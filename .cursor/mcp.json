@@ -1,0 +1,76 @@
+{
+  "mcpServers": {
+    "fetch-mcp": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "fetch-mcp@latest"
+      ],
+      "env": {}
+    },
+    "filesystem": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "@modelcontextprotocol/server-filesystem@latest",
+        "."
+      ],
+      "env": {}
+    },
+    "context7": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@upstash/context7-mcp"
+      ],
+      "env": {}
+    },
+    "sequential-thinking": {
+      "type": "stdio",
+      "command": "npx",
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
+      "env": {}
+    },
+    "docker": {
+      "type": "stdio",
+      "command": "uvx",
+      "args": [
+        "mcp-server-docker"
+      ],
+      "env": {}
+    },
+    "shadcn": {
+      "command": "npx",
+      "args": ["-y", "shadcn@canary", "registry:mcp"],
+      "env": {
+        "REGISTRY_URL": "https://styleglide.ai/t/v4/N2xuLTAtMHw0aXQtMTA3LWNkOHwzamIta3MtZHphfDJ8c3V8MC41"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": [
+        "@playwright/mcp@latest"
+      ]
+    },
+    "supabase": {
+      "command": "npx",
+      "args": [
+        "-y",
+        "@supabase/mcp-server-supabase@latest",
+        "--access-token",
+        "sbp_a18a95c85cf383fc8ef8b9c78ba50a2e2c488292"
+      ]
+    },
+    "CopilotKit MCP": {
+      "command": "npx",
+      "args": [
+        "mcp-remote",
+        "https://mcp.copilotkit.ai"
+      ]
+    }
+  }
+}
