@@ -1,0 +1,639 @@
+openapi: 3.0.3
+info:
+  title: GASTAT International Dossier System API
+  version: 1.0.0
+  description: RESTful API for managing international relationships, MoUs, and dossiers
+  contact:
+    name: GASTAT International Relations
+    email: international@gastat.sa
+servers:
+  - url: https://api.dossier.gastat.sa/v1
+    description: Production server
+  - url: https://staging-api.dossier.gastat.sa/v1
+    description: Staging server
+security:
+  - bearerAuth: []
+  - mfaAuth: []
+
+paths:
+  # Authentication
+  /auth/login:
+    post:
+      tags: [Authentication]
+      summary: Login with MFA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email: {type: string, format: email}
+                password: {type: string, format: password}
+                mfa_code: {type: string, pattern: '^[0-9]{6}$'}
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token: {type: string}
+                  refresh_token: {type: string}
+                  expires_in: {type: integer}
+                  user: {$ref: '#/components/schemas/User'}
+
+  # Dossiers
+  /dossiers:
+    get:
+      tags: [Dossiers]
+      summary: List dossiers with filters
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [country, organization, forum, thematic]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, archived, draft]
+        - name: classification
+          in: query
+          schema:
+            type: string
+            enum: [public, internal, confidential, secret]
+        - name: search
+          in: query
+          schema:
+            type: string
+          description: Full-text search in Arabic/English
+        - $ref: '#/components/parameters/Pagination'
+      responses:
+        '200':
+          description: List of dossiers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: '#/components/schemas/Dossier'}
+                  pagination: {$ref: '#/components/schemas/Pagination'}
+
+    post:
+      tags: [Dossiers]
+      summary: Create new dossier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInput'
+      responses:
+        '201':
+          description: Dossier created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+
+  /dossiers/{id}:
+    get:
+      tags: [Dossiers]
+      summary: Get dossier details
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Dossier details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+
+    patch:
+      tags: [Dossiers]
+      summary: Update dossier
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierInput'
+      responses:
+        '200':
+          description: Dossier updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+
+  # MoUs
+  /mous:
+    get:
+      tags: [MoUs]
+      summary: List MoUs with filters
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, negotiation, signed, active, expired, terminated]
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [data-exchange, capacity-building, strategic-partnership, technical-cooperation]
+        - name: expiring_soon
+          in: query
+          schema: {type: boolean}
+          description: MoUs expiring within 90 days
+        - $ref: '#/components/parameters/Pagination'
+      responses:
+        '200':
+          description: List of MoUs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items: {$ref: '#/components/schemas/MoU'}
+                  pagination: {$ref: '#/components/schemas/Pagination'}
+
+  /mous/{id}/deliverables:
+    get:
+      tags: [MoUs]
+      summary: Get MoU deliverables
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: MoU deliverables
+          content:
+            application/json:
+              schema:
+                type: array
+                items: {$ref: '#/components/schemas/Deliverable'}
+
+    patch:
+      tags: [MoUs]
+      summary: Update deliverable status
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                deliverable_id: {type: string, format: uuid}
+                status:
+                  type: string
+                  enum: [not-started, in-progress, completed, delayed, at-risk]
+                completion_percentage: {type: integer, minimum: 0, maximum: 100}
+      responses:
+        '200':
+          description: Deliverable updated
+
+  /mous/{id}/signature:
+    post:
+      tags: [MoUs]
+      summary: Initiate signature workflow
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, format: uuid}
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                provider:
+                  type: string
+                  enum: [docusign, pki]
+                signatories:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      contact_id: {type: string, format: uuid}
+                      order: {type: integer}
+                workflow:
+                  type: string
+                  enum: [parallel, sequential]
+      responses:
+        '201':
+          description: Signature request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignatureRequest'
+
+  # AI Services
+  /ai/briefs:
+    post:
+      tags: [AI]
+      summary: Generate AI brief
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dossier_id: {type: string, format: uuid}
+                type:
+                  type: string
+                  enum: [meeting, event, executive, policy]
+                context:
+                  type: object
+                  properties:
+                    meeting_date: {type: string, format: date}
+                    participants:
+                      type: array
+                      items: {type: string, format: uuid}
+                    agenda_items:
+                      type: array
+                      items: {type: string}
+                language:
+                  type: string
+                  enum: [ar, en]
+                detail_level:
+                  type: string
+                  enum: [executive, detailed, technical]
+      responses:
+        '201':
+          description: Brief generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Brief'
+
+  /ai/voice/transcribe:
+    post:
+      tags: [AI]
+      summary: Transcribe voice command
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                audio:
+                  type: string
+                  format: binary
+                language:
+                  type: string
+                  enum: [ar, en]
+      responses:
+        '200':
+          description: Transcription result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  text: {type: string}
+                  confidence: {type: number, minimum: 0, maximum: 1}
+                  language: {type: string}
+                  requires_confirmation: {type: boolean}
+
+  # Search
+  /search:
+    post:
+      tags: [Search]
+      summary: Global search across entities
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query: {type: string, minLength: 2}
+                types:
+                  type: array
+                  items:
+                    type: string
+                    enum: [dossier, mou, contact, document, activity]
+                filters:
+                  type: object
+                  properties:
+                    date_from: {type: string, format: date}
+                    date_to: {type: string, format: date}
+                    classification: {type: string}
+                    status: {type: string}
+                language:
+                  type: string
+                  enum: [ar, en, both]
+                limit: {type: integer, minimum: 1, maximum: 100}
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        type: {type: string}
+                        id: {type: string, format: uuid}
+                        title: {type: string}
+                        excerpt: {type: string}
+                        relevance: {type: number}
+                  facets:
+                    type: object
+                  total: {type: integer}
+
+  # Relationships
+  /relationships/{id}/health:
+    get:
+      tags: [Relationships]
+      summary: Get relationship health metrics
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema: {type: string, format: uuid}
+      responses:
+        '200':
+          description: Health metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  health_score: {type: number, minimum: 0, maximum: 100}
+                  risk_level:
+                    type: string
+                    enum: [healthy, monitor, at-risk, critical]
+                  metrics:
+                    type: object
+                    properties:
+                      engagement_frequency: {type: number}
+                      commitment_fulfillment: {type: number}
+                      response_time: {type: number}
+                  recommendations:
+                    type: array
+                    items: {type: string}
+
+  # Permission Delegation
+  /permissions/delegate:
+    post:
+      tags: [Permissions]
+      summary: Delegate permissions temporarily
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                grantee_id: {type: string, format: uuid}
+                resource_type:
+                  type: string
+                  enum: [dossier, mou, all]
+                resource_id: {type: string, format: uuid}
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                    enum: [read, write, delete, approve]
+                reason: {type: string}
+                valid_from: {type: string, format: date-time}
+                valid_until: {type: string, format: date-time}
+      responses:
+        '201':
+          description: Delegation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionDelegation'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    mfaAuth:
+      type: apiKey
+      in: header
+      name: X-MFA-Token
+
+  parameters:
+    Pagination:
+      name: page
+      in: query
+      schema:
+        type: object
+        properties:
+          page: {type: integer, minimum: 1}
+          limit: {type: integer, minimum: 1, maximum: 100}
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        email: {type: string, format: email}
+        name: {type: string}
+        role: {type: string}
+        organization_id: {type: string, format: uuid}
+        language_preference:
+          type: string
+          enum: [ar, en]
+
+    Dossier:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        type:
+          type: string
+          enum: [country, organization, forum, thematic]
+        entity_id: {type: string, format: uuid}
+        title: {type: string}
+        executive_summary: {type: string}
+        status:
+          type: string
+          enum: [active, archived, draft]
+        classification:
+          type: string
+          enum: [public, internal, confidential, secret]
+        tags:
+          type: array
+          items: {type: string}
+        statistics:
+          type: object
+        owner_id: {type: string, format: uuid}
+        created_at: {type: string, format: date-time}
+        updated_at: {type: string, format: date-time}
+
+    DossierInput:
+      type: object
+      required: [type, entity_id, title]
+      properties:
+        type:
+          type: string
+          enum: [country, organization, forum, thematic]
+        entity_id: {type: string, format: uuid}
+        title: {type: string}
+        executive_summary: {type: string}
+        status:
+          type: string
+          enum: [active, archived, draft]
+        classification:
+          type: string
+          enum: [public, internal, confidential, secret]
+        tags:
+          type: array
+          items: {type: string}
+
+    MoU:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        reference_number: {type: string}
+        title_en: {type: string}
+        title_ar: {type: string}
+        type:
+          type: string
+          enum: [data-exchange, capacity-building, strategic-partnership, technical-cooperation]
+        status:
+          type: string
+          enum: [draft, negotiation, signed, active, expired, terminated]
+        parties:
+          type: array
+          items: {type: string, format: uuid}
+        signed_date: {type: string, format: date}
+        effective_date: {type: string, format: date}
+        expiry_date: {type: string, format: date}
+        auto_renewal: {type: boolean}
+        performance_metrics:
+          type: object
+
+    Deliverable:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        description: {type: string}
+        due_date: {type: string, format: date}
+        status:
+          type: string
+          enum: [not-started, in-progress, completed, delayed, at-risk]
+        responsible_party: {type: string, format: uuid}
+        completion_percentage: {type: integer}
+
+    Brief:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        dossier_id: {type: string, format: uuid}
+        type:
+          type: string
+          enum: [meeting, event, executive, policy]
+        content:
+          type: object
+          properties:
+            executive_summary: {type: string}
+            key_points:
+              type: array
+              items: {type: string}
+            talking_points:
+              type: array
+              items: {type: string}
+            background: {type: string}
+            recommendations:
+              type: array
+              items: {type: string}
+        language:
+          type: string
+          enum: [ar, en]
+        generation_time_ms: {type: integer}
+        created_at: {type: string, format: date-time}
+
+    SignatureRequest:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        mou_id: {type: string, format: uuid}
+        document_id: {type: string, format: uuid}
+        provider:
+          type: string
+          enum: [docusign, pki]
+        status:
+          type: string
+          enum: [draft, sent, viewed, signed, completed, declined, expired]
+        signatories:
+          type: array
+          items:
+            type: object
+        workflow:
+          type: string
+          enum: [parallel, sequential]
+        created_at: {type: string, format: date-time}
+
+    PermissionDelegation:
+      type: object
+      properties:
+        id: {type: string, format: uuid}
+        grantor_id: {type: string, format: uuid}
+        grantee_id: {type: string, format: uuid}
+        resource_type:
+          type: string
+          enum: [dossier, mou, all]
+        resource_id: {type: string, format: uuid}
+        permissions:
+          type: array
+          items: {type: string}
+        reason: {type: string}
+        valid_from: {type: string, format: date-time}
+        valid_until: {type: string, format: date-time}
+        created_at: {type: string, format: date-time}
+
+    Pagination:
+      type: object
+      properties:
+        page: {type: integer}
+        limit: {type: integer}
+        total: {type: integer}
+        pages: {type: integer}
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code: {type: string}
+            message: {type: string}
+            details: {type: object}

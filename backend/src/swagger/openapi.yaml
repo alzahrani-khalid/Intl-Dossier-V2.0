@@ -1,0 +1,585 @@
+openapi: 3.0.0
+info:
+  title: GASTAT International Dossier System API
+  description: RESTful API for managing international relationships, MoUs, and strategic intelligence
+  version: 1.0.0
+  contact:
+    name: GASTAT Development Team
+    email: intl-dossier@gastat.sa
+
+servers:
+  - url: https://api.dossier.gastat.sa/v1
+    description: Production server
+  - url: https://staging-api.dossier.gastat.sa/v1
+    description: Staging server
+  - url: http://localhost:3000/api
+    description: Development server
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Authentication
+    description: User authentication and MFA
+  - name: Permissions
+    description: Permission delegation management
+  - name: Signatures
+    description: Digital signature workflows
+  - name: Positions
+    description: Position consistency analysis
+  - name: Intelligence
+    description: Intelligence source management
+  - name: Voice
+    description: Voice command processing
+  - name: Countries
+    description: Country dossier management
+  - name: Organizations
+    description: Organization management
+  - name: MoUs
+    description: Memorandum of Understanding operations
+  - name: Documents
+    description: Document management
+
+paths:
+  /auth/login:
+    post:
+      tags:
+        - Authentication
+      summary: User login with MFA
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        '200':
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /permissions/delegate:
+    post:
+      tags:
+        - Permissions
+      summary: Create permission delegation
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePermissionDelegation'
+      responses:
+        '201':
+          description: Delegation created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionDelegation'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /permissions/delegate/{id}:
+    delete:
+      tags:
+        - Permissions
+      summary: Revoke permission delegation
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Delegation revoked
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /permissions/delegated:
+    get:
+      tags:
+        - Permissions
+      summary: Get user's delegations
+      security:
+        - bearerAuth: []
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [granted, received, both]
+      responses:
+        '200':
+          description: List of delegations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  granted:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PermissionDelegation'
+                  received:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PermissionDelegation'
+
+  /mous/{id}/signature:
+    post:
+      tags:
+        - Signatures
+      summary: Create signature request for MoU
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateSignatureRequest'
+      responses:
+        '201':
+          description: Signature request created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignatureRequest'
+
+  /signatures/{id}/send:
+    post:
+      tags:
+        - Signatures
+      summary: Send signature request
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Request sent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignatureRequest'
+
+  /signatures/{id}/verify:
+    post:
+      tags:
+        - Signatures
+      summary: Verify digital signature
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                signature_data:
+                  type: string
+      responses:
+        '200':
+          description: Verification result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SignatureVerification'
+
+  /positions/{id}/consistency:
+    get:
+      tags:
+        - Positions
+      summary: Get position consistency analysis
+      security:
+        - bearerAuth: []
+      parameters:
+        - $ref: '#/components/parameters/IdParam'
+      responses:
+        '200':
+          description: Consistency analysis
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsistencyAnalysis'
+
+  /positions/validate:
+    post:
+      tags:
+        - Positions
+      summary: Validate position consistency
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                thematic_area_id:
+                  type: string
+                  format: uuid
+                force_refresh:
+                  type: boolean
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsistencyAnalysis'
+
+  /ai/voice/transcribe:
+    post:
+      tags:
+        - Voice
+      summary: Transcribe audio to text
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                audio:
+                  type: string
+                  format: binary
+                language:
+                  type: string
+                  enum: [ar, en]
+      responses:
+        '200':
+          description: Transcription result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TranscriptionResult'
+
+  /ai/voice/command:
+    post:
+      tags:
+        - Voice
+      summary: Process voice command
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                audio:
+                  type: string
+                  format: binary
+                text:
+                  type: string
+                language:
+                  type: string
+                  enum: [ar, en]
+                confirm:
+                  type: boolean
+      responses:
+        '200':
+          description: Command result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommandResult'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    IdParam:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+        details:
+          type: string
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+        password:
+          type: string
+          format: password
+        mfa_code:
+          type: string
+          pattern: '^[0-9]{6}$'
+
+    AuthResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        data:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+            expires_in:
+              type: integer
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        name_en:
+          type: string
+        name_ar:
+          type: string
+        role:
+          type: string
+          enum: [admin, analyst, manager, viewer]
+
+    CreatePermissionDelegation:
+      type: object
+      required:
+        - grantee_id
+        - resource_type
+        - permissions
+        - reason
+        - valid_from
+        - valid_until
+      properties:
+        grantee_id:
+          type: string
+          format: uuid
+        resource_type:
+          type: string
+          enum: [dossier, mou, all]
+        resource_id:
+          type: string
+          format: uuid
+        permissions:
+          type: array
+          items:
+            type: string
+            enum: [read, write, delete, approve]
+        reason:
+          type: string
+        valid_from:
+          type: string
+          format: date-time
+        valid_until:
+          type: string
+          format: date-time
+
+    PermissionDelegation:
+      allOf:
+        - $ref: '#/components/schemas/CreatePermissionDelegation'
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            grantor_id:
+              type: string
+              format: uuid
+            revoked:
+              type: boolean
+            created_at:
+              type: string
+              format: date-time
+
+    CreateSignatureRequest:
+      type: object
+      required:
+        - document_id
+        - provider
+        - signatories
+        - expires_at
+      properties:
+        document_id:
+          type: string
+          format: uuid
+        provider:
+          type: string
+          enum: [docusign, pki]
+        signatories:
+          type: array
+          items:
+            type: object
+            properties:
+              contact_id:
+                type: string
+                format: uuid
+              order:
+                type: integer
+        workflow:
+          type: string
+          enum: [parallel, sequential]
+        expires_at:
+          type: string
+          format: date-time
+
+    SignatureRequest:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        mou_id:
+          type: string
+          format: uuid
+        document_id:
+          type: string
+          format: uuid
+        provider:
+          type: string
+          enum: [docusign, pki]
+        status:
+          type: string
+          enum: [draft, sent, viewed, signed, completed, declined, expired]
+        signatories:
+          type: array
+          items:
+            type: object
+        created_at:
+          type: string
+          format: date-time
+
+    SignatureVerification:
+      type: object
+      properties:
+        valid:
+          type: boolean
+        signer:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+        certificate:
+          type: string
+
+    ConsistencyAnalysis:
+      type: object
+      properties:
+        consistency_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        conflicts:
+          type: array
+          items:
+            type: object
+            properties:
+              conflict_type:
+                type: string
+                enum: [contradiction, ambiguity, outdated]
+              severity:
+                type: string
+                enum: [low, medium, high]
+              description:
+                type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+        analysis_time_ms:
+          type: integer
+
+    TranscriptionResult:
+      type: object
+      properties:
+        text:
+          type: string
+        language:
+          type: string
+          enum: [ar, en]
+        confidence:
+          type: number
+          minimum: 0
+          maximum: 1
+        timestamps:
+          type: array
+          items:
+            type: object
+
+    CommandResult:
+      type: object
+      properties:
+        command:
+          type: object
+          properties:
+            action:
+              type: string
+            entity:
+              type: string
+            target:
+              type: string
+        confidence:
+          type: number
+        requires_confirmation:
+          type: boolean
+        result:
+          type: object
+        executed:
+          type: boolean

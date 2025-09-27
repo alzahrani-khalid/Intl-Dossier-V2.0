@@ -1,0 +1,48 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - button "العربية" [ref=e6] [cursor=pointer]:
+      - img [ref=e7] [cursor=pointer]
+      - generic [ref=e11] [cursor=pointer]: العربية
+    - generic [ref=e12]:
+      - generic [ref=e13]:
+        - img [ref=e15]
+        - heading "GASTAT International Dossier System" [level=1] [ref=e19]
+        - paragraph [ref=e20]: Sign In
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - generic [ref=e23]: Email
+          - textbox "Email" [ref=e24]
+        - generic [ref=e25]:
+          - generic [ref=e26]: Password
+          - generic [ref=e27]:
+            - textbox "Password" [ref=e28]
+            - button [ref=e29] [cursor=pointer]:
+              - img [ref=e30] [cursor=pointer]
+        - generic [ref=e33]:
+          - generic [ref=e34]:
+            - checkbox "Remember me" [ref=e35]
+            - generic [ref=e36]: Remember me
+          - link "Forgot password?" [ref=e37] [cursor=pointer]:
+            - /url: "#"
+        - button "Sign In" [ref=e38] [cursor=pointer]
+      - generic [ref=e39]:
+        - text: Don't have an account?
+        - link "Sign Up" [ref=e40] [cursor=pointer]:
+          - /url: /register
+    - paragraph [ref=e41]: © 2025 GASTAT - General Authority for Statistics
+  - generic:
+    - contentinfo:
+      - button "Open TanStack Router Devtools" [ref=e42] [cursor=pointer]:
+        - generic [ref=e43] [cursor=pointer]:
+          - img [ref=e45] [cursor=pointer]
+          - img [ref=e81] [cursor=pointer]
+        - generic [ref=e116] [cursor=pointer]: "-"
+        - generic [ref=e117] [cursor=pointer]: TanStack Router
+  - generic [ref=e118]:
+    - img [ref=e120]
+    - button "Open Tanstack query devtools" [ref=e169] [cursor=pointer]:
+      - img [ref=e170] [cursor=pointer]
+```

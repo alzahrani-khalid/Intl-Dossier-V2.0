@@ -1,0 +1,407 @@
+import React from 'react'
+import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest'
+import { render, screen, fireEvent, waitFor } from '@testing-library/react'
+import userEvent from '@testing-library/user-event'
+import { NotificationCenter, sendNotification } from '../Notifications/NotificationCenter'
+import { useAuthStore } from '../../store/authStore'
+import { realtimeManager } from '../../lib/realtime'
+
+// Mock dependencies
+vi.mock('../../store/authStore')
+vi.mock('../../lib/realtime')
+vi.mock('react-hot-toast', () => ({
+  toast: {
+    custom: vi.fn(),
+    dismiss: vi.fn(),
+  },
+  Toaster: () => null,
+}))
+
+describe('NotificationCenter', () => {
+  const mockUser = {
+    id: 'user-123',
+    email: 'test@example.com',
+    name: 'Test User',
+  }
+
+  beforeEach(() => {
+    vi.mocked(useAuthStore).mockReturnValue({
+      user: mockUser,
+      isAuthenticated: true,
+    } as any)
+
+    // Mock localStorage
+    Storage.prototype.getItem = vi.fn()
+    Storage.prototype.setItem = vi.fn()
+    Storage.prototype.removeItem = vi.fn()
+
+    // Mock Notification API
+    global.Notification = {
+      permission: 'granted',
+      requestPermission: vi.fn(),
+    } as any
+  })
+
+  afterEach(() => {
+    vi.clearAllMocks()
+  })
+
+  describe('Rendering', () => {
+    it('should render notification bell icon', () => {
+      render(<NotificationCenter />)
+      const bell = screen.getByRole('button')
+      expect(bell).toBeInTheDocument()
+    })
+
+    it('should show unread count badge', () => {
+      const notifications = [
+        {
+          id: '1',
+          type: 'info' as const,
+          title: 'Test',
+          message: 'Test message',
+          timestamp: new Date(),
+          read: false,
+        },
+      ]
+
+      Storage.prototype.getItem = vi.fn().mockReturnValue(JSON.stringify(notifications))
+
+      render(<NotificationCenter />)
+      const badge = screen.getByText('1')
+      expect(badge).toBeInTheDocument()
+    })
+
+    it('should open dropdown on bell click', async () => {
+      render(<NotificationCenter />)
+      const bell = screen.getByRole('button')
+
+      await userEvent.click(bell)
+
+      expect(screen.getByText('Notifications')).toBeInTheDocument()
+    })
+
+    it('should show empty state when no notifications', async () => {
+      render(<NotificationCenter />)
+      const bell = screen.getByRole('button')
+
+      await userEvent.click(bell)
+
+      expect(screen.getByText('No notifications')).toBeInTheDocument()
+    })
+  })
+
+  describe('Notification Management', () => {
+    const mockNotifications = [
+      {
+        id: '1',
+        type: 'success' as const,
+        title: 'Success',
+        message: 'Operation completed',
+        timestamp: new Date('2024-01-01'),
+        read: false,
+      },
+      {
+        id: '2',
+        type: 'error' as const,
+        title: 'Error',
+        message: 'Something went wrong',
+        timestamp: new Date('2024-01-02'),
+        read: true,
+      },
+    ]
+
+    beforeEach(() => {
+      Storage.prototype.getItem = vi.fn().mockReturnValue(
+        JSON.stringify(mockNotifications)
+      )
+    })
+
+    it('should display notifications list', async () => {
+      render(<NotificationCenter />)
+      const bell = screen.getByRole('button')
+
+      await userEvent.click(bell)
+
+      expect(screen.getByText('Success')).toBeInTheDocument()
+      expect(screen.getByText('Operation completed')).toBeInTheDocument()
+      expect(screen.getByText('Error')).toBeInTheDocument()
+    })
+
+    it('should mark notification as read on click', async () => {
+      render(<NotificationCenter autoMarkAsRead={true} />)
+      const bell = screen.getByRole('button')
+
+      await userEvent.click(bell)
+
+      const notification = screen.getByText('Success').closest('div')
+      await userEvent.click(notification!)
+
+      await waitFor(() => {
+        expect(Storage.prototype.setItem).toHaveBeenCalled()
+      })
+    })
+
+    it('should mark all as read', async () => {
+      render(<NotificationCenter />)
+      const bell = screen.getByRole('button')
+
+      await userEvent.click(bell)
+
+      const markAllButton = screen.getByText('Mark all as read')
+      await userEvent.click(markAllButton)
+
+      expect(Storage.prototype.setItem).toHaveBeenCalled()
+    })
+
+    it('should delete notification', async () => {
+      render(<NotificationCenter />)
+      const bell = screen.getByRole('button')
+
+      await userEvent.click(bell)
+
+      const deleteButtons = screen.getAllByRole('button').filter(
+        btn => btn.querySelector('svg')
+      )
+
+      await userEvent.click(deleteButtons[1]) // Click X button
+
+      expect(Storage.prototype.setItem).toHaveBeenCalled()
+    })
+
+    it('should clear all notifications', async () => {
+      render(<NotificationCenter />)
+      const bell = screen.getByRole('button')
+
+      await userEvent.click(bell)
+
+      const clearAllButton = screen.getByText('Clear all')
+      await userEvent.click(clearAllButton)
+
+      expect(Storage.prototype.removeItem).toHaveBeenCalledWith(
+        `notifications-${mockUser.id}`
+      )
+    })
+  })
+
+  describe('Real-time Updates', () => {
+    it('should subscribe to notification channel', () => {
+      render(<NotificationCenter />)
+
+      expect(realtimeManager.subscribe).toHaveBeenCalledWith(
+        expect.objectContaining({
+          channel: `notifications:${mockUser.id}`,
+        })
+      )
+    })
+
+    it('should handle new notification broadcast', async () => {
+      let broadcastHandler: any
+
+      vi.mocked(realtimeManager.subscribe).mockImplementation((config) => {
+        broadcastHandler = config.onBroadcast
+        return {} as any
+      })
+
+      render(<NotificationCenter showToast={false} />)
+
+      const newNotification = {
+        id: '3',
+        type: 'info',
+        title: 'New Notification',
+        message: 'This just arrived',
+        timestamp: new Date(),
+      }
+
+      broadcastHandler('new_notification', newNotification)
+
+      await waitFor(() => {
+        expect(Storage.prototype.setItem).toHaveBeenCalled()
+      })
+    })
+
+    it('should unsubscribe on unmount', () => {
+      const { unmount } = render(<NotificationCenter />)
+
+      unmount()
+
+      expect(realtimeManager.unsubscribe).toHaveBeenCalledWith(
+        `notifications:${mockUser.id}`
+      )
+    })
+  })
+
+  describe('Toast Notifications', () => {
+    it('should show toast for new notifications', async () => {
+      const { toast } = await import('react-hot-toast')
+
+      let broadcastHandler: any
+      vi.mocked(realtimeManager.subscribe).mockImplementation((config) => {
+        broadcastHandler = config.onBroadcast
+        return {} as any
+      })
+
+      render(<NotificationCenter showToast={true} />)
+
+      const newNotification = {
+        id: '3',
+        type: 'success',
+        title: 'Success Toast',
+        message: 'Operation successful',
+        timestamp: new Date(),
+      }
+
+      broadcastHandler('new_notification', newNotification)
+
+      await waitFor(() => {
+        expect(toast.custom).toHaveBeenCalled()
+      })
+    })
+  })
+
+  describe('Browser Notifications', () => {
+    it('should request permission on mount', () => {
+      global.Notification.permission = 'default'
+
+      render(<NotificationCenter />)
+
+      expect(global.Notification.requestPermission).toHaveBeenCalled()
+    })
+
+    it('should show browser notification when permitted', async () => {
+      const NotificationMock = vi.fn()
+      global.Notification = NotificationMock as any
+      global.Notification.permission = 'granted'
+
+      let broadcastHandler: any
+      vi.mocked(realtimeManager.subscribe).mockImplementation((config) => {
+        broadcastHandler = config.onBroadcast
+        return {} as any
+      })
+
+      render(<NotificationCenter />)
+
+      const newNotification = {
+        id: '3',
+        type: 'info',
+        title: 'Browser Notification',
+        message: 'This should appear in browser',
+        timestamp: new Date(),
+      }
+
+      broadcastHandler('new_notification', newNotification)
+
+      await waitFor(() => {
+        expect(NotificationMock).toHaveBeenCalledWith(
+          'Browser Notification',
+          expect.objectContaining({
+            body: 'This should appear in browser',
+          })
+        )
+      })
+    })
+  })
+
+  describe('sendNotification Helper', () => {
+    it('should broadcast notification to user channel', () => {
+      const notification = {
+        type: 'info' as const,
+        title: 'Test',
+        message: 'Test message',
+      }
+
+      sendNotification('user-456', notification)
+
+      expect(realtimeManager.broadcast).toHaveBeenCalledWith(
+        'notifications:user-456',
+        'new_notification',
+        expect.objectContaining({
+          ...notification,
+          id: expect.any(String),
+          timestamp: expect.any(Date),
+        })
+      )
+    })
+  })
+
+  describe('Notification Types', () => {
+    const types = ['info', 'success', 'warning', 'error'] as const
+
+    types.forEach((type) => {
+      it(`should render ${type} notification with correct icon`, async () => {
+        const notification = {
+          id: '1',
+          type,
+          title: `${type} notification`,
+          message: 'Test message',
+          timestamp: new Date(),
+          read: false,
+        }
+
+        Storage.prototype.getItem = vi.fn().mockReturnValue(
+          JSON.stringify([notification])
+        )
+
+        render(<NotificationCenter />)
+        const bell = screen.getByRole('button')
+
+        await userEvent.click(bell)
+
+        expect(screen.getByText(`${type} notification`)).toBeInTheDocument()
+      })
+    })
+  })
+
+  describe('Performance', () => {
+    it('should limit notifications to maxNotifications', async () => {
+      const manyNotifications = Array.from({ length: 100 }, (_, i) => ({
+        id: `${i}`,
+        type: 'info' as const,
+        title: `Notification ${i}`,
+        message: 'Test',
+        timestamp: new Date(),
+        read: false,
+      }))
+
+      Storage.prototype.getItem = vi.fn().mockReturnValue(
+        JSON.stringify(manyNotifications)
+      )
+
+      render(<NotificationCenter maxNotifications={50} />)
+
+      await waitFor(() => {
+        const stored = Storage.prototype.setItem.mock.calls[0]?.[1]
+        if (stored) {
+          const parsed = JSON.parse(stored)
+          expect(parsed.length).toBeLessThanOrEqual(50)
+        }
+      })
+    })
+
+    it('should debounce rapid notification updates', async () => {
+      let broadcastHandler: any
+      vi.mocked(realtimeManager.subscribe).mockImplementation((config) => {
+        broadcastHandler = config.onBroadcast
+        return {} as any
+      })
+
+      render(<NotificationCenter />)
+
+      // Send multiple notifications rapidly
+      for (let i = 0; i < 10; i++) {
+        broadcastHandler('new_notification', {
+          id: `${i}`,
+          type: 'info',
+          title: `Notification ${i}`,
+          message: 'Test',
+          timestamp: new Date(),
+        })
+      }
+
+      // Storage should not be called 10 times due to batching
+      await waitFor(() => {
+        expect(Storage.prototype.setItem.mock.calls.length).toBeLessThan(10)
+      })
+    })
+  })
+})

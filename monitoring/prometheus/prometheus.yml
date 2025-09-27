@@ -1,0 +1,249 @@
+global:
+  scrape_interval: 15s
+  evaluation_interval: 15s
+  external_labels:
+    cluster: 'gastat-production'
+    environment: 'production'
+
+rule_files:
+  - "alerts.yml"
+
+alerting:
+  alertmanagers:
+    - static_configs:
+        - targets:
+          - alertmanager:9093
+
+scrape_configs:
+  # Prometheus itself
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  # Node Exporter - System metrics
+  - job_name: 'node-exporter'
+    static_configs:
+      - targets: ['node-exporter:9100']
+    scrape_interval: 5s
+    metrics_path: /metrics
+
+  # cAdvisor - Container metrics
+  - job_name: 'cadvisor'
+    static_configs:
+      - targets: ['cadvisor:8080']
+    scrape_interval: 5s
+    metrics_path: /metrics
+
+  # Redis Exporter
+  - job_name: 'redis-exporter'
+    static_configs:
+      - targets: ['redis-exporter:9121']
+    scrape_interval: 5s
+
+  # PostgreSQL Exporter
+  - job_name: 'postgres-exporter'
+    static_configs:
+      - targets: ['postgres-exporter:9187']
+    scrape_interval: 5s
+
+  # Backend API metrics
+  - job_name: 'backend-api'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 5s
+    metrics_path: /metrics
+    scrape_timeout: 10s
+
+  # Frontend metrics (if available)
+  - job_name: 'frontend'
+    static_configs:
+      - targets: ['frontend:5173']
+    scrape_interval: 30s
+    metrics_path: /metrics
+
+  # AnythingLLM metrics
+  - job_name: 'anythingllm'
+    static_configs:
+      - targets: ['anythingllm:3001']
+    scrape_interval: 30s
+    metrics_path: /metrics
+
+  # Supabase metrics (if available)
+  - job_name: 'supabase'
+    static_configs:
+      - targets: ['supabase:5432']
+    scrape_interval: 30s
+    metrics_path: /metrics
+
+  # Blackbox exporter for uptime checks
+  - job_name: 'blackbox'
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    static_configs:
+      - targets:
+        - http://backend:3001/health
+        - http://frontend:5173
+        - http://grafana:3000
+        - http://prometheus:9090
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+  # Service discovery for dynamic targets
+  - job_name: 'kubernetes-pods'
+    kubernetes_sd_configs:
+      - role: pod
+    relabel_configs:
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_scrape]
+        action: keep
+        regex: true
+      - source_labels: [__meta_kubernetes_pod_annotation_prometheus_io_path]
+        action: replace
+        target_label: __metrics_path__
+        regex: (.+)
+      - source_labels: [__address__, __meta_kubernetes_pod_annotation_prometheus_io_port]
+        action: replace
+        regex: ([^:]+)(?::\d+)?;(\d+)
+        replacement: $1:$2
+        target_label: __address__
+      - action: labelmap
+        regex: __meta_kubernetes_pod_label_(.+)
+      - source_labels: [__meta_kubernetes_namespace]
+        action: replace
+        target_label: kubernetes_namespace
+      - source_labels: [__meta_kubernetes_pod_name]
+        action: replace
+        target_label: kubernetes_pod_name
+
+  # Custom application metrics
+  - job_name: 'gastat-application'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 10s
+    metrics_path: /api/metrics
+    scrape_timeout: 5s
+    honor_labels: true
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: instance
+        replacement: gastat-backend
+      - target_label: job
+        replacement: gastat-application
+
+  # Database connection pool metrics
+  - job_name: 'database-pool'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 15s
+    metrics_path: /api/database/metrics
+
+  # Rate limiting metrics
+  - job_name: 'rate-limiting'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 5s
+    metrics_path: /api/rate-limit/metrics
+
+  # AI/LLM service metrics
+  - job_name: 'ai-services'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 30s
+    metrics_path: /api/ai/metrics
+
+  # Search and indexing metrics
+  - job_name: 'search-indexing'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 30s
+    metrics_path: /api/search/metrics
+
+  # Report generation metrics
+  - job_name: 'report-generation'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 60s
+    metrics_path: /api/reports/metrics
+
+  # User activity metrics
+  - job_name: 'user-activity'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 60s
+    metrics_path: /api/users/metrics
+
+  # Security metrics
+  - job_name: 'security'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 30s
+    metrics_path: /api/security/metrics
+
+  # Performance metrics
+  - job_name: 'performance'
+    static_configs:
+      - targets: ['backend:3001']
+    scrape_interval: 10s
+    metrics_path: /api/performance/metrics
+
+  # Health check endpoints
+  - job_name: 'health-checks'
+    static_configs:
+      - targets:
+        - 'backend:3001/health'
+        - 'frontend:5173/health'
+        - 'postgres:5432'
+        - 'redis:6379'
+    scrape_interval: 30s
+    metrics_path: /health
+    scrape_timeout: 5s
+
+  # External service monitoring
+  - job_name: 'external-services'
+    static_configs:
+      - targets:
+        - 'https://api.supabase.co'
+        - 'https://api.openai.com'
+    scrape_interval: 300s
+    metrics_path: /probe
+    params:
+      module: [http_2xx]
+    relabel_configs:
+      - source_labels: [__address__]
+        target_label: __param_target
+      - source_labels: [__param_target]
+        target_label: instance
+      - target_label: __address__
+        replacement: blackbox-exporter:9115
+
+# Storage configuration
+storage:
+  tsdb:
+    retention.time: 30d
+    retention.size: 10GB
+    wal-compression: true
+
+# Remote write configuration for long-term storage
+remote_write:
+  - url: "https://prometheus-us-central1.grafana.net/api/prom/push"
+    basic_auth:
+      username: "your-username"
+      password: "your-password"
+    queue_config:
+      max_samples_per_send: 1000
+      batch_send_deadline: 5s
+      max_retries: 10
+      min_backoff: 30ms
+      max_backoff: 100ms
+
+# Remote read configuration
+remote_read:
+  - url: "https://prometheus-us-central1.grafana.net/api/prom/prometheus"
+    basic_auth:
+      username: "your-username"
+      password: "your-password"

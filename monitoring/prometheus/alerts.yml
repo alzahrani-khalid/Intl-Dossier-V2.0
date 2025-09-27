@@ -1,0 +1,342 @@
+groups:
+  # System alerts
+  - name: system
+    rules:
+      - alert: HighCPUUsage
+        expr: 100 - (avg by(instance) (irate(node_cpu_seconds_total{mode="idle"}[5m])) * 100) > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High CPU usage detected"
+          description: "CPU usage is above 80% for more than 5 minutes on {{ $labels.instance }}"
+
+      - alert: HighMemoryUsage
+        expr: (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes) / node_memory_MemTotal_bytes * 100 > 85
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High memory usage detected"
+          description: "Memory usage is above 85% for more than 5 minutes on {{ $labels.instance }}"
+
+      - alert: DiskSpaceLow
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 10
+        for: 5m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space is low"
+          description: "Disk space is below 10% on {{ $labels.instance }} for {{ $labels.mountpoint }}"
+
+      - alert: DiskSpaceCritical
+        expr: (node_filesystem_avail_bytes / node_filesystem_size_bytes) * 100 < 5
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Disk space is critically low"
+          description: "Disk space is below 5% on {{ $labels.instance }} for {{ $labels.mountpoint }}"
+
+  # Application alerts
+  - name: application
+    rules:
+      - alert: ApplicationDown
+        expr: up{job="backend-api"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Backend API is down"
+          description: "Backend API has been down for more than 1 minute"
+
+      - alert: HighErrorRate
+        expr: rate(http_requests_total{status=~"5.."}[5m]) / rate(http_requests_total[5m]) * 100 > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High error rate detected"
+          description: "Error rate is above 5% for more than 5 minutes"
+
+      - alert: HighResponseTime
+        expr: histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m])) > 2
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High response time detected"
+          description: "95th percentile response time is above 2 seconds for more than 5 minutes"
+
+      - alert: LowThroughput
+        expr: rate(http_requests_total[5m]) < 10
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Low throughput detected"
+          description: "Request rate is below 10 requests per second for more than 10 minutes"
+
+  # Database alerts
+  - name: database
+    rules:
+      - alert: DatabaseDown
+        expr: up{job="postgres-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Database is down"
+          description: "PostgreSQL database has been down for more than 1 minute"
+
+      - alert: HighDatabaseConnections
+        expr: pg_stat_database_numbackends / pg_settings_max_connections * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High database connection usage"
+          description: "Database connection usage is above 80% for more than 5 minutes"
+
+      - alert: SlowQueries
+        expr: rate(pg_stat_database_tup_returned[5m]) / rate(pg_stat_database_tup_fetched[5m]) < 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Slow database queries detected"
+          description: "Database query efficiency is below 10% for more than 5 minutes"
+
+      - alert: DatabaseSizeHigh
+        expr: pg_database_size_bytes / 1024 / 1024 / 1024 > 100
+        for: 0m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Database size is large"
+          description: "Database size is above 100GB"
+
+  # Redis alerts
+  - name: redis
+    rules:
+      - alert: RedisDown
+        expr: up{job="redis-exporter"} == 0
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Redis is down"
+          description: "Redis has been down for more than 1 minute"
+
+      - alert: RedisMemoryHigh
+        expr: redis_memory_used_bytes / redis_memory_max_bytes * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis memory usage is high"
+          description: "Redis memory usage is above 80% for more than 5 minutes"
+
+      - alert: RedisConnectionsHigh
+        expr: redis_connected_clients / redis_maxclients * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Redis connection usage is high"
+          description: "Redis connection usage is above 80% for more than 5 minutes"
+
+  # Rate limiting alerts
+  - name: rate_limiting
+    rules:
+      - alert: HighRateLimitHits
+        expr: rate(rate_limit_hits_total[5m]) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High rate limit hits detected"
+          description: "Rate limit hits are above 10 per second for more than 5 minutes"
+
+      - alert: RateLimitExceeded
+        expr: rate(rate_limit_exceeded_total[1m]) > 5
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Rate limit exceeded frequently"
+          description: "Rate limit exceeded more than 5 times per minute"
+
+  # AI/LLM service alerts
+  - name: ai_services
+    rules:
+      - alert: AIServiceDown
+        expr: up{job="anythingllm"} == 0
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "AI service is down"
+          description: "AnythingLLM service has been down for more than 5 minutes"
+
+      - alert: AIRequestFailures
+        expr: rate(ai_request_failures_total[5m]) / rate(ai_requests_total[5m]) * 100 > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High AI request failure rate"
+          description: "AI request failure rate is above 10% for more than 5 minutes"
+
+      - alert: AIResponseTimeHigh
+        expr: histogram_quantile(0.95, rate(ai_request_duration_seconds_bucket[5m])) > 30
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High AI response time"
+          description: "95th percentile AI response time is above 30 seconds for more than 5 minutes"
+
+  # Search and indexing alerts
+  - name: search_indexing
+    rules:
+      - alert: SearchIndexingLag
+        expr: search_indexing_lag_seconds > 300
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Search indexing is lagging"
+          description: "Search indexing lag is above 5 minutes for more than 5 minutes"
+
+      - alert: SearchFailures
+        expr: rate(search_failures_total[5m]) / rate(search_requests_total[5m]) * 100 > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High search failure rate"
+          description: "Search failure rate is above 5% for more than 5 minutes"
+
+  # Report generation alerts
+  - name: report_generation
+    rules:
+      - alert: ReportGenerationFailures
+        expr: rate(report_generation_failures_total[5m]) / rate(report_generation_requests_total[5m]) * 100 > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High report generation failure rate"
+          description: "Report generation failure rate is above 10% for more than 5 minutes"
+
+      - alert: ReportGenerationQueue
+        expr: report_generation_queue_size > 100
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Report generation queue is large"
+          description: "Report generation queue size is above 100 for more than 5 minutes"
+
+  # Security alerts
+  - name: security
+    rules:
+      - alert: HighFailedLogins
+        expr: rate(auth_failed_logins_total[5m]) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High failed login attempts"
+          description: "Failed login attempts are above 5 per second for more than 5 minutes"
+
+      - alert: SuspiciousActivity
+        expr: rate(suspicious_requests_total[5m]) > 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Suspicious activity detected"
+          description: "Suspicious requests are above 1 per second for more than 1 minute"
+
+      - alert: BruteForceAttack
+        expr: rate(auth_failed_logins_total[1m]) > 10
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Possible brute force attack"
+          description: "Failed login attempts are above 10 per second for more than 1 minute"
+
+  # Performance alerts
+  - name: performance
+    rules:
+      - alert: HighGCPause
+        expr: rate(jvm_gc_pause_seconds_total[5m]) > 0.1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High GC pause time"
+          description: "GC pause time is above 0.1 seconds per second for more than 5 minutes"
+
+      - alert: MemoryLeak
+        expr: increase(jvm_memory_used_bytes[1h]) > 100 * 1024 * 1024
+        for: 1h
+        labels:
+          severity: warning
+        annotations:
+          summary: "Possible memory leak detected"
+          description: "Memory usage increased by more than 100MB in the last hour"
+
+  # Container alerts
+  - name: containers
+    rules:
+      - alert: ContainerHighCPU
+        expr: rate(container_cpu_usage_seconds_total[5m]) > 0.8
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container CPU usage is high"
+          description: "Container {{ $labels.name }} CPU usage is above 80% for more than 5 minutes"
+
+      - alert: ContainerHighMemory
+        expr: container_memory_usage_bytes / container_spec_memory_limit_bytes * 100 > 80
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container memory usage is high"
+          description: "Container {{ $labels.name }} memory usage is above 80% for more than 5 minutes"
+
+      - alert: ContainerRestarting
+        expr: rate(container_start_time_seconds[5m]) > 0
+        for: 1m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Container is restarting frequently"
+          description: "Container {{ $labels.name }} has restarted in the last 5 minutes"
+
+  # Network alerts
+  - name: network
+    rules:
+      - alert: HighNetworkErrors
+        expr: rate(network_errors_total[5m]) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High network error rate"
+          description: "Network errors are above 1 per second for more than 5 minutes"
+
+      - alert: NetworkLatencyHigh
+        expr: histogram_quantile(0.95, rate(network_latency_seconds_bucket[5m])) > 1
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "High network latency"
+          description: "95th percentile network latency is above 1 second for more than 5 minutes"

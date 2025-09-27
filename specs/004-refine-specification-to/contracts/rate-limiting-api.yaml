@@ -1,0 +1,226 @@
+openapi: 3.0.0
+info:
+  title: Rate Limiting Management API
+  version: 1.0.0
+  description: API for managing rate limiting policies and monitoring
+
+paths:
+  /api/rate-limits/policies:
+    get:
+      summary: List rate limit policies
+      operationId: listRateLimitPolicies
+      parameters:
+        - name: applies_to
+          in: query
+          schema:
+            type: string
+            enum: [authenticated, anonymous, role]
+      responses:
+        '200':
+          description: List of rate limit policies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RateLimitPolicy'
+
+    post:
+      summary: Create rate limit policy
+      operationId: createRateLimitPolicy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RateLimitPolicyInput'
+      responses:
+        '201':
+          description: Policy created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitPolicy'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /api/rate-limits/policies/{id}:
+    put:
+      summary: Update rate limit policy
+      operationId: updateRateLimitPolicy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RateLimitPolicyInput'
+      responses:
+        '200':
+          description: Policy updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitPolicy'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      summary: Delete rate limit policy
+      operationId: deleteRateLimitPolicy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Policy deleted
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/rate-limits/status:
+    get:
+      summary: Get current rate limit status for user
+      operationId: getRateLimitStatus
+      responses:
+        '200':
+          description: Current rate limit status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    description: User ID or 'anonymous'
+                  ip_address:
+                    type: string
+                    description: IP address for anonymous users
+                  limits:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        endpoint_type:
+                          type: string
+                          enum: [api, upload, report, all]
+                        requests_used:
+                          type: integer
+                        requests_limit:
+                          type: integer
+                        reset_at:
+                          type: string
+                          format: date-time
+                        burst_remaining:
+                          type: integer
+
+components:
+  schemas:
+    RateLimitPolicy:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        requests_per_minute:
+          type: integer
+          minimum: 1
+        burst_capacity:
+          type: integer
+          minimum: 0
+        applies_to:
+          type: string
+          enum: [authenticated, anonymous, role]
+        role_id:
+          type: string
+        endpoint_type:
+          type: string
+          enum: [api, upload, report, all]
+        retry_after_seconds:
+          type: integer
+          minimum: 1
+          maximum: 3600
+        enabled:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    RateLimitPolicyInput:
+      type: object
+      required:
+        - name
+        - requests_per_minute
+        - burst_capacity
+        - applies_to
+        - endpoint_type
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+        requests_per_minute:
+          type: integer
+          minimum: 1
+        burst_capacity:
+          type: integer
+          minimum: 0
+        applies_to:
+          type: string
+          enum: [authenticated, anonymous, role]
+        role_id:
+          type: string
+        endpoint_type:
+          type: string
+          enum: [api, upload, report, all]
+        retry_after_seconds:
+          type: integer
+          minimum: 1
+          maximum: 3600
+          default: 60
+        enabled:
+          type: boolean
+          default: true
+
+  responses:
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              details:
+                type: object
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Resource not found

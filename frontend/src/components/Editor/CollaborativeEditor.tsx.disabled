@@ -1,0 +1,338 @@
+import React, { useEffect, useState, useCallback } from 'react'
+import { useEditor, EditorContent } from '@tiptap/react'
+import StarterKit from '@tiptap/starter-kit'
+import Collaboration from '@tiptap/extension-collaboration'
+import CollaborationCursor from '@tiptap/extension-collaboration-cursor'
+import * as Y from 'yjs'
+import { WebrtcProvider } from 'y-webrtc'
+import { IndexeddbPersistence } from 'y-indexeddb'
+import { useAuthStore } from '../../store/authStore'
+import { realtimeManager } from '../../lib/realtime'
+import { generateUserColor } from '../../lib/utils'
+
+export interface CollaborativeEditorProps {
+  documentId: string
+  roomName: string
+  className?: string
+  placeholder?: string
+  editable?: boolean
+  onSave?: (content: string) => void
+  onStatusChange?: (status: 'connecting' | 'connected' | 'disconnected') => void
+  initialContent?: string
+}
+
+export function CollaborativeEditor({
+  documentId,
+  roomName,
+  className = '',
+  placeholder = 'Start typing...',
+  editable = true,
+  onSave,
+  onStatusChange,
+  initialContent,
+}: CollaborativeEditorProps) {
+  const { user } = useAuthStore()
+  const [status, setStatus] = useState<'connecting' | 'connected' | 'disconnected'>('connecting')
+  const [ydoc, setYdoc] = useState<Y.Doc | null>(null)
+  const [provider, setProvider] = useState<WebrtcProvider | null>(null)
+  const [isSynced, setIsSynced] = useState(false)
+
+  // Initialize Yjs document and providers
+  useEffect(() => {
+    const doc = new Y.Doc()
+    setYdoc(doc)
+
+    // Setup WebRTC provider for real-time collaboration
+    const webrtcProvider = new WebrtcProvider(roomName, doc, {
+      signaling: ['wss://signaling.yjs.dev'],
+      password: documentId, // Use documentId as room password for security
+      awareness: {
+        user: {
+          name: user?.name || user?.email || 'Anonymous',
+          color: generateUserColor(),
+          id: user?.id,
+        },
+      },
+      maxConns: 20,
+      filterBcConns: true,
+      peerOpts: {
+        config: {
+          iceServers: [
+            { urls: 'stun:stun.l.google.com:19302' },
+            { urls: 'stun:stun1.l.google.com:19302' },
+          ],
+        },
+      },
+    })
+
+    // Setup IndexedDB persistence for offline support
+    const indexeddbProvider = new IndexeddbPersistence(documentId, doc)
+
+    indexeddbProvider.on('synced', () => {
+      console.log('Document synced with IndexedDB')
+      setIsSynced(true)
+    })
+
+    webrtcProvider.on('status', (event: { status: string }) => {
+      const newStatus = event.status === 'connected' ? 'connected' :
+                       event.status === 'connecting' ? 'connecting' : 'disconnected'
+      setStatus(newStatus)
+      onStatusChange?.(newStatus)
+    })
+
+    webrtcProvider.on('synced', (synced: boolean) => {
+      if (synced) {
+        console.log('Document synced with peers')
+        // Broadcast sync event
+        realtimeManager.broadcast(`doc:${documentId}`, 'synced', {
+          userId: user?.id,
+          timestamp: new Date().toISOString(),
+        })
+      }
+    })
+
+    setProvider(webrtcProvider)
+
+    // Cleanup
+    return () => {
+      webrtcProvider.destroy()
+      indexeddbProvider.destroy()
+      doc.destroy()
+    }
+  }, [documentId, roomName, user, onStatusChange])
+
+  // Initialize TipTap editor with Yjs
+  const editor = useEditor({
+    extensions: [
+      StarterKit.configure({
+        history: false, // Disable history, Yjs handles this
+      }),
+      ydoc && Collaboration.configure({
+        document: ydoc,
+        field: 'content',
+      }),
+      provider && CollaborationCursor.configure({
+        provider,
+        user: {
+          name: user?.name || user?.email || 'Anonymous',
+          color: generateUserColor(),
+        },
+      }),
+    ].filter(Boolean) as any[],
+    content: initialContent,
+    editable,
+    placeholder,
+    editorProps: {
+      attributes: {
+        class: `prose prose-sm sm:prose lg:prose-lg xl:prose-xl focus:outline-none ${className}`,
+      },
+    },
+    onUpdate: ({ editor }) => {
+      // Auto-save after changes (debounced)
+      if (onSave) {
+        const content = editor.getHTML()
+        const saveTimer = setTimeout(() => {
+          onSave(content)
+        }, 2000) // Save after 2 seconds of inactivity
+
+        return () => clearTimeout(saveTimer)
+      }
+    },
+  }, [ydoc, provider, editable])
+
+  // Handle manual save
+  const handleSave = useCallback(() => {
+    if (editor && onSave) {
+      const content = editor.getHTML()
+      onSave(content)
+    }
+  }, [editor, onSave])
+
+  // Keyboard shortcuts
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      // Ctrl/Cmd + S to save
+      if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+        e.preventDefault()
+        handleSave()
+      }
+    }
+
+    document.addEventListener('keydown', handleKeyDown)
+    return () => document.removeEventListener('keydown', handleKeyDown)
+  }, [handleSave])
+
+  // Connection status indicator
+  const getStatusColor = () => {
+    switch (status) {
+      case 'connected':
+        return 'bg-green-500'
+      case 'connecting':
+        return 'bg-yellow-500 animate-pulse'
+      case 'disconnected':
+        return 'bg-red-500'
+      default:
+        return 'bg-gray-500'
+    }
+  }
+
+  // Get connected users from awareness
+  const getConnectedUsers = () => {
+    if (!provider?.awareness) return []
+
+    const users: any[] = []
+    provider.awareness.getStates().forEach((state, clientId) => {
+      if (state.user && clientId !== provider.awareness.clientID) {
+        users.push(state.user)
+      }
+    })
+    return users
+  }
+
+  const connectedUsers = getConnectedUsers()
+
+  return (
+    <div className="relative w-full">
+      {/* Status bar */}
+      <div className="flex items-center justify-between mb-2 px-2">
+        <div className="flex items-center space-x-2">
+          <div className={`w-2 h-2 rounded-full ${getStatusColor()}`} />
+          <span className="text-xs text-gray-600">
+            {status === 'connected' ? 'Connected' :
+             status === 'connecting' ? 'Connecting...' : 'Disconnected'}
+          </span>
+          {isSynced && (
+            <span className="text-xs text-green-600">✓ Saved</span>
+          )}
+        </div>
+
+        {/* Connected users */}
+        {connectedUsers.length > 0 && (
+          <div className="flex items-center space-x-1">
+            <span className="text-xs text-gray-500 mr-2">
+              {connectedUsers.length} other{connectedUsers.length > 1 ? 's' : ''} editing
+            </span>
+            <div className="flex -space-x-2">
+              {connectedUsers.slice(0, 3).map((user, index) => (
+                <div
+                  key={index}
+                  className="w-6 h-6 rounded-full flex items-center justify-center text-xs text-white font-medium"
+                  style={{ backgroundColor: user.color }}
+                  title={user.name}
+                >
+                  {user.name.charAt(0).toUpperCase()}
+                </div>
+              ))}
+              {connectedUsers.length > 3 && (
+                <div className="w-6 h-6 rounded-full bg-gray-400 flex items-center justify-center text-xs text-white font-medium">
+                  +{connectedUsers.length - 3}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Editor */}
+      <div className="border border-gray-200 rounded-lg p-4 min-h-[300px] bg-white">
+        <EditorContent editor={editor} />
+      </div>
+
+      {/* Save button for manual save */}
+      {editable && onSave && (
+        <div className="flex justify-end mt-2">
+          <button
+            onClick={handleSave}
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          >
+            Save (Ctrl+S)
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}
+
+// Lightweight version for comments and notes
+export function CollaborativeTextarea({
+  documentId,
+  roomName,
+  className = '',
+  placeholder = 'Add a comment...',
+  onSubmit,
+}: {
+  documentId: string
+  roomName: string
+  className?: string
+  placeholder?: string
+  onSubmit?: (content: string) => void
+}) {
+  const [content, setContent] = useState('')
+  const [ydoc] = useState(() => new Y.Doc())
+  const [ytext] = useState(() => ydoc.getText('content'))
+  const { user } = useAuthStore()
+
+  useEffect(() => {
+    const provider = new WebrtcProvider(roomName, ydoc, {
+      signaling: ['wss://signaling.yjs.dev'],
+      password: documentId,
+    })
+
+    // Sync local state with Yjs
+    const observer = () => {
+      setContent(ytext.toString())
+    }
+    ytext.observe(observer)
+
+    return () => {
+      ytext.unobserve(observer)
+      provider.destroy()
+      ydoc.destroy()
+    }
+  }, [ydoc, ytext, roomName, documentId])
+
+  const handleChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    const newContent = e.target.value
+    const currentContent = ytext.toString()
+
+    if (newContent !== currentContent) {
+      ydoc.transact(() => {
+        ytext.delete(0, ytext.length)
+        ytext.insert(0, newContent)
+      })
+    }
+  }
+
+  const handleSubmit = () => {
+    if (content.trim() && onSubmit) {
+      onSubmit(content)
+      ydoc.transact(() => {
+        ytext.delete(0, ytext.length)
+      })
+      setContent('')
+    }
+  }
+
+  return (
+    <div className="relative">
+      <textarea
+        value={content}
+        onChange={handleChange}
+        placeholder={placeholder}
+        className={`w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500 ${className}`}
+        rows={3}
+      />
+      {onSubmit && (
+        <div className="flex justify-end mt-2">
+          <button
+            onClick={handleSubmit}
+            disabled={!content.trim()}
+            className="px-4 py-2 text-sm font-medium text-white bg-blue-600 rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            Submit
+          </button>
+        </div>
+      )}
+    </div>
+  )
+}

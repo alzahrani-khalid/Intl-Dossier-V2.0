@@ -1,0 +1,148 @@
+# Autoscaling Rules Configuration
+# These rules define when and how services should scale
+
+rules:
+  backend:
+    enabled: true
+    min_replicas: 2
+    max_replicas: 20
+    metrics:
+      - type: cpu
+        target_value: 70
+        scale_up_threshold: 70
+        scale_down_threshold: 30
+        evaluation_periods: 2
+        period: 60s
+      - type: memory
+        target_value: 80
+        scale_up_threshold: 80
+        scale_down_threshold: 40
+        evaluation_periods: 2
+        period: 60s
+      - type: request_rate
+        target_value: 1000
+        scale_up_threshold: 1000
+        scale_down_threshold: 500
+        evaluation_periods: 3
+        period: 30s
+      - type: response_time_p95
+        target_value: 500
+        scale_up_threshold: 500
+        scale_down_threshold: 200
+        evaluation_periods: 3
+        period: 30s
+    scaling_policy:
+      scale_up_increment: 2
+      scale_down_increment: 1
+      cooldown_period: 300s
+      scale_up_cooldown: 180s
+      scale_down_cooldown: 300s
+    graceful_degradation:
+      enabled: true
+      trigger_at_replicas: 18
+      features_to_disable:
+        - "real-time-updates"
+        - "export-large-datasets"
+        - "clustering-analysis"
+      priority_queues:
+        - "critical"
+        - "high"
+        - "medium"
+
+  frontend:
+    enabled: true
+    min_replicas: 2
+    max_replicas: 10
+    metrics:
+      - type: cpu
+        target_value: 70
+        scale_up_threshold: 70
+        scale_down_threshold: 30
+        evaluation_periods: 2
+        period: 60s
+      - type: memory
+        target_value: 80
+        scale_up_threshold: 80
+        scale_down_threshold: 40
+        evaluation_periods: 2
+        period: 60s
+      - type: connection_count
+        target_value: 5000
+        scale_up_threshold: 5000
+        scale_down_threshold: 2000
+        evaluation_periods: 2
+        period: 30s
+    scaling_policy:
+      scale_up_increment: 2
+      scale_down_increment: 1
+      cooldown_period: 180s
+      scale_up_cooldown: 120s
+      scale_down_cooldown: 300s
+
+  database_pool:
+    enabled: true
+    min_connections: 10
+    max_connections: 100
+    metrics:
+      - type: active_connections
+        target_value: 80
+        scale_up_threshold: 80
+        scale_down_threshold: 30
+        evaluation_periods: 2
+        period: 30s
+      - type: query_queue_length
+        target_value: 50
+        scale_up_threshold: 50
+        scale_down_threshold: 10
+        evaluation_periods: 2
+        period: 30s
+    scaling_policy:
+      scale_up_increment: 10
+      scale_down_increment: 5
+      cooldown_period: 60s
+
+alerts:
+  scaling_failures:
+    enabled: true
+    channels:
+      - email
+      - slack
+      - webhook
+    conditions:
+      - name: "Max replicas reached"
+        condition: "replicas >= max_replicas"
+        severity: critical
+        message: "Service {service} has reached maximum replicas ({max_replicas})"
+        message_ar: "الخدمة {service} وصلت إلى الحد الأقصى من النسخ ({max_replicas})"
+      
+      - name: "Scaling failed"
+        condition: "scaling_error_count > 3"
+        severity: high
+        message: "Autoscaling failed for service {service} after {error_count} attempts"
+        message_ar: "فشل التوسع التلقائي للخدمة {service} بعد {error_count} محاولات"
+      
+      - name: "Degraded mode activated"
+        condition: "degraded_mode == true"
+        severity: high
+        message: "Service {service} entered degraded mode at {replicas} replicas"
+        message_ar: "الخدمة {service} دخلت في وضع التدهور عند {replicas} نسخة"
+
+monitoring:
+  prometheus_queries:
+    cpu_usage: |
+      avg(rate(container_cpu_usage_seconds_total{service=~"$service"}[5m])) * 100
+    
+    memory_usage: |
+      avg(container_memory_usage_bytes{service=~"$service"} / container_spec_memory_limit_bytes{service=~"$service"}) * 100
+    
+    request_rate: |
+      sum(rate(http_requests_total{service=~"$service"}[1m]))
+    
+    response_time_p95: |
+      histogram_quantile(0.95, rate(http_request_duration_seconds_bucket{service=~"$service"}[5m]))
+    
+    active_replicas: |
+      count(up{service=~"$service"} == 1)
+    
+    failed_replicas: |
+      count(up{service=~"$service"} == 0)

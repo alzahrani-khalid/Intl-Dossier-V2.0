@@ -1,0 +1,44 @@
+apiVersion: 1
+
+datasources:
+  - name: Prometheus
+    type: prometheus
+    access: proxy
+    url: http://prometheus:9090
+    isDefault: true
+    editable: true
+    jsonData:
+      httpMethod: POST
+      queryTimeout: 60s
+      timeInterval: 15s
+      manageAlerts: true
+      alertmanagerUid: alertmanager
+    uid: prometheus
+
+  - name: Alertmanager
+    type: alertmanager
+    access: proxy
+    url: http://alertmanager:9093
+    editable: true
+    uid: alertmanager
+
+  - name: Jaeger
+    type: jaeger
+    access: proxy
+    url: http://jaeger:16686
+    editable: true
+    uid: jaeger
+
+  - name: Elasticsearch
+    type: elasticsearch
+    access: proxy
+    url: http://elasticsearch:9200
+    database: "gastat-logs"
+    editable: true
+    uid: elasticsearch
+    jsonData:
+      index: "gastat-logs-*"
+      timeField: "@timestamp"
+      esVersion: "8.11.0"
+      logMessageField: "message"
+      logLevelField: "level"

@@ -1,0 +1,1255 @@
+openapi: 3.0.3
+info:
+  title: GASTAT International Dossier System API
+  description: API for managing international relations, documents, and intelligence data
+  version: 1.0.0
+  contact:
+    name: GASTAT Development Team
+    email: dev@gastat.gov.sa
+
+servers:
+  - url: https://api.gastat.gov.sa/v1
+    description: Production server
+  - url: https://staging-api.gastat.gov.sa/v1
+    description: Staging server
+  - url: http://localhost:3000/api/v1
+    description: Development server
+
+security:
+  - BearerAuth: []
+  - ApiKeyAuth: []
+
+paths:
+  # Authentication Endpoints
+  /auth/login:
+    post:
+      summary: User login
+      description: Authenticate user with email and password
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@gastat.gov.sa
+                password:
+                  type: string
+                  minLength: 8
+                  example: SecurePassword123!
+      responses:
+        '200':
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  token:
+                    type: string
+                    example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                  mfa_required:
+                    type: boolean
+                    example: true
+        '401':
+          description: Invalid credentials
+        '429':
+          description: Rate limit exceeded
+
+  /auth/mfa/verify:
+    post:
+      summary: Verify MFA token
+      description: Verify multi-factor authentication token
+      tags: [Authentication]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [token, mfa_code]
+              properties:
+                token:
+                  type: string
+                  example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+                mfa_code:
+                  type: string
+                  pattern: '^[0-9]{6}$'
+                  example: "123456"
+      responses:
+        '200':
+          description: MFA verification successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user:
+                    $ref: '#/components/schemas/User'
+                  access_token:
+                    type: string
+        '401':
+          description: Invalid MFA code
+
+  # Countries Endpoints
+  /countries:
+    get:
+      summary: List countries
+      description: Get paginated list of countries with filtering
+      tags: [Countries]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+            example: "Saudi Arabia"
+        - name: region
+          in: query
+          schema:
+            type: string
+            enum: [asia, africa, europe, americas, oceania]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, suspended]
+        - name: iso_code
+          in: query
+          schema:
+            type: string
+            pattern: '^[A-Z]{2,3}$'
+            example: "SA"
+      responses:
+        '200':
+          description: List of countries
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Country'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+                  filters:
+                    $ref: '#/components/schemas/CountryFilters'
+        '400':
+          description: Invalid query parameters
+
+    post:
+      summary: Create country
+      description: Create a new country
+      tags: [Countries]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCountryRequest'
+      responses:
+        '201':
+          description: Country created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Country'
+        '400':
+          description: Invalid input data
+        '409':
+          description: Country already exists
+
+  /countries/{id}:
+    get:
+      summary: Get country by ID
+      description: Retrieve a specific country by ID
+      tags: [Countries]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Country details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Country'
+        '404':
+          description: Country not found
+
+    put:
+      summary: Update country
+      description: Update an existing country
+      tags: [Countries]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCountryRequest'
+      responses:
+        '200':
+          description: Country updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Country'
+        '400':
+          description: Invalid input data
+        '404':
+          description: Country not found
+
+    delete:
+      summary: Delete country
+      description: Soft delete a country
+      tags: [Countries]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Country deleted successfully
+        '404':
+          description: Country not found
+
+  # Organizations Endpoints
+  /organizations:
+    get:
+      summary: List organizations
+      description: Get paginated list of organizations with filtering
+      tags: [Organizations]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [government, ngo, international, private]
+        - name: country_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, suspended]
+      responses:
+        '200':
+          description: List of organizations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Organization'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      summary: Create organization
+      description: Create a new organization
+      tags: [Organizations]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateOrganizationRequest'
+      responses:
+        '201':
+          description: Organization created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Organization'
+
+  # MoUs Endpoints
+  /mous:
+    get:
+      summary: List MoUs
+      description: Get paginated list of MoUs with filtering
+      tags: [MoUs]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, internal_review, external_review, negotiation, signed, active, renewed, expired]
+        - name: organization_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: country_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of MoUs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MoU'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      summary: Create MoU
+      description: Create a new MoU
+      tags: [MoUs]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CreateMoURequest'
+      responses:
+        '201':
+          description: MoU created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoU'
+
+  /mous/{id}/workflow:
+    post:
+      summary: Update MoU workflow state
+      description: Transition MoU to next workflow state
+      tags: [MoUs]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action]
+              properties:
+                action:
+                  type: string
+                  enum: [submit_for_review, approve, reject, sign, activate, renew, expire]
+                comment:
+                  type: string
+                  maxLength: 1000
+      responses:
+        '200':
+          description: Workflow state updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MoU'
+
+  # Events Endpoints
+  /events:
+    get:
+      summary: List events
+      description: Get paginated list of events with filtering
+      tags: [Events]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date
+        - name: event_type
+          in: query
+          schema:
+            type: string
+            enum: [meeting, conference, workshop, other]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [scheduled, in_progress, completed, cancelled]
+      responses:
+        '200':
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      summary: Create event
+      description: Create a new event
+      tags: [Events]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEventRequest'
+      responses:
+        '201':
+          description: Event created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Event'
+        '409':
+          description: Event conflict detected
+
+  /events/conflicts:
+    get:
+      summary: Check event conflicts
+      description: Check for scheduling conflicts
+      tags: [Events]
+      parameters:
+        - name: start_time
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: end_time
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: exclude_event_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Conflict check results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  has_conflicts:
+                    type: boolean
+                  conflicts:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Event'
+
+  # Intelligence Reports Endpoints
+  /intelligence/reports:
+    get:
+      summary: List intelligence reports
+      description: Get paginated list of intelligence reports
+      tags: [Intelligence]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: classification
+          in: query
+          schema:
+            type: string
+            enum: [public, internal, confidential, secret]
+        - name: confidence_level
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+        - name: analysis_type
+          in: query
+          schema:
+            type: string
+            enum: [trend, pattern, prediction, assessment]
+      responses:
+        '200':
+          description: List of intelligence reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IntelligenceReport'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /intelligence/analyze:
+    post:
+      summary: Analyze data
+      description: Perform AI-powered analysis on data
+      tags: [Intelligence]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [data, analysis_type]
+              properties:
+                data:
+                  type: string
+                  description: Data to analyze
+                analysis_type:
+                  type: string
+                  enum: [trend, pattern, prediction, assessment]
+                context:
+                  type: object
+                  description: Additional context for analysis
+      responses:
+        '200':
+          description: Analysis completed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  analysis:
+                    type: string
+                    description: Analysis results
+                  confidence:
+                    type: number
+                    minimum: 0
+                    maximum: 1
+                  sources:
+                    type: array
+                    items:
+                      type: string
+        '503':
+          description: AI service unavailable, using fallback
+
+  # Reports Endpoints
+  /reports/generate:
+    post:
+      summary: Generate report
+      description: Generate a report in specified format
+      tags: [Reports]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [report_type, format]
+              properties:
+                report_type:
+                  type: string
+                  enum: [summary, detailed_analysis, statistical]
+                format:
+                  type: string
+                  enum: [pdf, excel, csv]
+                filters:
+                  type: object
+                  description: Report filters
+                date_range:
+                  type: object
+                  properties:
+                    start_date:
+                      type: string
+                      format: date
+                    end_date:
+                      type: string
+                      format: date
+      responses:
+        '200':
+          description: Report generated successfully
+          content:
+            application/octet-stream:
+              schema:
+                type: string
+                format: binary
+        '400':
+          description: Invalid report parameters
+
+  # Data Library Endpoints
+  /data-library:
+    get:
+      summary: List data library items
+      description: Get paginated list of data library items
+      tags: [Data Library]
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+        - name: search
+          in: query
+          schema:
+            type: string
+        - name: tags
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: access_level
+          in: query
+          schema:
+            type: string
+            enum: [public, internal, confidential, secret]
+      responses:
+        '200':
+          description: List of data library items
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DataLibraryItem'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+    post:
+      summary: Upload file
+      description: Upload a file to data library
+      tags: [Data Library]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file, name]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                name:
+                  type: string
+                description:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                access_level:
+                  type: string
+                  enum: [public, internal, confidential, secret]
+                  default: internal
+      responses:
+        '201':
+          description: File uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DataLibraryItem'
+        '413':
+          description: File too large (exceeds 50MB)
+
+  # Health Check
+  /health:
+    get:
+      summary: Health check
+      description: Check system health status
+      tags: [System]
+      security: []
+      responses:
+        '200':
+          description: System is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [healthy, degraded, unhealthy]
+                  timestamp:
+                    type: string
+                    format: date-time
+                  services:
+                    type: object
+                    properties:
+                      database:
+                        type: string
+                        enum: [up, down]
+                      ai_service:
+                        type: string
+                        enum: [up, down, fallback]
+                      storage:
+                        type: string
+                        enum: [up, down]
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        first_name:
+          type: string
+        last_name:
+          type: string
+        language_preference:
+          type: string
+          enum: [en, ar]
+        mfa_enabled:
+          type: boolean
+        role:
+          type: string
+          enum: [admin, user, viewer]
+        is_active:
+          type: boolean
+        last_login:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Country:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name_en:
+          type: string
+        name_ar:
+          type: string
+        iso_alpha2:
+          type: string
+          pattern: '^[A-Z]{2}$'
+        iso_alpha3:
+          type: string
+          pattern: '^[A-Z]{3}$'
+        region:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, suspended]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateCountryRequest:
+      type: object
+      required: [name_en, name_ar, iso_alpha2, iso_alpha3, region]
+      properties:
+        name_en:
+          type: string
+          maxLength: 255
+        name_ar:
+          type: string
+          maxLength: 255
+        iso_alpha2:
+          type: string
+          pattern: '^[A-Z]{2}$'
+        iso_alpha3:
+          type: string
+          pattern: '^[A-Z]{3}$'
+        region:
+          type: string
+          enum: [asia, africa, europe, americas, oceania]
+        status:
+          type: string
+          enum: [active, inactive, suspended]
+          default: active
+
+    UpdateCountryRequest:
+      type: object
+      properties:
+        name_en:
+          type: string
+          maxLength: 255
+        name_ar:
+          type: string
+          maxLength: 255
+        region:
+          type: string
+          enum: [asia, africa, europe, americas, oceania]
+        status:
+          type: string
+          enum: [active, inactive, suspended]
+
+    Organization:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+          enum: [government, ngo, international, private]
+        country_id:
+          type: string
+          format: uuid
+        parent_organization_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [active, inactive, suspended]
+        description:
+          type: string
+        website:
+          type: string
+          format: uri
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateOrganizationRequest:
+      type: object
+      required: [name, type, country_id]
+      properties:
+        name:
+          type: string
+          maxLength: 255
+        type:
+          type: string
+          enum: [government, ngo, international, private]
+        country_id:
+          type: string
+          format: uuid
+        parent_organization_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        website:
+          type: string
+          format: uri
+        status:
+          type: string
+          enum: [active, inactive, suspended]
+          default: active
+
+    MoU:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        version:
+          type: integer
+        status:
+          type: string
+          enum: [draft, internal_review, external_review, negotiation, signed, active, renewed, expired]
+        organization_id:
+          type: string
+          format: uuid
+        country_id:
+          type: string
+          format: uuid
+        document_path:
+          type: string
+        file_size:
+          type: integer
+        mime_type:
+          type: string
+        effective_date:
+          type: string
+          format: date
+        expiry_date:
+          type: string
+          format: date
+        description:
+          type: string
+        created_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateMoURequest:
+      type: object
+      required: [title, organization_id, country_id]
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        organization_id:
+          type: string
+          format: uuid
+        country_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+        effective_date:
+          type: string
+          format: date
+        expiry_date:
+          type: string
+          format: date
+        file:
+          type: string
+          format: binary
+
+    Event:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        location:
+          type: string
+        event_type:
+          type: string
+          enum: [meeting, conference, workshop, other]
+        status:
+          type: string
+          enum: [scheduled, in_progress, completed, cancelled]
+        is_recurring:
+          type: boolean
+        recurrence_pattern:
+          type: string
+        created_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateEventRequest:
+      type: object
+      required: [title, start_time, end_time, event_type]
+      properties:
+        title:
+          type: string
+          maxLength: 255
+        description:
+          type: string
+        start_time:
+          type: string
+          format: date-time
+        end_time:
+          type: string
+          format: date-time
+        location:
+          type: string
+        event_type:
+          type: string
+          enum: [meeting, conference, workshop, other]
+        is_recurring:
+          type: boolean
+          default: false
+        recurrence_pattern:
+          type: string
+
+    IntelligenceReport:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        content:
+          type: string
+        data_sources:
+          type: array
+          items:
+            type: string
+        confidence_level:
+          type: string
+          enum: [low, medium, high, critical]
+        classification:
+          type: string
+          enum: [public, internal, confidential, secret]
+        analysis_type:
+          type: string
+          enum: [trend, pattern, prediction, assessment]
+        status:
+          type: string
+          enum: [draft, review, approved, published]
+        country_id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        created_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    DataLibraryItem:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        file_path:
+          type: string
+        file_size:
+          type: integer
+        mime_type:
+          type: string
+        file_hash:
+          type: string
+        version:
+          type: integer
+        access_level:
+          type: string
+          enum: [public, internal, confidential, secret]
+        tags:
+          type: array
+          items:
+            type: string
+        country_id:
+          type: string
+          format: uuid
+        organization_id:
+          type: string
+          format: uuid
+        uploaded_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        limit:
+          type: integer
+          minimum: 1
+        total:
+          type: integer
+          minimum: 0
+        total_pages:
+          type: integer
+          minimum: 0
+        has_next:
+          type: boolean
+        has_prev:
+          type: boolean
+
+    CountryFilters:
+      type: object
+      properties:
+        regions:
+          type: array
+          items:
+            type: string
+        statuses:
+          type: array
+          items:
+            type: string
+        iso_codes:
+          type: array
+          items:
+            type: string
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        timestamp:
+          type: string
+          format: date-time
+        request_id:
+          type: string
+
+tags:
+  - name: Authentication
+    description: User authentication and authorization
+  - name: Countries
+    description: Country management
+  - name: Organizations
+    description: Organization management
+  - name: MoUs
+    description: Memorandum of Understanding management
+  - name: Events
+    description: Event scheduling and management
+  - name: Intelligence
+    description: Intelligence analysis and reporting
+  - name: Reports
+    description: Report generation and export
+  - name: Data Library
+    description: File and document management
+  - name: System
+    description: System health and monitoring

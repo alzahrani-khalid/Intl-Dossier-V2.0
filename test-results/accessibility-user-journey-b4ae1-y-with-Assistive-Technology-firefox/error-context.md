@@ -1,0 +1,41 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e2]:
+  - generic [ref=e4]:
+    - generic [ref=e5]:
+      - img [ref=e8]
+      - heading "Create Your Account" [level=1] [ref=e12]
+      - paragraph [ref=e13]: Join GASTAT International Dossier System
+      - generic [ref=e14]:
+        - generic [ref=e15]:
+          - generic [ref=e16]: Full Name
+          - textbox "John Doe" [ref=e17]
+        - generic [ref=e18]:
+          - generic [ref=e19]: Email
+          - textbox "user@gastat.sa" [ref=e20]
+        - generic [ref=e21]:
+          - generic [ref=e22]: Password
+          - textbox [ref=e23]
+        - generic [ref=e24]:
+          - generic [ref=e25]: Confirm Password
+          - textbox [ref=e26]
+        - button "Sign Up" [ref=e27] [cursor=pointer]
+        - generic [ref=e28]:
+          - text: Already have an account?
+          - link "Sign In" [ref=e29] [cursor=pointer]:
+            - /url: /login
+    - generic [ref=e30]: © 2025 GASTAT - General Authority for Statistics
+  - generic:
+    - contentinfo:
+      - button "Open TanStack Router Devtools" [ref=e31] [cursor=pointer]:
+        - generic [ref=e32] [cursor=pointer]:
+          - img [ref=e34] [cursor=pointer]
+          - img [ref=e70] [cursor=pointer]
+        - generic [ref=e105] [cursor=pointer]: "-"
+        - generic [ref=e106] [cursor=pointer]: TanStack Router
+  - generic [ref=e107]:
+    - img [ref=e109]
+    - button "Open Tanstack query devtools" [ref=e158] [cursor=pointer]:
+      - img [ref=e159] [cursor=pointer]
+```

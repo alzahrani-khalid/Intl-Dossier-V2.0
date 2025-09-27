@@ -1,0 +1,303 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Default theme - GASTAT Light */
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+    --primary: 139.6552 52.7273% 43.1373%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 139.2941 22.3404% 78.6275%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 139.2941 22.3404% 90%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 72.22% 50.59%;
+    --destructive-foreground: 0 0% 98%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 139.6552 52.7273% 43.1373%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+    
+    /* Sidebar */
+    --sidebar: 220.0000 13.0435% 95.0980%;
+    --sidebar-foreground: 220.0000 3.4483% 53.3333%;
+    --sidebar-primary: 139.6552 52.7273% 43.1373%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220.0000 13.0435% 91.1765%;
+    --sidebar-accent-foreground: 220.9091 39.3939% 11.1765%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 139.6552 52.7273% 43.1373%;
+    
+    /* Charts */
+    --chart-1: 173.5385 61.1940% 44.1176%;
+    --chart-2: 139.6552 52.7273% 43.1373%;
+    --chart-3: 48.2609 71.7391% 61.3725%;
+    --chart-4: 36.5217 50% 66.6667%;
+    --chart-5: 27.7895 59.5238% 59.2157%;
+    
+    /* Shadows */
+    --shadow-2xs: 0deg 0% 0%;
+    --shadow-xs: 0deg 0% 0%;
+    --shadow-sm: 0deg 0% 0%;
+    --shadow: 0deg 0% 0%;
+    --shadow-md: 0deg 0% 0%;
+    --shadow-lg: 0deg 0% 0%;
+    --shadow-xl: 0deg 0% 0%;
+    --shadow-2xl: 0deg 0% 0%;
+    
+    /* Typography */
+    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Merriweather', Georgia, serif;
+    --font-mono: 'JetBrains Mono', Consolas, monospace;
+    
+    /* Border radius */
+    --radius: 0.5rem;
+  }
+
+  .dark {
+    /* GASTAT Dark theme */
+    --background: 220.0000 14.7541% 11.9608%;
+    --foreground: 0 0% 95%;
+    --primary: 139.6552 52.7273% 43.1373%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220.0000 13.0435% 20%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 139.2941 22.3404% 25%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --muted: 220 14.3% 25%;
+    --muted-foreground: 220 13% 65%;
+    --border: 220 13% 25%;
+    --input: 220 13% 25%;
+    --ring: 139.6552 52.7273% 43.1373%;
+    --card: 220.0000 14.7541% 13.9608%;
+    --card-foreground: 0 0% 95%;
+    --popover: 220.0000 14.7541% 13.9608%;
+    --popover-foreground: 0 0% 95%;
+    
+    /* Sidebar */
+    --sidebar: 220.0000 14.7541% 8.9608%;
+    --sidebar-foreground: 240 4.8% 65.9%;
+    --sidebar-primary: 139.6552 52.7273% 43.1373%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220.0000 14.7541% 15.9608%;
+    --sidebar-accent-foreground: 240 4.8% 85.9%;
+    --sidebar-border: 220 13% 20%;
+    --sidebar-ring: 139.6552 52.7273% 43.1373%;
+    
+    /* Charts */
+    --chart-1: 173.5385 61.1940% 54.1176%;
+    --chart-2: 139.6552 52.7273% 53.1373%;
+    --chart-3: 48.2609 71.7391% 71.3725%;
+    --chart-4: 36.5217 50% 76.6667%;
+    --chart-5: 27.7895 59.5238% 69.2157%;
+    
+    /* Shadows */
+    --shadow-2xs: 0deg 0% 0%;
+    --shadow-xs: 0deg 0% 0%;
+    --shadow-sm: 0deg 0% 0%;
+    --shadow: 0deg 0% 0%;
+    --shadow-md: 0deg 0% 0%;
+    --shadow-lg: 0deg 0% 0%;
+    --shadow-xl: 0deg 0% 0%;
+    --shadow-2xl: 0deg 0% 0%;
+  }
+
+  /* Blue Sky theme classes */
+  .theme-blueSky {
+    --font-sans: 'Open Sans', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Lora', Georgia, serif;
+    --font-mono: 'Fira Code', Consolas, monospace;
+    --radius: 0.75rem;
+  }
+
+  .theme-blueSky:not(.dark) {
+    /* Blue Sky Light */
+    --background: 0 0% 100%;
+    --foreground: 222.2 47.4% 11.2%;
+    --primary: 203.8863 88.2845% 53.1373%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 203.4783 29.3478% 85.4902%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 203.4783 29.3478% 95%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+    --destructive: 0 72.22% 50.59%;
+    --destructive-foreground: 0 0% 98%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 203.8863 88.2845% 53.1373%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 47.4% 11.2%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 47.4% 11.2%;
+    
+    /* Sidebar */
+    --sidebar: 220.0000 13.0435% 95.0980%;
+    --sidebar-foreground: 220.0000 3.4483% 53.3333%;
+    --sidebar-primary: 203.8863 88.2845% 53.1373%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220.0000 13.0435% 91.1765%;
+    --sidebar-accent-foreground: 220.9091 39.3939% 11.1765%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 203.8863 88.2845% 53.1373%;
+    
+    /* Charts */
+    --chart-1: 221.1268 82.6667% 60.3922%;
+    --chart-2: 203.8863 88.2845% 53.1373%;
+    --chart-3: 187.0588 95.1807% 41.7647%;
+    --chart-4: 174.5455 77.6119% 45.6863%;
+    --chart-5: 197.6471 70.7317% 72.5490%;
+  }
+
+  .theme-blueSky.dark {
+    /* Blue Sky Dark (Pure Black) */
+    --background: 0 0% 0%;
+    --foreground: 0 0% 95%;
+    --primary: 203.8863 88.2845% 53.1373%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220.0000 20% 15%;
+    --secondary-foreground: 0 0% 98%;
+    --accent: 203.4783 29.3478% 20%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 85.7% 97.3%;
+    --muted: 220 14.3% 15%;
+    --muted-foreground: 220 13% 65%;
+    --border: 220 13% 18%;
+    --input: 220 13% 18%;
+    --ring: 203.8863 88.2845% 53.1373%;
+    --card: 0 0% 3%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 3%;
+    --popover-foreground: 0 0% 95%;
+    
+    /* Sidebar */
+    --sidebar: 0 0% 2%;
+    --sidebar-foreground: 240 4.8% 65.9%;
+    --sidebar-primary: 203.8863 88.2845% 53.1373%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 0 0% 8%;
+    --sidebar-accent-foreground: 240 4.8% 85.9%;
+    --sidebar-border: 220 13% 12%;
+    --sidebar-ring: 203.8863 88.2845% 53.1373%;
+    
+    /* Charts */
+    --chart-1: 221.1268 82.6667% 70.3922%;
+    --chart-2: 203.8863 88.2845% 63.1373%;
+    --chart-3: 187.0588 95.1807% 51.7647%;
+    --chart-4: 174.5455 77.6119% 55.6863%;
+    --chart-5: 197.6471 70.7317% 82.5490%;
+    
+    /* Shadows */
+    --shadow-2xs: 0deg 0% 100%;
+    --shadow-xs: 0deg 0% 100%;
+    --shadow-sm: 0deg 0% 100%;
+    --shadow: 0deg 0% 100%;
+    --shadow-md: 0deg 0% 100%;
+    --shadow-lg: 0deg 0% 100%;
+    --shadow-xl: 0deg 0% 100%;
+    --shadow-2xl: 0deg 0% 100%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  
+  body {
+    @apply bg-background text-foreground;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    font-family: var(--font-sans);
+  }
+  
+  /* Smooth theme transitions */
+  * {
+    transition: background-color 100ms ease, border-color 100ms ease, color 100ms ease;
+  }
+  
+  /* Disable transitions during theme switch for instant feedback */
+  .theme-switching * {
+    transition: none !important;
+  }
+  
+  /* RTL-specific adjustments */
+  [dir="rtl"] {
+    text-align: right;
+  }
+  
+  [dir="ltr"] {
+    text-align: left;
+  }
+  
+  /* Focus visible styles */
+  *:focus-visible {
+    @apply outline-none ring-2 ring-ring ring-offset-2 ring-offset-background;
+  }
+  
+  /* Selection colors */
+  ::selection {
+    @apply bg-primary/20;
+  }
+  
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-muted;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-muted-foreground/30 rounded-md;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-muted-foreground/50;
+  }
+  
+  /* Print styles */
+  @media print {
+    body {
+      @apply text-black bg-white;
+    }
+  }
+}
+
+@layer utilities {
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+  
+  /* Animation utilities */
+  .animate-in {
+    animation: fade-in 0.15s ease-out;
+  }
+  
+  .animate-out {
+    animation: fade-in 0.15s ease-out reverse;
+  }
+  
+  /* Text balance for better readability */
+  .text-balance {
+    text-wrap: balance;
+  }
+}

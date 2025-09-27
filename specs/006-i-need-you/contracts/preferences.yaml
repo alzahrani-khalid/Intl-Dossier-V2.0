@@ -1,0 +1,269 @@
+openapi: 3.1.0
+info:
+  title: User Preferences API
+  version: 1.0.0
+  description: API for managing user theme, language, and display preferences
+
+servers:
+  - url: /api
+    description: Application API endpoint
+
+paths:
+  /preferences/{userId}:
+    get:
+      operationId: getUserPreferences
+      summary: Get user preferences
+      description: Retrieves theme, language, and display preferences for a specific user
+      tags:
+        - Preferences
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The user's unique identifier
+          schema:
+            type: string
+            format: uuid
+            example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: User preferences retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreference'
+              examples:
+                default:
+                  value:
+                    id: "550e8400-e29b-41d4-a716-446655440000"
+                    userId: "123e4567-e89b-12d3-a456-426614174000"
+                    theme: "gastat"
+                    colorMode: "light"
+                    language: "en"
+                    createdAt: "2025-09-27T10:00:00Z"
+                    updatedAt: "2025-09-27T10:00:00Z"
+        '404':
+          description: User preferences not found (will use defaults)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                notFound:
+                  value:
+                    error: "PREFERENCES_NOT_FOUND"
+                    message: "No preferences found for user"
+                    defaultsApplied: true
+        '401':
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Cannot access other user's preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      operationId: updateUserPreferences
+      summary: Update user preferences
+      description: Updates theme, language, and display preferences for a specific user
+      tags:
+        - Preferences
+      parameters:
+        - name: userId
+          in: path
+          required: true
+          description: The user's unique identifier
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PreferenceUpdate'
+            examples:
+              themeChange:
+                summary: Change theme only
+                value:
+                  theme: "blueSky"
+              colorModeChange:
+                summary: Change color mode only
+                value:
+                  colorMode: "dark"
+              languageChange:
+                summary: Change language only
+                value:
+                  language: "ar"
+              fullUpdate:
+                summary: Update all preferences
+                value:
+                  theme: "blueSky"
+                  colorMode: "dark"
+                  language: "ar"
+      responses:
+        '200':
+          description: Preferences updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreference'
+        '201':
+          description: Preferences created successfully (first time)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreference'
+        '400':
+          description: Invalid request - validation failed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationError'
+              examples:
+                invalidTheme:
+                  value:
+                    error: "VALIDATION_ERROR"
+                    message: "Invalid theme value"
+                    field: "theme"
+                    validValues: ["gastat", "blueSky"]
+        '401':
+          description: Unauthorized - User not authenticated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden - Cannot update other user's preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Too many requests - Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                rateLimited:
+                  value:
+                    error: "RATE_LIMIT_EXCEEDED"
+                    message: "Too many preference updates. Please try again later."
+                    retryAfter: 60
+
+components:
+  schemas:
+    UserPreference:
+      type: object
+      required:
+        - id
+        - userId
+        - theme
+        - colorMode
+        - language
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the preference record
+        userId:
+          type: string
+          format: uuid
+          description: Reference to the user
+        theme:
+          type: string
+          enum: ["gastat", "blueSky"]
+          description: Selected visual theme
+        colorMode:
+          type: string
+          enum: ["light", "dark", "system"]
+          description: Color mode preference
+        language:
+          type: string
+          enum: ["en", "ar"]
+          description: Interface language
+        createdAt:
+          type: string
+          format: date-time
+          description: When the preferences were first created
+        updatedAt:
+          type: string
+          format: date-time
+          description: When the preferences were last updated
+
+    PreferenceUpdate:
+      type: object
+      properties:
+        theme:
+          type: string
+          enum: ["gastat", "blueSky"]
+          description: Selected visual theme
+        colorMode:
+          type: string
+          enum: ["light", "dark", "system"]
+          description: Color mode preference
+        language:
+          type: string
+          enum: ["en", "ar"]
+          description: Interface language
+      minProperties: 1
+      additionalProperties: false
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code for client handling
+        message:
+          type: string
+          description: Human-readable error message
+        defaultsApplied:
+          type: boolean
+          description: Whether default preferences were applied
+        retryAfter:
+          type: integer
+          description: Seconds to wait before retry (for rate limiting)
+
+    ValidationError:
+      type: object
+      required:
+        - error
+        - message
+        - field
+      properties:
+        error:
+          type: string
+          description: Error code (VALIDATION_ERROR)
+        message:
+          type: string
+          description: Human-readable error message
+        field:
+          type: string
+          description: Field that failed validation
+        validValues:
+          type: array
+          items:
+            type: string
+          description: List of valid values for the field
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+security:
+  - bearerAuth: []

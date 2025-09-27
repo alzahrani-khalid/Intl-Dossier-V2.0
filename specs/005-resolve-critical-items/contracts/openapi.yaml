@@ -1,0 +1,918 @@
+openapi: 3.0.3
+info:
+  title: Security Enhancement API
+  description: API contracts for security, monitoring, and accessibility features
+  version: 1.0.0
+servers:
+  - url: '{protocol}://{environment}.api.gastat.sa/v1'
+    variables:
+      protocol:
+        default: https
+        enum: [https]
+      environment:
+        default: dev
+        enum: [dev, staging, prod]
+
+paths:
+  /auth/mfa/enroll:
+    post:
+      summary: Enroll in MFA
+      operationId: enrollMFA
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [factor_type]
+              properties:
+                factor_type:
+                  type: string
+                  enum: [totp]
+      responses:
+        '200':
+          description: MFA enrollment initiated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MFAEnrollmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/mfa/verify:
+    post:
+      summary: Verify MFA code
+      operationId: verifyMFA
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [code]
+              properties:
+                code:
+                  type: string
+                  pattern: '^[0-9]{6}$'
+                factor_id:
+                  type: string
+      responses:
+        '200':
+          description: MFA verification successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MFAVerificationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /auth/mfa/backup-codes:
+    get:
+      summary: Get backup codes
+      operationId: getBackupCodes
+      tags: [Authentication]
+      responses:
+        '200':
+          description: Backup codes retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupCodesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+    
+    post:
+      summary: Generate new backup codes
+      operationId: generateBackupCodes
+      tags: [Authentication]
+      responses:
+        '200':
+          description: New backup codes generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BackupCodesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /auth/mfa/recover:
+    post:
+      summary: Recover account using backup code
+      operationId: recoverWithBackupCode
+      tags: [Authentication]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [backup_code]
+              properties:
+                backup_code:
+                  type: string
+                  pattern: '^[A-Z0-9]{8}$'
+      responses:
+        '200':
+          description: Recovery successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AuthTokenResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /monitoring/alerts:
+    get:
+      summary: List alert configurations
+      operationId: listAlerts
+      tags: [Monitoring]
+      parameters:
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+        - name: is_active
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: Alert configurations retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AlertConfiguration'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      summary: Create alert configuration
+      operationId: createAlert
+      tags: [Monitoring]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertConfigurationInput'
+      responses:
+        '201':
+          description: Alert configuration created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertConfiguration'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /monitoring/alerts/{id}:
+    patch:
+      summary: Update alert configuration
+      operationId: updateAlert
+      tags: [Monitoring]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AlertConfigurationUpdate'
+      responses:
+        '200':
+          description: Alert configuration updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AlertConfiguration'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /monitoring/alerts/{id}/acknowledge:
+    post:
+      summary: Acknowledge alert
+      operationId: acknowledgeAlert
+      tags: [Monitoring]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Alert acknowledged
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /monitoring/anomalies:
+    get:
+      summary: List detected anomalies
+      operationId: listAnomalies
+      tags: [Monitoring]
+      parameters:
+        - name: entity_type
+          in: query
+          schema:
+            type: string
+            enum: [user, system, api]
+        - name: min_score
+          in: query
+          schema:
+            type: number
+            minimum: 0
+            maximum: 1
+        - name: unreviewed_only
+          in: query
+          schema:
+            type: boolean
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Anomalies retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AnomalyPattern'
+
+  /monitoring/anomalies/{id}/review:
+    post:
+      summary: Review anomaly
+      operationId: reviewAnomaly
+      tags: [Monitoring]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [classification, false_positive]
+              properties:
+                classification:
+                  type: string
+                  enum: [legitimate, suspicious, malicious]
+                false_positive:
+                  type: boolean
+      responses:
+        '200':
+          description: Anomaly reviewed
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /monitoring/health:
+    get:
+      summary: Get service health status
+      operationId: getHealth
+      tags: [Monitoring]
+      responses:
+        '200':
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+        '503':
+          description: Service is unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthStatus'
+
+  /export:
+    post:
+      summary: Request data export
+      operationId: requestExport
+      tags: [Export]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ExportRequest'
+      responses:
+        '202':
+          description: Export request accepted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+
+  /export/{id}:
+    get:
+      summary: Get export status
+      operationId: getExportStatus
+      tags: [Export]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Export status retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExportStatus'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /export/{id}/download:
+    get:
+      summary: Download exported file
+      operationId: downloadExport
+      tags: [Export]
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Export file
+          content:
+            text/csv:
+              schema:
+                type: string
+                format: binary
+            application/json:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '410':
+          description: Export expired
+
+  /analytics/cluster:
+    post:
+      summary: Run clustering analysis
+      operationId: runClustering
+      tags: [Analytics]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ClusteringRequest'
+      responses:
+        '200':
+          description: Clustering completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ClusteringResult'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /accessibility/preferences:
+    get:
+      summary: Get accessibility preferences
+      operationId: getAccessibilityPreferences
+      tags: [Accessibility]
+      responses:
+        '200':
+          description: Preferences retrieved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessibilityPreferences'
+
+    put:
+      summary: Update accessibility preferences
+      operationId: updateAccessibilityPreferences
+      tags: [Accessibility]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AccessibilityPreferences'
+      responses:
+        '200':
+          description: Preferences updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AccessibilityPreferences'
+
+  /audit/logs:
+    get:
+      summary: Query audit logs
+      operationId: queryAuditLogs
+      tags: [Security]
+      parameters:
+        - name: event_type
+          in: query
+          schema:
+            type: string
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [info, warning, critical]
+        - name: user_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 1000
+            default: 100
+      responses:
+        '200':
+          description: Audit logs retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLog'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+components:
+  schemas:
+    MFAEnrollmentResponse:
+      type: object
+      required: [factor_id, secret, qr_code]
+      properties:
+        factor_id:
+          type: string
+        secret:
+          type: string
+        qr_code:
+          type: string
+          format: uri
+        backup_codes:
+          type: array
+          items:
+            type: string
+
+    MFAVerificationResponse:
+      type: object
+      required: [verified, access_token]
+      properties:
+        verified:
+          type: boolean
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+
+    BackupCodesResponse:
+      type: object
+      required: [codes]
+      properties:
+        codes:
+          type: array
+          items:
+            type: string
+            pattern: '^[A-Z0-9]{8}$'
+        generated_at:
+          type: string
+          format: date-time
+
+    AuthTokenResponse:
+      type: object
+      required: [access_token, refresh_token]
+      properties:
+        access_token:
+          type: string
+        refresh_token:
+          type: string
+        expires_in:
+          type: integer
+
+    AlertConfiguration:
+      type: object
+      required: [id, name, name_ar, condition, threshold, severity, channels, is_active]
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        name_ar:
+          type: string
+        condition:
+          type: string
+        threshold:
+          type: number
+        duration:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        channels:
+          type: array
+          items:
+            type: string
+        is_active:
+          type: boolean
+        metadata:
+          type: object
+
+    AlertConfigurationInput:
+      type: object
+      required: [name, name_ar, condition, threshold, severity, channels]
+      properties:
+        name:
+          type: string
+        name_ar:
+          type: string
+        condition:
+          type: string
+        threshold:
+          type: number
+        duration:
+          type: string
+          default: 5m
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        channels:
+          type: array
+          items:
+            type: string
+
+    AlertConfigurationUpdate:
+      type: object
+      properties:
+        threshold:
+          type: number
+        duration:
+          type: string
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        channels:
+          type: array
+          items:
+            type: string
+        is_active:
+          type: boolean
+        metadata:
+          type: object
+
+    AnomalyPattern:
+      type: object
+      required: [id, entity_type, entity_id, anomaly_score, sensitivity_level, detected_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        detection_type:
+          type: string
+        entity_type:
+          type: string
+        entity_id:
+          type: string
+        anomaly_score:
+          type: number
+          minimum: 0
+          maximum: 1
+        sensitivity_level:
+          type: string
+          enum: [low, medium, high, custom]
+        features:
+          type: object
+        classification:
+          type: string
+        false_positive:
+          type: boolean
+        detected_at:
+          type: string
+          format: date-time
+        reviewed_at:
+          type: string
+          format: date-time
+
+    HealthStatus:
+      type: object
+      required: [status, services]
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+        services:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              status:
+                type: string
+                enum: [healthy, unhealthy]
+              latency_ms:
+                type: number
+              last_check:
+                type: string
+                format: date-time
+
+    ExportRequest:
+      type: object
+      required: [resource_type, format]
+      properties:
+        resource_type:
+          type: string
+        filters:
+          type: object
+        format:
+          type: string
+          enum: [csv, json, excel]
+        columns:
+          type: array
+          items:
+            type: string
+
+    ExportResponse:
+      type: object
+      required: [id, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        estimated_rows:
+          type: integer
+        estimated_completion:
+          type: string
+          format: date-time
+
+    ExportStatus:
+      type: object
+      required: [id, status, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, processing, completed, failed]
+        progress:
+          type: number
+          minimum: 0
+          maximum: 100
+        row_count:
+          type: integer
+        file_size_bytes:
+          type: integer
+        download_url:
+          type: string
+          format: uri
+        expires_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+        error_message:
+          type: string
+
+    ClusteringRequest:
+      type: object
+      required: [dataset_id, data]
+      properties:
+        dataset_id:
+          type: string
+        data:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+        cluster_count:
+          type: integer
+          minimum: 3
+          maximum: 10
+        auto_optimize:
+          type: boolean
+          default: true
+
+    ClusteringResult:
+      type: object
+      required: [id, cluster_count, silhouette_score, labels]
+      properties:
+        id:
+          type: string
+          format: uuid
+        cluster_count:
+          type: integer
+        silhouette_score:
+          type: number
+          minimum: -1
+          maximum: 1
+        inertia:
+          type: number
+        centroids:
+          type: array
+          items:
+            type: array
+            items:
+              type: number
+        labels:
+          type: array
+          items:
+            type: integer
+        is_optimal:
+          type: boolean
+
+    AccessibilityPreferences:
+      type: object
+      properties:
+        high_contrast:
+          type: boolean
+          default: false
+        large_text:
+          type: boolean
+          default: false
+        reduce_motion:
+          type: boolean
+          default: false
+        screen_reader:
+          type: boolean
+          default: false
+        keyboard_only:
+          type: boolean
+          default: false
+        focus_indicators:
+          type: string
+          enum: [default, thick, high-contrast]
+          default: default
+        color_blind_mode:
+          type: string
+          enum: [none, protanopia, deuteranopia, tritanopia]
+        custom_css:
+          type: string
+
+    AuditLog:
+      type: object
+      required: [id, event_type, severity, action, result, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+        severity:
+          type: string
+          enum: [info, warning, critical]
+        user_id:
+          type: string
+          format: uuid
+        ip_address:
+          type: string
+          format: ipv4
+        user_agent:
+          type: string
+        resource:
+          type: string
+        action:
+          type: string
+        result:
+          type: string
+          enum: [success, failure, blocked]
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      required: [code, message, message_ar]
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        message_ar:
+          type: string
+        details:
+          type: object
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    
+    TooManyRequests:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: Number of seconds to wait
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

@@ -1,0 +1,302 @@
+openapi: 3.0.0
+info:
+  title: Reporting API
+  version: 1.0.0
+  description: API for generating and managing reports with multiple export formats
+
+paths:
+  /api/reports/templates:
+    get:
+      summary: List report templates
+      operationId: listReportTemplates
+      parameters:
+        - name: report_type
+          in: query
+          schema:
+            type: string
+            enum: [executive, analytical, compliance]
+      responses:
+        '200':
+          description: List of report templates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportTemplate'
+
+    post:
+      summary: Create report template
+      operationId: createReportTemplate
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ReportTemplateInput'
+      responses:
+        '201':
+          description: Template created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReportTemplate'
+        '400':
+          $ref: '#/components/responses/ValidationError'
+
+  /api/reports/generate:
+    post:
+      summary: Generate report
+      operationId: generateReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - template_id
+                - format
+              properties:
+                template_id:
+                  type: string
+                  format: uuid
+                format:
+                  type: string
+                  enum: [pdf, excel, csv, json]
+                filters:
+                  $ref: '#/components/schemas/ReportFilters'
+                language:
+                  type: string
+                  enum: [en, ar]
+                  default: en
+      responses:
+        '200':
+          description: Report generated
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+            text/csv:
+              schema:
+                type: string
+            application/json:
+              schema:
+                type: object
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+
+  /api/reports/schedule:
+    post:
+      summary: Schedule recurring report
+      operationId: scheduleReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - template_id
+                - frequency
+                - format
+              properties:
+                template_id:
+                  type: string
+                  format: uuid
+                frequency:
+                  type: string
+                  enum: [daily, weekly, monthly]
+                format:
+                  type: string
+                  enum: [pdf, excel, csv, json]
+                schedule_time:
+                  type: string
+                  description: Cron expression for scheduling
+                email_recipients:
+                  type: array
+                  items:
+                    type: string
+                    format: email
+      responses:
+        '201':
+          description: Report scheduled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schedule_id:
+                    type: string
+                    format: uuid
+                  next_run:
+                    type: string
+                    format: date-time
+
+components:
+  schemas:
+    ReportTemplate:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        name_ar:
+          type: string
+        report_type:
+          type: string
+          enum: [executive, analytical, compliance]
+        include_metrics:
+          type: boolean
+        include_trends:
+          type: boolean
+        include_charts:
+          type: boolean
+        include_audit_trail:
+          type: boolean
+        supported_formats:
+          type: array
+          items:
+            type: string
+            enum: [pdf, excel, csv, json]
+        schedule_enabled:
+          type: boolean
+        schedule_frequency:
+          type: string
+          enum: [daily, weekly, monthly]
+        organization_branding:
+          type: object
+          properties:
+            logo_url:
+              type: string
+            primary_color:
+              type: string
+            secondary_color:
+              type: string
+            font_family:
+              type: string
+        created_by:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    ReportTemplateInput:
+      type: object
+      required:
+        - name
+        - report_type
+        - supported_formats
+        - template_content
+      properties:
+        name:
+          type: string
+        name_ar:
+          type: string
+        report_type:
+          type: string
+          enum: [executive, analytical, compliance]
+        include_metrics:
+          type: boolean
+          default: false
+        include_trends:
+          type: boolean
+          default: false
+        include_charts:
+          type: boolean
+          default: false
+        include_audit_trail:
+          type: boolean
+          default: false
+        supported_formats:
+          type: array
+          items:
+            type: string
+            enum: [pdf, excel, csv, json]
+          minItems: 1
+        template_content:
+          type: string
+        template_content_ar:
+          type: string
+        organization_branding:
+          type: object
+          properties:
+            logo_url:
+              type: string
+            primary_color:
+              type: string
+            secondary_color:
+              type: string
+            font_family:
+              type: string
+
+    ReportFilters:
+      type: object
+      properties:
+        date_range:
+          type: object
+          properties:
+            from:
+              type: string
+              format: date
+            to:
+              type: string
+              format: date
+        entities:
+          type: array
+          items:
+            type: string
+            enum: [dossier, organization, country, project]
+        status:
+          type: array
+          items:
+            type: string
+        priority:
+          type: array
+          items:
+            type: string
+
+  responses:
+    RateLimitExceeded:
+      description: Rate limit exceeded
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until rate limit resets
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: Rate limit exceeded
+              retry_after:
+                type: integer
+                description: Seconds until rate limit resets
+
+    ValidationError:
+      description: Validation error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+              details:
+                type: object

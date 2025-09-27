@@ -1,143 +1,97 @@
-<!--
-Sync Impact Report
-==================
-Version change: [UNDEFINED] → 1.0.0 (Initial ratification)
-Modified principles: None (initial creation)
-Added sections: All sections newly defined
-Removed sections: None
-Templates requiring updates:
-  ✅ .specify/templates/spec-template.md (to be aligned)
-  ✅ .specify/templates/plan-template.md (to be aligned)
-  ✅ .specify/templates/tasks-template.md (to be aligned)
-Follow-up TODOs: None
--->
-
 # GASTAT International Dossier System Constitution
+**Version 2.1.1** | **Effective**: September 2025
 
 ## Core Principles
 
-### I. Bilingual Parity & Internationalization
-Every feature, interface element, and system message MUST be available in both Arabic
-and English from day one. No feature ships without complete RTL/LTR support and proper
-localization. Text direction switching must be seamless, and Arabic content receives
-equal priority in design, testing, and optimization. All date/time formats, numerical
-representations, and cultural conventions must respect locale-specific standards.
+### 1. Bilingual Excellence
+- Arabic and English support from day one
+- RTL/LTR seamless switching
+- Equal priority for both languages
+- Cultural conventions respected
 
-### II. Type Safety & Code Quality
-TypeScript with strict mode is mandatory throughout the codebase. The use of 'any'
-type is prohibited except in clearly documented edge cases with explicit justification.
-All functions must have explicit return types, all props must be properly typed, and
-type inference should be leveraged where appropriate. Components must not exceed 200
-lines to ensure maintainability and testability.
+### 2. Type Safety
+- TypeScript strict mode mandatory
+- No `any` types (except documented edge cases)
+- Explicit return types required
+- Components <200 lines max
 
-### III. Security-First Architecture
-Multi-factor authentication (MFA) is mandatory for all user accounts. Row-Level
-Security (RLS) must be enforced at the database level for all tables. Input validation
-must occur at both client and server levels with proper sanitization. API endpoints
-must implement rate limiting, and all sensitive data must be encrypted at rest and
-in transit. Security headers must be properly configured for all responses.
+### 3. Security-First
+- MFA mandatory for all users
+- RLS enforced at database level
+- Input validation client + server
+- Rate limiting on all APIs
+- Encryption at rest and in transit
 
-### IV. Data Sovereignty & Self-Hosting
-The system must be fully self-hostable with no hard dependencies on external cloud
-services. All core functionality must work within an air-gapped environment. Data
-must remain within the organization's infrastructure unless explicitly authorized.
-AnythingLLM integration must be containerized and locally deployable. External service
-dependencies must have offline fallback mechanisms.
+### 4. Data Sovereignty
+- Fully self-hostable system
+- No external cloud dependencies
+- Data stays within Saudi infrastructure
+- AnythingLLM containerized locally
+- Offline fallback mechanisms
 
-### V. Resilient Architecture & Error Handling
-Every component must implement comprehensive error boundaries and fallback UI states.
-Network failures must be gracefully handled with retry logic and offline queuing.
-AI service unavailability must trigger predefined fallback workflows. All async
-operations must have timeout controls and proper loading states. Error messages must
-be actionable and available in both languages.
+### 5. Resilient Architecture
+- Error boundaries on all components
+- Graceful network failure handling
+- AI service fallback workflows
+- Timeout controls on async operations
+- Bilingual error messages
 
-### VI. Accessibility & Compliance
-WCAG 2.1 Level AA compliance is mandatory for all user interfaces. Keyboard navigation
-must be fully supported throughout the application. Screen reader compatibility must
-be tested for both Arabic and English interfaces. Color contrast ratios must meet
-accessibility standards. All interactive elements must have appropriate ARIA labels
-and roles properly configured.
+### 6. Accessibility
+- WCAG 2.1 Level AA compliance
+- Full keyboard navigation
+- Screen reader compatibility
+- Proper ARIA labels and roles
+- Tested in both languages
 
-### VII. Container-First Deployment
-All services must be containerized using Docker with explicit resource limits.
-Docker Compose must orchestrate the complete stack for development and production.
-Container images must be minimal, using multi-stage builds where appropriate.
-Health checks and restart policies must be configured for all containers. Volume
-mounts must be clearly documented for data persistence.
+### 7. Container-First
+- Docker containerization mandatory
+- Docker Compose orchestration
+- Health checks on all services
+- Resource limits defined
+- Multi-stage builds preferred
 
-## Technology Stack Requirements
+## Technology Stack
 
-### Frontend Architecture
-- **Framework**: Vite + React 18+ with TypeScript
-- **Routing**: TanStack Router with type-safe routing
-- **State Management**: TanStack Query for server state, Zustand for client state
-- **Styling**: Tailwind CSS with RTL/LTR variants
-- **Forms**: React Hook Form with Zod validation
-- **I18n**: react-i18next with namespace separation
+**Frontend**: Vite + React 18+ + TypeScript + TanStack Router + TanStack Query + Tailwind CSS + RTL/LTR support
 
-### Backend Architecture
-- **Database**: Supabase (PostgreSQL) with RLS policies
-- **Authentication**: Supabase Auth with MFA support
-- **Real-time**: Supabase Realtime for live updates
-- **Storage**: Supabase Storage with bucket policies
-- **API**: RESTful with OpenAPI documentation
+**Backend**: Supabase (PostgreSQL + RLS + Auth + Realtime + Storage) + RESTful APIs
 
-### AI Integration
-- **LLM Provider**: AnythingLLM (self-hosted)
-- **Embedding Model**: Local deployment required
-- **Vector Storage**: pgvector extension in Supabase
-- **Fallback**: Predefined responses for AI unavailability
+**AI**: AnythingLLM (self-hosted) + pgvector + local embeddings + fallback responses
 
-### Infrastructure
-- **Containerization**: Docker 20.10+ with BuildKit
-- **Orchestration**: Docker Compose for single-node deployment
-- **Reverse Proxy**: Traefik with automatic SSL
-- **Monitoring**: Prometheus + Grafana stack
-- **Logging**: ELK stack or Loki for centralized logging
+**Infrastructure**: Docker + Docker Compose + Traefik + Prometheus/Grafana
 
-## Development Workflow
+## Development Standards
 
-### Code Review Requirements
-- All PRs must pass TypeScript strict checks
-- Both Arabic and English UI must be tested
-- Security checklist must be completed
-- Accessibility audit must pass
-- Docker build must succeed
-- Component size limit must be respected
+**Code Quality**:
+- TypeScript strict checks pass
+- Both languages tested
+- Security checklist completed
+- Accessibility audit passed
+- 80%+ test coverage
 
-### Testing Standards
-- Unit tests required for all business logic (>80% coverage)
-- Integration tests for all API endpoints
-- E2E tests for critical user flows in both languages
-- Performance tests for RTL rendering
-- Security tests for authentication flows
-- Accessibility tests with automated tools
+**Testing**:
+- Unit tests for business logic
+- Integration tests for APIs
+- E2E tests for critical flows
+- Performance tests for RTL
+- Security tests for auth
 
-### Deployment Pipeline
-- Feature branches deploy to isolated containers
-- Staging environment mirrors production exactly
-- Production deployment requires 2-person approval
-- Database migrations must be reversible
-- Rollback procedure must be documented
-- Zero-downtime deployments required
+**Deployment**:
+- Feature branches → isolated containers
+- Staging mirrors production
+- 2-person approval for production
+- Reversible migrations only
+- Zero-downtime deployments
 
 ## Governance
 
-The Constitution supersedes all development practices and architectural decisions.
-Any deviation from these principles requires explicit documentation and approval
-from the project governance board. Amendments to this constitution require:
+Constitution supersedes all practices. Deviations require:
+1. Written justification
+2. Impact analysis
+3. Migration plan
+4. Technical stakeholder approval
+5. Version increment
 
-1. Written proposal with clear justification
-2. Impact analysis on existing systems
-3. Migration plan for affected components
-4. Majority approval from technical stakeholders
-5. Version increment following semantic versioning
+Non-compliance blocks production deployment. All PRs must include compliance checklist.
 
-All pull requests must include a constitution compliance checklist. Code reviews
-must verify adherence to these principles. Quarterly audits will assess overall
-compliance with special attention to security, accessibility, and bilingual parity.
-
-Non-compliance with core principles blocks deployment to production. Temporary
-exceptions require documented mitigation plans with specific remediation timelines.
-
-**Version**: 1.0.0 | **Ratified**: 2025-09-25 | **Last Amended**: 2025-09-25
+**Version**: 2.1.1 | **Last Amended**: 2025-09-25

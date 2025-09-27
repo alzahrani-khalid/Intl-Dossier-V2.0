@@ -1,0 +1,11 @@
+{
+  "timestamp": "2025-09-26T20:32:24.475Z",
+  "totalJourneys": 0,
+  "passedJourneys": 0,
+  "failedJourneys": 0,
+  "totalViolations": 0,
+  "criticalViolations": 0,
+  "seriousViolations": 0,
+  "journeys": [],
+  "recommendations": []
+}

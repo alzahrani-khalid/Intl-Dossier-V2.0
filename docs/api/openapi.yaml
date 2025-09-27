@@ -1,0 +1,837 @@
+openapi: 3.0.3
+info:
+  title: International Dossier System API
+  version: 2.0.0
+  description: |
+    RESTful API for the GASTAT International Dossier System.
+    Provides endpoints for managing intelligence reports, rate limiting, and reporting.
+  contact:
+    name: API Support
+    email: support@gastat.sa
+  license:
+    name: Proprietary
+    
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.dossier.gastat.sa/api
+    description: Production server
+    
+security:
+  - BearerAuth: []
+  
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          example: VALIDATION_ERROR
+        message:
+          type: string
+          example: Invalid request parameters
+        details:
+          type: object
+          
+    BilingualField:
+      type: object
+      required:
+        - en
+        - ar
+      properties:
+        en:
+          type: string
+        ar:
+          type: string
+          
+    IntelligenceReport:
+      type: object
+      required:
+        - id
+        - title
+        - content
+        - category
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          $ref: '#/components/schemas/BilingualField'
+        content:
+          $ref: '#/components/schemas/BilingualField'
+        summary:
+          $ref: '#/components/schemas/BilingualField'
+        category:
+          type: string
+          enum: [intelligence, analysis, briefing, assessment]
+        status:
+          type: string
+          enum: [draft, active, archived]
+        classification:
+          type: string
+          enum: [public, confidential, secret, top_secret]
+        tags:
+          type: array
+          items:
+            type: string
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+          
+    VectorEmbedding:
+      type: object
+      required:
+        - document_id
+        - embedding
+      properties:
+        id:
+          type: string
+          format: uuid
+        document_id:
+          type: string
+          format: uuid
+        embedding:
+          type: array
+          items:
+            type: number
+          minItems: 1536
+          maxItems: 1536
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+          
+    RateLimitPolicy:
+      type: object
+      required:
+        - name
+        - max_requests
+        - window_ms
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        max_requests:
+          type: integer
+          minimum: 1
+        window_ms:
+          type: integer
+          minimum: 1000
+        burst_limit:
+          type: integer
+          minimum: 1
+        token_bucket_config:
+          type: object
+          properties:
+            capacity:
+              type: integer
+            refill_rate:
+              type: integer
+            refill_interval_ms:
+              type: integer
+        applies_to:
+          type: array
+          items:
+            type: string
+            enum: [anonymous, authenticated, admin, api_key]
+        active:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+          
+    RateLimitStatus:
+      type: object
+      properties:
+        user_id:
+          type: string
+        endpoint:
+          type: string
+        requests_made:
+          type: integer
+        requests_remaining:
+          type: integer
+        reset_at:
+          type: string
+          format: date-time
+        policies_applied:
+          type: array
+          items:
+            type: string
+            
+    ReportTemplate:
+      type: object
+      required:
+        - name
+        - type
+        - format
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+          enum: [summary, detailed, comparison, trend]
+        format:
+          type: string
+          enum: [pdf, excel, json, csv]
+        query_template:
+          type: string
+        parameters:
+          type: object
+        schedule_config:
+          type: object
+          properties:
+            cron:
+              type: string
+            timezone:
+              type: string
+            enabled:
+              type: boolean
+        created_at:
+          type: string
+          format: date-time
+          
+    SearchResult:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          $ref: '#/components/schemas/BilingualField'
+        content:
+          $ref: '#/components/schemas/BilingualField'
+        highlight:
+          type: object
+        score:
+          type: number
+          minimum: 0
+          maximum: 1
+        similarity:
+          type: number
+          minimum: 0
+          maximum: 1
+        metadata:
+          type: object
+          
+    SearchResponse:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchResult'
+        total_results:
+          type: integer
+        search_time:
+          type: number
+        partial:
+          type: boolean
+        facets:
+          type: object
+          
+paths:
+  /intelligence-reports:
+    get:
+      tags: [Intelligence Reports]
+      summary: List intelligence reports
+      operationId: listIntelligenceReports
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [intelligence, analysis, briefing, assessment]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, active, archived]
+        - name: classification
+          in: query
+          schema:
+            type: string
+            enum: [public, confidential, secret, top_secret]
+        - name: sort_by
+          in: query
+          schema:
+            type: string
+            enum: [created_at, updated_at, title]
+        - name: sort_order
+          in: query
+          schema:
+            type: string
+            enum: [asc, desc]
+      responses:
+        '200':
+          description: List of intelligence reports
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IntelligenceReport'
+                  pagination:
+                    type: object
+                    properties:
+                      page:
+                        type: integer
+                      limit:
+                        type: integer
+                      total:
+                        type: integer
+                      pages:
+                        type: integer
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+    post:
+      tags: [Intelligence Reports]
+      summary: Create intelligence report
+      operationId: createIntelligenceReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - content
+                - category
+              properties:
+                title:
+                  $ref: '#/components/schemas/BilingualField'
+                content:
+                  $ref: '#/components/schemas/BilingualField'
+                summary:
+                  $ref: '#/components/schemas/BilingualField'
+                category:
+                  type: string
+                  enum: [intelligence, analysis, briefing, assessment]
+                classification:
+                  type: string
+                  enum: [public, confidential, secret, top_secret]
+                tags:
+                  type: array
+                  items:
+                    type: string
+                metadata:
+                  type: object
+      responses:
+        '201':
+          description: Intelligence report created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceReport'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /intelligence-reports/{id}:
+    get:
+      tags: [Intelligence Reports]
+      summary: Get intelligence report by ID
+      operationId: getIntelligenceReport
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Intelligence report details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntelligenceReport'
+        '404':
+          description: Report not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /intelligence-reports/{id}/embedding:
+    post:
+      tags: [Intelligence Reports]
+      summary: Generate embedding for intelligence report
+      operationId: generateEmbedding
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                regenerate:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Embedding generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  embedding_id:
+                    type: string
+                    format: uuid
+                  dimensions:
+                    type: integer
+                  created_at:
+                    type: string
+                    format: date-time
+        '404':
+          description: Report not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /intelligence-reports/search:
+    post:
+      tags: [Intelligence Reports]
+      summary: Search intelligence reports
+      operationId: searchIntelligenceReports
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                  minLength: 3
+                limit:
+                  type: integer
+                  default: 20
+                  maximum: 100
+                offset:
+                  type: integer
+                  default: 0
+                use_vector:
+                  type: boolean
+                  default: true
+                use_text:
+                  type: boolean
+                  default: true
+                similarity_threshold:
+                  type: number
+                  minimum: 0
+                  maximum: 1
+                  default: 0.5
+                timeout:
+                  type: integer
+                  minimum: 100
+                  maximum: 30000
+                  default: 5000
+                filters:
+                  type: object
+                  properties:
+                    category:
+                      type: string
+                    status:
+                      type: string
+                    classification:
+                      type: string
+                    date_range:
+                      type: object
+                      properties:
+                        start:
+                          type: string
+                          format: date
+                        end:
+                          type: string
+                          format: date
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SearchResponse'
+        '400':
+          description: Invalid search request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /rate-limits/policies:
+    get:
+      tags: [Rate Limiting]
+      summary: List rate limit policies
+      operationId: listRateLimitPolicies
+      parameters:
+        - name: active
+          in: query
+          schema:
+            type: boolean
+        - name: applies_to
+          in: query
+          schema:
+            type: string
+            enum: [anonymous, authenticated, admin, api_key]
+      responses:
+        '200':
+          description: List of rate limit policies
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  policies:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/RateLimitPolicy'
+                      
+    post:
+      tags: [Rate Limiting]
+      summary: Create rate limit policy
+      operationId: createRateLimitPolicy
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - max_requests
+                - window_ms
+              properties:
+                name:
+                  type: string
+                description:
+                  type: string
+                max_requests:
+                  type: integer
+                  minimum: 1
+                window_ms:
+                  type: integer
+                  minimum: 1000
+                burst_limit:
+                  type: integer
+                token_bucket_config:
+                  type: object
+                applies_to:
+                  type: array
+                  items:
+                    type: string
+                    enum: [anonymous, authenticated, admin, api_key]
+      responses:
+        '201':
+          description: Policy created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitPolicy'
+        '400':
+          description: Invalid policy configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /rate-limits/policies/{id}:
+    put:
+      tags: [Rate Limiting]
+      summary: Update rate limit policy
+      operationId: updateRateLimitPolicy
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                max_requests:
+                  type: integer
+                window_ms:
+                  type: integer
+                burst_limit:
+                  type: integer
+                active:
+                  type: boolean
+      responses:
+        '200':
+          description: Policy updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitPolicy'
+        '404':
+          description: Policy not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /rate-limits/status:
+    get:
+      tags: [Rate Limiting]
+      summary: Get rate limit status for current user
+      operationId: getRateLimitStatus
+      parameters:
+        - name: endpoint
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Rate limit status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RateLimitStatus'
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+              description: Request limit
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+              description: Remaining requests
+            X-RateLimit-Reset:
+              schema:
+                type: string
+              description: Reset time
+                
+  /reports/templates:
+    get:
+      tags: [Reporting]
+      summary: List report templates
+      operationId: listReportTemplates
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [summary, detailed, comparison, trend]
+        - name: format
+          in: query
+          schema:
+            type: string
+            enum: [pdf, excel, json, csv]
+      responses:
+        '200':
+          description: List of report templates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  templates:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReportTemplate'
+                      
+  /reports/generate:
+    post:
+      tags: [Reporting]
+      summary: Generate report
+      operationId: generateReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - template_id
+              properties:
+                template_id:
+                  type: string
+                  format: uuid
+                parameters:
+                  type: object
+                format:
+                  type: string
+                  enum: [pdf, excel, json, csv]
+                async:
+                  type: boolean
+                  default: false
+      responses:
+        '200':
+          description: Report generated (synchronous)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  report_id:
+                    type: string
+                    format: uuid
+                  download_url:
+                    type: string
+                    format: uri
+                  expires_at:
+                    type: string
+                    format: date-time
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+            application/vnd.openxmlformats-officedocument.spreadsheetml.sheet:
+              schema:
+                type: string
+                format: binary
+        '202':
+          description: Report generation started (asynchronous)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                  status_url:
+                    type: string
+                    format: uri
+        '400':
+          description: Invalid report request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                
+  /reports/schedule:
+    post:
+      tags: [Reporting]
+      summary: Schedule recurring report
+      operationId: scheduleReport
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - template_id
+                - cron
+                - recipients
+              properties:
+                template_id:
+                  type: string
+                  format: uuid
+                cron:
+                  type: string
+                  example: "0 9 * * 1"
+                timezone:
+                  type: string
+                  default: "Asia/Riyadh"
+                recipients:
+                  type: array
+                  items:
+                    type: string
+                    format: email
+                format:
+                  type: string
+                  enum: [pdf, excel, json, csv]
+                parameters:
+                  type: object
+      responses:
+        '201':
+          description: Schedule created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  schedule_id:
+                    type: string
+                    format: uuid
+                  next_run:
+                    type: string
+                    format: date-time
+        '400':
+          description: Invalid schedule configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+tags:
+  - name: Intelligence Reports
+    description: Manage intelligence reports and analysis
+  - name: Rate Limiting
+    description: Configure and monitor rate limiting policies
+  - name: Reporting
+    description: Generate and schedule reports
