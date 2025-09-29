@@ -1,30 +1,34 @@
 # Tasks: Theme Selection System
 
 **Input**: Design documents from `/specs/006-i-need-you/`
-**Prerequisites**: plan.md (required), research.md, data-model.md, contracts/
+**Prerequisites**: plan.md (required), research.md, data-model.md, contracts/preferences.yaml
 
 ## Execution Flow (main)
 ```
 1. Load plan.md from feature directory
-   → Tech stack: TypeScript 5.0+, React 18+, Tailwind CSS, shadcn/ui, i18next
-   → Structure: Web application (frontend/backend split)
+   → Tech stack: TypeScript 5.0+, React 18+, TanStack Router/Query v5, Tailwind CSS, shadcn/ui, i18next
+   → Structure: Web application (frontend/backend)
 2. Load optional design documents:
-   → data-model.md: UserPreference, ThemeConfiguration, LanguageConfiguration
+   → data-model.md: UserPreference, ThemeConfiguration, LanguageConfiguration entities
    → contracts/preferences.yaml: GET/PUT /api/preferences/{userId}
-   → research.md: CSS variables approach, dual persistence strategy
+   → research.md: CSS variables approach, i18next for i18n, localStorage + Supabase persistence
 3. Generate tasks by category:
-   → Setup: i18n config, theme configs, Tailwind setup
-   → Tests: API contract tests, theme switching tests
-   → Core: providers, hooks, components
-   → Integration: Supabase sync, localStorage
-   → Polish: accessibility, performance
+   → Setup: i18n, theme configs, Tailwind RTL
+   → Tests: contract tests for preferences API
+   → Core: theme provider, language provider, preference hooks
+   → Integration: Supabase sync, localStorage persistence
+   → Polish: accessibility, visual tests, documentation
 4. Apply task rules:
    → Different files = mark [P] for parallel
+   → Same file = sequential (no [P])
    → Tests before implementation (TDD)
-5. Number tasks sequentially (T001-T030)
+5. Number tasks sequentially (T001-T032)
 6. Generate dependency graph
 7. Create parallel execution examples
-8. Validate task completeness
+8. Validate task completeness:
+   → All contracts have tests ✓
+   → All entities have models ✓
+   → All endpoints implemented ✓
 9. Return: SUCCESS (tasks ready for execution)
 ```
 
@@ -33,187 +37,128 @@
 - Include exact file paths in descriptions
 
 ## Path Conventions
-- **Backend**: `backend/src/`, `backend/tests/`
-- **Frontend**: `frontend/src/`, `frontend/tests/`
-- **Database**: `supabase/migrations/`
+- **Web app structure**: `backend/src/`, `frontend/src/`
+- Database migrations in `supabase/migrations/`
 
-## Phase 3.1: Setup & Configuration
-
-- [x] T001 Create database migration for user_preferences table in supabase/migrations/001_user_preferences.sql
-- [x] T002 [P] Configure i18next in frontend/src/i18n/config.ts with English and Arabic support
-- [x] T003 [P] Create GASTAT theme configuration in frontend/src/styles/themes/gastat.ts
-- [x] T004 [P] Create Blue Sky theme configuration in frontend/src/styles/themes/blueSky.ts
-- [x] T005 [P] Update Tailwind config for RTL support and CSS variables in frontend/tailwind.config.ts
-- [x] T006 [P] Create theme CSS variables in frontend/src/styles/globals.css
+## Phase 3.1: Setup
+- [X] T001 Install i18n dependencies: i18next, react-i18next, i18next-browser-languagedetector
+- [X] T002 Install Tailwind RTL plugin and configure for bidirectional support
+- [X] T003 [P] Create theme configuration structure in frontend/src/config/themes/
+- [X] T004 [P] Create i18n configuration in frontend/src/i18n/config.ts
+- [X] T005 [P] Set up translation file structure frontend/src/i18n/{en,ar}/
 
 ## Phase 3.2: Tests First (TDD) ⚠️ MUST COMPLETE BEFORE 3.3
-
 **CRITICAL: These tests MUST be written and MUST FAIL before ANY implementation**
-
-- [x] T007 [P] Contract test GET /api/preferences/{userId} in backend/tests/contract/preferences.get.test.ts
-- [x] T008 [P] Contract test PUT /api/preferences/{userId} in backend/tests/contract/preferences.put.test.ts
-- [x] T009 [P] Integration test default theme application in frontend/tests/integration/default-theme.test.tsx
-- [x] T010 [P] Integration test theme persistence in frontend/tests/integration/theme-persistence.test.tsx
-- [x] T011 [P] Integration test language switching and RTL in frontend/tests/integration/language-switch.test.tsx
-- [x] T012 [P] Integration test cross-tab synchronization in frontend/tests/integration/cross-tab-sync.test.tsx
-- [x] T013 [P] Unit test theme validation in backend/tests/unit/validation.test.ts
-- [x] T014 [P] Unit test preference merging logic in frontend/tests/unit/preference-merge.test.ts
+- [X] T006 [P] Contract test GET /api/preferences/{userId} in backend/tests/contract/test_preferences_get.test.ts
+- [X] T007 [P] Contract test PUT /api/preferences/{userId} in backend/tests/contract/test_preferences_put.test.ts
+- [X] T008 [P] Integration test theme switching in frontend/tests/integration/test_theme_switch.test.tsx
+- [X] T009 [P] Integration test language switching with RTL in frontend/tests/integration/test_language_switch.test.tsx
+- [X] T010 [P] Integration test preference persistence in frontend/tests/integration/test_preference_persistence.test.tsx
+- [X] T011 [P] Integration test cross-tab sync in frontend/tests/integration/test_cross_tab_sync.test.tsx
 
 ## Phase 3.3: Core Implementation (ONLY after tests are failing)
+- [X] T012 Create database migration for user_preferences table in supabase/migrations/001_create_user_preferences.sql
+- [X] T013 [P] Define GASTAT theme configuration in frontend/src/config/themes/gastat.ts
+- [X] T014 [P] Define Blue Sky theme configuration in frontend/src/config/themes/blue-sky.ts
+- [X] T015 [P] Create theme provider component in frontend/src/components/theme-provider/theme-provider.tsx
+- [X] T016 [P] Create language provider component in frontend/src/components/language-provider/language-provider.tsx
+- [X] T017 [P] Create useTheme hook in frontend/src/hooks/use-theme.ts
+- [X] T018 [P] Create useLanguage hook in frontend/src/hooks/use-language.ts
+- [X] T019 [P] Create theme selector component in frontend/src/components/theme-selector/theme-selector.tsx
+- [X] T020 [P] Create language switcher component in frontend/src/components/language-switcher/language-switcher.tsx
+- [X] T021 [P] Create UserPreference model in backend/src/models/user-preference.ts
+- [X] T022 [P] Create preferences service in backend/src/services/preferences-service.ts
+- [X] T023 Implement GET /api/preferences/{userId} endpoint in backend/src/api/preferences/get.ts
+- [X] T024 Implement PUT /api/preferences/{userId} endpoint in backend/src/api/preferences/put.ts
 
-### Backend Implementation
-- [x] T015 [P] Create UserPreference model in backend/src/models/user-preferences.ts
-- [x] T016 [P] Create preferences service in backend/src/services/preferences-service.ts
-- [x] T017 Create GET /api/preferences/{userId} endpoint in backend/src/api/preferences/get.ts
-- [x] T018 Create PUT /api/preferences/{userId} endpoint in backend/src/api/preferences/put.ts
-- [x] T019 [P] Add preference validation middleware in backend/src/middleware/validate-preferences.ts
-- [x] T020 [P] Add rate limiting middleware in backend/src/middleware/rate-limit.ts
+## Phase 3.4: Integration
+- [X] T025 Create localStorage persistence utility in frontend/src/utils/storage/preference-storage.ts
+- [X] T026 Implement Supabase preference sync in frontend/src/services/preference-sync.ts
+- [X] T027 Add cross-tab synchronization using BroadcastChannel in frontend/src/utils/broadcast/preference-broadcast.ts
+- [X] T028 Add theme/language controls to app header in frontend/src/components/layout/header.tsx
+- [X] T029 Wrap app with theme and language providers in frontend/src/main.tsx
 
-### Frontend Implementation
-- [x] T021 [P] Create ThemeProvider component in frontend/src/components/theme-provider/theme-provider.tsx
-- [x] T022 [P] Create LanguageProvider component in frontend/src/components/language-provider/language-provider.tsx
-- [x] T023 [P] Create useTheme hook in frontend/src/hooks/use-theme.ts
-- [x] T024 [P] Create useLanguage hook in frontend/src/hooks/use-language.ts
-- [x] T025 [P] Create ThemeSelector component in frontend/src/components/theme-selector/theme-selector.tsx
-- [x] T026 [P] Create LanguageSwitcher component in frontend/src/components/language-switcher/language-switcher.tsx
-- [x] T027 [P] Create localStorage preference service for immediate persistence in frontend/src/services/preference-persistence.ts
-- [x] T028 [P] Create cross-tab sync service in frontend/src/services/cross-tab-sync.ts
-
-## Phase 3.4: Translation Files
-
-- [x] T029 [P] Create English translations in frontend/src/i18n/en/common.json
-- [x] T030 [P] Create Arabic translations in frontend/src/i18n/ar/common.json
-
-## Phase 3.5: Integration & Polish
-
-- [x] T031 Integrate ThemeProvider into app root in frontend/src/app.tsx
-- [x] T032 Connect preference service to Supabase for cross-device sync
-- [x] T033 Add system preference detection as fallback only (when no stored preference exists)
-- [x] T034 [P] Add accessibility attributes and ARIA labels
-- [x] T035 [P] Add keyboard navigation support
-- [x] T036 [P] Add focus management for theme/language switches
-- [x] T037 [P] Performance optimization - debounce preference updates
-- [x] T038 [P] Add error boundaries for theme provider
-- [x] T039 [P] Create accessibility test suite in frontend/tests/a11y/theme-selector.test.tsx
-- [x] T040 Run quickstart validation checklist
-- [ ] T041 [P] Configure font loading (Plus Jakarta Sans for GASTAT, Open Sans for Blue Sky) in frontend/src/styles/fonts.css
+## Phase 3.5: Polish
+- [X] T030 [P] Add accessibility attributes and ARIA labels in frontend/src/components/theme-selector/theme-selector.tsx
+- [X] T031 [P] Add screen reader announcements for theme changes in frontend/src/components/theme-provider/theme-provider.tsx
+- [X] T032 [P] Create English translations in frontend/src/i18n/en/common.json
+- [X] T033 [P] Create Arabic translations in frontend/src/i18n/ar/common.json
+- [X] T034 [P] Add keyboard navigation support in frontend/src/components/theme-selector/theme-selector.tsx
+- [X] T035 Visual regression tests for all theme/mode combinations in frontend/tests/visual/
+- [X] T036 Performance test for theme switching (<100ms) in frontend/tests/performance/
+- [X] T037 Update user documentation in docs/features/theme-selection.md
 
 ## Dependencies
+- Setup (T001-T005) before all other tasks
+- Tests (T006-T011) before implementation (T012-T024)
+- T012 (migration) before T021-T024 (backend implementation)
+- T013-T014 (theme configs) before T015 (theme provider)
+- T015-T016 (providers) before T017-T020 (hooks and components)
+- T021-T022 before T023-T024 (model/service before endpoints)
+- Implementation (T012-T024) before integration (T025-T029)
+- All implementation before polish (T030-T037)
 
-- Database migration (T001) blocks all backend tasks
-- Theme configs (T003-T006) before theme provider (T021)
-- i18n config (T002) before language provider (T022)
-- Tests (T007-T014) before implementation (T015-T028)
-- Models (T015) before services (T016)
-- Services (T016) before endpoints (T017-T018)
-- Providers (T021-T022) before hooks (T023-T024)
-- Hooks before components (T025-T026)
-- All core implementation before integration (T031-T033)
-
-## Parallel Execution Examples
-
-### Batch 1: Setup Tasks
+## Parallel Example
 ```bash
-# Launch T002-T006 together (all different files):
-Task: "Configure i18next in frontend/src/i18n/config.ts"
-Task: "Create GASTAT theme in frontend/src/styles/themes/gastat.ts"
-Task: "Create Blue Sky theme in frontend/src/styles/themes/blueSky.ts"
-Task: "Update Tailwind config in frontend/tailwind.config.ts"
-Task: "Create theme CSS variables in frontend/src/styles/globals.css"
-```
+# Launch T006-T011 together (all test files):
+Task subagent_type=general-purpose prompt="Contract test GET /api/preferences/{userId} in backend/tests/contract/test_preferences_get.test.ts"
+Task subagent_type=general-purpose prompt="Contract test PUT /api/preferences/{userId} in backend/tests/contract/test_preferences_put.test.ts"
+Task subagent_type=general-purpose prompt="Integration test theme switching in frontend/tests/integration/test_theme_switch.test.tsx"
+Task subagent_type=general-purpose prompt="Integration test language switching with RTL in frontend/tests/integration/test_language_switch.test.tsx"
+Task subagent_type=general-purpose prompt="Integration test preference persistence in frontend/tests/integration/test_preference_persistence.test.tsx"
+Task subagent_type=general-purpose prompt="Integration test cross-tab sync in frontend/tests/integration/test_cross_tab_sync.test.tsx"
 
-### Batch 2: Test Tasks
-```bash
-# Launch T007-T014 together (all different test files):
-Task: "Contract test GET /api/preferences/{userId}"
-Task: "Contract test PUT /api/preferences/{userId}"
-Task: "Integration test default theme application"
-Task: "Integration test theme persistence"
-Task: "Integration test language switching"
-Task: "Integration test cross-tab sync"
-Task: "Unit test theme validation"
-Task: "Unit test preference merging"
-```
-
-### Batch 3: Backend Models and Services
-```bash
-# Launch T015-T016, T019-T020 together:
-Task: "Create UserPreference model"
-Task: "Create preferences service"
-Task: "Add preference validation middleware"
-Task: "Add rate limiting middleware"
-```
-
-### Batch 4: Frontend Core Components
-```bash
-# Launch T021-T028 together (all different files):
-Task: "Create ThemeProvider component"
-Task: "Create LanguageProvider component"
-Task: "Create useTheme hook"
-Task: "Create useLanguage hook"
-Task: "Create ThemeSelector component"
-Task: "Create LanguageSwitcher component"
-Task: "Create preference persistence service"
-Task: "Create cross-tab sync service"
-```
-
-### Batch 5: Translation Files
-```bash
-# Launch T029-T030 together:
-Task: "Create English translations"
-Task: "Create Arabic translations"
+# Launch T013-T022 together (all independent files):
+Task subagent_type=general-purpose prompt="Define GASTAT theme configuration in frontend/src/config/themes/gastat.ts"
+Task subagent_type=general-purpose prompt="Define Blue Sky theme configuration in frontend/src/config/themes/blue-sky.ts"
+Task subagent_type=general-purpose prompt="Create theme provider component in frontend/src/components/theme-provider/theme-provider.tsx"
+Task subagent_type=general-purpose prompt="Create language provider component in frontend/src/components/language-provider/language-provider.tsx"
+Task subagent_type=general-purpose prompt="Create useTheme hook in frontend/src/hooks/use-theme.ts"
+Task subagent_type=general-purpose prompt="Create useLanguage hook in frontend/src/hooks/use-language.ts"
+Task subagent_type=general-purpose prompt="Create theme selector component in frontend/src/components/theme-selector/theme-selector.tsx"
+Task subagent_type=general-purpose prompt="Create language switcher component in frontend/src/components/language-switcher/language-switcher.tsx"
+Task subagent_type=general-purpose prompt="Create UserPreference model in backend/src/models/user-preference.ts"
+Task subagent_type=general-purpose prompt="Create preferences service in backend/src/services/preferences-service.ts"
 ```
 
 ## Notes
+- [P] tasks = different files, no dependencies
+- Verify tests fail before implementing
+- Commit after each task group
+- Theme CSS variables must follow shadcn/ui conventions
+- All text must be translatable - no hardcoded strings
+- RTL/LTR switching must be seamless without layout breaks
+- Accessibility is critical - all controls must be keyboard navigable
 
-- **[P] tasks** = different files, no shared dependencies
-- Verify all tests fail before implementing features
-- Commit after each task completion
-- Run TypeScript strict mode checks after each implementation task
-- Test accessibility after UI components are complete
-- Validate against constitutional requirements throughout
-
-## Task Generation Rules Applied
+## Task Generation Rules
+*Applied during main() execution*
 
 1. **From Contracts**:
-   - preferences.yaml → T007-T008 (contract tests)
-   - GET endpoint → T017 (implementation)
-   - PUT endpoint → T018 (implementation)
-
+   - preferences.yaml → T006, T007 (contract tests)
+   - GET/PUT endpoints → T023, T024 (implementation)
+   
 2. **From Data Model**:
-   - UserPreference entity → T015 (model)
-   - ThemeConfiguration → T003-T004 (theme configs)
-   - LanguageConfiguration → T002 (i18n config)
-
+   - UserPreference entity → T021 (model), T012 (migration)
+   - ThemeConfiguration → T013, T014 (theme configs)
+   - LanguageConfiguration → T004, T005 (i18n setup)
+   
 3. **From User Stories**:
-   - Default theme story → T009 (test)
-   - Theme persistence → T010 (test)
-   - Language switching → T011 (test)
-   - Cross-tab sync → T012 (test)
+   - Theme switching → T008 (integration test)
+   - Language switching → T009 (integration test)
+   - Preference persistence → T010 (integration test)
+   - Cross-tab sync → T011 (integration test)
 
-4. **From Quickstart Scenarios**:
-   - 10 test scenarios → validation task T040
-   - Accessibility tests → T039
-   - Performance requirements → T037
+4. **Ordering**:
+   - Setup → Tests → Models → Services → Endpoints → Integration → Polish
+   - Database migration before backend implementation
+   - Theme configs before theme provider
 
 ## Validation Checklist
+*GATE: Checked by main() before returning*
 
-- [x] All contracts have corresponding tests (T007-T008)
-- [x] All entities have model tasks (T015, configs in T002-T004)
-- [x] All tests come before implementation (Phase 3.2 before 3.3)
-- [x] Parallel tasks truly independent (verified file paths)
+- [x] All contracts have corresponding tests (T006-T007 for preferences.yaml)
+- [x] All entities have model tasks (T021 for UserPreference, T013-T014 for themes)
+- [x] All tests come before implementation (T006-T011 before T012-T024)
+- [x] Parallel tasks truly independent (different files)
 - [x] Each task specifies exact file path
-- [x] No [P] task modifies same file as another [P] task
-
-## Success Metrics
-
-- All 40 tasks completed
-- All tests passing (including accessibility)
-- Theme switch < 100ms
-- WCAG 2.1 AA compliance verified
-- TypeScript strict mode passing
-- Both languages fully functional
-- Cross-device sync working
-
----
-*Generated from specifications in `/specs/006-i-need-you/`*
+- [x] No task modifies same file as another [P] task

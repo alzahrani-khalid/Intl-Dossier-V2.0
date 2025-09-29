@@ -1,22 +1,7 @@
-import { createClient, AuthError, User, Session } from '@supabase/supabase-js'
+import { AuthError, User, Session } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-
-// Supabase client setup
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  }
-})
+import { supabase } from '../lib/supabase'
 
 // Types
 export interface AuthUser {

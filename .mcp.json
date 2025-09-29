@@ -17,15 +17,6 @@
       ],
       "env": {}
     },
-    "context7": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@upstash/context7-mcp"
-      ],
-      "env": {}
-    },
     "sequential-thinking": {
       "type": "stdio",
       "command": "npx",
@@ -44,11 +35,13 @@
       "env": {}
     },
     "shadcn": {
+      "type": "stdio",
       "command": "npx",
-      "args": ["-y", "shadcn@canary", "registry:mcp"],
-      "env": {
-        "REGISTRY_URL": "https://styleglide.ai/t/v4/N2xuLTAtMHw0aXQtMTA3LWNkOHwzamIta3MtZHphfDJ8c3V8MC41"
-      }
+      "args": [
+        "-y",
+        "shadcn@latest",
+        "mcp"
+      ]
     },
     "playwright": {
       "command": "npx",

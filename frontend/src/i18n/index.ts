@@ -31,6 +31,14 @@ i18n
     react: {
       useSuspense: false,
     },
+
+    // Add missing keys handling
+    saveMissing: false,
+    missingKeyHandler: (lng, ns, key) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.warn(`Missing translation key: ${key} for language: ${lng}`)
+      }
+    },
   })
 
 // Function to check if current language is RTL

@@ -4,9 +4,8 @@
 module.exports = {
   root: true,
   parser: '@typescript-eslint/parser',
-  plugins: ['@typescript-eslint'],
-  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended'],
+  plugins: ['@typescript-eslint', 'tailwindcss'],
+  extends: ['eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:tailwindcss/recommended'],
   env: { browser: true, es2022: true },
   ignorePatterns: ['dist/**'],
 };
-

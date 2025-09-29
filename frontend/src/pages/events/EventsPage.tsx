@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
-import { Plus, Calendar as CalendarIcon, MapPin, Users, Video, List } from 'lucide-react'
+import { Plus, Calendar as CalendarIcon, MapPin, Users, Video, List, Building2, Flag } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -21,12 +21,15 @@ interface Event {
   venue_ar: string
   is_virtual: boolean
   virtual_link: string | null
-  max_participants: number
+  max_participants: number | null
   status: string
-  organizer: {
-    name_en: string
-    name_ar: string
-  }
+  organizer?: { name_en: string; name_ar: string }
+  organizer_id?: string
+  organizer_name_en?: string
+  organizer_name_ar?: string
+  country_id?: string
+  country_name_en?: string
+  country_name_ar?: string
 }
 
 export function EventsPage() {
@@ -41,19 +44,14 @@ export function EventsPage() {
     queryKey: ['events', searchTerm, filterType, selectedDate],
     queryFn: async () => {
       let query = supabase
-        .from('events')
-        .select(`
-          *,
-          organizer:organizations!organizer_id(name_en, name_ar)
-        `)
+        .from('event_details')
+        .select('*')
         .gte('start_datetime', startOfMonth(selectedDate).toISOString())
         .lte('start_datetime', endOfMonth(selectedDate).toISOString())
         .order('start_datetime', { ascending: true })
 
       if (searchTerm) {
-        query = query.or(
-          `title_en.ilike.%${searchTerm}%,title_ar.ilike.%${searchTerm}%`
-        )
+        query = query.or(`title_en.ilike.%${searchTerm}%,title_ar.ilike.%${searchTerm}%`)
       }
 
       if (filterType !== 'all') {
@@ -190,6 +188,26 @@ export function EventsPage() {
                 <span>{isRTL ? event.location_ar : event.location_en}</span>
               </div>
             )}
+          </div>
+        )
+      },
+      {
+        key: 'organizer',
+        header: t('events.organizer'),
+        cell: (event: Event) => (
+          <div className="flex items-center gap-1 text-sm">
+            <Building2 className="h-4 w-4 text-muted-foreground" />
+            <span>{isRTL ? (event.organizer_name_ar || '-') : (event.organizer_name_en || '-')}</span>
+          </div>
+        )
+      },
+      {
+        key: 'country',
+        header: t('events.country'),
+        cell: (event: Event) => (
+          <div className="flex items-center gap-1 text-sm">
+            <Flag className="h-4 w-4 text-muted-foreground" />
+            <span>{isRTL ? (event.country_name_ar || '-') : (event.country_name_en || '-')}</span>
           </div>
         )
       },

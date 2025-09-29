@@ -25,6 +25,7 @@ import { Route as ProtectedDataLibraryRouteImport } from './routes/_protected/da
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedCountriesRouteImport } from './routes/_protected/countries'
 import { Route as ProtectedBriefsRouteImport } from './routes/_protected/briefs'
+import { Route as ResponsiveDemoRouteImport } from './routes/responsive-demo'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -105,11 +106,17 @@ const ProtectedBriefsRoute = ProtectedBriefsRouteImport.update({
   path: '/briefs',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ResponsiveDemoRoute = ResponsiveDemoRouteImport.update({
+  id: '/responsive-demo',
+  path: '/responsive-demo',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/responsive-demo': typeof ResponsiveDemoRoute
   '/briefs': typeof ProtectedBriefsRoute
   '/countries': typeof ProtectedCountriesRoute
   '/dashboard': typeof ProtectedDashboardRoute
@@ -127,6 +134,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/responsive-demo': typeof ResponsiveDemoRoute
   '/briefs': typeof ProtectedBriefsRoute
   '/countries': typeof ProtectedCountriesRoute
   '/dashboard': typeof ProtectedDashboardRoute
@@ -165,6 +173,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/responsive-demo'
     | '/briefs'
     | '/countries'
     | '/dashboard'
@@ -182,6 +191,7 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
+    | '/responsive-demo'
     | '/briefs'
     | '/countries'
     | '/dashboard'
@@ -219,6 +229,7 @@ export interface RootRouteChildren {
   ProtectedRoute: typeof ProtectedRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
+  ResponsiveDemoRoute: typeof ResponsiveDemoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -377,6 +388,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProtectedRoute: ProtectedRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
+  ResponsiveDemoRoute: ResponsiveDemoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

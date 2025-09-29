@@ -1,0 +1,581 @@
+openapi: 3.0.0
+info:
+  title: Responsive Design Compliance API
+  version: 1.0.0
+  description: API for managing responsive design system, component registry, and validation
+
+servers:
+  - url: http://localhost:3000/api
+    description: Development server
+  - url: https://api.gastat-dossier.sa/api
+    description: Production server
+
+paths:
+  /design/tokens:
+    get:
+      summary: Get all design tokens
+      tags:
+        - Design Tokens
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [color, spacing, typography, border, shadow, animation]
+        - name: theme
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of design tokens
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  tokens:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DesignToken'
+
+    post:
+      summary: Create or update design token
+      tags:
+        - Design Tokens
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DesignToken'
+      responses:
+        '201':
+          description: Token created
+        '200':
+          description: Token updated
+
+  /design/themes:
+    get:
+      summary: Get available themes
+      tags:
+        - Themes
+      responses:
+        '200':
+          description: List of themes
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  themes:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ThemeVariant'
+
+  /components/registry:
+    get:
+      summary: Get component registry
+      tags:
+        - Component Registry
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [layout, form, display, feedback, navigation, overlay]
+        - name: source
+          in: query
+          schema:
+            type: string
+            enum: [shadcn, custom]
+      responses:
+        '200':
+          description: Component registry
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  components:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ComponentRegistry'
+
+    post:
+      summary: Register new component
+      tags:
+        - Component Registry
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComponentRegistry'
+      responses:
+        '201':
+          description: Component registered
+        '400':
+          description: Validation failed
+
+  /components/{name}/variants:
+    get:
+      summary: Get component variants
+      tags:
+        - Component Registry
+      parameters:
+        - name: name
+          in: path
+          required: true
+          schema:
+            type: string
+        - name: breakpoint
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Component variants
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  variants:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ComponentVariant'
+
+  /validation/check:
+    post:
+      summary: Validate component compliance
+      tags:
+        - Validation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                componentName:
+                  type: string
+                html:
+                  type: string
+                viewport:
+                  type: number
+                theme:
+                  type: string
+                language:
+                  type: string
+                  enum: [ar, en]
+      responses:
+        '200':
+          description: Validation results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  passed:
+                    type: boolean
+                  duration:
+                    type: number
+                    description: Validation time in ms
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ValidationResult'
+
+  /validation/rules:
+    get:
+      summary: Get validation rules
+      tags:
+        - Validation
+      parameters:
+        - name: component
+          in: query
+          schema:
+            type: string
+        - name: severity
+          in: query
+          schema:
+            type: string
+            enum: [error, warning, info]
+      responses:
+        '200':
+          description: Validation rules
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rules:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ValidationRule'
+
+  /preferences/responsive:
+    get:
+      summary: Get user responsive preferences
+      tags:
+        - User Preferences
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: User preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserPreference'
+
+    put:
+      summary: Update user responsive preferences
+      tags:
+        - User Preferences
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UserPreference'
+      responses:
+        '200':
+          description: Preferences updated
+        '400':
+          description: Invalid preferences
+
+  /breakpoints:
+    get:
+      summary: Get breakpoint configuration
+      tags:
+        - Breakpoints
+      responses:
+        '200':
+          description: Breakpoint configuration
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  breakpoints:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BreakpointConfig'
+
+  /metrics/performance:
+    post:
+      summary: Record performance metric
+      tags:
+        - Performance
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PerformanceMetric'
+      responses:
+        '201':
+          description: Metric recorded
+        '400':
+          description: Invalid metric
+
+    get:
+      summary: Get performance metrics
+      tags:
+        - Performance
+      parameters:
+        - name: metricType
+          in: query
+          schema:
+            type: string
+        - name: from
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: to
+          in: query
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Performance metrics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  metrics:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PerformanceMetric'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    DesignToken:
+      type: object
+      required:
+        - id
+        - category
+        - name
+        - value
+        - cssVariable
+      properties:
+        id:
+          type: string
+        category:
+          type: string
+          enum: [color, spacing, typography, border, shadow, animation]
+        name:
+          type: string
+        value:
+          type: string
+        cssVariable:
+          type: string
+        fallback:
+          type: string
+        description:
+          type: string
+        deprecated:
+          type: boolean
+
+    ComponentRegistry:
+      type: object
+      required:
+        - name
+        - version
+        - source
+        - category
+        - path
+      properties:
+        name:
+          type: string
+        version:
+          type: string
+        source:
+          type: string
+          enum: [shadcn, custom]
+        category:
+          type: string
+          enum: [layout, form, display, feedback, navigation, overlay]
+        path:
+          type: string
+        dependencies:
+          type: array
+          items:
+            type: string
+        documentation:
+          type: string
+
+    ComponentVariant:
+      type: object
+      required:
+        - id
+        - componentName
+        - variant
+        - rtlSupport
+      properties:
+        id:
+          type: string
+        componentName:
+          type: string
+        variant:
+          type: string
+        size:
+          type: string
+          enum: [xs, sm, md, lg, xl]
+        props:
+          type: object
+        className:
+          type: string
+        rtlSupport:
+          type: boolean
+        accessibility:
+          type: object
+          properties:
+            ariaLabel:
+              type: string
+            ariaLabelAr:
+              type: string
+            role:
+              type: string
+            focusable:
+              type: boolean
+
+    ThemeVariant:
+      type: object
+      required:
+        - id
+        - name
+        - direction
+        - isDefault
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        tokens:
+          type: object
+        direction:
+          type: string
+          enum: [ltr, rtl]
+        contrast:
+          type: string
+          enum: [normal, high]
+        motion:
+          type: string
+          enum: [normal, reduced]
+        isDefault:
+          type: boolean
+
+    ValidationRule:
+      type: object
+      required:
+        - id
+        - ruleType
+        - severity
+        - message
+      properties:
+        id:
+          type: string
+        componentName:
+          type: string
+        ruleType:
+          type: string
+          enum: [responsive, accessibility, rtl, performance, registry, typography]
+        severity:
+          type: string
+          enum: [error, warning, info]
+        message:
+          type: string
+        messageAr:
+          type: string
+        autoFix:
+          type: boolean
+
+    ValidationResult:
+      type: object
+      required:
+        - id
+        - ruleId
+        - passed
+        - severity
+        - message
+      properties:
+        id:
+          type: string
+        componentName:
+          type: string
+        ruleId:
+          type: string
+        passed:
+          type: boolean
+        severity:
+          type: string
+          enum: [error, warning, info]
+        message:
+          type: string
+        context:
+          type: object
+        suggestion:
+          type: string
+        autoFixed:
+          type: boolean
+
+    BreakpointConfig:
+      type: object
+      required:
+        - id
+        - name
+        - minWidth
+        - alias
+        - deviceType
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        minWidth:
+          type: number
+        maxWidth:
+          type: number
+        alias:
+          type: string
+        deviceType:
+          type: string
+          enum: [mobile, tablet, desktop, wide]
+        orientation:
+          type: string
+          enum: [portrait, landscape, any]
+        containerQueries:
+          type: boolean
+
+    UserPreference:
+      type: object
+      properties:
+        viewportPreference:
+          type: object
+          properties:
+            preferredView:
+              type: string
+              enum: [mobile, tablet, desktop, auto]
+            forceViewport:
+              type: boolean
+            zoomLevel:
+              type: number
+        themeId:
+          type: string
+        textSize:
+          type: string
+          enum: [small, medium, large, extra-large]
+        reducedMotion:
+          type: boolean
+        highContrast:
+          type: boolean
+        language:
+          type: string
+          enum: [ar, en]
+        direction:
+          type: string
+          enum: [rtl, ltr, auto]
+        componentDensity:
+          type: string
+          enum: [compact, normal, comfortable]
+
+    PerformanceMetric:
+      type: object
+      required:
+        - metricType
+        - value
+        - unit
+        - viewport
+      properties:
+        metricType:
+          type: string
+          enum: [validation_time, layout_shift, resize_performance, theme_switch, component_render]
+        value:
+          type: number
+        unit:
+          type: string
+          enum: [ms, px, count, percentage]
+        viewport:
+          type: number
+        componentName:
+          type: string
+        pageUrl:
+          type: string
+        sessionId:
+          type: string
+        metadata:
+          type: object

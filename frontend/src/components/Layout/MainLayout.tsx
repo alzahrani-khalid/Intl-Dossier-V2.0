@@ -9,11 +9,11 @@ interface MainLayoutProps {
 
 export function MainLayout({ children }: MainLayoutProps) {
   return (
-    <div className="flex min-h-screen bg-base-50 text-base-900 dark:bg-base-950 dark:text-base-25">
+    <div className="flex min-h-screen bg-background text-foreground">
       <Sidebar />
       <div className="flex min-h-screen flex-1 flex-col">
         <Navigation />
-        <main className="flex-1 overflow-y-auto bg-white/60 p-4 backdrop-blur dark:bg-base-900/60 md:p-6">
+        <main className="flex-1 overflow-y-auto bg-background p-4 md:p-6">
           <div className="mx-auto w-full max-w-7xl">{children}</div>
         </main>
       </div>

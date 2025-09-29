@@ -1,0 +1,86 @@
+{
+  "theme": {
+    "title": "Theme",
+    "select": "Select theme",
+    "gastat": "GASTAT",
+    "blueSky": "Blue Sky",
+    "light": "Light mode",
+    "dark": "Dark mode",
+    "switchToLight": "Switch to light mode",
+    "switchToDark": "Switch to dark mode",
+    "changed": "Theme changed to {{theme}}",
+    "colorModeChanged": "Color mode changed to {{mode}}"
+  },
+  "language": {
+    "title": "Language",
+    "select": "Select language",
+    "english": "English",
+    "arabic": "Arabic",
+    "changed": "Language changed to {{language}}"
+  },
+  "accessibility": {
+    "skipToContent": "Skip to main content",
+    "mainNavigation": "Main navigation",
+    "userMenu": "User menu",
+    "notifications": "Notifications",
+    "search": "Search",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "warning": "Warning",
+    "info": "Information"
+  },
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "close": "Close",
+    "confirm": "Confirm",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "submit": "Submit",
+    "reset": "Reset",
+    "logout": "Logout",
+    "profile": "Profile",
+    "settings": "Settings",
+    "help": "Help",
+    "about": "About"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "dossiers": "Dossiers",
+    "projects": "Projects",
+    "organizations": "Organizations",
+    "countries": "Countries",
+    "reports": "Reports",
+    "settings": "Settings",
+    "profile": "Profile",
+    "help": "Help"
+  },
+  "search": {
+    "searchPlaceholder": "Search...",
+    "noResults": "No results found",
+    "searching": "Searching...",
+    "clearSearch": "Clear search"
+  },
+  "errors": {
+    "preferenceSaveFailed": "Failed to save preferences. Changes are stored locally.",
+    "themeLoadFailed": "Failed to load theme. Using default theme.",
+    "languageLoadFailed": "Failed to load language. Using English.",
+    "networkError": "Network error. Please check your connection.",
+    "unknownError": "An unknown error occurred. Please try again."
+  },
+  "preferences": {
+    "title": "Preferences",
+    "appearance": "Appearance",
+    "language": "Language",
+    "theme": "Theme",
+    "colorMode": "Color Mode",
+    "saveSuccess": "Preferences saved successfully",
+    "loadError": "Failed to load preferences",
+    "resetConfirm": "Are you sure you want to reset to default preferences?",
+    "resetSuccess": "Preferences reset to defaults"
+  }
+}

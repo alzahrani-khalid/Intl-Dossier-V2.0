@@ -1,4 +1,5 @@
 import type { Config } from 'tailwindcss';
+import rtl from 'tailwindcss-rtl';
 
 const config: Config = {
   darkMode: ['class'],
@@ -9,6 +10,12 @@ const config: Config = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
+    screens: {
+      xs: '320px',
+      sm: '768px',
+      md: '1024px',
+      lg: '1440px',
+    },
     container: {
       center: true,
       padding: '2rem',
@@ -34,6 +41,18 @@ const config: Config = {
         destructive: {
           DEFAULT: 'hsl(var(--destructive))',
           foreground: 'hsl(var(--destructive-foreground))',
+        },
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          foreground: 'hsl(var(--success-foreground))',
+        },
+        warning: {
+          DEFAULT: 'hsl(var(--warning))',
+          foreground: 'hsl(var(--warning-foreground))',
+        },
+        info: {
+          DEFAULT: 'hsl(var(--info))',
+          foreground: 'hsl(var(--info-foreground))',
         },
         muted: {
           DEFAULT: 'hsl(var(--muted))',
@@ -121,6 +140,7 @@ const config: Config = {
     },
   },
   plugins: [
+    rtl,
     // RTL support plugin
     ({ addUtilities }: any) => {
       addUtilities({

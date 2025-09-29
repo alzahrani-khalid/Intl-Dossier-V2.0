@@ -1,151 +1,150 @@
 import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
-import i18n from 'i18next';
-import { initReactI18next, useTranslation } from 'react-i18next';
-import LanguageDetector from 'i18next-browser-languagedetector';
-
-export type Language = 'en' | 'ar';
-export type Direction = 'ltr' | 'rtl';
+import { useTranslation } from 'react-i18next';
+import { getDirection, type SupportedLanguage } from '../../i18n';
 
 interface LanguageContextValue {
-  language: Language;
-  direction: Direction;
-  setLanguage: (lang: Language) => void;
-  t: typeof i18n.t;
+  language: SupportedLanguage;
+  direction: 'ltr' | 'rtl';
+  setLanguage: (language: SupportedLanguage) => void;
+  t: (key: string) => string;
 }
 
 const LanguageContext = createContext<LanguageContextValue | undefined>(undefined);
 
 interface LanguageProviderProps {
   children: React.ReactNode;
-  defaultLanguage?: Language;
-  storageKey?: string;
-}
-
-if (!i18n.isInitialized) {
-  i18n
-    .use(LanguageDetector)
-    .use(initReactI18next)
-    .init({
-      resources: {
-        en: {
-          translation: {},
-        },
-        ar: {
-          translation: {},
-        },
-      },
-      fallbackLng: 'en',
-      debug: false,
-      interpolation: {
-        escapeValue: false,
-      },
-      detection: {
-        order: ['localStorage', 'navigator'],
-        caches: ['localStorage'],
-      },
-    });
+  initialLanguage?: SupportedLanguage;
 }
 
 export function LanguageProvider({
   children,
-  defaultLanguage = 'en',
-  storageKey = 'theme-preference',
-}: LanguageProviderProps): React.ReactElement {
-  const { t } = useTranslation();
-  
-  const [language, setLanguageState] = useState<Language>(() => {
-    if (typeof window === 'undefined') return defaultLanguage;
-    
-    try {
-      const stored = localStorage.getItem(storageKey);
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        return parsed.language || defaultLanguage;
-      }
-    } catch {}
-    
-    const browserLang = navigator.language.toLowerCase();
-    if (browserLang.startsWith('ar')) return 'ar';
-    
-    return defaultLanguage;
-  });
+  initialLanguage = 'en',
+}: LanguageProviderProps) {
+  const { i18n, t } = useTranslation();
+  const [language, setLanguageState] = useState<SupportedLanguage>(initialLanguage);
+  const [direction, setDirection] = useState<'ltr' | 'rtl'>('ltr');
 
-  const direction: Direction = language === 'ar' ? 'rtl' : 'ltr';
-
+  // Load language preference from localStorage on mount
   useEffect(() => {
-    const root = window.document.documentElement;
-    
-    root.setAttribute('lang', language);
-    root.setAttribute('dir', direction);
-    
-    i18n.changeLanguage(language);
-  }, [language, direction]);
+    const stored = localStorage.getItem('user-preferences');
+    if (stored) {
+      try {
+        const prefs = JSON.parse(stored);
+        if (prefs.language && (prefs.language === 'en' || prefs.language === 'ar')) {
+          setLanguageState(prefs.language);
+          i18n.changeLanguage(prefs.language);
+        }
+      } catch (e) {
+        // Silently ignore parse errors
+      }
+    } else {
+      // Use browser language detection
+      const browserLang = navigator.language.toLowerCase();
+      if (browserLang.startsWith('ar')) {
+        setLanguageState('ar');
+        i18n.changeLanguage('ar');
+      }
+    }
+  }, [i18n]);
 
-  const setLanguage = useCallback((newLang: Language) => {
-    setLanguageState(newLang);
-    
-    try {
-      const stored = localStorage.getItem(storageKey);
-      const current = stored ? JSON.parse(stored) : {};
-      localStorage.setItem(storageKey, JSON.stringify({
-        ...current,
-        language: newLang,
-        timestamp: Date.now(),
-      }));
-    } catch (error) {
-      console.error('Failed to save language preference:', error);
+  // Apply language direction
+  useEffect(() => {
+    const dir = getDirection(language);
+    setDirection(dir);
+    document.documentElement.dir = dir;
+    document.documentElement.lang = language;
+  }, [language]);
+
+  const setLanguage = useCallback(async (newLanguage: SupportedLanguage) => {
+    if (newLanguage !== 'en' && newLanguage !== 'ar') {
+      console.error(`Invalid language: ${newLanguage}`);
+      return;
     }
 
-    const message = newLang === 'ar' 
-      ? 'تم تغيير اللغة إلى العربية'
-      : 'Language changed to English';
+    setLanguageState(newLanguage);
     
-    const announcement = document.createElement('div');
-    announcement.setAttribute('role', 'status');
-    announcement.setAttribute('aria-live', 'polite');
-    announcement.setAttribute('aria-atomic', 'true');
-    announcement.className = 'sr-only';
-    announcement.textContent = message;
-    document.body.appendChild(announcement);
-    
-    setTimeout(() => {
-      document.body.removeChild(announcement);
-    }, 1000);
-  }, [storageKey]);
+    // Change i18n language
+    await i18n.changeLanguage(newLanguage);
 
-  useEffect(() => {
-    const handleStorageChange = (e: StorageEvent): void => {
-      if (e.key !== storageKey || !e.newValue) return;
-      
+    // Apply direction
+    const dir = getDirection(newLanguage);
+    setDirection(dir);
+    document.documentElement.dir = dir;
+    document.documentElement.lang = newLanguage;
+
+    // Save to localStorage
+    const stored = localStorage.getItem('user-preferences');
+    let prefs = { theme: 'gastat', colorMode: 'light', language: newLanguage, updatedAt: new Date().toISOString() };
+    if (stored) {
       try {
-        const parsed = JSON.parse(e.newValue);
-        if (parsed.language && parsed.language !== language) {
-          setLanguageState(parsed.language);
+        const existing = JSON.parse(stored);
+        prefs = { ...existing, language: newLanguage, updatedAt: new Date().toISOString() };
+      } catch (e) {
+        // Use defaults
+      }
+    }
+    localStorage.setItem('user-preferences', JSON.stringify(prefs));
+
+    // Dispatch custom event for cross-component sync
+    window.dispatchEvent(new CustomEvent('languageChange', {
+      detail: { language: newLanguage, direction: dir }
+    }));
+
+    // Dispatch for cross-tab sync
+    window.dispatchEvent(new CustomEvent('preferenceChange', {
+      detail: { language: newLanguage }
+    }));
+  }, [i18n]);
+
+  // Listen for language changes from other components or tabs
+  useEffect(() => {
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'user-preferences' && e.newValue) {
+        try {
+          const prefs = JSON.parse(e.newValue);
+          if (prefs.language && (prefs.language === 'en' || prefs.language === 'ar')) {
+            setLanguageState(prefs.language);
+            i18n.changeLanguage(prefs.language);
+          }
+        } catch (err) {
+          console.warn('Failed to parse preference update:', err);
         }
-      } catch {}
+      }
+    };
+
+    const handleLanguageChange = (e: CustomEvent) => {
+      if (e.detail?.language) {
+        setLanguageState(e.detail.language);
+        i18n.changeLanguage(e.detail.language);
+      }
     };
 
     window.addEventListener('storage', handleStorageChange);
-    return () => window.removeEventListener('storage', handleStorageChange);
-  }, [storageKey, language]);
+    window.addEventListener('languageChange' as any, handleLanguageChange);
+    
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+      window.removeEventListener('languageChange' as any, handleLanguageChange);
+    };
+  }, [i18n]);
+
+  const value: LanguageContextValue = {
+    language,
+    direction,
+    setLanguage,
+    t: t as any,
+  };
 
   return (
-    <LanguageContext.Provider 
-      value={{
-        language,
-        direction,
-        setLanguage,
-        t,
-      }}
-    >
+    <LanguageContext.Provider value={value}>
       {children}
     </LanguageContext.Provider>
   );
 }
 
-export function useLanguage(): LanguageContextValue {
+export function useLanguage() {
   const context = useContext(LanguageContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useLanguage must be used within a LanguageProvider');
   }
   return context;

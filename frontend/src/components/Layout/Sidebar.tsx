@@ -141,16 +141,16 @@ export function Sidebar() {
   if (!isSidebarOpen) return null
 
   return (
-    <aside className="hidden h-screen w-72 flex-col border-r border-gray-200 bg-white dark:border-gray-700 dark:bg-base-900 lg:flex">
+    <aside className="hidden h-screen w-72 flex-col border-r border-border bg-sidebar lg:flex">
       <div className="p-4">
         <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-sm">A</span>
+          <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
+            <span className="text-background font-bold text-sm">A</span>
           </div>
-          <span className="font-semibold text-gray-900">Acme Inc.</span>
+          <span className="font-semibold text-sidebar-foreground">Acme Inc.</span>
         </div>
         
-        <button className="w-full flex items-center justify-center gap-2 bg-green-600 hover:bg-green-700 text-white px-3 py-2 rounded-lg text-sm font-medium mb-6">
+        <button className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-2 rounded-lg text-sm font-medium mb-6">
           <Plus className="h-4 w-4" />
           Quick Create
         </button>
@@ -168,8 +168,8 @@ export function Sidebar() {
                   to={item.path}
                   className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-gray-100 text-gray-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                      : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -181,7 +181,7 @@ export function Sidebar() {
         </ul>
         
         <div className="mt-8">
-          <h3 className="px-3 text-xs font-semibold text-gray-500 uppercase tracking-wider mb-2">
+          <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
             Documents
           </h3>
           <ul className="space-y-1">
@@ -195,8 +195,8 @@ export function Sidebar() {
                     to={item.path}
                     className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                       isActive
-                        ? 'bg-gray-100 text-gray-900'
-                        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                        ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                        : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
                     }`}
                   >
                     <Icon className="h-4 w-4" />
@@ -206,14 +206,14 @@ export function Sidebar() {
               )
             })}
           </ul>
-          <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-gray-400 hover:text-gray-600 hover:bg-gray-50 w-full transition-colors mt-1">
+          <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50 w-full transition-colors mt-1">
             <Plus className="h-4 w-4" />
             <span>More</span>
           </button>
         </div>
       </nav>
 
-      <div className="p-4 border-t border-gray-200">
+      <div className="p-4 border-t border-sidebar-border">
         <ul className="space-y-1">
           {bottomNavItems.map((item) => {
             const Icon = item.icon
@@ -225,8 +225,8 @@ export function Sidebar() {
                   to={item.path}
                   className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
                     isActive
-                      ? 'bg-gray-100 text-gray-900'
-                      : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                      ? 'bg-sidebar-accent text-sidebar-accent-foreground'
+                      : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
                   }`}
                 >
                   <Icon className="h-4 w-4" />
@@ -237,21 +237,21 @@ export function Sidebar() {
           })}
         </ul>
         
-        <div className="mt-4 p-3 bg-gray-50 rounded-lg">
+        <div className="mt-4 p-3 bg-sidebar-accent/30 rounded-lg">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center">
-              <User className="h-4 w-4 text-gray-600" />
+            <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
+              <User className="h-4 w-4 text-muted-foreground" />
             </div>
             <div className="flex-1">
-              <p className="text-gray-900 text-sm font-medium">{user?.name || 'User'}</p>
-              <p className="text-gray-500 text-xs">{user?.email || 'user@gastat.gov.sa'}</p>
+              <p className="text-sidebar-foreground text-sm font-medium">{user?.name || 'User'}</p>
+              <p className="text-muted-foreground text-xs">{user?.email || 'user@gastat.gov.sa'}</p>
             </div>
             <button 
               aria-label="User menu"
-              className="p-1 hover:bg-gray-200 rounded"
+              className="p-1 hover:bg-sidebar-accent rounded"
               onClick={handleLogout}
             >
-              <LogOut className="h-4 w-4 text-gray-600" />
+              <LogOut className="h-4 w-4 text-muted-foreground" />
             </button>
           </div>
         </div>

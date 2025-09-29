@@ -1,142 +1,232 @@
-import { createClient } from '@supabase/supabase-js';
-import { 
-  UserPreference, 
-  PreferenceUpdate, 
-  DEFAULT_PREFERENCES,
+import { createClient, SupabaseClient } from '@supabase/supabase-js';
+import {
+  UserPreference,
+  UserPreferenceUpdate,
   UserPreferenceSchema,
-  PreferenceUpdateSchema 
-} from '../models/user-preferences';
+  UserPreferenceUpdateSchema,
+  USER_PREFERENCES_TABLE,
+  DEFAULT_PREFERENCES,
+  mapDatabaseToUserPreference,
+  mapUserPreferenceToDatabase,
+  validateUserId
+} from '../models/user-preference';
 
+/**
+ * Service for managing user preferences
+ */
 export class PreferencesService {
-  private supabase;
+  private supabase: SupabaseClient;
 
-  constructor(supabaseUrl: string, supabaseKey: string) {
-    this.supabase = createClient(supabaseUrl, supabaseKey);
+  constructor(supabaseUrl?: string, supabaseKey?: string) {
+    const url = supabaseUrl || process.env.SUPABASE_URL;
+    const key = supabaseKey || process.env.SUPABASE_SERVICE_KEY;
+
+    if (!url || !key) {
+      throw new Error('Supabase URL and service key are required');
+    }
+
+    this.supabase = createClient(url, key);
   }
 
-  async getUserPreferences(userId: string): Promise<UserPreference | null> {
+  /**
+   * Get user preferences by user ID
+   * Returns default preferences if none exist
+   */
+  async getPreferences(userId: string): Promise<UserPreference & { isDefault?: boolean }> {
+    // Validate user ID
+    if (!validateUserId(userId)) {
+      throw new Error('Invalid user ID format');
+    }
+
     try {
       const { data, error } = await this.supabase
-        .from('user_preferences')
+        .from(USER_PREFERENCES_TABLE)
         .select('*')
         .eq('user_id', userId)
         .single();
 
       if (error) {
+        // If preferences not found, return defaults
         if (error.code === 'PGRST116') {
-          return null;
+          return {
+            ...DEFAULT_PREFERENCES,
+            userId,
+            isDefault: true
+          } as UserPreference & { isDefault: boolean };
         }
         throw error;
       }
 
-      const preference = {
-        id: data.id,
-        userId: data.user_id,
-        theme: data.theme,
-        colorMode: data.color_mode,
-        language: data.language,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-      };
-
-      return UserPreferenceSchema.parse(preference);
+      return mapDatabaseToUserPreference(data);
     } catch (error) {
-      console.error('Error fetching user preferences:', error);
+      console.error('Error fetching preferences:', error);
       throw error;
     }
   }
 
-  async createUserPreferences(userId: string, preferences?: PreferenceUpdate): Promise<UserPreference> {
-    try {
-      const validatedPreferences = preferences 
-        ? PreferenceUpdateSchema.parse(preferences)
-        : {};
-
-      const { data, error } = await this.supabase
-        .from('user_preferences')
-        .insert({
-          user_id: userId,
-          theme: validatedPreferences.theme || DEFAULT_PREFERENCES.theme,
-          color_mode: validatedPreferences.colorMode || DEFAULT_PREFERENCES.colorMode,
-          language: validatedPreferences.language || DEFAULT_PREFERENCES.language,
-        })
-        .select()
-        .single();
-
-      if (error) {
-        throw error;
-      }
-
-      const preference = {
-        id: data.id,
-        userId: data.user_id,
-        theme: data.theme,
-        colorMode: data.color_mode,
-        language: data.language,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-      };
-
-      return UserPreferenceSchema.parse(preference);
-    } catch (error) {
-      console.error('Error creating user preferences:', error);
-      throw error;
+  /**
+   * Create or update user preferences
+   */
+  async upsertPreferences(
+    userId: string,
+    preferences: UserPreferenceUpdate
+  ): Promise<UserPreference> {
+    // Validate user ID
+    if (!validateUserId(userId)) {
+      throw new Error('Invalid user ID format');
     }
-  }
 
-  async updateUserPreferences(userId: string, updates: PreferenceUpdate): Promise<UserPreference> {
+    // Validate preferences
+    const validationResult = UserPreferenceUpdateSchema.safeParse(preferences);
+    if (!validationResult.success) {
+      throw new Error(`Invalid preferences: ${validationResult.error.message}`);
+    }
+
     try {
-      const validatedUpdates = PreferenceUpdateSchema.parse(updates);
-      
-      const updateData: any = {};
-      if (validatedUpdates.theme !== undefined) {
-        updateData.theme = validatedUpdates.theme;
-      }
-      if (validatedUpdates.colorMode !== undefined) {
-        updateData.color_mode = validatedUpdates.colorMode;
-      }
-      if (validatedUpdates.language !== undefined) {
-        updateData.language = validatedUpdates.language;
-      }
-
-      const { data, error } = await this.supabase
-        .from('user_preferences')
-        .update(updateData)
+      // Check if preferences exist
+      const { data: existing } = await this.supabase
+        .from(USER_PREFERENCES_TABLE)
+        .select('id')
         .eq('user_id', userId)
-        .select()
         .single();
 
-      if (error) {
-        if (error.code === 'PGRST116') {
-          return this.createUserPreferences(userId, updates);
-        }
-        throw error;
+      let result;
+
+      if (existing) {
+        // Update existing preferences
+        const updateData = mapUserPreferenceToDatabase(preferences);
+        updateData.updated_at = new Date().toISOString();
+
+        const { data, error } = await this.supabase
+          .from(USER_PREFERENCES_TABLE)
+          .update(updateData)
+          .eq('user_id', userId)
+          .select()
+          .single();
+
+        if (error) throw error;
+        result = data;
+      } else {
+        // Insert new preferences
+        const insertData = mapUserPreferenceToDatabase({
+          ...DEFAULT_PREFERENCES,
+          ...preferences,
+          userId
+        });
+
+        const { data, error } = await this.supabase
+          .from(USER_PREFERENCES_TABLE)
+          .insert(insertData)
+          .select()
+          .single();
+
+        if (error) throw error;
+        result = data;
       }
 
-      const preference = {
-        id: data.id,
-        userId: data.user_id,
-        theme: data.theme,
-        colorMode: data.color_mode,
-        language: data.language,
-        createdAt: data.created_at,
-        updatedAt: data.updated_at,
-      };
-
-      return UserPreferenceSchema.parse(preference);
+      return mapDatabaseToUserPreference(result);
     } catch (error) {
-      console.error('Error updating user preferences:', error);
+      console.error('Error upserting preferences:', error);
       throw error;
     }
   }
 
-  async upsertUserPreferences(userId: string, preferences: PreferenceUpdate): Promise<UserPreference> {
-    const existing = await this.getUserPreferences(userId);
-    
-    if (existing) {
-      return this.updateUserPreferences(userId, preferences);
-    } else {
-      return this.createUserPreferences(userId, preferences);
+  /**
+   * Delete user preferences
+   */
+  async deletePreferences(userId: string): Promise<void> {
+    // Validate user ID
+    if (!validateUserId(userId)) {
+      throw new Error('Invalid user ID format');
     }
+
+    try {
+      const { error } = await this.supabase
+        .from(USER_PREFERENCES_TABLE)
+        .delete()
+        .eq('user_id', userId);
+
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error deleting preferences:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get preferences for multiple users
+   */
+  async getBulkPreferences(userIds: string[]): Promise<UserPreference[]> {
+    // Validate all user IDs
+    const invalidIds = userIds.filter(id => !validateUserId(id));
+    if (invalidIds.length > 0) {
+      throw new Error(`Invalid user IDs: ${invalidIds.join(', ')}`);
+    }
+
+    try {
+      const { data, error } = await this.supabase
+        .from(USER_PREFERENCES_TABLE)
+        .select('*')
+        .in('user_id', userIds);
+
+      if (error) throw error;
+
+      const preferences = (data || []).map(mapDatabaseToUserPreference);
+
+      // Add defaults for missing users
+      const foundUserIds = new Set(preferences.map(p => p.userId));
+      const missingUsers = userIds.filter(id => !foundUserIds.has(id));
+
+      for (const userId of missingUsers) {
+        preferences.push({
+          ...DEFAULT_PREFERENCES,
+          userId,
+          isDefault: true
+        } as UserPreference);
+      }
+
+      return preferences;
+    } catch (error) {
+      console.error('Error fetching bulk preferences:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Validate preferences without saving
+   */
+  validatePreferences(preferences: any): { valid: boolean; errors?: string[] } {
+    const result = UserPreferenceUpdateSchema.safeParse(preferences);
+    
+    if (result.success) {
+      return { valid: true };
+    }
+
+    const errors = result.error.errors.map(err => {
+      return `${err.path.join('.')}: ${err.message}`;
+    });
+
+    return { valid: false, errors };
+  }
+
+  /**
+   * Get available theme options
+   */
+  getAvailableThemes(): string[] {
+    return ['gastat', 'blue-sky'];
+  }
+
+  /**
+   * Get available color modes
+   */
+  getAvailableColorModes(): string[] {
+    return ['light', 'dark'];
+  }
+
+  /**
+   * Get available languages
+   */
+  getAvailableLanguages(): string[] {
+    return ['en', 'ar'];
   }
 }

@@ -49,7 +49,7 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-50 to-base-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
       <div className="w-full max-w-md">
         {/* Language toggle */}
         <div className="flex justify-end mb-4">
@@ -57,16 +57,16 @@ export function LoginPage() {
         </div>
 
         {/* Login card */}
-        <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8">
+        <div className="bg-card rounded-2xl shadow-xl p-8">
           {/* Logo and title */}
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full mb-4">
-              <Globe className="h-8 w-8 text-primary-600 dark:text-primary-400" />
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
+              <Globe className="h-8 w-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-display font-display text-base-900 dark:text-base-50">
+            <h1 className="text-2xl font-bold text-foreground">
               {t('common.appTitle')}
             </h1>
-            <p className="text-base-600 dark:text-base-400 mt-2 font-text">
+            <p className="text-muted-foreground mt-2">
               {t('auth.signIn')}
             </p>
           </div>
@@ -77,7 +77,7 @@ export function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-base-700 dark:text-base-300 mb-2 font-text"
+                className="block text-sm font-medium text-foreground mb-2"
               >
                 {t('auth.email')}
               </label>
@@ -85,11 +85,11 @@ export function LoginPage() {
                 {...register('email')}
                 type="email"
                 id="email"
-                className="w-full px-4 py-2 border border-base-300 dark:border-base-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-base-800 dark:text-base-50 font-text"
+                className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
                 placeholder="user@gastat.sa"
               />
               {errors.email && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                <p className="mt-1 text-sm text-destructive">
                   {t(errors.email.message || '')}
                 </p>
               )}
@@ -99,7 +99,7 @@ export function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-base-700 dark:text-base-300 mb-2 font-text"
+                className="block text-sm font-medium text-foreground mb-2"
               >
                 {t('auth.password')}
               </label>
@@ -108,12 +108,12 @@ export function LoginPage() {
                   {...register('password')}
                   type={showPassword ? 'text' : 'password'}
                   id="password"
-                  className="w-full px-4 py-2 pe-12 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent dark:bg-gray-700 dark:text-white"
+                  className="w-full px-4 py-2 pe-12 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute end-3 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"
+                  className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? (
                     <EyeOff className="h-5 w-5" />
@@ -123,7 +123,7 @@ export function LoginPage() {
                 </button>
               </div>
               {errors.password && (
-                <p className="mt-1 text-sm text-red-600 dark:text-red-400">
+                <p className="mt-1 text-sm text-destructive">
                   {t(errors.password.message || '', { min: 6 })}
                 </p>
               )}
@@ -134,7 +134,7 @@ export function LoginPage() {
               <div>
                 <label
                   htmlFor="mfaCode"
-                  className="block text-sm font-medium text-base-700 dark:text-base-300 mb-2 font-text"
+                  className="block text-sm font-medium text-foreground mb-2"
                 >
                   {t('auth.mfaCode')}
                 </label>
@@ -143,11 +143,11 @@ export function LoginPage() {
                   id="mfaCode"
                   value={mfaCode}
                   onChange={(e) => setMfaCode(e.target.value)}
-                  className="w-full px-4 py-2 border border-base-300 dark:border-base-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-base-800 dark:text-base-50 font-text"
+                  className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
                   placeholder="123456"
                   maxLength={6}
                 />
-                <p className="mt-1 text-sm text-gray-600 dark:text-gray-400">
+                <p className="mt-1 text-sm text-muted-foreground">
                   {t('auth.enterMfaCode')}
                 </p>
               </div>
@@ -160,18 +160,18 @@ export function LoginPage() {
                   {...register('rememberMe')}
                   type="checkbox"
                   id="rememberMe"
-                  className="h-4 w-4 text-primary focus:ring-primary border-gray-300 rounded"
+                  className="h-4 w-4 text-primary focus:ring-ring border-input rounded"
                 />
                 <label
                   htmlFor="rememberMe"
-                  className="ms-2 text-sm text-gray-700 dark:text-gray-300"
+                  className="ms-2 text-sm text-foreground"
                 >
                   {t('auth.rememberMe')}
                 </label>
               </div>
               <a
                 href="#"
-                className="text-sm text-primary-600 hover:text-primary-700 font-text"
+                className="text-sm text-primary hover:text-primary/80"
               >
                 {t('auth.forgotPassword')}
               </a>
@@ -179,8 +179,8 @@ export function LoginPage() {
 
             {/* Error message */}
             {error && (
-              <div className="p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                <p className="text-sm text-red-600 dark:text-red-400">
+              <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+                <p className="text-sm text-destructive">
                   {error}
                 </p>
               </div>
@@ -190,7 +190,7 @@ export function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-primary-600 hover:bg-primary-700 text-primary-50 font-text font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full py-3 px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center">
@@ -204,11 +204,11 @@ export function LoginPage() {
           </form>
 
           {/* Sign up link */}
-          <div className="text-center mt-4 text-sm text-gray-600 dark:text-gray-400">
+          <div className="text-center mt-4 text-sm text-muted-foreground">
             Don't have an account?{' '}
             <a
               href="/register"
-              className="text-primary-600 hover:text-primary-700 hover:underline font-text"
+              className="text-primary hover:text-primary/80 hover:underline"
               onClick={(e) => {
                 e.preventDefault()
                 navigate({ to: '/register' })
@@ -220,7 +220,7 @@ export function LoginPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center mt-6 text-sm text-gray-600 dark:text-gray-400">
+        <p className="text-center mt-6 text-sm text-muted-foreground">
           © 2025 GASTAT - General Authority for Statistics
         </p>
       </div>

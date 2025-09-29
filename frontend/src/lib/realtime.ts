@@ -1,5 +1,5 @@
 import type { RealtimeChannel, RealtimePresenceState } from '@supabase/supabase-js'
-import { supabase } from '../store/authStore'
+import { supabase } from './supabase'
 
 export interface RealtimeConfig {
   channel: string

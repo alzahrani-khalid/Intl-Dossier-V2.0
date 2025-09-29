@@ -71,8 +71,43 @@ Refinement requirements (resolve critical ambiguities and fill explicit, testabl
      - Fields: `analysis_id`, `model_name`, `model_version`, `embedding_model`, `embedding_dim`, `prompt_template_id`, `prompt_hash`, `temperature`, `top_p`, `seed`, `input_tokens`, `output_tokens`, `latency_ms`, `confidence_score`, `created_by`, `created_at`, `source_refs[]`, `heuristics[]`.
    - Relationship to pgvector: each analysis has an optional `embedding_id` FK into `ai_embeddings`. When present, ensure `embedding_dim` matches table definition; reject writes on mismatch.
 
+7) Responsive Design Compliance
+   - Design approach:
+     - Mobile‑first, fluid layouts; prefer component‑level container queries over global breakpoints when practical.
+     - Use CSS Grid/Flex; avoid fixed heights and hard‑coded widths; constrain with `max-width` and intrinsic sizing.
+   - Breakpoints (guidance; can be tailored per component):
+     - `xs 320px` (minimum), `sm 375px`, `md 768px`, `lg 1024px`, `xl 1280px`, `2xl 1536px`.
+     - Prefer `@container (min-width: X)` for components; keep global media queries minimal and centralized.
+   - Typography and spacing:
+     - Use `rem` units and fluid type via `clamp(min, vw-based, max)`; spacing via design tokens/variables.
+     - Ensure line length 45–75ch for body text; headings scale proportionally across sizes.
+   - Media and images:
+     - Images/videos use `max-width: 100%` and `height: auto`; set `aspect-ratio` to prevent layout shift; provide `srcset`/`sizes`.
+     - Lazy‑load non‑critical media; avoid layout jank when assets load.
+   - Navigation and touch targets:
+     - Interactive targets are ≥44×44 CSS px with ≥8px separation; provide non‑hover affordances on touch.
+     - Menus, drawers, and modals adapt to small screens with focus‑trap and escape gestures; avoid off‑screen focus.
+   - WCAG reflow and zoom (A/AA):
+     - Reflow at `320px` width without loss of content/functionality; no horizontal scrolling except for data tables and code blocks.
+     - Content remains usable at 200% page zoom and 400% text zoom; orientation is not locked (works in portrait/landscape).
+     - Respect `prefers-reduced-motion` and `prefers-contrast`; provide equivalent states without animation.
+   - Safe areas and viewports:
+     - Include `<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">`.
+     - Use `env(safe-area-inset-*)` padding for headers/footers on notched devices.
+   - Forms:
+     - Use proper `type` and `inputmode`; labels are always visible; errors inline and readable on small screens; prevent keyboard overlap with critical controls.
+   - Data tables and long content:
+     - Provide responsive patterns (stacked key‑value, column priority, or horizontal scroll with sticky header); wrap long words (`overflow-wrap: anywhere; hyphens: auto`).
+   - Performance hints:
+     - Avoid oversized images; use code‑splitting; consider `content-visibility: auto` for long lists.
+   - Definition of Done (Responsive):
+     - No horizontal overflow on key pages at widths: 320, 375, 414, 768, 1024, 1280.
+     - All primary flows (login, dashboard, detail views) usable with keyboard and touch at `320px`.
+     - Axe has no critical violations at `320px` and `768px`; screenshots reviewed with baseline diffs for the above widths.
+     - Playwright checks verify presence of viewport meta and absence of unintended horizontal scrollbars.
+
 Placement guidance (preserve template section order):
    - Put search/filtering and reporting under Functional Requirements.
-   - Put rate limits, scaling, and browser support under Non‑functional Requirements.
+   - Put rate limits, scaling, browser support, and responsive design compliance under Non‑functional Requirements.
    - Put embeddings/pgvector, algorithms, and analysis metadata under Architecture and Data Model.
    - Put coverage thresholds and cross‑browser tests under Testing & QA.

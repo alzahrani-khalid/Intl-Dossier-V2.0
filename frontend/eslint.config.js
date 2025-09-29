@@ -3,6 +3,7 @@ import globals from 'globals'
 import reactHooks from 'eslint-plugin-react-hooks'
 import reactRefresh from 'eslint-plugin-react-refresh'
 import tseslint from 'typescript-eslint'
+import tailwind from 'eslint-plugin-tailwindcss'
 
 export default tseslint.config(
   {
@@ -10,6 +11,14 @@ export default tseslint.config(
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,
+  // TailwindCSS plugin recommended rules
+  {
+    name: 'tailwindcss:recommended',
+    plugins: { tailwindcss: tailwind },
+    rules: {
+      ...(tailwind.configs?.recommended?.rules ?? {}),
+    },
+  },
   {
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
@@ -19,8 +28,11 @@ export default tseslint.config(
     plugins: {
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
+      tailwindcss: tailwind,
     },
     rules: {
+      // Include Tailwind class ordering and related rules
+      ...(tailwind.configs?.recommended?.rules ?? {}),
       ...reactHooks.configs.recommended.rules,
       ...reactRefresh.configs.vite.rules,
     },

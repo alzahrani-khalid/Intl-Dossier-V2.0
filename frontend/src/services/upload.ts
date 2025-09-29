@@ -1,6 +1,6 @@
-import { createClient } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
+import { supabase } from '../lib/supabase'
 
 // Types for file upload
 export interface UploadFile {
@@ -57,16 +57,6 @@ export interface UploadActions {
   clearCompleted: () => void
   setMaxConcurrentUploads: (max: number) => void
 }
-
-// Supabase client setup
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey)
 
 // Chunk size for resumable uploads (1MB)
 const DEFAULT_CHUNK_SIZE = 1024 * 1024

@@ -119,10 +119,10 @@ export default function Organizations() {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-display font-semibold text-base-900 dark:text-base-50">
+            <h1 className="text-3xl font-display font-semibold text-foreground">
               {t('organizations.title', 'Organizations & delegations')}
             </h1>
-            <p className="text-base text-base-600 dark:text-base-300">
+            <p className="text-base text-muted-foreground">
               {t(
                 'organizations.subtitle',
                 'Track hierarchies, delegation scopes, and project ownership across every partner organization.'
@@ -139,42 +139,42 @@ export default function Organizations() {
       <section className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-semibold text-base-700 dark:text-base-200">
+            <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('organizations.metrics.registered', 'Registered entities')}
             </CardTitle>
-            <Building2 className="h-5 w-5 text-primary-600 dark:text-primary-300" />
+            <Building2 className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-base-900 dark:text-base-50">{filteredOrganizations.length}</p>
-            <p className="mt-2 text-sm text-base-500 dark:text-base-400">
+            <p className="text-2xl font-bold text-foreground">{filteredOrganizations.length}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
               {t('organizations.metrics.registeredHint', 'Includes headquarters and sub-directorates')}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-semibold text-base-700 dark:text-base-200">
+            <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('organizations.metrics.members', 'Delegated members')}
             </CardTitle>
-            <Users className="h-5 w-5 text-primary-600 dark:text-primary-300" />
+            <Users className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-base-900 dark:text-base-50">{totalMembers}</p>
-            <p className="mt-2 text-sm text-base-500 dark:text-base-400">
+            <p className="text-2xl font-bold text-foreground">{totalMembers}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
               {t('organizations.metrics.membersHint', 'Mapped to Supabase auth roles with MFA enforced')}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-semibold text-base-700 dark:text-base-200">
+            <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('organizations.metrics.delegations', 'Active delegations')}
             </CardTitle>
-            <ShieldCheck className="h-5 w-5 text-primary-600 dark:text-primary-300" />
+            <ShieldCheck className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-base-900 dark:text-base-50">{organisationsWithDelegations}</p>
-            <p className="mt-2 text-sm text-base-500 dark:text-base-400">
+            <p className="text-2xl font-bold text-foreground">{organisationsWithDelegations}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
               {t('organizations.metrics.delegationsHint', 'Expiring within 90 days: ')}
               <span className="font-semibold">{hierarchyCount}</span>
             </p>
@@ -188,7 +188,7 @@ export default function Organizations() {
         </CardHeader>
         <CardContent className="flex flex-col gap-4 lg:flex-row lg:items-end">
           <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-base-700 dark:text-base-200">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               {t('organizations.filters.search', 'Search by name or parent')}
             </label>
             <Input
@@ -198,13 +198,13 @@ export default function Organizations() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-base-700 dark:text-base-200">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               {t('organizations.filters.type', 'Type')}
             </label>
             <select
               value={typeFilter}
               onChange={(event) => setTypeFilter(event.target.value as typeof typeFilter)}
-              className="w-48 rounded-md border border-base-300 bg-white px-3 py-2 text-sm text-base-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-base-700 dark:bg-base-900 dark:text-base-100"
+              className="w-48 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
               <option value="all">{t('organizations.filters.allTypes', 'All types')}</option>
@@ -216,13 +216,13 @@ export default function Organizations() {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-base-700 dark:text-base-200">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               {t('organizations.filters.status', 'Status')}
             </label>
             <select
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
-              className="w-40 rounded-md border border-base-300 bg-white px-3 py-2 text-sm text-base-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-base-700 dark:bg-base-900 dark:text-base-100"
+              className="w-40 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
               <option value="all">{t('organizations.filters.allStatuses', 'All statuses')}</option>
@@ -234,10 +234,10 @@ export default function Organizations() {
         </CardContent>
       </Card>
 
-      <div className="overflow-x-auto rounded-xl border border-base-200 bg-white shadow-sm dark:border-base-700 dark:bg-base-900/70">
-        <table className="min-w-full divide-y divide-base-200 text-sm dark:divide-base-700">
+      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+        <table className="min-w-full divide-y divide-border text-sm">
           <thead>
-            <tr className="bg-base-50 text-xs font-semibold uppercase tracking-wide text-base-500 dark:bg-base-950/40 dark:text-base-400">
+            <tr className="bg-muted/50 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <th className="px-5 py-3 text-start">{t('organizations.table.organization', 'Organization')}</th>
               <th className="px-5 py-3 text-start">{t('organizations.table.type', 'Type')}</th>
               <th className="px-5 py-3 text-start">{t('organizations.table.country', 'Country')}</th>
@@ -247,35 +247,35 @@ export default function Organizations() {
               <th className="px-5 py-3 text-start">{t('organizations.table.status', 'Status')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-base-100 dark:divide-base-800">
+          <tbody className="divide-y divide-border">
             {filteredOrganizations.map((org) => (
-              <tr key={org.id} className="hover:bg-base-50/60 dark:hover:bg-base-800/40">
+              <tr key={org.id} className="hover:bg-accent/50">
                 <td className="px-5 py-4">
                   <div className="flex flex-col">
-                    <span className="font-semibold text-base-800 dark:text-base-50">{org.name}</span>
+                    <span className="font-semibold text-foreground">{org.name}</span>
                     {org.parent && (
-                      <span className="flex items-center gap-1 text-xs text-base-500 dark:text-base-400">
+                      <span className="flex items-center gap-1 text-xs text-muted-foreground">
                         <ChevronRight className="h-3 w-3" />
                         {t('organizations.table.parent', 'Parent')}: {org.parent}
                       </span>
                     )}
                   </div>
                 </td>
-                <td className="px-5 py-4 text-base-600 dark:text-base-300">
+                <td className="px-5 py-4 text-muted-foreground">
                   {t(`organizations.types.${org.type}`, organizationTypes[org.type])}
                 </td>
-                <td className="px-5 py-4 text-base-600 dark:text-base-300">{org.country}</td>
-                <td className="px-5 py-4 text-base-700 dark:text-base-200">{org.members}</td>
-                <td className="px-5 py-4 text-base-700 dark:text-base-200">{org.activeProjects}</td>
-                <td className="px-5 py-4 text-xs text-base-500 dark:text-base-400">{org.delegationExpires}</td>
+                <td className="px-5 py-4 text-muted-foreground">{org.country}</td>
+                <td className="px-5 py-4 text-foreground">{org.members}</td>
+                <td className="px-5 py-4 text-foreground">{org.activeProjects}</td>
+                <td className="px-5 py-4 text-xs text-muted-foreground">{org.delegationExpires}</td>
                 <td className="px-5 py-4">
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
                       org.status === 'active'
-                        ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-300'
+                        ? 'bg-primary/10 text-primary'
                         : org.status === 'inactive'
-                        ? 'bg-base-100 text-base-500 dark:bg-base-800/50 dark:text-base-300'
-                        : 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-300'
+                        ? 'bg-muted text-muted-foreground'
+                        : 'bg-destructive/10 text-destructive'
                     }`}
                   >
                     <Network className="h-3 w-3" />
@@ -286,7 +286,7 @@ export default function Organizations() {
             ))}
             {filteredOrganizations.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-5 py-8 text-center text-sm text-base-500 dark:text-base-300">
+                <td colSpan={7} className="px-5 py-8 text-center text-sm text-muted-foreground">
                   {t('organizations.table.empty', 'No organizations match the selected filters')}
                 </td>
               </tr>

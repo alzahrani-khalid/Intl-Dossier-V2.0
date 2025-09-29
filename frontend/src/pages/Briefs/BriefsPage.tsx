@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
-import { Plus, FileText, Tag, Calendar, User, Eye, Download } from 'lucide-react'
+import { Plus, FileText, Calendar, User, Eye, Download } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -20,6 +20,7 @@ interface Brief {
   tags: string[]
   is_published: boolean
   published_date: string | null
+  created_at: string
   author: {
     full_name: string
   }
@@ -31,53 +32,105 @@ interface Brief {
     name_en: string
     name_ar: string
   } | null
-  related_event: {
-    title_en: string
-    title_ar: string
+  related_event: null
+}
+
+type BriefRow = {
+  id: string
+  reference_number?: string | null
+  title?: string | null
+  title_en?: string | null
+  title_ar?: string | null
+  summary?: string | null
+  summary_en?: string | null
+  summary_ar?: string | null
+  status?: string | null
+  is_published?: boolean | null
+  created_at?: string | null
+  createdAt?: string | null
+  published_date?: string | null
+  published_at?: string | null
+  category?: string | null
+  tags?: string[] | null
+  author?: {
+    full_name?: string | null
   } | null
+  author_name?: string | null
+  created_by?: string | null
 }
 
 export function BriefsPage() {
   const { t, i18n } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
-  const [filterCategory, setFilterCategory] = useState<string>('all')
   const [filterStatus, setFilterStatus] = useState<'all' | 'published' | 'draft'>('all')
   const isRTL = i18n.language === 'ar'
 
   const { data: briefs, isLoading } = useQuery({
-    queryKey: ['briefs', searchTerm, filterCategory, filterStatus],
+    queryKey: ['briefs', searchTerm, filterStatus],
     queryFn: async () => {
-      let query = supabase
+      const { data, error } = await supabase
         .from('briefs')
-        .select(`
-          *,
-          author:users!author_id(full_name),
-          related_country:countries(name_en, name_ar),
-          related_organization:organizations(name_en, name_ar),
-          related_event:events(title_en, title_ar)
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
 
-      if (searchTerm) {
-        query = query.or(
-          `reference_number.ilike.%${searchTerm}%,title_en.ilike.%${searchTerm}%,title_ar.ilike.%${searchTerm}%`
-        )
+      if (error) {
+        console.error('Failed to load briefs', error)
+        throw error
       }
 
-      if (filterCategory !== 'all') {
-        query = query.eq('category', filterCategory)
-      }
+      const normalized = (data as BriefRow[] | null)?.map((raw) => {
+        const title = raw.title_en ?? raw.title ?? 'Untitled brief'
+        const summary = raw.summary_en ?? raw.summary ?? ''
+        const status: string = raw.status ?? (raw.is_published ? 'published' : 'draft')
+        const isPublished = raw.is_published ?? status === 'published'
+        const createdAt = raw.created_at ?? raw.createdAt ?? new Date().toISOString()
+        const publishedDate = raw.published_date ?? raw.published_at ?? (isPublished ? createdAt : null)
 
-      if (filterStatus === 'published') {
-        query = query.eq('is_published', true)
-      } else if (filterStatus === 'draft') {
-        query = query.eq('is_published', false)
-      }
+        return {
+          id: raw.id,
+          reference_number: raw.reference_number
+            ? String(raw.reference_number)
+            : `BRF-${String(raw.id ?? '').replace(/-/g, '').slice(0, 8).toUpperCase()}`,
+          title_en: title,
+          title_ar: raw.title_ar ?? title,
+          summary_en: summary,
+          summary_ar: raw.summary_ar ?? summary,
+          category: raw.category ?? 'other',
+          tags: Array.isArray(raw.tags) ? raw.tags : [],
+          is_published: Boolean(isPublished),
+          published_date: publishedDate,
+          created_at: createdAt,
+          author: {
+            full_name: raw.author?.full_name ?? raw.author_name ?? raw.created_by ?? '—'
+          },
+          related_country: null,
+          related_organization: null,
+          related_event: null
+        } satisfies Brief
+      }) ?? []
 
-      const { data, error } = await query
+      return normalized.filter((brief) => {
+        const matchesStatus =
+          filterStatus === 'all'
+            ? true
+            : filterStatus === 'published'
+              ? brief.is_published
+              : !brief.is_published
 
-      if (error) throw error
-      return data as Brief[]
+        const matchesSearch = searchTerm
+          ? [
+              brief.reference_number,
+              brief.title_en,
+              brief.title_ar,
+              brief.summary_en,
+              brief.summary_ar
+            ]
+              .filter(Boolean)
+              .some((value) => value.toLowerCase().includes(searchTerm.toLowerCase()))
+          : true
+
+        return matchesStatus && matchesSearch
+      })
     }
   })
 
@@ -100,39 +153,6 @@ export function BriefsPage() {
           <div className="text-sm text-muted-foreground line-clamp-2 mt-1">
             {isRTL ? brief.summary_ar : brief.summary_en}
           </div>
-        </div>
-      )
-    },
-    {
-      key: 'category',
-      header: t('briefs.category'),
-      cell: (brief: Brief) => (
-        <span className={`
-          inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-          ${brief.category === 'policy' ? 'bg-blue-100 text-blue-800' : ''}
-          ${brief.category === 'analysis' ? 'bg-purple-100 text-purple-800' : ''}
-          ${brief.category === 'news' ? 'bg-green-100 text-green-800' : ''}
-          ${brief.category === 'report' ? 'bg-yellow-100 text-yellow-800' : ''}
-          ${brief.category === 'other' ? 'bg-gray-100 text-gray-800' : ''}
-        `}>
-          {t(`briefs.categories.${brief.category}`)}
-        </span>
-      )
-    },
-    {
-      key: 'tags',
-      header: t('briefs.tags'),
-      cell: (brief: Brief) => (
-        <div className="flex flex-wrap gap-1">
-          {brief.tags?.slice(0, 3).map((tag, i) => (
-            <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs">
-              <Tag className="h-3 w-3" />
-              {tag}
-            </span>
-          ))}
-          {brief.tags?.length > 3 && (
-            <span className="text-xs text-muted-foreground">+{brief.tags.length - 3}</span>
-          )}
         </div>
       )
     },
@@ -193,7 +213,7 @@ export function BriefsPage() {
     {
       key: 'actions',
       header: '',
-      cell: (brief: Brief) => (
+      cell: () => (
         <div className="flex items-center gap-2">
           <Button size="sm" variant="ghost">
             <Eye className="h-4 w-4" />
@@ -205,8 +225,6 @@ export function BriefsPage() {
       )
     }
   ]
-
-  const categories = ['all', 'policy', 'analysis', 'news', 'report', 'other']
 
   return (
     <div className="container mx-auto py-6">
@@ -280,44 +298,29 @@ export function BriefsPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm"
             />
-            <div className="flex gap-4">
-              <div className="flex gap-2">
-                <span className="text-sm text-muted-foreground mt-2">{t('briefs.category')}:</span>
-                {categories.map(cat => (
-                  <Button
-                    key={cat}
-                    variant={filterCategory === cat ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setFilterCategory(cat)}
-                  >
-                    {cat === 'all' ? t('common.all') : t(`briefs.categories.${cat}`)}
-                  </Button>
-                ))}
-              </div>
-              <div className="flex gap-2 ml-4">
-                <span className="text-sm text-muted-foreground mt-2">{t('briefs.status')}:</span>
-                <Button
-                  variant={filterStatus === 'all' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterStatus('all')}
-                >
-                  {t('common.all')}
-                </Button>
-                <Button
-                  variant={filterStatus === 'published' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterStatus('published')}
-                >
-                  {t('briefs.published')}
-                </Button>
-                <Button
-                  variant={filterStatus === 'draft' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterStatus('draft')}
-                >
-                  {t('briefs.draft')}
-                </Button>
-              </div>
+            <div className="flex gap-2">
+              <span className="text-sm text-muted-foreground mt-2">{t('briefs.status')}:</span>
+              <Button
+                variant={filterStatus === 'all' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilterStatus('all')}
+              >
+                {t('common.all')}
+              </Button>
+              <Button
+                variant={filterStatus === 'published' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilterStatus('published')}
+              >
+                {t('briefs.published')}
+              </Button>
+              <Button
+                variant={filterStatus === 'draft' ? 'default' : 'outline'}
+                size="sm"
+                onClick={() => setFilterStatus('draft')}
+              >
+                {t('briefs.draft')}
+              </Button>
             </div>
           </div>
         </CardContent>

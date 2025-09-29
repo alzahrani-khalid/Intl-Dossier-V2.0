@@ -71,28 +71,28 @@ export function DataTable<TData, TValue>({
             value={globalFilter ?? ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
             placeholder={t('common.search')}
-            className="max-w-sm px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent dark:bg-gray-700 dark:text-white"
+            className="max-w-sm px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
           />
         </div>
       )}
 
       {/* Table */}
-      <div className="rounded-lg border border-gray-200 dark:border-gray-700 overflow-hidden">
+      <div className="rounded-lg border border-border overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 dark:bg-gray-800">
+            <thead className="bg-muted/50">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className={`px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider`}
+                      className={`px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-medium text-muted-foreground uppercase tracking-wider`}
                     >
                       {header.isPlaceholder ? null : (
                         <div
                           className={
                             header.column.getCanSort()
-                              ? 'flex items-center gap-2 cursor-pointer select-none hover:text-gray-900 dark:hover:text-white'
+                              ? 'flex items-center gap-2 cursor-pointer select-none hover:text-foreground'
                               : ''
                           }
                           onClick={header.column.getToggleSortingHandler()}
@@ -111,16 +111,16 @@ export function DataTable<TData, TValue>({
                 </tr>
               ))}
             </thead>
-            <tbody className="bg-white dark:bg-gray-900 divide-y divide-gray-200 dark:divide-gray-700">
+            <tbody className="bg-background divide-y divide-border">
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  className="hover:bg-accent/50 transition-colors"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className={`px-6 py-4 whitespace-nowrap text-sm text-gray-900 dark:text-gray-100`}
+                      className={`px-6 py-4 whitespace-nowrap text-sm text-foreground`}
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
@@ -135,7 +135,7 @@ export function DataTable<TData, TValue>({
       {/* Pagination */}
       {enablePagination && (
         <div className="flex items-center justify-between px-2">
-          <div className="text-sm text-gray-700 dark:text-gray-300">
+          <div className="text-sm text-muted-foreground">
             {t('Showing')} {table.getState().pagination.pageIndex * pageSize + 1} -{' '}
             {Math.min(
               (table.getState().pagination.pageIndex + 1) * pageSize,
@@ -148,7 +148,7 @@ export function DataTable<TData, TValue>({
             <button
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="First page"
             >
               {isRTL ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
@@ -156,13 +156,13 @@ export function DataTable<TData, TValue>({
             <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Previous page"
             >
               {isRTL ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
             </button>
 
-            <span className="text-sm text-gray-700 dark:text-gray-300">
+            <span className="text-sm text-muted-foreground">
               {t('Page')} {table.getState().pagination.pageIndex + 1} {t('of')}{' '}
               {table.getPageCount()}
             </span>
@@ -170,7 +170,7 @@ export function DataTable<TData, TValue>({
             <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Next page"
             >
               {isRTL ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
@@ -178,7 +178,7 @@ export function DataTable<TData, TValue>({
             <button
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="p-2 rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
               aria-label="Last page"
             >
               {isRTL ? <ChevronsLeft className="h-4 w-4" /> : <ChevronsRight className="h-4 w-4" />}

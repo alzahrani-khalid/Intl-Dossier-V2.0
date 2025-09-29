@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { Globe2, MapPin, Plus, ShieldAlert } from 'lucide-react'
+import { FileText, Globe2, MapPin, Plus, ShieldAlert } from 'lucide-react'
 
 interface CountryRow {
   id: string
@@ -116,10 +116,10 @@ export default function Countries() {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-display font-semibold text-base-900 dark:text-base-50">
+            <h1 className="text-3xl font-display font-semibold text-foreground">
               {t('countries.title', 'Countries overview')}
             </h1>
-            <p className="text-base text-base-600 dark:text-base-300">
+            <p className="text-base text-muted-foreground">
               {t(
                 'countries.subtitle',
                 'Monitor bilateral relationships, workflow status, and compliance posture across every partner state.'
@@ -136,42 +136,42 @@ export default function Countries() {
       <section className="grid gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-semibold text-base-700 dark:text-base-200">
+            <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('countries.metrics.totalPartners', 'Active partners')}
             </CardTitle>
-            <Globe2 className="h-5 w-5 text-primary-600 dark:text-primary-300" />
+            <Globe2 className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-base-900 dark:text-base-50">{activeCount}</p>
-            <p className="mt-2 text-sm text-base-500 dark:text-base-400">
+            <p className="text-2xl font-bold text-foreground">{activeCount}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
               {t('countries.metrics.totalPartnersHint', 'Includes strategic and operational partnerships')}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-semibold text-base-700 dark:text-base-200">
+            <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('countries.metrics.totalAgreements', 'Linked agreements')}
             </CardTitle>
-            <FileText className="h-5 w-5 text-primary-600 dark:text-primary-300" />
+            <FileText className="h-5 w-5 text-primary" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-base-900 dark:text-base-50">{totalAgreements}</p>
-            <p className="mt-2 text-sm text-base-500 dark:text-base-400">
+            <p className="text-2xl font-bold text-foreground">{totalAgreements}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
               {t('countries.metrics.totalAgreementsHint', 'Contracts and memoranda currently in force')}
             </p>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-sm font-semibold text-base-700 dark:text-base-200">
+            <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('countries.metrics.escalations', 'Escalations')}
             </CardTitle>
-            <ShieldAlert className="h-5 w-5 text-red-500" />
+            <ShieldAlert className="h-5 w-5 text-destructive" />
           </CardHeader>
           <CardContent>
-            <p className="text-2xl font-bold text-red-600 dark:text-red-400">{suspendedCount}</p>
-            <p className="mt-2 text-sm text-base-500 dark:text-base-400">
+            <p className="text-2xl font-bold text-destructive">{suspendedCount}</p>
+            <p className="mt-2 text-sm text-muted-foreground">
               {t('countries.metrics.escalationsHint', 'Partners pending compliance or data-sovereignty review')}
             </p>
           </CardContent>
@@ -184,7 +184,7 @@ export default function Countries() {
         </CardHeader>
         <CardContent className="flex flex-col gap-4 lg:flex-row lg:items-end">
           <div className="flex-1">
-            <label className="mb-1 block text-sm font-medium text-base-700 dark:text-base-200">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               {t('countries.filters.search', 'Search by name or ISO code')}
             </label>
             <Input
@@ -194,13 +194,13 @@ export default function Countries() {
             />
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-base-700 dark:text-base-200">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               {t('countries.filters.region', 'Region')}
             </label>
             <select
               value={regionFilter}
               onChange={(event) => setRegionFilter(event.target.value)}
-              className="w-48 rounded-md border border-base-300 bg-white px-3 py-2 text-sm text-base-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-base-700 dark:bg-base-900 dark:text-base-100"
+              className="w-48 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
               <option value="all">{t('countries.filters.allRegions', 'All regions')}</option>
@@ -212,13 +212,13 @@ export default function Countries() {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-base-700 dark:text-base-200">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               {t('countries.filters.status', 'Status')}
             </label>
             <select
               value={statusFilter}
               onChange={(event) => setStatusFilter(event.target.value as typeof statusFilter)}
-              className="w-44 rounded-md border border-base-300 bg-white px-3 py-2 text-sm text-base-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-base-700 dark:bg-base-900 dark:text-base-100"
+              className="w-44 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
               <option value="all">{t('countries.filters.allStatuses', 'All statuses')}</option>
@@ -228,13 +228,13 @@ export default function Countries() {
             </select>
           </div>
           <div>
-            <label className="mb-1 block text-sm font-medium text-base-700 dark:text-base-200">
+            <label className="mb-1 block text-sm font-medium text-foreground">
               {t('countries.filters.risk', 'Risk level')}
             </label>
             <select
               value={riskFilter}
               onChange={(event) => setRiskFilter(event.target.value as typeof riskFilter)}
-              className="w-40 rounded-md border border-base-300 bg-white px-3 py-2 text-sm text-base-700 shadow-sm focus:border-primary-500 focus:outline-none focus:ring-2 focus:ring-primary-200 dark:border-base-700 dark:bg-base-900 dark:text-base-100"
+              className="w-40 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
               <option value="all">{t('countries.filters.allRisks', 'All risks')}</option>
@@ -246,10 +246,10 @@ export default function Countries() {
         </CardContent>
       </Card>
 
-      <div className="overflow-x-auto rounded-xl border border-base-200 bg-white shadow-sm dark:border-base-700 dark:bg-base-900/70">
-        <table className="min-w-full divide-y divide-base-200 text-sm dark:divide-base-700">
+      <div className="overflow-x-auto rounded-xl border border-border bg-card shadow-sm">
+        <table className="min-w-full divide-y divide-border text-sm">
           <thead>
-            <tr className="bg-base-50 text-start text-xs font-semibold uppercase tracking-wide text-base-500 dark:bg-base-950/40 dark:text-base-400">
+            <tr className="bg-muted/50 text-start text-xs font-semibold uppercase tracking-wide text-muted-foreground">
               <th className="px-5 py-3 text-start">{t('countries.table.country', 'Country')}</th>
               <th className="px-5 py-3 text-start">{t('countries.table.iso', 'ISO codes')}</th>
               <th className="px-5 py-3 text-start">{t('countries.table.region', 'Region')}</th>
@@ -259,44 +259,44 @@ export default function Countries() {
               <th className="px-5 py-3 text-start">{t('countries.table.risk', 'Risk')}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-base-100 dark:divide-base-800">
+          <tbody className="divide-y divide-border">
             {filteredCountries.map((country) => (
-              <tr key={country.id} className="hover:bg-base-50/60 dark:hover:bg-base-800/40">
+              <tr key={country.id} className="hover:bg-accent/50">
                 <td className="px-5 py-4">
                   <div className="flex flex-col">
-                    <span className="font-semibold text-base-800 dark:text-base-50">{country.nameEn}</span>
-                    <span className="text-xs text-base-500 dark:text-base-400">{country.nameAr}</span>
+                    <span className="font-semibold text-foreground">{country.nameEn}</span>
+                    <span className="text-xs text-muted-foreground">{country.nameAr}</span>
                   </div>
                 </td>
-                <td className="px-5 py-4 font-mono text-sm text-base-700 dark:text-base-200">
+                <td className="px-5 py-4 font-mono text-sm text-foreground">
                   {country.iso2} · {country.iso3}
                 </td>
-                <td className="px-5 py-4 text-base-600 dark:text-base-300">{country.region}</td>
+                <td className="px-5 py-4 text-muted-foreground">{country.region}</td>
                 <td className="px-5 py-4">
                   <span
                     className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
                       country.status === 'active'
-                        ? 'bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-300'
+                        ? 'bg-primary/10 text-primary'
                         : country.status === 'inactive'
-                        ? 'bg-base-100 text-base-500 dark:bg-base-800/50 dark:text-base-300'
-                        : 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-300'
+                        ? 'bg-muted text-muted-foreground'
+                        : 'bg-destructive/10 text-destructive'
                     }`}
                   >
                     {t(`countries.status.${country.status}`, country.status)}
                   </span>
                 </td>
-                <td className="px-5 py-4 text-base-700 dark:text-base-200">{country.agreements}</td>
-                <td className="px-5 py-4 text-xs text-base-500 dark:text-base-400">
+                <td className="px-5 py-4 text-foreground">{country.agreements}</td>
+                <td className="px-5 py-4 text-xs text-muted-foreground">
                   {country.recentActivity}
                 </td>
                 <td className="px-5 py-4">
                   <span
                     className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
                       country.riskLevel === 'low'
-                        ? 'bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-300'
+                        ? 'bg-primary/10 text-primary'
                         : country.riskLevel === 'medium'
-                        ? 'bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-300'
-                        : 'bg-red-50 text-red-600 dark:bg-red-900/30 dark:text-red-300'
+                        ? 'bg-warning/10 text-warning'
+                        : 'bg-destructive/10 text-destructive'
                     }`}
                   >
                     <MapPin className="h-3 w-3" />
@@ -307,7 +307,7 @@ export default function Countries() {
             ))}
             {filteredCountries.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-5 py-8 text-center text-sm text-base-500 dark:text-base-300">
+                <td colSpan={7} className="px-5 py-8 text-center text-sm text-muted-foreground">
                   {t('countries.table.empty', 'No countries match the current filters')}
                 </td>
               </tr>

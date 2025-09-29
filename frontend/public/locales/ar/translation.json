@@ -24,6 +24,7 @@
     "no": "لا",
     "selectAll": "تحديد الكل",
     "clearAll": "مسح الكل",
+    "all": "الكل",
     "noData": "لا توجد بيانات متاحة",
     "language": "اللغة",
     "logout": "تسجيل الخروج",
@@ -44,6 +45,7 @@
     "loginSuccess": "تم تسجيل الدخول بنجاح!"
   },
   "navigation": {
+      "dataLibrary": "مكتبة البيانات",
     "dashboard": "لوحة التحكم",
     "countries": "الدول",
     "organizations": "المنظمات",
@@ -55,12 +57,14 @@
     "briefs": "الملخصات",
     "intelligence": "المعلومات الاستخباراتية",
     "reports": "التقارير",
+    "wordAssistant": "مساعد الكلمات",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
     "help": "المساعدة"
   },
   "dashboard": {
-    "title": "لوحة التحكم",
+    "title": "نظرة عامة على العمليات",
+    "subtitle": "الحالة المباشرة للالتزامات الدولية والموجزات الاستخباراتية وأنشطة الشركاء عبر ملف الهيئة العامة للإحصاء.",
     "executiveSummary": "الملخص التنفيذي",
     "activeCountries": "الدول النشطة",
     "activeMous": "مذكرات التفاهم النشطة",
@@ -68,17 +72,137 @@
     "recentActivities": "الأنشطة الأخيرة",
     "pendingTasks": "المهام المعلقة",
     "relationshipHealth": "صحة العلاقات",
+    "relationshipDescription": "النتائج المجمعة عبر التكتلات الشريكة الرئيسية (90 يومًا متداولة)",
+    "upcomingMissions": "المهام القادمة",
+    "workflowSnapshotTitle": "لقطة سير العمل",
+    "intelligenceHighlights": "أبرز المعلومات الاستخباراتية",
+    "confidence": "الثقة",
+    "keyDates": "المعالم الرئيسية",
     "metrics": {
       "totalCountries": "إجمالي الدول",
       "totalOrganizations": "إجمالي المنظمات",
       "totalMous": "إجمالي مذكرات التفاهم",
       "totalEvents": "إجمالي الفعاليات",
       "engagement": "معدل المشاركة",
-      "compliance": "معدل الامتثال"
+      "compliance": "معدل الامتثال",
+      "partners": "الشركاء الثنائيون النشطون",
+      "partnersChange": "+4 منذ الربع الثالث",
+      "partnersDescription": "12 شريكًا إستراتيجيًا تم تحديدهم للمراجعة الربع سنوية",
+      "partnersTrend": "95٪ من بطاقات أداء الشركاء صحية",
+      "mous": "مذكرات التفاهم في سير العمل",
+      "mousChange": "5 بانتظار المراجعة الخارجية",
+      "mousDescription": "متوسط وقت الإنجاز 18 يومًا",
+      "mousTrend": "ثلاث اتفاقيات تنتهي صلاحيتها خلال 30 يومًا",
+      "events": "المهام والفعاليات القادمة",
+      "eventsChange": "+2 ذات أولوية عالية",
+      "eventsDescription": "تغطية التقويم بنسبة 82٪ من السعة",
+      "eventsTrend": "تم تشغيل كشف التعارض مرتين هذا الأسبوع",
+      "intelligence": "موجزات معلوماتية منشورة",
+      "intelligenceChange": "88٪ بثقة ≥ 0.75",
+      "intelligenceDescription": "استخدم التلخيص بمساعدة الذكاء الاصطناعي في 31 موجزًا",
+      "intelligenceTrend": "التصنيف SLA بامتثال 100٪"
+    },
+    "intelligenceSummary": {
+      "gdpSummary": "تقترح مجموعة عمل دول مجلس التعاون منهجية مشتركة. تتطلب موافقة الوفد قبل قمة مارس.",
+      "aiSummary": "قلل برنامج AnythingLLM التجريبي وقت المراجعة بنسبة 28٪. نوصي بالتوسع إلى مجال الإحصائيات الزراعية.",
+      "trainingSummary": "طلبت ست مكاتب إحصاءات وطنية أفريقية ورش عمل متقدمة لأخذ العينات. الجدول المقترح الربع الثاني 2025."
+    },
+    "milestoneDescriptions": {
+      "q1Description": "إنهاء جدول الأعمال وتأكيد المتحدثين ونشر حزمة الإحاطة ثنائية اللغة بحلول 10 فبراير.",
+      "q2Description": "نشر سير عمل التحميل الآمن مع التحقق من صحة القطع الأثرية 50 ميجابايت ومسارات التدقيق."
+    },
+    "workflow": {
+      "internalReview": "المراجعة الداخلية",
+      "internalReviewDelta": "▼ 2 منذ الأسبوع الماضي",
+      "internalReviewDescription": "جميع المسودات تتضمن تعليقات قانونية",
+      "externalReview": "المراجعة الخارجية",
+      "externalReviewDelta": "▲ 1 يتطلب مذكرة سياسة",
+      "externalReviewDescription": "بانتظار توقيع الشريك على تبادل الإحصاءات مع الإمارات",
+      "negotiation": "التفاوض",
+      "negotiationDelta": "ثابت",
+      "negotiationDescription": "التركيز على التعاون في مجال الطاقة المتجددة مع كتلة الاتحاد الأوروبي",
+      "renewals": "التجديدات هذا الربع",
+      "renewalsDelta": "▲ 2 بسبب تنبيهات انتهاء الصلاحية",
+      "renewalsDescription": "تم إرسال التذكيرات التلقائية لأصحاب الشؤون القانونية والمالية"
+    },
+    "alerts": {
+      "title": "التنبيهات عالية المخاطر",
+      "expiringMou": "مذكرة تفاهم مع ABS (أستراليا) تنتهي في 21 يومًا",
+      "expiringMouDetail": "في انتظار الموافقة على الملحق المالي وملحق حوكمة البيانات المحدث.",
+      "expiringMouDue": "المراجعة مستحقة خلال 7 أيام",
+      "conflict": "تعارض في الجدول: مهمة OECD مقابل قمة دول مجلس التعاون",
+      "conflictDetail": "كلا الحدثين يطلبان نائب المحافظ. اقتراح قائد بديل أو إعادة جدولة إحاطة OECD.",
+      "conflictDue": "التصعيد بحلول 30 يناير",
+      "security": "موجز المعلومات يتطلب إعادة تصنيف",
+      "securityDetail": "ملخص الذكاء الاصطناعي حدد مصدرًا حساسًا. بانتظار المراجعة اليدوية للخفض.",
+      "securityDue": "الإنجاز خلال 48 ساعة"
+    },
+    "intelligence": {
+      "gdp": "فرصة تنسيق الناتج المحلي الإجمالي الإقليمي",
+      "ai": "برنامج تجريبي لتبادل البيانات بمساعدة الذكاء الاصطناعي",
+      "training": "الطلب على بناء القدرات من الشركاء الناطقين بالفرنسية"
+    },
+    "performance": {
+      "bilingual": "التغطية ثنائية اللغة",
+      "bilingualDescription": "جميع المحتوى ذو الأولوية متاح باللغتين العربية والإنجليزية",
+      "mfa": "امتثال MFA",
+      "mfaDescription": "تم فرض TOTP على 312 حسابًا نشطًا",
+      "contracts": "تغطية اختبار العقود",
+      "contractsDescription": "آخر مزامنة للمخطط اكتملت في 26 سبتمبر 2025",
+      "organisations": "التحقق من التسلسل الهرمي للمنظمات",
+      "organisationsDescription": "تم تعيين جميع الوفود مع فحص انتهاء صلاحية الوفود"
+    },
+    "milestones": {
+      "q1": "الربع الأول: منتدى إحصائيات شمال إفريقيا",
+      "q2": "الربع الثاني: نشر صندوق رمل تبادل البيانات"
     }
   },
   "countries": {
     "title": "الدول",
+    "titleOverview": "نظرة عامة على الدول",
+    "subtitle": "مراقبة العلاقات الثنائية وحالة سير العمل ووضع الامتثال عبر كل دولة شريكة.",
+    "actions": {
+      "addCountry": "إضافة دولة جديدة"
+    },
+    "metrics": {
+      "totalPartners": "الشركاء النشطون",
+      "totalPartnersHint": "يشمل الشراكات الإستراتيجية والتشغيلية",
+      "totalAgreements": "الاتفاقيات المرتبطة",
+      "totalAgreementsHint": "العقود ومذكرات التفاهم السارية حالياً",
+      "escalations": "التصعيدات",
+      "escalationsHint": "الشركاء في انتظار مراجعة الامتثال أو سيادة البيانات"
+    },
+    "filters": {
+      "title": "المرشحات والبحث",
+      "search": "البحث بالاسم أو رمز ISO",
+      "searchPlaceholder": "مثال: AE، فرنسا، نيجيريا",
+      "region": "المنطقة",
+      "allRegions": "جميع المناطق",
+      "status": "الحالة",
+      "allStatuses": "جميع الحالات",
+      "risk": "مستوى المخاطر",
+      "allRisks": "جميع المخاطر"
+    },
+    "risk": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي"
+    },
+    "table": {
+      "country": "الدولة",
+      "iso": "رموز ISO",
+      "region": "المنطقة",
+      "status": "الحالة",
+      "agreements": "الاتفاقيات",
+      "activity": "النشاط الأخير",
+      "risk": "المخاطر",
+      "empty": "لا توجد دول تطابق المرشحات الحالية"
+    },
+    "statuses": {
+      "active": "نشط",
+      "inactive": "غير نشط",
+      "suspended": "معلق"
+    },
     "addCountry": "إضافة دولة",
     "editCountry": "تعديل الدولة",
     "countryDetails": "تفاصيل الدولة",
@@ -112,11 +236,25 @@
     "timeline": "الجدول الزمني",
     "statuses": {
       "draft": "مسودة",
+      "internal_review": "المراجعة الداخلية",
+      "external_review": "المراجعة الخارجية",
       "negotiation": "قيد التفاوض",
       "signed": "موقعة",
       "active": "نشطة",
+      "renewed": "مجددة",
       "expired": "منتهية",
       "terminated": "ملغاة"
+    },
+    "total": "إجمالي مذكرات التفاهم",
+    "active": "نشطة",
+    "expiringSoon": "تنتهي قريباً",
+    "inProgress": "قيد التنفيذ",
+    "workflow": "سير العمل",
+    "dates": "التواريخ"
+  },
+  "forums": {
+    "statuses": {
+      "scheduled": "مجدول"
     }
   },
   "events": {
@@ -129,14 +267,77 @@
     "startDate": "تاريخ البداية",
     "endDate": "تاريخ النهاية",
     "location": "الموقع",
+    "organizer": "المنظم",
+    "country": "الدولة",
     "participants": "المشاركون",
     "agenda": "جدول الأعمال",
     "delegation": "الوفد",
     "outcomes": "النتائج",
-    "followUp": "إجراءات المتابعة"
+    "followUp": "إجراءات المتابعة",
+    "dateTime": "التاريخ والوقت",
+    "virtual": "فعالية افتراضية",
+    "venue": "المكان",
+    "status": "الحالة",
+    "more": "المزيد",
+    "types": {
+      "meeting": "اجتماع",
+      "conference": "مؤتمر",
+      "workshop": "ورشة عمل",
+      "training": "تدريب",
+      "ceremony": "حفل",
+      "other": "أخرى"
+    },
+    "statuses": {
+      "upcoming": "قادم",
+      "ongoing": "جاري",
+      "completed": "منتهي",
+      "cancelled": "ملغي"
+    },
+    "calendarView": "عرض التقويم",
+    "listView": "عرض القائمة"
+  },
+  "calendar": {
+    "sun": "الأحد",
+    "mon": "الاثنين",
+    "tue": "الثلاثاء",
+    "wed": "الأربعاء",
+    "thu": "الخميس",
+    "fri": "الجمعة",
+    "sat": "السبت"
+  },
+  "forums": {
+    "title": "المنتديات والمؤتمرات",
+    "addForum": "إضافة منتدى",
+    "editForum": "تعديل المنتدى",
+    "forumDetails": "تفاصيل المنتدى",
+    "dates": "التواريخ",
+    "location": "الموقع",
+    "venue": "المكان",
+    "organizer": "المنظم",
+    "participants": "المشاركون",
+    "sessions": "الجلسات",
+    "status": "الحالة",
+    "virtual": "افتراضي",
+    "statuses": {
+      "planning": "قيد التخطيط",
+      "upcoming": "قادم",
+      "scheduled": "مجدول",
+      "ongoing": "جاري",
+      "completed": "منتهي",
+      "cancelled": "ملغي"
+    }
   },
   "briefs": {
     "title": "الملخصات",
+    "referenceNumber": "الرقم المرجعي",
+    "relatedTo": "متعلق بـ",
+    "author": "المؤلف",
+    "status": "الحالة",
+    "published": "منشور",
+    "draft": "مسودة",
+    "totalBriefs": "إجمالي الملخصات",
+    "drafts": "المسودات",
+    "thisMonth": "هذا الشهر",
     "generateBrief": "إنشاء ملخص",
     "briefTemplate": "قالب الملخص",
     "selectTemplate": "اختر القالب",
@@ -211,6 +412,39 @@
   },
   "organizations": {
     "title": "المنظمات",
+    "titleFull": "المنظمات والوفود",
+    "subtitle": "تتبع التسلسلات الهرمية ونطاقات الوفود وملكية المشاريع عبر كل منظمة شريكة.",
+    "actions": {
+      "addOrganization": "إضافة منظمة"
+    },
+    "metrics": {
+      "registered": "الكيانات المسجلة",
+      "registeredHint": "يشمل المقرات الرئيسية والمديريات الفرعية",
+      "members": "الأعضاء المفوضون",
+      "membersHint": "مرتبطون بأدوار مصادقة Supabase مع فرض MFA",
+      "delegations": "الوفود النشطة",
+      "delegationsHint": "تنتهي خلال 90 يومًا: "
+    },
+    "filters": {
+      "title": "تصفية المنظمات",
+      "search": "البحث بالاسم أو المنظمة الأم",
+      "searchPlaceholder": "مثال: وزارة، OECD، إحصاءات",
+      "type": "النوع",
+      "allTypes": "جميع الأنواع",
+      "status": "الحالة",
+      "allStatuses": "جميع الحالات"
+    },
+    "table": {
+      "organization": "المنظمة",
+      "type": "النوع",
+      "country": "الدولة",
+      "members": "الأعضاء",
+      "projects": "المشاريع النشطة",
+      "delegation": "انتهاء صلاحية الوفد",
+      "status": "الحالة",
+      "parent": "المنظمة الأم",
+      "empty": "لا توجد منظمات تطابق المرشحات المحددة"
+    },
     "addOrganization": "إضافة منظمة",
     "editOrganization": "تعديل المنظمة",
     "organizationDetails": "تفاصيل المنظمة",
@@ -245,13 +479,15 @@
     "title": "التقارير الاستخباراتية",
     "addReport": "إضافة تقرير",
     "editReport": "تعديل التقرير",
+    "createReport": "إنشاء تقرير",
     "reportDetails": "تفاصيل التقرير",
     "reportNumber": "رقم التقرير",
-    "title": "العنوان",
+    "report": "التقرير",
     "executiveSummary": "الملخص التنفيذي",
     "analysis": "التحليل",
     "dataSources": "مصادر البيانات",
     "confidenceLevel": "مستوى الثقة",
+    "confidence": "الثقة",
     "classification": "التصنيف",
     "analysisType": "نوع التحليل",
     "keyFindings": "النتائج الرئيسية",
@@ -260,17 +496,27 @@
     "relatedOrganizations": "المنظمات ذات الصلة",
     "status": "الحالة",
     "author": "المؤلف",
+    "reviewer": "المراجع",
+    "approver": "المعتمد",
     "reviewedBy": "مراجع بواسطة",
     "approvedBy": "معتمد بواسطة",
     "publishedAt": "تاريخ النشر",
+    "people": "الأشخاص",
+    "search": "البحث",
     "searchReports": "البحث في التقارير",
     "semanticSearch": "البحث الدلالي",
     "searchPlaceholder": "ابحث في التقارير الاستخباراتية...",
+    "similaritySearchPlaceholder": "أدخل النص للبحث بالتشابه...",
+    "vectorSearch": "البحث الشعاعي",
+    "totalReports": "إجمالي التقارير",
+    "verifiedReports": "التقارير المؤكدة",
+    "pendingReview": "بانتظار المراجعة",
+    "published": "منشور",
     "confidenceLevels": {
       "low": "منخفض",
       "medium": "متوسط",
       "high": "عالي",
-      "verified": "متحقق"
+      "verified": "مؤكد"
     },
     "classifications": {
       "public": "عام",
@@ -290,7 +536,27 @@
       "review": "قيد المراجعة",
       "approved": "معتمد",
       "published": "منشور"
-    }
+    },
+    "findings": "نتائج"
+  },
+  "dataLibrary": {
+    "title": "مكتبة البيانات",
+    "dragDropFiles": "اسحب وأفلت الملفات هنا",
+    "or": "أو",
+    "browseFiles": "تصفح الملفات",
+    "maxFileSize": "50 ميجابايت",
+    "totalFiles": "إجمالي الملفات",
+    "searchPlaceholder": "البحث عن الملفات...",
+    "categories": {
+      "document": "مستند",
+      "dataset": "مجموعة بيانات",
+      "image": "صورة",
+      "video": "فيديو",
+      "other": "أخرى"
+    },
+    "filter": "تصفية",
+    "category": "الفئة",
+    "all": "الكل"
   },
   "reports": {
     "title": "التقارير",
@@ -358,8 +624,84 @@
     "invalidFileType": "نوع ملف غير صحيح",
     "dragAndDrop": "اسحب وأفلت الملفات هنا أو انقر للتصفح"
   },
+  "reports": {
+    "title": "التقارير",
+    "selectTemplate": "اختر قالب التقرير",
+    "selectTemplateDesc": "اختر قالب تقرير للإنشاء",
+    "recentReports": "التقارير الأخيرة",
+    "noRecentReports": "لا توجد تقارير حديثة",
+    "generateReport": "إنشاء التقرير",
+    "generating": "جاري الإنشاء...",
+    "parameters": "معاملات التقرير",
+    "parametersDesc": "تكوين معاملات التقرير",
+    "format": "تنسيق الإخراج",
+    "templates": {
+      "countryOverview": "نظرة عامة على الدولة",
+      "countryOverviewDesc": "إحصائيات وتحليلات شاملة للدولة",
+      "mouStatus": "تقرير حالة مذكرات التفاهم",
+      "mouStatusDesc": "الحالة والتفاصيل لجميع المذكرات",
+      "eventSummary": "ملخص الفعاليات",
+      "eventSummaryDesc": "ملخص الفعاليات والمشاركة",
+      "intelligenceDigest": "موجز المعلومات الاستخباراتية",
+      "intelligenceDigestDesc": "النتائج الاستخباراتية الموحدة",
+      "organizationProfile": "ملف المنظمة",
+      "organizationProfileDesc": "معلومات تفصيلية عن المنظمة",
+      "executiveDashboard": "لوحة المعلومات التنفيذية",
+      "executiveDashboardDesc": "ملخص تنفيذي عالي المستوى"
+    },
+    "parameters": {
+      "country": "الدولة",
+      "dateRange": "النطاق الزمني",
+      "status": "الحالة",
+      "includeExpiring": "تضمين المنتهية",
+      "period": "الفترة",
+      "reportPeriod": "فترة التقرير",
+      "confidenceLevel": "مستوى الثقة",
+      "classification": "التصنيف",
+      "organization": "المنظمة"
+    },
+    "periods": {
+      "thisMonth": "هذا الشهر",
+      "thisQuarter": "هذا الربع",
+      "thisYear": "هذا العام",
+      "weekly": "أسبوعي",
+      "monthly": "شهري",
+      "quarterly": "ربع سنوي"
+    }
+  },
   "wordAssistant": {
     "title": "مساعد الكلمات",
+    "description": "مساعد الكتابة المدعوم بالذكاء الاصطناعي للمستندات والمراسلات",
+    "connected": "متصل",
+    "disconnected": "غير متصل",
+    "clearChat": "مسح المحادثة",
+    "welcomeTitle": "كيف يمكنني مساعدتك اليوم؟",
+    "welcomeMessage": "يمكنني مساعدتك في صياغة المستندات وترجمة النصوص وتلخيص المحتوى وتحسين كتابتك.",
+    "inputPlaceholder": "اكتب رسالتك هنا...",
+    "errorMessage": "عذرًا، لم أتمكن من معالجة طلبك. يرجى المحاولة مرة أخرى.",
+    "fallbackContent": "الرد غير متاح",
+    "capabilities": "القدرات",
+    "capability1": "صياغة المستندات الرسمية",
+    "capability2": "الترجمة بين العربية والإنجليزية",
+    "capability3": "تلخيص النصوص الطويلة",
+    "capability4": "تحسين أسلوب الكتابة",
+    "capability5": "التحقق من القواعد والإملاء",
+    "capability6": "إنشاء ملخصات الاجتماعات",
+    "tips": "نصائح",
+    "tip1": "كن محددًا بشأن ما تحتاجه",
+    "tip2": "قدم السياق للحصول على نتائج أفضل",
+    "tip3": "يمكنك متابعة المحادثة",
+    "tip4": "انسخ الردود لاستخدامها في مكان آخر",
+    "prompts": {
+      "briefTitle": "ملخص الاجتماع",
+      "briefPrompt": "إنشاء ملخص لاجتماعي الثنائي القادم مع مكاتب الإحصاء",
+      "analysisTitle": "تحليل البيانات",
+      "analysisPrompt": "تحليل الاتجاهات الرئيسية في مقاييس التعاون الدولي لدينا",
+      "summaryTitle": "الملخص التنفيذي",
+      "summaryPrompt": "إنشاء ملخص تنفيذي لإنجازاتنا ربع السنوية",
+      "recommendationTitle": "التوصيات",
+      "recommendationPrompt": "تقديم توصيات استراتيجية لتحسين مشاركة الشركاء"
+    },
     "generateDocument": "إنشاء مستند",
     "prompt": "الطلب",
     "documentType": "نوع المستند",

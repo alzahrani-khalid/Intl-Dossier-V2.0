@@ -16,6 +16,7 @@ Auto-generated from all feature plans. Last updated: 2025-09-26
 - Supabase (PostgreSQL) for user preferences, localStorage for immediate persistence (006-i-need-you)
 - TypeScript 5.0+, Node.js 18+ + Documentation updates only - no code dependencies (007-resolve-specification-inconsistencies)
 - N/A - documentation changes only (007-resolve-specification-inconsistencies)
+- TypeScript 5.0+ (strict mode), Node.js 18+ LTS + React 18+, Tailwind CSS, shadcn/ui components, TanStack Router v5 (007-responsive-design-compliance)
 
 ## Project Structure
 ```
@@ -31,9 +32,9 @@ npm test [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNO
 TypeScript 5.0+, Node.js 20 LTS: Follow standard conventions
 
 ## Recent Changes
+- 007-responsive-design-compliance: Added TypeScript 5.0+ (strict mode), Node.js 18+ LTS + React 18+, Tailwind CSS, shadcn/ui components, TanStack Router v5
 - 007-resolve-specification-inconsistencies: Added TypeScript 5.0+, Node.js 18+ + Documentation updates only - no code dependencies
 - 006-i-need-you: Added TypeScript 5.0+, Node.js 18+ + React 18+, TanStack Router/Query v5, Tailwind CSS, shadcn/ui, i18nex
-- 005-resolve-critical-items: Added TypeScript 5.0+ (strict mode), Node.js 18+ LTS + React 18+, Supabase (PostgreSQL + RLS + Auth + Realtime + Storage), TanStack Router/Query v5, Tailwind CSS, AnythingLLM (self-hosted)
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

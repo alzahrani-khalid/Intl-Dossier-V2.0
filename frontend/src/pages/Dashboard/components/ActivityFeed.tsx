@@ -60,15 +60,16 @@ export function ActivityFeed() {
   }
 
   const getIconColor = (type: Activity['type']) => {
+    // Use theme-aware colors instead of hardcoded ones
     switch (type) {
       case 'mou':
-        return 'text-purple-600 bg-purple-100 dark:text-purple-400 dark:bg-purple-900/20'
+        return 'text-primary bg-primary/10'
       case 'event':
-        return 'text-blue-600 bg-blue-100 dark:text-blue-400 dark:bg-blue-900/20'
+        return 'text-primary bg-primary/10'
       case 'meeting':
-        return 'text-green-600 bg-green-100 dark:text-green-400 dark:bg-green-900/20'
+        return 'text-primary bg-primary/10'
       case 'country':
-        return 'text-yellow-600 bg-yellow-100 dark:text-yellow-400 dark:bg-yellow-900/20'
+        return 'text-primary bg-primary/10'
     }
   }
 
@@ -81,19 +82,19 @@ export function ActivityFeed() {
         return (
           <div
             key={activity.id}
-            className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+            className="flex gap-3 p-3 rounded-lg hover:bg-accent transition-colors"
           >
             <div className={`p-2 rounded-lg ${iconColor} flex-shrink-0`}>
               <Icon className="h-5 w-5" />
             </div>
             <div className="flex-1 min-w-0">
-              <p className="font-medium text-gray-900 dark:text-white">
+              <p className="font-medium text-foreground">
                 {activity.title}
               </p>
-              <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+              <p className="text-sm text-muted-foreground truncate">
                 {activity.description}
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-500 mt-1">
+              <p className="text-xs text-muted-foreground mt-1">
                 {activity.user} • {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
               </p>
             </div>

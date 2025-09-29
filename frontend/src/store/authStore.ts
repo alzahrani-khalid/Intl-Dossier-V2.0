@@ -1,11 +1,9 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
-import { createClient } from '@supabase/supabase-js'
+import { supabase } from '../lib/supabase'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || ''
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || ''
-
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Re-export supabase for backward compatibility
+export { supabase }
 
 export interface AuthUser {
   id: string
@@ -39,28 +37,30 @@ export const useAuthStore = create<AuthState>()(
       login: async (email: string, password: string, mfaCode?: string) => {
         set({ isLoading: true, error: null })
         try {
-          const response = await fetch('http://localhost:5001/api/auth/login', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ email, password, mfaCode }),
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email,
+            password,
           })
 
-          const data = await response.json()
-
-          if (!response.ok) {
-            throw new Error(data.message || 'Login failed')
+          if (error) {
+            throw error
           }
 
           if (data.user) {
+            // Fetch user profile from database
+            const { data: profile } = await supabase
+              .from('users')
+              .select('*')
+              .eq('id', data.user.id)
+              .single()
+
             set({
               user: {
                 id: data.user.id,
                 email: data.user.email || '',
-                name: data.user.name_en || data.user.name_ar,
-                role: data.user.role,
-                avatar: data.user.avatar_url,
+                name: profile?.full_name || profile?.username || data.user.email?.split('@')[0],
+                role: profile?.role || 'viewer',
+                avatar: profile?.avatar_url,
               },
               isAuthenticated: true,
               isLoading: false,
@@ -79,16 +79,10 @@ export const useAuthStore = create<AuthState>()(
       logout: async () => {
         set({ isLoading: true })
         try {
-          const response = await fetch('http://localhost:5001/api/auth/logout', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          })
+          const { error } = await supabase.auth.signOut()
 
-          if (!response.ok) {
-            const data = await response.json()
-            throw new Error(data.message || 'Logout failed')
+          if (error) {
+            throw error
           }
 
           set({

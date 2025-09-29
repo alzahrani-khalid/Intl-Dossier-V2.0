@@ -201,10 +201,10 @@ export function DashboardPage() {
   return (
     <div className="space-y-6">
       <section className="flex flex-col gap-2">
-        <h1 className="text-3xl font-display font-semibold text-base-900 dark:text-base-50">
+        <h1 className="text-3xl font-bold text-foreground">
           {t('dashboard.title', 'Operations overview')}
         </h1>
-        <p className="max-w-3xl text-base text-base-600 dark:text-base-300">
+        <p className="max-w-3xl text-base text-muted-foreground">
           {t(
             'dashboard.subtitle',
             'Live status of international commitments, intelligence briefs, and partner activities across the GASTAT dossier.'
@@ -222,7 +222,7 @@ export function DashboardPage() {
         <Card className="lg:col-span-2">
           <CardHeader className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle>{t('dashboard.relationshipHealth', 'Relationship health')}</CardTitle>
-            <span className="text-sm text-base-500">
+            <span className="text-sm text-muted-foreground">
               {t('dashboard.relationshipDescription', 'Aggregated scores across top partner blocs (rolling 90 days)')}
             </span>
           </CardHeader>
@@ -249,21 +249,21 @@ export function DashboardPage() {
             {workflowSnapshot.map((item) => (
               <div
                 key={item.label}
-                className="flex flex-col gap-2 rounded-lg border border-base-200 bg-white p-4 shadow-sm dark:border-base-700 dark:bg-base-900/70 sm:flex-row sm:items-center sm:justify-between"
+                className="flex flex-col gap-2 rounded-lg border border-border bg-card p-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
               >
                 <div>
-                  <p className="text-sm font-semibold text-base-800 dark:text-base-50">{item.label}</p>
-                  <p className="text-xs text-base-500 dark:text-base-400">{item.description}</p>
+                  <p className="text-sm font-semibold text-foreground">{item.label}</p>
+                  <p className="text-xs text-muted-foreground">{item.description}</p>
                 </div>
                 <div className="flex items-center gap-4">
-                  <span className="text-2xl font-bold text-primary-700 dark:text-primary-300">{item.total}</span>
+                  <span className="text-2xl font-bold text-primary">{item.total}</span>
                   <span
                     className={
                       item.status === 'positive'
-                        ? 'text-xs font-medium text-emerald-600 dark:text-emerald-400'
+                        ? 'text-xs font-medium text-success'
                         : item.status === 'negative'
-                        ? 'text-xs font-medium text-red-600 dark:text-red-400'
-                        : 'text-xs font-medium text-base-500 dark:text-base-300'
+                        ? 'text-xs font-medium text-destructive'
+                        : 'text-xs font-medium text-muted-foreground'
                     }
                   >
                     {item.delta}
@@ -275,25 +275,25 @@ export function DashboardPage() {
         </Card>
         <Card>
           <CardHeader className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-amber-500" />
+            <AlertTriangle className="h-5 w-5 text-warning" />
             <CardTitle>{t('dashboard.alerts.title', 'High-risk alerts')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {alertItems.map((alert) => (
               <div
                 key={alert.id}
-                className="rounded-lg border border-amber-200 bg-amber-50/60 p-4 dark:border-amber-700/40 dark:bg-amber-800/20"
+                className="rounded-lg border border-warning/20 bg-warning/10 p-4"
               >
                 <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-sm font-semibold text-amber-900 dark:text-amber-200">
+                  <h3 className="text-sm font-semibold text-warning-foreground">
                     {alert.title}
                   </h3>
-                  <span className="text-xs font-medium text-amber-700 dark:text-amber-300">
+                  <span className="text-xs font-medium text-warning-foreground/80">
                     {alert.dueIn}
                   </span>
                 </div>
-                <p className="mt-2 text-sm text-amber-800 dark:text-amber-200/90">{alert.detail}</p>
-                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-white/70 px-3 py-1 text-xs font-medium text-amber-700 shadow-sm dark:bg-amber-900/40 dark:text-amber-200">
+                <p className="mt-2 text-sm text-warning-foreground/90">{alert.detail}</p>
+                <div className="mt-3 inline-flex items-center gap-2 rounded-full bg-background/70 px-3 py-1 text-xs font-medium text-warning-foreground shadow-sm">
                   <ShieldCheck className="h-3 w-3" />
                   {alert.owner}
                 </div>
@@ -307,14 +307,14 @@ export function DashboardPage() {
         {performanceTargets.map(({ icon: Icon, label, value, description }) => (
           <Card key={label} className="col-span-1">
             <CardHeader className="flex flex-row items-center justify-between">
-              <CardTitle className="text-sm font-semibold text-base-700 dark:text-base-200">
+              <CardTitle className="text-sm font-semibold text-foreground">
                 {label}
               </CardTitle>
-              <Icon className="h-5 w-5 text-primary-600 dark:text-primary-300" />
+              <Icon className="h-5 w-5 text-primary" />
             </CardHeader>
             <CardContent>
-              <p className="text-2xl font-bold text-base-900 dark:text-base-50">{value}</p>
-              <p className="mt-2 text-sm text-base-500 dark:text-base-400">{description}</p>
+              <p className="text-2xl font-bold text-foreground">{value}</p>
+              <p className="mt-2 text-sm text-muted-foreground">{description}</p>
             </CardContent>
           </Card>
         ))}
@@ -323,25 +323,25 @@ export function DashboardPage() {
       <section className="grid gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader className="flex items-center gap-2">
-            <CheckCircle className="h-5 w-5 text-emerald-500" />
+            <CheckCircle className="h-5 w-5 text-success" />
             <CardTitle>{t('dashboard.intelligenceHighlights', 'Intelligence highlights')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             {intelligenceHighlights.map((highlight) => (
               <div
                 key={highlight.id}
-                className="rounded-lg border border-base-200 bg-white p-4 shadow-sm dark:border-base-700 dark:bg-base-900/70"
+                className="rounded-lg border border-border bg-card p-4 shadow-sm"
               >
                 <div className="flex items-center justify-between">
-                  <h3 className="text-sm font-semibold text-base-800 dark:text-base-100">
+                  <h3 className="text-sm font-semibold text-foreground">
                     {highlight.title}
                   </h3>
-                  <span className="text-xs font-medium text-base-500 dark:text-base-400">
+                  <span className="text-xs font-medium text-muted-foreground">
                     {t('dashboard.confidence', 'Confidence')}: {(highlight.confidence * 100).toFixed(0)}%
                   </span>
                 </div>
-                <p className="mt-2 text-sm text-base-600 dark:text-base-300">{highlight.summary}</p>
-                <span className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700 dark:bg-primary-900/30 dark:text-primary-200">
+                <p className="mt-2 text-sm text-muted-foreground">{highlight.summary}</p>
+                <span className="mt-3 inline-flex items-center gap-2 rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary">
                   <Clock className="h-3 w-3" />
                   {highlight.classification.toUpperCase()}
                 </span>
@@ -354,22 +354,22 @@ export function DashboardPage() {
             <CardTitle>{t('dashboard.keyDates', 'Key milestones')}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="rounded-lg border border-base-200 bg-white p-4 shadow-sm dark:border-base-700 dark:bg-base-900/70">
-              <h3 className="text-sm font-semibold text-base-800 dark:text-base-100">
+            <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
+              <h3 className="text-sm font-semibold text-foreground">
                 {t('dashboard.milestones.q1', 'Q1: North Africa statistical forum')}
               </h3>
-              <p className="mt-1 text-sm text-base-500 dark:text-base-400">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {t(
                   'dashboard.milestones.q1Description',
                   'Finalize agenda, confirm speakers, and publish bilingual briefing pack by 10 February.'
                 )}
               </p>
             </div>
-            <div className="rounded-lg border border-base-200 bg-white p-4 shadow-sm dark:border-base-700 dark:bg-base-900/70">
-              <h3 className="text-sm font-semibold text-base-800 dark:text-base-100">
+            <div className="rounded-lg border border-border bg-card p-4 shadow-sm">
+              <h3 className="text-sm font-semibold text-foreground">
                 {t('dashboard.milestones.q2', 'Q2: Data exchange sandbox rollout')}
               </h3>
-              <p className="mt-1 text-sm text-base-500 dark:text-base-400">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {t(
                   'dashboard.milestones.q2Description',
                   'Deploy secure upload workflow with 50MB artefact validation and audit trails.'

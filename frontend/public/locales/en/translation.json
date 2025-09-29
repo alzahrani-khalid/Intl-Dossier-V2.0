@@ -24,6 +24,7 @@
     "no": "No",
     "selectAll": "Select All",
     "clearAll": "Clear All",
+    "all": "All",
     "noData": "No data available",
     "language": "Language",
     "logout": "Logout",
@@ -44,6 +45,7 @@
     "loginSuccess": "Login successful!"
   },
   "navigation": {
+      "dataLibrary": "Data Library",
     "dashboard": "Dashboard",
     "countries": "Countries",
     "organizations": "Organizations",
@@ -55,30 +57,152 @@
     "briefs": "Briefs",
     "intelligence": "Intelligence",
     "reports": "Reports",
+    "wordAssistant": "Word Assistant",
     "settings": "Settings",
     "profile": "Profile",
     "help": "Help"
   },
   "dashboard": {
-    "title": "Dashboard",
+    "title": "Operations overview",
+    "subtitle": "Live status of international commitments, intelligence briefs, and partner activities across the GASTAT dossier.",
     "executiveSummary": "Executive Summary",
     "activeCountries": "Active Countries",
     "activeMous": "Active MoUs",
     "upcomingEvents": "Upcoming Events",
     "recentActivities": "Recent Activities",
     "pendingTasks": "Pending Tasks",
-    "relationshipHealth": "Relationship Health",
+    "relationshipHealth": "Relationship health",
+    "relationshipDescription": "Aggregated scores across top partner blocs (rolling 90 days)",
+    "upcomingMissions": "Upcoming missions",
+    "workflowSnapshotTitle": "Workflow snapshot",
+    "intelligenceHighlights": "Intelligence highlights",
+    "confidence": "Confidence",
+    "keyDates": "Key milestones",
     "metrics": {
       "totalCountries": "Total Countries",
       "totalOrganizations": "Total Organizations",
       "totalMous": "Total MoUs",
       "totalEvents": "Total Events",
       "engagement": "Engagement Rate",
-      "compliance": "Compliance Rate"
+      "compliance": "Compliance Rate",
+      "partners": "Active bilateral partners",
+      "partnersChange": "+4 since Q3",
+      "partnersDescription": "12 strategic partners flagged for quarterly review",
+      "partnersTrend": "95% of partner scorecards healthy",
+      "mous": "MoUs in workflow",
+      "mousChange": "5 awaiting external review",
+      "mousDescription": "Average turnaround 18 days",
+      "mousTrend": "Three agreements expiring within 30 days",
+      "events": "Upcoming missions & events",
+      "eventsChange": "+2 high priority",
+      "eventsDescription": "Calendar coverage at 82% capacity",
+      "eventsTrend": "Conflict detection triggered twice this week",
+      "intelligence": "Intelligence briefs published",
+      "intelligenceChange": "88% with confidence ≥ 0.75",
+      "intelligenceDescription": "AI-assisted summarisation used on 31 briefs",
+      "intelligenceTrend": "Classification SLA at 100% compliance"
+    },
+    "intelligenceSummary": {
+      "gdpSummary": "GCC working group proposes shared methodology. Requires delegation approval before March summit.",
+      "aiSummary": "AnythingLLM pilot reduced review time by 28%. Recommend expanding to agricultural statistics domain.",
+      "trainingSummary": "Six African national statistics offices requested advanced sampling workshops. Suggested schedule Q2 2025."
+    },
+    "milestoneDescriptions": {
+      "q1Description": "Finalize agenda, confirm speakers, and publish bilingual briefing pack by 10 February.",
+      "q2Description": "Deploy secure upload workflow with 50MB artefact validation and audit trails."
+    },
+    "workflow": {
+      "internalReview": "Internal review",
+      "internalReviewDelta": "▼ 2 since last week",
+      "internalReviewDescription": "All drafts include legal comments",
+      "externalReview": "External review",
+      "externalReviewDelta": "▲ 1 requires policy note",
+      "externalReviewDescription": "Waiting on partner signature for UAE statistics exchange",
+      "negotiation": "Negotiation",
+      "negotiationDelta": "steady",
+      "negotiationDescription": "Focus on renewable energy collaboration with EU bloc",
+      "renewals": "Renewals this quarter",
+      "renewalsDelta": "▲ 2 triggered by expiry alerts",
+      "renewalsDescription": "Auto-reminders sent to legal and finance owners"
+    },
+    "alerts": {
+      "title": "High-risk alerts",
+      "expiringMou": "MoU with ABS (Australia) expires in 21 days",
+      "expiringMouDetail": "Pending financial annex approval and updated data governance addendum.",
+      "expiringMouDue": "Review due in 7 days",
+      "conflict": "Schedule conflict: OECD mission vs GCC summit",
+      "conflictDetail": "Both events request the deputy governor. Propose alternate lead or reschedule OECD briefing.",
+      "conflictDue": "Escalate by 30 January",
+      "security": "Intelligence brief requires reclassification",
+      "securityDetail": "AI summary flagged sensitive source. Awaiting manual review for downgrade.",
+      "securityDue": "Complete within 48 hours"
+    },
+    "intelligence": {
+      "gdp": "Regional GDP harmonisation opportunity",
+      "ai": "AI-assisted data exchange pilot",
+      "training": "Capacity building demand from francophone partners"
+    },
+    "performance": {
+      "bilingual": "Bilingual coverage",
+      "bilingualDescription": "All priority content available in Arabic & English",
+      "mfa": "MFA compliance",
+      "mfaDescription": "TOTP enforced for 312 active accounts",
+      "contracts": "Contract test coverage",
+      "contractsDescription": "Latest schema sync completed 26 September 2025",
+      "organisations": "Organisation hierarchies verified",
+      "organisationsDescription": "All delegations mapped with delegation expiry checks"
+    },
+    "milestones": {
+      "q1": "Q1: North Africa statistical forum",
+      "q2": "Q2: Data exchange sandbox rollout"
     }
   },
   "countries": {
     "title": "Countries",
+    "titleOverview": "Countries overview",
+    "subtitle": "Monitor bilateral relationships, workflow status, and compliance posture across every partner state.",
+    "actions": {
+      "addCountry": "Add new country"
+    },
+    "metrics": {
+      "totalPartners": "Active partners",
+      "totalPartnersHint": "Includes strategic and operational partnerships",
+      "totalAgreements": "Linked agreements",
+      "totalAgreementsHint": "Contracts and memoranda currently in force",
+      "escalations": "Escalations",
+      "escalationsHint": "Partners pending compliance or data-sovereignty review"
+    },
+    "filters": {
+      "title": "Filters & search",
+      "search": "Search by name or ISO code",
+      "searchPlaceholder": "e.g. AE, France, نيجيريا",
+      "region": "Region",
+      "allRegions": "All regions",
+      "status": "Status",
+      "allStatuses": "All statuses",
+      "risk": "Risk level",
+      "allRisks": "All risks"
+    },
+    "risk": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High"
+    },
+    "table": {
+      "country": "Country",
+      "iso": "ISO codes",
+      "region": "Region",
+      "status": "Status",
+      "agreements": "Agreements",
+      "activity": "Recent activity",
+      "risk": "Risk",
+      "empty": "No countries match the current filters"
+    },
+    "statuses": {
+      "active": "Active",
+      "inactive": "Inactive",
+      "suspended": "Suspended"
+    },
     "addCountry": "Add Country",
     "editCountry": "Edit Country",
     "countryDetails": "Country Details",
@@ -112,12 +236,21 @@
     "timeline": "Timeline",
     "statuses": {
       "draft": "Draft",
+      "internal_review": "Internal Review",
+      "external_review": "External Review",
       "negotiation": "Under Negotiation",
       "signed": "Signed",
       "active": "Active",
+      "renewed": "Renewed",
       "expired": "Expired",
       "terminated": "Terminated"
-    }
+    },
+    "total": "Total MoUs",
+    "active": "Active",
+    "expiringSoon": "Expiring Soon",
+    "inProgress": "In Progress",
+    "workflow": "Workflow",
+    "dates": "Dates"
   },
   "events": {
     "title": "Events",
@@ -129,14 +262,77 @@
     "startDate": "Start Date",
     "endDate": "End Date",
     "location": "Location",
+    "organizer": "Organizer",
+    "country": "Country",
     "participants": "Participants",
     "agenda": "Agenda",
     "delegation": "Delegation",
     "outcomes": "Outcomes",
-    "followUp": "Follow-up Actions"
+    "followUp": "Follow-up Actions",
+    "dateTime": "Date & Time",
+    "virtual": "Virtual Event",
+    "venue": "Venue",
+    "status": "Status",
+    "more": "more",
+    "types": {
+      "meeting": "Meeting",
+      "conference": "Conference",
+      "workshop": "Workshop",
+      "training": "Training",
+      "ceremony": "Ceremony",
+      "other": "Other"
+    },
+    "statuses": {
+      "upcoming": "Upcoming",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "calendarView": "Calendar View",
+    "listView": "List View"
+  },
+  "calendar": {
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  },
+  "forums": {
+    "title": "Forums & Conferences",
+    "addForum": "Add Forum",
+    "editForum": "Edit Forum",
+    "forumDetails": "Forum Details",
+    "dates": "Dates",
+    "location": "Location",
+    "venue": "Venue",
+    "organizer": "Organizer",
+    "participants": "Participants",
+    "sessions": "Sessions",
+    "status": "Status",
+    "virtual": "Virtual",
+    "statuses": {
+      "planning": "Planning",
+      "upcoming": "Upcoming",
+      "scheduled": "Scheduled",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
   },
   "briefs": {
     "title": "Briefs",
+    "referenceNumber": "Reference Number",
+    "relatedTo": "Related To",
+    "author": "Author",
+    "status": "Status",
+    "published": "Published",
+    "draft": "Draft",
+    "totalBriefs": "Total Briefs",
+    "drafts": "Drafts",
+    "thisMonth": "This Month",
     "generateBrief": "Generate Brief",
     "briefTemplate": "Brief Template",
     "selectTemplate": "Select Template",
@@ -211,6 +407,39 @@
   },
   "organizations": {
     "title": "Organizations",
+    "titleFull": "Organizations & delegations",
+    "subtitle": "Track hierarchies, delegation scopes, and project ownership across every partner organization.",
+    "actions": {
+      "addOrganization": "Add organization"
+    },
+    "metrics": {
+      "registered": "Registered entities",
+      "registeredHint": "Includes headquarters and sub-directorates",
+      "members": "Delegated members",
+      "membersHint": "Mapped to Supabase auth roles with MFA enforced",
+      "delegations": "Active delegations",
+      "delegationsHint": "Expiring within 90 days: "
+    },
+    "filters": {
+      "title": "Filter organizations",
+      "search": "Search by name or parent",
+      "searchPlaceholder": "e.g. Ministry, OECD, statistics",
+      "type": "Type",
+      "allTypes": "All types",
+      "status": "Status",
+      "allStatuses": "All statuses"
+    },
+    "table": {
+      "organization": "Organization",
+      "type": "Type",
+      "country": "Country",
+      "members": "Members",
+      "projects": "Active projects",
+      "delegation": "Delegation expires",
+      "status": "Status",
+      "parent": "Parent",
+      "empty": "No organizations match the selected filters"
+    },
     "addOrganization": "Add Organization",
     "editOrganization": "Edit Organization",
     "organizationDetails": "Organization Details",
@@ -245,13 +474,15 @@
     "title": "Intelligence Reports",
     "addReport": "Add Report",
     "editReport": "Edit Report",
+    "createReport": "Create Report",
     "reportDetails": "Report Details",
     "reportNumber": "Report Number",
-    "title": "Title",
+    "report": "Report",
     "executiveSummary": "Executive Summary",
     "analysis": "Analysis",
     "dataSources": "Data Sources",
     "confidenceLevel": "Confidence Level",
+    "confidence": "Confidence",
     "classification": "Classification",
     "analysisType": "Analysis Type",
     "keyFindings": "Key Findings",
@@ -260,12 +491,22 @@
     "relatedOrganizations": "Related Organizations",
     "status": "Status",
     "author": "Author",
+    "reviewer": "Reviewer",
+    "approver": "Approver",
     "reviewedBy": "Reviewed By",
     "approvedBy": "Approved By",
     "publishedAt": "Published At",
+    "people": "People",
+    "search": "Search",
     "searchReports": "Search Reports",
     "semanticSearch": "Semantic Search",
     "searchPlaceholder": "Search intelligence reports...",
+    "similaritySearchPlaceholder": "Enter text for similarity search...",
+    "vectorSearch": "Vector Search",
+    "totalReports": "Total Reports",
+    "verifiedReports": "Verified Reports",
+    "pendingReview": "Pending Review",
+    "published": "Published",
     "confidenceLevels": {
       "low": "Low",
       "medium": "Medium",
@@ -290,7 +531,27 @@
       "review": "Under Review",
       "approved": "Approved",
       "published": "Published"
-    }
+    },
+    "findings": "findings"
+  },
+  "dataLibrary": {
+    "title": "Data Library",
+    "dragDropFiles": "Drag and drop files here",
+    "or": "or",
+    "browseFiles": "Browse Files",
+    "maxFileSize": "50MB",
+    "totalFiles": "Total Files",
+    "searchPlaceholder": "Search files...",
+    "categories": {
+      "document": "Document",
+      "dataset": "Dataset",
+      "image": "Image",
+      "video": "Video",
+      "other": "Other"
+    },
+    "filter": "Filter",
+    "category": "Category",
+    "all": "All"
   },
   "reports": {
     "title": "Reports",
@@ -358,8 +619,84 @@
     "invalidFileType": "Invalid file type",
     "dragAndDrop": "Drag and drop files here or click to browse"
   },
+  "reports": {
+    "title": "Reports",
+    "selectTemplate": "Select Report Template",
+    "selectTemplateDesc": "Choose a report template to generate",
+    "recentReports": "Recent Reports",
+    "noRecentReports": "No recent reports",
+    "generateReport": "Generate Report",
+    "generating": "Generating...",
+    "parameters": "Report Parameters",
+    "parametersDesc": "Configure the report parameters",
+    "format": "Output Format",
+    "templates": {
+      "countryOverview": "Country Overview",
+      "countryOverviewDesc": "Comprehensive country statistics and analysis",
+      "mouStatus": "MoU Status Report",
+      "mouStatusDesc": "Status and details of all memorandums",
+      "eventSummary": "Event Summary",
+      "eventSummaryDesc": "Summary of events and participation",
+      "intelligenceDigest": "Intelligence Digest",
+      "intelligenceDigestDesc": "Consolidated intelligence findings",
+      "organizationProfile": "Organization Profile",
+      "organizationProfileDesc": "Detailed organization information",
+      "executiveDashboard": "Executive Dashboard",
+      "executiveDashboardDesc": "High-level executive summary"
+    },
+    "parameters": {
+      "country": "Country",
+      "dateRange": "Date Range",
+      "status": "Status",
+      "includeExpiring": "Include Expiring",
+      "period": "Period",
+      "reportPeriod": "Report Period",
+      "confidenceLevel": "Confidence Level",
+      "classification": "Classification",
+      "organization": "Organization"
+    },
+    "periods": {
+      "thisMonth": "This Month",
+      "thisQuarter": "This Quarter",
+      "thisYear": "This Year",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly"
+    }
+  },
   "wordAssistant": {
     "title": "Word Assistant",
+    "description": "AI-powered writing assistant for documents and communications",
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "clearChat": "Clear Chat",
+    "welcomeTitle": "How can I help you today?",
+    "welcomeMessage": "I can help you draft documents, translate text, summarize content, and improve your writing.",
+    "inputPlaceholder": "Type your message here...",
+    "errorMessage": "Sorry, I couldn't process your request. Please try again.",
+    "fallbackContent": "Response not available",
+    "capabilities": "Capabilities",
+    "capability1": "Draft official documents",
+    "capability2": "Translate between Arabic and English",
+    "capability3": "Summarize long texts",
+    "capability4": "Improve writing style",
+    "capability5": "Check grammar and spelling",
+    "capability6": "Generate meeting briefs",
+    "tips": "Tips",
+    "tip1": "Be specific about what you need",
+    "tip2": "Provide context for better results",
+    "tip3": "You can continue the conversation",
+    "tip4": "Copy responses to use elsewhere",
+    "prompts": {
+      "briefTitle": "Meeting Brief",
+      "briefPrompt": "Generate a brief for my upcoming bilateral meeting with statistical offices",
+      "analysisTitle": "Data Analysis",
+      "analysisPrompt": "Analyze the key trends in our international cooperation metrics",
+      "summaryTitle": "Executive Summary",
+      "summaryPrompt": "Create an executive summary of our quarterly achievements",
+      "recommendationTitle": "Recommendations",
+      "recommendationPrompt": "Provide strategic recommendations for improving partner engagement"
+    },
     "generateDocument": "Generate Document",
     "prompt": "Prompt",
     "documentType": "Document Type",

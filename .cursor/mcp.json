@@ -45,9 +45,12 @@
     },
     "shadcn": {
       "command": "npx",
-      "args": ["-y", "shadcn@canary", "registry:mcp"],
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ],
       "env": {
-        "REGISTRY_URL": "https://styleglide.ai/t/v4/N2xuLTAtMHw0aXQtMTA3LWNkOHwzamIta3MtZHphfDJ8c3V8MC41"
+        "REGISTRY_URL": "https://tweakcn.com/r/themes/registry.json"
       }
     },
     "playwright": {

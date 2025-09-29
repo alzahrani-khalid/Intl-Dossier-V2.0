@@ -21,27 +21,27 @@ export function StatCard({
   trend,
 }: StatCardProps) {
   return (
-    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-100 dark:border-gray-700 p-6 hover:shadow-md transition-shadow">
+    <div className="bg-card rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
       <div className="flex items-start justify-between mb-4">
         <div className="flex-1">
-          <p className="text-sm font-medium text-gray-600 dark:text-gray-400">{title}</p>
+          <p className="text-sm font-medium text-muted-foreground">{title}</p>
           <div className="flex items-baseline gap-2 mt-1">
-            <p className="text-2xl font-bold text-gray-900 dark:text-white">
+            <p className="text-2xl font-bold text-foreground">
               {value}
             </p>
             <div className="flex items-center gap-1">
               {changeType === 'increase' ? (
-                <ArrowUpRight className="h-4 w-4 text-green-500" />
+                <ArrowUpRight className="h-4 w-4 text-success" />
               ) : changeType === 'decrease' ? (
-                <TrendingDown className="h-4 w-4 text-red-500" />
+                <TrendingDown className="h-4 w-4 text-destructive" />
               ) : null}
               <span
                 className={`text-sm font-medium ${
                   changeType === 'increase'
-                    ? 'text-green-600 dark:text-green-400'
+                    ? 'text-success'
                     : changeType === 'decrease'
-                    ? 'text-red-600 dark:text-red-400'
-                    : 'text-gray-600 dark:text-gray-400'
+                    ? 'text-destructive'
+                    : 'text-muted-foreground'
                 }`}
               >
                 {change}
@@ -49,12 +49,12 @@ export function StatCard({
             </div>
           </div>
           {description && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+            <p className="text-xs text-muted-foreground mt-1">
               {description}
             </p>
           )}
           {trend && (
-            <p className="text-xs font-medium text-gray-700 dark:text-gray-300 mt-2">
+            <p className="text-xs font-medium text-foreground/80 mt-2">
               {trend}
             </p>
           )}

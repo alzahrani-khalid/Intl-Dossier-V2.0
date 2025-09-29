@@ -8,65 +8,65 @@ export const gastatTheme: ThemeConfiguration = {
   },
   fonts: {
     sans: 'Plus Jakarta Sans, system-ui, -apple-system, sans-serif',
-    serif: 'Merriweather, Georgia, serif',
+    serif: 'Source Serif 4, Georgia, serif',
     mono: 'JetBrains Mono, Consolas, monospace',
   },
   radius: '0.5rem',
   cssVariables: {
     light: {
       // Core colors
-      background: '0 0% 100%',
-      foreground: '222.2 47.4% 11.2%',
+      background: '240 9.0909% 97.8431%',
+      foreground: '0 0% 20%',
       
       // Primary - GASTAT Green
       primary: '139.6552 52.7273% 43.1373%',
       primaryForeground: '0 0% 100%',
       
-      // Secondary - GASTAT Light Green
-      secondary: '139.2941 22.3404% 78.6275%',
-      secondaryForeground: '222.2 47.4% 11.2%',
+      // Secondary - sky blue
+      secondary: '218.5401 79.1908% 66.0784%',
+      secondaryForeground: '0 0% 100%',
       
       // Accent
-      accent: '139.2941 22.3404% 90%',
-      accentForeground: '222.2 47.4% 11.2%',
+      accent: '189.635 81.0651% 66.8627%',
+      accentForeground: '0 0% 20%',
       
       // Destructive
-      destructive: '0 72.22% 50.59%',
-      destructiveForeground: '0 0% 98%',
+      destructive: '0 84.2365% 60.1961%',
+      destructiveForeground: '0 0% 100%',
       
       // Muted
-      muted: '210 40% 96.1%',
-      mutedForeground: '215.4 16.3% 46.9%',
+      muted: '50.4 26.8817% 81.7647%',
+      mutedForeground: '0 0% 43.1373%',
       
       // Borders and inputs
-      border: '214.3 31.8% 91.4%',
-      input: '214.3 31.8% 91.4%',
+      border: '0 0% 83.1373%',
+      input: '0 0% 83.1373%',
       ring: '139.6552 52.7273% 43.1373%',
       
       // Card
       card: '0 0% 100%',
-      cardForeground: '222.2 47.4% 11.2%',
+      cardForeground: '0 0% 20%',
       
       // Popover
       popover: '0 0% 100%',
-      popoverForeground: '222.2 47.4% 11.2%',
+      popoverForeground: '0 0% 20%',
       
       // Sidebar
-      sidebar: '220.0000 13.0435% 95.0980%',
-      sidebarForeground: '220.0000 3.4483% 53.3333%',
+      sidebar: '240 9.0909% 97.8431%',
+      sidebarForeground: '0 0% 20%',
       sidebarPrimary: '139.6552 52.7273% 43.1373%',
       sidebarPrimaryForeground: '0 0% 100%',
-      sidebarAccent: '220.0000 13.0435% 91.1765%',
-      sidebarAccentForeground: '220.9091 39.3939% 11.1765%',
-      sidebarBorder: '220 13% 91%',
+      sidebarAccent: '189.635 81.0651% 66.8627%',
+      sidebarAccentForeground: '0 0% 20%',
+      sidebarBorder: '0 0% 83.1373%',
       sidebarRing: '139.6552 52.7273% 43.1373%',
       
       // Charts
-      chart1: '173.5385 61.1940% 44.1176%',
-      chart2: '139.6552 52.7273% 43.1373%',
-      chart3: '48.2609 71.7391% 61.3725%',
-      chart4: '36.5217 50% 66.6667%',
-      chart5: '27.7895 59.5238% 59.2157%',
+      chart1: '139.6552 52.7273% 43.1373%',
+      chart2: '218.5401 79.1908% 66.0784%',
+      chart3: '189.635 81.0651% 66.8627%',
+      chart4: '207.2727 44% 49.0196%',
+      chart5: '138.871 70.4545% 34.5098%',
       
       // Shadows (GASTAT green tinted)
       shadow2xs: '0deg 0% 0%',
@@ -80,58 +80,58 @@ export const gastatTheme: ThemeConfiguration = {
     },
     dark: {
       // Core colors
-      background: '220.0000 14.7541% 11.9608%',
-      foreground: '0 0% 95%',
+      background: '220 14.7541% 11.9608%',
+      foreground: '0 0% 89.8039%',
       
       // Primary - GASTAT Green (adjusted for dark)
       primary: '139.6552 52.7273% 43.1373%',
       primaryForeground: '0 0% 100%',
       
       // Secondary - Dark variant
-      secondary: '220.0000 13.0435% 20%',
-      secondaryForeground: '0 0% 98%',
+      secondary: '220.1351 59.2% 49.0196%',
+      secondaryForeground: '0 0% 89.8039%',
       
       // Accent
-      accent: '139.2941 22.3404% 25%',
-      accentForeground: '0 0% 98%',
+      accent: '243.75 26.087% 36.0784%',
+      accentForeground: '0 0% 89.8039%',
       
       // Destructive
-      destructive: '0 62.8% 30.6%',
-      destructiveForeground: '0 85.7% 97.3%',
+      destructive: '0 84.2365% 60.1961%',
+      destructiveForeground: '0 0% 100%',
       
       // Muted
-      muted: '220 14.3% 25%',
-      mutedForeground: '220 13% 65%',
+      muted: '0 0% 26.6667%',
+      mutedForeground: '0 0% 63.9216%',
       
       // Borders and inputs
-      border: '220 13% 25%',
-      input: '220 13% 25%',
+      border: '0 0% 26.6667%',
+      input: '0 0% 26.6667%',
       ring: '139.6552 52.7273% 43.1373%',
       
       // Card
-      card: '220.0000 14.7541% 13.9608%',
-      cardForeground: '0 0% 95%',
+      card: '197.1429 6.9307% 19.8039%',
+      cardForeground: '0 0% 89.8039%',
       
       // Popover
-      popover: '220.0000 14.7541% 13.9608%',
-      popoverForeground: '0 0% 95%',
+      popover: '197.1429 6.9307% 19.8039%',
+      popoverForeground: '0 0% 89.8039%',
       
       // Sidebar
-      sidebar: '220.0000 14.7541% 8.9608%',
-      sidebarForeground: '240 4.8% 65.9%',
+      sidebar: '220 14.7541% 11.9608%',
+      sidebarForeground: '0 0% 89.8039%',
       sidebarPrimary: '139.6552 52.7273% 43.1373%',
       sidebarPrimaryForeground: '0 0% 100%',
-      sidebarAccent: '220.0000 14.7541% 15.9608%',
-      sidebarAccentForeground: '240 4.8% 85.9%',
-      sidebarBorder: '220 13% 20%',
+      sidebarAccent: '218.5401 79.1908% 66.0784%',
+      sidebarAccentForeground: '0 0% 89.8039%',
+      sidebarBorder: '0 0% 26.6667%',
       sidebarRing: '139.6552 52.7273% 43.1373%',
       
       // Charts (adjusted for dark mode)
-      chart1: '173.5385 61.1940% 54.1176%',
-      chart2: '139.6552 52.7273% 53.1373%',
-      chart3: '48.2609 71.7391% 71.3725%',
-      chart4: '36.5217 50% 76.6667%',
-      chart5: '27.7895 59.5238% 69.2157%',
+      chart1: '139.6552 52.7273% 43.1373%',
+      chart2: '207.2727 44% 49.0196%',
+      chart3: '218.5401 79.1908% 66.0784%',
+      chart4: '189.635 81.0651% 66.8627%',
+      chart5: '138.871 70.4545% 34.5098%',
       
       // Shadows (subtle in dark mode)
       shadow2xs: '0deg 0% 0%',

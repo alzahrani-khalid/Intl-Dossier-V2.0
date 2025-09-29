@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useMutation } from '@tanstack/react-query'
 import { Send, Bot, User, Copy, ThumbsUp, ThumbsDown, RefreshCw, FileText, Sparkles } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
@@ -22,13 +22,41 @@ interface SuggestedPrompt {
   prompt: string
 }
 
+type AssistantAction =
+  | 'complete'
+  | 'translate'
+  | 'summarize'
+  | 'expand'
+  | 'rephrase'
+  | 'check_grammar'
+  | 'generate_embeddings'
+
+interface SendMessagePayload {
+  text: string
+  action?: AssistantAction
+  targetLanguage?: 'en' | 'ar'
+}
+
+interface WordAssistantResponse {
+  result: string
+  tokens_used?: number
+  model?: string
+  session_id?: string
+  embeddings?: number[]
+  error?: string
+}
+
+interface MutationContext {
+  typingMessageId: string
+}
+
 export function WordAssistantPage() {
-  const { t, i18n } = useTranslation()
+  const { t } = useTranslation()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [isConnected, setIsConnected] = useState(true)
   const messagesEndRef = useRef<HTMLDivElement>(null)
-  const isRTL = i18n.language === 'ar'
+  const messagesRef = useRef<Message[]>([])
 
   const suggestedPrompts: SuggestedPrompt[] = [
     {
@@ -53,18 +81,80 @@ export function WordAssistantPage() {
     }
   ]
 
-  const sendMessageMutation = useMutation({
-    mutationFn: async (message: string) => {
-      // Add user message
+  useEffect(() => {
+    messagesRef.current = messages
+  }, [messages])
+
+const assistantMode = (import.meta.env.VITE_WORD_ASSISTANT_MODE || 'fallback') as
+  | 'supabase'
+  | 'fallback'
+
+function generateLocalAssistantResponse(message: string, history: string): WordAssistantResponse {
+  const parts = [
+    '📝 *Draft Response*',
+    `You asked: ${message}`,
+    history
+      ? `Context considered (${Math.min(history.length, 120)} chars shown): ${history.slice(-120)}`
+      : 'No prior context provided.',
+    'Suggested next steps:',
+    '- Refine the prompt with specific objectives or data points.',
+    '- Add any constraints such as audience, tone, or deadline.',
+    '- When the AI service is available, re-run for a full draft.'
+  ]
+
+  return {
+    result: parts.join('\n\n'),
+    model: 'local-fallback'
+  }
+}
+
+const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessagePayload, MutationContext>({
+  mutationFn: async ({ text, action = 'complete', targetLanguage }): Promise<WordAssistantResponse> => {
+    const conversationHistory = messagesRef.current
+      .filter(message => !message.isTyping)
+      .map(message => `${message.role.toUpperCase()}: ${message.content}`)
+      .join('\n')
+
+    if (assistantMode !== 'supabase') {
+      return generateLocalAssistantResponse(text, conversationHistory)
+    }
+
+    const payload: Record<string, unknown> = {
+      action,
+      text,
+      max_length: 400
+    }
+
+    if (conversationHistory) {
+      payload.context = conversationHistory
+    }
+
+    if (targetLanguage) {
+      payload.target_language = targetLanguage
+    }
+
+    const { data, error } = await supabase.functions.invoke<WordAssistantResponse>('word-assistant', {
+      body: payload
+    })
+
+    if (error) {
+      throw error
+    }
+
+    if (!data) {
+      throw new Error(t('wordAssistant.errorMessage'))
+    }
+
+    return data
+  },
+    onMutate: async ({ text }) => {
       const userMessage: Message = {
         id: crypto.randomUUID(),
         role: 'user',
-        content: message,
+        content: text,
         timestamp: new Date()
       }
-      setMessages(prev => [...prev, userMessage])
 
-      // Add typing indicator
       const typingMessage: Message = {
         id: crypto.randomUUID(),
         role: 'assistant',
@@ -72,58 +162,59 @@ export function WordAssistantPage() {
         timestamp: new Date(),
         isTyping: true
       }
-      setMessages(prev => [...prev, typingMessage])
 
-      // Call AnythingLLM via Supabase Edge Function
-      const { data, error } = await supabase.functions.invoke('word-assistant', {
-        body: {
-          message,
-          context: messages.map(m => ({
-            role: m.role,
-            content: m.content
-          }))
-        }
+      setMessages(prev => {
+        const next = [...prev, userMessage, typingMessage]
+        messagesRef.current = next
+        return next
       })
 
-      if (error) {
-        // Handle fallback
-        if (!isConnected) {
-          throw new Error(t('wordAssistant.offlineError'))
-        }
-        throw error
-      }
-
-      return data
+      return { typingMessageId: typingMessage.id }
     },
-    onSuccess: (data) => {
-      // Remove typing indicator and add response
+    onSuccess: (data, _variables, context) => {
+      setIsConnected(true)
       setMessages(prev => {
-        const withoutTyping = prev.filter(m => !m.isTyping)
-        return [...withoutTyping, {
+        const withoutTyping = context
+          ? prev.filter(message => message.id !== context.typingMessageId)
+          : prev.filter(message => !message.isTyping)
+
+        const assistantMessage: Message = {
           id: crypto.randomUUID(),
           role: 'assistant',
-          content: data.response,
+          content: data.result || t('wordAssistant.fallbackContent'),
           timestamp: new Date()
-        }]
+        }
+
+        const next = [...withoutTyping, assistantMessage]
+        messagesRef.current = next
+        return next
       })
     },
-    onError: (error) => {
-      // Remove typing indicator
-      setMessages(prev => prev.filter(m => !m.isTyping))
-      
-      // Add error message
-      setMessages(prev => [...prev, {
-        id: crypto.randomUUID(),
-        role: 'assistant',
-        content: t('wordAssistant.errorMessage'),
-        timestamp: new Date()
-      }])
+    onError: (error, _variables, context) => {
+      setIsConnected(false)
+      setMessages(prev => {
+        const withoutTyping = context
+          ? prev.filter(message => message.id !== context.typingMessageId)
+          : prev.filter(message => !message.isTyping)
+
+        const assistantMessage: Message = {
+          id: crypto.randomUUID(),
+          role: 'assistant',
+          content: t('wordAssistant.errorMessage'),
+          timestamp: new Date()
+        }
+
+        const next = [...withoutTyping, assistantMessage]
+        messagesRef.current = next
+        return next
+      })
+      console.error('Word assistant error:', error)
     }
   })
 
   const handleSend = () => {
     if (!input.trim()) return
-    sendMessageMutation.mutate(input)
+    sendMessageMutation.mutate({ text: input.trim(), action: 'complete' })
     setInput('')
   }
 
@@ -143,22 +234,40 @@ export function WordAssistantPage() {
     scrollToBottom()
   }, [messages])
 
-  // Check AnythingLLM connection status
+  // Lightweight connectivity check on mount
   useEffect(() => {
+    let isMounted = true
+
     const checkConnection = async () => {
+      if (assistantMode !== 'supabase') {
+        if (isMounted) setIsConnected(true)
+        return
+      }
+
       try {
-        const { data, error } = await supabase.functions.invoke('word-assistant', {
-          body: { healthCheck: true }
+        const { error } = await supabase.functions.invoke<WordAssistantResponse>('word-assistant', {
+          body: {
+            action: 'check_grammar',
+            text: 'health check'
+          }
         })
-        setIsConnected(!error)
-      } catch {
-        setIsConnected(false)
+        if (isMounted) {
+          setIsConnected(!error)
+        }
+      } catch (err) {
+        console.warn('Word assistant connectivity check failed:', err)
+        if (isMounted) {
+          setIsConnected(false)
+        }
       }
     }
+
     checkConnection()
-    const interval = setInterval(checkConnection, 30000) // Check every 30 seconds
-    return () => clearInterval(interval)
-  }, [])
+
+    return () => {
+      isMounted = false
+    }
+  }, [assistantMode])
 
   return (
     <div className="container mx-auto py-6 h-[calc(100vh-8rem)]">

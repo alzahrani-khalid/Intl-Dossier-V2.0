@@ -248,7 +248,7 @@ export function ReportsPage() {
                             {template.formats.map(format => (
                               <span
                                 key={format}
-                                className="inline-flex items-center px-2 py-1 bg-gray-100 rounded text-xs"
+                                className="inline-flex items-center px-2 py-1 bg-muted rounded text-xs"
                               >
                                 {format.toUpperCase()}
                               </span>
@@ -387,7 +387,7 @@ export function ReportsPage() {
                           <span className="text-xs text-muted-foreground">
                             {format(report.createdAt, 'dd MMM HH:mm')}
                           </span>
-                          <span className="text-xs px-2 py-0.5 bg-gray-100 rounded">
+                          <span className="text-xs px-2 py-0.5 bg-muted rounded">
                             {report.format.toUpperCase()}
                           </span>
                         </div>

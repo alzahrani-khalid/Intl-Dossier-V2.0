@@ -14,6 +14,7 @@ import {
   ChevronDown,
 } from 'lucide-react'
 import { LanguageSwitcher } from './LanguageSwitcher'
+import { ThemeSelector } from './theme-selector/theme-selector'
 import { Button } from './ui/button'
 import {
   DropdownMenu,
@@ -70,12 +71,12 @@ export function Navigation() {
   }, [user])
 
   return (
-    <nav className="sticky top-0 z-30 border-b border-base-200 bg-white/90 backdrop-blur supports-[backdrop-filter]:bg-white/60 dark:border-base-700 dark:bg-base-900/80">
+    <nav className="sticky top-0 z-30 border-b border-border bg-card backdrop-blur">
       <div className="flex items-center justify-between px-4 py-3">
         <div className="flex items-center gap-3">
           <Link
             to="/dashboard"
-            className="flex items-center gap-2 text-lg font-semibold text-primary-700 dark:text-primary-300"
+            className="flex items-center gap-2 text-lg font-semibold text-foreground"
           >
             <span>GASTAT Dossier</span>
           </Link>
@@ -90,8 +91,8 @@ export function Navigation() {
                   className={cn(
                     'flex items-center gap-2 rounded-full px-4 py-2 text-sm font-medium transition-colors',
                     isActive
-                      ? 'bg-primary-50 text-primary-700 dark:bg-primary-900/40 dark:text-primary-200'
-                      : 'text-base-600 hover:bg-base-100 dark:text-base-300 dark:hover:bg-base-800'
+                      ? 'bg-accent text-accent-foreground'
+                      : 'text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground'
                   )}
                 >
                   <Icon className="h-4 w-4" />
@@ -103,6 +104,7 @@ export function Navigation() {
         </div>
 
         <div className="flex items-center gap-3">
+          <ThemeSelector />
           <LanguageSwitcher compact />
           <Button
             variant="ghost"
@@ -112,7 +114,7 @@ export function Navigation() {
           >
             <Bell className="h-5 w-5" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -end-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-red-600 px-1 text-xs font-semibold text-white">
+              <span className="absolute -top-1 -end-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-destructive px-1 text-xs font-semibold text-destructive-foreground">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
@@ -121,21 +123,21 @@ export function Navigation() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary-500 text-sm font-semibold text-white">
+                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                   {userInitials}
                 </span>
                 <span className="hidden sm:inline-flex flex-col items-start text-start">
-                  <span className="text-sm font-medium text-base-800 dark:text-base-100">{user?.name ?? user?.email}</span>
-                  <span className="text-xs text-base-500 dark:text-base-400">{user?.role ?? 'Administrator'}</span>
+                  <span className="text-sm font-medium text-foreground">{user?.name ?? user?.email}</span>
+                  <span className="text-xs text-muted-foreground">{user?.role ?? 'Administrator'}</span>
                 </span>
-                <ChevronDown className="h-4 w-4 text-base-400" />
+                <ChevronDown className="h-4 w-4 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-48">
               <DropdownMenuItem onSelect={() => navigate({ to: '/settings' })}>
                 {t('navigation.settings', 'Settings')}
               </DropdownMenuItem>
-              <DropdownMenuItem onSelect={handleLogout} className="text-red-600 focus:text-red-600">
+              <DropdownMenuItem onSelect={handleLogout} className="text-destructive focus:text-destructive">
                 <LogOut className="mr-2 h-4 w-4" />
                 {t('common.logout', 'Sign out')}
               </DropdownMenuItem>
@@ -155,8 +157,8 @@ export function Navigation() {
               className={cn(
                 'flex flex-1 items-center justify-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium transition-colors',
                 isActive
-                  ? 'border-primary-500 bg-primary-50 text-primary-700'
-                  : 'border-base-200 text-base-600 hover:border-primary-400 hover:text-primary-600'
+                  ? 'border-primary bg-accent text-accent-foreground'
+                  : 'border-border text-muted-foreground hover:border-primary hover:text-foreground'
               )}
             >
               <Icon className="h-4 w-4" />

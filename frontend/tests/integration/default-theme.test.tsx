@@ -117,10 +117,10 @@ describe('Default Theme Application Integration Test', () => {
     const styles = getComputedStyle(root);
     
     // Core colors
-    expect(styles.getPropertyValue('--background')).toBe('0 0% 100%');
-    expect(styles.getPropertyValue('--foreground')).toBe('222.2 47.4% 11.2%');
+    expect(styles.getPropertyValue('--background')).toBe('240 9.0909% 97.8431%');
+    expect(styles.getPropertyValue('--foreground')).toBe('0 0% 20%');
     expect(styles.getPropertyValue('--primary')).toBe('139.6552 52.7273% 43.1373%');
-    expect(styles.getPropertyValue('--secondary')).toBe('139.2941 22.3404% 78.6275%');
+    expect(styles.getPropertyValue('--secondary')).toBe('218.5401 79.1908% 66.0784%');
     
     // Typography
     expect(styles.getPropertyValue('--font-sans')).toContain('Plus Jakarta Sans');

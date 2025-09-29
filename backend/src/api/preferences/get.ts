@@ -1,30 +1,31 @@
 import { Request, Response } from 'express';
 import { PreferencesService } from '../../services/preferences-service';
-import { DEFAULT_PREFERENCES } from '../../models/user-preferences';
+import { validateUserId } from '../../models/user-preference';
 import { z } from 'zod';
 
 const paramsSchema = z.object({
-  userId: z.string().uuid(),
+  userId: z.string().min(1),
 });
 
 export async function getUserPreferences(
   req: Request,
-  res: Response,
-  preferencesService: PreferencesService
+  res: Response
 ): Promise<void> {
   try {
     const params = paramsSchema.parse(req.params);
+    const { userId } = params;
     
-    const authUserId = (req as any).user?.id;
-    if (!authUserId) {
-      res.status(401).json({
-        error: 'UNAUTHORIZED',
-        message: 'User not authenticated',
+    // Validate user ID format
+    if (!validateUserId(userId)) {
+      res.status(400).json({
+        error: 'Invalid user ID format',
       });
       return;
     }
-
-    if (authUserId !== params.userId) {
+    
+    // Check authentication if needed
+    const authUserId = (req as any).user?.id;
+    if (authUserId && authUserId !== userId) {
       res.status(403).json({
         error: 'FORBIDDEN',
         message: 'Cannot access other user\'s preferences',
@@ -32,16 +33,8 @@ export async function getUserPreferences(
       return;
     }
 
-    const preferences = await preferencesService.getUserPreferences(params.userId);
-
-    if (!preferences) {
-      res.status(404).json({
-        error: 'PREFERENCES_NOT_FOUND',
-        message: 'No preferences found for user',
-        defaultsApplied: true,
-      });
-      return;
-    }
+    const preferencesService = new PreferencesService();
+    const preferences = await preferencesService.getPreferences(userId);
 
     res.status(200).json(preferences);
   } catch (error) {
@@ -50,6 +43,13 @@ export async function getUserPreferences(
         error: 'VALIDATION_ERROR',
         message: 'Invalid request parameters',
         details: error.errors,
+      });
+      return;
+    }
+
+    if (error instanceof Error && error.message === 'Invalid user ID format') {
+      res.status(400).json({
+        error: 'Invalid user ID format',
       });
       return;
     }

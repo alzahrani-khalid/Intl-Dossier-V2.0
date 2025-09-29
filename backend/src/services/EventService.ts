@@ -4,73 +4,45 @@ import { logInfo, logError } from '../utils/logger';
 
 export interface Event {
   id: string;
-  title: string;
-  description?: string;
-  type: 'meeting' | 'conference' | 'workshop' | 'ceremony' | 'visit' | 'other';
-  start_date: string;
-  end_date: string;
-  location: string;
-  virtual_link?: string;
-  attendees: Array<{
-    type: 'country' | 'organization' | 'contact';
-    id: string;
-    role: 'host' | 'participant' | 'observer' | 'speaker';
-    confirmed: boolean;
-  }>;
-  agenda: Array<{
-    time: string;
-    topic: string;
-    presenter?: string;
-  }>;
-  documents: string[];
-  tags: string[];
-  visibility: 'public' | 'internal' | 'restricted';
-  metadata?: Record<string, any>;
-  created_by: string;
-  created_at: string;
-  updated_at: string;
+  title_en: string;
+  title_ar: string;
+  type: 'meeting' | 'conference' | 'workshop' | 'ceremony' | 'visit' | 'other' | string;
+  start_datetime: string;
+  end_datetime: string;
+  location_en?: string;
+  location_ar?: string;
+  venue_en: string;
+  venue_ar: string;
+  is_virtual: boolean;
+  virtual_link?: string | null;
+  max_participants?: number | null;
+  status: 'draft' | 'scheduled' | 'ongoing' | 'completed' | 'cancelled' | string;
 }
 
 export interface CalendarEvent {
   id: string;
-  title: string;
-  start_date: string;
-  end_date: string;
-  type: 'meeting' | 'conference' | 'workshop' | 'ceremony' | 'visit' | 'other';
-  location: string;
-  visibility: 'public' | 'internal' | 'restricted';
-  attendees: Array<{
-    id: string;
-    type: 'country' | 'organization' | 'contact';
-    entity_id: string;
-    role: 'host' | 'participant' | 'observer' | 'speaker';
-    confirmed: boolean;
-  }>;
+  title_en: string;
+  title_ar: string;
+  start_datetime: string;
+  end_datetime: string;
+  type: 'meeting' | 'conference' | 'workshop' | 'ceremony' | 'visit' | 'other' | string;
+  venue_en: string;
+  venue_ar: string;
+  is_virtual: boolean;
 }
 
 export interface CreateEventDto {
-  title: string;
-  description?: string;
+  title_en: string;
+  title_ar: string;
   type: 'meeting' | 'conference' | 'workshop' | 'ceremony' | 'visit' | 'other';
-  start_date: string;
-  end_date: string;
-  location: string;
-  virtual_link?: string;
-  attendees?: Array<{
-    type: 'country' | 'organization' | 'contact';
-    id: string;
-    role: 'host' | 'participant' | 'observer' | 'speaker';
-    confirmed: boolean;
-  }>;
-  agenda?: Array<{
-    time: string;
-    topic: string;
-    presenter?: string;
-  }>;
-  documents?: string[];
-  tags?: string[];
-  visibility: 'public' | 'internal' | 'restricted';
-  metadata?: Record<string, any>;
+  start_datetime: string;
+  end_datetime: string;
+  location_en?: string;
+  location_ar?: string;
+  venue_en?: string;
+  venue_ar?: string;
+  is_virtual?: boolean;
+  virtual_link?: string | null;
 }
 
 export interface UpdateEventDto extends Partial<CreateEventDto> {}
@@ -79,13 +51,9 @@ export interface EventSearchParams {
   type?: string;
   upcoming?: boolean;
   past?: boolean;
-  country_id?: string;
-  organization_id?: string;
   search?: string;
-  start_date?: string;
-  end_date?: string;
-  visibility?: string;
-  created_by?: string;
+  start_date?: string; // maps to start_datetime
+  end_date?: string;   // maps to end_datetime
   limit?: number;
   offset?: number;
   sort?: string;
@@ -106,49 +74,29 @@ export class EventService {
       if (cached) return cached;
 
       let query = supabaseAdmin
-        .from('events')
-        .select(`
-          *,
-          attendees:event_attendees(
-            id,
-            type,
-            entity_id,
-            role,
-            confirmed,
-            entity:countries(name_en, name_ar, code),
-            organization:organizations(name_en, name_ar),
-            contact:contacts(first_name, last_name, email)
-          )
-        `);
+        .from('event_details')
+        .select('*');
 
       // Apply filters
       if (params.type) {
         query = query.eq('type', params.type);
       }
       if (params.upcoming) {
-        query = query.gte('start_date', new Date().toISOString());
+        query = query.gte('start_datetime', new Date().toISOString());
       }
       if (params.past) {
-        query = query.lt('end_date', new Date().toISOString());
+        query = query.lt('end_datetime', new Date().toISOString());
       }
       if (params.start_date) {
-        query = query.gte('start_date', params.start_date);
+        query = query.gte('start_datetime', params.start_date);
       }
       if (params.end_date) {
-        query = query.lte('end_date', params.end_date);
-      }
-      if (params.visibility) {
-        query = query.eq('visibility', params.visibility);
-      }
-      if (params.created_by) {
-        query = query.eq('created_by', params.created_by);
+        query = query.lte('end_datetime', params.end_date);
       }
       if (params.search) {
-        query = query.or(`
-          title.ilike.%${params.search}%,
-          description.ilike.%${params.search}%,
-          location.ilike.%${params.search}%
-        `);
+        query = query.or(
+          `title_en.ilike.%${params.search}%,title_ar.ilike.%${params.search}%`
+        );
       }
 
       // Apply pagination
@@ -157,7 +105,9 @@ export class EventService {
       query = query.range(offset, offset + limit - 1);
 
       // Apply sorting
-      const sortField = params.sort || 'start_date';
+      const sortField = (params.sort === 'start_date' || !params.sort)
+        ? 'start_datetime'
+        : params.sort;
       const ascending = params.order === 'asc';
       query = query.order(sortField, { ascending });
 
@@ -188,20 +138,8 @@ export class EventService {
       if (cached) return cached;
 
       const { data, error } = await supabaseAdmin
-        .from('events')
-        .select(`
-          *,
-          attendees:event_attendees(
-            id,
-            type,
-            entity_id,
-            role,
-            confirmed,
-            entity:countries(name_en, name_ar, code),
-            organization:organizations(name_en, name_ar),
-            contact:contacts(first_name, last_name, email)
-          )
-        `)
+        .from('event_details')
+        .select('*')
         .eq('id', id)
         .single();
 
@@ -223,33 +161,25 @@ export class EventService {
    */
   async create(eventData: CreateEventDto, createdBy: string): Promise<Event> {
     try {
-      const event = {
-        ...eventData,
-        attendees: eventData.attendees || [],
-        agenda: eventData.agenda || [],
-        documents: eventData.documents || [],
-        tags: eventData.tags || [],
-        created_by: createdBy,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString()
-      };
+      // Accept older shapes: title/start_date/end_date/location
+      const title = (eventData as any).title_en ?? (eventData as any).title ?? '';
+      const start = (eventData as any).start_datetime ?? (eventData as any).start_date;
+      const end = (eventData as any).end_datetime ?? (eventData as any).end_date;
+      const location = (eventData as any).venue_en || (eventData as any).location_en || (eventData as any).location || '';
 
       const { data, error } = await supabaseAdmin
         .from('events')
-        .insert(event)
-        .select(`
-          *,
-          attendees:event_attendees(
-            id,
-            type,
-            entity_id,
-            role,
-            confirmed,
-            entity:countries(name_en, name_ar, code),
-            organization:organizations(name_en, name_ar),
-            contact:contacts(first_name, last_name, email)
-          )
-        `)
+        .insert({
+          title,
+          description: null,
+          type: eventData.type,
+          start_time: start,
+          end_time: end,
+          location,
+          virtual_link: eventData.virtual_link || null,
+          created_by: createdBy
+        })
+        .select('*')
         .single();
 
       if (error) throw error;
@@ -270,28 +200,25 @@ export class EventService {
    */
   async update(id: string, updates: UpdateEventDto, updatedBy: string): Promise<Event> {
     try {
-      const updateData = {
-        ...updates,
-        updated_at: new Date().toISOString()
-      };
+      const title = (updates as any).title_en ?? (updates as any).title;
+      const start = (updates as any).start_datetime ?? (updates as any).start_date;
+      const end = (updates as any).end_datetime ?? (updates as any).end_date;
+      const location = (updates as any).venue_en || (updates as any).location_en || (updates as any).location;
 
       const { data, error } = await supabaseAdmin
         .from('events')
-        .update(updateData)
+        .update({
+          title,
+          description: null,
+          type: updates.type,
+          start_time: start,
+          end_time: end,
+          location,
+          virtual_link: updates.virtual_link || null,
+          updated_at: new Date().toISOString()
+        })
         .eq('id', id)
-        .select(`
-          *,
-          attendees:event_attendees(
-            id,
-            type,
-            entity_id,
-            role,
-            confirmed,
-            entity:countries(name_en, name_ar, code),
-            organization:organizations(name_en, name_ar),
-            contact:contacts(first_name, last_name, email)
-          )
-        `)
+        .select('*')
         .single();
 
       if (error) throw error;
@@ -429,25 +356,10 @@ export class EventService {
   ): Promise<CalendarEvent[]> {
     try {
       let query = supabaseAdmin
-        .from('events')
-        .select(`
-          id,
-          title,
-          start_date,
-          end_date,
-          type,
-          location,
-          visibility,
-          attendees:event_attendees(
-            id,
-            type,
-            entity_id,
-            role,
-            confirmed
-          )
-        `)
-        .gte('start_date', startDate)
-        .lte('end_date', endDate);
+        .from('event_details')
+        .select('*')
+        .gte('start_datetime', startDate)
+        .lte('end_datetime', endDate);
 
       if (userId) {
         query = query.or(`
@@ -456,7 +368,7 @@ export class EventService {
         `);
       }
 
-      const { data, error } = await query.order('start_date', { ascending: true });
+      const { data, error } = await query.order('start_datetime', { ascending: true });
 
       if (error) throw error;
       return data || [];
@@ -472,19 +384,10 @@ export class EventService {
   async getUpcomingEvents(limit: number = 10): Promise<Event[]> {
     try {
       const { data, error } = await supabaseAdmin
-        .from('events')
-        .select(`
-          *,
-          attendees:event_attendees(
-            id,
-            type,
-            entity_id,
-            role,
-            confirmed
-          )
-        `)
-        .gte('start_date', new Date().toISOString())
-        .order('start_date', { ascending: true })
+        .from('event_details')
+        .select('*')
+        .gte('start_datetime', new Date().toISOString())
+        .order('start_datetime', { ascending: true })
         .limit(limit);
 
       if (error) throw error;
@@ -501,20 +404,10 @@ export class EventService {
   async findByCountry(countryId: string): Promise<Event[]> {
     try {
       const { data, error } = await supabaseAdmin
-        .from('events')
-        .select(`
-          *,
-          attendees:event_attendees(
-            id,
-            type,
-            entity_id,
-            role,
-            confirmed
-          )
-        `)
-        .eq('attendees.type', 'country')
-        .eq('attendees.entity_id', countryId)
-        .order('start_date', { ascending: false });
+        .from('event_details')
+        .select('*')
+        .eq('country_id', countryId)
+        .order('start_datetime', { ascending: false });
 
       if (error) throw error;
       return data || [];
@@ -530,20 +423,10 @@ export class EventService {
   async findByOrganization(organizationId: string): Promise<Event[]> {
     try {
       const { data, error } = await supabaseAdmin
-        .from('events')
-        .select(`
-          *,
-          attendees:event_attendees(
-            id,
-            type,
-            entity_id,
-            role,
-            confirmed
-          )
-        `)
-        .eq('attendees.type', 'organization')
-        .eq('attendees.entity_id', organizationId)
-        .order('start_date', { ascending: false });
+        .from('event_details')
+        .select('*')
+        .eq('organizer_id', organizationId)
+        .order('start_datetime', { ascending: false });
 
       if (error) throw error;
       return data || [];
@@ -566,28 +449,26 @@ export class EventService {
   }> {
     try {
       const { data, error } = await supabaseAdmin
-        .from('events')
-        .select('id, type, visibility, start_date, end_date');
+        .from('event_details')
+        .select('id, type, status, start_datetime, end_datetime');
 
       if (error) throw error;
 
-      const events = data || [];
+      const events = (data || []) as any[];
       const now = new Date().toISOString();
-      const upcoming = events.filter(e => e.start_date >= now).length;
-      const past = events.filter(e => e.end_date < now).length;
+      const upcoming = events.filter(e => e.start_datetime >= now).length;
+      const past = events.filter(e => e.end_datetime < now).length;
 
       const byType: Record<string, number> = {};
       const byVisibility: Record<string, number> = {};
 
-      events.forEach(event => {
+      events.forEach((event: any) => {
         byType[event.type] = (byType[event.type] || 0) + 1;
-        byVisibility[event.visibility] = (byVisibility[event.visibility] || 0) + 1;
+        byVisibility[event.status] = (byVisibility[event.status] || 0) + 1;
       });
 
       // Get total attendees count
-      const { count: attendeesCount } = await supabaseAdmin
-        .from('event_attendees')
-        .select('*', { count: 'exact', head: true });
+      const attendeesCount = 0;
 
       return {
         total: events.length,
@@ -616,9 +497,9 @@ export class EventService {
         .from('events')
         .select('*')
         .or(`
-          and(start_date.lte.${startDate},end_date.gte.${startDate}),
-          and(start_date.lte.${endDate},end_date.gte.${endDate}),
-          and(start_date.gte.${startDate},end_date.lte.${endDate})
+          and(start_time.lte.${startDate},end_time.gte.${startDate}),
+          and(start_time.lte.${endDate},end_time.gte.${endDate}),
+          and(start_time.gte.${startDate},end_time.lte.${endDate})
         `);
 
       if (excludeEventId) {

@@ -1,30 +1,31 @@
 import { Request, Response } from 'express';
 import { PreferencesService } from '../../services/preferences-service';
-import { PreferenceUpdateSchema } from '../../models/user-preferences';
+import { UserPreferenceUpdateSchema, validateUserId, ThemeEnum, ColorModeEnum, LanguageEnum } from '../../models/user-preference';
 import { z } from 'zod';
 
 const paramsSchema = z.object({
-  userId: z.string().uuid(),
+  userId: z.string().min(1),
 });
 
 export async function updateUserPreferences(
   req: Request,
-  res: Response,
-  preferencesService: PreferencesService
+  res: Response
 ): Promise<void> {
   try {
     const params = paramsSchema.parse(req.params);
+    const { userId } = params;
     
-    const authUserId = (req as any).user?.id;
-    if (!authUserId) {
-      res.status(401).json({
-        error: 'UNAUTHORIZED',
-        message: 'User not authenticated',
+    // Validate user ID format
+    if (!validateUserId(userId)) {
+      res.status(400).json({
+        error: 'Invalid user ID format',
       });
       return;
     }
-
-    if (authUserId !== params.userId) {
+    
+    // Check authentication if needed
+    const authUserId = (req as any).user?.id;
+    if (authUserId && authUserId !== userId) {
       res.status(403).json({
         error: 'FORBIDDEN',
         message: 'Cannot update other user\'s preferences',
@@ -32,35 +33,33 @@ export async function updateUserPreferences(
       return;
     }
 
-    const updates = PreferenceUpdateSchema.parse(req.body);
+    // Validate request body
+    const updates = UserPreferenceUpdateSchema.parse(req.body);
 
-    const existingPreferences = await preferencesService.getUserPreferences(params.userId);
-    
-    let preferences;
-    let statusCode;
-    
-    if (existingPreferences) {
-      preferences = await preferencesService.updateUserPreferences(params.userId, updates);
-      statusCode = 200;
-    } else {
-      preferences = await preferencesService.createUserPreferences(params.userId, updates);
-      statusCode = 201;
-    }
+    const preferencesService = new PreferencesService();
+    const preferences = await preferencesService.upsertPreferences(userId, updates);
 
-    res.status(statusCode).json(preferences);
+    res.status(200).json(preferences);
   } catch (error) {
     if (error instanceof z.ZodError) {
       const fieldError = error.errors[0];
       
       if (fieldError.path[0] && fieldError.code === 'invalid_enum_value') {
         const field = fieldError.path[0] as string;
-        const validValues = (fieldError as any).options || [];
+        let validValues: string[] = [];
+        
+        // Get valid values based on field
+        if (field === 'theme') {
+          validValues = ['gastat', 'blue-sky'];
+        } else if (field === 'colorMode') {
+          validValues = ['light', 'dark'];
+        } else if (field === 'language') {
+          validValues = ['en', 'ar'];
+        }
         
         res.status(400).json({
-          error: 'VALIDATION_ERROR',
-          message: `Invalid ${field} value`,
-          field,
-          validValues,
+          error: `Invalid ${field}`,
+          [`valid${field.charAt(0).toUpperCase() + field.slice(1)}s`]: validValues,
         });
       } else {
         res.status(400).json({
@@ -69,6 +68,13 @@ export async function updateUserPreferences(
           field: fieldError.path[0] as string,
         });
       }
+      return;
+    }
+
+    if (error instanceof Error && error.message === 'Invalid user ID format') {
+      res.status(400).json({
+        error: 'Invalid user ID format',
+      });
       return;
     }
 

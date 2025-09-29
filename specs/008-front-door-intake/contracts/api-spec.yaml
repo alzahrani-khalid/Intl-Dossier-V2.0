@@ -1,0 +1,81 @@
+openapi: 3.1.0
+info:
+  title: Front Door Intake API
+  version: 0.1.0
+paths:
+  /api/intake:
+    post:
+      summary: Submit intake ticket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IntakeCreate'
+      responses:
+        '201': { description: created }
+    get:
+      summary: List tickets
+      parameters:
+        - in: query
+          name: status
+          schema: { type: string }
+        - in: query
+          name: assigned_unit
+          schema: { type: string }
+        - in: query
+          name: request_type
+          schema: { type: string }
+        - in: query
+          name: search
+          schema: { type: string }
+      responses:
+        '200': { description: ok }
+  /api/intake/{id}:
+    get:
+      summary: Get ticket
+      responses: { '200': { description: ok }, '404': { description: not found } }
+    put:
+      summary: Update ticket (triage/assign)
+      responses: { '200': { description: ok } }
+  /api/intake/{id}/convert:
+    post:
+      summary: Convert to artifact
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [type]
+              properties:
+                type:
+                  enum: [engagement, position, mou_action, foresight]
+                payload:
+                  type: object
+      responses:
+        '201': { description: created }
+  /api/intake/{id}/dedupe:
+    get:
+      summary: Get duplicate candidates with confidence
+      responses:
+        '200': { description: ok }
+  /api/intake/{id}/sla:
+    get:
+      summary: SLA clocks and history
+      responses:
+        '200': { description: ok }
+components:
+  schemas:
+    IntakeCreate:
+      type: object
+      required: [request_type, title_en]
+      properties:
+        request_type: { enum: [engagement, position, mou_action, foresight, inquiry] }
+        title_en: { type: string }
+        title_ar: { type: string }
+        description_en: { type: string }
+        description_ar: { type: string }
+        dossier_id: { type: string, format: uuid }
+        sensitivity: { enum: [public, internal, confidential, secret] }
+        urgency: { enum: [low, medium, high, critical] }

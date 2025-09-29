@@ -1,8 +1,8 @@
 import React from 'react'
-import { createClient } from '@supabase/supabase-js'
 import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js'
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
+import { supabase } from '../lib/supabase'
 
 // Types for realtime subscriptions
 export interface RealtimeSubscription {
@@ -35,22 +35,6 @@ export interface RealtimeActions {
   setConnectionStatus: (status: RealtimeState['connectionStatus']) => void
   setError: (error: string | null) => void
 }
-
-// Supabase client setup
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
-
-if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables')
-}
-
-const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  realtime: {
-    params: {
-      eventsPerSecond: 10
-    }
-  }
-})
 
 type RealtimeConnectionState = 'connecting' | 'open' | 'closing' | 'closed'
 
@@ -125,11 +109,11 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
 
     unsubscribeAll: () => {
       const { subscriptions } = get()
-      
+
       subscriptions.forEach((subscription) => {
         subscription.channel.unsubscribe()
       })
-      
+
       subscriptions.clear()
       set({ subscriptions: new Map(subscriptions) })
     },
@@ -143,7 +127,7 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
       try {
         // Reconnect to Supabase
         await supabase.realtime.connect()
-        
+
         // Resubscribe to all existing subscriptions
         const { subscriptions } = get()
         const newSubscriptions = new Map()
@@ -196,7 +180,7 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
     },
 
     setConnectionStatus: (status) => {
-      set({ 
+      set({
         connectionStatus: status,
         isConnected: status === 'connected',
         isConnecting: status === 'reconnecting'

@@ -19,8 +19,8 @@ interface IntelligenceReport {
   confidence_level: 'low' | 'medium' | 'high' | 'verified'
   classification: 'public' | 'internal' | 'confidential' | 'restricted'
   analysis_type: string[]
-  key_findings: any[]
-  recommendations: any[]
+  key_findings: Array<Record<string, unknown>>
+  recommendations: Array<Record<string, unknown>>
   status: string
   author: {
     full_name: string
@@ -35,6 +35,38 @@ interface IntelligenceReport {
   published_at: string | null
 }
 
+type IntelligenceReportRow = {
+  id: string
+  report_number?: string | null
+  title?: string | null
+  title_en?: string | null
+  title_ar?: string | null
+  executive_summary_en?: string | null
+  executive_summary_ar?: string | null
+  summary_en?: string | null
+  summary_ar?: string | null
+  summary?: string | null
+  confidence_level?: string | null
+  confidence?: string | null
+  classification?: string | null
+  analysis_type?: string[] | string | null
+  analysis_types?: string[] | null
+  key_findings?: unknown
+  findings?: unknown
+  recommendations?: unknown
+  status?: string | null
+  author?: { full_name?: string | null } | null
+  author_name?: string | null
+  created_by?: string | null
+  reviewed_by?: { full_name?: string | null } | null
+  reviewed_by_name?: string | null
+  approved_by?: { full_name?: string | null } | null
+  approved_by_name?: string | null
+  created_at?: string | null
+  createdAt?: string | null
+  published_at?: string | null
+}
+
 export function IntelligencePage() {
   const { t, i18n } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
@@ -43,37 +75,101 @@ export function IntelligencePage() {
   const [similaritySearch, setSimilaritySearch] = useState('')
   const isRTL = i18n.language === 'ar'
 
-  const { data: reports, isLoading, refetch } = useQuery({
+  const { data: reports, isLoading } = useQuery({
     queryKey: ['intelligence', searchTerm, filterConfidence, filterClassification],
     queryFn: async () => {
-      let query = supabase
+      const { data, error } = await supabase
         .from('intelligence_reports')
-        .select(`
-          *,
-          author:users!author_id(full_name),
-          reviewed_by:users!reviewed_by(full_name),
-          approved_by:users!approved_by(full_name)
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
 
-      if (searchTerm) {
-        query = query.or(
-          `report_number.ilike.%${searchTerm}%,title_en.ilike.%${searchTerm}%,title_ar.ilike.%${searchTerm}%`
-        )
+      if (error) {
+        console.error('Failed to load intelligence reports', error)
+        throw error
       }
 
-      if (filterConfidence !== 'all') {
-        query = query.eq('confidence_level', filterConfidence)
-      }
+      const normalized = (data as IntelligenceReportRow[] | null)?.map((raw) => {
+        const titleEn = raw.title_en ?? raw.title ?? 'Untitled report'
+        const titleAr = raw.title_ar ?? titleEn
+        const summaryEn = raw.executive_summary_en ?? raw.summary_en ?? raw.summary ?? ''
+        const summaryAr = raw.executive_summary_ar ?? raw.summary_ar ?? summaryEn
+        const confidence = raw.confidence_level ?? raw.confidence ?? 'medium'
+        const classification = raw.classification ?? 'internal'
+        const status = raw.status ?? 'draft'
+        const createdAt = raw.created_at ?? raw.createdAt ?? new Date().toISOString()
+        const publishedAt = raw.published_at ?? null
 
-      if (filterClassification !== 'all') {
-        query = query.eq('classification', filterClassification)
-      }
+        const normalizeArray = (value: unknown) => {
+          if (Array.isArray(value)) return value
+          if (typeof value === 'string') {
+            const trimmed = value.trim()
+            if (!trimmed) return []
+            try {
+              const parsed = JSON.parse(trimmed)
+              if (Array.isArray(parsed)) return parsed
+              if (typeof parsed === 'string') return [parsed]
+            } catch {
+              return [trimmed]
+            }
+            return []
+          }
+          return []
+        }
 
-      const { data, error } = await query
+        return {
+          id: raw.id,
+          report_number: raw.report_number ?? raw.id ?? 'N/A',
+          title_en: titleEn,
+          title_ar: titleAr,
+          executive_summary_en: summaryEn,
+          executive_summary_ar: summaryAr,
+          confidence_level: confidence,
+          classification,
+          analysis_type: normalizeArray(
+            raw.analysis_type && !Array.isArray(raw.analysis_type)
+              ? raw.analysis_type
+              : raw.analysis_types ?? raw.analysis_type ?? []
+          ) as string[],
+          key_findings: normalizeArray(raw.key_findings ?? raw.findings ?? []) as Array<Record<string, unknown>>,
+          recommendations: normalizeArray(raw.recommendations ?? []) as Array<Record<string, unknown>>,
+          status,
+          author: {
+            full_name: raw.author?.full_name ?? raw.author_name ?? raw.created_by ?? '—'
+          },
+          reviewed_by: raw.reviewed_by
+            ? { full_name: raw.reviewed_by.full_name ?? '—' }
+            : raw.reviewed_by_name
+              ? { full_name: raw.reviewed_by_name }
+              : null,
+          approved_by: raw.approved_by
+            ? { full_name: raw.approved_by.full_name ?? '—' }
+            : raw.approved_by_name
+              ? { full_name: raw.approved_by_name }
+              : null,
+          created_at: createdAt,
+          published_at: publishedAt
+        } satisfies IntelligenceReport
+      }) ?? []
 
-      if (error) throw error
-      return data as IntelligenceReport[]
+      return normalized.filter((report) => {
+        const matchesConfidence =
+          filterConfidence === 'all' ? true : report.confidence_level === filterConfidence
+        const matchesClassification =
+          filterClassification === 'all' ? true : report.classification === filterClassification
+        const matchesSearch = searchTerm
+          ? [
+              report.report_number,
+              report.title_en,
+              report.title_ar,
+              report.executive_summary_en,
+              report.executive_summary_ar
+            ]
+              .filter(Boolean)
+              .some((value) => value.toLowerCase().includes(searchTerm.toLowerCase()))
+          : true
+
+        return matchesConfidence && matchesClassification && matchesSearch
+      })
     }
   })
 
@@ -102,7 +198,7 @@ export function IntelligencePage() {
     return (
       <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}>
         <Shield className="h-3 w-3 mr-1" />
-        {t(`intelligence.confidence.${level}`)} ({config.icon})
+        {t(`intelligence.confidenceLevels.${level}`)} ({config.icon})
       </div>
     )
   }
@@ -189,7 +285,7 @@ export function IntelligencePage() {
       cell: (report: IntelligenceReport) => (
         <div className="text-sm">
           <span className="font-medium">{report.key_findings?.length || 0}</span>
-          <span className="text-muted-foreground"> findings</span>
+          <span className="text-muted-foreground"> {t('intelligence.findings')}</span>
         </div>
       )
     },
@@ -239,7 +335,7 @@ export function IntelligencePage() {
     {
       key: 'actions',
       header: '',
-      cell: (report: IntelligenceReport) => (
+      cell: () => (
         <Button size="sm" variant="ghost">
           <Download className="h-4 w-4" />
         </Button>
@@ -247,8 +343,8 @@ export function IntelligencePage() {
     }
   ]
 
-  const confidenceLevels = ['all', 'low', 'medium', 'high', 'verified']
-  const classifications = ['all', 'public', 'internal', 'confidential', 'restricted']
+  const confidenceLevels = ['low', 'medium', 'high', 'verified']
+  const classifications = ['public', 'internal', 'confidential', 'restricted']
 
   return (
     <div className="container mx-auto py-6">
@@ -336,6 +432,13 @@ export function IntelligencePage() {
             <div className="flex gap-4">
               <div className="flex gap-2">
                 <span className="text-sm text-muted-foreground mt-2">{t('intelligence.confidence')}:</span>
+                <Button
+                  variant={filterConfidence === 'all' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFilterConfidence('all')}
+                >
+                  {t('common.all')}
+                </Button>
                 {confidenceLevels.map(level => (
                   <Button
                     key={level}
@@ -343,12 +446,19 @@ export function IntelligencePage() {
                     size="sm"
                     onClick={() => setFilterConfidence(level)}
                   >
-                    {level === 'all' ? t('common.all') : t(`intelligence.confidence.${level}`)}
+                    {t(`intelligence.confidenceLevels.${level}`)}
                   </Button>
                 ))}
               </div>
               <div className="flex gap-2">
                 <span className="text-sm text-muted-foreground mt-2">{t('intelligence.classification')}:</span>
+                <Button
+                  variant={filterClassification === 'all' ? 'default' : 'outline'}
+                  size="sm"
+                  onClick={() => setFilterClassification('all')}
+                >
+                  {t('common.all')}
+                </Button>
                 {classifications.map(cls => (
                   <Button
                     key={cls}
@@ -356,7 +466,7 @@ export function IntelligencePage() {
                     size="sm"
                     onClick={() => setFilterClassification(cls)}
                   >
-                    {cls === 'all' ? t('common.all') : t(`intelligence.classification.${cls}`)}
+                    {t(`intelligence.classifications.${cls}`)}
                   </Button>
                 ))}
               </div>

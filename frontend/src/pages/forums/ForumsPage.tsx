@@ -15,12 +15,12 @@ interface Forum {
   title_ar: string
   start_datetime: string
   end_datetime: string
-  location_en: string
-  location_ar: string
+  location_en?: string
+  location_ar?: string
   venue_en: string
   venue_ar: string
   is_virtual: boolean
-  max_participants: number
+  max_participants?: number
   number_of_sessions: number
   status: string
   organizer: {
@@ -38,15 +38,14 @@ export function ForumsPage() {
   const { data: forums, isLoading } = useQuery({
     queryKey: ['forums', searchTerm, filterStatus],
     queryFn: async () => {
+      // Use the forum_details view which aligns to UI shape
       let query = supabase
-        .from('forums')
-        .select(`
-          *,
-          organizer:organizations(name_en, name_ar)
-        `)
+        .from('forum_details')
+        .select('*')
         .order('start_datetime', { ascending: false })
 
       if (searchTerm) {
+        // Search over titles exposed by the view
         query = query.or(
           `title_en.ilike.%${searchTerm}%,title_ar.ilike.%${searchTerm}%`
         )
@@ -57,7 +56,6 @@ export function ForumsPage() {
       }
 
       const { data, error } = await query
-
       if (error) throw error
       return data as Forum[]
     }

@@ -1,0 +1,86 @@
+{
+  "theme": {
+    "title": "السمة",
+    "select": "اختر السمة",
+    "gastat": "الهيئة العامة للإحصاء",
+    "blueSky": "السماء الزرقاء",
+    "light": "الوضع الفاتح",
+    "dark": "الوضع الداكن",
+    "switchToLight": "التبديل إلى الوضع الفاتح",
+    "switchToDark": "التبديل إلى الوضع الداكن",
+    "changed": "تم تغيير السمة إلى {{theme}}",
+    "colorModeChanged": "تم تغيير وضع الألوان إلى {{mode}}"
+  },
+  "language": {
+    "title": "اللغة",
+    "select": "اختر اللغة",
+    "english": "الإنجليزية",
+    "arabic": "العربية",
+    "changed": "تم تغيير اللغة إلى {{language}}"
+  },
+  "accessibility": {
+    "skipToContent": "انتقل إلى المحتوى الرئيسي",
+    "mainNavigation": "التنقل الرئيسي",
+    "userMenu": "قائمة المستخدم",
+    "notifications": "الإشعارات",
+    "search": "بحث",
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجاح",
+    "warning": "تحذير",
+    "info": "معلومات"
+  },
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "close": "إغلاق",
+    "confirm": "تأكيد",
+    "back": "رجوع",
+    "next": "التالي",
+    "previous": "السابق",
+    "submit": "إرسال",
+    "reset": "إعادة تعيين",
+    "logout": "تسجيل الخروج",
+    "profile": "الملف الشخصي",
+    "settings": "الإعدادات",
+    "help": "مساعدة",
+    "about": "حول"
+  },
+  "navigation": {
+    "dashboard": "لوحة القيادة",
+    "dossiers": "الملفات",
+    "projects": "المشاريع",
+    "organizations": "المنظمات",
+    "countries": "البلدان",
+    "reports": "التقارير",
+    "settings": "الإعدادات",
+    "profile": "الملف الشخصي",
+    "help": "المساعدة"
+  },
+  "search": {
+    "searchPlaceholder": "بحث...",
+    "noResults": "لا توجد نتائج",
+    "searching": "جاري البحث...",
+    "clearSearch": "مسح البحث"
+  },
+  "errors": {
+    "preferenceSaveFailed": "فشل حفظ التفضيلات. التغييرات محفوظة محلياً.",
+    "themeLoadFailed": "فشل تحميل السمة. استخدام السمة الافتراضية.",
+    "languageLoadFailed": "فشل تحميل اللغة. استخدام اللغة الإنجليزية.",
+    "networkError": "خطأ في الشبكة. يرجى التحقق من الاتصال.",
+    "unknownError": "حدث خطأ غير معروف. يرجى المحاولة مرة أخرى."
+  },
+  "preferences": {
+    "title": "التفضيلات",
+    "appearance": "المظهر",
+    "language": "اللغة",
+    "theme": "السمة",
+    "colorMode": "وضع الألوان",
+    "saveSuccess": "تم حفظ التفضيلات بنجاح",
+    "loadError": "فشل تحميل التفضيلات",
+    "resetConfirm": "هل أنت متأكد من إعادة تعيين التفضيلات إلى الإعدادات الافتراضية؟",
+    "resetSuccess": "تم إعادة تعيين التفضيلات إلى الإعدادات الافتراضية"
+  }
+}

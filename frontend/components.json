@@ -4,13 +4,12 @@
   "rsc": false,
   "tsx": true,
   "tailwind": {
-    "config": "tailwind.config.js",
+    "config": "tailwind.config.ts",
     "css": "src/index.css",
     "baseColor": "neutral",
     "cssVariables": true,
     "prefix": ""
   },
-  "iconLibrary": "lucide",
   "aliases": {
     "components": "@/components",
     "utils": "@/lib/utils",
@@ -18,5 +17,17 @@
     "lib": "@/lib",
     "hooks": "@/hooks"
   },
-  "registries": {}
+  "registries": {
+    "@tweakcn": "https://tweakcn.com/r/themes/registry.json",
+    "@tailwindcss": "https://tailwindcss.com/r/themes/registry.json",
+    "@radix-ui": "https://www.radix-ui.com/themes/registry.json",
+    "@shadcn": "https://shadcn.com/r/themes/registry.json",
+    "@lucide": "https://lucide.dev/r/themes/registry.json",
+    "orgin" : "https://orgin.com/r/themes/registry.json",
+    "aceternity" : "https://aceternity.com/r/themes/registry.json",
+    "styleguide": "https://styleguide.com/r/themes/registry.json",
+    "kokonutui": "https://kokonutui.com/r/themes/registry.json",
+    "kibo-ui": "https://kibo-ui.com/r/themes/registry.json",
+    "skipper-ui": "https://skipper-ui.com/r/themes/registry.json"
+  }
 }

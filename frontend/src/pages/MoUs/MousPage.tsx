@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery, useMutation } from '@tanstack/react-query'
+import type { ColumnDef } from '@tanstack/react-table'
 import { Plus, FileText, Calendar, AlertCircle, ChevronRight, Clock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -49,12 +50,8 @@ export function MousPage() {
     queryKey: ['mous', searchTerm, filterState],
     queryFn: async () => {
       let query = supabase
-        .from('mous')
-        .select(`
-          *,
-          primary_party:organizations!primary_party_id(name_en, name_ar),
-          secondary_party:organizations!secondary_party_id(name_en, name_ar)
-        `)
+        .from('mous_frontend')
+        .select('*')
         .order('created_at', { ascending: false })
 
       if (searchTerm) {
@@ -78,7 +75,7 @@ export function MousPage() {
     mutationFn: async ({ id, newState }: { id: string; newState: string }) => {
       const { error } = await supabase
         .from('mous')
-        .update({ workflow_state: newState })
+        .update({ lifecycle_state: newState })
         .eq('id', id)
 
       if (error) throw error
@@ -94,12 +91,12 @@ export function MousPage() {
       <div className="flex items-center gap-2">
         <span className={`
           inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-          ${stateConfig.color === 'gray' ? 'bg-gray-100 text-gray-800' : ''}
-          ${stateConfig.color === 'yellow' ? 'bg-yellow-100 text-yellow-800' : ''}
-          ${stateConfig.color === 'orange' ? 'bg-orange-100 text-orange-800' : ''}
-          ${stateConfig.color === 'blue' ? 'bg-blue-100 text-blue-800' : ''}
-          ${stateConfig.color === 'green' ? 'bg-green-100 text-green-800' : ''}
-          ${stateConfig.color === 'red' ? 'bg-red-100 text-red-800' : ''}
+          ${stateConfig.color === 'gray' ? 'bg-muted text-muted-foreground' : ''}
+          ${stateConfig.color === 'yellow' ? 'bg-warning/10 text-warning' : ''}
+          ${stateConfig.color === 'orange' ? 'bg-warning/20 text-warning' : ''}
+          ${stateConfig.color === 'blue' ? 'bg-primary/10 text-primary' : ''}
+          ${stateConfig.color === 'green' ? 'bg-primary/10 text-primary' : ''}
+          ${stateConfig.color === 'red' ? 'bg-destructive/10 text-destructive' : ''}
         `}>
           {t(`mous.statuses.${state}`)}
         </span>
@@ -118,71 +115,75 @@ export function MousPage() {
     )
   }
 
-  const columns = [
+  const columns = useMemo<ColumnDef<MoU>[]>(() => [
     {
-      key: 'reference',
+      id: 'reference',
+      accessorKey: 'reference_number',
       header: t('mous.referenceNumber'),
-      cell: (mou: MoU) => (
-        <div className="font-mono text-sm">{mou.reference_number}</div>
-      )
+      cell: ({ row }) => (
+        <div className="font-mono text-sm">{row.original.reference_number}</div>
+      ),
     },
     {
-      key: 'title',
+      id: 'title',
       header: t('mous.title'),
-      cell: (mou: MoU) => (
+      accessorFn: (row) => (isRTL ? row.title_ar : row.title_en),
+      cell: ({ row }) => (
         <div className={`font-medium ${isRTL ? 'text-right' : 'text-left'}`}>
-          {isRTL ? mou.title_ar : mou.title_en}
+          {isRTL ? row.original.title_ar : row.original.title_en}
         </div>
-      )
+      ),
     },
     {
-      key: 'parties',
+      id: 'parties',
       header: t('mous.parties'),
-      cell: (mou: MoU) => (
+      cell: ({ row }) => (
         <div className="text-sm">
-          <div>{isRTL ? mou.primary_party.name_ar : mou.primary_party.name_en}</div>
+          <div>{isRTL ? row.original.primary_party.name_ar : row.original.primary_party.name_en}</div>
           <div className="text-muted-foreground">
-            ↔ {isRTL ? mou.secondary_party.name_ar : mou.secondary_party.name_en}
+            ↔ {isRTL ? row.original.secondary_party.name_ar : row.original.secondary_party.name_en}
           </div>
         </div>
-      )
+      ),
     },
     {
-      key: 'workflow',
+      id: 'workflow',
       header: t('mous.workflow'),
-      cell: (mou: MoU) => <WorkflowIndicator state={mou.workflow_state} />
+      accessorKey: 'workflow_state',
+      cell: ({ row }) => <WorkflowIndicator state={row.original.workflow_state} />,
     },
     {
-      key: 'dates',
+      id: 'dates',
       header: t('mous.dates'),
-      cell: (mou: MoU) => (
+      cell: ({ row }) => (
         <div className="text-sm space-y-1">
-          {mou.signing_date && (
+          {row.original.signing_date && (
             <div className="flex items-center gap-1">
               <FileText className="h-3 w-3" />
-              {format(new Date(mou.signing_date), 'dd MMM yyyy')}
+              {format(new Date(row.original.signing_date), 'dd MMM yyyy')}
             </div>
           )}
-          {mou.expiry_date && (
+          {row.original.expiry_date && (
             <div className="flex items-center gap-1">
               <Clock className="h-3 w-3" />
-              {format(new Date(mou.expiry_date), 'dd MMM yyyy')}
+              {format(new Date(row.original.expiry_date), 'dd MMM yyyy')}
             </div>
           )}
         </div>
-      )
+      ),
     },
     {
-      key: 'alerts',
+      id: 'alerts',
       header: '',
-      cell: (mou: MoU) => {
-        if (mou.expiry_date) {
+      enableSorting: false,
+      cell: ({ row }) => {
+        if (row.original.expiry_date) {
           const daysUntilExpiry = Math.floor(
-            (new Date(mou.expiry_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
+            (new Date(row.original.expiry_date).getTime() - new Date().getTime()) / (1000 * 60 * 60 * 24)
           )
           if (daysUntilExpiry <= 30 && daysUntilExpiry > 0) {
             return (
-              <div className="flex items-center gap-1 text-amber-600">
+              <div className="flex items-center gap-1 text-warning">
                 <AlertCircle className="h-4 w-4" />
                 <span className="text-xs">{daysUntilExpiry}d</span>
               </div>
@@ -190,9 +191,9 @@ export function MousPage() {
           }
         }
         return null
-      }
-    }
-  ]
+      },
+    },
+  ], [isRTL, t])
 
   const workflowStates = Object.keys(WORKFLOW_STATES)
 
@@ -230,7 +231,7 @@ export function MousPage() {
             <CardTitle className="text-sm font-medium">{t('mous.expiringSoon')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-amber-600">
+            <div className="text-2xl font-bold text-warning">
               {mous?.filter(m => {
                 if (!m.expiry_date) return false
                 const days = Math.floor(
