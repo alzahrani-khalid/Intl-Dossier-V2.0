@@ -79,3 +79,4 @@ pnpm-lock.yaml
 .kiro/steering/byterover-rules.md
 .qoder/rules/byterover-rules.md
 .augment/rules/byterover-rules.md
+node_modules
