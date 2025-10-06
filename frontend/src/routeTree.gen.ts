@@ -15,17 +15,21 @@ import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProtectedWordAssistantRouteImport } from './routes/_protected/word-assistant'
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
+import { Route as ProtectedResponsiveDemoRouteImport } from './routes/_protected/responsive-demo'
 import { Route as ProtectedReportsRouteImport } from './routes/_protected/reports'
 import { Route as ProtectedOrganizationsRouteImport } from './routes/_protected/organizations'
 import { Route as ProtectedMousRouteImport } from './routes/_protected/mous'
+import { Route as ProtectedMonitoringRouteImport } from './routes/_protected/monitoring'
 import { Route as ProtectedIntelligenceRouteImport } from './routes/_protected/intelligence'
 import { Route as ProtectedForumsRouteImport } from './routes/_protected/forums'
+import { Route as ProtectedExportRouteImport } from './routes/_protected/export'
 import { Route as ProtectedEventsRouteImport } from './routes/_protected/events'
 import { Route as ProtectedDataLibraryRouteImport } from './routes/_protected/data-library'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedCountriesRouteImport } from './routes/_protected/countries'
 import { Route as ProtectedBriefsRouteImport } from './routes/_protected/briefs'
-import { Route as ResponsiveDemoRouteImport } from './routes/responsive-demo'
+import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected/analytics'
+import { Route as ProtectedAccessibilityRouteImport } from './routes/_protected/accessibility'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -56,6 +60,11 @@ const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedResponsiveDemoRoute = ProtectedResponsiveDemoRouteImport.update({
+  id: '/responsive-demo',
+  path: '/responsive-demo',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedReportsRoute = ProtectedReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
@@ -71,6 +80,11 @@ const ProtectedMousRoute = ProtectedMousRouteImport.update({
   path: '/mous',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedMonitoringRoute = ProtectedMonitoringRouteImport.update({
+  id: '/monitoring',
+  path: '/monitoring',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedIntelligenceRoute = ProtectedIntelligenceRouteImport.update({
   id: '/intelligence',
   path: '/intelligence',
@@ -79,6 +93,11 @@ const ProtectedIntelligenceRoute = ProtectedIntelligenceRouteImport.update({
 const ProtectedForumsRoute = ProtectedForumsRouteImport.update({
   id: '/forums',
   path: '/forums',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedExportRoute = ProtectedExportRouteImport.update({
+  id: '/export',
+  path: '/export',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedEventsRoute = ProtectedEventsRouteImport.update({
@@ -106,27 +125,36 @@ const ProtectedBriefsRoute = ProtectedBriefsRouteImport.update({
   path: '/briefs',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ResponsiveDemoRoute = ResponsiveDemoRouteImport.update({
-  id: '/responsive-demo',
-  path: '/responsive-demo',
-  getParentRoute: () => rootRouteImport,
+const ProtectedAnalyticsRoute = ProtectedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAccessibilityRoute = ProtectedAccessibilityRouteImport.update({
+  id: '/accessibility',
+  path: '/accessibility',
+  getParentRoute: () => ProtectedRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/responsive-demo': typeof ResponsiveDemoRoute
+  '/accessibility': typeof ProtectedAccessibilityRoute
+  '/analytics': typeof ProtectedAnalyticsRoute
   '/briefs': typeof ProtectedBriefsRoute
   '/countries': typeof ProtectedCountriesRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/data-library': typeof ProtectedDataLibraryRoute
   '/events': typeof ProtectedEventsRoute
+  '/export': typeof ProtectedExportRoute
   '/forums': typeof ProtectedForumsRoute
   '/intelligence': typeof ProtectedIntelligenceRoute
+  '/monitoring': typeof ProtectedMonitoringRoute
   '/mous': typeof ProtectedMousRoute
   '/organizations': typeof ProtectedOrganizationsRoute
   '/reports': typeof ProtectedReportsRoute
+  '/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/settings': typeof ProtectedSettingsRoute
   '/word-assistant': typeof ProtectedWordAssistantRoute
 }
@@ -134,17 +162,21 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/responsive-demo': typeof ResponsiveDemoRoute
+  '/accessibility': typeof ProtectedAccessibilityRoute
+  '/analytics': typeof ProtectedAnalyticsRoute
   '/briefs': typeof ProtectedBriefsRoute
   '/countries': typeof ProtectedCountriesRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/data-library': typeof ProtectedDataLibraryRoute
   '/events': typeof ProtectedEventsRoute
+  '/export': typeof ProtectedExportRoute
   '/forums': typeof ProtectedForumsRoute
   '/intelligence': typeof ProtectedIntelligenceRoute
+  '/monitoring': typeof ProtectedMonitoringRoute
   '/mous': typeof ProtectedMousRoute
   '/organizations': typeof ProtectedOrganizationsRoute
   '/reports': typeof ProtectedReportsRoute
+  '/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/settings': typeof ProtectedSettingsRoute
   '/word-assistant': typeof ProtectedWordAssistantRoute
 }
@@ -154,16 +186,21 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/_protected/accessibility': typeof ProtectedAccessibilityRoute
+  '/_protected/analytics': typeof ProtectedAnalyticsRoute
   '/_protected/briefs': typeof ProtectedBriefsRoute
   '/_protected/countries': typeof ProtectedCountriesRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_protected/data-library': typeof ProtectedDataLibraryRoute
   '/_protected/events': typeof ProtectedEventsRoute
+  '/_protected/export': typeof ProtectedExportRoute
   '/_protected/forums': typeof ProtectedForumsRoute
   '/_protected/intelligence': typeof ProtectedIntelligenceRoute
+  '/_protected/monitoring': typeof ProtectedMonitoringRoute
   '/_protected/mous': typeof ProtectedMousRoute
   '/_protected/organizations': typeof ProtectedOrganizationsRoute
   '/_protected/reports': typeof ProtectedReportsRoute
+  '/_protected/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/_protected/word-assistant': typeof ProtectedWordAssistantRoute
 }
@@ -173,17 +210,21 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/responsive-demo'
+    | '/accessibility'
+    | '/analytics'
     | '/briefs'
     | '/countries'
     | '/dashboard'
     | '/data-library'
     | '/events'
+    | '/export'
     | '/forums'
     | '/intelligence'
+    | '/monitoring'
     | '/mous'
     | '/organizations'
     | '/reports'
+    | '/responsive-demo'
     | '/settings'
     | '/word-assistant'
   fileRoutesByTo: FileRoutesByTo
@@ -191,17 +232,21 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/responsive-demo'
+    | '/accessibility'
+    | '/analytics'
     | '/briefs'
     | '/countries'
     | '/dashboard'
     | '/data-library'
     | '/events'
+    | '/export'
     | '/forums'
     | '/intelligence'
+    | '/monitoring'
     | '/mous'
     | '/organizations'
     | '/reports'
+    | '/responsive-demo'
     | '/settings'
     | '/word-assistant'
   id:
@@ -210,16 +255,21 @@ export interface FileRouteTypes {
     | '/_protected'
     | '/login'
     | '/register'
+    | '/_protected/accessibility'
+    | '/_protected/analytics'
     | '/_protected/briefs'
     | '/_protected/countries'
     | '/_protected/dashboard'
     | '/_protected/data-library'
     | '/_protected/events'
+    | '/_protected/export'
     | '/_protected/forums'
     | '/_protected/intelligence'
+    | '/_protected/monitoring'
     | '/_protected/mous'
     | '/_protected/organizations'
     | '/_protected/reports'
+    | '/_protected/responsive-demo'
     | '/_protected/settings'
     | '/_protected/word-assistant'
   fileRoutesById: FileRoutesById
@@ -229,7 +279,6 @@ export interface RootRouteChildren {
   ProtectedRoute: typeof ProtectedRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
-  ResponsiveDemoRoute: typeof ResponsiveDemoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -276,6 +325,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSettingsRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/responsive-demo': {
+      id: '/_protected/responsive-demo'
+      path: '/responsive-demo'
+      fullPath: '/responsive-demo'
+      preLoaderRoute: typeof ProtectedResponsiveDemoRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/reports': {
       id: '/_protected/reports'
       path: '/reports'
@@ -297,6 +353,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedMousRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/monitoring': {
+      id: '/_protected/monitoring'
+      path: '/monitoring'
+      fullPath: '/monitoring'
+      preLoaderRoute: typeof ProtectedMonitoringRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/intelligence': {
       id: '/_protected/intelligence'
       path: '/intelligence'
@@ -309,6 +372,13 @@ declare module '@tanstack/react-router' {
       path: '/forums'
       fullPath: '/forums'
       preLoaderRoute: typeof ProtectedForumsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/export': {
+      id: '/_protected/export'
+      path: '/export'
+      fullPath: '/export'
+      preLoaderRoute: typeof ProtectedExportRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/events': {
@@ -346,35 +416,59 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedBriefsRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/analytics': {
+      id: '/_protected/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof ProtectedAnalyticsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/accessibility': {
+      id: '/_protected/accessibility'
+      path: '/accessibility'
+      fullPath: '/accessibility'
+      preLoaderRoute: typeof ProtectedAccessibilityRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
   }
 }
 
 interface ProtectedRouteChildren {
+  ProtectedAccessibilityRoute: typeof ProtectedAccessibilityRoute
+  ProtectedAnalyticsRoute: typeof ProtectedAnalyticsRoute
   ProtectedBriefsRoute: typeof ProtectedBriefsRoute
   ProtectedCountriesRoute: typeof ProtectedCountriesRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedDataLibraryRoute: typeof ProtectedDataLibraryRoute
   ProtectedEventsRoute: typeof ProtectedEventsRoute
+  ProtectedExportRoute: typeof ProtectedExportRoute
   ProtectedForumsRoute: typeof ProtectedForumsRoute
   ProtectedIntelligenceRoute: typeof ProtectedIntelligenceRoute
+  ProtectedMonitoringRoute: typeof ProtectedMonitoringRoute
   ProtectedMousRoute: typeof ProtectedMousRoute
   ProtectedOrganizationsRoute: typeof ProtectedOrganizationsRoute
   ProtectedReportsRoute: typeof ProtectedReportsRoute
+  ProtectedResponsiveDemoRoute: typeof ProtectedResponsiveDemoRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
   ProtectedWordAssistantRoute: typeof ProtectedWordAssistantRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedAccessibilityRoute: ProtectedAccessibilityRoute,
+  ProtectedAnalyticsRoute: ProtectedAnalyticsRoute,
   ProtectedBriefsRoute: ProtectedBriefsRoute,
   ProtectedCountriesRoute: ProtectedCountriesRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedDataLibraryRoute: ProtectedDataLibraryRoute,
   ProtectedEventsRoute: ProtectedEventsRoute,
+  ProtectedExportRoute: ProtectedExportRoute,
   ProtectedForumsRoute: ProtectedForumsRoute,
   ProtectedIntelligenceRoute: ProtectedIntelligenceRoute,
+  ProtectedMonitoringRoute: ProtectedMonitoringRoute,
   ProtectedMousRoute: ProtectedMousRoute,
   ProtectedOrganizationsRoute: ProtectedOrganizationsRoute,
   ProtectedReportsRoute: ProtectedReportsRoute,
+  ProtectedResponsiveDemoRoute: ProtectedResponsiveDemoRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
   ProtectedWordAssistantRoute: ProtectedWordAssistantRoute,
 }
@@ -388,7 +482,6 @@ const rootRouteChildren: RootRouteChildren = {
   ProtectedRoute: ProtectedRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-  ResponsiveDemoRoute: ResponsiveDemoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
