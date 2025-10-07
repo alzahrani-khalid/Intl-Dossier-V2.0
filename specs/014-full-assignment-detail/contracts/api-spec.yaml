@@ -1,0 +1,1064 @@
+openapi: 3.0.3
+info:
+  title: Assignment Detail API
+  description: API endpoints for full assignment detail page with comments, checklists, reactions, and real-time updates
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier Team
+
+servers:
+  - url: https://{project_id}.supabase.co/functions/v1
+    description: Supabase Edge Functions
+    variables:
+      project_id:
+        default: zkrcjzdemdmwhearhfgg
+
+security:
+  - BearerAuth: []
+
+paths:
+  /assignments-get/{id}:
+    get:
+      summary: Get assignment detail
+      description: Retrieve comprehensive assignment details including metadata, SLA tracking, work item preview, comments, checklist, and timeline
+      operationId: getAssignment
+      tags:
+        - Assignments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Assignment ID
+      responses:
+        '200':
+          description: Assignment details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentDetail'
+        '403':
+          description: User does not have permission to view this assignment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Assignment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments-comments-create:
+    post:
+      summary: Add comment to assignment
+      description: Create a new comment with optional @mentions
+      operationId: createComment
+      tags:
+        - Comments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateCommentRequest'
+      responses:
+        '201':
+          description: Comment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Comment'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to comment on this assignment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (max 10 comments/minute per assignment)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments-comments-reactions-toggle:
+    post:
+      summary: Toggle emoji reaction on comment
+      description: Add or remove emoji reaction on a comment
+      operationId: toggleReaction
+      tags:
+        - Reactions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToggleReactionRequest'
+      responses:
+        '200':
+          description: Reaction toggled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ReactionResponse'
+        '400':
+          description: Invalid emoji
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to react
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments-checklist-create-item:
+    post:
+      summary: Add checklist item
+      description: Create a new checklist item manually
+      operationId: createChecklistItem
+      tags:
+        - Checklist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateChecklistItemRequest'
+      responses:
+        '201':
+          description: Checklist item created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecklistItem'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to modify checklist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments-checklist-import-template:
+    post:
+      summary: Import checklist from template
+      description: Import all items from a predefined checklist template
+      operationId: importChecklistTemplate
+      tags:
+        - Checklist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ImportChecklistTemplateRequest'
+      responses:
+        '201':
+          description: Checklist items imported successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecklistImportResponse'
+        '400':
+          description: Invalid template ID
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to modify checklist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments-checklist-toggle-item:
+    post:
+      summary: Toggle checklist item completion
+      description: Mark checklist item as complete or incomplete
+      operationId: toggleChecklistItem
+      tags:
+        - Checklist
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ToggleChecklistItemRequest'
+      responses:
+        '200':
+          description: Checklist item toggled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChecklistItem'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to modify checklist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments-escalate:
+    post:
+      summary: Escalate assignment
+      description: Escalate assignment to supervisor, adding them as observer
+      operationId: escalateAssignment
+      tags:
+        - Actions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EscalateAssignmentRequest'
+      responses:
+        '200':
+          description: Assignment escalated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EscalationResponse'
+        '400':
+          description: Assignment already escalated or invalid reason
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to escalate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded (max 1 escalation/hour per assignment)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments-complete:
+    post:
+      summary: Mark assignment as complete
+      description: Mark assignment as complete and stop SLA tracking
+      operationId: completeAssignment
+      tags:
+        - Actions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CompleteAssignmentRequest'
+      responses:
+        '200':
+          description: Assignment completed successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+        '400':
+          description: Assignment already completed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to complete
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '409':
+          description: Optimistic locking conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments-observer-action:
+    post:
+      summary: Observer takes action on escalated assignment
+      description: Supervisor accepts assignment, reassigns, or continues observing
+      operationId: observerAction
+      tags:
+        - Actions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ObserverActionRequest'
+      responses:
+        '200':
+          description: Action taken successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+        '400':
+          description: Invalid action
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User is not an observer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments-related/{id}:
+    get:
+      summary: Get related assignments
+      description: Retrieve sibling assignments (same engagement or dossier) and context information
+      operationId: getRelatedAssignments
+      tags:
+        - Assignments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Assignment ID
+      responses:
+        '200':
+          description: Related assignments retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RelatedAssignmentsResponse'
+        '403':
+          description: User does not have permission to view this assignment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Assignment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /engagements/{id}/kanban:
+    get:
+      summary: Get engagement kanban board
+      description: Retrieve kanban board data with assignments grouped by workflow stage
+      operationId: getEngagementKanban
+      tags:
+        - Engagements
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Engagement ID
+      responses:
+        '200':
+          description: Kanban board data retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/KanbanBoardResponse'
+        '403':
+          description: User does not have permission to view this engagement
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Engagement not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /assignments/{id}/workflow-stage:
+    patch:
+      summary: Update assignment workflow stage
+      description: Move assignment to a different workflow stage (kanban column)
+      operationId: updateWorkflowStage
+      tags:
+        - Actions
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Assignment ID
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateWorkflowStageRequest'
+      responses:
+        '200':
+          description: Workflow stage updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+        '400':
+          description: Invalid workflow stage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: User does not have permission to update this assignment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Assignment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    AssignmentDetail:
+      type: object
+      required:
+        - id
+        - assignment_metadata
+        - work_item
+        - sla_tracking
+        - comments
+        - checklist_items
+        - timeline
+        - observers
+      properties:
+        id:
+          type: string
+          format: uuid
+        assignment_metadata:
+          $ref: '#/components/schemas/AssignmentMetadata'
+        work_item:
+          $ref: '#/components/schemas/WorkItem'
+        sla_tracking:
+          $ref: '#/components/schemas/SLATracking'
+        comments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Comment'
+        checklist_items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecklistItem'
+        timeline:
+          type: array
+          items:
+            $ref: '#/components/schemas/TimelineEvent'
+        observers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Observer'
+        can_escalate:
+          type: boolean
+        can_complete:
+          type: boolean
+        progress_percentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+
+    AssignmentMetadata:
+      type: object
+      required:
+        - assignment_id
+        - assigned_date
+        - assignee_name
+        - priority
+        - status
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        assigned_date:
+          type: string
+          format: date-time
+        assignee_name:
+          type: string
+        assignee_id:
+          type: string
+          format: uuid
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        status:
+          type: string
+          enum: [pending, assigned, in_progress, completed, cancelled]
+        assignment_source:
+          type: string
+        required_skills:
+          type: array
+          items:
+            type: string
+
+    WorkItem:
+      type: object
+      required:
+        - id
+        - type
+        - title
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [dossier, ticket, position, task]
+        title:
+          type: string
+        content_preview:
+          type: string
+        url:
+          type: string
+          format: uri
+
+    SLATracking:
+      type: object
+      required:
+        - deadline
+        - time_remaining_seconds
+        - percentage_elapsed
+        - health_status
+      properties:
+        deadline:
+          type: string
+          format: date-time
+        time_remaining_seconds:
+          type: integer
+        percentage_elapsed:
+          type: integer
+          minimum: 0
+          maximum: 100
+        health_status:
+          type: string
+          enum: [safe, warning, breached]
+        warning_threshold:
+          type: integer
+          default: 75
+
+    Comment:
+      type: object
+      required:
+        - id
+        - text
+        - author
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+          maxLength: 5000
+        author:
+          $ref: '#/components/schemas/User'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        mentions:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+        reactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReactionSummary'
+
+    ReactionSummary:
+      type: object
+      required:
+        - emoji
+        - count
+        - users
+      properties:
+        emoji:
+          type: string
+        count:
+          type: integer
+        users:
+          type: array
+          items:
+            type: string
+        user_reacted:
+          type: boolean
+
+    ChecklistItem:
+      type: object
+      required:
+        - id
+        - text
+        - completed
+        - sequence
+      properties:
+        id:
+          type: string
+          format: uuid
+        text:
+          type: string
+          maxLength: 500
+        completed:
+          type: boolean
+        completed_at:
+          type: string
+          format: date-time
+        completed_by:
+          $ref: '#/components/schemas/User'
+        sequence:
+          type: integer
+
+    TimelineEvent:
+      type: object
+      required:
+        - id
+        - event_type
+        - actor
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+          enum: [created, status_changed, escalated, completed, commented, checklist_updated, observer_added, reassigned]
+        actor:
+          $ref: '#/components/schemas/User'
+        event_data:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        is_critical:
+          type: boolean
+
+    Observer:
+      type: object
+      required:
+        - user
+        - role
+        - added_at
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        role:
+          type: string
+          enum: [supervisor, other]
+        added_at:
+          type: string
+          format: date-time
+
+    User:
+      type: object
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        username:
+          type: string
+
+    CreateCommentRequest:
+      type: object
+      required:
+        - assignment_id
+        - text
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        text:
+          type: string
+          maxLength: 5000
+
+    ToggleReactionRequest:
+      type: object
+      required:
+        - comment_id
+        - emoji
+      properties:
+        comment_id:
+          type: string
+          format: uuid
+        emoji:
+          type: string
+          enum: ['👍', '✅', '❓', '❤️', '🎯', '💡']
+
+    ReactionResponse:
+      type: object
+      required:
+        - action
+        - reaction
+      properties:
+        action:
+          type: string
+          enum: [added, removed]
+        reaction:
+          $ref: '#/components/schemas/ReactionSummary'
+
+    CreateChecklistItemRequest:
+      type: object
+      required:
+        - assignment_id
+        - text
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        text:
+          type: string
+          maxLength: 500
+
+    ImportChecklistTemplateRequest:
+      type: object
+      required:
+        - assignment_id
+        - template_id
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        template_id:
+          type: string
+          format: uuid
+
+    ChecklistImportResponse:
+      type: object
+      required:
+        - items_created
+        - items
+      properties:
+        items_created:
+          type: integer
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/ChecklistItem'
+
+    ToggleChecklistItemRequest:
+      type: object
+      required:
+        - item_id
+        - completed
+      properties:
+        item_id:
+          type: string
+          format: uuid
+        completed:
+          type: boolean
+
+    EscalateAssignmentRequest:
+      type: object
+      required:
+        - assignment_id
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        reason:
+          type: string
+          maxLength: 1000
+
+    EscalationResponse:
+      type: object
+      required:
+        - escalation_id
+        - observer_added
+        - notification_sent
+      properties:
+        escalation_id:
+          type: string
+          format: uuid
+        observer_added:
+          $ref: '#/components/schemas/Observer'
+        notification_sent:
+          type: boolean
+
+    CompleteAssignmentRequest:
+      type: object
+      required:
+        - assignment_id
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        completion_notes:
+          type: string
+
+    ObserverActionRequest:
+      type: object
+      required:
+        - assignment_id
+        - action
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        action:
+          type: string
+          enum: [accept, reassign, continue_observing]
+        reassign_to_user_id:
+          type: string
+          format: uuid
+
+    Assignment:
+      type: object
+      required:
+        - id
+        - status
+        - assignee_id
+      properties:
+        id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, assigned, in_progress, completed, cancelled]
+        assignee_id:
+          type: string
+          format: uuid
+        updated_at:
+          type: string
+          format: date-time
+
+    RelatedAssignmentsResponse:
+      type: object
+      required:
+        - context_type
+        - related_assignments
+      properties:
+        context_type:
+          type: string
+          enum: [engagement, dossier, standalone]
+          description: Type of context linking assignments
+        context_id:
+          type: string
+          format: uuid
+          description: ID of engagement or dossier (null for standalone)
+        context_title:
+          type: string
+          description: Title of engagement or dossier
+        progress:
+          $ref: '#/components/schemas/ContextProgress'
+        related_assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/RelatedAssignment'
+
+    ContextProgress:
+      type: object
+      required:
+        - total
+        - completed
+        - in_progress
+        - todo
+        - percentage
+      properties:
+        total:
+          type: integer
+        completed:
+          type: integer
+        in_progress:
+          type: integer
+        todo:
+          type: integer
+        percentage:
+          type: integer
+          minimum: 0
+          maximum: 100
+
+    RelatedAssignment:
+      type: object
+      required:
+        - id
+        - title
+        - status
+        - workflow_stage
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        assignee:
+          type: string
+          nullable: true
+        assignee_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          enum: [pending, assigned, in_progress, completed, cancelled]
+        workflow_stage:
+          type: string
+          enum: [todo, in_progress, review, done]
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        sla_remaining_seconds:
+          type: integer
+          nullable: true
+
+    KanbanBoardResponse:
+      type: object
+      required:
+        - engagement_id
+        - engagement_title
+        - columns
+      properties:
+        engagement_id:
+          type: string
+          format: uuid
+        engagement_title:
+          type: string
+        engagement_type:
+          type: string
+        progress:
+          $ref: '#/components/schemas/ContextProgress'
+        columns:
+          $ref: '#/components/schemas/KanbanColumns'
+
+    KanbanColumns:
+      type: object
+      required:
+        - todo
+        - in_progress
+        - review
+        - done
+      properties:
+        todo:
+          type: array
+          items:
+            $ref: '#/components/schemas/KanbanCard'
+        in_progress:
+          type: array
+          items:
+            $ref: '#/components/schemas/KanbanCard'
+        review:
+          type: array
+          items:
+            $ref: '#/components/schemas/KanbanCard'
+        done:
+          type: array
+          items:
+            $ref: '#/components/schemas/KanbanCard'
+
+    KanbanCard:
+      type: object
+      required:
+        - id
+        - title
+        - workflow_stage
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        assignee:
+          type: string
+          nullable: true
+        assignee_id:
+          type: string
+          format: uuid
+          nullable: true
+        sla_remaining_seconds:
+          type: integer
+          nullable: true
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        workflow_stage:
+          type: string
+          enum: [todo, in_progress, review, done]
+        is_current:
+          type: boolean
+          description: True if this is the assignment being viewed
+        status:
+          type: string
+          enum: [pending, assigned, in_progress, completed, cancelled]
+
+    UpdateWorkflowStageRequest:
+      type: object
+      required:
+        - workflow_stage
+      properties:
+        workflow_stage:
+          type: string
+          enum: [todo, in_progress, review, done]
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object

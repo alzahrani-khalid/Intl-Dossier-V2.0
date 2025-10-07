@@ -17,6 +17,11 @@ import {
   Plus,
   User,
   LogOut,
+  Inbox,
+  Folder,
+  MessageSquare,
+  ClipboardList,
+  ListChecks,
 } from 'lucide-react'
 import { useUIStore } from '../../store/uiStore'
 import { useAuthStore } from '../../store/authStore'
@@ -53,6 +58,36 @@ export function Sidebar() {
       path: '/',
     },
     {
+      id: 'assignments',
+      label: t('navigation.assignments'),
+      icon: ListChecks,
+      path: '/assignments',
+    },
+    {
+      id: 'intake',
+      label: t('navigation.intake'),
+      icon: Inbox,
+      path: '/intake/queue',
+    },
+    {
+      id: 'dossiers',
+      label: t('navigation.dossiers'),
+      icon: Folder,
+      path: '/dossiers',
+    },
+    {
+      id: 'positions',
+      label: t('navigation.positions'),
+      icon: MessageSquare,
+      path: '/positions',
+    },
+    {
+      id: 'after-actions',
+      label: t('navigation.afterActions'),
+      icon: ClipboardList,
+      path: '/after-actions',
+    },
+    {
       id: 'countries',
       label: t('navigation.countries'),
       icon: Globe2,
@@ -77,8 +112,8 @@ export function Sidebar() {
       path: '/mous',
     },
     {
-      id: 'events',
-      label: t('navigation.events'),
+      id: 'calendar',
+      label: t('navigation.calendar'),
       icon: Calendar,
       path: '/events',
     },
@@ -105,13 +140,13 @@ export function Sidebar() {
   const documentItems: NavItem[] = [
     {
       id: 'data-library',
-      label: 'Data Library',
+      label: t('navigation.dataLibrary'),
       icon: FileText,
       path: '/data-library',
     },
     {
       id: 'word-assistant',
-      label: 'Word Assistant',
+      label: t('navigation.wordAssistant'),
       icon: FileText,
       path: '/word-assistant',
     },
@@ -120,19 +155,19 @@ export function Sidebar() {
   const bottomNavItems: NavItem[] = [
     {
       id: 'settings',
-      label: 'Settings',
+      label: t('navigation.settings'),
       icon: Settings,
       path: '/settings',
     },
     {
       id: 'help',
-      label: 'Get Help',
+      label: t('navigation.getHelp'),
       icon: HelpCircle,
       path: '/help',
     },
     {
       id: 'search',
-      label: 'Search',
+      label: t('navigation.search'),
       icon: Search,
       path: '/search',
     },
@@ -147,7 +182,7 @@ export function Sidebar() {
           <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
             <span className="text-background font-bold text-sm">A</span>
           </div>
-          <span className="font-semibold text-sidebar-foreground">Acme Inc.</span>
+          <span className="font-semibold text-sidebar-foreground">GASTAT Dossier</span>
         </div>
         
         <button className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-2 rounded-lg text-sm font-medium mb-6">

@@ -383,7 +383,7 @@ class GracefulDegradationManager {
   /**
    * Check if request can be processed based on priority and degradation
    */
-  private canProcessRequest(priority: RequestPriority): boolean {
+  public canProcessRequest(priority: RequestPriority): boolean {
     switch (this.currentLevel) {
       case DegradationLevel.NONE:
       case DegradationLevel.LOW:

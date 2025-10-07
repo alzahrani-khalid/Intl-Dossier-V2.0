@@ -137,7 +137,7 @@ export function EventsPage() {
         key: 'title',
         header: t('events.eventName'),
         cell: (event: Event) => (
-          <div className={`font-medium ${isRTL ? 'text-right' : 'text-left'}`}>
+          <div className={`font-medium ${isRTL ? 'text-end' : 'text-start'}`}>
             {isRTL ? event.title_ar : event.title_en}
           </div>
         )
@@ -264,14 +264,14 @@ export function EventsPage() {
   return (
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">{t('navigation.events')}</h1>
+        <h1 className="text-3xl font-bold">{t('navigation.calendar')}</h1>
         <div className="flex gap-2">
           <Button
             variant={viewMode === 'calendar' ? 'default' : 'outline'}
             size="sm"
             onClick={() => setViewMode('calendar')}
           >
-            <CalendarIcon className="h-4 w-4 mr-2" />
+            <CalendarIcon className="h-4 w-4 me-2" />
             {t('events.calendarView')}
           </Button>
           <Button
@@ -279,11 +279,11 @@ export function EventsPage() {
             size="sm"
             onClick={() => setViewMode('list')}
           >
-            <List className="h-4 w-4 mr-2" />
+            <List className="h-4 w-4 me-2" />
             {t('events.listView')}
           </Button>
           <Button>
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="h-4 w-4 me-2" />
             {t('events.addEvent')}
           </Button>
         </div>

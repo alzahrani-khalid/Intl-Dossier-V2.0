@@ -1,0 +1,254 @@
+openapi: 3.0.3
+info:
+  title: Search Suggestions API
+  description: Typeahead suggestions endpoint with sub-200ms performance requirement
+  version: 1.0.0
+
+paths:
+  /api/search/suggest:
+    get:
+      summary: Get typeahead suggestions
+      description: Returns suggestions as user types, grouped by entity type. MUST respond within 200ms absolute maximum.
+      operationId: searchSuggest
+      tags:
+        - search
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+            maxLength: 50
+          description: Query prefix for suggestions
+          example: "clim"
+        - name: lang
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [ar, en]
+          description: Language for suggestions
+          example: "en"
+        - name: entityType
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [dossier, contact, engagement, position, mou, document]
+          description: Filter suggestions by entity type (optional)
+          example: "dossier"
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 10
+          description: Maximum number of suggestions
+          example: 10
+      responses:
+        '200':
+          description: Suggestions list (MUST respond within 200ms)
+          headers:
+            X-Response-Time:
+              schema:
+                type: integer
+              description: Actual response time in milliseconds (for monitoring)
+              example: 45
+            X-Cache-Status:
+              schema:
+                type: string
+                enum: [hit, miss]
+              description: Whether result was cached
+              example: "hit"
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - suggestions
+                  - executionTime
+                properties:
+                  suggestions:
+                    type: array
+                    maxItems: 20
+                    items:
+                      $ref: '#/components/schemas/Suggestion'
+                  executionTime:
+                    type: integer
+                    description: Query execution time in milliseconds (MUST be ≤200)
+                    maximum: 200
+                    example: 45
+                  cacheHit:
+                    type: boolean
+                    description: Whether result came from cache
+                    example: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '504':
+          description: Timeout - suggestion took longer than 200ms
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "SUGGESTION_TIMEOUT"
+                  message:
+                    type: object
+                    properties:
+                      ar:
+                        type: string
+                        example: "انتهت مهلة الاقتراح"
+                      en:
+                        type: string
+                        example: "Suggestion timeout"
+                  executionTime:
+                    type: integer
+                    description: Actual time taken before timeout
+                    example: 215
+
+components:
+  schemas:
+    Suggestion:
+      type: object
+      required:
+        - text
+        - entityType
+        - preview
+        - matchCount
+      properties:
+        text:
+          type: string
+          description: Suggested query text
+          example: "climate change"
+        entityType:
+          type: string
+          enum: [dossier, contact, engagement, position, mou, document]
+          description: Type of entity this suggestion relates to
+          example: "dossier"
+        preview:
+          type: string
+          description: Brief preview of matching entities
+          example: "Climate Change Dossier - 15 engagements, 8 positions"
+          maxLength: 150
+        matchCount:
+          type: integer
+          description: Number of matching entities
+          example: 23
+        highlighted:
+          type: string
+          description: Suggestion text with query prefix highlighted (HTML)
+          example: "<strong>Clim</strong>ate Change"
+        entityId:
+          type: string
+          format: uuid
+          description: If suggestion is for specific entity (optional)
+          example: "a3bb189e-8bf9-3888-9912-ace4e6543002"
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, message]
+            properties:
+              error:
+                type: string
+                example: "INVALID_QUERY_PREFIX"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "بادئة استعلام غير صحيحة"
+                  en:
+                    type: string
+                    example: "Invalid query prefix"
+              details:
+                type: string
+                example: "Query prefix must be between 2 and 50 characters"
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "UNAUTHORIZED"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "مطلوب مصادقة"
+                  en:
+                    type: string
+                    example: "Authentication required"
+
+    TooManyRequests:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "RATE_LIMIT_EXCEEDED"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "تم تجاوز حد المعدل"
+                  en:
+                    type: string
+                    example: "Rate limit exceeded"
+              retryAfter:
+                type: integer
+                description: Seconds until retry allowed
+                example: 5
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "INTERNAL_ERROR"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "خطأ داخلي في الخادم"
+                  en:
+                    type: string
+                    example: "Internal server error"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

@@ -186,7 +186,7 @@ export function SettingsPage() {
             onClick={() => updateSettingsMutation.mutate(formData)}
             disabled={updateSettingsMutation.isPending}
           >
-            <Save className="h-4 w-4 mr-2" />
+            <Save className="h-4 w-4 me-2" />
             {t('common.save')}
           </Button>
         )}
@@ -247,14 +247,14 @@ export function SettingsPage() {
                           variant={formData.language_preference === 'en' ? 'default' : 'outline'}
                           onClick={() => updateFormData({ language_preference: 'en' })}
                         >
-                          <Globe className="h-4 w-4 mr-2" />
+                          <Globe className="h-4 w-4 me-2" />
                           English
                         </Button>
                         <Button
                           variant={formData.language_preference === 'ar' ? 'default' : 'outline'}
                           onClick={() => updateFormData({ language_preference: 'ar' })}
                         >
-                          <Globe className="h-4 w-4 mr-2" />
+                          <Globe className="h-4 w-4 me-2" />
                           العربية
                         </Button>
                       </div>
@@ -440,7 +440,7 @@ export function SettingsPage() {
                                 <p className="font-medium mb-1">{t('settings.mfaSetupRequired')}</p>
                                 <p>{t('settings.mfaSetupInstructions')}</p>
                                 <Button size="sm" className="mt-2">
-                                  <Key className="h-4 w-4 mr-2" />
+                                  <Key className="h-4 w-4 me-2" />
                                   {t('settings.setupMfa')}
                                 </Button>
                               </div>
@@ -483,7 +483,7 @@ export function SettingsPage() {
                             <Input type="password" className="mt-2" />
                           </div>
                           <Button>
-                            <Key className="h-4 w-4 mr-2" />
+                            <Key className="h-4 w-4 me-2" />
                             {t('settings.changePassword')}
                           </Button>
                         </div>

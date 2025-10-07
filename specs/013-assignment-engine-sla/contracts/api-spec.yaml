@@ -1,0 +1,909 @@
+openapi: 3.1.0
+info:
+  title: Assignment Engine & SLA API
+  description: |
+    Auto-routing work items to staff members based on skills, capacity, and organizational units.
+    Enforces Work-In-Progress (WIP) limits, tracks Service Level Agreements (SLAs), and manages escalations.
+
+    **Key Features**:
+    - Auto-assignment with weighted scoring algorithm
+    - WIP limit enforcement (individual + unit level)
+    - SLA tracking with warning (75%) and breach (100%) thresholds
+    - Priority queue for capacity-exhausted scenarios
+    - Real-time SLA updates via Supabase Realtime
+    - Escalation workflow for overdue items
+
+    **Base URL**: `https://[project-ref].supabase.co/functions/v1`
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier System
+    email: support@gastat.gov.sa
+
+servers:
+  - url: https://{project-ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions (production)
+    variables:
+      project-ref:
+        default: your-project-ref
+        description: Supabase project reference ID
+  - url: http://localhost:54321/functions/v1
+    description: Local development (Supabase CLI)
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Assignments
+    description: Work item assignment operations (auto and manual)
+  - name: Queue
+    description: Assignment queue management
+  - name: SLA
+    description: Service Level Agreement tracking
+  - name: Capacity
+    description: Staff capacity and WIP limit management
+  - name: Escalation
+    description: Escalation workflow for overdue items
+  - name: Staff
+    description: Staff profile and availability management
+
+paths:
+  /assignments/auto-assign:
+    post:
+      summary: Auto-assign work item to best-matched staff member
+      description: |
+        Automatically assigns a work item to the most suitable staff member using weighted scoring algorithm.
+        Considers skills match, current capacity, availability status, and organizational unit.
+
+        If no eligible staff has available capacity, the item is queued for automatic assignment when capacity becomes available.
+
+        **FR-001 to FR-006**: Auto-assignment with skill matching, capacity checks, and priority handling.
+      operationId: autoAssignWorkItem
+      tags:
+        - Assignments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AutoAssignRequest'
+            examples:
+              urgentTicket:
+                summary: Urgent ticket requiring Arabic translation
+                value:
+                  work_item_id: ticket-789
+                  work_item_type: ticket
+                  required_skills:
+                    - skill-0001
+                  priority: urgent
+              normalDossier:
+                summary: Normal priority dossier
+                value:
+                  work_item_id: dossier-456
+                  work_item_type: dossier
+                  required_skills:
+                    - skill-0002
+                    - skill-0004
+                  priority: normal
+                  target_unit_id: 00000000-0000-0000-0000-000000000003
+      responses:
+        '200':
+          description: Assignment successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentResponse'
+        '202':
+          description: Item queued (no available capacity)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueuedResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /assignments/manual-override:
+    post:
+      summary: Manually override auto-assignment
+      description: |
+        Allows supervisors or admins to manually assign a work item to a specific staff member,
+        bypassing the auto-assignment algorithm.
+
+        **FR-007**: Manual override with permission checks.
+
+        **Permissions**: Requires `supervisor` role (for own unit) or `admin` role (system-wide).
+      operationId: manualOverrideAssignment
+      tags:
+        - Assignments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ManualOverrideRequest'
+      responses:
+        '200':
+          description: Manual assignment successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Insufficient permissions (not a supervisor or admin)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: Forbidden
+                message: Only supervisors and admins can manually override assignments
+                code: INSUFFICIENT_PERMISSIONS
+        '429':
+          $ref: '#/components/responses/RateLimitExceeded'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /assignments/queue:
+    get:
+      summary: List queued work items awaiting capacity
+      description: |
+        Returns work items in the assignment queue, ordered by priority (urgent first) and creation time (FIFO within priority).
+
+        **FR-010**: View queued items waiting for staff capacity.
+
+        **Permissions**: Supervisors see their unit's queue, admins see all queues.
+      operationId: listAssignmentQueue
+      tags:
+        - Queue
+      parameters:
+        - name: priority
+          in: query
+          description: Filter by priority level
+          schema:
+            $ref: '#/components/schemas/PriorityLevel'
+        - name: work_item_type
+          in: query
+          description: Filter by work item type
+          schema:
+            $ref: '#/components/schemas/WorkItemType'
+        - name: unit_id
+          in: query
+          description: Filter by target organizational unit
+          schema:
+            type: string
+            format: uuid
+        - name: page
+          in: query
+          description: Page number (1-indexed)
+          schema:
+            type: integer
+            default: 1
+            minimum: 1
+        - name: page_size
+          in: query
+          description: Items per page
+          schema:
+            type: integer
+            default: 50
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: Queue items retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /assignments/my-assignments:
+    get:
+      summary: List current user's assignments
+      description: |
+        Returns all active assignments for the authenticated user, including SLA deadline and time remaining.
+
+        **FR-014**: View personal assignments with SLA countdowns.
+
+        **Real-time**: Client should subscribe to Supabase Realtime channel for live SLA updates.
+      operationId: listMyAssignments
+      tags:
+        - Assignments
+      parameters:
+        - name: status
+          in: query
+          description: Filter by assignment status
+          schema:
+            $ref: '#/components/schemas/AssignmentStatus'
+        - name: include_completed
+          in: query
+          description: Include completed assignments (default: false)
+          schema:
+            type: boolean
+            default: false
+      responses:
+        '200':
+          description: Assignments retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MyAssignmentsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /assignments/{assignment_id}/escalate:
+    post:
+      summary: Escalate an overdue assignment
+      description: |
+        Manually escalate an assignment to the assignee's supervisor or designated escalation contact.
+
+        Automatic escalation occurs when SLA reaches 100% (deadline breach) via pg_cron job.
+
+        **FR-016 to FR-018**: Escalation workflow with notifications.
+      operationId: escalateAssignment
+      tags:
+        - Escalation
+      parameters:
+        - name: assignment_id
+          in: path
+          required: true
+          description: Assignment ID to escalate
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EscalateRequest'
+      responses:
+        '200':
+          description: Escalation successful
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EscalationResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Assignment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /capacity/check:
+    get:
+      summary: Check staff or unit capacity
+      description: |
+        Returns current capacity utilization for a staff member or organizational unit.
+
+        **FR-008, FR-009**: Capacity checks for WIP limit enforcement.
+
+        **Permissions**: Users can check their own capacity, supervisors can check their unit, admins can check any.
+      operationId: checkCapacity
+      tags:
+        - Capacity
+      parameters:
+        - name: staff_id
+          in: query
+          description: Staff member ID (UUID)
+          schema:
+            type: string
+            format: uuid
+        - name: unit_id
+          in: query
+          description: Organizational unit ID (UUID)
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Capacity retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CapacityResponse'
+        '400':
+          description: Must provide either staff_id or unit_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Insufficient permissions to check this capacity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /staff/availability:
+    put:
+      summary: Update staff member availability status
+      description: |
+        Updates availability status (available, on_leave, unavailable) for the authenticated user or managed staff.
+
+        When status changes to 'on_leave':
+        - **FR-011a**: Urgent and high priority items are automatically reassigned
+        - **FR-011b**: Normal and low priority items are flagged for manual review by supervisor
+
+        **Permissions**: Users can update their own status, supervisors can update their team members, admins can update anyone.
+      operationId: updateStaffAvailability
+      tags:
+        - Staff
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AvailabilityUpdateRequest'
+      responses:
+        '200':
+          description: Availability updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailabilityUpdateResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Insufficient permissions to update this staff member
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT token (obtained from login)
+
+  schemas:
+    # Enums
+    WorkItemType:
+      type: string
+      enum:
+        - dossier
+        - ticket
+        - position
+        - task
+      description: Type of work item being assigned
+
+    PriorityLevel:
+      type: string
+      enum:
+        - urgent
+        - high
+        - normal
+        - low
+      description: Priority level (determines SLA deadline)
+
+    AssignmentStatus:
+      type: string
+      enum:
+        - pending
+        - assigned
+        - in_progress
+        - completed
+        - cancelled
+      description: Current status of the assignment
+
+    AvailabilityStatus:
+      type: string
+      enum:
+        - available
+        - on_leave
+        - unavailable
+      description: Staff member availability status
+
+    EscalationReason:
+      type: string
+      enum:
+        - sla_breach
+        - manual
+        - capacity_exhaustion
+      description: Reason for escalation
+
+    # Request Bodies
+    AutoAssignRequest:
+      type: object
+      required:
+        - work_item_id
+        - work_item_type
+        - required_skills
+        - priority
+      properties:
+        work_item_id:
+          type: string
+          format: uuid
+          description: Unique identifier of the work item
+        work_item_type:
+          $ref: '#/components/schemas/WorkItemType'
+        required_skills:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: Array of skill IDs required to process this item
+        priority:
+          $ref: '#/components/schemas/PriorityLevel'
+        target_unit_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Preferred organizational unit (optional, null = any eligible unit)
+
+    ManualOverrideRequest:
+      type: object
+      required:
+        - work_item_id
+        - work_item_type
+        - assignee_id
+        - override_reason
+      properties:
+        work_item_id:
+          type: string
+          format: uuid
+        work_item_type:
+          $ref: '#/components/schemas/WorkItemType'
+        assignee_id:
+          type: string
+          format: uuid
+          description: Staff member to assign the work item to
+        override_reason:
+          type: string
+          minLength: 10
+          maxLength: 500
+          description: Reason for manual override (min 10 chars for audit trail)
+        priority:
+          $ref: '#/components/schemas/PriorityLevel'
+
+    EscalateRequest:
+      type: object
+      required:
+        - reason
+      properties:
+        reason:
+          $ref: '#/components/schemas/EscalationReason'
+        notes:
+          type: string
+          maxLength: 1000
+          nullable: true
+          description: Additional context for escalation (optional)
+
+    AvailabilityUpdateRequest:
+      type: object
+      required:
+        - status
+      properties:
+        staff_id:
+          type: string
+          format: uuid
+          nullable: true
+          description: Staff member to update (null = self)
+        status:
+          $ref: '#/components/schemas/AvailabilityStatus'
+        unavailable_until:
+          type: string
+          format: date-time
+          nullable: true
+          description: When availability returns (required if status is on_leave, null otherwise)
+        reason:
+          type: string
+          maxLength: 500
+          nullable: true
+          description: Reason for unavailability (for audit)
+
+    # Response Bodies
+    AssignmentResponse:
+      type: object
+      required:
+        - assignment_id
+        - assignee_id
+        - assigned_at
+        - sla_deadline
+        - time_remaining_seconds
+      properties:
+        assignment_id:
+          type: string
+          format: uuid
+        assignee_id:
+          type: string
+          format: uuid
+        assignee_name:
+          type: string
+          description: Full name of assignee (for display)
+        assigned_at:
+          type: string
+          format: date-time
+        sla_deadline:
+          type: string
+          format: date-time
+        time_remaining_seconds:
+          type: integer
+          description: Seconds until SLA deadline (negative if breached)
+        priority:
+          $ref: '#/components/schemas/PriorityLevel'
+        status:
+          $ref: '#/components/schemas/AssignmentStatus'
+
+    QueuedResponse:
+      type: object
+      required:
+        - queued
+        - queue_position
+        - queued_at
+      properties:
+        queued:
+          type: boolean
+          const: true
+        queue_id:
+          type: string
+          format: uuid
+        queue_position:
+          type: integer
+          minimum: 1
+          description: Position in priority queue (1 = next to be assigned)
+        queued_at:
+          type: string
+          format: date-time
+        estimated_assignment_time:
+          type: string
+          format: date-time
+          nullable: true
+          description: Estimated assignment time based on avg completion rate (null if unavailable)
+        reason:
+          type: string
+          example: "All staff at WIP limit"
+
+    QueueListResponse:
+      type: object
+      required:
+        - items
+        - total_count
+        - page
+        - page_size
+      properties:
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/QueueItem'
+        total_count:
+          type: integer
+          description: Total number of queued items (across all pages)
+        page:
+          type: integer
+        page_size:
+          type: integer
+        has_next_page:
+          type: boolean
+
+    QueueItem:
+      type: object
+      required:
+        - queue_id
+        - work_item_id
+        - work_item_type
+        - priority
+        - queued_at
+        - position
+      properties:
+        queue_id:
+          type: string
+          format: uuid
+        work_item_id:
+          type: string
+          format: uuid
+        work_item_type:
+          $ref: '#/components/schemas/WorkItemType'
+        required_skills:
+          type: array
+          items:
+            type: object
+            properties:
+              skill_id:
+                type: string
+                format: uuid
+              skill_name_en:
+                type: string
+              skill_name_ar:
+                type: string
+        priority:
+          $ref: '#/components/schemas/PriorityLevel'
+        queued_at:
+          type: string
+          format: date-time
+        position:
+          type: integer
+          description: Position in queue (1 = next to be assigned)
+        attempts:
+          type: integer
+          description: Number of failed assignment attempts
+
+    MyAssignmentsResponse:
+      type: object
+      required:
+        - assignments
+        - total_count
+      properties:
+        assignments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Assignment'
+        total_count:
+          type: integer
+        summary:
+          type: object
+          description: Summary statistics
+          properties:
+            active_count:
+              type: integer
+            at_risk_count:
+              type: integer
+              description: Assignments at 75%+ of SLA
+            breached_count:
+              type: integer
+              description: Assignments past SLA deadline
+
+    Assignment:
+      type: object
+      required:
+        - id
+        - work_item_id
+        - work_item_type
+        - assigned_at
+        - sla_deadline
+        - priority
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        work_item_id:
+          type: string
+          format: uuid
+        work_item_type:
+          $ref: '#/components/schemas/WorkItemType'
+        assigned_at:
+          type: string
+          format: date-time
+        sla_deadline:
+          type: string
+          format: date-time
+        time_remaining_seconds:
+          type: integer
+        priority:
+          $ref: '#/components/schemas/PriorityLevel'
+        status:
+          $ref: '#/components/schemas/AssignmentStatus'
+        warning_sent:
+          type: boolean
+          description: Whether 75% SLA warning has been sent
+        escalated:
+          type: boolean
+          description: Whether assignment has been escalated
+        escalated_at:
+          type: string
+          format: date-time
+          nullable: true
+        escalation_recipient_name:
+          type: string
+          nullable: true
+
+    EscalationResponse:
+      type: object
+      required:
+        - escalation_id
+        - escalated_to_id
+        - escalated_at
+      properties:
+        escalation_id:
+          type: string
+          format: uuid
+        escalated_to_id:
+          type: string
+          format: uuid
+        escalated_to_name:
+          type: string
+        escalated_at:
+          type: string
+          format: date-time
+        notification_sent:
+          type: boolean
+          description: Whether escalation notification was sent successfully
+
+    CapacityResponse:
+      type: object
+      required:
+        - available_capacity
+        - wip_current
+        - wip_limit
+        - status
+      properties:
+        staff_id:
+          type: string
+          format: uuid
+          nullable: true
+        unit_id:
+          type: string
+          format: uuid
+          nullable: true
+        available_capacity:
+          type: integer
+          minimum: 0
+          description: Number of additional assignments that can be accepted
+        wip_current:
+          type: integer
+          description: Current number of active assignments
+        wip_limit:
+          type: integer
+          description: Maximum concurrent assignments allowed
+        utilization_pct:
+          type: number
+          format: float
+          description: Capacity utilization percentage (0-100+)
+        status:
+          $ref: '#/components/schemas/AvailabilityStatus'
+        staff_members:
+          type: array
+          nullable: true
+          description: If unit_id provided, list of staff members with capacity details
+          items:
+            type: object
+            properties:
+              staff_id:
+                type: string
+                format: uuid
+              name:
+                type: string
+              wip_current:
+                type: integer
+              wip_limit:
+                type: integer
+              available_capacity:
+                type: integer
+              status:
+                $ref: '#/components/schemas/AvailabilityStatus'
+
+    AvailabilityUpdateResponse:
+      type: object
+      required:
+        - updated
+        - status
+      properties:
+        updated:
+          type: boolean
+        status:
+          $ref: '#/components/schemas/AvailabilityStatus'
+        reassigned_items:
+          type: array
+          description: Work items automatically reassigned (if status changed to on_leave)
+          items:
+            type: object
+            properties:
+              assignment_id:
+                type: string
+                format: uuid
+              work_item_id:
+                type: string
+                format: uuid
+              new_assignee_id:
+                type: string
+                format: uuid
+              new_assignee_name:
+                type: string
+        flagged_for_review:
+          type: array
+          description: Work items flagged for manual review (if status changed to on_leave)
+          items:
+            type: object
+            properties:
+              assignment_id:
+                type: string
+                format: uuid
+              work_item_id:
+                type: string
+                format: uuid
+              priority:
+                $ref: '#/components/schemas/PriorityLevel'
+
+    # Error Responses
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error type (e.g., "Bad Request", "Unauthorized")
+        message:
+          type: string
+          description: Human-readable error message (bilingual support via Accept-Language header)
+        code:
+          type: string
+          description: Machine-readable error code (e.g., "INSUFFICIENT_CAPACITY")
+        details:
+          type: object
+          nullable: true
+          description: Additional error context (validation errors, etc.)
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Bad Request
+            message: Invalid work_item_type. Must be one of: dossier, ticket, position, task
+            code: INVALID_WORK_ITEM_TYPE
+
+    Unauthorized:
+      description: Authentication required or invalid JWT token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Unauthorized
+            message: Missing or invalid JWT token
+            code: AUTH_REQUIRED
+
+    RateLimitExceeded:
+      description: Rate limit exceeded (100 requests per minute per user)
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Too Many Requests
+            message: Rate limit exceeded. Please try again in 60 seconds.
+            code: RATE_LIMIT_EXCEEDED
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until rate limit resets
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: Internal Server Error
+            message: An unexpected error occurred. Please try again later.
+            code: INTERNAL_ERROR

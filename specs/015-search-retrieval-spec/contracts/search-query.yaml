@@ -1,0 +1,266 @@
+openapi: 3.0.3
+info:
+  title: Search Query API
+  description: Main search endpoint for querying across multiple entity types
+  version: 1.0.0
+
+paths:
+  /api/search:
+    post:
+      summary: Execute search query
+      description: Search across dossiers, contacts, engagements, positions, MoUs, and documents with optional filtering
+      operationId: searchQuery
+      tags:
+        - search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+                - lang
+              properties:
+                query:
+                  type: string
+                  minLength: 2
+                  maxLength: 200
+                  description: Search query text
+                  example: "climate change"
+                lang:
+                  type: string
+                  enum: [ar, en]
+                  description: Query language
+                  example: "en"
+                entityTypes:
+                  type: array
+                  items:
+                    type: string
+                    enum: [dossier, contact, engagement, position, mou, document]
+                  description: Filter by entity types (empty = all types)
+                  example: ["dossier", "position"]
+                includeSemanticResults:
+                  type: boolean
+                  default: true
+                  description: Include semantic search results
+                limit:
+                  type: integer
+                  minimum: 1
+                  maximum: 100
+                  default: 50
+                  description: Maximum results per page
+                offset:
+                  type: integer
+                  minimum: 0
+                  default: 0
+                  description: Pagination offset
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - results
+                  - totalCount
+                  - restrictedCount
+                  - executionTime
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SearchResult'
+                  totalCount:
+                    type: integer
+                    description: Total accessible + restricted results
+                    example: 45
+                  restrictedCount:
+                    type: integer
+                    description: Number of results user cannot access
+                    example: 3
+                  executionTime:
+                    type: integer
+                    description: Query execution time in milliseconds
+                    example: 87
+                  hasMore:
+                    type: boolean
+                    description: Whether more results available
+                    example: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  schemas:
+    SearchResult:
+      type: object
+      required:
+        - entityId
+        - entityType
+        - title
+        - snippet
+        - score
+        - matchType
+      properties:
+        entityId:
+          type: string
+          format: uuid
+          description: Entity unique identifier
+          example: "a3bb189e-8bf9-3888-9912-ace4e6543002"
+        entityType:
+          type: string
+          enum: [dossier, contact, engagement, position, mou, document]
+          description: Type of entity
+          example: "dossier"
+        title:
+          type: object
+          required: [ar, en]
+          properties:
+            ar:
+              type: string
+              description: Arabic title
+              example: "تغير المناخ"
+            en:
+              type: string
+              description: English title
+              example: "Climate Change"
+        snippet:
+          type: object
+          required: [ar, en]
+          properties:
+            ar:
+              type: string
+              description: Arabic snippet with match context
+              example: "... اتفاقية تغير المناخ ..."
+            en:
+              type: string
+              description: English snippet with match context
+              example: "... climate change agreement ..."
+        score:
+          type: number
+          format: float
+          description: Relevance score (higher = more relevant)
+          example: 8.75
+        matchType:
+          type: string
+          enum: [exact, semantic, fuzzy]
+          description: How the result matched the query
+          example: "exact"
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Entity-specific metadata
+          example:
+            status: "active"
+            priority: "high"
+            tags: ["climate", "environment"]
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2025-10-01T14:30:00Z"
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, message]
+            properties:
+              error:
+                type: string
+                example: "INVALID_QUERY"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "استعلام غير صحيح"
+                  en:
+                    type: string
+                    example: "Invalid query"
+              details:
+                type: string
+                example: "Query must be between 2 and 200 characters"
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "UNAUTHORIZED"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "مطلوب مصادقة"
+                  en:
+                    type: string
+                    example: "Authentication required"
+
+    TooManyRequests:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "RATE_LIMIT_EXCEEDED"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "تم تجاوز حد المعدل"
+                  en:
+                    type: string
+                    example: "Rate limit exceeded"
+              retryAfter:
+                type: integer
+                description: Seconds until retry allowed
+                example: 60
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "INTERNAL_ERROR"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "خطأ داخلي في الخادم"
+                  en:
+                    type: string
+                    example: "Internal server error"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

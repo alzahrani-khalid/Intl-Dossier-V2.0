@@ -1,0 +1,172 @@
+{
+  "title": "مركز الملفات",
+  "create": "إنشاء ملف",
+  "edit": "تعديل الملف",
+  "archive": "أرشفة الملف",
+  "generateBrief": "إنشاء ملخص",
+  "viewDetails": "عرض التفاصيل",
+  "filters": {
+    "title": "الفلاتر",
+    "type": "النوع",
+    "status": "الحالة",
+    "sensitivity": "مستوى الحساسية",
+    "owner": "المالك",
+    "tags": "الوسوم",
+    "search": "البحث في الملفات...",
+    "reset": "إعادة تعيين الفلاتر"
+  },
+  "types": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "theme": "موضوع"
+  },
+  "statuses": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف"
+  },
+  "sensitivity": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي"
+  },
+  "fields": {
+    "name": "الاسم",
+    "type": "النوع",
+    "status": "الحالة",
+    "sensitivity": "مستوى الحساسية",
+    "summary": "الملخص",
+    "tags": "الوسوم",
+    "lastReview": "آخر مراجعة",
+    "reviewCadence": "دورية المراجعة",
+    "created": "تاريخ الإنشاء",
+    "updated": "تاريخ التحديث",
+    "version": "النسخة"
+  },
+  "stats": {
+    "title": "الإحصائيات",
+    "totalEngagements": "إجمالي التفاعلات",
+    "totalPositions": "إجمالي المواقف",
+    "totalMous": "إجمالي مذكرات التفاهم",
+    "activeCommitments": "الالتزامات النشطة",
+    "overdueCommitments": "الالتزامات المتأخرة",
+    "totalDocuments": "إجمالي الوثائق",
+    "recentActivity": "النشاط الأخير (90 يوم)",
+    "relationshipHealth": "درجة صحة العلاقة"
+  },
+  "timeline": {
+    "title": "الجدول الزمني",
+    "empty": "لا توجد أحداث في الجدول الزمني",
+    "loadMore": "تحميل المزيد من الأحداث",
+    "types": {
+      "engagement": "تفاعل",
+      "position": "موقف",
+      "mou": "مذكرة تفاهم",
+      "commitment": "التزام",
+      "document": "وثيقة",
+      "intelligence": "معلومات استخبارية"
+    }
+  },
+  "actions": {
+    "addEngagement": "إضافة تفاعل",
+    "addPosition": "إضافة موقف",
+    "logIntelligence": "تسجيل معلومات",
+    "uploadDocument": "رفع وثيقة",
+    "addContact": "إضافة جهة اتصال"
+  },
+  "keyContacts": {
+    "title": "جهات الاتصال الرئيسية",
+    "empty": "لا توجد جهات اتصال",
+    "name": "الاسم",
+    "role": "الدور",
+    "organization": "المنظمة",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "lastInteraction": "آخر تفاعل"
+  },
+  "brief": {
+    "title": "إنشاء ملخص تنفيذي",
+    "dateRange": "النطاق الزمني",
+    "startDate": "تاريخ البداية",
+    "endDate": "تاريخ النهاية",
+    "sections": "الأقسام المطلوبة",
+    "generating": "جاري إنشاء الملخص...",
+    "timeout": "انتهت مهلة إنشاء الملخص",
+    "fallback": "وضع النموذج اليدوي",
+    "generatedBy": "تم الإنشاء بواسطة",
+    "generatedAt": "تاريخ الإنشاء",
+    "ai": "الذكاء الاصطناعي",
+    "manual": "يدوي",
+    "templates": {
+      "summary": "الملخص التنفيذي",
+      "recentActivity": "النشاط الأخير",
+      "commitments": "الالتزامات المفتوحة",
+      "positions": "المواقف الرئيسية",
+      "health": "صحة العلاقة"
+    }
+  },
+  "conflict": {
+    "title": "تم اكتشاف تعارض في الإصدار",
+    "message": "تم تعديل هذا الملف من قبل مستخدم آخر. يرجى اختيار كيفية المتابعة:",
+    "keepMine": "الاحتفاظ بتغييراتي",
+    "useTheirs": "استخدام تغييراتهم",
+    "cancel": "إلغاء",
+    "currentVersion": "الإصدار الحالي",
+    "remoteVersion": "الإصدار البعيد",
+    "field": "الحقل",
+    "yourChange": "تغييرك",
+    "theirChange": "تغييرهم"
+  },
+  "errors": {
+    "loadFailed": "فشل تحميل الملفات",
+    "createFailed": "فشل إنشاء الملف",
+    "updateFailed": "فشل تحديث الملف",
+    "archiveFailed": "فشلت أرشفة الملف",
+    "versionConflict": "تم تعديل الملف من قبل مستخدم آخر. يرجى التحديث والمحاولة مرة أخرى.",
+    "permissionDenied": "ليس لديك إذن لتنفيذ هذا الإجراء",
+    "notFound": "الملف غير موجود",
+    "invalidData": "البيانات المقدمة غير صالحة"
+  },
+  "success": {
+    "created": "تم إنشاء الملف بنجاح",
+    "updated": "تم تحديث الملف بنجاح",
+    "archived": "تم أرشفة الملف بنجاح",
+    "briefGenerated": "تم إنشاء الملخص بنجاح"
+  },
+  "empty": {
+    "title": "لم يتم العثور على ملفات",
+    "description": "قم بإنشاء أول ملف للبدء",
+    "action": "إنشاء ملف"
+  },
+  "loading": "جاري تحميل الملفات...",
+  "tabs": {
+    "timeline": "الجدول الزمني",
+    "positions": "المواقف",
+    "mous": "مذكرات التفاهم",
+    "commitments": "الالتزامات",
+    "files": "الملفات",
+    "intelligence": "المعلومات الاستخبارية"
+  },
+  "hub": {
+    "title": "مركز الملفات",
+    "description": "إدارة الملفات الدبلوماسية للدول والمنظمات والمنتديات والمواضيع",
+    "create_button": "إنشاء ملف",
+    "error_title": "خطأ في تحميل الملفات",
+    "error_generic": "حدث خطأ أثناء تحميل الملفات",
+    "empty_title": "لم يتم العثور على ملفات",
+    "empty_description": "قم بإنشاء أول ملف أو قم بتعديل الفلاتر",
+    "load_more": "تحميل المزيد"
+  },
+  "detail": {
+    "not_found_title": "الملف غير موجود",
+    "error_title": "خطأ في تحميل الملف",
+    "error_generic": "حدث خطأ أثناء تحميل الملف",
+    "back_to_hub": "العودة إلى مركز الملفات",
+    "confirm_archive": "هل أنت متأكد من أرشفة هذا الملف؟",
+    "tabs_label": "تبويبات الملف",
+    "tab_coming_soon": "هذه الميزة قريباً",
+    "recent_briefs_title": "الملخصات الأخيرة",
+    "view_all_briefs": "عرض جميع الملخصات"
+  }
+}

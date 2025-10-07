@@ -290,7 +290,7 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
             size="sm"
             onClick={() => setMessages([])}
           >
-            <RefreshCw className="h-4 w-4 mr-2" />
+            <RefreshCw className="h-4 w-4 me-2" />
             {t('wordAssistant.clearChat')}
           </Button>
         </div>
@@ -317,7 +317,7 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
                         <CardContent className="p-4">
                           <div className="flex items-center gap-3">
                             <div className="text-primary">{prompt.icon}</div>
-                            <div className="text-left">
+                            <div className="text-start">
                               <p className="font-medium text-sm">{prompt.title}</p>
                               <p className="text-xs text-muted-foreground line-clamp-2">
                                 {prompt.prompt}
@@ -364,7 +364,7 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
                                     {format(message.timestamp, 'HH:mm')}
                                   </span>
                                   {message.role === 'assistant' && (
-                                    <div className="flex gap-1 ml-auto">
+                                    <div className="flex gap-1 ms-auto">
                                       <Button
                                         size="sm"
                                         variant="ghost"

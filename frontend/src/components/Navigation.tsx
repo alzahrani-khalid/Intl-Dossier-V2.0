@@ -46,7 +46,7 @@ export function Navigation() {
       { id: 'countries', label: t('navigation.countries', 'Countries'), path: '/countries', icon: Globe2 },
       { id: 'organizations', label: t('navigation.organizations', 'Organizations'), path: '/organizations', icon: Building2 },
       { id: 'mous', label: t('navigation.mous', 'MoUs'), path: '/mous', icon: FileText },
-      { id: 'events', label: t('navigation.events', 'Events'), path: '/events', icon: CalendarDays },
+      { id: 'calendar', label: t('navigation.calendar', 'Calendar'), path: '/events', icon: CalendarDays },
       { id: 'intelligence', label: t('navigation.intelligence', 'Intelligence'), path: '/intelligence', icon: Brain },
       { id: 'data-library', label: t('navigation.dataLibrary', 'Data Library'), path: '/data-library', icon: Database },
     ],
@@ -138,7 +138,7 @@ export function Navigation() {
                 {t('navigation.settings', 'Settings')}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={handleLogout} className="text-destructive focus:text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
+                <LogOut className="me-2 h-4 w-4" />
                 {t('common.logout', 'Sign out')}
               </DropdownMenuItem>
             </DropdownMenuContent>

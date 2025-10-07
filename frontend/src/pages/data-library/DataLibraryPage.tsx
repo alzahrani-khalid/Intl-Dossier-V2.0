@@ -381,7 +381,7 @@ export function DataLibraryPage() {
                       }
                     }}
                   >
-                    <Tag className="h-3 w-3 mr-1" />
+                    <Tag className="h-3 w-3 me-1" />
                     {tag}
                   </Button>
                 ))}

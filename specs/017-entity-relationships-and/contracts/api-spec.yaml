@@ -1,0 +1,1016 @@
+openapi: 3.0.3
+info:
+  title: Entity Relationships & UI/UX Redesign API
+  description: |
+    API endpoints for dossier relationships, position linking, polymorphic documents, and unified calendar.
+
+    **Feature**: 017-entity-relationships-and
+    **Version**: 1.0.0
+    **Authentication**: Supabase Auth (Bearer token)
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier System
+    email: support@gastat.gov.sa
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+    description: Staging environment (Supabase Edge Functions)
+  - url: http://localhost:54321/functions/v1
+    description: Local development
+
+security:
+  - BearerAuth: []
+
+paths:
+  # =============================================================================
+  # DOSSIER RELATIONSHIPS
+  # =============================================================================
+
+  /dossiers/{dossierId}/relationships:
+    get:
+      summary: Get dossier relationships
+      description: Retrieve all relationships for a dossier (both parent and child relationships)
+      operationId: getDossierRelationships
+      tags: [Dossier Relationships]
+      parameters:
+        - name: dossierId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: The dossier UUID
+        - name: relationship_type
+          in: query
+          schema:
+            type: string
+            enum: [member_of, participates_in, collaborates_with, monitors, is_member, hosts]
+          description: Filter by relationship type
+        - name: direction
+          in: query
+          schema:
+            type: string
+            enum: [parent, child, both]
+            default: both
+          description: Filter by relationship direction
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  relationships:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DossierRelationship'
+                  total_count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      summary: Create dossier relationship
+      description: Create a new relationship between two dossiers
+      operationId: createDossierRelationship
+      tags: [Dossier Relationships]
+      parameters:
+        - name: dossierId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - child_dossier_id
+                - relationship_type
+              properties:
+                child_dossier_id:
+                  type: string
+                  format: uuid
+                  description: The related dossier UUID
+                relationship_type:
+                  type: string
+                  enum: [member_of, participates_in, collaborates_with, monitors, is_member, hosts]
+                relationship_strength:
+                  type: string
+                  enum: [primary, secondary, observer]
+                  default: primary
+                established_date:
+                  type: string
+                  format: date
+                end_date:
+                  type: string
+                  format: date
+                  nullable: true
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Relationship created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DossierRelationship'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Relationship already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /dossiers/{parentId}/relationships/{childId}:
+    delete:
+      summary: Delete dossier relationship
+      description: Remove a relationship between two dossiers
+      operationId: deleteDossierRelationship
+      tags: [Dossier Relationships]
+      parameters:
+        - name: parentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: childId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: relationship_type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [member_of, participates_in, collaborates_with, monitors, is_member, hosts]
+      responses:
+        '204':
+          description: Relationship deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # =============================================================================
+  # POSITION-DOSSIER LINKING
+  # =============================================================================
+
+  /positions/{positionId}/dossiers:
+    get:
+      summary: Get position-dossier links
+      description: Retrieve all dossiers linked to a position
+      operationId: getPositionDossierLinks
+      tags: [Position Linking]
+      parameters:
+        - name: positionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: link_type
+          in: query
+          schema:
+            type: string
+            enum: [primary, related, reference]
+          description: Filter by link type
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PositionDossierLink'
+                  total_count:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      summary: Link position to dossiers (bulk)
+      description: Create multiple position-dossier links in one operation
+      operationId: createPositionDossierLinks
+      tags: [Position Linking]
+      parameters:
+        - name: positionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - dossier_ids
+              properties:
+                dossier_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  minItems: 1
+                  maxItems: 100
+                link_type:
+                  type: string
+                  enum: [primary, related, reference]
+                  default: related
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Links created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PositionDossierLink'
+                  created_count:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /positions/{positionId}/dossiers/{dossierId}:
+    delete:
+      summary: Unlink position from dossier
+      description: Remove a position-dossier link
+      operationId: deletePositionDossierLink
+      tags: [Position Linking]
+      parameters:
+        - name: positionId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: dossierId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Link deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # =============================================================================
+  # POLYMORPHIC DOCUMENTS
+  # =============================================================================
+
+  /documents:
+    get:
+      summary: Get documents for entity
+      description: Retrieve documents linked to any entity type
+      operationId: getDocuments
+      tags: [Documents]
+      parameters:
+        - name: owner_type
+          in: query
+          required: true
+          schema:
+            type: string
+            enum: [dossier, engagement, position, mou, after_action, ticket, assignment, intelligence_signal, commitment]
+        - name: owner_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: latest_only
+          in: query
+          schema:
+            type: boolean
+            default: true
+          description: Return only latest versions
+        - name: scan_status
+          in: query
+          schema:
+            type: string
+            enum: [pending, clean, infected, error]
+          description: Filter by scan status
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  documents:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Document'
+                  total_count:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    post:
+      summary: Upload document
+      description: Upload a document linked to any entity type
+      operationId: uploadDocument
+      tags: [Documents]
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - owner_type
+                - owner_id
+                - file
+              properties:
+                owner_type:
+                  type: string
+                  enum: [dossier, engagement, position, mou, after_action, ticket, assignment, intelligence_signal, commitment]
+                owner_id:
+                  type: string
+                  format: uuid
+                file:
+                  type: string
+                  format: binary
+                  description: The file to upload (max 100MB)
+                document_type:
+                  type: string
+                  description: memo, report, agreement, minutes, analysis, photo
+                sensitivity_level:
+                  type: string
+                  enum: [public, internal, confidential, secret]
+                  default: internal
+                language:
+                  type: string
+                  enum: [en, ar, both]
+                  default: en
+                tags:
+                  type: array
+                  items:
+                    type: string
+      responses:
+        '201':
+          description: Document uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Document'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '413':
+          description: File too large (max 100MB)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /documents/{documentId}:
+    delete:
+      summary: Delete document
+      description: Soft-delete a document (sets deleted_at timestamp)
+      operationId: deleteDocument
+      tags: [Documents]
+      parameters:
+        - name: documentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Document deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  # =============================================================================
+  # UNIFIED CALENDAR
+  # =============================================================================
+
+  /calendar:
+    get:
+      summary: Get unified calendar events
+      description: Retrieve aggregated events (engagements + calendar entries + deadlines)
+      operationId: getCalendarEvents
+      tags: [Calendar]
+      parameters:
+        - name: start
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: Start date for calendar range
+        - name: end
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date
+          description: End date for calendar range
+        - name: filters
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [engagements, calendar_entries, assignment_deadlines, approval_deadlines]
+          description: Event type filters
+        - name: dossier_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by dossier
+        - name: assignee_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+          description: Filter by assignee
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  events:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CalendarEvent'
+                  total_count:
+                    type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /calendar/entries:
+    post:
+      summary: Create calendar entry
+      description: Create a standalone calendar entry (non-engagement event)
+      operationId: createCalendarEntry
+      tags: [Calendar]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title_en
+                - event_date
+                - entry_type
+              properties:
+                dossier_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                  description: Optional dossier link
+                title_en:
+                  type: string
+                title_ar:
+                  type: string
+                description_en:
+                  type: string
+                description_ar:
+                  type: string
+                entry_type:
+                  type: string
+                  enum: [internal_meeting, deadline, reminder, holiday, training, review, other]
+                event_date:
+                  type: string
+                  format: date
+                event_time:
+                  type: string
+                  format: time
+                  nullable: true
+                duration_minutes:
+                  type: integer
+                  minimum: 0
+                all_day:
+                  type: boolean
+                  default: false
+                location:
+                  type: string
+                is_virtual:
+                  type: boolean
+                  default: false
+                meeting_link:
+                  type: string
+                  format: uri
+                  nullable: true
+                is_recurring:
+                  type: boolean
+                  default: false
+                recurrence_pattern:
+                  type: string
+                  description: iCalendar RRULE format
+                recurrence_end_date:
+                  type: string
+                  format: date
+                  nullable: true
+                linked_item_type:
+                  type: string
+                  enum: [assignment, position, mou, commitment]
+                  nullable: true
+                linked_item_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                attendee_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        '201':
+          description: Calendar entry created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarEntry'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /calendar/{eventType}/{eventId}:
+    patch:
+      summary: Reschedule calendar event
+      description: Update the date/time of any calendar event (engagement or entry)
+      operationId: rescheduleCalendarEvent
+      tags: [Calendar]
+      parameters:
+        - name: eventType
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [engagement, calendar_entry]
+        - name: eventId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - event_date
+              properties:
+                event_date:
+                  type: string
+                  format: date
+                event_time:
+                  type: string
+                  format: time
+                  nullable: true
+      responses:
+        '200':
+          description: Event rescheduled successfully
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - $ref: '#/components/schemas/Engagement'
+                  - $ref: '#/components/schemas/CalendarEntry'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+# =============================================================================
+# COMPONENTS
+# =============================================================================
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT token
+
+  schemas:
+    DossierRelationship:
+      type: object
+      properties:
+        parent_dossier_id:
+          type: string
+          format: uuid
+        child_dossier_id:
+          type: string
+          format: uuid
+        relationship_type:
+          type: string
+          enum: [member_of, participates_in, collaborates_with, monitors, is_member, hosts]
+        relationship_strength:
+          type: string
+          enum: [primary, secondary, observer]
+        established_date:
+          type: string
+          format: date
+        end_date:
+          type: string
+          format: date
+          nullable: true
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        created_by:
+          type: string
+          format: uuid
+        updated_at:
+          type: string
+          format: date-time
+        # Expanded dossier info
+        parent_dossier:
+          $ref: '#/components/schemas/DossierSummary'
+        child_dossier:
+          $ref: '#/components/schemas/DossierSummary'
+
+    PositionDossierLink:
+      type: object
+      properties:
+        position_id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        link_type:
+          type: string
+          enum: [primary, related, reference]
+        added_at:
+          type: string
+          format: date-time
+        added_by:
+          type: string
+          format: uuid
+        notes:
+          type: string
+        # Expanded info
+        dossier:
+          $ref: '#/components/schemas/DossierSummary'
+
+    Document:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        owner_type:
+          type: string
+          enum: [dossier, engagement, position, mou, after_action, ticket, assignment, intelligence_signal, commitment]
+        owner_id:
+          type: string
+          format: uuid
+        file_name:
+          type: string
+        file_size:
+          type: integer
+          format: int64
+        mime_type:
+          type: string
+        storage_path:
+          type: string
+        document_type:
+          type: string
+        language:
+          type: string
+          enum: [en, ar, both]
+        tags:
+          type: array
+          items:
+            type: string
+        scan_status:
+          type: string
+          enum: [pending, clean, infected, error]
+        sensitivity_level:
+          type: string
+          enum: [public, internal, confidential, secret]
+        version_number:
+          type: integer
+        is_latest:
+          type: boolean
+        supersedes_document_id:
+          type: string
+          format: uuid
+          nullable: true
+        uploaded_by:
+          type: string
+          format: uuid
+        uploaded_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    CalendarEvent:
+      description: Union type for all calendar event sources
+      oneOf:
+        - $ref: '#/components/schemas/Engagement'
+        - $ref: '#/components/schemas/CalendarEntry'
+        - $ref: '#/components/schemas/AssignmentDeadline'
+        - $ref: '#/components/schemas/ApprovalDeadline'
+      discriminator:
+        propertyName: event_source
+        mapping:
+          engagement: '#/components/schemas/Engagement'
+          calendar_entry: '#/components/schemas/CalendarEntry'
+          assignment_deadline: '#/components/schemas/AssignmentDeadline'
+          approval_deadline: '#/components/schemas/ApprovalDeadline'
+
+    Engagement:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        event_source:
+          type: string
+          enum: [engagement]
+        dossier_id:
+          type: string
+          format: uuid
+        title_en:
+          type: string
+        title_ar:
+          type: string
+        engagement_type:
+          type: string
+        engagement_date:
+          type: string
+          format: date
+        location:
+          type: string
+        color_code:
+          type: string
+          enum: [blue]
+          description: Blue for engagements
+
+    CalendarEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        event_source:
+          type: string
+          enum: [calendar_entry]
+        dossier_id:
+          type: string
+          format: uuid
+          nullable: true
+        title_en:
+          type: string
+        title_ar:
+          type: string
+        description_en:
+          type: string
+        description_ar:
+          type: string
+        entry_type:
+          type: string
+          enum: [internal_meeting, deadline, reminder, holiday, training, review, other]
+        event_date:
+          type: string
+          format: date
+        event_time:
+          type: string
+          format: time
+        duration_minutes:
+          type: integer
+        all_day:
+          type: boolean
+        location:
+          type: string
+        is_virtual:
+          type: boolean
+        meeting_link:
+          type: string
+        is_recurring:
+          type: boolean
+        recurrence_pattern:
+          type: string
+        recurrence_end_date:
+          type: string
+          format: date
+        linked_item_type:
+          type: string
+          enum: [assignment, position, mou, commitment]
+        linked_item_id:
+          type: string
+          format: uuid
+        organizer_id:
+          type: string
+          format: uuid
+        attendee_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+        status:
+          type: string
+          enum: [scheduled, completed, cancelled, rescheduled]
+        color_code:
+          type: string
+          enum: [green]
+          description: Green for internal events
+        created_at:
+          type: string
+          format: date-time
+        created_by:
+          type: string
+          format: uuid
+        updated_at:
+          type: string
+          format: date-time
+
+    AssignmentDeadline:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        event_source:
+          type: string
+          enum: [assignment_deadline]
+        assignment_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        event_date:
+          type: string
+          format: date
+        sla_deadline:
+          type: string
+          format: date-time
+        color_code:
+          type: string
+          enum: [red]
+          description: Red for SLA deadlines
+
+    ApprovalDeadline:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        event_source:
+          type: string
+          enum: [approval_deadline]
+        position_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        event_date:
+          type: string
+          format: date
+        approval_deadline:
+          type: string
+          format: date-time
+        color_code:
+          type: string
+          enum: [yellow]
+          description: Yellow for approval deadlines
+
+    DossierSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name_en:
+          type: string
+        name_ar:
+          type: string
+        reference_type:
+          type: string
+          enum: [country, organization, forum, theme]
+        status:
+          type: string
+
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        code:
+          type: string
+        details:
+          type: object
+
+  responses:
+    BadRequest:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized - missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Forbidden:
+      description: Forbidden - insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+tags:
+  - name: Dossier Relationships
+    description: Manage many-to-many relationships between dossiers
+  - name: Position Linking
+    description: Link positions to multiple dossiers
+  - name: Documents
+    description: Polymorphic document management
+  - name: Calendar
+    description: Unified calendar with engagements and entries

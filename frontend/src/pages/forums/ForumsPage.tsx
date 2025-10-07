@@ -66,7 +66,7 @@ export function ForumsPage() {
       key: 'title',
       header: t('forums.title'),
       cell: (forum: Forum) => (
-        <div className={`font-medium ${isRTL ? 'text-right' : 'text-left'}`}>
+        <div className={`font-medium ${isRTL ? 'text-end' : 'text-start'}`}>
           {isRTL ? forum.title_ar : forum.title_en}
         </div>
       )
@@ -153,7 +153,7 @@ export function ForumsPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.forums')}</h1>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 me-2" />
           {t('forums.addForum')}
         </Button>
       </div>

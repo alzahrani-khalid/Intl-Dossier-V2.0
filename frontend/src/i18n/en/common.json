@@ -31,10 +31,12 @@
     "info": "Information"
   },
   "common": {
+    "appTitle": "GASTAT International Dossier System",
     "save": "Save",
     "cancel": "Cancel",
     "delete": "Delete",
     "edit": "Edit",
+    "view": "View",
     "close": "Close",
     "confirm": "Confirm",
     "back": "Back",
@@ -46,18 +48,61 @@
     "profile": "Profile",
     "settings": "Settings",
     "help": "Help",
-    "about": "About"
+    "about": "About",
+    "search": "Search",
+    "filter": "Filter",
+    "all": "All",
+    "loading": "Loading...",
+    "noData": "No data available",
+    "yes": "Yes",
+    "no": "No",
+    "select": "Select"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "email": "Email",
+    "password": "Password",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?",
+    "loginSuccess": "Login successful!",
+    "invalidCredentials": "Invalid login credentials",
+    "mfaCode": "MFA Code",
+    "enterMfaCode": "Enter your 6-digit MFA code"
+  },
+  "realtime": {
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "reconnecting": "Reconnecting...",
+    "connectionLost": "Connection Lost"
   },
   "navigation": {
     "dashboard": "Dashboard",
+    "assignments": "My Assignments",
+    "intake": "Intake Queue",
     "dossiers": "Dossiers",
+    "positions": "Positions",
+    "afterActions": "After Actions",
     "projects": "Projects",
     "organizations": "Organizations",
     "countries": "Countries",
     "reports": "Reports",
     "settings": "Settings",
     "profile": "Profile",
-    "help": "Help"
+    "help": "Help",
+    "briefs": "Briefs",
+    "mous": "MOUs",
+    "forums": "Forums",
+    "engagements": "Engagements",
+    "events": "Events",
+    "calendar": "Calendar",
+    "intelligence": "Intelligence",
+    "dataLibrary": "Data Library",
+    "wordAssistant": "Word Assistant",
+    "getHelp": "Get Help",
+    "search": "Search"
   },
   "search": {
     "searchPlaceholder": "Search...",
@@ -82,5 +127,225 @@
     "loadError": "Failed to load preferences",
     "resetConfirm": "Are you sure you want to reset to default preferences?",
     "resetSuccess": "Preferences reset to defaults"
+  },
+  "briefs": {
+    "totalBriefs": "Total Briefs",
+    "published": "Published",
+    "drafts": "Drafts",
+    "draft": "Draft",
+    "thisMonth": "This Month",
+    "status": "Status",
+    "referenceNumber": "Reference #",
+    "title": "Title",
+    "relatedTo": "Related To",
+    "author": "Author",
+    "generateBrief": "Generate Brief"
+  },
+  "mous": {
+    "total": "Total MOUs",
+    "active": "Active",
+    "expiringSoon": "Expiring Soon",
+    "inProgress": "In Progress",
+    "referenceNumber": "Reference Number",
+    "title": "Title",
+    "parties": "Parties",
+    "workflow": "Workflow",
+    "dates": "Dates",
+    "addMou": "Add MOU",
+    "statuses": {
+      "draft": "Draft",
+      "internal_review": "Internal Review",
+      "external_review": "External Review",
+      "negotiation": "Negotiation",
+      "signed": "Signed",
+      "active": "Active",
+      "renewed": "Renewed",
+      "expired": "Expired"
+    }
+  },
+  "forums": {
+    "title": "Title",
+    "dates": "Dates",
+    "location": "Location",
+    "venue": "Venue",
+    "participants": "Participants",
+    "sessions": "Sessions",
+    "status": "Status",
+    "addForum": "Add Forum",
+    "virtual": "Virtual",
+    "statuses": {
+      "scheduled": "Scheduled",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "events": {
+    "eventName": "Event Name",
+    "eventType": "Event Type",
+    "dateTime": "Date & Time",
+    "location": "Location",
+    "organizer": "Organizer",
+    "country": "Country",
+    "participants": "Participants",
+    "status": "Status",
+    "addEvent": "Add Event",
+    "virtual": "Virtual",
+    "more": "more",
+    "calendarView": "Calendar View",
+    "listView": "List View",
+    "types": {
+      "meeting": "Meeting",
+      "conference": "Conference",
+      "workshop": "Workshop",
+      "training": "Training",
+      "ceremony": "Ceremony",
+      "other": "Other"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "scheduled": "Scheduled",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "calendar": {
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  },
+  "intelligence": {
+    "report": "Report",
+    "analysisType": "Analysis Type",
+    "confidence": "Confidence",
+    "classification": "Classification",
+    "keyFindings": "Key Findings",
+    "findings": "findings",
+    "status": "Status",
+    "people": "People",
+    "author": "Author",
+    "reviewer": "Reviewer",
+    "approver": "Approver",
+    "createReport": "Create Report",
+    "search": "Search",
+    "searchPlaceholder": "Search reports...",
+    "similaritySearchPlaceholder": "Describe what you're looking for...",
+    "vectorSearch": "Vector Search",
+    "totalReports": "Total Reports",
+    "verifiedReports": "Verified Reports",
+    "pendingReview": "Pending Review",
+    "published": "Published",
+    "confidenceLevels": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "verified": "Verified"
+    },
+    "classifications": {
+      "public": "Public",
+      "internal": "Internal",
+      "confidential": "Confidential",
+      "restricted": "Restricted"
+    },
+    "analysisTypes": {
+      "trends": "Trends",
+      "patterns": "Patterns",
+      "predictions": "Predictions",
+      "risks": "Risks",
+      "opportunities": "Opportunities"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "review": "Under Review",
+      "approved": "Approved",
+      "published": "Published"
+    }
+  },
+  "reports": {
+    "selectTemplate": "Select Report Template",
+    "selectTemplateDesc": "Choose a report template to generate",
+    "parameters": "Parameters",
+    "parametersDesc": "Configure report parameters",
+    "format": "Format",
+    "generateReport": "Generate Report",
+    "generating": "Generating...",
+    "recentReports": "Recent Reports",
+    "noRecentReports": "No recent reports",
+    "templates": {
+      "countryOverview": "Country Overview",
+      "countryOverviewDesc": "Comprehensive country analysis and statistics",
+      "mouStatus": "MOU Status Report",
+      "mouStatusDesc": "Summary of all memoranda of understanding",
+      "eventSummary": "Event Summary",
+      "eventSummaryDesc": "Summary of events and participation",
+      "intelligenceDigest": "Intelligence Digest",
+      "intelligenceDigestDesc": "Compiled intelligence reports",
+      "organizationProfile": "Organization Profile",
+      "organizationProfileDesc": "Detailed organization information",
+      "executiveDashboard": "Executive Dashboard",
+      "executiveDashboardDesc": "High-level overview for executives"
+    },
+    "parameters": {
+      "country": "Country",
+      "dateRange": "Date Range",
+      "status": "Status",
+      "includeExpiring": "Include Expiring Soon",
+      "period": "Period",
+      "confidenceLevel": "Confidence Level",
+      "classification": "Classification",
+      "organization": "Organization",
+      "reportPeriod": "Report Period"
+    },
+    "periods": {
+      "thisMonth": "This Month",
+      "thisQuarter": "This Quarter",
+      "thisYear": "This Year",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly"
+    }
+  },
+  "organizations": {
+    "types": {
+      "government": "Government",
+      "ngo": "NGO",
+      "private": "Private"
+    }
+  },
+  "engagements": {
+    "title": "Engagements",
+    "detail": "Engagement Details",
+    "information": "Information",
+    "informationDescription": "Engagement Information",
+    "date": "Date",
+    "description": "Description",
+    "createdBy": "Created By",
+    "location": "Location",
+    "logAfterAction": "Log After Action",
+    "viewKanban": "View Kanban Board",
+    "loadError": "Failed to load engagement",
+    "notFound": "Engagement not found",
+    "notFoundDescription": "The engagement you are looking for does not exist",
+    "listDescription": "Manage all international engagements",
+    "create": "Create Engagement",
+    "searchPlaceholder": "Search engagements...",
+    "noResults": "No engagements found",
+    "noEngagements": "No engagements yet",
+    "types": {
+      "meeting": "Meeting",
+      "conference": "Conference",
+      "workshop": "Workshop",
+      "training": "Training",
+      "ceremony": "Ceremony",
+      "consultation": "Consultation",
+      "coordination": "Coordination",
+      "siteVisit": "Site Visit",
+      "other": "Other"
+    }
   }
 }

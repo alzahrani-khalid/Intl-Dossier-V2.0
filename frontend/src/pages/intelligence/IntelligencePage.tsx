@@ -197,7 +197,7 @@ export function IntelligencePage() {
 
     return (
       <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}>
-        <Shield className="h-3 w-3 mr-1" />
+        <Shield className="h-3 w-3 me-1" />
         {t(`intelligence.confidenceLevels.${level}`)} ({config.icon})
       </div>
     )
@@ -351,7 +351,7 @@ export function IntelligencePage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.intelligence')}</h1>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 me-2" />
           {t('intelligence.createReport')}
         </Button>
       </div>
@@ -424,7 +424,7 @@ export function IntelligencePage() {
                   onClick={() => similaritySearchMutation.mutate(similaritySearch)}
                   disabled={!similaritySearch || similaritySearchMutation.isPending}
                 >
-                  <Search className="h-4 w-4 mr-2" />
+                  <Search className="h-4 w-4 me-2" />
                   {t('intelligence.vectorSearch')}
                 </Button>
               </div>

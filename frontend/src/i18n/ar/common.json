@@ -31,10 +31,12 @@
     "info": "معلومات"
   },
   "common": {
+    "appTitle": "نظام الملفات الدولية للهيئة العامة للإحصاء",
     "save": "حفظ",
     "cancel": "إلغاء",
     "delete": "حذف",
     "edit": "تعديل",
+    "view": "عرض",
     "close": "إغلاق",
     "confirm": "تأكيد",
     "back": "رجوع",
@@ -46,18 +48,61 @@
     "profile": "الملف الشخصي",
     "settings": "الإعدادات",
     "help": "مساعدة",
-    "about": "حول"
+    "about": "حول",
+    "search": "بحث",
+    "filter": "تصفية",
+    "all": "الكل",
+    "loading": "جاري التحميل...",
+    "noData": "لا توجد بيانات متاحة",
+    "yes": "نعم",
+    "no": "لا",
+    "select": "اختر"
+  },
+  "auth": {
+    "signIn": "تسجيل الدخول",
+    "signUp": "إنشاء حساب",
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "rememberMe": "تذكرني",
+    "forgotPassword": "نسيت كلمة المرور؟",
+    "dontHaveAccount": "ليس لديك حساب؟",
+    "alreadyHaveAccount": "لديك حساب بالفعل؟",
+    "loginSuccess": "تم تسجيل الدخول بنجاح!",
+    "invalidCredentials": "بيانات الدخول غير صحيحة",
+    "mfaCode": "رمز المصادقة الثنائية",
+    "enterMfaCode": "أدخل رمز المصادقة المكون من 6 أرقام"
+  },
+  "realtime": {
+    "connected": "متصل",
+    "disconnected": "غير متصل",
+    "reconnecting": "إعادة الاتصال...",
+    "connectionLost": "انقطع الاتصال"
   },
   "navigation": {
     "dashboard": "لوحة القيادة",
+    "assignments": "تكليفاتي",
+    "intake": "قائمة الاستقبال",
     "dossiers": "الملفات",
+    "positions": "المواقف",
+    "afterActions": "ملاحظات ما بعد الإجراء",
     "projects": "المشاريع",
     "organizations": "المنظمات",
     "countries": "البلدان",
     "reports": "التقارير",
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
-    "help": "المساعدة"
+    "help": "المساعدة",
+    "briefs": "الملخصات",
+    "mous": "مذكرات التفاهم",
+    "forums": "المنتديات",
+    "engagements": "الالتزامات",
+    "events": "الفعاليات",
+    "calendar": "التقويم",
+    "intelligence": "الاستخبارات",
+    "dataLibrary": "مكتبة البيانات",
+    "wordAssistant": "مساعد الوثائق",
+    "getHelp": "الحصول على مساعدة",
+    "search": "بحث"
   },
   "search": {
     "searchPlaceholder": "بحث...",
@@ -82,5 +127,225 @@
     "loadError": "فشل تحميل التفضيلات",
     "resetConfirm": "هل أنت متأكد من إعادة تعيين التفضيلات إلى الإعدادات الافتراضية؟",
     "resetSuccess": "تم إعادة تعيين التفضيلات إلى الإعدادات الافتراضية"
+  },
+  "briefs": {
+    "totalBriefs": "إجمالي الملخصات",
+    "published": "منشورة",
+    "drafts": "مسودات",
+    "draft": "مسودة",
+    "thisMonth": "هذا الشهر",
+    "status": "الحالة",
+    "referenceNumber": "الرقم المرجعي",
+    "title": "العنوان",
+    "relatedTo": "متعلق بـ",
+    "author": "المؤلف",
+    "generateBrief": "إنشاء ملخص"
+  },
+  "mous": {
+    "total": "إجمالي مذكرات التفاهم",
+    "active": "نشطة",
+    "expiringSoon": "تنتهي قريباً",
+    "inProgress": "قيد التنفيذ",
+    "referenceNumber": "الرقم المرجعي",
+    "title": "العنوان",
+    "parties": "الأطراف",
+    "workflow": "سير العمل",
+    "dates": "التواريخ",
+    "addMou": "إضافة مذكرة تفاهم",
+    "statuses": {
+      "draft": "مسودة",
+      "internal_review": "مراجعة داخلية",
+      "external_review": "مراجعة خارجية",
+      "negotiation": "تفاوض",
+      "signed": "موقعة",
+      "active": "نشطة",
+      "renewed": "مجددة",
+      "expired": "منتهية"
+    }
+  },
+  "forums": {
+    "title": "العنوان",
+    "dates": "التواريخ",
+    "location": "الموقع",
+    "venue": "المكان",
+    "participants": "المشاركون",
+    "sessions": "الجلسات",
+    "status": "الحالة",
+    "addForum": "إضافة منتدى",
+    "virtual": "افتراضي",
+    "statuses": {
+      "scheduled": "مجدول",
+      "ongoing": "جارٍ",
+      "completed": "مكتمل",
+      "cancelled": "ملغى"
+    }
+  },
+  "events": {
+    "eventName": "اسم الفعالية",
+    "eventType": "نوع الفعالية",
+    "dateTime": "التاريخ والوقت",
+    "location": "الموقع",
+    "organizer": "المنظم",
+    "country": "البلد",
+    "participants": "المشاركون",
+    "status": "الحالة",
+    "addEvent": "إضافة فعالية",
+    "virtual": "افتراضي",
+    "more": "المزيد",
+    "calendarView": "عرض التقويم",
+    "listView": "عرض القائمة",
+    "types": {
+      "meeting": "اجتماع",
+      "conference": "مؤتمر",
+      "workshop": "ورشة عمل",
+      "training": "تدريب",
+      "ceremony": "حفل",
+      "other": "أخرى"
+    },
+    "statuses": {
+      "draft": "مسودة",
+      "scheduled": "مجدول",
+      "ongoing": "جارٍ",
+      "completed": "مكتمل",
+      "cancelled": "ملغى"
+    }
+  },
+  "calendar": {
+    "sun": "الأحد",
+    "mon": "الإثنين",
+    "tue": "الثلاثاء",
+    "wed": "الأربعاء",
+    "thu": "الخميس",
+    "fri": "الجمعة",
+    "sat": "السبت"
+  },
+  "intelligence": {
+    "report": "التقرير",
+    "analysisType": "نوع التحليل",
+    "confidence": "الثقة",
+    "classification": "التصنيف",
+    "keyFindings": "النتائج الرئيسية",
+    "findings": "نتائج",
+    "status": "الحالة",
+    "people": "الأشخاص",
+    "author": "المؤلف",
+    "reviewer": "المراجع",
+    "approver": "المعتمد",
+    "createReport": "إنشاء تقرير",
+    "search": "بحث",
+    "searchPlaceholder": "البحث في التقارير...",
+    "similaritySearchPlaceholder": "صف ما تبحث عنه...",
+    "vectorSearch": "بحث متجه",
+    "totalReports": "إجمالي التقارير",
+    "verifiedReports": "التقارير الموثقة",
+    "pendingReview": "قيد المراجعة",
+    "published": "منشورة",
+    "confidenceLevels": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "verified": "موثق"
+    },
+    "classifications": {
+      "public": "عام",
+      "internal": "داخلي",
+      "confidential": "سري",
+      "restricted": "محظور"
+    },
+    "analysisTypes": {
+      "trends": "الاتجاهات",
+      "patterns": "الأنماط",
+      "predictions": "التوقعات",
+      "risks": "المخاطر",
+      "opportunities": "الفرص"
+    },
+    "statuses": {
+      "draft": "مسودة",
+      "review": "قيد المراجعة",
+      "approved": "معتمد",
+      "published": "منشور"
+    }
+  },
+  "reports": {
+    "selectTemplate": "اختر قالب التقرير",
+    "selectTemplateDesc": "اختر قالب تقرير لإنشائه",
+    "parameters": "المعاملات",
+    "parametersDesc": "تكوين معاملات التقرير",
+    "format": "الصيغة",
+    "generateReport": "إنشاء التقرير",
+    "generating": "جاري الإنشاء...",
+    "recentReports": "التقارير الأخيرة",
+    "noRecentReports": "لا توجد تقارير حديثة",
+    "templates": {
+      "countryOverview": "نظرة عامة على البلد",
+      "countryOverviewDesc": "تحليل شامل للبلد والإحصاءات",
+      "mouStatus": "تقرير حالة مذكرة التفاهم",
+      "mouStatusDesc": "ملخص جميع مذكرات التفاهم",
+      "eventSummary": "ملخص الفعاليات",
+      "eventSummaryDesc": "ملخص الفعاليات والمشاركة",
+      "intelligenceDigest": "ملخص الاستخبارات",
+      "intelligenceDigestDesc": "تقارير الاستخبارات المجمعة",
+      "organizationProfile": "ملف المنظمة",
+      "organizationProfileDesc": "معلومات تفصيلية عن المنظمة",
+      "executiveDashboard": "لوحة التحكم التنفيذية",
+      "executiveDashboardDesc": "نظرة عامة عالية المستوى للمسؤولين التنفيذيين"
+    },
+    "parameters": {
+      "country": "البلد",
+      "dateRange": "نطاق التاريخ",
+      "status": "الحالة",
+      "includeExpiring": "تضمين التي تنتهي قريباً",
+      "period": "الفترة",
+      "confidenceLevel": "مستوى الثقة",
+      "classification": "التصنيف",
+      "organization": "المنظمة",
+      "reportPeriod": "فترة التقرير"
+    },
+    "periods": {
+      "thisMonth": "هذا الشهر",
+      "thisQuarter": "هذا الربع",
+      "thisYear": "هذا العام",
+      "weekly": "أسبوعي",
+      "monthly": "شهري",
+      "quarterly": "ربع سنوي"
+    }
+  },
+  "organizations": {
+    "types": {
+      "government": "حكومي",
+      "ngo": "منظمة غير حكومية",
+      "private": "خاص"
+    }
+  },
+  "engagements": {
+    "title": "الالتزامات",
+    "detail": "تفاصيل الالتزام",
+    "information": "معلومات",
+    "informationDescription": "معلومات الالتزام",
+    "date": "التاريخ",
+    "description": "الوصف",
+    "createdBy": "أنشئ بواسطة",
+    "location": "الموقع",
+    "logAfterAction": "تسجيل ملاحظة ما بعد الإجراء",
+    "viewKanban": "عرض لوحة كانبان",
+    "loadError": "فشل تحميل الالتزام",
+    "notFound": "الالتزام غير موجود",
+    "notFoundDescription": "الالتزام الذي تبحث عنه غير موجود",
+    "listDescription": "إدارة جميع الالتزامات الدولية",
+    "create": "إنشاء التزام",
+    "searchPlaceholder": "البحث في الالتزامات...",
+    "noResults": "لا توجد التزامات",
+    "noEngagements": "لا توجد التزامات بعد",
+    "types": {
+      "meeting": "اجتماع",
+      "conference": "مؤتمر",
+      "workshop": "ورشة عمل",
+      "training": "تدريب",
+      "ceremony": "حفل",
+      "consultation": "استشارة",
+      "coordination": "تنسيق",
+      "siteVisit": "زيارة ميدانية",
+      "other": "أخرى"
+    }
   }
 }

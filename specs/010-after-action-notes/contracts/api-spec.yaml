@@ -1,0 +1,1206 @@
+openapi: 3.0.3
+info:
+  title: After-Action Notes API
+  description: API endpoints for managing after-action records following engagements
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier System
+    url: https://github.com/gastat/intl-dossier
+
+servers:
+  - url: https://gastat-dossier.supabase.co/functions/v1
+    description: Production (Supabase Edge Functions)
+  - url: http://localhost:54321/functions/v1
+    description: Local Development
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Engagements
+    description: Manage meetings and consultations
+  - name: After-Actions
+    description: Manage after-action records
+  - name: AI Extraction
+    description: AI-powered content extraction
+  - name: Documents
+    description: PDF generation and attachments
+
+paths:
+  # ==================== ENGAGEMENTS ====================
+  /engagements:
+    post:
+      tags: [Engagements]
+      summary: Create a new engagement
+      operationId: createEngagement
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateEngagementRequest'
+      responses:
+        '201':
+          description: Engagement created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Engagement'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /engagements/{engagementId}:
+    get:
+      tags: [Engagements]
+      summary: Get engagement by ID
+      operationId: getEngagement
+      parameters:
+        - $ref: '#/components/parameters/engagementId'
+      responses:
+        '200':
+          description: Engagement retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Engagement'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [Engagements]
+      summary: Update engagement
+      operationId: updateEngagement
+      parameters:
+        - $ref: '#/components/parameters/engagementId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateEngagementRequest'
+      responses:
+        '200':
+          description: Engagement updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Engagement'
+
+  /dossiers/{dossierId}/engagements:
+    get:
+      tags: [Engagements]
+      summary: List engagements for a dossier
+      operationId: listEngagements
+      parameters:
+        - $ref: '#/components/parameters/dossierId'
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: Engagements retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Engagement'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+
+  # ==================== AFTER-ACTION RECORDS ====================
+  /after-actions:
+    post:
+      tags: [After-Actions]
+      summary: Create after-action record
+      operationId: createAfterAction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateAfterActionRequest'
+      responses:
+        '201':
+          description: After-action created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfterActionRecord'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /after-actions/{afterActionId}:
+    get:
+      tags: [After-Actions]
+      summary: Get after-action by ID
+      operationId: getAfterAction
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      responses:
+        '200':
+          description: After-action retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfterActionRecord'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags: [After-Actions]
+      summary: Update after-action record
+      operationId: updateAfterAction
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateAfterActionRequest'
+      responses:
+        '200':
+          description: After-action updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfterActionRecord'
+        '409':
+          description: Conflict (version mismatch for optimistic locking)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /after-actions/{afterActionId}/publish:
+    post:
+      tags: [After-Actions]
+      summary: Publish after-action record
+      description: Requires step-up authentication if confidential
+      operationId: publishAfterAction
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mfa_token:
+                  type: string
+                  description: MFA token for step-up auth (required if confidential)
+      responses:
+        '200':
+          description: After-action published successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfterActionRecord'
+        '403':
+          description: Step-up MFA required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+                example:
+                  error: "step_up_required"
+                  message: "This record is confidential. MFA verification required."
+
+  /after-actions/{afterActionId}/request-edit:
+    post:
+      tags: [After-Actions]
+      summary: Request edit to published after-action
+      operationId: requestEdit
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reason, changes]
+              properties:
+                reason:
+                  type: string
+                  minLength: 10
+                  maxLength: 500
+                changes:
+                  type: object
+                  description: Proposed changes as JSON patch
+      responses:
+        '200':
+          description: Edit request submitted successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfterActionRecord'
+
+  /after-actions/{afterActionId}/approve-edit:
+    post:
+      tags: [After-Actions]
+      summary: Approve edit request (supervisor only)
+      operationId: approveEdit
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                approval_notes:
+                  type: string
+                  maxLength: 500
+      responses:
+        '200':
+          description: Edit approved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfterActionRecord'
+        '403':
+          description: Insufficient permissions (supervisor required)
+
+  /after-actions/{afterActionId}/reject-edit:
+    post:
+      tags: [After-Actions]
+      summary: Reject edit request (supervisor only)
+      operationId: rejectEdit
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [rejection_reason]
+              properties:
+                rejection_reason:
+                  type: string
+                  minLength: 10
+                  maxLength: 500
+      responses:
+        '200':
+          description: Edit rejected successfully
+
+  /after-actions/{afterActionId}/versions:
+    get:
+      tags: [After-Actions]
+      summary: Get version history
+      operationId: getVersionHistory
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      responses:
+        '200':
+          description: Version history retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AfterActionVersion'
+
+  /dossiers/{dossierId}/after-actions:
+    get:
+      tags: [After-Actions]
+      summary: List after-actions for a dossier
+      operationId: listAfterActions
+      parameters:
+        - $ref: '#/components/parameters/dossierId'
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, published, edit_requested]
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: After-actions retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AfterActionRecord'
+                  total:
+                    type: integer
+
+  # ==================== AI EXTRACTION ====================
+  /ai/extract:
+    post:
+      tags: [AI Extraction]
+      summary: Extract structured data from meeting minutes
+      description: Sync (<5 sec) or async (>5 sec) based on content size
+      operationId: extractMeetingData
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Meeting minutes file (PDF, DOCX, TXT)
+                language:
+                  type: string
+                  enum: [en, ar]
+                  default: en
+                mode:
+                  type: string
+                  enum: [sync, async, auto]
+                  default: auto
+                  description: auto = estimate based on file size
+      responses:
+        '200':
+          description: Extraction complete (sync mode)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtractionResult'
+        '202':
+          description: Extraction started (async mode)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                  status:
+                    type: string
+                    enum: [processing]
+                  estimated_time:
+                    type: integer
+                    description: Estimated seconds until completion
+
+  /ai/extract/{jobId}:
+    get:
+      tags: [AI Extraction]
+      summary: Get async extraction job status
+      operationId: getExtractionStatus
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Job status retrieved
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [processing]
+                      progress:
+                        type: integer
+                        minimum: 0
+                        maximum: 100
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [completed]
+                      result:
+                        $ref: '#/components/schemas/ExtractionResult'
+                  - type: object
+                    properties:
+                      status:
+                        type: string
+                        enum: [failed]
+                      error:
+                        type: string
+
+  # ==================== DOCUMENTS ====================
+  /after-actions/{afterActionId}/pdf:
+    post:
+      tags: [Documents]
+      summary: Generate bilingual PDF summary
+      description: Requires step-up auth if confidential
+      operationId: generatePDF
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                mfa_token:
+                  type: string
+                  description: MFA token for step-up auth (required if confidential)
+                language:
+                  type: string
+                  enum: [en, ar, both]
+                  default: both
+      responses:
+        '200':
+          description: PDF generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  pdf_url:
+                    type: string
+                    format: uri
+                    description: Signed URL (24-hour expiry)
+                  generated_at:
+                    type: string
+                    format: date-time
+
+  /after-actions/{afterActionId}/attachments:
+    post:
+      tags: [Documents]
+      summary: Upload attachment
+      operationId: uploadAttachment
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+                  description: Attachment file (max 100MB)
+      responses:
+        '201':
+          description: Attachment uploaded successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attachment'
+        '400':
+          description: Invalid file (type, size, or attachment limit exceeded)
+
+    get:
+      tags: [Documents]
+      summary: List attachments
+      operationId: listAttachments
+      parameters:
+        - $ref: '#/components/parameters/afterActionId'
+      responses:
+        '200':
+          description: Attachments retrieved
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Attachment'
+
+  /attachments/{attachmentId}:
+    delete:
+      tags: [Documents]
+      summary: Delete attachment
+      operationId: deleteAttachment
+      parameters:
+        - name: attachmentId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Attachment deleted successfully
+
+# ==================== COMPONENTS ====================
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token from auth.session()
+
+  parameters:
+    dossierId:
+      name: dossierId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    engagementId:
+      name: engagementId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    afterActionId:
+      name: afterActionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  schemas:
+    # ==================== ENGAGEMENTS ====================
+    Engagement:
+      type: object
+      required: [id, dossier_id, title, engagement_type, engagement_date, created_by, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+        engagement_type:
+          type: string
+          enum: [meeting, consultation, coordination, workshop, conference, site_visit, other]
+        engagement_date:
+          type: string
+          format: date-time
+        location:
+          type: string
+          maxLength: 500
+          nullable: true
+        description:
+          type: string
+          nullable: true
+        created_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateEngagementRequest:
+      type: object
+      required: [dossier_id, title, engagement_type, engagement_date]
+      properties:
+        dossier_id:
+          type: string
+          format: uuid
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+        engagement_type:
+          type: string
+          enum: [meeting, consultation, coordination, workshop, conference, site_visit, other]
+        engagement_date:
+          type: string
+          format: date-time
+        location:
+          type: string
+          maxLength: 500
+        description:
+          type: string
+
+    UpdateEngagementRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 500
+        engagement_type:
+          type: string
+          enum: [meeting, consultation, coordination, workshop, conference, site_visit, other]
+        engagement_date:
+          type: string
+          format: date-time
+        location:
+          type: string
+          maxLength: 500
+        description:
+          type: string
+
+    # ==================== AFTER-ACTION RECORDS ====================
+    AfterActionRecord:
+      type: object
+      required: [id, engagement_id, dossier_id, publication_status, is_confidential, created_by, created_at, version]
+      properties:
+        id:
+          type: string
+          format: uuid
+        engagement_id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        publication_status:
+          type: string
+          enum: [draft, published, edit_requested, edit_approved, edit_rejected]
+        is_confidential:
+          type: boolean
+        attendees:
+          type: array
+          items:
+            type: string
+          maxItems: 100
+        notes:
+          type: string
+          nullable: true
+        decisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/Decision'
+        commitments:
+          type: array
+          items:
+            $ref: '#/components/schemas/Commitment'
+        risks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Risk'
+        follow_up_actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/FollowUpAction'
+        created_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+        updated_at:
+          type: string
+          format: date-time
+        published_by:
+          type: string
+          format: uuid
+          nullable: true
+        published_at:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          type: integer
+          description: For optimistic locking
+
+    CreateAfterActionRequest:
+      type: object
+      required: [engagement_id, is_confidential]
+      properties:
+        engagement_id:
+          type: string
+          format: uuid
+        is_confidential:
+          type: boolean
+        attendees:
+          type: array
+          items:
+            type: string
+          maxItems: 100
+        notes:
+          type: string
+        decisions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateDecision'
+        commitments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateCommitment'
+        risks:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateRisk'
+        follow_up_actions:
+          type: array
+          items:
+            $ref: '#/components/schemas/CreateFollowUpAction'
+
+    UpdateAfterActionRequest:
+      allOf:
+        - $ref: '#/components/schemas/CreateAfterActionRequest'
+        - type: object
+          required: [version]
+          properties:
+            version:
+              type: integer
+              description: Current version (for optimistic locking)
+
+    AfterActionVersion:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        after_action_id:
+          type: string
+          format: uuid
+        version_number:
+          type: integer
+        content:
+          type: object
+          description: Full snapshot of record at this version
+        change_summary:
+          type: string
+        changed_by:
+          type: string
+          format: uuid
+        changed_at:
+          type: string
+          format: date-time
+
+    # ==================== DECISIONS ====================
+    Decision:
+      type: object
+      required: [id, after_action_id, description, decision_maker, decision_date]
+      properties:
+        id:
+          type: string
+          format: uuid
+        after_action_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        rationale:
+          type: string
+          nullable: true
+        decision_maker:
+          type: string
+          minLength: 1
+          maxLength: 200
+        decision_date:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+
+    CreateDecision:
+      type: object
+      required: [description, decision_maker, decision_date]
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        rationale:
+          type: string
+        decision_maker:
+          type: string
+          minLength: 1
+          maxLength: 200
+        decision_date:
+          type: string
+          format: date-time
+
+    # ==================== COMMITMENTS ====================
+    Commitment:
+      type: object
+      required: [id, after_action_id, dossier_id, description, priority, status, owner_type, tracking_mode, due_date]
+      properties:
+        id:
+          type: string
+          format: uuid
+        after_action_id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        status:
+          type: string
+          enum: [pending, in_progress, completed, cancelled, overdue]
+        owner_type:
+          type: string
+          enum: [internal, external]
+        owner_user_id:
+          type: string
+          format: uuid
+          nullable: true
+        owner_contact_id:
+          type: string
+          format: uuid
+          nullable: true
+        tracking_mode:
+          type: string
+          enum: [automatic, manual]
+        due_date:
+          type: string
+          format: date
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        ai_confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          nullable: true
+
+    CreateCommitment:
+      type: object
+      required: [description, priority, owner_type, due_date]
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        priority:
+          type: string
+          enum: [low, medium, high, critical]
+        owner_type:
+          type: string
+          enum: [internal, external]
+        owner_user_id:
+          type: string
+          format: uuid
+          description: Required if owner_type = internal
+        owner_contact_email:
+          type: string
+          format: email
+          description: Required if owner_type = external (will create/link contact)
+        owner_contact_name:
+          type: string
+          description: Required if owner_type = external and contact doesn't exist
+        due_date:
+          type: string
+          format: date
+        ai_confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+
+    # ==================== RISKS ====================
+    Risk:
+      type: object
+      required: [id, after_action_id, description, severity, likelihood]
+      properties:
+        id:
+          type: string
+          format: uuid
+        after_action_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        likelihood:
+          type: string
+          enum: [unlikely, possible, likely, certain]
+        mitigation_strategy:
+          type: string
+          nullable: true
+        owner:
+          type: string
+          maxLength: 200
+          nullable: true
+        ai_confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          nullable: true
+
+    CreateRisk:
+      type: object
+      required: [description, severity, likelihood]
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        severity:
+          type: string
+          enum: [low, medium, high, critical]
+        likelihood:
+          type: string
+          enum: [unlikely, possible, likely, certain]
+        mitigation_strategy:
+          type: string
+        owner:
+          type: string
+          maxLength: 200
+        ai_confidence:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+
+    # ==================== FOLLOW-UP ACTIONS ====================
+    FollowUpAction:
+      type: object
+      required: [id, after_action_id, description, completed]
+      properties:
+        id:
+          type: string
+          format: uuid
+        after_action_id:
+          type: string
+          format: uuid
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        assigned_to:
+          type: string
+          maxLength: 200
+          nullable: true
+        target_date:
+          type: string
+          format: date
+          nullable: true
+        completed:
+          type: boolean
+
+    CreateFollowUpAction:
+      type: object
+      required: [description]
+      properties:
+        description:
+          type: string
+          minLength: 1
+          maxLength: 2000
+        assigned_to:
+          type: string
+          maxLength: 200
+        target_date:
+          type: string
+          format: date
+
+    # ==================== AI EXTRACTION ====================
+    ExtractionResult:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum: [sync, async]
+        decisions:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              rationale:
+                type: string
+              decision_maker:
+                type: string
+              decision_date:
+                type: string
+                format: date-time
+              confidence:
+                type: number
+                format: float
+                minimum: 0
+                maximum: 1
+        commitments:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              owner:
+                type: string
+              due_date:
+                type: string
+                format: date
+              priority:
+                type: string
+                enum: [low, medium, high, critical]
+              confidence:
+                type: number
+                format: float
+                minimum: 0
+                maximum: 1
+        risks:
+          type: array
+          items:
+            type: object
+            properties:
+              description:
+                type: string
+              severity:
+                type: string
+                enum: [low, medium, high, critical]
+              likelihood:
+                type: string
+                enum: [unlikely, possible, likely, certain]
+              mitigation_strategy:
+                type: string
+              confidence:
+                type: number
+                format: float
+                minimum: 0
+                maximum: 1
+
+    # ==================== ATTACHMENTS ====================
+    Attachment:
+      type: object
+      required: [id, after_action_id, file_name, file_size, mime_type, scan_status, uploaded_by, uploaded_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        after_action_id:
+          type: string
+          format: uuid
+        file_name:
+          type: string
+          minLength: 1
+          maxLength: 255
+        file_url:
+          type: string
+          format: uri
+          description: Signed URL (24-hour expiry)
+        file_size:
+          type: integer
+          minimum: 1
+          maximum: 104857600  # 100MB
+        mime_type:
+          type: string
+          enum:
+            - application/pdf
+            - application/vnd.openxmlformats-officedocument.wordprocessingml.document
+            - application/vnd.openxmlformats-officedocument.spreadsheetml.sheet
+            - application/vnd.openxmlformats-officedocument.presentationml.presentation
+            - image/png
+            - image/jpeg
+            - text/plain
+            - text/csv
+        scan_status:
+          type: string
+          enum: [pending, clean, infected, scan_failed]
+        uploaded_by:
+          type: string
+          format: uuid
+        uploaded_at:
+          type: string
+          format: date-time
+
+    # ==================== ERRORS ====================
+    Error:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          description: Additional error context
+          additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "validation_error"
+            message: "Invalid request parameters"
+            details:
+              field: "due_date"
+              issue: "Must be a future date"
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "unauthorized"
+            message: "Authentication required"
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "forbidden"
+            message: "You do not have permission to access this resource"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "not_found"
+            message: "Resource not found"

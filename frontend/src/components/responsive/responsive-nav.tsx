@@ -73,7 +73,7 @@ export function ResponsiveNav({
               {item.icon}
               <span className="hidden xs:inline">{item.label}</span>
               {item.badge && (
-                <span className="ml-1 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
+                <span className="ms-1 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
                   {item.badge}
                 </span>
               )}
@@ -133,10 +133,10 @@ export function ResponsiveNav({
                 href={item.href}
                 onClick={item.onClick}
               >
-                {item.icon && <span className="mr-2">{item.icon}</span>}
+                {item.icon && <span className="me-2">{item.icon}</span>}
                 {item.label}
                 {item.badge && (
-                  <span className="ml-2 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
+                  <span className="ms-2 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
                     {item.badge}
                   </span>
                 )}
@@ -168,7 +168,7 @@ function MobileNavItem({ item, depth = 0, onItemClick }: MobileNavItemProps) {
           'w-full flex items-center justify-between px-3 py-2 rounded-md',
           'text-sm hover:bg-accent hover:text-accent-foreground transition-colors',
           item.priority === 'high' && 'font-semibold',
-          depth > 0 && 'ml-4'
+          depth > 0 && 'ms-4'
         )}
         onClick={() => {
           if (hasChildren) {

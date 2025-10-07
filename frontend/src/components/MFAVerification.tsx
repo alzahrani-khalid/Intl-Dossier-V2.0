@@ -244,7 +244,7 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
               onClick={handleResend}
               className="p-0 h-auto"
             >
-              <RefreshCw className="h-4 w-4 mr-1" />
+              <RefreshCw className="h-4 w-4 me-1" />
               Resend
             </Button>
           )}

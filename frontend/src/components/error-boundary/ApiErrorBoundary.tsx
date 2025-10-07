@@ -126,7 +126,7 @@ function ApiErrorFallback({ error, isRetrying, onRetry, showOfflineOption = true
             disabled={isRetrying}
             className="w-full"
           >
-            <RefreshCw className={`h-4 w-4 mr-2 ${isRetrying ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`h-4 w-4 me-2 ${isRetrying ? 'animate-spin' : ''}`} />
             {isRetrying ? 'Retrying...' : 'Try Again'}
           </Button>
           
@@ -136,14 +136,14 @@ function ApiErrorFallback({ error, isRetrying, onRetry, showOfflineOption = true
               variant="outline"
               className="w-full"
             >
-              <Wifi className="h-4 w-4 mr-2" />
+              <Wifi className="h-4 w-4 me-2" />
               Queue for Later
             </Button>
           )}
         </div>
 
         {process.env.NODE_ENV === 'development' && error && (
-          <details className="mt-4 text-left">
+          <details className="mt-4 text-start">
             <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
               Error Details
             </summary>

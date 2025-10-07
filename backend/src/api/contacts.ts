@@ -56,7 +56,7 @@ router.get('/', validate({ query: contactSearchSchema }), async (req, res, next)
 
 router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const contact = await contactService.findById(req.params.id);
+    const contact = await contactService.findById(req.params.id!);
     if (!contact) {
       return res.status(404).json({ error: 'Contact not found' });
     }
@@ -70,7 +70,7 @@ router.post('/', requirePermission(['manage_contacts']),
   validate({ body: createContactSchema }),
   async (req, res, next) => {
     try {
-      const contact = await contactService.create(req.body, req.user?.id);
+      const contact = await contactService.create(req.body, req.user?.id!);
       res.status(201).json(contact);
     } catch (error) {
       next(error);
@@ -82,7 +82,7 @@ router.put('/:id', requirePermission(['manage_contacts']),
   validate({ params: idParamSchema, body: updateContactSchema }),
   async (req, res, next) => {
     try {
-      const contact = await contactService.update(req.params.id, req.body, req.user?.id);
+      const contact = await contactService.update(req.params.id!, req.body, req.user?.id!);
       res.json(contact);
     } catch (error) {
       next(error);
@@ -94,7 +94,7 @@ router.delete('/:id', requirePermission(['manage_contacts']),
   validate({ params: idParamSchema }),
   async (req, res, next) => {
     try {
-      await contactService.delete(req.params.id, req.user?.id);
+      await contactService.delete(req.params.id!, req.user?.id!);
       res.json({ success: true });
     } catch (error) {
       next(error);
@@ -104,7 +104,7 @@ router.delete('/:id', requirePermission(['manage_contacts']),
 
 // Add interaction to contact
 router.post('/:id/interactions', requirePermission(['manage_contacts']),
-  validate({ 
+  validate({
     params: idParamSchema,
     body: z.object({
       type: z.enum(['email', 'meeting', 'call', 'event']),
@@ -115,9 +115,9 @@ router.post('/:id/interactions', requirePermission(['manage_contacts']),
   async (req, res, next) => {
     try {
       const contact = await contactService.addInteraction(
-        req.params.id,
+        req.params.id!,
         req.body,
-        req.user?.id
+        req.user?.id!
       );
       res.json(contact);
     } catch (error) {
@@ -127,11 +127,11 @@ router.post('/:id/interactions', requirePermission(['manage_contacts']),
 );
 
 // Get contacts by organization
-router.get('/organization/:organizationId', 
+router.get('/organization/:organizationId',
   validate({ params: z.object({ organizationId: z.string().uuid() }) }),
   async (req, res, next) => {
     try {
-      const contacts = await contactService.findByOrganization(req.params.organizationId);
+      const contacts = await contactService.findByOrganization(req.params.organizationId!);
       res.json({ data: contacts });
     } catch (error) {
       next(error);
@@ -144,7 +144,7 @@ router.get('/country/:countryId',
   validate({ params: z.object({ countryId: z.string().uuid() }) }),
   async (req, res, next) => {
     try {
-      const contacts = await contactService.findByCountry(req.params.countryId);
+      const contacts = await contactService.findByCountry(req.params.countryId!);
       res.json({ data: contacts });
     } catch (error) {
       next(error);
@@ -157,7 +157,7 @@ router.get('/high-influence/:threshold',
   validate({ params: z.object({ threshold: z.string().transform(val => parseInt(val)) }) }),
   async (req, res, next) => {
     try {
-      const threshold = parseInt(req.params.threshold) || 70;
+      const threshold = parseInt(req.params.threshold!) || 70;
       const contacts = await contactService.getHighInfluenceContacts(threshold);
       res.json({ data: contacts });
     } catch (error) {

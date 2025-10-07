@@ -48,8 +48,8 @@ router.post('/', validate({ body: createCommitmentSchema }), async (req, res, ne
 
 router.patch('/:id/status', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { status, notes } = req.body;
-    const commitment = await commitmentService.updateStatus(req.params.id, status);
+    const { status } = req.body;
+    const commitment = await commitmentService.updateStatus(req.params.id!, status);
     res.json(commitment);
   } catch (error) {
     next(error);

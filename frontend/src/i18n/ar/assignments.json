@@ -1,0 +1,366 @@
+{
+  "autoAssign": {
+    "queued": {
+      "title": "عنصر العمل في قائمة الانتظار",
+      "description": "الموضع {{position}} في قائمة الانتظار. {{reason}}"
+    },
+    "success": {
+      "title": "تم التعيين بنجاح",
+      "description": "تم تعيين {{workItemId}}"
+    },
+    "error": {
+      "title": "فشل التعيين"
+    }
+  },
+  "sla": {
+    "label": "اتفاقية مستوى الخدمة",
+    "deadline": "الموعد النهائي",
+    "target": "الهدف",
+    "ariaLabel": "حالة اتفاقية مستوى الخدمة: {{status}}",
+    "ariaWarning": "التعيين في خطر - {{remaining}} متبقي",
+    "ariaBreach": "تم تجاوز الموعد النهائي لاتفاقية مستوى الخدمة",
+    "progressLabel": "انقضى {{percent}}٪ من وقت اتفاقية مستوى الخدمة",
+    "remainingDays": "{{days}} يوم {{hours}} ساعة متبقية",
+    "remainingHours": "{{hours}} ساعة {{minutes}} دقيقة متبقية",
+    "remainingMinutes": "{{minutes}} دقيقة {{seconds}} ثانية متبقية",
+    "overdueByDays": "متأخر {{days}} يوم {{hours}} ساعة",
+    "overdueByHours": "متأخر {{hours}} ساعة {{minutes}} دقيقة",
+    "overdueByMinutes": "متأخر {{minutes}} دقيقة"
+  },
+  "escalate": {
+    "success": {
+      "title": "تم تصعيد التعيين",
+      "description": "تم تصعيد التعيين {{assignmentId}} إلى المشرف"
+    },
+    "error": {
+      "title": "فشل التصعيد"
+    }
+  },
+  "availability": {
+    "title": "حالة التوفر",
+    "description": "تحديث حالة توفرك وإدارة التعيينات",
+    "currentStatus": "الحالة الحالية",
+    "newStatus": "الحالة الجديدة",
+    "unavailableUntil": "غير متاح حتى",
+    "selectDate": "اختر تاريخًا",
+    "reason": "السبب",
+    "reasonPlaceholder": "يرجى تقديم سبب لتغيير حالتك...",
+    "updateStatus": "تحديث الحالة",
+    "statuses": {
+      "available": "متاح",
+      "on_leave": "في إجازة",
+      "unavailable": "غير متاح"
+    },
+    "reassignmentSummary": "ملخص إعادة تعيين التعيينات",
+    "reassignedCount": "تمت إعادة التعيين",
+    "flaggedCount": "تم وضع علامة للمراجعة",
+    "reassignmentNote": "تمت إعادة تعيين العناصر ذات الأولوية العاجلة/العالية تلقائيًا. تم وضع علامة على العناصر ذات الأولوية العادية/المنخفضة لمراجعة المشرف.",
+    "updated": {
+      "title": "تم تحديث التوفر",
+      "description": "تم إعادة تعيين {{reassignedCount}} عنصر، {{flaggedCount}} تم وضع علامة للمراجعة"
+    },
+    "returnedToWork": "تم تحديث الحالة إلى متاح",
+    "flagged": {
+      "title": "العناصر تحتاج للمراجعة",
+      "description": "{{count}} عنصر بأولوية عادية/منخفضة تم وضع علامة لمراجعة المشرف"
+    },
+    "error": {
+      "title": "فشل التحديث"
+    },
+    "validation": {
+      "dateRequired": "يرجى اختيار تاريخ عدم التوفر",
+      "reasonRequired": "يرجى تقديم سبب لتغيير حالتك"
+    }
+  },
+  "capacity": {
+    "title": "السعة",
+    "staffDescription": "سعة التعيينات الحالية لهذا الموظف",
+    "unitDescription": "سعة التعيينات الحالية لهذه الوحدة التنظيمية",
+    "currentAssignments": "التعيينات الحالية",
+    "utilization": "نسبة الاستخدام",
+    "available": "متاح",
+    "limit": "الحد الأقصى",
+    "status": {
+      "available": "متاح",
+      "warning": "قريب من السعة",
+      "nearCapacity": "قريب من السعة",
+      "atCapacity": "عند السعة"
+    },
+    "error": {
+      "title": "فشل تحميل السعة",
+      "noIdProvided": "يجب توفير معرّف الموظف أو معرّف الوحدة"
+    }
+  },
+  "queue": {
+    "filterPriority": "تصفية حسب الأولوية",
+    "allPriorities": "جميع الأولويات",
+    "filterWorkItemType": "تصفية حسب النوع",
+    "allTypes": "جميع الأنواع",
+    "pageSize": "عدد العناصر في الصفحة",
+    "totalItems": "إجمالي العناصر",
+    "showing": "عرض",
+    "loading": "جاري تحميل قائمة الانتظار...",
+    "error": "خطأ في تحميل قائمة الانتظار",
+    "emptyQueue": "لا توجد عناصر في قائمة الانتظار",
+    "queueSummary": "{{count}} عنصر في قائمة الانتظار",
+    "noItemsFound": "لم يتم العثور على عناصر مطابقة للفلاتر",
+    "position": "الموقع",
+    "workItemId": "معرّف عنصر العمل",
+    "workItemType": "النوع",
+    "priority": "الأولوية",
+    "requiredSkills": "المهارات المطلوبة",
+    "createdAt": "وقت الإضافة",
+    "page": "الصفحة"
+  },
+  "manualOverride": {
+    "title": "تجاوز التعيين اليدوي",
+    "description": "تعيين {{workItemId}} يدويًا لموظف محدد",
+    "selectAssignee": "اختر الموظف",
+    "selectStaffPlaceholder": "اختر أحد الموظفين",
+    "noStaffAvailable": "لا يوجد موظفون متاحون",
+    "overrideReason": "سبب التجاوز",
+    "reasonPlaceholder": "اشرح سبب التعيين اليدوي (10 أحرف على الأقل)...",
+    "reasonHint": "الحد الأدنى 10 أحرف",
+    "submit": "تعيين",
+    "success": {
+      "title": "تم التجاوز",
+      "description": "تم تعيين {{workItemId}} يدويًا إلى {{assigneeName}}"
+    },
+    "error": {
+      "title": "فشل التجاوز"
+    },
+    "validation": {
+      "reasonTooShort": "يجب أن يكون سبب التجاوز 10 أحرف على الأقل",
+      "selectAssignee": "يرجى اختيار موظف"
+    }
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "assigned": "تم التعيين",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "cancelled": "ملغى"
+  },
+  "priority": {
+    "urgent": "عاجل",
+    "high": "عالي",
+    "normal": "عادي",
+    "low": "منخفض"
+  },
+  "slaStatus": {
+    "ok": "في المسار الصحيح",
+    "warning": "في خطر",
+    "breached": "تم تجاوز الموعد"
+  },
+  "escalation_dashboard": {
+    "title": "لوحة معلومات التصعيد",
+    "description": "مراقبة وتحليل اتجاهات وأنماط التصعيد",
+    "error_loading": "فشل تحميل بيانات التصعيد. يرجى المحاولة مرة أخرى.",
+    "select_date_range": "اختر نطاق التاريخ",
+    "group_by_day": "حسب اليوم",
+    "group_by_week": "حسب الأسبوع",
+    "total_escalations": "إجمالي التصعيدات",
+    "avg_per_day": "المتوسط في اليوم",
+    "most_common_reason": "السبب الأكثر شيوعًا",
+    "affected_assignments": "التعيينات المتأثرة",
+    "from_previous_period": "من الفترة السابقة",
+    "timeline": "الجدول الزمني",
+    "by_unit": "حسب الوحدة",
+    "by_staff": "حسب الموظف",
+    "by_work_type": "حسب نوع العمل",
+    "escalation_timeline": "الجدول الزمني للتصعيد",
+    "escalation_timeline_description": "عدد التصعيدات اليومية أو الأسبوعية خلال الفترة المحددة",
+    "by_unit_description": "التصعيدات مجمعة حسب الوحدة التنظيمية",
+    "by_staff_description": "أعلى الموظفين حسب عدد ومعدل التصعيد",
+    "by_work_type_description": "التصعيدات مجمعة حسب نوع عنصر العمل",
+    "escalations": "تصعيدات",
+    "assignments": "تعيينات",
+    "reason": {
+      "sla_breach": "خرق اتفاقية مستوى الخدمة",
+      "capacity_exceeded": "تجاوز السعة",
+      "skill_mismatch": "عدم تطابق المهارات",
+      "manual_escalation": "تصعيد يدوي",
+      "none": "لا توجد تصعيدات"
+    }
+  },
+  "sla_breached": "تجاوز مدة الاتفاقية",
+  "detail": {
+    "title": "التعيين رقم {{id}}",
+    "breadcrumb": "التعيين رقم {{id}}",
+    "loading": "جارٍ تحميل تفاصيل التعيين...",
+    "metadata": {
+      "assigned_date": "تاريخ التعيين",
+      "assignee": "المعيّن إليه",
+      "priority": "الأولوية",
+      "status": "الحالة",
+      "work_item_id": "معرف عنصر العمل"
+    },
+    "sla": {
+      "title": "تتبع اتفاقية مستوى الخدمة",
+      "deadline": "الموعد النهائي",
+      "time_remaining": "الوقت المتبقي",
+      "health_status": "حالة الصحة",
+      "safe": "آمن",
+      "warning": "تحذير",
+      "breached": "تم التجاوز",
+      "percentage_elapsed": "انقضى {{percent}}٪"
+    },
+    "work_item": {
+      "title": "معاينة عنصر العمل",
+      "type": "النوع",
+      "preview": "معاينة",
+      "required_skills": "المهارات المطلوبة",
+      "view_full": "عرض {{type}} كاملاً"
+    },
+    "engagement": {
+      "context": "سياق المشاركة",
+      "title": "المشاركة",
+      "type": "النوع",
+      "date_range": "نطاق التاريخ",
+      "progress": "التقدم",
+      "completed": "{{completed}} من {{total}} مهام مكتملة",
+      "view_full": "عرض المشاركة كاملة",
+      "show_kanban": "عرض لوحة كانبان"
+    },
+    "keyboard_shortcuts": {
+      "title": "اختصارات لوحة المفاتيح",
+      "escalate": "E - تصعيد التعيين",
+      "comment": "C - التركيز على إدخال التعليق",
+      "kanban": "K - فتح لوحة كانبان"
+    }
+  },
+  "comments": {
+    "title": "التعليقات",
+    "add_comment": "إضافة تعليق",
+    "placeholder": "أضف تعليقًا... استخدم @اسم_المستخدم للإشارة إلى شخص ما",
+    "submit": "نشر التعليق",
+    "empty": "لا توجد تعليقات بعد",
+    "character_count": "{{current}}/{{max}} حرف",
+    "mentioned_you": "أشار إليك",
+    "reactions": "التفاعلات",
+    "add_reaction": "إضافة تفاعل"
+  },
+  "checklist": {
+    "title": "قائمة المراجعة",
+    "progress": "التقدم",
+    "completed": "{{completed}} من {{total}} مكتملة",
+    "add_item": "إضافة عنصر",
+    "import_template": "استيراد قالب",
+    "empty": "لا توجد عناصر في قائمة المراجعة بعد",
+    "completed_by": "أكملها {{name}}",
+    "completed_at": "أكملت في {{date}}",
+    "template_selector": {
+      "title": "اختر قالب قائمة المراجعة",
+      "description": "اختر قالبًا لاستيراد العناصر",
+      "preview": "معاينة العناصر",
+      "import": "استيراد القالب",
+      "cancel": "إلغاء"
+    }
+  },
+  "observers": {
+    "title": "المراقبون",
+    "empty": "لا يوجد مراقبون بعد",
+    "added": "أضيف في {{date}}",
+    "role": {
+      "supervisor": "مشرف",
+      "other": "مراقب"
+    },
+    "actions": {
+      "accept": "قبول التعيين",
+      "reassign": "إعادة تعيين",
+      "continue_observing": "متابعة المراقبة"
+    }
+  },
+  "timeline": {
+    "title": "الجدول الزمني",
+    "empty": "لا توجد أحداث بعد",
+    "event_types": {
+      "created": "تم إنشاء التعيين",
+      "status_changed": "تم تغيير الحالة",
+      "escalated": "تم تصعيد التعيين",
+      "completed": "تم إكمال التعيين",
+      "commented": "تمت إضافة تعليق",
+      "checklist_updated": "تم تحديث قائمة المراجعة",
+      "observer_added": "تمت إضافة مراقب",
+      "reassigned": "تمت إعادة تعيين التعيين",
+      "workflow_stage_changed": "تم تغيير مرحلة سير العمل"
+    },
+    "aria_label": "الجدول الزمني للتعيين مع {{count}} أحداث"
+  },
+  "related_tasks": {
+    "title": "المهام ذات الصلة",
+    "empty": "لا توجد مهام ذات صلة",
+    "sibling_assignments": "التعيينات الشقيقة",
+    "same_engagement": "نفس المشاركة",
+    "same_dossier": "نفس الملف"
+  },
+  "kanban": {
+    "title": "لوحة كانبان - {{engagement}}",
+    "close": "إغلاق",
+    "loading": "جارٍ تحميل لوحة كانبان...",
+    "error_loading": "فشل تحميل لوحة كانبان",
+    "no_assignments": "لا توجد تعيينات في هذه المرحلة",
+    "sort_by": "الترتيب حسب",
+    "sort_created": "تاريخ الإنشاء",
+    "sort_sla": "الموعد النهائي لاتفاقية مستوى الخدمة",
+    "sort_priority": "الأولوية",
+    "stage_transition_error": "فشل نقل التعيين",
+    "stage_todo": "للقيام به",
+    "stage_in_progress": "قيد التنفيذ",
+    "stage_review": "المراجعة",
+    "stage_done": "منجز",
+    "stage_cancelled": "ملغى",
+    "sla_overdue": "متأخر",
+    "sla_urgent": "عاجل",
+    "sla_warning": "قريب الموعد",
+    "columns": {
+      "todo": "للقيام به",
+      "in_progress": "قيد التنفيذ",
+      "review": "المراجعة",
+      "done": "منجز"
+    },
+    "column_count": "{{count}} مهام",
+    "current_assignment": "التعيين الحالي",
+    "drag_to_move": "اسحب لتغيير المرحلة",
+    "click_to_open": "انقر للفتح",
+    "keyboard_navigation": "استخدم Tab ومفاتيح الأسهم للتنقل"
+  },
+  "actions": {
+    "escalate": "تصعيد",
+    "complete": "وضع علامة مكتمل",
+    "view_details": "عرض التفاصيل",
+    "add_observer": "إضافة مراقب"
+  },
+  "errors": {
+    "load_failed": "فشل تحميل تفاصيل التعيين. يرجى المحاولة مرة أخرى.",
+    "not_found": "التعيين غير موجود. جارٍ إعادة التوجيه...",
+    "unauthorized": "ليس لديك إذن لعرض هذا التعيين. جارٍ إعادة التوجيه...",
+    "unexpected": "حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.",
+    "comment_failed": "فشل نشر التعليق",
+    "checklist_failed": "فشل تحديث قائمة المراجعة",
+    "escalate_failed": "فشل تصعيد التعيين",
+    "complete_failed": "فشل إكمال التعيين",
+    "network_error": "خطأ في الشبكة. يرجى التحقق من اتصالك."
+  },
+  "dialogs": {
+    "escalate": {
+      "title": "تصعيد التعيين",
+      "description": "قم بتصعيد هذا التعيين إلى المشرف الخاص بك للمراجعة",
+      "reason": "سبب التصعيد",
+      "reason_placeholder": "اشرح لماذا يحتاج هذا التعيين إلى التصعيد...",
+      "confirm": "تصعيد",
+      "cancel": "إلغاء",
+      "supervisor_auto_selected": "سيتم إخطار مشرفك",
+      "already_escalated": "تم تصعيد هذا التعيين بالفعل"
+    },
+    "complete": {
+      "title": "إكمال التعيين",
+      "description": "وضع علامة على هذا التعيين كمكتمل",
+      "notes": "ملاحظات الإكمال",
+      "notes_placeholder": "أضف أي ملاحظات أو تعليقات نهائية...",
+      "confirm": "إكمال",
+      "cancel": "إلغاء",
+      "warning": "لا يمكن التراجع عن هذا الإجراء"
+    }
+  }
+}

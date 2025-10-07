@@ -1,0 +1,297 @@
+openapi: 3.0.3
+info:
+  title: Semantic Search API
+  description: Vector-based semantic search using pgvector for discovering related content
+  version: 1.0.0
+
+paths:
+  /api/search/semantic:
+    post:
+      summary: Execute semantic search
+      description: Search using vector embeddings to find semantically similar content, even without exact keyword matches
+      operationId: searchSemantic
+      tags:
+        - search
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+                - lang
+              properties:
+                query:
+                  type: string
+                  minLength: 3
+                  maxLength: 500
+                  description: Semantic search query
+                  example: "sustainable development policies"
+                lang:
+                  type: string
+                  enum: [ar, en]
+                  description: Query language
+                  example: "en"
+                entityTypes:
+                  type: array
+                  items:
+                    type: string
+                    enum: [document, position, brief]
+                  description: Filter by entity types (semantic search only supports documents, positions, and briefs)
+                  example: ["document", "position"]
+                similarityThreshold:
+                  type: number
+                  format: float
+                  minimum: 0.5
+                  maximum: 1.0
+                  default: 0.7
+                  description: Minimum cosine similarity score (0.7 recommended)
+                  example: 0.7
+                limit:
+                  type: integer
+                  minimum: 1
+                  maximum: 50
+                  default: 20
+                  description: Maximum results to return
+                offset:
+                  type: integer
+                  minimum: 0
+                  default: 0
+                  description: Pagination offset
+      responses:
+        '200':
+          description: Semantic search results
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - results
+                  - totalCount
+                  - executionTime
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SemanticResult'
+                  totalCount:
+                    type: integer
+                    description: Total number of results above threshold
+                    example: 18
+                  executionTime:
+                    type: integer
+                    description: Query execution time in milliseconds
+                    example: 342
+                  queryEmbedding:
+                    type: array
+                    items:
+                      type: number
+                    description: Generated query embedding vector (for debugging)
+                    minItems: 1536
+                    maxItems: 1536
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/TooManyRequests'
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          description: Vector service unavailable (embedding generation failed)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "VECTOR_SERVICE_UNAVAILABLE"
+                  message:
+                    type: object
+                    properties:
+                      ar:
+                        type: string
+                        example: "خدمة المتجهات غير متاحة"
+                      en:
+                        type: string
+                        example: "Vector service unavailable"
+                  fallbackAvailable:
+                    type: boolean
+                    description: Whether user can retry with exact search
+                    example: true
+
+components:
+  schemas:
+    SemanticResult:
+      type: object
+      required:
+        - entityId
+        - entityType
+        - title
+        - snippet
+        - similarity
+      properties:
+        entityId:
+          type: string
+          format: uuid
+          description: Entity unique identifier
+          example: "b4cc290f-9bf0-4999-0023-bdf5f7654003"
+        entityType:
+          type: string
+          enum: [document, position, brief]
+          description: Type of entity
+          example: "position"
+        title:
+          type: object
+          required: [ar, en]
+          properties:
+            ar:
+              type: string
+              description: Arabic title
+              example: "السياسات البيئية"
+            en:
+              type: string
+              description: English title
+              example: "Environmental Policies"
+        snippet:
+          type: object
+          required: [ar, en]
+          properties:
+            ar:
+              type: string
+              description: Arabic content snippet
+              example: "... السياسات البيئية المستدامة ..."
+            en:
+              type: string
+              description: English content snippet
+              example: "... sustainable environmental policies ..."
+        similarity:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+          description: Cosine similarity score (1.0 = identical meaning)
+          example: 0.847
+        matchExplanation:
+          type: object
+          description: Why this result matched semantically
+          properties:
+            ar:
+              type: string
+              example: "يتناول مواضيع متشابهة: التنمية المستدامة والسياسات البيئية"
+            en:
+              type: string
+              example: "Discusses similar topics: sustainable development and environmental policies"
+        metadata:
+          type: object
+          additionalProperties: true
+          description: Entity-specific metadata
+          example:
+            documentType: "policy"
+            approvalStatus: "published"
+            tags: ["environment", "sustainability"]
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+          example: "2025-09-15T10:20:00Z"
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [error, message]
+            properties:
+              error:
+                type: string
+                example: "INVALID_SIMILARITY_THRESHOLD"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "عتبة التشابه غير صحيحة"
+                  en:
+                    type: string
+                    example: "Invalid similarity threshold"
+              details:
+                type: string
+                example: "Similarity threshold must be between 0.5 and 1.0"
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "UNAUTHORIZED"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "مطلوب مصادقة"
+                  en:
+                    type: string
+                    example: "Authentication required"
+
+    TooManyRequests:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "RATE_LIMIT_EXCEEDED"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "تم تجاوز حد المعدل"
+                  en:
+                    type: string
+                    example: "Rate limit exceeded"
+              retryAfter:
+                type: integer
+                description: Seconds until retry allowed
+                example: 60
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "INTERNAL_ERROR"
+              message:
+                type: object
+                properties:
+                  ar:
+                    type: string
+                    example: "خطأ داخلي في الخادم"
+                  en:
+                    type: string
+                    example: "Internal server error"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []

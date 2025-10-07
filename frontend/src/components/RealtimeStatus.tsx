@@ -1,12 +1,19 @@
 import { useTranslation } from 'react-i18next'
 import { useRealtimeStore } from '../services/realtime'
+import { useAuth } from '../contexts/auth.context'
 import { Badge } from './ui/badge'
 import { Button } from './ui/button'
 import { Wifi, WifiOff, RefreshCw, AlertCircle } from 'lucide-react'
 
 export function RealtimeStatus() {
   const { t } = useTranslation()
+  const auth = useAuth()
   const { connectionStatus, isConnected, reconnect, lastError } = useRealtimeStore()
+
+  // Don't show on login page or when not authenticated
+  if (!auth?.session) {
+    return null
+  }
 
   const getStatusIcon = () => {
     switch (connectionStatus) {
@@ -26,15 +33,15 @@ export function RealtimeStatus() {
   const getStatusText = () => {
     switch (connectionStatus) {
       case 'connected':
-        return t('realtime.connected')
+        return t('realtime.connected', 'Connected')
       case 'disconnected':
-        return t('realtime.disconnected')
+        return t('realtime.disconnected', 'Disconnected')
       case 'reconnecting':
-        return t('realtime.reconnecting')
+        return t('realtime.reconnecting', 'Reconnecting...')
       case 'error':
-        return t('realtime.connectionLost')
+        return t('realtime.connectionLost', 'Connection Lost')
       default:
-        return t('realtime.disconnected')
+        return t('realtime.disconnected', 'Disconnected')
     }
   }
 
@@ -53,22 +60,18 @@ export function RealtimeStatus() {
     }
   }
 
-  if (isConnected && !lastError) {
-    return (
-      <Badge variant={getStatusVariant()} className="gap-1">
-        {getStatusIcon()}
-        <span className="hidden sm:inline">{getStatusText()}</span>
-      </Badge>
-    )
+  // Only show if not connected or there's an error
+  if (connectionStatus === 'connected') {
+    return null
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-3 border border-gray-200 dark:border-gray-700">
       <Badge variant={getStatusVariant()} className="gap-1">
         {getStatusIcon()}
-        <span className="hidden sm:inline">{getStatusText()}</span>
+        <span>{getStatusText()}</span>
       </Badge>
-      
+
       {connectionStatus === 'error' && (
         <Button
           size="sm"
@@ -76,7 +79,7 @@ export function RealtimeStatus() {
           onClick={reconnect}
           className="h-6 px-2 text-xs"
         >
-          <RefreshCw className="h-3 w-3 mr-1" />
+          <RefreshCw className="h-3 w-3 me-1" />
           Retry
         </Button>
       )}

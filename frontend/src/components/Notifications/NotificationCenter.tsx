@@ -139,7 +139,7 @@ export function NotificationCenter({
           <div className="flex-1 w-0 p-4">
             <div className="flex items-start">
               <div className="flex-shrink-0 pt-0.5">{icon}</div>
-              <div className="ml-3 flex-1">
+              <div className="ms-3 flex-1">
                 <p className="text-sm font-medium text-gray-900">{notification.title}</p>
                 <p className="mt-1 text-sm text-gray-500">{notification.message}</p>
               </div>
@@ -321,7 +321,7 @@ export function NotificationCenter({
                       <div className="flex-shrink-0">
                         {getNotificationIcon(notification.type)}
                       </div>
-                      <div className="ml-3 flex-1">
+                      <div className="ms-3 flex-1">
                         <p className="text-sm font-medium text-gray-900">
                           {notification.title}
                         </p>
@@ -330,7 +330,7 @@ export function NotificationCenter({
                         </p>
                         <div className="mt-2 flex items-center justify-between">
                           <span className="text-xs text-gray-500">
-                            <Clock className="inline h-3 w-3 mr-1" />
+                            <Clock className="inline h-3 w-3 me-1" />
                             {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
                           </span>
                           {notification.actionUrl && (
@@ -348,7 +348,7 @@ export function NotificationCenter({
                           e.stopPropagation()
                           deleteNotification(notification.id)
                         }}
-                        className="ml-2 text-gray-400 hover:text-gray-600"
+                        className="ms-2 text-gray-400 hover:text-gray-600"
                       >
                         <X className="h-4 w-4" />
                       </button>

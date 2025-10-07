@@ -1,0 +1,380 @@
+openapi: 3.0.3
+info:
+  title: Global Search API
+  description: Main search endpoint for querying across all entity types
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier Team
+
+servers:
+  - url: https://api.gastat.dossier.local/v1
+    description: Local development
+  - url: https://api.gastat.dossier.gov.sa/v1
+    description: Production
+
+paths:
+  /search:
+    get:
+      summary: Search across all entities
+      description: |
+        Performs a global search across multiple entity types with support for:
+        - Full-text keyword search (English and Arabic)
+        - Entity type filtering
+        - Boolean operators (AND, OR, NOT)
+        - Quoted phrases for exact matching
+        - Pagination
+        - Result ranking by relevance
+
+        Performance SLA: p95 < 500ms
+      operationId: globalSearch
+      tags:
+        - Search
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Search query (max 500 characters)
+          schema:
+            type: string
+            maxLength: 500
+            minLength: 1
+          example: "climate policy AND (treaty OR agreement)"
+
+        - name: type
+          in: query
+          required: false
+          description: Filter by entity type(s). Comma-separated for multiple types.
+          schema:
+            type: string
+            enum:
+              - all
+              - dossiers
+              - people
+              - engagements
+              - positions
+              - mous
+              - documents
+            default: all
+          example: "dossiers,positions"
+
+        - name: lang
+          in: query
+          required: false
+          description: Preferred result language for snippets
+          schema:
+            type: string
+            enum: [en, ar, both]
+            default: both
+
+        - name: limit
+          in: query
+          required: false
+          description: Number of results per page
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+
+        - name: offset
+          in: query
+          required: false
+          description: Pagination offset
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+
+        - name: include_archived
+          in: query
+          required: false
+          description: Include archived entities in results
+          schema:
+            type: boolean
+            default: true
+
+      responses:
+        '200':
+          description: Search results returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - results
+                  - counts
+                  - query
+                  - took_ms
+                properties:
+                  results:
+                    type: array
+                    description: Array of search results from all entity types
+                    items:
+                      $ref: '#/components/schemas/SearchResult'
+
+                  counts:
+                    type: object
+                    description: Result counts by entity type
+                    properties:
+                      total:
+                        type: integer
+                        example: 127
+                      dossiers:
+                        type: integer
+                        example: 45
+                      people:
+                        type: integer
+                        example: 23
+                      engagements:
+                        type: integer
+                        example: 18
+                      positions:
+                        type: integer
+                        example: 29
+                      mous:
+                        type: integer
+                        example: 7
+                      documents:
+                        type: integer
+                        example: 5
+                      restricted:
+                        type: integer
+                        description: Number of results user lacks permission to view
+                        example: 3
+
+                  query:
+                    type: object
+                    description: Parsed query information
+                    properties:
+                      original:
+                        type: string
+                        example: "climate policy AND treaty"
+                      normalized:
+                        type: string
+                        example: "climate policy and treaty"
+                      language_detected:
+                        type: string
+                        enum: [en, ar, mixed]
+                        example: "en"
+                      has_boolean_operators:
+                        type: boolean
+                        example: true
+
+                  took_ms:
+                    type: integer
+                    description: Query execution time in milliseconds
+                    example: 287
+
+                  warnings:
+                    type: array
+                    description: Non-fatal warnings (e.g., query truncated)
+                    items:
+                      type: string
+                    example: ["Query truncated to 500 characters"]
+
+                  metadata:
+                    type: object
+                    description: Additional metadata
+                    properties:
+                      has_more:
+                        type: boolean
+                        example: true
+                      next_offset:
+                        type: integer
+                        example: 20
+                      restricted_message:
+                        type: string
+                        example: "3 additional results require higher permissions"
+
+              examples:
+                successWithResults:
+                  summary: Successful search with results
+                  value:
+                    results:
+                      - id: "550e8400-e29b-41d4-a716-446655440001"
+                        type: "dossier"
+                        title_en: "Climate Action Partnership"
+                        title_ar: "شراكة العمل المناخي"
+                        snippet_en: "...cooperation on <mark>climate</mark> <mark>policy</mark>..."
+                        snippet_ar: "...التعاون في <mark>سياسة</mark> <mark>المناخ</mark>..."
+                        rank_score: 0.95
+                        updated_at: "2025-10-01T14:30:00Z"
+                        status: "active"
+                        is_archived: false
+                      - id: "550e8400-e29b-41d4-a716-446655440002"
+                        type: "position"
+                        title_en: "Climate Treaty Negotiation Position"
+                        title_ar: "موقف التفاوض على معاهدة المناخ"
+                        snippet_en: "...key talking points for <mark>treaty</mark> negotiations..."
+                        snippet_ar: "...نقاط الحوار الرئيسية لمفاوضات <mark>المعاهدة</mark>..."
+                        rank_score: 0.87
+                        updated_at: "2025-09-28T10:15:00Z"
+                        status: "published"
+                        is_archived: false
+                    counts:
+                      total: 47
+                      dossiers: 18
+                      people: 5
+                      engagements: 12
+                      positions: 9
+                      mous: 2
+                      documents: 1
+                      restricted: 0
+                    query:
+                      original: "climate policy AND treaty"
+                      normalized: "climate policy and treaty"
+                      language_detected: "en"
+                      has_boolean_operators: true
+                    took_ms: 287
+                    warnings: []
+                    metadata:
+                      has_more: true
+                      next_offset: 20
+
+                noResults:
+                  summary: Search with no results
+                  value:
+                    results: []
+                    counts:
+                      total: 0
+                      dossiers: 0
+                      people: 0
+                      engagements: 0
+                      positions: 0
+                      mous: 0
+                      documents: 0
+                      restricted: 0
+                    query:
+                      original: "xyzabc123"
+                      normalized: "xyzabc123"
+                      language_detected: "en"
+                      has_boolean_operators: false
+                    took_ms: 95
+                    warnings: []
+                    metadata:
+                      suggestions: ["Try different keywords", "Check spelling"]
+                      typo_suggestions: []
+
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                emptyQuery:
+                  summary: Empty search query
+                  value:
+                    error: "bad_request"
+                    message: "Search query cannot be empty"
+                    message_ar: "لا يمكن أن يكون استعلام البحث فارغًا"
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "rate_limit_exceeded"
+                message: "Too many search requests. Please try again in 60 seconds."
+                message_ar: "عدد كبير جدًا من طلبات البحث. يرجى المحاولة مرة أخرى خلال 60 ثانية."
+                retry_after: 60
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+  schemas:
+    SearchResult:
+      type: object
+      required:
+        - id
+        - type
+        - title_en
+        - title_ar
+        - rank_score
+        - updated_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Entity UUID
+        type:
+          type: string
+          enum: [dossier, person, engagement, position, mou, document]
+          description: Entity type
+        title_en:
+          type: string
+          description: English title
+        title_ar:
+          type: string
+          description: Arabic title
+        snippet_en:
+          type: string
+          description: English snippet with <mark> tags around matches
+        snippet_ar:
+          type: string
+          description: Arabic snippet with <mark> tags around matches
+        rank_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Relevance score (0.0 - 1.0)
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        status:
+          type: string
+          description: Entity status
+        is_archived:
+          type: boolean
+          description: Whether entity is archived
+        match_type:
+          type: string
+          enum: [exact, semantic, fuzzy]
+          description: Type of match (exact keyword, semantic similarity, fuzzy/typo)
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: English error message
+        message_ar:
+          type: string
+          description: Arabic error message
+        details:
+          type: object
+          description: Additional error details
+        retry_after:
+          type: integer
+          description: Seconds to wait before retrying (for rate limits)

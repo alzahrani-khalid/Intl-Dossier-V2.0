@@ -155,12 +155,12 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
 
         <div className="space-y-3">
           <Button onClick={resetError} className="w-full">
-            <RefreshCw className="h-4 w-4 mr-2" />
+            <RefreshCw className="h-4 w-4 me-2" />
             {t('errorBoundary.refreshPage')}
           </Button>
           
           <Button onClick={handleGoHome} variant="outline" className="w-full">
-            <Home className="h-4 w-4 mr-2" />
+            <Home className="h-4 w-4 me-2" />
             {t('errorBoundary.goHome')}
           </Button>
           
@@ -169,7 +169,7 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
             variant="ghost" 
             className="w-full"
           >
-            <Bug className="h-4 w-4 mr-2" />
+            <Bug className="h-4 w-4 me-2" />
             {t('errorBoundary.reportError')}
           </Button>
         </div>
@@ -185,7 +185,7 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
             </Button>
             
             {showDetails && (
-              <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded text-left text-xs overflow-auto max-h-64">
+              <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded text-start text-xs overflow-auto max-h-64">
                 <div className="font-mono">
                   <div className="font-bold text-red-600 mb-2">Error:</div>
                   <div className="mb-4 text-red-500">{error?.message}</div>

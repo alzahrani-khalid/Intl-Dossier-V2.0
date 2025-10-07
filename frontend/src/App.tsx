@@ -1,6 +1,7 @@
 import { RouterProvider } from '@tanstack/react-router'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+import { Toaster } from 'react-hot-toast'
 import { queryClient } from './lib/queryClient'
 import { router } from './router'
 import { ErrorBoundary } from './components/error-boundary'
@@ -24,13 +25,14 @@ function App() {
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
           <ThemeErrorBoundary fallbackTheme="gastat" fallbackColorMode="light" fallbackLanguage="en">
-            <ThemeProvider defaultTheme="gastat" defaultColorMode="system">
-              <LanguageProvider defaultLanguage="en">
+            <ThemeProvider initialTheme="gastat" initialColorMode="light">
+              <LanguageProvider initialLanguage="en">
                 <RTLWrapper>
                   <AppRouter />
                   <ReactQueryDevtools initialIsOpen={false} />
                   <OfflineIndicator />
                   <RealtimeStatus />
+                  <Toaster position="top-right" />
                 </RTLWrapper>
               </LanguageProvider>
             </ThemeProvider>

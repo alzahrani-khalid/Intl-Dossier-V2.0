@@ -1,0 +1,257 @@
+{
+  "intake": {
+    "title": "Submit Support Request",
+    "subtitle": "Create a new support ticket for your request",
+    "form": {
+      "requestType": {
+        "label": "Request Type",
+        "placeholder": "Select request type",
+        "options": {
+          "engagement": "Engagement Support",
+          "position": "Position Development",
+          "mou_action": "MoU/Action Items",
+          "foresight": "Foresight Request"
+        },
+        "required": "Please select a request type"
+      },
+      "title": {
+        "label": "Title",
+        "placeholder": "Brief summary of your request",
+        "required": "Title is required",
+        "minLength": "Title must be at least 3 characters",
+        "maxLength": "Title must not exceed 200 characters"
+      },
+      "titleAr": {
+        "label": "Title (Arabic)",
+        "placeholder": "موجز طلبك"
+      },
+      "description": {
+        "label": "Description",
+        "placeholder": "Provide detailed information about your request",
+        "required": "Description is required",
+        "minLength": "Description must be at least 10 characters",
+        "maxLength": "Description must not exceed 5000 characters"
+      },
+      "descriptionAr": {
+        "label": "Description (Arabic)",
+        "placeholder": "قدم معلومات مفصلة عن طلبك"
+      },
+      "urgency": {
+        "label": "Urgency Level",
+        "placeholder": "Select urgency level",
+        "options": {
+          "low": "Low - Can wait a few days",
+          "medium": "Medium - Within this week",
+          "high": "High - Today or tomorrow",
+          "critical": "Critical - Urgent action needed"
+        },
+        "required": "Please select urgency level"
+      },
+      "dossier": {
+        "label": "Link to Dossier",
+        "placeholder": "Search for existing dossier",
+        "linkExisting": "Link to Existing Dossier",
+        "proposeNew": "Propose New Dossier",
+        "search": "Search dossiers...",
+        "noResults": "No dossiers found"
+      },
+      "attachments": {
+        "label": "Attachments",
+        "description": "Upload relevant documents (max 25MB per file, 100MB total)",
+        "dropzone": "Drag and drop files here, or click to browse",
+        "maxSize": "Maximum file size: 25MB",
+        "maxTotal": "Maximum total size: 100MB",
+        "supportedFormats": "Supported formats: PDF, DOCX, XLSX, PNG, JPG"
+      }
+    },
+    "slaPreview": {
+      "title": "Expected Response Times",
+      "acknowledgment": "Acknowledgment within",
+      "resolution": "Resolution target",
+      "minutes": "minutes",
+      "hours": "hours",
+      "businessHours": "Business hours only"
+    },
+    "actions": {
+      "submit": "Submit Request",
+      "cancel": "Cancel",
+      "saveDraft": "Save as Draft",
+      "reset": "Reset Form"
+    },
+    "validation": {
+      "requiredField": "This field is required",
+      "invalidFormat": "Invalid format",
+      "fileTooLarge": "File exceeds maximum size",
+      "totalSizeExceeded": "Total file size exceeds 100MB",
+      "unsupportedFileType": "Unsupported file type"
+    },
+    "success": {
+      "title": "Request Submitted Successfully",
+      "message": "Your ticket number is {{ticketNumber}}",
+      "viewTicket": "View Ticket",
+      "createAnother": "Create Another Request"
+    },
+    "error": {
+      "title": "Submission Failed",
+      "message": "Unable to submit your request. Please try again.",
+      "retry": "Retry",
+      "contactSupport": "Contact Support"
+    },
+    "sla": {
+      "acknowledgment": "Acknowledgment",
+      "resolution": "Resolution",
+      "paused": "(Paused)",
+      "target": "Target",
+      "breached_by_hours": "Breached by {{hours}}h {{minutes}}m",
+      "breached_by_minutes": "Breached by {{minutes}}m",
+      "time_remaining_hours": "{{hours}}h {{minutes}}m remaining",
+      "time_remaining_minutes": "{{minutes}}m remaining"
+    },
+    "typeSpecific": {
+      "engagement": {
+        "partnerName": {
+          "label": "Partner Organization",
+          "placeholder": "Enter partner organization name"
+        },
+        "collaborationType": {
+          "label": "Collaboration Type",
+          "options": {
+            "technical": "Technical Cooperation",
+            "data_sharing": "Data Sharing",
+            "capacity_building": "Capacity Building",
+            "other": "Other"
+          }
+        },
+        "expectedDuration": {
+          "label": "Expected Duration",
+          "placeholder": "e.g., 6 months, 1 year"
+        }
+      },
+      "position": {
+        "positionTitle": {
+          "label": "Position Title",
+          "placeholder": "Enter position title"
+        },
+        "department": {
+          "label": "Department",
+          "placeholder": "Select department"
+        },
+        "requiredSkills": {
+          "label": "Required Skills",
+          "placeholder": "List key skills (comma-separated)"
+        }
+      },
+      "mou_action": {
+        "mouReference": {
+          "label": "MoU Reference",
+          "placeholder": "Enter MoU reference number"
+        },
+        "actionType": {
+          "label": "Action Type",
+          "options": {
+            "review": "Review",
+            "amendment": "Amendment",
+            "renewal": "Renewal",
+            "termination": "Termination"
+          }
+        },
+        "deadline": {
+          "label": "Deadline",
+          "placeholder": "Select deadline date"
+        }
+      },
+      "foresight": {
+        "topic": {
+          "label": "Topic",
+          "placeholder": "Enter foresight topic"
+        },
+        "timeHorizon": {
+          "label": "Time Horizon",
+          "options": {
+            "short": "Short-term (1-3 years)",
+            "medium": "Medium-term (3-5 years)",
+            "long": "Long-term (5+ years)"
+          }
+        },
+        "stakeholders": {
+          "label": "Key Stakeholders",
+          "placeholder": "List key stakeholders (comma-separated)"
+        }
+      }
+    },
+    "queue": {
+      "title": "Intake Queue",
+      "subtitle": "Manage and triage incoming support requests",
+      "createTicket": "Create New Ticket",
+      "filters": {
+        "status": "Status",
+        "requestType": "Request Type",
+        "urgency": "Urgency",
+        "search": "Search",
+        "searchPlaceholder": "Search tickets...",
+        "all": "All",
+        "clear": "Clear all filters"
+      },
+      "status": {
+        "submitted": "Submitted",
+        "triaged": "Triaged",
+        "assigned": "Assigned",
+        "in_progress": "In Progress",
+        "converted": "Converted",
+        "closed": "Closed",
+        "merged": "Merged"
+      },
+      "urgency": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      },
+      "priority": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "urgent": "Urgent"
+      },
+      "table": {
+        "ticketNumber": "Ticket #",
+        "title": "Title",
+        "type": "Type",
+        "priority": "Priority",
+        "status": "Status",
+        "sla": "SLA",
+        "created": "Created"
+      },
+      "pagination": {
+        "showing": "Showing",
+        "of": "of",
+        "tickets": "tickets",
+        "page": "Page",
+        "previous": "Previous",
+        "next": "Next"
+      },
+      "noTickets": "No tickets found",
+      "error": "Failed to load tickets. Please try again."
+    },
+    "stepup": {
+      "title": "Security Verification Required",
+      "subtitle": "Re-authenticate to continue",
+      "close": "Close",
+      "default_reason": "This operation requires re-authentication for security purposes: {{operation}}",
+      "totp_label": "Enter your 6-digit verification code",
+      "totp_placeholder": "000000",
+      "verify": "Verify",
+      "verifying": "Verifying...",
+      "cancel": "Cancel",
+      "help_text": "Open your authenticator app to get the code",
+      "attempts_remaining": "{{count}} attempt remaining",
+      "attempts_remaining_plural": "{{count}} attempts remaining",
+      "errors": {
+        "invalid_format": "Please enter a valid 6-digit code",
+        "verification_failed": "Invalid verification code. Please try again.",
+        "max_attempts": "Maximum attempts reached. Please wait before trying again.",
+        "network_error": "Network error. Please check your connection and try again."
+      }
+    }
+  }
+}

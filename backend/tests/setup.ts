@@ -1,6 +1,11 @@
 import { beforeAll, afterAll } from 'vitest';
 import { createServer } from 'http';
 import { AddressInfo } from 'net';
+import { config } from 'dotenv';
+import { resolve } from 'path';
+
+// Load environment variables from root .env file
+config({ path: resolve(__dirname, '../../.env') });
 
 export interface TestServer {
   request: (path: string, options?: RequestInit) => Promise<Response>;

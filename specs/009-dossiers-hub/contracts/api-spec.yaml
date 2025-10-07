@@ -1,0 +1,752 @@
+openapi: 3.0.3
+info:
+  title: Dossiers Hub API
+  description: API for managing diplomatic dossiers with timeline aggregation and brief generation
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier System
+
+servers:
+  - url: https://api.gastat-intl-dossier.local
+    description: Local development
+  - url: https://api.gastat-intl-dossier.sa
+    description: Production
+
+security:
+  - BearerAuth: []
+
+paths:
+  /dossiers:
+    get:
+      summary: List dossiers with filtering
+      operationId: listDossiers
+      tags:
+        - Dossiers
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [country, organization, forum, theme]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, archived]
+        - name: sensitivity
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high]
+        - name: owner_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: tags
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+        - name: search
+          in: query
+          description: Full-text search across names and summaries
+          schema:
+            type: string
+        - name: cursor
+          in: query
+          description: Cursor for pagination (from previous response)
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+      responses:
+        '200':
+          description: List of dossiers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Dossier'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      summary: Create new dossier
+      operationId: createDossier
+      tags:
+        - Dossiers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierCreate'
+      responses:
+        '201':
+          description: Dossier created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /dossiers/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get dossier details
+      operationId: getDossier
+      tags:
+        - Dossiers
+      parameters:
+        - name: include
+          in: query
+          description: Related resources to include
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [stats, owners, contacts, recent_briefs]
+      responses:
+        '200':
+          description: Dossier details
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Dossier'
+                  - type: object
+                    properties:
+                      stats:
+                        $ref: '#/components/schemas/DossierStats'
+                      owners:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/DossierOwner'
+                      contacts:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/KeyContact'
+                      recent_briefs:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/BriefSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Update dossier
+      operationId: updateDossier
+      tags:
+        - Dossiers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierUpdate'
+      responses:
+        '200':
+          description: Dossier updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Version conflict (optimistic lock failure)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error:
+                  code: VERSION_CONFLICT
+                  message_en: "Dossier was modified by another user. Please refresh and try again."
+                  message_ar: "تم تعديل الملف من قبل مستخدم آخر. يرجى التحديث والمحاولة مرة أخرى."
+                  current_version: 5
+
+    delete:
+      summary: Archive dossier
+      operationId: archiveDossier
+      tags:
+        - Dossiers
+      responses:
+        '204':
+          description: Dossier archived
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dossiers/{id}/timeline:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      summary: Get dossier timeline events
+      operationId: getDossierTimeline
+      tags:
+        - Dossiers
+      parameters:
+        - name: event_type
+          in: query
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [engagement, position, mou, commitment, document, intelligence]
+        - name: start_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: end_date
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: cursor
+          in: query
+          description: Cursor for pagination (event_date,event_type,source_id)
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+      responses:
+        '200':
+          description: Timeline events
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TimelineEvent'
+                  pagination:
+                    $ref: '#/components/schemas/CursorPagination'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dossiers/{id}/briefs:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    post:
+      summary: Generate executive brief
+      operationId: generateBrief
+      tags:
+        - Briefs
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                date_range_start:
+                  type: string
+                  format: date-time
+                date_range_end:
+                  type: string
+                  format: date-time
+                sections:
+                  type: array
+                  description: Specific sections to include (optional, defaults to all)
+                  items:
+                    type: string
+                    enum: [summary, recent_activity, commitments, positions, health]
+      responses:
+        '201':
+          description: Brief generated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Brief'
+        '202':
+          description: Brief generation in progress (long-running operation)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum: [processing]
+                  estimated_completion:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          description: AI service unavailable - manual template provided
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    $ref: '#/components/schemas/ErrorDetail'
+                  fallback:
+                    type: object
+                    properties:
+                      template:
+                        $ref: '#/components/schemas/BriefTemplate'
+                      pre_populated_data:
+                        type: object
+                        description: Dossier data to pre-fill template
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Dossier:
+      type: object
+      required:
+        - id
+        - name_en
+        - name_ar
+        - type
+        - status
+        - sensitivity_level
+        - version
+      properties:
+        id:
+          type: string
+          format: uuid
+        name_en:
+          type: string
+          maxLength: 200
+        name_ar:
+          type: string
+          maxLength: 200
+        type:
+          type: string
+          enum: [country, organization, forum, theme]
+        status:
+          type: string
+          enum: [active, inactive, archived]
+        sensitivity_level:
+          type: string
+          enum: [low, medium, high]
+        summary_en:
+          type: string
+          nullable: true
+        summary_ar:
+          type: string
+          nullable: true
+        tags:
+          type: array
+          items:
+            type: string
+            maxLength: 50
+          maxItems: 20
+        review_cadence:
+          type: string
+          description: ISO 8601 duration (e.g., "P90D" for 90 days)
+          nullable: true
+        last_review_date:
+          type: string
+          format: date-time
+          nullable: true
+        version:
+          type: integer
+          description: Optimistic locking version
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        archived:
+          type: boolean
+
+    DossierCreate:
+      type: object
+      required:
+        - name_en
+        - name_ar
+        - type
+      properties:
+        name_en:
+          type: string
+          maxLength: 200
+        name_ar:
+          type: string
+          maxLength: 200
+        type:
+          type: string
+          enum: [country, organization, forum, theme]
+        sensitivity_level:
+          type: string
+          enum: [low, medium, high]
+          default: low
+        summary_en:
+          type: string
+        summary_ar:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        review_cadence:
+          type: string
+          description: ISO 8601 duration
+
+    DossierUpdate:
+      type: object
+      required:
+        - version
+      properties:
+        version:
+          type: integer
+          description: Current version for optimistic locking
+        name_en:
+          type: string
+          maxLength: 200
+        name_ar:
+          type: string
+          maxLength: 200
+        status:
+          type: string
+          enum: [active, inactive, archived]
+        sensitivity_level:
+          type: string
+          enum: [low, medium, high]
+        summary_en:
+          type: string
+        summary_ar:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        review_cadence:
+          type: string
+        last_review_date:
+          type: string
+          format: date-time
+
+    DossierStats:
+      type: object
+      properties:
+        total_engagements:
+          type: integer
+        total_positions:
+          type: integer
+        total_mous:
+          type: integer
+        active_commitments:
+          type: integer
+        overdue_commitments:
+          type: integer
+        total_documents:
+          type: integer
+        recent_activity_count:
+          type: integer
+          description: Events in last 90 days
+        relationship_health_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 100
+          nullable: true
+
+    DossierOwner:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+        user_name:
+          type: string
+        assigned_at:
+          type: string
+          format: date-time
+        role_type:
+          type: string
+          enum: [owner, co-owner, reviewer]
+
+    KeyContact:
+      type: object
+      required:
+        - id
+        - dossier_id
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          maxLength: 200
+        role:
+          type: string
+        organization:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+          maxLength: 50
+        last_interaction_date:
+          type: string
+          format: date-time
+          nullable: true
+        notes:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    TimelineEvent:
+      type: object
+      properties:
+        event_type:
+          type: string
+          enum: [engagement, position, mou, commitment, document, intelligence]
+        source_id:
+          type: string
+        event_date:
+          type: string
+          format: date-time
+        event_title_en:
+          type: string
+        event_title_ar:
+          type: string
+        event_description_en:
+          type: string
+          nullable: true
+        event_description_ar:
+          type: string
+          nullable: true
+        metadata:
+          type: object
+          description: Event-type specific metadata
+
+    Brief:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        content_en:
+          $ref: '#/components/schemas/BriefContent'
+        content_ar:
+          $ref: '#/components/schemas/BriefContent'
+        date_range_start:
+          type: string
+          format: date-time
+          nullable: true
+        date_range_end:
+          type: string
+          format: date-time
+          nullable: true
+        generated_by:
+          type: string
+          enum: [ai, manual]
+        generated_at:
+          type: string
+          format: date-time
+        generated_by_user_id:
+          type: string
+          format: uuid
+          nullable: true
+
+    BriefSummary:
+      type: object
+      description: Brief without full content
+      properties:
+        id:
+          type: string
+          format: uuid
+        generated_at:
+          type: string
+          format: date-time
+        generated_by:
+          type: string
+          enum: [ai, manual]
+        summary_en:
+          type: string
+          description: First 200 chars of summary
+        summary_ar:
+          type: string
+
+    BriefContent:
+      type: object
+      required:
+        - summary
+        - sections
+      properties:
+        summary:
+          type: string
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              title:
+                type: string
+              content:
+                type: string
+
+    BriefTemplate:
+      type: object
+      description: Manual brief template structure
+      properties:
+        sections:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              title_en:
+                type: string
+              title_ar:
+                type: string
+              placeholder_en:
+                type: string
+              placeholder_ar:
+                type: string
+              required:
+                type: boolean
+
+    CursorPagination:
+      type: object
+      properties:
+        next_cursor:
+          type: string
+          nullable: true
+        has_more:
+          type: boolean
+        total_count:
+          type: integer
+          description: Total items (optional, may be expensive to compute)
+
+    Error:
+      type: object
+      properties:
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+        message_en:
+          type: string
+        message_ar:
+          type: string
+        details:
+          type: object
+          additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

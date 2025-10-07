@@ -1,0 +1,361 @@
+{
+  "library": {
+    "title": "Positions Library",
+    "subtitle": "{{count}} positions available",
+    "create_position": "Create Position",
+    "stats": {
+      "total": "Total Positions",
+      "published": "Published",
+      "in_review": "In Review",
+      "drafts": "Drafts"
+    },
+    "search_and_filter": "Search & Filter",
+    "search_placeholder": "Search by title, content, or category...",
+    "search_label": "Search positions",
+    "status_filter": "Filter by status",
+    "type_filter": "Filter by type",
+    "all_statuses": "All Statuses",
+    "all_types": "All Types",
+    "sort_by": "Sort by",
+    "sort": {
+      "updated": "Last Updated",
+      "created": "Recently Created",
+      "title": "Title (A-Z)",
+      "popularity": "Most Popular"
+    },
+    "clear_filters": "Clear Filters",
+    "error_loading": "Failed to load positions",
+    "no_results": "No positions found matching your filters",
+    "no_positions": "No positions available yet"
+  },
+  "editor": {
+    "title": "Position Editor",
+    "toolbar": "Editor toolbar",
+    "bold": "Bold",
+    "italic": "Italic",
+    "heading2": "Heading 2",
+    "heading3": "Heading 3",
+    "bulletList": "Bullet list",
+    "orderedList": "Numbered list",
+    "quote": "Quote",
+    "placeholderEn": "Enter English content here...",
+    "placeholderAr": "أدخل المحتوى العربي هنا...",
+    "englishContent": "English Content",
+    "arabicContent": "Arabic Content",
+    "title": "Title",
+    "titleEnglish": "English title",
+    "titleArabic": "Arabic title",
+    "content": "Content",
+    "contentEnglish": "English content editor",
+    "contentArabic": "Arabic content editor",
+    "save": "Save",
+    "saveError": "Failed to save position. Please try again.",
+    "autoSaveError": "Auto-save failed. Please save manually.",
+    "autoSaving": "Auto-saving...",
+    "lastSaved": "Last saved at {{time}}",
+    "unsavedChanges": "Unsaved changes",
+    "conflictTitle": "Version Conflict Detected",
+    "conflictDescription": "This position has been modified by another user. Your version: {{current}}, Server version: {{server}}. Please reload the page to see the latest version.",
+    "reloadPage": "Reload Page"
+  },
+  "consistency": {
+    "title": "Consistency Check",
+    "score": "Consistency Score",
+    "noConflicts": "No conflicts detected",
+    "noConflictsDescription": "This position is consistent with all other published positions.",
+    "conflictsFound": "Conflicts Found",
+    "conflictsFoundDescription": "This position has conflicts with other positions that need to be reviewed.",
+    "aiServiceStatus": "AI Service",
+    "aiAvailable": "Available",
+    "aiUnavailable": "Unavailable",
+    "checkTrigger": "Check Trigger",
+    "manual": "Manual Check",
+    "automaticOnSubmit": "Automatic on Submit",
+    "checkedAt": "Checked At",
+    "checkedBy": "Checked By",
+    "conflict": {
+      "id": "Conflict ID",
+      "type": "Type",
+      "severity": "Severity",
+      "description": "Description",
+      "suggestedResolution": "Suggested Resolution",
+      "affectedSections": "Affected Sections",
+      "conflictingPosition": "Conflicting Position"
+    },
+    "conflictTypes": {
+      "contradiction": "Contradiction",
+      "ambiguity": "Ambiguity",
+      "overlap": "Overlap"
+    },
+    "severityLevels": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "actions": {
+      "modify": "Modify Position",
+      "accept": "Accept Risk",
+      "escalate": "Escalate to Admin",
+      "viewPosition": "View Conflicting Position",
+      "reconcile": "Reconcile"
+    },
+    "scoreLabels": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor",
+      "critical": "Critical"
+    },
+    "emptyState": {
+      "title": "No Consistency Check Available",
+      "description": "Run a consistency check to identify potential conflicts with other positions."
+    }
+  },
+  "emergencyCorrection": {
+    "title": "Emergency Correction",
+    "description": "Correct a published position after publication. This is a sensitive action requiring admin privileges.",
+    "badge": "Emergency Correction",
+    "restrictedAccess": "Restricted Access",
+    "restrictedAccessMessage": "This feature is only available to system administrators. Please contact an administrator if you need to perform an emergency correction.",
+    "positionToCorrect": "Position to Correct",
+    "positionId": "Position ID",
+    "warning": "Warning: Post-Publication Correction",
+    "warningMessage": "This position will be permanently marked with an \"Emergency Correction\" badge. A new version will be created and all audience groups will be notified of the change.",
+    "badgePreview": "Badge Preview",
+    "badgePreviewMessage": "Will appear on corrected position",
+    "reasonLabel": "Emergency Correction Reason",
+    "reasonPlaceholder": "Explain why this emergency correction is needed (minimum 10 characters)...",
+    "reasonCharacterCount": "characters minimum",
+    "adminPasswordLabel": "Re-enter Admin Password",
+    "adminPasswordPlaceholder": "Enter your admin password to confirm",
+    "adminPasswordHelp": "Admin verification required to perform emergency corrections",
+    "audienceNotifications": "Audience Group Notifications",
+    "audienceNotificationsMessage": "Automatic notifications will be sent to all audience groups associated with this position to inform them of the emergency correction.",
+    "cancel": "Cancel",
+    "confirm": "Confirm Emergency Correction",
+    "submitting": "Correcting...",
+    "success": "Emergency correction applied successfully",
+    "error": "Failed to apply emergency correction",
+    "invalidPassword": "Invalid admin password",
+    "adminRequired": "Admin access required for emergency corrections",
+    "reasonRequired": "Correction reason must be at least 10 characters"
+  },
+  "approval": {
+    "title": "Approval Chain",
+    "stage": "Stage",
+    "noChainConfigured": "No approval chain configured",
+    "stepUpVerified": "Verified",
+    "stepUpVerifiedTooltip": "This approval was verified using step-up authentication",
+    "delegated": "Delegated",
+    "delegatedFrom": "Delegated from {{name}}",
+    "delegatedUntil": "Until {{date}}",
+    "reassigned": "Reassigned",
+    "reassignedBy": "Reassigned by {{name}}",
+    "hasComments": "Comments",
+    "multipleActions": "{{count}} actions",
+    "progress": "Stage {{current}} of {{total}}",
+    "completed": "Completed",
+    "remaining": "Remaining",
+    "actions": {
+      "approve": "Approved",
+      "request_revisions": "Revisions Requested",
+      "delegate": "Delegated",
+      "reassign": "Reassigned"
+    }
+  },
+  "status": {
+    "draft": "Draft",
+    "under_review": "Under Review",
+    "review": "Under Review",
+    "approved": "Approved",
+    "published": "Published",
+    "unpublished": "Unpublished"
+  },
+  "tabs": {
+    "editor": "Editor",
+    "approvals": "Approvals",
+    "versions": "Versions"
+  },
+  "notFound": "Position not found",
+  "submit": "Submit for Review",
+  "publish": "Publish",
+  "attachments": "Attachments",
+  "consistency": "Consistency Check",
+  "approvalChain": "Approval Progress",
+  "versions": {
+    "description": "View version history and compare changes"
+  },
+  "loading": "Loading positions...",
+  "type": {
+    "policy_brief": "Policy Brief",
+    "talking_point": "Talking Point",
+    "statement": "Statement"
+  },
+  "search": {
+    "placeholder": "Search positions...",
+    "label": "Search positions"
+  },
+  "filter": {
+    "status": "Status",
+    "type": "Type",
+    "dateRange": "Date Range",
+    "all": "All",
+    "allTime": "All Time",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "last90Days": "Last 90 Days",
+    "clear": "Clear Filters"
+  },
+  "results": {
+    "count": "Showing {{count}} of {{total}} positions"
+  },
+  "empty": {
+    "noResults": "No positions found matching your filters",
+    "clearFilters": "Clear all filters"
+  },
+  "list": {
+    "label": "Positions list"
+  },
+  "card": {
+    "noContent": "No content available",
+    "attachedTo": "Attached to {{count}} engagement(s)",
+    "view": "View {{title}}",
+    "viewButton": "View",
+    "attach": "Attach {{title}}",
+    "attachButton": "Attach",
+    "detach": "Detach {{title}}",
+    "detachButton": "Detach"
+  },
+  "suggestions": {
+    "title": "AI-Suggested Positions",
+    "description": "Based on engagement context and AI analysis",
+    "loading": "Generating suggestions...",
+    "error": "Failed to load suggestions",
+    "retry": "Retry",
+    "fallbackMode": "AI service unavailable. Showing keyword-based suggestions.",
+    "empty": "No relevant positions found for this engagement",
+    "emptyHint": "Try manually searching for positions",
+    "listLabel": "Suggested positions",
+    "score": "Relevance",
+    "attachLabel": "Attach {{title}}",
+    "attach": "Attach",
+    "rejectLabel": "Reject {{title}}",
+    "reject": "Not relevant",
+    "refresh": "Refresh Suggestions",
+    "relevance": {
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    },
+    "action": {
+      "accepted": "Attached",
+      "rejected": "Rejected",
+      "ignored": "Ignored"
+    }
+  },
+  "attach": {
+    "dialogTrigger": "Add Position",
+    "dialogTitle": "Attach Positions to Engagement",
+    "dialogDescription": "Search and select positions to attach. You can attach up to 100 positions.",
+    "searchPlaceholder": "Search by title, content, or category...",
+    "selected": "{{count}} of {{max}} selected",
+    "clearSelection": "Clear",
+    "maxSelectionsReached": "Maximum of {{max}} positions can be attached",
+    "noResults": "No positions found matching your search",
+    "allAttached": "All positions have been attached",
+    "selectLabel": "Select {{title}}",
+    "previewLabel": "Preview {{title}}",
+    "previewTitle": "Position Preview",
+    "content": "Content",
+    "keyMessages": "Key Messages",
+    "previewEmpty": "Select a position to preview",
+    "selected": "Selected",
+    "selectThis": "Select This Position",
+    "attachSelected": "Attach {{count}} Position(s)",
+    "attaching": "Attaching..."
+  },
+  "briefing": {
+    "title": "Generate Briefing Pack",
+    "description": "Create a PDF briefing pack with {{count}} attached positions",
+    "selectLanguage": "Select Language",
+    "language": {
+      "english": "English (LTR)",
+      "arabic": "Arabic (RTL)"
+    },
+    "estimatedTime": "Estimated generation time: ~{{seconds}} seconds",
+    "generate": "Generate Briefing Pack",
+    "initiating": "Starting generation...",
+    "generating": "Generating briefing pack...",
+    "pleaseWait": "This may take a few moments",
+    "completed": "Briefing pack ready!",
+    "download": "Download PDF",
+    "generateAnother": "Generate Another Pack",
+    "error": "Failed to generate briefing pack",
+    "tryAgain": "Try Again",
+    "noPositions": "Please attach at least one position before generating a briefing pack"
+  },
+  "analytics": {
+    "title": "Position Analytics",
+    "description": "Usage insights and popularity metrics",
+    "error": "Failed to load analytics",
+    "rank": "Popularity Rank",
+    "popularityScore": "Popularity",
+    "views": "Views",
+    "lastViewed": "Last viewed",
+    "attachments": "Attachments",
+    "lastAttached": "Last attached",
+    "briefingPacks": "Briefing Packs",
+    "usageTrend": "Usage Trend",
+    "last7Days": "Last 7 days"
+  },
+  "dossier_tab": {
+    "title": "Attached Positions",
+    "subtitle": "{{count}} positions attached to this dossier",
+    "create_position": "Attach Position",
+    "search_placeholder": "Search positions...",
+    "search_label": "Search positions",
+    "status_filter": "Filter by status",
+    "type_filter": "Filter by type",
+    "all_statuses": "All Statuses",
+    "all_types": "All Types",
+    "clear_filters": "Clear Filters",
+    "error_loading": "Failed to load positions",
+    "no_results": "No positions found matching your filters",
+    "no_positions": "No positions attached to this dossier yet"
+  },
+  "detail": {
+    "not_found": "Position not found",
+    "error_loading": "Failed to load position",
+    "back_to_library": "Back to Positions",
+    "edit": "Edit",
+    "archive": "Archive",
+    "restore": "Restore",
+    "content_title": "Position Content",
+    "content_description": "Full position statement in both languages",
+    "english_version": "English Version",
+    "arabic_version": "النسخة العربية",
+    "related_engagements": "Related Engagements",
+    "related_engagements_description": "Dossiers and engagements using this position",
+    "no_related_engagements": "Not attached to any engagements",
+    "metadata_title": "Metadata",
+    "dossier": "Dossier",
+    "view_dossier": "View Dossier",
+    "no_dossier": "Not linked to a dossier",
+    "created": "Created",
+    "last_updated": "Last Updated",
+    "version": "Version"
+  },
+  "engagement_section": {
+    "title": "Positions",
+    "subtitle": "Attached positions and suggestions",
+    "attached_tab": "Attached",
+    "suggestions_tab": "Suggestions",
+    "briefing_tab": "Briefing",
+    "no_attached": "No positions attached",
+    "attach_position": "Attach Position",
+    "error_loading_attached": "Failed to load attached positions",
+    "error_loading_suggestions": "Failed to load suggestions",
+    "no_positions_for_briefing": "No positions attached yet. Attach positions to generate a briefing pack.",
+    "attach_positions_first": "Attach Positions First"
+  }
+}

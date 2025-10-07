@@ -378,7 +378,7 @@ export function RealtimeActivityFeed({
                       : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
                   )}
                 >
-                  <Icon className="h-3 w-3 mr-1" />
+                  <Icon className="h-3 w-3 me-1" />
                   {type.replace('_', ' ')}
                 </button>
               )

@@ -1,16 +1,44 @@
 import i18n from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import Backend from 'i18next-http-backend'
+
+import enCommon from './en/common.json'
+import arCommon from './ar/common.json'
+import enIntake from './en/intake.json'
+import arIntake from './ar/intake.json'
+import enDossiers from './en/dossiers.json'
+import arDossiers from './ar/dossiers.json'
+import enPositions from './en/positions.json'
+import arPositions from './ar/positions.json'
+import enAssignments from './en/assignments.json'
+import arAssignments from './ar/assignments.json'
+// Force reload
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = typeof supportedLanguages[number]
 
+const resources = {
+  en: {
+    translation: enCommon,
+    intake: enIntake,
+    dossiers: enDossiers,
+    positions: enPositions,
+    assignments: enAssignments,
+  },
+  ar: {
+    translation: arCommon,
+    intake: arIntake,
+    dossiers: arDossiers,
+    positions: arPositions,
+    assignments: arAssignments,
+  },
+}
+
 i18n
-  .use(Backend)
   .use(LanguageDetector)
   .use(initReactI18next)
   .init({
+    resources,
     fallbackLng: 'en',
     debug: false,
     supportedLngs: supportedLanguages,
@@ -22,10 +50,6 @@ i18n
     detection: {
       order: ['localStorage', 'cookie', 'htmlTag', 'navigator'],
       caches: ['localStorage', 'cookie'],
-    },
-
-    backend: {
-      loadPath: '/locales/{{lng}}/translation.json',
     },
 
     react: {

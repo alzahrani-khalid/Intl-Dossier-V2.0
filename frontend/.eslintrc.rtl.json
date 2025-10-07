@@ -1,0 +1,47 @@
+{
+  "rules": {
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "Literal[value=/\\bml-/]",
+        "message": "Use 'ms-*' (margin-start) instead of 'ml-*' for RTL support"
+      },
+      {
+        "selector": "Literal[value=/\\bmr-/]",
+        "message": "Use 'me-*' (margin-end) instead of 'mr-*' for RTL support"
+      },
+      {
+        "selector": "Literal[value=/\\bpl-/]",
+        "message": "Use 'ps-*' (padding-start) instead of 'pl-*' for RTL support"
+      },
+      {
+        "selector": "Literal[value=/\\bpr-/]",
+        "message": "Use 'pe-*' (padding-end) instead of 'pr-*' for RTL support"
+      },
+      {
+        "selector": "Literal[value=/\\btext-left\\b/]",
+        "message": "Use 'text-start' instead of 'text-left' for RTL support"
+      },
+      {
+        "selector": "Literal[value=/\\btext-right\\b/]",
+        "message": "Use 'text-end' instead of 'text-right' for RTL support"
+      },
+      {
+        "selector": "Literal[value=/\\bleft-/]",
+        "message": "Use 'start-*' instead of 'left-*' for RTL support"
+      },
+      {
+        "selector": "Literal[value=/\\bright-/]",
+        "message": "Use 'end-*' instead of 'right-*' for RTL support"
+      },
+      {
+        "selector": "Literal[value=/\\brounded-l-/]",
+        "message": "Use 'rounded-s-*' instead of 'rounded-l-*' for RTL support"
+      },
+      {
+        "selector": "Literal[value=/\\brounded-r-/]",
+        "message": "Use 'rounded-e-*' instead of 'rounded-r-*' for RTL support"
+      }
+    ]
+  }
+}

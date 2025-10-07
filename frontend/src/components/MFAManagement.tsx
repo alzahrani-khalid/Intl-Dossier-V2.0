@@ -121,7 +121,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
 
           <div className="flex gap-2">
             <Button onClick={downloadBackupCodes} className="flex-1">
-              <Download className="h-4 w-4 mr-2" />
+              <Download className="h-4 w-4 me-2" />
               Download Codes
             </Button>
             <Button variant="outline" onClick={() => setShowBackupCodes(false)}>
@@ -160,7 +160,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
               <span className="font-medium">Two-Factor Authentication</span>
               {mfaConfig?.enabled ? (
                 <Badge variant="default" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                  <CheckCircle className="h-3 w-3 mr-1" />
+                  <CheckCircle className="h-3 w-3 me-1" />
                   Enabled
                 </Badge>
               ) : (
@@ -209,7 +209,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
                 disabled={isLoading}
                 className="flex-1"
               >
-                <RefreshCw className="h-4 w-4 mr-2" />
+                <RefreshCw className="h-4 w-4 me-2" />
                 Generate New Backup Codes
               </Button>
               <Button 
@@ -218,7 +218,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
                 disabled={isLoading}
                 className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
               >
-                <Trash2 className="h-4 w-4 mr-2" />
+                <Trash2 className="h-4 w-4 me-2" />
                 Disable 2FA
               </Button>
             </div>

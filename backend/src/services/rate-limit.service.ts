@@ -119,7 +119,7 @@ export class RateLimitService {
     reset_at: Date;
     retry_after?: number;
   }> {
-    const policy = this.getApplicablePolicy(userId, endpointType);
+    const policy = this.getApplicablePolicy(endpointType, userId);
     if (!policy) {
       return {
         allowed: true,
@@ -146,7 +146,7 @@ export class RateLimitService {
     };
   }
   
-  private getApplicablePolicy(userId?: string, endpointType: string): RateLimitPolicy | null {
+  private getApplicablePolicy(endpointType: string, userId?: string): RateLimitPolicy | null {
     const userKey = userId ? 'authenticated' : 'anonymous';
     
     let policy = this.policies.get(`${userKey}:${endpointType}`);
@@ -212,7 +212,7 @@ export class RateLimitService {
     const limits = [];
     
     for (const endpointType of endpointTypes) {
-      const policy = this.getApplicablePolicy(userId, endpointType);
+      const policy = this.getApplicablePolicy(endpointType, userId);
       if (!policy) continue;
       
       const cacheKey = RateLimitPolicyModel.getCacheKey(userId, ip, endpointType);
@@ -269,11 +269,11 @@ export class RateLimitService {
   }
   
   async applyBurstLimit(
+    burst: number,
     userId?: string,
-    ip?: string,
-    burst: number
+    ip?: string
   ): Promise<boolean> {
-    const policy = this.getApplicablePolicy(userId, 'api');
+    const policy = this.getApplicablePolicy('api', userId);
     if (!policy) return true;
     
     const cacheKey = RateLimitPolicyModel.getCacheKey(userId, ip, 'api');

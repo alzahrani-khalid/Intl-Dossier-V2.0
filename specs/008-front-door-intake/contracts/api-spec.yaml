@@ -1,81 +1,996 @@
-openapi: 3.1.0
+openapi: 3.0.3
 info:
   title: Front Door Intake API
-  version: 0.1.0
+  description: API for managing support intake tickets with AI-powered triage and duplicate detection
+  version: 1.0.0
+  contact:
+    name: GASTAT International Team
+
+servers:
+  - url: https://api.gastat.sa/v1
+    description: Production
+  - url: https://staging-api.gastat.sa/v1
+    description: Staging
+
+security:
+  - BearerAuth: []
+
 paths:
-  /api/intake:
+  /intake/tickets:
     post:
-      summary: Submit intake ticket
+      summary: Submit new intake ticket
+      tags: [Intake]
+      operationId: createIntakeTicket
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/IntakeCreate'
+              $ref: '#/components/schemas/CreateTicketRequest'
       responses:
-        '201': { description: created }
+        '201':
+          description: Ticket created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '413':
+          description: Attachment exceeds size limit
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
     get:
-      summary: List tickets
+      summary: List intake tickets with filtering
+      tags: [Intake]
+      operationId: listIntakeTickets
       parameters:
-        - in: query
-          name: status
-          schema: { type: string }
-        - in: query
-          name: assigned_unit
-          schema: { type: string }
-        - in: query
-          name: request_type
-          schema: { type: string }
-        - in: query
-          name: search
-          schema: { type: string }
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, submitted, triaged, assigned, in_progress, converted, closed, merged]
+        - name: request_type
+          in: query
+          schema:
+            type: string
+            enum: [engagement, position, mou_action, foresight]
+        - name: sensitivity
+          in: query
+          schema:
+            type: string
+            enum: [public, internal, confidential, secret]
+        - name: urgency
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, critical]
+        - name: assigned_to
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: assigned_unit
+          in: query
+          schema:
+            type: string
+        - name: sla_breached
+          in: query
+          schema:
+            type: boolean
+        - name: created_after
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: created_before
+          in: query
+          schema:
+            type: string
+            format: date-time
+        - name: page
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
       responses:
-        '200': { description: ok }
-  /api/intake/{id}:
+        '200':
+          description: List of tickets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketListResponse'
+          headers:
+            X-Total-Count:
+              schema:
+                type: integer
+              description: Total number of tickets matching filters
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+
+  /intake/tickets/{ticketId}:
     get:
-      summary: Get ticket
-      responses: { '200': { description: ok }, '404': { description: not found } }
-    put:
-      summary: Update ticket (triage/assign)
-      responses: { '200': { description: ok } }
-  /api/intake/{id}/convert:
-    post:
-      summary: Convert to artifact
+      summary: Get ticket details
+      tags: [Intake]
+      operationId: getIntakeTicket
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      responses:
+        '200':
+          description: Ticket details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketDetailResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Update ticket
+      tags: [Intake]
+      operationId: updateIntakeTicket
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
       requestBody:
         required: true
         content:
           application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTicketRequest'
+      responses:
+        '200':
+          description: Ticket updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /intake/tickets/{ticketId}/triage:
+    post:
+      summary: Apply triage decision
+      tags: [Triage]
+      operationId: triageTicket
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TriageDecisionRequest'
+      responses:
+        '200':
+          description: Triage applied
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriageDecisionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    get:
+      summary: Get AI triage suggestions
+      tags: [Triage]
+      operationId: getTriageSuggestions
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      responses:
+        '200':
+          description: Triage suggestions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TriageSuggestionsResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          description: AI service temporarily unavailable
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+              description: Seconds to wait before retry
+
+  /intake/tickets/{ticketId}/assign:
+    post:
+      summary: Assign ticket to user/unit
+      tags: [Assignment]
+      operationId: assignTicket
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignTicketRequest'
+      responses:
+        '200':
+          description: Ticket assigned
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /intake/tickets/{ticketId}/convert:
+    post:
+      summary: Convert ticket to artifact
+      tags: [Conversion]
+      operationId: convertTicket
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConvertTicketRequest'
+      responses:
+        '200':
+          description: Ticket converted
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConversionResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '409':
+          description: Conversion conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /intake/tickets/{ticketId}/duplicates:
+    get:
+      summary: Get duplicate candidates
+      tags: [Duplicates]
+      operationId: getDuplicates
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+        - name: threshold
+          in: query
+          schema:
+            type: number
+            minimum: 0
+            maximum: 1
+            default: 0.65
+      responses:
+        '200':
+          description: Duplicate candidates
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DuplicatesResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          description: AI service temporarily unavailable
+          headers:
+            Retry-After:
+              schema:
+                type: integer
+
+  /intake/tickets/{ticketId}/merge:
+    post:
+      summary: Merge duplicate tickets
+      tags: [Duplicates]
+      operationId: mergeTickets
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MergeRequest'
+      responses:
+        '200':
+          description: Tickets merged
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /intake/tickets/{ticketId}/close:
+    post:
+      summary: Close ticket
+      tags: [Lifecycle]
+      operationId: closeTicket
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CloseTicketRequest'
+      responses:
+        '200':
+          description: Ticket closed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TicketResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /intake/tickets/{ticketId}/attachments:
+    post:
+      summary: Upload attachment
+      tags: [Attachments]
+      operationId: uploadAttachment
+      parameters:
+        - $ref: '#/components/parameters/TicketId'
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
             schema:
               type: object
-              required: [type]
               properties:
-                type:
-                  enum: [engagement, position, mou_action, foresight]
-                payload:
-                  type: object
+                file:
+                  type: string
+                  format: binary
+                  description: File to upload (max 25MB)
+              required:
+                - file
       responses:
-        '201': { description: created }
-  /api/intake/{id}/dedupe:
+        '201':
+          description: Attachment uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AttachmentResponse'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '413':
+          description: File too large
+
+  /intake/health:
     get:
-      summary: Get duplicate candidates with confidence
+      summary: Health check
+      tags: [System]
+      operationId: healthCheck
+      security: []
       responses:
-        '200': { description: ok }
-  /api/intake/{id}/sla:
+        '200':
+          description: System healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+        '503':
+          description: System unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+  /intake/ai/health:
     get:
-      summary: SLA clocks and history
+      summary: AI service health check
+      tags: [System]
+      operationId: aiHealthCheck
+      security: []
       responses:
-        '200': { description: ok }
+        '200':
+          description: AI service healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIHealthResponse'
+        '503':
+          description: AI service unhealthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AIHealthResponse'
+
 components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    TicketId:
+      name: ticketId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+    
+    RateLimited:
+      description: Rate limit exceeded
+      headers:
+        X-RateLimit-Limit:
+          schema:
+            type: integer
+        X-RateLimit-Remaining:
+          schema:
+            type: integer
+        Retry-After:
+          schema:
+            type: integer
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
   schemas:
-    IntakeCreate:
+    CreateTicketRequest:
       type: object
-      required: [request_type, title_en]
+      required:
+        - request_type
+        - title
+        - description
       properties:
-        request_type: { enum: [engagement, position, mou_action, foresight, inquiry] }
-        title_en: { type: string }
-        title_ar: { type: string }
-        description_en: { type: string }
-        description_ar: { type: string }
-        dossier_id: { type: string, format: uuid }
-        sensitivity: { enum: [public, internal, confidential, secret] }
-        urgency: { enum: [low, medium, high, critical] }
+        request_type:
+          type: string
+          enum: [engagement, position, mou_action, foresight]
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        title_ar:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          minLength: 1
+          maxLength: 5000
+        description_ar:
+          type: string
+          maxLength: 5000
+        type_specific_fields:
+          type: object
+          description: 2-3 unique fields per request type
+        dossier_id:
+          type: string
+          format: uuid
+        urgency:
+          type: string
+          enum: [low, medium, high, critical]
+        attachments:
+          type: array
+          items:
+            type: string
+            format: uuid
+          maxItems: 10
+
+    UpdateTicketRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          maxLength: 200
+        title_ar:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        description_ar:
+          type: string
+          maxLength: 5000
+        urgency:
+          type: string
+          enum: [low, medium, high, critical]
+        type_specific_fields:
+          type: object
+
+    TicketResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ticket_number:
+          type: string
+        request_type:
+          type: string
+        title:
+          type: string
+        title_ar:
+          type: string
+        status:
+          type: string
+        priority:
+          type: string
+        assigned_to:
+          type: string
+        assigned_unit:
+          type: string
+        sla_status:
+          $ref: '#/components/schemas/SLAStatus'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    TicketDetailResponse:
+      allOf:
+        - $ref: '#/components/schemas/TicketResponse'
+        - type: object
+          properties:
+            description:
+              type: string
+            description_ar:
+              type: string
+            type_specific_fields:
+              type: object
+            sensitivity:
+              type: string
+            urgency:
+              type: string
+            dossier_id:
+              type: string
+              format: uuid
+            converted_to_type:
+              type: string
+            converted_to_id:
+              type: string
+            attachments:
+              type: array
+              items:
+                $ref: '#/components/schemas/AttachmentResponse'
+            triage_history:
+              type: array
+              items:
+                $ref: '#/components/schemas/TriageDecisionResponse'
+            audit_trail:
+              type: array
+              items:
+                $ref: '#/components/schemas/AuditLogEntry'
+
+    TicketListResponse:
+      type: object
+      properties:
+        tickets:
+          type: array
+          items:
+            $ref: '#/components/schemas/TicketResponse'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    TriageDecisionRequest:
+      type: object
+      required:
+        - action
+      properties:
+        action:
+          type: string
+          enum: [accept, override]
+        sensitivity:
+          type: string
+          enum: [public, internal, confidential, secret]
+        urgency:
+          type: string
+          enum: [low, medium, high, critical]
+        assigned_to:
+          type: string
+          format: uuid
+        assigned_unit:
+          type: string
+        override_reason:
+          type: string
+          maxLength: 500
+        override_reason_ar:
+          type: string
+          maxLength: 500
+
+    TriageDecisionResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        decision_type:
+          type: string
+        suggested_sensitivity:
+          type: string
+        suggested_urgency:
+          type: string
+        suggested_assignee:
+          type: string
+        suggested_unit:
+          type: string
+        final_sensitivity:
+          type: string
+        final_urgency:
+          type: string
+        final_assignee:
+          type: string
+        final_unit:
+          type: string
+        confidence_score:
+          type: number
+        override_reason:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+
+    TriageSuggestionsResponse:
+      type: object
+      properties:
+        request_type:
+          type: string
+        sensitivity:
+          type: string
+        urgency:
+          type: string
+        suggested_assignee:
+          type: string
+        suggested_unit:
+          type: string
+        confidence_scores:
+          type: object
+          properties:
+            type:
+              type: number
+            sensitivity:
+              type: number
+            urgency:
+              type: number
+            assignment:
+              type: number
+        model_info:
+          type: object
+          properties:
+            name:
+              type: string
+            version:
+              type: string
+        cached:
+          type: boolean
+        cached_at:
+          type: string
+          format: date-time
+
+    AssignTicketRequest:
+      type: object
+      properties:
+        assigned_to:
+          type: string
+          format: uuid
+        assigned_unit:
+          type: string
+        reason:
+          type: string
+          maxLength: 500
+
+    ConvertTicketRequest:
+      type: object
+      required:
+        - target_type
+      properties:
+        target_type:
+          type: string
+          enum: [engagement, position, mou_action, foresight]
+        additional_data:
+          type: object
+        mfa_token:
+          type: string
+          description: Required for confidential+ tickets
+
+    ConversionResponse:
+      type: object
+      properties:
+        success:
+          type: boolean
+        artifact_type:
+          type: string
+        artifact_id:
+          type: string
+        artifact_url:
+          type: string
+        correlation_id:
+          type: string
+
+    DuplicatesResponse:
+      type: object
+      properties:
+        candidates:
+          type: array
+          items:
+            type: object
+            properties:
+              ticket_id:
+                type: string
+                format: uuid
+              ticket_number:
+                type: string
+              title:
+                type: string
+              overall_score:
+                type: number
+              title_similarity:
+                type: number
+              content_similarity:
+                type: number
+              is_high_confidence:
+                type: boolean
+        model_info:
+          type: object
+          properties:
+            embedding_model:
+              type: string
+            threshold_used:
+              type: number
+
+    MergeRequest:
+      type: object
+      required:
+        - target_ticket_ids
+      properties:
+        target_ticket_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+        keep_as_primary:
+          type: string
+          format: uuid
+        merge_reason:
+          type: string
+          maxLength: 500
+
+    CloseTicketRequest:
+      type: object
+      required:
+        - resolution
+      properties:
+        resolution:
+          type: string
+          maxLength: 2000
+        resolution_ar:
+          type: string
+          maxLength: 2000
+        mfa_token:
+          type: string
+          description: Required for confidential+ tickets
+
+    AttachmentResponse:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        file_name:
+          type: string
+        file_size:
+          type: integer
+        mime_type:
+          type: string
+        scan_status:
+          type: string
+          enum: [pending, clean, infected, error]
+        uploaded_at:
+          type: string
+          format: date-time
+        download_url:
+          type: string
+
+    SLAStatus:
+      type: object
+      properties:
+        acknowledgment:
+          type: object
+          properties:
+            target_minutes:
+              type: integer
+            elapsed_minutes:
+              type: integer
+            remaining_minutes:
+              type: integer
+            is_breached:
+              type: boolean
+            target_time:
+              type: string
+              format: date-time
+        resolution:
+          type: object
+          properties:
+            target_minutes:
+              type: integer
+            elapsed_minutes:
+              type: integer
+            remaining_minutes:
+              type: integer
+            is_breached:
+              type: boolean
+            target_time:
+              type: string
+              format: date-time
+
+    AuditLogEntry:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        action:
+          type: string
+        user_id:
+          type: string
+        user_name:
+          type: string
+        changes:
+          type: object
+        mfa_verified:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+        limit:
+          type: integer
+        total_pages:
+          type: integer
+        total_items:
+          type: integer
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+        services:
+          type: object
+          properties:
+            database:
+              type: boolean
+            storage:
+              type: boolean
+            auth:
+              type: boolean
+        version:
+          type: string
+        timestamp:
+          type: string
+          format: date-time
+
+    AIHealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [healthy, degraded, unhealthy]
+        services:
+          type: object
+          properties:
+            embedding_model:
+              type: boolean
+            classification_model:
+              type: boolean
+            vector_store:
+              type: boolean
+        fallback_active:
+          type: boolean
+        last_success:
+          type: string
+          format: date-time
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+        correlation_id:
+          type: string
+        timestamp:
+          type: string
+          format: date-time

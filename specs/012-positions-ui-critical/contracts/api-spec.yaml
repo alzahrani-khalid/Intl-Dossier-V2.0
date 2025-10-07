@@ -1,0 +1,795 @@
+openapi: 3.0.3
+info:
+  title: Positions UI Critical Integrations API
+  version: 1.0.0
+  description: |
+    API contracts for positions UI critical integrations including:
+    - Engagement-position relationship management
+    - AI-powered position suggestions
+    - Bilingual briefing pack generation
+    - Position usage analytics
+
+servers:
+  - url: https://api.gastat-dossier.local/v1
+    description: Local development
+  - url: https://api.gastat-dossier.sa/v1
+    description: Production
+
+tags:
+  - name: Engagement Positions
+    description: Manage position attachments to engagements
+  - name: Position Suggestions
+    description: AI-powered position recommendations
+  - name: Briefing Packs
+    description: Generate and manage briefing pack PDFs
+  - name: Position Analytics
+    description: Position usage statistics and insights
+
+paths:
+  /engagements/{engagementId}/positions:
+    get:
+      tags: [Engagement Positions]
+      summary: List positions attached to an engagement
+      operationId: listEngagementPositions
+      parameters:
+        - $ref: '#/components/parameters/EngagementId'
+        - name: sort
+          in: query
+          schema:
+            type: string
+            enum: [display_order, relevance_score, attached_at]
+            default: display_order
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+      responses:
+        '200':
+          description: List of attached positions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EngagementPosition'
+                  meta:
+                    $ref: '#/components/schemas/PaginationMeta'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      tags: [Engagement Positions]
+      summary: Attach a position to an engagement
+      operationId: attachPosition
+      parameters:
+        - $ref: '#/components/parameters/EngagementId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [position_id]
+              properties:
+                position_id:
+                  type: string
+                  format: uuid
+                attachment_reason:
+                  type: string
+                  maxLength: 500
+                display_order:
+                  type: integer
+                  minimum: 0
+      responses:
+        '201':
+          description: Position attached successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EngagementPosition'
+        '400':
+          description: Invalid request (e.g., position already attached, limit exceeded)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                already_attached:
+                  value:
+                    error: "POSITION_ALREADY_ATTACHED"
+                    message: "Position is already attached to this engagement"
+                limit_exceeded:
+                  value:
+                    error: "ATTACHMENT_LIMIT_EXCEEDED"
+                    message: "Cannot attach more than 100 positions to an engagement"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          description: Forbidden (user not a dossier collaborator)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "INSUFFICIENT_PERMISSIONS"
+                message: "Only dossier collaborators can attach positions"
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /engagements/{engagementId}/positions/{positionId}:
+    delete:
+      tags: [Engagement Positions]
+      summary: Detach a position from an engagement
+      operationId: detachPosition
+      parameters:
+        - $ref: '#/components/parameters/EngagementId'
+        - $ref: '#/components/parameters/PositionId'
+      responses:
+        '204':
+          description: Position detached successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /engagements/{engagementId}/positions/suggestions:
+    get:
+      tags: [Position Suggestions]
+      summary: Get AI-suggested positions for an engagement
+      operationId: getSuggestedPositions
+      parameters:
+        - $ref: '#/components/parameters/EngagementId'
+        - name: min_relevance
+          in: query
+          description: Minimum relevance score (0.0 to 1.0)
+          schema:
+            type: number
+            format: float
+            minimum: 0.0
+            maximum: 1.0
+            default: 0.7
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 10
+      responses:
+        '200':
+          description: List of suggested positions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PositionSuggestion'
+                  meta:
+                    type: object
+                    properties:
+                      ai_service_status:
+                        type: string
+                        enum: [available, degraded, unavailable]
+                      fallback_mode:
+                        type: boolean
+                      generated_at:
+                        type: string
+                        format: date-time
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '503':
+          description: AI service unavailable, returning fallback suggestions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PositionSuggestion'
+                  meta:
+                    type: object
+                    properties:
+                      ai_service_status:
+                        type: string
+                        const: unavailable
+                      fallback_mode:
+                        type: boolean
+                        const: true
+
+    post:
+      tags: [Position Suggestions]
+      summary: Update suggestion user action (accept/reject/ignore)
+      operationId: updateSuggestionAction
+      parameters:
+        - $ref: '#/components/parameters/EngagementId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [suggestion_id, action]
+              properties:
+                suggestion_id:
+                  type: string
+                  format: uuid
+                action:
+                  type: string
+                  enum: [accepted, rejected, ignored]
+      responses:
+        '200':
+          description: Suggestion action updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PositionSuggestion'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /engagements/{engagementId}/briefing-packs:
+    get:
+      tags: [Briefing Packs]
+      summary: List briefing packs for an engagement
+      operationId: listBriefingPacks
+      parameters:
+        - $ref: '#/components/parameters/EngagementId'
+        - name: language
+          in: query
+          schema:
+            type: string
+            enum: [en, ar, all]
+            default: all
+      responses:
+        '200':
+          description: List of briefing packs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/BriefingPack'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      tags: [Briefing Packs]
+      summary: Generate a new briefing pack
+      operationId: generateBriefingPack
+      parameters:
+        - $ref: '#/components/parameters/EngagementId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [language]
+              properties:
+                language:
+                  type: string
+                  enum: [en, ar]
+                  description: Target language for briefing pack
+                position_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  maxItems: 100
+                  description: Specific positions to include (omit to include all attached)
+                include_metadata:
+                  type: boolean
+                  default: true
+                  description: Include engagement metadata (title, date, stakeholders)
+      responses:
+        '202':
+          description: Briefing pack generation initiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum: [pending, generating]
+                  estimated_completion:
+                    type: string
+                    format: date-time
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                no_positions:
+                  value:
+                    error: "NO_POSITIONS_ATTACHED"
+                    message: "No positions attached to generate briefing pack"
+                too_many_positions:
+                  value:
+                    error: "TOO_MANY_POSITIONS"
+                    message: "Cannot generate briefing pack with more than 100 positions"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /engagements/{engagementId}/briefing-packs/{packId}:
+    get:
+      tags: [Briefing Packs]
+      summary: Get briefing pack details and download URL
+      operationId: getBriefingPack
+      parameters:
+        - $ref: '#/components/parameters/EngagementId'
+        - name: packId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Briefing pack details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BriefingPack'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /briefing-packs/jobs/{jobId}/status:
+    get:
+      tags: [Briefing Packs]
+      summary: Check briefing pack generation status
+      operationId: getBriefingPackJobStatus
+      parameters:
+        - name: jobId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Job status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  job_id:
+                    type: string
+                    format: uuid
+                  status:
+                    type: string
+                    enum: [pending, generating, completed, failed]
+                  progress_percent:
+                    type: integer
+                    minimum: 0
+                    maximum: 100
+                  briefing_pack:
+                    $ref: '#/components/schemas/BriefingPack'
+                  error:
+                    $ref: '#/components/schemas/Error'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /positions/{positionId}/analytics:
+    get:
+      tags: [Position Analytics]
+      summary: Get usage analytics for a position
+      operationId: getPositionAnalytics
+      parameters:
+        - $ref: '#/components/parameters/PositionId'
+      responses:
+        '200':
+          description: Position usage analytics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PositionAnalytics'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /positions/analytics/top:
+    get:
+      tags: [Position Analytics]
+      summary: Get top positions by usage
+      operationId: getTopPositions
+      parameters:
+        - name: metric
+          in: query
+          schema:
+            type: string
+            enum: [views, attachments, briefings, popularity]
+            default: popularity
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 50
+            default: 10
+        - name: time_range
+          in: query
+          schema:
+            type: string
+            enum: [7d, 30d, 90d, all]
+            default: 30d
+      responses:
+        '200':
+          description: Top positions by usage
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        position:
+                          $ref: '#/components/schemas/Position'
+                        analytics:
+                          $ref: '#/components/schemas/PositionAnalytics'
+                        rank:
+                          type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+components:
+  parameters:
+    EngagementId:
+      name: engagementId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Unique engagement identifier
+
+    PositionId:
+      name: positionId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Unique position identifier
+
+  schemas:
+    EngagementPosition:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        engagement_id:
+          type: string
+          format: uuid
+        position:
+          $ref: '#/components/schemas/Position'
+        attached_by:
+          $ref: '#/components/schemas/User'
+        attached_at:
+          type: string
+          format: date-time
+        attachment_reason:
+          type: string
+          nullable: true
+        display_order:
+          type: integer
+          nullable: true
+        relevance_score:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+          nullable: true
+
+    Position:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        title:
+          type: object
+          properties:
+            en:
+              type: string
+            ar:
+              type: string
+        content:
+          type: object
+          properties:
+            en:
+              type: string
+            ar:
+              type: string
+        type:
+          type: string
+          enum: [talking_point, policy_brief, statement, q_and_a]
+        status:
+          type: string
+          enum: [draft, in_review, approved, published]
+        primary_language:
+          type: string
+          enum: [en, ar]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    PositionSuggestion:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        engagement_id:
+          type: string
+          format: uuid
+        position:
+          $ref: '#/components/schemas/Position'
+        relevance_score:
+          type: number
+          format: float
+          minimum: 0.0
+          maximum: 1.0
+        suggestion_reasoning:
+          type: object
+          properties:
+            keywords_matched:
+              type: array
+              items:
+                type: string
+            context_factors:
+              type: array
+              items:
+                type: string
+        created_at:
+          type: string
+          format: date-time
+        user_action:
+          type: string
+          enum: [accepted, rejected, ignored]
+          nullable: true
+        actioned_at:
+          type: string
+          format: date-time
+          nullable: true
+
+    BriefingPack:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        engagement_id:
+          type: string
+          format: uuid
+        language:
+          type: string
+          enum: [en, ar]
+        position_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+        generated_by:
+          $ref: '#/components/schemas/User'
+        generated_at:
+          type: string
+          format: date-time
+        file_url:
+          type: string
+          format: uri
+          description: Supabase Storage URL for PDF download
+        file_size_bytes:
+          type: integer
+        expires_at:
+          type: string
+          format: date-time
+          nullable: true
+        metadata:
+          type: object
+          properties:
+            page_count:
+              type: integer
+            template_version:
+              type: string
+            positions_translated:
+              type: integer
+
+    PositionAnalytics:
+      type: object
+      properties:
+        position_id:
+          type: string
+          format: uuid
+        view_count:
+          type: integer
+        attachment_count:
+          type: integer
+        briefing_pack_count:
+          type: integer
+        last_viewed_at:
+          type: string
+          format: date-time
+          nullable: true
+        last_attached_at:
+          type: string
+          format: date-time
+          nullable: true
+        popularity_score:
+          type: number
+          format: float
+          description: Weighted score combining views, attachments, and briefings
+        usage_rank:
+          type: integer
+          description: Position's rank among all positions by popularity
+        trend_data:
+          type: object
+          properties:
+            daily:
+              type: array
+              items:
+                type: object
+                properties:
+                  date:
+                    type: string
+                    format: date
+                  views:
+                    type: integer
+                  attachments:
+                    type: integer
+            weekly:
+              type: array
+              items:
+                type: object
+                properties:
+                  week_start:
+                    type: string
+                    format: date
+                  views:
+                    type: integer
+                  attachments:
+                    type: integer
+
+    User:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+
+    PaginationMeta:
+      type: object
+      properties:
+        total:
+          type: integer
+        limit:
+          type: integer
+        offset:
+          type: integer
+        has_more:
+          type: boolean
+
+    Error:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+          description: Machine-readable error code
+        message:
+          type: string
+          description: Human-readable error message (bilingual)
+        details:
+          type: object
+          description: Additional error context
+
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "UNAUTHORIZED"
+            message: "Authentication required to access this resource"
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "FORBIDDEN"
+            message: "You do not have permission to perform this action"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "NOT_FOUND"
+            message: "The requested resource was not found"
+
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "BAD_REQUEST"
+            message: "Invalid request parameters"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - BearerAuth: []

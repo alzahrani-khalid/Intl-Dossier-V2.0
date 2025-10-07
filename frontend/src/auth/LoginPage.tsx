@@ -36,7 +36,7 @@ export function LoginPage() {
   const onSubmit = async (data: LoginFormData) => {
     try {
       await login(data.email, data.password, showMfaInput ? mfaCode : undefined)
-      toast.success(t('auth.loginSuccess'))
+      // Redirect without showing toast - successful login is indicated by redirect
       navigate({ to: '/' })
     } catch (error) {
       // Check if MFA is required
@@ -85,6 +85,7 @@ export function LoginPage() {
                 {...register('email')}
                 type="email"
                 id="email"
+                autoComplete="username"
                 className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
                 placeholder="user@gastat.sa"
               />
@@ -108,6 +109,7 @@ export function LoginPage() {
                   {...register('password')}
                   type={showPassword ? 'text' : 'password'}
                   id="password"
+                  autoComplete="current-password"
                   className="w-full px-4 py-2 pe-12 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
                 />
                 <button
@@ -205,7 +207,7 @@ export function LoginPage() {
 
           {/* Sign up link */}
           <div className="text-center mt-4 text-sm text-muted-foreground">
-            Don't have an account?{' '}
+            {t('auth.dontHaveAccount')}{' '}
             <a
               href="/register"
               className="text-primary hover:text-primary/80 hover:underline"
@@ -214,7 +216,7 @@ export function LoginPage() {
                 navigate({ to: '/register' })
               }}
             >
-              Sign Up
+              {t('auth.signUp')}
             </a>
           </div>
         </div>

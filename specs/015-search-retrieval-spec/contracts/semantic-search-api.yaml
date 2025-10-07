@@ -1,0 +1,327 @@
+openapi: 3.0.3
+info:
+  title: Semantic Search API
+  description: Vector-based semantic search for positions, documents, and briefs
+  version: 1.0.0
+
+servers:
+  - url: https://api.gastat.dossier.local/v1
+    description: Local development
+  - url: https://api.gastat.dossier.gov.sa/v1
+    description: Production
+
+paths:
+  /search/semantic:
+    post:
+      summary: Perform semantic search
+      description: |
+        Performs vector-based semantic search using embeddings to find conceptually 
+        related content even when exact keywords don't match.
+        
+        Supported entity types:
+        - Positions (talking points, key messages)
+        - Documents (attachments with text content)
+        - Briefs (background documents)
+        
+        Features:
+        - Cross-language matching (Arabic query → English results)
+        - Similarity threshold filtering (default 0.6/60%)
+        - Combined with keyword search for hybrid results
+        
+        Performance SLA: <500ms p95
+      operationId: semanticSearch
+      tags:
+        - Search
+        - Semantic
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - query
+              properties:
+                query:
+                  type: string
+                  description: Natural language search query
+                  minLength: 3
+                  maxLength: 500
+                  example: "sustainable development goals"
+                
+                entity_types:
+                  type: array
+                  description: Entity types to search (default: all supported)
+                  items:
+                    type: string
+                    enum: [positions, documents, briefs]
+                  default: [positions, documents, briefs]
+                  example: ["positions", "documents"]
+                
+                similarity_threshold:
+                  type: number
+                  format: float
+                  description: Minimum similarity score (0.0 - 1.0)
+                  minimum: 0.0
+                  maximum: 1.0
+                  default: 0.6
+                  example: 0.6
+                
+                limit:
+                  type: integer
+                  description: Maximum number of results
+                  minimum: 1
+                  maximum: 50
+                  default: 20
+                  example: 20
+                
+                include_keyword_results:
+                  type: boolean
+                  description: Include hybrid keyword+semantic results
+                  default: true
+
+      responses:
+        '200':
+          description: Semantic search results returned successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - results
+                  - query
+                  - took_ms
+                properties:
+                  results:
+                    type: array
+                    description: Semantically similar results
+                    items:
+                      $ref: '#/components/schemas/SemanticResult'
+                  
+                  exact_matches:
+                    type: array
+                    description: Exact keyword matches (if include_keyword_results=true)
+                    items:
+                      $ref: '#/components/schemas/SemanticResult'
+                  
+                  query:
+                    type: object
+                    properties:
+                      original:
+                        type: string
+                        example: "sustainable development goals"
+                      embedding_dimensions:
+                        type: integer
+                        example: 1536
+                      similarity_threshold:
+                        type: number
+                        example: 0.6
+                  
+                  took_ms:
+                    type: integer
+                    description: Total query execution time
+                    example: 342
+                  
+                  performance:
+                    type: object
+                    description: Performance breakdown
+                    properties:
+                      embedding_generation_ms:
+                        type: integer
+                        example: 125
+                      vector_search_ms:
+                        type: integer
+                        example: 87
+                      keyword_search_ms:
+                        type: integer
+                        example: 43
+                      merge_dedup_ms:
+                        type: integer
+                        example: 12
+
+              examples:
+                successWithResults:
+                  summary: Successful semantic search
+                  value:
+                    results:
+                      - id: "550e8400-e29b-41d4-a716-446655440001"
+                        type: "position"
+                        title_en: "Green Economy Transition Strategy"
+                        title_ar: "استراتيجية التحول إلى الاقتصاد الأخضر"
+                        snippet_en: "...focuses on environmental sustainability and economic growth..."
+                        snippet_ar: "...تركز على الاستدامة البيئية والنمو الاقتصادي..."
+                        similarity_score: 0.87
+                        match_type: "semantic"
+                        updated_at: "2025-09-28T10:15:00Z"
+                      - id: "550e8400-e29b-41d4-a716-446655440002"
+                        type: "document"
+                        title_en: "Climate Action Framework 2030"
+                        title_ar: "إطار العمل المناخي 2030"
+                        snippet_en: "...comprehensive approach to environmental policy..."
+                        snippet_ar: "...نهج شامل للسياسة البيئية..."
+                        similarity_score: 0.74
+                        match_type: "semantic"
+                        updated_at: "2025-10-01T14:30:00Z"
+                    exact_matches:
+                      - id: "550e8400-e29b-41d4-a716-446655440003"
+                        type: "position"
+                        title_en: "Sustainable Development Goals Position"
+                        title_ar: "موقف أهداف التنمية المستدامة"
+                        snippet_en: "...GASTAT position on <mark>sustainable development goals</mark>..."
+                        snippet_ar: "...موقف الهيئة بشأن <mark>أهداف التنمية المستدامة</mark>..."
+                        similarity_score: 0.95
+                        match_type: "exact"
+                        updated_at: "2025-09-15T08:20:00Z"
+                    query:
+                      original: "sustainable development goals"
+                      embedding_dimensions: 1536
+                      similarity_threshold: 0.6
+                    took_ms: 342
+                    performance:
+                      embedding_generation_ms: 125
+                      vector_search_ms: 87
+                      keyword_search_ms: 43
+                      merge_dedup_ms: 12
+
+                noResults:
+                  summary: No semantic matches found
+                  value:
+                    results: []
+                    exact_matches: []
+                    query:
+                      original: "xyz123abc"
+                      embedding_dimensions: 1536
+                      similarity_threshold: 0.6
+                    took_ms: 287
+                    performance:
+                      embedding_generation_ms: 142
+                      vector_search_ms: 95
+                      keyword_search_ms: 38
+                      merge_dedup_ms: 2
+
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidEntityType:
+                  summary: Invalid entity type
+                  value:
+                    error: "bad_request"
+                    message: "Entity type 'dossiers' does not support semantic search. Supported types: positions, documents, briefs"
+                    message_ar: "نوع الكيان 'dossiers' لا يدعم البحث الدلالي. الأنواع المدعومة: positions, documents, briefs"
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        '503':
+          description: Embedding service unavailable
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "service_unavailable"
+                message: "Embedding generation service is temporarily unavailable. Please try again later."
+                message_ar: "خدمة إنشاء التضمينات غير متاحة مؤقتًا. يرجى المحاولة مرة أخرى لاحقًا."
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+  schemas:
+    SemanticResult:
+      type: object
+      required:
+        - id
+        - type
+        - title_en
+        - title_ar
+        - similarity_score
+        - match_type
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Entity UUID
+        type:
+          type: string
+          enum: [position, document, brief]
+          description: Entity type
+        title_en:
+          type: string
+          description: English title
+        title_ar:
+          type: string
+          description: Arabic title
+        snippet_en:
+          type: string
+          description: English snippet (may include <mark> tags for keyword matches)
+        snippet_ar:
+          type: string
+          description: Arabic snippet (may include <mark> tags for keyword matches)
+        similarity_score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Vector similarity score (0.0 - 1.0)
+        match_type:
+          type: string
+          enum: [exact, semantic, hybrid]
+          description: Type of match
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp
+        status:
+          type: string
+          description: Entity status
+        embedding_age_days:
+          type: integer
+          description: Days since embedding was last updated
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: English error message
+        message_ar:
+          type: string
+          description: Arabic error message
+        details:
+          type: object
+          description: Additional error details

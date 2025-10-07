@@ -51,7 +51,7 @@ export function OfflineIndicator() {
           <div className="space-y-2">
             <div className="flex items-center gap-2 text-xs">
               <Badge variant="outline" className="text-xs">
-                <Clock className="h-3 w-3 mr-1" />
+                <Clock className="h-3 w-3 me-1" />
                 {pendingActions.length} {t('offline.queuedActions')}
               </Badge>
               {failedActions.length > 0 && (
@@ -126,7 +126,7 @@ export function OfflineIndicator() {
                   onClick={processQueue}
                   className="text-xs"
                 >
-                  <RefreshCw className="h-3 w-3 mr-1" />
+                  <RefreshCw className="h-3 w-3 me-1" />
                   {t('offline.retrySync')}
                 </Button>
               )}

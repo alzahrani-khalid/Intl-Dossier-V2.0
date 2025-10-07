@@ -94,4 +94,18 @@ Constitution supersedes all practices. Deviations require:
 
 Non-compliance blocks production deployment. All PRs must include compliance checklist.
 
+## Approved Exceptions
+
+### Exception 1: pg_cron for SLA Monitoring (Feature 013-assignment-engine-sla)
+- **Principle Affected**: §7 Container-First
+- **Violation**: pg_cron extension runs within managed Supabase PostgreSQL, not as separate container
+- **Justification**:
+  - SLA monitoring requires sub-minute scheduling (30-second intervals) for 5,000+ concurrent assignments
+  - External cron container would require database credentials, increasing attack surface
+  - pg_cron is PostgreSQL-native extension, managed by Supabase platform
+  - Containerized alternative would add latency and complexity without security benefit
+- **Approved By**: Technical Stakeholders (2025-10-02)
+- **Migration Plan**: If migrating away from Supabase, pg_cron logic must be refactored to containerized cron daemon
+- **Review Date**: 2026-01-01
+
 **Version**: 2.1.1 | **Last Amended**: 2025-09-25

@@ -8,7 +8,7 @@ import { createClient } from '@supabase/supabase-js';
 
 // Test configuration
 export const TEST_CONFIG = {
-  baseUrl: process.env.TEST_API_URL || 'http://localhost:3001',
+  baseUrl: process.env.TEST_API_URL || 'http://localhost:5001',
   supabaseUrl: process.env.SUPABASE_URL || 'http://localhost:54321',
   supabaseKey: process.env.SUPABASE_ANON_KEY || 'test-key',
   timeout: 10000,

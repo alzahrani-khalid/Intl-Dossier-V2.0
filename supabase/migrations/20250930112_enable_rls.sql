@@ -1,0 +1,15 @@
+-- Migration: Enable Row Level Security on all after-action tables
+-- Feature: 010-after-action-notes
+-- Task: T013
+
+ALTER TABLE engagements ENABLE ROW LEVEL SECURITY;
+ALTER TABLE after_action_records ENABLE ROW LEVEL SECURITY;
+ALTER TABLE decisions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE commitments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE risks ENABLE ROW LEVEL SECURITY;
+ALTER TABLE follow_up_actions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE attachments ENABLE ROW LEVEL SECURITY;
+ALTER TABLE after_action_versions ENABLE ROW LEVEL SECURITY;
+ALTER TABLE external_contacts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE user_notification_preferences ENABLE ROW LEVEL SECURITY;
+ALTER TABLE notifications ENABLE ROW LEVEL SECURITY;

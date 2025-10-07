@@ -1,0 +1,274 @@
+openapi: 3.0.3
+info:
+  title: Search Suggestions API
+  description: Typeahead suggestions for search queries
+  version: 1.0.0
+
+servers:
+  - url: https://api.gastat.dossier.local/v1
+    description: Local development
+  - url: https://api.gastat.dossier.gov.sa/v1
+    description: Production
+
+paths:
+  /search/suggest:
+    get:
+      summary: Get search suggestions
+      description: |
+        Returns typeahead suggestions as the user types a search query.
+        
+        Features:
+        - Entity type filtering
+        - Bilingual suggestions (Arabic/English)
+        - Fuzzy matching for typo tolerance
+        - Caching for <200ms performance
+        
+        Performance SLA: <200ms absolute maximum (p100)
+      operationId: getSearchSuggestions
+      tags:
+        - Search
+        - Suggestions
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: q
+          in: query
+          required: true
+          description: Partial search query (prefix)
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 100
+          example: "clim"
+
+        - name: type
+          in: query
+          required: false
+          description: Filter suggestions by entity type
+          schema:
+            type: string
+            enum:
+              - all
+              - dossiers
+              - people
+              - engagements
+              - positions
+              - mous
+              - documents
+            default: all
+          example: "dossiers"
+
+        - name: lang
+          in: query
+          required: false
+          description: Preferred suggestion language
+          schema:
+            type: string
+            enum: [en, ar, both]
+            default: both
+
+        - name: limit
+          in: query
+          required: false
+          description: Maximum number of suggestions
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 20
+            default: 10
+
+      responses:
+        '200':
+          description: Suggestions returned successfully
+          headers:
+            X-Cache-Hit:
+              description: Whether result came from cache
+              schema:
+                type: boolean
+            X-Response-Time-Ms:
+              description: Server response time in milliseconds
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - suggestions
+                  - query
+                  - took_ms
+                properties:
+                  suggestions:
+                    type: array
+                    description: Array of typeahead suggestions
+                    items:
+                      $ref: '#/components/schemas/Suggestion'
+
+                  query:
+                    type: object
+                    properties:
+                      original:
+                        type: string
+                        example: "clim"
+                      normalized:
+                        type: string
+                        example: "clim"
+                      language_detected:
+                        type: string
+                        enum: [en, ar, mixed]
+                        example: "en"
+
+                  took_ms:
+                    type: integer
+                    description: Query execution time in milliseconds (must be <200ms)
+                    example: 47
+
+                  cache_hit:
+                    type: boolean
+                    description: Whether result was served from cache
+                    example: true
+
+              examples:
+                successWithSuggestions:
+                  summary: Successful suggestions
+                  value:
+                    suggestions:
+                      - id: "550e8400-e29b-41d4-a716-446655440001"
+                        type: "dossier"
+                        title_en: "Climate Action Partnership"
+                        title_ar: "شراكة العمل المناخي"
+                        preview_en: "Bilateral cooperation on climate policy"
+                        preview_ar: "التعاون الثنائي في سياسة المناخ"
+                        score: 0.95
+                        match_position: 0
+                      - id: "550e8400-e29b-41d4-a716-446655440002"
+                        type: "position"
+                        title_en: "Climate Treaty Negotiation"
+                        title_ar: "التفاوض على معاهدة المناخ"
+                        preview_en: "Key talking points for climate negotiations"
+                        preview_ar: "نقاط الحوار الرئيسية للمفاوضات المناخية"
+                        score: 0.87
+                        match_position: 0
+                      - id: "550e8400-e29b-41d4-a716-446655440003"
+                        type: "document"
+                        title_en: "Climate Change Report 2024"
+                        title_ar: "تقرير تغير المناخ 2024"
+                        preview_en: "Annual climate assessment"
+                        preview_ar: "التقييم المناخي السنوي"
+                        score: 0.82
+                        match_position: 0
+                    query:
+                      original: "clim"
+                      normalized: "clim"
+                      language_detected: "en"
+                    took_ms: 47
+                    cache_hit: true
+
+                noSuggestions:
+                  summary: No suggestions found
+                  value:
+                    suggestions: []
+                    query:
+                      original: "xyzabc"
+                      normalized: "xyzabc"
+                      language_detected: "en"
+                    took_ms: 95
+                    cache_hit: false
+
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+  schemas:
+    Suggestion:
+      type: object
+      required:
+        - id
+        - type
+        - title_en
+        - title_ar
+        - score
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Entity UUID
+        type:
+          type: string
+          enum: [dossier, person, engagement, position, mou, document]
+          description: Entity type
+        title_en:
+          type: string
+          description: English title
+        title_ar:
+          type: string
+          description: Arabic title
+        preview_en:
+          type: string
+          description: English preview text (brief description)
+        preview_ar:
+          type: string
+          description: Arabic preview text (brief description)
+        score:
+          type: number
+          format: float
+          minimum: 0
+          maximum: 1
+          description: Relevance score (0.0 - 1.0)
+        match_position:
+          type: integer
+          description: Character position where match starts (0-based)
+        status:
+          type: string
+          description: Entity status (e.g., "active", "archived")
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: English error message
+        message_ar:
+          type: string
+          description: Arabic error message
+        details:
+          type: object
+          description: Additional error details

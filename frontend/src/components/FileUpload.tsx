@@ -186,7 +186,7 @@ export function FileUpload({
       {error && (
         <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
           <div className="flex items-center">
-            <AlertCircle className="h-4 w-4 text-red-500 mr-2" />
+            <AlertCircle className="h-4 w-4 text-red-500 me-2" />
             <span className="text-sm text-red-700 dark:text-red-400">{error}</span>
           </div>
         </div>

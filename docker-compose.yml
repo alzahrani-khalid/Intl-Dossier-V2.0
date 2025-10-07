@@ -1,100 +1,138 @@
 version: '3.8'
 
 services:
-  # PostgreSQL 15 with pgvector extension
+  # Supabase Services
   postgres:
-    image: ankane/pgvector:v0.5.1-pg15
-    container_name: intl_dossier_postgres
+    image: supabase/postgres:15.1.0.117
+    container_name: intake-postgres
+    ports:
+      - "54322:5432"
     environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
-      POSTGRES_DB: intl_dossier
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./supabase/migrations:/docker-entrypoint-initdb.d
-    ports:
-      - "5432:5432"
+      - ./backend/migrations:/docker-entrypoint-initdb.d
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U postgres"]
       interval: 10s
       timeout: 5s
       retries: 5
-    networks:
-      - intl_dossier_network
+
+  supabase-studio:
+    image: supabase/studio:latest
+    container_name: intake-studio
+    ports:
+      - "54323:3000"
+    environment:
+      STUDIO_PG_META_URL: http://postgres:5432
+      POSTGRES_PASSWORD: postgres
+    depends_on:
+      - postgres
+
+  supabase-kong:
+    image: kong:2.8.1
+    container_name: intake-kong
+    ports:
+      - "54321:8000"
+    environment:
+      KONG_DATABASE: "off"
+      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
+    volumes:
+      - ./docker/kong.yml:/var/lib/kong/kong.yml
+    depends_on:
+      - postgres
+
+  # AnythingLLM for AI Services
+  anythingllm:
+    image: mintplexlabs/anythingllm:latest
+    container_name: intake-anythingllm
+    ports:
+      - "3001:3001"
+    volumes:
+      - anythingllm_data:/app/server/storage
+      - ./docker/anythingllm.env:/app/server/.env
+    environment:
+      STORAGE_DIR: /app/server/storage
+      SERVER_PORT: 3001
+      ENABLE_HTTPS: false
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # pgvector Extension Setup
+  pgvector-setup:
+    image: pgvector/pgvector:pg15
+    container_name: intake-pgvector-setup
+    command: |
+      sh -c "
+        PGPASSWORD=postgres psql -h postgres -U postgres -d postgres -c 'CREATE EXTENSION IF NOT EXISTS vector;' &&
+        PGPASSWORD=postgres psql -h postgres -U postgres -d postgres -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm;' &&
+        PGPASSWORD=postgres psql -h postgres -U postgres -d postgres -c 'CREATE EXTENSION IF NOT EXISTS btree_gin;'
+      "
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: "no"
 
   # Redis for caching and rate limiting
   redis:
     image: redis:7-alpine
-    container_name: intl_dossier_redis
-    command: redis-server --appendonly yes
-    volumes:
-      - redis_data:/data
+    container_name: intake-redis
     ports:
       - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: >
+      redis-server
+      --maxmemory 512mb
+      --maxmemory-policy allkeys-lru
+      --save 60 1000
+      --appendonly yes
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '1.0'
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
-      timeout: 5s
-      retries: 5
-    networks:
-      - intl_dossier_network
-
-  # AnythingLLM for AI/ML operations
-  anythingllm:
-    image: mintplexlabs/anythingllm:latest
-    container_name: intl_dossier_anythingllm
-    environment:
-      STORAGE_DIR: /app/server/storage
-      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_here_min_32_chars_long}
-      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
-      EMBEDDING_MODEL_PROVIDER: ${EMBEDDING_MODEL_PROVIDER:-openai}
-      VECTOR_DB_PROVIDER: native
-      DISABLE_TELEMETRY: true
-      SERVER_PORT: 3001
-    volumes:
-      - anythingllm_storage:/app/server/storage
-    ports:
-      - "3002:3001"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/api/ping"]
-      interval: 30s
-      timeout: 10s
+      timeout: 3s
       retries: 3
-    networks:
-      - intl_dossier_network
-    depends_on:
-      postgres:
-        condition: service_healthy
 
-  # Backend API service
+  # Prometheus for metrics
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: intake-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus_data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    depends_on:
+      - backend
+      - frontend
+
+  # Backend Service
   backend:
     build:
       context: ./backend
       dockerfile: Dockerfile
-    container_name: intl_dossier_backend
+    container_name: intake-backend
+    ports:
+      - "4000:4000"
     environment:
-      NODE_ENV: ${NODE_ENV:-development}
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-password}@postgres:5432/intl_dossier
+      NODE_ENV: development
+      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
       REDIS_URL: redis://redis:6379
-      SUPABASE_URL: ${SUPABASE_URL}
-      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
-      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
-      ANYTHINGLLM_API_URL: http://anythingllm:3001
-      ANYTHINGLLM_API_KEY: ${ANYTHINGLLM_API_KEY}
-      JWT_SECRET: ${JWT_SECRET:-your_jwt_secret_here_min_32_chars_long}
-      API_PORT: 3000
     volumes:
       - ./backend:/app
       - /app/node_modules
-    ports:
-      - "3000:3000"
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-    networks:
-      - intl_dossier_network
     depends_on:
       postgres:
         condition: service_healthy
@@ -104,60 +142,43 @@ services:
         condition: service_healthy
     command: npm run dev
 
-  # Frontend application
+  # Frontend Service
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    container_name: intl_dossier_frontend
+    container_name: intake-frontend
+    ports:
+      - "3000:3000"
     environment:
-      VITE_SUPABASE_URL: ${SUPABASE_URL}
+      NODE_ENV: development
+      VITE_SUPABASE_URL: http://localhost:54321
       VITE_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
-      VITE_API_URL: http://backend:3000
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    ports:
-      - "5173:5173"
-    networks:
-      - intl_dossier_network
     depends_on:
       - backend
     command: npm run dev
 
-  # Background worker for async tasks
-  worker:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile.worker
-    container_name: intl_dossier_worker
-    environment:
-      NODE_ENV: ${NODE_ENV:-development}
-      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD:-password}@postgres:5432/intl_dossier
-      REDIS_URL: redis://redis:6379
-      SUPABASE_URL: ${SUPABASE_URL}
-      SUPABASE_SERVICE_KEY: ${SUPABASE_SERVICE_KEY}
-      ANYTHINGLLM_API_URL: http://anythingllm:3001
-      ANYTHINGLLM_API_KEY: ${ANYTHINGLLM_API_KEY}
+  # ClamAV for Virus Scanning (using mkodockx for ARM support)
+  clamav:
+    image: mkodockx/docker-clamav:alpine
+    container_name: intake-clamav
+    ports:
+      - "3310:3310"
     volumes:
-      - ./backend:/app
-      - /app/node_modules
-    networks:
-      - intl_dossier_network
-    depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      anythingllm:
-        condition: service_healthy
-    command: npm run worker
-
-networks:
-  intl_dossier_network:
-    driver: bridge
+      - clamav_data:/var/lib/clamav
+    environment:
+      - CLAMD_STARTUP_TIMEOUT=1800
 
 volumes:
   postgres_data:
+  anythingllm_data:
   redis_data:
-  anythingllm_storage:
+  prometheus_data:
+  clamav_data:
+
+networks:
+  default:
+    name: intake-network

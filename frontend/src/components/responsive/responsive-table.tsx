@@ -74,7 +74,7 @@ export function ResponsiveTable<T extends { id?: string | number }>({
                   </span>
                   <span className={cn(
                     'text-sm',
-                    column.align === 'right' && 'text-right',
+                    column.align === 'right' && 'text-end',
                     column.align === 'center' && 'text-center'
                   )}>
                     {column.accessor(item)}
@@ -133,10 +133,10 @@ export function ResponsiveTable<T extends { id?: string | number }>({
               <TableHead
                 key={column.key}
                 className={cn(
-                  column.align === 'right' && 'text-right',
+                  column.align === 'right' && 'text-end',
                   column.align === 'center' && 'text-center',
-                  isRTL && column.align === 'right' && 'text-left',
-                  isRTL && column.align === 'left' && 'text-right'
+                  isRTL && column.align === 'right' && 'text-start',
+                  isRTL && column.align === 'left' && 'text-end'
                 )}
               >
                 {column.header}
@@ -157,10 +157,10 @@ export function ResponsiveTable<T extends { id?: string | number }>({
                 <TableCell
                   key={column.key}
                   className={cn(
-                    column.align === 'right' && 'text-right',
+                    column.align === 'right' && 'text-end',
                     column.align === 'center' && 'text-center',
-                    isRTL && column.align === 'right' && 'text-left',
-                    isRTL && column.align === 'left' && 'text-right'
+                    isRTL && column.align === 'right' && 'text-start',
+                    isRTL && column.align === 'left' && 'text-end'
                   )}
                 >
                   {column.accessor(item)}

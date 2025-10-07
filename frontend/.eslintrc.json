@@ -1,0 +1,82 @@
+{
+  "root": true,
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": 2022,
+    "sourceType": "module",
+    "project": "./tsconfig.json",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["@typescript-eslint", "react", "react-hooks"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:@typescript-eslint/recommended",
+    "plugin:@typescript-eslint/recommended-requiring-type-checking",
+    "plugin:react/recommended",
+    "plugin:react-hooks/recommended",
+    "prettier"
+  ],
+  "rules": {
+    "@typescript-eslint/explicit-function-return-type": ["error", {
+      "allowExpressions": true,
+      "allowTypedFunctionExpressions": true
+    }],
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unused-vars": "error",
+    "@typescript-eslint/no-floating-promises": "error",
+    "react/react-in-jsx-scope": "off",
+    "react/prop-types": "off",
+    "no-console": ["warn", { "allow": ["warn", "error"] }],
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "Literal[value=/\\bml-/]",
+        "message": "⚠️ RTL: Use 'ms-*' (margin-start) instead of 'ml-*'"
+      },
+      {
+        "selector": "Literal[value=/\\bmr-/]",
+        "message": "⚠️ RTL: Use 'me-*' (margin-end) instead of 'mr-*'"
+      },
+      {
+        "selector": "Literal[value=/\\bpl-/]",
+        "message": "⚠️ RTL: Use 'ps-*' (padding-start) instead of 'pl-*'"
+      },
+      {
+        "selector": "Literal[value=/\\bpr-/]",
+        "message": "⚠️ RTL: Use 'pe-*' (padding-end) instead of 'pr-*'"
+      },
+      {
+        "selector": "Literal[value=/\\btext-left\\b/]",
+        "message": "⚠️ RTL: Use 'text-start' instead of 'text-left'"
+      },
+      {
+        "selector": "Literal[value=/\\btext-right\\b/]",
+        "message": "⚠️ RTL: Use 'text-end' instead of 'text-right'"
+      },
+      {
+        "selector": "Literal[value=/\\bleft-/]",
+        "message": "⚠️ RTL: Use 'start-*' instead of 'left-*'"
+      },
+      {
+        "selector": "Literal[value=/\\bright-/]",
+        "message": "⚠️ RTL: Use 'end-*' instead of 'right-*'"
+      },
+      {
+        "selector": "Literal[value=/\\brounded-l-/]",
+        "message": "⚠️ RTL: Use 'rounded-s-*' instead of 'rounded-l-*'"
+      },
+      {
+        "selector": "Literal[value=/\\brounded-r-/]",
+        "message": "⚠️ RTL: Use 'rounded-e-*' instead of 'rounded-r-*'"
+      }
+    ]
+  },
+  "settings": {
+    "react": {
+      "version": "detect"
+    }
+  },
+  "ignorePatterns": ["dist", "node_modules", "*.js", "vite.config.ts"]
+}

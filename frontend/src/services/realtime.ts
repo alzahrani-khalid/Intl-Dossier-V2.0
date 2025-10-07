@@ -31,7 +31,7 @@ export interface RealtimeActions {
   }) => string
   unsubscribe: (subscriptionId: string) => void
   unsubscribeAll: () => void
-  reconnect: () => void
+  reconnect: () => Promise<void>
   setConnectionStatus: (status: RealtimeState['connectionStatus']) => void
   setError: (error: string | null) => void
 }
@@ -55,14 +55,14 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
         let channel = supabase
           .channel(`${table}-${event}-${subscriptionId}`)
           .on(
-            'postgres_changes',
+            'postgres_changes' as any,
             {
               event,
               schema: 'public',
               table,
               filter
-            },
-            (payload) => {
+            } as any,
+            (payload: any) => {
               callback(payload)
             }
           )
@@ -137,7 +137,7 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
             const newChannel = supabase
               .channel(`${subscription.table}-${subscription.event}-${id}`)
               .on(
-                'postgres_changes',
+                'postgres_changes' as any,
                 {
                   event: subscription.event,
                   schema: 'public',
@@ -285,7 +285,7 @@ export function useRealtimeSubscription() {
 }
 
 // Specific hooks for common subscriptions
-export function useTableSubscription<T = any>(
+export function useTableSubscription<T extends { [key: string]: any } = any>(
   table: string,
   event: 'INSERT' | 'UPDATE' | 'DELETE' | '*',
   callback: (payload: RealtimePostgresChangesPayload<T>) => void,

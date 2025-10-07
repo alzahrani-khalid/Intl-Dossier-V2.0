@@ -1,0 +1,360 @@
+{
+  "library": {
+    "title": "مكتبة المواقف",
+    "subtitle": "{{count}} موقف متاح",
+    "create_position": "إنشاء موقف",
+    "stats": {
+      "total": "إجمالي المواقف",
+      "published": "منشور",
+      "in_review": "قيد المراجعة",
+      "drafts": "مسودات"
+    },
+    "search_and_filter": "البحث والتصفية",
+    "search_placeholder": "البحث بالعنوان أو المحتوى أو الفئة...",
+    "search_label": "البحث عن المواقف",
+    "status_filter": "التصفية حسب الحالة",
+    "type_filter": "التصفية حسب النوع",
+    "all_statuses": "جميع الحالات",
+    "all_types": "جميع الأنواع",
+    "sort_by": "الترتيب حسب",
+    "sort": {
+      "updated": "آخر تحديث",
+      "created": "الأحدث إنشاءً",
+      "title": "العنوان (أ-ي)",
+      "popularity": "الأكثر شهرة"
+    },
+    "clear_filters": "مسح الفلاتر",
+    "error_loading": "فشل تحميل المواقف",
+    "no_results": "لا توجد مواقف تطابق الفلاتر الخاصة بك",
+    "no_positions": "لا توجد مواقف متاحة بعد"
+  },
+  "editor": {
+    "title": "محرر الموقف",
+    "toolbar": "شريط أدوات المحرر",
+    "bold": "غامق",
+    "italic": "مائل",
+    "heading2": "عنوان 2",
+    "heading3": "عنوان 3",
+    "bulletList": "قائمة نقطية",
+    "orderedList": "قائمة مرقمة",
+    "quote": "اقتباس",
+    "placeholderEn": "Enter English content here...",
+    "placeholderAr": "أدخل المحتوى العربي هنا...",
+    "englishContent": "المحتوى الإنجليزي",
+    "arabicContent": "المحتوى العربي",
+    "title": "العنوان",
+    "titleEnglish": "العنوان الإنجليزي",
+    "titleArabic": "العنوان العربي",
+    "content": "المحتوى",
+    "contentEnglish": "محرر المحتوى الإنجليزي",
+    "contentArabic": "محرر المحتوى العربي",
+    "save": "حفظ",
+    "saveError": "فشل حفظ الموقف. يرجى المحاولة مرة أخرى.",
+    "autoSaveError": "فشل الحفظ التلقائي. يرجى الحفظ يدوياً.",
+    "autoSaving": "جاري الحفظ التلقائي...",
+    "lastSaved": "آخر حفظ في {{time}}",
+    "unsavedChanges": "تغييرات غير محفوظة",
+    "conflictTitle": "تم اكتشاف تعارض في الإصدار",
+    "conflictDescription": "تم تعديل هذا الموقف من قبل مستخدم آخر. الإصدار الخاص بك: {{current}}، إصدار الخادم: {{server}}. يرجى إعادة تحميل الصفحة لرؤية أحدث إصدار.",
+    "reloadPage": "إعادة تحميل الصفحة"
+  },
+  "consistency": {
+    "title": "فحص الاتساق",
+    "score": "درجة الاتساق",
+    "noConflicts": "لا توجد تعارضات",
+    "noConflictsDescription": "هذا الموقف متسق مع جميع المواقف المنشورة الأخرى.",
+    "conflictsFound": "تعارضات موجودة",
+    "conflictsFoundDescription": "هذا الموقف لديه تعارضات مع مواقف أخرى تحتاج إلى مراجعة.",
+    "aiServiceStatus": "خدمة الذكاء الاصطناعي",
+    "aiAvailable": "متاحة",
+    "aiUnavailable": "غير متاحة",
+    "checkTrigger": "مشغل الفحص",
+    "manual": "فحص يدوي",
+    "automaticOnSubmit": "تلقائي عند الإرسال",
+    "checkedAt": "تم الفحص في",
+    "checkedBy": "تم الفحص بواسطة",
+    "conflict": {
+      "id": "معرف التعارض",
+      "type": "النوع",
+      "severity": "الخطورة",
+      "description": "الوصف",
+      "suggestedResolution": "الحل المقترح",
+      "affectedSections": "الأقسام المتأثرة",
+      "conflictingPosition": "الموقف المتعارض"
+    },
+    "conflictTypes": {
+      "contradiction": "تناقض",
+      "ambiguity": "غموض",
+      "overlap": "تداخل"
+    },
+    "severityLevels": {
+      "high": "عالية",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "actions": {
+      "modify": "تعديل الموقف",
+      "accept": "قبول المخاطرة",
+      "escalate": "رفع إلى المسؤول",
+      "viewPosition": "عرض الموقف المتعارض",
+      "reconcile": "التوفيق"
+    },
+    "scoreLabels": {
+      "excellent": "ممتاز",
+      "good": "جيد",
+      "fair": "مقبول",
+      "poor": "ضعيف",
+      "critical": "حرج"
+    },
+    "emptyState": {
+      "title": "لا يوجد فحص اتساق متاح",
+      "description": "قم بتشغيل فحص الاتساق لتحديد التعارضات المحتملة مع المواقف الأخرى."
+    }
+  },
+  "approval": {
+    "title": "سلسلة الاعتماد",
+    "stage": "المرحلة",
+    "noChainConfigured": "لم يتم تكوين سلسلة اعتماد",
+    "stepUpVerified": "مُتحقق منه",
+    "stepUpVerifiedTooltip": "تم التحقق من هذا الاعتماد باستخدام المصادقة المُحسّنة",
+    "delegated": "مُفوَّض",
+    "delegatedFrom": "مُفوَّض من {{name}}",
+    "delegatedUntil": "حتى {{date}}",
+    "reassigned": "مُعاد تعيينه",
+    "reassignedBy": "أعاد التعيين {{name}}",
+    "hasComments": "تعليقات",
+    "multipleActions": "{{count}} إجراءات",
+    "progress": "المرحلة {{current}} من {{total}}",
+    "completed": "مكتمل",
+    "remaining": "متبقي",
+    "actions": {
+      "approve": "معتمد",
+      "request_revisions": "طُلبت مراجعات",
+      "delegate": "مُفوَّض",
+      "reassign": "مُعاد تعيينه"
+    }
+  },
+  "status": {
+    "draft": "مسودة",
+    "under_review": "قيد المراجعة",
+    "approved": "معتمد",
+    "published": "منشور",
+    "unpublished": "غير منشور"
+  },
+  "tabs": {
+    "editor": "المحرر",
+    "approvals": "الموافقات",
+    "versions": "الإصدارات"
+  },
+  "notFound": "الموقف غير موجود",
+  "submit": "تقديم للمراجعة",
+  "publish": "نشر",
+  "attachments": "المرفقات",
+  "consistency": "فحص الاتساق",
+  "approvalChain": "تقدم الموافقة",
+  "versions": {
+    "description": "عرض سجل الإصدارات ومقارنة التغييرات"
+  },
+  "loading": "جاري تحميل المواقف...",
+  "type": {
+    "policy_brief": "موجز سياسة",
+    "talking_point": "نقطة نقاش",
+    "statement": "بيان"
+  },
+  "search": {
+    "placeholder": "البحث في المواقف...",
+    "label": "البحث في المواقف"
+  },
+  "filter": {
+    "status": "الحالة",
+    "type": "النوع",
+    "dateRange": "نطاق التاريخ",
+    "all": "الكل",
+    "allTime": "كل الأوقات",
+    "last7Days": "آخر 7 أيام",
+    "last30Days": "آخر 30 يوم",
+    "last90Days": "آخر 90 يوم",
+    "clear": "مسح الفلاتر"
+  },
+  "results": {
+    "count": "عرض {{count}} من {{total}} موقف"
+  },
+  "empty": {
+    "noResults": "لا توجد مواقف تطابق الفلاتر",
+    "clearFilters": "مسح جميع الفلاتر"
+  },
+  "list": {
+    "label": "قائمة المواقف"
+  },
+  "card": {
+    "noContent": "لا يوجد محتوى متاح",
+    "attachedTo": "مرفق بـ {{count}} مشاركة",
+    "view": "عرض {{title}}",
+    "viewButton": "عرض",
+    "attach": "إرفاق {{title}}",
+    "attachButton": "إرفاق",
+    "detach": "فك الإرفاق {{title}}",
+    "detachButton": "فك الإرفاق"
+  },
+  "suggestions": {
+    "title": "مواقف مقترحة بالذكاء الاصطناعي",
+    "description": "بناءً على سياق المشاركة وتحليل الذكاء الاصطناعي",
+    "loading": "جاري إنشاء الاقتراحات...",
+    "error": "فشل تحميل الاقتراحات",
+    "retry": "إعادة المحاولة",
+    "fallbackMode": "خدمة الذكاء الاصطناعي غير متاحة. عرض اقتراحات بناءً على الكلمات المفتاحية.",
+    "empty": "لم يتم العثور على مواقف ذات صلة بهذه المشاركة",
+    "emptyHint": "حاول البحث يدوياً عن المواقف",
+    "listLabel": "المواقف المقترحة",
+    "score": "درجة الصلة",
+    "attachLabel": "إرفاق {{title}}",
+    "attach": "إرفاق",
+    "rejectLabel": "رفض {{title}}",
+    "reject": "غير ذي صلة",
+    "refresh": "تحديث الاقتراحات",
+    "relevance": {
+      "high": "عالية",
+      "medium": "متوسطة",
+      "low": "منخفضة"
+    },
+    "action": {
+      "accepted": "مرفق",
+      "rejected": "مرفوض",
+      "ignored": "متجاهل"
+    }
+  },
+  "attach": {
+    "dialogTrigger": "إضافة موقف",
+    "dialogTitle": "إرفاق مواقف بالمشاركة",
+    "dialogDescription": "ابحث واختر المواقف للإرفاق. يمكنك إرفاق حتى 100 موقف.",
+    "searchPlaceholder": "البحث بالعنوان أو المحتوى أو الفئة...",
+    "selected": "{{count}} من {{max}} محدد",
+    "clearSelection": "مسح",
+    "maxSelectionsReached": "يمكن إرفاق {{max}} موقف كحد أقصى",
+    "noResults": "لم يتم العثور على مواقف تطابق البحث",
+    "allAttached": "تم إرفاق جميع المواقف",
+    "selectLabel": "اختر {{title}}",
+    "previewLabel": "معاينة {{title}}",
+    "previewTitle": "معاينة الموقف",
+    "content": "المحتوى",
+    "keyMessages": "الرسائل الرئيسية",
+    "previewEmpty": "اختر موقفاً للمعاينة",
+    "selected": "محدد",
+    "selectThis": "اختر هذا الموقف",
+    "attachSelected": "إرفاق {{count}} موقف",
+    "attaching": "جاري الإرفاق..."
+  },
+  "briefing": {
+    "title": "إنشاء حزمة إحاطة",
+    "description": "إنشاء حزمة إحاطة PDF مع {{count}} موقف مرفق",
+    "selectLanguage": "اختر اللغة",
+    "language": {
+      "english": "الإنجليزية (من اليسار لليمين)",
+      "arabic": "العربية (من اليمين لليسار)"
+    },
+    "estimatedTime": "الوقت المقدر للإنشاء: ~{{seconds}} ثانية",
+    "generate": "إنشاء حزمة الإحاطة",
+    "initiating": "بدء الإنشاء...",
+    "generating": "جاري إنشاء حزمة الإحاطة...",
+    "pleaseWait": "قد يستغرق هذا بضع لحظات",
+    "completed": "حزمة الإحاطة جاهزة!",
+    "download": "تحميل PDF",
+    "generateAnother": "إنشاء حزمة أخرى",
+    "error": "فشل إنشاء حزمة الإحاطة",
+    "tryAgain": "حاول مرة أخرى",
+    "noPositions": "يرجى إرفاق موقف واحد على الأقل قبل إنشاء حزمة الإحاطة"
+  },
+  "analytics": {
+    "title": "تحليلات الموقف",
+    "description": "رؤى الاستخدام ومقاييس الشعبية",
+    "error": "فشل تحميل التحليلات",
+    "rank": "ترتيب الشعبية",
+    "popularityScore": "الشعبية",
+    "views": "المشاهدات",
+    "lastViewed": "آخر مشاهدة",
+    "attachments": "المرفقات",
+    "lastAttached": "آخر إرفاق",
+    "briefingPacks": "حزم الإحاطة",
+    "usageTrend": "اتجاه الاستخدام",
+    "last7Days": "آخر 7 أيام"
+  },
+  "emergencyCorrection": {
+    "title": "تصحيح طارئ",
+    "description": "تصحيح موقف منشور بعد النشر. هذا إجراء حساس يتطلب صلاحيات المسؤول.",
+    "badge": "تصحيح طارئ",
+    "restrictedAccess": "وصول مقيد",
+    "restrictedAccessMessage": "هذه الميزة متاحة فقط لمسؤولي النظام. يرجى الاتصال بالمسؤول إذا كنت بحاجة إلى إجراء تصحيح طارئ.",
+    "positionToCorrect": "الموقف المراد تصحيحه",
+    "positionId": "معرف الموقف",
+    "warning": "تحذير: تصحيح بعد النشر",
+    "warningMessage": "سيتم وضع علامة \"تصحيح طارئ\" على هذا الموقف بشكل دائم. سيتم إنشاء نسخة جديدة وإشعار جميع المجموعات المستهدفة بالتغيير.",
+    "badgePreview": "معاينة الشارة",
+    "badgePreviewMessage": "سيظهر على الموقف المصحح",
+    "reasonLabel": "سبب التصحيح الطارئ",
+    "reasonPlaceholder": "اشرح سبب الحاجة إلى هذا التصحيح الطارئ (10 أحرف على الأقل)...",
+    "reasonCharacterCount": "أحرف كحد أدنى",
+    "adminPasswordLabel": "أعد إدخال كلمة مرور المسؤول",
+    "adminPasswordPlaceholder": "أدخل كلمة مرور المسؤول للتأكيد",
+    "adminPasswordHelp": "التحقق من صلاحيات المسؤول مطلوب لإجراء التصحيحات الطارئة",
+    "audienceNotifications": "إشعارات المجموعات المستهدفة",
+    "audienceNotificationsMessage": "سيتم إرسال إشعارات تلقائية إلى جميع المجموعات المستهدفة المرتبطة بهذا الموقف لإعلامهم بالتصحيح الطارئ.",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد التصحيح الطارئ",
+    "submitting": "جاري التصحيح...",
+    "success": "تم تطبيق التصحيح الطارئ بنجاح",
+    "error": "فشل تطبيق التصحيح الطارئ",
+    "invalidPassword": "كلمة مرور المسؤول غير صحيحة",
+    "adminRequired": "مطلوب وصول المسؤول لإجراء التصحيحات الطارئة",
+    "reasonRequired": "يجب أن يكون سبب التصحيح 10 أحرف على الأقل"
+  },
+  "dossier_tab": {
+    "title": "المواقف المرفقة",
+    "subtitle": "{{count}} موقف مرفق بهذا الملف",
+    "create_position": "إرفاق موقف",
+    "search_placeholder": "البحث في المواقف...",
+    "search_label": "البحث في المواقف",
+    "status_filter": "تصفية حسب الحالة",
+    "type_filter": "تصفية حسب النوع",
+    "all_statuses": "كل الحالات",
+    "all_types": "كل الأنواع",
+    "clear_filters": "مسح الفلاتر",
+    "error_loading": "فشل تحميل المواقف",
+    "no_results": "لا توجد مواقف تطابق الفلاتر",
+    "no_positions": "لا توجد مواقف مرفقة بهذا الملف بعد"
+  },
+  "detail": {
+    "not_found": "الموقف غير موجود",
+    "error_loading": "فشل تحميل الموقف",
+    "back_to_library": "العودة إلى المواقف",
+    "edit": "تعديل",
+    "archive": "أرشفة",
+    "restore": "استعادة",
+    "content_title": "محتوى الموقف",
+    "content_description": "بيان الموقف الكامل بكلا اللغتين",
+    "english_version": "English Version",
+    "arabic_version": "النسخة العربية",
+    "related_engagements": "الالتزامات ذات الصلة",
+    "related_engagements_description": "الملفات والالتزامات المستخدمة لهذا الموقف",
+    "no_related_engagements": "غير مرفق بأي التزامات",
+    "metadata_title": "البيانات الوصفية",
+    "dossier": "الملف",
+    "view_dossier": "عرض الملف",
+    "no_dossier": "غير مرتبط بملف",
+    "created": "تاريخ الإنشاء",
+    "last_updated": "آخر تحديث",
+    "version": "الإصدار"
+  },
+  "engagement_section": {
+    "title": "المواقف",
+    "subtitle": "المواقف المرفقة والاقتراحات",
+    "attached_tab": "المرفقة",
+    "suggestions_tab": "الاقتراحات",
+    "briefing_tab": "الإحاطة",
+    "no_attached": "لا توجد مواقف مرفقة",
+    "attach_position": "إرفاق موقف",
+    "error_loading_attached": "فشل تحميل المواقف المرفقة",
+    "error_loading_suggestions": "فشل تحميل الاقتراحات",
+    "no_positions_for_briefing": "لا توجد مواقف مرفقة بعد. قم بإرفاق مواقف لإنشاء حزمة إحاطة.",
+    "attach_positions_first": "إرفاق المواقف أولاً"
+  }
+}

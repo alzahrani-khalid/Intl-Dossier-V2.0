@@ -95,7 +95,7 @@ class RealtimeManager {
           if (!presenceState[presence.presence_ref]) {
             presenceState[presence.presence_ref] = []
           }
-          presenceState[presence.presence_ref].push(presence)
+          presenceState[presence.presence_ref]?.push(presence)
         })
         config.onPresenceJoin!(presenceState)
       })
@@ -109,7 +109,7 @@ class RealtimeManager {
           if (!presenceState[presence.presence_ref]) {
             presenceState[presence.presence_ref] = []
           }
-          presenceState[presence.presence_ref].push(presence)
+          presenceState[presence.presence_ref]?.push(presence)
         })
         config.onPresenceLeave!(presenceState)
       })

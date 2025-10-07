@@ -77,7 +77,7 @@ export class VectorService {
         throw new Error(`AnythingLLM API error: ${response.statusText}`);
       }
       
-      const data = await response.json();
+      const data = await response.json() as any;
       return data.data[0].embedding;
     } catch (error) {
       console.error('Failed to generate embedding:', error);

@@ -1,0 +1,917 @@
+openapi: 3.0.3
+info:
+  title: Positions & Talking Points Lifecycle API
+  description: API for managing organizational positions with bilingual content, approval workflows, versioning, and consistency checking
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier System
+
+servers:
+  - url: https://your-project.supabase.co/functions/v1
+    description: Supabase Edge Functions
+
+security:
+  - BearerAuth: []
+  - StepUpAuth: []
+
+tags:
+  - name: Positions
+    description: CRUD operations for positions
+  - name: Approvals
+    description: Approval workflow management
+  - name: Versions
+    description: Version history and comparison
+  - name: Publication
+    description: Publishing and audience management
+  - name: Consistency
+    description: Consistency checking
+  - name: Attachments
+    description: Attachment management
+
+paths:
+  /positions:
+    get:
+      summary: List positions
+      tags: [Positions]
+      operationId: listPositions
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, under_review, approved, published]
+        - name: thematic_category
+          in: query
+          schema:
+            type: string
+        - name: author_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            default: 0
+      responses:
+        '200':
+          description: List of positions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Position'
+                  total:
+                    type: integer
+                  limit:
+                    type: integer
+                  offset:
+                    type: integer
+
+    post:
+      summary: Create new position
+      tags: [Positions]
+      operationId: createPosition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreatePositionRequest'
+      responses:
+        '201':
+          description: Position created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /positions/{id}:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    get:
+      summary: Get position by ID
+      tags: [Positions]
+      operationId: getPosition
+      responses:
+        '200':
+          description: Position details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    put:
+      summary: Update position
+      tags: [Positions]
+      operationId: updatePosition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdatePositionRequest'
+      responses:
+        '200':
+          description: Position updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+        '409':
+          description: Concurrent modification conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /positions/{id}/submit:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    put:
+      summary: Submit position for review
+      tags: [Approvals]
+      operationId: submitForReview
+      responses:
+        '200':
+          description: Position submitted, consistency check results included
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  position:
+                    $ref: '#/components/schemas/Position'
+                  consistency_check:
+                    $ref: '#/components/schemas/ConsistencyCheck'
+        '400':
+          description: Missing required content (EN/AR)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /positions/{id}/approve:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    post:
+      summary: Approve position at current stage
+      tags: [Approvals]
+      operationId: approvePosition
+      security:
+        - StepUpAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ApprovalRequest'
+      responses:
+        '200':
+          description: Position approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+        '403':
+          description: Step-up authentication required or not authorized for this stage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /positions/{id}/request-revisions:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    post:
+      summary: Request revisions from author
+      tags: [Approvals]
+      operationId: requestRevisions
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [comments]
+              properties:
+                comments:
+                  type: string
+                  description: Required explanation of requested revisions
+      responses:
+        '200':
+          description: Position returned to draft with comments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+
+  /positions/{id}/delegate:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    post:
+      summary: Delegate approval authority
+      tags: [Approvals]
+      operationId: delegateApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [delegate_to, valid_until]
+              properties:
+                delegate_to:
+                  type: string
+                  format: uuid
+                valid_until:
+                  type: string
+                  format: date-time
+                reason:
+                  type: string
+      responses:
+        '200':
+          description: Delegation recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  delegation_id:
+                    type: string
+                    format: uuid
+                  message:
+                    type: string
+
+  /approvals/{id}/reassign:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+        description: Approval ID
+
+    put:
+      summary: Reassign approval to different user (admin only)
+      tags: [Approvals]
+      operationId: reassignApproval
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [reassign_to, reason]
+              properties:
+                reassign_to:
+                  type: string
+                  format: uuid
+                reason:
+                  type: string
+                  description: Required justification for reassignment
+      responses:
+        '200':
+          description: Approval reassigned
+        '403':
+          description: Admin privileges required
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /positions/{id}/versions:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    get:
+      summary: Get version history
+      tags: [Versions]
+      operationId: getVersions
+      responses:
+        '200':
+          description: List of versions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  versions:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Version'
+
+  /positions/{id}/versions/compare:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+      - name: from_version
+        in: query
+        required: true
+        schema:
+          type: integer
+      - name: to_version
+        in: query
+        required: true
+        schema:
+          type: integer
+
+    get:
+      summary: Compare two versions
+      tags: [Versions]
+      operationId: compareVersions
+      responses:
+        '200':
+          description: Diff results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VersionDiff'
+
+  /positions/{id}/publish:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    post:
+      summary: Publish approved position
+      tags: [Publication]
+      operationId: publishPosition
+      responses:
+        '200':
+          description: Position published
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+        '400':
+          description: Position not approved
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /positions/{id}/unpublish:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    post:
+      summary: Unpublish position
+      tags: [Publication]
+      operationId: unpublishPosition
+      responses:
+        '200':
+          description: Position unpublished
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+
+  /positions/{id}/consistency-check:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    post:
+      summary: Trigger manual consistency check
+      tags: [Consistency]
+      operationId: checkConsistency
+      responses:
+        '200':
+          description: Consistency check results
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConsistencyCheck'
+
+  /positions/{id}/consistency-check/{check_id}/reconcile:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+      - name: check_id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    put:
+      summary: Reconcile consistency conflicts
+      tags: [Consistency]
+      operationId: reconcileConflicts
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resolved_conflicts:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      conflict_id:
+                        type: string
+                      resolution_action:
+                        type: string
+                      notes:
+                        type: string
+      responses:
+        '200':
+          description: Conflicts reconciled
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated_score:
+                    type: integer
+                  message:
+                    type: string
+
+  /positions/{id}/attachments:
+    parameters:
+      - $ref: '#/components/parameters/PositionId'
+
+    get:
+      summary: List attachments
+      tags: [Attachments]
+      operationId: listAttachments
+      responses:
+        '200':
+          description: List of attachments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Attachment'
+
+    post:
+      summary: Upload attachment
+      tags: [Attachments]
+      operationId: uploadAttachment
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required: [file]
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Attachment uploaded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Attachment'
+        '413':
+          description: File too large (>50MB)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /attachments/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+          format: uuid
+
+    delete:
+      summary: Delete attachment
+      tags: [Attachments]
+      operationId: deleteAttachment
+      responses:
+        '204':
+          description: Attachment deleted
+
+  /auth-verify-step-up:
+    post:
+      summary: Initiate step-up authentication challenge
+      tags: [Authentication]
+      operationId: initiateStepUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [action, position_id]
+              properties:
+                action:
+                  type: string
+                  enum: [approve]
+                position_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Step-up challenge initiated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  challenge_id:
+                    type: string
+                    format: uuid
+                  challenge_type:
+                    type: string
+                    enum: [totp, sms, push]
+                  expires_at:
+                    type: string
+                    format: date-time
+
+  /auth-verify-step-up/complete:
+    post:
+      summary: Complete step-up authentication
+      tags: [Authentication]
+      operationId: completeStepUp
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [challenge_id, verification_code]
+              properties:
+                challenge_id:
+                  type: string
+                  format: uuid
+                verification_code:
+                  type: string
+      responses:
+        '200':
+          description: Step-up verified, elevated token returned
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  elevated_token:
+                    type: string
+                  valid_until:
+                    type: string
+                    format: date-time
+        '401':
+          description: Invalid verification code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    StepUpAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Elevated JWT token obtained from step-up authentication
+
+  parameters:
+    PositionId:
+      name: id
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+      description: Position UUID
+
+  schemas:
+    Position:
+      type: object
+      required: [id, position_type_id, title_en, title_ar, status, author_id, created_at]
+      properties:
+        id:
+          type: string
+          format: uuid
+        position_type_id:
+          type: string
+          format: uuid
+        title_en:
+          type: string
+        title_ar:
+          type: string
+        content_en:
+          type: string
+        content_ar:
+          type: string
+        rationale_en:
+          type: string
+        rationale_ar:
+          type: string
+        alignment_notes_en:
+          type: string
+        alignment_notes_ar:
+          type: string
+        thematic_category:
+          type: string
+        status:
+          type: string
+          enum: [draft, under_review, approved, published]
+        current_stage:
+          type: integer
+          minimum: 0
+          maximum: 10
+        approval_chain_config:
+          type: object
+        consistency_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        author_id:
+          type: string
+          format: uuid
+        audience_groups:
+          type: array
+          items:
+            type: string
+            format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        version:
+          type: integer
+
+    CreatePositionRequest:
+      type: object
+      required: [position_type_id, title_en, title_ar, audience_groups]
+      properties:
+        position_type_id:
+          type: string
+          format: uuid
+        title_en:
+          type: string
+        title_ar:
+          type: string
+        content_en:
+          type: string
+        content_ar:
+          type: string
+        rationale_en:
+          type: string
+        rationale_ar:
+          type: string
+        alignment_notes_en:
+          type: string
+        alignment_notes_ar:
+          type: string
+        thematic_category:
+          type: string
+        audience_groups:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Audience groups who can view this position when published
+
+    UpdatePositionRequest:
+      type: object
+      required: [version]
+      properties:
+        title_en:
+          type: string
+        title_ar:
+          type: string
+        content_en:
+          type: string
+        content_ar:
+          type: string
+        rationale_en:
+          type: string
+        rationale_ar:
+          type: string
+        alignment_notes_en:
+          type: string
+        alignment_notes_ar:
+          type: string
+        thematic_category:
+          type: string
+        audience_groups:
+          type: array
+          items:
+            type: string
+            format: uuid
+        version:
+          type: integer
+          description: Current version for optimistic locking
+
+    ApprovalRequest:
+      type: object
+      required: [action]
+      properties:
+        action:
+          type: string
+          enum: [approve]
+        comments:
+          type: string
+
+    Version:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        position_id:
+          type: string
+          format: uuid
+        version_number:
+          type: integer
+        content_en:
+          type: string
+        content_ar:
+          type: string
+        rationale_en:
+          type: string
+        rationale_ar:
+          type: string
+        author_id:
+          type: string
+          format: uuid
+        superseded:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        retention_until:
+          type: string
+          format: date-time
+
+    VersionDiff:
+      type: object
+      properties:
+        from_version:
+          type: integer
+        to_version:
+          type: integer
+        english_diff:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [added, removed, unchanged]
+              text:
+                type: string
+        arabic_diff:
+          type: array
+          items:
+            type: object
+            properties:
+              type:
+                type: string
+                enum: [added, removed, unchanged]
+              text:
+                type: string
+        metadata_changes:
+          type: object
+
+    ConsistencyCheck:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        position_id:
+          type: string
+          format: uuid
+        check_trigger:
+          type: string
+          enum: [manual, automatic_on_submit]
+        consistency_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+        ai_service_available:
+          type: boolean
+        conflicts:
+          type: array
+          items:
+            type: object
+            properties:
+              conflict_position_id:
+                type: string
+                format: uuid
+              conflict_type:
+                type: string
+                enum: [contradiction, ambiguity, overlap]
+              severity:
+                type: string
+                enum: [high, medium, low]
+              description:
+                type: string
+              suggested_resolution:
+                type: string
+              affected_sections:
+                type: array
+                items:
+                  type: string
+        checked_at:
+          type: string
+          format: date-time
+        checked_by:
+          type: string
+          format: uuid
+
+    Attachment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        position_id:
+          type: string
+          format: uuid
+        file_name:
+          type: string
+        file_size:
+          type: integer
+        file_type:
+          type: string
+        storage_path:
+          type: string
+        uploader_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      required: [error, message]
+      properties:
+        error:
+          type: string
+        message:
+          type: string
+        details:
+          type: object
+
+  responses:
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Forbidden:
+      description: Forbidden
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'

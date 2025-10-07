@@ -65,7 +65,7 @@
         "-y",
         "@supabase/mcp-server-supabase@latest",
         "--access-token",
-        "sbp_a18a95c85cf383fc8ef8b9c78ba50a2e2c488292"
+        "sbp_5b308210608d3be8f51d26eca2e0a909ae2eef39"
       ]
     },
     "CopilotKit MCP": {

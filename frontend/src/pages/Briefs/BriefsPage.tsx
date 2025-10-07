@@ -146,7 +146,7 @@ export function BriefsPage() {
       key: 'title',
       header: t('briefs.title'),
       cell: (brief: Brief) => (
-        <div className={`${isRTL ? 'text-right' : 'text-left'}`}>
+        <div className={`${isRTL ? 'text-end' : 'text-start'}`}>
           <div className="font-medium">
             {isRTL ? brief.title_ar : brief.title_en}
           </div>
@@ -231,7 +231,7 @@ export function BriefsPage() {
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold">{t('navigation.briefs')}</h1>
         <Button>
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="h-4 w-4 me-2" />
           {t('briefs.generateBrief')}
         </Button>
       </div>

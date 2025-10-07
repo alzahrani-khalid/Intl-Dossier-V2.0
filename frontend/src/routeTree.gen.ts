@@ -15,17 +15,46 @@ import { Route as ProtectedRouteImport } from './routes/_protected'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as ProtectedWordAssistantRouteImport } from './routes/_protected/word-assistant'
 import { Route as ProtectedSettingsRouteImport } from './routes/_protected/settings'
+import { Route as ProtectedResponsiveDemoRouteImport } from './routes/_protected/responsive-demo'
 import { Route as ProtectedReportsRouteImport } from './routes/_protected/reports'
+import { Route as ProtectedPositionsRouteImport } from './routes/_protected/positions'
 import { Route as ProtectedOrganizationsRouteImport } from './routes/_protected/organizations'
 import { Route as ProtectedMousRouteImport } from './routes/_protected/mous'
+import { Route as ProtectedMonitoringRouteImport } from './routes/_protected/monitoring'
 import { Route as ProtectedIntelligenceRouteImport } from './routes/_protected/intelligence'
+import { Route as ProtectedIntakeRouteImport } from './routes/_protected/intake'
 import { Route as ProtectedForumsRouteImport } from './routes/_protected/forums'
+import { Route as ProtectedExportRouteImport } from './routes/_protected/export'
 import { Route as ProtectedEventsRouteImport } from './routes/_protected/events'
 import { Route as ProtectedDataLibraryRouteImport } from './routes/_protected/data-library'
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedCountriesRouteImport } from './routes/_protected/countries'
 import { Route as ProtectedBriefsRouteImport } from './routes/_protected/briefs'
-import { Route as ResponsiveDemoRouteImport } from './routes/responsive-demo'
+import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected/analytics'
+import { Route as ProtectedAccessibilityRouteImport } from './routes/_protected/accessibility'
+import { Route as ProtectedPositionsIndexRouteImport } from './routes/_protected/positions/index'
+import { Route as ProtectedIntakeIndexRouteImport } from './routes/_protected/intake/index'
+import { Route as ProtectedEngagementsIndexRouteImport } from './routes/_protected/engagements/index'
+import { Route as ProtectedDossiersIndexRouteImport } from './routes/_protected/dossiers/index'
+import { Route as ProtectedAssignmentsIndexRouteImport } from './routes/_protected/assignments/index'
+import { Route as ProtectedApprovalsIndexRouteImport } from './routes/_protected/approvals/index'
+import { Route as ProtectedAfterActionsIndexRouteImport } from './routes/_protected/after-actions/index'
+import { Route as ProtectedPositionsPositionIdRouteImport } from './routes/_protected/positions/$positionId'
+import { Route as ProtectedPositionsIdRouteImport } from './routes/_protected/positions/$id'
+import { Route as ProtectedIntakeQueueRouteImport } from './routes/_protected/intake/queue'
+import { Route as ProtectedIntakeNewRouteImport } from './routes/_protected/intake/new'
+import { Route as ProtectedEngagementsEngagementIdRouteImport } from './routes/_protected/engagements/$engagementId'
+import { Route as ProtectedDossiersIdRouteImport } from './routes/_protected/dossiers/$id'
+import { Route as ProtectedAssignmentsQueueRouteImport } from './routes/_protected/assignments/queue'
+import { Route as ProtectedAssignmentsEscalationsRouteImport } from './routes/_protected/assignments/escalations'
+import { Route as ProtectedAssignmentsIdRouteImport } from './routes/_protected/assignments/$id'
+import { Route as ProtectedAfterActionsAfterActionIdRouteImport } from './routes/_protected/after-actions/$afterActionId'
+import { Route as ProtectedAdminApprovalsRouteImport } from './routes/_protected/admin/approvals'
+import { Route as ProtectedPositionsIdVersionsRouteImport } from './routes/_protected/positions/$id/versions'
+import { Route as ProtectedPositionsIdApprovalsRouteImport } from './routes/_protected/positions/$id/approvals'
+import { Route as ProtectedIntakeTicketsIdRouteImport } from './routes/_protected/intake/tickets.$id'
+import { Route as ProtectedEngagementsEngagementIdAfterActionRouteImport } from './routes/_protected/engagements/$engagementId/after-action'
+import { Route as ProtectedAfterActionsAfterActionIdVersionsRouteImport } from './routes/_protected/after-actions/$afterActionId/versions'
 
 const RegisterRoute = RegisterRouteImport.update({
   id: '/register',
@@ -56,9 +85,19 @@ const ProtectedSettingsRoute = ProtectedSettingsRouteImport.update({
   path: '/settings',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedResponsiveDemoRoute = ProtectedResponsiveDemoRouteImport.update({
+  id: '/responsive-demo',
+  path: '/responsive-demo',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedReportsRoute = ProtectedReportsRouteImport.update({
   id: '/reports',
   path: '/reports',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPositionsRoute = ProtectedPositionsRouteImport.update({
+  id: '/positions',
+  path: '/positions',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedOrganizationsRoute = ProtectedOrganizationsRouteImport.update({
@@ -71,14 +110,29 @@ const ProtectedMousRoute = ProtectedMousRouteImport.update({
   path: '/mous',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedMonitoringRoute = ProtectedMonitoringRouteImport.update({
+  id: '/monitoring',
+  path: '/monitoring',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedIntelligenceRoute = ProtectedIntelligenceRouteImport.update({
   id: '/intelligence',
   path: '/intelligence',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedIntakeRoute = ProtectedIntakeRouteImport.update({
+  id: '/intake',
+  path: '/intake',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedForumsRoute = ProtectedForumsRouteImport.update({
   id: '/forums',
   path: '/forums',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedExportRoute = ProtectedExportRouteImport.update({
+  id: '/export',
+  path: '/export',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedEventsRoute = ProtectedEventsRouteImport.update({
@@ -106,47 +160,236 @@ const ProtectedBriefsRoute = ProtectedBriefsRouteImport.update({
   path: '/briefs',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ResponsiveDemoRoute = ResponsiveDemoRouteImport.update({
-  id: '/responsive-demo',
-  path: '/responsive-demo',
-  getParentRoute: () => rootRouteImport,
+const ProtectedAnalyticsRoute = ProtectedAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedAccessibilityRoute = ProtectedAccessibilityRouteImport.update({
+  id: '/accessibility',
+  path: '/accessibility',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPositionsIndexRoute = ProtectedPositionsIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProtectedPositionsRoute,
+} as any)
+const ProtectedIntakeIndexRoute = ProtectedIntakeIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => ProtectedIntakeRoute,
+} as any)
+const ProtectedEngagementsIndexRoute =
+  ProtectedEngagementsIndexRouteImport.update({
+    id: '/engagements/',
+    path: '/engagements/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersIndexRoute = ProtectedDossiersIndexRouteImport.update({
+  id: '/dossiers/',
+  path: '/dossiers/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAssignmentsIndexRoute =
+  ProtectedAssignmentsIndexRouteImport.update({
+    id: '/assignments/',
+    path: '/assignments/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedApprovalsIndexRoute = ProtectedApprovalsIndexRouteImport.update({
+  id: '/approvals/',
+  path: '/approvals/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAfterActionsIndexRoute =
+  ProtectedAfterActionsIndexRouteImport.update({
+    id: '/after-actions/',
+    path: '/after-actions/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedPositionsPositionIdRoute =
+  ProtectedPositionsPositionIdRouteImport.update({
+    id: '/$positionId',
+    path: '/$positionId',
+    getParentRoute: () => ProtectedPositionsRoute,
+  } as any)
+const ProtectedPositionsIdRoute = ProtectedPositionsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => ProtectedPositionsRoute,
+} as any)
+const ProtectedIntakeQueueRoute = ProtectedIntakeQueueRouteImport.update({
+  id: '/queue',
+  path: '/queue',
+  getParentRoute: () => ProtectedIntakeRoute,
+} as any)
+const ProtectedIntakeNewRoute = ProtectedIntakeNewRouteImport.update({
+  id: '/new',
+  path: '/new',
+  getParentRoute: () => ProtectedIntakeRoute,
+} as any)
+const ProtectedEngagementsEngagementIdRoute =
+  ProtectedEngagementsEngagementIdRouteImport.update({
+    id: '/engagements/$engagementId',
+    path: '/engagements/$engagementId',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersIdRoute = ProtectedDossiersIdRouteImport.update({
+  id: '/dossiers/$id',
+  path: '/dossiers/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAssignmentsQueueRoute =
+  ProtectedAssignmentsQueueRouteImport.update({
+    id: '/assignments/queue',
+    path: '/assignments/queue',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAssignmentsEscalationsRoute =
+  ProtectedAssignmentsEscalationsRouteImport.update({
+    id: '/assignments/escalations',
+    path: '/assignments/escalations',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAssignmentsIdRoute = ProtectedAssignmentsIdRouteImport.update({
+  id: '/assignments/$id',
+  path: '/assignments/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAfterActionsAfterActionIdRoute =
+  ProtectedAfterActionsAfterActionIdRouteImport.update({
+    id: '/after-actions/$afterActionId',
+    path: '/after-actions/$afterActionId',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAdminApprovalsRoute = ProtectedAdminApprovalsRouteImport.update({
+  id: '/admin/approvals',
+  path: '/admin/approvals',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPositionsIdVersionsRoute =
+  ProtectedPositionsIdVersionsRouteImport.update({
+    id: '/versions',
+    path: '/versions',
+    getParentRoute: () => ProtectedPositionsIdRoute,
+  } as any)
+const ProtectedPositionsIdApprovalsRoute =
+  ProtectedPositionsIdApprovalsRouteImport.update({
+    id: '/approvals',
+    path: '/approvals',
+    getParentRoute: () => ProtectedPositionsIdRoute,
+  } as any)
+const ProtectedIntakeTicketsIdRoute =
+  ProtectedIntakeTicketsIdRouteImport.update({
+    id: '/tickets/$id',
+    path: '/tickets/$id',
+    getParentRoute: () => ProtectedIntakeRoute,
+  } as any)
+const ProtectedEngagementsEngagementIdAfterActionRoute =
+  ProtectedEngagementsEngagementIdAfterActionRouteImport.update({
+    id: '/after-action',
+    path: '/after-action',
+    getParentRoute: () => ProtectedEngagementsEngagementIdRoute,
+  } as any)
+const ProtectedAfterActionsAfterActionIdVersionsRoute =
+  ProtectedAfterActionsAfterActionIdVersionsRouteImport.update({
+    id: '/versions',
+    path: '/versions',
+    getParentRoute: () => ProtectedAfterActionsAfterActionIdRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/responsive-demo': typeof ResponsiveDemoRoute
+  '/accessibility': typeof ProtectedAccessibilityRoute
+  '/analytics': typeof ProtectedAnalyticsRoute
   '/briefs': typeof ProtectedBriefsRoute
   '/countries': typeof ProtectedCountriesRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/data-library': typeof ProtectedDataLibraryRoute
   '/events': typeof ProtectedEventsRoute
+  '/export': typeof ProtectedExportRoute
   '/forums': typeof ProtectedForumsRoute
+  '/intake': typeof ProtectedIntakeRouteWithChildren
   '/intelligence': typeof ProtectedIntelligenceRoute
+  '/monitoring': typeof ProtectedMonitoringRoute
   '/mous': typeof ProtectedMousRoute
   '/organizations': typeof ProtectedOrganizationsRoute
+  '/positions': typeof ProtectedPositionsRouteWithChildren
   '/reports': typeof ProtectedReportsRoute
+  '/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/settings': typeof ProtectedSettingsRoute
   '/word-assistant': typeof ProtectedWordAssistantRoute
+  '/admin/approvals': typeof ProtectedAdminApprovalsRoute
+  '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
+  '/assignments/$id': typeof ProtectedAssignmentsIdRoute
+  '/assignments/escalations': typeof ProtectedAssignmentsEscalationsRoute
+  '/assignments/queue': typeof ProtectedAssignmentsQueueRoute
+  '/dossiers/$id': typeof ProtectedDossiersIdRoute
+  '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
+  '/intake/new': typeof ProtectedIntakeNewRoute
+  '/intake/queue': typeof ProtectedIntakeQueueRoute
+  '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
+  '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
+  '/after-actions': typeof ProtectedAfterActionsIndexRoute
+  '/approvals': typeof ProtectedApprovalsIndexRoute
+  '/assignments': typeof ProtectedAssignmentsIndexRoute
+  '/dossiers': typeof ProtectedDossiersIndexRoute
+  '/engagements': typeof ProtectedEngagementsIndexRoute
+  '/intake/': typeof ProtectedIntakeIndexRoute
+  '/positions/': typeof ProtectedPositionsIndexRoute
+  '/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
+  '/engagements/$engagementId/after-action': typeof ProtectedEngagementsEngagementIdAfterActionRoute
+  '/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
+  '/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
+  '/positions/$id/versions': typeof ProtectedPositionsIdVersionsRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
-  '/responsive-demo': typeof ResponsiveDemoRoute
+  '/accessibility': typeof ProtectedAccessibilityRoute
+  '/analytics': typeof ProtectedAnalyticsRoute
   '/briefs': typeof ProtectedBriefsRoute
   '/countries': typeof ProtectedCountriesRoute
   '/dashboard': typeof ProtectedDashboardRoute
   '/data-library': typeof ProtectedDataLibraryRoute
   '/events': typeof ProtectedEventsRoute
+  '/export': typeof ProtectedExportRoute
   '/forums': typeof ProtectedForumsRoute
   '/intelligence': typeof ProtectedIntelligenceRoute
+  '/monitoring': typeof ProtectedMonitoringRoute
   '/mous': typeof ProtectedMousRoute
   '/organizations': typeof ProtectedOrganizationsRoute
   '/reports': typeof ProtectedReportsRoute
+  '/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/settings': typeof ProtectedSettingsRoute
   '/word-assistant': typeof ProtectedWordAssistantRoute
+  '/admin/approvals': typeof ProtectedAdminApprovalsRoute
+  '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
+  '/assignments/$id': typeof ProtectedAssignmentsIdRoute
+  '/assignments/escalations': typeof ProtectedAssignmentsEscalationsRoute
+  '/assignments/queue': typeof ProtectedAssignmentsQueueRoute
+  '/dossiers/$id': typeof ProtectedDossiersIdRoute
+  '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
+  '/intake/new': typeof ProtectedIntakeNewRoute
+  '/intake/queue': typeof ProtectedIntakeQueueRoute
+  '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
+  '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
+  '/after-actions': typeof ProtectedAfterActionsIndexRoute
+  '/approvals': typeof ProtectedApprovalsIndexRoute
+  '/assignments': typeof ProtectedAssignmentsIndexRoute
+  '/dossiers': typeof ProtectedDossiersIndexRoute
+  '/engagements': typeof ProtectedEngagementsIndexRoute
+  '/intake': typeof ProtectedIntakeIndexRoute
+  '/positions': typeof ProtectedPositionsIndexRoute
+  '/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
+  '/engagements/$engagementId/after-action': typeof ProtectedEngagementsEngagementIdAfterActionRoute
+  '/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
+  '/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
+  '/positions/$id/versions': typeof ProtectedPositionsIdVersionsRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -154,18 +397,48 @@ export interface FileRoutesById {
   '/_protected': typeof ProtectedRouteWithChildren
   '/login': typeof LoginRoute
   '/register': typeof RegisterRoute
+  '/_protected/accessibility': typeof ProtectedAccessibilityRoute
+  '/_protected/analytics': typeof ProtectedAnalyticsRoute
   '/_protected/briefs': typeof ProtectedBriefsRoute
   '/_protected/countries': typeof ProtectedCountriesRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
   '/_protected/data-library': typeof ProtectedDataLibraryRoute
   '/_protected/events': typeof ProtectedEventsRoute
+  '/_protected/export': typeof ProtectedExportRoute
   '/_protected/forums': typeof ProtectedForumsRoute
+  '/_protected/intake': typeof ProtectedIntakeRouteWithChildren
   '/_protected/intelligence': typeof ProtectedIntelligenceRoute
+  '/_protected/monitoring': typeof ProtectedMonitoringRoute
   '/_protected/mous': typeof ProtectedMousRoute
   '/_protected/organizations': typeof ProtectedOrganizationsRoute
+  '/_protected/positions': typeof ProtectedPositionsRouteWithChildren
   '/_protected/reports': typeof ProtectedReportsRoute
+  '/_protected/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/_protected/settings': typeof ProtectedSettingsRoute
   '/_protected/word-assistant': typeof ProtectedWordAssistantRoute
+  '/_protected/admin/approvals': typeof ProtectedAdminApprovalsRoute
+  '/_protected/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
+  '/_protected/assignments/$id': typeof ProtectedAssignmentsIdRoute
+  '/_protected/assignments/escalations': typeof ProtectedAssignmentsEscalationsRoute
+  '/_protected/assignments/queue': typeof ProtectedAssignmentsQueueRoute
+  '/_protected/dossiers/$id': typeof ProtectedDossiersIdRoute
+  '/_protected/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
+  '/_protected/intake/new': typeof ProtectedIntakeNewRoute
+  '/_protected/intake/queue': typeof ProtectedIntakeQueueRoute
+  '/_protected/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
+  '/_protected/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
+  '/_protected/after-actions/': typeof ProtectedAfterActionsIndexRoute
+  '/_protected/approvals/': typeof ProtectedApprovalsIndexRoute
+  '/_protected/assignments/': typeof ProtectedAssignmentsIndexRoute
+  '/_protected/dossiers/': typeof ProtectedDossiersIndexRoute
+  '/_protected/engagements/': typeof ProtectedEngagementsIndexRoute
+  '/_protected/intake/': typeof ProtectedIntakeIndexRoute
+  '/_protected/positions/': typeof ProtectedPositionsIndexRoute
+  '/_protected/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
+  '/_protected/engagements/$engagementId/after-action': typeof ProtectedEngagementsEngagementIdAfterActionRoute
+  '/_protected/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
+  '/_protected/positions/$id/approvals': typeof ProtectedPositionsIdApprovalsRoute
+  '/_protected/positions/$id/versions': typeof ProtectedPositionsIdVersionsRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -173,55 +446,141 @@ export interface FileRouteTypes {
     | '/'
     | '/login'
     | '/register'
-    | '/responsive-demo'
+    | '/accessibility'
+    | '/analytics'
     | '/briefs'
     | '/countries'
     | '/dashboard'
     | '/data-library'
     | '/events'
+    | '/export'
     | '/forums'
+    | '/intake'
     | '/intelligence'
+    | '/monitoring'
     | '/mous'
     | '/organizations'
+    | '/positions'
     | '/reports'
+    | '/responsive-demo'
     | '/settings'
     | '/word-assistant'
+    | '/admin/approvals'
+    | '/after-actions/$afterActionId'
+    | '/assignments/$id'
+    | '/assignments/escalations'
+    | '/assignments/queue'
+    | '/dossiers/$id'
+    | '/engagements/$engagementId'
+    | '/intake/new'
+    | '/intake/queue'
+    | '/positions/$id'
+    | '/positions/$positionId'
+    | '/after-actions'
+    | '/approvals'
+    | '/assignments'
+    | '/dossiers'
+    | '/engagements'
+    | '/intake/'
+    | '/positions/'
+    | '/after-actions/$afterActionId/versions'
+    | '/engagements/$engagementId/after-action'
+    | '/intake/tickets/$id'
+    | '/positions/$id/approvals'
+    | '/positions/$id/versions'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/login'
     | '/register'
-    | '/responsive-demo'
+    | '/accessibility'
+    | '/analytics'
     | '/briefs'
     | '/countries'
     | '/dashboard'
     | '/data-library'
     | '/events'
+    | '/export'
     | '/forums'
     | '/intelligence'
+    | '/monitoring'
     | '/mous'
     | '/organizations'
     | '/reports'
+    | '/responsive-demo'
     | '/settings'
     | '/word-assistant'
+    | '/admin/approvals'
+    | '/after-actions/$afterActionId'
+    | '/assignments/$id'
+    | '/assignments/escalations'
+    | '/assignments/queue'
+    | '/dossiers/$id'
+    | '/engagements/$engagementId'
+    | '/intake/new'
+    | '/intake/queue'
+    | '/positions/$id'
+    | '/positions/$positionId'
+    | '/after-actions'
+    | '/approvals'
+    | '/assignments'
+    | '/dossiers'
+    | '/engagements'
+    | '/intake'
+    | '/positions'
+    | '/after-actions/$afterActionId/versions'
+    | '/engagements/$engagementId/after-action'
+    | '/intake/tickets/$id'
+    | '/positions/$id/approvals'
+    | '/positions/$id/versions'
   id:
     | '__root__'
     | '/'
     | '/_protected'
     | '/login'
     | '/register'
+    | '/_protected/accessibility'
+    | '/_protected/analytics'
     | '/_protected/briefs'
     | '/_protected/countries'
     | '/_protected/dashboard'
     | '/_protected/data-library'
     | '/_protected/events'
+    | '/_protected/export'
     | '/_protected/forums'
+    | '/_protected/intake'
     | '/_protected/intelligence'
+    | '/_protected/monitoring'
     | '/_protected/mous'
     | '/_protected/organizations'
+    | '/_protected/positions'
     | '/_protected/reports'
+    | '/_protected/responsive-demo'
     | '/_protected/settings'
     | '/_protected/word-assistant'
+    | '/_protected/admin/approvals'
+    | '/_protected/after-actions/$afterActionId'
+    | '/_protected/assignments/$id'
+    | '/_protected/assignments/escalations'
+    | '/_protected/assignments/queue'
+    | '/_protected/dossiers/$id'
+    | '/_protected/engagements/$engagementId'
+    | '/_protected/intake/new'
+    | '/_protected/intake/queue'
+    | '/_protected/positions/$id'
+    | '/_protected/positions/$positionId'
+    | '/_protected/after-actions/'
+    | '/_protected/approvals/'
+    | '/_protected/assignments/'
+    | '/_protected/dossiers/'
+    | '/_protected/engagements/'
+    | '/_protected/intake/'
+    | '/_protected/positions/'
+    | '/_protected/after-actions/$afterActionId/versions'
+    | '/_protected/engagements/$engagementId/after-action'
+    | '/_protected/intake/tickets/$id'
+    | '/_protected/positions/$id/approvals'
+    | '/_protected/positions/$id/versions'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -229,7 +588,6 @@ export interface RootRouteChildren {
   ProtectedRoute: typeof ProtectedRouteWithChildren
   LoginRoute: typeof LoginRoute
   RegisterRoute: typeof RegisterRoute
-  ResponsiveDemoRoute: typeof ResponsiveDemoRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -276,11 +634,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSettingsRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/responsive-demo': {
+      id: '/_protected/responsive-demo'
+      path: '/responsive-demo'
+      fullPath: '/responsive-demo'
+      preLoaderRoute: typeof ProtectedResponsiveDemoRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/reports': {
       id: '/_protected/reports'
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof ProtectedReportsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/positions': {
+      id: '/_protected/positions'
+      path: '/positions'
+      fullPath: '/positions'
+      preLoaderRoute: typeof ProtectedPositionsRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/organizations': {
@@ -297,6 +669,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedMousRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/monitoring': {
+      id: '/_protected/monitoring'
+      path: '/monitoring'
+      fullPath: '/monitoring'
+      preLoaderRoute: typeof ProtectedMonitoringRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/intelligence': {
       id: '/_protected/intelligence'
       path: '/intelligence'
@@ -304,11 +683,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedIntelligenceRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/intake': {
+      id: '/_protected/intake'
+      path: '/intake'
+      fullPath: '/intake'
+      preLoaderRoute: typeof ProtectedIntakeRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/forums': {
       id: '/_protected/forums'
       path: '/forums'
       fullPath: '/forums'
       preLoaderRoute: typeof ProtectedForumsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/export': {
+      id: '/_protected/export'
+      path: '/export'
+      fullPath: '/export'
+      preLoaderRoute: typeof ProtectedExportRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/events': {
@@ -346,37 +739,328 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedBriefsRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/analytics': {
+      id: '/_protected/analytics'
+      path: '/analytics'
+      fullPath: '/analytics'
+      preLoaderRoute: typeof ProtectedAnalyticsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/accessibility': {
+      id: '/_protected/accessibility'
+      path: '/accessibility'
+      fullPath: '/accessibility'
+      preLoaderRoute: typeof ProtectedAccessibilityRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/positions/': {
+      id: '/_protected/positions/'
+      path: '/'
+      fullPath: '/positions/'
+      preLoaderRoute: typeof ProtectedPositionsIndexRouteImport
+      parentRoute: typeof ProtectedPositionsRoute
+    }
+    '/_protected/intake/': {
+      id: '/_protected/intake/'
+      path: '/'
+      fullPath: '/intake/'
+      preLoaderRoute: typeof ProtectedIntakeIndexRouteImport
+      parentRoute: typeof ProtectedIntakeRoute
+    }
+    '/_protected/engagements/': {
+      id: '/_protected/engagements/'
+      path: '/engagements'
+      fullPath: '/engagements'
+      preLoaderRoute: typeof ProtectedEngagementsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/dossiers/': {
+      id: '/_protected/dossiers/'
+      path: '/dossiers'
+      fullPath: '/dossiers'
+      preLoaderRoute: typeof ProtectedDossiersIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/assignments/': {
+      id: '/_protected/assignments/'
+      path: '/assignments'
+      fullPath: '/assignments'
+      preLoaderRoute: typeof ProtectedAssignmentsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/approvals/': {
+      id: '/_protected/approvals/'
+      path: '/approvals'
+      fullPath: '/approvals'
+      preLoaderRoute: typeof ProtectedApprovalsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/after-actions/': {
+      id: '/_protected/after-actions/'
+      path: '/after-actions'
+      fullPath: '/after-actions'
+      preLoaderRoute: typeof ProtectedAfterActionsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/positions/$positionId': {
+      id: '/_protected/positions/$positionId'
+      path: '/$positionId'
+      fullPath: '/positions/$positionId'
+      preLoaderRoute: typeof ProtectedPositionsPositionIdRouteImport
+      parentRoute: typeof ProtectedPositionsRoute
+    }
+    '/_protected/positions/$id': {
+      id: '/_protected/positions/$id'
+      path: '/$id'
+      fullPath: '/positions/$id'
+      preLoaderRoute: typeof ProtectedPositionsIdRouteImport
+      parentRoute: typeof ProtectedPositionsRoute
+    }
+    '/_protected/intake/queue': {
+      id: '/_protected/intake/queue'
+      path: '/queue'
+      fullPath: '/intake/queue'
+      preLoaderRoute: typeof ProtectedIntakeQueueRouteImport
+      parentRoute: typeof ProtectedIntakeRoute
+    }
+    '/_protected/intake/new': {
+      id: '/_protected/intake/new'
+      path: '/new'
+      fullPath: '/intake/new'
+      preLoaderRoute: typeof ProtectedIntakeNewRouteImport
+      parentRoute: typeof ProtectedIntakeRoute
+    }
+    '/_protected/engagements/$engagementId': {
+      id: '/_protected/engagements/$engagementId'
+      path: '/engagements/$engagementId'
+      fullPath: '/engagements/$engagementId'
+      preLoaderRoute: typeof ProtectedEngagementsEngagementIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/dossiers/$id': {
+      id: '/_protected/dossiers/$id'
+      path: '/dossiers/$id'
+      fullPath: '/dossiers/$id'
+      preLoaderRoute: typeof ProtectedDossiersIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/assignments/queue': {
+      id: '/_protected/assignments/queue'
+      path: '/assignments/queue'
+      fullPath: '/assignments/queue'
+      preLoaderRoute: typeof ProtectedAssignmentsQueueRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/assignments/escalations': {
+      id: '/_protected/assignments/escalations'
+      path: '/assignments/escalations'
+      fullPath: '/assignments/escalations'
+      preLoaderRoute: typeof ProtectedAssignmentsEscalationsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/assignments/$id': {
+      id: '/_protected/assignments/$id'
+      path: '/assignments/$id'
+      fullPath: '/assignments/$id'
+      preLoaderRoute: typeof ProtectedAssignmentsIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/after-actions/$afterActionId': {
+      id: '/_protected/after-actions/$afterActionId'
+      path: '/after-actions/$afterActionId'
+      fullPath: '/after-actions/$afterActionId'
+      preLoaderRoute: typeof ProtectedAfterActionsAfterActionIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/approvals': {
+      id: '/_protected/admin/approvals'
+      path: '/admin/approvals'
+      fullPath: '/admin/approvals'
+      preLoaderRoute: typeof ProtectedAdminApprovalsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/positions/$id/versions': {
+      id: '/_protected/positions/$id/versions'
+      path: '/versions'
+      fullPath: '/positions/$id/versions'
+      preLoaderRoute: typeof ProtectedPositionsIdVersionsRouteImport
+      parentRoute: typeof ProtectedPositionsIdRoute
+    }
+    '/_protected/positions/$id/approvals': {
+      id: '/_protected/positions/$id/approvals'
+      path: '/approvals'
+      fullPath: '/positions/$id/approvals'
+      preLoaderRoute: typeof ProtectedPositionsIdApprovalsRouteImport
+      parentRoute: typeof ProtectedPositionsIdRoute
+    }
+    '/_protected/intake/tickets/$id': {
+      id: '/_protected/intake/tickets/$id'
+      path: '/tickets/$id'
+      fullPath: '/intake/tickets/$id'
+      preLoaderRoute: typeof ProtectedIntakeTicketsIdRouteImport
+      parentRoute: typeof ProtectedIntakeRoute
+    }
+    '/_protected/engagements/$engagementId/after-action': {
+      id: '/_protected/engagements/$engagementId/after-action'
+      path: '/after-action'
+      fullPath: '/engagements/$engagementId/after-action'
+      preLoaderRoute: typeof ProtectedEngagementsEngagementIdAfterActionRouteImport
+      parentRoute: typeof ProtectedEngagementsEngagementIdRoute
+    }
+    '/_protected/after-actions/$afterActionId/versions': {
+      id: '/_protected/after-actions/$afterActionId/versions'
+      path: '/versions'
+      fullPath: '/after-actions/$afterActionId/versions'
+      preLoaderRoute: typeof ProtectedAfterActionsAfterActionIdVersionsRouteImport
+      parentRoute: typeof ProtectedAfterActionsAfterActionIdRoute
+    }
   }
 }
 
+interface ProtectedIntakeRouteChildren {
+  ProtectedIntakeNewRoute: typeof ProtectedIntakeNewRoute
+  ProtectedIntakeQueueRoute: typeof ProtectedIntakeQueueRoute
+  ProtectedIntakeIndexRoute: typeof ProtectedIntakeIndexRoute
+  ProtectedIntakeTicketsIdRoute: typeof ProtectedIntakeTicketsIdRoute
+}
+
+const ProtectedIntakeRouteChildren: ProtectedIntakeRouteChildren = {
+  ProtectedIntakeNewRoute: ProtectedIntakeNewRoute,
+  ProtectedIntakeQueueRoute: ProtectedIntakeQueueRoute,
+  ProtectedIntakeIndexRoute: ProtectedIntakeIndexRoute,
+  ProtectedIntakeTicketsIdRoute: ProtectedIntakeTicketsIdRoute,
+}
+
+const ProtectedIntakeRouteWithChildren = ProtectedIntakeRoute._addFileChildren(
+  ProtectedIntakeRouteChildren,
+)
+
+interface ProtectedPositionsIdRouteChildren {
+  ProtectedPositionsIdApprovalsRoute: typeof ProtectedPositionsIdApprovalsRoute
+  ProtectedPositionsIdVersionsRoute: typeof ProtectedPositionsIdVersionsRoute
+}
+
+const ProtectedPositionsIdRouteChildren: ProtectedPositionsIdRouteChildren = {
+  ProtectedPositionsIdApprovalsRoute: ProtectedPositionsIdApprovalsRoute,
+  ProtectedPositionsIdVersionsRoute: ProtectedPositionsIdVersionsRoute,
+}
+
+const ProtectedPositionsIdRouteWithChildren =
+  ProtectedPositionsIdRoute._addFileChildren(ProtectedPositionsIdRouteChildren)
+
+interface ProtectedPositionsRouteChildren {
+  ProtectedPositionsIdRoute: typeof ProtectedPositionsIdRouteWithChildren
+  ProtectedPositionsPositionIdRoute: typeof ProtectedPositionsPositionIdRoute
+  ProtectedPositionsIndexRoute: typeof ProtectedPositionsIndexRoute
+}
+
+const ProtectedPositionsRouteChildren: ProtectedPositionsRouteChildren = {
+  ProtectedPositionsIdRoute: ProtectedPositionsIdRouteWithChildren,
+  ProtectedPositionsPositionIdRoute: ProtectedPositionsPositionIdRoute,
+  ProtectedPositionsIndexRoute: ProtectedPositionsIndexRoute,
+}
+
+const ProtectedPositionsRouteWithChildren =
+  ProtectedPositionsRoute._addFileChildren(ProtectedPositionsRouteChildren)
+
+interface ProtectedAfterActionsAfterActionIdRouteChildren {
+  ProtectedAfterActionsAfterActionIdVersionsRoute: typeof ProtectedAfterActionsAfterActionIdVersionsRoute
+}
+
+const ProtectedAfterActionsAfterActionIdRouteChildren: ProtectedAfterActionsAfterActionIdRouteChildren =
+  {
+    ProtectedAfterActionsAfterActionIdVersionsRoute:
+      ProtectedAfterActionsAfterActionIdVersionsRoute,
+  }
+
+const ProtectedAfterActionsAfterActionIdRouteWithChildren =
+  ProtectedAfterActionsAfterActionIdRoute._addFileChildren(
+    ProtectedAfterActionsAfterActionIdRouteChildren,
+  )
+
+interface ProtectedEngagementsEngagementIdRouteChildren {
+  ProtectedEngagementsEngagementIdAfterActionRoute: typeof ProtectedEngagementsEngagementIdAfterActionRoute
+}
+
+const ProtectedEngagementsEngagementIdRouteChildren: ProtectedEngagementsEngagementIdRouteChildren =
+  {
+    ProtectedEngagementsEngagementIdAfterActionRoute:
+      ProtectedEngagementsEngagementIdAfterActionRoute,
+  }
+
+const ProtectedEngagementsEngagementIdRouteWithChildren =
+  ProtectedEngagementsEngagementIdRoute._addFileChildren(
+    ProtectedEngagementsEngagementIdRouteChildren,
+  )
+
 interface ProtectedRouteChildren {
+  ProtectedAccessibilityRoute: typeof ProtectedAccessibilityRoute
+  ProtectedAnalyticsRoute: typeof ProtectedAnalyticsRoute
   ProtectedBriefsRoute: typeof ProtectedBriefsRoute
   ProtectedCountriesRoute: typeof ProtectedCountriesRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
   ProtectedDataLibraryRoute: typeof ProtectedDataLibraryRoute
   ProtectedEventsRoute: typeof ProtectedEventsRoute
+  ProtectedExportRoute: typeof ProtectedExportRoute
   ProtectedForumsRoute: typeof ProtectedForumsRoute
+  ProtectedIntakeRoute: typeof ProtectedIntakeRouteWithChildren
   ProtectedIntelligenceRoute: typeof ProtectedIntelligenceRoute
+  ProtectedMonitoringRoute: typeof ProtectedMonitoringRoute
   ProtectedMousRoute: typeof ProtectedMousRoute
   ProtectedOrganizationsRoute: typeof ProtectedOrganizationsRoute
+  ProtectedPositionsRoute: typeof ProtectedPositionsRouteWithChildren
   ProtectedReportsRoute: typeof ProtectedReportsRoute
+  ProtectedResponsiveDemoRoute: typeof ProtectedResponsiveDemoRoute
   ProtectedSettingsRoute: typeof ProtectedSettingsRoute
   ProtectedWordAssistantRoute: typeof ProtectedWordAssistantRoute
+  ProtectedAdminApprovalsRoute: typeof ProtectedAdminApprovalsRoute
+  ProtectedAfterActionsAfterActionIdRoute: typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
+  ProtectedAssignmentsIdRoute: typeof ProtectedAssignmentsIdRoute
+  ProtectedAssignmentsEscalationsRoute: typeof ProtectedAssignmentsEscalationsRoute
+  ProtectedAssignmentsQueueRoute: typeof ProtectedAssignmentsQueueRoute
+  ProtectedDossiersIdRoute: typeof ProtectedDossiersIdRoute
+  ProtectedEngagementsEngagementIdRoute: typeof ProtectedEngagementsEngagementIdRouteWithChildren
+  ProtectedAfterActionsIndexRoute: typeof ProtectedAfterActionsIndexRoute
+  ProtectedApprovalsIndexRoute: typeof ProtectedApprovalsIndexRoute
+  ProtectedAssignmentsIndexRoute: typeof ProtectedAssignmentsIndexRoute
+  ProtectedDossiersIndexRoute: typeof ProtectedDossiersIndexRoute
+  ProtectedEngagementsIndexRoute: typeof ProtectedEngagementsIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
+  ProtectedAccessibilityRoute: ProtectedAccessibilityRoute,
+  ProtectedAnalyticsRoute: ProtectedAnalyticsRoute,
   ProtectedBriefsRoute: ProtectedBriefsRoute,
   ProtectedCountriesRoute: ProtectedCountriesRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,
   ProtectedDataLibraryRoute: ProtectedDataLibraryRoute,
   ProtectedEventsRoute: ProtectedEventsRoute,
+  ProtectedExportRoute: ProtectedExportRoute,
   ProtectedForumsRoute: ProtectedForumsRoute,
+  ProtectedIntakeRoute: ProtectedIntakeRouteWithChildren,
   ProtectedIntelligenceRoute: ProtectedIntelligenceRoute,
+  ProtectedMonitoringRoute: ProtectedMonitoringRoute,
   ProtectedMousRoute: ProtectedMousRoute,
   ProtectedOrganizationsRoute: ProtectedOrganizationsRoute,
+  ProtectedPositionsRoute: ProtectedPositionsRouteWithChildren,
   ProtectedReportsRoute: ProtectedReportsRoute,
+  ProtectedResponsiveDemoRoute: ProtectedResponsiveDemoRoute,
   ProtectedSettingsRoute: ProtectedSettingsRoute,
   ProtectedWordAssistantRoute: ProtectedWordAssistantRoute,
+  ProtectedAdminApprovalsRoute: ProtectedAdminApprovalsRoute,
+  ProtectedAfterActionsAfterActionIdRoute:
+    ProtectedAfterActionsAfterActionIdRouteWithChildren,
+  ProtectedAssignmentsIdRoute: ProtectedAssignmentsIdRoute,
+  ProtectedAssignmentsEscalationsRoute: ProtectedAssignmentsEscalationsRoute,
+  ProtectedAssignmentsQueueRoute: ProtectedAssignmentsQueueRoute,
+  ProtectedDossiersIdRoute: ProtectedDossiersIdRoute,
+  ProtectedEngagementsEngagementIdRoute:
+    ProtectedEngagementsEngagementIdRouteWithChildren,
+  ProtectedAfterActionsIndexRoute: ProtectedAfterActionsIndexRoute,
+  ProtectedApprovalsIndexRoute: ProtectedApprovalsIndexRoute,
+  ProtectedAssignmentsIndexRoute: ProtectedAssignmentsIndexRoute,
+  ProtectedDossiersIndexRoute: ProtectedDossiersIndexRoute,
+  ProtectedEngagementsIndexRoute: ProtectedEngagementsIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
@@ -388,7 +1072,6 @@ const rootRouteChildren: RootRouteChildren = {
   ProtectedRoute: ProtectedRouteWithChildren,
   LoginRoute: LoginRoute,
   RegisterRoute: RegisterRoute,
-  ResponsiveDemoRoute: ResponsiveDemoRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
