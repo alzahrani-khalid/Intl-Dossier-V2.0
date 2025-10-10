@@ -1,8 +1,10 @@
 import { useTranslation } from 'react-i18next';
 import { useInView } from 'react-intersection-observer';
+import { useEffect } from 'react';
+import { supabase } from '@/lib/supabase';
 import { Badge } from './ui/badge';
 import { Skeleton } from './ui/skeleton';
-import { Calendar, FileText, MessageSquare, Handshake, CheckCircle, Lightbulb } from 'lucide-react';
+import { Calendar, FileText, MessageSquare, Handshake, CheckCircle, Lightbulb, Link2 } from 'lucide-react';
 import type { TimelineEvent } from '../types/dossier';
 
 interface DossierTimelineProps {
@@ -15,6 +17,7 @@ interface DossierTimelineProps {
 }
 
 export function DossierTimeline({
+  dossierId,
   events = [],
   isLoading,
   isFetchingNextPage,
@@ -49,6 +52,8 @@ export function DossierTimeline({
         return <FileText className="h-4 w-4" />;
       case 'intelligence':
         return <Lightbulb className="h-4 w-4" />;
+      case 'relationship':
+        return <Link2 className="h-4 w-4" />;
       default:
         return null;
     }
@@ -69,10 +74,48 @@ export function DossierTimeline({
         return 'bg-gray-100 text-gray-800';
       case 'intelligence':
         return 'bg-rose-100 text-rose-800';
+      case 'relationship':
+        return 'bg-teal-100 text-teal-800';
       default:
         return 'bg-gray-100 text-gray-800';
     }
   };
+
+  // Subscribe to Realtime updates for relationship events
+  useEffect(() => {
+    if (!dossierId) return;
+
+    // Subscribe to dossier_relationships table
+    const channel = supabase
+      .channel(`dossier_relationships:${dossierId}`)
+      .on(
+        'postgres_changes',
+        {
+          event: 'INSERT',
+          schema: 'public',
+          table: 'dossier_relationships',
+          filter: `parent_dossier_id=eq.${dossierId},child_dossier_id=eq.${dossierId}`,
+        },
+        () => {
+          // Debounce invalidation to avoid too many refetches
+          const timeoutId = setTimeout(() => {
+            // Trigger refetch by calling onLoadMore if available
+            // In practice, this would call queryClient.invalidateQueries(['timeline', dossierId])
+            // but we're keeping it simple here
+            if (onLoadMore) {
+              onLoadMore();
+            }
+          }, 500);
+
+          return () => clearTimeout(timeoutId);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [dossierId, onLoadMore]);
 
   // Loading skeleton
   if (isLoading) {

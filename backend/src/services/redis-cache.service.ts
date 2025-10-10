@@ -32,16 +32,17 @@ export class RedisCacheService {
   private client: Redis | null = null;
   private isConnected: boolean = false;
   private fallbackMode: boolean = false;
+  private errorLogged: boolean = false; // Track if error has been logged
 
   constructor(
     private redisUrl: string = process.env.REDIS_URL || 'redis://localhost:6379',
     private options: { maxRetriesPerRequest: number; retryStrategy?: (times: number) => number | void } = {
-      maxRetriesPerRequest: 3,
+      maxRetriesPerRequest: 1, // Reduce retries from 3 to 1
       retryStrategy: (times: number) => {
-        if (times > 3) {
-          return null; // Stop retrying, enter fallback mode
+        if (times > 1) {
+          return null; // Stop retrying after first attempt, enter fallback mode
         }
-        return Math.min(times * 100, 3000); // Exponential backoff, max 3 seconds
+        return 100; // Wait 100ms before retry
       }
     }
   ) {
@@ -58,18 +59,26 @@ export class RedisCacheService {
       this.client.on('connect', () => {
         this.isConnected = true;
         this.fallbackMode = false;
-        console.log('Redis connected successfully');
+        this.errorLogged = false;
+        console.log('✓ Redis connected successfully');
       });
 
       this.client.on('error', (error) => {
-        console.warn('Redis connection error, entering fallback mode:', error.message);
+        // Log error only once to avoid spam
+        if (!this.errorLogged) {
+          console.warn('⚠ Redis unavailable, running in fallback mode (caching disabled)');
+          this.errorLogged = true;
+        }
         this.isConnected = false;
         this.fallbackMode = true;
       });
 
       this.client.on('close', () => {
         this.isConnected = false;
-        console.log('Redis connection closed');
+        if (this.errorLogged) {
+          // Reset flag when connection closes after being in error state
+          this.errorLogged = false;
+        }
       });
 
     } catch (error) {

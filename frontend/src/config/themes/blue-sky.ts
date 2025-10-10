@@ -129,10 +129,10 @@ export const blueSkyTheme: ThemeConfig = {
   },
   typography: {
     fonts: {
-      // Twitter's font stack with system fonts
-      sans: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Ubuntu, Arial, sans-serif',
-      serif: '"Crimson Text", "Georgia", "Times New Roman", serif',
-      mono: '"SF Mono", "Monaco", "Inconsolata", "Fira Code", "Courier New", monospace'
+      // Standardized font stack
+      sans: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+      serif: 'Georgia, "Times New Roman", serif',
+      mono: 'Consolas, "Courier New", monospace'
     },
     sizes: {
       xs: '0.75rem',     // 12px - Smallest text

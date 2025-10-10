@@ -5,7 +5,7 @@ import { ok, requireAuthHeader, sendError, getAuthToken } from './helpers';
 
 const router = Router();
 
-const limiter = rateLimit({ windowMs: 60_000, max: 6, standardHeaders: true, legacyHeaders: false, keyGenerator: (req) => getAuthToken(req) || req.ip });
+const limiter = rateLimit({ windowMs: 60_000, max: 6, standardHeaders: true, legacyHeaders: false, keyGenerator: (req) => getAuthToken(req) || req.ip || 'unknown' });
 
 router.post('/cluster', requireAuthHeader, limiter, (req, res) => {
   try {

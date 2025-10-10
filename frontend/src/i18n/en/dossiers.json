@@ -141,12 +141,381 @@
   },
   "loading": "Loading dossiers...",
   "tabs": {
+    "overview": "Overview",
+    "relationships": "Relationships",
     "timeline": "Timeline",
+    "engagements": "Engagements",
     "positions": "Positions",
     "mous": "MoUs",
+    "intelligence": "Intelligence",
+    "contacts": "Key Contacts",
     "commitments": "Commitments",
-    "files": "Files",
-    "intelligence": "Intelligence"
+    "documents": "Documents",
+    "files": "Files"
+  },
+  "relationships": {
+    "title": "Dossier Relationships",
+    "add": "Add Relationship",
+    "remove": "Remove Relationship",
+    "networkGraph": "Network Graph",
+    "listView": "List View",
+    "empty": "No relationships found",
+    "no_relationships": "No relationships found",
+    "filter_by_type": "Filter by Type",
+    "all_types": "All Types",
+    "legend": "Legend",
+    "types": {
+      "member_of": "Member of",
+      "participates_in": "Participates in",
+      "collaborates_with": "Collaborates with",
+      "monitors": "Monitors",
+      "is_member": "Is member",
+      "hosts": "Hosts"
+    },
+    "strength": {
+      "primary": "Primary",
+      "secondary": "Secondary",
+      "observer": "Observer"
+    },
+    "status": {
+      "active": "Active",
+      "archived": "Archived"
+    },
+    "fields": {
+      "parentDossier": "Parent Dossier",
+      "childDossier": "Related Dossier",
+      "relationshipType": "Relationship Type",
+      "strength": "Strength",
+      "establishedDate": "Established Date",
+      "endDate": "End Date",
+      "notes": "Notes"
+    },
+    "graph": {
+      "zoomIn": "Zoom In",
+      "zoomOut": "Zoom Out",
+      "fitView": "Fit View",
+      "reset": "Reset View",
+      "loading": "Loading graph...",
+      "noData": "No relationships to display"
+    },
+    "errors": {
+      "loadFailed": "Failed to load relationships",
+      "createFailed": "Failed to create relationship",
+      "deleteFailed": "Failed to delete relationship"
+    },
+    "success": {
+      "created": "Relationship created successfully",
+      "deleted": "Relationship deleted successfully"
+    }
+  },
+  "documents": {
+    "title": "Documents",
+    "upload": "Upload Document",
+    "download": "Download",
+    "delete": "Delete",
+    "preview": "Preview",
+    "empty": "No documents found",
+    "ownerTypes": {
+      "dossier": "Dossier",
+      "engagement": "Engagement",
+      "position": "Position",
+      "mou": "MoU",
+      "after_action": "After Action",
+      "ticket": "Ticket",
+      "assignment": "Assignment",
+      "intelligence_signal": "Intelligence",
+      "commitment": "Commitment"
+    },
+    "fields": {
+      "fileName": "File Name",
+      "fileSize": "File Size",
+      "mimeType": "Type",
+      "documentType": "Document Type",
+      "language": "Language",
+      "tags": "Tags",
+      "uploaded": "Uploaded",
+      "uploadedBy": "Uploaded By"
+    },
+    "scanStatus": {
+      "pending": "Scanning...",
+      "clean": "Clean",
+      "infected": "Infected",
+      "error": "Scan Error"
+    },
+    "sensitivity": {
+      "public": "Public",
+      "internal": "Internal",
+      "confidential": "Confidential",
+      "secret": "Secret"
+    },
+    "types": {
+      "memo": "Memo",
+      "report": "Report",
+      "agreement": "Agreement",
+      "minutes": "Minutes",
+      "analysis": "Analysis",
+      "photo": "Photo"
+    },
+    "errors": {
+      "uploadFailed": "Failed to upload document",
+      "downloadFailed": "Failed to download document",
+      "deleteFailed": "Failed to delete document",
+      "fileTooLarge": "File size exceeds 100MB limit",
+      "infected": "File contains malware and cannot be uploaded"
+    },
+    "success": {
+      "uploaded": "Document uploaded successfully",
+      "deleted": "Document deleted successfully"
+    }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "addEvent": "Add Event",
+    "editEvent": "Edit Event",
+    "deleteEvent": "Delete Event",
+    "today": "Today",
+    "month": "Month",
+    "week": "Week",
+    "day": "Day",
+    "agenda": "Agenda",
+    "empty": "No events scheduled",
+    "entryTypes": {
+      "internal_meeting": "Internal Meeting",
+      "deadline": "Deadline",
+      "reminder": "Reminder",
+      "holiday": "Holiday",
+      "training": "Training",
+      "review": "Review",
+      "other": "Other"
+    },
+    "fields": {
+      "title": "Title",
+      "description": "Description",
+      "eventDate": "Date",
+      "eventTime": "Time",
+      "duration": "Duration (minutes)",
+      "allDay": "All Day",
+      "location": "Location",
+      "isVirtual": "Virtual Meeting",
+      "meetingLink": "Meeting Link",
+      "organizer": "Organizer",
+      "attendees": "Attendees",
+      "linkedItem": "Linked Item"
+    },
+    "recurrence": {
+      "enabled": "Recurring Event",
+      "pattern": "Recurrence Pattern",
+      "endDate": "End Date",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "yearly": "Yearly"
+    },
+    "status": {
+      "scheduled": "Scheduled",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "rescheduled": "Rescheduled"
+    },
+    "errors": {
+      "loadFailed": "Failed to load calendar events",
+      "createFailed": "Failed to create event",
+      "updateFailed": "Failed to update event",
+      "deleteFailed": "Failed to delete event"
+    },
+    "success": {
+      "created": "Event created successfully",
+      "updated": "Event updated successfully",
+      "deleted": "Event deleted successfully"
+    }
+  },
+  "positionLinks": {
+    "title": "Linked Positions",
+    "link": "Link Position",
+    "unlink": "Unlink Position",
+    "bulkLink": "Bulk Link Positions",
+    "empty": "No positions linked",
+    "linkTypes": {
+      "primary": "Primary",
+      "related": "Related",
+      "reference": "Reference"
+    },
+    "fields": {
+      "position": "Position",
+      "linkType": "Link Type",
+      "addedAt": "Added",
+      "addedBy": "Added By",
+      "notes": "Notes"
+    },
+    "errors": {
+      "loadFailed": "Failed to load position links",
+      "linkFailed": "Failed to link position",
+      "unlinkFailed": "Failed to unlink position"
+    },
+    "success": {
+      "linked": "Position linked successfully",
+      "unlinked": "Position unlinked successfully",
+      "bulkLinked": "{{count}} positions linked successfully"
+    }
+  },
+  "intelligence": {
+    "title": "Intelligence Signals",
+    "log": "Log Signal",
+    "edit": "Edit Signal",
+    "delete": "Delete Signal",
+    "validate": "Validate",
+    "empty": "No intelligence signals logged",
+    "no_signals": "No Intelligence Signals",
+    "no_signals_filtered": "No Signals Found",
+    "no_signals_description": "No intelligence signals have been logged for this dossier yet",
+    "error_loading": "Error loading intelligence signals",
+    "error_generic": "An error occurred while loading intelligence signals. Please try again.",
+    "filter": "Filter Signals",
+    "filter_by_type": "Filter by type",
+    "all_types": "All Types",
+    "source": "Source",
+    "logged_at": "Logged",
+    "validated": "Validated",
+    "more_tags": "more",
+    "type": {
+      "news": "News",
+      "report": "Report",
+      "rumor": "Rumor",
+      "tip": "Tip",
+      "analysis": "Analysis",
+      "alert": "Alert"
+    },
+    "confidence": {
+      "confirmed": "Confirmed",
+      "probable": "Probable",
+      "possible": "Possible",
+      "unconfirmed": "Unconfirmed"
+    },
+    "signalTypes": {
+      "news": "News",
+      "report": "Report",
+      "rumor": "Rumor",
+      "tip": "Tip",
+      "analysis": "Analysis",
+      "alert": "Alert"
+    },
+    "confidenceLevels": {
+      "confirmed": "Confirmed",
+      "probable": "Probable",
+      "possible": "Possible",
+      "unconfirmed": "Unconfirmed"
+    },
+    "fields": {
+      "signalType": "Type",
+      "source": "Source",
+      "sourceReliability": "Source Reliability",
+      "sourceUrl": "Source URL",
+      "title": "Title",
+      "content": "Content",
+      "confidenceLevel": "Confidence Level",
+      "tags": "Tags",
+      "impactAssessment": "Impact Assessment",
+      "loggedBy": "Logged By",
+      "loggedAt": "Logged At",
+      "validatedBy": "Validated By",
+      "validatedAt": "Validated At"
+    },
+    "reliability": {
+      "1": "Unreliable",
+      "2": "Questionable",
+      "3": "Moderate",
+      "4": "Reliable",
+      "5": "Highly Reliable"
+    },
+    "errors": {
+      "loadFailed": "Failed to load intelligence signals",
+      "createFailed": "Failed to log signal",
+      "updateFailed": "Failed to update signal",
+      "deleteFailed": "Failed to delete signal",
+      "validateFailed": "Failed to validate signal"
+    },
+    "success": {
+      "logged": "Signal logged successfully",
+      "updated": "Signal updated successfully",
+      "deleted": "Signal deleted successfully",
+      "validated": "Signal validated successfully"
+    }
+  },
+  "mous": {
+    "title": "Memoranda of Understanding",
+    "add": "Add MoU",
+    "edit": "Edit MoU",
+    "delete": "Delete MoU",
+    "viewDocument": "View Document",
+    "empty": "No MoUs found",
+    "no_mous": "No MoUs",
+    "no_mous_description": "This dossier has no memoranda of understanding yet",
+    "signed": "Signed",
+    "expires": "Expires",
+    "effective": "Effective",
+    "renewal_required": "Renewal Required",
+    "error_loading": "Error loading MoUs",
+    "error_generic": "An error occurred while loading MoUs. Please try again.",
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "renewed": "Renewed"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "active": "Active",
+      "expired": "Expired",
+      "cancelled": "Cancelled",
+      "renewed": "Renewed"
+    },
+    "fields": {
+      "title": "Title",
+      "summary": "Summary",
+      "signedDate": "Signed Date",
+      "effectiveDate": "Effective Date",
+      "expiryDate": "Expiry Date",
+      "renewalRequiredBy": "Renewal Required By",
+      "status": "Status",
+      "documentPath": "Document",
+      "parties": "Parties",
+      "renewedBy": "Renewed By"
+    },
+    "parties": {
+      "title": "Signatories",
+      "add": "Add Party",
+      "remove": "Remove Party",
+      "partyType": "Type",
+      "partyRole": "Role",
+      "signedByName": "Signed By (Name)",
+      "signedByTitle": "Signed By (Title)",
+      "types": {
+        "country": "Country",
+        "organization": "Organization"
+      },
+      "roles": {
+        "signatory": "Signatory",
+        "witness": "Witness",
+        "observer": "Observer"
+      }
+    },
+    "alerts": {
+      "renewalDue": "Renewal due within {{days}} days",
+      "expired": "This MoU has expired",
+      "expiringSoon": "Expiring soon"
+    },
+    "errors": {
+      "loadFailed": "Failed to load MoUs",
+      "createFailed": "Failed to create MoU",
+      "updateFailed": "Failed to update MoU",
+      "deleteFailed": "Failed to delete MoU"
+    },
+    "success": {
+      "created": "MoU created successfully",
+      "updated": "MoU updated successfully",
+      "deleted": "MoU deleted successfully"
+    }
   },
   "hub": {
     "title": "Dossiers Hub",

@@ -42,13 +42,13 @@ function StatCard({ icon, label, value, iconColor = 'text-muted-foreground' }: S
 export function DossierStats({ stats }: DossierStatsProps) {
   const { t } = useTranslation('dossiers');
 
-  // Calculate health score color and status
+  // Calculate health score color and status - Theme aware
   const getHealthScoreColor = (score: number | null): string => {
-    if (score === null) return 'bg-gray-500';
-    if (score >= 80) return 'bg-green-500';
-    if (score >= 60) return 'bg-blue-500';
-    if (score >= 40) return 'bg-amber-500';
-    return 'bg-red-500';
+    if (score === null) return 'bg-muted';
+    if (score >= 80) return 'bg-success';
+    if (score >= 60) return 'bg-info';
+    if (score >= 40) return 'bg-warning';
+    return 'bg-destructive';
   };
 
   const getHealthScoreLabel = (score: number | null): string => {
@@ -64,57 +64,57 @@ export function DossierStats({ stats }: DossierStatsProps) {
 
   return (
     <div className="space-y-4">
-      {/* Main Stats Grid */}
+      {/* Main Stats Grid - Theme aware */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
         <StatCard
           icon={<Calendar className="h-5 w-5" />}
           label={t('stats.totalEngagements')}
           value={stats.total_engagements}
-          iconColor="text-blue-500"
+          iconColor="text-info"
         />
         <StatCard
           icon={<MessageSquare className="h-5 w-5" />}
           label={t('stats.totalPositions')}
           value={stats.total_positions}
-          iconColor="text-purple-500"
+          iconColor="text-secondary"
         />
         <StatCard
           icon={<Handshake className="h-5 w-5" />}
           label={t('stats.totalMous')}
           value={stats.total_mous}
-          iconColor="text-green-500"
+          iconColor="text-success"
         />
       </div>
 
-      {/* Commitments Row */}
+      {/* Commitments Row - Theme aware */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <StatCard
           icon={<CheckCircle className="h-5 w-5" />}
           label={t('stats.activeCommitments')}
           value={stats.active_commitments}
-          iconColor="text-green-600"
+          iconColor="text-success"
         />
         <StatCard
           icon={<AlertCircle className="h-5 w-5" />}
           label={t('stats.overdueCommitments')}
           value={stats.overdue_commitments}
-          iconColor={stats.overdue_commitments > 0 ? 'text-red-500' : 'text-muted-foreground'}
+          iconColor={stats.overdue_commitments > 0 ? 'text-destructive' : 'text-muted-foreground'}
         />
       </div>
 
-      {/* Additional Metrics */}
+      {/* Additional Metrics - Theme aware */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <StatCard
           icon={<FileText className="h-5 w-5" />}
           label={t('stats.totalDocuments')}
           value={stats.total_documents}
-          iconColor="text-gray-500"
+          iconColor="text-muted-foreground"
         />
         <StatCard
           icon={<Activity className="h-5 w-5" />}
           label={t('stats.recentActivity')}
           value={stats.recent_activity_count}
-          iconColor="text-indigo-500"
+          iconColor="text-accent"
         />
       </div>
 

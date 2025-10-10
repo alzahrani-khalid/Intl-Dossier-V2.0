@@ -13,13 +13,17 @@ interface AuditLog {
 
 function rid() { return Math.random().toString(36).slice(2, 10); }
 
-const logs: AuditLog[] = Array.from({ length: 50 }).map((_, i) => ({
-  id: rid(),
-  action: 'login',
-  severity: (['low','medium','high','critical'] as const)[Math.floor(Math.random()*4)],
-  user_id: `user_${i%3}`,
-  created_at: new Date(Date.now() - (50 - i) * 60_000).toISOString(),
-}));
+const logs: AuditLog[] = Array.from({ length: 50 }).map((_, i) => {
+  const severities = ['low','medium','high','critical'] as const;
+  const severityIndex = Math.floor(Math.random()*4);
+  return {
+    id: rid(),
+    action: 'login',
+    severity: severities[severityIndex] ?? 'low',
+    user_id: `user_${i%3}`,
+    created_at: new Date(Date.now() - (50 - i) * 60_000).toISOString(),
+  };
+});
 
 router.get('/logs', requireAuthHeader, (req, res) => {
   const token = getAuthToken(req)!;

@@ -66,9 +66,10 @@
     --shadow-2xl: 0deg 0% 0%;
     
     /* Typography */
-    --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    --font-serif: 'Merriweather', Georgia, serif;
-    --font-mono: 'JetBrains Mono', Consolas, monospace;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-arabic: 'Tajawal', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Georgia', 'Times New Roman', serif;
+    --font-mono: 'Consolas', 'Courier New', monospace;
     
     /* Border radius */
     --radius: 0.5rem;
@@ -126,9 +127,10 @@
 
   /* Blue Sky theme classes */
   .theme-blueSky {
-    --font-sans: 'Inter', 'Open Sans', system-ui, -apple-system, sans-serif;
-    --font-serif: 'Lexend', 'Open Sans', system-ui, -apple-system, sans-serif;
-    --font-mono: 'JetBrains Mono', 'Fira Code', Consolas, monospace;
+    --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+    --font-arabic: 'Tajawal', system-ui, -apple-system, sans-serif;
+    --font-serif: 'Georgia', 'Times New Roman', serif;
+    --font-mono: 'Consolas', 'Courier New', monospace;
     --radius: 1rem;
   }
 
@@ -254,11 +256,23 @@
     transition: none !important;
   }
   
-  /* RTL-specific adjustments */
+  /* RTL/LTR font and text alignment */
+  [dir="rtl"],
+  [dir="rtl"] body,
+  [dir="rtl"] * {
+    font-family: 'Tajawal', system-ui, -apple-system, sans-serif !important;
+  }
+
+  [dir="ltr"],
+  [dir="ltr"] body,
+  [dir="ltr"] * {
+    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+  }
+
   [dir="rtl"] {
     text-align: right;
   }
-  
+
   [dir="ltr"] {
     text-align: left;
   }

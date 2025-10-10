@@ -199,12 +199,12 @@ export function DashboardPage() {
   ]
 
   return (
-    <div className="space-y-6">
+    <div className="w-full space-y-6">
       <section className="flex flex-col gap-2">
-        <h1 className="text-3xl font-bold text-foreground">
+        <h1 className="text-2xl font-bold text-foreground sm:text-3xl">
           {t('dashboard.title', 'Operations overview')}
         </h1>
-        <p className="max-w-3xl text-base text-muted-foreground">
+        <p className="max-w-3xl text-sm text-muted-foreground sm:text-base">
           {t(
             'dashboard.subtitle',
             'Live status of international commitments, intelligence briefs, and partner activities across the GASTAT dossier.'
@@ -212,14 +212,14 @@ export function DashboardPage() {
         </p>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         {stats.map((stat) => (
           <StatCard key={stat.title} {...stat} />
         ))}
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-3">
-        <Card className="lg:col-span-2">
+      <section className="grid gap-6 2xl:grid-cols-3">
+        <Card className="2xl:col-span-2">
           <CardHeader className="flex flex-col gap-1 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle>{t('dashboard.relationshipHealth', 'Relationship health')}</CardTitle>
             <span className="text-sm text-muted-foreground">
@@ -240,8 +240,8 @@ export function DashboardPage() {
         </Card>
       </section>
 
-      <section className="grid gap-6 xl:grid-cols-3">
-        <Card className="xl:col-span-2">
+      <section className="grid gap-6 2xl:grid-cols-3">
+        <Card className="2xl:col-span-2">
           <CardHeader>
             <CardTitle>{t('dashboard.workflowSnapshotTitle', 'Workflow snapshot')}</CardTitle>
           </CardHeader>
@@ -303,7 +303,7 @@ export function DashboardPage() {
         </Card>
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-2 xl:grid-cols-4">
+      <section className="grid gap-6 sm:grid-cols-2 2xl:grid-cols-4">
         {performanceTargets.map(({ icon: Icon, label, value, description }) => (
           <Card key={label} className="col-span-1">
             <CardHeader className="flex flex-row items-center justify-between">
@@ -320,7 +320,7 @@ export function DashboardPage() {
         ))}
       </section>
 
-      <section className="grid gap-6 lg:grid-cols-2">
+      <section className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader className="flex items-center gap-2">
             <CheckCircle className="h-5 w-5 text-success" />

@@ -12,6 +12,8 @@ import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Save, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { PositionDossierLinker } from '@/components/positions/PositionDossierLinker';
+import { usePositionDossierLinks } from '@/hooks/usePositionDossierLinks';
 
 // Types for position data
 interface PositionEditorData {
@@ -497,6 +499,20 @@ export function PositionEditor({
           </CardContent>
         </Card>
       </div>
+
+      {/* Linked Dossiers Section */}
+      {initialData?.id && (
+        <Card className="mt-6">
+          <CardHeader>
+            <CardTitle className="text-sm font-medium">
+              {t('positions.editor.linkedDossiers')}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <PositionDossierLinker positionId={initialData.id} />
+          </CardContent>
+        </Card>
+      )}
 
       {/* Version Conflict Dialog */}
       <Dialog open={showConflictDialog} onOpenChange={setShowConflictDialog}>

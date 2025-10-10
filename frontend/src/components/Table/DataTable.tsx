@@ -22,6 +22,7 @@ interface DataTableProps<TData, TValue> {
   enableFiltering?: boolean
   enableSorting?: boolean
   enablePagination?: boolean
+  onRowClick?: (row: TData) => void
 }
 
 export function DataTable<TData, TValue>({
@@ -31,6 +32,7 @@ export function DataTable<TData, TValue>({
   enableFiltering = true,
   enableSorting = true,
   enablePagination = true,
+  onRowClick,
 }: DataTableProps<TData, TValue>) {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.dir() === 'rtl'
@@ -62,38 +64,38 @@ export function DataTable<TData, TValue>({
   })
 
   return (
-    <div className="space-y-4">
-      {/* Global Search */}
+    <div className="space-y-3 sm:space-y-4">
+      {/* Global Search - Mobile First */}
       {enableFiltering && (
-        <div className="flex items-center justify-between">
+        <div className="px-2 sm:px-0">
           <input
             type="text"
             value={globalFilter ?? ''}
             onChange={(e) => setGlobalFilter(e.target.value)}
             placeholder={t('common.search')}
-            className="max-w-sm px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
+            className="w-full sm:max-w-sm px-3 py-2 sm:px-4 text-sm sm:text-base border border-input rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent bg-background text-foreground"
           />
         </div>
       )}
 
-      {/* Table */}
+      {/* Table - Responsive with better scroll */}
       <div className="rounded-lg border border-border overflow-hidden">
-        <div className="overflow-x-auto">
-          <table className="w-full">
+        <div className="overflow-x-auto touch-pan-x">
+          <table className="w-full min-w-max">
             <thead className="bg-muted/50">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className={`px-6 py-3 text-${isRTL ? 'right' : 'left'} text-xs font-medium text-muted-foreground uppercase tracking-wider`}
+                      className={`px-3 py-2 sm:px-4 sm:py-3 lg:px-6 text-${isRTL ? 'end' : 'start'} text-xs font-medium text-muted-foreground uppercase tracking-wider`}
                     >
                       {header.isPlaceholder ? null : (
                         <div
                           className={
                             header.column.getCanSort()
-                              ? 'flex items-center gap-2 cursor-pointer select-none hover:text-foreground'
-                              : ''
+                              ? 'flex items-center gap-1 sm:gap-2 cursor-pointer select-none hover:text-foreground min-h-[44px] sm:min-h-0'
+                              : 'min-h-[44px] sm:min-h-0 flex items-center'
                           }
                           onClick={header.column.getToggleSortingHandler()}
                         >
@@ -102,7 +104,7 @@ export function DataTable<TData, TValue>({
                             header.getContext()
                           )}
                           {header.column.getCanSort() && (
-                            <ArrowUpDown className="h-3 w-3" />
+                            <ArrowUpDown className="h-3 w-3 flex-shrink-0" />
                           )}
                         </div>
                       )}
@@ -115,12 +117,13 @@ export function DataTable<TData, TValue>({
               {table.getRowModel().rows.map((row) => (
                 <tr
                   key={row.id}
-                  className="hover:bg-accent/50 transition-colors"
+                  className={`hover:bg-accent/50 transition-colors ${onRowClick ? 'cursor-pointer active:bg-accent' : ''}`}
+                  onClick={() => onRowClick?.(row.original)}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <td
                       key={cell.id}
-                      className={`px-6 py-4 whitespace-nowrap text-sm text-foreground`}
+                      className="px-3 py-3 sm:px-4 sm:py-4 lg:px-6 whitespace-nowrap text-xs sm:text-sm text-foreground"
                     >
                       {flexRender(cell.column.columnDef.cell, cell.getContext())}
                     </td>
@@ -132,10 +135,11 @@ export function DataTable<TData, TValue>({
         </div>
       </div>
 
-      {/* Pagination */}
+      {/* Pagination - Mobile First */}
       {enablePagination && (
-        <div className="flex items-center justify-between px-2">
-          <div className="text-sm text-muted-foreground">
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 px-2 sm:px-0">
+          {/* Results count */}
+          <div className="text-xs sm:text-sm text-muted-foreground order-2 sm:order-1">
             {t('Showing')} {table.getState().pagination.pageIndex * pageSize + 1} -{' '}
             {Math.min(
               (table.getState().pagination.pageIndex + 1) * pageSize,
@@ -144,11 +148,12 @@ export function DataTable<TData, TValue>({
             {t('of')} {data.length}
           </div>
 
-          <div className="flex items-center gap-2">
+          {/* Pagination controls - Touch friendly */}
+          <div className="flex items-center gap-1 sm:gap-2 order-1 sm:order-2">
             <button
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
-              className="p-2 rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
+              className="min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 sm:p-2 flex items-center justify-center rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
               aria-label="First page"
             >
               {isRTL ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
@@ -156,13 +161,13 @@ export function DataTable<TData, TValue>({
             <button
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
-              className="p-2 rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
+              className="min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 sm:p-2 flex items-center justify-center rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
               aria-label="Previous page"
             >
               {isRTL ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
             </button>
 
-            <span className="text-sm text-muted-foreground">
+            <span className="text-xs sm:text-sm text-muted-foreground px-2 whitespace-nowrap">
               {t('Page')} {table.getState().pagination.pageIndex + 1} {t('of')}{' '}
               {table.getPageCount()}
             </span>
@@ -170,7 +175,7 @@ export function DataTable<TData, TValue>({
             <button
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
-              className="p-2 rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
+              className="min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 sm:p-2 flex items-center justify-center rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
               aria-label="Next page"
             >
               {isRTL ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
@@ -178,7 +183,7 @@ export function DataTable<TData, TValue>({
             <button
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
-              className="p-2 rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed"
+              className="min-h-[44px] min-w-[44px] sm:min-h-0 sm:min-w-0 sm:p-2 flex items-center justify-center rounded-lg hover:bg-accent disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
               aria-label="Last page"
             >
               {isRTL ? <ChevronsLeft className="h-4 w-4" /> : <ChevronsRight className="h-4 w-4" />}

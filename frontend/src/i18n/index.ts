@@ -12,6 +12,8 @@ import enPositions from './en/positions.json'
 import arPositions from './ar/positions.json'
 import enAssignments from './en/assignments.json'
 import arAssignments from './ar/assignments.json'
+import enForums from './en/forums.json'
+import arForums from './ar/forums.json'
 // Force reload
 
 const supportedLanguages = ['en', 'ar'] as const
@@ -24,6 +26,7 @@ const resources = {
     dossiers: enDossiers,
     positions: enPositions,
     assignments: enAssignments,
+    forums: enForums,
   },
   ar: {
     translation: arCommon,
@@ -31,6 +34,7 @@ const resources = {
     dossiers: arDossiers,
     positions: arPositions,
     assignments: arAssignments,
+    forums: arForums,
   },
 }
 

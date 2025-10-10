@@ -133,7 +133,7 @@ export default function Countries() {
         </div>
       </header>
 
-      <section className="grid gap-4 md:grid-cols-3">
+      <section className="grid gap-4 sm:grid-cols-2 2xl:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between">
             <CardTitle className="text-sm font-semibold text-card-foreground">

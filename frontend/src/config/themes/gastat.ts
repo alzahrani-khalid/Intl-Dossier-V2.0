@@ -122,9 +122,9 @@ export const gastatTheme = {
   },
   typography: {
     fonts: {
-      sans: 'Plus Jakarta Sans, "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", Arial, sans-serif',
-      serif: 'Source Serif 4, "Times New Roman", Times, serif',
-      mono: 'JetBrains Mono, "SFMono-Regular", Consolas, "Liberation Mono", "Courier New", monospace'
+      sans: 'Inter, system-ui, -apple-system, BlinkMacSystemFont, sans-serif',
+      serif: 'Georgia, "Times New Roman", serif',
+      mono: 'Consolas, "Courier New", monospace'
     },
     sizes: {
       xs: '0.75rem',    // 12px

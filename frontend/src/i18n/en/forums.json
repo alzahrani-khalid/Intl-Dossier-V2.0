@@ -1,0 +1,29 @@
+{
+  "title": "Title",
+  "dates": "Dates",
+  "location": "Location",
+  "venue": "Venue",
+  "participants": "Participants",
+  "sessions": "Sessions",
+  "status": "Status",
+  "virtual": "Virtual",
+  "addForum": "Add Forum",
+  "countries": "Countries",
+  "organizations": "Organizations",
+  "years": "years",
+  "organizer": "Organizer",
+  "noCountries": "No countries participating",
+  "noOrganizations": "No organizations participating",
+  "statuses": {
+    "scheduled": "Scheduled",
+    "ongoing": "Ongoing",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "participationType": {
+    "member": "Member",
+    "observer": "Observer",
+    "guest": "Guest",
+    "sponsor": "Sponsor"
+  }
+}

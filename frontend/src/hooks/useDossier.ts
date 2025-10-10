@@ -32,9 +32,8 @@ export interface DossierWithIncludes extends Dossier {
   }>;
   recent_briefs?: Array<{
     id: string;
-    generated_at: string;
-    summary_en: string;
-    summary_ar?: string;
+    created_at: string;
+    summary: string;
   }>;
 }
 
@@ -61,12 +60,26 @@ export function useDossier(
 
       // Fetch additional data based on includes
       if (includes.includes('stats')) {
+        // Determine the foreign key column based on dossier reference_type
+        const referenceColumn =
+          result.reference_type === 'country' ? 'country_id' :
+          result.reference_type === 'organization' ? 'organization_id' : null;
+
         // Fetch stats
         const [engagements, positions, mous, commitments] = await Promise.all([
+          // Engagements: has dossier_id column
           supabase.from('engagements').select('id', { count: 'exact', head: true }).eq('dossier_id', dossierId),
-          supabase.from('positions').select('id', { count: 'exact', head: true }).eq('dossier_id', dossierId),
-          supabase.from('mous').select('id', { count: 'exact', head: true }).eq('dossier_id', dossierId),
-          supabase.from('commitments').select('id', { count: 'exact', head: true }).eq('dossier_id', dossierId),
+
+          // Positions: linked via position_dossier_links junction table
+          supabase.from('position_dossier_links').select('position_id', { count: 'exact', head: true }).eq('dossier_id', dossierId),
+
+          // MoUs: use reference_id with type-specific column
+          referenceColumn && result.reference_id
+            ? supabase.from('mous').select('id', { count: 'exact', head: true }).eq(referenceColumn, result.reference_id)
+            : Promise.resolve({ count: 0 }),
+
+          // Commitments: no dossier relationship in current schema
+          Promise.resolve({ count: 0 }),
         ]);
 
         result.stats = {
@@ -95,13 +108,22 @@ export function useDossier(
       }
 
       if (includes.includes('recent_briefs')) {
-        const { data: briefs } = await supabase
-          .from('briefs')
-          .select('id, generated_at, summary_en, summary_ar')
-          .eq('dossier_id', dossierId)
-          .order('generated_at', { ascending: false })
-          .limit(3);
-        result.recent_briefs = briefs || [];
+        // Briefs use reference_id with type-specific column
+        const referenceColumn =
+          result.reference_type === 'country' ? 'country_id' :
+          result.reference_type === 'organization' ? 'organization_id' : null;
+
+        let briefs = [];
+        if (referenceColumn && result.reference_id) {
+          const { data } = await supabase
+            .from('briefs')
+            .select('id, created_at, summary')
+            .eq(referenceColumn, result.reference_id)
+            .order('created_at', { ascending: false })
+            .limit(3);
+          briefs = data || [];
+        }
+        result.recent_briefs = briefs;
       }
 
       return result;

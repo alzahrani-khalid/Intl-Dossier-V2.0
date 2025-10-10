@@ -38,7 +38,6 @@
       "type": "stdio",
       "command": "npx",
       "args": [
-        "-y",
         "shadcn@latest",
         "mcp"
       ]

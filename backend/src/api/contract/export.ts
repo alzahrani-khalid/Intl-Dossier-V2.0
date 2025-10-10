@@ -5,7 +5,7 @@ import { getAuthToken, ok, requireAuthHeader, sendError, isOtherUserToken } from
 
 const router = Router();
 
-const limiter = rateLimit({ windowMs: 60_000, max: 10, standardHeaders: true, legacyHeaders: false, keyGenerator: (req) => getAuthToken(req) || req.ip });
+const limiter = rateLimit({ windowMs: 60_000, max: 10, standardHeaders: true, legacyHeaders: false, keyGenerator: (req) => getAuthToken(req) || req.ip || 'unknown' });
 
 router.post('/', requireAuthHeader, limiter, (req, res) => {
   const token = (req as any).token as string;
@@ -21,7 +21,7 @@ router.post('/', requireAuthHeader, limiter, (req, res) => {
 
 router.get('/:id', requireAuthHeader, (req, res) => {
   const token = (req as any).token as string;
-  const item = exportService.get(req.params.id);
+  const item = exportService.get(req.params.id ?? '');
   if (!item) return sendError(res, 404, 'EXPORT_NOT_FOUND', 'Export not found', 'لم يتم العثور على التصدير');
   if (isOtherUserToken(token)) return sendError(res, 403, 'ACCESS_DENIED', 'Access denied', 'تم رفض الوصول');
   return ok(res, item);
@@ -30,10 +30,11 @@ router.get('/:id', requireAuthHeader, (req, res) => {
 router.get('/:id/download', requireAuthHeader, (req, res) => {
   const token = (req as any).token as string;
   const { id } = req.params;
-  if (id === 'non-existent-id') return sendError(res, 404, 'EXPORT_NOT_FOUND', 'Export not found', 'لم يتم العثور على التصدير');
-  if (id === 'expired-id') return sendError(res, 410, 'EXPORT_EXPIRED', 'Export expired', 'انتهت صلاحية التصدير');
-  if (id === 'processing-id') return sendError(res, 409, 'EXPORT_NOT_READY', 'Export not ready', 'التصدير غير جاهز');
-  const item = exportService.get(id);
+  const itemId = id ?? '';
+  if (itemId === 'non-existent-id') return sendError(res, 404, 'EXPORT_NOT_FOUND', 'Export not found', 'لم يتم العثور على التصدير');
+  if (itemId === 'expired-id') return sendError(res, 410, 'EXPORT_EXPIRED', 'Export expired', 'انتهت صلاحية التصدير');
+  if (itemId === 'processing-id') return sendError(res, 409, 'EXPORT_NOT_READY', 'Export not ready', 'التصدير غير جاهز');
+  const item = exportService.get(itemId);
   if (!item) return sendError(res, 404, 'EXPORT_NOT_FOUND', 'Export not found', 'لم يتم العثور على التصدير');
   if (isOtherUserToken(token)) return sendError(res, 403, 'ACCESS_DENIED', 'Access denied', 'تم رفض الوصول');
   if (item.status !== 'completed') return sendError(res, 409, 'EXPORT_NOT_READY', 'Export not ready', 'التصدير غير جاهز');

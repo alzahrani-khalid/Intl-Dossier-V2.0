@@ -150,7 +150,7 @@ export function EngagementKanbanDialog({
                 <KanbanHeader className="bg-muted/50 font-semibold text-sm px-4 py-3 border-b">
                   <div className="flex items-center justify-between">
                     <span>{column.name}</span>
-                    <span className="ml-2 px-2 py-0.5 bg-background rounded-full text-xs font-normal">
+                    <span className="ms-2 px-2 py-0.5 bg-background rounded-full text-xs font-normal">
                       {kanbanData.filter((a) => a.column === column.id).length}
                     </span>
                   </div>

@@ -14,7 +14,7 @@ import { ar, enUS } from 'date-fns/locale';
 import type { Position } from '@/types/position';
 
 export interface PositionCardProps {
-  position: Position;
+  position: Position & { link_type?: 'primary' | 'related' | 'reference' };
   onClick?: () => void;
   onAttach?: () => void;
   onDetach?: () => void;
@@ -71,6 +71,19 @@ export const PositionCard: React.FC<PositionCardProps> = ({
     }
   };
 
+  // Link type badge configuration (T059)
+  const getLinkTypeBadge = (linkType?: 'primary' | 'related' | 'reference') => {
+    if (!linkType) return null;
+
+    const config = {
+      primary: { label: 'Primary', className: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200' },
+      related: { label: 'Related', className: 'bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-200' },
+      reference: { label: 'Reference', className: 'bg-gray-50 text-gray-600 dark:bg-gray-800 dark:text-gray-400' },
+    };
+
+    return config[linkType];
+  };
+
   return (
     <Card
       className="h-full transition-shadow hover:shadow-md flex flex-col"
@@ -78,17 +91,30 @@ export const PositionCard: React.FC<PositionCardProps> = ({
       aria-label={title}
     >
       <CardHeader className="pb-3">
-        <div className="flex items-start justify-between gap-2">
-          <h3
-            className="line-clamp-2 text-lg font-semibold leading-tight"
-            onClick={onClick}
-            style={{ cursor: onClick ? 'pointer' : 'default' }}
-          >
-            {title}
-          </h3>
-          <Badge variant={getStatusVariant(positionStatus)} className="shrink-0">
-            {t(`status.${positionStatus}`)}
-          </Badge>
+        <div className="flex flex-col gap-2">
+          <div className="flex items-start justify-between gap-2">
+            <h3
+              className="line-clamp-2 text-lg font-semibold leading-tight"
+              onClick={onClick}
+              style={{ cursor: onClick ? 'pointer' : 'default' }}
+            >
+              {title}
+            </h3>
+            <Badge variant={getStatusVariant(positionStatus)} className="shrink-0">
+              {t(`status.${positionStatus}`)}
+            </Badge>
+          </div>
+          {/* Link Type Badge - T059 */}
+          {position.link_type && (
+            <div className="flex items-center gap-2">
+              <Badge
+                className={`text-xs ${getLinkTypeBadge(position.link_type)?.className}`}
+                variant="outline"
+              >
+                {getLinkTypeBadge(position.link_type)?.label}
+              </Badge>
+            </div>
+          )}
         </div>
       </CardHeader>
 

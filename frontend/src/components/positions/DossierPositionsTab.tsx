@@ -8,7 +8,7 @@
 
 import { useState, useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { usePositions } from '../../hooks/usePositions';
+import { useDossierPositionLinks } from '../../hooks/useDossierPositionLinks';
 import { PositionList } from './PositionList';
 import { AttachPositionDialog } from './AttachPositionDialog';
 import { Button } from '../ui/button';
@@ -28,29 +28,18 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<PositionStatus | 'all'>('all');
   const [typeFilter, setTypeFilter] = useState<PositionType | 'all'>('all');
+  const [linkTypeFilter, setLinkTypeFilter] = useState<'primary' | 'related' | 'reference' | 'all'>('all');
   const [showAttachDialog, setShowAttachDialog] = useState(false);
 
   // Debounce search input
   const debouncedSearch = useDebouncedValue(searchQuery, 300);
 
-  // Fetch positions filtered by dossier
-  const { data, isLoading, error, fetchNextPage, hasNextPage } = usePositions({
-    dossierId,
-    search: debouncedSearch,
+  // Fetch positions linked to this dossier with link_type information
+  const { positions, totalCount, isLoading, error, refetch } = useDossierPositionLinks(dossierId, {
+    link_type: linkTypeFilter === 'all' ? undefined : linkTypeFilter,
     status: statusFilter === 'all' ? undefined : statusFilter,
-    type: typeFilter === 'all' ? undefined : typeFilter,
-    sort: 'updated_at',
-    order: 'desc',
-    limit: 50, // Fetch more items per page for better performance
+    search: debouncedSearch,
   });
-
-  // Flatten infinite query pages into single array
-  const positions = useMemo(
-    () => data?.pages.flatMap(page => page.data) || [],
-    [data]
-  );
-
-  const totalCount = data?.pages[0]?.total || 0;
 
   // Handler for creating new position
   const handleCreatePosition = () => {
@@ -62,10 +51,11 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
     setSearchQuery('');
     setStatusFilter('all');
     setTypeFilter('all');
+    setLinkTypeFilter('all');
   };
 
   const hasActiveFilters =
-    searchQuery || statusFilter !== 'all' || typeFilter !== 'all';
+    searchQuery || statusFilter !== 'all' || typeFilter !== 'all' || linkTypeFilter !== 'all';
 
   return (
     <div className="space-y-6">
@@ -103,6 +93,26 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
             />
           </div>
 
+          {/* Link Type Filter - NEW */}
+          <div>
+            <Select
+              value={linkTypeFilter}
+              onValueChange={(value) =>
+                setLinkTypeFilter(value as 'primary' | 'related' | 'reference' | 'all')
+              }
+            >
+              <SelectTrigger aria-label="Filter by link type">
+                <SelectValue placeholder="All Link Types" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">All Link Types</SelectItem>
+                <SelectItem value="primary">Primary</SelectItem>
+                <SelectItem value="related">Related</SelectItem>
+                <SelectItem value="reference">Reference</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
           {/* Status Filter */}
           <div>
             <Select
@@ -132,38 +142,6 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
                 </SelectItem>
                 <SelectItem value="archived">
                   {t('positions:status.archived')}
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* Type Filter */}
-          <div>
-            <Select
-              value={typeFilter}
-              onValueChange={(value) => setTypeFilter(value as PositionType | 'all')}
-            >
-              <SelectTrigger aria-label={t('positions:dossier_tab.type_filter')}>
-                <SelectValue placeholder={t('positions:dossier_tab.all_types')} />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">
-                  {t('positions:dossier_tab.all_types')}
-                </SelectItem>
-                <SelectItem value="statement">
-                  {t('positions:type.statement')}
-                </SelectItem>
-                <SelectItem value="brief">
-                  {t('positions:type.brief')}
-                </SelectItem>
-                <SelectItem value="talking_points">
-                  {t('positions:type.talking_points')}
-                </SelectItem>
-                <SelectItem value="q_and_a">
-                  {t('positions:type.q_and_a')}
-                </SelectItem>
-                <SelectItem value="guidance">
-                  {t('positions:type.guidance')}
                 </SelectItem>
               </SelectContent>
             </Select>

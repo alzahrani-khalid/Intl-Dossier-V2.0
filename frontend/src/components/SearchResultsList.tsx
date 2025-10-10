@@ -1,7 +1,7 @@
 /**
  * SearchResultsList Component
- * Feature: 015-search-retrieval-spec
- * Task: T045
+ * Feature: 015-search-retrieval-spec + 017-entity-relationships-and
+ * Tasks: T045, T097, T099
  *
  * Results list with:
  * - Bilingual result cards (title, snippet with highlights)
@@ -13,12 +13,25 @@
  * - Section dividers (Exact vs Related)
  * - Loading skeletons
  * - ARIA accessibility
+ * - Relationship context display (T097)
+ * - Relationship path highlighting (T099)
  */
 
-import React from 'react';
+import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Badge } from '@/components/ui/badge';
+import { ChevronRight, ChevronLeft, Network } from 'lucide-react';
+
+interface RelationshipPathSegment {
+  dossier_id: string;
+  dossier_name_en: string;
+  dossier_name_ar: string;
+  dossier_type: string;
+  relationship_type?: string;
+  relationship_strength?: 'primary' | 'secondary' | 'observer';
+}
 
 interface SearchResult {
   id: string;
@@ -32,6 +45,22 @@ interface SearchResult {
   isArchived?: boolean;
   updatedAt: string;
   url: string;
+  // T097: Relationship context
+  parentDossier?: {
+    id: string;
+    name_en: string;
+    name_ar: string;
+    type: string;
+  };
+  linkedDossiers?: Array<{
+    id: string;
+    name_en: string;
+    name_ar: string;
+    type: string;
+    link_type?: string;
+  }>;
+  // T099: Relationship path for multi-dossier entities
+  relationshipPath?: RelationshipPathSegment[];
 }
 
 interface SearchResultsListProps {
@@ -82,6 +111,21 @@ const entityTypeBadges: Record<
 
 function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean }) {
   const badge = entityTypeBadges[result.entityType] || entityTypeBadges.dossier;
+  const [showRelationshipPath, setShowRelationshipPath] = useState(false);
+
+  // T099: Get relationship strength color
+  const getRelationshipColor = (strength?: string) => {
+    switch (strength) {
+      case 'primary':
+        return 'text-blue-600 dark:text-blue-400';
+      case 'secondary':
+        return 'text-gray-600 dark:text-gray-400';
+      case 'observer':
+        return 'text-gray-400 dark:text-gray-500';
+      default:
+        return 'text-gray-600 dark:text-gray-400';
+    }
+  };
 
   return (
     <a
@@ -112,6 +156,20 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
                 {isRTL ? 'تطابق دلالي' : 'Semantic match'}
               </span>
             )}
+
+            {/* T099: Multi-dossier relationship badge */}
+            {result.relationshipPath && result.relationshipPath.length > 1 && (
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  setShowRelationshipPath(!showRelationshipPath);
+                }}
+                className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/40 transition-colors"
+              >
+                <Network className="me-1 h-3 w-3" />
+                {result.relationshipPath.length} {isRTL ? 'ملفات' : 'dossiers'}
+              </button>
+            )}
           </div>
 
           {/* Title (bilingual) */}
@@ -140,6 +198,71 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
           <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
             {isRTL ? 'آخر تحديث:' : 'Updated:'} {new Date(result.updatedAt).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
           </div>
+
+          {/* T097: Relationship Context - Parent Dossier */}
+          {result.parentDossier && (
+            <div className="mt-2 flex items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+              <span>{isRTL ? 'من:' : 'from'}</span>
+              <Badge variant="outline" className="text-xs">
+                {isRTL ? result.parentDossier.name_ar : result.parentDossier.name_en}
+              </Badge>
+              <span className="text-gray-400">({result.parentDossier.type})</span>
+            </div>
+          )}
+
+          {/* T097: Relationship Context - Linked Dossiers */}
+          {result.linkedDossiers && result.linkedDossiers.length > 0 && (
+            <div className="mt-2 flex flex-wrap items-center gap-1 text-xs text-gray-600 dark:text-gray-400">
+              <span>{isRTL ? 'مرتبط بـ:' : 'linked to:'}</span>
+              {result.linkedDossiers.slice(0, 2).map((dossier, idx) => (
+                <Badge key={dossier.id} variant="outline" className="text-xs">
+                  {isRTL ? dossier.name_ar : dossier.name_en}
+                </Badge>
+              ))}
+              {result.linkedDossiers.length > 2 && (
+                <span className="text-gray-400">
+                  {isRTL ? `...و ${result.linkedDossiers.length - 2} أخرى` : `...and ${result.linkedDossiers.length - 2} more`}
+                </span>
+              )}
+            </div>
+          )}
+
+          {/* T099: Expandable Relationship Path */}
+          {showRelationshipPath && result.relationshipPath && result.relationshipPath.length > 0 && (
+            <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-md border border-gray-200 dark:border-gray-700">
+              <div className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+                {isRTL ? 'مسار العلاقة:' : 'Relationship Path:'}
+              </div>
+              <div className="flex flex-col gap-2">
+                {result.relationshipPath.map((segment, idx) => (
+                  <div key={segment.dossier_id} className="flex items-center gap-2 text-xs">
+                    <Badge variant="outline" className="text-xs">
+                      {isRTL ? segment.dossier_name_ar : segment.dossier_name_en}
+                    </Badge>
+                    {idx < result.relationshipPath!.length - 1 && (
+                      <>
+                        {isRTL ? (
+                          <ChevronLeft className="h-3 w-3 text-gray-400" />
+                        ) : (
+                          <ChevronRight className="h-3 w-3 text-gray-400" />
+                        )}
+                        {segment.relationship_type && (
+                          <span className={`text-xs ${getRelationshipColor(segment.relationship_strength)}`}>
+                            {segment.relationship_type}
+                          </span>
+                        )}
+                        {isRTL ? (
+                          <ChevronLeft className="h-3 w-3 text-gray-400" />
+                        ) : (
+                          <ChevronRight className="h-3 w-3 text-gray-400" />
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Rank score (dev mode only) */}

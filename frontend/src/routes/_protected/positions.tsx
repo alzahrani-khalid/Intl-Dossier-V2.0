@@ -127,7 +127,7 @@ export function PositionsLibraryPage() {
           </div>
 
           {/* Quick Stats */}
-          <div className="mt-8 grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
             <Card>
               <CardHeader className="pb-2">
                 <CardDescription className="text-xs">

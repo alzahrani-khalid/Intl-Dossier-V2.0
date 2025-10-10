@@ -59,7 +59,7 @@ export default {
       },
       fontFamily: {
         sans: ['Inter', 'system-ui', 'sans-serif'],
-        arabic: ['Noto Sans Arabic', 'system-ui', 'sans-serif'],
+        arabic: ['Tajawal', 'system-ui', 'sans-serif'],
       },
       screens: {
         'sm': '640px',    // Mobile-first: large mobile/small tablet

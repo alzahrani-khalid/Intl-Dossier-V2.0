@@ -1,0 +1,29 @@
+{
+  "title": "العنوان",
+  "dates": "التواريخ",
+  "location": "الموقع",
+  "venue": "المكان",
+  "participants": "المشاركون",
+  "sessions": "الجلسات",
+  "status": "الحالة",
+  "virtual": "افتراضي",
+  "addForum": "إضافة منتدى",
+  "countries": "الدول",
+  "organizations": "المنظمات",
+  "years": "سنوات",
+  "organizer": "المنظم",
+  "noCountries": "لا توجد دول مشاركة",
+  "noOrganizations": "لا توجد منظمات مشاركة",
+  "statuses": {
+    "scheduled": "مجدول",
+    "ongoing": "جاري",
+    "completed": "مكتمل",
+    "cancelled": "ملغى"
+  },
+  "participationType": {
+    "member": "عضو",
+    "observer": "مراقب",
+    "guest": "ضيف",
+    "sponsor": "راعي"
+  }
+}

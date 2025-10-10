@@ -19,6 +19,9 @@ import { DossierActions } from '../../../components/DossierActions';
 import { KeyContactsPanel } from '../../../components/KeyContactsPanel';
 import { ConflictDialog } from '../../../components/ConflictDialog';
 import { DossierPositionsTab } from '../../../components/positions/DossierPositionsTab';
+import { RelationshipGraph } from '../../../components/dossiers/RelationshipGraph';
+import { DossierMoUsTab } from '../../../components/dossiers/DossierMoUsTab';
+import { DossierIntelligenceTab } from '../../../components/dossiers/DossierIntelligenceTab';
 import type { ConflictError } from '../../../types/dossier';
 
 // Search params for tabs
@@ -35,7 +38,7 @@ export const Route = createFileRoute('/_protected/dossiers/$id')({
   },
 });
 
-type TabType = 'timeline' | 'positions' | 'mous' | 'commitments' | 'files' | 'intelligence';
+type TabType = 'timeline' | 'relationships' | 'positions' | 'mous' | 'intelligence' | 'contacts' | 'commitments' | 'files';
 
 function DossierDetailPage() {
   const { t } = useTranslation('dossiers');
@@ -161,11 +164,13 @@ function DossierDetailPage() {
   // Tab definitions
   const tabs: Array<{ id: TabType; label: string; disabled?: boolean }> = [
     { id: 'timeline', label: t('tabs.timeline') },
+    { id: 'relationships', label: t('tabs.relationships') },
     { id: 'positions', label: t('tabs.positions') },
-    { id: 'mous', label: t('tabs.mous'), disabled: true },
+    { id: 'mous', label: t('tabs.mous') },
+    { id: 'intelligence', label: t('tabs.intelligence') },
+    { id: 'contacts', label: t('tabs.contacts') },
     { id: 'commitments', label: t('tabs.commitments'), disabled: true },
     { id: 'files', label: t('tabs.files'), disabled: true },
-    { id: 'intelligence', label: t('tabs.intelligence'), disabled: true },
   ];
 
   return (
@@ -180,9 +185,7 @@ function DossierDetailPage() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          {/* Main Column */}
-          <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6">
             {/* Stats Cards */}
             {dossier.stats && (
               <div>
@@ -190,11 +193,12 @@ function DossierDetailPage() {
               </div>
             )}
 
-            {/* Tabs Navigation */}
+            {/* Tabs Navigation - Mobile First Responsive */}
             <div className="bg-white dark:bg-gray-800 rounded-lg shadow">
               <div className="border-b border-gray-200 dark:border-gray-700">
+                {/* Mobile: Horizontal Scrollable Tabs */}
                 <nav
-                  className="-mb-px flex space-x-8 px-6"
+                  className="-mb-px flex overflow-x-auto scrollbar-hide px-4 sm:px-6"
                   aria-label={t('detail.tabs_label')}
                   role="tablist"
                 >
@@ -207,24 +211,25 @@ function DossierDetailPage() {
                       aria-selected={activeTab === tab.id}
                       aria-controls={`${tab.id}-panel`}
                       className={`
-                        whitespace-nowrap py-4 px-1 border-b-2 font-medium text-sm
+                        flex-shrink-0 min-h-11 py-3 px-3 sm:px-4 md:px-6 border-b-2 font-medium text-xs sm:text-sm md:text-base
+                        transition-all duration-200 ease-in-out
                         ${
                           activeTab === tab.id
-                            ? 'border-blue-500 text-blue-600 dark:text-blue-400'
-                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300'
+                            ? 'border-blue-500 text-blue-600 dark:text-blue-400 bg-blue-50/50 dark:bg-blue-900/10'
+                            : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700/50'
                         }
                         ${tab.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
-                        focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500
+                        focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-t-md
                       `}
                     >
-                      {tab.label}
+                      <span className="whitespace-nowrap">{tab.label}</span>
                     </button>
                   ))}
                 </nav>
               </div>
 
-              {/* Tab Panels */}
-              <div className="p-6">
+              {/* Tab Panels - Responsive Padding */}
+              <div className="p-4 sm:p-6">
                 {/* Timeline Tab */}
                 {activeTab === 'timeline' && (
                   <div
@@ -233,6 +238,17 @@ function DossierDetailPage() {
                     aria-labelledby="timeline-tab"
                   >
                     <DossierTimeline dossierId={id} />
+                  </div>
+                )}
+
+                {/* Relationships Tab */}
+                {activeTab === 'relationships' && (
+                  <div
+                    id="relationships-panel"
+                    role="tabpanel"
+                    aria-labelledby="relationships-tab"
+                  >
+                    <RelationshipGraph dossierId={id} />
                   </div>
                 )}
 
@@ -247,8 +263,41 @@ function DossierDetailPage() {
                   </div>
                 )}
 
+                {/* MoUs Tab */}
+                {activeTab === 'mous' && (
+                  <div
+                    id="mous-panel"
+                    role="tabpanel"
+                    aria-labelledby="mous-tab"
+                  >
+                    <DossierMoUsTab dossierId={id} />
+                  </div>
+                )}
+
+                {/* Intelligence Tab */}
+                {activeTab === 'intelligence' && (
+                  <div
+                    id="intelligence-panel"
+                    role="tabpanel"
+                    aria-labelledby="intelligence-tab"
+                  >
+                    <DossierIntelligenceTab dossierId={id} />
+                  </div>
+                )}
+
+                {/* Contacts Tab */}
+                {activeTab === 'contacts' && (
+                  <div
+                    id="contacts-panel"
+                    role="tabpanel"
+                    aria-labelledby="contacts-tab"
+                  >
+                    <KeyContactsPanel dossierId={id} />
+                  </div>
+                )}
+
                 {/* Other tabs - placeholder */}
-                {activeTab !== 'timeline' && activeTab !== 'positions' && (
+                {!['timeline', 'relationships', 'positions', 'mous', 'intelligence', 'contacts'].includes(activeTab) && (
                   <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                     <p>{t('detail.tab_coming_soon')}</p>
                   </div>
@@ -256,45 +305,8 @@ function DossierDetailPage() {
               </div>
             </div>
 
-            {/* Actions Panel */}
-            <DossierActions dossierId={id} />
-          </div>
-
-          {/* Sidebar */}
-          <div className="space-y-6">
-            {/* Key Contacts Panel */}
-            <KeyContactsPanel dossierId={id} />
-
-            {/* Recent Briefs */}
-            {dossier.recent_briefs && dossier.recent_briefs.length > 0 && (
-              <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6">
-                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-4">
-                  {t('detail.recent_briefs_title')}
-                </h3>
-                <div className="space-y-3">
-                  {dossier.recent_briefs.slice(0, 3).map((brief) => (
-                    <div
-                      key={brief.id}
-                      className="border-l-4 border-blue-500 ps-4 py-2"
-                    >
-                      <p className="text-sm text-gray-600 dark:text-gray-400">
-                        {new Date(brief.generated_at).toLocaleDateString()}
-                      </p>
-                      <p className="text-sm text-gray-900 dark:text-white line-clamp-2">
-                        {brief.summary_en}
-                      </p>
-                    </div>
-                  ))}
-                </div>
-                <button
-                  onClick={() => console.log('View all briefs for dossier', id)}
-                  className="mt-4 w-full text-sm text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300"
-                >
-                  {t('detail.view_all_briefs')}
-                </button>
-              </div>
-            )}
-          </div>
+          {/* Actions Panel */}
+          <DossierActions dossierId={id} />
         </div>
       </main>
 

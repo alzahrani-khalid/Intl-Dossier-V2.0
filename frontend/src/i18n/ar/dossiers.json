@@ -146,7 +146,43 @@
     "mous": "مذكرات التفاهم",
     "commitments": "الالتزامات",
     "files": "الملفات",
-    "intelligence": "المعلومات الاستخبارية"
+    "intelligence": "المعلومات الاستخبارية",
+    "relationships": "العلاقات",
+    "contacts": "جهات الاتصال الرئيسية"
+  },
+  "relationships": {
+    "title": "ترابط الملفات",
+    "add": "إضافة علاقة",
+    "remove": "إزالة علاقة",
+    "networkGraph": "رسم الشبكة",
+    "listView": "عرض قائمة",
+    "empty": "لم يتم العثور على علاقات",
+    "no_relationships": "لم يتم العثور على علاقات",
+    "filter_by_type": "تصفية حسب النوع",
+    "all_types": "جميع الأنواع",
+    "legend": "وصف الرموز",
+    "types": {
+      "member_of": "عضو في",
+      "participates_in": "يشارك في",
+      "collaborates_with": "يتعاون مع",
+      "monitors": "يراقب",
+      "is_member": "عضو",
+      "hosts": "يستضيف"
+    },
+    "strength": {
+      "primary": "أساسي",
+      "secondary": "ثانوي",
+      "observer": "مراقب"
+    },
+    "status": {
+      "active": "نشط",
+      "archived": "مؤرشف"
+    },
+    "errors": {
+      "loadFailed": "فشل تحميل العلاقات",
+      "createFailed": "فشل إنشاء العلاقة",
+      "deleteFailed": "فشل حذف العلاقة"
+    }
   },
   "hub": {
     "title": "مركز الملفات",

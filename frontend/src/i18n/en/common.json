@@ -50,13 +50,23 @@
     "help": "Help",
     "about": "About",
     "search": "Search",
+    "searchAll": "Search all columns...",
     "filter": "Filter",
     "all": "All",
     "loading": "Loading...",
     "noData": "No data available",
     "yes": "Yes",
     "no": "No",
-    "select": "Select"
+    "select": "Select",
+    "selectAll": "Select all",
+    "selectRow": "Select row",
+    "columns": "Columns",
+    "export": "Export",
+    "of": "of",
+    "selected": "selected",
+    "showing": "Showing",
+    "page": "Page",
+    "for": "for"
   },
   "auth": {
     "signIn": "Sign In",
@@ -79,6 +89,11 @@
     "connectionLost": "Connection Lost"
   },
   "navigation": {
+    "myWork": "My Work",
+    "myAssignments": "My Assignments",
+    "intakeQueue": "Intake Queue",
+    "waitingQueue": "Waiting Queue",
+    "browse": "Browse",
     "dashboard": "Dashboard",
     "assignments": "My Assignments",
     "intake": "Intake Queue",
@@ -102,7 +117,8 @@
     "dataLibrary": "Data Library",
     "wordAssistant": "Word Assistant",
     "getHelp": "Get Help",
-    "search": "Search"
+    "search": "Search",
+    "openNotifications": "Open notifications"
   },
   "search": {
     "searchPlaceholder": "Search...",

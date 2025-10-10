@@ -12,7 +12,7 @@ import {
 import { useAuthStore } from '../../store/authStore'
 import { useUIStore } from '../../store/uiStore'
 import { ThemeSelector } from '../theme-selector/theme-selector'
-import { LanguageSwitcher } from '../language-switcher/language-switcher'
+import { LanguageToggle } from '../LanguageToggle'
 
 export function Header() {
   const { t } = useTranslation()
@@ -58,8 +58,8 @@ export function Header() {
           {/* Theme selector */}
           <ThemeSelector />
 
-          {/* Language switcher */}
-          <LanguageSwitcher />
+          {/* Language toggle */}
+          <LanguageToggle />
 
           {/* Notifications */}
           <button className="relative p-2 rounded-lg hover:bg-accent transition-colors">
