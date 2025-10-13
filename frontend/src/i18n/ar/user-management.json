@@ -1,0 +1,315 @@
+{
+  "title": "إدارة المستخدمين",
+  "users": "المستخدمون",
+  "roles": "الأدوار",
+  "permissions": "الصلاحيات",
+  "delegations": "التفويضات",
+  "accessReviews": "مراجعات الوصول",
+
+  "userOnboarding": {
+    "title": "تسجيل المستخدمين",
+    "createUser": "إنشاء مستخدم",
+    "userCreated": "تم إنشاء المستخدم بنجاح",
+    "activateAccount": "تفعيل الحساب",
+    "accountActivated": "تم تفعيل الحساب بنجاح",
+    "activationEmailSent": "تم إرسال بريد التفعيل إلى {{email}}",
+    "setPassword": "تعيين كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
+    "passwordsMustMatch": "يجب أن تتطابق كلمات المرور",
+    "activationTokenInvalid": "رمز التفعيل غير صالح أو منتهي الصلاحية",
+    "duplicateEmail": "البريد الإلكتروني مستخدم بالفعل",
+    "duplicateUsername": "اسم المستخدم مستخدم بالفعل",
+    "defaultPreferences": "سيتم تعيين التفضيلات الافتراضية (الإنجليزية، توقيت UTC، دور المشاهد)"
+  },
+
+  "userProfile": {
+    "username": "اسم المستخدم",
+    "fullName": "الاسم الكامل",
+    "email": "البريد الإلكتروني",
+    "avatar": "الصورة الرمزية",
+    "role": "الدور",
+    "userType": "نوع المستخدم",
+    "status": "الحالة",
+    "preferences": "التفضيلات",
+    "mfaEnabled": "المصادقة الثنائية مفعلة",
+    "lastLoginAt": "آخر تسجيل دخول",
+    "lastLoginIp": "عنوان IP لآخر تسجيل دخول",
+    "allowedResources": "الموارد المسموح بها",
+    "expiresAt": "تنتهي في"
+  },
+
+  "roles": {
+    "admin": "مدير",
+    "manager": "مشرف",
+    "staff": "موظف",
+    "viewer": "مشاهد",
+    "assignRole": "تعيين الدور",
+    "roleAssigned": "تم تعيين الدور بنجاح",
+    "roleRequiresApproval": "تعيين دور المدير يتطلب موافقة مزدوجة",
+    "pendingApproval": "بانتظار الموافقة",
+    "approveRole": "الموافقة على تغيير الدور",
+    "rejectRole": "رفض تغيير الدور",
+    "roleApproved": "تمت الموافقة على تغيير الدور",
+    "roleRejected": "تم رفض تغيير الدور",
+    "cannotChangeSelfRole": "لا يمكنك تغيير دورك الخاص",
+    "requiresDualApproval": "تغييرات دور المدير تتطلب موافقين مختلفين",
+    "approvalReason": "سبب الموافقة"
+  },
+
+  "userTypes": {
+    "employee": "موظف",
+    "contractor": "متعاقد",
+    "guest": "ضيف"
+  },
+
+  "userStatus": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "pending": "معلق",
+    "deactivated": "معطل",
+    "suspended": "موقوف"
+  },
+
+  "delegation": {
+    "title": "تفويض الصلاحيات",
+    "delegate": "تفويض الصلاحيات",
+    "revoke": "إلغاء التفويض",
+    "validate": "التحقق من التفويض",
+    "granted": "التفويضات الممنوحة",
+    "received": "التفويضات المستلمة",
+    "delegateTo": "التفويض إلى",
+    "validFrom": "صالح من",
+    "validUntil": "صالح حتى",
+    "permissions": "الصلاحيات المراد تفويضها",
+    "reason": "سبب التفويض",
+    "delegationCreated": "تم إنشاء التفويض بنجاح",
+    "delegationRevoked": "تم إلغاء التفويض بنجاح",
+    "circularDelegation": "تم اكتشاف تفويض دائري",
+    "circularDelegationError": "هذا التفويض سينشئ سلسلة دائرية: {{chain}}",
+    "transitiveNotAllowed": "لا يمكن إعادة تفويض الصلاحيات المفوضة",
+    "expiryWarning": "ينتهي هذا التفويض خلال {{days}} يوم",
+    "expiringSoon": "ينتهي قريباً",
+    "expired": "منتهي",
+    "delegationChain": "سلسلة التفويض",
+    "viewChain": "عرض سلسلة التفويض",
+    "chainVisualization": "السلسلة: {{chain}}"
+  },
+
+  "userDeactivation": {
+    "title": "تعطيل المستخدم",
+    "deactivate": "تعطيل المستخدم",
+    "reactivate": "إعادة تفعيل المستخدم",
+    "deactivated": "تم تعطيل المستخدم بنجاح",
+    "reactivated": "تمت إعادة تفعيل المستخدم بنجاح",
+    "confirmDeactivation": "هل أنت متأكد من تعطيل هذا المستخدم؟",
+    "confirmReactivation": "هل أنت متأكد من إعادة تفعيل هذا المستخدم؟",
+    "deactivationReason": "سبب التعطيل",
+    "orphanedItems": "العناصر اليتيمة",
+    "orphanedDossiers": "سيتم وضع علامة يتيم على {{count}} ملف",
+    "orphanedAssignments": "سيتم وضع علامة يتيم على {{count}} تكليف",
+    "orphanedApprovals": "سيتم وضع علامة يتيم على {{count}} موافقة معلقة",
+    "sessionsTerminated": "سيتم إنهاء جميع الجلسات النشطة",
+    "delegationsRevoked": "سيتم إلغاء جميع التفويضات",
+    "securityReviewRequired": "إعادة التفعيل تتطلب موافقة المراجعة الأمنية"
+  },
+
+  "accessReview": {
+    "title": "مراجعة الوصول",
+    "generate": "إنشاء مراجعة الوصول",
+    "complete": "إكمال المراجعة",
+    "certify": "اعتماد الوصول",
+    "requestChange": "طلب تغيير الوصول",
+    "reviewGenerated": "تم إنشاء مراجعة الوصول بنجاح",
+    "reviewCompleted": "تم إكمال مراجعة الوصول بنجاح",
+    "accessCertified": "تم اعتماد الوصول بنجاح",
+    "scope": "نطاق المراجعة",
+    "scopeAll": "جميع المستخدمين",
+    "scopeDepartment": "حسب القسم",
+    "scopeRole": "حسب الدور",
+    "findings": "النتائج",
+    "findingTypes": {
+      "inactiveUser": "مستخدم غير نشط",
+      "excessivePermissions": "صلاحيات مفرطة",
+      "expiringGuest": "حساب ضيف منتهي",
+      "pendingApproval": "موافقة دور معلقة",
+      "expiredDelegation": "تفويض منتهي"
+    },
+    "inactiveUsers": "المستخدمون غير النشطين ({{count}})",
+    "excessivePermissions": "الصلاحيات المفرطة ({{count}})",
+    "expiringGuests": "حسابات الضيوف المنتهية ({{count}})",
+    "inactiveThreshold": "90 يوماً بدون تسجيل دخول",
+    "quarterlySchedule": "المراجعات مجدولة ربع سنوياً في الساعة 9 صباحاً في الأول من يناير/أبريل/يوليو/أكتوبر",
+    "manualOverride": "الجدولة اليدوية متاحة",
+    "scheduleReview": "جدولة مراجعة الوصول",
+    "reviewScheduled": "تم جدولة مراجعة الوصول بنجاح",
+    "complianceReport": "تقرير الامتثال"
+  },
+
+  "guestAccounts": {
+    "title": "حسابات الضيوف",
+    "create": "إنشاء حساب ضيف",
+    "guestCreated": "تم إنشاء حساب الضيف بنجاح",
+    "expirationRequired": "تاريخ الانتهاء مطلوب لحسابات الضيوف",
+    "maxDuration": "الحد الأقصى للمدة: 90 يوماً",
+    "allowedResources": "الموارد المسموح بها",
+    "selectResources": "اختر الموارد",
+    "restrictedAccess": "وصول محدود",
+    "autoExpiration": "انتهاء تلقائي خلال {{days}} يوم",
+    "expirationJob": "يتم التحقق من الانتهاء التلقائي كل 5 دقائق"
+  },
+
+  "mfa": {
+    "title": "المصادقة متعددة العوامل",
+    "setup": "إعداد المصادقة الثنائية",
+    "enable": "تفعيل المصادقة الثنائية",
+    "disable": "تعطيل المصادقة الثنائية",
+    "qrCode": "رمز QR",
+    "scanQrCode": "امسح رمز QR هذا باستخدام تطبيق المصادقة",
+    "verificationCode": "رمز التحقق",
+    "enterCode": "أدخل الرمز المكون من 6 أرقام من تطبيقك",
+    "backupCodes": "رموز النسخ الاحتياطي",
+    "saveBackupCodes": "احفظ رموز النسخ الاحتياطي هذه في مكان آمن",
+    "mfaEnabled": "تم تفعيل المصادقة الثنائية بنجاح",
+    "mfaDisabled": "تم تعطيل المصادقة الثنائية بنجاح",
+    "invalidCode": "رمز التحقق غير صالح"
+  },
+
+  "passwordReset": {
+    "title": "إعادة تعيين كلمة المرور",
+    "initiateReset": "إعادة تعيين كلمة المرور",
+    "resetLink": "تم إرسال رابط الإعادة",
+    "resetLinkSent": "تم إرسال رابط إعادة تعيين كلمة المرور إلى {{email}}",
+    "newPassword": "كلمة المرور الجديدة",
+    "confirmNewPassword": "تأكيد كلمة المرور الجديدة",
+    "passwordReset": "تم إعادة تعيين كلمة المرور بنجاح",
+    "tokenInvalid": "رمز الإعادة غير صالح أو منتهي الصلاحية",
+    "mfaRequired": "يتطلب التحقق من المصادقة الثنائية لإعادة تعيين كلمة المرور",
+    "rateLimited": "محاولات إعادة التعيين كثيرة جداً. يرجى المحاولة مرة أخرى خلال 5 دقائق",
+    "strengthRequirements": "يجب أن تكون كلمة المرور 12 حرفاً على الأقل مع أحرف كبيرة وصغيرة وأرقام ورموز"
+  },
+
+  "usersList": {
+    "title": "قائمة المستخدمين",
+    "searchPlaceholder": "البحث عن المستخدمين بالاسم أو البريد الإلكتروني أو اسم المستخدم...",
+    "filterByRole": "تصفية حسب الدور",
+    "filterByStatus": "تصفية حسب الحالة",
+    "filterByType": "تصفية حسب النوع",
+    "showAll": "عرض الكل",
+    "resultsPerPage": "النتائج في الصفحة",
+    "showing": "عرض {{from}}-{{to}} من {{total}} مستخدم"
+  },
+
+  "userDetail": {
+    "title": "تفاصيل المستخدم",
+    "overview": "نظرة عامة",
+    "permissionSummary": "ملخص الصلاحيات",
+    "rolePermissions": "صلاحيات الدور",
+    "delegatedPermissions": "الصلاحيات المفوضة",
+    "grantedBy": "ممنوح من {{grantor}}",
+    "validPeriod": "صالح {{from}} - {{until}}",
+    "activityHistory": "سجل النشاط",
+    "auditLog": "سجل التدقيق",
+    "sessions": "الجلسات النشطة",
+    "noActiveSessions": "لا توجد جلسات نشطة"
+  },
+
+  "notifications": {
+    "title": "الإشعارات",
+    "markAsRead": "تعليم كمقروء",
+    "markAllAsRead": "تعليم الكل كمقروء",
+    "clear": "مسح",
+    "clearAll": "مسح الكل",
+    "noNotifications": "لا توجد إشعارات",
+    "types": {
+      "delegationExpiring": "تفويض ينتهي",
+      "delegationExpired": "تفويض منتهي",
+      "roleChanged": "تم تغيير الدور",
+      "roleApprovalPending": "موافقة دور معلقة",
+      "accessReviewDue": "مراجعة وصول مستحقة",
+      "accountExpiring": "حساب ينتهي",
+      "sessionTerminated": "تم إنهاء الجلسة"
+    },
+    "messages": {
+      "delegationExpiring": "ينتهي تفويضك إلى {{grantee}} خلال {{days}} يوم",
+      "delegationExpired": "انتهى تفويضك إلى {{grantee}}",
+      "roleChanged": "تم تغيير دورك إلى {{role}}",
+      "roleApprovalPending": "تغيير الدور لـ {{user}} يتطلب موافقتك",
+      "accessReviewDue": "مراجعة الوصول مستحقة لـ {{scope}}",
+      "accountExpiring": "ينتهي حساب الضيف الخاص بك خلال {{days}} يوم",
+      "sessionTerminated": "تم إنهاء جلستك بسبب تغيير الدور. يرجى تسجيل الدخول مرة أخرى."
+    }
+  },
+
+  "audit": {
+    "title": "سجل التدقيق",
+    "action": "الإجراء",
+    "performedBy": "نفذ بواسطة",
+    "timestamp": "الطابع الزمني",
+    "details": "التفاصيل",
+    "ipAddress": "عنوان IP",
+    "userAgent": "وكيل المستخدم",
+    "actions": {
+      "userCreated": "إنشاء مستخدم",
+      "userActivated": "تفعيل مستخدم",
+      "roleAssigned": "تعيين دور",
+      "roleApproved": "الموافقة على دور",
+      "roleRejected": "رفض دور",
+      "delegationCreated": "إنشاء تفويض",
+      "delegationRevoked": "إلغاء تفويض",
+      "userDeactivated": "تعطيل مستخدم",
+      "userReactivated": "إعادة تفعيل مستخدم",
+      "accessReviewGenerated": "إنشاء مراجعة وصول",
+      "accessCertified": "اعتماد وصول",
+      "passwordReset": "إعادة تعيين كلمة المرور",
+      "mfaEnabled": "تفعيل المصادقة الثنائية",
+      "mfaDisabled": "تعطيل المصادقة الثنائية"
+    },
+    "immutable": "سجلات التدقيق غير قابلة للتغيير ومحفوظة لمدة 7 سنوات",
+    "exportLog": "تصدير سجل التدقيق"
+  },
+
+  "errors": {
+    "loadFailed": "فشل تحميل بيانات المستخدم",
+    "saveFailed": "فشل حفظ بيانات المستخدم",
+    "unauthorized": "غير مصرح لك بتنفيذ هذا الإجراء",
+    "userNotFound": "المستخدم غير موجود",
+    "invalidInput": "إدخال غير صالح",
+    "networkError": "خطأ في الشبكة. يرجى المحاولة مرة أخرى.",
+    "serverError": "خطأ في الخادم. يرجى الاتصال بالدعم."
+  },
+
+  "validation": {
+    "required": "{{field}} مطلوب",
+    "email": "صيغة البريد الإلكتروني غير صالحة",
+    "username": "يجب أن يكون اسم المستخدم من 3-20 حرفاً، أحرف وأرقام وشرطات سفلية فقط",
+    "password": "يجب أن تكون كلمة المرور 12 حرفاً على الأقل",
+    "passwordStrength": "يجب أن تتضمن كلمة المرور أحرفاً كبيرة وصغيرة وأرقاماً ورموزاً",
+    "dateRange": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء",
+    "resourceSelection": "يجب اختيار مورد واحد على الأقل"
+  },
+
+  "actions": {
+    "create": "إنشاء",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "submit": "إرسال",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "activate": "تفعيل",
+    "deactivate": "تعطيل",
+    "reactivate": "إعادة تفعيل",
+    "assign": "تعيين",
+    "revoke": "إلغاء",
+    "certify": "اعتماد",
+    "review": "مراجعة",
+    "schedule": "جدولة",
+    "export": "تصدير",
+    "refresh": "تحديث",
+    "filter": "تصفية",
+    "search": "بحث",
+    "viewDetails": "عرض التفاصيل",
+    "close": "إغلاق"
+  }
+}

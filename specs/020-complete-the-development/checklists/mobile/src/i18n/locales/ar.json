@@ -1,0 +1,37 @@
+{
+  "common": {
+    "loading": "جاري التحميل...",
+    "error": "خطأ",
+    "success": "نجح",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "search": "بحث",
+    "filter": "تصفية",
+    "refresh": "تحديث",
+    "submit": "إرسال",
+    "back": "رجوع",
+    "next": "التالي",
+    "done": "تم",
+    "retry": "إعادة المحاولة",
+    "offline": "غير متصل",
+    "online": "متصل",
+    "syncing": "جاري المزامنة...",
+    "lastSync": "آخر مزامنة: {{time}}"
+  },
+  "auth": {
+    "login": "تسجيل الدخول",
+    "logout": "تسجيل الخروج",
+    "biometricPrompt": "المصادقة للوصول إلى ملف الهيئة",
+    "biometricFallback": "استخدام كلمة المرور",
+    "sessionExpired": "انتهت جلستك. يرجى تسجيل الدخول مرة أخرى."
+  },
+  "tabs": {
+    "frontDoor": "الباب الأمامي",
+    "search": "بحث",
+    "assignments": "المهام",
+    "kanban": "كانبان",
+    "profile": "الملف الشخصي"
+  }
+}

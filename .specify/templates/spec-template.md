@@ -1,8 +1,9 @@
 # Feature Specification: [FEATURE NAME]
 
-**Feature Branch**: `[###-feature-name]`  
-**Created**: [DATE]  
-**Status**: Draft  
+**Feature Branch**: `[###-feature-name]`
+**Created**: [DATE]
+**Status**: Draft
+**Platform Scope**: [web-only | mobile-only | cross-platform]
 **Input**: User description: "$ARGUMENTS"
 
 ## User Scenarios & Testing *(mandatory)*
@@ -32,6 +33,10 @@
 
 1. **Given** [initial state], **When** [action], **Then** [expected outcome]
 2. **Given** [initial state], **When** [action], **Then** [expected outcome]
+
+*For cross-platform features, add mobile-specific scenarios:*
+3. **Given** user is offline with cached data, **When** [action], **Then** [offline behavior]
+4. **Given** user syncs after offline edits, **When** conflict detected, **Then** [conflict resolution UX]
 
 ---
 
@@ -74,6 +79,26 @@
 
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
+
+## Mobile Requirements *(mandatory for mobile-only or cross-platform features)*
+
+### Offline Behavior *(for data-heavy features only)*
+
+- **Offline Access**: [Describe which data is available offline, e.g., "Users can view and edit dossiers offline, changes sync when online"]
+- **Sync Requirements**: [Describe sync behavior, e.g., "Manual sync via pull-to-refresh, auto-sync on app foreground if >5min since last sync"]
+- **Conflict Scenarios**: [Describe expected conflicts, e.g., "If same dossier edited on web and mobile, user prompted to choose version"]
+
+### Native Features *(if applicable)*
+
+- **Biometrics**: [e.g., "Touch ID/Face ID required for viewing confidential dossiers"]
+- **Camera**: [e.g., "Document scanning with auto-crop and OCR for text extraction"]
+- **Push Notifications**: [e.g., "Notification when delegated role expires within 24 hours"]
+
+### Mobile Performance Criteria
+
+- **SC-M01**: Initial screen render ≤1s on 4G network
+- **SC-M02**: Fresh data load ≤2s for primary content
+- **SC-M03**: Incremental sync completes ≤3s for typical dataset
 
 ## Requirements *(mandatory)*
 

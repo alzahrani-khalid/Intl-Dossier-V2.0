@@ -1,0 +1,525 @@
+openapi: 3.1.0
+info:
+  title: Access Review & Recertification API
+  version: 1.0.0
+  description: API endpoints for access review management, compliance reporting, and user recertification
+
+servers:
+  - url: https://{project-ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions
+    variables:
+      project-ref:
+        default: zkrcjzdemdmwhearhfgg
+
+security:
+  - BearerAuth: []
+
+paths:
+  /generate-access-review:
+    post:
+      summary: Generate access review report
+      description: |
+        Generates comprehensive access review report for specified user scope.
+        Uses materialized view for fast aggregation (<10s for 1000+ users).
+
+        **Authorization**: Admin role required
+        **Rate Limit**: 5 requests/min per IP
+        **Success Criteria**: Report generated in <10 seconds for any user group
+      operationId: generateAccessReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - review_name
+                - review_scope
+              properties:
+                review_name:
+                  type: string
+                  example: "Q4 2025 Access Review"
+                review_scope:
+                  type: string
+                  enum: [all_users, department, role, custom]
+                  example: all_users
+                department:
+                  type: string
+                  description: Required if scope=department
+                  example: "International Relations"
+                role:
+                  type: string
+                  enum: [admin, editor, viewer]
+                  description: Required if scope=role
+                  example: editor
+                user_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  description: Required if scope=custom
+                  example: ["550e8400-e29b-41d4-a716-446655440000"]
+                include_inactive_threshold_days:
+                  type: integer
+                  default: 90
+                  description: Flag users inactive for N+ days
+                  example: 90
+      responses:
+        '201':
+          description: Access review created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  review_id:
+                    type: string
+                    format: uuid
+                    example: "990e8400-e29b-41d4-a716-446655440000"
+                  review_name:
+                    type: string
+                    example: "Q4 2025 Access Review"
+                  users_reviewed:
+                    type: integer
+                    example: 523
+                  findings_summary:
+                    type: object
+                    properties:
+                      inactive_users:
+                        type: integer
+                        example: 45
+                      excessive_permissions:
+                        type: integer
+                        example: 12
+                      guest_accounts_expiring:
+                        type: integer
+                        example: 8
+                      orphaned_delegations:
+                        type: integer
+                        example: 3
+                  generation_time_ms:
+                    type: integer
+                    example: 7842
+                    description: Report generation time in milliseconds
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /access-review/{review_id}:
+    get:
+      summary: Get access review details
+      description: |
+        Retrieves detailed findings from an access review.
+
+        **Authorization**: Admin role required
+        **Rate Limit**: 30 requests/min per IP
+      operationId: getAccessReview
+      parameters:
+        - name: review_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: "990e8400-e29b-41d4-a716-446655440000"
+        - name: finding_type
+          in: query
+          schema:
+            type: string
+            enum: [all, inactive_users, excessive_permissions, expiring_guests, orphaned_delegations]
+            default: all
+          description: Filter findings by type
+      responses:
+        '200':
+          description: Access review details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: "990e8400-e29b-41d4-a716-446655440000"
+                  review_name:
+                    type: string
+                    example: "Q4 2025 Access Review"
+                  review_scope:
+                    type: string
+                    example: all_users
+                  reviewer_email:
+                    type: string
+                    example: admin@gastat.gov.sa
+                  status:
+                    type: string
+                    enum: [in_progress, completed]
+                    example: in_progress
+                  review_date:
+                    type: string
+                    format: date-time
+                    example: "2025-10-11T09:00:00Z"
+                  completed_at:
+                    type: string
+                    format: date-time
+                    example: null
+                  findings:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReviewFinding'
+                  summary:
+                    type: object
+                    properties:
+                      total_users:
+                        type: integer
+                        example: 523
+                      issues_identified:
+                        type: integer
+                        example: 68
+                      recommendations_count:
+                        type: integer
+                        example: 68
+
+  /certify-user-access:
+    post:
+      summary: Certify user access as appropriate
+      description: |
+        Manager or administrator certifies that a user's access is appropriate for their role.
+
+        **Authorization**: Admin or manager role required
+        **Rate Limit**: 20 requests/min per user
+      operationId: certifyUserAccess
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - review_id
+                - user_id
+                - certified
+              properties:
+                review_id:
+                  type: string
+                  format: uuid
+                  example: "990e8400-e29b-41d4-a716-446655440000"
+                user_id:
+                  type: string
+                  format: uuid
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+                certified:
+                  type: boolean
+                  example: true
+                  description: True if access appropriate, false if changes needed
+                requested_changes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      change_type:
+                        type: string
+                        enum: [reduce_role, remove_delegation, deactivate, other]
+                      reason:
+                        type: string
+                  description: Required if certified=false
+                  example:
+                    - change_type: reduce_role
+                      reason: "User no longer needs editor permissions"
+      responses:
+        '200':
+          description: Certification recorded
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  review_id:
+                    type: string
+                    format: uuid
+                    example: "990e8400-e29b-41d4-a716-446655440000"
+                  user_id:
+                    type: string
+                    format: uuid
+                    example: "550e8400-e29b-41d4-a716-446655440000"
+                  certified:
+                    type: boolean
+                    example: true
+                  certified_at:
+                    type: string
+                    format: date-time
+                    example: "2025-10-11T14:30:00Z"
+
+  /complete-access-review:
+    post:
+      summary: Mark access review as completed
+      description: |
+        Finalizes access review, locks findings, and generates compliance report.
+
+        **Authorization**: Admin role required (must be reviewer)
+        **Rate Limit**: 5 requests/min per IP
+      operationId: completeAccessReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - review_id
+              properties:
+                review_id:
+                  type: string
+                  format: uuid
+                  example: "990e8400-e29b-41d4-a716-446655440000"
+                notes:
+                  type: string
+                  description: Final review notes
+                  example: "All critical issues addressed. 12 users scheduled for role reduction."
+      responses:
+        '200':
+          description: Review completed
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  review_id:
+                    type: string
+                    format: uuid
+                    example: "990e8400-e29b-41d4-a716-446655440000"
+                  completed_at:
+                    type: string
+                    format: date-time
+                    example: "2025-10-11T16:00:00Z"
+                  compliance_report_url:
+                    type: string
+                    format: uri
+                    example: "https://storage.supabase.co/reports/access-review-990e8400.pdf"
+
+  /inactive-users:
+    get:
+      summary: List inactive users flagged for review
+      description: |
+        Retrieves users who haven't logged in for specified threshold period.
+
+        **Authorization**: Admin role required
+        **Rate Limit**: 30 requests/min per IP
+      operationId: listInactiveUsers
+      parameters:
+        - name: inactive_days
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            default: 90
+          description: Minimum days of inactivity
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 500
+            default: 100
+      responses:
+        '200':
+          description: List of inactive users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        user_id:
+                          type: string
+                          format: uuid
+                          example: "550e8400-e29b-41d4-a716-446655440000"
+                        email:
+                          type: string
+                          example: john.doe@gastat.gov.sa
+                        full_name:
+                          type: string
+                          example: John Doe
+                        role:
+                          type: string
+                          example: editor
+                        last_login_at:
+                          type: string
+                          format: date-time
+                          example: "2025-07-01T10:00:00Z"
+                        days_since_login:
+                          type: integer
+                          example: 102
+                        active_delegations:
+                          type: integer
+                          example: 2
+                        owned_dossiers:
+                          type: integer
+                          example: 5
+                  total:
+                    type: integer
+                    example: 45
+
+  /schedule-access-review:
+    post:
+      summary: Schedule automatic access review
+      description: |
+        Configures automatic quarterly access review scheduling or manual override.
+
+        **Authorization**: Admin role required
+        **Rate Limit**: 3 requests/min per IP
+      operationId: scheduleAccessReview
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - schedule_type
+              properties:
+                schedule_type:
+                  type: string
+                  enum: [automatic_quarterly, manual_override, disable]
+                  example: automatic_quarterly
+                next_review_date:
+                  type: string
+                  format: date-time
+                  description: Required if schedule_type=manual_override
+                  example: "2025-11-01T09:00:00Z"
+                review_scope:
+                  type: string
+                  enum: [all_users, department, role]
+                  default: all_users
+                auto_assign_reviewer:
+                  type: string
+                  format: uuid
+                  description: Admin user to auto-assign reviews (defaults to oldest admin)
+                  example: "660e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Schedule configured
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  schedule_type:
+                    type: string
+                    example: automatic_quarterly
+                  next_scheduled_review:
+                    type: string
+                    format: date-time
+                    example: "2026-01-01T09:00:00Z"
+                  cron_expression:
+                    type: string
+                    example: "0 9 1 1,4,7,10 *"
+                    description: pg_cron expression for automatic reviews
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    ReviewFinding:
+      type: object
+      properties:
+        user_id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        email:
+          type: string
+          example: john.doe@gastat.gov.sa
+        full_name:
+          type: string
+          example: John Doe
+        primary_role:
+          type: string
+          example: editor
+        issues:
+          type: array
+          items:
+            type: string
+            enum:
+              - inactive_90_days
+              - excessive_permissions
+              - guest_account_expiring
+              - orphaned_delegation
+              - multiple_admin_roles
+          example: ["inactive_90_days", "excessive_permissions"]
+        recommendations:
+          type: array
+          items:
+            type: string
+            enum:
+              - deactivate
+              - reduce_role
+              - remove_delegation
+              - extend_guest_expiry
+              - review_manually
+          example: ["deactivate", "reduce_role"]
+        last_login_at:
+          type: string
+          format: date-time
+          example: "2025-07-01T10:00:00Z"
+        days_since_login:
+          type: integer
+          example: 102
+        active_delegations:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              grantor_email:
+                type: string
+              resource_type:
+                type: string
+              valid_until:
+                type: string
+                format: date-time
+        certified_by:
+          type: string
+          format: uuid
+          example: null
+        certified_at:
+          type: string
+          format: date-time
+          example: null
+
+    Error:
+      type: object
+      required:
+        - error
+        - code
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+        details:
+          type: object

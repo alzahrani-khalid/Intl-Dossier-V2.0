@@ -7,6 +7,8 @@
 
 ## Summary
 
+**Platform Scope**: [web-only | mobile-only | cross-platform]
+
 [Extract from feature spec: primary requirement + technical approach from research]
 
 ## Technical Context
@@ -23,9 +25,17 @@
 **Testing**: [e.g., pytest, XCTest, cargo test or NEEDS CLARIFICATION]  
 **Target Platform**: [e.g., Linux server, iOS 15+, WASM or NEEDS CLARIFICATION]
 **Project Type**: [single/web/mobile - determines source structure]  
-**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]  
-**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]  
+**Performance Goals**: [domain-specific, e.g., 1000 req/s, 10k lines/sec, 60 fps or NEEDS CLARIFICATION]
+**Constraints**: [domain-specific, e.g., <200ms p95, <100MB memory, offline-capable or NEEDS CLARIFICATION]
 **Scale/Scope**: [domain-specific, e.g., 10k users, 1M LOC, 50 screens or NEEDS CLARIFICATION]
+
+**Platform Scope**: [web-only | mobile-only | cross-platform or NEEDS CLARIFICATION]
+
+*For mobile-only or cross-platform features, specify:*
+- **Mobile Tech Stack**: [e.g., Expo SDK 52+, React Native 0.81+, WatermelonDB 0.28+ or NEEDS CLARIFICATION]
+- **Offline Requirements**: [e.g., offline-first for dossier CRUD, online-only for analytics or N/A]
+- **Sync Strategy**: [e.g., incremental sync with conflict resolution, real-time only or N/A]
+- **Native Features**: [e.g., biometric auth, camera integration, push notifications or N/A]
 
 ## Constitution Check
 
@@ -42,6 +52,7 @@ Verify compliance with project constitution (.specify/memory/constitution.md):
 - [ ] **Security by Default**: RLS policies on tables, JWT validation, no secrets in git, rate limiting
 - [ ] **Performance**: Indexed queries, Redis caching strategy, lazy loading, <200ms p95 latency
 - [ ] **Accessibility**: WCAG AA compliance, semantic HTML, keyboard navigation, 4.5:1 color contrast
+- [ ] **Cross-Platform Mobile**: Platform scope declared in spec, mobile features use Expo/RN Paper, offline-first for data-heavy workflows, hybrid conflict resolution
 
 ### Security & Compliance
 
@@ -115,12 +126,29 @@ frontend/
 │   └── services/
 └── tests/
 
-# [REMOVE IF UNUSED] Option 3: Mobile + API (when "iOS/Android" detected)
-api/
-└── [same as backend above]
+# [REMOVE IF UNUSED] Option 3: Cross-Platform (Web + Mobile)
+backend/
+├── src/
+│   ├── models/
+│   ├── services/
+│   └── api/
 
-ios/ or android/
-└── [platform-specific structure: feature modules, UI flows, platform tests]
+frontend/
+├── src/
+│   ├── components/
+│   ├── pages/
+│   └── services/
+
+mobile/
+├── src/
+│   ├── screens/
+│   ├── components/
+│   ├── navigation/
+│   ├── services/
+│   └── database/        # WatermelonDB schema for offline-first
+
+supabase/
+└── migrations/          # Shared across platforms
 ```
 
 **Structure Decision**: [Document the selected structure and reference the real
@@ -134,3 +162,20 @@ directories captured above]
 |-----------|------------|-------------------------------------|
 | [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
 | [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+
+## Mobile Architecture *(fill only for mobile-only or cross-platform features)*
+
+### Offline-First Strategy
+- **Data persistence**: [e.g., WatermelonDB for dossiers/documents, AsyncStorage for settings]
+- **Sync triggers**: [e.g., on app foreground, manual pull-to-refresh, background interval]
+- **Conflict resolution**: [e.g., hybrid approach per constitution - auto-merge non-conflicting, user-prompt for conflicts]
+
+### Native Features Integration
+- **Biometrics**: [e.g., Touch ID/Face ID for sensitive operations, optional fallback to PIN]
+- **Camera**: [e.g., document scanning with OCR, photo attachments]
+- **Push Notifications**: [e.g., role approval requests, delegation expiry alerts]
+
+### Performance Targets
+- Initial screen render: ≤1s (skeleton UI with cached data)
+- Fresh data load: ≤2s
+- Incremental sync: ≤3s for data-heavy operations

@@ -27,8 +27,13 @@
     "docker:logs": "docker-compose logs -f",
     "docker:build": "docker-compose build",
     "monitor": "docker-compose up -d prometheus grafana",
+    "mobile:start": "cd mobile && npm start",
+    "mobile:ios": "cd mobile && npm run ios",
+    "mobile:android": "cd mobile && npm run android",
     "clean": "turbo run clean && rm -rf node_modules */node_modules",
-    "fresh": "npm run clean && npm install && npm run build"
+    "fresh": "npm run clean && npm install && npm run build",
+    "android": "expo run:android",
+    "ios": "expo run:ios"
   },
   "repository": {
     "type": "git",
@@ -73,7 +78,13 @@
     "prettier": "^3.6.2",
     "shadcn": "^3.4.0",
     "turbo": "^2.5.8",
-    "typescript": "5.0",
+    "typescript": "~5.9.2",
     "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@upstash/redis": "^1.35.5",
+    "expo": "^54.0.13",
+    "react": "19.1.0",
+    "react-native": "0.81.4"
   }
 }

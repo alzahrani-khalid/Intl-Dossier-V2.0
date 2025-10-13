@@ -1,24 +1,36 @@
 <!--
 Sync Impact Report:
-Version Change: 0.0.0 → 1.0.0
-Rationale: Initial constitution establishment for Intl-DossierV2.0 project
+Version Change: 1.0.0 → 1.1.0
+Rationale: Added cross-platform mobile development requirements to ensure web and mobile (Expo/React Native) parity
 
-Modified Principles: N/A (initial creation)
+Modified Principles:
+  - Added Principle VIII: Cross-Platform Mobile Development (MANDATORY)
+  - Updated Feature Specifications: Platform scope declaration required
+  - Updated Code Organization: Mobile directory structure and testing tools
+  - Updated UI Component Strategy: React Native Paper guidance for mobile
+
 Added Sections:
-  - Core Principles (7 principles)
-  - Security & Compliance Requirements
-  - Quality Standards
-  - Governance
+  - Cross-Platform Considerations (Data Synchronization, Platform Parity, Testing Requirements)
+
+Key Changes:
+  - Offline-first architecture required for data-heavy mobile workflows
+  - Hybrid conflict resolution: automatic merge + user prompts for conflicts
+  - Performance targets: ≤1s render, ≤2s data load, ≤3s sync
+  - Platform scope must be declared in specs (web-only, mobile-only, cross-platform)
+  - Mobile tech stack: Expo SDK 52+, React Native 0.81+, WatermelonDB 0.28+, React Native Paper 5.12+
 
 Templates Status:
-  ✅ plan-template.md - Verified: Constitution Check section aligns with principles
-  ✅ spec-template.md - Verified: User story priorities and requirements align
-  ✅ tasks-template.md - Verified: Task categorization reflects principle-driven types
-  ⚠ Command files - Pending: Agent-specific files need generic principle references
+  ⚠ plan-template.md - Needs update: Add platform scope and mobile requirements sections
+  ⚠ spec-template.md - Needs update: Add platform scope declaration field
+  ⚠ tasks-template.md - Needs update: Add mobile-specific task types
+  ℹ️ Command files - No immediate changes needed
 
-Follow-up TODOs: None - all placeholders filled
+Follow-up TODOs:
+  1. Update plan-template.md to include platform scope and mobile architecture sections
+  2. Update spec-template.md to require platform scope declaration
+  3. Update tasks-template.md to include mobile development task categories
 
-Last Synced: 2025-10-09
+Last Synced: 2025-10-12
 -->
 
 # Intl-DossierV2.0 Project Constitution
@@ -81,6 +93,20 @@ All UI components MUST meet WCAG AA standards. Semantic HTML MUST be used. ARIA 
 
 **Validation**: axe-playwright tests must pass. Keyboard navigation verification in E2E tests. Manual accessibility audit before production releases.
 
+### VIII. Cross-Platform Mobile Development (MANDATORY)
+
+All features MUST explicitly declare platform scope (web-only, mobile-only, or cross-platform) in specifications. Mobile apps MUST use Expo SDK 52+ with React Native 0.81+ and TypeScript 5.8+ strict mode. Data-heavy workflows (dossier management, document handling, relationship mapping) MUST implement offline-first architecture using WatermelonDB 0.28+ for local persistence with automatic sync to Supabase backend.
+
+Mobile UI MUST use React Native Paper 5.12+ (Material Design 3) for consistency. Navigation MUST use React Navigation 7+ with deep linking support. Biometric authentication MUST be implemented via expo-local-authentication for sensitive operations. Push notifications MUST use expo-notifications with proper permission handling and opt-in flows.
+
+**Performance Targets**: Initial screen render ≤1s (skeleton/cached data), fresh data load ≤2s, incremental sync ≤3s for data-heavy operations, background sync ≤5s for large datasets.
+
+**Conflict Resolution**: Hybrid approach - automatic merge for non-conflicting field updates, user-prompted resolution for conflicting changes (same field modified), optimistic locking with _version column, server timestamp authority for tie-breaking, full audit trail of all conflict resolutions.
+
+**Rationale**: GASTAT staff require mobile access for field work, international travel, and remote collaboration scenarios. Offline-first architecture ensures productivity in low-connectivity environments common in international missions. Native mobile features enhance security (biometrics) and engagement (push notifications).
+
+**Validation**: Cross-platform features must have parallel implementations in mobile/ directory. Offline sync must pass network disconnection tests. Data consistency must be verified across web and mobile platforms. Mobile tests: Jest + RNTL (unit/component), Maestro (E2E).
+
 ## Security & Compliance Requirements
 
 ### Data Protection
@@ -100,10 +126,14 @@ Users MUST authenticate via Supabase Auth with email/password or SSO integration
 ### Code Organization
 
 Follow project structure conventions:
-- Backend: Express + TypeScript with src/api/, src/services/, src/middleware/
-- Frontend: React 19 with src/components/, src/pages/, src/hooks/, src/store/
-- Tests: Vitest for unit/integration, Playwright for E2E
-- Database: SQL migrations in backend/migrations/
+- **Backend**: Express + TypeScript with src/api/, src/services/, src/middleware/
+- **Frontend (Web)**: React 19 with src/components/, src/pages/, src/hooks/, src/store/
+- **Frontend (Mobile)**: Expo + React Native with mobile/src/screens/, mobile/src/components/, mobile/src/navigation/, mobile/src/services/, mobile/src/database/
+- **Tests**:
+  - Web: Vitest (unit/integration), Playwright (E2E)
+  - Mobile: Jest + RNTL (unit/component), Maestro (E2E)
+- **Database**: SQL migrations in supabase/migrations/ (shared across platforms)
+- **Offline Storage**: WatermelonDB schema in mobile/src/database/schema/
 
 ### Naming Conventions
 
@@ -126,6 +156,13 @@ Follow Conventional Commits specification: feat, fix, docs, style, refactor, tes
 
 All features MUST have a specification in specs/###-feature-name/ following the spec-template.md structure. Specs MUST be written from user perspective (WHAT and WHY, not HOW). User stories MUST be prioritized (P1, P2, P3) and independently testable. Acceptance criteria MUST be measurable and technology-agnostic.
 
+**Platform Scope Declaration**: Specs MUST explicitly state platform scope in the feature overview section:
+- **Web-only**: Features exclusive to web interface (e.g., advanced analytics dashboards)
+- **Mobile-only**: Features exclusive to mobile apps (e.g., biometric login, offline field data collection)
+- **Cross-platform**: Features required on both web and mobile (e.g., dossier CRUD, document management)
+
+Cross-platform features MUST include mobile-specific acceptance criteria: offline behavior, sync requirements, native feature usage (camera, biometrics), performance targets for mobile networks.
+
 ### Implementation Planning
 
 All features MUST have an implementation plan following plan-template.md. Plan MUST include: technical context, constitution compliance check, project structure, and complexity tracking if violations are justified. Plans MUST identify library dependencies from shadcn/ui or approved registries before custom builds.
@@ -136,7 +173,50 @@ Tasks MUST be organized by user story to enable independent implementation. Each
 
 ### UI Component Strategy
 
-ALWAYS check shadcn/ui first via shadcn MCP tools. If not found, check approved registries (tweakcn, originui, aceternity, kokonutui, kibo-ui, skiper-ui, magicui, cult-ui) in order. Only build custom components if not available in any registry. All components stored in frontend/src/components/ui/ must follow mobile-first and RTL requirements.
+**Web Platform**:
+- ALWAYS check shadcn/ui first via shadcn MCP tools
+- If not found, check approved registries (tweakcn, originui, aceternity, kokonutui, kibo-ui, skiper-ui, magicui, cult-ui) in order
+- Only build custom components if not available in any registry
+- All components stored in frontend/src/components/ui/ must follow mobile-first and RTL requirements
+
+**Mobile Platform**:
+- ALWAYS use React Native Paper 5.12+ components for Material Design 3 consistency
+- Check expo-vector-icons for iconography (MaterialCommunityIcons preferred)
+- Follow React Native Paper theming for RTL support (automatic with I18nManager)
+- All components stored in mobile/src/components/ must support offline state indicators and biometric-protected actions
+- Shared business logic MUST be extracted to platform-agnostic services in backend/src/services/
+
+## Cross-Platform Considerations
+
+### Data Synchronization
+
+Data-heavy features (dossier management, document handling, relationship mapping) MUST implement sync logic for mobile offline-first architecture:
+- **Create/Update/Delete** operations MUST queue in WatermelonDB when offline, sync when connection restored
+- **Sync API** MUST support incremental sync with last_sync_timestamp parameter and delta queries
+- **Conflict resolution** follows hybrid approach: automatic merge for non-conflicting field updates, user-prompted resolution dialog for conflicting changes (same field modified by different users/devices)
+- **Optimistic locking** MUST use _version column to detect conflicts during sync
+- **Cleanup strategy** MUST purge synced records older than 90 days from mobile storage to prevent bloat
+
+### Platform Parity
+
+Features MUST maintain functional parity across platforms unless explicitly justified in specifications:
+- **Core workflows** (dossier CRUD, relationship mapping, document upload/download) MUST work on both web and mobile
+- **Platform-specific enhancements** are allowed: biometrics (mobile), advanced keyboard shortcuts (web), camera integration (mobile)
+- **Performance targets**:
+  - Initial screen render ≤1s (skeleton UI with cached data)
+  - Fresh data load ≤2s for interactive content
+  - Incremental sync ≤3s for data-heavy operations
+  - Background sync ≤5s for large datasets
+- **Offline degradation**: Mobile MUST show cached data with "Last synced: [timestamp]" indicator when offline, queue operations for later sync
+
+### Testing Requirements
+
+Cross-platform features MUST include:
+- **Unit tests** for shared business logic (backend services, data transformation utilities)
+- **Integration tests** for Sync API: incremental sync, conflict resolution, offline queue processing
+- **Component tests**: Vitest (web React components), Jest + RNTL (mobile React Native components)
+- **E2E tests**: Playwright (web user journeys), Maestro (mobile user journeys) covering identical scenarios
+- **Performance tests**: Network graph rendering, timeline queries, sync operations under load
 
 ## Governance
 
@@ -160,4 +240,4 @@ All PRs MUST verify compliance with applicable principles. Complexity violations
 **Phase 2 (Implementation)**: Code reviews verify adherence to principles
 **Production Release**: Security audit, accessibility audit, performance testing
 
-**Version**: 1.0.0 | **Ratified**: 2025-10-09 | **Last Amended**: 2025-10-09
+**Version**: 1.1.0 | **Ratified**: 2025-10-09 | **Last Amended**: 2025-10-12

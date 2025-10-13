@@ -1,0 +1,526 @@
+openapi: 3.1.0
+info:
+  title: Mobile Authentication API
+  version: 1.0.0
+  description: |
+    Mobile authentication API with Supabase Auth integration and biometric support.
+    Handles token refresh, biometric setup, and session management.
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+    description: Supabase Edge Functions (Staging)
+
+paths:
+  /auth-mobile-login:
+    post:
+      summary: Mobile Login (Email/Password)
+      description: |
+        Initial login with email and password. Returns JWT access token and refresh token.
+        Refresh token should be encrypted and stored in platform secure storage (iOS Keychain/Android Keystore).
+      operationId: mobileLogin
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - device_id
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: "kazahrani@stats.gov.sa"
+                password:
+                  type: string
+                  format: password
+                  minLength: 8
+                  example: "itisme"
+                device_id:
+                  type: string
+                  description: Unique device identifier (UUID) for tracking sessions
+                  example: "device-12345-abcde"
+                device_info:
+                  type: object
+                  properties:
+                    platform:
+                      type: string
+                      enum: [ios, android]
+                    os_version:
+                      type: string
+                      example: "iOS 15.5"
+                    app_version:
+                      type: string
+                      example: "1.0.0"
+                    device_model:
+                      type: string
+                      example: "iPhone 14 Pro"
+      responses:
+        '200':
+          description: Successful login
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                    description: JWT access token (expires in 1 hour)
+                    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                  refresh_token:
+                    type: string
+                    description: Refresh token (expires in 30 days)
+                    example: "v1.eyJpZCI6IjEyMzQ1Njc4OTAiLCJ..."
+                  user:
+                    $ref: '#/components/schemas/User'
+                  session_id:
+                    type: string
+                    format: uuid
+                    description: Session ID for tracking and invalidation
+                  expires_at:
+                    type: string
+                    format: date-time
+                    description: Access token expiration timestamp
+              example:
+                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                refresh_token: "v1.eyJpZCI6IjEyMzQ1Njc4OTAiLCJ..."
+                user:
+                  id: "user-uuid-1234"
+                  email: "kazahrani@stats.gov.sa"
+                  name_ar: "خالد الزهراني"
+                  name_en: "Khalid Alzahrani"
+                  role: "analyst"
+                  permissions: ["intake:submit", "dossier:read", "assignment:view"]
+                session_id: "session-uuid-5678"
+                expires_at: "2025-10-12T11:00:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: "INVALID_CREDENTIALS"
+                message: "Email or password is incorrect"
+        '403':
+          description: Account locked or inactive
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: "ACCOUNT_LOCKED"
+                message: "Account has been deactivated. Contact administrator."
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /auth-refresh-token:
+    post:
+      summary: Refresh Access Token
+      description: |
+        Exchanges refresh token for new access token. Used for biometric re-authentication
+        and session extension.
+      operationId: refreshToken
+      tags:
+        - Authentication
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - refresh_token
+              properties:
+                refresh_token:
+                  type: string
+                  description: Refresh token from initial login
+                device_id:
+                  type: string
+                  description: Device ID for session validation
+      responses:
+        '200':
+          description: Successful token refresh
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  access_token:
+                    type: string
+                  expires_at:
+                    type: string
+                    format: date-time
+              example:
+                access_token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                expires_at: "2025-10-12T12:00:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Invalid or expired refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: "INVALID_REFRESH_TOKEN"
+                message: "Refresh token is invalid or expired. Please log in again."
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /auth-biometric-setup:
+    post:
+      summary: Setup Biometric Authentication
+      description: |
+        Enables biometric auth for user. Stores encrypted refresh token mapping to
+        biometric identity. Called after first successful login when user opts in.
+      operationId: biometricSetup
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - device_id
+                - biometric_type
+                - encrypted_refresh_token
+              properties:
+                device_id:
+                  type: string
+                  description: Device ID for biometric mapping
+                biometric_type:
+                  type: string
+                  enum: [touch_id, face_id, fingerprint, face_unlock]
+                  description: Type of biometric authentication
+                encrypted_refresh_token:
+                  type: string
+                  description: Refresh token encrypted with platform-specific key (base64)
+                  example: "U2FsdGVkX1+abcdefg..."
+                public_key:
+                  type: string
+                  description: Optional public key for server-side verification
+      responses:
+        '200':
+          description: Biometric auth enabled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  biometric_id:
+                    type: string
+                    format: uuid
+                    description: ID for biometric credential
+                  enabled_at:
+                    type: string
+                    format: date-time
+              example:
+                biometric_id: "bio-uuid-9876"
+                enabled_at: "2025-10-12T10:15:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Biometric already enabled for this device
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: "BIOMETRIC_ALREADY_ENABLED"
+                message: "Biometric authentication is already enabled for this device"
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /auth-biometric-disable:
+    post:
+      summary: Disable Biometric Authentication
+      description: |
+        Disables biometric auth for device. Removes encrypted refresh token mapping.
+        User must re-enable biometric auth or use password login.
+      operationId: biometricDisable
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - device_id
+              properties:
+                device_id:
+                  type: string
+                reason:
+                  type: string
+                  description: Optional reason for disabling (for audit log)
+                  example: "User changed biometric setup on device"
+      responses:
+        '200':
+          description: Biometric auth disabled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  disabled_at:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: No biometric auth found for this device
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /auth-session-validate:
+    post:
+      summary: Validate Session
+      description: |
+        Validates access token and returns current session status. Used on app foreground
+        to check if session is still valid or needs re-authentication.
+      operationId: sessionValidate
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - session_id
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                  description: Session ID from login response
+      responses:
+        '200':
+          description: Session is valid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                  user:
+                    $ref: '#/components/schemas/User'
+                  expires_at:
+                    type: string
+                    format: date-time
+                  requires_reauth:
+                    type: boolean
+                    description: True if session expired or role changed, requires re-authentication
+              example:
+                valid: true
+                user:
+                  id: "user-uuid-1234"
+                  email: "kazahrani@stats.gov.sa"
+                  role: "analyst"
+                  permissions: ["intake:submit", "dossier:read"]
+                expires_at: "2025-10-12T11:00:00Z"
+                requires_reauth: false
+        '401':
+          description: Session invalid or expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: "SESSION_INVALID"
+                message: "Session has expired or been invalidated. Please log in again."
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /auth-logout:
+    post:
+      summary: Logout (Invalidate Session)
+      description: |
+        Invalidates current session and access token. Clears device token for push
+        notifications. User must log in again to access app.
+      operationId: logout
+      tags:
+        - Authentication
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - session_id
+              properties:
+                session_id:
+                  type: string
+                  format: uuid
+                device_id:
+                  type: string
+                  description: Optional device ID to clear push notification token
+      responses:
+        '200':
+          description: Logout successful
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logged_out_at:
+                    type: string
+                    format: date-time
+              example:
+                logged_out_at: "2025-10-12T10:30:00Z"
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT access token
+
+  schemas:
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - role
+        - permissions
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+          format: email
+        name_ar:
+          type: string
+        name_en:
+          type: string
+        role:
+          type: string
+          enum:
+            - viewer
+            - analyst
+            - editor
+            - manager
+            - admin
+          description: User's primary role
+        permissions:
+          type: array
+          items:
+            type: string
+          description: Array of permission strings (e.g., "intake:submit", "dossier:read")
+          example: ["intake:submit", "dossier:read", "assignment:view"]
+        department:
+          type: string
+          description: User's department (optional)
+        avatar_url:
+          type: string
+          format: uri
+          description: Profile avatar URL (optional)
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          example: "Invalid request parameters"
+        details:
+          type: object
+          description: Additional error context
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "VALIDATION_ERROR"
+            message: "Email format is invalid"
+
+    Unauthorized:
+      description: Invalid or expired JWT token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "UNAUTHORIZED"
+            message: "Invalid or expired access token"
+
+    RateLimited:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "RATE_LIMITED"
+            message: "Too many login attempts. Retry after 300 seconds."
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until rate limit resets
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "INTERNAL_ERROR"
+            message: "An unexpected error occurred. Please try again."

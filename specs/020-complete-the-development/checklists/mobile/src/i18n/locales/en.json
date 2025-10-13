@@ -1,0 +1,37 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "search": "Search",
+    "filter": "Filter",
+    "refresh": "Refresh",
+    "submit": "Submit",
+    "back": "Back",
+    "next": "Next",
+    "done": "Done",
+    "retry": "Retry",
+    "offline": "Offline",
+    "online": "Online",
+    "syncing": "Syncing...",
+    "lastSync": "Last synced: {{time}}"
+  },
+  "auth": {
+    "login": "Login",
+    "logout": "Logout",
+    "biometricPrompt": "Authenticate to access GASTAT Dossier",
+    "biometricFallback": "Use Password",
+    "sessionExpired": "Your session has expired. Please log in again."
+  },
+  "tabs": {
+    "frontDoor": "Front Door",
+    "search": "Search",
+    "assignments": "Assignments",
+    "kanban": "Kanban",
+    "profile": "Profile"
+  }
+}

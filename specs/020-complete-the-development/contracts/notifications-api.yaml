@@ -1,0 +1,620 @@
+openapi: 3.1.0
+info:
+  title: Mobile Push Notifications API
+  version: 1.0.0
+  description: |
+    Push notifications API for mobile app. Supports FCM (Android) and APNS (iOS) with
+    notification grouping, priority levels, deep linking, and user preferences.
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+    description: Supabase Edge Functions (Staging)
+
+security:
+  - BearerAuth: []
+
+paths:
+  /notifications-register-device:
+    post:
+      summary: Register Device for Push Notifications
+      description: |
+        Registers device token (FCM or APNS) for push notifications. Called after user
+        grants notification permission. Stores token with user_id for targeted notifications.
+      operationId: registerDevice
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - device_token
+                - platform
+              properties:
+                device_token:
+                  type: string
+                  description: FCM token (Android) or APNS token (iOS)
+                  example: "fGzTk7vQR9m..."
+                platform:
+                  type: string
+                  enum: [ios, android]
+                device_id:
+                  type: string
+                  description: Unique device identifier
+                device_info:
+                  type: object
+                  properties:
+                    os_version:
+                      type: string
+                    app_version:
+                      type: string
+                    device_model:
+                      type: string
+      responses:
+        '200':
+          description: Device registered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  device_registration_id:
+                    type: string
+                    format: uuid
+                  registered_at:
+                    type: string
+                    format: date-time
+              example:
+                device_registration_id: "reg-uuid-1234"
+                registered_at: "2025-10-12T10:20:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /notifications-update-preferences:
+    post:
+      summary: Update Notification Preferences
+      description: |
+        Updates user's notification preferences by category. Controls which notification
+        types user receives and priority levels for each category.
+      operationId: updatePreferences
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - preferences
+              properties:
+                preferences:
+                  type: object
+                  properties:
+                    assignment:
+                      $ref: '#/components/schemas/NotificationPreference'
+                    intake:
+                      $ref: '#/components/schemas/NotificationPreference'
+                    user_management:
+                      $ref: '#/components/schemas/NotificationPreference'
+                    kanban:
+                      $ref: '#/components/schemas/NotificationPreference'
+                    global:
+                      type: object
+                      properties:
+                        enabled:
+                          type: boolean
+                          description: Master toggle for all notifications
+                        quiet_hours:
+                          type: object
+                          properties:
+                            enabled:
+                              type: boolean
+                            start_time:
+                              type: string
+                              format: time
+                              example: "22:00"
+                            end_time:
+                              type: string
+                              format: time
+                              example: "08:00"
+              example:
+                preferences:
+                  assignment:
+                    enabled: true
+                    priority_filter: "urgent_only"
+                    events: ["new_assignment", "sla_warning", "sla_breach", "escalation"]
+                  intake:
+                    enabled: true
+                    priority_filter: "all"
+                    events: ["approved", "rejected", "duplicate_detected"]
+                  kanban:
+                    enabled: false
+                    priority_filter: "none"
+                    events: []
+                  global:
+                    enabled: true
+                    quiet_hours:
+                      enabled: true
+                      start_time: "22:00"
+                      end_time: "08:00"
+      responses:
+        '200':
+          description: Preferences updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  updated_at:
+                    type: string
+                    format: date-time
+              example:
+                updated_at: "2025-10-12T10:25:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /notifications-send:
+    post:
+      summary: Send Push Notification (Backend Trigger)
+      description: |
+        Backend-only endpoint for sending push notifications. Called by Supabase Edge
+        Functions when events occur (assignment created, SLA breach, role changed).
+      operationId: sendNotification
+      tags:
+        - Notifications
+      security:
+        - ServiceRoleKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_ids
+                - category
+                - notification
+              properties:
+                user_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  description: List of user IDs to send notification to
+                  example: ["user-uuid-1234", "user-uuid-5678"]
+                category:
+                  type: string
+                  enum: [assignment, intake, user_management, kanban]
+                notification:
+                  $ref: '#/components/schemas/PushNotification'
+      responses:
+        '200':
+          description: Notifications sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  sent_count:
+                    type: integer
+                    description: Number of notifications successfully sent
+                  failed_count:
+                    type: integer
+                    description: Number of failed sends
+                  notification_ids:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+                    description: FCM/APNS notification IDs
+              example:
+                sent_count: 2
+                failed_count: 0
+                notification_ids: ["fcm-notif-1", "apns-notif-2"]
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          description: Invalid service role key
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /notifications-history:
+    get:
+      summary: Get Notification History
+      description: |
+        Retrieves user's notification history with filtering and pagination. Used for
+        in-app notification center.
+      operationId: getHistory
+      tags:
+        - Notifications
+      parameters:
+        - name: category
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [assignment, intake, user_management, kanban]
+          description: Filter by category
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [pending, delivered, read, dismissed]
+          description: Filter by delivery status
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 10
+            maximum: 100
+            default: 20
+          description: Number of notifications per page
+        - name: offset
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+          description: Pagination offset
+      responses:
+        '200':
+          description: Notification history retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  notifications:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/NotificationHistory'
+                  total_count:
+                    type: integer
+                  has_more:
+                    type: boolean
+              example:
+                notifications:
+                  - id: "notif-uuid-1"
+                    category: "assignment"
+                    priority: "urgent"
+                    title_en: "New urgent assignment"
+                    body_en: "You have been assigned to review climate policy dossier"
+                    deep_link_url: "intldossier://assignment/assign-uuid-123"
+                    delivery_status: "read"
+                    delivered_at: "2025-10-12T09:00:00Z"
+                    read_at: "2025-10-12T09:05:00Z"
+                total_count: 45
+                has_more: true
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /notifications-mark-read:
+    post:
+      summary: Mark Notification as Read
+      description: |
+        Marks one or more notifications as read. Updates delivery_status to 'read'
+        and sets read_at timestamp.
+      operationId: markRead
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - notification_ids
+              properties:
+                notification_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  description: List of notification IDs to mark as read
+                  example: ["notif-uuid-1", "notif-uuid-2"]
+      responses:
+        '200':
+          description: Notifications marked as read
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  marked_count:
+                    type: integer
+                  marked_at:
+                    type: string
+                    format: date-time
+              example:
+                marked_count: 2
+                marked_at: "2025-10-12T10:30:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /notifications-unregister-device:
+    post:
+      summary: Unregister Device (Logout/Uninstall)
+      description: |
+        Removes device token from notification system. Called on logout or app uninstall.
+      operationId: unregisterDevice
+      tags:
+        - Notifications
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - device_id
+              properties:
+                device_id:
+                  type: string
+                  description: Device ID to unregister
+      responses:
+        '200':
+          description: Device unregistered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  unregistered_at:
+                    type: string
+                    format: date-time
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Device not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT access token
+
+    ServiceRoleKey:
+      type: http
+      scheme: bearer
+      description: Supabase service role key (backend-only)
+
+  schemas:
+    NotificationPreference:
+      type: object
+      properties:
+        enabled:
+          type: boolean
+          description: Enable/disable notifications for this category
+        priority_filter:
+          type: string
+          enum: [all, urgent_only, high_and_urgent, none]
+          description: Filter notifications by priority level
+        events:
+          type: array
+          items:
+            type: string
+          description: List of specific events to receive notifications for
+          example: ["new_assignment", "sla_warning", "sla_breach"]
+
+    PushNotification:
+      type: object
+      required:
+        - title_ar
+        - title_en
+        - body_ar
+        - body_en
+        - priority
+      properties:
+        title_ar:
+          type: string
+          maxLength: 100
+          example: "مهمة جديدة عاجلة"
+        title_en:
+          type: string
+          maxLength: 100
+          example: "New urgent assignment"
+        body_ar:
+          type: string
+          maxLength: 500
+          example: "تم تعيينك لمراجعة ملف السياسة المناخية"
+        body_en:
+          type: string
+          maxLength: 500
+          example: "You have been assigned to review climate policy dossier"
+        priority:
+          type: string
+          enum: [urgent, high, normal]
+          description: Notification priority (affects sound/vibration)
+        deep_link_url:
+          type: string
+          format: uri
+          description: Deep link to open specific screen on tap
+          example: "intldossier://assignment/assign-uuid-123"
+        grouping_key:
+          type: string
+          description: Key for grouping similar notifications
+          example: "assignment-new"
+        action_buttons:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+              label_ar:
+                type: string
+              label_en:
+                type: string
+              action:
+                type: string
+                description: Action identifier to handle on button press
+          description: Optional action buttons (max 2 for iOS, 3 for Android)
+          example:
+            - id: "approve"
+              label_ar: "موافقة"
+              label_en: "Approve"
+              action: "approve_role_change"
+            - id: "reject"
+              label_ar: "رفض"
+              label_en: "Reject"
+              action: "reject_role_change"
+        badge_count:
+          type: integer
+          description: App icon badge number (iOS only)
+          example: 5
+        sound:
+          type: string
+          enum: [default, urgent, silent]
+          description: Notification sound type
+        expiry:
+          type: string
+          format: date-time
+          description: Notification expiry (for APNS)
+
+    NotificationHistory:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        notification_id:
+          type: string
+          description: FCM/APNS notification ID
+        category:
+          type: string
+          enum: [assignment, intake, user_management, kanban]
+        priority:
+          type: string
+          enum: [urgent, high, normal]
+        title_ar:
+          type: string
+        title_en:
+          type: string
+        body_ar:
+          type: string
+        body_en:
+          type: string
+        deep_link_url:
+          type: string
+        delivery_status:
+          type: string
+          enum: [pending, delivered, read, dismissed]
+        delivered_at:
+          type: string
+          format: date-time
+        read_at:
+          type: string
+          format: date-time
+        dismissed_at:
+          type: string
+          format: date-time
+
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          example: "Invalid request parameters"
+        details:
+          type: object
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "VALIDATION_ERROR"
+            message: "Platform must be either 'ios' or 'android'"
+
+    Unauthorized:
+      description: Invalid or expired JWT token
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "UNAUTHORIZED"
+            message: "Invalid or expired access token"
+
+    RateLimited:
+      description: Too many requests
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "RATE_LIMITED"
+            message: "Too many notification requests. Retry after 60 seconds."
+      headers:
+        Retry-After:
+          schema:
+            type: integer
+          description: Seconds until rate limit resets
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: "INTERNAL_ERROR"
+            message: "An unexpected error occurred. Please try again."

@@ -4,6 +4,7 @@ Last updated: 2025-10-07
 
 ## Core Tech Stack
 - **Frontend**: React 18+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS, shadcn/ui, i18next, React Flow (network graphs)
+- **Mobile**: Expo SDK 52+, React Native 0.81+, TypeScript 5.8+, React Native Paper 5.12+ (Material Design 3), WatermelonDB 0.28+ (offline-first), React Navigation 7+, expo-local-authentication (biometrics), expo-notifications (push), i18next (internationalization)
 - **Backend**: Node.js 18+ LTS, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
 - **Database**: PostgreSQL 15+ with pgvector, pg_trgm, pg_tsvector extensions
 - **AI/ML**: AnythingLLM (self-hosted), vector embeddings (1536 dimensions)
@@ -13,6 +14,7 @@ Last updated: 2025-10-07
 ```
 backend/          # Express + TypeScript API
 frontend/         # React 19 + Vite app
+mobile/           # Expo + React Native mobile app (iOS/Android)
 tests/            # Unit, integration, E2E tests
 supabase/         # Migrations, seed data, Edge Functions
 ```
@@ -125,23 +127,27 @@ When building UI components, **ALWAYS** follow this workflow:
 - Use shadcn MCP tools to explore available components
 
 ## Recent Changes
-- 2025-10-09: ✅ **Entity Relationships & UI/UX Redesign (017-entity-relationships-and)** - Complete test suite implementation
+- 021-apply-gusto-design: Added TypeScript 5.8+ (strict mode)
+- 020-complete-the-development: Added TypeScript 5.8+ (strict mode), React Native 0.81+ + Expo SDK 52+, React Native Paper 5.12+ (Material Design 3), WatermelonDB 0.28+ (offline-first), React Navigation 7+, TanStack Query v5, i18next (i18n), expo-local-authentication, expo-notifications
+- 019-user-management-access: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS, React 19 + Supabase (Auth, PostgreSQL 15+, RLS, Realtime), TanStack Query v5, React Router, i18next, shadcn/ui
+  - ✅ Feature spec: Expo-based mobile app with offline-first architecture
+  - ✅ Research: Jest + RNTL (unit tests), Maestro (E2E), React Native Paper (UI), WatermelonDB (offline sync)
+  - ✅ Data model: 11 entities with WatermelonDB schema, offline storage cleanup strategy
+  - ✅ API contracts: Sync API (incremental sync), Auth API (Supabase Auth + biometrics), Notifications API (Expo Push)
+  - ✅ Quickstart: Setup guide for Expo development, testing, and deployment
+  - 📊 Status: Planning complete - ready for `/speckit.tasks` to generate actionable tasks
   - ✅ Contract Tests: 12 tests covering all API endpoints (GET/POST/DELETE for relationships, positions, documents, calendar)
   - ✅ Integration Tests: 7 tests for network graph performance (<3s for 50 nodes), timeline aggregation (<1s for 100 events), realtime updates
   - ✅ E2E Tests: 5 Playwright tests covering user journeys (country analyst, policy officer, intake officer, staff assignments, calendar)
   - ✅ Performance Tests: Network graph rendering (<3s), timeline queries (<1s)
   - ✅ Accessibility Tests: WCAG AA compliance, RTL layout validation
   - 📊 Status: Test suite complete - ready for test execution and validation
-- 2025-10-08: ✅ **Entity Relationships Core Implementation (017-entity-relationships-and)** - 90% complete
   - ✅ Database: 10 new tables (countries, organizations, forums, dossier_relationships, position_dossier_links, mous, intelligence_signals, documents, calendar_entries)
   - ✅ Backend: 12 Edge Functions for relationships, linking, documents, calendar management
   - ✅ Frontend: 8 shared components (UniversalEntityCard, RelationshipNavigator, UnifiedTimeline, etc.)
   - ✅ Features: Dossier-to-dossier relationships, polymorphic documents, many-to-many position linking, unified calendar with 4 event types
   - ✅ Performance: Network graph <3s for 50 nodes, timeline <1s for 100 events
   - ⏳ Remaining: Test execution and validation (contract, integration, E2E, performance tests)
-- 2025-10-05: ✅ **Search & Retrieval System (015-search-retrieval-spec)** - 100% complete, ready for UAT
-- 2025-09-26: Added Kanban board implementation (016-implement-kanban) with @dnd-kit/core
-- See `SEARCH_IMPLEMENTATION_COMPLETE.md` for detailed implementation summary
 
 <!-- MANUAL ADDITIONS START -->
 ## Deployment Configuration
