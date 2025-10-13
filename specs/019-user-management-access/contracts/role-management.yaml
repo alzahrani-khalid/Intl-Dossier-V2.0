@@ -1,0 +1,404 @@
+openapi: 3.1.0
+info:
+  title: Role Management API
+  version: 1.0.0
+  description: API endpoints for role assignment, dual approval workflow, and permission management
+
+servers:
+  - url: https://{project-ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions
+    variables:
+      project-ref:
+        default: zkrcjzdemdmwhearhfgg
+
+security:
+  - BearerAuth: []
+
+paths:
+  /assign-role:
+    post:
+      summary: Assign or change user role
+      description: |
+        Assigns a role to a user. Admin role assignments require dual approval workflow.
+        Non-admin role changes (viewer ↔ editor) take effect immediately.
+
+        **Authorization**: Admin role required
+        **Rate Limit**: 10 requests/min per IP
+        **Success Criteria**: Role changes take effect within 30 seconds
+      operationId: assignRole
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - new_role
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+                new_role:
+                  type: string
+                  enum: [admin, editor, viewer]
+                  example: editor
+                reason:
+                  type: string
+                  example: "Promotion to editor role"
+      responses:
+        '200':
+          description: Role assignment processed
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: Immediate role change (non-admin roles)
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      role_changed:
+                        type: boolean
+                        example: true
+                      new_role:
+                        type: string
+                        example: editor
+                      sessions_terminated:
+                        type: integer
+                        example: 2
+                        description: Number of active sessions terminated
+                  - type: object
+                    description: Dual approval required (admin role)
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      requires_approval:
+                        type: boolean
+                        example: true
+                      approval_request_id:
+                        type: string
+                        format: uuid
+                        example: "660e8400-e29b-41d4-a716-446655440000"
+                      pending_approvals:
+                        type: integer
+                        example: 2
+                        description: Number of approvals needed
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                same_role:
+                  value:
+                    error: "User already has this role"
+                    code: "SAME_ROLE"
+                user_not_found:
+                  value:
+                    error: "User not found"
+                    code: "USER_NOT_FOUND"
+        '403':
+          description: Cannot change own role
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /approve-role-change:
+    post:
+      summary: Approve admin role assignment
+      description: |
+        Approve a pending admin role assignment. Requires two distinct administrators.
+        Second approval automatically applies the role change.
+
+        **Authorization**: Admin role required (cannot approve own request)
+        **Rate Limit**: 10 requests/min per IP
+      operationId: approveRoleChange
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - approval_request_id
+                - approved
+              properties:
+                approval_request_id:
+                  type: string
+                  format: uuid
+                  example: "660e8400-e29b-41d4-a716-446655440000"
+                approved:
+                  type: boolean
+                  example: true
+                rejection_reason:
+                  type: string
+                  description: Required if approved=false
+                  example: "Insufficient justification"
+      responses:
+        '200':
+          description: Approval processed
+          content:
+            application/json:
+              schema:
+                oneOf:
+                  - type: object
+                    description: First approval recorded
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      status:
+                        type: string
+                        example: first_approved
+                      remaining_approvals:
+                        type: integer
+                        example: 1
+                  - type: object
+                    description: Second approval - role applied
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      status:
+                        type: string
+                        example: approved
+                      role_applied:
+                        type: boolean
+                        example: true
+                      user_id:
+                        type: string
+                        format: uuid
+                        example: "550e8400-e29b-41d4-a716-446655440000"
+                      new_role:
+                        type: string
+                        example: admin
+                  - type: object
+                    description: Approval rejected
+                    properties:
+                      success:
+                        type: boolean
+                        example: true
+                      status:
+                        type: string
+                        example: rejected
+                      rejection_reason:
+                        type: string
+                        example: "Insufficient justification"
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                already_approved:
+                  value:
+                    error: "Already approved by this administrator"
+                    code: "ALREADY_APPROVED"
+                cannot_approve_own:
+                  value:
+                    error: "Cannot approve own role change request"
+                    code: "SELF_APPROVAL"
+                same_approver:
+                  value:
+                    error: "Both approvals must be from different administrators"
+                    code: "DUPLICATE_APPROVER"
+
+  /pending-approvals:
+    get:
+      summary: List pending role approval requests
+      description: |
+        Retrieves all pending admin role assignment requests requiring approval.
+
+        **Authorization**: Admin role required
+        **Rate Limit**: 30 requests/min per IP
+      operationId: listPendingApprovals
+      parameters:
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, first_approved, approved, rejected]
+          description: Filter by approval status
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+        - name: offset
+          in: query
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+      responses:
+        '200':
+          description: List of pending approvals
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  approvals:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PendingApproval'
+                  total:
+                    type: integer
+                    example: 5
+                  limit:
+                    type: integer
+                    example: 50
+                  offset:
+                    type: integer
+                    example: 0
+
+  /user-permissions:
+    get:
+      summary: Get comprehensive user permissions
+      description: |
+        Retrieves user's complete permission set including primary role and active delegations.
+
+        **Authorization**: Authenticated user (can view own permissions), Admin (can view any user)
+        **Rate Limit**: 60 requests/min per IP
+      operationId: getUserPermissions
+      parameters:
+        - name: user_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: User permissions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  user_id:
+                    type: string
+                    format: uuid
+                    example: "550e8400-e29b-41d4-a716-446655440000"
+                  email:
+                    type: string
+                    example: john.doe@gastat.gov.sa
+                  primary_role:
+                    type: string
+                    example: editor
+                  active_delegations:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/DelegationSummary'
+                  effective_permissions:
+                    type: object
+                    description: Combined permissions from role + delegations
+                    properties:
+                      can_create_dossiers:
+                        type: boolean
+                        example: true
+                      can_edit_dossiers:
+                        type: boolean
+                        example: true
+                      can_manage_users:
+                        type: boolean
+                        example: false
+                      accessible_resources:
+                        type: array
+                        items:
+                          type: string
+                          format: uuid
+                        example: ["550e8400-e29b-41d4-a716-446655440000"]
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    PendingApproval:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "660e8400-e29b-41d4-a716-446655440000"
+        user_id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        user_email:
+          type: string
+          example: john.doe@gastat.gov.sa
+        requested_role:
+          type: string
+          example: admin
+        requester_id:
+          type: string
+          format: uuid
+          example: "770e8400-e29b-41d4-a716-446655440000"
+        requester_email:
+          type: string
+          example: admin@gastat.gov.sa
+        status:
+          type: string
+          enum: [pending, first_approved, approved, rejected]
+          example: pending
+        first_approver_email:
+          type: string
+          example: admin2@gastat.gov.sa
+        first_approved_at:
+          type: string
+          format: date-time
+          example: "2025-10-11T10:30:00Z"
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-10-11T10:00:00Z"
+
+    DelegationSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "880e8400-e29b-41d4-a716-446655440000"
+        grantor_email:
+          type: string
+          example: manager@gastat.gov.sa
+        resource_type:
+          type: string
+          example: dossier
+        resource_id:
+          type: string
+          format: uuid
+          example: "990e8400-e29b-41d4-a716-446655440000"
+        valid_until:
+          type: string
+          format: date-time
+          example: "2025-12-31T23:59:59Z"
+
+    Error:
+      type: object
+      required:
+        - error
+        - code
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+        details:
+          type: object

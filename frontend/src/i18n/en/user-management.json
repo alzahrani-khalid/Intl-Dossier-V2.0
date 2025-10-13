@@ -1,0 +1,315 @@
+{
+  "title": "User Management",
+  "users": "Users",
+  "roles": "Roles",
+  "permissions": "Permissions",
+  "delegations": "Delegations",
+  "accessReviews": "Access Reviews",
+
+  "userOnboarding": {
+    "title": "User Onboarding",
+    "createUser": "Create User",
+    "userCreated": "User created successfully",
+    "activateAccount": "Activate Account",
+    "accountActivated": "Account activated successfully",
+    "activationEmailSent": "Activation email sent to {{email}}",
+    "setPassword": "Set Password",
+    "confirmPassword": "Confirm Password",
+    "passwordsMustMatch": "Passwords must match",
+    "activationTokenInvalid": "Activation token is invalid or expired",
+    "duplicateEmail": "Email already exists",
+    "duplicateUsername": "Username already exists",
+    "defaultPreferences": "Default preferences will be assigned (English, UTC timezone, Viewer role)"
+  },
+
+  "userProfile": {
+    "username": "Username",
+    "fullName": "Full Name",
+    "email": "Email",
+    "avatar": "Avatar",
+    "role": "Role",
+    "userType": "User Type",
+    "status": "Status",
+    "preferences": "Preferences",
+    "mfaEnabled": "MFA Enabled",
+    "lastLoginAt": "Last Login",
+    "lastLoginIp": "Last Login IP",
+    "allowedResources": "Allowed Resources",
+    "expiresAt": "Expires At"
+  },
+
+  "roles": {
+    "admin": "Admin",
+    "manager": "Manager",
+    "staff": "Staff",
+    "viewer": "Viewer",
+    "assignRole": "Assign Role",
+    "roleAssigned": "Role assigned successfully",
+    "roleRequiresApproval": "Admin role assignment requires dual approval",
+    "pendingApproval": "Pending Approval",
+    "approveRole": "Approve Role Change",
+    "rejectRole": "Reject Role Change",
+    "roleApproved": "Role change approved",
+    "roleRejected": "Role change rejected",
+    "cannotChangeSelfRole": "You cannot change your own role",
+    "requiresDualApproval": "Admin role changes require two distinct approvers",
+    "approvalReason": "Approval Reason"
+  },
+
+  "userTypes": {
+    "employee": "Employee",
+    "contractor": "Contractor",
+    "guest": "Guest"
+  },
+
+  "userStatus": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "deactivated": "Deactivated",
+    "suspended": "Suspended"
+  },
+
+  "delegation": {
+    "title": "Permission Delegation",
+    "delegate": "Delegate Permissions",
+    "revoke": "Revoke Delegation",
+    "validate": "Validate Delegation",
+    "granted": "Granted Delegations",
+    "received": "Received Delegations",
+    "delegateTo": "Delegate To",
+    "validFrom": "Valid From",
+    "validUntil": "Valid Until",
+    "permissions": "Permissions to Delegate",
+    "reason": "Delegation Reason",
+    "delegationCreated": "Delegation created successfully",
+    "delegationRevoked": "Delegation revoked successfully",
+    "circularDelegation": "Circular delegation detected",
+    "circularDelegationError": "This delegation would create a circular chain: {{chain}}",
+    "transitiveNotAllowed": "Delegated permissions cannot be re-delegated",
+    "expiryWarning": "This delegation expires in {{days}} days",
+    "expiringSoon": "Expiring Soon",
+    "expired": "Expired",
+    "delegationChain": "Delegation Chain",
+    "viewChain": "View Delegation Chain",
+    "chainVisualization": "Chain: {{chain}}"
+  },
+
+  "userDeactivation": {
+    "title": "User Deactivation",
+    "deactivate": "Deactivate User",
+    "reactivate": "Reactivate User",
+    "deactivated": "User deactivated successfully",
+    "reactivated": "User reactivated successfully",
+    "confirmDeactivation": "Are you sure you want to deactivate this user?",
+    "confirmReactivation": "Are you sure you want to reactivate this user?",
+    "deactivationReason": "Deactivation Reason",
+    "orphanedItems": "Orphaned Items",
+    "orphanedDossiers": "{{count}} dossiers will be marked as orphaned",
+    "orphanedAssignments": "{{count}} assignments will be marked as orphaned",
+    "orphanedApprovals": "{{count}} pending approvals will be marked as orphaned",
+    "sessionsTerminated": "All active sessions will be terminated",
+    "delegationsRevoked": "All delegations will be revoked",
+    "securityReviewRequired": "Reactivation requires security review approval"
+  },
+
+  "accessReview": {
+    "title": "Access Review",
+    "generate": "Generate Access Review",
+    "complete": "Complete Review",
+    "certify": "Certify Access",
+    "requestChange": "Request Access Change",
+    "reviewGenerated": "Access review generated successfully",
+    "reviewCompleted": "Access review completed successfully",
+    "accessCertified": "Access certified successfully",
+    "scope": "Review Scope",
+    "scopeAll": "All Users",
+    "scopeDepartment": "By Department",
+    "scopeRole": "By Role",
+    "findings": "Findings",
+    "findingTypes": {
+      "inactiveUser": "Inactive User",
+      "excessivePermissions": "Excessive Permissions",
+      "expiringGuest": "Expiring Guest Account",
+      "pendingApproval": "Pending Role Approval",
+      "expiredDelegation": "Expired Delegation"
+    },
+    "inactiveUsers": "Inactive Users ({{count}})",
+    "excessivePermissions": "Excessive Permissions ({{count}})",
+    "expiringGuests": "Expiring Guest Accounts ({{count}})",
+    "inactiveThreshold": "90 days without login",
+    "quarterlySchedule": "Reviews scheduled quarterly at 9 AM on 1st of Jan/Apr/Jul/Oct",
+    "manualOverride": "Manual scheduling available",
+    "scheduleReview": "Schedule Access Review",
+    "reviewScheduled": "Access review scheduled successfully",
+    "complianceReport": "Compliance Report"
+  },
+
+  "guestAccounts": {
+    "title": "Guest Accounts",
+    "create": "Create Guest Account",
+    "guestCreated": "Guest account created successfully",
+    "expirationRequired": "Expiration date is required for guest accounts",
+    "maxDuration": "Maximum duration: 90 days",
+    "allowedResources": "Allowed Resources",
+    "selectResources": "Select Resources",
+    "restrictedAccess": "Restricted Access",
+    "autoExpiration": "Auto-expiration in {{days}} days",
+    "expirationJob": "Automatic expiration check runs every 5 minutes"
+  },
+
+  "mfa": {
+    "title": "Multi-Factor Authentication",
+    "setup": "Setup MFA",
+    "enable": "Enable MFA",
+    "disable": "Disable MFA",
+    "qrCode": "QR Code",
+    "scanQrCode": "Scan this QR code with your authenticator app",
+    "verificationCode": "Verification Code",
+    "enterCode": "Enter 6-digit code from your app",
+    "backupCodes": "Backup Codes",
+    "saveBackupCodes": "Save these backup codes in a secure location",
+    "mfaEnabled": "MFA enabled successfully",
+    "mfaDisabled": "MFA disabled successfully",
+    "invalidCode": "Invalid verification code"
+  },
+
+  "passwordReset": {
+    "title": "Password Reset",
+    "initiateReset": "Reset Password",
+    "resetLink": "Reset Link Sent",
+    "resetLinkSent": "Password reset link sent to {{email}}",
+    "newPassword": "New Password",
+    "confirmNewPassword": "Confirm New Password",
+    "passwordReset": "Password reset successfully",
+    "tokenInvalid": "Reset token is invalid or expired",
+    "mfaRequired": "MFA verification required for password reset",
+    "rateLimited": "Too many reset attempts. Please try again in 5 minutes",
+    "strengthRequirements": "Password must be at least 12 characters with uppercase, lowercase, numbers, and symbols"
+  },
+
+  "usersList": {
+    "title": "Users List",
+    "searchPlaceholder": "Search users by name, email, or username...",
+    "filterByRole": "Filter by Role",
+    "filterByStatus": "Filter by Status",
+    "filterByType": "Filter by Type",
+    "showAll": "Show All",
+    "resultsPerPage": "Results per page",
+    "showing": "Showing {{from}}-{{to}} of {{total}} users"
+  },
+
+  "userDetail": {
+    "title": "User Details",
+    "overview": "Overview",
+    "permissionSummary": "Permission Summary",
+    "rolePermissions": "Role Permissions",
+    "delegatedPermissions": "Delegated Permissions",
+    "grantedBy": "Granted by {{grantor}}",
+    "validPeriod": "Valid {{from}} - {{until}}",
+    "activityHistory": "Activity History",
+    "auditLog": "Audit Log",
+    "sessions": "Active Sessions",
+    "noActiveSessions": "No active sessions"
+  },
+
+  "notifications": {
+    "title": "Notifications",
+    "markAsRead": "Mark as Read",
+    "markAllAsRead": "Mark All as Read",
+    "clear": "Clear",
+    "clearAll": "Clear All",
+    "noNotifications": "No notifications",
+    "types": {
+      "delegationExpiring": "Delegation Expiring",
+      "delegationExpired": "Delegation Expired",
+      "roleChanged": "Role Changed",
+      "roleApprovalPending": "Role Approval Pending",
+      "accessReviewDue": "Access Review Due",
+      "accountExpiring": "Account Expiring",
+      "sessionTerminated": "Session Terminated"
+    },
+    "messages": {
+      "delegationExpiring": "Your delegation to {{grantee}} expires in {{days}} days",
+      "delegationExpired": "Your delegation to {{grantee}} has expired",
+      "roleChanged": "Your role has been changed to {{role}}",
+      "roleApprovalPending": "Role change for {{user}} requires your approval",
+      "accessReviewDue": "Access review is due for {{scope}}",
+      "accountExpiring": "Your guest account expires in {{days}} days",
+      "sessionTerminated": "Your session was terminated due to role change. Please log in again."
+    }
+  },
+
+  "audit": {
+    "title": "Audit Log",
+    "action": "Action",
+    "performedBy": "Performed By",
+    "timestamp": "Timestamp",
+    "details": "Details",
+    "ipAddress": "IP Address",
+    "userAgent": "User Agent",
+    "actions": {
+      "userCreated": "User Created",
+      "userActivated": "User Activated",
+      "roleAssigned": "Role Assigned",
+      "roleApproved": "Role Approved",
+      "roleRejected": "Role Rejected",
+      "delegationCreated": "Delegation Created",
+      "delegationRevoked": "Delegation Revoked",
+      "userDeactivated": "User Deactivated",
+      "userReactivated": "User Reactivated",
+      "accessReviewGenerated": "Access Review Generated",
+      "accessCertified": "Access Certified",
+      "passwordReset": "Password Reset",
+      "mfaEnabled": "MFA Enabled",
+      "mfaDisabled": "MFA Disabled"
+    },
+    "immutable": "Audit logs are immutable and retained for 7 years",
+    "exportLog": "Export Audit Log"
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load user data",
+    "saveFailed": "Failed to save user data",
+    "unauthorized": "You are not authorized to perform this action",
+    "userNotFound": "User not found",
+    "invalidInput": "Invalid input",
+    "networkError": "Network error. Please try again.",
+    "serverError": "Server error. Please contact support."
+  },
+
+  "validation": {
+    "required": "{{field}} is required",
+    "email": "Invalid email format",
+    "username": "Username must be 3-20 characters, alphanumeric and underscores only",
+    "password": "Password must be at least 12 characters",
+    "passwordStrength": "Password must include uppercase, lowercase, numbers, and symbols",
+    "dateRange": "End date must be after start date",
+    "resourceSelection": "At least one resource must be selected"
+  },
+
+  "actions": {
+    "create": "Create",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "approve": "Approve",
+    "reject": "Reject",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "reactivate": "Reactivate",
+    "assign": "Assign",
+    "revoke": "Revoke",
+    "certify": "Certify",
+    "review": "Review",
+    "schedule": "Schedule",
+    "export": "Export",
+    "refresh": "Refresh",
+    "filter": "Filter",
+    "search": "Search",
+    "viewDetails": "View Details",
+    "close": "Close"
+  }
+}

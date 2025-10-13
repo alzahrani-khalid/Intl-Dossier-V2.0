@@ -17,6 +17,18 @@ import {
   HelpCircle,
   LogOut,
   User,
+  Folder,
+  Briefcase,
+  MessageSquare,
+  ClipboardList,
+  ScrollText,
+  TrendingUp,
+  BarChart3,
+  Activity,
+  Download,
+  UserCog,
+  ListChecks,
+  PenTool,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -88,8 +100,8 @@ export function AnimatedSidebar() {
     [t, counts]
   )
 
-  // Browse Navigation Items
-  const browseItems = useMemo<NavigationItem[]>(
+  // Main Work Items
+  const mainWorkItems = useMemo<NavigationItem[]>(
     () => [
       {
         id: 'dashboard',
@@ -97,6 +109,43 @@ export function AnimatedSidebar() {
         path: '/dashboard',
         icon: LayoutDashboard,
       },
+      {
+        id: 'approvals',
+        label: t('navigation.approvals', 'Approvals'),
+        path: '/approvals',
+        icon: CheckSquare,
+      },
+      {
+        id: 'dossiers',
+        label: t('navigation.dossiers', 'Dossiers'),
+        path: '/dossiers',
+        icon: Folder,
+      },
+      {
+        id: 'engagements',
+        label: t('navigation.engagements', 'Engagements'),
+        path: '/engagements',
+        icon: Briefcase,
+      },
+      {
+        id: 'positions',
+        label: t('navigation.positions', 'Positions'),
+        path: '/positions',
+        icon: MessageSquare,
+      },
+      {
+        id: 'after-actions',
+        label: t('navigation.afterActions', 'After Actions'),
+        path: '/after-actions',
+        icon: ClipboardList,
+      },
+    ],
+    [t]
+  )
+
+  // Browse Navigation Items (Entities)
+  const browseItems = useMemo<NavigationItem[]>(
+    () => [
       {
         id: 'countries',
         label: t('navigation.countries', 'Countries'),
@@ -121,11 +170,24 @@ export function AnimatedSidebar() {
         path: '/mous',
         icon: FileText,
       },
+    ],
+    [t]
+  )
+
+  // Tools & Reports Items
+  const toolsItems = useMemo<NavigationItem[]>(
+    () => [
       {
         id: 'calendar',
         label: t('navigation.calendar', 'Calendar'),
         path: '/calendar',
         icon: CalendarDays,
+      },
+      {
+        id: 'briefs',
+        label: t('navigation.briefs', 'Briefs'),
+        path: '/briefs',
+        icon: ScrollText,
       },
       {
         id: 'intelligence',
@@ -134,14 +196,67 @@ export function AnimatedSidebar() {
         icon: Brain,
       },
       {
+        id: 'analytics',
+        label: t('navigation.analytics', 'Analytics'),
+        path: '/analytics',
+        icon: TrendingUp,
+      },
+      {
+        id: 'reports',
+        label: t('navigation.reports', 'Reports'),
+        path: '/reports',
+        icon: BarChart3,
+      },
+    ],
+    [t]
+  )
+
+  // Documents Items
+  const documentItems = useMemo<NavigationItem[]>(
+    () => [
+      {
         id: 'data-library',
         label: t('navigation.dataLibrary', 'Data Library'),
         path: '/data-library',
         icon: Database,
       },
+      {
+        id: 'word-assistant',
+        label: t('navigation.wordAssistant', 'Word Assistant'),
+        path: '/word-assistant',
+        icon: PenTool,
+      },
     ],
     [t]
   )
+
+  // Admin Items (role-based)
+  const adminItems = useMemo<NavigationItem[]>(
+    () => [
+      {
+        id: 'users',
+        label: t('navigation.users', 'User Management'),
+        path: '/users',
+        icon: UserCog,
+      },
+      {
+        id: 'monitoring',
+        label: t('navigation.monitoring', 'Monitoring'),
+        path: '/monitoring',
+        icon: Activity,
+      },
+      {
+        id: 'export',
+        label: t('navigation.export', 'Export'),
+        path: '/export',
+        icon: Download,
+      },
+    ],
+    [t]
+  )
+
+  // Check if user is admin
+  const isAdmin = user?.role === 'admin' || user?.role === 'super_admin'
 
   // Bottom Navigation Items
   const bottomItems = useMemo<NavigationItem[]>(
@@ -250,7 +365,36 @@ export function AnimatedSidebar() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* Browse Section */}
+        {/* Main Work Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Main</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {mainWorkItems.map((item) => {
+                const Icon = item.icon
+                const isActive = activePath === item.path || activePath.startsWith(`${item.path}/`)
+
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={item.label}
+                      className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      <Link to={item.path}>
+                        <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Browse Section (Entities) */}
         <SidebarGroup>
           <SidebarGroupLabel>{t('navigation.browse', 'Browse')}</SidebarGroupLabel>
           <SidebarGroupContent>
@@ -278,6 +422,95 @@ export function AnimatedSidebar() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* Tools & Reports Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Tools</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {toolsItems.map((item) => {
+                const Icon = item.icon
+                const isActive = activePath === item.path || activePath.startsWith(`${item.path}/`)
+
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={item.label}
+                      className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      <Link to={item.path}>
+                        <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Documents Section */}
+        <SidebarGroup>
+          <SidebarGroupLabel>Documents</SidebarGroupLabel>
+          <SidebarGroupContent>
+            <SidebarMenu>
+              {documentItems.map((item) => {
+                const Icon = item.icon
+                const isActive = activePath === item.path || activePath.startsWith(`${item.path}/`)
+
+                return (
+                  <SidebarMenuItem key={item.id}>
+                    <SidebarMenuButton
+                      asChild
+                      isActive={isActive}
+                      tooltip={item.label}
+                      className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                    >
+                      <Link to={item.path}>
+                        <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
+                        <span>{item.label}</span>
+                      </Link>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+
+        {/* Admin Section (role-based) */}
+        {isAdmin && (
+          <SidebarGroup>
+            <SidebarGroupLabel>Admin</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {adminItems.map((item) => {
+                  const Icon = item.icon
+                  const isActive = activePath === item.path || activePath.startsWith(`${item.path}/`)
+
+                  return (
+                    <SidebarMenuItem key={item.id}>
+                      <SidebarMenuButton
+                        asChild
+                        isActive={isActive}
+                        tooltip={item.label}
+                        className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+                      >
+                        <Link to={item.path}>
+                          <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
+                          <span>{item.label}</span>
+                        </Link>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  )
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
 
         {/* Settings & Help */}
         <SidebarGroup className="mt-auto">

@@ -1,0 +1,467 @@
+openapi: 3.1.0
+info:
+  title: User Lifecycle Management API
+  version: 1.0.0
+  description: API endpoints for user creation, activation, deactivation, and account management
+
+servers:
+  - url: https://{project-ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions
+    variables:
+      project-ref:
+        default: zkrcjzdemdmwhearhfgg
+
+security:
+  - BearerAuth: []
+
+paths:
+  /create-user:
+    post:
+      summary: Create new user account
+      description: |
+        Creates a new user account with initial role assignment. Sends activation email to user.
+
+        **Authorization**: Admin role required
+        **Rate Limit**: 10 requests/min per IP
+        **Success Criteria**: Account created in <2 seconds, activation email sent
+      operationId: createUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+                - full_name
+                - username
+                - role
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john.doe@gastat.gov.sa
+                full_name:
+                  type: string
+                  minLength: 2
+                  example: John Doe
+                username:
+                  type: string
+                  pattern: ^[a-z0-9_]{3,20}$
+                  example: jdoe
+                role:
+                  type: string
+                  enum: [admin, editor, viewer]
+                  default: viewer
+                  example: editor
+                user_type:
+                  type: string
+                  enum: [employee, guest]
+                  default: employee
+                  example: employee
+                expires_at:
+                  type: string
+                  format: date-time
+                  description: Required for guest accounts
+                  example: "2025-12-31T23:59:59Z"
+                allowed_resources:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  description: Resource IDs guest can access (guest accounts only)
+                  example: ["550e8400-e29b-41d4-a716-446655440000"]
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  user_id:
+                    type: string
+                    format: uuid
+                    example: "550e8400-e29b-41d4-a716-446655440000"
+                  activation_sent:
+                    type: boolean
+                    example: true
+                  activation_expires_at:
+                    type: string
+                    format: date-time
+                    example: "2025-10-13T10:00:00Z"
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                duplicate_email:
+                  value:
+                    error: "Email already exists"
+                    code: "DUPLICATE_EMAIL"
+                invalid_guest_config:
+                  value:
+                    error: "Guest accounts must have expires_at set"
+                    code: "INVALID_GUEST_CONFIG"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Insufficient permissions (admin role required)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /activate-account:
+    post:
+      summary: Activate user account and set password
+      description: |
+        User activates their account using token from activation email and sets initial password.
+
+        **Authorization**: Public (requires valid activation token)
+        **Rate Limit**: 5 requests/min per IP
+        **Token Expiry**: 48 hours
+      operationId: activateAccount
+      security: [] # Public endpoint
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - activation_token
+                - password
+              properties:
+                activation_token:
+                  type: string
+                  example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                password:
+                  type: string
+                  format: password
+                  minLength: 12
+                  pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{12,}$
+                  description: Min 12 chars, mixed case, numbers, special chars
+                  example: "SecureP@ssw0rd123"
+      responses:
+        '200':
+          description: Account activated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Account activated. You can now log in."
+        '400':
+          description: Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                expired_token:
+                  value:
+                    error: "Activation token expired (valid for 48 hours)"
+                    code: "TOKEN_EXPIRED"
+                invalid_password:
+                  value:
+                    error: "Password does not meet security requirements"
+                    code: "WEAK_PASSWORD"
+
+  /deactivate-user:
+    post:
+      summary: Deactivate user account
+      description: |
+        Deactivates user account, revokes all access, terminates active sessions.
+        Work items owned by user are marked as "orphaned" for administrator review.
+
+        **Authorization**: Admin role required
+        **Rate Limit**: 10 requests/min per IP
+        **Success Criteria**: Account deactivated, sessions terminated within 5 seconds
+      operationId: deactivateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+                reason:
+                  type: string
+                  example: "Employee resigned"
+      responses:
+        '200':
+          description: User deactivated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  sessions_terminated:
+                    type: integer
+                    example: 3
+                  delegations_revoked:
+                    type: integer
+                    example: 5
+                  orphaned_items:
+                    type: object
+                    properties:
+                      dossiers:
+                        type: integer
+                        example: 12
+                      assignments:
+                        type: integer
+                        example: 7
+                      approvals:
+                        type: integer
+                        example: 3
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                user_not_found:
+                  value:
+                    error: "User not found"
+                    code: "USER_NOT_FOUND"
+                already_deactivated:
+                  value:
+                    error: "User already deactivated"
+                    code: "ALREADY_DEACTIVATED"
+        '403':
+          description: Cannot deactivate own account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /reactivate-user:
+    post:
+      summary: Reactivate deactivated user account
+      description: |
+        Reactivates a deactivated user account. Requires security review approval before
+        restoring any previous roles or permissions.
+
+        **Authorization**: Admin role required
+        **Rate Limit**: 10 requests/min per IP
+      operationId: reactivateUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - user_id
+                - security_review_approved
+              properties:
+                user_id:
+                  type: string
+                  format: uuid
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+                security_review_approved:
+                  type: boolean
+                  description: Confirmation that security review is complete
+                  example: true
+                restore_role:
+                  type: string
+                  enum: [admin, editor, viewer]
+                  description: Role to assign after reactivation (requires approval for admin)
+                  example: editor
+      responses:
+        '200':
+          description: User reactivated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  requires_role_approval:
+                    type: boolean
+                    example: false
+                    description: True if admin role requires dual approval
+                  approval_request_id:
+                    type: string
+                    format: uuid
+                    example: "660e8400-e29b-41d4-a716-446655440000"
+                    description: Present if role requires approval
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /initiate-password-reset:
+    post:
+      summary: Initiate password reset flow
+      description: |
+        Initiates password reset for user. If MFA enabled, requires TOTP verification.
+        If MFA not enabled, sends time-limited reset link to email (expires in 1 hour).
+
+        **Authorization**: Public
+        **Rate Limit**: 3 requests/5min per IP
+      operationId: initiatePasswordReset
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: john.doe@gastat.gov.sa
+      responses:
+        '200':
+          description: Reset instructions sent (generic response to prevent email enumeration)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "If email exists, reset instructions sent"
+                  method:
+                    type: string
+                    enum: [mfa, email]
+                    example: mfa
+                  challenge_id:
+                    type: string
+                    format: uuid
+                    description: Present if MFA method
+                    example: "770e8400-e29b-41d4-a716-446655440000"
+
+  /reset-password:
+    post:
+      summary: Complete password reset
+      description: |
+        Completes password reset flow. Requires either reset token (email method)
+        or TOTP code + challenge_id (MFA method).
+
+        **Authorization**: Public (requires valid reset token or MFA verification)
+        **Rate Limit**: 5 requests/min per IP
+      operationId: resetPassword
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              oneOf:
+                - type: object
+                  required:
+                    - reset_token
+                    - new_password
+                  properties:
+                    reset_token:
+                      type: string
+                      example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+                    new_password:
+                      type: string
+                      format: password
+                      minLength: 12
+                      example: "NewSecureP@ssw0rd123"
+                - type: object
+                  required:
+                    - challenge_id
+                    - totp_code
+                    - new_password
+                  properties:
+                    challenge_id:
+                      type: string
+                      format: uuid
+                      example: "770e8400-e29b-41d4-a716-446655440000"
+                    totp_code:
+                      type: string
+                      pattern: ^\d{6}$
+                      example: "123456"
+                    new_password:
+                      type: string
+                      format: password
+                      minLength: 12
+                      example: "NewSecureP@ssw0rd123"
+      responses:
+        '200':
+          description: Password reset successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Password reset successful. Please log in."
+        '400':
+          description: Invalid token or TOTP code
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token from auth.users
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+        - code
+      properties:
+        error:
+          type: string
+          example: "Validation failed"
+        code:
+          type: string
+          example: "VALIDATION_ERROR"
+        details:
+          type: object
+          additionalProperties: true

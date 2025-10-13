@@ -19,7 +19,8 @@ description: "Task list template for feature implementation"
 ## Path Conventions
 - **Single project**: `src/`, `tests/` at repository root
 - **Web app**: `backend/src/`, `frontend/src/`
-- **Mobile**: `api/src/`, `ios/src/` or `android/src/`
+- **Mobile**: `mobile/src/screens/`, `mobile/src/components/`, `mobile/src/database/`
+- **Cross-platform**: `backend/src/`, `frontend/src/`, `mobile/src/`, `supabase/migrations/`
 - Paths shown below assume single project - adjust based on plan.md structure
 
 <!-- 
@@ -65,6 +66,16 @@ Examples of foundational tasks (adjust based on your project):
 - [ ] T007 Create base models/entities that all stories depend on
 - [ ] T008 Configure error handling and logging infrastructure
 - [ ] T009 Setup environment configuration management
+
+*For mobile-only or cross-platform features, add:*
+
+- [ ] T010 [P] Initialize Expo project with React Native 0.81+ and TypeScript 5.8+ strict mode
+- [ ] T011 [P] Setup WatermelonDB with base schema and sync infrastructure
+- [ ] T012 [P] Configure React Native Paper 5.12+ theming (RTL support via I18nManager)
+- [ ] T013 [P] Setup expo-local-authentication for biometric auth
+- [ ] T014 [P] Configure expo-notifications with permission handling
+- [ ] T015 [P] Setup i18next for mobile with RTL detection
+- [ ] T016 Implement base sync service with incremental sync and conflict detection
 
 **Checkpoint**: Foundation ready - user story implementation can now begin in parallel
 
@@ -140,6 +151,36 @@ Examples of foundational tasks (adjust based on your project):
 ---
 
 [Add more user story phases as needed, following the same pattern]
+
+---
+
+## Phase X: Mobile User Story - [Title] (Priority: PX) 📱
+
+**Goal**: [Brief description of mobile-specific functionality]
+
+**Platform**: Mobile-only OR Cross-platform (mobile implementation)
+
+**Independent Test**: [How to verify this story works on mobile independently]
+
+### Tests for Mobile User Story (OPTIONAL - only if tests requested) ⚠️
+
+**NOTE: Write these tests FIRST using Jest + RNTL for mobile, ensure they FAIL before implementation**
+
+- [ ] TXXX [P] [USX] Component test for [Screen] in mobile/tests/screens/[Screen].test.tsx
+- [ ] TXXX [P] [USX] Integration test for offline sync in mobile/tests/integration/sync.test.ts
+- [ ] TXXX [P] [USX] E2E test for [user journey] using Maestro in mobile/tests/e2e/[flow].yaml
+
+### Implementation for Mobile User Story
+
+- [ ] TXXX [P] [USX] Create WatermelonDB schema for [Entity] in mobile/src/database/schema/[entity].ts
+- [ ] TXXX [P] [USX] Create sync service for [Entity] in mobile/src/services/sync/[entity]-sync.ts
+- [ ] TXXX [USX] Implement [Screen] component in mobile/src/screens/[Screen]/[Screen].tsx
+- [ ] TXXX [USX] Add offline indicator UI in mobile/src/components/OfflineStatus.tsx
+- [ ] TXXX [USX] Implement biometric auth for [action] in mobile/src/services/auth/biometric.ts
+- [ ] TXXX [USX] Setup push notification handler for [event] in mobile/src/services/notifications/[handler].ts
+- [ ] TXXX [USX] Add conflict resolution UI for sync conflicts in mobile/src/screens/ConflictResolution.tsx
+
+**Checkpoint**: Mobile user story should work offline, sync correctly, and handle conflicts per constitution
 
 ---
 

@@ -1,0 +1,412 @@
+openapi: 3.1.0
+info:
+  title: Permission Delegation API
+  version: 1.0.0
+  description: API endpoints for time-bound permission delegation, validation, and expiration management
+
+servers:
+  - url: https://{project-ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions
+    variables:
+      project-ref:
+        default: zkrcjzdemdmwhearhfgg
+
+security:
+  - BearerAuth: []
+
+paths:
+  /delegate-permissions:
+    post:
+      summary: Create permission delegation
+      description: |
+        Delegates permissions from current user to another user for a specified time period.
+        Validates that user has permissions to delegate and prevents circular delegations.
+
+        **Authorization**: Authenticated user with permissions to delegate
+        **Rate Limit**: 10 requests/min per user
+        **Success Criteria**: Delegation created in <3 clicks, validation <100ms
+      operationId: createDelegation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - grantee_id
+                - valid_until
+                - reason
+              properties:
+                grantee_id:
+                  type: string
+                  format: uuid
+                  description: User receiving delegated permissions
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+                resource_type:
+                  type: string
+                  enum: [dossier, forum, organization, all]
+                  description: Type of resource (null/all for system-wide)
+                  example: dossier
+                resource_id:
+                  type: string
+                  format: uuid
+                  description: Specific resource ID (null for all resources of type)
+                  example: "660e8400-e29b-41d4-a716-446655440000"
+                valid_from:
+                  type: string
+                  format: date-time
+                  description: Start date (defaults to now)
+                  example: "2025-10-11T00:00:00Z"
+                valid_until:
+                  type: string
+                  format: date-time
+                  description: End date (required, must be future)
+                  example: "2025-12-31T23:59:59Z"
+                reason:
+                  type: string
+                  minLength: 10
+                  description: Business justification for delegation
+                  example: "Covering vacation period from Oct 11 to Dec 31"
+      responses:
+        '201':
+          description: Delegation created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  delegation_id:
+                    type: string
+                    format: uuid
+                    example: "770e8400-e29b-41d4-a716-446655440000"
+                  grantor_id:
+                    type: string
+                    format: uuid
+                    example: "880e8400-e29b-41d4-a716-446655440000"
+                  grantee_id:
+                    type: string
+                    format: uuid
+                    example: "550e8400-e29b-41d4-a716-446655440000"
+                  valid_from:
+                    type: string
+                    format: date-time
+                    example: "2025-10-11T00:00:00Z"
+                  valid_until:
+                    type: string
+                    format: date-time
+                    example: "2025-12-31T23:59:59Z"
+                  expires_in_days:
+                    type: integer
+                    example: 81
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                circular_delegation:
+                  value:
+                    error: "Circular delegation detected: grantee has delegation path back to grantor"
+                    code: "CIRCULAR_DELEGATION"
+                insufficient_permissions:
+                  value:
+                    error: "Cannot delegate permissions you don't have"
+                    code: "INSUFFICIENT_PERMISSIONS"
+                cannot_delegate_delegated:
+                  value:
+                    error: "Cannot re-delegate received delegations (no transitive delegation)"
+                    code: "TRANSITIVE_DELEGATION_FORBIDDEN"
+                self_delegation:
+                  value:
+                    error: "Cannot delegate to yourself"
+                    code: "SELF_DELEGATION"
+                invalid_date_range:
+                  value:
+                    error: "valid_until must be after valid_from"
+                    code: "INVALID_DATE_RANGE"
+        '409':
+          description: Duplicate delegation exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /revoke-delegation:
+    post:
+      summary: Manually revoke delegation
+      description: |
+        Revokes an active delegation before its expiration date. Only grantor can revoke.
+
+        **Authorization**: Must be delegation grantor or admin
+        **Rate Limit**: 20 requests/min per user
+      operationId: revokeDelegation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - delegation_id
+              properties:
+                delegation_id:
+                  type: string
+                  format: uuid
+                  example: "770e8400-e29b-41d4-a716-446655440000"
+                reason:
+                  type: string
+                  description: Optional reason for revocation
+                  example: "User returned from vacation early"
+      responses:
+        '200':
+          description: Delegation revoked successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  delegation_id:
+                    type: string
+                    format: uuid
+                    example: "770e8400-e29b-41d4-a716-446655440000"
+                  revoked_at:
+                    type: string
+                    format: date-time
+                    example: "2025-10-11T15:30:00Z"
+                  revoked_by:
+                    type: string
+                    format: uuid
+                    example: "880e8400-e29b-41d4-a716-446655440000"
+        '400':
+          description: Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                not_found:
+                  value:
+                    error: "Delegation not found"
+                    code: "DELEGATION_NOT_FOUND"
+                already_revoked:
+                  value:
+                    error: "Delegation already revoked or expired"
+                    code: "ALREADY_REVOKED"
+        '403':
+          description: Not authorized to revoke
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /my-delegations:
+    get:
+      summary: List user's delegations (granted and received)
+      description: |
+        Retrieves delegations where user is grantor (granted) or grantee (received).
+
+        **Authorization**: Authenticated user
+        **Rate Limit**: 60 requests/min per user
+      operationId: listMyDelegations
+      parameters:
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [granted, received, all]
+            default: all
+          description: Filter by delegation type
+        - name: active_only
+          in: query
+          schema:
+            type: boolean
+            default: true
+          description: Only show active delegations
+        - name: expiring_within_days
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 90
+          description: Filter delegations expiring within N days
+      responses:
+        '200':
+          description: List of delegations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  granted:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Delegation'
+                  received:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Delegation'
+                  total:
+                    type: integer
+                    example: 12
+
+  /validate-delegation:
+    post:
+      summary: Validate if user can delegate to another user
+      description: |
+        Pre-validation check before creating delegation. Checks permissions, circular references,
+        and transitive delegation rules.
+
+        **Authorization**: Authenticated user
+        **Rate Limit**: 30 requests/min per user
+      operationId: validateDelegation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - grantee_id
+              properties:
+                grantee_id:
+                  type: string
+                  format: uuid
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+                resource_type:
+                  type: string
+                  example: dossier
+                resource_id:
+                  type: string
+                  format: uuid
+                  example: "660e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Validation result
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  valid:
+                    type: boolean
+                    example: true
+                  can_delegate:
+                    type: boolean
+                    example: true
+                  issues:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        code:
+                          type: string
+                          example: CIRCULAR_DELEGATION
+                        message:
+                          type: string
+                          example: "Would create circular delegation"
+                    example: []
+                  delegation_chain:
+                    type: array
+                    description: Shows delegation path if exists
+                    items:
+                      type: object
+                      properties:
+                        from_user:
+                          type: string
+                          example: admin@gastat.gov.sa
+                        to_user:
+                          type: string
+                          example: manager@gastat.gov.sa
+                        resource:
+                          type: string
+                          example: dossier:660e8400-e29b-41d4-a716-446655440000
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Delegation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "770e8400-e29b-41d4-a716-446655440000"
+        grantor_id:
+          type: string
+          format: uuid
+          example: "880e8400-e29b-41d4-a716-446655440000"
+        grantor_email:
+          type: string
+          example: manager@gastat.gov.sa
+        grantee_id:
+          type: string
+          format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        grantee_email:
+          type: string
+          example: john.doe@gastat.gov.sa
+        source:
+          type: string
+          enum: [direct, delegated]
+          example: direct
+        resource_type:
+          type: string
+          example: dossier
+        resource_id:
+          type: string
+          format: uuid
+          example: "660e8400-e29b-41d4-a716-446655440000"
+        reason:
+          type: string
+          example: "Vacation coverage"
+        is_active:
+          type: boolean
+          example: true
+        valid_from:
+          type: string
+          format: date-time
+          example: "2025-10-11T00:00:00Z"
+        valid_until:
+          type: string
+          format: date-time
+          example: "2025-12-31T23:59:59Z"
+        revoked_at:
+          type: string
+          format: date-time
+          example: null
+        revoked_by:
+          type: string
+          format: uuid
+          example: null
+        expires_in_days:
+          type: integer
+          example: 81
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-10-11T10:00:00Z"
+
+    Error:
+      type: object
+      required:
+        - error
+        - code
+      properties:
+        error:
+          type: string
+        code:
+          type: string
+        details:
+          type: object

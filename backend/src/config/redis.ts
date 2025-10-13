@@ -131,4 +131,114 @@ export const cacheHelpers = {
   }
 };
 
+/**
+ * Session Management Helpers for User Management & Access Control
+ *
+ * Session key prefix for Redis keys
+ */
+export const SESSION_KEY_PREFIX = 'session:';
+
+/**
+ * Session TTL in seconds (30 minutes)
+ */
+export const SESSION_TTL = 30 * 60;
+
+/**
+ * Session Management Functions
+ */
+
+/**
+ * Generate Redis key for a session
+ */
+export function getSessionKey(sessionId: string): string {
+  return `${SESSION_KEY_PREFIX}${sessionId}`;
+}
+
+/**
+ * Store session in Redis whitelist
+ * @param sessionId - Session identifier
+ * @param userId - User identifier
+ * @param metadata - Additional session metadata
+ */
+export async function storeSession(
+  sessionId: string,
+  userId: string,
+  metadata: Record<string, unknown> = {}
+): Promise<void> {
+  const key = getSessionKey(sessionId);
+  const sessionData = {
+    userId,
+    createdAt: new Date().toISOString(),
+    ...metadata,
+  };
+  await redis.setex(key, SESSION_TTL, JSON.stringify(sessionData));
+}
+
+/**
+ * Validate session exists in Redis whitelist
+ * @param sessionId - Session identifier
+ * @returns Session data if valid, null if invalid
+ */
+export async function validateSession(sessionId: string): Promise<Record<string, unknown> | null> {
+  const key = getSessionKey(sessionId);
+  const sessionJson = await redis.get(key);
+  if (!sessionJson) return null;
+
+  try {
+    return JSON.parse(sessionJson) as Record<string, unknown>;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * Invalidate a specific session
+ * @param sessionId - Session identifier
+ */
+export async function invalidateSession(sessionId: string): Promise<void> {
+  const key = getSessionKey(sessionId);
+  await redis.del(key);
+}
+
+/**
+ * Invalidate all sessions for a user
+ * @param userId - User identifier
+ */
+export async function invalidateAllUserSessions(userId: string): Promise<void> {
+  // Scan for all session keys
+  const pattern = `${SESSION_KEY_PREFIX}*`;
+  const keys = await redis.keys(pattern);
+
+  // Filter keys that belong to the user and delete them
+  const userSessionKeys: string[] = [];
+
+  for (const key of keys) {
+    const sessionJson = await redis.get(key);
+    if (sessionJson) {
+      try {
+        const session = JSON.parse(sessionJson) as Record<string, unknown>;
+        if (session.userId === userId) {
+          userSessionKeys.push(key);
+        }
+      } catch {
+        // Skip invalid session data
+        continue;
+      }
+    }
+  }
+
+  if (userSessionKeys.length > 0) {
+    await redis.del(...userSessionKeys);
+  }
+}
+
+/**
+ * Refresh session TTL
+ * @param sessionId - Session identifier
+ */
+export async function refreshSession(sessionId: string): Promise<void> {
+  const key = getSessionKey(sessionId);
+  await redis.expire(key, SESSION_TTL);
+}
+
 export default redis;
