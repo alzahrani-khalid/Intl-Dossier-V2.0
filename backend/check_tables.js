@@ -1,8 +1,16 @@
 const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config({ path: '.env.test' });
+
+// Validate required environment variables
+if (!process.env.SUPABASE_URL || !process.env.SUPABASE_SERVICE_ROLE_KEY) {
+  console.error('❌ ERROR: Missing required environment variables.');
+  console.error('Please ensure SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY are set in .env.test');
+  process.exit(1);
+}
 
 const supabase = createClient(
-  'https://zkrcjzdemdmwhearhfgg.supabase.co',
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InprcmNqemRlbWRtd2hlYXJoZmdnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc1ODgyNjQ5MCwiZXhwIjoyMDc0NDAyNDkwfQ.MJnEz1fi5Ek2Ryepf6VjliOTE7Sz0Y-lWQtA1YwpB_A'
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
 );
 
 async function checkTables() {
@@ -23,11 +31,11 @@ async function checkTables() {
   
   for (const table of tables) {
     try {
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from(table)
         .select('*')
         .limit(0);
-      
+
       if (error) {
         console.log(`❌ ${table}: NOT FOUND (${error.message})`);
       } else {
