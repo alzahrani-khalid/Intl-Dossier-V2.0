@@ -8,12 +8,12 @@ export function EscalationsPage() {
   const { t } = useTranslation()
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto space-y-6 p-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">{t('assignments.escalations.title')}</h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 text-muted-foreground">
             {t('assignments.escalations.description')}
           </p>
         </div>
@@ -21,7 +21,7 @@ export function EscalationsPage() {
 
       {/* Info Alert */}
       <Alert>
-        <Shield className="h-4 w-4" />
+        <Shield className="size-4" />
         <AlertDescription>
           {t('assignments.escalations.info')}
         </AlertDescription>

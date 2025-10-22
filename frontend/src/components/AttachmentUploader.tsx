@@ -220,17 +220,17 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
   return (
     <div className="space-y-4">
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.form.attachments.label')}
         </label>
-        <p className="text-xs text-gray-500 mb-3">
+        <p className="mb-3 text-xs text-gray-500">
           {t('intake.form.attachments.description')}
         </p>
       </div>
 
       {/* Dropzone */}
       <div
-        className={`relative border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+        className={`relative rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
           dragActive
             ? 'border-blue-500 bg-blue-50'
             : 'border-gray-300 hover:border-gray-400'
@@ -251,7 +251,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
         <div className="space-y-2">
           <svg
-            className="mx-auto h-12 w-12 text-gray-400"
+            className="mx-auto size-12 text-gray-400"
             stroke="currentColor"
             fill="none"
             viewBox="0 0 48 48"
@@ -269,7 +269,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
             <button
               type="button"
               onClick={onButtonClick}
-              className="font-medium text-blue-600 hover:text-blue-500 focus:outline-none focus:underline"
+              className="font-medium text-blue-600 hover:text-blue-500 focus:underline focus:outline-none"
             >
               {t('intake.form.attachments.dropzone')}
             </button>
@@ -285,7 +285,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
       {/* Validation Error */}
       {validationError && (
-        <div className="bg-red-50 border border-red-200 rounded-md p-3">
+        <div className="rounded-md border border-red-200 bg-red-50 p-3">
           <p className="text-sm text-red-800">{validationError}</p>
         </div>
       )}
@@ -296,15 +296,15 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
           {files.map((attachmentFile) => (
             <div
               key={attachmentFile.id}
-              className="flex items-center justify-between p-3 bg-gray-50 rounded-md border border-gray-200"
+              className="flex items-center justify-between rounded-md border border-gray-200 bg-gray-50 p-3"
             >
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center space-x-3">
                   {/* File Icon */}
-                  <div className="flex-shrink-0">
+                  <div className="shrink-0">
                     {attachmentFile.status === 'success' ? (
                       <svg
-                        className="h-5 w-5 text-green-500"
+                        className="size-5 text-green-500"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -316,7 +316,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                       </svg>
                     ) : attachmentFile.status === 'error' ? (
                       <svg
-                        className="h-5 w-5 text-red-500"
+                        className="size-5 text-red-500"
                         fill="currentColor"
                         viewBox="0 0 20 20"
                       >
@@ -328,7 +328,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                       </svg>
                     ) : (
                       <svg
-                        className="animate-spin h-5 w-5 text-blue-500"
+                        className="size-5 animate-spin text-blue-500"
                         viewBox="0 0 24 24"
                       >
                         <circle
@@ -350,8 +350,8 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                   </div>
 
                   {/* File Info */}
-                  <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900 truncate">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate text-sm font-medium text-gray-900">
                       {attachmentFile.file.name}
                     </p>
                     <p className="text-xs text-gray-500">
@@ -360,7 +360,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                         ` - ${attachmentFile.progress}%`}
                     </p>
                     {attachmentFile.error && (
-                      <p className="text-xs text-red-600 mt-1">{attachmentFile.error}</p>
+                      <p className="mt-1 text-xs text-red-600">{attachmentFile.error}</p>
                     )}
                   </div>
                 </div>
@@ -368,9 +368,9 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
                 {/* Progress Bar */}
                 {attachmentFile.status === 'uploading' && (
                   <div className="mt-2">
-                    <div className="w-full bg-gray-200 rounded-full h-1.5">
+                    <div className="h-1.5 w-full rounded-full bg-gray-200">
                       <div
-                        className="bg-blue-600 h-1.5 rounded-full transition-all duration-300"
+                        className="h-1.5 rounded-full bg-blue-600 transition-all duration-300"
                         style={{ width: `${attachmentFile.progress}%` }}
                       />
                     </div>
@@ -382,10 +382,10 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
               <button
                 type="button"
                 onClick={() => handleDelete(attachmentFile)}
-                className="ms-3 flex-shrink-0 text-gray-400 hover:text-red-500 transition-colors"
+                className="ms-3 shrink-0 text-gray-400 transition-colors hover:text-red-500"
                 disabled={attachmentFile.status === 'uploading'}
               >
-                <svg className="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                <svg className="size-5" fill="currentColor" viewBox="0 0 20 20">
                   <path
                     fillRule="evenodd"
                     d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
@@ -397,7 +397,7 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
           ))}
 
           {/* Total Size */}
-          <div className="flex justify-between text-xs text-gray-500 pt-2">
+          <div className="flex justify-between pt-2 text-xs text-gray-500">
             <span>
               {files.length} {files.length === 1 ? 'file' : 'files'}
             </span>

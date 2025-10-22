@@ -150,17 +150,17 @@ export function PDFGeneratorButton({
           disabled={disabled}
           className={cn('gap-2', className)}
         >
-          <FileText className="h-4 w-4" />
+          <FileText className="size-4" />
           {t('afterActions.pdf.generateButton')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[450px]" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
+            <FileText className="size-5" />
             {t('afterActions.pdf.title')}
             {isConfidential && (
-              <Shield className="h-4 w-4 text-amber-500" />
+              <Shield className="size-4 text-amber-500" />
             )}
           </DialogTitle>
           <DialogDescription>
@@ -172,7 +172,7 @@ export function PDFGeneratorButton({
           {/* Confidential Warning */}
           {isConfidential && status === 'idle' && (
             <Alert className="border-amber-500">
-              <Shield className="h-4 w-4 text-amber-500" />
+              <Shield className="size-4 text-amber-500" />
               <AlertDescription className="text-amber-700">
                 {t('afterActions.pdf.confidentialWarning')}
               </AlertDescription>
@@ -186,19 +186,19 @@ export function PDFGeneratorButton({
               <RadioGroup value={language} onValueChange={(v) => setLanguage(v as PDFLanguage)}>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="en" id="lang-en" />
-                  <Label htmlFor="lang-en" className="font-normal cursor-pointer">
+                  <Label htmlFor="lang-en" className="cursor-pointer font-normal">
                     {t('afterActions.pdf.englishOnly')}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="ar" id="lang-ar" />
-                  <Label htmlFor="lang-ar" className="font-normal cursor-pointer">
+                  <Label htmlFor="lang-ar" className="cursor-pointer font-normal">
                     {t('afterActions.pdf.arabicOnly')}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="both" id="lang-both" />
-                  <Label htmlFor="lang-both" className="font-normal cursor-pointer">
+                  <Label htmlFor="lang-both" className="cursor-pointer font-normal">
                     {t('afterActions.pdf.both')} {t('common.recommended')}
                   </Label>
                 </div>
@@ -209,17 +209,17 @@ export function PDFGeneratorButton({
           {/* Status Display */}
           {status === 'verifying' && (
             <Alert>
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
               <AlertDescription>{t('afterActions.pdf.verifying')}</AlertDescription>
             </Alert>
           )}
 
           {status === 'generating' && (
             <Alert>
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
               <AlertDescription>
                 {t('afterActions.pdf.generating')}
-                <span className="block text-xs text-muted-foreground mt-1">
+                <span className="mt-1 block text-xs text-muted-foreground">
                   {t('afterActions.pdf.estimatedTime')}
                 </span>
               </AlertDescription>
@@ -228,7 +228,7 @@ export function PDFGeneratorButton({
 
           {status === 'completed' && pdfUrl && (
             <Alert className="border-green-500">
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="size-4 text-green-500" />
               <AlertDescription className="text-green-700">
                 <div className="space-y-2">
                   <p>{t('afterActions.pdf.completed')}</p>
@@ -242,7 +242,7 @@ export function PDFGeneratorButton({
 
           {status === 'failed' && (
             <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
@@ -250,7 +250,7 @@ export function PDFGeneratorButton({
           {/* Info Alert */}
           {status === 'idle' && (
             <Alert>
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertDescription>
                 {t('afterActions.pdf.info')}
               </AlertDescription>
@@ -263,7 +263,7 @@ export function PDFGeneratorButton({
           {status === 'completed' && pdfUrl ? (
             <>
               <Button onClick={handleDownload} className="flex-1">
-                <Download className="me-2 h-4 w-4" />
+                <Download className="me-2 size-4" />
                 {t('afterActions.pdf.download')}
               </Button>
               <Button
@@ -283,12 +283,12 @@ export function PDFGeneratorButton({
               >
                 {status === 'generating' || status === 'verifying' ? (
                   <>
-                    <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="me-2 size-4 animate-spin" />
                     {t('afterActions.pdf.generating')}
                   </>
                 ) : (
                   <>
-                    <FileText className="me-2 h-4 w-4" />
+                    <FileText className="me-2 size-4" />
                     {t('afterActions.pdf.generate')}
                   </>
                 )}

@@ -117,17 +117,17 @@ export function FileUpload({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'completed':
-        return <Check className="h-4 w-4 text-green-500" />
+        return <Check className="size-4 text-green-500" />
       case 'error':
-        return <AlertCircle className="h-4 w-4 text-red-500" />
+        return <AlertCircle className="size-4 text-red-500" />
       case 'uploading':
-        return <Upload className="h-4 w-4 text-blue-500 animate-pulse" />
+        return <Upload className="size-4 animate-pulse text-blue-500" />
       case 'paused':
-        return <Pause className="h-4 w-4 text-yellow-500" />
+        return <Pause className="size-4 text-yellow-500" />
       case 'cancelled':
-        return <X className="h-4 w-4 text-gray-500" />
+        return <X className="size-4 text-gray-500" />
       default:
-        return <File className="h-4 w-4 text-gray-500" />
+        return <File className="size-4 text-gray-500" />
     }
   }
 
@@ -152,7 +152,7 @@ export function FileUpload({
     <div className={`space-y-4 ${className}`}>
       {/* Upload Area */}
       <div
-        className={`relative border-2 border-dashed rounded-lg p-6 text-center transition-colors ${
+        className={`relative rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
           dragActive
             ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
             : 'border-gray-300 dark:border-gray-600'
@@ -166,27 +166,27 @@ export function FileUpload({
           type="file"
           multiple
           onChange={handleFileInput}
-          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+          className="absolute inset-0 size-full cursor-pointer opacity-0"
           accept={acceptedTypes?.join(',')}
         />
         
-        <Upload className="mx-auto h-12 w-12 text-gray-400 mb-4" />
-        <p className="text-lg font-medium text-gray-900 dark:text-white mb-2">
+        <Upload className="mx-auto mb-4 size-12 text-gray-400" />
+        <p className="mb-2 text-lg font-medium text-gray-900 dark:text-white">
           {t('dataLibrary.dragAndDrop')}
         </p>
         <p className="text-sm text-gray-500 dark:text-gray-400">
           or click to browse files
         </p>
-        <p className="text-xs text-gray-400 mt-2">
+        <p className="mt-2 text-xs text-gray-400">
           Max file size: 50MB • Supported: PDF, DOCX, Images, CSV, Excel
         </p>
       </div>
 
       {/* Error Message */}
       {error && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
           <div className="flex items-center">
-            <AlertCircle className="h-4 w-4 text-red-500 me-2" />
+            <AlertCircle className="me-2 size-4 text-red-500" />
             <span className="text-sm text-red-700 dark:text-red-400">{error}</span>
           </div>
         </div>
@@ -211,19 +211,19 @@ export function FileUpload({
             </div>
           </div>
 
-          <div className="space-y-2 max-h-64 overflow-y-auto">
+          <div className="max-h-64 space-y-2 overflow-y-auto">
             {uploads.map((upload) => (
               <div
                 key={upload.id}
-                className="flex items-center space-x-3 p-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg"
+                className="flex items-center space-x-3 rounded-lg border border-gray-200 bg-white p-3 dark:border-gray-700 dark:bg-gray-800"
               >
-                <div className="flex-shrink-0">
+                <div className="shrink-0">
                   {getStatusIcon(upload.status)}
                 </div>
 
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between">
-                    <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
+                    <p className="truncate text-sm font-medium text-gray-900 dark:text-white">
                       {upload.name}
                     </p>
                     <Badge className={`text-xs ${getStatusColor(upload.status)}`}>
@@ -231,7 +231,7 @@ export function FileUpload({
                     </Badge>
                   </div>
                   
-                  <div className="flex items-center justify-between mt-1">
+                  <div className="mt-1 flex items-center justify-between">
                     <p className="text-xs text-gray-500 dark:text-gray-400">
                       {formatFileSize(upload.size)}
                     </p>
@@ -245,7 +245,7 @@ export function FileUpload({
                   )}
 
                   {upload.error && (
-                    <p className="text-xs text-red-500 mt-1 truncate">
+                    <p className="mt-1 truncate text-xs text-red-500">
                       {upload.error}
                     </p>
                   )}
@@ -258,7 +258,7 @@ export function FileUpload({
                       variant="ghost"
                       onClick={() => pauseUpload(upload.id)}
                     >
-                      <Pause className="h-3 w-3" />
+                      <Pause className="size-3" />
                     </Button>
                   )}
                   
@@ -268,7 +268,7 @@ export function FileUpload({
                       variant="ghost"
                       onClick={() => resumeUpload(upload.id)}
                     >
-                      <Play className="h-3 w-3" />
+                      <Play className="size-3" />
                     </Button>
                   )}
                   
@@ -278,7 +278,7 @@ export function FileUpload({
                       variant="ghost"
                       onClick={() => retryUpload(upload.id)}
                     >
-                      <RotateCcw className="h-3 w-3" />
+                      <RotateCcw className="size-3" />
                     </Button>
                   )}
                   
@@ -288,7 +288,7 @@ export function FileUpload({
                       variant="ghost"
                       onClick={() => cancelUpload(upload.id)}
                     >
-                      <X className="h-3 w-3" />
+                      <X className="size-3" />
                     </Button>
                   )}
                   
@@ -298,7 +298,7 @@ export function FileUpload({
                       variant="ghost"
                       onClick={() => removeUpload(upload.id)}
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Trash2 className="size-3" />
                     </Button>
                   )}
                 </div>
@@ -311,7 +311,7 @@ export function FileUpload({
       {/* Upload Status */}
       {isUploading && (
         <div className="flex items-center justify-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-          <Upload className="h-4 w-4 animate-pulse" />
+          <Upload className="size-4 animate-pulse" />
           <span>Uploading files...</span>
         </div>
       )}

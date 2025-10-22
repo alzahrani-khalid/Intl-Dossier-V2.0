@@ -59,12 +59,12 @@ serve(async (req) => {
           name_ar,
           reference_type,
           status,
-          description_en,
-          description_ar
+          summary_en,
+          summary_ar
         )
       `)
       .eq('position_id', positionId)
-      .order('created_at', { ascending: false });
+      .order('added_at', { ascending: false });
 
     // Filter by link_type if provided
     if (linkType) {

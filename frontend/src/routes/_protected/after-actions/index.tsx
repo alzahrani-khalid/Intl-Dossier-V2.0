@@ -1,4 +1,4 @@
-import { createFileRoute } from '@tanstack/react-router';
+import { createFileRoute, useNavigate } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { FileText, Plus } from 'lucide-react';
 import { Button } from '../../../components/ui/button';
@@ -10,6 +10,7 @@ export const Route = createFileRoute('/_protected/after-actions/')({
 
 function AfterActionsIndexPage() {
   const { t } = useTranslation(['common']);
+  const navigate = useNavigate();
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
@@ -25,7 +26,11 @@ function AfterActionsIndexPage() {
                 Manage engagement outcomes and commitments
               </p>
             </div>
-            <Button size="lg" className="gap-2">
+            <Button
+              size="lg"
+              className="gap-2"
+              onClick={() => navigate({ to: '/engagements' })}
+            >
               <Plus className="h-5 w-5" />
               Create After Action
             </Button>

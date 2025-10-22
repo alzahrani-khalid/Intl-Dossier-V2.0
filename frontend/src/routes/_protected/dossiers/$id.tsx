@@ -12,6 +12,7 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useDossier } from '../../../hooks/useDossier';
 import { useArchiveDossier } from '../../../hooks/useArchiveDossier';
+import { useTimelineEvents } from '../../../hooks/useTimelineEvents';
 import { DossierHeader } from '../../../components/DossierHeader';
 import { DossierStats } from '../../../components/DossierStats';
 import { DossierTimeline } from '../../../components/DossierTimeline';
@@ -24,9 +25,10 @@ import { DossierMoUsTab } from '../../../components/dossiers/DossierMoUsTab';
 import { DossierIntelligenceTab } from '../../../components/dossiers/DossierIntelligenceTab';
 import type { ConflictError } from '../../../types/dossier';
 
-// Search params for tabs
+// Search params for tabs and filters
 interface DossierDetailSearchParams {
   tab?: string;
+  event_type?: string;
 }
 
 export const Route = createFileRoute('/_protected/dossiers/$id')({
@@ -34,6 +36,7 @@ export const Route = createFileRoute('/_protected/dossiers/$id')({
   validateSearch: (search: Record<string, unknown>): DossierDetailSearchParams => {
     return {
       tab: search.tab as string | undefined,
+      event_type: search.event_type as string | undefined,
     };
   },
 });
@@ -61,6 +64,23 @@ function DossierDetailPage() {
     isLoading,
     error,
   } = useDossier(id, ['stats', 'owners', 'contacts', 'recent_briefs']);
+
+  // Build timeline filters from URL params (supports comma-separated values)
+  const timelineFilters = searchParams.event_type
+    ? { event_type: searchParams.event_type.split(',') as any[] }
+    : undefined;
+
+  // Fetch timeline events
+  const {
+    data: timelineData,
+    isLoading: isLoadingTimeline,
+    isFetchingNextPage,
+    hasNextPage,
+    fetchNextPage,
+  } = useTimelineEvents(id, timelineFilters);
+
+  // Flatten timeline events from pages
+  const timelineEvents = timelineData?.pages.flatMap((page) => page.events) ?? [];
 
   // Mutations (updateMutation unused until edit functionality is added)
   const archiveMutation = useArchiveDossier(id);
@@ -108,6 +128,34 @@ function DossierDetailPage() {
     setShowConflictDialog(false);
   };
 
+  const handleStatClick = (statType: 'engagements' | 'positions' | 'mous') => {
+    // Map stat types to their corresponding tabs and event filters
+    const tabMap: Record<typeof statType, TabType> = {
+      engagements: 'timeline',
+      positions: 'positions',
+      mous: 'mous',
+    };
+
+    const eventTypeMap: Record<typeof statType, string | undefined> = {
+      engagements: 'engagement',
+      positions: 'position',
+      mous: 'mou',
+    };
+
+    // Navigate to tab with event_type filter for timeline
+    const targetTab = tabMap[statType];
+    const eventType = eventTypeMap[statType];
+
+    setActiveTab(targetTab);
+    navigate({
+      search: {
+        tab: targetTab,
+        ...(targetTab === 'timeline' && eventType ? { event_type: eventType } : {}),
+      } as any,
+      replace: true,
+    });
+  };
+
   // Loading state
   if (isLoading) {
     return (
@@ -132,27 +180,39 @@ function DossierDetailPage() {
 
   // Error state
   if (error) {
+    const isNotFound = error instanceof Error && error.message === 'DOSSIER_NOT_FOUND';
+
     return (
-      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4">
         <div className="max-w-md w-full">
           <div
             className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6"
             role="alert"
           >
             <h2 className="text-lg font-medium text-red-800 dark:text-red-200">
-              {error instanceof Error && error.message.includes('404')
-                ? t('detail.not_found_title')
-                : t('detail.error_title')}
+              {isNotFound
+                ? t('detail.not_found_title', 'Dossier Not Found')
+                : t('detail.error_title', 'Error Loading Dossier')}
             </h2>
             <p className="mt-2 text-sm text-red-700 dark:text-red-300">
-              {error instanceof Error ? error.message : t('detail.error_generic')}
+              {isNotFound
+                ? t('detail.not_found_message', 'The dossier you are looking for does not exist or may have been removed. This could be due to a data integrity issue where an assignment references a non-existent dossier.')
+                : (error instanceof Error ? error.message : t('detail.error_generic', 'An unexpected error occurred while loading the dossier.'))}
             </p>
-            <button
-              onClick={() => navigate({ to: '/dossiers' })}
-              className="mt-4 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-            >
-              {t('detail.back_to_hub')}
-            </button>
+            <div className="mt-4 flex flex-col sm:flex-row gap-2">
+              <button
+                onClick={() => navigate({ to: '/my-work/waiting' })}
+                className="inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100 hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                {t('detail.back_to_waiting_queue', 'Back to Waiting Queue')}
+              </button>
+              <button
+                onClick={() => navigate({ to: '/dossiers' })}
+                className="inline-flex items-center justify-center px-4 py-2 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+              >
+                {t('detail.back_to_hub', 'Go to Dossiers')}
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -189,7 +249,7 @@ function DossierDetailPage() {
             {/* Stats Cards */}
             {dossier.stats && (
               <div>
-                <DossierStats stats={dossier.stats} />
+                <DossierStats stats={dossier.stats} onStatClick={handleStatClick} />
               </div>
             )}
 
@@ -237,7 +297,15 @@ function DossierDetailPage() {
                     role="tabpanel"
                     aria-labelledby="timeline-tab"
                   >
-                    <DossierTimeline dossierId={id} />
+                    <DossierTimeline
+                      dossierId={id}
+                      events={timelineEvents}
+                      isLoading={isLoadingTimeline}
+                      isFetchingNextPage={isFetchingNextPage}
+                      hasNextPage={hasNextPage}
+                      onLoadMore={fetchNextPage}
+                      activeFilter={searchParams.event_type}
+                    />
                   </div>
                 )}
 

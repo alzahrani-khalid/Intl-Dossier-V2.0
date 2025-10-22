@@ -1,0 +1,252 @@
+openapi: 3.1.0
+info:
+  title: Task Contributors API
+  version: 1.0.0
+  description: |
+    API contracts for managing task contributors. Enables team collaboration tracking
+    by allowing task owners to add/remove contributors with specific roles.
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+    description: Supabase Edge Functions (Production)
+  - url: http://localhost:54321/functions/v1
+    description: Supabase Edge Functions (Local)
+
+paths:
+  /contributors-get:
+    get:
+      operationId: getContributors
+      summary: Get contributors for a task
+      description: Fetches all active contributors (removed_at = NULL) for a specific task
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: task_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Task ID to fetch contributors for
+      responses:
+        '200':
+          description: Contributors retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Contributor'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /contributors-add:
+    post:
+      operationId: addContributor
+      summary: Add a contributor to a task
+      description: |
+        Adds a team member as a contributor to a task. Only task owners (assignee or creator) can add contributors.
+        Prevents duplicate contributors via UNIQUE(task_id, user_id) constraint.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - task_id
+                - user_id
+                - role
+              properties:
+                task_id:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                user_id:
+                  type: string
+                  format: uuid
+                  example: "987f6543-e21c-43d5-b678-987654321098"
+                  description: "User to add as contributor"
+                role:
+                  type: string
+                  enum: [helper, reviewer, advisor, observer, supervisor]
+                  example: "helper"
+                  description: |
+                    Contributor role:
+                    - helper: Assisted with task execution
+                    - reviewer: Reviewed task outputs/quality
+                    - advisor: Provided expert guidance
+                    - observer: Monitored progress (training/knowledge transfer)
+                    - supervisor: Provided oversight/approval
+                notes:
+                  type: string
+                  nullable: true
+                  maxLength: 500
+                  example: "Provided statistical methodology review"
+                  description: "Optional notes about the contributor's specific contribution"
+      responses:
+        '201':
+          description: Contributor added successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Contributor'
+        '400':
+          description: Bad request - Invalid input or duplicate contributor
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "User is already a contributor on this task"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Forbidden - User is not task owner
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Only task owners can add contributors"
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /contributors-remove:
+    delete:
+      operationId: removeContributor
+      summary: Remove a contributor from a task
+      description: |
+        Soft-removes a contributor by setting removed_at timestamp. Only task owners can remove contributors.
+        Maintains audit trail by preserving the record.
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Contributor record ID to remove
+      responses:
+        '200':
+          description: Contributor removed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Contributor'
+                    description: "Contributor record with removed_at timestamp set"
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          description: Forbidden - User is not task owner
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Only task owners can remove contributors"
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT token
+
+  schemas:
+    Contributor:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: "Unique contributor record identifier"
+        task_id:
+          type: string
+          format: uuid
+          description: "Reference to the task"
+        user_id:
+          type: string
+          format: uuid
+          description: "Reference to the contributing user"
+        role:
+          type: string
+          enum: [helper, reviewer, advisor, observer, supervisor]
+          description: "Type of contribution made"
+        notes:
+          type: string
+          nullable: true
+          description: "Optional notes about the contribution"
+        added_at:
+          type: string
+          format: date-time
+          description: "Timestamp when contributor was added"
+        removed_at:
+          type: string
+          format: date-time
+          nullable: true
+          description: "Timestamp when contributor was removed (null = active)"
+
+  responses:
+    UnauthorizedError:
+      description: Unauthorized - Missing or invalid JWT token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Unauthorized: Invalid or missing JWT token"
+
+    NotFoundError:
+      description: Not found - Task or contributor does not exist or user does not have access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Task or contributor not found or you do not have access"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal server error"

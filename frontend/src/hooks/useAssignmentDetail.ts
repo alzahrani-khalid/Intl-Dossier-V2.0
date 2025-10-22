@@ -22,12 +22,24 @@ type ChecklistItem = Database['public']['Tables']['assignment_checklist_items'][
 type AssignmentObserver = Database['public']['Tables']['assignment_observers']['Row'];
 type AssignmentEvent = Database['public']['Tables']['assignment_events']['Row'];
 
+interface LinkedEntity {
+  type: 'dossier' | 'position' | 'ticket';
+  id: string;
+  name_en?: string;
+  name_ar?: string;
+  title_en?: string;
+  title_ar?: string;
+  ticket_number?: string;
+  status?: string;
+}
+
 export interface AssignmentDetailResponse {
   assignment: Assignment & {
     assignee_name?: string;
     assigned_by_name?: string;
     work_item_title?: string;
     work_item_preview?: string;
+    work_item_linked_entities?: LinkedEntity[];
     required_skills?: string[];
   };
   engagement?: {

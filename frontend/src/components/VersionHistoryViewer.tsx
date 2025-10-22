@@ -146,7 +146,7 @@ export function VersionHistoryViewer({
   };
 
   const formatPath = (path: (string | number)[]): string => {
-    return path.join(' ’ ');
+    return path.join(' ï¿½ ');
   };
 
   const handleOpenChange = (isOpen: boolean) => {
@@ -166,7 +166,7 @@ export function VersionHistoryViewer({
 
     return (
       <Dialog open={showDiff} onOpenChange={setShowDiff}>
-        <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+        <DialogContent className="max-h-[80vh] max-w-4xl overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
           <DialogHeader>
             <DialogTitle>
               {t('afterActions.versions.diffTitle', { from: v1, to: v2 })}
@@ -179,7 +179,7 @@ export function VersionHistoryViewer({
           <div className="space-y-3">
             {changes.length === 0 ? (
               <Alert>
-                <AlertCircle className="h-4 w-4" />
+                <AlertCircle className="size-4" />
                 <AlertDescription>
                   {t('afterActions.versions.noChanges')}
                 </AlertDescription>
@@ -198,23 +198,23 @@ export function VersionHistoryViewer({
                     </div>
                   </CardHeader>
                   <CardContent className="text-sm">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       {change.kind !== 'N' && (
                         <div>
-                          <p className="font-semibold text-red-600 mb-1">
+                          <p className="mb-1 font-semibold text-red-600">
                             {t('afterActions.versions.before')}:
                           </p>
-                          <pre className="bg-red-50 p-2 rounded text-xs overflow-x-auto">
+                          <pre className="overflow-x-auto rounded bg-red-50 p-2 text-xs">
                             {renderDiffValue(change.lhs)}
                           </pre>
                         </div>
                       )}
                       {change.kind !== 'D' && (
                         <div>
-                          <p className="font-semibold text-green-600 mb-1">
+                          <p className="mb-1 font-semibold text-green-600">
                             {t('afterActions.versions.after')}:
                           </p>
-                          <pre className="bg-green-50 p-2 rounded text-xs overflow-x-auto">
+                          <pre className="overflow-x-auto rounded bg-green-50 p-2 text-xs">
                             {renderDiffValue(change.rhs)}
                           </pre>
                         </div>
@@ -249,14 +249,14 @@ export function VersionHistoryViewer({
           disabled={disabled}
           className={cn('gap-2', className)}
         >
-          <History className="h-4 w-4" />
+          <History className="size-4" />
           {t('afterActions.versions.button')}
         </Button>
       </DialogTrigger>
-      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-h-[80vh] max-w-3xl overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <History className="h-5 w-5" />
+            <History className="size-5" />
             {t('afterActions.versions.title')}
           </DialogTitle>
           <DialogDescription>
@@ -267,20 +267,20 @@ export function VersionHistoryViewer({
         <div className="space-y-4">
           {loading && (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin" />
+              <Loader2 className="size-6 animate-spin" />
             </div>
           )}
 
           {error && (
             <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertDescription>{error}</AlertDescription>
             </Alert>
           )}
 
           {!loading && !error && versions.length === 0 && (
             <Alert>
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertDescription>
                 {t('afterActions.versions.noVersions')}
               </AlertDescription>
@@ -336,7 +336,7 @@ export function VersionHistoryViewer({
                               )
                             }
                           >
-                            <Eye className="h-4 w-4 me-1" />
+                            <Eye className="me-1 size-4" />
                             {t('afterActions.versions.viewDiff')}
                           </Button>
                         )}

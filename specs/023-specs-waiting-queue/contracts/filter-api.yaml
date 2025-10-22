@@ -1,0 +1,484 @@
+openapi: 3.1.0
+info:
+  title: Waiting Queue Filter API
+  version: 1.0.0
+  description: |
+    API for filtering and sorting waiting queue assignments with advanced criteria.
+    Supports multi-criteria filtering, pagination, and caching for performance.
+  contact:
+    name: GASTAT International Dossier Team
+    email: support@gastat.gov.sa
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1/waiting-queue-filters
+    description: Production (Supabase Edge Functions)
+  - url: http://localhost:54321/functions/v1/waiting-queue-filters
+    description: Local Development (Supabase Local)
+
+tags:
+  - name: filters
+    description: Queue filtering and sorting operations
+
+security:
+  - BearerAuth: []
+
+paths:
+  /assignments:
+    get:
+      summary: Get filtered waiting queue assignments
+      description: |
+        Retrieves waiting queue assignments with optional filtering, sorting, and pagination.
+        Results are cached in Redis for 5 minutes for performance.
+        Supports multi-criteria filtering with combined conditions.
+      operationId: getFilteredAssignments
+      tags:
+        - filters
+      parameters:
+        - name: priority
+          in: query
+          description: Filter by priority (comma-separated for multiple)
+          required: false
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+            example: "high,urgent"
+        - name: aging
+          in: query
+          description: Filter by aging bucket
+          required: false
+          schema:
+            type: string
+            enum: ["0-2", "3-6", "7+"]
+            example: "7+"
+        - name: work_item_type
+          in: query
+          description: Filter by work item type (comma-separated)
+          required: false
+          schema:
+            type: string
+            enum: [dossier, ticket, position, task]
+            example: "dossier,position"
+        - name: assignee_id
+          in: query
+          description: Filter by assignee user ID
+          required: false
+          schema:
+            type: string
+            format: uuid
+            example: "123e4567-e89b-12d3-a456-426614174000"
+        - name: status
+          in: query
+          description: Filter by assignment status (comma-separated)
+          required: false
+          schema:
+            type: string
+            enum: [pending, assigned, in_progress]
+            example: "pending,assigned"
+          default: "pending,assigned"
+        - name: sort_by
+          in: query
+          description: Field to sort results by
+          required: false
+          schema:
+            type: string
+            enum: [assigned_at, priority, aging]
+            default: assigned_at
+        - name: sort_order
+          in: query
+          description: Sort order direction
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: asc
+        - name: page
+          in: query
+          description: Page number (1-indexed)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: page_size
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+      responses:
+        '200':
+          description: Filtered assignments retrieved successfully
+          headers:
+            X-Total-Count:
+              description: Total number of items matching filters (ignoring pagination)
+              schema:
+                type: integer
+                example: 127
+            X-Page:
+              description: Current page number
+              schema:
+                type: integer
+                example: 1
+            X-Page-Size:
+              description: Items per page
+              schema:
+                type: integer
+                example: 50
+            X-Total-Pages:
+              description: Total number of pages
+              schema:
+                type: integer
+                example: 3
+            Cache-Control:
+              description: Cache control header
+              schema:
+                type: string
+                example: "max-age=300"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      items:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Assignment'
+                      pagination:
+                        type: object
+                        properties:
+                          total_items:
+                            type: integer
+                            description: Total items matching filters
+                            example: 127
+                          total_pages:
+                            type: integer
+                            example: 3
+                          current_page:
+                            type: integer
+                            example: 1
+                          page_size:
+                            type: integer
+                            example: 50
+                          has_next_page:
+                            type: boolean
+                            example: true
+                          has_prev_page:
+                            type: boolean
+                            example: false
+                      filters_applied:
+                        type: object
+                        description: Echo of filters applied to this query
+                        properties:
+                          priority:
+                            type: array
+                            items:
+                              type: string
+                            example: ["high", "urgent"]
+                          aging:
+                            type: string
+                            example: "7+"
+                          work_item_type:
+                            type: array
+                            items:
+                              type: string
+                            example: ["dossier"]
+                          assignee_id:
+                            type: string
+                            format: uuid
+                            nullable: true
+                          status:
+                            type: array
+                            items:
+                              type: string
+                            example: ["pending", "assigned"]
+                      sort:
+                        type: object
+                        properties:
+                          sort_by:
+                            type: string
+                            example: "assigned_at"
+                          sort_order:
+                            type: string
+                            example: "asc"
+                      cache_status:
+                        type: string
+                        enum: [hit, miss]
+                        description: Whether result was served from cache
+                        example: "miss"
+        '400':
+          description: Bad request (invalid query parameters)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                invalidPriority:
+                  value:
+                    error: "Invalid priority value: 'critical'. Must be one of: low, medium, high, urgent"
+                    code: "VALIDATION_ERROR"
+                invalidPageSize:
+                  value:
+                    error: "page_size exceeds maximum (100)"
+                    code: "VALIDATION_ERROR"
+                    details:
+                      provided: 200
+                      max_allowed: 100
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /preferences:
+    get:
+      summary: Get user's saved filter preferences
+      description: Retrieve user's previously saved filter preferences from localStorage/backend
+      operationId: getFilterPreferences
+      tags:
+        - filters
+      responses:
+        '200':
+          description: Preferences retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      user_id:
+                        type: string
+                        format: uuid
+                      preferences:
+                        $ref: '#/components/schemas/FilterPreferences'
+                      saved_at:
+                        type: string
+                        format: date-time
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: No saved preferences found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Save user's filter preferences
+      description: Save user's current filter selections for future sessions
+      operationId: saveFilterPreferences
+      tags:
+        - filters
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FilterPreferences'
+      responses:
+        '200':
+          description: Preferences saved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    example: "Filter preferences saved"
+                  data:
+                    type: object
+                    properties:
+                      user_id:
+                        type: string
+                        format: uuid
+                      saved_at:
+                        type: string
+                        format: date-time
+        '400':
+          description: Invalid preferences
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+  schemas:
+    Assignment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          example: "123e4567-e89b-12d3-a456-426614174000"
+        work_item_id:
+          type: string
+          format: uuid
+        work_item_type:
+          type: string
+          enum: [dossier, ticket, position, task]
+          example: "dossier"
+        assignee_id:
+          type: string
+          format: uuid
+          nullable: true
+        assignee_name:
+          type: string
+          nullable: true
+          example: "Ahmed Al-Rashid"
+        assignee_email:
+          type: string
+          format: email
+          nullable: true
+        status:
+          type: string
+          enum: [pending, assigned, in_progress, completed, cancelled]
+          example: "pending"
+        workflow_stage:
+          type: string
+          enum: [todo, in_progress, done]
+          example: "todo"
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+          example: "high"
+        assigned_at:
+          type: string
+          format: date-time
+          example: "2025-01-04T08:30:00Z"
+        days_waiting:
+          type: number
+          format: float
+          description: Days since assignment created (calculated)
+          example: 10.5
+        aging_bucket:
+          type: string
+          enum: ["0-2", "3-6", "7+"]
+          description: Aging category for color coding
+          example: "7+"
+        last_reminder_sent_at:
+          type: string
+          format: date-time
+          nullable: true
+          example: "2025-01-13T14:20:00Z"
+        can_send_reminder:
+          type: boolean
+          description: Whether reminder cooldown allows sending (calculated)
+          example: true
+        escalation_status:
+          type: object
+          nullable: true
+          description: Latest escalation info (if escalated)
+          properties:
+            escalated_at:
+              type: string
+              format: date-time
+            escalated_to_name:
+              type: string
+            status:
+              type: string
+              enum: [pending, acknowledged, resolved]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    FilterPreferences:
+      type: object
+      properties:
+        priority:
+          type: array
+          items:
+            type: string
+            enum: [low, medium, high, urgent]
+          example: ["high", "urgent"]
+        aging:
+          type: string
+          enum: ["0-2", "3-6", "7+", "all"]
+          example: "7+"
+        work_item_type:
+          type: array
+          items:
+            type: string
+            enum: [dossier, ticket, position, task]
+          example: ["dossier"]
+        assignee_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: array
+          items:
+            type: string
+            enum: [pending, assigned, in_progress]
+          example: ["pending", "assigned"]
+        sort_by:
+          type: string
+          enum: [assigned_at, priority, aging]
+          default: assigned_at
+        sort_order:
+          type: string
+          enum: [asc, desc]
+          default: asc
+        page_size:
+          type: integer
+          minimum: 10
+          maximum: 100
+          default: 50
+
+    Error:
+      type: object
+      required:
+        - error
+        - code
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+        details:
+          type: object
+          description: Additional error context
+          additionalProperties: true

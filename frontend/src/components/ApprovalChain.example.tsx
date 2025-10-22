@@ -47,7 +47,7 @@ export function Example1_ThreeStageInProgress() {
   ];
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4 p-6">
       <h2 className="text-2xl font-bold">Example 1: 3-Stage Chain (Stage 2)</h2>
       <ApprovalChain
         approvalChainConfig={approvalChainConfig}
@@ -133,7 +133,7 @@ export function Example2_FiveStageWithDelegation() {
   ];
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4 p-6">
       <h2 className="text-2xl font-bold">Example 2: 5-Stage Chain with Delegation</h2>
       <ApprovalChain
         approvalChainConfig={approvalChainConfig}
@@ -217,7 +217,7 @@ export function Example3_CompletedChain() {
   ];
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4 p-6">
       <h2 className="text-2xl font-bold">Example 3: Completed & Published</h2>
       <ApprovalChain
         approvalChainConfig={approvalChainConfig}
@@ -294,7 +294,7 @@ export function Example4_WithRevisionsAndReassignment() {
   ];
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4 p-6">
       <h2 className="text-2xl font-bold">Example 4: With Revisions & Reassignment</h2>
       <ApprovalChain
         approvalChainConfig={approvalChainConfig}
@@ -328,7 +328,7 @@ export function Example5_MaximumStages() {
   }));
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4 p-6">
       <h2 className="text-2xl font-bold">Example 5: Maximum 10 Stages</h2>
       <ApprovalChain
         approvalChainConfig={approvalChainConfig}
@@ -362,7 +362,7 @@ export function Example6_DraftPosition() {
   const approvals: Approval[] = [];
 
   return (
-    <div className="p-6 space-y-4">
+    <div className="space-y-4 p-6">
       <h2 className="text-2xl font-bold">Example 6: Draft (Not Submitted)</h2>
       <ApprovalChain
         approvalChainConfig={approvalChainConfig}
@@ -377,33 +377,33 @@ export function Example6_DraftPosition() {
 // Example 7: All examples in a single view
 export function ApprovalChainExamplesShowcase() {
   return (
-    <div className="space-y-8 p-8 bg-gray-50 min-h-screen">
-      <h1 className="text-4xl font-bold text-center mb-8">
+    <div className="min-h-screen space-y-8 bg-gray-50 p-8">
+      <h1 className="mb-8 text-center text-4xl font-bold">
         Approval Chain Component Examples
       </h1>
 
       <div className="space-y-12">
-        <div className="bg-white rounded-lg shadow-md">
+        <div className="rounded-lg bg-white shadow-md">
           <Example1_ThreeStageInProgress />
         </div>
 
-        <div className="bg-white rounded-lg shadow-md">
+        <div className="rounded-lg bg-white shadow-md">
           <Example2_FiveStageWithDelegation />
         </div>
 
-        <div className="bg-white rounded-lg shadow-md">
+        <div className="rounded-lg bg-white shadow-md">
           <Example3_CompletedChain />
         </div>
 
-        <div className="bg-white rounded-lg shadow-md">
+        <div className="rounded-lg bg-white shadow-md">
           <Example4_WithRevisionsAndReassignment />
         </div>
 
-        <div className="bg-white rounded-lg shadow-md overflow-x-auto">
+        <div className="overflow-x-auto rounded-lg bg-white shadow-md">
           <Example5_MaximumStages />
         </div>
 
-        <div className="bg-white rounded-lg shadow-md">
+        <div className="rounded-lg bg-white shadow-md">
           <Example6_DraftPosition />
         </div>
       </div>

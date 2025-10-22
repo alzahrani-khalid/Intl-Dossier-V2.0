@@ -139,17 +139,17 @@ export function SearchPage() {
 
   return (
     <SearchErrorBoundary>
-      <div className="container mx-auto px-4 py-6 max-w-6xl" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="container mx-auto max-w-6xl px-4 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
         {/* Page Header */}
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 mb-2">
+          <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-gray-100">
             {t('search.title')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">{t('search.description')}</p>
         </div>
 
         {/* Search Input with Suggestions */}
-        <div className="mb-6 relative">
+        <div className="relative mb-6">
           <GlobalSearchInput
             ref={searchInputRef}
             value={query}
@@ -176,27 +176,27 @@ export function SearchPage() {
           <div className="mb-4 flex items-center gap-4">
             <button
               onClick={() => setUseSemanticMode(false)}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`rounded-md px-4 py-2 transition-colors ${
                 !useSemanticMode
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
               }`}
             >
               {t('search.modes.keyword')}
             </button>
             <button
               onClick={() => setUseSemanticMode(true)}
-              className={`px-4 py-2 rounded-md transition-colors ${
+              className={`rounded-md px-4 py-2 transition-colors ${
                 useSemanticMode
                   ? 'bg-purple-600 text-white'
-                  : 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                  : 'bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300'
               }`}
             >
               {t('search.modes.semantic')}
             </button>
 
             {/* Include archived toggle */}
-            <label className="flex items-center gap-2 ms-auto">
+            <label className="ms-auto flex items-center gap-2">
               <input
                 type="checkbox"
                 checked={searchParams.includeArchived === 'true'}
@@ -209,7 +209,7 @@ export function SearchPage() {
                     },
                   });
                 }}
-                className="w-4 h-4 text-blue-600 rounded"
+                className="size-4 rounded text-blue-600"
               />
               <span className="text-sm text-gray-700 dark:text-gray-300">
                 {t('search.includeArchived')}
@@ -240,17 +240,17 @@ export function SearchPage() {
 
         {/* Search Results */}
         {searchError ? (
-          <div className="text-center py-12">
-            <div className="text-4xl mb-4">❌</div>
-            <h3 className="text-lg font-semibold text-red-600 dark:text-red-400 mb-2">
+          <div className="py-12 text-center">
+            <div className="mb-4 text-4xl">❌</div>
+            <h3 className="mb-2 text-lg font-semibold text-red-600 dark:text-red-400">
               {t('search.error.title')}
             </h3>
-            <p className="text-gray-600 dark:text-gray-400 mb-4">
+            <p className="mb-4 text-gray-600 dark:text-gray-400">
               {searchError instanceof Error ? searchError.message : t('search.error.generic')}
             </p>
             <button
               onClick={() => refetchSearch()}
-              className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+              className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
             >
               {t('search.error.retry')}
             </button>
@@ -279,7 +279,7 @@ export function SearchPage() {
 
         {/* Performance metrics (dev mode) */}
         {process.env.NODE_ENV === 'development' && displayData?.tookMs && (
-          <div className="mt-6 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <div className="mt-6 rounded-lg bg-gray-100 p-4 dark:bg-gray-800">
             <div className="text-xs text-gray-600 dark:text-gray-400">
               <div>Search took: {displayData.tookMs}ms</div>
               {displayData.cacheHit !== undefined && (

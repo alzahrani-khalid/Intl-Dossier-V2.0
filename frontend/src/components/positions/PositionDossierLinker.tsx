@@ -16,7 +16,7 @@ interface PositionDossierLinkerProps {
 }
 
 export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation(['positions', 'translation']);
   const isRTL = i18n.language === 'ar';
 
   const [isAdding, setIsAdding] = useState(false);

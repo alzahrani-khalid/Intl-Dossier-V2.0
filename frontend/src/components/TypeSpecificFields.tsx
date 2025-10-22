@@ -31,14 +31,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
   // Render engagement-specific fields
   const renderEngagementFields = () => (
-    <div className="space-y-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+    <div className="space-y-4 rounded-md border border-gray-200 bg-gray-50 p-4">
       <h3 className="text-sm font-medium text-gray-900">
         {t('intake.form.requestType.options.engagement')} - {t('intake.typeSpecific.engagement.title', 'Additional Information')}
       </h3>
 
       {/* Partner Name */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.engagement.partnerName.label')}
         </label>
         <input
@@ -46,19 +46,19 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.partnerName || ''}
           onChange={(e) => handleFieldChange('partnerName', e.target.value)}
           placeholder={t('intake.typeSpecific.engagement.partnerName.placeholder')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       {/* Collaboration Type */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.engagement.collaborationType.label')}
         </label>
         <select
           value={value.collaborationType || ''}
           onChange={(e) => handleFieldChange('collaborationType', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Select type...</option>
           <option value="technical">
@@ -78,7 +78,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Expected Duration */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.engagement.expectedDuration.label')}
         </label>
         <input
@@ -86,7 +86,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.expectedDuration || ''}
           onChange={(e) => handleFieldChange('expectedDuration', e.target.value)}
           placeholder={t('intake.typeSpecific.engagement.expectedDuration.placeholder')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
     </div>
@@ -94,14 +94,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
   // Render position-specific fields
   const renderPositionFields = () => (
-    <div className="space-y-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+    <div className="space-y-4 rounded-md border border-gray-200 bg-gray-50 p-4">
       <h3 className="text-sm font-medium text-gray-900">
         {t('intake.form.requestType.options.position')} - {t('intake.typeSpecific.position.title', 'Additional Information')}
       </h3>
 
       {/* Position Title */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.position.positionTitle.label')}
         </label>
         <input
@@ -109,13 +109,13 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.positionTitle || ''}
           onChange={(e) => handleFieldChange('positionTitle', e.target.value)}
           placeholder={t('intake.typeSpecific.position.positionTitle.placeholder')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       {/* Department */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.position.department.label')}
         </label>
         <input
@@ -123,13 +123,13 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.department || ''}
           onChange={(e) => handleFieldChange('department', e.target.value)}
           placeholder={t('intake.typeSpecific.position.department.placeholder')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       {/* Required Skills */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.position.requiredSkills.label')}
         </label>
         <textarea
@@ -137,7 +137,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           onChange={(e) => handleFieldChange('requiredSkills', e.target.value)}
           placeholder={t('intake.typeSpecific.position.requiredSkills.placeholder')}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
     </div>
@@ -145,14 +145,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
   // Render MoU action-specific fields
   const renderMouActionFields = () => (
-    <div className="space-y-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+    <div className="space-y-4 rounded-md border border-gray-200 bg-gray-50 p-4">
       <h3 className="text-sm font-medium text-gray-900">
         {t('intake.form.requestType.options.mou_action')} - {t('intake.typeSpecific.mou_action.title', 'Additional Information')}
       </h3>
 
       {/* MoU Reference */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.mou_action.mouReference.label')}
         </label>
         <input
@@ -160,19 +160,19 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.mouReference || ''}
           onChange={(e) => handleFieldChange('mouReference', e.target.value)}
           placeholder={t('intake.typeSpecific.mou_action.mouReference.placeholder')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       {/* Action Type */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.mou_action.actionType.label')}
         </label>
         <select
           value={value.actionType || ''}
           onChange={(e) => handleFieldChange('actionType', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Select action type...</option>
           <option value="review">
@@ -192,14 +192,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Deadline */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.mou_action.deadline.label')}
         </label>
         <input
           type="date"
           value={value.deadline || ''}
           onChange={(e) => handleFieldChange('deadline', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
     </div>
@@ -207,14 +207,14 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
   // Render foresight-specific fields
   const renderForesightFields = () => (
-    <div className="space-y-4 p-4 bg-gray-50 rounded-md border border-gray-200">
+    <div className="space-y-4 rounded-md border border-gray-200 bg-gray-50 p-4">
       <h3 className="text-sm font-medium text-gray-900">
         {t('intake.form.requestType.options.foresight')} - {t('intake.typeSpecific.foresight.title', 'Additional Information')}
       </h3>
 
       {/* Topic */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.foresight.topic.label')}
         </label>
         <input
@@ -222,19 +222,19 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           value={value.topic || ''}
           onChange={(e) => handleFieldChange('topic', e.target.value)}
           placeholder={t('intake.typeSpecific.foresight.topic.placeholder')}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
 
       {/* Time Horizon */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.foresight.timeHorizon.label')}
         </label>
         <select
           value={value.timeHorizon || ''}
           onChange={(e) => handleFieldChange('timeHorizon', e.target.value)}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="">Select time horizon...</option>
           <option value="short">
@@ -251,7 +251,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
 
       {/* Stakeholders */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">
+        <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('intake.typeSpecific.foresight.stakeholders.label')}
         </label>
         <textarea
@@ -259,7 +259,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
           onChange={(e) => handleFieldChange('stakeholders', e.target.value)}
           placeholder={t('intake.typeSpecific.foresight.stakeholders.placeholder')}
           rows={3}
-          className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
         />
       </div>
     </div>

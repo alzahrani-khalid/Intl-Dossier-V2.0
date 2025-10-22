@@ -18,15 +18,15 @@ export function RealtimeStatus() {
   const getStatusIcon = () => {
     switch (connectionStatus) {
       case 'connected':
-        return <Wifi className="h-4 w-4 text-green-500" />
+        return <Wifi className="size-4 text-green-500" />
       case 'disconnected':
-        return <WifiOff className="h-4 w-4 text-gray-500" />
+        return <WifiOff className="size-4 text-gray-500" />
       case 'reconnecting':
-        return <RefreshCw className="h-4 w-4 text-yellow-500 animate-spin" />
+        return <RefreshCw className="size-4 animate-spin text-yellow-500" />
       case 'error':
-        return <AlertCircle className="h-4 w-4 text-red-500" />
+        return <AlertCircle className="size-4 text-red-500" />
       default:
-        return <WifiOff className="h-4 w-4 text-gray-500" />
+        return <WifiOff className="size-4 text-gray-500" />
     }
   }
 
@@ -66,7 +66,7 @@ export function RealtimeStatus() {
   }
 
   return (
-    <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2 bg-white dark:bg-gray-800 shadow-lg rounded-lg p-3 border border-gray-200 dark:border-gray-700">
+    <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
       <Badge variant={getStatusVariant()} className="gap-1">
         {getStatusIcon()}
         <span>{getStatusText()}</span>
@@ -79,7 +79,7 @@ export function RealtimeStatus() {
           onClick={reconnect}
           className="h-6 px-2 text-xs"
         >
-          <RefreshCw className="h-3 w-3 me-1" />
+          <RefreshCw className="me-1 size-3" />
           Retry
         </Button>
       )}

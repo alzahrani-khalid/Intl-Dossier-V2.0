@@ -65,10 +65,24 @@ export const useCreateTicket = () => {
   return useMutation({
     mutationFn: async (data: CreateTicketRequest): Promise<TicketResponse> => {
       const headers = await getAuthHeaders();
+
+      // Transform camelCase to snake_case for API
+      const payload = {
+        request_type: data.requestType,
+        title: data.title,
+        title_ar: data.titleAr,
+        description: data.description,
+        description_ar: data.descriptionAr,
+        urgency: data.urgency,
+        dossier_id: data.dossierId,
+        type_specific_fields: data.typeSpecificFields,
+        attachments: data.attachments,
+      };
+
       const response = await fetch(`${API_BASE_URL}/intake-tickets-create`, {
         method: 'POST',
         headers,
-        body: JSON.stringify(data),
+        body: JSON.stringify(payload),
       });
 
       if (!response.ok) {

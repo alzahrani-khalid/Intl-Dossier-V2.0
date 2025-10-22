@@ -1,0 +1,448 @@
+openapi: 3.1.0
+info:
+  title: Waiting Queue Reminder API
+  version: 1.0.0
+  description: |
+    API for sending follow-up reminders to assignment assignees.
+    Supports individual and bulk reminder operations with rate limiting and cooldown enforcement.
+  contact:
+    name: GASTAT International Dossier Team
+    email: support@gastat.gov.sa
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1/waiting-queue-reminder
+    description: Production (Supabase Edge Functions)
+  - url: http://localhost:54321/functions/v1/waiting-queue-reminder
+    description: Local Development (Supabase Local)
+
+tags:
+  - name: reminders
+    description: Follow-up reminder operations
+
+security:
+  - BearerAuth: []
+
+paths:
+  /send:
+    post:
+      summary: Send follow-up reminder (single assignment)
+      description: |
+        Sends a follow-up reminder notification to the assignee of a single assignment.
+        Enforces 24-hour cooldown period and rate limiting (100 reminders per 5-minute window).
+      operationId: sendReminder
+      tags:
+        - reminders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - assignment_id
+              properties:
+                assignment_id:
+                  type: string
+                  format: uuid
+                  description: ID of the assignment to send reminder for
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+      responses:
+        '200':
+          description: Reminder sent successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Follow-up reminder sent successfully"
+                  data:
+                    type: object
+                    properties:
+                      reminder_id:
+                        type: string
+                        format: uuid
+                        description: ID of the created followup_reminders record
+                      assignment_id:
+                        type: string
+                        format: uuid
+                      sent_at:
+                        type: string
+                        format: date-time
+                      recipient_email:
+                        type: string
+                        format: email
+                      delivery_status:
+                        type: string
+                        enum: [pending, delivered]
+        '400':
+          description: Bad request (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                noAssignee:
+                  value:
+                    error: "Cannot send reminder: Assignment has no assignee"
+                    code: "NO_ASSIGNEE"
+                    details:
+                      assignment_id: "123e4567-e89b-12d3-a456-426614174000"
+                cooldownActive:
+                  value:
+                    error: "Cannot send reminder: Cooldown period active (last sent 12 hours ago)"
+                    code: "COOLDOWN_ACTIVE"
+                    details:
+                      last_sent_at: "2025-01-14T10:30:00Z"
+                      cooldown_hours: 24
+                      retry_after_hours: 12
+                completedAssignment:
+                  value:
+                    error: "Cannot send reminder: Assignment is completed"
+                    code: "INVALID_STATUS"
+                    details:
+                      assignment_id: "123e4567-e89b-12d3-a456-426614174000"
+                      status: "completed"
+        '401':
+          description: Unauthorized (missing or invalid JWT)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Insufficient permissions: 'send_reminders' permission required"
+                code: "FORBIDDEN"
+        '404':
+          description: Assignment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Assignment not found"
+                code: "NOT_FOUND"
+                details:
+                  assignment_id: "123e4567-e89b-12d3-a456-426614174000"
+        '429':
+          description: Rate limit exceeded
+          headers:
+            X-RateLimit-Limit:
+              description: Maximum requests allowed per window
+              schema:
+                type: integer
+                example: 100
+            X-RateLimit-Remaining:
+              description: Requests remaining in current window
+              schema:
+                type: integer
+                example: 0
+            X-RateLimit-Reset:
+              description: Unix timestamp when rate limit resets
+              schema:
+                type: integer
+                example: 1705233600
+            Retry-After:
+              description: Seconds until rate limit resets
+              schema:
+                type: integer
+                example: 180
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Rate limit exceeded: 100 reminders per 5-minute window"
+                code: "RATE_LIMIT_EXCEEDED"
+                details:
+                  limit: 100
+                  window_minutes: 5
+                  retry_after_seconds: 180
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Failed to send reminder notification"
+                code: "INTERNAL_ERROR"
+                details:
+                  reason: "Notification service unavailable"
+
+  /send-bulk:
+    post:
+      summary: Send follow-up reminders (bulk operation)
+      description: |
+        Queues bulk reminder sending for multiple assignments. Returns job ID for progress tracking.
+        Processes reminders in chunks of 10 with max 10 parallel workers.
+        Max 100 assignments per bulk operation.
+      operationId: sendBulkReminders
+      tags:
+        - reminders
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - assignment_ids
+              properties:
+                assignment_ids:
+                  type: array
+                  minItems: 1
+                  maxItems: 100
+                  items:
+                    type: string
+                    format: uuid
+                  description: Array of assignment IDs (max 100)
+                  example:
+                    - "123e4567-e89b-12d3-a456-426614174000"
+                    - "123e4567-e89b-12d3-a456-426614174001"
+                    - "123e4567-e89b-12d3-a456-426614174002"
+      responses:
+        '202':
+          description: Bulk reminder job queued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bulk reminder job queued"
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: string
+                        format: uuid
+                        description: Job ID for tracking progress
+                      total_items:
+                        type: integer
+                        description: Number of assignments to process
+                        example: 50
+                      status_url:
+                        type: string
+                        format: uri
+                        description: URL to poll for job status
+                        example: "/status/abc123-def456-ghi789"
+        '400':
+          description: Bad request (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                tooManyItems:
+                  value:
+                    error: "Bulk operation limited to 100 items maximum"
+                    code: "BULK_LIMIT_EXCEEDED"
+                    details:
+                      provided: 150
+                      max_allowed: 100
+                emptyArray:
+                  value:
+                    error: "assignment_ids cannot be empty"
+                    code: "VALIDATION_ERROR"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '429':
+          description: Rate limit exceeded
+          headers:
+            X-RateLimit-Limit:
+              schema:
+                type: integer
+            X-RateLimit-Remaining:
+              schema:
+                type: integer
+            X-RateLimit-Reset:
+              schema:
+                type: integer
+            Retry-After:
+              schema:
+                type: integer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /status/{job_id}:
+    get:
+      summary: Get bulk reminder job status
+      description: Poll job status and results for bulk reminder operation
+      operationId: getBulkReminderStatus
+      tags:
+        - reminders
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          description: Job ID returned from /send-bulk endpoint
+          schema:
+            type: string
+            format: uuid
+          example: "abc123-def456-ghi789"
+      responses:
+        '200':
+          description: Job status retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: string
+                        format: uuid
+                      status:
+                        type: string
+                        enum: [queued, processing, completed, failed]
+                        description: Current job status
+                      progress:
+                        type: object
+                        properties:
+                          total:
+                            type: integer
+                            description: Total items to process
+                            example: 50
+                          processed:
+                            type: integer
+                            description: Items processed so far
+                            example: 30
+                          succeeded:
+                            type: integer
+                            description: Items successfully sent
+                            example: 28
+                          failed:
+                            type: integer
+                            description: Items that failed
+                            example: 2
+                          skipped:
+                            type: integer
+                            description: Items skipped (cooldown, no assignee)
+                            example: 0
+                      results:
+                        type: object
+                        description: Detailed results (only when status=completed)
+                        properties:
+                          sent:
+                            type: array
+                            items:
+                              type: string
+                              format: uuid
+                            description: Assignment IDs successfully sent
+                          failed:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                assignment_id:
+                                  type: string
+                                  format: uuid
+                                error:
+                                  type: string
+                                  example: "Cooldown active"
+                          skipped:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                assignment_id:
+                                  type: string
+                                  format: uuid
+                                reason:
+                                  type: string
+                                  example: "No assignee"
+                      created_at:
+                        type: string
+                        format: date-time
+                      completed_at:
+                        type: string
+                        format: date-time
+                        nullable: true
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Job not found"
+                code: "NOT_FOUND"
+                details:
+                  job_id: "abc123-def456-ghi789"
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+        - code
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+          example: "Rate limit exceeded"
+        code:
+          type: string
+          description: Machine-readable error code
+          example: "RATE_LIMIT_EXCEEDED"
+        details:
+          type: object
+          description: Additional error context (optional)
+          additionalProperties: true

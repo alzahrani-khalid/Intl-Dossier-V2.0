@@ -78,7 +78,7 @@ export function AnimatedSidebar() {
       {
         id: 'my-assignments',
         label: t('navigation.myAssignments', 'My Assignments'),
-        path: '/my-work/assignments',
+        path: '/tasks',
         icon: CheckSquare,
         badgeCount: counts.assignments,
       },

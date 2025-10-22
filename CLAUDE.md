@@ -3,7 +3,7 @@
 Last updated: 2025-10-07
 
 ## Core Tech Stack
-- **Frontend**: React 18+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS, shadcn/ui, i18next, React Flow (network graphs)
+- **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS, shadcn/ui, i18next, React Flow (network graphs)
 - **Mobile**: Expo SDK 52+, React Native 0.81+, TypeScript 5.8+, React Native Paper 5.12+ (Material Design 3), WatermelonDB 0.28+ (offline-first), React Navigation 7+, expo-local-authentication (biometrics), expo-notifications (push), i18next (internationalization)
 - **Backend**: Node.js 18+ LTS, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
 - **Database**: PostgreSQL 15+ with pgvector, pg_trgm, pg_tsvector extensions
@@ -20,10 +20,10 @@ supabase/         # Migrations, seed data, Edge Functions
 ```
 
 ## Commands
-- **Dev**: `npm run dev` (monorepo via Turborepo)
-- **Build**: `npm run build`
-- **Test**: `npm test`, `npm run lint`, `npm run typecheck`
-- **DB**: `npm run db:migrate`, `npm run db:seed`, `npm run db:reset`
+- **Dev**: `pnpm dev` (monorepo via Turborepo)
+- **Build**: `pnpm build`
+- **Test**: `pnpm test`, `pnpm lint`, `pnpm typecheck`
+- **DB**: `pnpm db:migrate`, `pnpm db:seed`, `pnpm db:reset`
 
 ## Mobile-First & Responsive Design (MANDATORY)
 
@@ -127,9 +127,9 @@ When building UI components, **ALWAYS** follow this workflow:
 - Use shadcn MCP tools to explore available components
 
 ## Recent Changes
-- 021-apply-gusto-design: Added TypeScript 5.8+ (strict mode)
-- 020-complete-the-development: Added TypeScript 5.8+ (strict mode), React Native 0.81+ + Expo SDK 52+, React Native Paper 5.12+ (Material Design 3), WatermelonDB 0.28+ (offline-first), React Navigation 7+, TanStack Query v5, i18next (i18n), expo-local-authentication, expo-notifications
-- 019-user-management-access: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS, React 19 + Supabase (Auth, PostgreSQL 15+, RLS, Realtime), TanStack Query v5, React Router, i18next, shadcn/ui
+- 025-unified-tasks-model: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS (backend), React 19 (frontend)
+- 024-intake-entity-linking: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS (backend), React 19 (frontend) + Supabase (PostgreSQL 15+, Auth, RLS, Realtime), TanStack Query v5, TanStack Router v5, Redis 7.x, AnythingLLM (AI service), shadcn/ui, Tailwind CSS, @dnd-kit/core (drag-and-drop), i18next (internationalization)
+- 023-specs-waiting-queue: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS (backend), React 19 (frontend) + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Auth, Realtime), Redis 7.x, i18next, shadcn/ui, Tailwind CSS
   - ✅ Feature spec: Expo-based mobile app with offline-first architecture
   - ✅ Research: Jest + RNTL (unit tests), Maestro (E2E), React Native Paper (UI), WatermelonDB (offline sync)
   - ✅ Data model: 11 entities with WatermelonDB schema, offline storage cleanup strategy

@@ -33,13 +33,16 @@ import { Route as ProtectedCalendarRouteImport } from './routes/_protected/calen
 import { Route as ProtectedBriefsRouteImport } from './routes/_protected/briefs'
 import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected/analytics'
 import { Route as ProtectedAccessibilityRouteImport } from './routes/_protected/accessibility'
+import { Route as ProtectedTasksIndexRouteImport } from './routes/_protected/tasks/index'
 import { Route as ProtectedPositionsIndexRouteImport } from './routes/_protected/positions/index'
 import { Route as ProtectedIntakeIndexRouteImport } from './routes/_protected/intake/index'
 import { Route as ProtectedEngagementsIndexRouteImport } from './routes/_protected/engagements/index'
 import { Route as ProtectedDossiersIndexRouteImport } from './routes/_protected/dossiers/index'
-import { Route as ProtectedAssignmentsIndexRouteImport } from './routes/_protected/assignments/index'
 import { Route as ProtectedApprovalsIndexRouteImport } from './routes/_protected/approvals/index'
 import { Route as ProtectedAfterActionsIndexRouteImport } from './routes/_protected/after-actions/index'
+import { Route as ProtectedTasksQueueRouteImport } from './routes/_protected/tasks/queue'
+import { Route as ProtectedTasksEscalationsRouteImport } from './routes/_protected/tasks/escalations'
+import { Route as ProtectedTasksIdRouteImport } from './routes/_protected/tasks/$id'
 import { Route as ProtectedPositionsPositionIdRouteImport } from './routes/_protected/positions/$positionId'
 import { Route as ProtectedPositionsIdRouteImport } from './routes/_protected/positions/$id'
 import { Route as ProtectedMyWorkWaitingRouteImport } from './routes/_protected/my-work/waiting'
@@ -50,9 +53,6 @@ import { Route as ProtectedIntakeNewRouteImport } from './routes/_protected/inta
 import { Route as ProtectedEngagementsEngagementIdRouteImport } from './routes/_protected/engagements/$engagementId'
 import { Route as ProtectedDossiersIdRouteImport } from './routes/_protected/dossiers/$id'
 import { Route as ProtectedCalendarNewRouteImport } from './routes/_protected/calendar/new'
-import { Route as ProtectedAssignmentsQueueRouteImport } from './routes/_protected/assignments/queue'
-import { Route as ProtectedAssignmentsEscalationsRouteImport } from './routes/_protected/assignments/escalations'
-import { Route as ProtectedAssignmentsIdRouteImport } from './routes/_protected/assignments/$id'
 import { Route as ProtectedAfterActionsAfterActionIdRouteImport } from './routes/_protected/after-actions/$afterActionId'
 import { Route as ProtectedAdminApprovalsRouteImport } from './routes/_protected/admin/approvals'
 import { Route as ProtectedPositionsIdVersionsRouteImport } from './routes/_protected/positions/$id/versions'
@@ -180,6 +180,11 @@ const ProtectedAccessibilityRoute = ProtectedAccessibilityRouteImport.update({
   path: '/accessibility',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedTasksIndexRoute = ProtectedTasksIndexRouteImport.update({
+  id: '/tasks/',
+  path: '/tasks/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedPositionsIndexRoute = ProtectedPositionsIndexRouteImport.update({
   id: '/',
   path: '/',
@@ -201,12 +206,6 @@ const ProtectedDossiersIndexRoute = ProtectedDossiersIndexRouteImport.update({
   path: '/dossiers/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedAssignmentsIndexRoute =
-  ProtectedAssignmentsIndexRouteImport.update({
-    id: '/assignments/',
-    path: '/assignments/',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
 const ProtectedApprovalsIndexRoute = ProtectedApprovalsIndexRouteImport.update({
   id: '/approvals/',
   path: '/approvals/',
@@ -218,6 +217,22 @@ const ProtectedAfterActionsIndexRoute =
     path: '/after-actions/',
     getParentRoute: () => ProtectedRoute,
   } as any)
+const ProtectedTasksQueueRoute = ProtectedTasksQueueRouteImport.update({
+  id: '/tasks/queue',
+  path: '/tasks/queue',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedTasksEscalationsRoute =
+  ProtectedTasksEscalationsRouteImport.update({
+    id: '/tasks/escalations',
+    path: '/tasks/escalations',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedTasksIdRoute = ProtectedTasksIdRouteImport.update({
+  id: '/tasks/$id',
+  path: '/tasks/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedPositionsPositionIdRoute =
   ProtectedPositionsPositionIdRouteImport.update({
     id: '/$positionId',
@@ -270,23 +285,6 @@ const ProtectedCalendarNewRoute = ProtectedCalendarNewRouteImport.update({
   id: '/new',
   path: '/new',
   getParentRoute: () => ProtectedCalendarRoute,
-} as any)
-const ProtectedAssignmentsQueueRoute =
-  ProtectedAssignmentsQueueRouteImport.update({
-    id: '/assignments/queue',
-    path: '/assignments/queue',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedAssignmentsEscalationsRoute =
-  ProtectedAssignmentsEscalationsRouteImport.update({
-    id: '/assignments/escalations',
-    path: '/assignments/escalations',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedAssignmentsIdRoute = ProtectedAssignmentsIdRouteImport.update({
-  id: '/assignments/$id',
-  path: '/assignments/$id',
-  getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedAfterActionsAfterActionIdRoute =
   ProtectedAfterActionsAfterActionIdRouteImport.update({
@@ -356,9 +354,6 @@ export interface FileRoutesByFullPath {
   '/word-assistant': typeof ProtectedWordAssistantRoute
   '/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
-  '/assignments/$id': typeof ProtectedAssignmentsIdRoute
-  '/assignments/escalations': typeof ProtectedAssignmentsEscalationsRoute
-  '/assignments/queue': typeof ProtectedAssignmentsQueueRoute
   '/calendar/new': typeof ProtectedCalendarNewRoute
   '/dossiers/$id': typeof ProtectedDossiersIdRoute
   '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
@@ -369,13 +364,16 @@ export interface FileRoutesByFullPath {
   '/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
   '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
   '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
+  '/tasks/$id': typeof ProtectedTasksIdRoute
+  '/tasks/escalations': typeof ProtectedTasksEscalationsRoute
+  '/tasks/queue': typeof ProtectedTasksQueueRoute
   '/after-actions': typeof ProtectedAfterActionsIndexRoute
   '/approvals': typeof ProtectedApprovalsIndexRoute
-  '/assignments': typeof ProtectedAssignmentsIndexRoute
   '/dossiers': typeof ProtectedDossiersIndexRoute
   '/engagements': typeof ProtectedEngagementsIndexRoute
   '/intake/': typeof ProtectedIntakeIndexRoute
   '/positions/': typeof ProtectedPositionsIndexRoute
+  '/tasks': typeof ProtectedTasksIndexRoute
   '/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
   '/engagements/$engagementId/after-action': typeof ProtectedEngagementsEngagementIdAfterActionRoute
   '/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
@@ -406,9 +404,6 @@ export interface FileRoutesByTo {
   '/word-assistant': typeof ProtectedWordAssistantRoute
   '/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
-  '/assignments/$id': typeof ProtectedAssignmentsIdRoute
-  '/assignments/escalations': typeof ProtectedAssignmentsEscalationsRoute
-  '/assignments/queue': typeof ProtectedAssignmentsQueueRoute
   '/calendar/new': typeof ProtectedCalendarNewRoute
   '/dossiers/$id': typeof ProtectedDossiersIdRoute
   '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
@@ -419,13 +414,16 @@ export interface FileRoutesByTo {
   '/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
   '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
   '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
+  '/tasks/$id': typeof ProtectedTasksIdRoute
+  '/tasks/escalations': typeof ProtectedTasksEscalationsRoute
+  '/tasks/queue': typeof ProtectedTasksQueueRoute
   '/after-actions': typeof ProtectedAfterActionsIndexRoute
   '/approvals': typeof ProtectedApprovalsIndexRoute
-  '/assignments': typeof ProtectedAssignmentsIndexRoute
   '/dossiers': typeof ProtectedDossiersIndexRoute
   '/engagements': typeof ProtectedEngagementsIndexRoute
   '/intake': typeof ProtectedIntakeIndexRoute
   '/positions': typeof ProtectedPositionsIndexRoute
+  '/tasks': typeof ProtectedTasksIndexRoute
   '/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
   '/engagements/$engagementId/after-action': typeof ProtectedEngagementsEngagementIdAfterActionRoute
   '/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
@@ -460,9 +458,6 @@ export interface FileRoutesById {
   '/_protected/word-assistant': typeof ProtectedWordAssistantRoute
   '/_protected/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/_protected/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
-  '/_protected/assignments/$id': typeof ProtectedAssignmentsIdRoute
-  '/_protected/assignments/escalations': typeof ProtectedAssignmentsEscalationsRoute
-  '/_protected/assignments/queue': typeof ProtectedAssignmentsQueueRoute
   '/_protected/calendar/new': typeof ProtectedCalendarNewRoute
   '/_protected/dossiers/$id': typeof ProtectedDossiersIdRoute
   '/_protected/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
@@ -473,13 +468,16 @@ export interface FileRoutesById {
   '/_protected/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
   '/_protected/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
   '/_protected/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
+  '/_protected/tasks/$id': typeof ProtectedTasksIdRoute
+  '/_protected/tasks/escalations': typeof ProtectedTasksEscalationsRoute
+  '/_protected/tasks/queue': typeof ProtectedTasksQueueRoute
   '/_protected/after-actions/': typeof ProtectedAfterActionsIndexRoute
   '/_protected/approvals/': typeof ProtectedApprovalsIndexRoute
-  '/_protected/assignments/': typeof ProtectedAssignmentsIndexRoute
   '/_protected/dossiers/': typeof ProtectedDossiersIndexRoute
   '/_protected/engagements/': typeof ProtectedEngagementsIndexRoute
   '/_protected/intake/': typeof ProtectedIntakeIndexRoute
   '/_protected/positions/': typeof ProtectedPositionsIndexRoute
+  '/_protected/tasks/': typeof ProtectedTasksIndexRoute
   '/_protected/after-actions/$afterActionId/versions': typeof ProtectedAfterActionsAfterActionIdVersionsRoute
   '/_protected/engagements/$engagementId/after-action': typeof ProtectedEngagementsEngagementIdAfterActionRoute
   '/_protected/intake/tickets/$id': typeof ProtectedIntakeTicketsIdRoute
@@ -514,9 +512,6 @@ export interface FileRouteTypes {
     | '/word-assistant'
     | '/admin/approvals'
     | '/after-actions/$afterActionId'
-    | '/assignments/$id'
-    | '/assignments/escalations'
-    | '/assignments/queue'
     | '/calendar/new'
     | '/dossiers/$id'
     | '/engagements/$engagementId'
@@ -527,13 +522,16 @@ export interface FileRouteTypes {
     | '/my-work/waiting'
     | '/positions/$id'
     | '/positions/$positionId'
+    | '/tasks/$id'
+    | '/tasks/escalations'
+    | '/tasks/queue'
     | '/after-actions'
     | '/approvals'
-    | '/assignments'
     | '/dossiers'
     | '/engagements'
     | '/intake/'
     | '/positions/'
+    | '/tasks'
     | '/after-actions/$afterActionId/versions'
     | '/engagements/$engagementId/after-action'
     | '/intake/tickets/$id'
@@ -564,9 +562,6 @@ export interface FileRouteTypes {
     | '/word-assistant'
     | '/admin/approvals'
     | '/after-actions/$afterActionId'
-    | '/assignments/$id'
-    | '/assignments/escalations'
-    | '/assignments/queue'
     | '/calendar/new'
     | '/dossiers/$id'
     | '/engagements/$engagementId'
@@ -577,13 +572,16 @@ export interface FileRouteTypes {
     | '/my-work/waiting'
     | '/positions/$id'
     | '/positions/$positionId'
+    | '/tasks/$id'
+    | '/tasks/escalations'
+    | '/tasks/queue'
     | '/after-actions'
     | '/approvals'
-    | '/assignments'
     | '/dossiers'
     | '/engagements'
     | '/intake'
     | '/positions'
+    | '/tasks'
     | '/after-actions/$afterActionId/versions'
     | '/engagements/$engagementId/after-action'
     | '/intake/tickets/$id'
@@ -617,9 +615,6 @@ export interface FileRouteTypes {
     | '/_protected/word-assistant'
     | '/_protected/admin/approvals'
     | '/_protected/after-actions/$afterActionId'
-    | '/_protected/assignments/$id'
-    | '/_protected/assignments/escalations'
-    | '/_protected/assignments/queue'
     | '/_protected/calendar/new'
     | '/_protected/dossiers/$id'
     | '/_protected/engagements/$engagementId'
@@ -630,13 +625,16 @@ export interface FileRouteTypes {
     | '/_protected/my-work/waiting'
     | '/_protected/positions/$id'
     | '/_protected/positions/$positionId'
+    | '/_protected/tasks/$id'
+    | '/_protected/tasks/escalations'
+    | '/_protected/tasks/queue'
     | '/_protected/after-actions/'
     | '/_protected/approvals/'
-    | '/_protected/assignments/'
     | '/_protected/dossiers/'
     | '/_protected/engagements/'
     | '/_protected/intake/'
     | '/_protected/positions/'
+    | '/_protected/tasks/'
     | '/_protected/after-actions/$afterActionId/versions'
     | '/_protected/engagements/$engagementId/after-action'
     | '/_protected/intake/tickets/$id'
@@ -821,6 +819,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAccessibilityRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/tasks/': {
+      id: '/_protected/tasks/'
+      path: '/tasks'
+      fullPath: '/tasks'
+      preLoaderRoute: typeof ProtectedTasksIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/positions/': {
       id: '/_protected/positions/'
       path: '/'
@@ -849,13 +854,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersIndexRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/assignments/': {
-      id: '/_protected/assignments/'
-      path: '/assignments'
-      fullPath: '/assignments'
-      preLoaderRoute: typeof ProtectedAssignmentsIndexRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/approvals/': {
       id: '/_protected/approvals/'
       path: '/approvals'
@@ -868,6 +866,27 @@ declare module '@tanstack/react-router' {
       path: '/after-actions'
       fullPath: '/after-actions'
       preLoaderRoute: typeof ProtectedAfterActionsIndexRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/tasks/queue': {
+      id: '/_protected/tasks/queue'
+      path: '/tasks/queue'
+      fullPath: '/tasks/queue'
+      preLoaderRoute: typeof ProtectedTasksQueueRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/tasks/escalations': {
+      id: '/_protected/tasks/escalations'
+      path: '/tasks/escalations'
+      fullPath: '/tasks/escalations'
+      preLoaderRoute: typeof ProtectedTasksEscalationsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/tasks/$id': {
+      id: '/_protected/tasks/$id'
+      path: '/tasks/$id'
+      fullPath: '/tasks/$id'
+      preLoaderRoute: typeof ProtectedTasksIdRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/positions/$positionId': {
@@ -939,27 +958,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/calendar/new'
       preLoaderRoute: typeof ProtectedCalendarNewRouteImport
       parentRoute: typeof ProtectedCalendarRoute
-    }
-    '/_protected/assignments/queue': {
-      id: '/_protected/assignments/queue'
-      path: '/assignments/queue'
-      fullPath: '/assignments/queue'
-      preLoaderRoute: typeof ProtectedAssignmentsQueueRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/assignments/escalations': {
-      id: '/_protected/assignments/escalations'
-      path: '/assignments/escalations'
-      fullPath: '/assignments/escalations'
-      preLoaderRoute: typeof ProtectedAssignmentsEscalationsRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/assignments/$id': {
-      id: '/_protected/assignments/$id'
-      path: '/assignments/$id'
-      fullPath: '/assignments/$id'
-      preLoaderRoute: typeof ProtectedAssignmentsIdRouteImport
-      parentRoute: typeof ProtectedRoute
     }
     '/_protected/after-actions/$afterActionId': {
       id: '/_protected/after-actions/$afterActionId'
@@ -1123,19 +1121,19 @@ interface ProtectedRouteChildren {
   ProtectedWordAssistantRoute: typeof ProtectedWordAssistantRoute
   ProtectedAdminApprovalsRoute: typeof ProtectedAdminApprovalsRoute
   ProtectedAfterActionsAfterActionIdRoute: typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
-  ProtectedAssignmentsIdRoute: typeof ProtectedAssignmentsIdRoute
-  ProtectedAssignmentsEscalationsRoute: typeof ProtectedAssignmentsEscalationsRoute
-  ProtectedAssignmentsQueueRoute: typeof ProtectedAssignmentsQueueRoute
   ProtectedDossiersIdRoute: typeof ProtectedDossiersIdRoute
   ProtectedEngagementsEngagementIdRoute: typeof ProtectedEngagementsEngagementIdRouteWithChildren
   ProtectedMyWorkAssignmentsRoute: typeof ProtectedMyWorkAssignmentsRoute
   ProtectedMyWorkIntakeRoute: typeof ProtectedMyWorkIntakeRoute
   ProtectedMyWorkWaitingRoute: typeof ProtectedMyWorkWaitingRoute
+  ProtectedTasksIdRoute: typeof ProtectedTasksIdRoute
+  ProtectedTasksEscalationsRoute: typeof ProtectedTasksEscalationsRoute
+  ProtectedTasksQueueRoute: typeof ProtectedTasksQueueRoute
   ProtectedAfterActionsIndexRoute: typeof ProtectedAfterActionsIndexRoute
   ProtectedApprovalsIndexRoute: typeof ProtectedApprovalsIndexRoute
-  ProtectedAssignmentsIndexRoute: typeof ProtectedAssignmentsIndexRoute
   ProtectedDossiersIndexRoute: typeof ProtectedDossiersIndexRoute
   ProtectedEngagementsIndexRoute: typeof ProtectedEngagementsIndexRoute
+  ProtectedTasksIndexRoute: typeof ProtectedTasksIndexRoute
 }
 
 const ProtectedRouteChildren: ProtectedRouteChildren = {
@@ -1162,20 +1160,20 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminApprovalsRoute: ProtectedAdminApprovalsRoute,
   ProtectedAfterActionsAfterActionIdRoute:
     ProtectedAfterActionsAfterActionIdRouteWithChildren,
-  ProtectedAssignmentsIdRoute: ProtectedAssignmentsIdRoute,
-  ProtectedAssignmentsEscalationsRoute: ProtectedAssignmentsEscalationsRoute,
-  ProtectedAssignmentsQueueRoute: ProtectedAssignmentsQueueRoute,
   ProtectedDossiersIdRoute: ProtectedDossiersIdRoute,
   ProtectedEngagementsEngagementIdRoute:
     ProtectedEngagementsEngagementIdRouteWithChildren,
   ProtectedMyWorkAssignmentsRoute: ProtectedMyWorkAssignmentsRoute,
   ProtectedMyWorkIntakeRoute: ProtectedMyWorkIntakeRoute,
   ProtectedMyWorkWaitingRoute: ProtectedMyWorkWaitingRoute,
+  ProtectedTasksIdRoute: ProtectedTasksIdRoute,
+  ProtectedTasksEscalationsRoute: ProtectedTasksEscalationsRoute,
+  ProtectedTasksQueueRoute: ProtectedTasksQueueRoute,
   ProtectedAfterActionsIndexRoute: ProtectedAfterActionsIndexRoute,
   ProtectedApprovalsIndexRoute: ProtectedApprovalsIndexRoute,
-  ProtectedAssignmentsIndexRoute: ProtectedAssignmentsIndexRoute,
   ProtectedDossiersIndexRoute: ProtectedDossiersIndexRoute,
   ProtectedEngagementsIndexRoute: ProtectedEngagementsIndexRoute,
+  ProtectedTasksIndexRoute: ProtectedTasksIndexRoute,
 }
 
 const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(

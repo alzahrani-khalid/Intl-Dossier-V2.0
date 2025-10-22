@@ -2,6 +2,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
 import { corsHeaders } from "../_shared/cors.ts";
 
+// Note: The dossier ID is now read from the query parameter ?id= instead of the URL path
+
 interface TimelineQuery {
   event_type?: string[];
   start_date?: string;
@@ -51,30 +53,34 @@ serve(async (req) => {
       );
     }
 
-    // Create Supabase client with user context
-    const supabaseClient = createClient(
+    // Extract JWT token (remove "Bearer " prefix)
+    const token = authHeader.replace("Bearer ", "");
+
+    // Create Supabase client for auth validation
+    const authClient = createClient(
       Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
-      {
-        global: {
-          headers: { Authorization: authHeader },
-        },
-      }
+      Deno.env.get("SUPABASE_ANON_KEY") ?? ""
     );
 
-    // Get current user
+    // Get current user by passing the JWT token directly
     const {
       data: { user },
       error: userError,
-    } = await supabaseClient.auth.getUser();
+    } = await authClient.auth.getUser(token);
 
     if (userError || !user) {
+      console.error("Auth error:", userError);
       return new Response(
         JSON.stringify({
           error: {
             code: "UNAUTHORIZED",
-            message_en: "Invalid user session",
+            message_en: `Invalid user session: ${userError?.message || 'No user found'}`,
             message_ar: "جلسة مستخدم غير صالحة",
+            details: {
+              error: userError?.message,
+              status: userError?.status,
+              has_user: !!user,
+            },
           },
         }),
         {
@@ -84,10 +90,16 @@ serve(async (req) => {
       );
     }
 
-    // Extract dossier ID from URL
+    // Create Supabase client with service role for database operations
+    // We use service role to bypass RLS since we've already validated the user above
+    const supabaseClient = createClient(
+      Deno.env.get("SUPABASE_URL") ?? "",
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+    );
+
+    // Extract dossier ID from query parameter
     const url = new URL(req.url);
-    const pathParts = url.pathname.split("/");
-    const dossierId = pathParts[pathParts.indexOf("dossiers") + 1];
+    const dossierId = url.searchParams.get("id");
 
     if (!dossierId) {
       return new Response(
@@ -106,8 +118,9 @@ serve(async (req) => {
     }
 
     // Parse query parameters
+    const eventTypes = url.searchParams.getAll("event_type");
     const params: TimelineQuery = {
-      event_type: url.searchParams.get("event_type")?.split(",") || undefined,
+      event_type: eventTypes.length > 0 ? eventTypes : undefined,
       start_date: url.searchParams.get("start_date") || undefined,
       end_date: url.searchParams.get("end_date") || undefined,
       cursor: url.searchParams.get("cursor") || undefined,
@@ -137,34 +150,164 @@ serve(async (req) => {
       );
     }
 
-    // Build timeline query
-    let query = supabaseClient
-      .from("dossier_timeline")
-      .select("*")
-      .eq("dossier_id", dossierId);
+    // Query all event sources in parallel
+    const [engagementsResult, calendarResult] = await Promise.all([
+      // 1. Engagements - uses single-language columns
+      supabaseClient
+        .from("engagements")
+        .select("id, title, description, engagement_date, engagement_type")
+        .eq("dossier_id", dossierId)
+        .not("engagement_date", "is", null),
+
+      // 2. Calendar Entries - has proper bilingual columns
+      supabaseClient
+        .from("calendar_entries")
+        .select("id, title_en, title_ar, description_en, description_ar, entry_type, event_date, location, status")
+        .eq("dossier_id", dossierId),
+    ]);
+
+    // Note: MoUs and Positions don't have direct dossier_id foreign keys
+    // They would need to be queried through position_dossier_links or country/organization relationships
+    const mousResult = { data: [], error: null };
+    const positionsResult = { data: [], error: null };
+
+    // Check for query errors
+    if (engagementsResult.error || calendarResult.error || mousResult.error || positionsResult.error) {
+      const errors = [
+        engagementsResult.error,
+        calendarResult.error,
+        mousResult.error,
+        positionsResult.error,
+      ].filter(Boolean);
+
+      console.error("Error fetching timeline events:", errors);
+      return new Response(
+        JSON.stringify({
+          error: {
+            code: "QUERY_ERROR",
+            message_en: "Failed to fetch timeline events",
+            message_ar: "فشل في جلب أحداث الجدول الزمني",
+            details: errors,
+          },
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    // Transform all sources to unified timeline event format
+    const allEvents = [
+      // Engagements - single language, so use same value for both en and ar
+      // Always use 'engagement' as event_type, store engagement_type in metadata
+      ...(engagementsResult.data || []).map((item: any) => ({
+        event_type: 'engagement',
+        event_title_en: item.title,
+        event_title_ar: item.title,
+        event_description_en: item.description,
+        event_description_ar: item.description,
+        event_date: item.engagement_date,
+        source_id: item.id,
+        source_table: 'engagements',
+        metadata: {
+          engagement_type: item.engagement_type,
+        },
+      })),
+
+      // Calendar Entries
+      ...(calendarResult.data || []).map((item: any) => ({
+        event_type: item.entry_type || 'calendar',
+        event_title_en: item.title_en,
+        event_title_ar: item.title_ar,
+        event_description_en: item.description_en,
+        event_description_ar: item.description_ar,
+        event_date: item.event_date,
+        source_id: item.id,
+        source_table: 'calendar_entries',
+        metadata: {
+          location: item.location,
+          status: item.status,
+        },
+      })),
+
+      // MoUs
+      ...(mousResult.data || []).map((item: any) => ({
+        event_type: 'mou',
+        event_title_en: item.title_en,
+        event_title_ar: item.title_ar,
+        event_description_en: item.description_en,
+        event_description_ar: item.description_ar,
+        event_date: item.signature_date,
+        source_id: item.id,
+        source_table: 'mous',
+        metadata: {
+          status: item.status,
+        },
+      })),
+
+      // Positions
+      ...(positionsResult.data || []).map((item: any) => ({
+        event_type: item.position_type || 'position',
+        event_title_en: item.title_en,
+        event_title_ar: item.title_ar,
+        event_description_en: item.description_en,
+        event_description_ar: item.description_ar,
+        event_date: item.position_date,
+        source_id: item.id,
+        source_table: 'positions',
+        metadata: {},
+      })),
+    ];
+
+    // Sort by date descending
+    allEvents.sort((a, b) => {
+      const dateA = new Date(a.event_date).getTime();
+      const dateB = new Date(b.event_date).getTime();
+      return dateB - dateA;
+    });
 
     // Apply filters
+    let filteredEvents = allEvents;
+
     if (params.event_type && params.event_type.length > 0) {
-      query = query.in("event_type", params.event_type);
-    }
-    if (params.start_date) {
-      query = query.gte("event_date", params.start_date);
-    }
-    if (params.end_date) {
-      query = query.lte("event_date", params.end_date);
+      filteredEvents = filteredEvents.filter((event) =>
+        params.event_type!.includes(event.event_type)
+      );
     }
 
-    // Cursor-based pagination
+    if (params.start_date) {
+      filteredEvents = filteredEvents.filter(
+        (event) => event.event_date >= params.start_date!
+      );
+    }
+
+    if (params.end_date) {
+      filteredEvents = filteredEvents.filter(
+        (event) => event.event_date <= params.end_date!
+      );
+    }
+
+    // Apply cursor-based pagination
     if (params.cursor) {
       try {
-        // Decode cursor: base64 encoded "event_date|event_type|source_id"
+        // Decode cursor: base64 encoded "event_date|event_type|source_table|source_id"
         const decoded = atob(params.cursor);
-        const [cursorDate, cursorType, cursorId] = decoded.split("|");
-        
-        // Apply cursor filter: get events after this cursor
-        query = query.or(
-          `and(event_date.lt.${cursorDate}),and(event_date.eq.${cursorDate},event_type.gt.${cursorType}),and(event_date.eq.${cursorDate},event_type.eq.${cursorType},source_id.gt.${cursorId})`
+        const [cursorDate, cursorType, cursorTable, cursorId] = decoded.split("|");
+
+        // Find the index of the cursor in the sorted array
+        const cursorIndex = filteredEvents.findIndex(
+          (event) =>
+            event.event_date === cursorDate &&
+            event.event_type === cursorType &&
+            event.source_table === cursorTable &&
+            event.source_id === cursorId
         );
+
+        // Get events after the cursor
+        if (cursorIndex !== -1) {
+          filteredEvents = filteredEvents.slice(cursorIndex + 1);
+        }
       } catch {
         return new Response(
           JSON.stringify({
@@ -182,44 +325,21 @@ serve(async (req) => {
       }
     }
 
-    // Order and limit (indexed for performance)
-    query = query
-      .order("event_date", { ascending: false })
-      .order("event_type", { ascending: false })
-      .order("source_id", { ascending: false })
-      .limit(params.limit);
-
-    // Execute query
-    const { data: events, error: queryError } = await query;
-
-    if (queryError) {
-      console.error("Error fetching timeline:", queryError);
-      return new Response(
-        JSON.stringify({
-          error: {
-            code: "QUERY_ERROR",
-            message_en: "Failed to fetch timeline events",
-            message_ar: "فشل في جلب أحداث الجدول الزمني",
-            details: queryError,
-          },
-        }),
-        {
-          status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
-    }
+    // Apply limit
+    const paginatedEvents = filteredEvents.slice(0, params.limit);
+    const transformedEvents = paginatedEvents;
 
     // Calculate next cursor
     let nextCursor: string | null = null;
-    if (events && events.length === params.limit) {
-      const lastEvent = events[events.length - 1];
-      const cursorValue = `${lastEvent.event_date}|${lastEvent.event_type}|${lastEvent.source_id}`;
+    if (filteredEvents.length > params.limit) {
+      // More events available beyond this page
+      const lastEvent = paginatedEvents[paginatedEvents.length - 1];
+      const cursorValue = `${lastEvent.event_date}|${lastEvent.event_type}|${lastEvent.source_table}|${lastEvent.source_id}`;
       nextCursor = btoa(cursorValue);
     }
 
     const response = {
-      data: events || [],
+      events: transformedEvents,
       pagination: {
         next_cursor: nextCursor,
         has_more: nextCursor !== null,

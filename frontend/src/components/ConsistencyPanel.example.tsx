@@ -44,8 +44,8 @@ const exampleConsistencyCheck = {
  */
 export function BasicExample() {
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Basic Consistency Panel</h2>
+    <div className="mx-auto max-w-4xl p-4">
+      <h2 className="mb-4 text-2xl font-bold">Basic Consistency Panel</h2>
       <ConsistencyPanel consistencyCheck={exampleConsistencyCheck} />
     </div>
   );
@@ -74,8 +74,8 @@ export function WithCallbacksExample() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Consistency Panel with Callbacks</h2>
+    <div className="mx-auto max-w-4xl p-4">
+      <h2 className="mb-4 text-2xl font-bold">Consistency Panel with Callbacks</h2>
       <ConsistencyPanel
         consistencyCheck={exampleConsistencyCheck}
         onResolveConflict={handleResolveConflict}
@@ -91,8 +91,8 @@ export function WithCallbacksExample() {
  */
 export function EmptyStateExample() {
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Empty State</h2>
+    <div className="mx-auto max-w-4xl p-4">
+      <h2 className="mb-4 text-2xl font-bold">Empty State</h2>
       <ConsistencyPanel consistencyCheck={null} />
     </div>
   );
@@ -110,8 +110,8 @@ export function NoConflictsExample() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">No Conflicts</h2>
+    <div className="mx-auto max-w-4xl p-4">
+      <h2 className="mb-4 text-2xl font-bold">No Conflicts</h2>
       <ConsistencyPanel consistencyCheck={cleanCheck} />
     </div>
   );
@@ -129,8 +129,8 @@ export function AIUnavailableExample() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">AI Service Unavailable</h2>
+    <div className="mx-auto max-w-4xl p-4">
+      <h2 className="mb-4 text-2xl font-bold">AI Service Unavailable</h2>
       <ConsistencyPanel consistencyCheck={checkWithoutAI} />
     </div>
   );
@@ -188,7 +188,7 @@ export function FullIntegrationExample() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-4">
+    <div className="mx-auto max-w-4xl space-y-4 p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Full Integration Example</h2>
         <Button onClick={runConsistencyCheck}>Run Consistency Check</Button>
@@ -241,8 +241,8 @@ export function SeverityLevelsExample() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4">
-      <h2 className="text-2xl font-bold mb-4">Different Severity Levels</h2>
+    <div className="mx-auto max-w-4xl p-4">
+      <h2 className="mb-4 text-2xl font-bold">Different Severity Levels</h2>
       <ConsistencyPanel consistencyCheck={severityCheck} />
     </div>
   );
@@ -267,7 +267,7 @@ export function LoadingStateExample() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-4 space-y-4">
+    <div className="mx-auto max-w-4xl space-y-4 p-4">
       <div className="flex items-center justify-between">
         <h2 className="text-2xl font-bold">Loading State</h2>
         <Button onClick={loadCheck} disabled={loading}>
@@ -275,7 +275,7 @@ export function LoadingStateExample() {
         </Button>
       </div>
       {loading ? (
-        <div className="text-center py-8">Loading consistency check...</div>
+        <div className="py-8 text-center">Loading consistency check...</div>
       ) : (
         <ConsistencyPanel consistencyCheck={consistencyCheck} loading={loading} />
       )}

@@ -56,8 +56,8 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
   return (
     <div className="space-y-4">
       <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
-        <h3 className="text-lg font-semibold flex items-center gap-2">
-          <ListTodo className="h-5 w-5" />
+        <h3 className="flex items-center gap-2 text-lg font-semibold">
+          <ListTodo className="size-5" />
           {t('afterActions.followUps.title')}
         </h3>
         {!readOnly && (
@@ -76,7 +76,7 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
         <Card key={index} className={cn(action.completed && 'opacity-60')}>
           <CardHeader>
             <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
-              <CardTitle className="text-base flex items-center gap-2">
+              <CardTitle className="flex items-center gap-2 text-base">
                 <Checkbox
                   checked={action.completed}
                   onCheckedChange={(checked) => updateFollowUp(index, 'completed', checked)}
@@ -91,7 +91,7 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
                   size="sm"
                   onClick={() => removeFollowUp(index)}
                 >
-                  <Trash2 className="h-4 w-4 text-destructive" />
+                  <Trash2 className="size-4 text-destructive" />
                 </Button>
               )}
             </div>
@@ -115,11 +115,11 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <Label htmlFor={`followup-assigned-${index}`}>
                   {t('afterActions.followUps.assignedTo')}
-                  <span className="text-xs text-muted-foreground ms-1">
+                  <span className="ms-1 text-xs text-muted-foreground">
                     {t('common.optional')}
                   </span>
                 </Label>
@@ -137,7 +137,7 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
               <div>
                 <Label>
                   {t('afterActions.followUps.targetDate')}
-                  <span className="text-xs text-muted-foreground ms-1">
+                  <span className="ms-1 text-xs text-muted-foreground">
                     {t('common.optional')}
                   </span>
                 </Label>

@@ -62,41 +62,41 @@ export class SearchErrorBoundary extends Component<Props, State> {
 
       // Default error UI (bilingual)
       return (
-        <div className="flex items-center justify-center min-h-[400px] p-8">
+        <div className="flex min-h-[400px] items-center justify-center p-8">
           <div className="max-w-md text-center">
             {/* Error icon */}
-            <div className="text-6xl mb-4">⚠️</div>
+            <div className="mb-4 text-6xl">⚠️</div>
 
             {/* Error title (English) */}
-            <h2 className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+            <h2 className="mb-2 text-xl font-semibold text-gray-900 dark:text-gray-100">
               Search Error
             </h2>
 
             {/* Error title (Arabic) */}
             <h2
-              className="text-xl font-semibold text-gray-900 dark:text-gray-100 mb-4"
+              className="mb-4 text-xl font-semibold text-gray-900 dark:text-gray-100"
               dir="rtl"
             >
               خطأ في البحث
             </h2>
 
             {/* Error description (English) */}
-            <p className="text-gray-600 dark:text-gray-400 mb-2">
+            <p className="mb-2 text-gray-600 dark:text-gray-400">
               Something went wrong while loading the search results.
             </p>
 
             {/* Error description (Arabic) */}
-            <p className="text-gray-600 dark:text-gray-400 mb-6" dir="rtl">
+            <p className="mb-6 text-gray-600 dark:text-gray-400" dir="rtl">
               حدث خطأ أثناء تحميل نتائج البحث.
             </p>
 
             {/* Error details (dev mode only) */}
             {process.env.NODE_ENV === 'development' && this.state.error && (
-              <details className="mb-6 text-start bg-gray-100 dark:bg-gray-800 p-4 rounded-lg">
-                <summary className="cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <details className="mb-6 rounded-lg bg-gray-100 p-4 text-start dark:bg-gray-800">
+                <summary className="mb-2 cursor-pointer text-sm font-medium text-gray-700 dark:text-gray-300">
                   Error Details (Dev Only)
                 </summary>
-                <pre className="text-xs text-red-600 dark:text-red-400 overflow-x-auto">
+                <pre className="overflow-x-auto text-xs text-red-600 dark:text-red-400">
                   {this.state.error.toString()}
                   {'\n\n'}
                   {this.state.error.stack}
@@ -105,11 +105,11 @@ export class SearchErrorBoundary extends Component<Props, State> {
             )}
 
             {/* Action buttons */}
-            <div className="flex flex-col sm:flex-row gap-3 justify-center">
+            <div className="flex flex-col justify-center gap-3 sm:flex-row">
               {/* Try again button */}
               <button
                 onClick={this.handleReset}
-                className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+                className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
               >
                 Try Again / حاول مرة أخرى
               </button>
@@ -117,14 +117,14 @@ export class SearchErrorBoundary extends Component<Props, State> {
               {/* Reload page button */}
               <button
                 onClick={() => window.location.reload()}
-                className="px-4 py-2 rounded-md bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-gray-100 hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+                className="rounded-md bg-gray-200 px-4 py-2 text-gray-900 transition-colors hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-100 dark:hover:bg-gray-600"
               >
                 Reload Page / إعادة تحميل الصفحة
               </button>
             </div>
 
             {/* Help text */}
-            <p className="text-sm text-gray-500 dark:text-gray-400 mt-6">
+            <p className="mt-6 text-sm text-gray-500 dark:text-gray-400">
               If the problem persists, please contact support.
               <br />
               إذا استمرت المشكلة، يرجى الاتصال بالدعم الفني.

@@ -1,0 +1,47 @@
+# Dependencies
+node_modules/
+**/node_modules/
+
+# Build output
+dist/
+build/
+out/
+**/dist/
+**/build/
+**/out/
+
+# Coverage reports
+coverage/
+**/coverage/
+.nyc_output/
+
+# Minified files
+*.min.js
+*.min.css
+
+# Generated files
+*.generated.ts
+*.generated.js
+database.types.ts
+**/database.types.ts
+
+# Vendor files
+vendor/
+**/vendor/
+
+# Test files (optional - remove if you want to lint tests)
+# **/*.test.ts
+# **/*.test.tsx
+# **/*.spec.ts
+# **/*.spec.tsx
+
+# Config files
+.pnp.*
+.yarn/*
+
+# Logs
+*.log
+
+# Temporary files
+*.tmp
+*.temp

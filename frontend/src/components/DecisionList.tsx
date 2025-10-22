@@ -62,7 +62,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
         <h3 className="text-lg font-semibold">{t('afterActions.decisions.title')}</h3>
         {!readOnly && (
           <Button type="button" variant="outline" size="sm" onClick={addDecision}>
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('afterActions.decisions.add')}
           </Button>
         )}
@@ -94,7 +94,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                     size="sm"
                     onClick={() => removeDecision(index)}
                   >
-                    <Trash2 className="h-4 w-4 text-destructive" />
+                    <Trash2 className="size-4 text-destructive" />
                   </Button>
                 )}
               </div>
@@ -116,7 +116,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                 dir={isRTL ? 'rtl' : 'ltr'}
                 required
               />
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {decision.description.length}/2000
               </p>
             </div>
@@ -136,7 +136,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <Label htmlFor={`decision-maker-${index}`}>
                   {t('afterActions.decisions.decisionMaker')} *
@@ -165,7 +165,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
                       )}
                       disabled={readOnly}
                     >
-                      <CalendarIcon className="h-4 w-4 opacity-50 me-2" />
+                      <CalendarIcon className="me-2 size-4 opacity-50" />
                       {decision.decision_date
                         ? format(decision.decision_date, 'PPP')
                         : t('common.selectDate')}

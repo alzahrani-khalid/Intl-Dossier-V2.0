@@ -7,7 +7,7 @@
  */
 
 import { createClient } from '@supabase/supabase-js';
-import { logger } from '../utils/logger';
+import logger from '../utils/logger';
 
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;

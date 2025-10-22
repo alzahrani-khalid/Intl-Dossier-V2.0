@@ -88,10 +88,10 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
 
   // Loading skeleton
   const LoadingSkeleton = () => (
-    <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
       {Array.from({ length: 6 }).map((_, i) => (
         <Card key={i}>
-          <CardContent className="p-6 space-y-3">
+          <CardContent className="space-y-3 p-6">
             <Skeleton className="h-6 w-3/4" />
             <Skeleton className="h-4 w-full" />
             <Skeleton className="h-4 w-5/6" />
@@ -109,9 +109,9 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
   const EmptyState = () => (
     <Card>
       <CardContent className="flex flex-col items-center justify-center py-12">
-        <FileText className="h-16 w-16 text-muted-foreground mb-4" />
-        <h3 className="text-lg font-semibold mb-2">{t('list.empty')}</h3>
-        <p className="text-sm text-muted-foreground text-center max-w-md">
+        <FileText className="mb-4 size-16 text-muted-foreground" />
+        <h3 className="mb-2 text-lg font-semibold">{t('list.empty')}</h3>
+        <p className="max-w-md text-center text-sm text-muted-foreground">
           {t('list.emptyDescription')}
         </p>
       </CardContent>
@@ -122,9 +122,9 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
   const ErrorState = () => (
     <Card>
       <CardContent className="flex flex-col items-center justify-center py-12">
-        <AlertCircle className="h-16 w-16 text-destructive mb-4" />
-        <h3 className="text-lg font-semibold mb-2">{t('list.error')}</h3>
-        <p className="text-sm text-muted-foreground text-center max-w-md mb-4">
+        <AlertCircle className="mb-4 size-16 text-destructive" />
+        <h3 className="mb-2 text-lg font-semibold">{t('list.error')}</h3>
+        <p className="mb-4 max-w-md text-center text-sm text-muted-foreground">
           {t('list.errorDescription')}
         </p>
         <Button onClick={() => window.location.reload()} variant="outline">
@@ -156,7 +156,7 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
       {!isLoading && !isError && positions.length === 0 && <EmptyState />}
 
       {!isLoading && !isError && positions.length > 0 && (
-        <div className="grid gap-4 grid-cols-1 lg:grid-cols-2 xl:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2 xl:grid-cols-3">
           {positions.map((position) => (
             <PositionCard key={position.id} position={position} />
           ))}
@@ -168,7 +168,7 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
         <div ref={observerTarget} className="flex items-center justify-center py-8">
           {isFetchingNextPage && (
             <div className="flex items-center gap-2 text-muted-foreground">
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Loader2 className="size-5 animate-spin" />
               <span className="text-sm">{t('list.loadingMore')}</span>
             </div>
           )}
@@ -177,7 +177,7 @@ export function PositionList({ filters = {}, onFilterChange }: PositionListProps
 
       {/* No More Results */}
       {!hasNextPage && positions.length > 0 && (
-        <div className="text-center py-8">
+        <div className="py-8 text-center">
           <p className="text-sm text-muted-foreground">{t('list.noMoreResults')}</p>
         </div>
       )}

@@ -178,7 +178,7 @@ export function QuickSwitcher() {
         setOpen(false);
       }
     },
-    [searchQuery, results, recentItems, selectedIndex]
+    [searchQuery, results, recentItems, selectedIndex, handleSelectResult]
   );
 
   // Handle result selection
@@ -214,12 +214,12 @@ export function QuickSwitcher() {
       {/* Trigger button (optional - can be placed in navbar) */}
       <button
         onClick={() => setOpen(true)}
-        className="hidden sm:flex items-center gap-2 px-3 py-1.5 rounded-md border border-gray-300 dark:border-gray-700 text-sm text-gray-600 dark:text-gray-400 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+        className="hidden items-center gap-2 rounded-md border border-gray-300 px-3 py-1.5 text-sm text-gray-600 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-800 sm:flex"
         aria-label={t('quickswitcher.open')}
       >
-        <Search className="h-4 w-4" />
+        <Search className="size-4" />
         <span className="hidden md:inline">{t('quickswitcher.search')}</span>
-        <kbd className="hidden md:inline-flex items-center gap-1 px-1.5 py-0.5 text-xs font-mono bg-gray-100 dark:bg-gray-800 rounded">
+        <kbd className="hidden items-center gap-1 rounded bg-gray-100 px-1.5 py-0.5 font-mono text-xs dark:bg-gray-800 md:inline-flex">
           {navigator.platform.includes('Mac') ? '⌘' : 'Ctrl'}K
         </kbd>
       </button>
@@ -227,22 +227,22 @@ export function QuickSwitcher() {
       {/* Quick Switcher Modal */}
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogContent
-          className="sm:max-w-2xl p-0 gap-0 max-h-[80vh] flex flex-col"
+          className="flex max-h-[80vh] flex-col gap-0 p-0 sm:max-w-2xl"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
-          <DialogHeader className="px-4 pt-4 pb-0">
+          <DialogHeader className="px-4 pb-0 pt-4">
             <DialogTitle className="sr-only">
               {t('quickswitcher.title')}
             </DialogTitle>
           </DialogHeader>
 
           {/* Search Input */}
-          <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
+          <div className="border-b border-gray-200 px-4 py-3 dark:border-gray-700">
             <div className="relative">
               <Search
                 className={`absolute top-1/2 -translate-y-1/2 ${
-                  isRTL ? 'right-3' : 'left-3'
-                } h-4 w-4 text-gray-400`}
+                  isRTL ? 'end-3' : 'start-3'
+                } size-4 text-gray-400`}
               />
               <Input
                 ref={inputRef}
@@ -273,12 +273,12 @@ export function QuickSwitcher() {
               <div className="flex flex-col items-center justify-center py-12 text-sm text-gray-500 dark:text-gray-400">
                 {searchQuery ? (
                   <>
-                    <Search className="h-8 w-8 mb-2 opacity-50" />
+                    <Search className="mb-2 size-8 opacity-50" />
                     <p>{t('quickswitcher.no_results')}</p>
                   </>
                 ) : (
                   <>
-                    <Clock className="h-8 w-8 mb-2 opacity-50" />
+                    <Clock className="mb-2 size-8 opacity-50" />
                     <p>{t('quickswitcher.no_recent')}</p>
                   </>
                 )}
@@ -288,7 +288,7 @@ export function QuickSwitcher() {
                 {/* Recent items header */}
                 {!searchQuery && recentItems.length > 0 && (
                   <div className="px-2 py-1 text-xs font-medium text-gray-500 dark:text-gray-400">
-                    <Clock className="inline h-3 w-3 me-1" />
+                    <Clock className="me-1 inline size-3" />
                     {t('quickswitcher.recent')}
                   </div>
                 )}
@@ -302,7 +302,7 @@ export function QuickSwitcher() {
                             ? entityLabels.ar[type as keyof typeof entityLabels.ar]
                             : entityLabels.en[type as keyof typeof entityLabels.en]}
                         </div>
-                        {items.map((result, idx) => {
+                        {items.map((result) => {
                           const globalIndex = results.indexOf(result);
                           const Icon =
                             entityIcons[result.entityType as keyof typeof entityIcons];
@@ -310,19 +310,19 @@ export function QuickSwitcher() {
                             <button
                               key={result.id}
                               onClick={() => handleSelectResult(result)}
-                              className={`w-full px-3 py-2 rounded-md text-start flex items-center gap-3 transition-colors ${
+                              className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-start transition-colors ${
                                 globalIndex === selectedIndex
                                   ? 'bg-blue-50 dark:bg-blue-900/20'
                                   : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                               }`}
                             >
-                              <Icon className="h-4 w-4 flex-shrink-0 text-gray-400" />
-                              <div className="flex-1 min-w-0">
-                                <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                              <Icon className="size-4 shrink-0 text-gray-400" />
+                              <div className="min-w-0 flex-1">
+                                <div className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
                                   {isRTL ? result.title_ar : result.title_en}
                                 </div>
                                 {result.relationshipContext && (
-                                  <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                                  <div className="truncate text-xs text-gray-500 dark:text-gray-400">
                                     {isRTL ? 'من: ' : 'from '}
                                     {isRTL
                                       ? result.relationshipContext.parent_dossier_name_ar
@@ -335,26 +335,26 @@ export function QuickSwitcher() {
                         })}
                       </div>
                     ))
-                  : displayedResults.map((result, idx) => {
+                  : displayedResults.map((result) => {
                       const Icon =
                         entityIcons[result.entityType as keyof typeof entityIcons];
                       return (
                         <button
                           key={result.id}
                           onClick={() => handleSelectResult(result)}
-                          className={`w-full px-3 py-2 rounded-md text-start flex items-center gap-3 transition-colors ${
+                          className={`flex w-full items-center gap-3 rounded-md px-3 py-2 text-start transition-colors ${
                             idx === selectedIndex
                               ? 'bg-blue-50 dark:bg-blue-900/20'
                               : 'hover:bg-gray-50 dark:hover:bg-gray-800'
                           }`}
                         >
-                          <Icon className="h-4 w-4 flex-shrink-0 text-gray-400" />
-                          <div className="flex-1 min-w-0">
-                            <div className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+                          <Icon className="size-4 shrink-0 text-gray-400" />
+                          <div className="min-w-0 flex-1">
+                            <div className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
                               {isRTL ? result.title_ar : result.title_en}
                             </div>
                             {result.relationshipContext && (
-                              <div className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                              <div className="truncate text-xs text-gray-500 dark:text-gray-400">
                                 {isRTL ? 'من: ' : 'from '}
                                 {isRTL
                                   ? result.relationshipContext.parent_dossier_name_ar
@@ -375,24 +375,24 @@ export function QuickSwitcher() {
           </ScrollArea>
 
           {/* Footer with keyboard hints */}
-          <div className="px-4 py-2 border-t border-gray-200 dark:border-gray-700">
+          <div className="border-t border-gray-200 px-4 py-2 dark:border-gray-700">
             <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
               <div className="flex items-center gap-4">
                 <span>
-                  <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded font-mono">
+                  <kbd className="rounded bg-gray-100 px-1.5 py-0.5 font-mono dark:bg-gray-800">
                     ↑↓
                   </kbd>{' '}
                   {t('quickswitcher.navigate')}
                 </span>
                 <span>
-                  <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded font-mono">
+                  <kbd className="rounded bg-gray-100 px-1.5 py-0.5 font-mono dark:bg-gray-800">
                     ↵
                   </kbd>{' '}
                   {t('quickswitcher.select')}
                 </span>
               </div>
               <span>
-                <kbd className="px-1.5 py-0.5 bg-gray-100 dark:bg-gray-800 rounded font-mono">
+                <kbd className="rounded bg-gray-100 px-1.5 py-0.5 font-mono dark:bg-gray-800">
                   esc
                 </kbd>{' '}
                 {t('quickswitcher.close')}

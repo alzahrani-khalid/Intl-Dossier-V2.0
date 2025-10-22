@@ -50,7 +50,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
   if (!editor) return null;
 
   return (
-    <div className="border-b border-gray-200 p-2 flex flex-wrap gap-1" role="toolbar" aria-label={t('positions.editor.toolbar')}>
+    <div className="flex flex-wrap gap-1 border-b border-gray-200 p-2" role="toolbar" aria-label={t('editor.toolbar')}>
       <Button
         type="button"
         variant="ghost"
@@ -58,7 +58,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         onClick={() => editor.chain().focus().toggleBold().run()}
         disabled={disabled || !editor.can().chain().focus().toggleBold().run()}
         className={cn(editor.isActive('bold') && 'bg-gray-100')}
-        aria-label={t('positions.editor.bold')}
+        aria-label={t('editor.bold')}
         aria-pressed={editor.isActive('bold')}
       >
         <strong>B</strong>
@@ -70,7 +70,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         onClick={() => editor.chain().focus().toggleItalic().run()}
         disabled={disabled || !editor.can().chain().focus().toggleItalic().run()}
         className={cn(editor.isActive('italic') && 'bg-gray-100')}
-        aria-label={t('positions.editor.italic')}
+        aria-label={t('editor.italic')}
         aria-pressed={editor.isActive('italic')}
       >
         <em>I</em>
@@ -83,7 +83,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
         disabled={disabled}
         className={cn(editor.isActive('heading', { level: 2 }) && 'bg-gray-100')}
-        aria-label={t('positions.editor.heading2')}
+        aria-label={t('editor.heading2')}
         aria-pressed={editor.isActive('heading', { level: 2 })}
       >
         H2
@@ -95,7 +95,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
         disabled={disabled}
         className={cn(editor.isActive('heading', { level: 3 }) && 'bg-gray-100')}
-        aria-label={t('positions.editor.heading3')}
+        aria-label={t('editor.heading3')}
         aria-pressed={editor.isActive('heading', { level: 3 })}
       >
         H3
@@ -108,7 +108,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         onClick={() => editor.chain().focus().toggleBulletList().run()}
         disabled={disabled}
         className={cn(editor.isActive('bulletList') && 'bg-gray-100')}
-        aria-label={t('positions.editor.bulletList')}
+        aria-label={t('editor.bulletList')}
         aria-pressed={editor.isActive('bulletList')}
       >
         •
@@ -120,7 +120,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         onClick={() => editor.chain().focus().toggleOrderedList().run()}
         disabled={disabled}
         className={cn(editor.isActive('orderedList') && 'bg-gray-100')}
-        aria-label={t('positions.editor.orderedList')}
+        aria-label={t('editor.orderedList')}
         aria-pressed={editor.isActive('orderedList')}
       >
         1.
@@ -133,7 +133,7 @@ function EditorMenuBar({ editor, disabled = false }: EditorMenuBarProps) {
         onClick={() => editor.chain().focus().toggleBlockquote().run()}
         disabled={disabled}
         className={cn(editor.isActive('blockquote') && 'bg-gray-100')}
-        aria-label={t('positions.editor.quote')}
+        aria-label={t('editor.quote')}
         aria-pressed={editor.isActive('blockquote')}
       >
         &quot;
@@ -191,7 +191,7 @@ export function PositionEditor({
         link: false,
       }),
       Placeholder.configure({
-        placeholder: t('positions.editor.placeholderEn'),
+        placeholder: t('editor.placeholderEn'),
       }),
       Link.configure({
         openOnClick: false,
@@ -217,7 +217,7 @@ export function PositionEditor({
         link: false,
       }),
       Placeholder.configure({
-        placeholder: t('positions.editor.placeholderAr'),
+        placeholder: t('editor.placeholderAr'),
       }),
       Link.configure({
         openOnClick: false,
@@ -266,7 +266,7 @@ export function PositionEditor({
           onConflict(formData.version, serverVersion);
         }
       } else {
-        setError(err.message || t('positions.editor.autoSaveError'));
+        setError(err.message || t('editor.autoSaveError'));
       }
     } finally {
       setAutoSaving(false);
@@ -293,7 +293,7 @@ export function PositionEditor({
           onConflict(formData.version, serverVersion);
         }
       } else {
-        setError(err.message || t('positions.editor.saveError'));
+        setError(err.message || t('editor.saveError'));
       }
     } finally {
       setSaving(false);
@@ -357,19 +357,19 @@ export function PositionEditor({
         <div className="flex items-center gap-2">
           {autoSaving && (
             <Badge variant="outline" className="gap-1">
-              <Loader2 className="h-3 w-3 animate-spin" />
-              {t('positions.editor.autoSaving')}
+              <Loader2 className="size-3 animate-spin" />
+              {t('editor.autoSaving')}
             </Badge>
           )}
           {!autoSaving && lastSaved && (
             <Badge variant="outline">
-              {t('positions.editor.lastSaved', { time: lastSaved.toLocaleTimeString() })}
+              {t('editor.lastSaved', { time: lastSaved.toLocaleTimeString() })}
             </Badge>
           )}
           {isDirty && !autoSaving && (
             <Badge variant="outline" className="gap-1">
-              <AlertCircle className="h-3 w-3" />
-              {t('positions.editor.unsavedChanges')}
+              <AlertCircle className="size-3" />
+              {t('editor.unsavedChanges')}
             </Badge>
           )}
         </div>
@@ -377,10 +377,10 @@ export function PositionEditor({
           onClick={handleManualSave}
           disabled={saving || !isDirty || readOnly}
           className="gap-2"
-          aria-label={t('positions.editor.save')}
+          aria-label={t('editor.save')}
         >
-          {saving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Save className="h-4 w-4" />}
-          {t('positions.editor.save')}
+          {saving ? <Loader2 className="size-4 animate-spin" /> : <Save className="size-4" />}
+          {t('editor.save')}
         </Button>
       </div>
 
@@ -389,7 +389,7 @@ export function PositionEditor({
         <Card className="border-red-200 bg-red-50">
           <CardContent className="pt-4">
             <div className="flex items-center gap-2 text-red-800">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <span>{error}</span>
             </div>
           </CardContent>
@@ -397,17 +397,17 @@ export function PositionEditor({
       )}
 
       {/* Bilingual side-by-side editor */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {/* English Editor */}
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium">
-              {t('positions.editor.englishContent')}
+              {t('editor.englishContent')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <div>
-              <Label htmlFor="title_en">{t('positions.editor.title')}</Label>
+              <Label htmlFor="title_en">{t('editor.title')}</Label>
               <input
                 id="title_en"
                 type="text"
@@ -422,13 +422,13 @@ export function PositionEditor({
                   'w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500',
                   readOnly && 'bg-gray-100 cursor-not-allowed'
                 )}
-                aria-label={t('positions.editor.titleEnglish')}
+                aria-label={t('editor.titleEnglish')}
               />
             </div>
             <div>
-              <Label>{t('positions.editor.content')}</Label>
+              <Label>{t('editor.content')}</Label>
               <div
-                className="border border-gray-300 rounded-md overflow-hidden"
+                className="overflow-hidden rounded-md border border-gray-300"
                 dir="ltr"
               >
                 <EditorMenuBar editor={editorEn} disabled={readOnly} />
@@ -440,7 +440,7 @@ export function PositionEditor({
                   <EditorContent
                     editor={editorEn}
                     className="prose prose-sm max-w-none p-4 focus:outline-none"
-                    aria-label={t('positions.editor.contentEnglish')}
+                    aria-label={t('editor.contentEnglish')}
                   />
                 </div>
               </div>
@@ -452,12 +452,12 @@ export function PositionEditor({
         <Card>
           <CardHeader>
             <CardTitle className="text-sm font-medium">
-              {t('positions.editor.arabicContent')}
+              {t('editor.arabicContent')}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
             <div>
-              <Label htmlFor="title_ar">{t('positions.editor.title')}</Label>
+              <Label htmlFor="title_ar">{t('editor.title')}</Label>
               <input
                 id="title_ar"
                 type="text"
@@ -473,13 +473,13 @@ export function PositionEditor({
                   readOnly && 'bg-gray-100 cursor-not-allowed'
                 )}
                 dir="rtl"
-                aria-label={t('positions.editor.titleArabic')}
+                aria-label={t('editor.titleArabic')}
               />
             </div>
             <div>
-              <Label>{t('positions.editor.content')}</Label>
+              <Label>{t('editor.content')}</Label>
               <div
-                className="border border-gray-300 rounded-md overflow-hidden"
+                className="overflow-hidden rounded-md border border-gray-300"
                 dir="rtl"
               >
                 <EditorMenuBar editor={editorAr} disabled={readOnly} />
@@ -491,7 +491,7 @@ export function PositionEditor({
                   <EditorContent
                     editor={editorAr}
                     className="prose prose-sm max-w-none p-4 focus:outline-none"
-                    aria-label={t('positions.editor.contentArabic')}
+                    aria-label={t('editor.contentArabic')}
                   />
                 </div>
               </div>
@@ -505,7 +505,7 @@ export function PositionEditor({
         <Card className="mt-6">
           <CardHeader>
             <CardTitle className="text-sm font-medium">
-              {t('positions.editor.linkedDossiers')}
+              {t('editor.linkedDossiers')}
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -519,11 +519,11 @@ export function PositionEditor({
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <AlertCircle className="h-5 w-5 text-red-600" />
-              {t('positions.editor.conflictTitle')}
+              <AlertCircle className="size-5 text-red-600" />
+              {t('editor.conflictTitle')}
             </DialogTitle>
             <DialogDescription>
-              {t('positions.editor.conflictDescription', {
+              {t('editor.conflictDescription', {
                 current: conflictVersions?.current,
                 server: conflictVersions?.server,
               })}
@@ -534,8 +534,8 @@ export function PositionEditor({
               {t('common.cancel')}
             </Button>
             <Button onClick={handleConflictReload} className="gap-2">
-              <RefreshCw className="h-4 w-4" />
-              {t('positions.editor.reloadPage')}
+              <RefreshCw className="size-4" />
+              {t('editor.reloadPage')}
             </Button>
           </DialogFooter>
         </DialogContent>

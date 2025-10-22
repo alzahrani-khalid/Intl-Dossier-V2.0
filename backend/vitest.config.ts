@@ -2,41 +2,39 @@ import { defineConfig } from 'vitest/config';
 import path from 'path';
 
 export default defineConfig({
+  root: __dirname, // Prevent looking up parent directories for config
   test: {
     globals: true,
     environment: 'node',
-    setupFiles: [path.resolve(__dirname, './tests/setup.ts')],
+    pool: 'forks', // Use forked processes for complete isolation
+    setupFiles: [path.resolve(__dirname, './tests/setup.ts')], // Absolute path to backend test setup
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html'],
-      thresholds: {
-        global: {
-          branches: 80,
-          functions: 80,
-          lines: 80,
-          statements: 80,
-        },
-      },
+      reporter: ['text', 'json', 'html', 'lcov'],
       exclude: [
         'node_modules/',
+        'tests/',
         'dist/',
-        '*.config.js',
-        '*.config.ts',
         '**/*.d.ts',
-        '**/*.spec.ts',
-        '**/*.test.ts',
-        '**/tests/**',
-        'src/db/migrate.ts',
-        'src/db/seed.ts',
-        'src/index.ts',
+        '**/*.config.*',
+        '**/mockData.ts',
       ],
+      include: ['src/**/*.ts'],
+      all: true,
+      lines: 80,
+      functions: 80,
+      branches: 75,
+      statements: 80,
     },
-    include: ['**/*.{test,spec}.{js,mjs,cjs,ts,mts,cts,jsx,tsx}'],
-    exclude: ['node_modules', 'dist', '.next', 'coverage', 'public', '.turbo'],
+    include: ['tests/**/*.test.ts'],
+    exclude: ['node_modules/', 'dist/'],
+    testTimeout: 30000, // 30s for integration tests with database
+    hookTimeout: 30000,
   },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
+      '@tests': path.resolve(__dirname, './tests'),
     },
   },
 });

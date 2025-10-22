@@ -116,8 +116,8 @@ export function GlobalSearchInput({
   return (
     <div className={`relative w-full ${className}`} dir={direction}>
       {/* Search Icon */}
-      <div className={`absolute top-1/2 -translate-y-1/2 ${direction === 'rtl' ? 'right-3' : 'left-3'} text-muted-foreground pointer-events-none`}>
-        <Search className="h-4 w-4" />
+      <div className={`absolute top-1/2 -translate-y-1/2 ${direction === 'rtl' ? 'right-3' : 'left-3'} pointer-events-none text-muted-foreground`}>
+        <Search className="size-4" />
       </div>
 
       {/* Search Input */}
@@ -130,7 +130,7 @@ export function GlobalSearchInput({
         onFocus={onFocus}
         onBlur={onBlur}
         placeholder={placeholderText}
-        className={`w-full ${direction === 'rtl' ? 'pe-10 ps-20' : 'ps-10 pe-20'}`}
+        className={`w-full ${direction === 'rtl' ? 'pe-10 ps-20' : 'pe-20 ps-10'}`}
         dir="auto" // Auto-detect text direction
         autoFocus={autoFocus}
         autoComplete="off"
@@ -150,7 +150,7 @@ export function GlobalSearchInput({
         {/* Loading Indicator */}
         {isLoading && (
           <div className="me-1" aria-label={t('search.loading', 'Loading...')}>
-            <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+            <Loader2 className="size-4 animate-spin text-muted-foreground" />
           </div>
         )}
 
@@ -161,16 +161,16 @@ export function GlobalSearchInput({
             variant="ghost"
             size="sm"
             onClick={handleClear}
-            className="h-7 w-7 p-0 hover:bg-muted"
+            className="size-7 p-0 hover:bg-muted"
             aria-label={t('search.clear', 'Clear search')}
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         )}
 
         {/* Keyboard Shortcut Hint */}
         {!localValue && !isLoading && (
-          <div className="hidden sm:flex items-center gap-1 px-2 py-1 text-xs text-muted-foreground bg-muted rounded">
+          <div className="hidden items-center gap-1 rounded bg-muted px-2 py-1 text-xs text-muted-foreground sm:flex">
             <kbd className="font-mono">/</kbd>
           </div>
         )}

@@ -26,7 +26,7 @@ interface RateLimitPolicy {
 }
 
 // Cache for rate limit policies (5 minute TTL)
-let policyCache: Map<string, RateLimitPolicy[]> = new Map();
+const policyCache: Map<string, RateLimitPolicy[]> = new Map();
 let cacheExpiry = 0;
 
 // Function to get rate limit policies from database

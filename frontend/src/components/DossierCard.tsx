@@ -75,10 +75,10 @@ export function DossierCard({ dossier }: DossierCardProps) {
     >
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-lg font-semibold line-clamp-2">
+          <CardTitle className="line-clamp-2 text-lg font-semibold">
             {name}
           </CardTitle>
-          <div className="flex gap-1 flex-shrink-0">
+          <div className="flex shrink-0 gap-1">
             <Badge
               variant={getSensitivityVariant(dossier.sensitivity_level)}
               className="whitespace-nowrap"
@@ -92,7 +92,7 @@ export function DossierCard({ dossier }: DossierCardProps) {
       <CardContent>
         <div className="space-y-3">
           {/* Type and Status */}
-          <div className="flex gap-2 flex-wrap">
+          <div className="flex flex-wrap gap-2">
             <Badge
               className={getTypeBadgeClass(dossier.type)}
               aria-label={`${t('fields.type')}: ${t(`types.${dossier.type}`)}`}
@@ -109,14 +109,14 @@ export function DossierCard({ dossier }: DossierCardProps) {
 
           {/* Summary Preview */}
           {summaryPreview && (
-            <p className="text-sm text-muted-foreground line-clamp-2">
+            <p className="line-clamp-2 text-sm text-muted-foreground">
               {summaryPreview}
             </p>
           )}
 
           {/* Tags */}
           {dossier.tags && dossier.tags.length > 0 && (
-            <div className="flex gap-1 flex-wrap">
+            <div className="flex flex-wrap gap-1">
               {dossier.tags.slice(0, 3).map((tag, index) => (
                 <Badge
                   key={index}
@@ -136,8 +136,8 @@ export function DossierCard({ dossier }: DossierCardProps) {
           )}
 
           {/* Metadata */}
-          <div className="text-xs text-muted-foreground pt-2 border-t">
-            <div className="flex justify-between items-center">
+          <div className="border-t pt-2 text-xs text-muted-foreground">
+            <div className="flex items-center justify-between">
               <span>
                 {t('fields.version')}: {dossier.version}
               </span>

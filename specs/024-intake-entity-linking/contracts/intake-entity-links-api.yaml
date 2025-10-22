@@ -1,0 +1,979 @@
+openapi: 3.1.0
+info:
+  title: Intake Entity Linking API
+  description: |
+    REST API for creating, managing, and discovering polymorphic entity links for intake tickets.
+    Supports 11 entity types with 5 link types, AI-powered suggestions, and comprehensive audit trails.
+  version: 1.0.0
+  contact:
+    name: GASTAT Development Team
+    email: dev@stats.gov.sa
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+    description: Staging environment (Supabase Edge Functions)
+  - url: http://localhost:54321/functions/v1
+    description: Local development
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Links
+    description: Create, read, update, delete entity links
+  - name: AI Suggestions
+    description: Generate and accept AI-powered link suggestions
+  - name: Search
+    description: Search entities and reverse lookup
+
+paths:
+  /api/intake/{intake_id}/links:
+    get:
+      tags: [Links]
+      summary: Get all links for an intake ticket
+      description: |
+        Returns all active (non-deleted) entity links for the specified intake ticket.
+        Results can be filtered by link type and are automatically filtered by user's clearance level.
+      operationId: getEntityLinks
+      parameters:
+        - name: intake_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: UUID of the intake ticket
+        - name: link_type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [primary, related, requested, mentioned, assigned_to]
+          description: Filter links by type
+        - name: entity_type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [dossier, position, mou, engagement, assignment, commitment, intelligence_signal, organization, country, forum, working_group, topic]
+          description: Filter links by entity type
+      responses:
+        '200':
+          description: Successfully retrieved links
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntityLink'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        example: 5
+                      by_type:
+                        type: object
+                        additionalProperties:
+                          type: integer
+                        example:
+                          primary: 1
+                          related: 3
+                          requested: 1
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags: [Links]
+      summary: Create a new entity link
+      description: |
+        Creates a new link between the intake ticket and an entity.
+        Validates:
+        - Entity exists and is not archived
+        - User has sufficient clearance
+        - Link type constraints (e.g., only 1 primary link per intake)
+        - Organization boundaries
+      operationId: createEntityLink
+      parameters:
+        - name: intake_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateLinkRequest'
+      responses:
+        '201':
+          description: Link created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    $ref: '#/components/schemas/EntityLink'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          description: Conflict - link constraint violated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                primary_exists:
+                  summary: Primary link already exists
+                  value:
+                    success: false
+                    error:
+                      code: LINK_CONSTRAINT_VIOLATION
+                      message: This intake already has a primary link. Only one primary link is allowed per intake.
+                      details:
+                        existing_link_id: '550e8400-e29b-41d4-a716-446655440000'
+                        constraint: 'unique_primary_link'
+
+  /api/intake/{intake_id}/links/batch:
+    post:
+      tags: [Links]
+      summary: Create multiple entity links in one operation
+      description: |
+        Creates up to 50 entity links in a single batch operation.
+        Returns both successful creations and detailed errors for failures.
+        Target performance: <500ms for 50 links (SC-003).
+      operationId: createEntityLinksBatch
+      parameters:
+        - name: intake_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                links:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/CreateLinkRequest'
+                  minItems: 1
+                  maxItems: 50
+              required: [links]
+      responses:
+        '201':
+          description: Batch operation completed (may include partial failures)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      succeeded:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/EntityLink'
+                      failed:
+                        type: array
+                        items:
+                          type: object
+                          properties:
+                            index:
+                              type: integer
+                              description: Index in the original request array
+                            entity_type:
+                              type: string
+                            entity_id:
+                              type: string
+                              format: uuid
+                            error:
+                              $ref: '#/components/schemas/ErrorDetail'
+                  meta:
+                    type: object
+                    properties:
+                      total_requested:
+                        type: integer
+                        example: 10
+                      succeeded_count:
+                        type: integer
+                        example: 8
+                      failed_count:
+                        type: integer
+                        example: 2
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/intake/{intake_id}/links/{link_id}:
+    delete:
+      tags: [Links]
+      summary: Soft-delete an entity link
+      description: |
+        Marks a link as deleted by setting deleted_at timestamp.
+        Link remains in database for audit purposes (7-year retention).
+        Users can only delete links they created, or users with steward+ role can delete any link.
+      operationId: deleteEntityLink
+      parameters:
+        - name: intake_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: link_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Link soft-deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    properties:
+                      link_id:
+                        type: string
+                        format: uuid
+                      deleted_at:
+                        type: string
+                        format: date-time
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+    put:
+      tags: [Links]
+      summary: Update link metadata
+      description: |
+        Updates editable fields: notes, link_order.
+        Link type, entity_type, entity_id are immutable (delete and recreate instead).
+      operationId: updateEntityLink
+      parameters:
+        - name: intake_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: link_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                notes:
+                  type: string
+                  maxLength: 1000
+                  nullable: true
+                link_order:
+                  type: integer
+                  minimum: 0
+              minProperties: 1
+      responses:
+        '200':
+          description: Link updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/EntityLink'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/intake/{intake_id}/links/{link_id}/restore:
+    post:
+      tags: [Links]
+      summary: Restore a soft-deleted link
+      description: |
+        Clears the deleted_at timestamp, making the link active again.
+        Only users with steward+ role can restore links.
+      operationId: restoreEntityLink
+      parameters:
+        - name: intake_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: link_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Link restored successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/EntityLink'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /api/intake/{intake_id}/links/reorder:
+    put:
+      tags: [Links]
+      summary: Reorder entity links
+      description: |
+        Updates link_order values for multiple links.
+        Used by drag-and-drop UI. Typically debounced (500ms) client-side.
+      operationId: reorderEntityLinks
+      parameters:
+        - name: intake_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                link_orders:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      link_id:
+                        type: string
+                        format: uuid
+                      link_order:
+                        type: integer
+                        minimum: 0
+                    required: [link_id, link_order]
+                  minItems: 2
+              required: [link_orders]
+      responses:
+        '200':
+          description: Links reordered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      updated_count:
+                        type: integer
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/intake/{intake_id}/links/suggestions:
+    post:
+      tags: [AI Suggestions]
+      summary: Generate AI-powered link suggestions
+      description: |
+        Analyzes intake ticket text using AnythingLLM and returns 3-5 entity suggestions
+        with confidence scores and reasoning. Suggestions are filtered by user's clearance
+        level and organization boundaries.
+
+        Performance target: <3 seconds (SC-002).
+
+        Graceful degradation: If AI service is unavailable, returns error with
+        success=false and allows user to proceed with manual linking.
+      operationId: generateLinkSuggestions
+      parameters:
+        - name: intake_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: force_refresh
+          in: query
+          required: false
+          schema:
+            type: boolean
+            default: false
+          description: Regenerate suggestions even if cached
+      responses:
+        '200':
+          description: Suggestions generated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AILinkSuggestion'
+                  meta:
+                    type: object
+                    properties:
+                      generation_time_ms:
+                        type: integer
+                        example: 2450
+                      cached:
+                        type: boolean
+                        example: false
+        '503':
+          description: AI service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    properties:
+                      code:
+                        type: string
+                        example: AI_SERVICE_UNAVAILABLE
+                      message:
+                        type: string
+                        example: AI suggestions are temporarily unavailable. Please proceed with manual linking.
+                      allow_fallback:
+                        type: boolean
+                        example: true
+
+  /api/intake/{intake_id}/links/suggestions/accept:
+    post:
+      tags: [AI Suggestions]
+      summary: Accept AI link suggestions
+      description: |
+        Accepts one or more AI suggestions, creating actual entity links.
+        Updates ai_link_suggestions table with status='accepted'.
+      operationId: acceptLinkSuggestions
+      parameters:
+        - name: intake_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                suggestion_ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                  minItems: 1
+              required: [suggestion_ids]
+      responses:
+        '201':
+          description: Suggestions accepted, links created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      accepted_count:
+                        type: integer
+                      links_created:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/EntityLink'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /api/entities/{entity_type}/{entity_id}/intakes:
+    get:
+      tags: [Search]
+      summary: Reverse lookup - find intakes linked to an entity
+      description: |
+        Returns all intake tickets linked to the specified entity.
+        Results filtered by link type and automatically filtered by user's clearance level.
+        Paginated for performance with 1000+ intakes.
+
+        Performance target: <2 seconds for 1000+ intakes (SC-004).
+      operationId: getEntityIntakes
+      parameters:
+        - name: entity_type
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [dossier, position, mou, engagement, assignment, commitment, intelligence_signal, organization, country, forum, working_group, topic]
+        - name: entity_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: link_type
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [primary, related, requested, mentioned, assigned_to]
+        - name: page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: per_page
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 10
+            maximum: 100
+            default: 50
+      responses:
+        '200':
+          description: Successfully retrieved intake tickets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IntakeLinkInfo'
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                        example: 127
+                      page:
+                        type: integer
+                        example: 1
+                      per_page:
+                        type: integer
+                        example: 50
+                      total_pages:
+                        type: integer
+                        example: 3
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /api/entities/search:
+    get:
+      tags: [Search]
+      summary: Search entities for linking
+      description: |
+        Searches entities across specified types using fuzzy matching and ranking algorithm.
+
+        Ranking formula (FR-001a):
+        - 50% AI confidence (semantic relevance to current intake)
+        - 30% Recency (when entity was last linked)
+        - 20% Alphabetical order
+
+        Results automatically filtered by user's clearance level and organization.
+      operationId: searchEntities
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+            minLength: 2
+          description: Search query string
+        - name: entity_types
+          in: query
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+              enum: [dossier, position, mou, engagement, assignment, commitment, intelligence_signal, organization, country, forum, working_group, topic]
+          description: Filter by entity types (defaults to all types)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 5
+            maximum: 50
+            default: 20
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/EntitySearchResult'
+                  meta:
+                    type: object
+                    properties:
+                      query:
+                        type: string
+                        example: "Saudi Arabia"
+                      total_results:
+                        type: integer
+                        example: 15
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT token
+
+  schemas:
+    EntityLink:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        intake_id:
+          type: string
+          format: uuid
+        entity_type:
+          type: string
+          enum: [dossier, position, mou, engagement, assignment, commitment, intelligence_signal, organization, country, forum, working_group, topic]
+        entity_id:
+          type: string
+          format: uuid
+        link_type:
+          type: string
+          enum: [primary, related, requested, mentioned, assigned_to]
+        source:
+          type: string
+          enum: [human, ai, import]
+        confidence:
+          type: number
+          format: double
+          minimum: 0.00
+          maximum: 1.00
+          nullable: true
+        notes:
+          type: string
+          nullable: true
+        link_order:
+          type: integer
+        suggested_by:
+          type: string
+          format: uuid
+          nullable: true
+        linked_by:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        deleted_at:
+          type: string
+          format: date-time
+          nullable: true
+        entity:
+          type: object
+          description: Denormalized entity details for UI display
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+            classification_level:
+              type: integer
+      required: [id, intake_id, entity_type, entity_id, link_type, source, link_order, linked_by, created_at, updated_at]
+
+    CreateLinkRequest:
+      type: object
+      properties:
+        entity_type:
+          type: string
+          enum: [dossier, position, mou, engagement, assignment, commitment, intelligence_signal, organization, country, forum, working_group, topic]
+        entity_id:
+          type: string
+          format: uuid
+        link_type:
+          type: string
+          enum: [primary, related, requested, mentioned, assigned_to]
+        notes:
+          type: string
+          maxLength: 1000
+          nullable: true
+        link_order:
+          type: integer
+          minimum: 0
+          default: 0
+      required: [entity_type, entity_id, link_type]
+
+    AILinkSuggestion:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        suggested_entity_type:
+          type: string
+        suggested_entity_id:
+          type: string
+          format: uuid
+        suggested_link_type:
+          type: string
+        confidence:
+          type: number
+          format: double
+          minimum: 0.00
+          maximum: 1.00
+        reasoning:
+          type: string
+          description: LLM-generated explanation for the suggestion
+        entity:
+          type: object
+          description: Denormalized entity details
+          properties:
+            name:
+              type: string
+            type:
+              type: string
+            classification_level:
+              type: integer
+        status:
+          type: string
+          enum: [pending, accepted, rejected]
+          default: pending
+        created_at:
+          type: string
+          format: date-time
+      required: [id, suggested_entity_type, suggested_entity_id, suggested_link_type, confidence, reasoning, status, created_at]
+      example:
+        id: "aa0e8400-e29b-41d4-a716-446655440000"
+        suggested_entity_type: "dossier"
+        suggested_entity_id: "770e8400-e29b-41d4-a716-446655440000"
+        suggested_link_type: "primary"
+        confidence: 0.92
+        reasoning: "The intake description mentions 'bilateral meeting with Saudi Arabia', which strongly correlates with the Saudi Arabia country dossier. The meeting context and diplomatic nature suggest this is the primary entity for this intake."
+        entity:
+          name: "Saudi Arabia Country Dossier"
+          type: "dossier"
+          classification_level: 2
+        status: "pending"
+        created_at: "2025-01-18T10:30:00Z"
+
+    IntakeLinkInfo:
+      type: object
+      properties:
+        intake_id:
+          type: string
+          format: uuid
+        link_id:
+          type: string
+          format: uuid
+        link_type:
+          type: string
+        intake:
+          type: object
+          description: Denormalized intake details
+          properties:
+            title:
+              type: string
+            status:
+              type: string
+            classification_level:
+              type: integer
+            created_at:
+              type: string
+              format: date-time
+        linked_at:
+          type: string
+          format: date-time
+      required: [intake_id, link_id, link_type, linked_at]
+
+    EntitySearchResult:
+      type: object
+      properties:
+        entity_type:
+          type: string
+        entity_id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        description:
+          type: string
+          nullable: true
+        classification_level:
+          type: integer
+        rank:
+          type: number
+          format: double
+          description: Ranking score (0.00-1.00) based on FR-001a formula
+        last_linked_at:
+          type: string
+          format: date-time
+          nullable: true
+      required: [entity_type, entity_id, name, classification_level, rank]
+      example:
+        entity_type: "dossier"
+        entity_id: "770e8400-e29b-41d4-a716-446655440000"
+        name: "Saudi Arabia Country Dossier"
+        description: "Comprehensive dossier covering diplomatic relations, trade agreements, and bilateral meetings."
+        classification_level: 2
+        rank: 0.89
+        last_linked_at: "2025-01-15T08:20:00Z"
+
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          $ref: '#/components/schemas/ErrorDetail'
+
+    ErrorDetail:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Machine-readable error code
+          example: VALIDATION_ERROR
+        message:
+          type: string
+          description: Human-readable error message
+          example: The entity does not exist or has been archived.
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional context for debugging
+      required: [code, message]
+
+  responses:
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: UNAUTHORIZED
+              message: Authentication token is missing or invalid.
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: FORBIDDEN
+              message: You do not have sufficient clearance to access this entity.
+              details:
+                required_clearance: 3
+                user_clearance: 2
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: NOT_FOUND
+              message: The requested resource was not found.
+
+    BadRequest:
+      description: Invalid request
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            success: false
+            error:
+              code: VALIDATION_ERROR
+              message: Request validation failed.
+              details:
+                errors:
+                  - field: entity_id
+                    message: Must be a valid UUID

@@ -116,7 +116,7 @@ export default function Countries() {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-display font-semibold text-foreground">
+            <h1 className="font-display text-3xl font-semibold text-foreground">
               {t('countries.title', 'Countries overview')}
             </h1>
             <p className="text-base text-muted-foreground">
@@ -127,7 +127,7 @@ export default function Countries() {
             </p>
           </div>
           <Button size="sm" className="gap-2">
-            <Plus className="h-4 w-4" />
+            <Plus className="size-4" />
             {t('countries.actions.addCountry', 'Add new country')}
           </Button>
         </div>
@@ -139,7 +139,7 @@ export default function Countries() {
             <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('countries.metrics.totalPartners', 'Active partners')}
             </CardTitle>
-            <Globe2 className="h-5 w-5 text-primary" />
+            <Globe2 className="size-5 text-primary" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-foreground">{activeCount}</p>
@@ -153,7 +153,7 @@ export default function Countries() {
             <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('countries.metrics.totalAgreements', 'Linked agreements')}
             </CardTitle>
-            <FileText className="h-5 w-5 text-primary" />
+            <FileText className="size-5 text-primary" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-foreground">{totalAgreements}</p>
@@ -167,7 +167,7 @@ export default function Countries() {
             <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('countries.metrics.escalations', 'Escalations')}
             </CardTitle>
-            <ShieldAlert className="h-5 w-5 text-destructive" />
+            <ShieldAlert className="size-5 text-destructive" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-destructive">{suspendedCount}</p>
@@ -299,7 +299,7 @@ export default function Countries() {
                         : 'bg-destructive/10 text-destructive'
                     }`}
                   >
-                    <MapPin className="h-3 w-3" />
+                    <MapPin className="size-3" />
                     {t(`countries.risk.${country.riskLevel}`, country.riskLevel)}
                   </span>
                 </td>

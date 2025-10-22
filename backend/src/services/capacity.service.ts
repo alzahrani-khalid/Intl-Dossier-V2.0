@@ -223,7 +223,7 @@ export class CapacityService {
     unitId: string,
     requiredSkills?: string[]
   ): Promise<StaffCapacityStatus[]> {
-    let query = this.supabase
+    const query = this.supabase
       .from('staff_profiles')
       .select('user_id, individual_wip_limit, current_assignment_count, availability_status, unit_id, skills')
       .eq('unit_id', unitId)

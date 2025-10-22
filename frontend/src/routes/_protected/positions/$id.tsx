@@ -6,7 +6,7 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
+import { Card, CardContent } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Save, Send, CheckCircle, FileText, History, Users } from 'lucide-react';
 import { usePosition } from '@/hooks/usePosition';
@@ -25,7 +25,7 @@ export const Route = createFileRoute('/_protected/positions/$id')({
 
 function PositionDetailPage() {
   const { id } = Route.useParams();
-  const { t } = useTranslation();
+  const { t } = useTranslation('positions');
   const { data: position, isLoading } = usePosition(id);
   const updatePosition = useUpdatePosition();
   const submitPosition = useSubmitPosition();
@@ -44,7 +44,7 @@ function PositionDetailPage() {
       <div className="container mx-auto py-6">
         <Card className="p-6 text-center">
           <p className="text-lg text-muted-foreground">
-            {t('positions.notFound', 'Position not found')}
+            {t('notFound', 'Position not found')}
           </p>
         </Card>
       </div>
@@ -88,7 +88,7 @@ function PositionDetailPage() {
           <div className="flex items-center gap-3">
             <h1 className="text-3xl font-bold">{position.title_en}</h1>
             <Badge variant={getStatusColor(position.status)}>
-              {t(`positions.status.${position.status}`, position.status)}
+              {t(`status.${position.status}`, position.status)}
             </Badge>
           </div>
           <p className="text-sm text-muted-foreground">{position.title_ar}</p>
@@ -99,14 +99,14 @@ function PositionDetailPage() {
             <>
               <Button variant="outline" onClick={handleSubmit}>
                 <Send className="me-2 h-4 w-4" />
-                {t('positions.submit', 'Submit for Review')}
+                {t('submit', 'Submit for Review')}
               </Button>
             </>
           )}
           {position.status === 'approved' && (
             <Button>
               <CheckCircle className="me-2 h-4 w-4" />
-              {t('positions.publish', 'Publish')}
+              {t('publish', 'Publish')}
             </Button>
           )}
         </div>
@@ -117,21 +117,53 @@ function PositionDetailPage() {
         <TabsList>
           <TabsTrigger value="editor">
             <FileText className="me-2 h-4 w-4" />
-            {t('positions.tabs.editor', 'Editor')}
+            {t('tabs.editor', 'Editor')}
           </TabsTrigger>
           {(position.status === 'under_review' || position.status === 'approved' || position.status === 'published') && (
             <TabsTrigger value="approvals">
               <Users className="me-2 h-4 w-4" />
-              {t('positions.tabs.approvals', 'Approvals')}
+              {t('tabs.approvals', 'Approvals')}
             </TabsTrigger>
           )}
           <TabsTrigger value="versions">
             <History className="me-2 h-4 w-4" />
-            {t('positions.tabs.versions', 'Versions')}
+            {t('tabs.versions', 'Versions')}
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="editor" className="space-y-6">
+          {/* Editor Status Banner */}
+          {position.status !== 'draft' && (
+            <Card className="bg-muted/50 border-border">
+              <CardContent className="pt-3 pb-3">
+                <div className="flex items-start gap-2">
+                  <FileText className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <p className="text-xs font-bold text-foreground">
+                    {position.status === 'under_review' &&
+                      'Position Under Review - Read Only. This position is currently under review and cannot be edited. It must go through the approval chain before any changes can be made.'}
+                    {position.status === 'approved' &&
+                      'Position Approved - Read Only. This position has been approved and is awaiting publication. Contact an administrator to make changes.'}
+                    {position.status === 'published' &&
+                      'Position Published - Read Only. This position has been published. To make changes, you must use the Emergency Correction workflow or create a new version.'}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
+          {position.status === 'draft' && (
+            <Card className="bg-muted/50 border-border">
+              <CardContent className="pt-3 pb-3">
+                <div className="flex items-start gap-2">
+                  <FileText className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <p className="text-xs font-bold text-foreground">
+                    Draft Mode - Editing Enabled. You can edit this position. Changes are auto-saved every 30 seconds. Click "Submit for Review" when ready to start the approval process.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
               <Card className="p-6">
@@ -145,7 +177,7 @@ function PositionDetailPage() {
 
               <Card className="p-6">
                 <h3 className="text-lg font-semibold mb-4">
-                  {t('positions.attachments', 'Attachments')}
+                  {t('attachments', 'Attachments')}
                 </h3>
                 <AttachmentUploader positionId={position.id} />
               </Card>
@@ -155,7 +187,7 @@ function PositionDetailPage() {
               {position.consistency_score !== undefined && (
                 <Card className="p-6">
                   <h3 className="text-lg font-semibold mb-4">
-                    {t('positions.consistency', 'Consistency Check')}
+                    {t('consistency.title', 'Consistency Check')}
                   </h3>
                   <ConsistencyPanel positionId={position.id} />
                 </Card>
@@ -164,7 +196,7 @@ function PositionDetailPage() {
               {(position.status === 'under_review' || position.status === 'approved') && (
                 <Card className="p-6">
                   <h3 className="text-lg font-semibold mb-4">
-                    {t('positions.approvalChain', 'Approval Progress')}
+                    {t('approvalChain', 'Approval Progress')}
                   </h3>
                   <ApprovalChain positionId={position.id} currentStage={position.current_stage} />
                 </Card>
@@ -186,7 +218,7 @@ function PositionDetailPage() {
         <TabsContent value="versions">
           <Card className="p-6">
             <p className="text-muted-foreground">
-              {t('positions.versions.description', 'View version history and compare changes')}
+              {t('versions.description', 'View version history and compare changes')}
             </p>
           </Card>
         </TabsContent>

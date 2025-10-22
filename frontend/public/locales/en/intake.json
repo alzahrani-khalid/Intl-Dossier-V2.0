@@ -1,0 +1,116 @@
+{
+  "title": "Submit New Request",
+  "subtitle": "Create a new intake ticket for processing",
+  "form": {
+    "requestType": {
+      "label": "Request Type",
+      "placeholder": "Select a request type",
+      "required": "Request type is required",
+      "options": {
+        "engagement": "Engagement",
+        "position": "Position",
+        "mou_action": "MOU Action",
+        "foresight": "Foresight"
+      }
+    },
+    "title": {
+      "label": "Title (English)",
+      "placeholder": "Enter a descriptive title",
+      "minLength": "Title must be at least 3 characters",
+      "maxLength": "Title must not exceed 200 characters"
+    },
+    "titleAr": {
+      "label": "Title (Arabic)",
+      "placeholder": "أدخل عنواناً وصفياً"
+    },
+    "description": {
+      "label": "Description (English)",
+      "placeholder": "Provide detailed information about your request",
+      "minLength": "Description must be at least 10 characters",
+      "maxLength": "Description must not exceed 5000 characters"
+    },
+    "descriptionAr": {
+      "label": "Description (Arabic)",
+      "placeholder": "قدم معلومات مفصلة عن طلبك"
+    },
+    "urgency": {
+      "label": "Urgency Level",
+      "placeholder": "Select urgency level",
+      "required": "Urgency level is required",
+      "options": {
+        "low": "Low",
+        "medium": "Medium",
+        "high": "High",
+        "critical": "Critical"
+      }
+    }
+  },
+  "queue": {
+    "status": {
+      "submitted": "Submitted",
+      "triaged": "Triaged",
+      "assigned": "Assigned",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    },
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "urgency": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical"
+    }
+  },
+  "slaPreview": {
+    "title": "Expected SLA",
+    "acknowledgment": "Acknowledgment",
+    "resolution": "Resolution",
+    "minutes": "minutes",
+    "hours": "hours",
+    "businessHours": "Business hours only"
+  },
+  "success": {
+    "title": "Request Submitted Successfully",
+    "message": "Your request {{ticketNumber}} has been created",
+    "viewTicket": "View Ticket",
+    "createAnother": "Create Another"
+  },
+  "error": {
+    "message": "Failed to submit request. Please try again."
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "reset": "Reset",
+    "fillMock": "Fill with Example",
+    "submit": "Submit Request",
+    "submitting": "Submitting..."
+  },
+  "ticketDetail": {
+    "error": "Failed to load ticket. Please try again.",
+    "requestType": "Request Type",
+    "urgency": "Urgency",
+    "sensitivity": "Sensitivity",
+    "priority": "Priority",
+    "description": "Description",
+    "additionalInfo": "Additional Information",
+    "attachments": "Attachments",
+    "convert": "Convert to Artifact",
+    "close": "Close Ticket",
+    "convertPrompt": "Enter target type (dossier/engagement/position):",
+    "closePrompt": "Enter resolution:",
+    "historyPlaceholder": "Audit history will be displayed here",
+    "tabs": {
+      "details": "Details",
+      "triage": "Triage",
+      "duplicates": "Duplicates",
+      "history": "History",
+      "links": "Links"
+    }
+  }
+}

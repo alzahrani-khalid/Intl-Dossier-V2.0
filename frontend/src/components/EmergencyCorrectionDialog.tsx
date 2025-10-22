@@ -135,10 +135,10 @@ export function EmergencyCorrectionDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-red-600" />
+            <AlertTriangle className="size-5 text-red-600" />
             {isRTL ? 'تصحيح طارئ' : 'Emergency Correction'}
           </DialogTitle>
           <DialogDescription>
@@ -151,11 +151,11 @@ export function EmergencyCorrectionDialog({
         <div className="space-y-6">
           {/* Admin Check Warning */}
           {!isAdmin && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4">
               <div className="flex items-start gap-3">
-                <Shield className="h-5 w-5 text-red-600 mt-0.5" />
+                <Shield className="mt-0.5 size-5 text-red-600" />
                 <div>
-                  <h4 className="font-semibold text-red-900 mb-1">
+                  <h4 className="mb-1 font-semibold text-red-900">
                     {isRTL ? 'وصول مقيد' : 'Restricted Access'}
                   </h4>
                   <p className="text-sm text-red-800">
@@ -169,22 +169,22 @@ export function EmergencyCorrectionDialog({
           )}
 
           {/* Position Info */}
-          <div className="p-4 bg-muted/50 rounded-lg">
-            <h4 className="font-medium text-sm text-muted-foreground mb-2">
+          <div className="rounded-lg bg-muted/50 p-4">
+            <h4 className="mb-2 text-sm font-medium text-muted-foreground">
               {isRTL ? 'الموقف المراد تصحيحه' : 'Position to Correct'}
             </h4>
             <p className="text-sm font-medium">{positionTitle}</p>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="mt-1 text-xs text-muted-foreground">
               {isRTL ? 'معرف الموقف' : 'Position ID'}: {positionId.slice(0, 8)}...
             </p>
           </div>
 
           {/* Warning Message */}
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
             <div className="flex items-start gap-3">
-              <AlertTriangle className="h-5 w-5 text-amber-600 mt-0.5" />
+              <AlertTriangle className="mt-0.5 size-5 text-amber-600" />
               <div>
-                <h4 className="font-semibold text-amber-900 mb-1">
+                <h4 className="mb-1 font-semibold text-amber-900">
                   {isRTL ? 'تحذير: تصحيح بعد النشر' : 'Warning: Post-Publication Correction'}
                 </h4>
                 <p className="text-sm text-amber-800">
@@ -197,13 +197,13 @@ export function EmergencyCorrectionDialog({
           </div>
 
           {/* Emergency Correction Badge Preview */}
-          <div className="p-4 bg-muted/50 rounded-lg">
-            <h4 className="font-medium text-sm text-muted-foreground mb-3">
+          <div className="rounded-lg bg-muted/50 p-4">
+            <h4 className="mb-3 text-sm font-medium text-muted-foreground">
               {isRTL ? 'معاينة الشارة' : 'Badge Preview'}
             </h4>
             <div className="flex items-center gap-2">
               <Badge variant="destructive" className="flex items-center gap-1.5">
-                <AlertTriangle className="h-3 w-3" />
+                <AlertTriangle className="size-3" />
                 {isRTL ? 'تصحيح طارئ' : 'Emergency Correction'}
               </Badge>
               <span className="text-xs text-muted-foreground">
@@ -222,7 +222,7 @@ export function EmergencyCorrectionDialog({
             </Label>
             <textarea
               id="reason"
-              className="w-full min-h-[100px] px-3 py-2 text-sm border border-input rounded-md focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-[100px] w-full rounded-md border border-input px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
               placeholder={
                 isRTL
                   ? 'اشرح سبب الحاجة إلى هذا التصحيح الطارئ (10 أحرف على الأقل)...'
@@ -267,11 +267,11 @@ export function EmergencyCorrectionDialog({
           )}
 
           {/* Notification Warning */}
-          <div className="p-4 bg-blue-50 border border-blue-200 rounded-lg">
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4">
             <div className="flex items-start gap-3">
-              <Bell className="h-5 w-5 text-blue-600 mt-0.5" />
+              <Bell className="mt-0.5 size-5 text-blue-600" />
               <div>
-                <h4 className="font-semibold text-blue-900 mb-1">
+                <h4 className="mb-1 font-semibold text-blue-900">
                   {isRTL ? 'إشعارات المجموعات المستهدفة' : 'Audience Group Notifications'}
                 </h4>
                 <p className="text-sm text-blue-800">
@@ -285,13 +285,13 @@ export function EmergencyCorrectionDialog({
 
           {/* Error Message */}
           {error && (
-            <div className="p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="rounded-lg border border-red-200 bg-red-50 p-4">
               <p className="text-sm text-red-800">{error}</p>
             </div>
           )}
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button
             variant="outline"
             onClick={handleClose}
@@ -308,12 +308,12 @@ export function EmergencyCorrectionDialog({
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
                 {isRTL ? 'جاري التصحيح...' : 'Correcting...'}
               </>
             ) : (
               <>
-                <Shield className="h-4 w-4 me-2" />
+                <Shield className="me-2 size-4" />
                 {isRTL ? 'تأكيد التصحيح الطارئ' : 'Confirm Emergency Correction'}
               </>
             )}

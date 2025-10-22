@@ -74,13 +74,13 @@ export function Sidebar() {
       id: 'my-work',
       label: t('navigation.myWork'),
       icon: Briefcase,
-      path: '/my-work/assignments',
+      path: '/tasks',
       children: [
         {
           id: 'my-assignments',
           label: t('navigation.myAssignments'),
           icon: ListChecks,
-          path: '/my-work/assignments',
+          path: '/tasks',
         },
         {
           id: 'my-intake',
@@ -100,7 +100,7 @@ export function Sidebar() {
       id: 'assignments',
       label: t('navigation.assignments'),
       icon: ListChecks,
-      path: '/assignments',
+      path: '/tasks',
     },
     {
       id: 'intake',

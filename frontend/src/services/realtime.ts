@@ -52,7 +52,7 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
       const { subscriptions } = get()
 
       try {
-        let channel = supabase
+        const channel = supabase
           .channel(`${table}-${event}-${subscriptionId}`)
           .on(
             'postgres_changes' as any,

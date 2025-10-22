@@ -38,12 +38,12 @@ function ActionButton({
   return (
     <Button
       variant={variant}
-      className="w-full justify-start gap-2 h-auto py-3 px-4"
+      className="h-auto w-full justify-start gap-2 px-4 py-3"
       onClick={onClick}
       disabled={disabled}
       aria-label={label}
     >
-      <div className="flex-shrink-0" aria-hidden="true">
+      <div className="shrink-0" aria-hidden="true">
         {icon}
       </div>
       <span className="text-sm font-medium">{label}</span>
@@ -72,7 +72,7 @@ export function DossierActions({
         {/* Primary Action - Generate Brief */}
         {onGenerateBrief && (
           <ActionButton
-            icon={<FileText className="h-5 w-5" />}
+            icon={<FileText className="size-5" />}
             label={t('generateBrief')}
             onClick={onGenerateBrief}
             variant="default"
@@ -82,7 +82,7 @@ export function DossierActions({
         {/* Secondary Actions */}
         {onAddEngagement && (
           <ActionButton
-            icon={<Calendar className="h-5 w-5" />}
+            icon={<Calendar className="size-5" />}
             label={t('actions.addEngagement')}
             onClick={onAddEngagement}
           />
@@ -90,7 +90,7 @@ export function DossierActions({
 
         {onAddPosition && (
           <ActionButton
-            icon={<MessageSquare className="h-5 w-5" />}
+            icon={<MessageSquare className="size-5" />}
             label={t('actions.addPosition')}
             onClick={onAddPosition}
           />
@@ -98,7 +98,7 @@ export function DossierActions({
 
         {onLogIntelligence && (
           <ActionButton
-            icon={<Lightbulb className="h-5 w-5" />}
+            icon={<Lightbulb className="size-5" />}
             label={t('actions.logIntelligence')}
             onClick={onLogIntelligence}
           />
@@ -106,7 +106,7 @@ export function DossierActions({
 
         {onUploadDocument && (
           <ActionButton
-            icon={<Upload className="h-5 w-5" />}
+            icon={<Upload className="size-5" />}
             label={t('actions.uploadDocument')}
             onClick={onUploadDocument}
           />
@@ -114,7 +114,7 @@ export function DossierActions({
 
         {onAddContact && (
           <ActionButton
-            icon={<UserPlus className="h-5 w-5" />}
+            icon={<UserPlus className="size-5" />}
             label={t('actions.addContact')}
             onClick={onAddContact}
           />

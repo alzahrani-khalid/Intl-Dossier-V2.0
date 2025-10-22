@@ -42,7 +42,7 @@ export function AssignmentQueuePage() {
     return (
       <div className="container mx-auto p-6">
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>
             {error.message || 'Failed to load queue. Edge Functions may not be deployed yet.'}
           </AlertDescription>
@@ -52,16 +52,16 @@ export function AssignmentQueuePage() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto space-y-6 p-6">
       <div>
         <h1 className="text-3xl font-bold">Assignment Queue</h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="mt-1 text-muted-foreground">
           Manage queued work items awaiting capacity
         </p>
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -167,11 +167,11 @@ export function AssignmentQueuePage() {
           </Card>
         ) : data?.items && data.items.length > 0 ? (
           data.items.map((item) => (
-            <Card key={item.queue_id} className="hover:shadow-md transition-shadow">
+            <Card key={item.queue_id} className="transition-shadow hover:shadow-md">
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="mb-2 flex items-center gap-2">
                       <Badge className={getPriorityColor(item.priority)}>
                         {item.priority}
                       </Badge>
@@ -181,12 +181,12 @@ export function AssignmentQueuePage() {
                     <p className="text-sm text-muted-foreground">
                       Work Item: {item.work_item_id}
                     </p>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       Queued: {new Date(item.queued_at).toLocaleString()}
                     </p>
                     {item.required_skills && item.required_skills.length > 0 && (
                       <div className="mt-2">
-                        <p className="text-xs text-muted-foreground mb-1">Required Skills:</p>
+                        <p className="mb-1 text-xs text-muted-foreground">Required Skills:</p>
                         <div className="flex flex-wrap gap-1">
                           {item.required_skills.map((skill) => (
                             <Badge key={skill.skill_id} variant="outline" className="text-xs">
@@ -197,9 +197,9 @@ export function AssignmentQueuePage() {
                       </div>
                     )}
                   </div>
-                  <div className="text-end flex flex-col gap-2">
+                  <div className="flex flex-col gap-2 text-end">
                     <Button size="sm" className="gap-2">
-                      <UserPlus className="h-4 w-4" />
+                      <UserPlus className="size-4" />
                       Assign
                     </Button>
                     {item.attempts > 0 && (
@@ -215,7 +215,7 @@ export function AssignmentQueuePage() {
         ) : (
           <Card>
             <CardContent className="p-6 text-center text-muted-foreground">
-              <Clock className="h-12 w-12 mx-auto mb-2 text-blue-500" />
+              <Clock className="mx-auto mb-2 size-12 text-blue-500" />
               <p>No items in queue</p>
             </CardContent>
           </Card>

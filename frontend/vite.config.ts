@@ -22,6 +22,12 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
     },
+    // Add cache-busting headers for HTML in dev mode
+    headers: {
+      'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
+      'Pragma': 'no-cache',
+      'Expires': '0',
+    },
   },
   build: {
     target: 'ES2022',

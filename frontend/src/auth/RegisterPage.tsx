@@ -62,93 +62,93 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-base-50 to-base-100 flex items-center justify-center p-4">
+    <div className="from-base-50 to-base-100 flex min-h-screen items-center justify-center bg-gradient-to-br p-4">
       <div className="w-full max-w-md">
-        <div className="bg-white dark:bg-base-800 rounded-2xl shadow-xl p-8">
-          <div className="flex justify-center mb-6">
-            <div className="w-16 h-16 bg-primary-100 dark:bg-primary-900 rounded-full flex items-center justify-center">
-              <Globe className="w-8 h-8 text-primary-600 dark:text-primary-400" />
+        <div className="dark:bg-base-800 rounded-2xl bg-white p-8 shadow-xl">
+          <div className="mb-6 flex justify-center">
+            <div className="flex size-16 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900">
+              <Globe className="size-8 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
 
-          <h1 className="text-2xl font-display font-display text-base-900 dark:text-base-50 text-center mb-2">
+          <h1 className="font-display text-base-900 dark:text-base-50 mb-2 text-center text-2xl">
             Create Your Account
           </h1>
-          <p className="text-base-600 dark:text-base-400 font-text text-center mb-6">
+          <p className="text-base-600 dark:text-base-400 font-text mb-6 text-center">
             Join GASTAT International Dossier System
           </p>
 
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-base-700 dark:text-base-300 mb-2 font-text">
+              <label className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium">
                 Full Name
               </label>
               <input
                 {...register('name')}
                 type="text"
                 placeholder="John Doe"
-                className="w-full px-4 py-2 border border-base-300 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-base-800 dark:text-base-50 font-text"
+                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 disabled={isLoading}
               />
               {errors.name && (
-                <p className="text-red-600 dark:text-red-400 text-sm mt-1 font-text">{errors.name.message}</p>
+                <p className="font-text mt-1 text-sm text-red-600 dark:text-red-400">{errors.name.message}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-base-700 dark:text-base-300 mb-2 font-text">
+              <label className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium">
                 Email
               </label>
               <input
                 {...register('email')}
                 type="email"
                 placeholder="user@gastat.sa"
-                className="w-full px-4 py-2 border border-base-300 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-base-800 dark:text-base-50 font-text"
+                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 disabled={isLoading}
               />
               {errors.email && (
-                <p className="text-red-600 dark:text-red-400 text-sm mt-1 font-text">{errors.email.message}</p>
+                <p className="font-text mt-1 text-sm text-red-600 dark:text-red-400">{errors.email.message}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-base-700 dark:text-base-300 mb-2 font-text">
+              <label className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium">
                 Password
               </label>
               <input
                 {...register('password')}
                 type="password"
-                className="w-full px-4 py-2 border border-base-300 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-base-800 dark:text-base-50 font-text"
+                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 disabled={isLoading}
               />
               {errors.password && (
-                <p className="text-red-600 dark:text-red-400 text-sm mt-1 font-text">{errors.password.message}</p>
+                <p className="font-text mt-1 text-sm text-red-600 dark:text-red-400">{errors.password.message}</p>
               )}
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-base-700 dark:text-base-300 mb-2 font-text">
+              <label className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium">
                 Confirm Password
               </label>
               <input
                 {...register('confirmPassword')}
                 type="password"
-                className="w-full px-4 py-2 border border-base-300 dark:border-base-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 dark:bg-base-800 dark:text-base-50 font-text"
+                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
                 disabled={isLoading}
               />
               {errors.confirmPassword && (
-                <p className="text-red-600 dark:text-red-400 text-sm mt-1 font-text">{errors.confirmPassword.message}</p>
+                <p className="font-text mt-1 text-sm text-red-600 dark:text-red-400">{errors.confirmPassword.message}</p>
               )}
             </div>
 
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full bg-primary-600 text-primary-50 py-3 px-4 rounded-lg font-text font-medium hover:bg-primary-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              className="font-text flex w-full items-center justify-center rounded-lg bg-primary-600 px-4 py-3 font-medium text-primary-50 transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                  <Loader2 className="me-2 size-4 animate-spin" />
                   Creating Account...
                 </>
               ) : (
@@ -156,11 +156,11 @@ export function RegisterPage() {
               )}
             </button>
 
-            <div className="text-center text-sm text-base-600 dark:text-base-400 font-text">
+            <div className="text-base-600 dark:text-base-400 font-text text-center text-sm">
               Already have an account?{' '}
               <a
                 href="/login"
-                className="text-primary-600 hover:text-primary-700 hover:underline font-text"
+                className="font-text text-primary-600 hover:text-primary-700 hover:underline"
                 onClick={(e) => {
                   e.preventDefault()
                   navigate({ to: '/login' })
@@ -172,7 +172,7 @@ export function RegisterPage() {
           </form>
         </div>
 
-        <div className="text-center mt-6 text-sm text-base-600 dark:text-base-400 font-text">
+        <div className="text-base-600 dark:text-base-400 font-text mt-6 text-center text-sm">
           © 2025 GASTAT - General Authority for Statistics
         </div>
       </div>

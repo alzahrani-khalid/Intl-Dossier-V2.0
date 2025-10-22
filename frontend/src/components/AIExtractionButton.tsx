@@ -202,14 +202,14 @@ export function AIExtractionButton({
           disabled={disabled}
           className={cn('gap-2', className)}
         >
-          <Sparkles className="h-4 w-4" />
+          <Sparkles className="size-4" />
           {t('afterActions.ai.extractButton')}
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-primary" />
+            <Sparkles className="size-5 text-primary" />
             {t('afterActions.ai.title')}
           </DialogTitle>
           <DialogDescription>
@@ -279,14 +279,14 @@ export function AIExtractionButton({
             <div className="space-y-2">
               {status === 'uploading' && (
                 <Alert>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                   <AlertDescription>{t('afterActions.ai.uploading')}</AlertDescription>
                 </Alert>
               )}
 
               {status === 'processing' && (
                 <Alert>
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                   <AlertDescription>
                     {t('afterActions.ai.processing')} ({progress}%)
                     {jobId && (
@@ -300,7 +300,7 @@ export function AIExtractionButton({
 
               {status === 'completed' && (
                 <Alert className="border-green-500">
-                  <CheckCircle className="h-4 w-4 text-green-500" />
+                  <CheckCircle className="size-4 text-green-500" />
                   <AlertDescription className="text-green-700">
                     {t('afterActions.ai.completed')}
                   </AlertDescription>
@@ -309,7 +309,7 @@ export function AIExtractionButton({
 
               {status === 'failed' && (
                 <Alert variant="destructive">
-                  <AlertCircle className="h-4 w-4" />
+                  <AlertCircle className="size-4" />
                   <AlertDescription>{error}</AlertDescription>
                 </Alert>
               )}
@@ -319,7 +319,7 @@ export function AIExtractionButton({
           {/* Info Alert */}
           {status === 'idle' && (
             <Alert>
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertDescription>
                 {t('afterActions.ai.info')}
               </AlertDescription>
@@ -336,12 +336,12 @@ export function AIExtractionButton({
           >
             {status === 'uploading' || status === 'processing' ? (
               <>
-                <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
                 {t('afterActions.ai.extracting')}
               </>
             ) : (
               <>
-                <Upload className="me-2 h-4 w-4" />
+                <Upload className="me-2 size-4" />
                 {t('afterActions.ai.extract')}
               </>
             )}

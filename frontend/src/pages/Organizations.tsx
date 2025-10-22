@@ -119,7 +119,7 @@ export default function Organizations() {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="text-3xl font-display font-semibold text-foreground">
+            <h1 className="font-display text-3xl font-semibold text-foreground">
               {t('organizations.title', 'Organizations & delegations')}
             </h1>
             <p className="text-base text-muted-foreground">
@@ -130,7 +130,7 @@ export default function Organizations() {
             </p>
           </div>
           <Button size="sm" className="gap-2">
-            <Plus className="h-4 w-4" />
+            <Plus className="size-4" />
             {t('organizations.actions.addOrganization', 'Add organization')}
           </Button>
         </div>
@@ -142,7 +142,7 @@ export default function Organizations() {
             <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('organizations.metrics.registered', 'Registered entities')}
             </CardTitle>
-            <Building2 className="h-5 w-5 text-primary" />
+            <Building2 className="size-5 text-primary" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-foreground">{filteredOrganizations.length}</p>
@@ -156,7 +156,7 @@ export default function Organizations() {
             <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('organizations.metrics.members', 'Delegated members')}
             </CardTitle>
-            <Users className="h-5 w-5 text-primary" />
+            <Users className="size-5 text-primary" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-foreground">{totalMembers}</p>
@@ -170,7 +170,7 @@ export default function Organizations() {
             <CardTitle className="text-sm font-semibold text-card-foreground">
               {t('organizations.metrics.delegations', 'Active delegations')}
             </CardTitle>
-            <ShieldCheck className="h-5 w-5 text-primary" />
+            <ShieldCheck className="size-5 text-primary" />
           </CardHeader>
           <CardContent>
             <p className="text-2xl font-bold text-foreground">{organisationsWithDelegations}</p>
@@ -255,7 +255,7 @@ export default function Organizations() {
                     <span className="font-semibold text-foreground">{org.name}</span>
                     {org.parent && (
                       <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                        <ChevronRight className="h-3 w-3" />
+                        <ChevronRight className="size-3" />
                         {t('organizations.table.parent', 'Parent')}: {org.parent}
                       </span>
                     )}
@@ -278,7 +278,7 @@ export default function Organizations() {
                         : 'bg-destructive/10 text-destructive'
                     }`}
                   >
-                    <Network className="h-3 w-3" />
+                    <Network className="size-3" />
                     {t(`organizations.status.${org.status}`, org.status)}
                   </span>
                 </td>

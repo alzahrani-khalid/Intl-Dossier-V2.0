@@ -22,7 +22,7 @@ function kmeans(data: number[][], k: number, maxIter = 20): { labels: number[]; 
   const dim = data[0].length;
   // init centroids as first k points (deterministic for consistency)
   const centroids = data.slice(0, k).map(row => row.slice());
-  let labels = new Array(n).fill(0);
+  const labels = new Array(n).fill(0);
   for (let iter = 0; iter < maxIter; iter++) {
     // assign
     for (let i = 0; i < n; i++) {

@@ -56,7 +56,24 @@
     "unsavedChanges": "تغييرات غير محفوظة",
     "conflictTitle": "تم اكتشاف تعارض في الإصدار",
     "conflictDescription": "تم تعديل هذا الموقف من قبل مستخدم آخر. الإصدار الخاص بك: {{current}}، إصدار الخادم: {{server}}. يرجى إعادة تحميل الصفحة لرؤية أحدث إصدار.",
-    "reloadPage": "إعادة تحميل الصفحة"
+    "reloadPage": "إعادة تحميل الصفحة",
+    "linkedDossiers": "الملفات المرتبطة"
+  },
+  "position_dossier_links": {
+    "title": "الملفات المرتبطة",
+    "add_link": "إضافة رابط",
+    "no_links": "لا توجد ملفات مرتبطة",
+    "select_dossier": "اختر ملف",
+    "select_placeholder": "اختر ملفاً للربط",
+    "no_dossiers": "لا توجد ملفات متاحة",
+    "link_type": "نوع الرابط",
+    "types": {
+      "primary": "أساسي",
+      "related": "ذو صلة",
+      "reference": "مرجعي"
+    },
+    "notes_optional": "ملاحظات (اختياري)",
+    "notes_placeholder": "أضف أي ملاحظات عن هذا الرابط..."
   },
   "consistency": {
     "title": "فحص الاتساق",
@@ -150,7 +167,6 @@
   "submit": "تقديم للمراجعة",
   "publish": "نشر",
   "attachments": "المرفقات",
-  "consistency": "فحص الاتساق",
   "approvalChain": "تقدم الموافقة",
   "versions": {
     "description": "عرض سجل الإصدارات ومقارنة التغييرات"

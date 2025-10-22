@@ -88,8 +88,9 @@ serve(async (req) => {
 
     // Fetch assignment with engagement context
     // Note: We're using service role, so RLS is bypassed. We implement auth checks manually below.
+    // Updated to query 'tasks' table for unified tasks model (025-unified-tasks-model)
     const { data: assignment, error: assignmentError} = await supabaseClient
-      .from("assignments")
+      .from("tasks")
       .select(`
         *,
         engagement:engagements!left(
@@ -237,6 +238,88 @@ serve(async (req) => {
     }
 
     console.log("Authorization passed for user:", user.id);
+
+    // Fetch task data if work_item_type is 'task'
+    let workItemTitle = "Untitled";
+    let workItemPreview = "";
+    let workItemLinkedEntities: any[] = [];
+
+    if (assignment.work_item_type === 'task' && assignment.work_item_id) {
+      const { data: task, error: taskError } = await supabaseClient
+        .from("tasks")
+        .select("id, title, description, source, status")
+        .eq("id", assignment.work_item_id)
+        .single();
+
+      if (task && !taskError) {
+        workItemTitle = task.title;
+        workItemPreview = task.description || "";
+
+        // Extract linked entity IDs from task source
+        const linkedEntities: any[] = [];
+
+        // Fetch linked dossiers
+        if (task.source?.dossier_ids && Array.isArray(task.source.dossier_ids)) {
+          const { data: dossiers } = await supabaseClient
+            .from("dossiers")
+            .select("id, name_en, name_ar, status")
+            .in("id", task.source.dossier_ids);
+
+          if (dossiers) {
+            linkedEntities.push(...dossiers.map((d: any) => ({
+              type: 'dossier',
+              id: d.id,
+              name_en: d.name_en,
+              name_ar: d.name_ar,
+              status: d.status,
+            })));
+          }
+        }
+
+        // Fetch linked positions
+        if (task.source?.position_ids && Array.isArray(task.source.position_ids)) {
+          const { data: positions } = await supabaseClient
+            .from("positions")
+            .select("id, title_en, title_ar, status")
+            .in("id", task.source.position_ids);
+
+          if (positions) {
+            linkedEntities.push(...positions.map((p: any) => ({
+              type: 'position',
+              id: p.id,
+              title_en: p.title_en,
+              title_ar: p.title_ar,
+              status: p.status,
+            })));
+          }
+        }
+
+        // Fetch linked tickets
+        if (task.source?.ticket_ids && Array.isArray(task.source.ticket_ids)) {
+          const { data: tickets } = await supabaseClient
+            .from("intake_tickets")
+            .select("id, title, title_ar, ticket_number, status")
+            .in("id", task.source.ticket_ids);
+
+          if (tickets) {
+            linkedEntities.push(...tickets.map((t: any) => ({
+              type: 'ticket',
+              id: t.id,
+              title_en: t.title,
+              title_ar: t.title_ar,
+              ticket_number: t.ticket_number,
+              status: t.status,
+            })));
+          }
+        }
+
+        workItemLinkedEntities = linkedEntities;
+      }
+    } else {
+      // Legacy fallback for non-task work items
+      workItemTitle = assignment.work_item_title || "Untitled";
+      workItemPreview = assignment.work_item_content_preview || "";
+    }
 
     // Fetch comments with reactions and mentions
     const { data: comments, error: commentsError } = await supabaseClient
@@ -386,7 +469,7 @@ serve(async (req) => {
     let engagementAssignmentsData = { total: 0, completed: 0, progress: 0 };
     if (assignment.engagement_id) {
       const { data: relatedAssignments } = await supabaseClient
-        .from("assignments")
+        .from("tasks")
         .select("id, status")
         .eq("engagement_id", assignment.engagement_id);
 
@@ -405,8 +488,9 @@ serve(async (req) => {
         ...assignment,
         assignee_name: getUserDetails(assignment.assignee_id).name,
         assigned_by_name: getUserDetails(assignment.assigned_by).name,
-        work_item_title: assignment.work_item_title || "Untitled",
-        work_item_preview: assignment.work_item_content_preview || "",
+        work_item_title: workItemTitle,
+        work_item_preview: workItemPreview,
+        work_item_linked_entities: workItemLinkedEntities,
         required_skills: assignment.required_skills || [],
         can_escalate: canEscalate,
         can_complete: canComplete,

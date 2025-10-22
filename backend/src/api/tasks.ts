@@ -1,246 +1,397 @@
-import { Router } from 'express';
+/**
+ * Tasks API Routes
+ * Part of: 025-unified-tasks-model implementation
+ *
+ * REST API for unified tasks with:
+ * - Optimistic locking (updated_at comparison)
+ * - Work item linking (dossier/position/ticket/generic)
+ * - Engagement context for kanban boards
+ * - Team collaboration via contributors
+ * - SLA monitoring and warnings
+ */
+
+import { Router, Request, Response, NextFunction } from 'express';
 import { z } from 'zod';
-import { validate, paginationSchema, idParamSchema } from '../utils/validation';
-import { requirePermission } from '../middleware/auth';
-import { TaskService } from '../services/TaskService';
+import { validate, idParamSchema } from '../utils/validation';
+import { authenticateToken } from '../middleware/auth';
+import { optimisticLockingMiddleware } from '../middleware/optimistic-locking';
+import { tasksService } from '../services/tasks.service';
 
 const router = Router();
 
-const taskService = new TaskService();
+// Apply authentication to all routes
+router.use(authenticateToken);
+
+// ============================================================================
+// VALIDATION SCHEMAS
+// ============================================================================
 
 const createTaskSchema = z.object({
-  title: z.string().min(3).max(200),
+  title: z.string().min(1).max(500),
   description: z.string().optional(),
-  type: z.enum(['action', 'review', 'approval', 'follow-up']).default('action'),
-  priority: z.enum(['low', 'medium', 'high', 'critical']).default('medium'),
-  assigned_to: z.string().uuid(),
-  related_entity: z.object({
-    type: z.enum(['mou', 'activity', 'commitment', 'document']),
-    id: z.string().uuid()
-  }),
-  due_date: z.string().datetime(),
-  dependencies: z.array(z.string().uuid()).default([]),
-  escalation_rules: z.array(z.object({
-    days_before_due: z.number().min(1),
-    escalate_to: z.string().uuid()
-  })).default([])
+  assignee_id: z.string().uuid(),
+  engagement_id: z.string().uuid().optional(),
+  priority: z.enum(['low', 'medium', 'high', 'urgent']).default('medium'),
+  workflow_stage: z.enum(['todo', 'in_progress', 'review', 'done', 'cancelled']).default('todo'),
+  sla_deadline: z.string().datetime().optional(),
+  work_item_type: z.enum(['dossier', 'position', 'ticket', 'generic']).optional(),
+  work_item_id: z.string().uuid().optional(),
+  source: z.record(z.any()).optional(),
 });
 
-const updateTaskSchema = createTaskSchema.partial().extend({
-  status: z.enum(['pending', 'in-progress', 'completed', 'cancelled']).optional(),
-  completed_at: z.string().datetime().optional()
+const updateTaskSchema = z.object({
+  title: z.string().min(1).max(500).optional(),
+  description: z.string().optional(),
+  assignee_id: z.string().uuid().optional(),
+  engagement_id: z.string().uuid().optional(),
+  priority: z.enum(['low', 'medium', 'high', 'urgent']).optional(),
+  workflow_stage: z.enum(['todo', 'in_progress', 'review', 'done', 'cancelled']).optional(),
+  status: z.enum(['pending', 'in_progress', 'review', 'completed', 'cancelled']).optional(),
+  sla_deadline: z.string().datetime().optional(),
+  work_item_type: z.enum(['dossier', 'position', 'ticket', 'generic']).optional(),
+  work_item_id: z.string().uuid().optional(),
+  source: z.record(z.any()).optional(),
+  completed_by: z.string().uuid().optional(),
+  completed_at: z.string().datetime().optional(),
+  last_known_updated_at: z.string().datetime().optional(), // For optimistic locking
 });
 
-const taskSearchSchema = z.object({
-  assigned_to: z.string().uuid().optional(),
-  assigned_by: z.string().uuid().optional(),
-  status: z.enum(['pending', 'in-progress', 'completed', 'cancelled']).optional(),
-  priority: z.enum(['low', 'medium', 'high', 'critical']).optional(),
-  type: z.enum(['action', 'review', 'approval', 'follow-up']).optional(),
-  related_entity_type: z.enum(['mou', 'activity', 'commitment', 'document']).optional(),
-  related_entity_id: z.string().uuid().optional(),
-  due_date_from: z.string().datetime().optional(),
-  due_date_to: z.string().datetime().optional(),
-  overdue: z.boolean().optional(),
-  search: z.string().optional(),
-  limit: z.number().min(1).max(100).default(50),
-  offset: z.number().min(0).default(0)
+const taskFiltersSchema = z.object({
+  assignee_id: z.string().uuid().optional(),
+  engagement_id: z.string().uuid().optional(),
+  workflow_stage: z.enum(['todo', 'in_progress', 'review', 'done', 'cancelled']).optional(),
+  status: z.enum(['pending', 'in_progress', 'review', 'completed', 'cancelled']).optional(),
+  work_item_type: z.enum(['dossier', 'position', 'ticket', 'generic']).optional(),
+  work_item_id: z.string().uuid().optional(),
+  sla_deadline_before: z.string().datetime().optional(),
+  is_overdue: z.boolean().optional(),
+  page: z.number().min(1).default(1),
+  page_size: z.number().min(1).max(100).default(50),
+  sort_by: z.enum(['created_at', 'updated_at', 'sla_deadline', 'priority']).default('created_at'),
+  sort_order: z.enum(['asc', 'desc']).default('desc'),
 });
 
-// Task management endpoints
-router.get('/', validate({ query: taskSearchSchema }), async (req, res, next) => {
-  try {
-    const result = await taskService.findAll(req.query);
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
-});
+// ============================================================================
+// CRUD ENDPOINTS
+// ============================================================================
 
-router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
-  try {
-    const task = await taskService.findById(req.params.id);
-    if (!task) {
-      return res.status(404).json({ error: 'Task not found' });
-    }
-    res.json(task);
-  } catch (error) {
-    next(error);
-  }
-});
-
-router.post('/', requirePermission(['manage_tasks']),
+/**
+ * POST /tasks
+ * Create a new task
+ */
+router.post(
+  '/',
   validate({ body: createTaskSchema }),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const task = await taskService.create(req.body, req.user?.id);
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const task = await tasksService.createTask({
+        ...req.body,
+        created_by: userId,
+        tenant_id: req.user.tenantId,
+      });
+
       res.status(201).json(task);
-    } catch (error) {
+    } catch (error: any) {
       next(error);
     }
   }
 );
 
-router.put('/:id', requirePermission(['manage_tasks']),
-  validate({ params: idParamSchema, body: updateTaskSchema }),
-  async (req, res, next) => {
-    try {
-      const task = await taskService.update(req.params.id, req.body, req.user?.id);
-      res.json(task);
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-router.delete('/:id', requirePermission(['manage_tasks']),
+/**
+ * GET /tasks/:id
+ * Get a single task by ID
+ */
+router.get(
+  '/:id',
   validate({ params: idParamSchema }),
-  async (req, res, next) => {
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      await taskService.delete(req.params.id, req.user?.id);
-      res.json({ success: true });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
 
-// Update task status
-router.patch('/:id/status', requirePermission(['manage_tasks']),
-  validate({ 
-    params: idParamSchema,
-    body: z.object({
-      status: z.enum(['pending', 'in-progress', 'completed', 'cancelled'])
-    })
-  }),
-  async (req, res, next) => {
-    try {
-      const task = await taskService.updateStatus(
-        req.params.id,
-        req.body.status,
-        req.user?.id
-      );
+      const task = await tasksService.getTaskById(req.params.id, userId);
+
+      if (!task) {
+        return res.status(404).json({ error: 'Task not found' });
+      }
+
       res.json(task);
-    } catch (error) {
+    } catch (error: any) {
       next(error);
     }
   }
 );
 
-// Add comment to task
-router.post('/:id/comments', requirePermission(['manage_tasks']),
+/**
+ * GET /tasks
+ * List tasks with filtering, sorting, and pagination
+ */
+router.get(
+  '/',
+  validate({ query: taskFiltersSchema }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await tasksService.listTasks({
+        filters: {
+          assignee_id: req.query.assignee_id as string,
+          engagement_id: req.query.engagement_id as string,
+          workflow_stage: req.query.workflow_stage as any,
+          status: req.query.status as any,
+          work_item_type: req.query.work_item_type as any,
+          work_item_id: req.query.work_item_id as string,
+          sla_deadline_before: req.query.sla_deadline_before as string,
+          is_overdue: req.query.is_overdue === 'true',
+        },
+        page: parseInt(req.query.page as string) || 1,
+        page_size: parseInt(req.query.page_size as string) || 50,
+        sort_by: (req.query.sort_by as any) || 'created_at',
+        sort_order: (req.query.sort_order as any) || 'desc',
+      });
+
+      res.json(result);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * PUT /tasks/:id
+ * Update a task with optimistic locking
+ */
+router.put(
+  '/:id',
+  validate({ params: idParamSchema, body: updateTaskSchema }),
+  optimisticLockingMiddleware('tasks'),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const task = await tasksService.updateTask(req.params.id, {
+        ...req.body,
+        updated_by: userId,
+      });
+
+      res.json(task);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * DELETE /tasks/:id
+ * Soft delete a task
+ */
+router.delete(
+  '/:id',
+  validate({ params: idParamSchema }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      await tasksService.deleteTask(req.params.id, userId);
+
+      res.json({ success: true, message: 'Task deleted successfully' });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
+// ============================================================================
+// SPECIALIZED ENDPOINTS
+// ============================================================================
+
+/**
+ * GET /tasks/my-tasks
+ * Get tasks assigned to the current user
+ */
+router.get(
+  '/my-tasks',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const result = await tasksService.getMyTasks(userId, {
+        page: parseInt(req.query.page as string) || 1,
+        page_size: parseInt(req.query.page_size as string) || 50,
+      });
+
+      res.json(result);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * GET /tasks/engagement/:engagementId
+ * Get tasks for an engagement (kanban board)
+ */
+router.get(
+  '/engagement/:engagementId',
+  validate({ params: z.object({ engagementId: z.string().uuid() }) }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const result = await tasksService.getEngagementTasks(req.params.engagementId);
+
+      res.json(result);
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * GET /tasks/work-item/:workItemType/:workItemId
+ * Get tasks linked to a work item (reverse lookup)
+ */
+router.get(
+  '/work-item/:workItemType/:workItemId',
+  validate({
+    params: z.object({
+      workItemType: z.enum(['dossier', 'position', 'ticket', 'generic']),
+      workItemId: z.string().uuid(),
+    }),
+  }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const tasks = await tasksService.getWorkItemTasks(
+        req.params.workItemType as any,
+        req.params.workItemId
+      );
+
+      res.json({ tasks, total_count: tasks.length });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * GET /tasks/overdue
+ * Get overdue tasks (SLA breach detection)
+ */
+router.get(
+  '/overdue',
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const assigneeId = req.query.assignee_id as string | undefined;
+      const tasks = await tasksService.getOverdueTasks(assigneeId);
+
+      res.json({ tasks, total_count: tasks.length });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * GET /tasks/approaching-deadline
+ * Get tasks approaching SLA deadline (for warnings)
+ */
+router.get(
+  '/approaching-deadline',
+  validate({
+    query: z.object({
+      hours: z.number().min(1).default(4),
+      assignee_id: z.string().uuid().optional(),
+    }),
+  }),
+  async (req: Request, res: Response, next: NextFunction) => {
+    try {
+      const hours = parseInt(req.query.hours as string) || 4;
+      const assigneeId = req.query.assignee_id as string | undefined;
+
+      const tasks = await tasksService.getTasksApproachingDeadline(hours, assigneeId);
+
+      res.json({ tasks, total_count: tasks.length });
+    } catch (error: any) {
+      next(error);
+    }
+  }
+);
+
+/**
+ * PATCH /tasks/:id/workflow-stage
+ * Update task workflow stage (for kanban drag-and-drop)
+ */
+router.patch(
+  '/:id/workflow-stage',
   validate({
     params: idParamSchema,
     body: z.object({
-      text: z.string().min(1).max(1000)
-    })
+      workflow_stage: z.enum(['todo', 'in_progress', 'review', 'done', 'cancelled']),
+      last_known_updated_at: z.string().datetime().optional(),
+    }),
   }),
-  async (req, res, next) => {
+  optimisticLockingMiddleware('tasks'),
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const task = await taskService.addComment(
-        req.params.id,
-        req.body,
-        req.user?.id
-      );
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
+
+      const task = await tasksService.updateTask(req.params.id, {
+        workflow_stage: req.body.workflow_stage,
+        updated_by: userId,
+      });
+
       res.json(task);
-    } catch (error) {
+    } catch (error: any) {
       next(error);
     }
   }
 );
 
-// Get tasks assigned to user
-router.get('/assigned/:userId', 
-  validate({ 
-    params: z.object({ userId: z.string().uuid() }),
-    query: z.object({ include_completed: z.boolean().optional() })
+/**
+ * PATCH /tasks/:id/complete
+ * Mark task as completed
+ */
+router.patch(
+  '/:id/complete',
+  validate({
+    params: idParamSchema,
+    body: z.object({
+      last_known_updated_at: z.string().datetime().optional(),
+    }),
   }),
-  async (req, res, next) => {
+  optimisticLockingMiddleware('tasks'),
+  async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const includeCompleted = req.query.include_completed === 'true';
-      const tasks = await taskService.findByAssignee(req.params.userId, includeCompleted);
-      res.json({ data: tasks });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ error: 'User not authenticated' });
+      }
 
-// Get overdue tasks
-router.get('/overdue/list', async (req, res, next) => {
-  try {
-    const tasks = await taskService.getOverdueTasks();
-    res.json({ data: tasks });
-  } catch (error) {
-    next(error);
-  }
-});
+      const task = await tasksService.updateTask(req.params.id, {
+        status: 'completed',
+        workflow_stage: 'done',
+        completed_by: userId,
+        completed_at: new Date().toISOString(),
+        updated_by: userId,
+      });
 
-// Get tasks due soon
-router.get('/due-soon/:days',
-  validate({ params: z.object({ days: z.string().transform(val => parseInt(val)) }) }),
-  async (req, res, next) => {
-    try {
-      const days = parseInt(req.params.days) || 7;
-      const tasks = await taskService.getTasksDueSoon(days);
-      res.json({ data: tasks });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-// Get tasks due soon with default days
-router.get('/due-soon',
-  async (req, res, next) => {
-    try {
-      const tasks = await taskService.getTasksDueSoon(7);
-      res.json({ data: tasks });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-// Get tasks by related entity
-router.get('/related/:entityType/:entityId',
-  validate({ 
-    params: z.object({
-      entityType: z.enum(['mou', 'activity', 'commitment', 'document']),
-      entityId: z.string().uuid()
-    })
-  }),
-  async (req, res, next) => {
-    try {
-      const tasks = await taskService.findByRelatedEntity(
-        req.params.entityType,
-        req.params.entityId
-      );
-      res.json({ data: tasks });
-    } catch (error) {
-      next(error);
-    }
-  }
-);
-
-// Get task statistics
-router.get('/stats/overview', async (req, res, next) => {
-  try {
-    const userId = req.query.user_id as string;
-    const stats = await taskService.getStatistics(userId);
-    res.json(stats);
-  } catch (error) {
-    next(error);
-  }
-});
-
-// Check for escalations
-router.get('/escalations/check', requirePermission(['manage_tasks']),
-  async (req, res, next) => {
-    try {
-      const tasks = await taskService.checkEscalations();
-      res.json({ data: tasks });
-    } catch (error) {
+      res.json(task);
+    } catch (error: any) {
       next(error);
     }
   }

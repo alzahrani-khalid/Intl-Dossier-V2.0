@@ -130,29 +130,29 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
   return (
     <a
       href={result.url}
-      className="block p-4 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-400 hover:shadow-md transition-all"
+      className="block rounded-lg border border-gray-200 p-4 transition-all hover:border-blue-500 hover:shadow-md dark:border-gray-700 dark:hover:border-blue-400"
       role="listitem"
     >
       <div className="flex items-start justify-between gap-3">
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {/* Badges row */}
-          <div className="flex flex-wrap items-center gap-2 mb-2">
+          <div className="mb-2 flex flex-wrap items-center gap-2">
             {/* Entity type badge */}
-            <span className={`inline-flex items-center px-2 py-1 rounded-md text-xs font-medium ${badge.color}`}>
+            <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${badge.color}`}>
               <span className="me-1">{badge.icon}</span>
               {isRTL ? badge.label.ar : badge.label.en}
             </span>
 
             {/* Archived badge */}
             {result.isArchived && (
-              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+              <span className="inline-flex items-center rounded-md bg-gray-100 px-2 py-1 text-xs font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                 {isRTL ? 'مؤرشف' : 'Archived'}
               </span>
             )}
 
             {/* Match type badge */}
             {result.matchType === 'semantic' && (
-              <span className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
+              <span className="inline-flex items-center rounded-md bg-purple-100 px-2 py-1 text-xs font-medium text-purple-700 dark:bg-purple-900/30 dark:text-purple-300">
                 {isRTL ? 'تطابق دلالي' : 'Semantic match'}
               </span>
             )}
@@ -164,22 +164,22 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
                   e.preventDefault();
                   setShowRelationshipPath(!showRelationshipPath);
                 }}
-                className="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-indigo-100 text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-300 hover:bg-indigo-200 dark:hover:bg-indigo-900/40 transition-colors"
+                className="inline-flex items-center rounded-md bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 transition-colors hover:bg-indigo-200 dark:bg-indigo-900/30 dark:text-indigo-300 dark:hover:bg-indigo-900/40"
               >
-                <Network className="me-1 h-3 w-3" />
+                <Network className="me-1 size-3" />
                 {result.relationshipPath.length} {isRTL ? 'ملفات' : 'dossiers'}
               </button>
             )}
           </div>
 
           {/* Title (bilingual) */}
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-1">
+          <h3 className="mb-1 text-lg font-semibold text-gray-900 dark:text-gray-100">
             {isRTL ? result.title_ar : result.title_en}
           </h3>
 
           {/* Secondary title */}
           {result.title_en && result.title_ar && (
-            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+            <p className="mb-2 text-sm text-gray-600 dark:text-gray-400">
               {isRTL ? result.title_en : result.title_ar}
             </p>
           )}
@@ -187,7 +187,7 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
           {/* Snippet with highlights */}
           {(result.snippet_en || result.snippet_ar) && (
             <div
-              className="text-sm text-gray-700 dark:text-gray-300 line-clamp-2"
+              className="line-clamp-2 text-sm text-gray-700 dark:text-gray-300"
               dangerouslySetInnerHTML={{
                 __html: isRTL ? result.snippet_ar || '' : result.snippet_en || '',
               }}
@@ -229,8 +229,8 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
 
           {/* T099: Expandable Relationship Path */}
           {showRelationshipPath && result.relationshipPath && result.relationshipPath.length > 0 && (
-            <div className="mt-3 p-3 bg-gray-50 dark:bg-gray-800/50 rounded-md border border-gray-200 dark:border-gray-700">
-              <div className="text-xs font-medium text-gray-700 dark:text-gray-300 mb-2">
+            <div className="mt-3 rounded-md border border-gray-200 bg-gray-50 p-3 dark:border-gray-700 dark:bg-gray-800/50">
+              <div className="mb-2 text-xs font-medium text-gray-700 dark:text-gray-300">
                 {isRTL ? 'مسار العلاقة:' : 'Relationship Path:'}
               </div>
               <div className="flex flex-col gap-2">
@@ -242,9 +242,9 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
                     {idx < result.relationshipPath!.length - 1 && (
                       <>
                         {isRTL ? (
-                          <ChevronLeft className="h-3 w-3 text-gray-400" />
+                          <ChevronLeft className="size-3 text-gray-400" />
                         ) : (
-                          <ChevronRight className="h-3 w-3 text-gray-400" />
+                          <ChevronRight className="size-3 text-gray-400" />
                         )}
                         {segment.relationship_type && (
                           <span className={`text-xs ${getRelationshipColor(segment.relationship_strength)}`}>
@@ -252,9 +252,9 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
                           </span>
                         )}
                         {isRTL ? (
-                          <ChevronLeft className="h-3 w-3 text-gray-400" />
+                          <ChevronLeft className="size-3 text-gray-400" />
                         ) : (
-                          <ChevronRight className="h-3 w-3 text-gray-400" />
+                          <ChevronRight className="size-3 text-gray-400" />
                         )}
                       </>
                     )}
@@ -267,9 +267,9 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
 
         {/* Rank score (dev mode only) */}
         {process.env.NODE_ENV === 'development' && (
-          <div className="flex-shrink-0 text-end">
+          <div className="shrink-0 text-end">
             <div className="text-xs text-gray-500 dark:text-gray-400">Rank</div>
-            <div className="text-sm font-mono font-semibold text-gray-700 dark:text-gray-300">
+            <div className="font-mono text-sm font-semibold text-gray-700 dark:text-gray-300">
               {result.rankScore.toFixed(1)}
             </div>
           </div>
@@ -281,7 +281,7 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
 
 function LoadingSkeleton() {
   return (
-    <div className="p-4 rounded-lg border border-gray-200 dark:border-gray-700">
+    <div className="rounded-lg border border-gray-200 p-4 dark:border-gray-700">
       <div className="flex items-start gap-3">
         <div className="flex-1 space-y-3">
           <div className="flex gap-2">
@@ -314,26 +314,26 @@ export function SearchResultsList({
   // Empty state
   if (!isLoading && results.length === 0 && exactMatches.length === 0) {
     return (
-      <div className="text-center py-12" dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="text-6xl mb-4">🔍</div>
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100 mb-2">
+      <div className="py-12 text-center" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="mb-4 text-6xl">🔍</div>
+        <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100">
           {t('search.noResults.title')}
         </h3>
-        <p className="text-gray-600 dark:text-gray-400 mb-6">
+        <p className="mb-6 text-gray-600 dark:text-gray-400">
           {t('search.noResults.description')}
         </p>
 
         {/* Typo suggestions */}
         {typoSuggestions.length > 0 && (
           <div className="mb-6">
-            <p className="text-sm text-gray-700 dark:text-gray-300 mb-2">
+            <p className="mb-2 text-sm text-gray-700 dark:text-gray-300">
               {t('search.noResults.didYouMean')}
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {typoSuggestions.map((suggestion, idx) => (
                 <button
                   key={idx}
-                  className="px-3 py-1 rounded-md bg-blue-50 dark:bg-blue-900/20 text-blue-600 dark:text-blue-400 text-sm hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
+                  className="rounded-md bg-blue-50 px-3 py-1 text-sm text-blue-600 transition-colors hover:bg-blue-100 dark:bg-blue-900/20 dark:text-blue-400 dark:hover:bg-blue-900/30"
                   onClick={() => {
                     // This would trigger a new search
                     // onSearchQueryChange(suggestion);
@@ -348,11 +348,11 @@ export function SearchResultsList({
 
         {/* Search tips */}
         {searchTips.length > 0 && (
-          <div className="max-w-md mx-auto text-start">
-            <p className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+          <div className="mx-auto max-w-md text-start">
+            <p className="mb-2 text-sm font-medium text-gray-700 dark:text-gray-300">
               {t('search.noResults.tips')}
             </p>
-            <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1 list-disc list-inside">
+            <ul className="list-inside list-disc space-y-1 text-sm text-gray-600 dark:text-gray-400">
               {searchTips.map((tip, idx) => (
                 <li key={idx}>{tip}</li>
               ))}
@@ -369,7 +369,7 @@ export function SearchResultsList({
         {/* Exact Matches Section */}
         {exactMatches.length > 0 && (
           <div>
-            <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 px-1">
+            <h2 className="mb-3 px-1 text-sm font-semibold text-gray-700 dark:text-gray-300">
               {t('search.sections.exactMatches')} ({exactMatches.length})
             </h2>
             <div className="space-y-3">
@@ -384,7 +384,7 @@ export function SearchResultsList({
         {results.length > 0 && (
           <div>
             {exactMatches.length > 0 && (
-              <h2 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-3 px-1 mt-6">
+              <h2 className="mb-3 mt-6 px-1 text-sm font-semibold text-gray-700 dark:text-gray-300">
                 {t('search.sections.related')} ({results.length})
               </h2>
             )}
@@ -407,10 +407,10 @@ export function SearchResultsList({
 
         {/* Load more button */}
         {!isLoading && hasMore && onLoadMore && (
-          <div className="text-center pt-4">
+          <div className="pt-4 text-center">
             <button
               onClick={onLoadMore}
-              className="px-4 py-2 rounded-md bg-blue-600 text-white hover:bg-blue-700 transition-colors"
+              className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
             >
               {t('search.loadMore')}
             </button>
