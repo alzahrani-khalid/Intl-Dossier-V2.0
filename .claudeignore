@@ -1,0 +1,39 @@
+# Archive - historical documentation that should not pollute AI context
+.archive/
+
+# Project docs archive (if created)
+project_docs/archive/
+
+# Test artifacts
+test-results/
+playwright-report/
+coverage/
+
+# Build outputs
+dist/
+build/
+.next/
+.turbo/
+
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Temporary files
+temp/
+*.tmp
+*.log
+
+# iOS/Mobile specific
+ios/
+mobile/
+Gusto Mobile ios Jun 2025/
+
+# Monitoring
+monitoring/
+
+# Docker build contexts (keep configs, ignore runtime data)
+docker/data/
+docker/logs/
+
