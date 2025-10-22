@@ -100,7 +100,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
       <Card className={className}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
+            <Shield className="size-5" />
             Backup Codes Generated
           </CardTitle>
           <CardDescription>
@@ -108,7 +108,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-          <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4">
+          <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-800">
             <div className="grid grid-cols-2 gap-2 font-mono text-sm">
               {backupCodes.map((code, index) => (
                 <div key={index} className="flex items-center justify-between">
@@ -121,7 +121,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
 
           <div className="flex gap-2">
             <Button onClick={downloadBackupCodes} className="flex-1">
-              <Download className="h-4 w-4 me-2" />
+              <Download className="me-2 size-4" />
               Download Codes
             </Button>
             <Button variant="outline" onClick={() => setShowBackupCodes(false)}>
@@ -137,7 +137,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
     <Card className={className}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Shield className="h-5 w-5" />
+          <Shield className="size-5" />
           Two-Factor Authentication
         </CardTitle>
         <CardDescription>
@@ -146,9 +146,9 @@ export function MFAManagement({ className }: MFAManagementProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+          <div className="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-red-600 dark:text-red-400" />
+              <AlertTriangle className="size-4 text-red-600 dark:text-red-400" />
               <span className="text-sm text-red-800 dark:text-red-200">{error}</span>
             </div>
           </div>
@@ -160,7 +160,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
               <span className="font-medium">Two-Factor Authentication</span>
               {mfaConfig?.enabled ? (
                 <Badge variant="default" className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                  <CheckCircle className="h-3 w-3 me-1" />
+                  <CheckCircle className="me-1 size-3" />
                   Enabled
                 </Badge>
               ) : (
@@ -192,9 +192,9 @@ export function MFAManagement({ className }: MFAManagementProps) {
 
         {mfaConfig?.enabled && (
           <div className="space-y-3">
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-3">
+            <div className="rounded-lg border border-green-200 bg-green-50 p-3 dark:border-green-800 dark:bg-green-900/20">
               <div className="flex items-start gap-2">
-                <CheckCircle className="h-4 w-4 text-green-600 dark:text-green-400 mt-0.5" />
+                <CheckCircle className="mt-0.5 size-4 text-green-600 dark:text-green-400" />
                 <div className="text-sm text-green-800 dark:text-green-200">
                   <p className="font-medium">2FA is active</p>
                   <p>Your account is protected with two-factor authentication</p>
@@ -209,7 +209,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
                 disabled={isLoading}
                 className="flex-1"
               >
-                <RefreshCw className="h-4 w-4 me-2" />
+                <RefreshCw className="me-2 size-4" />
                 Generate New Backup Codes
               </Button>
               <Button 
@@ -218,7 +218,7 @@ export function MFAManagement({ className }: MFAManagementProps) {
                 disabled={isLoading}
                 className="text-red-600 hover:text-red-700 dark:text-red-400 dark:hover:text-red-300"
               >
-                <Trash2 className="h-4 w-4 me-2" />
+                <Trash2 className="me-2 size-4" />
                 Disable 2FA
               </Button>
             </div>
@@ -226,9 +226,9 @@ export function MFAManagement({ className }: MFAManagementProps) {
         )}
 
         {showDisableConfirm && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+          <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
             <div className="flex items-start gap-2">
-              <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 mt-0.5" />
+              <AlertTriangle className="mt-0.5 size-5 text-red-600 dark:text-red-400" />
               <div className="space-y-2">
                 <h4 className="font-medium text-red-800 dark:text-red-200">
                   Disable Two-Factor Authentication?

@@ -128,7 +128,7 @@ export function VersionComparison({
             return (
               <span
                 key={index}
-                className="bg-green-100 text-green-900 px-0.5 rounded"
+                className="rounded bg-green-100 px-0.5 text-green-900"
                 aria-label={t('positions.versionComparison.added')}
               >
                 {item.text}
@@ -140,7 +140,7 @@ export function VersionComparison({
             return (
               <span
                 key={index}
-                className="bg-red-100 text-red-900 px-0.5 rounded line-through"
+                className="rounded bg-red-100 px-0.5 text-red-900 line-through"
                 aria-label={t('positions.versionComparison.removed')}
               >
                 {item.text}
@@ -205,7 +205,7 @@ export function VersionComparison({
               </Select>
             </div>
 
-            <ArrowRight className="mt-6 h-5 w-5 text-muted-foreground flex-shrink-0" />
+            <ArrowRight className="mt-6 size-5 shrink-0 text-muted-foreground" />
 
             <div className="flex-1">
               <label
@@ -244,7 +244,7 @@ export function VersionComparison({
               className="mt-6"
             >
               {isLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
                 t('positions.versionComparison.compare')
               )}
@@ -253,7 +253,7 @@ export function VersionComparison({
 
           {fromVersion === toVersion && fromVersion && (
             <Alert className="mt-4">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertDescription>
                 {t('positions.versionComparison.sameVersionError')}
               </AlertDescription>
@@ -265,14 +265,14 @@ export function VersionComparison({
       {/* Loading State */}
       {isLoading && (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="size-8 animate-spin text-primary" />
         </div>
       )}
 
       {/* Error State */}
       {error && (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>
             {error instanceof Error ? error.message : t('positions.versionComparison.error')}
           </AlertDescription>
@@ -290,25 +290,25 @@ export function VersionComparison({
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+              <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
                 {/* English Diff (Left) */}
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 mb-3">
-                    <h3 className="font-semibold text-sm">
+                  <div className="mb-3 flex items-center gap-2">
+                    <h3 className="text-sm font-semibold">
                       {t('positions.versionComparison.englishVersion')}
                     </h3>
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
-                        <span className="w-3 h-3 bg-green-100 border border-green-300 rounded" />
+                        <span className="size-3 rounded border border-green-300 bg-green-100" />
                         {t('positions.versionComparison.added')}
                       </span>
                       <span className="inline-flex items-center gap-1">
-                        <span className="w-3 h-3 bg-red-100 border border-red-300 rounded" />
+                        <span className="size-3 rounded border border-red-300 bg-red-100" />
                         {t('positions.versionComparison.removed')}
                       </span>
                     </div>
                   </div>
-                  <div className="border rounded-md p-4 bg-gray-50 min-h-[200px]">
+                  <div className="min-h-[200px] rounded-md border bg-gray-50 p-4">
                     {versionDiff.english_diff.length > 0 ? (
                       renderDiffText(versionDiff.english_diff, false)
                     ) : (
@@ -321,26 +321,26 @@ export function VersionComparison({
 
                 {/* Arabic Diff (Right) */}
                 <div className="space-y-2">
-                  <div className="flex items-center gap-2 mb-3 justify-end">
+                  <div className="mb-3 flex items-center justify-end gap-2">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <span className="inline-flex items-center gap-1">
-                        <span className="w-3 h-3 bg-red-100 border border-red-300 rounded" />
+                        <span className="size-3 rounded border border-red-300 bg-red-100" />
                         {t('positions.versionComparison.removed')}
                       </span>
                       <span className="inline-flex items-center gap-1">
-                        <span className="w-3 h-3 bg-green-100 border border-green-300 rounded" />
+                        <span className="size-3 rounded border border-green-300 bg-green-100" />
                         {t('positions.versionComparison.added')}
                       </span>
                     </div>
-                    <h3 className="font-semibold text-sm">
+                    <h3 className="text-sm font-semibold">
                       {t('positions.versionComparison.arabicVersion')}
                     </h3>
                   </div>
-                  <div className="border rounded-md p-4 bg-gray-50 min-h-[200px]" dir="rtl">
+                  <div className="min-h-[200px] rounded-md border bg-gray-50 p-4" dir="rtl">
                     {versionDiff.arabic_diff.length > 0 ? (
                       renderDiffText(versionDiff.arabic_diff, true)
                     ) : (
-                      <p className="text-sm text-muted-foreground text-end">
+                      <p className="text-end text-sm text-muted-foreground">
                         {t('positions.versionComparison.noChanges')}
                       </p>
                     )}
@@ -406,7 +406,7 @@ export function VersionComparison({
             versionDiff.arabic_diff.length === 0 &&
             Object.keys(versionDiff.metadata_changes).length === 0 && (
               <Alert>
-                <AlertCircle className="h-4 w-4" />
+                <AlertCircle className="size-4" />
                 <AlertDescription>
                   {t('positions.versionComparison.noChangesBetweenVersions')}
                 </AlertDescription>

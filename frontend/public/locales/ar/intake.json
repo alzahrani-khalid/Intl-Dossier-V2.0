@@ -1,0 +1,116 @@
+{
+  "title": "تقديم طلب جديد",
+  "subtitle": "إنشاء تذكرة جديدة للمعالجة",
+  "form": {
+    "requestType": {
+      "label": "نوع الطلب",
+      "placeholder": "اختر نوع الطلب",
+      "required": "نوع الطلب مطلوب",
+      "options": {
+        "engagement": "مشاركة",
+        "position": "موقف",
+        "mou_action": "إجراء مذكرة تفاهم",
+        "foresight": "استشراف"
+      }
+    },
+    "title": {
+      "label": "العنوان (الإنجليزية)",
+      "placeholder": "أدخل عنواناً وصفياً",
+      "minLength": "يجب أن يكون العنوان 3 أحرف على الأقل",
+      "maxLength": "يجب ألا يتجاوز العنوان 200 حرف"
+    },
+    "titleAr": {
+      "label": "العنوان (العربية)",
+      "placeholder": "أدخل عنواناً وصفياً"
+    },
+    "description": {
+      "label": "الوصف (الإنجليزية)",
+      "placeholder": "قدم معلومات مفصلة عن طلبك",
+      "minLength": "يجب أن يكون الوصف 10 أحرف على الأقل",
+      "maxLength": "يجب ألا يتجاوز الوصف 5000 حرف"
+    },
+    "descriptionAr": {
+      "label": "الوصف (العربية)",
+      "placeholder": "قدم معلومات مفصلة عن طلبك"
+    },
+    "urgency": {
+      "label": "مستوى الأولوية",
+      "placeholder": "اختر مستوى الأولوية",
+      "required": "مستوى الأولوية مطلوب",
+      "options": {
+        "low": "منخفض",
+        "medium": "متوسط",
+        "high": "عالي",
+        "critical": "حرج"
+      }
+    }
+  },
+  "queue": {
+    "status": {
+      "submitted": "مقدم",
+      "triaged": "تم الفرز",
+      "assigned": "معين",
+      "in_progress": "قيد التنفيذ",
+      "completed": "مكتمل",
+      "cancelled": "ملغى"
+    },
+    "priority": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "urgent": "عاجل"
+    },
+    "urgency": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "critical": "حرج"
+    }
+  },
+  "slaPreview": {
+    "title": "اتفاقية مستوى الخدمة المتوقعة",
+    "acknowledgment": "الإقرار",
+    "resolution": "الحل",
+    "minutes": "دقائق",
+    "hours": "ساعات",
+    "businessHours": "ساعات العمل فقط"
+  },
+  "success": {
+    "title": "تم تقديم الطلب بنجاح",
+    "message": "تم إنشاء طلبك {{ticketNumber}}",
+    "viewTicket": "عرض التذكرة",
+    "createAnother": "إنشاء آخر"
+  },
+  "error": {
+    "message": "فشل تقديم الطلب. يرجى المحاولة مرة أخرى."
+  },
+  "actions": {
+    "cancel": "إلغاء",
+    "reset": "إعادة تعيين",
+    "fillMock": "ملء بمثال",
+    "submit": "تقديم الطلب",
+    "submitting": "جاري التقديم..."
+  },
+  "ticketDetail": {
+    "error": "فشل تحميل التذكرة. يرجى المحاولة مرة أخرى.",
+    "requestType": "نوع الطلب",
+    "urgency": "الأولوية",
+    "sensitivity": "الحساسية",
+    "priority": "الأهمية",
+    "description": "الوصف",
+    "additionalInfo": "معلومات إضافية",
+    "attachments": "المرفقات",
+    "convert": "تحويل إلى قطعة أثرية",
+    "close": "إغلاق التذكرة",
+    "convertPrompt": "أدخل النوع المستهدف (ملف/مشاركة/موقف):",
+    "closePrompt": "أدخل الحل:",
+    "historyPlaceholder": "سيتم عرض سجل التدقيق هنا",
+    "tabs": {
+      "details": "التفاصيل",
+      "triage": "الفرز",
+      "duplicates": "المكررات",
+      "history": "السجل",
+      "links": "الروابط"
+    }
+  }
+}

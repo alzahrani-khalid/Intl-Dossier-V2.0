@@ -109,8 +109,8 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base flex items-center gap-2">
-            <Filter className="h-4 w-4" />
+          <CardTitle className="flex items-center gap-2 text-base">
+            <Filter className="size-4" />
             {t('filters.title')}
             {activeFilterCount > 0 && (
               <Badge variant="secondary" className="ms-2">
@@ -138,25 +138,25 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
             {t('filters.search')}
           </Label>
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               id="search"
               type="text"
               placeholder={t('filters.search')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="ps-9 pe-9"
+              className="pe-9 ps-9"
               aria-label={t('filters.search')}
             />
             {searchQuery && (
               <Button
                 variant="ghost"
                 size="sm"
-                className="absolute right-1 top-1/2 -translate-y-1/2 h-7 w-7 p-0"
+                className="absolute right-1 top-1/2 size-7 -translate-y-1/2 p-0"
                 onClick={() => setSearchQuery('')}
                 aria-label={t('clear', { ns: 'translation' })}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             )}
           </div>
@@ -170,7 +170,7 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
               <Badge
                 key={type}
                 variant={isFilterActive('type', type) ? 'default' : 'outline'}
-                className="cursor-pointer hover:bg-primary/90 transition-colors"
+                className="cursor-pointer transition-colors hover:bg-primary/90"
                 onClick={() => toggleFilter('type', type)}
                 role="checkbox"
                 aria-checked={isFilterActive('type', type)}
@@ -196,7 +196,7 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
               <Badge
                 key={status}
                 variant={isFilterActive('status', status) ? 'default' : 'outline'}
-                className="cursor-pointer hover:bg-primary/90 transition-colors"
+                className="cursor-pointer transition-colors hover:bg-primary/90"
                 onClick={() => toggleFilter('status', status)}
                 role="checkbox"
                 aria-checked={isFilterActive('status', status)}
@@ -222,7 +222,7 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
               <Badge
                 key={sensitivity}
                 variant={isFilterActive('sensitivity', sensitivity) ? 'default' : 'outline'}
-                className="cursor-pointer hover:bg-primary/90 transition-colors"
+                className="cursor-pointer transition-colors hover:bg-primary/90"
                 onClick={() => toggleFilter('sensitivity', sensitivity)}
                 role="checkbox"
                 aria-checked={isFilterActive('sensitivity', sensitivity)}
@@ -242,8 +242,8 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
 
         {/* Active Filters Summary */}
         {activeFilterCount > 0 && (
-          <div className="pt-4 border-t">
-            <p className="text-xs text-muted-foreground mb-2">
+          <div className="border-t pt-4">
+            <p className="mb-2 text-xs text-muted-foreground">
               {t('activeFilters', { ns: 'translation' }) || 'Active filters'}:
             </p>
             <div className="flex flex-wrap gap-2">
@@ -251,7 +251,7 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
                 <Badge variant="secondary" className="gap-1">
                   {t('filters.type')}: {t(`types.${filters.type}`)}
                   <X
-                    className="h-3 w-3 cursor-pointer"
+                    className="size-3 cursor-pointer"
                     onClick={() => toggleFilter('type', filters.type!)}
                   />
                 </Badge>
@@ -260,7 +260,7 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
                 <Badge variant="secondary" className="gap-1">
                   {t('filters.status')}: {t(`statuses.${filters.status}`)}
                   <X
-                    className="h-3 w-3 cursor-pointer"
+                    className="size-3 cursor-pointer"
                     onClick={() => toggleFilter('status', filters.status!)}
                   />
                 </Badge>
@@ -269,7 +269,7 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
                 <Badge variant="secondary" className="gap-1">
                   {t('filters.sensitivity')}: {t(`sensitivity.${filters.sensitivity}`)}
                   <X
-                    className="h-3 w-3 cursor-pointer"
+                    className="size-3 cursor-pointer"
                     onClick={() => toggleFilter('sensitivity', filters.sensitivity!)}
                   />
                 </Badge>

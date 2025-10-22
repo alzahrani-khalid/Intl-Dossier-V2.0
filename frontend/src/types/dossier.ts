@@ -132,6 +132,7 @@ export interface TimelineEvent {
   dossier_id: string;
   event_type: EventType;
   source_id: string;
+  source_table: 'engagements' | 'calendar_entries' | 'mous' | 'positions';
   event_date: string;
   event_title_en: string;
   event_title_ar: string;

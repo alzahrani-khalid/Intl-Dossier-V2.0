@@ -125,7 +125,7 @@ export function ApprovalChain({
   status,
   className,
 }: ApprovalChainProps) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('positions');
   const isRTL = i18n.language === 'ar';
 
   // Extract stages from config
@@ -134,8 +134,8 @@ export function ApprovalChain({
   if (stages.length === 0) {
     return (
       <div className="flex items-center justify-center py-8 text-muted-foreground">
-        <AlertCircle className="h-5 w-5 me-2" />
-        <span>{t('positions.approval.noChainConfigured')}</span>
+        <AlertCircle className="me-2 size-5" />
+        <span>{t('approval.noChainConfigured')}</span>
       </div>
     );
   }
@@ -158,9 +158,9 @@ export function ApprovalChain({
             return (
               <React.Fragment key={stage.order}>
                 {/* Stage item */}
-                <div className="flex flex-col items-center min-w-[180px] flex-shrink-0">
+                <div className="flex min-w-[180px] shrink-0 flex-col items-center">
                   {/* Stage indicator */}
-                  <div className="flex flex-col items-center mb-3">
+                  <div className="mb-3 flex flex-col items-center">
                     <div
                       className={cn(
                         'flex h-12 w-12 items-center justify-center rounded-full border-2 transition-all',
@@ -172,34 +172,34 @@ export function ApprovalChain({
                           'bg-gray-100 border-gray-300 text-gray-400'
                       )}
                       role="img"
-                      aria-label={`${t('positions.approval.stage')} ${stage.order}`}
+                      aria-label={`${t('approval.stage')} ${stage.order}`}
                     >
                       {stageStatus === 'completed' ? (
-                        <CheckCircle className="h-6 w-6" />
+                        <CheckCircle className="size-6" />
                       ) : stageStatus === 'current' ? (
-                        <Clock className="h-6 w-6" />
+                        <Clock className="size-6" />
                       ) : (
-                        <Circle className="h-6 w-6" />
+                        <Circle className="size-6" />
                       )}
                     </div>
 
                     {/* Stage number */}
-                    <span className="text-xs font-medium text-muted-foreground mt-1">
-                      {t('positions.approval.stage')} {stage.order}
+                    <span className="mt-1 text-xs font-medium text-muted-foreground">
+                      {t('approval.stage')} {stage.order}
                     </span>
                   </div>
 
                   {/* Stage details */}
-                  <div className="text-center space-y-2 w-full">
+                  <div className="w-full space-y-2 text-center">
                     {/* Role */}
-                    <div className="font-medium text-sm break-words">
+                    <div className="break-words text-sm font-medium">
                       {stage.role}
                     </div>
 
                     {/* Approver info */}
                     {stage.approver_name && (
                       <div className="flex items-center justify-center gap-1 text-xs text-muted-foreground">
-                        <User className="h-3 w-3" />
+                        <User className="size-3" />
                         <span className="truncate">{stage.approver_name}</span>
                       </div>
                     )}
@@ -228,14 +228,14 @@ export function ApprovalChain({
                               <TooltipTrigger asChild>
                                 <Badge
                                   variant="outline"
-                                  className="border-green-600 text-green-700 text-xs gap-1"
+                                  className="gap-1 border-green-600 text-xs text-green-700"
                                 >
-                                  <Shield className="h-3 w-3" />
-                                  {t('positions.approval.stepUpVerified')}
+                                  <Shield className="size-3" />
+                                  {t('approval.stepUpVerified')}
                                 </Badge>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <p>{t('positions.approval.stepUpVerifiedTooltip')}</p>
+                                <p>{t('approval.stepUpVerifiedTooltip')}</p>
                               </TooltipContent>
                             </Tooltip>
                           </TooltipProvider>
@@ -247,19 +247,19 @@ export function ApprovalChain({
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <div className="flex items-center justify-center gap-1 text-xs text-amber-600">
-                                  <Users className="h-3 w-3" />
-                                  <span>{t('positions.approval.delegated')}</span>
+                                  <Users className="size-3" />
+                                  <span>{t('approval.delegated')}</span>
                                 </div>
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>
-                                  {t('positions.approval.delegatedFrom', {
+                                  {t('approval.delegatedFrom', {
                                     name: lastApproval.delegated_from_name || lastApproval.delegated_from,
                                   })}
                                 </p>
                                 {lastApproval.delegated_until && (
-                                  <p className="text-xs mt-1">
-                                    {t('positions.approval.delegatedUntil', {
+                                  <p className="mt-1 text-xs">
+                                    {t('approval.delegatedUntil', {
                                       date: new Date(lastApproval.delegated_until).toLocaleDateString(
                                         i18n.language
                                       ),
@@ -277,20 +277,20 @@ export function ApprovalChain({
                             <Tooltip>
                               <TooltipTrigger asChild>
                                 <div className="flex items-center justify-center gap-1 text-xs text-purple-600">
-                                  <Users className="h-3 w-3" />
-                                  <span>{t('positions.approval.reassigned')}</span>
+                                  <Users className="size-3" />
+                                  <span>{t('approval.reassigned')}</span>
                                 </div>
                               </TooltipTrigger>
                               <TooltipContent>
                                 <p>
-                                  {t('positions.approval.reassignedBy', {
+                                  {t('approval.reassignedBy', {
                                     name:
                                       lastApproval.reassigned_by_name ||
                                       lastApproval.reassigned_by,
                                   })}
                                 </p>
                                 {lastApproval.reassignment_reason && (
-                                  <p className="text-xs mt-1 max-w-xs">
+                                  <p className="mt-1 max-w-xs text-xs">
                                     {lastApproval.reassignment_reason}
                                   </p>
                                 )}
@@ -304,13 +304,13 @@ export function ApprovalChain({
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <div className="flex items-center justify-center gap-1 text-xs text-blue-600 cursor-help">
-                                  <MessageSquare className="h-3 w-3" />
-                                  <span>{t('positions.approval.hasComments')}</span>
+                                <div className="flex cursor-help items-center justify-center gap-1 text-xs text-blue-600">
+                                  <MessageSquare className="size-3" />
+                                  <span>{t('approval.hasComments')}</span>
                                 </div>
                               </TooltipTrigger>
                               <TooltipContent className="max-w-xs">
-                                <p className="text-xs whitespace-pre-wrap">
+                                <p className="whitespace-pre-wrap text-xs">
                                   {lastApproval.comments}
                                 </p>
                               </TooltipContent>
@@ -335,14 +335,14 @@ export function ApprovalChain({
                           <TooltipProvider>
                             <Tooltip>
                               <TooltipTrigger asChild>
-                                <div className="text-xs text-muted-foreground cursor-help">
-                                  {t('positions.approval.multipleActions', {
+                                <div className="cursor-help text-xs text-muted-foreground">
+                                  {t('approval.multipleActions', {
                                     count: stageApprovals.length,
                                   })}
                                 </div>
                               </TooltipTrigger>
                               <TooltipContent>
-                                <div className="space-y-2 max-w-xs">
+                                <div className="max-w-xs space-y-2">
                                   {stageApprovals.map((approval, idx) => (
                                     <div key={approval.id} className="text-xs">
                                       <div className="font-medium">
@@ -373,7 +373,7 @@ export function ApprovalChain({
 
                 {/* Connector arrow */}
                 {!isLastStage && (
-                  <div className="flex items-center pt-6 flex-shrink-0">
+                  <div className="flex shrink-0 items-center pt-6">
                     <ArrowRight
                       className={cn(
                         'h-5 w-5 text-muted-foreground',
@@ -389,9 +389,9 @@ export function ApprovalChain({
         </div>
 
         {/* Progress bar */}
-        <div className="relative h-1 bg-gray-200 rounded-full mt-4 overflow-hidden">
+        <div className="relative mt-4 h-1 overflow-hidden rounded-full bg-gray-200">
           <div
-            className="absolute top-0 h-full bg-blue-600 transition-all duration-500 ease-out rounded-full"
+            className="absolute top-0 h-full rounded-full bg-blue-600 transition-all duration-500 ease-out"
             style={{
               width: `${((currentStage - 1) / (stages.length - 1)) * 100}%`,
               [isRTL ? 'right' : 'left']: 0,
@@ -400,7 +400,7 @@ export function ApprovalChain({
             aria-valuenow={currentStage}
             aria-valuemin={1}
             aria-valuemax={stages.length}
-            aria-label={t('positions.approval.progress', {
+            aria-label={t('approval.progress', {
               current: currentStage,
               total: stages.length,
             })}
@@ -408,18 +408,18 @@ export function ApprovalChain({
         </div>
 
         {/* Summary */}
-        <div className="flex items-center justify-between mt-4 text-sm">
+        <div className="mt-4 flex items-center justify-between text-sm">
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-2">
-              <CheckCircle className="h-4 w-4 text-green-600" />
+              <CheckCircle className="size-4 text-green-600" />
               <span className="text-muted-foreground">
-                {t('positions.approval.completed')}: {currentStage - 1}
+                {t('approval.completed')}: {currentStage - 1}
               </span>
             </div>
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-blue-600" />
+              <Clock className="size-4 text-blue-600" />
               <span className="text-muted-foreground">
-                {t('positions.approval.remaining')}: {stages.length - currentStage + 1}
+                {t('approval.remaining')}: {stages.length - currentStage + 1}
               </span>
             </div>
           </div>

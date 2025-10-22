@@ -3,50 +3,35 @@
     "fetch-mcp": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "fetch-mcp@latest"
-      ],
+      "args": ["fetch-mcp@latest"],
       "env": {}
     },
     "filesystem": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "@modelcontextprotocol/server-filesystem@latest",
-        "."
-      ],
+      "args": ["@modelcontextprotocol/server-filesystem@latest", "."],
       "env": {}
     },
     "sequential-thinking": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
-      ],
+      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
       "env": {}
     },
     "docker": {
       "type": "stdio",
       "command": "uvx",
-      "args": [
-        "mcp-server-docker"
-      ],
+      "args": ["mcp-server-docker"],
       "env": {}
     },
     "shadcn": {
       "type": "stdio",
       "command": "npx",
-      "args": [
-        "shadcn@latest",
-        "mcp"
-      ]
+      "args": ["shadcn@latest", "mcp"]
     },
     "playwright": {
       "command": "npx",
-      "args": [
-        "@playwright/mcp@latest"
-      ]
+      "args": ["@playwright/mcp@latest"]
     },
     "supabase": {
       "command": "npx",
@@ -59,10 +44,7 @@
     },
     "CopilotKit MCP": {
       "command": "npx",
-      "args": [
-        "mcp-remote",
-        "https://mcp.copilotkit.ai"
-      ]
+      "args": ["mcp-remote", "https://mcp.copilotkit.ai"]
     }
   }
 }

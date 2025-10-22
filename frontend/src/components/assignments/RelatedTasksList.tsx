@@ -100,7 +100,7 @@ export function RelatedTasksList({
           {siblingAssignments.map((assignment) => (
             <Link
               key={assignment.id}
-              to="/assignments/$id"
+              to="/tasks/$id"
               params={{ id: assignment.id }}
               className="block"
             >

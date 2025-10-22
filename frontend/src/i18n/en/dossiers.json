@@ -59,13 +59,39 @@
     "title": "Timeline",
     "empty": "No timeline events found",
     "loadMore": "Load More Events",
+    "selectFilter": "Select event type filters",
+    "filtersSelected": "selected",
+    "filterBy": "Filter",
+    "clearAll": "Clear all",
+    "activeFilter": "Filtered by",
+    "clearFilter": "Clear",
+    "filter": "Filter",
     "types": {
       "engagement": "Engagement",
       "position": "Position",
       "mou": "MoU",
       "commitment": "Commitment",
       "document": "Document",
-      "intelligence": "Intelligence"
+      "intelligence": "Intelligence",
+      "internal_meeting": "Internal Meeting",
+      "deadline": "Deadline",
+      "reminder": "Reminder",
+      "holiday": "Holiday",
+      "training": "Training",
+      "review": "Review",
+      "forum": "Forum",
+      "other": "Other"
+    },
+    "engagementTypes": {
+      "conference": "Conference",
+      "workshop": "Workshop",
+      "meeting": "Meeting",
+      "bilateral": "Bilateral Meeting",
+      "multilateral": "Multilateral Meeting",
+      "consultation": "Consultation",
+      "negotiation": "Negotiation",
+      "ceremony": "Ceremony",
+      "other": "Other"
     }
   },
   "actions": {

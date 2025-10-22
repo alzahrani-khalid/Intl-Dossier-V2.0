@@ -1,7 +1,8 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { Link } from '@tanstack/react-router';
+import { useDuplicateCandidates, useMergeTickets } from '../hooks/useIntakeApi';
 
 interface DuplicateCandidate {
   id: string;
@@ -34,69 +35,12 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
   const [selectedCandidate, setSelectedCandidate] = useState<DuplicateCandidate | null>(null);
   const [mergeReason, setMergeReason] = useState('');
 
-  // Fetch duplicate candidates
-  const { data: candidates, isLoading, error } = useQuery({
-    queryKey: ['duplicate-candidates', ticketId],
-    queryFn: async () => {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/intake/tickets/${ticketId}/duplicates`,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-          },
-        }
-      );
+  // Fetch duplicate candidates using the proper hook
+  const { data: response, isLoading, error } = useDuplicateCandidates(ticketId);
+  const candidates = response?.candidates || [];
 
-      if (!response.ok) {
-        throw new Error('Failed to fetch duplicate candidates');
-      }
-
-      return response.json() as Promise<DuplicateCandidate[]>;
-    },
-  });
-
-  // Merge tickets mutation
-  const mergeMutation = useMutation({
-    mutationFn: async ({
-      candidateId,
-      primaryTicketId,
-      reason,
-    }: {
-      candidateId: string;
-      primaryTicketId: string;
-      reason: string;
-    }) => {
-      const response = await fetch(
-        `${import.meta.env.VITE_API_URL}/intake/tickets/${ticketId}/merge`,
-        {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${localStorage.getItem('access_token')}`,
-          },
-          body: JSON.stringify({
-            target_ticket_id: primaryTicketId === ticketId ? selectedCandidate?.target_ticket_id : ticketId,
-            primary_ticket_id: primaryTicketId,
-            merge_reason: reason,
-            merge_reason_ar: i18n.language === 'ar' ? reason : undefined,
-          }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error('Failed to merge tickets');
-      }
-
-      return response.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['duplicate-candidates', ticketId] });
-      queryClient.invalidateQueries({ queryKey: ['intake-ticket', ticketId] });
-      setSelectedCandidate(null);
-      setMergeReason('');
-    },
-  });
+  // Use the merge tickets hook
+  const mergeMutation = useMergeTickets(ticketId);
 
   // Mark as not duplicate mutation
   const notDuplicateMutation = useMutation({
@@ -144,17 +88,25 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       return;
     }
 
+    const targetId = primaryId === ticketId ? selectedCandidate.target_ticket_id : ticketId;
+
     mergeMutation.mutate({
-      candidateId: selectedCandidate.id,
+      targetTicketIds: [targetId],
       primaryTicketId: primaryId,
-      reason: mergeReason,
+      mergeReason: mergeReason,
+      mergeReasonAr: i18n.language === 'ar' ? mergeReason : undefined,
+    }, {
+      onSuccess: () => {
+        setSelectedCandidate(null);
+        setMergeReason('');
+      }
     });
   };
 
   if (isLoading) {
     return (
-      <div className="text-center py-8">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="py-8 text-center">
+        <div className="inline-block size-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
         <p className="mt-4 text-gray-600 dark:text-gray-400">
           {t('duplicates.loading', 'Checking for duplicates...')}
         </p>
@@ -164,7 +116,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
 
   if (error) {
     return (
-      <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-400">
+      <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
         {t('duplicates.error', 'Failed to load duplicate candidates. Please try again.')}
       </div>
     );
@@ -172,9 +124,9 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
 
   if (!candidates || candidates.length === 0) {
     return (
-      <div className="text-center py-8">
-        <div className="text-6xl mb-4">✓</div>
-        <p className="text-gray-600 dark:text-gray-400 text-lg">
+      <div className="py-8 text-center">
+        <div className="mb-4 text-6xl">✓</div>
+        <p className="text-lg text-gray-600 dark:text-gray-400">
           {t('duplicates.noDuplicates', 'No potential duplicates detected')}
         </p>
       </div>
@@ -189,14 +141,14 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
     <div className="space-y-6">
       {/* Warning Banner for High Confidence Duplicates */}
       {highConfidence.length > 0 && (
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-          <div className="flex items-center gap-2 mb-2">
-            <span className="text-red-600 dark:text-red-400 text-xl">⚠️</span>
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+          <div className="mb-2 flex items-center gap-2">
+            <span className="text-xl text-red-600 dark:text-red-400">⚠️</span>
             <h3 className="font-semibold text-red-800 dark:text-red-300">
               {t('duplicates.highConfidenceWarning', 'High Confidence Duplicates Detected')}
             </h3>
           </div>
-          <p className="text-red-700 dark:text-red-400 text-sm">
+          <p className="text-sm text-red-700 dark:text-red-400">
             {t(
               'duplicates.highConfidenceMessage',
               'We found {{count}} ticket(s) with high similarity. Please review and consider merging.',
@@ -209,7 +161,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       {/* High Confidence Candidates */}
       {highConfidence.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
             {t('duplicates.highConfidence', 'High Confidence Duplicates')}
           </h3>
           <div className="space-y-4">
@@ -229,7 +181,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
       {/* Medium Confidence Candidates */}
       {mediumConfidence.length > 0 && (
         <div>
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
             {t('duplicates.mediumConfidence', 'Possible Duplicates')}
           </h3>
           <div className="space-y-4">
@@ -248,19 +200,19 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
 
       {/* Merge Dialog */}
       {selectedCandidate && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50 p-4">
+          <div className="max-h-[90vh] w-full max-w-2xl overflow-y-auto rounded-lg bg-white shadow-xl dark:bg-gray-800">
             <div className="p-6">
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
+              <h2 className="mb-4 text-2xl font-bold text-gray-900 dark:text-white">
                 {t('duplicates.mergDialog.title', 'Merge Tickets')}
               </h2>
 
-              <div className="space-y-4 mb-6">
+              <div className="mb-6 space-y-4">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('duplicates.mergeDialog.primaryTicket', 'Select Primary Ticket')}
                   </label>
-                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-3">
+                  <p className="mb-3 text-sm text-gray-600 dark:text-gray-400">
                     {t(
                       'duplicates.mergeDialog.primaryTicketHelp',
                       'The primary ticket will remain active, and the other will be marked as merged.'
@@ -269,7 +221,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                   <div className="space-y-2">
                     <button
                       onClick={() => handleMerge(ticketId)}
-                      className="w-full text-start p-3 border-2 border-blue-500 bg-blue-50 dark:bg-blue-900/20 rounded-lg hover:bg-blue-100 dark:hover:bg-blue-900/30"
+                      className="w-full rounded-lg border-2 border-blue-500 bg-blue-50 p-3 text-start hover:bg-blue-100 dark:bg-blue-900/20 dark:hover:bg-blue-900/30"
                     >
                       <div className="font-medium text-gray-900 dark:text-white">
                         {t('duplicates.mergeDialog.currentTicket', 'Current Ticket')}
@@ -278,7 +230,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                     </button>
                     <button
                       onClick={() => handleMerge(selectedCandidate.target_ticket_id)}
-                      className="w-full text-start p-3 border-2 border-gray-300 dark:border-gray-600 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700"
+                      className="w-full rounded-lg border-2 border-gray-300 p-3 text-start hover:bg-gray-50 dark:border-gray-600 dark:hover:bg-gray-700"
                     >
                       <div className="font-medium text-gray-900 dark:text-white">
                         {selectedCandidate.target_ticket.ticket_number}
@@ -293,7 +245,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                 </div>
 
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                  <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                     {t('duplicates.mergeDialog.reason', 'Reason for Merge')} *
                   </label>
                   <textarea
@@ -304,7 +256,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                       'Explain why these tickets should be merged'
                     )}
                     rows={3}
-                    className="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                    className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
                   />
                 </div>
               </div>
@@ -315,7 +267,7 @@ export function DuplicateComparison({ ticketId }: DuplicateComparisonProps) {
                     setSelectedCandidate(null);
                     setMergeReason('');
                   }}
-                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+                  className="flex-1 rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
                 >
                   {t('common.cancel', 'Cancel')}
                 </button>
@@ -350,41 +302,41 @@ function DuplicateCandidateCard({
 
   return (
     <div
-      className={`border-2 rounded-lg p-4 transition-all ${
+      className={`rounded-lg border-2 p-4 transition-all ${
         isSelected
           ? 'border-blue-500 bg-blue-50 dark:bg-blue-900/20'
-          : 'border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600'
+          : 'border-gray-200 hover:border-gray-300 dark:border-gray-700 dark:hover:border-gray-600'
       }`}
     >
-      <div className="flex items-start justify-between mb-3">
+      <div className="mb-3 flex items-start justify-between">
         <div className="flex-1">
           <Link
             to={`/intake/tickets/${candidate.target_ticket_id}`}
-            className="text-blue-600 hover:text-blue-700 dark:text-blue-400 font-medium"
+            className="font-medium text-blue-600 hover:text-blue-700 dark:text-blue-400"
             target="_blank"
           >
             {candidate.target_ticket.ticket_number} ↗
           </Link>
-          <h4 className="text-lg font-semibold text-gray-900 dark:text-white mt-1">
+          <h4 className="mt-1 text-lg font-semibold text-gray-900 dark:text-white">
             {i18n.language === 'ar' && candidate.target_ticket.title_ar
               ? candidate.target_ticket.title_ar
               : candidate.target_ticket.title}
           </h4>
         </div>
-        <div className={`px-3 py-1 rounded-full text-sm font-semibold ${getSimilarityColor(candidate.overall_score)}`}>
+        <div className={`rounded-full px-3 py-1 text-sm font-semibold ${getSimilarityColor(candidate.overall_score)}`}>
           {Math.round(candidate.overall_score * 100)}%
         </div>
       </div>
 
-      <p className="text-gray-600 dark:text-gray-400 text-sm mb-3 line-clamp-2">
+      <p className="mb-3 line-clamp-2 text-sm text-gray-600 dark:text-gray-400">
         {i18n.language === 'ar' && candidate.target_ticket.description_ar
           ? candidate.target_ticket.description_ar
           : candidate.target_ticket.description}
       </p>
 
-      <div className="grid grid-cols-3 gap-2 mb-4">
+      <div className="mb-4 grid grid-cols-3 gap-2">
         <div className="text-center">
-          <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+          <div className="mb-1 text-xs text-gray-500 dark:text-gray-400">
             {t('duplicates.titleSimilarity', 'Title')}
           </div>
           <div className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -392,7 +344,7 @@ function DuplicateCandidateCard({
           </div>
         </div>
         <div className="text-center">
-          <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+          <div className="mb-1 text-xs text-gray-500 dark:text-gray-400">
             {t('duplicates.contentSimilarity', 'Content')}
           </div>
           <div className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -400,7 +352,7 @@ function DuplicateCandidateCard({
           </div>
         </div>
         <div className="text-center">
-          <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">
+          <div className="mb-1 text-xs text-gray-500 dark:text-gray-400">
             {t('duplicates.metadataSimilarity', 'Metadata')}
           </div>
           <div className="text-sm font-semibold text-gray-900 dark:text-white">
@@ -412,13 +364,13 @@ function DuplicateCandidateCard({
       <div className="flex gap-2">
         <button
           onClick={onSelect}
-          className="flex-1 px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-700"
+          className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-sm text-white hover:bg-blue-700"
         >
           {t('duplicates.merge', 'Merge Tickets')}
         </button>
         <button
           onClick={onNotDuplicate}
-          className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+          className="rounded-md border border-gray-300 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
         >
           {t('duplicates.notDuplicate', 'Not a Duplicate')}
         </button>

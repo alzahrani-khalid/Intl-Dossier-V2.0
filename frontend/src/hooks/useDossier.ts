@@ -45,16 +45,18 @@ export function useDossier(
     queryKey: ['dossier', dossierId, includes],
     queryFn: async () => {
       // Build select query based on includes
-      let query = supabase
+      // Use maybeSingle() instead of single() to handle missing dossiers gracefully
+      const { data: dossier, error } = await supabase
         .from('dossiers')
         .select('*')
         .eq('id', dossierId)
-        .single();
+        .maybeSingle();
 
-      const { data: dossier, error } = await query;
-
+      // Handle errors (but not "no rows" which is handled by maybeSingle)
       if (error) throw error;
-      if (!dossier) throw new Error('Dossier not found');
+      if (!dossier) {
+        throw new Error('DOSSIER_NOT_FOUND');
+      }
 
       const result: DossierWithIncludes = dossier;
 

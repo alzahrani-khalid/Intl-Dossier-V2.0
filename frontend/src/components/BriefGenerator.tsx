@@ -99,7 +99,7 @@ export function BriefGenerator({
 
   // Render date range inputs
   const renderDateInputs = () => (
-    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
       <div className="space-y-2">
         <Label htmlFor="date-start">{t('brief.startDate')}</Label>
         <Input
@@ -128,7 +128,7 @@ export function BriefGenerator({
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <FileText className="h-5 w-5" />
+          <FileText className="size-5" />
           {t('brief.title')}
         </CardTitle>
       </CardHeader>
@@ -147,17 +147,17 @@ export function BriefGenerator({
         {state === 'generating' && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-sm">
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
               <span>{t('brief.generating')}</span>
               {countdown !== null && (
                 <Badge variant="outline" className="gap-1">
-                  <Clock className="h-3 w-3" />
+                  <Clock className="size-3" />
                   {countdown}s
                 </Badge>
               )}
             </div>
             <Progress value={progress} className="h-2" />
-            <p className="text-xs text-muted-foreground text-center">
+            <p className="text-center text-xs text-muted-foreground">
               {t('brief.pleaseWait', { ns: 'translation' }) ||
                 'Please wait while we generate your brief...'}
             </p>
@@ -168,11 +168,11 @@ export function BriefGenerator({
         {state === 'success' && brief && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-green-600">
-              <CheckCircle className="h-5 w-5" />
+              <CheckCircle className="size-5" />
               <span className="font-medium">{t('success.briefGenerated')}</span>
             </div>
 
-            <div className="space-y-4 p-4 bg-muted/50 rounded-lg">
+            <div className="space-y-4 rounded-lg bg-muted/50 p-4">
               {/* Brief Metadata */}
               <div className="flex flex-wrap gap-2 text-sm text-muted-foreground">
                 <Badge variant="outline">
@@ -187,7 +187,7 @@ export function BriefGenerator({
               {/* Brief Content */}
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium mb-2">
+                  <h4 className="mb-2 font-medium">
                     {t('brief.summary', { ns: 'translation' }) || 'Summary'}
                   </h4>
                   <p className="text-sm">
@@ -198,8 +198,8 @@ export function BriefGenerator({
                 {(isRTL ? brief.content_ar.sections : brief.content_en.sections).map(
                   (section, index) => (
                     <div key={index}>
-                      <h4 className="font-medium mb-2">{section.title}</h4>
-                      <p className="text-sm whitespace-pre-wrap">{section.content}</p>
+                      <h4 className="mb-2 font-medium">{section.title}</h4>
+                      <p className="whitespace-pre-wrap text-sm">{section.content}</p>
                     </div>
                   )
                 )}
@@ -216,7 +216,7 @@ export function BriefGenerator({
         {(state === 'error' || state === 'timeout') && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-destructive">
-              <AlertCircle className="h-5 w-5" />
+              <AlertCircle className="size-5" />
               <span className="font-medium">
                 {state === 'timeout' ? t('brief.timeout') : t('errors.loadFailed')}
               </span>
@@ -232,7 +232,7 @@ export function BriefGenerator({
         {state === 'fallback' && fallbackTemplate && (
           <div className="space-y-4">
             <div className="flex items-center gap-2 text-amber-600">
-              <AlertCircle className="h-5 w-5" />
+              <AlertCircle className="size-5" />
               <span className="font-medium">{t('brief.fallback')}</span>
             </div>
 
@@ -249,7 +249,7 @@ export function BriefGenerator({
                 </Label>
                 <textarea
                   id="summary-en"
-                  className="w-full min-h-[100px] p-2 border rounded-md"
+                  className="min-h-[100px] w-full rounded-md border p-2"
                   value={manualContent['summary_en'] || ''}
                   onChange={(e) =>
                     setManualContent({ ...manualContent, summary_en: e.target.value })
@@ -264,7 +264,7 @@ export function BriefGenerator({
                 </Label>
                 <textarea
                   id="summary-ar"
-                  className="w-full min-h-[100px] p-2 border rounded-md"
+                  className="min-h-[100px] w-full rounded-md border p-2"
                   dir="rtl"
                   value={manualContent['summary_ar'] || ''}
                   onChange={(e) =>
@@ -276,14 +276,14 @@ export function BriefGenerator({
 
               {/* Section Fields */}
               {fallbackTemplate.sections.map((section) => (
-                <div key={section.id} className="space-y-4 p-4 border rounded-lg">
+                <div key={section.id} className="space-y-4 rounded-lg border p-4">
                   <h4 className="font-medium">{isRTL ? section.title_ar : section.title_en}</h4>
 
                   <div className="space-y-2">
                     <Label htmlFor={`${section.id}-en`}>{section.title_en}</Label>
                     <textarea
                       id={`${section.id}-en`}
-                      className="w-full min-h-[80px] p-2 border rounded-md text-sm"
+                      className="min-h-[80px] w-full rounded-md border p-2 text-sm"
                       value={manualContent[`${section.id}_en`] || ''}
                       onChange={(e) =>
                         setManualContent({
@@ -300,7 +300,7 @@ export function BriefGenerator({
                     <Label htmlFor={`${section.id}-ar`}>{section.title_ar}</Label>
                     <textarea
                       id={`${section.id}-ar`}
-                      className="w-full min-h-[80px] p-2 border rounded-md text-sm"
+                      className="min-h-[80px] w-full rounded-md border p-2 text-sm"
                       dir="rtl"
                       value={manualContent[`${section.id}_ar`] || ''}
                       onChange={(e) =>

@@ -90,10 +90,10 @@ export function ConflictDialog({
 
   return (
     <Dialog open={open} onOpenChange={(open) => !open && onResolve('cancel')}>
-      <DialogContent className="max-w-3xl max-h-[80vh] overflow-y-auto">
+      <DialogContent className="max-h-[80vh] max-w-3xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-amber-500" />
+            <AlertTriangle className="size-5 text-amber-500" />
             {t('conflict.title')}
           </DialogTitle>
           <DialogDescription>{t('conflict.message')}</DialogDescription>
@@ -101,15 +101,15 @@ export function ConflictDialog({
 
         <div className="space-y-4">
           {/* Version Info */}
-          <div className="flex gap-4 p-4 bg-muted/50 rounded-lg">
+          <div className="flex gap-4 rounded-lg bg-muted/50 p-4">
             <div className="flex-1">
-              <p className="text-sm font-medium text-muted-foreground mb-1">
+              <p className="mb-1 text-sm font-medium text-muted-foreground">
                 {t('conflict.currentVersion')}
               </p>
               <Badge variant="outline">v{currentData.version || 'unknown'}</Badge>
             </div>
             <div className="flex-1">
-              <p className="text-sm font-medium text-muted-foreground mb-1">
+              <p className="mb-1 text-sm font-medium text-muted-foreground">
                 {t('conflict.remoteVersion')}
               </p>
               <Badge variant="default">v{remoteData.version || 'unknown'}</Badge>
@@ -119,8 +119,8 @@ export function ConflictDialog({
           {/* Conflicts Table */}
           {conflicts.length > 0 && (
             <div className="space-y-3">
-              <h3 className="font-medium text-sm">{t('conflict.changes')}</h3>
-              <div className="border rounded-lg overflow-hidden">
+              <h3 className="text-sm font-medium">{t('conflict.changes')}</h3>
+              <div className="overflow-hidden rounded-lg border">
                 <table className="w-full text-sm">
                   <thead className="bg-muted/50">
                     <tr>
@@ -132,18 +132,18 @@ export function ConflictDialog({
                   <tbody>
                     {conflicts.map((conflict, index) => (
                       <tr key={conflict.field} className={index % 2 === 0 ? 'bg-muted/20' : ''}>
-                        <td className="p-3 font-medium align-top">
+                        <td className="p-3 align-top font-medium">
                           {getFieldLabel(conflict.field)}
                         </td>
                         <td className="p-3 align-top">
-                          <div className="p-2 bg-blue-50 rounded border border-blue-200">
+                          <div className="rounded border border-blue-200 bg-blue-50 p-2">
                             <pre className="whitespace-pre-wrap text-xs">
                               {formatValue(conflict.currentValue)}
                             </pre>
                           </div>
                         </td>
                         <td className="p-3 align-top">
-                          <div className="p-2 bg-amber-50 rounded border border-amber-200">
+                          <div className="rounded border border-amber-200 bg-amber-50 p-2">
                             <pre className="whitespace-pre-wrap text-xs">
                               {formatValue(conflict.remoteValue)}
                             </pre>
@@ -158,7 +158,7 @@ export function ConflictDialog({
           )}
 
           {/* Warning Message */}
-          <div className="p-4 bg-amber-50 border border-amber-200 rounded-lg">
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-4">
             <p className="text-sm text-amber-900">
               {t('conflict.warning', { ns: 'translation' }) ||
                 'Choosing "Keep My Changes" will overwrite the remote changes. This action cannot be undone.'}
@@ -166,7 +166,7 @@ export function ConflictDialog({
           </div>
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button
             variant="outline"
             onClick={() => onResolve('cancel')}

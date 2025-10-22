@@ -58,7 +58,7 @@ export function Navigation() {
       {
         id: 'my-assignments',
         label: t('navigation.myAssignments', 'My Assignments'),
-        path: '/my-work/assignments',
+        path: '/tasks',
         icon: CheckSquare,
         badgeCount: counts.assignments,
       },
@@ -122,7 +122,7 @@ export function Navigation() {
           >
             <span>GASTAT Dossier</span>
           </Link>
-          <div className="hidden lg:flex items-center gap-1 ps-6">
+          <div className="hidden items-center gap-1 ps-6 lg:flex">
             {/* Work Queue Section - Priority (FR-033) */}
             {workItems.map((item) => {
               const Icon = item.icon
@@ -138,10 +138,10 @@ export function Navigation() {
                       : 'text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground'
                   )}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="size-4" />
                   <span>{item.label}</span>
                   {item.badgeCount && item.badgeCount > 0 && (
-                    <span className="inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary px-1.5 text-xs font-semibold text-primary-foreground">
+                    <span className="inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1.5 text-xs font-semibold text-primary-foreground">
                       {item.badgeCount > 99 ? '99+' : item.badgeCount}
                     </span>
                   )}
@@ -167,7 +167,7 @@ export function Navigation() {
                       : 'text-muted-foreground hover:bg-accent/50 hover:text-accent-foreground'
                   )}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="size-4" />
                   <span>{item.label}</span>
                 </Link>
               )
@@ -184,9 +184,9 @@ export function Navigation() {
             className="relative"
             aria-label={t('navigation.openNotifications', 'Open notifications')}
           >
-            <Bell className="h-5 w-5" />
+            <Bell className="size-5" />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -end-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-destructive px-1 text-xs font-semibold text-destructive-foreground">
+              <span className="absolute -end-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-destructive px-1 text-xs font-semibold text-destructive-foreground">
                 {unreadCount > 9 ? '9+' : unreadCount}
               </span>
             )}
@@ -195,14 +195,14 @@ export function Navigation() {
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2">
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
+                <span className="inline-flex size-9 items-center justify-center rounded-full bg-primary text-sm font-semibold text-primary-foreground">
                   {userInitials}
                 </span>
-                <span className="hidden sm:inline-flex flex-col items-start text-start">
+                <span className="hidden flex-col items-start text-start sm:inline-flex">
                   <span className="text-sm font-medium text-foreground">{user?.name ?? user?.email}</span>
                   <span className="text-xs text-muted-foreground">{user?.role ?? 'Administrator'}</span>
                 </span>
-                <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                <ChevronDown className="size-4 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="min-w-48">
@@ -210,7 +210,7 @@ export function Navigation() {
                 {t('navigation.settings', 'Settings')}
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={handleLogout} className="text-destructive focus:text-destructive">
-                <LogOut className="me-2 h-4 w-4" />
+                <LogOut className="me-2 size-4" />
                 {t('common.logout', 'Sign out')}
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -219,10 +219,10 @@ export function Navigation() {
       </div>
 
       {/* Mobile Navigation - Work-Queue-First (FR-033) */}
-      <div className="lg:hidden px-4 pb-3 space-y-3">
+      <div className="space-y-3 px-4 pb-3 lg:hidden">
         {/* Work Queue Section - Priority on Mobile */}
         <div>
-          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">
+          <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t('navigation.myWork', 'My Work')}
           </h3>
           <div className="grid grid-cols-2 gap-2">
@@ -240,10 +240,10 @@ export function Navigation() {
                       : 'border-border text-muted-foreground hover:border-primary hover:text-foreground'
                   )}
                 >
-                  <Icon className="h-4 w-4 shrink-0" />
+                  <Icon className="size-4 shrink-0" />
                   <span className="truncate">{item.label}</span>
                   {item.badgeCount && item.badgeCount > 0 && (
-                    <span className="absolute -top-1 -end-1 inline-flex h-5 min-w-[1.25rem] items-center justify-center rounded-full bg-primary px-1 text-xs font-semibold text-primary-foreground">
+                    <span className="absolute -end-1 -top-1 inline-flex h-5 min-w-5 items-center justify-center rounded-full bg-primary px-1 text-xs font-semibold text-primary-foreground">
                       {item.badgeCount > 99 ? '99+' : item.badgeCount}
                     </span>
                   )}
@@ -255,7 +255,7 @@ export function Navigation() {
 
         {/* Browse Section */}
         <div>
-          <h3 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2 px-1">
+          <h3 className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t('navigation.browse', 'Browse')}
           </h3>
           <div className="grid grid-cols-2 gap-2">
@@ -273,7 +273,7 @@ export function Navigation() {
                       : 'border-border text-muted-foreground hover:border-primary hover:text-foreground'
                   )}
                 >
-                  <Icon className="h-4 w-4 shrink-0" />
+                  <Icon className="size-4 shrink-0" />
                   <span className="truncate">{item.label}</span>
                 </Link>
               )

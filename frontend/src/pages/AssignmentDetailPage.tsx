@@ -65,7 +65,7 @@ class AssignmentErrorBoundary extends Component<
       return (
         <div className="container mx-auto p-6">
           <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="size-4" />
             <AlertDescription className="flex items-center justify-between">
               <span>
                 {this.props.t('assignments.errors.unexpected', {
@@ -80,7 +80,7 @@ class AssignmentErrorBoundary extends Component<
                   this.props.onRetry();
                 }}
               >
-                <RefreshCw className="h-4 w-4 me-2" />
+                <RefreshCw className="me-2 size-4" />
                 {this.props.t('common.retry', { defaultValue: 'Retry' })}
               </Button>
             </AlertDescription>
@@ -94,7 +94,7 @@ class AssignmentErrorBoundary extends Component<
 }
 
 export function AssignmentDetailPage() {
-  const { id } = useParams({ from: '/_protected/assignments/$id' });
+  const { id } = useParams({ from: '/_protected/tasks/$id' });
   const navigate = useNavigate();
   const { t } = useTranslation();
 
@@ -141,16 +141,16 @@ export function AssignmentDetailPage() {
     { enabled: !!data?.engagement }
   );
 
-  // 404 error - redirect to assignments after 3 seconds
+  // 404 error - redirect to tasks after 3 seconds
   if (error && error.message.includes('404')) {
     setTimeout(() => {
-      navigate({ to: '/assignments' });
+      navigate({ to: '/tasks' });
     }, 3000);
 
     return (
       <div className="container mx-auto p-6">
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>
             {t('assignments.errors.not_found', {
               defaultValue: 'Assignment not found. Redirecting...'
@@ -164,13 +164,13 @@ export function AssignmentDetailPage() {
   // 403 error - unauthorized access, redirect after 3 seconds
   if (error && error.message.includes('403')) {
     setTimeout(() => {
-      navigate({ to: '/assignments' });
+      navigate({ to: '/tasks' });
     }, 3000);
 
     return (
       <div className="container mx-auto p-6">
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>
             {t('assignments.errors.unauthorized', {
               defaultValue: "You don't have permission to view this assignment. Redirecting..."
@@ -184,10 +184,10 @@ export function AssignmentDetailPage() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto space-y-6 p-6">
         <Skeleton className="h-8 w-64" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <div className="lg:col-span-2 space-y-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <div className="space-y-6 lg:col-span-2">
             <Skeleton className="h-32" />
             <Skeleton className="h-48" />
             <Skeleton className="h-64" />
@@ -206,7 +206,7 @@ export function AssignmentDetailPage() {
     return (
       <div className="container mx-auto p-6">
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>
             {t('assignments.errors.load_failed', {
               defaultValue: 'Failed to load assignment details. Please try again.'
@@ -235,7 +235,7 @@ export function AssignmentDetailPage() {
 
   // Wrap content with error boundary (T073)
   const content = (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto space-y-6 p-6">
       {/* Page Header */}
       <div className="space-y-2">
         <h1 className="text-3xl font-bold">
@@ -247,14 +247,14 @@ export function AssignmentDetailPage() {
 
         {/* Breadcrumbs */}
         <nav className="text-sm text-muted-foreground">
-          <a href="/assignments" className="hover:text-foreground">
-            {t('assignments.my_assignments', { defaultValue: 'My Assignments' })}
+          <a href="/tasks" className="hover:text-foreground">
+            {t('assignments.my_assignments', { defaultValue: 'My Tasks' })}
           </a>
           <span className="mx-2">/</span>
           <span className="text-foreground">
             {t('assignments.detail.breadcrumb', {
               id: assignment.id.slice(0, 8),
-              defaultValue: `Assignment #${assignment.id.slice(0, 8)}`
+              defaultValue: `Task #${assignment.id.slice(0, 8)}`
             })}
           </span>
         </nav>
@@ -276,11 +276,14 @@ export function AssignmentDetailPage() {
       )}
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Left Column: Primary Content */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           {/* Assignment Metadata */}
-          <AssignmentMetadataCard assignment={assignment} />
+          <AssignmentMetadataCard
+            assignment={assignment}
+            assigneeName={assignment.assignee_name}
+          />
 
           {/* SLA Tracking */}
           {sla && <SLACountdown sla={sla} />}

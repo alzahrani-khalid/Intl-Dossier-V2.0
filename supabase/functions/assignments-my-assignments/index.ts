@@ -3,7 +3,7 @@
  * Get authenticated user's assignments with SLA countdown
  *
  * Query Parameters:
- * - status?: "pending" | "assigned" | "in_progress" | "completed" | "cancelled"
+ * - status?: "pending" | "in_progress" | "completed" | "cancelled"
  * - include_completed?: boolean (default: false)
  *
  * Response 200:
@@ -36,6 +36,7 @@ interface Assignment {
   id: string;
   work_item_id: string;
   work_item_type: string;
+  work_item_title?: string;
   assigned_at: string;
   sla_deadline: string;
   time_remaining_seconds: number;
@@ -48,6 +49,12 @@ interface Assignment {
 
 interface MyAssignmentsResponse {
   assignments: Assignment[];
+  total_count: number;
+  summary: {
+    active_count: number;
+    at_risk_count: number;
+    breached_count: number;
+  };
 }
 
 serve(async (req) => {
@@ -97,8 +104,8 @@ serve(async (req) => {
 
     // Build query
     let query = supabaseClient
-      .from('assignments')
-      .select('*')
+      .from('tasks')
+      .select('id, title, description, work_item_type, work_item_id, assignee_id, created_at, sla_deadline, priority, status, workflow_stage, assignment, escalation')
       .eq('assignee_id', user.id)
       .order('sla_deadline', { ascending: true }); // Most urgent first
 
@@ -107,7 +114,7 @@ serve(async (req) => {
       query = query.eq('status', status);
     } else if (!includeCompleted) {
       // Default: exclude completed and cancelled
-      query = query.in('status', ['pending', 'assigned', 'in_progress']);
+      query = query.in('status', ['pending', 'in_progress']);
     }
 
     // Execute query
@@ -117,29 +124,63 @@ serve(async (req) => {
       throw queryError;
     }
 
-    // Calculate time remaining for each assignment
+    // Calculate time remaining for each task and format the response
     const now = Date.now();
-    const assignmentsWithTimeRemaining: Assignment[] = (assignments || []).map((assignment) => {
-      const deadline = new Date(assignment.sla_deadline).getTime();
+    const assignmentsWithTimeRemaining: Assignment[] = (assignments || []).map((task) => {
+      const deadline = new Date(task.sla_deadline).getTime();
       const timeRemaining = Math.floor((deadline - now) / 1000);
 
+      // Use the task's own title, or fallback to description or 'Untitled Task'
+      const workItemTitle = task.title || task.description || 'Untitled Task';
+
+      // Extract values from JSONB fields
+      const assignment = task.assignment || {};
+      const escalation = task.escalation || {};
+      const assignedAt = assignment.assigned_at || task.created_at;
+
       return {
-        id: assignment.id,
-        work_item_id: assignment.work_item_id,
-        work_item_type: assignment.work_item_type,
-        assigned_at: assignment.assigned_at,
-        sla_deadline: assignment.sla_deadline,
+        id: task.id,
+        work_item_id: task.work_item_id || task.id,
+        work_item_type: task.work_item_type,
+        work_item_title: workItemTitle,
+        assigned_at: assignedAt,
+        sla_deadline: task.sla_deadline,
         time_remaining_seconds: timeRemaining,
-        priority: assignment.priority,
-        status: assignment.status,
-        warning_sent_at: assignment.warning_sent_at,
-        escalated_at: assignment.escalated_at,
-        escalation_recipient_id: assignment.escalation_recipient_id,
+        priority: task.priority,
+        status: task.status,
+        warning_sent_at: assignment.warning_sent_at || null,
+        escalated_at: escalation.escalated_at || null,
+        escalation_recipient_id: escalation.recipient_id || null,
       };
     });
 
+    // Calculate summary statistics
+    const activeAssignments = assignmentsWithTimeRemaining.filter(
+      (a) => a.status !== 'completed' && a.status !== 'cancelled'
+    );
+
+    const atRiskAssignments = assignmentsWithTimeRemaining.filter((a) => {
+      if (a.status === 'completed' || a.status === 'cancelled') return false;
+      const deadline = new Date(a.sla_deadline).getTime();
+      const assignedAt = new Date(a.assigned_at).getTime();
+      const totalDuration = deadline - assignedAt;
+      const elapsed = now - assignedAt;
+      const percentageElapsed = (elapsed / totalDuration) * 100;
+      return percentageElapsed >= 75 && percentageElapsed < 100;
+    });
+
+    const breachedAssignments = assignmentsWithTimeRemaining.filter(
+      (a) => a.time_remaining_seconds < 0 && a.status !== 'completed' && a.status !== 'cancelled'
+    );
+
     const response: MyAssignmentsResponse = {
       assignments: assignmentsWithTimeRemaining,
+      total_count: assignmentsWithTimeRemaining.length,
+      summary: {
+        active_count: activeAssignments.length,
+        at_risk_count: atRiskAssignments.length,
+        breached_count: breachedAssignments.length,
+      },
     };
 
     return new Response(JSON.stringify(response), {

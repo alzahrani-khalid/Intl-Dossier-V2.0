@@ -95,7 +95,7 @@ export function CreateDossierDialog({ open, onOpenChange }: CreateDossierDialogP
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('create')}</DialogTitle>
           <DialogDescription>
@@ -238,11 +238,11 @@ export function CreateDossierDialog({ open, onOpenChange }: CreateDossierDialogP
               </Button>
             </div>
             {formData.tags && formData.tags.length > 0 && (
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div className="mt-2 flex flex-wrap gap-2">
                 {formData.tags.map((tag) => (
                   <div
                     key={tag}
-                    className="inline-flex items-center gap-1 px-3 py-1 bg-gray-100 dark:bg-gray-800 rounded-full text-sm"
+                    className="inline-flex items-center gap-1 rounded-full bg-gray-100 px-3 py-1 text-sm dark:bg-gray-800"
                   >
                     <span>{tag}</span>
                     <button

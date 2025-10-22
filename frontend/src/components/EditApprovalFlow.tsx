@@ -152,7 +152,7 @@ export function EditApprovalFlow({
   };
 
   const formatPath = (path: (string | number)[]): string => {
-    return path.join(' ’ ');
+    return path.join(' ï¿½ ');
   };
 
   return (
@@ -197,7 +197,7 @@ export function EditApprovalFlow({
               size="sm"
               onClick={() => setShowDiff(!showDiff)}
             >
-              <Eye className="h-4 w-4 me-2" />
+              <Eye className="me-2 size-4" />
               {showDiff ? t('common.hide') : t('common.show')}
             </Button>
           </div>
@@ -206,7 +206,7 @@ export function EditApprovalFlow({
           <CardContent className="space-y-3">
             {changes.length === 0 ? (
               <Alert>
-                <AlertCircle className="h-4 w-4" />
+                <AlertCircle className="size-4" />
                 <AlertDescription>
                   {t('afterActions.editFlow.noChanges')}
                 </AlertDescription>
@@ -225,23 +225,23 @@ export function EditApprovalFlow({
                     </div>
                   </CardHeader>
                   <CardContent className="text-sm">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                       {change.kind !== 'N' && (
                         <div>
-                          <p className="font-semibold text-red-600 mb-1">
+                          <p className="mb-1 font-semibold text-red-600">
                             {t('afterActions.editFlow.currentVersion')}:
                           </p>
-                          <pre className="bg-red-50 p-2 rounded text-xs overflow-x-auto border border-red-200">
+                          <pre className="overflow-x-auto rounded border border-red-200 bg-red-50 p-2 text-xs">
                             {renderDiffValue(change.lhs)}
                           </pre>
                         </div>
                       )}
                       {change.kind !== 'D' && (
                         <div>
-                          <p className="font-semibold text-green-600 mb-1">
+                          <p className="mb-1 font-semibold text-green-600">
                             {t('afterActions.editFlow.proposedVersion')}:
                           </p>
-                          <pre className="bg-green-50 p-2 rounded text-xs overflow-x-auto border border-green-200">
+                          <pre className="overflow-x-auto rounded border border-green-200 bg-green-50 p-2 text-xs">
                             {renderDiffValue(change.rhs)}
                           </pre>
                         </div>
@@ -258,7 +258,7 @@ export function EditApprovalFlow({
       {/* Error Display */}
       {error && (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -274,7 +274,7 @@ export function EditApprovalFlow({
                 className="flex-1"
                 variant="default"
               >
-                <CheckCircle className="me-2 h-4 w-4" />
+                <CheckCircle className="me-2 size-4" />
                 {t('afterActions.editFlow.approve')}
               </Button>
               <Button
@@ -283,7 +283,7 @@ export function EditApprovalFlow({
                 className="flex-1"
                 variant="destructive"
               >
-                <XCircle className="me-2 h-4 w-4" />
+                <XCircle className="me-2 size-4" />
                 {t('afterActions.editFlow.reject')}
               </Button>
             </div>
@@ -316,7 +316,7 @@ export function EditApprovalFlow({
             </div>
 
             <Alert>
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertDescription>
                 {t('afterActions.editFlow.approvalWarning')}
               </AlertDescription>
@@ -330,12 +330,12 @@ export function EditApprovalFlow({
               >
                 {loading ? (
                   <>
-                    <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="me-2 size-4 animate-spin" />
                     {t('afterActions.editFlow.approving')}
                   </>
                 ) : (
                   <>
-                    <CheckCircle className="me-2 h-4 w-4" />
+                    <CheckCircle className="me-2 size-4" />
                     {t('afterActions.editFlow.confirmApprove')}
                   </>
                 )}
@@ -382,7 +382,7 @@ export function EditApprovalFlow({
             </div>
 
             <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertDescription>
                 {t('afterActions.editFlow.rejectionWarning')}
               </AlertDescription>
@@ -397,12 +397,12 @@ export function EditApprovalFlow({
               >
                 {loading ? (
                   <>
-                    <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="me-2 size-4 animate-spin" />
                     {t('afterActions.editFlow.rejecting')}
                   </>
                 ) : (
                   <>
-                    <XCircle className="me-2 h-4 w-4" />
+                    <XCircle className="me-2 size-4" />
                     {t('afterActions.editFlow.confirmReject')}
                   </>
                 )}

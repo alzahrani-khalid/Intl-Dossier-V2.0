@@ -1,6 +1,5 @@
 {
-  "intake": {
-    "title": "Submit Support Request",
+  "title": "Submit Support Request",
     "subtitle": "Create a new support ticket for your request",
     "form": {
       "requestType": {
@@ -76,7 +75,8 @@
       "submit": "Submit Request",
       "cancel": "Cancel",
       "saveDraft": "Save as Draft",
-      "reset": "Reset Form"
+      "reset": "Reset Form",
+      "fillMock": "Fill with Mock Data"
     },
     "validation": {
       "requiredField": "This field is required",
@@ -253,5 +253,4 @@
         "network_error": "Network error. Please check your connection and try again."
       }
     }
-  }
 }

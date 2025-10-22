@@ -83,12 +83,12 @@ export function PositionCard({ position }: PositionCardProps) {
     >
       <CardHeader>
         <div className="flex items-start justify-between gap-2">
-          <CardTitle className="text-lg font-semibold line-clamp-2">
+          <CardTitle className="line-clamp-2 text-lg font-semibold">
             {title}
           </CardTitle>
           <Badge
             variant={getStatusVariant(position.status)}
-            className="whitespace-nowrap flex-shrink-0"
+            className="shrink-0 whitespace-nowrap"
             aria-label={`${t('fields.status')}: ${t(`statuses.${position.status}`)}`}
           >
             {t(`statuses.${position.status}`)}
@@ -99,7 +99,7 @@ export function PositionCard({ position }: PositionCardProps) {
         <div className="space-y-3">
           {/* Category */}
           {position.thematic_category && (
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex flex-wrap gap-2">
               <Badge
                 className={getCategoryBadgeClass(position.thematic_category)}
                 aria-label={`${t('fields.thematicCategory')}: ${t(`thematicCategories.${position.thematic_category}`, position.thematic_category)}`}
@@ -111,7 +111,7 @@ export function PositionCard({ position }: PositionCardProps) {
 
           {/* Content Preview */}
           {contentPreview && (
-            <p className="text-sm text-muted-foreground line-clamp-3">
+            <p className="line-clamp-3 text-sm text-muted-foreground">
               {contentPreview}
             </p>
           )}
@@ -132,8 +132,8 @@ export function PositionCard({ position }: PositionCardProps) {
           )}
 
           {/* Metadata */}
-          <div className="text-xs text-muted-foreground pt-2 border-t">
-            <div className="flex justify-between items-center">
+          <div className="border-t pt-2 text-xs text-muted-foreground">
+            <div className="flex items-center justify-between">
               <span>
                 {t('fields.version')}: {position.version}
               </span>

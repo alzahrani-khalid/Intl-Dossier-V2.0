@@ -163,15 +163,12 @@ export function RelationshipGraph({ dossierId, dossierName = 'Current Dossier' }
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
-  // Sync nodes and edges when initialNodes/initialEdges change
-  useEffect(() => {
-    setNodes(initialNodes);
-    setEdges(initialEdges);
-  }, [initialNodes, initialEdges, setNodes, setEdges]);
+  // Note: We use the `key` prop on ReactFlow to force remounting when data changes,
+  // so we don't need to sync nodes/edges manually. This prevents infinite loops.
 
-  // Fit view when nodes change and instance is available
+  // Fit view when instance becomes available
   useEffect(() => {
-    if (reactFlowInstance && nodes.length > 0) {
+    if (reactFlowInstance && initialNodes.length > 0) {
       // Small delay to ensure nodes are rendered
       setTimeout(() => {
         reactFlowInstance.fitView({
@@ -181,7 +178,7 @@ export function RelationshipGraph({ dossierId, dossierName = 'Current Dossier' }
         });
       }, 100);
     }
-  }, [nodes, reactFlowInstance]);
+  }, [reactFlowInstance, initialNodes.length]); // Only re-fit when instance is ready or node count changes
 
   // Create a stable key for ReactFlow to force remount on data changes
   const graphKey = useMemo(() =>

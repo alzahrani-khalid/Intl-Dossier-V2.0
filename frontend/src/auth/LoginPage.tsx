@@ -49,24 +49,24 @@ export function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background to-muted flex items-center justify-center p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-background to-muted p-4">
       <div className="w-full max-w-md">
         {/* Language toggle */}
-        <div className="flex justify-end mb-4">
+        <div className="mb-4 flex justify-end">
           <LanguageSwitcher />
         </div>
 
         {/* Login card */}
-        <div className="bg-card rounded-2xl shadow-xl p-8">
+        <div className="rounded-2xl bg-card p-8 shadow-xl">
           {/* Logo and title */}
-          <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-primary/10 rounded-full mb-4">
-              <Globe className="h-8 w-8 text-primary" />
+          <div className="mb-8 text-center">
+            <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-primary/10">
+              <Globe className="size-8 text-primary" />
             </div>
             <h1 className="text-2xl font-bold text-foreground">
               {t('common.appTitle')}
             </h1>
-            <p className="text-muted-foreground mt-2">
+            <p className="mt-2 text-muted-foreground">
               {t('auth.signIn')}
             </p>
           </div>
@@ -77,7 +77,7 @@ export function LoginPage() {
             <div>
               <label
                 htmlFor="email"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="mb-2 block text-sm font-medium text-foreground"
               >
                 {t('auth.email')}
               </label>
@@ -86,7 +86,7 @@ export function LoginPage() {
                 type="email"
                 id="email"
                 autoComplete="username"
-                className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
+                className="w-full rounded-lg border border-input bg-background px-4 py-2 text-foreground focus:border-transparent focus:ring-2 focus:ring-ring"
                 placeholder="user@gastat.sa"
               />
               {errors.email && (
@@ -100,7 +100,7 @@ export function LoginPage() {
             <div>
               <label
                 htmlFor="password"
-                className="block text-sm font-medium text-foreground mb-2"
+                className="mb-2 block text-sm font-medium text-foreground"
               >
                 {t('auth.password')}
               </label>
@@ -110,7 +110,7 @@ export function LoginPage() {
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="current-password"
-                  className="w-full px-4 py-2 pe-12 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
+                  className="w-full rounded-lg border border-input bg-background px-4 py-2 pe-12 text-foreground focus:border-transparent focus:ring-2 focus:ring-ring"
                 />
                 <button
                   type="button"
@@ -118,9 +118,9 @@ export function LoginPage() {
                   className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5" />
+                    <EyeOff className="size-5" />
                   ) : (
-                    <Eye className="h-5 w-5" />
+                    <Eye className="size-5" />
                   )}
                 </button>
               </div>
@@ -136,7 +136,7 @@ export function LoginPage() {
               <div>
                 <label
                   htmlFor="mfaCode"
-                  className="block text-sm font-medium text-foreground mb-2"
+                  className="mb-2 block text-sm font-medium text-foreground"
                 >
                   {t('auth.mfaCode')}
                 </label>
@@ -145,7 +145,7 @@ export function LoginPage() {
                   id="mfaCode"
                   value={mfaCode}
                   onChange={(e) => setMfaCode(e.target.value)}
-                  className="w-full px-4 py-2 border border-input rounded-lg focus:ring-2 focus:ring-ring focus:border-transparent bg-background text-foreground"
+                  className="w-full rounded-lg border border-input bg-background px-4 py-2 text-foreground focus:border-transparent focus:ring-2 focus:ring-ring"
                   placeholder="123456"
                   maxLength={6}
                 />
@@ -162,7 +162,7 @@ export function LoginPage() {
                   {...register('rememberMe')}
                   type="checkbox"
                   id="rememberMe"
-                  className="h-4 w-4 text-primary focus:ring-ring border-input rounded"
+                  className="size-4 rounded border-input text-primary focus:ring-ring"
                 />
                 <label
                   htmlFor="rememberMe"
@@ -181,7 +181,7 @@ export function LoginPage() {
 
             {/* Error message */}
             {error && (
-              <div className="p-3 bg-destructive/10 border border-destructive/20 rounded-lg">
+              <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-3">
                 <p className="text-sm text-destructive">
                   {error}
                 </p>
@@ -192,11 +192,11 @@ export function LoginPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-3 px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center">
-                  <Loader2 className="h-5 w-5 animate-spin me-2" />
+                  <Loader2 className="me-2 size-5 animate-spin" />
                   {t('common.loading')}
                 </span>
               ) : (
@@ -206,7 +206,7 @@ export function LoginPage() {
           </form>
 
           {/* Sign up link */}
-          <div className="text-center mt-4 text-sm text-muted-foreground">
+          <div className="mt-4 text-center text-sm text-muted-foreground">
             {t('auth.dontHaveAccount')}{' '}
             <a
               href="/register"
@@ -222,7 +222,7 @@ export function LoginPage() {
         </div>
 
         {/* Footer */}
-        <p className="text-center mt-6 text-sm text-muted-foreground">
+        <p className="mt-6 text-center text-sm text-muted-foreground">
           © 2025 GASTAT - General Authority for Statistics
         </p>
       </div>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assignment Escalated</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #f5f5f5;
+    }
+    .container {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .header {
+      border-bottom: 3px solid #ef4444;
+      padding-bottom: 20px;
+      margin-bottom: 30px;
+    }
+    .header h1 {
+      margin: 0;
+      font-size: 24px;
+      color: #ef4444;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+    .badge-high {
+      background-color: #fee2e2;
+      color: #991b1b;
+    }
+    .badge-medium {
+      background-color: #fef3c7;
+      color: #92400e;
+    }
+    .badge-low {
+      background-color: #dbeafe;
+      color: #1e40af;
+    }
+    .detail-row {
+      display: flex;
+      padding: 12px 0;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    .detail-label {
+      font-weight: 600;
+      color: #6b7280;
+      width: 140px;
+      flex-shrink: 0;
+    }
+    .detail-value {
+      color: #111827;
+      flex-grow: 1;
+    }
+    .reason-box {
+      background-color: #fef3c7;
+      border-left: 4px solid #f59e0b;
+      padding: 16px;
+      margin: 20px 0;
+      border-radius: 4px;
+    }
+    .reason-box h3 {
+      margin: 0 0 8px 0;
+      font-size: 14px;
+      color: #92400e;
+      text-transform: uppercase;
+    }
+    .reason-box p {
+      margin: 0;
+      color: #78350f;
+    }
+    .action-buttons {
+      margin-top: 30px;
+      text-align: center;
+    }
+    .button {
+      display: inline-block;
+      padding: 12px 24px;
+      margin: 0 8px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .button-primary {
+      background-color: #3b82f6;
+      color: #ffffff;
+    }
+    .button-secondary {
+      background-color: #e5e7eb;
+      color: #374151;
+    }
+    .footer {
+      margin-top: 30px;
+      padding-top: 20px;
+      border-top: 1px solid #e5e7eb;
+      font-size: 12px;
+      color: #6b7280;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>⚠️ Assignment Escalated to You</h1>
+      <span class="badge badge-{{priority}}">{{priority}} Priority</span>
+    </div>
+
+    <p>Hello <strong>{{recipient_name}}</strong>,</p>
+
+    <p>An assignment has been escalated to you for review and action. This escalation was initiated by <strong>{{escalated_by_name}}</strong> due to the assignment being overdue.</p>
+
+    <div class="detail-row">
+      <span class="detail-label">Work Item:</span>
+      <span class="detail-value">{{work_item_type}} #{{work_item_id}}</span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Current Assignee:</span>
+      <span class="detail-value">{{assignee_name}}</span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Workflow Stage:</span>
+      <span class="detail-value">{{workflow_stage}}</span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Assigned Date:</span>
+      <span class="detail-value">{{assigned_at}}</span>
+    </div>
+
+    <div class="detail-row">
+      <span class="detail-label">Days Pending:</span>
+      <span class="detail-value">{{days_pending}} days</span>
+    </div>
+
+    {{#if reason}}
+    <div class="reason-box">
+      <h3>Escalation Reason</h3>
+      <p>{{reason}}</p>
+    </div>
+    {{/if}}
+
+    <div class="action-buttons">
+      <a href="{{app_url}}/assignments/{{assignment_id}}" class="button button-primary">
+        View Assignment
+      </a>
+      <a href="{{app_url}}/escalations/{{escalation_id}}/acknowledge" class="button button-secondary">
+        Acknowledge Escalation
+      </a>
+    </div>
+
+    <div class="footer">
+      <p>This is an automated notification from the Intl-Dossier system.</p>
+      <p>Escalated on {{escalated_at}} UTC</p>
+    </div>
+  </div>
+</body>
+</html>

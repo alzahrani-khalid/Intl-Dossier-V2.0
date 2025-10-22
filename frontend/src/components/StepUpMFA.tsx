@@ -361,7 +361,7 @@ export function StepUpMFA({
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5 text-orange-500" aria-hidden="true" />
+            <Shield className="size-5 text-orange-500" aria-hidden="true" />
             <span>{t('stepUp.title')}</span>
           </DialogTitle>
           <DialogDescription id="step-up-description">
@@ -371,9 +371,9 @@ export function StepUpMFA({
 
         {/* Reason for step-up */}
         {reason && (
-          <div className="rounded-md bg-amber-50 border border-amber-200 p-3">
+          <div className="rounded-md border border-amber-200 bg-amber-50 p-3">
             <div className="flex items-start gap-2">
-              <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 flex-shrink-0" aria-hidden="true" />
+              <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" aria-hidden="true" />
               <p className="text-sm text-amber-900">{reason}</p>
             </div>
           </div>
@@ -382,7 +382,7 @@ export function StepUpMFA({
         {/* Loading state */}
         {isInitiating && (
           <div className="flex items-center justify-center py-8">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+            <div className="size-8 animate-spin rounded-full border-b-2 border-primary"></div>
             <span className="ms-3 text-sm text-muted-foreground">
               {t('stepUp.initiating')}
             </span>
@@ -393,19 +393,19 @@ export function StepUpMFA({
         {challengeData && !isInitiating && (
           <form onSubmit={verifyCode} className="space-y-4">
             {/* Challenge type info */}
-            <div className="flex items-center justify-between p-3 bg-muted rounded-md">
+            <div className="flex items-center justify-between rounded-md bg-muted p-3">
               <div className="flex items-center gap-2">
-                <Shield className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
+                <Shield className="size-4 text-muted-foreground" aria-hidden="true" />
                 <span className="text-sm font-medium">
                   {getChallengeTypeLabel()}
                 </span>
               </div>
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" aria-hidden="true" />
+                <Clock className="size-4" aria-hidden="true" />
                 <span
                   aria-live="polite"
                   aria-atomic="true"
-                  className={timeRemaining < 60 ? 'text-destructive font-medium' : ''}
+                  className={timeRemaining < 60 ? 'font-medium text-destructive' : ''}
                 >
                   {formatTime(timeRemaining)}
                 </span>
@@ -435,7 +435,7 @@ export function StepUpMFA({
                 }}
                 placeholder={getPlaceholder()}
                 disabled={isVerifying || timeRemaining === 0}
-                className="text-center text-2xl tracking-widest font-mono"
+                className="text-center font-mono text-2xl tracking-widest"
                 aria-invalid={!!error}
                 aria-describedby={error ? 'verification-error' : undefined}
                 autoComplete="one-time-code"
@@ -446,7 +446,7 @@ export function StepUpMFA({
             {error && (
               <div
                 id="verification-error"
-                className="rounded-md bg-destructive/10 border border-destructive/20 p-3"
+                className="rounded-md border border-destructive/20 bg-destructive/10 p-3"
                 role="alert"
               >
                 <p className="text-sm text-destructive">{error}</p>
@@ -463,13 +463,13 @@ export function StepUpMFA({
                 disabled={!canResend || isResending || timeRemaining === 0}
                 className="w-full"
               >
-                <RefreshCw className={`h-4 w-4 me-2 ${isResending ? 'animate-spin' : ''}`} aria-hidden="true" />
+                <RefreshCw className={`me-2 size-4 ${isResending ? 'animate-spin' : ''}`} aria-hidden="true" />
                 {isResending ? t('stepUp.resending') : t('stepUp.resendCode')}
               </Button>
             )}
 
             {/* Actions */}
-            <DialogFooter className="flex-col sm:flex-row gap-2">
+            <DialogFooter className="flex-col gap-2 sm:flex-row">
               <Button
                 type="button"
                 variant="outline"
@@ -490,7 +490,7 @@ export function StepUpMFA({
               >
                 {isVerifying ? (
                   <>
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white me-2"></div>
+                    <div className="me-2 size-4 animate-spin rounded-full border-b-2 border-white"></div>
                     {t('stepUp.verifying')}
                   </>
                 ) : (
@@ -503,7 +503,7 @@ export function StepUpMFA({
 
         {/* Help text */}
         <div className="border-t pt-4">
-          <p className="text-xs text-muted-foreground text-center">
+          <p className="text-center text-xs text-muted-foreground">
             {t('stepUp.helpText')}
           </p>
         </div>

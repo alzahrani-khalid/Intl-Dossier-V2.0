@@ -56,7 +56,24 @@
     "unsavedChanges": "Unsaved changes",
     "conflictTitle": "Version Conflict Detected",
     "conflictDescription": "This position has been modified by another user. Your version: {{current}}, Server version: {{server}}. Please reload the page to see the latest version.",
-    "reloadPage": "Reload Page"
+    "reloadPage": "Reload Page",
+    "linkedDossiers": "Linked Dossiers"
+  },
+  "position_dossier_links": {
+    "title": "Linked Dossiers",
+    "add_link": "Add Link",
+    "no_links": "No linked dossiers",
+    "select_dossier": "Select Dossier",
+    "select_placeholder": "Choose a dossier to link",
+    "no_dossiers": "No dossiers available",
+    "link_type": "Link Type",
+    "types": {
+      "primary": "Primary",
+      "related": "Related",
+      "reference": "Reference"
+    },
+    "notes_optional": "Notes (Optional)",
+    "notes_placeholder": "Add any notes about this link..."
   },
   "consistency": {
     "title": "Consistency Check",
@@ -180,7 +197,6 @@
   "submit": "Submit for Review",
   "publish": "Publish",
   "attachments": "Attachments",
-  "consistency": "Consistency Check",
   "approvalChain": "Approval Progress",
   "versions": {
     "description": "View version history and compare changes"

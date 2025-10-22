@@ -80,12 +80,12 @@ export class ThemeErrorBoundary extends Component<Props, State> {
       const isRTL = document.documentElement.getAttribute('dir') === 'rtl';
       
       return (
-        <div className="min-h-screen flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-background border rounded-lg p-6 shadow-lg">
-            <h1 className="text-2xl font-bold mb-4 text-destructive">
+        <div className="flex min-h-screen items-center justify-center p-4">
+          <div className="w-full max-w-md rounded-lg border bg-background p-6 shadow-lg">
+            <h1 className="mb-4 text-2xl font-bold text-destructive">
               {isRTL ? 'خطأ في نظام السمات' : 'Theme System Error'}
             </h1>
-            <p className="text-muted-foreground mb-4">
+            <p className="mb-4 text-muted-foreground">
               {isRTL 
                 ? 'حدث خطأ في تحميل إعدادات السمة. تم تطبيق السمة الافتراضية.'
                 : 'An error occurred loading theme settings. Default theme has been applied.'}
@@ -95,14 +95,14 @@ export class ThemeErrorBoundary extends Component<Props, State> {
                 <summary className="cursor-pointer text-sm text-muted-foreground hover:text-foreground">
                   {isRTL ? 'تفاصيل الخطأ' : 'Error details'}
                 </summary>
-                <pre className="mt-2 text-xs bg-muted p-2 rounded overflow-auto">
+                <pre className="mt-2 overflow-auto rounded bg-muted p-2 text-xs">
                   {this.state.error.message}
                 </pre>
               </details>
             )}
             <button
               onClick={this.handleReset}
-              className="w-full px-4 py-2 bg-primary text-primary-foreground rounded hover:bg-primary/90 transition-colors"
+              className="w-full rounded bg-primary px-4 py-2 text-primary-foreground transition-colors hover:bg-primary/90"
             >
               {isRTL ? 'إعادة تحميل الصفحة' : 'Reload Page'}
             </button>

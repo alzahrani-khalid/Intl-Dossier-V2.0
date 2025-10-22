@@ -1,0 +1,479 @@
+openapi: 3.1.0
+info:
+  title: Waiting Queue Escalation API
+  version: 1.0.0
+  description: |
+    API for escalating overdue assignments to higher management via organizational hierarchy.
+    Supports individual and bulk escalation operations with path resolution.
+  contact:
+    name: GASTAT International Dossier Team
+    email: support@gastat.gov.sa
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1/waiting-queue-escalation
+    description: Production (Supabase Edge Functions)
+  - url: http://localhost:54321/functions/v1/waiting-queue-escalation
+    description: Local Development (Supabase Local)
+
+tags:
+  - name: escalations
+    description: Assignment escalation operations
+
+security:
+  - BearerAuth: []
+
+paths:
+  /escalate:
+    post:
+      summary: Escalate assignment to higher management
+      description: |
+        Escalates an assignment to the assignee's manager via organizational hierarchy.
+        Creates escalation record and sends notification to recipient.
+        Prevents escalation of completed/cancelled assignments.
+      operationId: escalateAssignment
+      tags:
+        - escalations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - assignment_id
+              properties:
+                assignment_id:
+                  type: string
+                  format: uuid
+                  description: ID of the assignment to escalate
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                escalation_reason:
+                  type: string
+                  maxLength: 500
+                  description: Optional reason for escalation
+                  example: "Assignment overdue by 10 days with no progress"
+                escalate_to_user_id:
+                  type: string
+                  format: uuid
+                  description: Optional specific recipient (overrides hierarchy resolution)
+                  example: "987e6543-e21b-12d3-a456-426614174999"
+      responses:
+        '200':
+          description: Assignment escalated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Assignment escalated successfully"
+                  data:
+                    type: object
+                    properties:
+                      escalation_id:
+                        type: string
+                        format: uuid
+                        description: ID of created escalation_records record
+                      assignment_id:
+                        type: string
+                        format: uuid
+                      escalated_by:
+                        type: string
+                        format: uuid
+                      escalated_to:
+                        type: string
+                        format: uuid
+                      escalated_to_name:
+                        type: string
+                        example: "Ahmed Al-Rashid (Division Manager)"
+                      escalation_reason:
+                        type: string
+                        nullable: true
+                      escalated_at:
+                        type: string
+                        format: date-time
+                      status:
+                        type: string
+                        enum: [pending]
+                        example: "pending"
+        '400':
+          description: Bad request (validation errors)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                noEscalationPath:
+                  value:
+                    error: "Cannot escalate: No escalation path configured for this user"
+                    code: "NO_ESCALATION_PATH"
+                    details:
+                      assignee_id: "123e4567-e89b-12d3-a456-426614174000"
+                invalidStatus:
+                  value:
+                    error: "Cannot escalate: Assignment is completed"
+                    code: "INVALID_STATUS"
+                    details:
+                      assignment_id: "123e4567-e89b-12d3-a456-426614174000"
+                      status: "completed"
+                noAssignee:
+                  value:
+                    error: "Cannot escalate: Assignment has no assignee"
+                    code: "NO_ASSIGNEE"
+                circularReference:
+                  value:
+                    error: "Cannot escalate: Circular reporting chain detected"
+                    code: "CIRCULAR_HIERARCHY"
+        '401':
+          description: Unauthorized (missing or invalid JWT)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden (insufficient permissions)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Insufficient permissions: 'escalate_assignments' permission required"
+                code: "FORBIDDEN"
+        '404':
+          description: Assignment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "Assignment not found"
+                code: "NOT_FOUND"
+                details:
+                  assignment_id: "123e4567-e89b-12d3-a456-426614174000"
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /escalate-bulk:
+    post:
+      summary: Escalate multiple assignments (bulk operation)
+      description: |
+        Queues bulk escalation for multiple assignments. Returns job ID for progress tracking.
+        Max 100 assignments per bulk operation.
+      operationId: escalateBulkAssignments
+      tags:
+        - escalations
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - assignment_ids
+              properties:
+                assignment_ids:
+                  type: array
+                  minItems: 1
+                  maxItems: 100
+                  items:
+                    type: string
+                    format: uuid
+                  description: Array of assignment IDs (max 100)
+                  example:
+                    - "123e4567-e89b-12d3-a456-426614174000"
+                    - "123e4567-e89b-12d3-a456-426614174001"
+                escalation_reason:
+                  type: string
+                  maxLength: 500
+                  description: Common reason applied to all escalations
+                  example: "Bulk escalation of overdue assignments"
+      responses:
+        '202':
+          description: Bulk escalation job queued successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  message:
+                    type: string
+                    example: "Bulk escalation job queued"
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: string
+                        format: uuid
+                      total_items:
+                        type: integer
+                        example: 25
+                      status_url:
+                        type: string
+                        format: uri
+                        example: "/status/abc123-def456-ghi789"
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /status/{job_id}:
+    get:
+      summary: Get bulk escalation job status
+      description: Poll job status and results for bulk escalation operation
+      operationId: getBulkEscalationStatus
+      tags:
+        - escalations
+      parameters:
+        - name: job_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Job status retrieved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      job_id:
+                        type: string
+                        format: uuid
+                      status:
+                        type: string
+                        enum: [queued, processing, completed, failed]
+                      progress:
+                        type: object
+                        properties:
+                          total:
+                            type: integer
+                          processed:
+                            type: integer
+                          succeeded:
+                            type: integer
+                          failed:
+                            type: integer
+                      results:
+                        type: object
+                        properties:
+                          escalated:
+                            type: array
+                            items:
+                              type: string
+                              format: uuid
+                          failed:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                assignment_id:
+                                  type: string
+                                  format: uuid
+                                error:
+                                  type: string
+        '404':
+          description: Job not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /{escalation_id}/acknowledge:
+    post:
+      summary: Acknowledge escalation
+      description: |
+        Manager acknowledges receipt of escalation notification.
+        Updates escalation status to 'acknowledged' and records timestamp.
+      operationId: acknowledgeEscalation
+      tags:
+        - escalations
+      parameters:
+        - name: escalation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Escalation acknowledged
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    example: "Escalation acknowledged"
+                  data:
+                    type: object
+                    properties:
+                      escalation_id:
+                        type: string
+                        format: uuid
+                      status:
+                        type: string
+                        enum: [acknowledged]
+                      acknowledged_at:
+                        type: string
+                        format: date-time
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Not authorized to acknowledge this escalation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Escalation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /{escalation_id}/resolve:
+    post:
+      summary: Resolve escalation
+      description: |
+        Manager marks escalation as resolved after taking action.
+        Updates escalation status to 'resolved' and records timestamp.
+      operationId: resolveEscalation
+      tags:
+        - escalations
+      parameters:
+        - name: escalation_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                resolution_notes:
+                  type: string
+                  maxLength: 1000
+                  description: Optional notes about resolution
+      responses:
+        '200':
+          description: Escalation resolved
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+                    example: "Escalation resolved"
+                  data:
+                    type: object
+                    properties:
+                      escalation_id:
+                        type: string
+                        format: uuid
+                      status:
+                        type: string
+                        enum: [resolved]
+                      resolved_at:
+                        type: string
+                        format: date-time
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '403':
+          description: Not authorized to resolve this escalation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Escalation not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+  schemas:
+    Error:
+      type: object
+      required:
+        - error
+        - code
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+        details:
+          type: object
+          description: Additional error context
+          additionalProperties: true

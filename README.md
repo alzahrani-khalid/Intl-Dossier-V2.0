@@ -36,7 +36,7 @@ See [mobile/README.md](./mobile/README.md) for detailed mobile setup instruction
 ### Prerequisites
 
 - **Node.js**: 18+ LTS
-- **npm**: 9.0+
+- **pnpm**: 10.x+ (Package manager)
 - **Git**: Latest version
 - **Supabase Account**: For backend services
 
@@ -47,8 +47,11 @@ See [mobile/README.md](./mobile/README.md) for detailed mobile setup instruction
 git clone <repository-url>
 cd Intl-DossierV2.0
 
+# Install pnpm globally (if not installed)
+npm install -g pnpm
+
 # Install dependencies (monorepo)
-npm install
+pnpm install
 
 # Configure environment variables
 cp backend/.env.example backend/.env
@@ -57,10 +60,10 @@ cp frontend/.env.example frontend/.env
 # Edit .env files with your Supabase credentials
 
 # Run database migrations
-npm run db:migrate
+pnpm db:migrate
 
 # Start development servers
-npm run dev
+pnpm dev
 ```
 
 The web app will be available at:
@@ -74,20 +77,20 @@ The web app will be available at:
 cd mobile
 
 # Install dependencies
-npm install
+pnpm install
 
 # Configure environment
 cp .env.example .env
 # Edit .env with your Supabase credentials
 
 # Start Expo development server
-npm start
+pnpm start
 
 # Run on iOS (macOS only)
-npm run ios
+pnpm ios
 
 # Run on Android
-npm run android
+pnpm android
 ```
 
 See [mobile/README.md](./mobile/README.md) for comprehensive mobile setup guide.
@@ -143,6 +146,13 @@ Intl-DossierV2.0/
 - **Real-time Collaboration**: Live updates and notifications
 - **Kanban Boards**: Visual workflow management
 - **Document Management**: Upload and manage documents
+- **Waiting Queue Actions**: Comprehensive action management for pending assignments
+  - **Assignment Details View**: Quick access to full assignment information with aging indicators
+  - **Follow-Up Reminders**: Send individual or bulk reminders with 24-hour cooldown enforcement
+  - **Assignment Escalation**: Escalate overdue items to management with organizational hierarchy support
+  - **Advanced Filtering**: Filter by priority, aging, type, and assignee with sub-second performance
+  - **Bulk Operations**: Process up to 100 assignments at once with progress tracking
+  - **Bilingual Notifications**: English and Arabic notification templates with RTL support
 - **RTL Support**: Full Arabic language support
 - **Responsive Design**: Mobile-first, works on all devices
 - **Accessibility**: WCAG AA compliant
@@ -206,45 +216,45 @@ Intl-DossierV2.0/
 
 ```bash
 # Web unit tests
-cd frontend && npm test
+cd frontend && pnpm test
 
 # Backend tests
-cd backend && npm test
+cd backend && pnpm test
 
 # Mobile tests
-cd mobile && npm test
+cd mobile && pnpm test
 
 # E2E tests
-npm run test:e2e
+pnpm test:e2e
 ```
 
 ### Code Quality
 
 ```bash
 # Lint all packages
-npm run lint
+pnpm lint
 
 # Type check
-npm run typecheck
+pnpm typecheck
 
 # Format code
-npm run format
+pnpm format
 ```
 
 ### Database
 
 ```bash
 # Run migrations
-npm run db:migrate
+pnpm db:migrate
 
 # Seed database
-npm run db:seed
+pnpm db:seed
 
 # Reset database
-npm run db:reset
+pnpm db:reset
 
 # Generate migration
-npm run db:migration:create
+pnpm db:migration:create
 ```
 
 ## Deployment
@@ -253,10 +263,10 @@ npm run db:migration:create
 
 ```bash
 # Build for production
-npm run build
+pnpm build
 
 # Preview production build
-npm run preview
+pnpm preview
 ```
 
 ### Mobile Application

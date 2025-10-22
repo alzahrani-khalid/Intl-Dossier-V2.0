@@ -59,13 +59,39 @@
     "title": "الجدول الزمني",
     "empty": "لا توجد أحداث في الجدول الزمني",
     "loadMore": "تحميل المزيد من الأحداث",
+    "selectFilter": "اختر فلاتر نوع الحدث",
+    "filtersSelected": "محدد",
+    "filterBy": "تصفية",
+    "clearAll": "مسح الكل",
+    "activeFilter": "مصفى حسب",
+    "clearFilter": "مسح",
+    "filter": "تصفية",
     "types": {
       "engagement": "تفاعل",
       "position": "موقف",
       "mou": "مذكرة تفاهم",
       "commitment": "التزام",
       "document": "وثيقة",
-      "intelligence": "معلومات استخبارية"
+      "intelligence": "معلومات استخبارية",
+      "internal_meeting": "اجتماع داخلي",
+      "deadline": "موعد نهائي",
+      "reminder": "تذكير",
+      "holiday": "عطلة",
+      "training": "تدريب",
+      "review": "مراجعة",
+      "forum": "منتدى",
+      "other": "أخرى"
+    },
+    "engagementTypes": {
+      "conference": "مؤتمر",
+      "workshop": "ورشة عمل",
+      "meeting": "اجتماع",
+      "bilateral": "اجتماع ثنائي",
+      "multilateral": "اجتماع متعدد الأطراف",
+      "consultation": "مشاورة",
+      "negotiation": "مفاوضات",
+      "ceremony": "حفل",
+      "other": "أخرى"
     }
   },
   "actions": {

@@ -47,17 +47,17 @@ serve(async (req) => {
     let query = supabaseClient
       .from('calendar_entries')
       .select('*')
-      .order('start_datetime', { ascending: true });
+      .order('event_date', { ascending: true });
 
-    // Date range filter
+    // Date range filter (using event_date instead of start_datetime/end_datetime)
     if (startDate && endDate) {
       query = query
-        .gte('start_datetime', startDate)
-        .lte('end_datetime', endDate);
+        .gte('event_date', startDate)
+        .lte('event_date', endDate);
     } else if (startDate) {
-      query = query.gte('start_datetime', startDate);
+      query = query.gte('event_date', startDate);
     } else if (endDate) {
-      query = query.lte('end_datetime', endDate);
+      query = query.lte('event_date', endDate);
     }
 
     // Entry type filter

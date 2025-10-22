@@ -241,4 +241,23 @@ export async function refreshSession(sessionId: string): Promise<void> {
   await redis.expire(key, SESSION_TTL);
 }
 
+/**
+ * Waiting Queue Actions - Redis Key Prefixes & TTL Constants
+ *
+ * Key prefix patterns and TTL values for waiting queue operations
+ */
+export const WAITING_QUEUE_KEYS = {
+  RATE_LIMIT: (userId: string) => `rate-limit:reminder:${userId}`,
+  QUEUE_FILTER_CACHE: (userId: string, filterHash: string) => `queue-filter:${userId}:${filterHash}`,
+  BULK_JOB_STATUS: (jobId: string) => `bulk-job:${jobId}`,
+  COOLDOWN_TRACKER: (assignmentId: string) => `cooldown:${assignmentId}`,
+} as const;
+
+export const WAITING_QUEUE_TTL = {
+  RATE_LIMIT_WINDOW: 300, // 5 minutes
+  FILTER_CACHE: 300, // 5 minutes
+  BULK_JOB_STATUS: 3600, // 1 hour
+  COOLDOWN_TRACKER: 86400, // 24 hours
+} as const;
+
 export default redis;

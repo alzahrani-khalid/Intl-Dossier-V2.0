@@ -144,7 +144,7 @@ export function SLACountdown({
 
   return (
     <div className={`sla-countdown ${className}`}>
-      <div className="flex items-center justify-between mb-2">
+      <div className="mb-2 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
             {eventType === 'acknowledgment'
@@ -158,7 +158,7 @@ export function SLACountdown({
           )}
         </div>
         <span
-          className={`px-3 py-1 rounded-full text-xs font-semibold ${getStatusColor()}`}
+          className={`rounded-full px-3 py-1 text-xs font-semibold ${getStatusColor()}`}
           role="status"
           aria-live="polite"
         >
@@ -167,7 +167,7 @@ export function SLACountdown({
       </div>
 
       {/* Progress bar */}
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2 overflow-hidden">
+      <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
         <div
           className={`h-full transition-all duration-1000 ${
             isBreached ? 'bg-red-500' :

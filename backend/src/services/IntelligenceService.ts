@@ -266,7 +266,7 @@ export class IntelligenceService {
     try {
       // Get entity data based on type
       let entity;
-      let analysis: any = {};
+      const analysis: any = {};
 
       if (entityType === 'country') {
         const { data } = await supabaseAdmin

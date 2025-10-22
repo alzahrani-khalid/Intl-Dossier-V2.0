@@ -42,7 +42,7 @@ export function LanguageSwitcher({ compact = false }: LanguageSwitcherProps) {
           className="gap-2"
           aria-label={i18n.t('languages.switch', 'Switch language')}
         >
-          <Globe className="h-4 w-4" />
+          <Globe className="size-4" />
           {!compact && <span>{labelMap[language]}</span>}
         </Button>
       </DropdownMenuTrigger>
@@ -54,7 +54,7 @@ export function LanguageSwitcher({ compact = false }: LanguageSwitcherProps) {
             className="flex items-center justify-between"
           >
             <span>{labelMap[lang]}</span>
-            {language === lang && <Check className="h-4 w-4 text-primary-500" />}
+            {language === lang && <Check className="size-4 text-primary-500" />}
           </DropdownMenuItem>
         ))}
       </DropdownMenuContent>

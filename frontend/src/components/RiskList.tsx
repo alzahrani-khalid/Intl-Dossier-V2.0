@@ -35,10 +35,10 @@ const severities: Risk['severity'][] = ['low', 'medium', 'high', 'critical'];
 const likelihoods: Risk['likelihood'][] = ['unlikely', 'possible', 'likely', 'certain'];
 
 const severityColors = {
-  low: 'bg-blue-500',
-  medium: 'bg-yellow-500',
-  high: 'bg-orange-500',
-  critical: 'bg-red-500',
+  low: 'bg-green-500 hover:bg-green-500/80 text-white',
+  medium: 'bg-amber-500 hover:bg-amber-500/80 text-white',
+  high: 'bg-orange-600 hover:bg-orange-600/80 text-white',
+  critical: 'bg-red-600 hover:bg-red-600/80 text-white',
 };
 
 export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
@@ -69,8 +69,8 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
   return (
     <div className="space-y-4">
       <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
-        <h3 className="text-lg font-semibold flex items-center gap-2">
-          <AlertTriangle className="h-5 w-5" />
+        <h3 className="flex items-center gap-2 text-lg font-semibold">
+          <AlertTriangle className="size-5" />
           {t('afterActions.risks.title')}
         </h3>
         {!readOnly && (
@@ -86,7 +86,13 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
       )}
 
       {risks.map((risk, index) => (
-        <Card key={index} className="border-l-4" style={{ borderLeftColor: `var(--${severityColors[risk.severity]})` }}>
+        <Card key={index} className={cn(
+          'border-l-4',
+          risk.severity === 'low' && 'border-l-green-500',
+          risk.severity === 'medium' && 'border-l-amber-500',
+          risk.severity === 'high' && 'border-l-orange-600',
+          risk.severity === 'critical' && 'border-l-red-600'
+        )}>
           <CardHeader>
             <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
               <CardTitle className="text-base">
@@ -110,7 +116,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
                     size="sm"
                     onClick={() => removeRisk(index)}
                   >
-                    <Trash2 className="h-4 w-4 text-destructive" />
+                    <Trash2 className="size-4 text-destructive" />
                   </Button>
                 )}
               </div>
@@ -134,7 +140,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               <div>
                 <Label htmlFor={`severity-${index}`}>{t('afterActions.risks.severity')} *</Label>
                 <Select

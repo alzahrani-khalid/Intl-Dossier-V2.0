@@ -114,12 +114,12 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
   // Success modal
   if (showSuccess && createdTicket) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-8 max-w-md w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50">
+        <div className="w-full max-w-md rounded-lg bg-white p-8" dir={isRTL ? 'rtl' : 'ltr'}>
           <div className="text-center">
-            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100 mb-4">
+            <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-green-100">
               <svg
-                className="h-6 w-6 text-green-600"
+                className="size-6 text-green-600"
                 fill="none"
                 stroke="currentColor"
                 viewBox="0 0 24 24"
@@ -132,16 +132,16 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                 />
               </svg>
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-2">
+            <h3 className="mb-2 text-lg font-medium text-gray-900">
               {t('intake.success.title')}
             </h3>
-            <p className="text-sm text-gray-500 mb-6">
+            <p className="mb-6 text-sm text-gray-500">
               {t('intake.success.message', { ticketNumber: createdTicket.ticketNumber })}
             </p>
-            <div className="flex gap-3 justify-center">
+            <div className="flex justify-center gap-3">
               <button
                 onClick={() => navigate({ to: `/intake/tickets/${createdTicket.id}` })}
-                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
+                className="rounded-md bg-blue-600 px-4 py-2 text-white transition-colors hover:bg-blue-700"
               >
                 {t('intake.success.viewTicket')}
               </button>
@@ -152,7 +152,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   reset();
                   setAttachmentIds([]);
                 }}
-                className="px-4 py-2 bg-white border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
+                className="rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
               >
                 {t('intake.success.createAnother')}
               </button>
@@ -164,24 +164,24 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
   }
 
   return (
-    <div className="max-w-4xl mx-auto py-8 px-4" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="bg-white shadow rounded-lg p-6">
+    <div className="mx-auto max-w-4xl px-4 py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="rounded-lg bg-white p-6 shadow">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900 mb-2">{t('intake.title')}</h1>
+          <h1 className="mb-2 text-2xl font-bold text-gray-900">{t('intake.title')}</h1>
           <p className="text-sm text-gray-600">{t('intake.subtitle')}</p>
         </div>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Request Type */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               {t('intake.form.requestType.label')}
-              <span className="text-red-500 ms-1">*</span>
+              <span className="ms-1 text-red-500">*</span>
             </label>
             <select
               {...register('requestType')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">{t('intake.form.requestType.placeholder')}</option>
               <option value="engagement">
@@ -204,15 +204,15 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
           {/* Title (English) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               {t('intake.form.title.label')}
-              <span className="text-red-500 ms-1">*</span>
+              <span className="ms-1 text-red-500">*</span>
             </label>
             <input
               type="text"
               {...register('title')}
               placeholder={t('intake.form.title.placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.title && (
               <p className="mt-1 text-sm text-red-600">{errors.title.message}</p>
@@ -221,14 +221,14 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
           {/* Title (Arabic) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               {t('intake.form.titleAr.label')}
             </label>
             <input
               type="text"
               {...register('titleAr')}
               placeholder={t('intake.form.titleAr.placeholder')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               dir="rtl"
             />
             {errors.titleAr && (
@@ -238,15 +238,15 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
           {/* Description (English) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               {t('intake.form.description.label')}
-              <span className="text-red-500 ms-1">*</span>
+              <span className="ms-1 text-red-500">*</span>
             </label>
             <textarea
               {...register('description')}
               placeholder={t('intake.form.description.placeholder')}
               rows={5}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             {errors.description && (
               <p className="mt-1 text-sm text-red-600">{errors.description.message}</p>
@@ -255,14 +255,14 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
           {/* Description (Arabic) */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               {t('intake.form.descriptionAr.label')}
             </label>
             <textarea
               {...register('descriptionAr')}
               placeholder={t('intake.form.descriptionAr.placeholder')}
               rows={5}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
               dir="rtl"
             />
             {errors.descriptionAr && (
@@ -272,13 +272,13 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
           {/* Urgency Level */}
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="mb-2 block text-sm font-medium text-gray-700">
               {t('intake.form.urgency.label')}
-              <span className="text-red-500 ms-1">*</span>
+              <span className="ms-1 text-red-500">*</span>
             </label>
             <select
               {...register('urgency')}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
             >
               <option value="">{t('intake.form.urgency.placeholder')}</option>
               <option value="low">{t('intake.form.urgency.options.low')}</option>
@@ -310,8 +310,8 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
           {/* SLA Preview */}
           {slaPreview && (
-            <div className="bg-blue-50 border border-blue-200 rounded-md p-4">
-              <h3 className="text-sm font-medium text-blue-900 mb-2">
+            <div className="rounded-md border border-blue-200 bg-blue-50 p-4">
+              <h3 className="mb-2 text-sm font-medium text-blue-900">
                 {t('intake.slaPreview.title')}
               </h3>
               <div className="space-y-1 text-sm text-blue-700">
@@ -332,35 +332,55 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
 
           {/* Error Message */}
           {createTicketMutation.isError && (
-            <div className="bg-red-50 border border-red-200 rounded-md p-4">
+            <div className="rounded-md border border-red-200 bg-red-50 p-4">
               <p className="text-sm text-red-800">{t('intake.error.message')}</p>
             </div>
           )}
 
           {/* Actions */}
-          <div className="flex gap-3 justify-end pt-4 border-t">
+          <div className="flex justify-end gap-3 border-t pt-4">
             <button
               type="button"
               onClick={() => navigate({ to: '/intake' })}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+              className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
             >
               {t('intake.actions.cancel')}
             </button>
             <button
               type="button"
               onClick={() => reset()}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50 transition-colors"
+              className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
             >
               {t('intake.actions.reset')}
             </button>
             <button
+              type="button"
+              onClick={() => {
+                setValue('requestType', 'engagement');
+                setValue('title', 'New Partnership with ExampleCorp');
+                setValue('titleAr', 'شراكة جديدة مع شركة المثال');
+                setValue(
+                  'description',
+                  'Initial discussion for a strategic partnership with ExampleCorp to expand our market reach in the new region. This involves exploring potential joint ventures and co-marketing opportunities.'
+                );
+                setValue(
+                  'descriptionAr',
+                  'مناقشة أولية لشراكة استراتيجية مع شركة المثال لتوسيع نطاق وصولنا إلى السوق في المنطقة الجديدة. يتضمن ذلك استكشاف المشاريع المشتركة المحتملة وفرص التسويق المشترك.'
+                );
+                setValue('urgency', 'high');
+              }}
+              className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
+            >
+              {t('intake.actions.fillMock')}
+            </button>
+            <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
+              className="rounded-md bg-blue-600 px-6 py-2 text-white transition-colors hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
             >
               {isSubmitting ? (
                 <span className="flex items-center gap-2">
-                  <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
+                  <svg className="size-4 animate-spin" viewBox="0 0 24 24">
                     <circle
                       className="opacity-25"
                       cx="12"

@@ -99,10 +99,10 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
 
   if (step === 'setup') {
     return (
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
+            <Shield className="size-5" />
             Enable Two-Factor Authentication
           </CardTitle>
           <CardDescription>
@@ -112,8 +112,8 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
         <CardContent className="space-y-4">
           {qrCode && (
             <div className="text-center">
-              <div className="bg-white p-4 rounded-lg border inline-block">
-                <img src={qrCode} alt="MFA QR Code" className="w-48 h-48" />
+              <div className="inline-block rounded-lg border bg-white p-4">
+                <img src={qrCode} alt="MFA QR Code" className="size-48" />
               </div>
             </div>
           )}
@@ -133,15 +133,15 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
                   variant="outline"
                   onClick={() => copyToClipboard(secret)}
                 >
-                  {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                  {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
                 </Button>
               </div>
             </div>
           )}
 
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+          <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-800 dark:bg-yellow-900/20">
             <div className="flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+              <AlertCircle className="mt-0.5 size-4 text-yellow-600 dark:text-yellow-400" />
               <div className="text-sm text-yellow-800 dark:text-yellow-200">
                 <p className="font-medium">Important:</p>
                 <ul className="mt-1 space-y-1 text-xs">
@@ -170,7 +170,7 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
 
   if (step === 'verify') {
     return (
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle>Verify Setup</CardTitle>
           <CardDescription>
@@ -185,15 +185,15 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
               value={verificationCode}
               onChange={(e) => setVerificationCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
               placeholder="123456"
-              className="text-center text-lg font-mono tracking-widest"
+              className="text-center font-mono text-lg tracking-widest"
               maxLength={6}
             />
           </div>
 
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+            <div className="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                <AlertCircle className="size-4 text-red-600 dark:text-red-400" />
                 <span className="text-sm text-red-800 dark:text-red-200">{error}</span>
               </div>
             </div>
@@ -218,7 +218,7 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
 
   if (step === 'backup') {
     return (
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle>Backup Codes</CardTitle>
           <CardDescription>
@@ -235,19 +235,19 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
                   variant="outline"
                   onClick={() => setShowBackupCodes(!showBackupCodes)}
                 >
-                  {showBackupCodes ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                  {showBackupCodes ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={downloadBackupCodes}
                 >
-                  <Download className="h-4 w-4" />
+                  <Download className="size-4" />
                 </Button>
               </div>
             </div>
             
-            <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+            <div className="rounded-lg bg-gray-50 p-3 dark:bg-gray-800">
               <div className="grid grid-cols-2 gap-2 font-mono text-sm">
                 {backupCodes.map((code, index) => (
                   <div key={index} className="flex items-center justify-between">
@@ -259,9 +259,9 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
             </div>
           </div>
 
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
             <div className="flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 text-blue-600 dark:text-blue-400 mt-0.5" />
+              <AlertCircle className="mt-0.5 size-4 text-blue-600 dark:text-blue-400" />
               <div className="text-sm text-blue-800 dark:text-blue-200">
                 <p className="font-medium">Important:</p>
                 <ul className="mt-1 space-y-1 text-xs">
@@ -292,10 +292,10 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
 
   if (step === 'complete') {
     return (
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-green-600 dark:text-green-400">
-            <Check className="h-5 w-5" />
+            <Check className="size-5" />
             MFA Enabled Successfully
           </CardTitle>
           <CardDescription>
@@ -304,8 +304,8 @@ export function MFASetup({ onComplete, onCancel }: MFASetupProps) {
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="text-center">
-            <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4">
-              <Shield className="h-12 w-12 text-green-600 dark:text-green-400 mx-auto mb-2" />
+            <div className="rounded-lg border border-green-200 bg-green-50 p-4 dark:border-green-800 dark:bg-green-900/20">
+              <Shield className="mx-auto mb-2 size-12 text-green-600 dark:text-green-400" />
               <p className="text-sm text-green-800 dark:text-green-200">
                 Your account is now protected with two-factor authentication
               </p>

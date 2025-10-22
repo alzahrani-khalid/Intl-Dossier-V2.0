@@ -139,12 +139,12 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg font-semibold text-start">
+          <h2 className="text-start text-lg font-semibold">
             {t('documents.tab.title')}
           </h2>
-          <p className="text-sm text-muted-foreground text-start">
+          <p className="text-start text-sm text-muted-foreground">
             {t('documents.tab.description')}
           </p>
         </div>
@@ -152,7 +152,7 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
           onClick={() => setShowUploader(!showUploader)}
           className="w-full sm:w-auto"
         >
-          <Upload className="h-4 w-4 me-2" />
+          <Upload className="me-2 size-4" />
           {t('documents.upload.button')}
         </Button>
       </div>
@@ -161,7 +161,7 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
       {showUploader && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base text-start">
+            <CardTitle className="text-start text-base">
               {t('documents.upload.title')}
             </CardTitle>
           </CardHeader>
@@ -181,10 +181,10 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
       {/* Filters */}
       <Card>
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Latest Only Toggle */}
             <div className="flex items-center justify-between space-x-2">
-              <Label htmlFor="latest-only" className="text-sm font-medium text-start cursor-pointer">
+              <Label htmlFor="latest-only" className="cursor-pointer text-start text-sm font-medium">
                 {t('documents.filter.latest_only')}
               </Label>
               <Switch
@@ -196,7 +196,7 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
 
             {/* Scan Status Filter */}
             <div>
-              <Label className="text-sm font-medium text-start block mb-2">
+              <Label className="mb-2 block text-start text-sm font-medium">
                 {t('documents.filter.scan_status')}
               </Label>
               <Select value={scanStatusFilter} onValueChange={setScanStatusFilter}>
@@ -218,18 +218,18 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
       {/* Documents List */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base text-start">
+          <CardTitle className="text-start text-base">
             {t('documents.list.title', { count: documents?.length || 0 })}
           </CardTitle>
         </CardHeader>
         <CardContent>
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              <Loader2 className="size-6 animate-spin text-muted-foreground" />
             </div>
           ) : error ? (
             <div className="flex items-center justify-center py-12 text-destructive">
-              <AlertCircle className="h-5 w-5 me-2" />
+              <AlertCircle className="me-2 size-5" />
               <span className="text-sm">
                 {error instanceof Error ? error.message : t('documents.list.error')}
               </span>
@@ -244,15 +244,15 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
                   return (
                     <div
                       key={doc.id}
-                      className="flex items-start gap-3 rounded-lg border p-4 hover:bg-muted/50 transition-colors"
+                      className="flex items-start gap-3 rounded-lg border p-4 transition-colors hover:bg-muted/50"
                     >
-                      <Icon className="h-5 w-5 mt-0.5 flex-shrink-0 text-muted-foreground" />
+                      <Icon className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
 
-                      <div className="flex-1 min-w-0 space-y-2">
+                      <div className="min-w-0 flex-1 space-y-2">
                         <div className="flex items-start justify-between gap-2">
-                          <p className="text-sm font-medium truncate text-start">{doc.file_name}</p>
+                          <p className="truncate text-start text-sm font-medium">{doc.file_name}</p>
                           {doc.version_number > 1 && (
-                            <Badge variant="outline" className="text-xs flex-shrink-0">
+                            <Badge variant="outline" className="shrink-0 text-xs">
                               v{doc.version_number}
                             </Badge>
                           )}
@@ -266,7 +266,7 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
 
                         <div className="flex flex-wrap gap-2">
                           <Badge className={scanStatusConfig[doc.scan_status].color}>
-                            <ScanIcon className="h-3 w-3 me-1" />
+                            <ScanIcon className="me-1 size-3" />
                             {t(`documents.scan_status.${doc.scan_status}`)}
                           </Badge>
                           <Badge className={sensitivityLevelConfig[doc.sensitivity_level]}>
@@ -278,26 +278,26 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-1 flex-shrink-0">
+                      <div className="flex shrink-0 items-center gap-1">
                         <Button
                           size="icon"
                           variant="ghost"
                           onClick={() => handleDownload(doc)}
-                          className="h-8 w-8"
+                          className="size-8"
                         >
-                          <Download className="h-4 w-4" />
+                          <Download className="size-4" />
                         </Button>
                         <Button
                           size="icon"
                           variant="ghost"
                           onClick={() => deleteMutation.mutate(doc.id)}
                           disabled={deleteMutation.isPending}
-                          className="h-8 w-8 text-destructive hover:text-destructive"
+                          className="size-8 text-destructive hover:text-destructive"
                         >
                           {deleteMutation.isPending ? (
-                            <Loader2 className="h-4 w-4 animate-spin" />
+                            <Loader2 className="size-4 animate-spin" />
                           ) : (
-                            <Trash2 className="h-4 w-4" />
+                            <Trash2 className="size-4" />
                           )}
                         </Button>
                       </div>
@@ -308,7 +308,7 @@ export function EntityDocumentsTab({ ownerType, ownerId }: EntityDocumentsTabPro
             </ScrollArea>
           ) : (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <FileWarning className="h-12 w-12 text-muted-foreground mb-4" />
+              <FileWarning className="mb-4 size-12 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
                 {t('documents.list.empty')}
               </p>

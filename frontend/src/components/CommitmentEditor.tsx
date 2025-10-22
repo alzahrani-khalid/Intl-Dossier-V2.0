@@ -129,7 +129,7 @@ export function CommitmentEditor({
                     size="sm"
                     onClick={() => removeCommitment(index)}
                   >
-                    <Trash2 className="h-4 w-4 text-destructive" />
+                    <Trash2 className="size-4 text-destructive" />
                   </Button>
                 )}
               </div>
@@ -164,14 +164,14 @@ export function CommitmentEditor({
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="internal" id={`internal-${index}`} />
                   <Label htmlFor={`internal-${index}`} className="flex items-center gap-2">
-                    <User className="h-4 w-4" />
+                    <User className="size-4" />
                     {t('afterActions.commitments.internal')}
                   </Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="external" id={`external-${index}`} />
                   <Label htmlFor={`external-${index}`} className="flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
+                    <Mail className="size-4" />
                     {t('afterActions.commitments.external')}
                   </Label>
                 </div>
@@ -249,7 +249,7 @@ export function CommitmentEditor({
               </div>
             )}
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
               <div>
                 <Label htmlFor={`priority-${index}`}>{t('afterActions.commitments.priority')} *</Label>
                 <Select

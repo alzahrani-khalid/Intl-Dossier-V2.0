@@ -152,30 +152,55 @@ serve(async (req) => {
 
     // Include stats if requested
     if (includeStats) {
-      // Query timeline to calculate stats
-      const { data: timelineData, error: timelineError } = await supabaseClient
-        .from("dossier_timeline")
-        .select("event_type")
-        .eq("dossier_id", dossierId);
+      // Query source tables directly for stats (no materialized view needed)
+      const ninetyDaysAgo = new Date();
+      ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
+      const ninetyDaysAgoISO = ninetyDaysAgo.toISOString();
 
-      if (!timelineError && timelineData) {
-        const stats = {
-          total_engagements: timelineData.filter(e => e.event_type === "engagement").length,
-          total_positions: timelineData.filter(e => e.event_type === "position").length,
-          total_mous: timelineData.filter(e => e.event_type === "mou").length,
-          total_commitments: timelineData.filter(e => e.event_type === "commitment").length,
-          total_documents: timelineData.filter(e => e.event_type === "document").length,
-          total_intelligence: timelineData.filter(e => e.event_type === "intelligence").length,
-          recent_activity_count: timelineData.filter(e => {
-            const date = new Date(e.event_date || "");
-            const ninetyDaysAgo = new Date();
-            ninetyDaysAgo.setDate(ninetyDaysAgo.getDate() - 90);
-            return date >= ninetyDaysAgo;
-          }).length,
-          relationship_health_score: null, // TODO: Implement health score algorithm
-        };
-        response.stats = stats;
-      }
+      const [engagementsResult, positionsResult, mousResult, calendarResult] = await Promise.all([
+        // Count engagements
+        supabaseClient
+          .from("engagements")
+          .select("id, engagement_date", { count: "exact", head: false })
+          .eq("dossier_id", dossierId),
+
+        // Count positions linked to this dossier
+        supabaseClient
+          .from("position_dossier_links")
+          .select("position_id", { count: "exact", head: true })
+          .eq("dossier_id", dossierId),
+
+        // Count MoUs
+        supabaseClient
+          .from("mous")
+          .select("id", { count: "exact", head: true })
+          .eq("dossier_id", dossierId),
+
+        // Count calendar entries
+        supabaseClient
+          .from("calendar_entries")
+          .select("id", { count: "exact", head: true })
+          .eq("dossier_id", dossierId),
+      ]);
+
+      // Calculate recent activity (engagements in last 90 days)
+      const recentEngagements = engagementsResult.data?.filter(e => {
+        if (!e.engagement_date) return false;
+        const date = new Date(e.engagement_date);
+        return date >= ninetyDaysAgo;
+      }).length || 0;
+
+      const stats = {
+        total_engagements: engagementsResult.count || 0,
+        total_positions: positionsResult.count || 0,
+        total_mous: mousResult.count || 0,
+        active_commitments: 0, // TODO: Add commitments table query when available
+        overdue_commitments: 0, // TODO: Add commitments table query when available
+        total_documents: 0, // TODO: Add documents count when needed
+        recent_activity_count: recentEngagements,
+        relationship_health_score: null, // TODO: Implement health score algorithm
+      };
+      response.stats = stats;
     }
 
     // Include owners if requested

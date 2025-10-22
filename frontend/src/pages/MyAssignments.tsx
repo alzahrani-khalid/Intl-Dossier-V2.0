@@ -14,7 +14,7 @@ export function MyAssignmentsPage() {
 
   const handleAssignmentClick = (assignment: any) => {
     // Navigate to assignment detail page
-    navigate({ to: `/assignments/${assignment.id}` })
+    navigate({ to: `/tasks/${assignment.id}` })
   }
 
   const formatTimeRemaining = (seconds: number): string => {
@@ -42,7 +42,7 @@ export function MyAssignmentsPage() {
     return (
       <div className="container mx-auto p-6">
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>
             {error.message || 'Failed to load assignments. Edge Functions may not be deployed yet.'}
           </AlertDescription>
@@ -52,16 +52,16 @@ export function MyAssignmentsPage() {
   }
 
   return (
-    <div className="container mx-auto p-6 space-y-6">
+    <div className="container mx-auto space-y-6 p-6">
       <div>
         <h1 className="text-3xl font-bold">{t('my_assignments')}</h1>
-        <p className="text-muted-foreground mt-1">
+        <p className="mt-1 text-muted-foreground">
           {t('my_assignments_description')}
         </p>
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         <Card>
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -115,44 +115,44 @@ export function MyAssignmentsPage() {
           data.assignments.map((assignment) => (
             <Card
               key={assignment.id}
-              className="hover:shadow-md transition-shadow cursor-pointer"
+              className="cursor-pointer transition-shadow hover:shadow-md"
               onClick={() => handleAssignmentClick(assignment)}
             >
               <CardContent className="p-6">
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="mb-2 flex items-center gap-2">
                       <Badge className={getPriorityColor(assignment.priority)}>
                         {assignment.priority}
                       </Badge>
                       <Badge variant="outline">{assignment.work_item_type}</Badge>
-                      {assignment.escalated && (
+                      {assignment.escalated_at && (
                         <Badge variant="destructive">Escalated</Badge>
                       )}
                     </div>
-                    <h3 className="text-lg font-semibold mb-1">
+                    <h3 className="mb-1 text-lg font-semibold">
                       {assignment.work_item_title || assignment.work_item_id}
                     </h3>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       Assigned: {new Date(assignment.assigned_at).toLocaleString()}
                     </p>
                   </div>
                   <div className="text-end">
-                    <div className="flex items-center gap-2 justify-end">
-                      <Clock className={`h-4 w-4 ${
+                    <div className="flex items-center justify-end gap-2">
+                      <Clock className={`size-4 ${
                         assignment.time_remaining_seconds < 0 ? 'text-red-500' :
-                        assignment.warning_sent ? 'text-yellow-500' :
+                        assignment.warning_sent_at ? 'text-yellow-500' :
                         'text-green-500'
                       }`} />
                       <span className={`font-semibold ${
                         assignment.time_remaining_seconds < 0 ? 'text-red-500' :
-                        assignment.warning_sent ? 'text-yellow-500' :
+                        assignment.warning_sent_at ? 'text-yellow-500' :
                         'text-green-500'
                       }`}>
                         {formatTimeRemaining(assignment.time_remaining_seconds)}
                       </span>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       Due: {new Date(assignment.sla_deadline).toLocaleString()}
                     </p>
                   </div>
@@ -163,7 +163,7 @@ export function MyAssignmentsPage() {
         ) : (
           <Card>
             <CardContent className="p-6 text-center text-muted-foreground">
-              <CheckCircle2 className="h-12 w-12 mx-auto mb-2 text-green-500" />
+              <CheckCircle2 className="mx-auto mb-2 size-12 text-green-500" />
               <p>No active assignments</p>
             </CardContent>
           </Card>

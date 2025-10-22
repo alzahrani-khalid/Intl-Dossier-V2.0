@@ -34,7 +34,12 @@ export default tseslint.config(
       // Include Tailwind class ordering and related rules
       ...(tailwind.configs?.recommended?.rules ?? {}),
       ...reactHooks.configs.recommended.rules,
-      ...reactRefresh.configs.vite.rules,
+      // Disable problematic rules that conflict
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      '@typescript-eslint/no-unused-expressions': 'off',
+      'no-unused-expressions': 'off',
+      'react-refresh/only-export-components': 'warn',
       // RTL Support: Prevent non-RTL-safe Tailwind classes
       'no-restricted-syntax': [
         'error',

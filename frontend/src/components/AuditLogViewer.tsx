@@ -204,14 +204,14 @@ export const AuditLogViewer: React.FC<AuditLogViewerProps> = ({
             <div
               key={log.id}
               className={`relative ${
-                isRTL ? 'pe-12 ps-0' : 'ps-12 pe-0'
+                isRTL ? 'pe-12 ps-0' : 'pe-0 ps-12'
               }`}
             >
               {/* Event icon */}
               <div
                 className={`absolute ${
                   isRTL ? 'right-0' : 'left-0'
-                } flex h-8 w-8 items-center justify-center rounded-full ${eventColor}`}
+                } flex size-8 items-center justify-center rounded-full ${eventColor}`}
               >
                 {getEventIcon(log.action)}
               </div>

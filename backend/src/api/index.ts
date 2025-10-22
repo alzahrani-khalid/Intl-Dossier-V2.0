@@ -10,12 +10,16 @@ import relationshipsRouter from './relationships';
 import organizationsRouter from './organizations';
 import contactsRouter from './contacts';
 import tasksRouter from './tasks';
+import taskContributorsRouter from './task-contributors';
 import commitmentsRouter from './commitments';
 import intelligenceRouter from './intelligence';
 import positionsRouter from './positions';
 import permissionsRouter from './permissions';
 import signaturesRouter from './signatures';
 import voiceRouter from './voice';
+import afterActionRouter from './after-action';
+import intakeEntityLinksRouter from './intake-entity-links';
+import entitySearchRouter from './entity-search';
 import { authenticateToken } from '../middleware/auth';
 import { apiLimiter } from '../middleware/rateLimiter';
 import { logApiRequest, logError } from '../utils/logger';
@@ -65,12 +69,18 @@ apiRouter.use('/relationships', relationshipsRouter);
 apiRouter.use('/organizations', organizationsRouter);
 apiRouter.use('/contacts', contactsRouter);
 apiRouter.use('/tasks', tasksRouter);
+apiRouter.use('/task-contributors', taskContributorsRouter);
 apiRouter.use('/commitments', commitmentsRouter);
 apiRouter.use('/intelligence', intelligenceRouter);
 apiRouter.use('/positions', positionsRouter);
 apiRouter.use('/permissions', permissionsRouter);
 apiRouter.use('/signatures', signaturesRouter);
 apiRouter.use('/voice', voiceRouter);
+apiRouter.use('/after-action', afterActionRouter);
+
+// Intake Entity Linking routes
+apiRouter.use(intakeEntityLinksRouter);
+apiRouter.use(entitySearchRouter);
 
 // API 404 handler
 apiRouter.use((req, res) => {

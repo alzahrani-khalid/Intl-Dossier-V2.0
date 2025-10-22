@@ -68,7 +68,7 @@ export function KeyContactsPanel({
                 className="h-8 gap-1"
                 aria-label={t('actions.addContact')}
               >
-                <UserPlus className="h-4 w-4" />
+                <UserPlus className="size-4" />
                 <span className="hidden sm:inline">{t('actions.addContact')}</span>
               </Button>
             )}
@@ -76,7 +76,7 @@ export function KeyContactsPanel({
         </CardHeader>
         <CardContent>
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <User className="h-12 w-12 text-muted-foreground mb-4" />
+            <User className="mb-4 size-12 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">{t('keyContacts.empty')}</p>
             {onAddContact && (
               <Button
@@ -85,7 +85,7 @@ export function KeyContactsPanel({
                 onClick={onAddContact}
                 className="mt-4 gap-2"
               >
-                <UserPlus className="h-4 w-4" />
+                <UserPlus className="size-4" />
                 {t('actions.addContact')}
               </Button>
             )}
@@ -99,7 +99,7 @@ export function KeyContactsPanel({
     <Card>
       <CardHeader>
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base flex items-center gap-2">
+          <CardTitle className="flex items-center gap-2 text-base">
             {t('keyContacts.title')}
             <Badge variant="secondary">{contacts.length}</Badge>
           </CardTitle>
@@ -111,7 +111,7 @@ export function KeyContactsPanel({
               className="h-8 gap-1"
               aria-label={t('actions.addContact')}
             >
-              <UserPlus className="h-4 w-4" />
+              <UserPlus className="size-4" />
               <span className="hidden sm:inline">{t('actions.addContact')}</span>
             </Button>
           )}
@@ -122,32 +122,32 @@ export function KeyContactsPanel({
           {contacts.map((contact) => (
             <li
               key={contact.id}
-              className="p-4 border rounded-lg hover:bg-muted/50 transition-colors"
+              className="rounded-lg border p-4 transition-colors hover:bg-muted/50"
               role="listitem"
             >
               <div className="space-y-3">
                 {/* Name and Actions */}
                 <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="font-semibold text-base leading-tight truncate">
+                  <div className="min-w-0 flex-1">
+                    <h3 className="truncate text-base font-semibold leading-tight">
                       {contact.name}
                     </h3>
                     {contact.role && (
-                      <p className="text-sm text-muted-foreground truncate">
+                      <p className="truncate text-sm text-muted-foreground">
                         {contact.role}
                       </p>
                     )}
                   </div>
-                  <div className="flex gap-1 flex-shrink-0">
+                  <div className="flex shrink-0 gap-1">
                     {onEditContact && (
                       <Button
                         variant="ghost"
                         size="sm"
                         onClick={() => onEditContact(contact.id)}
-                        className="h-8 w-8 p-0"
+                        className="size-8 p-0"
                         aria-label={`${t('edit')} ${contact.name}`}
                       >
-                        <Edit className="h-4 w-4" />
+                        <Edit className="size-4" />
                       </Button>
                     )}
                     {onDeleteContact && (
@@ -155,10 +155,10 @@ export function KeyContactsPanel({
                         variant="ghost"
                         size="sm"
                         onClick={() => onDeleteContact(contact.id)}
-                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                        className="size-8 p-0 text-destructive hover:text-destructive"
                         aria-label={`${t('delete', { ns: 'translation' })} ${contact.name}`}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="size-4" />
                       </Button>
                     )}
                   </div>
@@ -167,7 +167,7 @@ export function KeyContactsPanel({
                 {/* Organization */}
                 {contact.organization && (
                   <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                    <Building2 className="h-4 w-4 flex-shrink-0" />
+                    <Building2 className="size-4 shrink-0" />
                     <span className="truncate">{contact.organization}</span>
                   </div>
                 )}
@@ -176,10 +176,10 @@ export function KeyContactsPanel({
                 <div className="space-y-2">
                   {contact.email && (
                     <div className="flex items-center gap-2 text-sm">
-                      <Mail className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                      <Mail className="size-4 shrink-0 text-muted-foreground" />
                       <a
                         href={`mailto:${contact.email}`}
-                        className="text-primary hover:underline truncate"
+                        className="truncate text-primary hover:underline"
                         aria-label={`${t('keyContacts.email')}: ${contact.email}`}
                       >
                         {contact.email}
@@ -188,7 +188,7 @@ export function KeyContactsPanel({
                   )}
                   {contact.phone && (
                     <div className="flex items-center gap-2 text-sm">
-                      <Phone className="h-4 w-4 flex-shrink-0 text-muted-foreground" />
+                      <Phone className="size-4 shrink-0 text-muted-foreground" />
                       <a
                         href={`tel:${contact.phone}`}
                         className="text-primary hover:underline"
@@ -203,8 +203,8 @@ export function KeyContactsPanel({
 
                 {/* Last Interaction */}
                 {contact.last_interaction_date && (
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground pt-2 border-t">
-                    <Calendar className="h-3 w-3 flex-shrink-0" />
+                  <div className="flex items-center gap-2 border-t pt-2 text-xs text-muted-foreground">
+                    <Calendar className="size-3 shrink-0" />
                     <span>
                       {t('keyContacts.lastInteraction')}:{' '}
                       {new Date(contact.last_interaction_date).toLocaleDateString(
@@ -221,7 +221,7 @@ export function KeyContactsPanel({
 
                 {/* Notes */}
                 {contact.notes && (
-                  <p className="text-xs text-muted-foreground pt-2 border-t italic line-clamp-2">
+                  <p className="line-clamp-2 border-t pt-2 text-xs italic text-muted-foreground">
                     {contact.notes}
                   </p>
                 )}

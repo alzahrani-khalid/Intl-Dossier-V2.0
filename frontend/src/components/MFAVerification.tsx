@@ -129,10 +129,10 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
 
   if (isBackupMode) {
     return (
-      <Card className="w-full max-w-md mx-auto">
+      <Card className="mx-auto w-full max-w-md">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
+            <Shield className="size-5" />
             Enter Backup Code
           </CardTitle>
           <CardDescription>
@@ -148,23 +148,23 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
               value={backupCode}
               onChange={(e) => handleBackupCodeChange(e.target.value)}
               placeholder="Enter 8-character backup code"
-              className="text-center text-lg font-mono tracking-widest"
+              className="text-center font-mono text-lg tracking-widest"
               maxLength={8}
             />
           </div>
 
           {error && (
-            <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+            <div className="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
               <div className="flex items-center gap-2">
-                <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+                <AlertCircle className="size-4 text-red-600 dark:text-red-400" />
                 <span className="text-sm text-red-800 dark:text-red-200">{error}</span>
               </div>
             </div>
           )}
 
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-3">
+          <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-800 dark:bg-yellow-900/20">
             <div className="flex items-start gap-2">
-              <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+              <AlertCircle className="mt-0.5 size-4 text-yellow-600 dark:text-yellow-400" />
               <div className="text-sm text-yellow-800 dark:text-yellow-200">
                 <p className="font-medium">Note:</p>
                 <p>Each backup code can only be used once. After use, it will be removed from your account.</p>
@@ -181,7 +181,7 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
               {isLoading ? 'Verifying...' : 'Verify Backup Code'}
             </Button>
             <Button variant="outline" onClick={toggleMode}>
-              <ArrowLeft className="h-4 w-4" />
+              <ArrowLeft className="size-4" />
             </Button>
           </div>
         </CardContent>
@@ -190,10 +190,10 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
   }
 
   return (
-    <Card className="w-full max-w-md mx-auto">
+    <Card className="mx-auto w-full max-w-md">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Shield className="h-5 w-5" />
+          <Shield className="size-5" />
           Two-Factor Authentication
         </CardTitle>
         <CardDescription>
@@ -202,8 +202,8 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="text-center">
-          <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-            <Shield className="h-12 w-12 text-blue-600 dark:text-blue-400 mx-auto mb-2" />
+          <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
+            <Shield className="mx-auto mb-2 size-12 text-blue-600 dark:text-blue-400" />
             <p className="text-sm text-blue-800 dark:text-blue-200">
               Check your authenticator app for a new code
             </p>
@@ -218,15 +218,15 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
             value={code}
             onChange={(e) => handleCodeChange(e.target.value)}
             placeholder="123456"
-            className="text-center text-lg font-mono tracking-widest"
+            className="text-center font-mono text-lg tracking-widest"
             maxLength={6}
           />
         </div>
 
         {error && (
-          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3">
+          <div className="rounded-lg border border-red-200 bg-red-50 p-3 dark:border-red-800 dark:bg-red-900/20">
             <div className="flex items-center gap-2">
-              <AlertCircle className="h-4 w-4 text-red-600 dark:text-red-400" />
+              <AlertCircle className="size-4 text-red-600 dark:text-red-400" />
               <span className="text-sm text-red-800 dark:text-red-200">{error}</span>
             </div>
           </div>
@@ -234,7 +234,7 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
 
         <div className="flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4" />
+            <Clock className="size-4" />
             <span>Code expires in {timeLeft}s</span>
           </div>
           {canResend && (
@@ -242,9 +242,9 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
               variant="link"
               size="sm"
               onClick={handleResend}
-              className="p-0 h-auto"
+              className="h-auto p-0"
             >
-              <RefreshCw className="h-4 w-4 me-1" />
+              <RefreshCw className="me-1 size-4" />
               Resend
             </Button>
           )}
@@ -259,7 +259,7 @@ export function MFAVerification({ onSuccess, onBack, onUseBackupCode, email }: M
             {isLoading ? 'Verifying...' : 'Verify Code'}
           </Button>
           <Button variant="outline" onClick={onBack}>
-            <ArrowLeft className="h-4 w-4" />
+            <ArrowLeft className="size-4" />
           </Button>
         </div>
 

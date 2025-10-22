@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, lazy, Suspense } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useParams, useNavigate } from '@tanstack/react-router';
 import { SLACountdown } from '../components/SLACountdown';
@@ -6,11 +6,14 @@ import { TriagePanel } from '../components/TriagePanel';
 import { DuplicateComparison } from '../components/DuplicateComparison';
 import { useTicket, useUpdateTicket, useConvertTicket, useCloseTicket } from '../hooks/useIntakeApi';
 
+// Lazy load EntityLinkManager for performance (Task T049)
+const EntityLinkManager = lazy(() => import('../components/entity-links/EntityLinkManager'));
+
 export function TicketDetail() {
   const { t, i18n } = useTranslation('intake');
   const { id } = useParams({ strict: false });
   const navigate = useNavigate();
-  const [activeTab, setActiveTab] = useState<'details' | 'triage' | 'duplicates' | 'history'>('details');
+  const [activeTab, setActiveTab] = useState<'details' | 'triage' | 'duplicates' | 'history' | 'links'>('details');
 
   // Use the proper hooks
   const { data: response, isLoading, error } = useTicket(id || '');
@@ -38,8 +41,8 @@ export function TicketDetail() {
   if (isLoading) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="text-center py-12">
-          <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-gray-900 dark:border-white"></div>
+        <div className="py-12 text-center">
+          <div className="inline-block size-12 animate-spin rounded-full border-b-2 border-gray-900 dark:border-white"></div>
           <p className="mt-4 text-gray-600 dark:text-gray-400">{t('common.loading', 'Loading...')}</p>
         </div>
       </div>
@@ -49,7 +52,7 @@ export function TicketDetail() {
   if (error || !ticket) {
     return (
       <div className="container mx-auto px-4 py-8">
-        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-red-700 dark:text-red-400">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 text-red-700 dark:border-red-800 dark:bg-red-900/20 dark:text-red-400">
           {t('ticketDetail.error', 'Failed to load ticket. Please try again.')}
         </div>
       </div>
@@ -60,9 +63,9 @@ export function TicketDetail() {
     <div className="container mx-auto px-4 py-8" dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center justify-between mb-4">
+        <div className="mb-4 flex items-center justify-between">
           <div>
-            <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
               {ticket.ticket_number}
             </h1>
             <p className="text-gray-600 dark:text-gray-400">
@@ -71,7 +74,7 @@ export function TicketDetail() {
           </div>
           <div className="flex items-center gap-3">
             <span
-              className={`px-4 py-2 inline-flex text-sm font-semibold rounded-full ${getStatusBadgeColor(
+              className={`inline-flex rounded-full px-4 py-2 text-sm font-semibold ${getStatusBadgeColor(
                 ticket.status
               )}`}
             >
@@ -79,7 +82,7 @@ export function TicketDetail() {
             </span>
             <button
               onClick={() => navigate({ to: '/intake/queue' })}
-              className="px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="rounded-md border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               {t('common.back', 'Back to Queue')}
             </button>
@@ -88,7 +91,7 @@ export function TicketDetail() {
 
         {/* SLA Indicators */}
         {ticket.status !== 'closed' && ticket.status !== 'converted' && ticket.submitted_at && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <div className="mb-6 grid grid-cols-1 gap-4 md:grid-cols-2">
             <SLACountdown
               ticketId={ticket.id}
               targetMinutes={ticket.priority === 'urgent' || ticket.priority === 'high' ? 30 : 60}
@@ -106,13 +109,13 @@ export function TicketDetail() {
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 dark:border-gray-700 mb-6">
-        <nav className="flex -mb-px">
-          {['details', 'triage', 'duplicates', 'history'].map((tab) => (
+      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
+        <nav className="-mb-px flex">
+          {['details', 'triage', 'duplicates', 'history', 'links'].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab as typeof activeTab)}
-              className={`px-6 py-3 text-sm font-medium border-b-2 transition-colors ${
+              className={`border-b-2 px-6 py-3 text-sm font-medium transition-colors ${
                 activeTab === tab
                   ? 'border-blue-500 text-blue-600 dark:text-blue-400'
                   : 'border-transparent text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300'
@@ -125,21 +128,21 @@ export function TicketDetail() {
       </div>
 
       {/* Tab Content */}
-      <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+      <div className="rounded-lg bg-white p-6 shadow-md dark:bg-gray-800">
         {activeTab === 'details' && (
           <div className="space-y-6">
             {/* Basic Information */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('ticketDetail.requestType', 'Request Type')}
                 </label>
                 <p className="text-gray-900 dark:text-white">
-                  {t(`intake.form.requestType.options.${ticket.request_type}`)}
+                  {t(`form.requestType.options.${ticket.requestType}`)}
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('ticketDetail.urgency', 'Urgency')}
                 </label>
                 <p className="text-gray-900 dark:text-white">
@@ -147,13 +150,13 @@ export function TicketDetail() {
                 </p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('ticketDetail.sensitivity', 'Sensitivity')}
                 </label>
-                <p className="text-gray-900 dark:text-white capitalize">{ticket.sensitivity}</p>
+                <p className="capitalize text-gray-900 dark:text-white">{ticket.sensitivity}</p>
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('ticketDetail.priority', 'Priority')}
                 </label>
                 <p className="text-gray-900 dark:text-white">
@@ -164,11 +167,11 @@ export function TicketDetail() {
 
             {/* Description */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('ticketDetail.description', 'Description')}
               </label>
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <p className="text-gray-900 dark:text-white whitespace-pre-wrap">
+              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
+                <p className="whitespace-pre-wrap text-gray-900 dark:text-white">
                   {i18n.language === 'ar' && ticket.description_ar ? ticket.description_ar : ticket.description}
                 </p>
               </div>
@@ -177,13 +180,13 @@ export function TicketDetail() {
             {/* Type-Specific Fields */}
             {ticket.type_specific_fields && Object.keys(ticket.type_specific_fields).length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('ticketDetail.additionalInfo', 'Additional Information')}
                 </label>
-                <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4 space-y-2">
+                <div className="space-y-2 rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
                   {Object.entries(ticket.type_specific_fields).map(([key, value]) => (
                     <div key={key} className="flex justify-between">
-                      <span className="text-gray-600 dark:text-gray-400 capitalize">{key}:</span>
+                      <span className="capitalize text-gray-600 dark:text-gray-400">{key}:</span>
                       <span className="text-gray-900 dark:text-white">{String(value)}</span>
                     </div>
                   ))}
@@ -194,14 +197,14 @@ export function TicketDetail() {
             {/* Attachments */}
             {attachments && attachments.length > 0 && (
               <div>
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('ticketDetail.attachments', 'Attachments')}
                 </label>
                 <div className="space-y-2">
                   {attachments.map((attachment: any) => (
                     <div
                       key={attachment.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900 rounded-lg"
+                      className="flex items-center justify-between rounded-lg bg-gray-50 p-3 dark:bg-gray-900"
                     >
                       <div className="flex items-center gap-3">
                         <span className="text-2xl">📎</span>
@@ -214,7 +217,7 @@ export function TicketDetail() {
                           </p>
                         </div>
                       </div>
-                      <button className="text-blue-600 hover:text-blue-700 dark:text-blue-400 text-sm">
+                      <button className="text-sm text-blue-600 hover:text-blue-700 dark:text-blue-400">
                         {t('common.download', 'Download')}
                       </button>
                     </div>
@@ -225,7 +228,7 @@ export function TicketDetail() {
 
             {/* Actions */}
             {ticket.status !== 'closed' && ticket.status !== 'converted' && (
-              <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+              <div className="flex gap-3 border-t border-gray-200 pt-4 dark:border-gray-700">
                 {ticket.status === 'triaged' && (
                   <button
                     onClick={() => {
@@ -235,7 +238,7 @@ export function TicketDetail() {
                       }
                     }}
                     disabled={convertMutation.isPending}
-                    className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+                    className="rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
                   >
                     {t('ticketDetail.convert', 'Convert to Artifact')}
                   </button>
@@ -251,7 +254,7 @@ export function TicketDetail() {
                     }
                   }}
                   disabled={closeMutation.isPending}
-                  className="px-4 py-2 bg-gray-600 text-white rounded-md hover:bg-gray-700 disabled:opacity-50"
+                  className="rounded-md bg-gray-600 px-4 py-2 text-white hover:bg-gray-700 disabled:opacity-50"
                 >
                   {t('ticketDetail.close', 'Close Ticket')}
                 </button>
@@ -268,6 +271,25 @@ export function TicketDetail() {
           <div className="text-gray-600 dark:text-gray-400">
             {t('ticketDetail.historyPlaceholder', 'Audit history will be displayed here')}
           </div>
+        )}
+
+        {activeTab === 'links' && (
+          <Suspense
+            fallback={
+              <div className="flex items-center justify-center py-12">
+                <div className="inline-block size-12 animate-spin rounded-full border-b-2 border-gray-900 dark:border-white"></div>
+                <p className="ms-4 text-gray-600 dark:text-gray-400">{t('common.loading', 'Loading...')}</p>
+              </div>
+            }
+          >
+            <EntityLinkManager
+              intakeId={ticket.id}
+              organizationId={ticket.organization_id}
+              classificationLevel={ticket.classification_level || 0}
+              canRestore={false} // TODO: Check user role for steward+ permission
+              enableReorder={true}
+            />
+          </Suspense>
         )}
       </div>
     </div>

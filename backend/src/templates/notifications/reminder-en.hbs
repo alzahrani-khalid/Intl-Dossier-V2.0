@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Follow-Up Reminder - Pending Assignment</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .header {
+            border-bottom: 3px solid #2563eb;
+            padding-bottom: 20px;
+            margin-bottom: 25px;
+        }
+        h1 {
+            color: #1e40af;
+            font-size: 24px;
+            margin: 0 0 10px 0;
+        }
+        .priority-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+        .priority-high {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .priority-medium {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        .priority-low {
+            background-color: #dbeafe;
+            color: #1e40af;
+        }
+        .assignment-details {
+            background-color: #f9fafb;
+            border-left: 4px solid #2563eb;
+            padding: 15px 20px;
+            margin: 20px 0;
+        }
+        .detail-row {
+            margin: 10px 0;
+        }
+        .detail-label {
+            font-weight: 600;
+            color: #4b5563;
+            min-width: 120px;
+            display: inline-block;
+        }
+        .detail-value {
+            color: #1f2937;
+        }
+        .action-button {
+            display: inline-block;
+            background-color: #2563eb;
+            color: #ffffff;
+            padding: 12px 24px;
+            text-decoration: none;
+            border-radius: 6px;
+            font-weight: 600;
+            margin-top: 20px;
+        }
+        .action-button:hover {
+            background-color: #1d4ed8;
+        }
+        .footer {
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+            font-size: 14px;
+            color: #6b7280;
+        }
+        .aging-indicator {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .aging-high {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+        .aging-medium {
+            background-color: #fed7aa;
+            color: #9a3412;
+        }
+        .aging-low {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Follow-Up Reminder</h1>
+            <p style="margin: 0; color: #6b7280;">You have a pending assignment awaiting action</p>
+        </div>
+
+        <div class="assignment-details">
+            <div class="detail-row">
+                <span class="detail-label">Work Item ID:</span>
+                <span class="detail-value">{{work_item_id}}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Work Item Type:</span>
+                <span class="detail-value">{{work_item_type}}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Priority:</span>
+                <span class="priority-badge priority-{{priority}}">{{priority}}</span>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Assigned:</span>
+                <span class="detail-value">{{assigned_date}}</span>
+                {{#if aging_days}}
+                <span class="aging-indicator aging-{{aging_level}}">{{aging_days}} days old</span>
+                {{/if}}
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Status:</span>
+                <span class="detail-value">{{status}}</span>
+            </div>
+        </div>
+
+        <p>This is a friendly reminder to review and complete the assignment above. It has been waiting in your queue{{#if aging_days}} for {{aging_days}} days{{/if}}.</p>
+
+        <p>Please take action on this assignment at your earliest convenience.</p>
+
+        <a href="{{assignment_url}}" class="action-button">View Assignment</a>
+
+        <div class="footer">
+            <p><strong>Note:</strong> This is an automated reminder sent by the Intl-Dossier system. If you have already completed this assignment, please update its status accordingly.</p>
+            <p style="margin-top: 15px;">If you believe you received this reminder in error, please contact your supervisor or system administrator.</p>
+        </div>
+    </div>
+</body>
+</html>

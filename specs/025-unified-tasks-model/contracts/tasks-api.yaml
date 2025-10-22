@@ -1,0 +1,479 @@
+openapi: 3.1.0
+info:
+  title: Unified Tasks API
+  version: 1.0.0
+  description: |
+    API contracts for the unified tasks model. Consolidates assignment and task management
+    into a single endpoint set with contributor support, optimistic locking, and engagement context.
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+    description: Supabase Edge Functions (Production)
+  - url: http://localhost:54321/functions/v1
+    description: Supabase Edge Functions (Local)
+
+paths:
+  /tasks-get:
+    get:
+      operationId: getTasks
+      summary: Get tasks list with filtering and pagination
+      description: |
+        Fetches tasks for authenticated user with filters. Supports:
+        - My assigned tasks (assignee_id = current user)
+        - Tasks I contributed to (via task_contributors join)
+        - Filter by status, workflow_stage, engagement_id
+        - Cursor-based pagination for variable loads (10-1000+ tasks)
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: filter
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [assigned, contributed, created, all]
+            default: assigned
+          description: Filter tasks by relationship to current user
+        - name: status
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [pending, in_progress, review, completed, cancelled]
+          description: Filter by task status
+        - name: workflow_stage
+          in: query
+          required: false
+          schema:
+            type: string
+            enum: [todo, in_progress, review, done, cancelled]
+          description: Filter by kanban workflow stage
+        - name: engagement_id
+          in: query
+          required: false
+          schema:
+            type: string
+            format: uuid
+          description: Filter by engagement (for kanban boards)
+        - name: limit
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 50
+          description: Number of tasks per page
+        - name: cursor
+          in: query
+          required: false
+          schema:
+            type: string
+          description: Pagination cursor (last task's created_at timestamp)
+      responses:
+        '200':
+          description: Tasks retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Task'
+                  nextCursor:
+                    type: string
+                    nullable: true
+                    description: Cursor for next page, null if last page
+                  total:
+                    type: integer
+                    description: Total count (optional, for client-side pagination display)
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks-create:
+    post:
+      operationId: createTask
+      summary: Create a new task
+      description: Creates a unified task with assignment context, work item links, and engagement
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - assignee_id
+                - status
+                - workflow_stage
+                - priority
+              properties:
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                  example: "Review Australia Population Data Initiative"
+                description:
+                  type: string
+                  nullable: true
+                  example: "Analyze population projection methodology and provide feedback"
+                assignee_id:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                engagement_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                  example: "987f6543-e21c-43d5-b678-987654321098"
+                status:
+                  type: string
+                  enum: [pending, in_progress, review, completed, cancelled]
+                  default: pending
+                workflow_stage:
+                  type: string
+                  enum: [todo, in_progress, review, done, cancelled]
+                  default: todo
+                priority:
+                  type: string
+                  enum: [low, medium, high, urgent]
+                  default: medium
+                sla_deadline:
+                  type: string
+                  format: date-time
+                  nullable: true
+                  example: "2025-10-30T23:59:59Z"
+                work_item_type:
+                  type: string
+                  enum: [dossier, position, ticket, generic]
+                  nullable: true
+                work_item_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                  description: "Single work item link (use source for multiple items)"
+                source:
+                  type: object
+                  nullable: true
+                  description: "Link to multiple work items"
+                  properties:
+                    dossier_ids:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                    position_ids:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                    ticket_ids:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks-update:
+    patch:
+      operationId: updateTask
+      summary: Update task with optimistic locking
+      description: |
+        Updates task fields with optimistic locking to prevent conflicting concurrent edits.
+        Client must send current updated_at timestamp; server checks for conflicts.
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - id
+                - updated_at
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  example: "123e4567-e89b-12d3-a456-426614174000"
+                updated_at:
+                  type: string
+                  format: date-time
+                  description: "Current updated_at timestamp from client (for optimistic locking)"
+                  example: "2025-10-19T10:30:00Z"
+                title:
+                  type: string
+                  minLength: 1
+                  maxLength: 200
+                description:
+                  type: string
+                  nullable: true
+                assignee_id:
+                  type: string
+                  format: uuid
+                engagement_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                status:
+                  type: string
+                  enum: [pending, in_progress, review, completed, cancelled]
+                workflow_stage:
+                  type: string
+                  enum: [todo, in_progress, review, done, cancelled]
+                priority:
+                  type: string
+                  enum: [low, medium, high, urgent]
+                sla_deadline:
+                  type: string
+                  format: date-time
+                  nullable: true
+                work_item_type:
+                  type: string
+                  enum: [dossier, position, ticket, generic]
+                  nullable: true
+                work_item_id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                source:
+                  type: object
+                  nullable: true
+                  properties:
+                    dossier_ids:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                    position_ids:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                    ticket_ids:
+                      type: array
+                      items:
+                        type: string
+                        format: uuid
+                completed_by:
+                  type: string
+                  format: uuid
+                  nullable: true
+                completed_at:
+                  type: string
+                  format: date-time
+                  nullable: true
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequestError'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '409':
+          description: Conflict - Task was modified by another user
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    example: "Task was modified by another user. Please reload and try again."
+                  currentVersion:
+                    $ref: '#/components/schemas/Task'
+                    description: "Current task state from database"
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /tasks-delete:
+    delete:
+      operationId: deleteTask
+      summary: Soft-delete a task
+      description: Marks task as deleted (is_deleted = true) for audit compliance
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Task ID to delete
+      responses:
+        '204':
+          description: Task deleted successfully (soft delete)
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '404':
+          $ref: '#/components/responses/NotFoundError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase Auth JWT token
+
+  schemas:
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        assignee_id:
+          type: string
+          format: uuid
+        engagement_id:
+          type: string
+          format: uuid
+          nullable: true
+        status:
+          type: string
+          enum: [pending, in_progress, review, completed, cancelled]
+        workflow_stage:
+          type: string
+          enum: [todo, in_progress, review, done, cancelled]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        sla_deadline:
+          type: string
+          format: date-time
+          nullable: true
+        work_item_type:
+          type: string
+          enum: [dossier, position, ticket, generic]
+          nullable: true
+        work_item_id:
+          type: string
+          format: uuid
+          nullable: true
+        source:
+          type: object
+          nullable: true
+          properties:
+            dossier_ids:
+              type: array
+              items:
+                type: string
+                format: uuid
+            position_ids:
+              type: array
+              items:
+                type: string
+                format: uuid
+            ticket_ids:
+              type: array
+              items:
+                type: string
+                format: uuid
+        created_by:
+          type: string
+          format: uuid
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+        completed_by:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        is_deleted:
+          type: boolean
+
+  responses:
+    BadRequestError:
+      description: Bad request - Invalid input
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Invalid input: title is required"
+
+    UnauthorizedError:
+      description: Unauthorized - Missing or invalid JWT token
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Unauthorized: Invalid or missing JWT token"
+
+    NotFoundError:
+      description: Not found - Task does not exist or user does not have access
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Task not found or you do not have access"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: string
+                example: "Internal server error"

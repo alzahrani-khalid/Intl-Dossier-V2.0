@@ -14,7 +14,7 @@ import enAssignments from './en/assignments.json'
 import arAssignments from './ar/assignments.json'
 import enForums from './en/forums.json'
 import arForums from './ar/forums.json'
-// Force reload
+// Force reload - updated 2025-10-14 - v2
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = typeof supportedLanguages[number]

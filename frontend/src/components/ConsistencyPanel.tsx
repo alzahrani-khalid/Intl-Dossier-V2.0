@@ -113,20 +113,20 @@ export function ConsistencyPanel({
   const getSeverityIcon = (severity: 'high' | 'medium' | 'low') => {
     switch (severity) {
       case 'high':
-        return <AlertTriangle className="h-3 w-3" />;
+        return <AlertTriangle className="size-3" />;
       case 'medium':
-        return <AlertCircle className="h-3 w-3" />;
+        return <AlertCircle className="size-3" />;
       case 'low':
-        return <Info className="h-3 w-3" />;
+        return <Info className="size-3" />;
     }
   };
 
   // Get conflict type badge and icon
   const getConflictTypeBadge = (type: 'contradiction' | 'ambiguity' | 'overlap') => {
     const icons = {
-      contradiction: <AlertTriangle className="h-3 w-3" />,
-      ambiguity: <AlertCircle className="h-3 w-3" />,
-      overlap: <Info className="h-3 w-3" />,
+      contradiction: <AlertTriangle className="size-3" />,
+      ambiguity: <AlertCircle className="size-3" />,
+      overlap: <Info className="size-3" />,
     };
 
     return (
@@ -152,13 +152,13 @@ export function ConsistencyPanel({
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-base">
-            <Shield className="h-5 w-5 text-muted-foreground" />
+            <Shield className="size-5 text-muted-foreground" />
             {t('consistency.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 space-y-2">
-            <Shield className="h-12 w-12 text-muted-foreground mx-auto opacity-50" />
+          <div className="space-y-2 py-8 text-center">
+            <Shield className="mx-auto size-12 text-muted-foreground opacity-50" />
             <p className="text-sm font-medium text-muted-foreground">
               {t('consistency.emptyState.title')}
             </p>
@@ -179,7 +179,7 @@ export function ConsistencyPanel({
       <CardHeader>
         <CardTitle className="flex items-center justify-between text-base">
           <div className="flex items-center gap-2">
-            <Shield className="h-5 w-5" />
+            <Shield className="size-5" />
             {t('consistency.title')}
           </div>
           {/* AI Service Status Badge */}
@@ -187,7 +187,7 @@ export function ConsistencyPanel({
             variant={consistencyCheck.ai_service_available ? 'default' : 'secondary'}
             className="gap-1"
           >
-            <Zap className="h-3 w-3" />
+            <Zap className="size-3" />
             {consistencyCheck.ai_service_available
               ? t('consistency.aiAvailable')
               : t('consistency.aiUnavailable')}
@@ -197,11 +197,11 @@ export function ConsistencyPanel({
       <CardContent className="space-y-4">
         {/* Consistency Score Gauge */}
         <div
-          className={`p-4 rounded-lg border ${getScoreBackgroundColor(score)}`}
+          className={`rounded-lg border p-4 ${getScoreBackgroundColor(score)}`}
           role="region"
           aria-label={t('consistency.score')}
         >
-          <div className="flex items-center justify-between mb-2">
+          <div className="mb-2 flex items-center justify-between">
             <span className="text-sm font-medium text-muted-foreground">
               {t('consistency.score')}
             </span>
@@ -209,7 +209,7 @@ export function ConsistencyPanel({
           </div>
           <Progress
             value={score}
-            className="h-2 mb-2"
+            className="mb-2 h-2"
             aria-label={`${t('consistency.score')}: ${score} out of 100`}
           />
           <div className="flex items-center justify-between">
@@ -224,7 +224,7 @@ export function ConsistencyPanel({
         {/* Check Metadata */}
         <div className="grid grid-cols-2 gap-3 text-sm">
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Shield className="h-4 w-4" />
+            <Shield className="size-4" />
             <div>
               <p className="text-xs">{t('consistency.checkTrigger')}</p>
               <p className="font-medium text-foreground">
@@ -235,7 +235,7 @@ export function ConsistencyPanel({
             </div>
           </div>
           <div className="flex items-center gap-2 text-muted-foreground">
-            <Clock className="h-4 w-4" />
+            <Clock className="size-4" />
             <div>
               <p className="text-xs">{t('consistency.checkedAt')}</p>
               <p className="font-medium text-foreground">
@@ -249,8 +249,8 @@ export function ConsistencyPanel({
 
         {/* Conflicts Section */}
         {!hasConflicts ? (
-          <div className="flex items-center gap-3 p-4 bg-green-50 border border-green-200 rounded-lg">
-            <CheckCircle className="h-5 w-5 text-green-600 flex-shrink-0" />
+          <div className="flex items-center gap-3 rounded-lg border border-green-200 bg-green-50 p-4">
+            <CheckCircle className="size-5 shrink-0 text-green-600" />
             <div>
               <p className="text-sm font-medium text-green-900">
                 {t('consistency.noConflicts')}
@@ -263,8 +263,8 @@ export function ConsistencyPanel({
         ) : (
           <div className="space-y-3">
             {/* Conflicts Header */}
-            <div className="flex items-center gap-3 p-3 bg-amber-50 border border-amber-200 rounded-lg">
-              <AlertTriangle className="h-5 w-5 text-amber-600 flex-shrink-0" />
+            <div className="flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3">
+              <AlertTriangle className="size-5 shrink-0 text-amber-600" />
               <div>
                 <p className="text-sm font-medium text-amber-900">
                   {t('consistency.conflictsFound')} ({consistencyCheck.conflicts.length})
@@ -283,41 +283,41 @@ export function ConsistencyPanel({
                 return (
                   <div
                     key={`${conflict.conflict_position_id}-${index}`}
-                    className="border rounded-lg overflow-hidden"
+                    className="overflow-hidden rounded-lg border"
                   >
                     {/* Conflict Header */}
                     <button
                       onClick={() => toggleConflict(index)}
-                      className="w-full px-4 py-3 flex items-center justify-between bg-muted/50 hover:bg-muted transition-colors text-start"
+                      className="flex w-full items-center justify-between bg-muted/50 px-4 py-3 text-start transition-colors hover:bg-muted"
                       aria-expanded={isExpanded}
                       aria-controls={`conflict-${index}`}
                     >
-                      <div className="flex items-center gap-2 flex-1 min-w-0">
+                      <div className="flex min-w-0 flex-1 items-center gap-2">
                         {getSeverityIcon(conflict.severity)}
-                        <span className="text-sm font-medium truncate">
+                        <span className="truncate text-sm font-medium">
                           {conflict.description}
                         </span>
                       </div>
-                      <div className="flex items-center gap-2 flex-shrink-0 ms-2">
+                      <div className="ms-2 flex shrink-0 items-center gap-2">
                         <Badge variant={getSeverityVariant(conflict.severity)} className="gap-1">
                           {t(`consistency.severityLevels.${conflict.severity}`)}
                         </Badge>
                         {getConflictTypeBadge(conflict.conflict_type)}
                         {isExpanded ? (
-                          <ChevronUp className="h-4 w-4 text-muted-foreground" />
+                          <ChevronUp className="size-4 text-muted-foreground" />
                         ) : (
-                          <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                          <ChevronDown className="size-4 text-muted-foreground" />
                         )}
                       </div>
                     </button>
 
                     {/* Conflict Details (Expandable) */}
                     {isExpanded && (
-                      <div id={`conflict-${index}`} className="p-4 space-y-3 bg-background">
+                      <div id={`conflict-${index}`} className="space-y-3 bg-background p-4">
                         {/* Affected Sections */}
                         {conflict.affected_sections.length > 0 && (
                           <div>
-                            <p className="text-xs font-medium text-muted-foreground mb-1">
+                            <p className="mb-1 text-xs font-medium text-muted-foreground">
                               {t('consistency.conflict.affectedSections')}
                             </p>
                             <div className="flex flex-wrap gap-1">
@@ -331,8 +331,8 @@ export function ConsistencyPanel({
                         )}
 
                         {/* Suggested Resolution */}
-                        <div className="p-3 bg-blue-50 border border-blue-200 rounded-md">
-                          <p className="text-xs font-medium text-blue-900 mb-1">
+                        <div className="rounded-md border border-blue-200 bg-blue-50 p-3">
+                          <p className="mb-1 text-xs font-medium text-blue-900">
                             {t('consistency.conflict.suggestedResolution')}
                           </p>
                           <p className="text-sm text-blue-800">{conflict.suggested_resolution}</p>
@@ -359,7 +359,7 @@ export function ConsistencyPanel({
                             className="gap-1"
                           >
                             {t('consistency.actions.viewPosition')}
-                            <ExternalLink className="h-3 w-3" />
+                            <ExternalLink className="size-3" />
                           </Button>
                           <Button
                             variant="secondary"

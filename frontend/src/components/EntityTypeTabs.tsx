@@ -127,7 +127,7 @@ export function EntityTypeTabs({
     <div ref={tabsRef} className="w-full overflow-x-auto" dir={isRTL ? 'rtl' : 'ltr'}>
       <Tabs value={selectedType} onValueChange={(value) => onTypeChange(value as EntityType)}>
         <TabsList
-          className="inline-flex h-10 items-center justify-start rounded-md bg-muted p-1 text-muted-foreground w-full sm:w-auto"
+          className="inline-flex h-10 w-full items-center justify-start rounded-md bg-muted p-1 text-muted-foreground sm:w-auto"
           role="tablist"
           aria-label={t('search.tabs.label')}
         >
@@ -154,7 +154,7 @@ export function EntityTypeTabs({
                 disabled={isLoading}
               >
                 {/* Icon */}
-                <span className={`me-2 ${isRTL ? 'ms-2 me-0' : ''}`}>{config.icon}</span>
+                <span className={`me-2 ${isRTL ? 'me-0 ms-2' : ''}`}>{config.icon}</span>
 
                 {/* Label */}
                 <span className={isSelected ? config.color : ''}>
@@ -166,8 +166,8 @@ export function EntityTypeTabs({
                   <span
                     className={`
                       ms-2 ${isRTL ? 'me-2 ms-0' : ''}
-                      inline-flex items-center justify-center
-                      min-w-[1.25rem] h-5 px-1.5 rounded-full
+                      inline-flex h-5 min-w-5
+                      items-center justify-center rounded-full px-1.5
                       text-xs font-semibold
                       ${
                         isSelected
@@ -183,7 +183,7 @@ export function EntityTypeTabs({
 
                 {/* Loading indicator */}
                 {isLoading && isSelected && (
-                  <span className="ms-2 inline-block w-3 h-3 border-2 border-current border-t-transparent rounded-full animate-spin" />
+                  <span className="ms-2 inline-block size-3 animate-spin rounded-full border-2 border-current border-t-transparent" />
                 )}
               </TabsTrigger>
             );

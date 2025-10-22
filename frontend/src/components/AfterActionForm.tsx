@@ -197,7 +197,7 @@ export function AfterActionForm({
             <CardTitle className="flex items-center gap-2">
               {t('afterActions.form.title')}
               {formData.is_confidential && (
-                <Shield className="h-5 w-5 text-amber-500" />
+                <Shield className="size-5 text-amber-500" />
               )}
             </CardTitle>
             {!readOnly && <AIExtractionButton onExtract={handleAIExtraction} />}
@@ -208,7 +208,7 @@ export function AfterActionForm({
       {/* Error Display */}
       {error && (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
@@ -251,15 +251,15 @@ export function AfterActionForm({
             />
             <Label
               htmlFor="confidential"
-              className="text-sm font-normal cursor-pointer flex items-center gap-2"
+              className="flex cursor-pointer items-center gap-2 text-sm font-normal"
             >
-              {formData.is_confidential && <Shield className="h-4 w-4 text-amber-500" />}
+              {formData.is_confidential && <Shield className="size-4 text-amber-500" />}
               {t('afterActions.form.confidential')}
             </Label>
           </div>
           {formData.is_confidential && (
             <Alert className="border-amber-500">
-              <Shield className="h-4 w-4 text-amber-500" />
+              <Shield className="size-4 text-amber-500" />
               <AlertDescription className="text-amber-700">
                 {t('afterActions.form.confidentialWarning')}
               </AlertDescription>
@@ -344,12 +344,12 @@ export function AfterActionForm({
               >
                 {saving ? (
                   <>
-                    <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                    <Loader2 className="me-2 size-4 animate-spin" />
                     {t('afterActions.form.saving')}
                   </>
                 ) : (
                   <>
-                    <Save className="me-2 h-4 w-4" />
+                    <Save className="me-2 size-4" />
                     {t('afterActions.form.saveDraft')}
                   </>
                 )}
@@ -364,12 +364,12 @@ export function AfterActionForm({
                 >
                   {publishing ? (
                     <>
-                      <Loader2 className="me-2 h-4 w-4 animate-spin" />
+                      <Loader2 className="me-2 size-4 animate-spin" />
                       {t('afterActions.form.publishing')}
                     </>
                   ) : (
                     <>
-                      <Send className="me-2 h-4 w-4" />
+                      <Send className="me-2 size-4" />
                       {t('afterActions.form.publish')}
                     </>
                   )}
@@ -378,7 +378,7 @@ export function AfterActionForm({
             </div>
 
             {!isFormValid() && (
-              <p className="text-sm text-muted-foreground text-center mt-4">
+              <p className="mt-4 text-center text-sm text-muted-foreground">
                 {t('afterActions.form.publishRequirements')}
               </p>
             )}

@@ -3,11 +3,13 @@
 ## ✅ Mobile-First Design Checklist
 
 ### Before Writing Any Component
+
 - [ ] Start with mobile layout (320-640px base)
 - [ ] Use Tailwind's mobile-first breakpoints (base → sm: → md: → lg: → xl: → 2xl:)
 - [ ] Test on mobile viewport first (375px minimum width)
 
 ### Layout & Spacing
+
 - [ ] Container uses responsive padding: `px-4 sm:px-6 lg:px-8`
 - [ ] Grids adapt to screen size: `grid-cols-1 sm:grid-cols-2 lg:grid-cols-3`
 - [ ] Flexbox switches direction: `flex-col sm:flex-row`
@@ -15,16 +17,19 @@
 - [ ] Adequate spacing between elements: `gap-2 sm:gap-4 lg:gap-6`
 
 ### Typography
+
 - [ ] Text scales responsively: `text-sm sm:text-base md:text-lg`
 - [ ] Headings scale: `text-2xl sm:text-3xl md:text-4xl lg:text-5xl`
 - [ ] Line height adjusts: `leading-tight sm:leading-normal`
 
 ### Interactive Elements
+
 - [ ] Buttons are touch-friendly: `h-11 px-4 sm:h-10 sm:px-6 md:h-12 md:px-8`
 - [ ] Forms use responsive layout
 - [ ] Modals/dialogs work on mobile (fullscreen on small screens)
 
 ### Images & Media
+
 - [ ] Images are responsive: `w-full h-auto`
 - [ ] Aspect ratios defined: `aspect-square sm:aspect-video`
 - [ ] Lazy loading implemented for performance
@@ -34,11 +39,13 @@
 ## ✅ Arabic RTL Support Checklist
 
 ### Component Setup
+
 - [ ] Import `useTranslation` hook
 - [ ] Detect RTL: `const isRTL = i18n.language === 'ar'`
 - [ ] Set `dir` attribute: `dir={isRTL ? 'rtl' : 'ltr'}`
 
 ### Logical Properties (REQUIRED)
+
 - [ ] Replace `ml-*` with `ms-*` (margin-start)
 - [ ] Replace `mr-*` with `me-*` (margin-end)
 - [ ] Replace `pl-*` with `ps-*` (padding-start)
@@ -51,23 +58,27 @@
 - [ ] Replace `rounded-r-*` with `rounded-e-*`
 
 ### Flexbox & Grid
+
 - [ ] Flex direction aware of RTL: `flex-row` (auto-reverses) or explicit `${isRTL ? 'flex-row-reverse' : 'flex-row'}`
 - [ ] Grid columns work in RTL context
 - [ ] Order of elements makes sense in RTL
 
 ### Icons & Visual Elements
+
 - [ ] Directional icons flip in RTL: `className={isRTL ? 'rotate-180' : ''}`
 - [ ] Chevrons point correct direction
 - [ ] Arrows reverse in RTL
 - [ ] Images with directional context adjust
 
 ### Forms
+
 - [ ] Input text alignment: `text-start`
 - [ ] Placeholders translated: `placeholder={t('key')}`
 - [ ] Labels positioned correctly in RTL
 - [ ] Form validation messages align properly
 
 ### Typography in Arabic
+
 - [ ] Arabic font family used: `font-arabic`
 - [ ] Text renders correctly right-to-left
 - [ ] Line breaks work properly
@@ -75,17 +86,20 @@
 - [ ] Dates formatted: `new Intl.DateTimeFormat(i18n.language).format()`
 
 ### Animations & Transitions
+
 - [ ] Slide animations reverse in RTL
 - [ ] Transformations account for direction: `${isRTL ? '-translate-x-4' : 'translate-x-4'}`
 - [ ] Hover effects work in RTL
 
 ### Navigation
+
 - [ ] Breadcrumbs reverse in RTL
 - [ ] Menus open on correct side
 - [ ] Sidebar slides from correct direction
 - [ ] Pagination arrows point correctly
 
 ### Testing
+
 - [ ] Component tested in English (LTR)
 - [ ] Component tested in Arabic (RTL)
 - [ ] Visual hierarchy correct in both languages
@@ -98,6 +112,7 @@
 ## 🚫 Common Mistakes to Avoid
 
 ### ❌ Hard-coded Directions
+
 ```tsx
 // WRONG
 <div className="ml-4 text-left">
@@ -107,6 +122,7 @@
 ```
 
 ### ❌ Desktop-First CSS
+
 ```tsx
 // WRONG
 <div className="p-8 sm:p-4">
@@ -116,6 +132,7 @@
 ```
 
 ### ❌ Fixed Widths on Mobile
+
 ```tsx
 // WRONG
 <div className="w-96">
@@ -125,6 +142,7 @@
 ```
 
 ### ❌ Non-Translated Content
+
 ```tsx
 // WRONG
 <button>Submit</button>
@@ -134,6 +152,7 @@
 ```
 
 ### ❌ Icons Not Flipping
+
 ```tsx
 // WRONG
 <ChevronRight />
@@ -165,50 +184,60 @@ export function ResponsiveRTLComponent() {
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Responsive heading */}
-      <h1 className="
+      <h1
+        className="
         text-2xl sm:text-3xl md:text-4xl lg:text-5xl
         font-bold text-start
         mb-4 sm:mb-6 lg:mb-8
-      ">
+      "
+      >
         {t('page.title')}
       </h1>
 
       {/* Responsive grid */}
-      <div className="
+      <div
+        className="
         grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
         gap-4 sm:gap-6 lg:gap-8
-      ">
+      "
+      >
         {/* Card with RTL support */}
-        <div className="
+        <div
+          className="
           p-4 sm:p-6
           rounded-lg border
           bg-card text-card-foreground
-        ">
-          <h2 className="
+        "
+        >
+          <h2
+            className="
             text-lg sm:text-xl
             font-semibold text-start
             mb-2 sm:mb-4
-          ">
+          "
+          >
             {t('card.title')}
           </h2>
 
-          <p className="
+          <p
+            className="
             text-sm sm:text-base
             text-muted-foreground text-start
             mb-4
-          ">
+          "
+          >
             {t('card.description')}
           </p>
 
           {/* RTL-aware button with icon */}
-          <Button className="
+          <Button
+            className="
             h-11 min-w-11
             px-4 sm:px-6
             w-full sm:w-auto
-          ">
-            <span className={isRTL ? 'order-2' : 'order-1'}>
-              {t('card.action')}
-            </span>
+          "
+          >
+            <span className={isRTL ? 'order-2' : 'order-1'}>{t('card.action')}</span>
             <ChevronRight
               className={`
                 ${isRTL ? 'order-1 me-2 rotate-180' : 'order-2 ms-2'}
@@ -220,12 +249,14 @@ export function ResponsiveRTLComponent() {
       </div>
 
       {/* Responsive flex layout */}
-      <div className="
+      <div
+        className="
         flex flex-col sm:flex-row
         items-start sm:items-center
         gap-4 sm:gap-6
         mt-8
-      ">
+      "
+      >
         <input
           type="text"
           placeholder={t('form.search')}
@@ -238,10 +269,12 @@ export function ResponsiveRTLComponent() {
           "
         />
 
-        <Button className="
+        <Button
+          className="
           h-11 px-6
           w-full sm:w-auto
-        ">
+        "
+        >
           {t('form.submit')}
         </Button>
       </div>
@@ -255,6 +288,7 @@ export function ResponsiveRTLComponent() {
 ## 🔧 Quick Fixes for Existing Components
 
 ### Fix Hard-coded Margins/Padding
+
 ```bash
 # Find all instances
 grep -r "ml-\|mr-\|pl-\|pr-" frontend/src
@@ -267,6 +301,7 @@ pr-4 → pe-4
 ```
 
 ### Fix Text Alignment
+
 ```bash
 # Find all instances
 grep -r "text-left\|text-right" frontend/src
@@ -277,6 +312,7 @@ text-right → text-end
 ```
 
 ### Fix Desktop-First Responsive
+
 ```bash
 # Look for reverse breakpoint patterns (large to small)
 grep -r 'className="[^"]*lg:[^"]*sm:' frontend/src

@@ -14,9 +14,10 @@ interface TriageSuggestion {
 
 interface TriagePanelProps {
   ticketId: string;
+  onSuccess?: () => void;
 }
 
-export function TriagePanel({ ticketId }: TriagePanelProps) {
+export function TriagePanel({ ticketId, onSuccess }: TriagePanelProps) {
   const { t, i18n } = useTranslation('intake');
   const [isOverriding, setIsOverriding] = useState(false);
   const [overrideValues, setOverrideValues] = useState<Partial<TriageSuggestion>>({});
@@ -38,14 +39,21 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
 
   const handleAcceptSuggestions = () => {
     if (!suggestions) return;
-    applyTriageMutation.mutate({
-      decision_type: 'ai_suggestion',
-      suggested_type: suggestions.suggested_type,
-      suggested_sensitivity: suggestions.suggested_sensitivity,
-      suggested_urgency: suggestions.suggested_urgency,
-      suggested_assignee: suggestions.suggested_assignee,
-      suggested_unit: suggestions.suggested_unit,
-    });
+    applyTriageMutation.mutate(
+      {
+        decision_type: 'ai_suggestion',
+        suggested_type: suggestions.suggested_type,
+        suggested_sensitivity: suggestions.suggested_sensitivity,
+        suggested_urgency: suggestions.suggested_urgency,
+        suggested_assignee: suggestions.suggested_assignee,
+        suggested_unit: suggestions.suggested_unit,
+      },
+      {
+        onSuccess: () => {
+          onSuccess?.();
+        },
+      }
+    );
   };
 
   const handleApplyOverride = () => {
@@ -54,16 +62,23 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
       return;
     }
 
-    applyTriageMutation.mutate({
-      decision_type: 'manual_override',
-      suggested_type: overrideValues.suggested_type,
-      suggested_sensitivity: overrideValues.suggested_sensitivity,
-      suggested_urgency: overrideValues.suggested_urgency,
-      suggested_assignee: overrideValues.suggested_assignee,
-      suggested_unit: overrideValues.suggested_unit,
-      override_reason: overrideReason,
-      override_reason_ar: i18n.language === 'ar' ? overrideReason : undefined,
-    });
+    applyTriageMutation.mutate(
+      {
+        decision_type: 'manual_override',
+        suggested_type: overrideValues.suggested_type,
+        suggested_sensitivity: overrideValues.suggested_sensitivity,
+        suggested_urgency: overrideValues.suggested_urgency,
+        suggested_assignee: overrideValues.suggested_assignee,
+        suggested_unit: overrideValues.suggested_unit,
+        override_reason: overrideReason,
+        override_reason_ar: i18n.language === 'ar' ? overrideReason : undefined,
+      },
+      {
+        onSuccess: () => {
+          onSuccess?.();
+        },
+      }
+    );
   };
 
   const getConfidenceColor = (score?: number): string => {
@@ -82,8 +97,8 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
 
   if (isLoading) {
     return (
-      <div className="text-center py-8">
-        <div className="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
+      <div className="py-8 text-center">
+        <div className="inline-block size-8 animate-spin rounded-full border-b-2 border-blue-600"></div>
         <p className="mt-4 text-gray-600 dark:text-gray-400">
           {t('triage.loadingSuggestions', 'Analyzing ticket...')}
         </p>
@@ -95,28 +110,28 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
     return (
       <div className="space-y-4">
         {!aiAvailable && (
-          <div className="bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg p-4">
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-yellow-600 dark:text-yellow-400 text-xl">⚠️</span>
+          <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:border-yellow-800 dark:bg-yellow-900/20">
+            <div className="mb-2 flex items-center gap-2">
+              <span className="text-xl text-yellow-600 dark:text-yellow-400">⚠️</span>
               <h3 className="font-semibold text-yellow-800 dark:text-yellow-300">
                 {t('triage.aiUnavailable', 'AI Triage Temporarily Unavailable')}
               </h3>
             </div>
-            <p className="text-yellow-700 dark:text-yellow-400 text-sm">
+            <p className="text-sm text-yellow-700 dark:text-yellow-400">
               {t('triage.aiUnavailableMessage', 'AI triage suggestions are currently unavailable. Please perform manual triage or try again later.')}
             </p>
           </div>
         )}
 
         {/* Fallback to manual triage */}
-        <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+        <div className="rounded-lg bg-gray-50 p-6 dark:bg-gray-900">
+          <h3 className="mb-4 text-lg font-semibold text-gray-900 dark:text-white">
             {t('triage.manualTriage', 'Manual Triage')}
           </h3>
 
           <div className="space-y-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('triage.sensitivity', 'Sensitivity Level')}
               </label>
               <select
@@ -124,7 +139,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_sensitivity: e.target.value })
                 }
-                className="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="">{t('common.select', 'Select...')}</option>
                 <option value="public">{t('triage.sensitivityLevels.public', 'Public')}</option>
@@ -135,7 +150,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('triage.urgency', 'Urgency')}
               </label>
               <select
@@ -143,7 +158,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_urgency: e.target.value })
                 }
-                className="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="">{t('common.select', 'Select...')}</option>
                 <option value="low">{t('queue.urgency.low', 'Low')}</option>
@@ -154,7 +169,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('triage.assignedUnit', 'Assigned Unit')}
               </label>
               <input
@@ -164,12 +179,12 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                   setOverrideValues({ ...overrideValues, suggested_unit: e.target.value })
                 }
                 placeholder={t('triage.assignedUnitPlaceholder', 'Enter unit name')}
-                className="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('triage.reason', 'Reason')}
               </label>
               <textarea
@@ -177,14 +192,14 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                 onChange={(e) => setOverrideReason(e.target.value)}
                 placeholder={t('triage.reasonPlaceholder', 'Explain your triage decision')}
                 rows={3}
-                className="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
             <button
               onClick={handleApplyOverride}
               disabled={applyTriageMutation.isPending || !overrideReason.trim()}
-              className="w-full px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {applyTriageMutation.isPending
                 ? t('triage.applying', 'Applying...')
@@ -199,21 +214,21 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
   return (
     <div className="space-y-6">
       {/* AI Status Banner */}
-      <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+      <div className="rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <span className="text-blue-600 dark:text-blue-400 text-xl">🤖</span>
+            <span className="text-xl text-blue-600 dark:text-blue-400">🤖</span>
             <div>
               <h3 className="font-semibold text-blue-800 dark:text-blue-300">
                 {t('triage.aiSuggestions', 'AI-Powered Suggestions')}
               </h3>
-              <p className="text-blue-600 dark:text-blue-400 text-sm">
+              <p className="text-sm text-blue-600 dark:text-blue-400">
                 {t('triage.modelInfo', 'Model')}: {suggestions.model_name || 'Unknown'}
               </p>
             </div>
           </div>
           <div
-            className={`px-3 py-1 rounded-full text-sm font-semibold ${getConfidenceColor(
+            className={`rounded-full px-3 py-1 text-sm font-semibold ${getConfidenceColor(
               suggestions.confidence_score
             )} bg-white dark:bg-gray-800`}
           >
@@ -225,46 +240,46 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
       {/* Suggestions Display */}
       {!isOverriding ? (
         <div className="space-y-4">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             {suggestions.suggested_type && (
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('triage.requestType', 'Request Type')}
                 </label>
-                <p className="text-gray-900 dark:text-white font-semibold">
+                <p className="font-semibold text-gray-900 dark:text-white">
                   {t(`intake.form.requestType.options.${suggestions.suggested_type}`)}
                 </p>
               </div>
             )}
 
             {suggestions.suggested_sensitivity && (
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('triage.sensitivity', 'Sensitivity')}
                 </label>
-                <p className="text-gray-900 dark:text-white font-semibold capitalize">
+                <p className="font-semibold capitalize text-gray-900 dark:text-white">
                   {suggestions.suggested_sensitivity}
                 </p>
               </div>
             )}
 
             {suggestions.suggested_urgency && (
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('triage.urgency', 'Urgency')}
                 </label>
-                <p className="text-gray-900 dark:text-white font-semibold">
+                <p className="font-semibold text-gray-900 dark:text-white">
                   {t(`queue.urgency.${suggestions.suggested_urgency}`)}
                 </p>
               </div>
             )}
 
             {suggestions.suggested_unit && (
-              <div className="bg-gray-50 dark:bg-gray-900 rounded-lg p-4">
-                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <div className="rounded-lg bg-gray-50 p-4 dark:bg-gray-900">
+                <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                   {t('triage.assignedUnit', 'Assigned Unit')}
                 </label>
-                <p className="text-gray-900 dark:text-white font-semibold">
+                <p className="font-semibold text-gray-900 dark:text-white">
                   {suggestions.suggested_unit}
                 </p>
               </div>
@@ -272,11 +287,11 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-3 border-t border-gray-200 pt-4 dark:border-gray-700">
             <button
               onClick={handleAcceptSuggestions}
               disabled={applyTriageMutation.isPending}
-              className="flex-1 px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+              className="flex-1 rounded-md bg-green-600 px-4 py-2 text-white hover:bg-green-700 disabled:opacity-50"
             >
               {applyTriageMutation.isPending
                 ? t('triage.applying', 'Applying...')
@@ -287,7 +302,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                 setIsOverriding(true);
                 setOverrideValues(suggestions);
               }}
-              className="flex-1 px-4 py-2 bg-yellow-600 text-white rounded-md hover:bg-yellow-700"
+              className="flex-1 rounded-md bg-yellow-600 px-4 py-2 text-white hover:bg-yellow-700"
             >
               {t('triage.override', 'Override')}
             </button>
@@ -299,9 +314,9 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
             {t('triage.overrideTitle', 'Override AI Suggestions')}
           </h3>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('triage.sensitivity', 'Sensitivity Level')}
               </label>
               <select
@@ -309,7 +324,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_sensitivity: e.target.value })
                 }
-                className="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="public">{t('triage.sensitivityLevels.public', 'Public')}</option>
                 <option value="internal">{t('triage.sensitivityLevels.internal', 'Internal')}</option>
@@ -319,7 +334,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
             </div>
 
             <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('triage.urgency', 'Urgency')}
               </label>
               <select
@@ -327,7 +342,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_urgency: e.target.value })
                 }
-                className="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               >
                 <option value="low">{t('queue.urgency.low', 'Low')}</option>
                 <option value="medium">{t('queue.urgency.medium', 'Medium')}</option>
@@ -337,7 +352,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('triage.assignedUnit', 'Assigned Unit')}
               </label>
               <input
@@ -346,12 +361,12 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                 onChange={(e) =>
                   setOverrideValues({ ...overrideValues, suggested_unit: e.target.value })
                 }
-                className="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               />
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 {t('triage.overrideReason', 'Reason for Override')} *
               </label>
               <textarea
@@ -359,16 +374,16 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                 onChange={(e) => setOverrideReason(e.target.value)}
                 placeholder={t('triage.overrideReasonPlaceholder', 'Explain why you are overriding the AI suggestions')}
                 rows={3}
-                className="w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-white"
+                className="w-full rounded-md border-gray-300 bg-white text-gray-900 dark:border-gray-600 dark:bg-gray-700 dark:text-white"
               />
             </div>
           </div>
 
-          <div className="flex gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+          <div className="flex gap-3 border-t border-gray-200 pt-4 dark:border-gray-700">
             <button
               onClick={handleApplyOverride}
               disabled={applyTriageMutation.isPending || !overrideReason.trim()}
-              className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 disabled:opacity-50"
+              className="flex-1 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 disabled:opacity-50"
             >
               {applyTriageMutation.isPending
                 ? t('triage.applying', 'Applying...')
@@ -380,7 +395,7 @@ export function TriagePanel({ ticketId }: TriagePanelProps) {
                 setOverrideValues({});
                 setOverrideReason('');
               }}
-              className="px-4 py-2 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 rounded-md hover:bg-gray-50 dark:hover:bg-gray-700"
+              className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
             >
               {t('common.cancel', 'Cancel')}
             </button>

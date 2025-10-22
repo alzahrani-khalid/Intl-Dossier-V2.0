@@ -9,10 +9,9 @@ serve(async (req) => {
   }
 
   try {
-    // Extract ticket ID and threshold from URL
+    // Extract ticket ID and threshold from URL query parameters
     const url = new URL(req.url);
-    const pathParts = url.pathname.split('/');
-    const ticketId = pathParts[pathParts.length - 2]; // /intake/tickets/{id}/duplicates
+    const ticketId = url.searchParams.get('id');
     const threshold = parseFloat(url.searchParams.get('threshold') || '0.65');
 
     if (!ticketId) {

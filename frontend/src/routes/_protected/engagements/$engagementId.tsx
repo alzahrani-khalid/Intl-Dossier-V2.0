@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from '@tanstack/react-router';
+import { createFileRoute, Link, Outlet } from '@tanstack/react-router';
 import { useEngagement } from '@/hooks/useEngagement';
 import { useTranslation } from 'react-i18next';
 import { useState } from 'react';
@@ -186,6 +186,9 @@ function EngagementDetailPage() {
         stats={stats || { total: 0, todo: 0, in_progress: 0, review: 0, done: 0, progressPercentage: 0 }}
         onDragEnd={handleDragEnd}
       />
+
+      {/* Outlet for nested routes like after-action */}
+      <Outlet />
     </div>
   );
 }

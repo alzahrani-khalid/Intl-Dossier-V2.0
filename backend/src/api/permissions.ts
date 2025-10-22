@@ -109,7 +109,7 @@ router.get(
       }
 
       const type = req.query.type as string || 'both';
-      let delegations: any = {};
+      const delegations: any = {};
 
       if (type === 'granted' || type === 'both') {
         delegations.granted = await permissionService.getDelegationsGranted(userId);
