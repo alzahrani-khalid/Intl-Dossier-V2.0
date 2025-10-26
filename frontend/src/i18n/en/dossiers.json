@@ -13,13 +13,28 @@
     "owner": "Owner",
     "tags": "Tags",
     "search": "Search dossiers...",
-    "reset": "Reset Filters"
+    "reset": "Reset Filters",
+    "select_type": "Select type...",
+    "select_status": "Select status...",
+    "select_sensitivity": "Select sensitivity...",
+    "type_selected": "type(s)",
+    "status_selected": "status(es)",
+    "sensitivity_selected": "level(s)",
+    "search_type": "Search types...",
+    "search_status": "Search statuses...",
+    "search_sensitivity": "Search levels...",
+    "no_type_found": "No type found",
+    "no_status_found": "No status found",
+    "no_sensitivity_found": "No level found"
   },
   "types": {
     "country": "Country",
     "organization": "Organization",
     "forum": "Forum",
-    "theme": "Theme"
+    "theme": "Theme",
+    "engagement": "Engagement",
+    "working_group": "Working Group",
+    "person": "Person"
   },
   "statuses": {
     "active": "Active",
@@ -27,6 +42,12 @@
     "archived": "Archived"
   },
   "sensitivity": {
+    "0": "Public",
+    "1": "Internal",
+    "2": "Confidential",
+    "3": "Secret",
+    "4": "Top Secret",
+    "5": "Restricted",
     "low": "Low",
     "medium": "Medium",
     "high": "High"

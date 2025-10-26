@@ -17,19 +17,26 @@ import { isValidUUID } from "../_shared/security.ts";
  */
 
 // Map entity types to their table names and name fields
-const ENTITY_CONFIG: Record<string, { table: string; nameField: string }> = {
+// Primary: Unified dossiers table for new architecture
+// Fallback: Legacy tables for backward compatibility
+const ENTITY_CONFIG: Record<string, {
+  table: string;
+  nameField: string;
+  legacyTable?: string;
+  legacyNameField?: string;
+}> = {
   dossier: { table: 'dossiers', nameField: 'name_en' },
-  position: { table: 'positions', nameField: 'title_en' },
-  mou: { table: 'mous', nameField: 'title_en' },
-  engagement: { table: 'engagements', nameField: 'title_en' },
+  position: { table: 'dossiers', nameField: 'name_en' },
+  mou: { table: 'dossiers', nameField: 'name_en', legacyTable: 'mous', legacyNameField: 'title_en' },
+  engagement: { table: 'dossiers', nameField: 'name_en', legacyTable: 'engagements', legacyNameField: 'title' },
   assignment: { table: 'assignments', nameField: 'title' },
   commitment: { table: 'commitments', nameField: 'description_en' },
-  intelligence_signal: { table: 'intelligence_signals', nameField: 'title_en' },
-  organization: { table: 'organizations', nameField: 'name_en' },
-  country: { table: 'countries', nameField: 'name_en' },
-  forum: { table: 'forums', nameField: 'name_en' },
-  working_group: { table: 'working_groups', nameField: 'name_en' },
-  topic: { table: 'topics', nameField: 'name_en' },
+  intelligence_signal: { table: 'dossiers', nameField: 'name_en', legacyTable: 'intelligence_signals', legacyNameField: 'title' },
+  organization: { table: 'dossiers', nameField: 'name_en', legacyTable: 'organizations', legacyNameField: 'official_name_en' },
+  country: { table: 'dossiers', nameField: 'name_en', legacyTable: 'countries', legacyNameField: 'iso_code_3' },
+  forum: { table: 'dossiers', nameField: 'name_en', legacyTable: 'forums', legacyNameField: 'name_en' },
+  working_group: { table: 'dossiers', nameField: 'name_en', legacyTable: 'working_groups', legacyNameField: 'name_en' },
+  topic: { table: 'dossiers', nameField: 'name_en', legacyTable: 'topics', legacyNameField: 'name_en' },
 };
 
 serve(async (req) => {
@@ -242,15 +249,35 @@ serve(async (req) => {
         }
 
         try {
-          // Fetch entity name
-          const { data: entity, error: entityError } = await supabaseClient
+          // Try unified dossiers table first
+          let { data: entity, error: entityError } = await supabaseClient
             .from(config.table)
             .select(config.nameField)
             .eq("id", link.entity_id)
             .single();
 
+          // If not found in unified table, try legacy table
+          if ((entityError || !entity) && config.legacyTable && config.legacyNameField) {
+            console.log(`Entity not in ${config.table}, trying legacy table ${config.legacyTable}`);
+            const legacyResult = await supabaseClient
+              .from(config.legacyTable)
+              .select(config.legacyNameField)
+              .eq("id", link.entity_id)
+              .single();
+
+            entity = legacyResult.data;
+            entityError = legacyResult.error;
+
+            if (entity) {
+              return {
+                ...link,
+                entity_name: entity[config.legacyNameField] || link.entity_id,
+              };
+            }
+          }
+
           if (entityError || !entity) {
-            console.warn(`Entity not found: ${link.entity_type}/${link.entity_id}`);
+            console.warn(`Entity not found in any table: ${link.entity_type}/${link.entity_id}`);
             return {
               ...link,
               entity_name: link.entity_id,

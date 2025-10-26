@@ -1,8 +1,58 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Tajawal:wght@300;400;500;700;800&display=swap');
+/* Modern Navigation Design Tokens - @import must come first */
+@import './styles/modern-nav-tokens.css';
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Geist fonts from Vercel CDN */
+@font-face {
+  font-family: 'Geist';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/Geist-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/Geist-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/Geist-SemiBold.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-sans/Geist-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/GeistMono-Regular.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Geist Mono';
+  src: url('https://cdn.jsdelivr.net/npm/geist@1.0.0/dist/fonts/geist-mono/GeistMono-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
 
 /* RTL/LTR logical utilities imported at file top */
 
@@ -18,27 +68,27 @@
     --radius-full: 9999px;
 
     /* Font families */
-    --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-    --font-arabic: 'Tajawal', system-ui, -apple-system, sans-serif;
+    --font-sans: 'Geist', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-arabic: 'Geist', system-ui, -apple-system, sans-serif;
     --font-serif: 'Georgia', 'Times New Roman', serif;
-    --font-mono: 'Consolas', 'Courier New', monospace;
+    --font-mono: 'Geist Mono', 'Consolas', 'Courier New', monospace;
 
-    /* Font sizes */
-    --text-xs: 0.75rem;
-    --text-sm: 0.875rem;
-    --text-base: 1rem;
-    --text-lg: 1.125rem;
-    --text-xl: 1.25rem;
-    --text-2xl: 1.5rem;
-    --text-3xl: 1.875rem;
-    --text-4xl: 2.25rem;
-    --text-5xl: 3rem;
+    /* Font sizes - Kibo UI scale (14px base) */
+    --text-xs: 0.75rem;      /* 12px */
+    --text-sm: 0.875rem;     /* 14px - Kibo UI base */
+    --text-base: 0.875rem;   /* 14px - changed from 16px to match Kibo UI */
+    --text-lg: 1rem;         /* 16px */
+    --text-xl: 1.125rem;     /* 18px */
+    --text-2xl: 1.5rem;      /* 24px */
+    --text-3xl: 1.875rem;    /* 30px */
+    --text-4xl: 2.25rem;     /* 36px */
+    --text-5xl: 3rem;        /* 48px */
 
-    /* Font weights */
+    /* Font weights - Kibo UI scale */
     --font-light: 300;
     --font-normal: 400;
     --font-medium: 500;
-    --font-semibold: 600;
+    --font-semibold: 600;  /* Kibo UI uses 600 for headings */
     --font-bold: 700;
 
     /* Transitions */
@@ -58,8 +108,8 @@
     --accent-foreground: 0 0% 20%;
 
     /* Neutral colors */
-    --background: 240 9.0909% 97.8431%;
-    --foreground: 0 0% 20%;
+    --background: 0 0% 52.549%;
+    --foreground: 0 0% 100%;
     --card: 0 0% 100%;
     --card-foreground: 0 0% 20%;
     --popover: 0 0% 100%;
@@ -136,7 +186,7 @@
     --info-foreground: 202.5 28.5714% 5.4902%;
 
     /* Sidebar */
-    --sidebar: 220 14.7541% 11.9608%;
+    --sidebar: 220 14.7541% 18%;
     --sidebar-foreground: 0 0% 89.8039%;
     --sidebar-primary: 139.6552 52.7273% 43.1373%;
     --sidebar-primary-foreground: 0 0% 100%;
@@ -249,7 +299,7 @@
     --info-foreground: 0 0% 100%;
 
     /* Sidebar for dark mode */
-    --sidebar: 209 33% 12%;             /* Dark sidebar */
+    --sidebar: 209 33% 18%;             /* Lighter dark sidebar */
     --sidebar-foreground: 204 5% 97%;
     --sidebar-primary: 205 92% 62%;     /* Twitter blue */
     --sidebar-primary-foreground: 0 0% 100%;
@@ -282,20 +332,27 @@
     @apply bg-background text-foreground;
     font-family: var(--font-sans);
     font-size: var(--text-base);
+    font-weight: 400; /* Kibo UI body weight */
     transition: background-color var(--transition-base), color var(--transition-base);
+    background-color: #868686 !important;
   }
 
-  /* RTL/LTR support */
+  /* Kibo UI font weight overrides - redefine font-bold to use 600 instead of 700 */
+  .font-bold {
+    font-weight: 600 !important; /* Kibo UI uses 600, not 700 */
+  }
+
+  /* RTL/LTR support - both use Geist for consistent typography */
   html[dir="rtl"],
   html[dir="rtl"] body,
   html[dir="rtl"] * {
-    font-family: 'Tajawal', system-ui, -apple-system, sans-serif !important;
+    font-family: 'Geist', system-ui, -apple-system, sans-serif !important;
   }
 
   html[dir="ltr"],
   html[dir="ltr"] body,
   html[dir="ltr"] * {
-    font-family: 'Inter', system-ui, -apple-system, sans-serif !important;
+    font-family: 'Geist', system-ui, -apple-system, sans-serif !important;
   }
 }
 

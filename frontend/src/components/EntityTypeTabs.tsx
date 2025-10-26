@@ -16,20 +16,30 @@ import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 
 export type EntityType =
   | 'all'
-  | 'dossiers'
-  | 'people'
-  | 'engagements'
+  // 7 unified dossier types
+  | 'country'
+  | 'organization'
+  | 'forum'
+  | 'engagement'
+  | 'theme'
+  | 'working_group'
+  | 'person'
+  // Other entities (not dossiers)
   | 'positions'
-  | 'mous'
   | 'documents';
 
 interface EntityTypeCounts {
   all: number;
-  dossiers: number;
-  people: number;
-  engagements: number;
+  // 7 unified dossier types
+  country: number;
+  organization: number;
+  forum: number;
+  engagement: number;
+  theme: number;
+  working_group: number;
+  person: number;
+  // Other entities
   positions: number;
-  mous: number;
   documents: number;
 }
 
@@ -45,24 +55,17 @@ const entityTypeConfig: Record<
   { icon: string; labelKey: string; color: string }
 > = {
   all: { icon: '🔍', labelKey: 'all', color: 'text-gray-700 dark:text-gray-300' },
-  dossiers: { icon: '📁', labelKey: 'dossiers', color: 'text-blue-600 dark:text-blue-400' },
-  people: { icon: '👤', labelKey: 'people', color: 'text-green-600 dark:text-green-400' },
-  engagements: {
-    icon: '🤝',
-    labelKey: 'engagements',
-    color: 'text-purple-600 dark:text-purple-400',
-  },
-  positions: {
-    icon: '📋',
-    labelKey: 'positions',
-    color: 'text-orange-600 dark:text-orange-400',
-  },
-  mous: { icon: '📜', labelKey: 'mous', color: 'text-red-600 dark:text-red-400' },
-  documents: {
-    icon: '📄',
-    labelKey: 'documents',
-    color: 'text-indigo-600 dark:text-indigo-400',
-  },
+  // 7 unified dossier types
+  country: { icon: '🌍', labelKey: 'country', color: 'text-blue-600 dark:text-blue-400' },
+  organization: { icon: '🏢', labelKey: 'organization', color: 'text-purple-600 dark:text-purple-400' },
+  forum: { icon: '👥', labelKey: 'forum', color: 'text-cyan-600 dark:text-cyan-400' },
+  engagement: { icon: '🤝', labelKey: 'engagement', color: 'text-green-600 dark:text-green-400' },
+  theme: { icon: '🎯', labelKey: 'theme', color: 'text-pink-600 dark:text-pink-400' },
+  working_group: { icon: '💼', labelKey: 'working_group', color: 'text-amber-600 dark:text-amber-400' },
+  person: { icon: '👤', labelKey: 'person', color: 'text-teal-600 dark:text-teal-400' },
+  // Other entities (not dossiers)
+  positions: { icon: '📋', labelKey: 'positions', color: 'text-orange-600 dark:text-orange-400' },
+  documents: { icon: '📄', labelKey: 'documents', color: 'text-indigo-600 dark:text-indigo-400' },
 };
 
 export function EntityTypeTabs({

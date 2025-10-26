@@ -1,5 +1,5 @@
 // T049: RelationshipGraph component with React Flow
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate } from '@tanstack/react-router';
 import ReactFlow, {
@@ -16,7 +16,7 @@ import ReactFlow, {
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 
-import { useRelationships } from '@/hooks/useRelationships';
+import { useRelationshipsForDossier } from '@/hooks/useRelationships';
 import { Card } from '@/components/ui/card';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Loader2 } from 'lucide-react';
@@ -28,13 +28,14 @@ interface RelationshipGraphProps {
   dossierName?: string;
 }
 
-// Define custom node types
+// Define custom node types OUTSIDE component to prevent recreation on every render
+// This fixes the React Flow warning and ensures nodes render correctly
 const nodeTypes = {
   centerNode: CenterNode,
   relatedNode: RelatedNode,
 };
 
-// Define custom edge types
+// Define custom edge types OUTSIDE component
 const edgeTypes = {
   customEdge: CustomEdge,
 };
@@ -46,14 +47,12 @@ export function RelationshipGraph({ dossierId, dossierName = 'Current Dossier' }
 
   const [relationshipTypeFilter, setRelationshipTypeFilter] = useState<string | undefined>(undefined);
 
-  const { relationships, isLoading, error } = useRelationships(dossierId, {
-    relationship_type: relationshipTypeFilter,
-    direction: 'both',
-  });
+  const { data: relationshipsData, isLoading, error } = useRelationshipsForDossier(dossierId);
+  const relationships = relationshipsData?.relationships || [];
 
   // Transform relationships to React Flow nodes and edges
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
-    if (!relationships.length) {
+    if (!relationships || relationships.length === 0) {
       return { nodes: [], edges: [] };
     }
 
@@ -98,54 +97,54 @@ export function RelationshipGraph({ dossierId, dossierName = 'Current Dossier' }
         health_score: Math.floor(Math.random() * 30) + 60,
       };
 
-      // Add child dossier node if this is a parent relationship - Custom component with stats
-      if (rel.child_dossier && !nodeMap.has(rel.child_dossier.id)) {
+      // Add target dossier node if not current dossier - Custom component with stats
+      if (rel.target_dossier && rel.target_dossier.id !== dossierId && !nodeMap.has(rel.target_dossier.id)) {
         nodes.push({
-          id: rel.child_dossier.id,
+          id: rel.target_dossier.id,
           type: 'relatedNode',
           data: {
-            label: isRTL ? rel.child_dossier.name_ar : rel.child_dossier.name_en,
-            referenceType: rel.child_dossier.reference_type as 'country' | 'organization' | 'forum',
-            description: `Key ${rel.child_dossier.reference_type} partner with active collaboration`,
+            label: isRTL ? rel.target_dossier.name_ar : rel.target_dossier.name_en,
+            referenceType: rel.target_dossier.type as 'country' | 'organization' | 'forum',
+            description: `Key ${rel.target_dossier.type} partner with active collaboration`,
             stats: mockStats,
           },
           position: { x: isRTL ? 1200 - x : x, y },
           sourcePosition: isRTL ? Position.Left : Position.Right,
           targetPosition: isRTL ? Position.Right : Position.Left,
         });
-        nodeMap.set(rel.child_dossier.id, true);
+        nodeMap.set(rel.target_dossier.id, true);
       }
 
-      // Add parent dossier node if this is a child relationship - Custom component with stats
-      if (rel.parent_dossier && !nodeMap.has(rel.parent_dossier.id)) {
+      // Add source dossier node if not current dossier - Custom component with stats
+      if (rel.source_dossier && rel.source_dossier.id !== dossierId && !nodeMap.has(rel.source_dossier.id)) {
         nodes.push({
-          id: rel.parent_dossier.id,
+          id: rel.source_dossier.id,
           type: 'relatedNode',
           data: {
-            label: isRTL ? rel.parent_dossier.name_ar : rel.parent_dossier.name_en,
-            referenceType: rel.parent_dossier.reference_type as 'country' | 'organization' | 'forum',
-            description: `Key ${rel.parent_dossier.reference_type} partner with active collaboration`,
+            label: isRTL ? rel.source_dossier.name_ar : rel.source_dossier.name_en,
+            referenceType: rel.source_dossier.type as 'country' | 'organization' | 'forum',
+            description: `Key ${rel.source_dossier.type} partner with active collaboration`,
             stats: mockStats,
           },
           position: { x: isRTL ? 1200 - x : x, y },
           sourcePosition: isRTL ? Position.Left : Position.Right,
           targetPosition: isRTL ? Position.Right : Position.Left,
         });
-        nodeMap.set(rel.parent_dossier.id, true);
+        nodeMap.set(rel.source_dossier.id, true);
       }
 
-      // Create edge with custom component - Updated colors for new impact scheme
-      const edgeColor = rel.relationship_strength === 'primary' ? '#3b82f6' :
-                        rel.relationship_strength === 'secondary' ? '#f59e0b' : '#94a3b8';
+      // Create edge with custom component
+      // Default color since relationship_strength doesn't exist in new schema
+      const edgeColor = '#3b82f6'; // Default blue color
 
       edges.push({
-        id: `${rel.parent_dossier_id}-${rel.child_dossier_id}-${rel.relationship_type}`,
-        source: rel.parent_dossier_id,
-        target: rel.child_dossier_id,
+        id: `${rel.source_dossier_id}-${rel.target_dossier_id}-${rel.relationship_type}`,
+        source: rel.source_dossier_id,
+        target: rel.target_dossier_id,
         type: 'customEdge',
         data: {
-          label: t(`relationships.types.${rel.relationship_type}`),
-          strength: rel.relationship_strength,
+          label: t(`relationships.types.${rel.relationship_type}`) || rel.relationship_type,
+          strength: 'primary', // Default strength since it doesn't exist in new schema
         },
         markerEnd: {
           type: MarkerType.ArrowClosed,
@@ -163,8 +162,18 @@ export function RelationshipGraph({ dossierId, dossierName = 'Current Dossier' }
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
   const [reactFlowInstance, setReactFlowInstance] = useState<ReactFlowInstance | null>(null);
 
-  // Note: We use the `key` prop on ReactFlow to force remounting when data changes,
-  // so we don't need to sync nodes/edges manually. This prevents infinite loops.
+  // Track the last synced relationship count to prevent infinite loops
+  const lastSyncedCount = useRef<number>(-1);
+
+  // Sync nodes and edges state when relationships data changes
+  // useNodesState/useEdgesState don't automatically update when their initial values change
+  useEffect(() => {
+    if (lastSyncedCount.current !== relationships.length) {
+      setNodes(initialNodes);
+      setEdges(initialEdges);
+      lastSyncedCount.current = relationships.length;
+    }
+  }, [relationships.length, initialNodes, initialEdges]);
 
   // Fit view when instance becomes available
   useEffect(() => {

@@ -3,37 +3,57 @@
     "fetch-mcp": {
       "type": "stdio",
       "command": "npx",
-      "args": ["fetch-mcp@latest"],
+      "args": [
+        "fetch-mcp@latest"
+      ],
       "env": {}
     },
     "filesystem": {
       "type": "stdio",
       "command": "npx",
-      "args": ["@modelcontextprotocol/server-filesystem@latest", "."],
+      "args": [
+        "@modelcontextprotocol/server-filesystem@latest",
+        "."
+      ],
       "env": {}
     },
     "sequential-thinking": {
       "type": "stdio",
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-sequential-thinking"],
+      "args": [
+        "-y",
+        "@modelcontextprotocol/server-sequential-thinking"
+      ],
       "env": {}
     },
     "docker": {
       "type": "stdio",
       "command": "uvx",
-      "args": ["mcp-server-docker"],
+      "args": [
+        "mcp-server-docker"
+      ],
       "env": {}
     },
     "shadcn": {
       "type": "stdio",
       "command": "npx",
-      "args": ["shadcn@latest", "mcp"]
+      "args": [
+        "shadcn@latest",
+        "mcp"
+      ],
+      "env": {
+        "REGISTRY_URL": "https://www.kibo-ui.com/r/registry.json"
+      }
     },
     "playwright": {
+      "type": "stdio",
       "command": "npx",
-      "args": ["@playwright/mcp@latest"]
+      "args": [
+        "@playwright/mcp@latest"
+      ]
     },
     "supabase": {
+      "type": "stdio",
       "command": "npx",
       "args": [
         "-y",
@@ -41,10 +61,6 @@
         "--access-token",
         "sbp_5b308210608d3be8f51d26eca2e0a909ae2eef39"
       ]
-    },
-    "CopilotKit MCP": {
-      "command": "npx",
-      "args": ["mcp-remote", "https://mcp.copilotkit.ai"]
     }
   }
 }

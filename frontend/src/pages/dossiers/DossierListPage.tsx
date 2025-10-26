@@ -1,0 +1,506 @@
+/**
+ * DossierListPage Component
+ * Part of: 026-unified-dossier-architecture implementation (User Story 1 - T056)
+ *
+ * List view for all dossiers with type filtering, search, and pagination.
+ * Mobile-first, RTL-compatible, with responsive grid layout.
+ *
+ * Features:
+ * - Responsive grid (1 col mobile → 2 col tablet → 3 col desktop)
+ * - RTL support via logical properties
+ * - Type filtering with badges
+ * - Search functionality
+ * - Pagination controls
+ * - Loading states and error handling
+ * - Touch-friendly UI (44x44px min)
+ * - Accessibility compliant (WCAG AA)
+ */
+
+import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useNavigate, Link } from '@tanstack/react-router';
+import { useDossiers } from '@/hooks/useDossier';
+import { UniversalDossierCard } from '@/components/Dossier/UniversalDossierCard';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
+import { Badge } from '@/components/ui/badge';
+import { Skeleton } from '@/components/ui/skeleton';
+import {
+  Plus,
+  Search,
+  Filter,
+  ChevronLeft,
+  ChevronRight,
+  Loader2,
+  AlertCircle,
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
+import type { DossierType, DossierStatus, DossierFilters } from '@/services/dossier-api';
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert';
+
+const DOSSIER_TYPES: DossierType[] = [
+  'country',
+  'organization',
+  'forum',
+  'engagement',
+  'theme',
+  'working_group',
+  'person',
+];
+
+const DOSSIER_STATUSES: DossierStatus[] = ['active', 'inactive', 'archived'];
+
+export function DossierListPage() {
+  const { t, i18n } = useTranslation('dossier');
+  const isRTL = i18n.language === 'ar';
+  const navigate = useNavigate();
+
+  // Filter state
+  const [filters, setFilters] = useState<DossierFilters>({
+    page: 1,
+    page_size: 12,
+    sort_by: 'updated_at',
+    sort_order: 'desc',
+  });
+
+  // Local state for search input (debounced)
+  const [searchInput, setSearchInput] = useState('');
+
+  // Fetch dossiers with filters
+  const { data, isLoading, isError, error } = useDossiers(filters);
+
+  const handleFilterChange = (key: keyof DossierFilters, value: unknown) => {
+    setFilters((prev) => ({
+      ...prev,
+      [key]: value,
+      page: 1, // Reset to first page when filters change
+    }));
+  };
+
+  const handleSearch = () => {
+    setFilters((prev) => ({
+      ...prev,
+      search: searchInput || undefined,
+      page: 1,
+    }));
+  };
+
+  const handleClearType = () => {
+    setFilters((prev) => ({
+      ...prev,
+      type: undefined,
+      page: 1,
+    }));
+  };
+
+  const handleClearStatus = () => {
+    setFilters((prev) => ({
+      ...prev,
+      status: undefined,
+      page: 1,
+    }));
+  };
+
+  const handlePageChange = (newPage: number) => {
+    setFilters((prev) => ({ ...prev, page: newPage }));
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleViewDossier = (id: string) => {
+    navigate({ to: '/dossiers/$id', params: { id } });
+  };
+
+  const handleEditDossier = (id: string) => {
+    navigate({ to: '/dossiers/$id/edit', params: { id } });
+  };
+
+  const totalPages = data ? Math.ceil(data.total / (filters.page_size || 12)) : 0;
+
+  return (
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Page Header */}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8 sm:mb-10">
+        <div>
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-start tracking-tight">
+            {t('list.title')}
+          </h1>
+          <p className="text-sm sm:text-base text-muted-foreground/80 text-start mt-2 sm:mt-3">
+            {t('list.subtitle')}
+          </p>
+        </div>
+        <Link to="/dossiers/create">
+          <Button
+            size="lg"
+            className={cn(
+              "min-h-11 w-full sm:w-auto",
+              "shadow-md hover:shadow-lg",
+              "transition-all duration-200"
+            )}
+          >
+            <Plus className={cn('h-5 w-5', isRTL ? 'ms-2' : 'me-2')} />
+            {t('list.createNew')}
+          </Button>
+        </Link>
+      </div>
+
+      {/* Filters Section with Modern Glass Effect */}
+      <div className={cn(
+        "rounded-3xl border border-black/5 p-5 sm:p-7 mb-8 space-y-6",
+        "bg-white/60 backdrop-blur-xl",
+        "shadow-[0_6px_20px_rgba(0,0,0,0.08),0_2px_6px_rgba(0,0,0,0.04)]"
+      )}>
+        {/* Search Bar with Modern Style */}
+        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+          <div className="flex-1">
+            <div className="relative">
+              <Search className={cn(
+                'absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground/50',
+                isRTL ? 'end-4' : 'start-4'
+              )} />
+              <Input
+                placeholder={t('list.searchPlaceholder')}
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
+                className={cn(
+                  'h-12 w-full',
+                  isRTL ? 'pe-11 ps-4' : 'ps-11 pe-4',
+                  'bg-white/40 border border-black/5',
+                  'rounded-2xl',
+                  'text-sm placeholder:text-muted-foreground/40',
+                  'shadow-[inset_0_2px_4px_rgba(0,0,0,0.06)]',
+                  'focus-visible:bg-white/60 focus-visible:border-black/10',
+                  'focus-visible:shadow-[inset_0_2px_6px_rgba(0,0,0,0.08)]',
+                  'transition-all duration-150'
+                )}
+              />
+            </div>
+          </div>
+          <Button
+            onClick={handleSearch}
+            size="lg"
+            className={cn(
+              "min-h-12 w-full sm:w-auto px-6",
+              "rounded-xl",
+              "shadow-md hover:shadow-lg",
+              "transition-all duration-200"
+            )}
+          >
+            <Search className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
+            {t('list.search')}
+          </Button>
+        </div>
+
+        {/* Filter Controls with Modern Styling */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          {/* Type Filter */}
+          <Select
+            value={filters.type}
+            onValueChange={(value) => handleFilterChange('type', value as DossierType)}
+          >
+            <SelectTrigger className={cn(
+              "h-12",
+              "bg-white/40 border border-black/5",
+              "rounded-xl",
+              "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
+              "hover:bg-white/60 hover:border-black/10",
+              "transition-all duration-150"
+            )}>
+              <SelectValue placeholder={t('list.filterByType')} />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              {DOSSIER_TYPES.map((type) => (
+                <SelectItem key={type} value={type}>
+                  {t(`type.${type}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Status Filter */}
+          <Select
+            value={filters.status}
+            onValueChange={(value) => handleFilterChange('status', value as DossierStatus)}
+          >
+            <SelectTrigger className={cn(
+              "h-12",
+              "bg-white/40 border border-black/5",
+              "rounded-xl",
+              "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
+              "hover:bg-white/60 hover:border-black/10",
+              "transition-all duration-150"
+            )}>
+              <SelectValue placeholder={t('list.filterByStatus')} />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              {DOSSIER_STATUSES.map((status) => (
+                <SelectItem key={status} value={status}>
+                  {t(`status.${status}`)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          {/* Sort By */}
+          <Select
+            value={filters.sort_by}
+            onValueChange={(value) => handleFilterChange('sort_by', value)}
+          >
+            <SelectTrigger className={cn(
+              "h-12",
+              "bg-white/40 border border-black/5",
+              "rounded-xl",
+              "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
+              "hover:bg-white/60 hover:border-black/10",
+              "transition-all duration-150"
+            )}>
+              <SelectValue placeholder={t('list.sortBy')} />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="updated_at">{t('list.sortUpdated')}</SelectItem>
+              <SelectItem value="created_at">{t('list.sortCreated')}</SelectItem>
+              <SelectItem value="name_en">{t('list.sortNameEn')}</SelectItem>
+              <SelectItem value="name_ar">{t('list.sortNameAr')}</SelectItem>
+            </SelectContent>
+          </Select>
+
+          {/* Sort Order */}
+          <Select
+            value={filters.sort_order}
+            onValueChange={(value) => handleFilterChange('sort_order', value as 'asc' | 'desc')}
+          >
+            <SelectTrigger className={cn(
+              "h-12",
+              "bg-white/40 border border-black/5",
+              "rounded-xl",
+              "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
+              "hover:bg-white/60 hover:border-black/10",
+              "transition-all duration-150"
+            )}>
+              <SelectValue placeholder={t('list.sortOrder')} />
+            </SelectTrigger>
+            <SelectContent className="rounded-xl">
+              <SelectItem value="desc">{t('list.sortDesc')}</SelectItem>
+              <SelectItem value="asc">{t('list.sortAsc')}</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+
+        {/* Active Filters with Modern Badge Styling */}
+        {(filters.type || filters.status || filters.search) && (
+          <div className="flex flex-wrap items-center gap-2 pt-2">
+            <span className="text-sm font-medium text-muted-foreground/70">{t('list.activeFilters')}:</span>
+            {filters.type && (
+              <Badge
+                variant="secondary"
+                className={cn(
+                  "text-xs sm:text-sm px-3 py-1.5",
+                  "bg-white/60 border border-black/5",
+                  "rounded-lg",
+                  "shadow-sm",
+                  "hover:bg-white/80",
+                  "transition-colors duration-150"
+                )}
+              >
+                {t(`type.${filters.type}`)}
+                <button
+                  onClick={handleClearType}
+                  className={cn(
+                    'ms-2 text-muted-foreground/60',
+                    'hover:text-destructive',
+                    'font-semibold text-base',
+                    'transition-colors duration-150'
+                  )}
+                  aria-label={t('list.clearFilter')}
+                >
+                  ×
+                </button>
+              </Badge>
+            )}
+            {filters.status && (
+              <Badge
+                variant="secondary"
+                className={cn(
+                  "text-xs sm:text-sm px-3 py-1.5",
+                  "bg-white/60 border border-black/5",
+                  "rounded-lg",
+                  "shadow-sm",
+                  "hover:bg-white/80",
+                  "transition-colors duration-150"
+                )}
+              >
+                {t(`status.${filters.status}`)}
+                <button
+                  onClick={handleClearStatus}
+                  className={cn(
+                    'ms-2 text-muted-foreground/60',
+                    'hover:text-destructive',
+                    'font-semibold text-base',
+                    'transition-colors duration-150'
+                  )}
+                  aria-label={t('list.clearFilter')}
+                >
+                  ×
+                </button>
+              </Badge>
+            )}
+            {filters.search && (
+              <Badge
+                variant="secondary"
+                className={cn(
+                  "text-xs sm:text-sm px-3 py-1.5",
+                  "bg-white/60 border border-black/5",
+                  "rounded-lg",
+                  "shadow-sm",
+                  "hover:bg-white/80",
+                  "transition-colors duration-150"
+                )}
+              >
+                {t('list.searchQuery')}: "{filters.search}"
+                <button
+                  onClick={() => {
+                    setSearchInput('');
+                    handleFilterChange('search', undefined);
+                  }}
+                  className={cn(
+                    'ms-2 text-muted-foreground/60',
+                    'hover:text-destructive',
+                    'font-semibold text-base',
+                    'transition-colors duration-150'
+                  )}
+                  aria-label={t('list.clearFilter')}
+                >
+                  ×
+                </button>
+              </Badge>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Results Section */}
+      {isLoading && (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <Skeleton key={i} className="h-64 sm:h-72 rounded-2xl" />
+          ))}
+        </div>
+      )}
+
+      {isError && (
+        <Alert
+          variant="destructive"
+          className={cn(
+            "rounded-2xl border-destructive/20",
+            "bg-destructive/5"
+          )}
+        >
+          <AlertCircle className="h-5 w-5" />
+          <AlertTitle className="text-base font-semibold">{t('list.errorTitle')}</AlertTitle>
+          <AlertDescription className="text-sm">
+            {error?.message || t('list.errorMessage')}
+          </AlertDescription>
+        </Alert>
+      )}
+
+      {!isLoading && !isError && data && (
+        <>
+          {/* Results Count */}
+          <div className="flex items-center justify-between mb-6">
+            <p className="text-sm font-medium text-muted-foreground/70 text-start">
+              {t('list.showing', {
+                from: (filters.page! - 1) * filters.page_size! + 1,
+                to: Math.min(filters.page! * filters.page_size!, data.total),
+                total: data.total,
+              })}
+            </p>
+          </div>
+
+          {/* Dossiers Grid */}
+          {data.data.length === 0 ? (
+            <div className={cn(
+              "text-center py-16 px-4",
+              "rounded-2xl",
+              "bg-white/40 border border-black/5"
+            )}>
+              <p className="text-muted-foreground text-base">{t('list.noDossiers')}</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 mb-10">
+              {data.data.map((dossier) => (
+                <UniversalDossierCard
+                  key={dossier.id}
+                  dossier={dossier}
+                  onView={handleViewDossier}
+                  onEdit={handleEditDossier}
+                />
+              ))}
+            </div>
+          )}
+
+          {/* Pagination with Modern Styling */}
+          {totalPages > 1 && (
+            <div className={cn(
+              "flex flex-col sm:flex-row items-center justify-between gap-4",
+              "pt-6 mt-2",
+              "border-t border-black/5"
+            )}>
+              <p className="text-sm font-medium text-muted-foreground/70">
+                {t('list.page', { current: filters.page, total: totalPages })}
+              </p>
+              <div className="flex items-center gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(filters.page! - 1)}
+                  disabled={filters.page === 1}
+                  className={cn(
+                    "min-h-11 min-w-11 px-4",
+                    "rounded-xl",
+                    "bg-white/40 border border-black/5",
+                    "hover:bg-white/60 hover:border-black/10",
+                    "disabled:opacity-40 disabled:cursor-not-allowed",
+                    "shadow-sm hover:shadow-md",
+                    "transition-all duration-150"
+                  )}
+                >
+                  <ChevronLeft className={cn('h-4 w-4', isRTL && 'rotate-180')} />
+                  <span className={cn('sm:inline hidden', isRTL ? 'me-2' : 'ms-2')}>
+                    {t('list.previous')}
+                  </span>
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => handlePageChange(filters.page! + 1)}
+                  disabled={filters.page === totalPages}
+                  className={cn(
+                    "min-h-11 min-w-11 px-4",
+                    "rounded-xl",
+                    "bg-white/40 border border-black/5",
+                    "hover:bg-white/60 hover:border-black/10",
+                    "disabled:opacity-40 disabled:cursor-not-allowed",
+                    "shadow-sm hover:shadow-md",
+                    "transition-all duration-150"
+                  )}
+                >
+                  <span className={cn('sm:inline hidden', isRTL ? 'ms-2' : 'me-2')}>
+                    {t('list.next')}
+                  </span>
+                  <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
+                </Button>
+              </div>
+            </div>
+          )}
+        </>
+      )}
+    </div>
+  );
+}

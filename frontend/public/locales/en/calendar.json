@@ -1,0 +1,58 @@
+{
+  "title": "Calendar",
+  "subtitle": "View and manage events across all dossiers",
+  "create_event": "Create Event",
+  "create_event_description": "Add a new event to the calendar",
+  "event_details": "Event Details",
+  "edit": "Edit Event",
+  "close": "Close",
+  "today": "Today",
+  "previous": "Previous",
+  "next": "Next",
+  "more": "more",
+  "no_events": "No events scheduled for this date",
+  "upcoming_events": "Upcoming Events",
+  "all_day_event": "All-day event",
+  "participants_count": "{{count}} participant",
+  "participants_count_plural": "{{count}} participants",
+  "linked_to": "Linked to",
+  "view": {
+    "month": "Month",
+    "week": "Week",
+    "day": "Day"
+  },
+  "weekday": {
+    "sun": "Sun",
+    "mon": "Mon",
+    "tue": "Tue",
+    "wed": "Wed",
+    "thu": "Thu",
+    "fri": "Fri",
+    "sat": "Sat"
+  },
+  "types": {
+    "internal_meeting": "Internal Meeting",
+    "deadline": "Deadline",
+    "reminder": "Reminder",
+    "holiday": "Holiday",
+    "training": "Training",
+    "review": "Review",
+    "other": "Other"
+  },
+  "status": {
+    "scheduled": "Scheduled",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "linked_item_type": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "engagement": "Engagement",
+    "theme": "Theme",
+    "working_group": "Working Group",
+    "person": "Person"
+  },
+  "all_types": "All Types"
+}

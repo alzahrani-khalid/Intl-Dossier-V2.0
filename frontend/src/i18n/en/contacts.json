@@ -1,0 +1,362 @@
+{
+  "contactDirectory": {
+    "title": "Contact Directory",
+    "subtitle": "Manage and organize your professional contacts",
+
+    "labels": {
+      "fullName": "Full Name",
+      "organization": "Organization",
+      "position": "Position",
+      "email": "Email Address",
+      "phone": "Phone Number",
+      "notes": "Notes",
+      "tags": "Tags",
+      "sourceType": "Source Type",
+      "createdAt": "Created Date",
+      "updatedAt": "Last Updated"
+    },
+
+    "placeholders": {
+      "fullName": "Enter full name",
+      "searchContacts": "Search by name, organization, or email...",
+      "position": "e.g., Director of International Cooperation",
+      "email": "contact@example.com",
+      "phone": "+966 50 123 4567",
+      "notes": "Add notes about this contact...",
+      "selectOrganization": "Select organization",
+      "selectTags": "Select tags"
+    },
+
+    "buttons": {
+      "createContact": "Create Contact",
+      "saveContact": "Save Contact",
+      "cancel": "Cancel",
+      "edit": "Edit",
+      "archive": "Archive",
+      "restore": "Restore",
+      "delete": "Delete",
+      "export": "Export",
+      "importCard": "Scan Business Card",
+      "importDocument": "Extract from Document",
+      "back": "Back"
+    },
+
+    "validation": {
+      "nameRequired": "Full name is required",
+      "nameMinLength": "Name must be at least 2 characters",
+      "nameMaxLength": "Name cannot exceed 200 characters",
+      "invalidEmail": "Please enter a valid email address",
+      "invalidPhone": "Please enter a valid phone number",
+      "notesMaxLength": "Notes cannot exceed 5000 characters"
+    },
+
+    "messages": {
+      "contactCreated": "Contact created successfully",
+      "contactUpdated": "Contact updated successfully",
+      "contactArchived": "Contact archived successfully",
+      "contactRestored": "Contact restored successfully",
+      "contactDeleted": "Contact deleted successfully",
+      "noContacts": "No contacts found",
+      "loadingContacts": "Loading contacts...",
+      "searchNoResults": "No contacts match your search",
+      "showingResults": "Showing {{showing}} of {{total}} contacts",
+      "archiveConfirm": "Are you sure you want to archive {{name}}? Archived contacts will be hidden from the main list."
+    },
+
+    "filters": {
+      "all": "All Contacts",
+      "byOrganization": "Group by Organization",
+      "archived": "Archived",
+      "recent": "Recently Added"
+    },
+
+    "sourceTypes": {
+      "manual": "Manual Entry",
+      "businessCard": "Business Card",
+      "document": "Document Extract"
+    },
+
+    "search": {
+      "search": "Search",
+      "filters": "Filters",
+      "refine_search": "Refine your search",
+      "apply_filters": "Apply Filters",
+      "reset": "Reset",
+      "clear_all": "Clear All",
+      "filter_by_organization": "Filter by Organization",
+      "all_organizations": "All Organizations",
+      "filter_by_tags": "Filter by Tags",
+      "filter_by_source": "Filter by Source",
+      "all_sources": "All Sources",
+      "sort_by": "Sort By",
+      "order": "Order",
+      "sort_name": "Name",
+      "sort_created": "Date Created",
+      "sort_updated": "Last Updated",
+      "ascending": "Ascending",
+      "descending": "Descending",
+      "include_archived": "Include Archived Contacts"
+    },
+
+    "list": {
+      "loading_contacts": "Loading contacts...",
+      "no_contacts_found": "No contacts found",
+      "try_different_filters": "Try adjusting your filters or search terms"
+    },
+
+    "form": {
+      "full_name": "Full Name",
+      "full_name_required": "Full name is required",
+      "full_name_min_length": "Name must be at least 2 characters",
+      "full_name_max_length": "Name cannot exceed 200 characters",
+      "full_name_placeholder": "Enter full name",
+      "organization": "Organization",
+      "select_organization": "Select an organization",
+      "position": "Position / Title",
+      "position_placeholder": "e.g., Director of International Relations",
+      "email_addresses": "Email Addresses",
+      "email_placeholder": "email@example.com",
+      "email_invalid": "Please enter a valid email address",
+      "add_email": "Add Another Email",
+      "phone_numbers": "Phone Numbers",
+      "phone_placeholder": "+966 50 123 4567",
+      "add_phone": "Add Another Phone",
+      "tags": "Tags",
+      "notes": "Notes",
+      "notes_placeholder": "Add any additional notes or context...",
+      "notes_description": "Internal notes about this contact",
+      "cancel": "Cancel",
+      "create_contact": "Create Contact",
+      "save_changes": "Save Changes"
+    },
+
+    "hooks": {
+      "contact_created_success": "Contact \"{{name}}\" created successfully",
+      "contact_created_error": "Failed to create contact: {{error}}",
+      "contact_updated_success": "Contact \"{{name}}\" updated successfully",
+      "contact_updated_error": "Failed to update contact: {{error}}",
+      "contact_archived_success": "Contact archived successfully",
+      "contact_archived_error": "Failed to archive contact: {{error}}",
+      "duplicate_check_error": "Failed to check for duplicates: {{error}}",
+      "export_success": "Contacts exported successfully",
+      "export_error": "Failed to export contacts: {{error}}"
+    },
+
+    "tabs": {
+      "manual_entry": "Manual Entry",
+      "scan_card": "Scan Business Card"
+    },
+
+    "ocr": {
+      "scan_business_card": "Scan Business Card",
+      "scan_description": "Take a photo or upload an image of a business card to automatically extract contact information",
+      "take_photo": "Take Photo",
+      "upload_image": "Upload Image",
+      "capture_photo": "Capture",
+      "cancel": "Cancel",
+      "process_card": "Extract Information",
+      "processing": "Processing image...",
+      "back_to_manual": "Back to Manual Entry",
+      "consent_cloud_ocr_title": "Use cloud OCR for better accuracy",
+      "consent_cloud_ocr_description": "Enable Google Vision API for improved text recognition. Your image will be sent to Google's servers for processing.",
+      "extraction_success": "Extracted {{fieldsCount}} field(s) with {{confidence}}% confidence",
+      "extraction_error": "Failed to extract information: {{error}}",
+      "confidence_tooltip": "OCR confidence: {{confidence}}%",
+      "invalid_file_type": "Invalid file type. Please upload JPEG, PNG, or HEIC image.",
+      "file_too_large": "File too large. Maximum size is 10MB.",
+      "camera_error": "Unable to access camera. Please check permissions.",
+      "info_alert": "After extraction, you can review and edit all fields before saving. Fields with low confidence are highlighted."
+    },
+
+    "duplicates": {
+      "dialog_title": "Potential Duplicate Contacts Found",
+      "dialog_description": "We found existing contacts that may be duplicates. Please review before proceeding.",
+      "match": "match",
+      "view_contact": "View Contact",
+      "cancel": "Review Form",
+      "proceed_anyway": "Create Anyway",
+      "reasons": {
+        "email_match": "Email Match",
+        "phone_match": "Phone Match",
+        "name_similarity": "Similar Name",
+        "organization_match": "Same Organization"
+      }
+    },
+
+    "documentExtraction": {
+      "title": "Extract Contacts from Document",
+      "description": "Upload a PDF, Word document, Excel spreadsheet, or text file to automatically extract contact information",
+      "click_to_upload": "Click to upload or drag and drop",
+      "supported_formats": "Supported: PDF, DOCX, DOC, TXT, CSV, XLS, XLSX (max 50MB)",
+      "invalid_file_type": "Invalid file type. Please upload PDF, DOCX, DOC, TXT, CSV, or Excel file.",
+      "file_too_large": "File too large. Maximum size is 50MB.",
+      "extract_contacts": "Extract Contacts",
+      "processing": "Processing document...",
+      "status_pending": "Document uploaded, waiting to start processing",
+      "status_processing": "Extracting contacts from document",
+      "status_completed": "Processing complete",
+      "status_failed": "Processing failed",
+      "processing_time_estimate": "This may take 1-2 minutes depending on document size",
+      "processing_error": "Failed to process document: {{error}}",
+      "extraction_complete": "Extraction Complete",
+      "contacts_found": "contacts found",
+      "review_and_edit": "Review and edit the extracted contacts below before importing",
+      "no_contacts_found": "No contacts were found in this document. Please try a different file or enter contacts manually.",
+      "start_over": "Upload Different File",
+      "review_and_import": "Review & Import",
+      "back_to_manual": "Back to Manual Entry",
+      "info_alert": "The document will be analyzed to extract contact names, organizations, positions, email addresses, and phone numbers. You can review and edit all extracted information before importing.",
+      "upload_success": "Document uploaded successfully. Processing started.",
+      "upload_error": "Failed to upload document: {{error}}",
+      "review_contacts": "Review Extracted Contacts",
+      "review_description": "Select contacts to import and edit any fields as needed. Low-confidence fields are highlighted for your review.",
+      "select_all": "Select All",
+      "deselect_all": "Deselect All",
+      "no_contacts_selected": "Please select at least one contact to import",
+      "no_contacts_to_review": "No contacts available for review",
+      "import_selected": "Import Selected",
+      "importing": "Importing contacts...",
+      "batch_import_tab": "Extract from Document"
+    },
+
+    "hooks": {
+      "contact_created_success": "Contact \"{{name}}\" created successfully",
+      "contact_created_error": "Failed to create contact: {{error}}",
+      "contact_updated_success": "Contact \"{{name}}\" updated successfully",
+      "contact_updated_error": "Failed to update contact: {{error}}",
+      "contact_archived_success": "Contact archived successfully",
+      "contact_archived_error": "Failed to archive contact: {{error}}",
+      "duplicate_check_error": "Failed to check for duplicates: {{error}}",
+      "export_success": "Contacts exported successfully",
+      "export_error": "Failed to export contacts: {{error}}",
+      "batch_created_success": "Successfully imported {{count}} contact(s)",
+      "batch_created_partial": "Imported {{created}} contact(s). {{failed}} failed.",
+      "batch_created_error": "Failed to import contacts: {{error}}"
+    },
+
+    "relationships": {
+      "title": "Contact Network",
+      "view_network": "View Network",
+      "add_relationship": "Add Relationship",
+      "no_relationships": "No relationships yet",
+      "add_relationships_hint": "Create relationships to visualize this contact's network",
+      "loading_network": "Loading network...",
+      "relationship_count": "{{count}} relationship(s)",
+      "created_success": "Relationship created successfully",
+      "created_error": "Failed to create relationship: {{error}}",
+      "deleted_success": "Relationship deleted successfully",
+      "deleted_error": "Failed to delete relationship: {{error}}",
+      "form": {
+        "select_contact": "Select Contact",
+        "select_contact_placeholder": "Choose a contact",
+        "contact_required": "Contact selection is required",
+        "relationship_type": "Relationship Type",
+        "start_date": "Start Date",
+        "end_date": "End Date",
+        "notes": "Notes",
+        "notes_placeholder": "Add notes about this relationship...",
+        "create_relationship": "Create Relationship"
+      }
+    },
+
+    "relationshipTypes": {
+      "reports_to": "Reports To",
+      "collaborates_with": "Collaborates With",
+      "partner": "Partner",
+      "colleague": "Colleague",
+      "other": "Other"
+    },
+
+    "organizations": {
+      "title": "Organizations",
+      "view_all": "View All Organizations",
+      "group_by_organization": "Group by Organization",
+      "no_organization": "No Organization",
+      "contact_count": "{{count}} contact(s)"
+    },
+
+    "interactions": {
+      "title": "Interaction History",
+      "timeline_title": "Timeline",
+      "add_note": "Add Note",
+      "notes_count": "{{count}} note(s)",
+      "attendees_count": "{{count}} attendee(s)",
+      "attachments_count": "{{count}} attachment(s)",
+      "show_more": "Show More",
+      "show_less": "Show Less",
+      "loading": "Loading interaction history...",
+      "error": "Failed to load interactions",
+      "no_notes_title": "No Interaction Notes Yet",
+      "no_notes_description": "Start tracking your interactions with this contact by adding notes about meetings, calls, emails, and more.",
+      "view_contact": "View Contact",
+      "actions": "Actions",
+      "edit": "Edit Note",
+      "delete": "Delete Note",
+      "delete_confirm": "Are you sure you want to delete this note? This action cannot be undone.",
+
+      "types": {
+        "meeting": "Meeting",
+        "email": "Email",
+        "call": "Phone Call",
+        "conference": "Conference",
+        "other": "Other"
+      },
+
+      "form": {
+        "create_title": "Add Interaction Note",
+        "edit_title": "Edit Interaction Note",
+        "description": "Record details about your interaction with this contact",
+        "date": "Date",
+        "select_date": "Select date",
+        "date_description": "When did this interaction occur? Cannot select future dates.",
+        "type": "Interaction Type",
+        "select_type": "Select type",
+        "details": "Details",
+        "details_placeholder": "Add details about this interaction, key discussion points, outcomes, follow-up actions...",
+        "characters": "characters",
+        "attendees": "Attendees",
+        "search_attendees": "Search for other contacts who attended...",
+        "attendees_description": "Select other contacts who participated in this interaction",
+        "attachments": "Attachments",
+        "upload_files": "Upload Files",
+        "attachments_description": "Attach meeting notes, presentations, or other related documents (max 10MB per file)",
+        "cancel": "Cancel",
+        "create_note": "Create Note",
+        "save_changes": "Save Changes"
+      },
+
+      "hooks": {
+        "note_created_success": "{{type}} note added successfully",
+        "note_created_error": "Failed to create note: {{error}}",
+        "note_updated_success": "Note updated successfully",
+        "note_updated_error": "Failed to update note: {{error}}",
+        "note_deleted_success": "Note deleted successfully",
+        "note_deleted_error": "Failed to delete note: {{error}}",
+        "attachment_uploaded_success": "Attachment uploaded successfully",
+        "attachment_upload_error": "Failed to upload attachment: {{error}}",
+        "attachment_downloaded_success": "Attachment downloaded successfully",
+        "attachment_download_error": "Failed to download attachment: {{error}}"
+      },
+
+      "search": {
+        "title": "Search Interaction Notes",
+        "description": "Search across all interaction notes from all contacts",
+        "placeholder": "Search in notes details...",
+        "filters": "Filters",
+        "clear_filters": "Clear Filters",
+        "type_filter": "Type",
+        "all_types": "All Types",
+        "date_from": "From Date",
+        "date_to": "To Date",
+        "select_date": "Select date",
+        "searching": "Searching notes...",
+        "error": "Failed to search notes",
+        "results_count": "{{count}} note(s) found",
+        "no_results_title": "No Notes Found",
+        "no_results_description": "Try adjusting your search terms or filters to find what you're looking for.",
+        "start_searching_title": "Start Searching",
+        "start_searching_description": "Enter keywords or apply filters to search through all interaction notes."
+      }
+    }
+  }
+}

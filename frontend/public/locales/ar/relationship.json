@@ -1,0 +1,79 @@
+{
+  "title": "العلاقات",
+  "types": {
+    "bilateral_relation": "علاقة ثنائية",
+    "membership": "عضوية",
+    "partnership": "شراكة",
+    "parent_of": "رئيسي لـ",
+    "subsidiary_of": "فرعي لـ",
+    "discusses": "يناقش",
+    "involves": "يتضمن",
+    "participant_in": "مشارك في",
+    "hosted_by": "مستضاف من قبل",
+    "sponsored_by": "برعاية",
+    "related_to": "مرتبط بـ",
+    "represents": "يمثل",
+    "member_of": "عضو في"
+  },
+  "status": {
+    "active": "نشط",
+    "historical": "تاريخي",
+    "terminated": "منتهي"
+  },
+  "direction": {
+    "outgoing": "علاقة صادرة",
+    "incoming": "علاقة واردة"
+  },
+  "list": {
+    "empty": {
+      "title": "لا توجد علاقات",
+      "description": "لا يحتوي هذا الملف على أي علاقات حتى الآن. أضف علاقات لربطه بكيانات أخرى."
+    },
+    "loading": "جاري تحميل العلاقات..."
+  },
+  "form": {
+    "title": "إضافة علاقة",
+    "editTitle": "تعديل علاقة",
+    "selectTarget": "اختر الملف المستهدف",
+    "selectTargetPlaceholder": "اختر ملفاً لإنشاء علاقة معه",
+    "selectType": "نوع العلاقة",
+    "selectTypePlaceholder": "اختر نوع العلاقة",
+    "notesEn": "ملاحظات (إنجليزي)",
+    "notesEnPlaceholder": "Add notes about this relationship in English",
+    "notesAr": "ملاحظات (عربي)",
+    "notesArPlaceholder": "أضف ملاحظات حول هذه العلاقة بالعربية",
+    "effectiveFrom": "سارية من",
+    "effectiveTo": "سارية حتى",
+    "selectDate": "اختر التاريخ",
+    "cancel": "إلغاء",
+    "create": "إنشاء علاقة",
+    "update": "تحديث علاقة"
+  },
+  "create": {
+    "success": "تم إنشاء العلاقة بنجاح",
+    "error": "فشل إنشاء العلاقة: {{message}}"
+  },
+  "update": {
+    "success": "تم تحديث العلاقة بنجاح",
+    "error": "فشل تحديث العلاقة: {{message}}"
+  },
+  "delete": {
+    "confirm": {
+      "title": "حذف العلاقة؟",
+      "description": "هل أنت متأكد من حذف هذه العلاقة؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "success": "تم حذف العلاقة بنجاح",
+    "error": "فشل حذف العلاقة: {{message}}"
+  },
+  "effectiveFrom": "من",
+  "effectiveTo": "حتى",
+  "metadata": "معلومات إضافية",
+  "validation": {
+    "targetRequired": "الرجاء اختيار ملف مستهدف",
+    "typeRequired": "الرجاء اختيار نوع العلاقة",
+    "selfReference": "لا يمكن إنشاء علاقة مع نفس الملف",
+    "circular": "ستؤدي هذه العلاقة إلى تكوين تبعية دائرية",
+    "duplicate": "هذه العلاقة موجودة بالفعل",
+    "dateRange": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البداية"
+  }
+}

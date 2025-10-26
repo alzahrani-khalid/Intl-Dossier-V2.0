@@ -78,15 +78,12 @@ function EngagementDetailPage() {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
-            <Link
-              to="/dossiers/$dossierId"
-              params={{ dossierId: engagement.dossier_id }}
-            >
+            <Link to="/engagements">
               <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
             </Link>
           </Button>
           <div>
-            <h1 className="text-3xl font-bold">{engagement.title}</h1>
+            <h1 className="text-3xl font-bold">{isRTL ? engagement.name_ar : engagement.name_en}</h1>
             <p className="text-muted-foreground">
               {t('engagements.detail')}
             </p>
@@ -120,30 +117,32 @@ function EngagementDetailPage() {
             <div className="flex-1">
               <p className="text-sm font-medium">{t('engagements.date')}</p>
               <p className="text-sm text-muted-foreground">
-                {format(new Date(engagement.engagement_date), 'PPP', { locale })}
+                {format(new Date(engagement.created_at), 'PPP', { locale })}
               </p>
             </div>
           </div>
 
           {/* Location */}
-          {engagement.location && (
+          {(isRTL ? engagement.location_ar : engagement.location_en) && (
             <div className="flex items-start gap-3">
               <MapPin className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm font-medium">{t('engagements.location')}</p>
-                <p className="text-sm text-muted-foreground">{engagement.location}</p>
+                <p className="text-sm text-muted-foreground">
+                  {isRTL ? engagement.location_ar : engagement.location_en}
+                </p>
               </div>
             </div>
           )}
 
           {/* Description */}
-          {engagement.description && (
+          {(isRTL ? engagement.description_ar : engagement.description_en) && (
             <div className="flex items-start gap-3">
               <FileText className="h-5 w-5 text-muted-foreground mt-0.5" />
               <div className="flex-1">
                 <p className="text-sm font-medium">{t('engagements.description')}</p>
                 <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                  {engagement.description}
+                  {isRTL ? engagement.description_ar : engagement.description_en}
                 </p>
               </div>
             </div>
@@ -181,7 +180,7 @@ function EngagementDetailPage() {
       <EngagementKanbanDialog
         open={kanbanOpen}
         onClose={() => setKanbanOpen(false)}
-        engagementTitle={engagement?.title || ''}
+        engagementTitle={isRTL ? (engagement?.name_ar || '') : (engagement?.name_en || '')}
         columns={columns}
         stats={stats || { total: 0, todo: 0, in_progress: 0, review: 0, done: 0, progressPercentage: 0 }}
         onDragEnd={handleDragEnd}

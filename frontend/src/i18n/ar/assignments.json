@@ -292,7 +292,7 @@
     "empty": "لا توجد مهام ذات صلة",
     "sibling_assignments": "التعيينات الشقيقة",
     "same_engagement": "نفس المشاركة",
-    "same_dossier": "نفس الملف"
+    "same_dossier": "نفس الدوسيه"
   },
   "kanban": {
     "title": "لوحة كانبان - {{engagement}}",

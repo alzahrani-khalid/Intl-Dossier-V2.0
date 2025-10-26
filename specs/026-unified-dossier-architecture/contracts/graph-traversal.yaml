@@ -1,0 +1,92 @@
+openapi: 3.1.0
+info:
+  title: Graph Traversal API
+  description: N-degree relationship traversal and path finding
+  version: 1.0.0
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+  - url: http://localhost:54321/functions/v1
+
+security:
+  - bearerAuth: []
+
+paths:
+  /graph/traverse:
+    post:
+      summary: Traverse relationship graph
+      description: Find all entities within N degrees of starting dossier
+      operationId: traverseGraph
+      tags:
+        - Graph
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - start_dossier_id
+                - max_degrees
+              properties:
+                start_dossier_id:
+                  type: string
+                  format: uuid
+                max_degrees:
+                  type: integer
+                  minimum: 1
+                  maximum: 5
+                  description: Maximum degrees of separation
+                relationship_types:
+                  type: array
+                  items:
+                    type: string
+                  description: Filter by relationship types
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  nodes:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                        type:
+                          type: string
+                        name_en:
+                          type: string
+                        name_ar:
+                          type: string
+                        degree:
+                          type: integer
+                  edges:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        source:
+                          type: string
+                          format: uuid
+                        target:
+                          type: string
+                          format: uuid
+                        relationship_type:
+                          type: string
+                        path:
+                          type: array
+                          items:
+                            type: string
+                            format: uuid
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer

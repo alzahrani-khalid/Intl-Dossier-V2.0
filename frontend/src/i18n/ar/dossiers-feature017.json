@@ -9,10 +9,10 @@
     "intelligence": "معلومات استخبارية",
     "commitments": "الالتزامات",
     "documents": "الوثائق",
-    "files": "الملفات"
+    "files": "الدوسيهات"
   },
   "relationships": {
-    "title": "علاقات الملف",
+    "title": "علاقات الدوسيه",
     "add": "إضافة علاقة",
     "remove": "إزالة علاقة",
     "networkGraph": "مخطط الشبكة",
@@ -39,8 +39,8 @@
       "archived": "مؤرشف"
     },
     "fields": {
-      "parentDossier": "الملف الرئيسي",
-      "childDossier": "الملف المرتبط",
+      "parentDossier": "الدوسيه الرئيسي",
+      "childDossier": "الدوسيه المرتبط",
       "relationshipType": "نوع العلاقة",
       "strength": "القوة",
       "establishedDate": "تاريخ التأسيس",
@@ -73,7 +73,7 @@
     "preview": "معاينة",
     "empty": "لا توجد وثائق",
     "ownerTypes": {
-      "dossier": "ملف",
+      "dossier": "دوسيه",
       "engagement": "تفاعل",
       "position": "موقف",
       "mou": "مذكرة تفاهم",
@@ -128,7 +128,7 @@
   "calendar": {
     "page": {
       "title": "التقويم",
-      "description": "تقويم موحد يعرض جميع التفاعلات والاجتماعات والمواعيد النهائية والأحداث عبر جميع الملفات"
+      "description": "تقويم موحد يعرض جميع التفاعلات والاجتماعات والمواعيد النهائية والأحداث عبر جميع الدوسيهات"
     },
     "view_mode": {
       "month": "شهر",

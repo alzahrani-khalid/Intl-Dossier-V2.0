@@ -80,6 +80,36 @@ const config: Config = {
           border: 'hsl(var(--sidebar-border))',
           ring: 'hsl(var(--sidebar-ring))',
         },
+        // Modern Navigation Colors
+        'icon-rail': {
+          DEFAULT: 'var(--icon-rail-bg)',
+          hover: 'var(--icon-rail-hover)',
+          'active-bg': 'var(--icon-rail-active-bg)',
+          'active-indicator': 'var(--icon-rail-active-indicator)',
+          icon: 'var(--icon-rail-icon)',
+          'icon-active': 'var(--icon-rail-icon-active)',
+          border: 'var(--icon-rail-border)',
+        },
+        'panel': {
+          DEFAULT: 'var(--panel-bg)',
+          border: 'var(--panel-border)',
+          text: 'var(--panel-text)',
+          'text-muted': 'var(--panel-text-muted)',
+          hover: 'var(--panel-hover)',
+          active: 'var(--panel-active)',
+          'active-text': 'var(--panel-active-text)',
+        },
+        'badge': {
+          DEFAULT: 'var(--badge-bg)',
+          text: 'var(--badge-text)',
+        },
+        'content': {
+          DEFAULT: 'var(--content-bg)',
+          card: 'var(--content-card-bg)',
+          border: 'var(--content-border)',
+          text: 'var(--content-text)',
+          'text-muted': 'var(--content-text-muted)',
+        },
         chart: {
           '1': 'hsl(var(--chart-1))',
           '2': 'hsl(var(--chart-2))',

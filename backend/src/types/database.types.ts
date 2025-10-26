@@ -119,13 +119,6 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "aa_commitments_dossier_id_fkey"
-            columns: ["dossier_id"]
-            isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
-          },
-          {
             foreignKeyName: "aa_commitments_owner_contact_id_fkey"
             columns: ["owner_contact_id"]
             isOneToOne: false
@@ -439,22 +432,7 @@ export type Database = {
           updated_by?: string | null
           version?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "after_action_records_dossier_id_fkey"
-            columns: ["dossier_id"]
-            isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "after_action_records_engagement_id_fkey"
-            columns: ["engagement_id"]
-            isOneToOne: true
-            referencedRelation: "engagements"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       after_action_versions: {
         Row: {
@@ -1145,15 +1123,7 @@ export type Database = {
           work_item_type?: Database["public"]["Enums"]["work_item_type"]
           workflow_stage?: Database["public"]["Enums"]["engagement_workflow_stage"]
         }
-        Relationships: [
-          {
-            foreignKeyName: "assignments_engagement_id_fkey"
-            columns: ["engagement_id"]
-            isOneToOne: false
-            referencedRelation: "engagements"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       attachments: {
         Row: {
@@ -1165,7 +1135,7 @@ export type Database = {
           id: string
           mime_type: string
           scan_status: Database["public"]["Enums"]["scan_status"]
-          search_vector: unknown | null
+          search_vector: unknown
           uploaded_at: string | null
           uploaded_by: string
         }
@@ -1178,7 +1148,7 @@ export type Database = {
           id?: string
           mime_type: string
           scan_status?: Database["public"]["Enums"]["scan_status"]
-          search_vector?: unknown | null
+          search_vector?: unknown
           uploaded_at?: string | null
           uploaded_by: string
         }
@@ -1191,7 +1161,7 @@ export type Database = {
           id?: string
           mime_type?: string
           scan_status?: Database["public"]["Enums"]["scan_status"]
-          search_vector?: unknown | null
+          search_vector?: unknown
           uploaded_at?: string | null
           uploaded_by?: string
         }
@@ -1238,13 +1208,6 @@ export type Database = {
             foreignKeyName: "attendees_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "attendees_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
@@ -1281,7 +1244,7 @@ export type Database = {
           entity_id: string
           entity_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           new_values: Json | null
           old_values: Json | null
           session_id: string | null
@@ -1296,7 +1259,7 @@ export type Database = {
           entity_id: string
           entity_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_values?: Json | null
           old_values?: Json | null
           session_id?: string | null
@@ -1311,7 +1274,7 @@ export type Database = {
           entity_id?: string
           entity_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           new_values?: Json | null
           old_values?: Json | null
           session_id?: string | null
@@ -1330,7 +1293,7 @@ export type Database = {
           entity_id: string
           entity_type: string
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           mfa_method: string | null
           mfa_verified: boolean
           new_values: Json | null
@@ -1348,7 +1311,7 @@ export type Database = {
           entity_id: string
           entity_type: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           mfa_method?: string | null
           mfa_verified?: boolean
           new_values?: Json | null
@@ -1366,7 +1329,7 @@ export type Database = {
           entity_id?: string
           entity_type?: string
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           mfa_method?: string | null
           mfa_verified?: boolean
           new_values?: Json | null
@@ -1416,15 +1379,7 @@ export type Database = {
           metadata?: Json | null
           position_ids?: string[]
         }
-        Relationships: [
-          {
-            foreignKeyName: "briefing_packs_engagement_id_fkey"
-            columns: ["engagement_id"]
-            isOneToOne: false
-            referencedRelation: "engagements"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       briefs: {
         Row: {
@@ -1444,7 +1399,7 @@ export type Database = {
           organization_id: string | null
           parameters: Json
           purpose: string
-          search_vector: unknown | null
+          search_vector: unknown
           status: Database["public"]["Enums"]["brief_status"]
           summary: string | null
           target_entity: Json
@@ -1472,7 +1427,7 @@ export type Database = {
           organization_id?: string | null
           parameters?: Json
           purpose: string
-          search_vector?: unknown | null
+          search_vector?: unknown
           status?: Database["public"]["Enums"]["brief_status"]
           summary?: string | null
           target_entity?: Json
@@ -1500,7 +1455,7 @@ export type Database = {
           organization_id?: string | null
           parameters?: Json
           purpose?: string
-          search_vector?: unknown | null
+          search_vector?: unknown
           status?: Database["public"]["Enums"]["brief_status"]
           summary?: string | null
           target_entity?: Json
@@ -1512,34 +1467,6 @@ export type Database = {
           version?: number
         }
         Relationships: [
-          {
-            foreignKeyName: "briefs_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "briefs_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["country_id"]
-          },
-          {
-            foreignKeyName: "briefs_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "briefs_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "fk_briefs_intelligence_report"
             columns: ["intelligence_report_id"]
@@ -1631,9 +1558,75 @@ export type Database = {
           title_en?: string
           updated_at?: string | null
         }
+        Relationships: []
+      }
+      calendar_events: {
+        Row: {
+          created_at: string
+          description_ar: string | null
+          description_en: string | null
+          dossier_id: string
+          end_datetime: string
+          event_type: string
+          id: string
+          is_virtual: boolean
+          location_ar: string | null
+          location_en: string | null
+          room_ar: string | null
+          room_en: string | null
+          start_datetime: string
+          status: string
+          timezone: string
+          title_ar: string | null
+          title_en: string | null
+          updated_at: string
+          virtual_link: string | null
+        }
+        Insert: {
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          dossier_id: string
+          end_datetime: string
+          event_type: string
+          id?: string
+          is_virtual?: boolean
+          location_ar?: string | null
+          location_en?: string | null
+          room_ar?: string | null
+          room_en?: string | null
+          start_datetime: string
+          status?: string
+          timezone?: string
+          title_ar?: string | null
+          title_en?: string | null
+          updated_at?: string
+          virtual_link?: string | null
+        }
+        Update: {
+          created_at?: string
+          description_ar?: string | null
+          description_en?: string | null
+          dossier_id?: string
+          end_datetime?: string
+          event_type?: string
+          id?: string
+          is_virtual?: boolean
+          location_ar?: string | null
+          location_en?: string | null
+          room_ar?: string | null
+          room_en?: string | null
+          start_datetime?: string
+          status?: string
+          timezone?: string
+          title_ar?: string | null
+          title_en?: string | null
+          updated_at?: string
+          virtual_link?: string | null
+        }
         Relationships: [
           {
-            foreignKeyName: "calendar_entries_dossier_id_fkey"
+            foreignKeyName: "calendar_events_dossier_id_fkey"
             columns: ["dossier_id"]
             isOneToOne: false
             referencedRelation: "dossiers"
@@ -1921,129 +1914,54 @@ export type Database = {
           updated_at?: string
           version?: number
         }
-        Relationships: [
-          {
-            foreignKeyName: "contacts_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "contacts_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["country_id"]
-          },
-          {
-            foreignKeyName: "contacts_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "contacts_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       countries: {
         Row: {
-          code: string
-          code3: string
-          cooperation_areas: string[] | null
-          created_at: string
-          created_by: string
-          deleted_at: string | null
-          expertise_domains: string[] | null
+          area_sq_km: number | null
+          capital_ar: string | null
+          capital_en: string | null
           flag_url: string | null
           id: string
-          is_arab_league: boolean | null
-          is_deleted: boolean
-          is_gcc: boolean | null
-          is_islamic_org: boolean | null
-          iso_alpha2: string | null
-          iso_alpha3: string | null
-          last_modified_by: string
-          name_ar: string
-          name_en: string
-          region: string
-          relationship_status:
-            | Database["public"]["Enums"]["relationship_status"]
-            | null
-          statistical_system: Json
-          status: Database["public"]["Enums"]["country_status"]
-          strategic_importance: number | null
-          tenant_id: string
-          updated_at: string
-          version: number
+          iso_code_2: string
+          iso_code_3: string
+          population: number | null
+          region: string | null
+          subregion: string | null
         }
         Insert: {
-          code: string
-          code3: string
-          cooperation_areas?: string[] | null
-          created_at?: string
-          created_by: string
-          deleted_at?: string | null
-          expertise_domains?: string[] | null
+          area_sq_km?: number | null
+          capital_ar?: string | null
+          capital_en?: string | null
           flag_url?: string | null
-          id?: string
-          is_arab_league?: boolean | null
-          is_deleted?: boolean
-          is_gcc?: boolean | null
-          is_islamic_org?: boolean | null
-          iso_alpha2?: string | null
-          iso_alpha3?: string | null
-          last_modified_by: string
-          name_ar: string
-          name_en: string
-          region: string
-          relationship_status?:
-            | Database["public"]["Enums"]["relationship_status"]
-            | null
-          statistical_system?: Json
-          status?: Database["public"]["Enums"]["country_status"]
-          strategic_importance?: number | null
-          tenant_id: string
-          updated_at?: string
-          version?: number
+          id: string
+          iso_code_2: string
+          iso_code_3: string
+          population?: number | null
+          region?: string | null
+          subregion?: string | null
         }
         Update: {
-          code?: string
-          code3?: string
-          cooperation_areas?: string[] | null
-          created_at?: string
-          created_by?: string
-          deleted_at?: string | null
-          expertise_domains?: string[] | null
+          area_sq_km?: number | null
+          capital_ar?: string | null
+          capital_en?: string | null
           flag_url?: string | null
           id?: string
-          is_arab_league?: boolean | null
-          is_deleted?: boolean
-          is_gcc?: boolean | null
-          is_islamic_org?: boolean | null
-          iso_alpha2?: string | null
-          iso_alpha3?: string | null
-          last_modified_by?: string
-          name_ar?: string
-          name_en?: string
-          region?: string
-          relationship_status?:
-            | Database["public"]["Enums"]["relationship_status"]
-            | null
-          statistical_system?: Json
-          status?: Database["public"]["Enums"]["country_status"]
-          strategic_importance?: number | null
-          tenant_id?: string
-          updated_at?: string
-          version?: number
+          iso_code_2?: string
+          iso_code_3?: string
+          population?: number | null
+          region?: string | null
+          subregion?: string | null
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "countries_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "dossiers"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       country_organization_relations: {
         Row: {
@@ -2082,36 +2000,7 @@ export type Database = {
           tenant_id?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "country_organization_relations_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "country_organization_relations_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["country_id"]
-          },
-          {
-            foreignKeyName: "country_organization_relations_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "country_organization_relations_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       data_library_items: {
         Row: {
@@ -2173,38 +2062,10 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "data_library_items_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "data_library_items_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["country_id"]
-          },
-          {
             foreignKeyName: "data_library_items_deleted_by_fkey"
             columns: ["deleted_by"]
             isOneToOne: false
             referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "data_library_items_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "data_library_items_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
           {
@@ -2410,67 +2271,62 @@ export type Database = {
           role_type?: string | null
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "dossier_owners_dossier_id_fkey"
-            columns: ["dossier_id"]
-            isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       dossier_relationships: {
         Row: {
-          child_dossier_id: string
-          created_at: string | null
+          created_at: string
           created_by: string | null
-          end_date: string | null
-          established_date: string | null
-          notes: string | null
-          parent_dossier_id: string
-          relationship_strength: string | null
+          effective_from: string | null
+          effective_to: string | null
+          id: string
+          notes_ar: string | null
+          notes_en: string | null
+          relationship_metadata: Json | null
           relationship_type: string
-          status: string | null
-          updated_at: string | null
+          source_dossier_id: string
+          status: string
+          target_dossier_id: string
         }
         Insert: {
-          child_dossier_id: string
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
-          end_date?: string | null
-          established_date?: string | null
-          notes?: string | null
-          parent_dossier_id: string
-          relationship_strength?: string | null
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          notes_ar?: string | null
+          notes_en?: string | null
+          relationship_metadata?: Json | null
           relationship_type: string
-          status?: string | null
-          updated_at?: string | null
+          source_dossier_id: string
+          status?: string
+          target_dossier_id: string
         }
         Update: {
-          child_dossier_id?: string
-          created_at?: string | null
+          created_at?: string
           created_by?: string | null
-          end_date?: string | null
-          established_date?: string | null
-          notes?: string | null
-          parent_dossier_id?: string
-          relationship_strength?: string | null
+          effective_from?: string | null
+          effective_to?: string | null
+          id?: string
+          notes_ar?: string | null
+          notes_en?: string | null
+          relationship_metadata?: Json | null
           relationship_type?: string
-          status?: string | null
-          updated_at?: string | null
+          source_dossier_id?: string
+          status?: string
+          target_dossier_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "dossier_relationships_child_dossier_id_fkey"
-            columns: ["child_dossier_id"]
+            foreignKeyName: "dossier_relationships_source_dossier_id_fkey"
+            columns: ["source_dossier_id"]
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "dossier_relationships_parent_dossier_id_fkey"
-            columns: ["parent_dossier_id"]
+            foreignKeyName: "dossier_relationships_target_dossier_id_fkey"
+            columns: ["target_dossier_id"]
             isOneToOne: false
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
@@ -2479,64 +2335,55 @@ export type Database = {
       }
       dossiers: {
         Row: {
-          archived: boolean
           created_at: string
+          created_by: string | null
+          description_ar: string | null
+          description_en: string | null
           id: string
-          last_review_date: string | null
+          metadata: Json | null
           name_ar: string
           name_en: string
-          reference_id: string | null
-          reference_type: string | null
-          review_cadence: unknown | null
-          search_vector: unknown | null
-          sensitivity_level: string
+          search_vector: unknown
+          sensitivity_level: number
           status: string
-          summary_ar: string | null
-          summary_en: string | null
           tags: string[] | null
           type: string
           updated_at: string
-          version: number
+          updated_by: string | null
         }
         Insert: {
-          archived?: boolean
           created_at?: string
+          created_by?: string | null
+          description_ar?: string | null
+          description_en?: string | null
           id?: string
-          last_review_date?: string | null
+          metadata?: Json | null
           name_ar: string
           name_en: string
-          reference_id?: string | null
-          reference_type?: string | null
-          review_cadence?: unknown | null
-          search_vector?: unknown | null
-          sensitivity_level?: string
+          search_vector?: unknown
+          sensitivity_level?: number
           status?: string
-          summary_ar?: string | null
-          summary_en?: string | null
           tags?: string[] | null
           type: string
           updated_at?: string
-          version?: number
+          updated_by?: string | null
         }
         Update: {
-          archived?: boolean
           created_at?: string
+          created_by?: string | null
+          description_ar?: string | null
+          description_en?: string | null
           id?: string
-          last_review_date?: string | null
+          metadata?: Json | null
           name_ar?: string
           name_en?: string
-          reference_id?: string | null
-          reference_type?: string | null
-          review_cadence?: unknown | null
-          search_vector?: unknown | null
-          sensitivity_level?: string
+          search_vector?: unknown
+          sensitivity_level?: number
           status?: string
-          summary_ar?: string | null
-          summary_en?: string | null
           tags?: string[] | null
           type?: string
           updated_at?: string
-          version?: number
+          updated_by?: string | null
         }
         Relationships: []
       }
@@ -2673,61 +2520,35 @@ export type Database = {
           relevance_score?: number | null
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "engagement_positions_engagement_id_fkey"
-            columns: ["engagement_id"]
-            isOneToOne: false
-            referencedRelation: "engagements"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       engagements: {
         Row: {
-          created_at: string | null
-          created_by: string
-          description: string | null
-          dossier_id: string
-          engagement_date: string
+          engagement_category: string
           engagement_type: string
           id: string
-          location: string | null
-          search_vector: unknown | null
-          title: string
-          updated_at: string | null
+          location_ar: string | null
+          location_en: string | null
         }
         Insert: {
-          created_at?: string | null
-          created_by: string
-          description?: string | null
-          dossier_id: string
-          engagement_date: string
+          engagement_category: string
           engagement_type: string
-          id?: string
-          location?: string | null
-          search_vector?: unknown | null
-          title: string
-          updated_at?: string | null
+          id: string
+          location_ar?: string | null
+          location_en?: string | null
         }
         Update: {
-          created_at?: string | null
-          created_by?: string
-          description?: string | null
-          dossier_id?: string
-          engagement_date?: string
+          engagement_category?: string
           engagement_type?: string
           id?: string
-          location?: string | null
-          search_vector?: unknown | null
-          title?: string
-          updated_at?: string | null
+          location_ar?: string | null
+          location_en?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "engagements_dossier_id_fkey"
-            columns: ["dossier_id"]
-            isOneToOne: false
+            foreignKeyName: "engagements_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
             referencedRelation: "dossiers"
             referencedColumns: ["id"]
           },
@@ -2903,13 +2724,6 @@ export type Database = {
             foreignKeyName: "event_attendees_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "event_attendees_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["id"]
           },
@@ -2917,46 +2731,41 @@ export type Database = {
       }
       event_participants: {
         Row: {
-          created_at: string | null
-          event_id: string | null
+          attendance_status: string
+          created_at: string
+          event_id: string
           id: string
-          role: string | null
-          user_id: string | null
+          notes: string | null
+          participant_id: string
+          participant_type: string
+          role: string
         }
         Insert: {
-          created_at?: string | null
-          event_id?: string | null
+          attendance_status?: string
+          created_at?: string
+          event_id: string
           id?: string
-          role?: string | null
-          user_id?: string | null
+          notes?: string | null
+          participant_id: string
+          participant_type: string
+          role: string
         }
         Update: {
-          created_at?: string | null
-          event_id?: string | null
+          attendance_status?: string
+          created_at?: string
+          event_id?: string
           id?: string
-          role?: string | null
-          user_id?: string | null
+          notes?: string | null
+          participant_id?: string
+          participant_type?: string
+          role?: string
         }
         Relationships: [
           {
             foreignKeyName: "event_participants_event_id_fkey"
             columns: ["event_id"]
             isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "event_participants_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "event_participants_user_id_fkey"
-            columns: ["user_id"]
-            isOneToOne: false
-            referencedRelation: "users"
+            referencedRelation: "calendar_events"
             referencedColumns: ["id"]
           },
         ]
@@ -3053,7 +2862,7 @@ export type Database = {
           id: string
           notification_preference: string
           organization: string | null
-          search_vector: unknown | null
+          search_vector: unknown
           updated_at: string | null
         }
         Insert: {
@@ -3063,7 +2872,7 @@ export type Database = {
           id?: string
           notification_preference?: string
           organization?: string | null
-          search_vector?: unknown | null
+          search_vector?: unknown
           updated_at?: string | null
         }
         Update: {
@@ -3073,7 +2882,7 @@ export type Database = {
           id?: string
           notification_preference?: string
           organization?: string | null
-          search_vector?: unknown | null
+          search_vector?: unknown
           updated_at?: string | null
         }
         Relationships: []
@@ -3191,129 +3000,45 @@ export type Database = {
           tenant_id?: string
           years_participated?: number[] | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "forum_participants_forum_id_fkey"
-            columns: ["forum_id"]
-            isOneToOne: false
-            referencedRelation: "forum_details"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "forum_participants_forum_id_fkey"
-            columns: ["forum_id"]
-            isOneToOne: false
-            referencedRelation: "forums"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       forums: {
         Row: {
-          agenda: Json | null
-          capacity: number | null
-          created_at: string
-          created_by: string
-          deleted_at: string | null
-          event_id: string | null
-          frequency: Database["public"]["Enums"]["forum_frequency"]
+          agenda_url: string | null
+          currency: string | null
           id: string
-          is_deleted: boolean
-          last_modified_by: string
-          name_ar: string
-          name_en: string
-          next_event: Json | null
-          organizing_body: string | null
-          participation_history: Json | null
-          priority_level: Database["public"]["Enums"]["priority_level"] | null
-          registration_deadline: string | null
-          registration_required: boolean | null
-          speakers: Json | null
-          tenant_id: string
-          themes: string[] | null
-          type: Database["public"]["Enums"]["forum_type"]
-          updated_at: string
-          version: number
+          keynote_speakers: Json | null
+          live_stream_url: string | null
+          number_of_sessions: number | null
+          registration_fee: number | null
+          sponsors: Json | null
         }
         Insert: {
-          agenda?: Json | null
-          capacity?: number | null
-          created_at?: string
-          created_by: string
-          deleted_at?: string | null
-          event_id?: string | null
-          frequency: Database["public"]["Enums"]["forum_frequency"]
-          id?: string
-          is_deleted?: boolean
-          last_modified_by: string
-          name_ar: string
-          name_en: string
-          next_event?: Json | null
-          organizing_body?: string | null
-          participation_history?: Json | null
-          priority_level?: Database["public"]["Enums"]["priority_level"] | null
-          registration_deadline?: string | null
-          registration_required?: boolean | null
-          speakers?: Json | null
-          tenant_id: string
-          themes?: string[] | null
-          type: Database["public"]["Enums"]["forum_type"]
-          updated_at?: string
-          version?: number
+          agenda_url?: string | null
+          currency?: string | null
+          id: string
+          keynote_speakers?: Json | null
+          live_stream_url?: string | null
+          number_of_sessions?: number | null
+          registration_fee?: number | null
+          sponsors?: Json | null
         }
         Update: {
-          agenda?: Json | null
-          capacity?: number | null
-          created_at?: string
-          created_by?: string
-          deleted_at?: string | null
-          event_id?: string | null
-          frequency?: Database["public"]["Enums"]["forum_frequency"]
+          agenda_url?: string | null
+          currency?: string | null
           id?: string
-          is_deleted?: boolean
-          last_modified_by?: string
-          name_ar?: string
-          name_en?: string
-          next_event?: Json | null
-          organizing_body?: string | null
-          participation_history?: Json | null
-          priority_level?: Database["public"]["Enums"]["priority_level"] | null
-          registration_deadline?: string | null
-          registration_required?: boolean | null
-          speakers?: Json | null
-          tenant_id?: string
-          themes?: string[] | null
-          type?: Database["public"]["Enums"]["forum_type"]
-          updated_at?: string
-          version?: number
+          keynote_speakers?: Json | null
+          live_stream_url?: string | null
+          number_of_sessions?: number | null
+          registration_fee?: number | null
+          sponsors?: Json | null
         }
         Relationships: [
           {
-            foreignKeyName: "forums_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "forums_event_id_fkey"
-            columns: ["event_id"]
-            isOneToOne: false
-            referencedRelation: "events"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "forums_organizing_body_fkey"
-            columns: ["organizing_body"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "forums_organizing_body_fkey"
-            columns: ["organizing_body"]
-            isOneToOne: false
-            referencedRelation: "organizations"
+            foreignKeyName: "forums_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "dossiers"
             referencedColumns: ["id"]
           },
         ]
@@ -3667,7 +3392,7 @@ export type Database = {
           processed_at: string | null
           published_at: string | null
           relevance_score: number | null
-          search_vector: unknown | null
+          search_vector: unknown
           source_id: string
           summary: string | null
           title: string
@@ -3685,7 +3410,7 @@ export type Database = {
           processed_at?: string | null
           published_at?: string | null
           relevance_score?: number | null
-          search_vector?: unknown | null
+          search_vector?: unknown
           source_id: string
           summary?: string | null
           title: string
@@ -3703,7 +3428,7 @@ export type Database = {
           processed_at?: string | null
           published_at?: string | null
           relevance_score?: number | null
-          search_vector?: unknown | null
+          search_vector?: unknown
           source_id?: string
           summary?: string | null
           title?: string
@@ -3816,20 +3541,6 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "intelligence_reports_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "countries"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "intelligence_reports_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["country_id"]
-          },
-          {
             foreignKeyName: "intelligence_reports_created_by_fkey"
             columns: ["created_by"]
             isOneToOne: false
@@ -3841,20 +3552,6 @@ export type Database = {
             columns: ["deleted_by"]
             isOneToOne: false
             referencedRelation: "users"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "intelligence_reports_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "intelligence_reports_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
             referencedColumns: ["id"]
           },
         ]
@@ -3869,7 +3566,7 @@ export type Database = {
           impact_assessment: string | null
           logged_at: string | null
           logged_by: string
-          search_vector: unknown | null
+          search_vector: unknown
           signal_type: string
           source: string
           source_reliability: number | null
@@ -3889,7 +3586,7 @@ export type Database = {
           impact_assessment?: string | null
           logged_at?: string | null
           logged_by: string
-          search_vector?: unknown | null
+          search_vector?: unknown
           signal_type: string
           source: string
           source_reliability?: number | null
@@ -3909,7 +3606,7 @@ export type Database = {
           impact_assessment?: string | null
           logged_at?: string | null
           logged_by?: string
-          search_vector?: unknown | null
+          search_vector?: unknown
           signal_type?: string
           source?: string
           source_reliability?: number | null
@@ -3920,15 +3617,7 @@ export type Database = {
           validated_at?: string | null
           validated_by?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "intelligence_signals_dossier_id_fkey"
-            columns: ["dossier_id"]
-            isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       intelligence_sources: {
         Row: {
@@ -4033,15 +3722,7 @@ export type Database = {
           role?: string | null
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "key_contacts_dossier_id_fkey"
-            columns: ["dossier_id"]
-            isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       link_audit_logs: {
         Row: {
@@ -4164,6 +3845,8 @@ export type Database = {
           parties: Json | null
           performance_metrics: Json | null
           reference_number: string
+          signatory_1_dossier_id: string | null
+          signatory_2_dossier_id: string | null
           tenant_id: string
           title: string
           title_ar: string
@@ -4196,6 +3879,8 @@ export type Database = {
           parties?: Json | null
           performance_metrics?: Json | null
           reference_number: string
+          signatory_1_dossier_id?: string | null
+          signatory_2_dossier_id?: string | null
           tenant_id: string
           title: string
           title_ar: string
@@ -4228,6 +3913,8 @@ export type Database = {
           parties?: Json | null
           performance_metrics?: Json | null
           reference_number?: string
+          signatory_1_dossier_id?: string | null
+          signatory_2_dossier_id?: string | null
           tenant_id?: string
           title?: string
           title_ar?: string
@@ -4237,31 +3924,17 @@ export type Database = {
         }
         Relationships: [
           {
-            foreignKeyName: "mous_country_id_fkey"
-            columns: ["country_id"]
+            foreignKeyName: "mous_signatory_1_dossier_id_fkey"
+            columns: ["signatory_1_dossier_id"]
             isOneToOne: false
-            referencedRelation: "countries"
+            referencedRelation: "dossiers"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "mous_country_id_fkey"
-            columns: ["country_id"]
+            foreignKeyName: "mous_signatory_2_dossier_id_fkey"
+            columns: ["signatory_2_dossier_id"]
             isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["country_id"]
-          },
-          {
-            foreignKeyName: "mous_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "mous_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
+            referencedRelation: "dossiers"
             referencedColumns: ["id"]
           },
         ]
@@ -4325,20 +3998,6 @@ export type Database = {
           user_id?: string | null
         }
         Relationships: [
-          {
-            foreignKeyName: "organization_members_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "organization_members_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
           {
             foreignKeyName: "organization_members_user_id_fkey"
             columns: ["user_id"]
@@ -4421,102 +4080,65 @@ export type Database = {
       }
       organizations: {
         Row: {
-          code: string
-          committees: Json | null
-          country_id: string | null
-          created_at: string
-          created_by: string
-          deleted_at: string | null
-          description: string | null
-          headquarters_country: string
+          address_ar: string | null
+          address_en: string | null
+          email: string | null
+          established_date: string | null
+          headquarters_country_id: string | null
           id: string
-          is_deleted: boolean
-          last_modified_by: string
-          membership: Json
-          name_ar: string
-          name_en: string
-          parent_organization_id: string | null
-          reporting_requirements: Json | null
-          status: Database["public"]["Enums"]["organization_status"]
-          tenant_id: string
-          type: Database["public"]["Enums"]["organization_type"]
-          updated_at: string
-          version: number
+          logo_url: string | null
+          org_code: string | null
+          org_type: string
+          parent_org_id: string | null
+          phone: string | null
           website: string | null
         }
         Insert: {
-          code: string
-          committees?: Json | null
-          country_id?: string | null
-          created_at?: string
-          created_by: string
-          deleted_at?: string | null
-          description?: string | null
-          headquarters_country: string
-          id?: string
-          is_deleted?: boolean
-          last_modified_by: string
-          membership?: Json
-          name_ar: string
-          name_en: string
-          parent_organization_id?: string | null
-          reporting_requirements?: Json | null
-          status?: Database["public"]["Enums"]["organization_status"]
-          tenant_id: string
-          type: Database["public"]["Enums"]["organization_type"]
-          updated_at?: string
-          version?: number
+          address_ar?: string | null
+          address_en?: string | null
+          email?: string | null
+          established_date?: string | null
+          headquarters_country_id?: string | null
+          id: string
+          logo_url?: string | null
+          org_code?: string | null
+          org_type: string
+          parent_org_id?: string | null
+          phone?: string | null
           website?: string | null
         }
         Update: {
-          code?: string
-          committees?: Json | null
-          country_id?: string | null
-          created_at?: string
-          created_by?: string
-          deleted_at?: string | null
-          description?: string | null
-          headquarters_country?: string
+          address_ar?: string | null
+          address_en?: string | null
+          email?: string | null
+          established_date?: string | null
+          headquarters_country_id?: string | null
           id?: string
-          is_deleted?: boolean
-          last_modified_by?: string
-          membership?: Json
-          name_ar?: string
-          name_en?: string
-          parent_organization_id?: string | null
-          reporting_requirements?: Json | null
-          status?: Database["public"]["Enums"]["organization_status"]
-          tenant_id?: string
-          type?: Database["public"]["Enums"]["organization_type"]
-          updated_at?: string
-          version?: number
+          logo_url?: string | null
+          org_code?: string | null
+          org_type?: string
+          parent_org_id?: string | null
+          phone?: string | null
           website?: string | null
         }
         Relationships: [
           {
-            foreignKeyName: "organizations_country_id_fkey"
-            columns: ["country_id"]
+            foreignKeyName: "organizations_headquarters_country_id_fkey"
+            columns: ["headquarters_country_id"]
             isOneToOne: false
             referencedRelation: "countries"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "organizations_country_id_fkey"
-            columns: ["country_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["country_id"]
+            foreignKeyName: "organizations_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "dossiers"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "organizations_parent_org_id_fkey"
-            columns: ["parent_organization_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "organizations_parent_org_id_fkey"
-            columns: ["parent_organization_id"]
+            columns: ["parent_org_id"]
             isOneToOne: false
             referencedRelation: "organizations"
             referencedColumns: ["id"]
@@ -4573,6 +4195,67 @@ export type Database = {
           valid_until?: string
         }
         Relationships: []
+      }
+      persons: {
+        Row: {
+          biography_ar: string | null
+          biography_en: string | null
+          email: string | null
+          id: string
+          nationality_country_id: string | null
+          organization_id: string | null
+          phone: string | null
+          photo_url: string | null
+          title_ar: string | null
+          title_en: string | null
+        }
+        Insert: {
+          biography_ar?: string | null
+          biography_en?: string | null
+          email?: string | null
+          id: string
+          nationality_country_id?: string | null
+          organization_id?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          title_ar?: string | null
+          title_en?: string | null
+        }
+        Update: {
+          biography_ar?: string | null
+          biography_en?: string | null
+          email?: string | null
+          id?: string
+          nationality_country_id?: string | null
+          organization_id?: string | null
+          phone?: string | null
+          photo_url?: string | null
+          title_ar?: string | null
+          title_en?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "persons_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "dossiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "persons_nationality_country_id_fkey"
+            columns: ["nationality_country_id"]
+            isOneToOne: false
+            referencedRelation: "countries"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "persons_organization_id_fkey"
+            columns: ["organization_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       position_audience_groups: {
         Row: {
@@ -4708,25 +4391,28 @@ export type Database = {
       }
       position_dossier_links: {
         Row: {
-          added_at: string | null
-          added_by: string | null
+          created_at: string
+          created_by: string | null
           dossier_id: string
+          id: string
           link_type: string
           notes: string | null
           position_id: string
         }
         Insert: {
-          added_at?: string | null
-          added_by?: string | null
+          created_at?: string
+          created_by?: string | null
           dossier_id: string
-          link_type?: string
+          id?: string
+          link_type: string
           notes?: string | null
           position_id: string
         }
         Update: {
-          added_at?: string | null
-          added_by?: string | null
+          created_at?: string
+          created_by?: string | null
           dossier_id?: string
+          id?: string
           link_type?: string
           notes?: string | null
           position_id?: string
@@ -4803,15 +4489,7 @@ export type Database = {
           suggestion_reasoning?: Json | null
           user_action?: string | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "position_suggestions_engagement_id_fkey"
-            columns: ["engagement_id"]
-            isOneToOne: false
-            referencedRelation: "engagements"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       position_types: {
         Row: {
@@ -5212,22 +4890,7 @@ export type Database = {
           updated_at?: string
           user_id?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "profiles_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "event_details"
-            referencedColumns: ["organizer_id"]
-          },
-          {
-            foreignKeyName: "profiles_organization_id_fkey"
-            columns: ["organization_id"]
-            isOneToOne: false
-            referencedRelation: "organizations"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       query_embeddings: {
         Row: {
@@ -5551,7 +5214,7 @@ export type Database = {
           contact_id: string
           created_at: string | null
           id: string
-          ip_address: unknown | null
+          ip_address: unknown
           order_index: number
           request_id: string
           signature_data: string | null
@@ -5563,7 +5226,7 @@ export type Database = {
           contact_id: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           order_index: number
           request_id: string
           signature_data?: string | null
@@ -5575,7 +5238,7 @@ export type Database = {
           contact_id?: string
           created_at?: string | null
           id?: string
-          ip_address?: unknown | null
+          ip_address?: unknown
           order_index?: number
           request_id?: string
           signature_data?: string | null
@@ -5989,15 +5652,7 @@ export type Database = {
           work_item_type?: string | null
           workflow_stage?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "tasks_engagement_id_fkey"
-            columns: ["engagement_id"]
-            isOneToOne: false
-            referencedRelation: "engagements"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       thematic_area_experts: {
         Row: {
@@ -6111,6 +5766,39 @@ export type Database = {
             columns: ["parent_area_id"]
             isOneToOne: false
             referencedRelation: "thematic_areas"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      themes: {
+        Row: {
+          id: string
+          parent_theme_id: string | null
+          theme_category: string
+        }
+        Insert: {
+          id: string
+          parent_theme_id?: string | null
+          theme_category: string
+        }
+        Update: {
+          id?: string
+          parent_theme_id?: string | null
+          theme_category?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "themes_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "dossiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "themes_parent_theme_id_fkey"
+            columns: ["parent_theme_id"]
+            isOneToOne: false
+            referencedRelation: "themes"
             referencedColumns: ["id"]
           },
         ]
@@ -6351,7 +6039,7 @@ export type Database = {
           password_hash: string | null
           phone: string | null
           role: string
-          search_vector: unknown | null
+          search_vector: unknown
           timezone: string | null
           updated_at: string
           updated_by: string | null
@@ -6383,7 +6071,7 @@ export type Database = {
           password_hash?: string | null
           phone?: string | null
           role?: string
-          search_vector?: unknown | null
+          search_vector?: unknown
           timezone?: string | null
           updated_at?: string
           updated_by?: string | null
@@ -6415,7 +6103,7 @@ export type Database = {
           password_hash?: string | null
           phone?: string | null
           role?: string
-          search_vector?: unknown | null
+          search_vector?: unknown
           timezone?: string | null
           updated_at?: string
           updated_by?: string | null
@@ -6584,6 +6272,51 @@ export type Database = {
           },
         ]
       }
+      working_groups: {
+        Row: {
+          disbandment_date: string | null
+          established_date: string | null
+          id: string
+          lead_org_id: string | null
+          mandate_ar: string | null
+          mandate_en: string | null
+          wg_status: string
+        }
+        Insert: {
+          disbandment_date?: string | null
+          established_date?: string | null
+          id: string
+          lead_org_id?: string | null
+          mandate_ar?: string | null
+          mandate_en?: string | null
+          wg_status?: string
+        }
+        Update: {
+          disbandment_date?: string | null
+          established_date?: string | null
+          id?: string
+          lead_org_id?: string | null
+          mandate_ar?: string | null
+          mandate_en?: string | null
+          wg_status?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "working_groups_id_fkey"
+            columns: ["id"]
+            isOneToOne: true
+            referencedRelation: "dossiers"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "working_groups_lead_org_id_fkey"
+            columns: ["lead_org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       workspace_members: {
         Row: {
           active: boolean | null
@@ -6697,15 +6430,7 @@ export type Database = {
           pending: number | null
           total_commitments: number | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "aa_commitments_dossier_id_fkey"
-            columns: ["dossier_id"]
-            isOneToOne: false
-            referencedRelation: "dossiers"
-            referencedColumns: ["id"]
-          },
-        ]
+        Relationships: []
       }
       audit_logs_active: {
         Row: {
@@ -6751,55 +6476,10 @@ export type Database = {
           },
         ]
       }
-      event_details: {
-        Row: {
-          country_code: string | null
-          country_id: string | null
-          country_name_ar: string | null
-          country_name_en: string | null
-          end_datetime: string | null
-          id: string | null
-          is_virtual: boolean | null
-          location_ar: string | null
-          location_en: string | null
-          max_participants: number | null
-          organizer_id: string | null
-          organizer_name_ar: string | null
-          organizer_name_en: string | null
-          start_datetime: string | null
-          status: string | null
-          title_ar: string | null
-          title_en: string | null
-          type: string | null
-          venue_ar: string | null
-          venue_en: string | null
-          virtual_link: string | null
-        }
-        Relationships: []
-      }
-      forum_details: {
-        Row: {
-          end_datetime: string | null
-          id: string | null
-          is_virtual: boolean | null
-          location_ar: string | null
-          location_en: string | null
-          max_participants: number | null
-          number_of_sessions: number | null
-          organizer: Json | null
-          start_datetime: string | null
-          status: string | null
-          title_ar: string | null
-          title_en: string | null
-          venue_ar: string | null
-          venue_en: string | null
-        }
-        Relationships: []
-      }
       link_audit_logs_archival_eligible: {
         Row: {
           action: string | null
-          age: unknown | null
+          age: unknown
           details: Json | null
           entity_id: string | null
           entity_type: string | null
@@ -6898,10 +6578,7 @@ export type Database = {
         Args: { algorithm: string; secret: string; signables: string }
         Returns: string
       }
-      binary_quantize: {
-        Args: { "": string } | { "": unknown }
-        Returns: unknown
-      }
+      archive_dossier: { Args: { dossier_id: string }; Returns: undefined }
       calculate_consistency_score: {
         Args: { p_thematic_area_id: string }
         Returns: number
@@ -6910,10 +6587,7 @@ export type Database = {
         Args: { ticket1_id: string; ticket2_id: string }
         Returns: number
       }
-      calculate_next_scan_time: {
-        Args: { frequency: string }
-        Returns: string
-      }
+      calculate_next_scan_time: { Args: { frequency: string }; Returns: string }
       calculate_priority: {
         Args: {
           p_sensitivity: Database["public"]["Enums"]["sensitivity_level"]
@@ -6925,10 +6599,7 @@ export type Database = {
         Args: { text1: string; text2: string }
         Returns: number
       }
-      can_edit_dossier: {
-        Args: { dossier_id: string }
-        Returns: boolean
-      }
+      can_edit_dossier: { Args: { dossier_id: string }; Returns: boolean }
       check_clearance_level: {
         Args: { p_entity_id: string; p_entity_type: string; p_user_id: string }
         Returns: boolean
@@ -6947,16 +6618,17 @@ export type Database = {
         }[]
       }
       check_sla_breaches: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           breach_count: number
           ticket_count: number
         }[]
       }
-      cleanup_expired_rate_limits: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
+      check_user_is_contributor: {
+        Args: { task_uuid: string; user_uuid: string }
+        Returns: boolean
       }
+      cleanup_expired_rate_limits: { Args: never; Returns: undefined }
       convert_ticket_to_artifact: {
         Args: {
           p_additional_data?: Json
@@ -6968,10 +6640,7 @@ export type Database = {
         }
         Returns: Json
       }
-      cosine_similarity: {
-        Args: { v1: string; v2: string }
-        Returns: number
-      }
+      cosine_similarity: { Args: { v1: string; v2: string }; Returns: number }
       create_document_version: {
         Args: {
           p_description_ar: string
@@ -6988,10 +6657,7 @@ export type Database = {
         Args: { p_consistency_id: string; p_thematic_area_id: string }
         Returns: undefined
       }
-      euclidean_distance: {
-        Args: { v1: string; v2: string }
-        Returns: number
-      }
+      euclidean_distance: { Args: { v1: string; v2: string }; Returns: number }
       find_matching_sla_policy: {
         Args: {
           p_priority: Database["public"]["Enums"]["priority_level"]
@@ -7011,10 +6677,7 @@ export type Database = {
           similarity_score: number
         }[]
       }
-      generate_content_hash: {
-        Args: { p_content: string }
-        Returns: string
-      }
+      generate_content_hash: { Args: { p_content: string }; Returns: string }
       generate_embedding: {
         Args: { input_text: string; model_name?: string }
         Returns: string
@@ -7023,13 +6686,31 @@ export type Database = {
         Args: { p_file_name: string; p_ticket_id: string }
         Returns: string
       }
-      generate_ticket_number: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
+      generate_ticket_number: { Args: never; Returns: string }
       get_assignment_progress: {
         Args: { p_assignment_id: string }
         Returns: number
+      }
+      get_bidirectional_relationships: {
+        Args: {
+          dossier_id_param: string
+          include_inactive?: boolean
+          relationship_type_filter?: string
+        }
+        Returns: {
+          direction: string
+          effective_from: string
+          effective_to: string
+          notes_ar: string
+          notes_en: string
+          related_dossier_id: string
+          related_dossier_type: string
+          related_name_ar: string
+          related_name_en: string
+          relationship_id: string
+          relationship_type: string
+          status: string
+        }[]
       }
       get_comment_reactions: {
         Args: { p_comment_id: string }
@@ -7073,8 +6754,20 @@ export type Database = {
           title: string
         }[]
       }
+      get_relationship_path: {
+        Args: {
+          max_depth?: number
+          source_dossier_id: string
+          target_dossier_id: string
+        }
+        Returns: {
+          path: string[]
+          path_length: number
+          relationship_path: string[]
+        }[]
+      }
       get_sla_breached_tickets: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           breach_time: string
           minutes_overdue: number
@@ -7086,134 +6779,31 @@ export type Database = {
           title: string
         }[]
       }
-      get_system_user_id: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_user_clearance_level: {
-        Args: { user_id: string }
-        Returns: number
-      }
+      get_system_user_id: { Args: never; Returns: string }
+      get_user_clearance_level: { Args: { user_id: string }; Returns: number }
       get_user_max_sensitivity: {
         Args: { p_user_id: string }
         Returns: Database["public"]["Enums"]["sensitivity_level"]
       }
-      get_user_role: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_user_unit: {
-        Args: Record<PropertyKey, never>
-        Returns: string
-      }
-      get_user_units: {
-        Args: { p_user_id: string }
-        Returns: string[]
-      }
-      gtrgm_compress: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      gtrgm_decompress: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      gtrgm_in: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      gtrgm_options: {
-        Args: { "": unknown }
-        Returns: undefined
-      }
-      gtrgm_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      halfvec_avg: {
-        Args: { "": number[] }
-        Returns: unknown
-      }
-      halfvec_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      halfvec_send: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      halfvec_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
-      }
-      hnsw_bit_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnsw_halfvec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnsw_sparsevec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      hnswhandler: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
+      get_user_role: { Args: never; Returns: string }
+      get_user_unit: { Args: never; Returns: string }
+      get_user_units: { Args: { p_user_id: string }; Returns: string[] }
       inner_product_similarity: {
         Args: { v1: string; v2: string }
         Returns: number
       }
-      invoke_update_aging_buckets: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      is_admin: {
-        Args: Record<PropertyKey, never> | { p_user_id: string }
-        Returns: boolean
-      }
-      is_admin_or_manager: {
-        Args: { user_id: string }
-        Returns: boolean
-      }
+      invoke_update_aging_buckets: { Args: never; Returns: undefined }
+      is_admin:
+        | { Args: { p_user_id: string }; Returns: boolean }
+        | { Args: never; Returns: boolean }
+      is_admin_or_manager: { Args: { user_id: string }; Returns: boolean }
       is_assigned_to_dossier: {
         Args: { dossier_uuid: string }
         Returns: boolean
       }
-      is_auditor: {
-        Args: { p_user_id: string }
-        Returns: boolean
-      }
-      is_manager: {
-        Args: Record<PropertyKey, never>
-        Returns: boolean
-      }
-      is_supervisor: {
-        Args: { p_user_id: string }
-        Returns: boolean
-      }
-      ivfflat_bit_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      ivfflat_halfvec_support: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      ivfflathandler: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      l2_norm: {
-        Args: { "": unknown } | { "": unknown }
-        Returns: number
-      }
-      l2_normalize: {
-        Args: { "": string } | { "": unknown } | { "": unknown }
-        Returns: unknown
-      }
+      is_auditor: { Args: { p_user_id: string }; Returns: boolean }
+      is_manager: { Args: never; Returns: boolean }
+      is_supervisor: { Args: { p_user_id: string }; Returns: boolean }
       log_audit_event: {
         Args: {
           p_action: string
@@ -7238,7 +6828,7 @@ export type Database = {
         Returns: undefined
       }
       manual_update_aging_buckets: {
-        Args: Record<PropertyKey, never>
+        Args: never
         Returns: {
           message: string
           total_assignments: number
@@ -7276,22 +6866,11 @@ export type Database = {
         }
         Returns: Json
       }
-      normalize_vector: {
-        Args: { v: string }
-        Returns: string
-      }
-      process_stale_queue_items: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      refresh_aa_commitment_summary: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      refresh_organization_summary: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      normalize_vector: { Args: { v: string }; Returns: string }
+      process_stale_queue_items: { Args: never; Returns: undefined }
+      refresh_aa_commitment_summary: { Args: never; Returns: undefined }
+      refresh_organization_summary: { Args: never; Returns: undefined }
+      restore_dossier: { Args: { dossier_id: string }; Returns: undefined }
       rollback_ticket_conversion: {
         Args: {
           p_correlation_id?: string
@@ -7397,42 +6976,14 @@ export type Database = {
           title: string
         }[]
       }
-      set_limit: {
-        Args: { "": number }
-        Returns: number
-      }
-      show_limit: {
-        Args: Record<PropertyKey, never>
-        Returns: number
-      }
-      show_trgm: {
-        Args: { "": string }
-        Returns: string[]
-      }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       sign: {
         Args: { algorithm?: string; payload: Json; secret: string }
         Returns: string
       }
-      sla_check_and_escalate: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      sparsevec_out: {
-        Args: { "": unknown }
-        Returns: unknown
-      }
-      sparsevec_send: {
-        Args: { "": unknown }
-        Returns: string
-      }
-      sparsevec_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
-      }
-      start_sla_tracking: {
-        Args: { p_ticket_id: string }
-        Returns: string
-      }
+      sla_check_and_escalate: { Args: never; Returns: undefined }
+      start_sla_tracking: { Args: { p_ticket_id: string }; Returns: string }
       store_ticket_embedding: {
         Args: {
           p_embedding: string
@@ -7442,42 +6993,35 @@ export type Database = {
         }
         Returns: string
       }
-      sync_existing_auth_users: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
+      sync_existing_auth_users: { Args: never; Returns: undefined }
+      system_operation: { Args: { p_operation: string }; Returns: boolean }
+      traverse_relationship_graph: {
+        Args: {
+          max_degrees?: number
+          relationship_type_filter?: string
+          start_dossier_id: string
+        }
+        Returns: {
+          degree: number
+          dossier_id: string
+          dossier_type: string
+          name_ar: string
+          name_en: string
+          path: string[]
+          relationship_path: string[]
+          status: string
+        }[]
       }
-      system_operation: {
-        Args: { p_operation: string }
-        Returns: boolean
-      }
-      try_cast_double: {
-        Args: { inp: string }
-        Returns: number
-      }
-      update_overdue_aa_commitments: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      update_overdue_commitments: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
+      try_cast_double: { Args: { inp: string }; Returns: number }
+      update_overdue_aa_commitments: { Args: never; Returns: undefined }
+      update_overdue_commitments: { Args: never; Returns: undefined }
       update_relationship_health: {
         Args: { p_organization_id: string }
         Returns: undefined
       }
-      update_table_statistics: {
-        Args: Record<PropertyKey, never>
-        Returns: undefined
-      }
-      url_decode: {
-        Args: { data: string }
-        Returns: string
-      }
-      url_encode: {
-        Args: { data: string }
-        Returns: string
-      }
+      update_table_statistics: { Args: never; Returns: undefined }
+      url_decode: { Args: { data: string }; Returns: string }
+      url_encode: { Args: { data: string }; Returns: string }
       user_can_view_assignment: {
         Args: { assignment_id: string; user_id: string }
         Returns: boolean
@@ -7485,30 +7029,6 @@ export type Database = {
       user_has_role: {
         Args: { p_role: string; p_user_id: string }
         Returns: boolean
-      }
-      vector_avg: {
-        Args: { "": number[] }
-        Returns: string
-      }
-      vector_dims: {
-        Args: { "": string } | { "": unknown }
-        Returns: number
-      }
-      vector_norm: {
-        Args: { "": string }
-        Returns: number
-      }
-      vector_out: {
-        Args: { "": string }
-        Returns: unknown
-      }
-      vector_send: {
-        Args: { "": string }
-        Returns: string
-      }
-      vector_typmod_in: {
-        Args: { "": unknown[] }
-        Returns: number
       }
       verify: {
         Args: { algorithm?: string; secret: string; token: string }

@@ -1,4 +1,5 @@
 // T048: PATCH /calendar/{entryId} Edge Function (Update calendar entry)
+// Updated for 026-unified-dossier-architecture: Uses calendar_events and event_participants
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
@@ -41,13 +42,8 @@ serve(async (req) => {
       description_ar,
       start_datetime,
       end_datetime,
-      all_day,
       location,
-      recurrence_pattern,
-      linked_item_type,
-      linked_item_id,
-      attendee_ids,
-      reminder_minutes,
+      participants,
     } = body;
 
     const supabaseClient = createClient(
@@ -67,31 +63,30 @@ serve(async (req) => {
 
     // Build update object (only include provided fields)
     const updates: Record<string, any> = {};
-    if (entry_type !== undefined) updates.entry_type = entry_type;
+    if (entry_type !== undefined) {
+      updates.event_type = entry_type === 'internal_meeting' ? 'main_event' : 'session';
+    }
     if (title_en !== undefined) updates.title_en = title_en;
     if (title_ar !== undefined) updates.title_ar = title_ar;
     if (description_en !== undefined) updates.description_en = description_en;
     if (description_ar !== undefined) updates.description_ar = description_ar;
     if (start_datetime !== undefined) updates.start_datetime = start_datetime;
     if (end_datetime !== undefined) updates.end_datetime = end_datetime;
-    if (all_day !== undefined) updates.all_day = all_day;
-    if (location !== undefined) updates.location = location;
-    if (recurrence_pattern !== undefined) updates.recurrence_pattern = recurrence_pattern;
-    if (linked_item_type !== undefined) updates.linked_item_type = linked_item_type;
-    if (linked_item_id !== undefined) updates.linked_item_id = linked_item_id;
-    if (attendee_ids !== undefined) updates.attendee_ids = attendee_ids;
-    if (reminder_minutes !== undefined) updates.reminder_minutes = reminder_minutes;
+    if (location !== undefined) {
+      updates.location_en = location;
+      updates.location_ar = location;
+    }
 
-    if (Object.keys(updates).length === 0) {
+    if (Object.keys(updates).length === 0 && !participants) {
       return new Response(
         JSON.stringify({ error: 'No fields to update' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
 
-    // Update calendar entry
-    const { data: entry, error: updateError } = await supabaseClient
-      .from('calendar_entries')
+    // Update calendar event
+    const { data: event, error: updateError } = await supabaseClient
+      .from('calendar_events')
       .update(updates)
       .eq('id', entryId)
       .select()
@@ -101,22 +96,50 @@ serve(async (req) => {
       // Check if it's a permission error
       if (updateError.code === '42501') {
         return new Response(
-          JSON.stringify({ error: 'Forbidden: You do not have permission to update this calendar entry' }),
+          JSON.stringify({ error: 'Forbidden: You do not have permission to update this calendar event' }),
           { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       // Check if entry not found
       if (updateError.code === 'PGRST116') {
         return new Response(
-          JSON.stringify({ error: 'Calendar entry not found' }),
+          JSON.stringify({ error: 'Calendar event not found' }),
           { status: 404, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
       throw updateError;
     }
 
+    // Update participants if provided
+    if (participants !== undefined) {
+      // Delete existing participants
+      await supabaseClient
+        .from('event_participants')
+        .delete()
+        .eq('event_id', entryId);
+
+      // Add new participants
+      if (participants.length > 0) {
+        const participantInserts = participants.map((p: any) => ({
+          event_id: entryId,
+          participant_type: p.participant_type,
+          participant_id: p.participant_id,
+          role: 'attendee',
+          attendance_status: 'invited',
+        }));
+
+        const { error: participantsError } = await supabaseClient
+          .from('event_participants')
+          .insert(participantInserts);
+
+        if (participantsError) {
+          console.error('Failed to update participants:', participantsError);
+        }
+      }
+    }
+
     return new Response(
-      JSON.stringify(entry),
+      JSON.stringify(event),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
 

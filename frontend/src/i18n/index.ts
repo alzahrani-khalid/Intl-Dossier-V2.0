@@ -14,7 +14,9 @@ import enAssignments from './en/assignments.json'
 import arAssignments from './ar/assignments.json'
 import enForums from './en/forums.json'
 import arForums from './ar/forums.json'
-// Force reload - updated 2025-10-14 - v2
+import enContacts from './en/contacts.json'
+import arContacts from './ar/contacts.json'
+// Force reload - updated 2025-10-14 - v3
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = typeof supportedLanguages[number]
@@ -27,6 +29,7 @@ const resources = {
     positions: enPositions,
     assignments: enAssignments,
     forums: enForums,
+    contacts: enContacts,
   },
   ar: {
     translation: arCommon,
@@ -35,6 +38,7 @@ const resources = {
     positions: arPositions,
     assignments: arAssignments,
     forums: arForums,
+    contacts: arContacts,
   },
 }
 

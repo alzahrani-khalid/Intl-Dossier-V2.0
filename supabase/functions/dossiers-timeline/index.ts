@@ -150,44 +150,22 @@ serve(async (req) => {
       );
     }
 
-    // Query all event sources in parallel
-    const [engagementsResult, calendarResult] = await Promise.all([
-      // 1. Engagements - uses single-language columns
-      supabaseClient
-        .from("engagements")
-        .select("id, title, description, engagement_date, engagement_type")
-        .eq("dossier_id", dossierId)
-        .not("engagement_date", "is", null),
-
-      // 2. Calendar Entries - has proper bilingual columns
-      supabaseClient
-        .from("calendar_entries")
-        .select("id, title_en, title_ar, description_en, description_ar, entry_type, event_date, location, status")
-        .eq("dossier_id", dossierId),
-    ]);
-
-    // Note: MoUs and Positions don't have direct dossier_id foreign keys
-    // They would need to be queried through position_dossier_links or country/organization relationships
-    const mousResult = { data: [], error: null };
-    const positionsResult = { data: [], error: null };
+    // Query calendar entries only (engagements is an extension table, not a timeline source)
+    const calendarResult = await supabaseClient
+      .from("calendar_entries")
+      .select("id, title_en, title_ar, description_en, description_ar, entry_type, event_date, location, status")
+      .eq("dossier_id", dossierId);
 
     // Check for query errors
-    if (engagementsResult.error || calendarResult.error || mousResult.error || positionsResult.error) {
-      const errors = [
-        engagementsResult.error,
-        calendarResult.error,
-        mousResult.error,
-        positionsResult.error,
-      ].filter(Boolean);
-
-      console.error("Error fetching timeline events:", errors);
+    if (calendarResult.error) {
+      console.error("Error fetching timeline events:", calendarResult.error);
       return new Response(
         JSON.stringify({
           error: {
             code: "QUERY_ERROR",
             message_en: "Failed to fetch timeline events",
             message_ar: "فشل في جلب أحداث الجدول الزمني",
-            details: errors,
+            details: calendarResult.error,
           },
         }),
         {
@@ -199,22 +177,6 @@ serve(async (req) => {
 
     // Transform all sources to unified timeline event format
     const allEvents = [
-      // Engagements - single language, so use same value for both en and ar
-      // Always use 'engagement' as event_type, store engagement_type in metadata
-      ...(engagementsResult.data || []).map((item: any) => ({
-        event_type: 'engagement',
-        event_title_en: item.title,
-        event_title_ar: item.title,
-        event_description_en: item.description,
-        event_description_ar: item.description,
-        event_date: item.engagement_date,
-        source_id: item.id,
-        source_table: 'engagements',
-        metadata: {
-          engagement_type: item.engagement_type,
-        },
-      })),
-
       // Calendar Entries
       ...(calendarResult.data || []).map((item: any) => ({
         event_type: item.entry_type || 'calendar',
@@ -229,34 +191,6 @@ serve(async (req) => {
           location: item.location,
           status: item.status,
         },
-      })),
-
-      // MoUs
-      ...(mousResult.data || []).map((item: any) => ({
-        event_type: 'mou',
-        event_title_en: item.title_en,
-        event_title_ar: item.title_ar,
-        event_description_en: item.description_en,
-        event_description_ar: item.description_ar,
-        event_date: item.signature_date,
-        source_id: item.id,
-        source_table: 'mous',
-        metadata: {
-          status: item.status,
-        },
-      })),
-
-      // Positions
-      ...(positionsResult.data || []).map((item: any) => ({
-        event_type: item.position_type || 'position',
-        event_title_en: item.title_en,
-        event_title_ar: item.title_ar,
-        event_description_en: item.description_en,
-        event_description_ar: item.description_ar,
-        event_date: item.position_date,
-        source_id: item.id,
-        source_table: 'positions',
-        metadata: {},
       })),
     ];
 

@@ -31,7 +31,7 @@
     "info": "معلومات"
   },
   "common": {
-    "appTitle": "نظام الملفات الدولية للهيئة العامة للإحصاء",
+    "appTitle": "نظام الدوسيهات الدولية للهيئة العامة للإحصاء",
     "save": "حفظ",
     "cancel": "إلغاء",
     "delete": "حذف",
@@ -108,7 +108,7 @@
     "assignments": "تكليفاتي",
     "intake": "قائمة الاستقبال",
     "approvals": "الموافقات",
-    "dossiers": "الملفات",
+    "dossiers": "الدوسيهات",
     "positions": "المواقف",
     "afterActions": "ملاحظات ما بعد الإجراء",
     "projects": "المشاريع",
@@ -694,7 +694,7 @@
         }
       },
       "types": {
-        "dossier": "ملف",
+        "dossier": "دوسيه",
         "ticket": "تذكرة",
         "position": "موقف",
         "task": "مهمة"
@@ -719,7 +719,7 @@
       "7+": "7+ أيام"
     },
     "workItemTypes": {
-      "dossier": "ملف",
+      "dossier": "دوسيه",
       "ticket": "تذكرة",
       "position": "موقف"
     },
@@ -850,7 +850,7 @@
   "tasks": {
     "title": "المهام",
     "myTasks": "مهامي",
-    "dossier": "ملف",
+    "dossier": "دوسيه",
     "position": "موقف",
     "ticket": "تذكرة",
     "noLinkedItems": "لا توجد عناصر مرتبطة",
@@ -899,10 +899,10 @@
     "confidence": "الثقة",
     "lastLinked": "آخر ربط",
     "entityTypes": {
-      "dossier": "ملف",
+      "dossier": "دوسيه",
       "position": "موقف",
       "mou": "مذكرة تفاهم",
-      "engagement": "مشاركة",
+      "engagement": "ارتباط",
       "assignment": "تعيين",
       "commitment": "التزام",
       "intelligence_signal": "إشارة استخبارات",

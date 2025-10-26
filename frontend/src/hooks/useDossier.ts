@@ -1,135 +1,311 @@
 /**
- * useDossier Hook
+ * Dossier Hooks
+ * Part of: 026-unified-dossier-architecture implementation
  *
- * Fetches a single dossier by ID with optional includes for related data
+ * TanStack Query hooks for dossier operations with automatic caching,
+ * invalidation, and optimistic updates.
  */
 
-import { useQuery } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
-import type { Dossier } from '@/types/dossier';
+import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
+import {
+  createDossier,
+  getDossier,
+  updateDossier,
+  deleteDossier,
+  listDossiers,
+  getDossiersByType,
+  getDocumentsForDossier,
+  linkDocumentToDossier,
+  unlinkDocumentFromDossier,
+  type CreateDossierRequest,
+  type UpdateDossierRequest,
+  type DossierFilters,
+  type DossierWithExtension,
+  type DossiersListResponse,
+  type DossierType,
+  type LinkedDocument,
+  DossierAPIError,
+} from '@/services/dossier-api';
+import { toast } from 'sonner';
+import { useTranslation } from 'react-i18next';
 
-export type DossierInclude = 'stats' | 'owners' | 'contacts' | 'recent_briefs';
+/**
+ * Query Keys Factory
+ */
+export const dossierKeys = {
+  all: ['dossiers'] as const,
+  lists: () => [...dossierKeys.all, 'list'] as const,
+  list: (filters?: DossierFilters) => [...dossierKeys.lists(), { filters }] as const,
+  details: () => [...dossierKeys.all, 'detail'] as const,
+  detail: (id: string) => [...dossierKeys.details(), id] as const,
+  byType: (type: DossierType, page?: number, page_size?: number) =>
+    [...dossierKeys.all, 'type', type, { page, page_size }] as const,
+};
 
-export interface DossierWithIncludes extends Dossier {
-  stats?: {
-    total_engagements: number;
-    total_positions: number;
-    total_mous: number;
-    total_commitments: number;
-  };
-  owners?: Array<{
-    id: string;
-    user_id: string;
-    role: string;
-  }>;
-  contacts?: Array<{
-    id: string;
-    name: string;
-    title?: string;
-    organization?: string;
-    email?: string;
-    phone?: string;
-  }>;
-  recent_briefs?: Array<{
-    id: string;
-    created_at: string;
-    summary: string;
-  }>;
-}
-
+/**
+ * Hook to fetch a single dossier by ID
+ */
 export function useDossier(
-  dossierId: string,
-  includes: DossierInclude[] = []
+  id: string,
+  options?: Omit<UseQueryOptions<DossierWithExtension, DossierAPIError>, 'queryKey' | 'queryFn'>
 ) {
   return useQuery({
-    queryKey: ['dossier', dossierId, includes],
-    queryFn: async () => {
-      // Build select query based on includes
-      // Use maybeSingle() instead of single() to handle missing dossiers gracefully
-      const { data: dossier, error } = await supabase
-        .from('dossiers')
-        .select('*')
-        .eq('id', dossierId)
-        .maybeSingle();
+    queryKey: dossierKeys.detail(id),
+    queryFn: () => getDossier(id),
+    ...options,
+  });
+}
 
-      // Handle errors (but not "no rows" which is handled by maybeSingle)
-      if (error) throw error;
-      if (!dossier) {
-        throw new Error('DOSSIER_NOT_FOUND');
-      }
+/**
+ * Hook to fetch list of dossiers with filters
+ */
+export function useDossiers(
+  filters?: DossierFilters,
+  options?: Omit<UseQueryOptions<DossiersListResponse, DossierAPIError>, 'queryKey' | 'queryFn'>
+) {
+  return useQuery({
+    queryKey: dossierKeys.list(filters),
+    queryFn: () => listDossiers(filters),
+    ...options,
+  });
+}
 
-      const result: DossierWithIncludes = dossier;
+/**
+ * Hook to fetch dossiers by type
+ */
+export function useDossiersByType(
+  type: DossierType,
+  page?: number,
+  page_size?: number,
+  options?: Omit<UseQueryOptions<DossiersListResponse, DossierAPIError>, 'queryKey' | 'queryFn'>
+) {
+  return useQuery({
+    queryKey: dossierKeys.byType(type, page, page_size),
+    queryFn: () => getDossiersByType(type, page, page_size),
+    ...options,
+  });
+}
 
-      // Fetch additional data based on includes
-      if (includes.includes('stats')) {
-        // Determine the foreign key column based on dossier reference_type
-        const referenceColumn =
-          result.reference_type === 'country' ? 'country_id' :
-          result.reference_type === 'organization' ? 'organization_id' : null;
+/**
+ * Hook to create a new dossier
+ */
+export function useCreateDossier() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
-        // Fetch stats
-        const [engagements, positions, mous, commitments] = await Promise.all([
-          // Engagements: has dossier_id column
-          supabase.from('engagements').select('id', { count: 'exact', head: true }).eq('dossier_id', dossierId),
+  return useMutation({
+    mutationFn: (request: CreateDossierRequest) => createDossier(request),
+    onSuccess: (data) => {
+      // Invalidate all dossier lists to refetch with new data
+      queryClient.invalidateQueries({ queryKey: dossierKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: dossierKeys.byType(data.type) });
 
-          // Positions: linked via position_dossier_links junction table
-          supabase.from('position_dossier_links').select('position_id', { count: 'exact', head: true }).eq('dossier_id', dossierId),
+      // Set the new dossier in the cache
+      queryClient.setQueryData(dossierKeys.detail(data.id), data);
 
-          // MoUs: use reference_id with type-specific column
-          referenceColumn && result.reference_id
-            ? supabase.from('mous').select('id', { count: 'exact', head: true }).eq(referenceColumn, result.reference_id)
-            : Promise.resolve({ count: 0 }),
-
-          // Commitments: no dossier relationship in current schema
-          Promise.resolve({ count: 0 }),
-        ]);
-
-        result.stats = {
-          total_engagements: engagements.count || 0,
-          total_positions: positions.count || 0,
-          total_mous: mous.count || 0,
-          total_commitments: commitments.count || 0,
-        };
-      }
-
-      if (includes.includes('owners')) {
-        const { data: owners } = await supabase
-          .from('dossier_owners')
-          .select('*')
-          .eq('dossier_id', dossierId);
-        result.owners = owners || [];
-      }
-
-      if (includes.includes('contacts')) {
-        const { data: contacts } = await supabase
-          .from('key_contacts')
-          .select('*')
-          .eq('dossier_id', dossierId)
-          .limit(5);
-        result.contacts = contacts || [];
-      }
-
-      if (includes.includes('recent_briefs')) {
-        // Briefs use reference_id with type-specific column
-        const referenceColumn =
-          result.reference_type === 'country' ? 'country_id' :
-          result.reference_type === 'organization' ? 'organization_id' : null;
-
-        let briefs = [];
-        if (referenceColumn && result.reference_id) {
-          const { data } = await supabase
-            .from('briefs')
-            .select('id, created_at, summary')
-            .eq(referenceColumn, result.reference_id)
-            .order('created_at', { ascending: false })
-            .limit(3);
-          briefs = data || [];
-        }
-        result.recent_briefs = briefs;
-      }
-
-      return result;
+      toast.success(t('dossier.create.success', { name: data.name_en }));
     },
-    enabled: !!dossierId,
+    onError: (error: DossierAPIError) => {
+      toast.error(t('dossier.create.error', { message: error.message }));
+    },
+  });
+}
+
+/**
+ * Hook to update a dossier
+ */
+export function useUpdateDossier() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: ({ id, request }: { id: string; request: UpdateDossierRequest }) =>
+      updateDossier(id, request),
+    onMutate: async ({ id, request }) => {
+      // Cancel any outgoing refetches to avoid overwriting optimistic update
+      await queryClient.cancelQueries({ queryKey: dossierKeys.detail(id) });
+
+      // Snapshot the previous value
+      const previousDossier = queryClient.getQueryData<DossierWithExtension>(
+        dossierKeys.detail(id)
+      );
+
+      // Optimistically update the cache
+      if (previousDossier) {
+        queryClient.setQueryData<DossierWithExtension>(dossierKeys.detail(id), {
+          ...previousDossier,
+          ...request,
+          updated_at: new Date().toISOString(),
+        });
+      }
+
+      return { previousDossier };
+    },
+    onSuccess: (data, { id }) => {
+      // Update the cache with server response
+      queryClient.setQueryData(dossierKeys.detail(id), data);
+
+      // Invalidate lists to refetch
+      queryClient.invalidateQueries({ queryKey: dossierKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: dossierKeys.byType(data.type) });
+
+      toast.success(t('dossier.update.success', { name: data.name_en }));
+    },
+    onError: (error: DossierAPIError, { id }, context) => {
+      // Rollback optimistic update on error
+      if (context?.previousDossier) {
+        queryClient.setQueryData(dossierKeys.detail(id), context.previousDossier);
+      }
+
+      toast.error(t('dossier.update.error', { message: error.message }));
+    },
+  });
+}
+
+/**
+ * Hook to delete a dossier
+ */
+export function useDeleteDossier() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: (id: string) => deleteDossier(id),
+    onMutate: async (id) => {
+      // Cancel any outgoing refetches
+      await queryClient.cancelQueries({ queryKey: dossierKeys.detail(id) });
+
+      // Snapshot the previous value
+      const previousDossier = queryClient.getQueryData<DossierWithExtension>(
+        dossierKeys.detail(id)
+      );
+
+      // Optimistically remove from cache
+      queryClient.removeQueries({ queryKey: dossierKeys.detail(id) });
+
+      return { previousDossier };
+    },
+    onSuccess: (_, id) => {
+      // Invalidate all lists to refetch without deleted item
+      queryClient.invalidateQueries({ queryKey: dossierKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: dossierKeys.all });
+
+      toast.success(t('dossier.delete.success'));
+    },
+    onError: (error: DossierAPIError, id, context) => {
+      // Restore the previous value on error
+      if (context?.previousDossier) {
+        queryClient.setQueryData(dossierKeys.detail(id), context.previousDossier);
+      }
+
+      toast.error(t('dossier.delete.error', { message: error.message }));
+    },
+  });
+}
+
+/**
+ * Hook to prefetch a dossier (useful for hover effects, navigation hints)
+ */
+export function usePrefetchDossier() {
+  const queryClient = useQueryClient();
+
+  return (id: string) => {
+    queryClient.prefetchQuery({
+      queryKey: dossierKeys.detail(id),
+      queryFn: () => getDossier(id),
+    });
+  };
+}
+
+/**
+ * Hook to invalidate dossier queries (useful after bulk operations)
+ */
+export function useInvalidateDossiers() {
+  const queryClient = useQueryClient();
+
+  return () => {
+    queryClient.invalidateQueries({ queryKey: dossierKeys.all });
+  };
+}
+
+/**
+ * Document Links Query Keys
+ */
+export const documentLinksKeys = {
+  all: ['documentLinks'] as const,
+  forDossier: (dossierId: string) => [...documentLinksKeys.all, 'dossier', dossierId] as const,
+};
+
+/**
+ * Hook to fetch linked documents for a dossier
+ */
+export function useDocumentLinks(
+  dossierId: string,
+  options?: Omit<UseQueryOptions<LinkedDocument[], DossierAPIError>, 'queryKey' | 'queryFn'>
+) {
+  return useQuery({
+    queryKey: documentLinksKeys.forDossier(dossierId),
+    queryFn: () => getDocumentsForDossier(dossierId),
+    ...options,
+  });
+}
+
+/**
+ * Hook to link a document to a dossier
+ */
+export function useLinkDocument() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: ({
+      dossierId,
+      documentId,
+      documentType,
+    }: {
+      dossierId: string;
+      documentId: string;
+      documentType: 'position' | 'mou' | 'brief';
+    }) => linkDocumentToDossier(dossierId, documentId, documentType),
+    onSuccess: (_, variables) => {
+      // Invalidate document links for this dossier
+      queryClient.invalidateQueries({
+        queryKey: documentLinksKeys.forDossier(variables.dossierId),
+      });
+      toast.success(t('document.linkSuccess'));
+    },
+    onError: (error: DossierAPIError) => {
+      toast.error(t('document.linkError', { message: error.message }));
+    },
+  });
+}
+
+/**
+ * Hook to unlink a document from a dossier
+ */
+export function useUnlinkDocument() {
+  const queryClient = useQueryClient();
+  const { t } = useTranslation();
+
+  return useMutation({
+    mutationFn: ({
+      dossierId,
+      documentId,
+      documentType,
+    }: {
+      dossierId: string;
+      documentId: string;
+      documentType: 'position' | 'mou' | 'brief';
+    }) => unlinkDocumentFromDossier(dossierId, documentId, documentType),
+    onSuccess: (_, variables) => {
+      // Invalidate document links for this dossier
+      queryClient.invalidateQueries({
+        queryKey: documentLinksKeys.forDossier(variables.dossierId),
+      });
+      toast.success(t('document.unlinkSuccess'));
+    },
+    onError: (error: DossierAPIError) => {
+      toast.error(t('document.unlinkError', { message: error.message }));
+    },
   });
 }

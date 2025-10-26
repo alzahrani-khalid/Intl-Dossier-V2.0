@@ -33,13 +33,63 @@ export default defineConfig({
     target: 'ES2022',
     outDir: 'dist',
     sourcemap: true,
+    // T132: Optimize chunk size limits for better code splitting
+    chunkSizeWarningLimit: 500, // Warn about chunks larger than 500kb
     rollupOptions: {
       output: {
-        manualChunks: {
-          'react-vendor': ['react', 'react-dom'],
-          'tanstack-vendor': ['@tanstack/react-router', '@tanstack/react-query'],
-          'i18n-vendor': ['i18next', 'react-i18next'],
+        // T132: Enhanced manual chunking for better lazy loading
+        manualChunks: (id) => {
+          // Core React libraries
+          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+            return 'react-vendor';
+          }
+
+          // TanStack libraries
+          if (id.includes('node_modules/@tanstack/react-router') ||
+              id.includes('node_modules/@tanstack/react-query')) {
+            return 'tanstack-vendor';
+          }
+
+          // i18n libraries
+          if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next')) {
+            return 'i18n-vendor';
+          }
+
+          // UI libraries (shadcn, Radix UI)
+          if (id.includes('node_modules/@radix-ui') || id.includes('node_modules/cmdk')) {
+            return 'ui-vendor';
+          }
+
+          // Chart/visualization libraries (React Flow for graph viz)
+          if (id.includes('node_modules/reactflow') || id.includes('node_modules/@xyflow') ||
+              id.includes('node_modules/d3') || id.includes('node_modules/recharts')) {
+            return 'visualization-vendor';
+          }
+
+          // Form libraries
+          if (id.includes('node_modules/react-hook-form') || id.includes('node_modules/zod')) {
+            return 'form-vendor';
+          }
+
+          // Date libraries
+          if (id.includes('node_modules/date-fns') || id.includes('node_modules/dayjs')) {
+            return 'date-vendor';
+          }
+
+          // Supabase client
+          if (id.includes('node_modules/@supabase')) {
+            return 'supabase-vendor';
+          }
+
+          // Other large node_modules
+          if (id.includes('node_modules')) {
+            return 'vendor-misc';
+          }
         },
+        // T132: Optimize chunk file names for better caching
+        chunkFileNames: 'assets/[name]-[hash].js',
+        entryFileNames: 'assets/[name]-[hash].js',
+        assetFileNames: 'assets/[name]-[hash].[ext]',
       },
     },
   },

@@ -1,6 +1,6 @@
 import React from 'react'
 
-type Variant = 'default' | 'secondary' | 'outline' | 'destructive'
+type Variant = 'default' | 'secondary' | 'outline' | 'destructive' | 'none'
 
 export interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: Variant
@@ -11,6 +11,7 @@ const variantClasses: Record<Variant, string> = {
   secondary: 'bg-secondary text-secondary-foreground',
   outline: 'border border-border text-foreground',
   destructive: 'bg-destructive text-destructive-foreground',
+  none: '', // No default styling - use custom classes
 }
 
 export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
