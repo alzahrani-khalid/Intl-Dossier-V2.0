@@ -1,0 +1,267 @@
+{
+  "title": "Dossiers",
+  "untitled": "Untitled Dossier",
+  "id": "ID",
+  "type": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "engagement": "Engagement",
+    "theme": "Theme",
+    "working_group": "Working Group",
+    "person": "Person"
+  },
+  "typeDescription": {
+    "country": "National entities and sovereign states with geographic and demographic data",
+    "organization": "Government agencies, NGOs, private sector, and international organizations",
+    "forum": "Conferences, summits, and multilateral discussion platforms",
+    "engagement": "Meetings, consultations, and diplomatic interactions",
+    "theme": "Policy areas, strategic priorities, and thematic focus areas",
+    "working_group": "Task forces, committees, and collaborative working bodies",
+    "person": "VIP individuals including ambassadors, ministers, and key contacts"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived",
+    "deleted": "Deleted"
+  },
+  "action": {
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "create": "Create Dossier",
+    "more": "More actions",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next"
+  },
+  "filter": {
+    "all": "All Types",
+    "byType": "Filter by Type",
+    "byStatus": "Filter by Status",
+    "search": "Search dossiers...",
+    "select_type": "Select type...",
+    "select_status": "Select status...",
+    "select_sensitivity": "Select sensitivity...",
+    "type_selected": "type(s)",
+    "status_selected": "status(es)",
+    "sensitivity_selected": "level(s)",
+    "search_type": "Search types...",
+    "search_status": "Search statuses...",
+    "search_sensitivity": "Search levels...",
+    "no_type_found": "No type found",
+    "no_status_found": "No status found",
+    "no_sensitivity_found": "No level found",
+    "reset": "Reset"
+  },
+  "sensitivityLevel": {
+    "0": "Public",
+    "1": "Internal",
+    "2": "Confidential",
+    "3": "Secret",
+    "4": "Top Secret",
+    "5": "Restricted"
+  },
+  "form": {
+    "basicInformation": "Basic Information",
+    "nameEn": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "nameEnPlaceholder": "Enter name in English",
+    "nameArPlaceholder": "أدخل الاسم بالعربية",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "descriptionEnPlaceholder": "Enter description in English",
+    "descriptionArPlaceholder": "أدخل الوصف بالعربية",
+    "status": "Status",
+    "selectStatus": "Select status",
+    "sensitivityLevel": "Sensitivity Level",
+    "selectSensitivity": "Select level",
+    "sensitivityDescription": "Classification level for access control",
+    "countryFields": "Country-Specific Information",
+    "organizationFields": "Organization-Specific Information",
+    "forumFields": "Forum-Specific Information",
+    "engagementFields": "Engagement-Specific Information",
+    "themeFields": "Theme-Specific Information",
+    "working_groupFields": "Working Group-Specific Information",
+    "personFields": "Person-Specific Information",
+    "typeSpecificFieldsPlaceholder": "Additional fields for {{type}} will be displayed here",
+    "person": {
+      "titleEn": "Title (English)",
+      "titleAr": "Title (Arabic)",
+      "titleEnPlaceholder": "e.g., Ambassador, Minister of Trade",
+      "titleArPlaceholder": "مثال: سفير، وزير التجارة",
+      "titleDescription": "Official title or position (e.g., Ambassador, Minister, Director)",
+      "photoUrl": "Photo URL",
+      "photoUrlPlaceholder": "https://example.com/photo.jpg",
+      "photoUrlDescription": "URL to person's official photograph",
+      "biographyEn": "Biography (English)",
+      "biographyAr": "Biography (Arabic)",
+      "biographyEnPlaceholder": "Enter person's background and qualifications",
+      "biographyArPlaceholder": "أدخل السيرة الذاتية والمؤهلات"
+    },
+    "cancel": "Cancel",
+    "create": "Create Dossier",
+    "update": "Update Dossier"
+  },
+  "list": {
+    "title": "All Dossiers",
+    "subtitle": "Browse and manage all entities across the system",
+    "createNew": "Create New Dossier",
+    "searchPlaceholder": "Search by name, description, or tags...",
+    "search": "Search",
+    "filterByType": "Filter by Type",
+    "filterByStatus": "Filter by Status",
+    "sortBy": "Sort by",
+    "sortOrder": "Order",
+    "sortUpdated": "Last Updated",
+    "sortCreated": "Date Created",
+    "sortNameEn": "Name (English)",
+    "sortNameAr": "Name (Arabic)",
+    "sortDesc": "Newest First",
+    "sortAsc": "Oldest First",
+    "activeFilters": "Active Filters",
+    "clearFilter": "Clear filter",
+    "searchQuery": "Search",
+    "showing": "Showing {{from}}-{{to}} of {{total}} dossiers",
+    "noDossiers": "No dossiers found. Create your first one to get started.",
+    "page": "Page {{current}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "errorTitle": "Error Loading Dossiers",
+    "errorMessage": "Failed to load dossiers. Please try again."
+  },
+  "detail": {
+    "back": "Back to List",
+    "edit": "Edit Dossier",
+    "delete": "Delete",
+    "deleteConfirmTitle": "Delete Dossier?",
+    "deleteConfirmMessage": "Are you sure you want to delete '{{name}}'? This action cannot be undone and will remove all associated data.",
+    "cancel": "Cancel",
+    "confirmDelete": "Delete Dossier",
+    "deleteSuccess": "Dossier deleted successfully",
+    "deleteError": "Failed to delete dossier",
+    "created": "Created",
+    "updated": "Last Updated",
+    "tags": "Tags",
+    "tabs": {
+      "details": "Details",
+      "relationships": "Relationships",
+      "documents": "Documents",
+      "calendar": "Calendar",
+      "relationshipsPlaceholder": "Relationships will be displayed here (User Story 2)",
+      "documentsPlaceholder": "Related documents will be displayed here (User Story 6)",
+      "calendarPlaceholder": "Calendar events will be displayed here (User Story 4)"
+    },
+    "countryDetails": "Country Information",
+    "organizationDetails": "Organization Information",
+    "forumDetails": "Forum Information",
+    "engagementDetails": "Engagement Information",
+    "themeDetails": "Theme Information",
+    "working_groupDetails": "Working Group Information",
+    "personDetails": "Person Information",
+    "noExtensionData": "No additional type-specific data available",
+    "errorTitle": "Error Loading Dossier",
+    "errorMessage": "Failed to load dossier. Please try again."
+  },
+  "create": {
+    "title": "Create New Dossier",
+    "subtitleSelectType": "Choose the type of dossier you want to create",
+    "subtitleFillForm": "Enter information for {{type}} dossier",
+    "cancel": "Cancel",
+    "changeType": "Change Type",
+    "step1": "Select Type",
+    "step2": "Fill Details",
+    "selectTypeTitle": "Select Dossier Type",
+    "selectTypeDescription": "Choose the type of entity you want to create. Each type has specific fields tailored to that entity.",
+    "fillFormTitle": "Create {{type}} Dossier",
+    "fillFormDescription": "Fill in the required information to create a new dossier.",
+    "helpTitle": "Need Help",
+    "helpText": "Select the appropriate dossier type based on the entity you're tracking. Required fields are marked with an asterisk (*). You can always edit the dossier later.",
+    "success": "Dossier created successfully",
+    "error": "Failed to create dossier"
+  },
+  "update": {
+    "title": "Edit Dossier",
+    "success": "Dossier '{{name}}' updated successfully",
+    "error": "Failed to update dossier: {{message}}"
+  },
+  "delete": {
+    "title": "Delete Dossier",
+    "confirm": "Are you sure you want to delete this dossier? This action cannot be undone.",
+    "success": "Dossier deleted successfully",
+    "error": "Failed to delete dossier: {{message}}"
+  },
+  "list": {
+    "title": "All Dossiers",
+    "empty": "No dossiers found",
+    "emptyFiltered": "No dossiers match your filters",
+    "loading": "Loading dossiers...",
+    "error": "Failed to load dossiers"
+  },
+  "detail": {
+    "title": "Dossier Details",
+    "loading": "Loading dossier...",
+    "error": "Failed to load dossier",
+    "notFound": "Dossier not found",
+    "basicInfo": "Basic Information",
+    "extensionInfo": "Type-Specific Details",
+    "metadata": "Metadata",
+    "relationships": "Relationships",
+    "calendar": "Calendar Events",
+    "documents": "Related Documents",
+    "createdAt": "Created",
+    "updatedAt": "Last Updated"
+  },
+  "dossier": {
+    "nav": {
+      "dossiers": "Dossiers",
+      "inbox": "Inbox",
+      "partners": "Partners",
+      "documents": "Documents",
+      "reports": "Reports",
+      "missions": "Missions",
+      "teams": "Teams",
+      "settings": "Settings"
+    },
+    "reports": {
+      "title": "Reports",
+      "overview": "Overview",
+      "allReports": "All reports",
+      "yourReports": "Your reports",
+      "favorites": "Add favorites",
+      "topics": "Conversation topics",
+      "topicsList": "Topics",
+      "suggestions": "Suggestions",
+      "export": "Data export"
+    },
+    "support": {
+      "human": "Human support",
+      "automation": "Automation",
+      "proactive": "Proactive support"
+    },
+    "overview": {
+      "title": "Dossier Overview",
+      "subtitle": "Manage bilateral agreements, partnerships, and international cooperation",
+      "recent": "Recent Dossiers",
+      "deadlines": "Upcoming Deadlines"
+    },
+    "stats": {
+      "active": "Active Dossiers",
+      "pending": "Pending Review",
+      "completed": "Completed This Month",
+      "team": "Team Members"
+    },
+    "classification": {
+      "notice": "This system contains classified information. Unauthorized access is prohibited."
+    }
+  }
+}
+
+
+
+
+
+
+

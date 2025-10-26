@@ -29,6 +29,7 @@ import {
   UserCog,
   ListChecks,
   PenTool,
+  Target,
 } from 'lucide-react'
 import {
   Sidebar,
@@ -122,12 +123,6 @@ export function AnimatedSidebar() {
         icon: Folder,
       },
       {
-        id: 'engagements',
-        label: t('navigation.engagements', 'Engagements'),
-        path: '/engagements',
-        icon: Briefcase,
-      },
-      {
         id: 'positions',
         label: t('navigation.positions', 'Positions'),
         path: '/positions',
@@ -143,7 +138,7 @@ export function AnimatedSidebar() {
     [t]
   )
 
-  // Browse Navigation Items (Entities)
+  // Browse Navigation Items (7 Unified Dossier Types)
   const browseItems = useMemo<NavigationItem[]>(
     () => [
       {
@@ -165,10 +160,28 @@ export function AnimatedSidebar() {
         icon: Users,
       },
       {
-        id: 'mous',
-        label: t('navigation.mous', 'MoUs'),
-        path: '/mous',
-        icon: FileText,
+        id: 'engagements',
+        label: t('navigation.engagements', 'Engagements'),
+        path: '/engagements',
+        icon: CalendarDays,
+      },
+      {
+        id: 'themes',
+        label: t('navigation.themes', 'Themes'),
+        path: '/themes',
+        icon: Target,
+      },
+      {
+        id: 'working-groups',
+        label: t('navigation.workingGroups', 'Working Groups'),
+        path: '/working-groups',
+        icon: Briefcase,
+      },
+      {
+        id: 'persons',
+        label: t('navigation.persons', 'Persons'),
+        path: '/persons',
+        icon: User,
       },
     ],
     [t]

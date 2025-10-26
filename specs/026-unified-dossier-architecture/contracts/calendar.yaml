@@ -1,0 +1,139 @@
+openapi: 3.1.0
+info:
+  title: Calendar Events API
+  description: Manages temporal events for engagements and forums
+  version: 1.0.0
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+  - url: http://localhost:54321/functions/v1
+
+security:
+  - bearerAuth: []
+
+paths:
+  /calendar/events:
+    get:
+      summary: List calendar events
+      description: Get events within date range
+      operationId: listEvents
+      tags:
+        - Calendar
+      parameters:
+        - name: start_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: end_date
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: dossier_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/CalendarEvent'
+
+    post:
+      summary: Create calendar event
+      operationId: createEvent
+      tags:
+        - Calendar
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EventCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CalendarEvent'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+
+  schemas:
+    CalendarEvent:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+          enum: [main_event, session, plenary, working_session, ceremony, reception]
+        title_en:
+          type: string
+        title_ar:
+          type: string
+        start_datetime:
+          type: string
+          format: date-time
+        end_datetime:
+          type: string
+          format: date-time
+        location_en:
+          type: string
+        location_ar:
+          type: string
+        is_virtual:
+          type: boolean
+        status:
+          type: string
+          enum: [planned, ongoing, completed, cancelled, postponed]
+
+    EventCreate:
+      type: object
+      required:
+        - dossier_id
+        - event_type
+        - start_datetime
+        - end_datetime
+      properties:
+        dossier_id:
+          type: string
+          format: uuid
+        event_type:
+          type: string
+        title_en:
+          type: string
+        title_ar:
+          type: string
+        start_datetime:
+          type: string
+          format: date-time
+        end_datetime:
+          type: string
+          format: date-time
+        location_en:
+          type: string
+        location_ar:
+          type: string
+        is_virtual:
+          type: boolean

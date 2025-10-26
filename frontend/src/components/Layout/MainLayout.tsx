@@ -1,32 +1,32 @@
-import type { ReactNode } from 'react'
-import { Toaster } from 'react-hot-toast'
-import { useTranslation } from 'react-i18next'
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
-import { AnimatedSidebar } from './AnimatedSidebar'
+import type { ReactNode } from 'react';
+import { Toaster } from 'react-hot-toast';
+import { useNavigate } from '@tanstack/react-router';
+import { NavigationShell } from '@/components/modern-nav';
+import { useAuthStore } from '@/store/authStore';
 
 interface MainLayoutProps {
-  children: ReactNode
+  children: ReactNode;
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
-  const { i18n } = useTranslation()
-  const isRTL = i18n.language === 'ar'
+  const navigate = useNavigate();
+  const { user, logout } = useAuthStore();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate({ to: '/login' });
+  };
 
   return (
-    <SidebarProvider>
-      <div className="flex min-h-screen w-full overflow-x-hidden bg-background text-foreground" dir={isRTL ? 'rtl' : 'ltr'}>
-        <AnimatedSidebar />
-        <SidebarInset>
-          <header className="sticky top-0 z-30 flex h-14 shrink-0 items-center gap-2 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex w-full items-center gap-2 px-4 sm:px-6">
-              <SidebarTrigger className="-ms-1" />
-            </div>
-          </header>
-          <main className="flex-1 overflow-x-hidden overflow-y-auto bg-background p-4 sm:p-6 lg:p-8">
-            <div className="mx-auto w-full">{children}</div>
-          </main>
-        </SidebarInset>
-      </div>
+    <>
+      <NavigationShell
+        userName={user?.name || 'User'}
+        userEmail={user?.email || ''}
+        onLogout={handleLogout}
+        defaultPanelOpen={true}
+      >
+        {children}
+      </NavigationShell>
       <Toaster
         position="top-center"
         toastOptions={{
@@ -37,6 +37,6 @@ export function MainLayout({ children }: MainLayoutProps) {
           },
         }}
       />
-    </SidebarProvider>
-  )
+    </>
+  );
 }

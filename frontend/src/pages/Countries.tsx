@@ -3,83 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
-import { FileText, Globe2, MapPin, Plus, ShieldAlert } from 'lucide-react'
-
-interface CountryRow {
-  id: string
-  nameEn: string
-  nameAr: string
-  iso2: string
-  iso3: string
-  region: string
-  status: 'active' | 'inactive' | 'suspended'
-  agreements: number
-  recentActivity: string
-  riskLevel: 'low' | 'medium' | 'high'
-}
-
-const countries: CountryRow[] = [
-  {
-    id: 'sa',
-    nameEn: 'Saudi Arabia',
-    nameAr: 'المملكة العربية السعودية',
-    iso2: 'SA',
-    iso3: 'SAU',
-    region: 'Asia',
-    status: 'active',
-    agreements: 24,
-    recentActivity: 'Digital economy task-force signed 18 Sep 2025',
-    riskLevel: 'low',
-  },
-  {
-    id: 'ae',
-    nameEn: 'United Arab Emirates',
-    nameAr: 'الإمارات العربية المتحدة',
-    iso2: 'AE',
-    iso3: 'ARE',
-    region: 'Asia',
-    status: 'active',
-    agreements: 19,
-    recentActivity: 'Open data exchange pilot renewed 12 Sep 2025',
-    riskLevel: 'low',
-  },
-  {
-    id: 'fr',
-    nameEn: 'France',
-    nameAr: 'فرنسا',
-    iso2: 'FR',
-    iso3: 'FRA',
-    region: 'Europe',
-    status: 'active',
-    agreements: 11,
-    recentActivity: 'Awaiting legal review on urban statistics MoU',
-    riskLevel: 'medium',
-  },
-  {
-    id: 'ng',
-    nameEn: 'Nigeria',
-    nameAr: 'نيجيريا',
-    iso2: 'NG',
-    iso3: 'NGA',
-    region: 'Africa',
-    status: 'suspended',
-    agreements: 3,
-    recentActivity: 'Suspended pending data protection audit',
-    riskLevel: 'high',
-  },
-  {
-    id: 'us',
-    nameEn: 'United States',
-    nameAr: 'الولايات المتحدة الأمريكية',
-    iso2: 'US',
-    iso3: 'USA',
-    region: 'Americas',
-    status: 'active',
-    agreements: 16,
-    recentActivity: 'Joint training programme scheduled Q2 2025',
-    riskLevel: 'medium',
-  },
-]
+import { FileText, Globe2, MapPin, Plus, ShieldAlert, Loader2 } from 'lucide-react'
+import { useDossiersByType } from '@/hooks/useDossier'
 
 const regions = ['Asia', 'Europe', 'Africa', 'Americas', 'Oceania']
 
@@ -87,29 +12,73 @@ export default function Countries() {
   const { t, i18n } = useTranslation()
   const [searchTerm, setSearchTerm] = useState('')
   const [regionFilter, setRegionFilter] = useState<string>('all')
-  const [statusFilter, setStatusFilter] = useState<'all' | CountryRow['status']>('all')
-  const [riskFilter, setRiskFilter] = useState<'all' | CountryRow['riskLevel']>('all')
+  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive' | 'suspended'>('all')
+
+  // Query countries from unified dossiers table
+  const { data, isLoading, isError, error } = useDossiersByType('country', 1, 1000)
 
   const filteredCountries = useMemo(() => {
-    return countries.filter((country) => {
-      const matchesSearch = [country.nameEn, country.nameAr, country.iso2, country.iso3]
+    if (!data?.data) return []
+
+    return data.data.filter((dossier) => {
+      const country = dossier.extension_data
+
+      // Search filter
+      const matchesSearch = [
+        dossier.name_en,
+        dossier.name_ar,
+        country?.iso2,
+        country?.iso3
+      ]
+        .filter(Boolean)
         .join(' ')
         .toLowerCase()
         .includes(searchTerm.toLowerCase())
 
-      const matchesRegion = regionFilter === 'all' || country.region === regionFilter
-      const matchesStatus = statusFilter === 'all' || country.status === statusFilter
-      const matchesRisk = riskFilter === 'all' || country.riskLevel === riskFilter
+      // Region filter
+      const matchesRegion = regionFilter === 'all' || country?.region === regionFilter
 
-      return matchesSearch && matchesRegion && matchesStatus && matchesRisk
+      // Status filter
+      const matchesStatus = statusFilter === 'all' || dossier.status === statusFilter
+
+      return matchesSearch && matchesRegion && matchesStatus
     })
-  }, [searchTerm, regionFilter, statusFilter, riskFilter])
+  }, [data, searchTerm, regionFilter, statusFilter])
 
-  const totalAgreements = filteredCountries.reduce((acc, curr) => acc + curr.agreements, 0)
+  const totalAgreements = filteredCountries.reduce((acc, curr) => {
+    const agreements = curr.extension_data?.agreements_count || 0
+    return acc + agreements
+  }, 0)
   const activeCount = filteredCountries.filter((c) => c.status === 'active').length
   const suspendedCount = filteredCountries.filter((c) => c.status === 'suspended').length
 
   const isRTL = i18n.dir() === 'rtl'
+
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex min-h-96 items-center justify-center">
+        <Loader2 className="size-8 animate-spin text-primary" />
+      </div>
+    )
+  }
+
+  // Error state
+  if (isError) {
+    return (
+      <div className="flex min-h-96 flex-col items-center justify-center gap-4">
+        <ShieldAlert className="size-12 text-destructive" />
+        <div className="text-center">
+          <h2 className="text-xl font-semibold text-foreground">
+            {t('countries.error.title', 'Failed to load countries')}
+          </h2>
+          <p className="text-sm text-muted-foreground">
+            {error?.message || t('countries.error.message', 'An error occurred while fetching data')}
+          </p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="space-y-6">
@@ -227,22 +196,6 @@ export default function Countries() {
               <option value="suspended">{t('countries.status.suspended', 'Suspended')}</option>
             </select>
           </div>
-          <div>
-            <label className="mb-1 block text-sm font-medium text-foreground">
-              {t('countries.filters.risk', 'Risk level')}
-            </label>
-            <select
-              value={riskFilter}
-              onChange={(event) => setRiskFilter(event.target.value as typeof riskFilter)}
-              className="w-40 rounded-md border border-input bg-background px-3 py-2 text-sm text-foreground shadow-sm focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20"
-              dir={isRTL ? 'rtl' : 'ltr'}
-            >
-              <option value="all">{t('countries.filters.allRisks', 'All risks')}</option>
-              <option value="low">{t('countries.risk.low', 'Low')}</option>
-              <option value="medium">{t('countries.risk.medium', 'Medium')}</option>
-              <option value="high">{t('countries.risk.high', 'High')}</option>
-            </select>
-          </div>
         </CardContent>
       </Card>
 
@@ -255,59 +208,47 @@ export default function Countries() {
               <th className="px-5 py-3 text-start">{t('countries.table.region', 'Region')}</th>
               <th className="px-5 py-3 text-start">{t('countries.table.status', 'Status')}</th>
               <th className="px-5 py-3 text-start">{t('countries.table.agreements', 'Agreements')}</th>
-              <th className="px-5 py-3 text-start">{t('countries.table.activity', 'Recent activity')}</th>
-              <th className="px-5 py-3 text-start">{t('countries.table.risk', 'Risk')}</th>
+              <th className="px-5 py-3 text-start">{t('countries.table.updated', 'Last updated')}</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
-            {filteredCountries.map((country) => (
-              <tr key={country.id} className="hover:bg-accent/50">
-                <td className="px-5 py-4">
-                  <div className="flex flex-col">
-                    <span className="font-semibold text-foreground">{country.nameEn}</span>
-                    <span className="text-xs text-muted-foreground">{country.nameAr}</span>
-                  </div>
-                </td>
-                <td className="px-5 py-4 font-mono text-sm text-foreground">
-                  {country.iso2} · {country.iso3}
-                </td>
-                <td className="px-5 py-4 text-muted-foreground">{country.region}</td>
-                <td className="px-5 py-4">
-                  <span
-                    className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
-                      country.status === 'active'
-                        ? 'bg-primary/10 text-primary'
-                        : country.status === 'inactive'
-                        ? 'bg-muted text-muted-foreground'
-                        : 'bg-destructive/10 text-destructive'
-                    }`}
-                  >
-                    {t(`countries.status.${country.status}`, country.status)}
-                  </span>
-                </td>
-                <td className="px-5 py-4 text-foreground">{country.agreements}</td>
-                <td className="px-5 py-4 text-xs text-muted-foreground">
-                  {country.recentActivity}
-                </td>
-                <td className="px-5 py-4">
-                  <span
-                    className={`inline-flex items-center gap-1 rounded-full px-3 py-1 text-xs font-semibold ${
-                      country.riskLevel === 'low'
-                        ? 'bg-primary/10 text-primary'
-                        : country.riskLevel === 'medium'
-                        ? 'bg-warning/10 text-warning'
-                        : 'bg-destructive/10 text-destructive'
-                    }`}
-                  >
-                    <MapPin className="size-3" />
-                    {t(`countries.risk.${country.riskLevel}`, country.riskLevel)}
-                  </span>
-                </td>
-              </tr>
-            ))}
+            {filteredCountries.map((dossier) => {
+              const country = dossier.extension_data
+              return (
+                <tr key={dossier.id} className="hover:bg-accent/50">
+                  <td className="px-5 py-4">
+                    <div className="flex flex-col">
+                      <span className="font-semibold text-foreground">{dossier.name_en}</span>
+                      <span className="text-xs text-muted-foreground">{dossier.name_ar}</span>
+                    </div>
+                  </td>
+                  <td className="px-5 py-4 font-mono text-sm text-foreground">
+                    {country?.iso2 || '—'} · {country?.iso3 || '—'}
+                  </td>
+                  <td className="px-5 py-4 text-muted-foreground">{country?.region || '—'}</td>
+                  <td className="px-5 py-4">
+                    <span
+                      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold ${
+                        dossier.status === 'active'
+                          ? 'bg-primary/10 text-primary'
+                          : dossier.status === 'inactive'
+                          ? 'bg-muted text-muted-foreground'
+                          : 'bg-destructive/10 text-destructive'
+                      }`}
+                    >
+                      {t(`countries.status.${dossier.status}`, dossier.status)}
+                    </span>
+                  </td>
+                  <td className="px-5 py-4 text-foreground">{country?.agreements_count || 0}</td>
+                  <td className="px-5 py-4 text-xs text-muted-foreground">
+                    {new Date(dossier.updated_at).toLocaleDateString()}
+                  </td>
+                </tr>
+              )
+            })}
             {filteredCountries.length === 0 && (
               <tr>
-                <td colSpan={7} className="px-5 py-8 text-center text-sm text-muted-foreground">
+                <td colSpan={6} className="px-5 py-8 text-center text-sm text-muted-foreground">
                   {t('countries.table.empty', 'No countries match the current filters')}
                 </td>
               </tr>

@@ -29,6 +29,7 @@ import {
   Download,
   UserCog,
   ChevronRight,
+  Target,
 } from 'lucide-react'
 import { useUIStore } from '../../store/uiStore'
 import { useAuthStore } from '../../store/authStore'
@@ -68,7 +69,7 @@ export function Sidebar() {
       id: 'dashboard',
       label: t('navigation.dashboard'),
       icon: Home,
-      path: '/',
+      path: '/dashboard',
     },
     {
       id: 'my-work',
@@ -96,12 +97,9 @@ export function Sidebar() {
         },
       ],
     },
-    {
-      id: 'assignments',
-      label: t('navigation.assignments'),
-      icon: ListChecks,
-      path: '/tasks',
-    },
+  ]
+
+  const workflowItems: NavItem[] = [
     {
       id: 'intake',
       label: t('navigation.intake'),
@@ -115,16 +113,63 @@ export function Sidebar() {
       path: '/approvals',
     },
     {
+      id: 'assignments',
+      label: t('navigation.assignments'),
+      icon: ListChecks,
+      path: '/tasks',
+    },
+  ]
+
+  const contentItems: NavItem[] = [
+    {
       id: 'dossiers',
       label: t('navigation.dossiers'),
       icon: Folder,
       path: '/dossiers',
-    },
-    {
-      id: 'engagements',
-      label: t('navigation.engagements'),
-      icon: Briefcase,
-      path: '/engagements',
+      children: [
+        {
+          id: 'countries',
+          label: t('navigation.countries'),
+          icon: Globe2,
+          path: '/countries',
+        },
+        {
+          id: 'organizations',
+          label: t('navigation.organizations'),
+          icon: Building2,
+          path: '/organizations',
+        },
+        {
+          id: 'forums',
+          label: t('navigation.forums'),
+          icon: Users,
+          path: '/forums',
+        },
+        {
+          id: 'engagements',
+          label: t('navigation.engagements'),
+          icon: Calendar,
+          path: '/engagements',
+        },
+        {
+          id: 'themes',
+          label: t('navigation.themes'),
+          icon: Target,
+          path: '/themes',
+        },
+        {
+          id: 'working-groups',
+          label: t('navigation.workingGroups'),
+          icon: Briefcase,
+          path: '/working-groups',
+        },
+        {
+          id: 'persons',
+          label: t('navigation.persons'),
+          icon: User,
+          path: '/persons',
+        },
+      ],
     },
     {
       id: 'positions',
@@ -137,33 +182,6 @@ export function Sidebar() {
       label: t('navigation.afterActions'),
       icon: ClipboardList,
       path: '/after-actions',
-    },
-  ]
-
-  const entityItems: NavItem[] = [
-    {
-      id: 'countries',
-      label: t('navigation.countries'),
-      icon: Globe2,
-      path: '/countries',
-    },
-    {
-      id: 'organizations',
-      label: t('navigation.organizations'),
-      icon: Building2,
-      path: '/organizations',
-    },
-    {
-      id: 'forums',
-      label: t('navigation.forums'),
-      icon: Users,
-      path: '/forums',
-    },
-    {
-      id: 'mous',
-      label: t('navigation.mous'),
-      icon: FileText,
-      path: '/mous',
     },
   ]
 
@@ -260,7 +278,9 @@ export function Sidebar() {
     },
   ]
 
-  const [expandedItems, setExpandedItems] = React.useState<Set<string>>(new Set(['my-work']))
+  const [expandedItems, setExpandedItems] = React.useState<Set<string>>(
+    new Set(['my-work', 'dossiers'])
+  )
 
   const toggleExpand = (itemId: string) => {
     setExpandedItems((prev) => {
@@ -351,18 +371,28 @@ export function Sidebar() {
 
       <nav className="flex-1 overflow-y-auto px-4">
         {/* Main Navigation */}
-        <ul className="space-y-1">{navItems.map((item) => renderNavItem(item))}</ul>
+        <div className="mb-6">
+          <ul className="space-y-1">{navItems.map((item) => renderNavItem(item))}</ul>
+        </div>
 
-        {/* Entities Section */}
-        <div className="mt-8">
+        {/* Workflows Section */}
+        <div className="mb-6">
           <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            {t('navigation.browse')}
+            Workflows
           </h3>
-          <ul className="space-y-1">{entityItems.map((item) => renderNavItem(item))}</ul>
+          <ul className="space-y-1">{workflowItems.map((item) => renderNavItem(item))}</ul>
+        </div>
+
+        {/* Content Section */}
+        <div className="mb-6">
+          <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+            Content
+          </h3>
+          <ul className="space-y-1">{contentItems.map((item) => renderNavItem(item))}</ul>
         </div>
 
         {/* Tools & Reports Section */}
-        <div className="mt-8">
+        <div className="mb-6">
           <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
             Tools
           </h3>
@@ -371,7 +401,7 @@ export function Sidebar() {
 
         {/* Admin Section */}
         {isAdmin && (
-          <div className="mt-8">
+          <div className="mb-6">
             <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
               Admin
             </h3>
@@ -380,7 +410,7 @@ export function Sidebar() {
         )}
 
         {/* Documents Section */}
-        <div className="mt-8">
+        <div className="mb-6">
           <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
             Documents
           </h3>

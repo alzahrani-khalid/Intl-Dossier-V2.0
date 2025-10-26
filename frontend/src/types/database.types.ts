@@ -4708,24 +4708,27 @@ export type Database = {
       }
       position_dossier_links: {
         Row: {
-          added_at: string | null
-          added_by: string | null
+          id: string
+          created_at: string | null
+          created_by: string | null
           dossier_id: string
           link_type: string
           notes: string | null
           position_id: string
         }
         Insert: {
-          added_at?: string | null
-          added_by?: string | null
+          id?: string
+          created_at?: string | null
+          created_by?: string | null
           dossier_id: string
           link_type?: string
           notes?: string | null
           position_id: string
         }
         Update: {
-          added_at?: string | null
-          added_by?: string | null
+          id?: string
+          created_at?: string | null
+          created_by?: string | null
           dossier_id?: string
           link_type?: string
           notes?: string | null

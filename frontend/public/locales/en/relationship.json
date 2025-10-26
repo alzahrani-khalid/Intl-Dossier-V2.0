@@ -1,0 +1,79 @@
+{
+  "title": "Relationships",
+  "types": {
+    "bilateral_relation": "Bilateral Relation",
+    "membership": "Membership",
+    "partnership": "Partnership",
+    "parent_of": "Parent Of",
+    "subsidiary_of": "Subsidiary Of",
+    "discusses": "Discusses",
+    "involves": "Involves",
+    "participant_in": "Participant In",
+    "hosted_by": "Hosted By",
+    "sponsored_by": "Sponsored By",
+    "related_to": "Related To",
+    "represents": "Represents",
+    "member_of": "Member Of"
+  },
+  "status": {
+    "active": "Active",
+    "historical": "Historical",
+    "terminated": "Terminated"
+  },
+  "direction": {
+    "outgoing": "Outgoing relationship",
+    "incoming": "Incoming relationship"
+  },
+  "list": {
+    "empty": {
+      "title": "No Relationships",
+      "description": "This dossier doesn't have any relationships yet. Add relationships to connect it with other entities."
+    },
+    "loading": "Loading relationships..."
+  },
+  "form": {
+    "title": "Add Relationship",
+    "editTitle": "Edit Relationship",
+    "selectTarget": "Select Target Dossier",
+    "selectTargetPlaceholder": "Choose a dossier to create relationship with",
+    "selectType": "Relationship Type",
+    "selectTypePlaceholder": "Choose relationship type",
+    "notesEn": "Notes (English)",
+    "notesEnPlaceholder": "Add notes about this relationship in English",
+    "notesAr": "Notes (Arabic)",
+    "notesArPlaceholder": "أضف ملاحظات حول هذه العلاقة بالعربية",
+    "effectiveFrom": "Effective From",
+    "effectiveTo": "Effective To",
+    "selectDate": "Select date",
+    "cancel": "Cancel",
+    "create": "Create Relationship",
+    "update": "Update Relationship"
+  },
+  "create": {
+    "success": "Relationship created successfully",
+    "error": "Failed to create relationship: {{message}}"
+  },
+  "update": {
+    "success": "Relationship updated successfully",
+    "error": "Failed to update relationship: {{message}}"
+  },
+  "delete": {
+    "confirm": {
+      "title": "Delete Relationship?",
+      "description": "Are you sure you want to delete this relationship? This action cannot be undone."
+    },
+    "success": "Relationship deleted successfully",
+    "error": "Failed to delete relationship: {{message}}"
+  },
+  "effectiveFrom": "From",
+  "effectiveTo": "Until",
+  "metadata": "Additional Information",
+  "validation": {
+    "targetRequired": "Please select a target dossier",
+    "typeRequired": "Please select a relationship type",
+    "selfReference": "Cannot create relationship to the same dossier",
+    "circular": "This relationship would create a circular dependency",
+    "duplicate": "This relationship already exists",
+    "dateRange": "End date must be after start date"
+  }
+}

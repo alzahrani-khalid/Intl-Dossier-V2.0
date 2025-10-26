@@ -1,17 +1,17 @@
 /**
- * Supabase Edge Function: Global Search
- * Feature: 015-search-retrieval-spec
- * Task: T039
+ * Supabase Edge Function: Unified Search
+ * Feature: 026-unified-dossier-architecture
+ * Task: T105 - Unified search across all 7 dossier types
  *
- * GET /search - Global search across all entity types
+ * GET /search - Search across all dossier types with RLS integration
  *
  * Query Parameters:
  * - q: Search query (required, max 500 chars)
- * - type: Entity type filter (optional, comma-separated)
- * - lang: Preferred language for snippets (optional)
- * - limit: Results per page (optional, default 20, max 100)
+ * - types: Dossier type filter (optional, comma-separated: country,organization,forum,engagement,theme,working_group,person)
+ * - status: Status filter (optional, comma-separated: active,inactive,archived,deleted)
+ * - sensitivity_max: Maximum sensitivity level (optional, 0-5)
+ * - limit: Results per page (optional, default 50, max 100)
  * - offset: Pagination offset (optional, default 0)
- * - include_archived: Include archived items (optional, default true)
  */
 
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
@@ -34,22 +34,19 @@ serve(async (req: Request) => {
     // Parse query parameters
     const url = new URL(req.url);
     const query = url.searchParams.get('q');
-    const entityTypes = url.searchParams.get('type') || 'all';
-    const lang = url.searchParams.get('lang') || 'both';
-    const limit = parseInt(url.searchParams.get('limit') || '20');
+    const typesParam = url.searchParams.get('types');
+    const statusParam = url.searchParams.get('status');
+    const sensitivityMax = url.searchParams.get('sensitivity_max');
+    const limit = parseInt(url.searchParams.get('limit') || '50');
     const offset = parseInt(url.searchParams.get('offset') || '0');
-    const includeArchived = url.searchParams.get('include_archived') !== 'false';
 
     // Validate query
     if (!query || query.trim().length === 0) {
       return new Response(
         JSON.stringify({
           error: 'bad_request',
-          message: 'Query parameter is required and cannot be empty',
-          details: {
-            message: 'Query parameter is required and cannot be empty',
-            message_ar: 'معلمة الاستعلام مطلوبة ولا يمكن أن تكون فارغة'
-          }
+          message: 'Query parameter "q" is required and cannot be empty',
+          message_ar: 'معلمة الاستعلام "q" مطلوبة ولا يمكن أن تكون فارغة'
         }),
         {
           status: 400,
@@ -86,7 +83,7 @@ serve(async (req: Request) => {
       );
     }
 
-    // Create Supabase client with user's token
+    // Create Supabase client with user's token (RLS will apply automatically)
     const supabase = createClient(supabaseUrl, supabaseServiceKey, {
       global: {
         headers: {
@@ -95,148 +92,200 @@ serve(async (req: Request) => {
       }
     });
 
-    // Detect language
-    const arabicRegex = /[\u0600-\u06FF]/;
-    const englishRegex = /[A-Za-z]/;
-    const hasArabic = arabicRegex.test(processedQuery);
-    const hasEnglish = englishRegex.test(processedQuery);
-
-    let languageDetected: 'ar' | 'en' | 'mixed' = 'en';
-    if (hasArabic && hasEnglish) {
-      languageDetected = 'mixed';
-    } else if (hasArabic) {
-      languageDetected = 'ar';
+    // Parse dossier types filter
+    const types = typesParam ? typesParam.split(',').map(t => t.trim()) : undefined;
+    const validTypes = ['country', 'organization', 'forum', 'engagement', 'theme', 'working_group', 'person'];
+    if (types && types.some(t => !validTypes.includes(t))) {
+      return new Response(
+        JSON.stringify({
+          error: 'bad_request',
+          message: `Invalid dossier types. Valid types: ${validTypes.join(', ')}`,
+          message_ar: 'أنواع ملفات غير صالحة'
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
     }
 
-    // Detect boolean operators
-    const hasBooleanOperators = /\b(AND|OR|NOT)\b/.test(processedQuery);
-
-    // Normalize query
-    const normalizedQuery = processedQuery.toLowerCase().trim();
-
-    // Parse entity types
-    const requestedTypes = entityTypes === 'all'
-      ? ['dossiers', 'people', 'engagements', 'positions', 'mous', 'documents']
-      : entityTypes.split(',').map(t => t.trim());
-
-    // Map entity types to tables
-    const tableMap: Record<string, string> = {
-      'dossiers': 'dossiers',
-      'people': 'users',  // Changed from staff_profiles to users
-      'engagements': 'engagements',
-      'positions': 'positions',
-      'mous': 'mous',
-      'documents': 'attachments'
-    };
-
-    // Execute search across entity types using database function
-    const results: any[] = [];
-    const counts: Record<string, number> = {
-      total: 0,
-      dossiers: 0,
-      people: 0,
-      engagements: 0,
-      positions: 0,
-      mous: 0,
-      documents: 0,
-      restricted: 0
-    };
-
-    // Search configuration based on language
-    const searchConfig = languageDetected === 'ar' ? 'arabic' : 'english';
-
-    // Use database function for full-text search
-    for (const type of requestedTypes) {
-      try {
-        // Call search_entities_fulltext function
-        const { data, error } = await supabase.rpc('search_entities_fulltext', {
-          p_entity_type: type,
-          p_query: processedQuery,
-          p_language: searchConfig,
-          p_limit: validatedLimit,
-          p_offset: validatedOffset
-        });
-
-        if (error) {
-          console.error(`Error searching ${type}:`, error);
-          continue;
+    // Parse status filter
+    const statusFilter = statusParam ? statusParam.split(',').map(s => s.trim()) : undefined;
+    const validStatuses = ['active', 'inactive', 'archived', 'deleted'];
+    if (statusFilter && statusFilter.some(s => !validStatuses.includes(s))) {
+      return new Response(
+        JSON.stringify({
+          error: 'bad_request',
+          message: `Invalid status values. Valid statuses: ${validStatuses.join(', ')}`,
+          message_ar: 'قيم حالة غير صالحة'
+        }),
+        {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         }
+      );
+    }
 
-        if (data && data.length > 0) {
-          // Transform results to match response schema
-          const typedResults = data.map((item: any) => ({
-            id: item.entity_id,
-            type: item.entity_type,
-            title_en: item.entity_title_en || '',
-            title_ar: item.entity_title_ar || '',
-            snippet_en: item.entity_snippet_en || '',
-            snippet_ar: item.entity_snippet_ar || '',
-            rank_score: Math.min(1.0, item.rank_score * 10), // Normalize to 0-1 range
-            updated_at: item.updated_at,
-            match_type: 'exact',
-            is_archived: false // Will be determined from status if available
-          }));
+    // Transform query for full-text search (split terms and join with OR)
+    const terms = processedQuery
+      .replace(/[^\w\s\u0600-\u06FF]/gi, '') // Keep alphanumeric, spaces, and Arabic
+      .split(/\s+/)
+      .filter(Boolean);
 
-          results.push(...typedResults);
-          counts[type] = data.length;
-          counts.total += data.length;
-        }
+    const tsquery = terms.join(' | '); // OR operator for broader results
 
-        // For people search, also search external_contacts
-        if (type === 'people') {
-          const { data: externalData, error: externalError } = await supabase.rpc('search_entities_fulltext', {
-            p_entity_type: 'external_contacts',
-            p_query: processedQuery,
-            p_language: searchConfig,
-            p_limit: validatedLimit,
-            p_offset: validatedOffset
-          });
+    // Build search query
+    let dbQuery = supabase
+      .from('dossiers')
+      .select('*', { count: 'exact' })
+      .textSearch('search_vector', tsquery, {
+        type: 'websearch',
+        config: 'simple',
+      });
 
-          if (!externalError && externalData && externalData.length > 0) {
-            const externalResults = externalData.map((item: any) => ({
-              id: item.entity_id,
-              type: 'person',
-              title_en: item.entity_title_en || '',
-              title_ar: item.entity_title_ar || '',
-              snippet_en: item.entity_snippet_en || '',
-              snippet_ar: item.entity_snippet_ar || '',
-              rank_score: Math.min(1.0, item.rank_score * 10),
-              updated_at: item.updated_at,
-              match_type: 'exact',
-              is_archived: false
-            }));
+    // Apply type filter
+    if (types && types.length > 0) {
+      dbQuery = dbQuery.in('type', types);
+    }
 
-            results.push(...externalResults);
-            counts.people += externalData.length;
-            counts.total += externalData.length;
+    // Apply status filter (default: exclude deleted)
+    if (statusFilter && statusFilter.length > 0) {
+      dbQuery = dbQuery.in('status', statusFilter);
+    } else {
+      dbQuery = dbQuery.neq('status', 'deleted');
+    }
+
+    // Apply sensitivity filter
+    if (sensitivityMax !== null && sensitivityMax !== undefined) {
+      const maxLevel = parseInt(sensitivityMax);
+      if (isNaN(maxLevel) || maxLevel < 0 || maxLevel > 5) {
+        return new Response(
+          JSON.stringify({
+            error: 'bad_request',
+            message: 'sensitivity_max must be between 0 and 5',
+            message_ar: 'يجب أن تكون sensitivity_max بين 0 و 5'
+          }),
+          {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           }
-        }
-      } catch (err) {
-        console.error(`Error searching ${type}:`, err);
+        );
       }
+      dbQuery = dbQuery.lte('sensitivity_level', maxLevel);
     }
 
-    // Sort results by rank_score DESC
-    results.sort((a, b) => b.rank_score - a.rank_score);
+    // Apply pagination
+    dbQuery = dbQuery.range(validatedOffset, validatedOffset + validatedLimit - 1);
+
+    // Execute query
+    const { data, error, count } = await dbQuery;
+
+    if (error) {
+      console.error('Search error:', error);
+      return new Response(
+        JSON.stringify({
+          error: 'database_error',
+          message: error.message,
+          message_ar: 'حدث خطأ في قاعدة البيانات'
+        }),
+        {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        }
+      );
+    }
+
+    // Calculate ranking and format results
+    const results = (data || []).map((dossier: any) => {
+      // Calculate rank (exact match > partial match > description match)
+      let rank = 20; // Default rank
+      const lowerQuery = processedQuery.toLowerCase();
+      const nameEn = (dossier.name_en || '').toLowerCase();
+      const nameAr = (dossier.name_ar || '').toLowerCase();
+      const descEn = (dossier.description_en || '').toLowerCase();
+      const descAr = (dossier.description_ar || '').toLowerCase();
+
+      if (nameEn === lowerQuery || nameAr === lowerQuery) {
+        rank = 100; // Exact match
+      } else if (nameEn.startsWith(lowerQuery) || nameAr.startsWith(lowerQuery)) {
+        rank = 90; // Starts with
+      } else if (nameEn.includes(lowerQuery) || nameAr.includes(lowerQuery)) {
+        rank = 80; // Contains in name
+      } else if (descEn.includes(lowerQuery) || descAr.includes(lowerQuery)) {
+        rank = 60; // Contains in description
+      }
+
+      // Generate snippet
+      let snippet = '';
+      if (nameEn.includes(lowerQuery)) {
+        snippet = dossier.name_en;
+      } else if (nameAr.includes(lowerQuery)) {
+        snippet = dossier.name_ar;
+      } else if (descEn.includes(lowerQuery)) {
+        const index = descEn.indexOf(lowerQuery);
+        const start = Math.max(0, index - 50);
+        const end = Math.min(dossier.description_en.length, index + processedQuery.length + 50);
+        snippet = (start > 0 ? '...' : '') +
+                  dossier.description_en.substring(start, end) +
+                  (end < dossier.description_en.length ? '...' : '');
+      } else if (descAr.includes(lowerQuery)) {
+        const index = descAr.indexOf(lowerQuery);
+        const start = Math.max(0, index - 50);
+        const end = Math.min(dossier.description_ar.length, index + processedQuery.length + 50);
+        snippet = (start > 0 ? '...' : '') +
+                  dossier.description_ar.substring(start, end) +
+                  (end < dossier.description_ar.length ? '...' : '');
+      }
+
+      return {
+        id: dossier.id,
+        type: dossier.type,
+        name_en: dossier.name_en,
+        name_ar: dossier.name_ar,
+        description_en: dossier.description_en || null,
+        description_ar: dossier.description_ar || null,
+        status: dossier.status,
+        sensitivity_level: dossier.sensitivity_level,
+        tags: dossier.tags || [],
+        created_at: dossier.created_at,
+        updated_at: dossier.updated_at,
+        rank,
+        snippet: snippet || dossier.description_en?.substring(0, 150) || ''
+      };
+    });
+
+    // Sort by rank (exact match > relevance > status > alphabetical)
+    results.sort((a: any, b: any) => {
+      if (b.rank !== a.rank) return b.rank - a.rank;
+      if (a.status !== b.status) {
+        const statusOrder: Record<string, number> = {
+          active: 0, inactive: 1, archived: 2, deleted: 3
+        };
+        return (statusOrder[a.status] || 999) - (statusOrder[b.status] || 999);
+      }
+      return a.name_en.localeCompare(b.name_en);
+    });
 
     // Calculate took_ms
     const tookMs = Date.now() - startTime;
 
     // Build response
     const response = {
-      results: results.slice(0, validatedLimit),
-      counts,
+      data: results,
+      count: count || 0,
+      limit: validatedLimit,
+      offset: validatedOffset,
       query: {
         original: query,
-        normalized: normalizedQuery,
-        language_detected: languageDetected,
-        has_boolean_operators: hasBooleanOperators
+        normalized: processedQuery,
+        terms,
+        tsquery
       },
       took_ms: tookMs,
       warnings,
       metadata: {
-        has_more: counts.total > validatedOffset + validatedLimit,
-        next_offset: counts.total > validatedOffset + validatedLimit
+        has_more: (count || 0) > validatedOffset + validatedLimit,
+        next_offset: (count || 0) > validatedOffset + validatedLimit
           ? validatedOffset + validatedLimit
           : null
       }

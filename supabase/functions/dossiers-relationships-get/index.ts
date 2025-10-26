@@ -1,17 +1,26 @@
-// T037: GET /dossiers/{dossierId}/relationships Edge Function
+// T066: GET /relationships Edge Function for Unified Dossier Architecture
+// User Story 2: Model Engagement as Independent Entity
+// Gets bidirectional relationships for any dossier (engagement or entity)
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
 };
 
 serve(async (req) => {
   // Handle CORS preflight
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
+  }
+
+  if (req.method !== 'GET') {
+    return new Response(
+      JSON.stringify({ error: 'Method not allowed' }),
+      { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+    );
   }
 
   try {
@@ -28,7 +37,8 @@ serve(async (req) => {
     const url = new URL(req.url);
     const dossierId = url.searchParams.get('dossierId');
     const relationship_type = url.searchParams.get('relationship_type');
-    const direction = url.searchParams.get('direction') || 'both';
+    const status = url.searchParams.get('status') || 'active';
+    const includeHistorical = url.searchParams.get('includeHistorical') === 'true';
 
     if (!dossierId) {
       return new Response(
@@ -47,7 +57,7 @@ serve(async (req) => {
     // Verify dossier exists
     const { data: dossier, error: dossierError } = await supabaseClient
       .from('dossiers')
-      .select('id')
+      .select('id, type')
       .eq('id', dossierId)
       .single();
 
@@ -58,71 +68,24 @@ serve(async (req) => {
       );
     }
 
-    // Build query based on direction
-    let query;
+    // Build bidirectional query (both source and target)
+    // T066: getRelationshipsForDossier - fetches both directions
+    let query = supabaseClient
+      .from('dossier_relationships')
+      .select(`
+        *,
+        source_dossier:dossiers!source_dossier_id(id, type, name_en, name_ar, status),
+        target_dossier:dossiers!target_dossier_id(id, type, name_en, name_ar, status)
+      `)
+      .or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`);
 
-    if (direction === 'parent') {
-      // Parent relationships: this dossier is the parent
-      query = supabaseClient
-        .from('dossier_relationships')
-        .select(`
-          *,
-          child_dossier:dossiers!child_dossier_id(id, name_en, name_ar, reference_type, status)
-        `)
-        .eq('parent_dossier_id', dossierId)
-        .eq('status', 'active');
-    } else if (direction === 'child') {
-      // Child relationships: this dossier is the child
-      query = supabaseClient
-        .from('dossier_relationships')
-        .select(`
-          *,
-          parent_dossier:dossiers!parent_dossier_id(id, name_en, name_ar, reference_type, status)
-        `)
-        .eq('child_dossier_id', dossierId)
-        .eq('status', 'active');
-    } else {
-      // Both directions: fetch separately and union
-      const { data: parentRels, error: parentError } = await supabaseClient
-        .from('dossier_relationships')
-        .select(`
-          *,
-          child_dossier:dossiers!child_dossier_id(id, name_en, name_ar, reference_type, status)
-        `)
-        .eq('parent_dossier_id', dossierId)
-        .eq('status', 'active');
-
-      const { data: childRels, error: childError } = await supabaseClient
-        .from('dossier_relationships')
-        .select(`
-          *,
-          parent_dossier:dossiers!parent_dossier_id(id, name_en, name_ar, reference_type, status)
-        `)
-        .eq('child_dossier_id', dossierId)
-        .eq('status', 'active');
-
-      if (parentError || childError) {
-        throw new Error('Failed to fetch relationships');
-      }
-
-      // Filter by relationship type if provided
-      let relationships = [...(parentRels || []), ...(childRels || [])];
-      if (relationship_type) {
-        relationships = relationships.filter(r => r.relationship_type === relationship_type);
-      }
-
-      return new Response(
-        JSON.stringify({
-          relationships,
-          total_count: relationships.length,
-        }),
-        { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Apply relationship type filter if provided
+    // Apply filters
     if (relationship_type) {
       query = query.eq('relationship_type', relationship_type);
+    }
+
+    if (!includeHistorical) {
+      query = query.eq('status', status);
     }
 
     const { data: relationships, error: relError } = await query;
@@ -131,10 +94,30 @@ serve(async (req) => {
       throw relError;
     }
 
+    // Transform data to indicate direction and identify related dossier
+    const transformedRelationships = (relationships || []).map((rel) => {
+      const isSource = rel.source_dossier_id === dossierId;
+      return {
+        ...rel,
+        direction: isSource ? 'outgoing' : 'incoming',
+        related_dossier: isSource ? rel.target_dossier : rel.source_dossier,
+      };
+    });
+
     return new Response(
       JSON.stringify({
-        relationships: relationships || [],
-        total_count: relationships?.length || 0,
+        relationships: transformedRelationships,
+        total_count: transformedRelationships.length,
+        page: 0,
+        page_size: transformedRelationships.length,
+        // Additional metadata for debugging
+        dossier_id: dossierId,
+        dossier_type: dossier.type,
+        filters: {
+          relationship_type: relationship_type || 'all',
+          status,
+          includeHistorical,
+        },
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
@@ -142,7 +125,9 @@ serve(async (req) => {
   } catch (error) {
     console.error('Error in dossiers-relationships-get:', error);
     return new Response(
-      JSON.stringify({ error: error.message }),
+      JSON.stringify({
+        error: error.message || 'Internal server error'
+      }),
       { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }

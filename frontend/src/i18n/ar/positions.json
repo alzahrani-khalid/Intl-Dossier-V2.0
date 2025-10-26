@@ -57,15 +57,15 @@
     "conflictTitle": "تم اكتشاف تعارض في الإصدار",
     "conflictDescription": "تم تعديل هذا الموقف من قبل مستخدم آخر. الإصدار الخاص بك: {{current}}، إصدار الخادم: {{server}}. يرجى إعادة تحميل الصفحة لرؤية أحدث إصدار.",
     "reloadPage": "إعادة تحميل الصفحة",
-    "linkedDossiers": "الملفات المرتبطة"
+    "linkedDossiers": "الدوسيهات المرتبطة"
   },
   "position_dossier_links": {
-    "title": "الملفات المرتبطة",
+    "title": "الدوسيهات المرتبطة",
     "add_link": "إضافة رابط",
-    "no_links": "لا توجد ملفات مرتبطة",
-    "select_dossier": "اختر ملف",
-    "select_placeholder": "اختر ملفاً للربط",
-    "no_dossiers": "لا توجد ملفات متاحة",
+    "no_links": "لا توجد دوسيهات مرتبطة",
+    "select_dossier": "اختر دوسيه",
+    "select_placeholder": "اختر دوسيهًا للربط",
+    "no_dossiers": "لا توجد دوسيهات متاحة",
     "link_type": "نوع الرابط",
     "types": {
       "primary": "أساسي",
@@ -350,12 +350,12 @@
     "english_version": "English Version",
     "arabic_version": "النسخة العربية",
     "related_engagements": "الالتزامات ذات الصلة",
-    "related_engagements_description": "الملفات والالتزامات المستخدمة لهذا الموقف",
+    "related_engagements_description": "الدوسيهات والالتزامات المستخدمة لهذا الموقف",
     "no_related_engagements": "غير مرفق بأي التزامات",
     "metadata_title": "البيانات الوصفية",
-    "dossier": "الملف",
-    "view_dossier": "عرض الملف",
-    "no_dossier": "غير مرتبط بملف",
+    "dossier": "الدوسيه",
+    "view_dossier": "عرض الدوسيه",
+    "no_dossier": "غير مرتبط بدوسيه",
     "created": "تاريخ الإنشاء",
     "last_updated": "آخر تحديث",
     "version": "الإصدار"

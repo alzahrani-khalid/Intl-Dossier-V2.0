@@ -1,0 +1,267 @@
+{
+  "title": "الدوسيهات",
+  "untitled": "دوسيه بدون عنوان",
+  "id": "المعرف",
+  "type": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "engagement": "ارتباط",
+    "theme": "موضوع",
+    "working_group": "فريق عمل",
+    "person": "شخص"
+  },
+  "typeDescription": {
+    "country": "الكيانات الوطنية والدول ذات السيادة مع البيانات الجغرافية والديموغرافية",
+    "organization": "الهيئات الحكومية والمنظمات غير الحكومية والقطاع الخاص والمنظمات الدولية",
+    "forum": "المؤتمرات والقمم ومنصات النقاش متعددة الأطراف",
+    "engagement": "الاجتماعات والمشاورات والتفاعلات الدبلوماسية",
+    "theme": "المجالات السياسية والأولويات الاستراتيجية ومجالات التركيز المواضيعية",
+    "working_group": "فرق العمل واللجان والهيئات التعاونية",
+    "person": "الأفراد المهمون بما في ذلك السفراء والوزراء وجهات الاتصال الرئيسية"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف",
+    "deleted": "محذوف"
+  },
+  "action": {
+    "view": "عرض",
+    "edit": "تحرير",
+    "delete": "حذف",
+    "create": "إنشاء دوسيه",
+    "more": "المزيد من الإجراءات",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "next": "التالي"
+  },
+  "filter": {
+    "all": "جميع الأنواع",
+    "byType": "تصفية حسب النوع",
+    "byStatus": "تصفية حسب الحالة",
+    "search": "البحث في الدوسيهات...",
+    "select_type": "اختر النوع...",
+    "select_status": "اختر الحالة...",
+    "select_sensitivity": "اختر مستوى السرية...",
+    "type_selected": "نوع (أنواع)",
+    "status_selected": "حالة (حالات)",
+    "sensitivity_selected": "مستوى (مستويات)",
+    "search_type": "البحث في الأنواع...",
+    "search_status": "البحث في الحالات...",
+    "search_sensitivity": "البحث في المستويات...",
+    "no_type_found": "لم يتم العثور على نوع",
+    "no_status_found": "لم يتم العثور على حالة",
+    "no_sensitivity_found": "لم يتم العثور على مستوى",
+    "reset": "إعادة تعيين"
+  },
+  "sensitivityLevel": {
+    "0": "عام",
+    "1": "داخلي",
+    "2": "سري",
+    "3": "سري للغاية",
+    "4": "فائق السرية",
+    "5": "محظور"
+  },
+  "form": {
+    "basicInformation": "المعلومات الأساسية",
+    "nameEn": "الاسم (بالإنجليزية)",
+    "nameAr": "الاسم (بالعربية)",
+    "nameEnPlaceholder": "أدخل الاسم بالإنجليزية",
+    "nameArPlaceholder": "أدخل الاسم بالعربية",
+    "descriptionEn": "الوصف (بالإنجليزية)",
+    "descriptionAr": "الوصف (بالعربية)",
+    "descriptionEnPlaceholder": "أدخل الوصف بالإنجليزية",
+    "descriptionArPlaceholder": "أدخل الوصف بالعربية",
+    "status": "الحالة",
+    "selectStatus": "اختر الحالة",
+    "sensitivityLevel": "مستوى السرية",
+    "selectSensitivity": "اختر المستوى",
+    "sensitivityDescription": "مستوى التصنيف للتحكم في الوصول",
+    "countryFields": "معلومات خاصة بالدولة",
+    "organizationFields": "معلومات خاصة بالمنظمة",
+    "forumFields": "معلومات خاصة بالمنتدى",
+    "engagementFields": "معلومات خاصة بالمشاركة",
+    "themeFields": "معلومات خاصة بالموضوع",
+    "working_groupFields": "معلومات خاصة بفريق العمل",
+    "personFields": "معلومات خاصة بالشخص",
+    "typeSpecificFieldsPlaceholder": "سيتم عرض الحقول الإضافية لـ {{type}} هنا",
+    "person": {
+      "titleEn": "المسمى الوظيفي (بالإنجليزية)",
+      "titleAr": "المسمى الوظيفي (بالعربية)",
+      "titleEnPlaceholder": "مثال: Ambassador, Minister of Trade",
+      "titleArPlaceholder": "مثال: سفير، وزير التجارة",
+      "titleDescription": "المسمى أو المنصب الرسمي (مثل: سفير، وزير، مدير)",
+      "photoUrl": "رابط الصورة",
+      "photoUrlPlaceholder": "https://example.com/photo.jpg",
+      "photoUrlDescription": "رابط الصورة الرسمية للشخص",
+      "biographyEn": "السيرة الذاتية (بالإنجليزية)",
+      "biographyAr": "السيرة الذاتية (بالعربية)",
+      "biographyEnPlaceholder": "أدخل الخلفية والمؤهلات",
+      "biographyArPlaceholder": "أدخل الخلفية والمؤهلات"
+    },
+    "cancel": "إلغاء",
+    "create": "إنشاء دوسيه",
+    "update": "تحديث الدوسيه"
+  },
+  "list": {
+    "title": "جميع الدوسيهات",
+    "subtitle": "تصفح وإدارة جميع الكيانات في النظام",
+    "createNew": "إنشاء دوسيه جديد",
+    "searchPlaceholder": "البحث بالاسم أو الوصف أو الوسوم...",
+    "search": "بحث",
+    "filterByType": "تصفية حسب النوع",
+    "filterByStatus": "تصفية حسب الحالة",
+    "sortBy": "ترتيب حسب",
+    "sortOrder": "الترتيب",
+    "sortUpdated": "آخر تحديث",
+    "sortCreated": "تاريخ الإنشاء",
+    "sortNameEn": "الاسم (بالإنجليزية)",
+    "sortNameAr": "الاسم (بالعربية)",
+    "sortDesc": "الأحدث أولاً",
+    "sortAsc": "الأقدم أولاً",
+    "activeFilters": "الفلاتر النشطة",
+    "clearFilter": "مسح الفلتر",
+    "searchQuery": "البحث",
+    "showing": "عرض {{from}}-{{to}} من {{total}} دوسيه",
+    "noDossiers": "لا توجد دوسيهات. أنشئ أول دوسيه للبدء.",
+    "page": "صفحة {{current}} من {{total}}",
+    "previous": "السابق",
+    "next": "التالي",
+    "errorTitle": "خطأ في تحميل الدوسيهات",
+    "errorMessage": "فشل تحميل الدوسيهات. يرجى المحاولة مرة أخرى."
+  },
+  "detail": {
+    "back": "العودة إلى القائمة",
+    "edit": "تحرير الدوسيه",
+    "delete": "حذف",
+    "deleteConfirmTitle": "حذف الدوسيه؟",
+    "deleteConfirmMessage": "هل أنت متأكد من حذف '{{name}}'؟ لا يمكن التراجع عن هذا الإجراء وسيتم إزالة جميع البيانات المرتبطة.",
+    "cancel": "إلغاء",
+    "confirmDelete": "حذف الدوسيه",
+    "deleteSuccess": "تم حذف الدوسيه بنجاح",
+    "deleteError": "فشل حذف الدوسيه",
+    "created": "تاريخ الإنشاء",
+    "updated": "آخر تحديث",
+    "tags": "الوسوم",
+    "tabs": {
+      "details": "التفاصيل",
+      "relationships": "العلاقات",
+      "documents": "المستندات",
+      "calendar": "التقويم",
+      "relationshipsPlaceholder": "سيتم عرض العلاقات هنا (القصة 2)",
+      "documentsPlaceholder": "سيتم عرض المستندات ذات الصلة هنا (القصة 6)",
+      "calendarPlaceholder": "سيتم عرض أحداث التقويم هنا (القصة 4)"
+    },
+    "countryDetails": "معلومات الدولة",
+    "organizationDetails": "معلومات المنظمة",
+    "forumDetails": "معلومات المنتدى",
+    "engagementDetails": "معلومات المشاركة",
+    "themeDetails": "معلومات الموضوع",
+    "working_groupDetails": "معلومات فريق العمل",
+    "personDetails": "معلومات الشخص",
+    "noExtensionData": "لا توجد بيانات إضافية خاصة بالنوع",
+    "errorTitle": "خطأ في تحميل الدوسيه",
+    "errorMessage": "فشل تحميل الدوسيه. يرجى المحاولة مرة أخرى."
+  },
+  "create": {
+    "title": "إنشاء دوسيه جديد",
+    "subtitleSelectType": "اختر نوع الدوسيه الذي تريد إنشاءه",
+    "subtitleFillForm": "أدخل معلومات دوسيه {{type}}",
+    "cancel": "إلغاء",
+    "changeType": "تغيير النوع",
+    "step1": "اختيار النوع",
+    "step2": "إدخال التفاصيل",
+    "selectTypeTitle": "اختيار نوع الدوسيه",
+    "selectTypeDescription": "اختر نوع الكيان الذي تريد إنشاءه. كل نوع له حقول خاصة مصممة لذلك الكيان.",
+    "fillFormTitle": "إنشاء دوسيه {{type}}",
+    "fillFormDescription": "املأ المعلومات المطلوبة لإنشاء دوسيه جديد.",
+    "helpTitle": "تحتاج مساعدة",
+    "helpText": "اختر نوع الدوسيه المناسب بناءً على الكيان الذي تتتبعه. الحقول المطلوبة مميزة بعلامة نجمة (*). يمكنك دائمًا تحرير الدوسيه لاحقًا.",
+    "success": "تم إنشاء الدوسيه بنجاح",
+    "error": "فشل إنشاء الدوسيه"
+  },
+  "update": {
+    "title": "تحرير الدوسيه",
+    "success": "تم تحديث الدوسيه '{{name}}' بنجاح",
+    "error": "فشل تحديث الدوسيه: {{message}}"
+  },
+  "delete": {
+    "title": "حذف الدوسيه",
+    "confirm": "هل أنت متأكد من حذف هذا الدوسيه؟ لا يمكن التراجع عن هذا الإجراء.",
+    "success": "تم حذف الدوسيه بنجاح",
+    "error": "فشل حذف الدوسيه: {{message}}"
+  },
+  "list": {
+    "title": "جميع الدوسيهات",
+    "empty": "لا توجد دوسيهات",
+    "emptyFiltered": "لا توجد دوسيهات تطابق الفلاتر",
+    "loading": "جارٍ تحميل الدوسيهات...",
+    "error": "فشل تحميل الدوسيهات"
+  },
+  "detail": {
+    "title": "تفاصيل الدوسيه",
+    "loading": "جارٍ تحميل الدوسيه...",
+    "error": "فشل تحميل الدوسيه",
+    "notFound": "الدوسيه غير موجود",
+    "basicInfo": "المعلومات الأساسية",
+    "extensionInfo": "التفاصيل الخاصة بالنوع",
+    "metadata": "البيانات الوصفية",
+    "relationships": "العلاقات",
+    "calendar": "أحداث التقويم",
+    "documents": "المستندات ذات الصلة",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "آخر تحديث"
+  },
+  "dossier": {
+    "nav": {
+      "dossiers": "الدوسيهات",
+      "inbox": "صندوق الوارد",
+      "partners": "الشركاء",
+      "documents": "المستندات",
+      "reports": "التقارير",
+      "missions": "المهمات",
+      "teams": "الفرق",
+      "settings": "الإعدادات"
+    },
+    "reports": {
+      "title": "التقارير",
+      "overview": "نظرة عامة",
+      "allReports": "جميع التقارير",
+      "yourReports": "تقاريرك",
+      "favorites": "إضافة المفضلة",
+      "topics": "مواضيع المحادثة",
+      "topicsList": "المواضيع",
+      "suggestions": "الاقتراحات",
+      "export": "تصدير البيانات"
+    },
+    "support": {
+      "human": "الدعم البشري",
+      "automation": "الأتمتة",
+      "proactive": "الدعم الاستباقي"
+    },
+    "overview": {
+      "title": "نظرة عامة على الدوسيه",
+      "subtitle": "إدارة الاتفاقيات الثنائية والشراكات والتعاون الدولي",
+      "recent": "الدوسيهات الأخيرة",
+      "deadlines": "المواعيد النهائية القادمة"
+    },
+    "stats": {
+      "active": "الدوسيهات النشطة",
+      "pending": "قيد المراجعة",
+      "completed": "مكتمل هذا الشهر",
+      "team": "أعضاء الفريق"
+    },
+    "classification": {
+      "notice": "يحتوي هذا النظام على معلومات مصنفة. الوصول غير المصرح به ممنوع."
+    }
+  }
+}
+
+
+
+
+
+
+

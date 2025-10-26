@@ -34,9 +34,10 @@ function EngagementsPage() {
   const engagements = engagementsData?.items || [];
 
   // Filter engagements by search query
-  const filteredEngagements = engagements.filter((engagement) =>
-    engagement.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredEngagements = engagements.filter((engagement) => {
+    const name = isRTL ? engagement.name_ar : engagement.name_en;
+    return name.toLowerCase().includes(searchQuery.toLowerCase());
+  });
 
   const engagementTypeMap: Record<string, string> = {
     meeting: t('engagements.types.meeting'),
@@ -132,7 +133,7 @@ function EngagementsPage() {
                   <div className="flex-1 space-y-2 w-full">
                     <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2">
                       <h3 className="text-lg font-semibold text-start">
-                        {engagement.title}
+                        {isRTL ? engagement.name_ar : engagement.name_en}
                       </h3>
                       <Badge variant="secondary" className="w-fit">
                         {engagementTypeMap[engagement.engagement_type] ||
@@ -140,9 +141,9 @@ function EngagementsPage() {
                       </Badge>
                     </div>
 
-                    {engagement.description && (
+                    {(isRTL ? engagement.description_ar : engagement.description_en) && (
                       <p className="text-sm text-muted-foreground line-clamp-2 text-start">
-                        {engagement.description}
+                        {isRTL ? engagement.description_ar : engagement.description_en}
                       </p>
                     )}
 
@@ -151,16 +152,16 @@ function EngagementsPage() {
                         <Calendar className="h-4 w-4" />
                         <span>
                           {format(
-                            new Date(engagement.engagement_date),
+                            new Date(engagement.created_at),
                             'PPP',
                             { locale }
                           )}
                         </span>
                       </div>
-                      {engagement.location && (
+                      {(isRTL ? engagement.location_ar : engagement.location_en) && (
                         <div className="flex items-center gap-2">
                           <MapPin className="h-4 w-4" />
-                          <span>{engagement.location}</span>
+                          <span>{isRTL ? engagement.location_ar : engagement.location_en}</span>
                         </div>
                       )}
                     </div>

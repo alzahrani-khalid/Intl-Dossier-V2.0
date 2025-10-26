@@ -4,30 +4,39 @@ import { supabase } from '@/lib/supabase';
 
 export interface CalendarEvent {
   id: string;
-  entry_type: 'internal_meeting' | 'deadline' | 'reminder' | 'holiday' | 'training' | 'review' | 'other';
+  dossier_id: string;
+  event_type: 'main_event' | 'session' | 'plenary' | 'working_session' | 'ceremony' | 'reception';
   title_en?: string;
   title_ar?: string;
   description_en?: string;
   description_ar?: string;
   start_datetime: string;
-  end_datetime?: string;
-  all_day: boolean;
-  location?: string;
-  recurrence_pattern?: string;
-  linked_item_type?: string;
-  linked_item_id?: string;
-  attendee_ids: string[];
-  reminder_minutes: number;
-  organizer_id: string;
+  end_datetime: string;
+  timezone: string;
+  location_en?: string;
+  location_ar?: string;
+  is_virtual: boolean;
+  virtual_link?: string;
+  room_en?: string;
+  room_ar?: string;
+  status: 'planned' | 'ongoing' | 'completed' | 'cancelled' | 'postponed';
   created_at: string;
   updated_at: string;
+  // Optional dossier relation when fetched with join
+  dossier?: {
+    id: string;
+    type: string;
+    name_en: string;
+    name_ar: string;
+  };
 }
 
 export interface UseCalendarEventsFilters {
   start_date?: string;
   end_date?: string;
-  entry_type?: string;
-  linked_item_type?: string;
+  event_type?: string;
+  dossier_id?: string;
+  status?: string;
 }
 
 export interface UseCalendarEventsResult {
@@ -54,11 +63,14 @@ export function useCalendarEvents(filters?: UseCalendarEventsFilters): UseCalend
       if (filters?.end_date) {
         params.append('end_date', filters.end_date);
       }
-      if (filters?.entry_type) {
-        params.append('entry_type', filters.entry_type);
+      if (filters?.event_type) {
+        params.append('event_type', filters.event_type);
       }
-      if (filters?.linked_item_type) {
-        params.append('linked_item_type', filters.linked_item_type);
+      if (filters?.dossier_id) {
+        params.append('dossier_id', filters.dossier_id);
+      }
+      if (filters?.status) {
+        params.append('status', filters.status);
       }
 
       const { data: { session } } = await supabase.auth.getSession();

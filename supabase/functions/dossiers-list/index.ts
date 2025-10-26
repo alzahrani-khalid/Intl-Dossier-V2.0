@@ -94,7 +94,7 @@ serve(async (req) => {
     let query = supabaseClient
       .from("dossiers")
       .select("*", { count: "exact" })
-      .eq("archived", false);
+      .neq("status", "archived");
 
     // Apply filters
     if (params.type) {

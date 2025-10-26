@@ -1,0 +1,362 @@
+{
+  "contactDirectory": {
+    "title": "دليل جهات الاتصال",
+    "subtitle": "إدارة وتنظيم جهات الاتصال المهنية",
+
+    "labels": {
+      "fullName": "الاسم الكامل",
+      "organization": "المنظمة",
+      "position": "المنصب",
+      "email": "البريد الإلكتروني",
+      "phone": "رقم الهاتف",
+      "notes": "ملاحظات",
+      "tags": "الوسوم",
+      "sourceType": "مصدر الإدخال",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "آخر تحديث"
+    },
+
+    "placeholders": {
+      "fullName": "أدخل الاسم الكامل",
+      "searchContacts": "ابحث بالاسم أو المنظمة أو البريد الإلكتروني...",
+      "position": "مثال: مدير التعاون الدولي",
+      "email": "contact@example.com",
+      "phone": "+966 50 123 4567",
+      "notes": "أضف ملاحظات حول جهة الاتصال...",
+      "selectOrganization": "اختر المنظمة",
+      "selectTags": "اختر الوسوم"
+    },
+
+    "buttons": {
+      "createContact": "إنشاء جهة اتصال",
+      "saveContact": "حفظ جهة الاتصال",
+      "cancel": "إلغاء",
+      "edit": "تعديل",
+      "archive": "أرشفة",
+      "restore": "استعادة",
+      "delete": "حذف",
+      "export": "تصدير",
+      "importCard": "مسح بطاقة العمل",
+      "importDocument": "استخراج من مستند",
+      "back": "رجوع"
+    },
+
+    "validation": {
+      "nameRequired": "الاسم الكامل مطلوب",
+      "nameMinLength": "يجب أن يكون الاسم على الأقل حرفين",
+      "nameMaxLength": "لا يمكن أن يتجاوز الاسم 200 حرف",
+      "invalidEmail": "يرجى إدخال بريد إلكتروني صالح",
+      "invalidPhone": "يرجى إدخال رقم هاتف صالح",
+      "notesMaxLength": "لا يمكن أن تتجاوز الملاحظات 5000 حرف"
+    },
+
+    "messages": {
+      "contactCreated": "تم إنشاء جهة الاتصال بنجاح",
+      "contactUpdated": "تم تحديث جهة الاتصال بنجاح",
+      "contactArchived": "تم أرشفة جهة الاتصال بنجاح",
+      "contactRestored": "تم استعادة جهة الاتصال بنجاح",
+      "contactDeleted": "تم حذف جهة الاتصال بنجاح",
+      "noContacts": "لا توجد جهات اتصال",
+      "loadingContacts": "جاري تحميل جهات الاتصال...",
+      "searchNoResults": "لا توجد نتائج مطابقة للبحث",
+      "showingResults": "عرض {{showing}} من أصل {{total}} جهة اتصال",
+      "archiveConfirm": "هل أنت متأكد من أرشفة {{name}}؟ سيتم إخفاء جهات الاتصال المؤرشفة من القائمة الرئيسية."
+    },
+
+    "filters": {
+      "all": "جميع جهات الاتصال",
+      "byOrganization": "تجميع حسب المنظمة",
+      "archived": "المؤرشفة",
+      "recent": "المضافة حديثاً"
+    },
+
+    "sourceTypes": {
+      "manual": "إدخال يدوي",
+      "businessCard": "بطاقة عمل",
+      "document": "مستخرج من مستند"
+    },
+
+    "search": {
+      "search": "بحث",
+      "filters": "التصفية",
+      "refine_search": "تحسين نتائج البحث",
+      "apply_filters": "تطبيق التصفية",
+      "reset": "إعادة تعيين",
+      "clear_all": "مسح الكل",
+      "filter_by_organization": "تصفية حسب المنظمة",
+      "all_organizations": "جميع المنظمات",
+      "filter_by_tags": "تصفية حسب الوسوم",
+      "filter_by_source": "تصفية حسب المصدر",
+      "all_sources": "جميع المصادر",
+      "sort_by": "ترتيب حسب",
+      "order": "الترتيب",
+      "sort_name": "الاسم",
+      "sort_created": "تاريخ الإنشاء",
+      "sort_updated": "آخر تحديث",
+      "ascending": "تصاعدي",
+      "descending": "تنازلي",
+      "include_archived": "تضمين جهات الاتصال المؤرشفة"
+    },
+
+    "list": {
+      "loading_contacts": "جاري تحميل جهات الاتصال...",
+      "no_contacts_found": "لم يتم العثور على جهات اتصال",
+      "try_different_filters": "جرب تعديل التصفية أو كلمات البحث"
+    },
+
+    "form": {
+      "full_name": "الاسم الكامل",
+      "full_name_required": "الاسم الكامل مطلوب",
+      "full_name_min_length": "يجب أن يكون الاسم على الأقل حرفين",
+      "full_name_max_length": "لا يمكن أن يتجاوز الاسم 200 حرف",
+      "full_name_placeholder": "أدخل الاسم الكامل",
+      "organization": "المنظمة",
+      "select_organization": "اختر المنظمة",
+      "position": "المنصب / اللقب",
+      "position_placeholder": "مثال: مدير العلاقات الدولية",
+      "email_addresses": "عناوين البريد الإلكتروني",
+      "email_placeholder": "email@example.com",
+      "email_invalid": "يرجى إدخال بريد إلكتروني صالح",
+      "add_email": "إضافة بريد إلكتروني آخر",
+      "phone_numbers": "أرقام الهواتف",
+      "phone_placeholder": "+966 50 123 4567",
+      "add_phone": "إضافة رقم هاتف آخر",
+      "tags": "الوسوم",
+      "notes": "ملاحظات",
+      "notes_placeholder": "أضف أي ملاحظات أو سياق إضافي...",
+      "notes_description": "ملاحظات داخلية حول جهة الاتصال",
+      "cancel": "إلغاء",
+      "create_contact": "إنشاء جهة اتصال",
+      "save_changes": "حفظ التغييرات"
+    },
+
+    "hooks": {
+      "contact_created_success": "تم إنشاء جهة الاتصال \"{{name}}\" بنجاح",
+      "contact_created_error": "فشل إنشاء جهة الاتصال: {{error}}",
+      "contact_updated_success": "تم تحديث جهة الاتصال \"{{name}}\" بنجاح",
+      "contact_updated_error": "فشل تحديث جهة الاتصال: {{error}}",
+      "contact_archived_success": "تم أرشفة جهة الاتصال بنجاح",
+      "contact_archived_error": "فشلت أرشفة جهة الاتصال: {{error}}",
+      "duplicate_check_error": "فشل التحقق من التكرارات: {{error}}",
+      "export_success": "تم تصدير جهات الاتصال بنجاح",
+      "export_error": "فشل تصدير جهات الاتصال: {{error}}"
+    },
+
+    "tabs": {
+      "manual_entry": "إدخال يدوي",
+      "scan_card": "مسح بطاقة العمل"
+    },
+
+    "ocr": {
+      "scan_business_card": "مسح بطاقة العمل",
+      "scan_description": "التقط صورة أو قم بتحميل صورة لبطاقة عمل لاستخراج معلومات الاتصال تلقائياً",
+      "take_photo": "التقاط صورة",
+      "upload_image": "تحميل صورة",
+      "capture_photo": "التقاط",
+      "cancel": "إلغاء",
+      "process_card": "استخراج المعلومات",
+      "processing": "جاري معالجة الصورة...",
+      "back_to_manual": "العودة للإدخال اليدوي",
+      "consent_cloud_ocr_title": "استخدام OCR السحابي لدقة أفضل",
+      "consent_cloud_ocr_description": "تمكين Google Vision API لتحسين التعرف على النص. سيتم إرسال صورتك إلى خوادم Google للمعالجة.",
+      "extraction_success": "تم استخراج {{fieldsCount}} حقل بثقة {{confidence}}%",
+      "extraction_error": "فشل استخراج المعلومات: {{error}}",
+      "confidence_tooltip": "ثقة OCR: {{confidence}}%",
+      "invalid_file_type": "نوع الملف غير صالح. يرجى تحميل صورة JPEG أو PNG أو HEIC.",
+      "file_too_large": "الملف كبير جداً. الحد الأقصى للحجم هو 10 ميجابايت.",
+      "camera_error": "تعذر الوصول إلى الكاميرا. يرجى التحقق من الأذونات.",
+      "info_alert": "بعد الاستخراج، يمكنك مراجعة وتعديل جميع الحقول قبل الحفظ. الحقول ذات الثقة المنخفضة مميزة."
+    },
+
+    "duplicates": {
+      "dialog_title": "تم العثور على جهات اتصال مكررة محتملة",
+      "dialog_description": "وجدنا جهات اتصال موجودة قد تكون مكررة. يرجى المراجعة قبل المتابعة.",
+      "match": "تطابق",
+      "view_contact": "عرض جهة الاتصال",
+      "cancel": "مراجعة النموذج",
+      "proceed_anyway": "إنشاء على أي حال",
+      "reasons": {
+        "email_match": "تطابق البريد الإلكتروني",
+        "phone_match": "تطابق الهاتف",
+        "name_similarity": "اسم مشابه",
+        "organization_match": "نفس المنظمة"
+      }
+    },
+
+    "documentExtraction": {
+      "title": "استخراج جهات الاتصال من مستند",
+      "description": "قم بتحميل ملف PDF أو Word أو Excel أو ملف نصي لاستخراج معلومات جهات الاتصال تلقائياً",
+      "click_to_upload": "انقر للتحميل أو اسحب وأفلت",
+      "supported_formats": "المدعوم: PDF, DOCX, DOC, TXT, CSV, XLS, XLSX (بحد أقصى 50 ميجابايت)",
+      "invalid_file_type": "نوع ملف غير صالح. يرجى تحميل ملف PDF أو DOCX أو DOC أو TXT أو CSV أو Excel.",
+      "file_too_large": "الملف كبير جداً. الحد الأقصى للحجم هو 50 ميجابايت.",
+      "extract_contacts": "استخراج جهات الاتصال",
+      "processing": "جاري معالجة المستند...",
+      "status_pending": "تم تحميل المستند، في انتظار بدء المعالجة",
+      "status_processing": "جاري استخراج جهات الاتصال من المستند",
+      "status_completed": "اكتملت المعالجة",
+      "status_failed": "فشلت المعالجة",
+      "processing_time_estimate": "قد يستغرق هذا من دقيقة إلى دقيقتين حسب حجم المستند",
+      "processing_error": "فشلت معالجة المستند: {{error}}",
+      "extraction_complete": "اكتمل الاستخراج",
+      "contacts_found": "جهات اتصال تم العثور عليها",
+      "review_and_edit": "راجع وعدّل جهات الاتصال المستخرجة أدناه قبل الاستيراد",
+      "no_contacts_found": "لم يتم العثور على جهات اتصال في هذا المستند. يرجى تجربة ملف آخر أو إدخال جهات الاتصال يدوياً.",
+      "start_over": "تحميل ملف مختلف",
+      "review_and_import": "مراجعة واستيراد",
+      "back_to_manual": "العودة للإدخال اليدوي",
+      "info_alert": "سيتم تحليل المستند لاستخراج أسماء جهات الاتصال والمنظمات والمناصب وعناوين البريد الإلكتروني وأرقام الهواتف. يمكنك مراجعة وتعديل جميع المعلومات المستخرجة قبل الاستيراد.",
+      "upload_success": "تم تحميل المستند بنجاح. بدأت المعالجة.",
+      "upload_error": "فشل تحميل المستند: {{error}}",
+      "review_contacts": "مراجعة جهات الاتصال المستخرجة",
+      "review_description": "حدد جهات الاتصال للاستيراد وعدّل أي حقول حسب الحاجة. الحقول ذات الثقة المنخفضة مميزة للمراجعة.",
+      "select_all": "تحديد الكل",
+      "deselect_all": "إلغاء تحديد الكل",
+      "no_contacts_selected": "يرجى تحديد جهة اتصال واحدة على الأقل للاستيراد",
+      "no_contacts_to_review": "لا توجد جهات اتصال متاحة للمراجعة",
+      "import_selected": "استيراد المحدد",
+      "importing": "جاري استيراد جهات الاتصال...",
+      "batch_import_tab": "استخراج من مستند"
+    },
+
+    "hooks": {
+      "contact_created_success": "تم إنشاء جهة الاتصال \"{{name}}\" بنجاح",
+      "contact_created_error": "فشل إنشاء جهة الاتصال: {{error}}",
+      "contact_updated_success": "تم تحديث جهة الاتصال \"{{name}}\" بنجاح",
+      "contact_updated_error": "فشل تحديث جهة الاتصال: {{error}}",
+      "contact_archived_success": "تم أرشفة جهة الاتصال بنجاح",
+      "contact_archived_error": "فشلت أرشفة جهة الاتصال: {{error}}",
+      "duplicate_check_error": "فشل التحقق من التكرارات: {{error}}",
+      "export_success": "تم تصدير جهات الاتصال بنجاح",
+      "export_error": "فشل تصدير جهات الاتصال: {{error}}",
+      "batch_created_success": "تم استيراد {{count}} جهة اتصال بنجاح",
+      "batch_created_partial": "تم استيراد {{created}} جهة اتصال. فشل {{failed}}.",
+      "batch_created_error": "فشل استيراد جهات الاتصال: {{error}}"
+    },
+
+    "relationships": {
+      "title": "شبكة جهات الاتصال",
+      "view_network": "عرض الشبكة",
+      "add_relationship": "إضافة علاقة",
+      "no_relationships": "لا توجد علاقات بعد",
+      "add_relationships_hint": "قم بإنشاء علاقات لتصور شبكة جهة الاتصال هذه",
+      "loading_network": "جاري تحميل الشبكة...",
+      "relationship_count": "{{count}} علاقة",
+      "created_success": "تم إنشاء العلاقة بنجاح",
+      "created_error": "فشل إنشاء العلاقة: {{error}}",
+      "deleted_success": "تم حذف العلاقة بنجاح",
+      "deleted_error": "فشل حذف العلاقة: {{error}}",
+      "form": {
+        "select_contact": "اختر جهة اتصال",
+        "select_contact_placeholder": "اختر جهة اتصال",
+        "contact_required": "اختيار جهة الاتصال مطلوب",
+        "relationship_type": "نوع العلاقة",
+        "start_date": "تاريخ البدء",
+        "end_date": "تاريخ الانتهاء",
+        "notes": "ملاحظات",
+        "notes_placeholder": "أضف ملاحظات حول هذه العلاقة...",
+        "create_relationship": "إنشاء علاقة"
+      }
+    },
+
+    "relationshipTypes": {
+      "reports_to": "يتبع لـ",
+      "collaborates_with": "يتعاون مع",
+      "partner": "شريك",
+      "colleague": "زميل",
+      "other": "أخرى"
+    },
+
+    "organizations": {
+      "title": "المنظمات",
+      "view_all": "عرض جميع المنظمات",
+      "group_by_organization": "تجميع حسب المنظمة",
+      "no_organization": "بدون منظمة",
+      "contact_count": "{{count}} جهة اتصال"
+    },
+
+    "interactions": {
+      "title": "سجل التفاعلات",
+      "timeline_title": "الخط الزمني",
+      "add_note": "إضافة ملاحظة",
+      "notes_count": "{{count}} ملاحظة",
+      "attendees_count": "{{count}} حاضر",
+      "attachments_count": "{{count}} مرفق",
+      "show_more": "عرض المزيد",
+      "show_less": "عرض أقل",
+      "loading": "جاري تحميل سجل التفاعلات...",
+      "error": "فشل تحميل التفاعلات",
+      "no_notes_title": "لا توجد ملاحظات تفاعل بعد",
+      "no_notes_description": "ابدأ بتتبع تفاعلاتك مع جهة الاتصال هذه من خلال إضافة ملاحظات حول الاجتماعات والمكالمات والبريد الإلكتروني وغير ذلك.",
+      "view_contact": "عرض جهة الاتصال",
+      "actions": "الإجراءات",
+      "edit": "تعديل الملاحظة",
+      "delete": "حذف الملاحظة",
+      "delete_confirm": "هل أنت متأكد من حذف هذه الملاحظة؟ لا يمكن التراجع عن هذا الإجراء.",
+
+      "types": {
+        "meeting": "اجتماع",
+        "email": "بريد إلكتروني",
+        "call": "مكالمة هاتفية",
+        "conference": "مؤتمر",
+        "other": "أخرى"
+      },
+
+      "form": {
+        "create_title": "إضافة ملاحظة تفاعل",
+        "edit_title": "تعديل ملاحظة التفاعل",
+        "description": "سجل تفاصيل تفاعلك مع جهة الاتصال هذه",
+        "date": "التاريخ",
+        "select_date": "اختر التاريخ",
+        "date_description": "متى حدث هذا التفاعل؟ لا يمكن اختيار تواريخ مستقبلية.",
+        "type": "نوع التفاعل",
+        "select_type": "اختر النوع",
+        "details": "التفاصيل",
+        "details_placeholder": "أضف تفاصيل حول هذا التفاعل، نقاط المناقشة الرئيسية، النتائج، الإجراءات المتابعة...",
+        "characters": "حرف",
+        "attendees": "الحاضرون",
+        "search_attendees": "ابحث عن جهات اتصال أخرى حضرت...",
+        "attendees_description": "اختر جهات الاتصال الأخرى التي شاركت في هذا التفاعل",
+        "attachments": "المرفقات",
+        "upload_files": "رفع الملفات",
+        "attachments_description": "أرفق محاضر الاجتماعات أو العروض التقديمية أو المستندات ذات الصلة (بحد أقصى 10 ميجابايت لكل ملف)",
+        "cancel": "إلغاء",
+        "create_note": "إنشاء الملاحظة",
+        "save_changes": "حفظ التغييرات"
+      },
+
+      "hooks": {
+        "note_created_success": "تمت إضافة ملاحظة {{type}} بنجاح",
+        "note_created_error": "فشل إنشاء الملاحظة: {{error}}",
+        "note_updated_success": "تم تحديث الملاحظة بنجاح",
+        "note_updated_error": "فشل تحديث الملاحظة: {{error}}",
+        "note_deleted_success": "تم حذف الملاحظة بنجاح",
+        "note_deleted_error": "فشل حذف الملاحظة: {{error}}",
+        "attachment_uploaded_success": "تم رفع المرفق بنجاح",
+        "attachment_upload_error": "فشل رفع المرفق: {{error}}",
+        "attachment_downloaded_success": "تم تنزيل المرفق بنجاح",
+        "attachment_download_error": "فشل تنزيل المرفق: {{error}}"
+      },
+
+      "search": {
+        "title": "البحث في ملاحظات التفاعل",
+        "description": "ابحث في جميع ملاحظات التفاعل من كافة جهات الاتصال",
+        "placeholder": "ابحث في تفاصيل الملاحظات...",
+        "filters": "المرشحات",
+        "clear_filters": "مسح المرشحات",
+        "type_filter": "النوع",
+        "all_types": "جميع الأنواع",
+        "date_from": "من تاريخ",
+        "date_to": "إلى تاريخ",
+        "select_date": "اختر التاريخ",
+        "searching": "جاري البحث في الملاحظات...",
+        "error": "فشل البحث في الملاحظات",
+        "results_count": "تم العثور على {{count}} ملاحظة",
+        "no_results_title": "لم يتم العثور على ملاحظات",
+        "no_results_description": "حاول تعديل مصطلحات البحث أو المرشحات للعثور على ما تبحث عنه.",
+        "start_searching_title": "ابدأ البحث",
+        "start_searching_description": "أدخل كلمات رئيسية أو قم بتطبيق المرشحات للبحث في جميع ملاحظات التفاعل."
+      }
+    }
+  }
+}

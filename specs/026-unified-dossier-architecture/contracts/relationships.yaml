@@ -1,0 +1,174 @@
+openapi: 3.1.0
+info:
+  title: Dossier Relationships API
+  description: |
+    Manages polymorphic relationships between any two dossiers.
+    Supports bidirectional queries and graph traversal.
+  version: 1.0.0
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+    description: Production
+  - url: http://localhost:54321/functions/v1
+    description: Local
+
+security:
+  - bearerAuth: []
+
+paths:
+  /dossiers/{id}/relationships:
+    get:
+      summary: Get relationships for dossier
+      description: Retrieve all relationships where dossier is source OR target (bidirectional)
+      operationId: getDossierRelationships
+      tags:
+        - Relationships
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+        - name: type
+          in: query
+          description: Filter by relationship type
+          schema:
+            type: string
+        - name: direction
+          in: query
+          description: Filter by direction
+          schema:
+            type: string
+            enum: [outgoing, incoming, both]
+            default: both
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Relationship'
+
+  /relationships:
+    post:
+      summary: Create relationship
+      description: Create new relationship between two dossiers
+      operationId: createRelationship
+      tags:
+        - Relationships
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RelationshipCreate'
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Relationship'
+
+  /relationships/{id}:
+    delete:
+      summary: Delete relationship
+      description: Remove relationship between dossiers
+      operationId: deleteRelationship
+      tags:
+        - Relationships
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Deleted successfully
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    Relationship:
+      type: object
+      required:
+        - id
+        - source_dossier_id
+        - target_dossier_id
+        - relationship_type
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        source_dossier_id:
+          type: string
+          format: uuid
+        target_dossier_id:
+          type: string
+          format: uuid
+        relationship_type:
+          type: string
+          description: Type of relationship (bilateral_relation, membership, partnership, etc.)
+        relationship_metadata:
+          type: object
+        notes_en:
+          type: string
+        notes_ar:
+          type: string
+        effective_from:
+          type: string
+          format: date-time
+        effective_to:
+          type: string
+          format: date-time
+        status:
+          type: string
+          enum: [active, historical, terminated]
+        created_at:
+          type: string
+          format: date-time
+        created_by:
+          type: string
+          format: uuid
+
+    RelationshipCreate:
+      type: object
+      required:
+        - source_dossier_id
+        - target_dossier_id
+        - relationship_type
+      properties:
+        source_dossier_id:
+          type: string
+          format: uuid
+        target_dossier_id:
+          type: string
+          format: uuid
+        relationship_type:
+          type: string
+        relationship_metadata:
+          type: object
+        notes_en:
+          type: string
+        notes_ar:
+          type: string
+        effective_from:
+          type: string
+          format: date-time
+        effective_to:
+          type: string
+          format: date-time

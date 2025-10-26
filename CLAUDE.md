@@ -127,9 +127,9 @@ When building UI components, **ALWAYS** follow this workflow:
 - Use shadcn MCP tools to explore available components
 
 ## Recent Changes
+- 027-contact-directory: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Auth, RLS, Storage), OCR (tesseract.js v5.0+, @google-cloud/vision v4.3+, sharp v0.33+), Document Parsing (unpdf v1.0.1+, mammoth v1.8.0+), franc-min (language detection)
+- 026-unified-dossier-architecture: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS (backend), React 19 (frontend)
 - 025-unified-tasks-model: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS (backend), React 19 (frontend)
-- 024-intake-entity-linking: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS (backend), React 19 (frontend) + Supabase (PostgreSQL 15+, Auth, RLS, Realtime), TanStack Query v5, TanStack Router v5, Redis 7.x, AnythingLLM (AI service), shadcn/ui, Tailwind CSS, @dnd-kit/core (drag-and-drop), i18next (internationalization)
-- 023-specs-waiting-queue: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS (backend), React 19 (frontend) + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Auth, Realtime), Redis 7.x, i18next, shadcn/ui, Tailwind CSS
   - ✅ Feature spec: Expo-based mobile app with offline-first architecture
   - ✅ Research: Jest + RNTL (unit tests), Maestro (E2E), React Native Paper (UI), WatermelonDB (offline sync)
   - ✅ Data model: 11 entities with WatermelonDB schema, offline storage cleanup strategy

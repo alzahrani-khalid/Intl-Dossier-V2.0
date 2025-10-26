@@ -14,8 +14,8 @@ export interface DossierPositionLink {
   dossier_id: string;
   link_type: 'primary' | 'related' | 'reference';
   notes?: string | null;
-  added_at: string;
-  added_by: string;
+  created_at: string;
+  created_by: string;
   position: Position;
 }
 
@@ -54,8 +54,8 @@ export function useDossierPositionLinks(
           dossier_id,
           link_type,
           notes,
-          added_at,
-          added_by,
+          created_at,
+          created_by,
           position:positions (
             id,
             title_en,
@@ -79,7 +79,7 @@ export function useDossierPositionLinks(
           )
         `)
         .eq('dossier_id', dossierId)
-        .order('added_at', { ascending: false });
+        .order('created_at', { ascending: false });
 
       // Apply link_type filter
       if (filters?.link_type) {

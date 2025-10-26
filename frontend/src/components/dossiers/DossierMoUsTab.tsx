@@ -41,32 +41,15 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
   const { t, i18n } = useTranslation('dossiers');
   const isRTL = i18n.language === 'ar';
 
-  // Fetch MoUs for this dossier using reference_id pattern
+  // Fetch MoUs for this dossier using unified architecture
   const { data: mous, isLoading, error } = useQuery({
     queryKey: ['dossier-mous', dossierId],
     queryFn: async () => {
-      // First fetch dossier to get reference_type and reference_id
-      const { data: dossier, error: dossierError } = await supabase
-        .from('dossiers')
-        .select('reference_type, reference_id')
-        .eq('id', dossierId)
-        .single();
-
-      if (dossierError) throw dossierError;
-      if (!dossier || !dossier.reference_id) return [];
-
-      // Determine which column to query based on reference_type
-      const referenceColumn =
-        dossier.reference_type === 'country' ? 'country_id' :
-        dossier.reference_type === 'organization' ? 'organization_id' : null;
-
-      if (!referenceColumn) return [];
-
-      // Query MoUs using the appropriate reference column
+      // Query MoUs where this dossier is either signatory
       const { data, error } = await supabase
         .from('mous')
         .select('*')
-        .eq(referenceColumn, dossier.reference_id)
+        .or(`signatory_1_dossier_id.eq.${dossierId},signatory_2_dossier_id.eq.${dossierId}`)
         .order('created_at', { ascending: false });
 
       if (error) throw error;

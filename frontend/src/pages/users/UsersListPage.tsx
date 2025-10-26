@@ -18,7 +18,6 @@ import {
   PaginationPrevious,
 } from '@/components/ui/pagination';
 import { Search, UserPlus, Eye, Edit, Ban, CheckCircle } from 'lucide-react';
-import { UserTable } from '@/components/user-management/UserTable';
 
 type UserStatus = 'active' | 'inactive' | 'pending' | 'deactivated' | 'suspended';
 type UserRole = 'admin' | 'manager' | 'staff' | 'viewer';

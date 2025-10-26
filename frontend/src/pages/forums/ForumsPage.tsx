@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useQuery } from '@tanstack/react-query'
 import { ColumnDef } from '@tanstack/react-table'
 import { Plus, Calendar, Users, MapPin, Filter } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -8,27 +7,12 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { AdvancedDataTable } from '@/components/Table/AdvancedDataTable'
 import { ForumDetailsDialog } from '@/components/forums/ForumDetailsDialog'
-import { supabase } from '@/lib/supabase'
+import { useDossiersByType } from '@/hooks/useDossier'
 import { format } from 'date-fns'
+import type { DossierWithExtension, ForumExtension } from '@/services/dossier-api'
 
-interface Forum {
-  id: string
-  title_en: string
-  title_ar: string
-  start_datetime: string
-  end_datetime: string
-  location_en?: string
-  location_ar?: string
-  venue_en: string
-  venue_ar: string
-  is_virtual: boolean
-  max_participants?: number
-  number_of_sessions: number
-  status: string
-  organizer: {
-    name_en: string
-    name_ar: string
-  }
+interface Forum extends DossierWithExtension {
+  extension?: ForumExtension
 }
 
 export function ForumsPage() {
@@ -39,104 +23,80 @@ export function ForumsPage() {
   const [dialogOpen, setDialogOpen] = useState(false)
   const isRTL = i18n.language === 'ar'
 
-  const { data: forums, isLoading } = useQuery({
-    queryKey: ['forums', searchTerm, filterStatus],
-    queryFn: async () => {
-      // Use the forum_details view which aligns to UI shape
-      let query = supabase
-        .from('forum_details')
-        .select('*')
-        .order('start_datetime', { ascending: false })
+  // Fetch forums from unified dossiers table
+  const { data, isLoading } = useDossiersByType('forum', 1, 1000)
 
-      if (searchTerm) {
-        // Search over titles exposed by the view
-        query = query.or(
-          `title_en.ilike.%${searchTerm}%,title_ar.ilike.%${searchTerm}%`
-        )
-      }
-
-      if (filterStatus !== 'all') {
-        query = query.eq('status', filterStatus)
-      }
-
-      const { data, error } = await query
-      if (error) throw error
-      return data as Forum[]
+  // Filter forums based on search and status
+  const forums = (data?.dossiers || []).filter(forum => {
+    // Search filter
+    if (searchTerm) {
+      const searchLower = searchTerm.toLowerCase()
+      const matchesName =
+        forum.name_en?.toLowerCase().includes(searchLower) ||
+        forum.name_ar?.toLowerCase().includes(searchLower)
+      if (!matchesName) return false
     }
+
+    // Status filter
+    if (filterStatus !== 'all' && forum.status !== filterStatus) {
+      return false
+    }
+
+    return true
   })
 
   const columns: ColumnDef<Forum>[] = [
     {
-      accessorKey: 'title_en',
+      accessorKey: 'name_en',
       header: t('title'),
       cell: ({ row }) => (
         <div className={`font-medium ${isRTL ? 'text-end' : 'text-start'}`}>
-          {isRTL ? row.original.title_ar : row.original.title_en}
+          {isRTL ? row.original.name_ar : row.original.name_en}
         </div>
       )
     },
     {
-      accessorKey: 'start_datetime',
+      accessorKey: 'created_at',
       header: t('dates'),
       cell: ({ row }) => {
-        const startDate = row.original.start_datetime ? new Date(row.original.start_datetime) : null
-        const isValidDate = startDate && !isNaN(startDate.getTime())
+        const extension = row.original.extension as ForumExtension | undefined
+        const createdDate = row.original.created_at ? new Date(row.original.created_at) : null
+        const isValidDate = createdDate && !isNaN(createdDate.getTime())
 
         return (
           <div className="flex items-center gap-1">
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <span className="text-sm">
-              {isValidDate ? format(startDate, 'dd MMM yyyy') : '-'}
+              {isValidDate ? format(createdDate, 'dd MMM yyyy') : '-'}
             </span>
           </div>
         )
       }
     },
     {
-      accessorKey: 'location_en',
+      accessorKey: 'description_en',
       header: t('location'),
       cell: ({ row }) => {
-        const location = isRTL ? row.original.location_ar : row.original.location_en
+        const description = isRTL ? row.original.description_ar : row.original.description_en
         return (
           <div className="flex items-center gap-1">
             <MapPin className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">
-              {location || '-'}
+            <span className="text-sm truncate max-w-xs">
+              {description || '-'}
             </span>
           </div>
         )
       }
     },
     {
-      accessorKey: 'venue_en',
-      header: t('venue'),
+      accessorKey: 'extension',
+      header: t('sessions'),
       cell: ({ row }) => {
-        const venue = isRTL ? row.original.venue_ar : row.original.venue_en
+        const extension = row.original.extension as ForumExtension | undefined
         return (
-          <span className="text-sm">
-            {row.original.is_virtual
-              ? t('virtual')
-              : (venue || '-')}
-          </span>
+          <span className="text-sm">{extension?.number_of_sessions || '-'}</span>
         )
       }
-    },
-    {
-      accessorKey: 'max_participants',
-      header: t('participants'),
-      cell: ({ row }) => (
-        <div className="flex items-center gap-1">
-          <Users className="h-4 w-4 text-muted-foreground" />
-          <span className="text-sm">{row.original.max_participants || '-'}</span>
-        </div>
-      )
-    },
-    {
-      accessorKey: 'number_of_sessions',
-      header: t('sessions'),
-      cell: ({ row }) => (
-        <span className="text-sm">{row.original.number_of_sessions}</span>
-      )
     },
     {
       accessorKey: 'status',
@@ -149,12 +109,11 @@ export function ForumsPage() {
         return (
           <span className={`
             inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-            ${row.original.status === 'scheduled' ? 'bg-blue-100 text-blue-800' : ''}
-            ${row.original.status === 'ongoing' ? 'bg-green-100 text-green-800' : ''}
-            ${row.original.status === 'completed' ? 'bg-gray-100 text-gray-800' : ''}
-            ${row.original.status === 'cancelled' ? 'bg-red-100 text-red-800' : ''}
+            ${row.original.status === 'active' ? 'bg-green-100 text-green-800' : ''}
+            ${row.original.status === 'inactive' ? 'bg-gray-100 text-gray-800' : ''}
+            ${row.original.status === 'archived' ? 'bg-yellow-100 text-yellow-800' : ''}
           `}>
-            {t(`statuses.${row.original.status}`)}
+            {row.original.status}
           </span>
         )
       }
@@ -163,10 +122,9 @@ export function ForumsPage() {
 
   const statusOptions = [
     { value: 'all', label: t('common:all') },
-    { value: 'scheduled', label: t('statuses.scheduled') },
-    { value: 'ongoing', label: t('statuses.ongoing') },
-    { value: 'completed', label: t('statuses.completed') },
-    { value: 'cancelled', label: t('statuses.cancelled') }
+    { value: 'active', label: 'Active' },
+    { value: 'inactive', label: 'Inactive' },
+    { value: 'archived', label: 'Archived' }
   ]
 
   return (

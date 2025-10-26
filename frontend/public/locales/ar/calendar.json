@@ -1,0 +1,58 @@
+{
+  "title": "التقويم",
+  "subtitle": "عرض وإدارة الأحداث عبر جميع الدوسيهات",
+  "create_event": "إنشاء حدث",
+  "create_event_description": "إضافة حدث جديد إلى التقويم",
+  "event_details": "تفاصيل الحدث",
+  "edit": "تحرير الحدث",
+  "close": "إغلاق",
+  "today": "اليوم",
+  "previous": "السابق",
+  "next": "التالي",
+  "more": "المزيد",
+  "no_events": "لا توجد أحداث مجدولة لهذا التاريخ",
+  "upcoming_events": "الأحداث القادمة",
+  "all_day_event": "حدث طوال اليوم",
+  "participants_count": "مشارك واحد",
+  "participants_count_plural": "{{count}} مشارك",
+  "linked_to": "مرتبط بـ",
+  "view": {
+    "month": "شهر",
+    "week": "أسبوع",
+    "day": "يوم"
+  },
+  "weekday": {
+    "sun": "الأحد",
+    "mon": "الإثنين",
+    "tue": "الثلاثاء",
+    "wed": "الأربعاء",
+    "thu": "الخميس",
+    "fri": "الجمعة",
+    "sat": "السبت"
+  },
+  "types": {
+    "internal_meeting": "اجتماع داخلي",
+    "deadline": "موعد نهائي",
+    "reminder": "تذكير",
+    "holiday": "عطلة",
+    "training": "تدريب",
+    "review": "مراجعة",
+    "other": "أخرى"
+  },
+  "status": {
+    "scheduled": "مجدول",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "cancelled": "ملغى"
+  },
+  "linked_item_type": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "engagement": "مشاركة",
+    "theme": "موضوع",
+    "working_group": "مجموعة عمل",
+    "person": "شخص"
+  },
+  "all_types": "جميع الأنواع"
+}
