@@ -54,24 +54,66 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
       .slice(0, 2);
   }, [user]);
 
-  // Placeholder SidebarLink - will be implemented in Task 5
-  const SidebarLink = ({ item, isActive }: { item: NavigationItem; isActive: boolean }) => (
-    <Link
-      to={item.path}
-      className={cn(
-        'flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-colors',
-        isActive ? 'bg-sidebar-accent text-sidebar-accent-foreground' : 'hover:bg-sidebar-accent/50'
-      )}
-    >
-      <item.icon className="h-4 w-4" />
-      <span>{t(item.label, item.label)}</span>
-      {item.badgeCount !== undefined && item.badgeCount > 0 && (
-        <span className="ms-auto text-xs bg-primary text-primary-foreground px-1.5 py-0.5 rounded">
-          {item.badgeCount > 99 ? '99+' : item.badgeCount}
-        </span>
-      )}
-    </Link>
-  );
+  // SidebarLink with animations
+  interface SidebarLinkProps {
+    item: NavigationItem;
+    isActive: boolean;
+    isRTL: boolean;
+  }
+
+  function SidebarLink({ item, isActive, isRTL }: SidebarLinkProps) {
+    const Icon = item.icon;
+
+    return (
+      <Link to={item.path} className="group/link relative block">
+        {/* Hover background animation */}
+        <AnimatePresence>
+          {isActive && (
+            <motion.div
+              layoutId="active-sidebar-link"
+              className="absolute inset-0 bg-sidebar-accent rounded-lg z-10"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.15 }}
+            />
+          )}
+        </AnimatePresence>
+
+        {/* Link content */}
+        <div
+          className={cn(
+            'relative z-20 flex items-center gap-3 px-3 py-2 rounded-lg',
+            'text-sidebar-foreground transition-all duration-150',
+            'group-hover/link:bg-sidebar-accent/50',
+            isActive && 'font-medium text-sidebar-accent-foreground'
+          )}
+        >
+          <Icon
+            className={cn(
+              'h-4 w-4 shrink-0 transition-transform duration-150',
+              'group-hover/link:translate-x-1',
+              isRTL && 'group-hover/link:-translate-x-1'
+            )}
+          />
+          <span className="text-sm">{t(item.label, item.label)}</span>
+
+          {/* Badge for work queue counts */}
+          {item.badgeCount !== undefined && item.badgeCount > 0 && (
+            <div
+              className={cn(
+                'ms-auto flex h-5 min-w-5 items-center justify-center',
+                'rounded-md px-1 bg-primary text-primary-foreground',
+                'text-xs font-medium tabular-nums'
+              )}
+            >
+              {item.badgeCount > 99 ? '99+' : item.badgeCount}
+            </div>
+          )}
+        </div>
+      </Link>
+    );
+  }
 
   return (
     <div
@@ -116,6 +158,7 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
                     location.pathname === item.path ||
                     location.pathname.startsWith(`${item.path}/`)
                   }
+                  isRTL={isRTL}
                 />
               ))}
             </div>
@@ -132,6 +175,7 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
               key={item.id}
               item={item}
               isActive={location.pathname === item.path}
+              isRTL={isRTL}
             />
           ))}
         </div>
