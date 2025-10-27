@@ -138,7 +138,7 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
     <motion.div
       className={cn(
         'group/sidebar-btn relative hidden md:flex md:flex-col h-screen flex-shrink-0',
-        'bg-sidebar text-sidebar-foreground',
+        'bg-sidebar text-sidebar-foreground border-r border-sidebar-border',
         className
       )}
       animate={{ width: isOpen ? '300px' : '70px' }}
