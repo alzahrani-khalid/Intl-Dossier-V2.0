@@ -18,6 +18,6 @@
     "hooks": "@/hooks"
   },
   "registries": {
-    "@kibo-ui": "https://www.kibo-ui.com/r/{name}.json"
+    "@aceternity-pro": "https://pro.aceternity.com/registry/{name}.json"
   }
 }
