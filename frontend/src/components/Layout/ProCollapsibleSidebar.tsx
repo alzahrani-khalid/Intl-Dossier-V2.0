@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from '@tanstack/react-router';
 import { LogOut, User } from 'lucide-react';
@@ -8,6 +8,7 @@ import { useAuth } from '@/contexts/auth.context';
 import { useWorkQueueCounts } from '@/hooks/useWorkQueueCounts';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { ThemeSelector } from '@/components/theme-selector/theme-selector';
+import { Sheet, SheetContent } from '@/components/ui/sheet';
 import {
   createNavigationSections,
   bottomNavigationItems,
@@ -215,3 +216,32 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
     </div>
   );
 }
+
+// Mobile wrapper component with Sheet
+export function ProCollapsibleSidebarWrapper({ children }: { children: React.ReactNode }) {
+  const [mobileOpen, setMobileOpen] = useState(false);
+  const { i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
+
+  return (
+    <>
+      {/* Mobile Sheet */}
+      <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        <SheetContent
+          side={isRTL ? 'right' : 'left'}
+          className="w-[300px] p-0 bg-sidebar"
+        >
+          <ProCollapsibleSidebar className="md:hidden" />
+        </SheetContent>
+      </Sheet>
+
+      {/* Desktop Sidebar */}
+      <ProCollapsibleSidebar className="hidden md:flex" />
+
+      {/* Main Content */}
+      {children}
+    </>
+  );
+}
+
+export default ProCollapsibleSidebarWrapper;
