@@ -11,7 +11,7 @@ export function MainLayout({ children }: MainLayoutProps) {
  <>
  <div className="flex h-screen overflow-hidden bg-background">
  <ProCollapsibleSidebarWrapper>
- <main className="flex-1 overflow-y-auto">
+ <main className="flex-1 overflow-y-auto p-4 md:p-6 lg:p-8">
  {children}
  </main>
  </ProCollapsibleSidebarWrapper>
