@@ -1,42 +1,31 @@
 import type { ReactNode } from 'react';
 import { Toaster } from 'react-hot-toast';
-import { useNavigate } from '@tanstack/react-router';
-import { NavigationShell } from '@/components/modern-nav';
-import { useAuthStore } from '@/store/authStore';
+import { ProCollapsibleSidebarWrapper } from './ProCollapsibleSidebar';
 
 interface MainLayoutProps {
-  children: ReactNode;
+ children: ReactNode;
 }
 
 export function MainLayout({ children }: MainLayoutProps) {
-  const navigate = useNavigate();
-  const { user, logout } = useAuthStore();
-
-  const handleLogout = async () => {
-    await logout();
-    navigate({ to: '/login' });
-  };
-
-  return (
-    <>
-      <NavigationShell
-        userName={user?.name || 'User'}
-        userEmail={user?.email || ''}
-        onLogout={handleLogout}
-        defaultPanelOpen={true}
-      >
-        {children}
-      </NavigationShell>
-      <Toaster
-        position="top-center"
-        toastOptions={{
-          duration: 4000,
-          style: {
-            background: 'var(--toast-bg)',
-            color: 'var(--toast-color)',
-          },
-        }}
-      />
-    </>
-  );
+ return (
+ <>
+ <div className="flex h-screen overflow-hidden bg-background">
+ <ProCollapsibleSidebarWrapper>
+ <main className="flex-1 overflow-y-auto">
+ {children}
+ </main>
+ </ProCollapsibleSidebarWrapper>
+ </div>
+ <Toaster
+ position="top-center"
+ toastOptions={{
+ duration: 4000,
+ style: {
+ background: 'var(--toast-bg)',
+ color: 'var(--toast-color)',
+ },
+ }}
+ />
+ </>
+ );
 }
