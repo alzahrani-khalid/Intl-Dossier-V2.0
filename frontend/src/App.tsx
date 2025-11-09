@@ -24,8 +24,8 @@ function App() {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <ThemeErrorBoundary fallbackTheme="gastat" fallbackColorMode="light" fallbackLanguage="en">
-            <ThemeProvider initialTheme="gastat" initialColorMode="light">
+          <ThemeErrorBoundary fallbackTheme="zinc" fallbackColorMode="light" fallbackLanguage="en">
+            <ThemeProvider initialTheme="zinc" initialColorMode="light">
               <LanguageProvider initialLanguage="en">
                 <RTLWrapper>
                   <AppRouter />
