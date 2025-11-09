@@ -10,7 +10,7 @@ A complete, production-ready dashboard prototype with a professional dossier aes
 
 ```bash
 # 1. Start the development server
-cd frontend && npm run dev
+cd frontend && pnpm dev
 
 # 2. Open your browser to:
 http://localhost:5173/prototype-dossier
@@ -274,7 +274,7 @@ Everything is ready to go. Here's what to do:
 
 ### Option A: Quick Look (2 min)
 ```bash
-npm run dev
+pnpm dev
 # Then visit: http://localhost:5173/prototype-dossier
 ```
 
@@ -341,7 +341,7 @@ This prototype demonstrates:
 
 ```bash
 # Start exploring now
-cd frontend && npm run dev
+cd frontend && pnpm dev
 
 # Then open: http://localhost:5173/prototype-dossier
 ```

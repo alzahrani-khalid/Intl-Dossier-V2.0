@@ -38,29 +38,31 @@ scripts/          # Helper scripts
 
 ## Commands
 
+⚠️ **IMPORTANT**: This project uses **pnpm** exclusively. Using npm or yarn will fail.
+
 ### Development
-- **Dev (monorepo)**: `npm run dev` — runs frontend and backend via Turborepo
-- **Build**: `npm run build`
-- **Typecheck**: `npm run typecheck`
-- **Lint**: `npm run lint`
+- **Dev (monorepo)**: `pnpm dev` — runs frontend and backend via Turborepo
+- **Build**: `pnpm build`
+- **Typecheck**: `pnpm typecheck`
+- **Lint**: `pnpm lint`
 
 ### Testing
-- **All tests**: `npm test`
-- **Unit/Integration**: `npm run test:unit`
-- **E2E**: `npm run test:e2e`
-- **Single E2E file**: `npx playwright test e2e/tests/auth.spec.ts`
+- **All tests**: `pnpm test`
+- **Unit/Integration**: `pnpm run test:unit`
+- **E2E**: `pnpm run test:e2e`
+- **Single E2E file**: `pnpm exec playwright test e2e/tests/auth.spec.ts`
 
 ### Database
-- **Migrate**: `npm run db:migrate`
-- **Seed**: `npm run db:seed`
-- **Rollback**: `npm run db:rollback`
-- **Reset**: `npm run db:reset`
-- **Create migration**: `cd backend && npm run migrate:create`
+- **Migrate**: `pnpm run db:migrate`
+- **Seed**: `pnpm run db:seed`
+- **Rollback**: `pnpm run db:rollback`
+- **Reset**: `pnpm run db:reset`
+- **Create migration**: `cd backend && pnpm run migrate:create`
 
 ### Docker
-- **Start**: `npm run docker:up`
-- **Stop**: `npm run docker:down`
-- **Logs**: `npm run docker:logs`
+- **Start**: `pnpm run docker:up`
+- **Stop**: `pnpm run docker:down`
+- **Logs**: `pnpm run docker:logs`
 
 ## Coding Style & Naming Conventions
 
@@ -99,16 +101,16 @@ scripts/          # Helper scripts
 ### Running Tests
 ```bash
 # Run all tests
-npm test
+pnpm test
 
 # Run specific test file
-npx vitest run src/services/auth.test.ts
+pnpm exec vitest run src/services/auth.test.ts
 
 # Run E2E test
-npx playwright test e2e/tests/auth.spec.ts
+pnpm exec playwright test e2e/tests/auth.spec.ts
 
 # Run tests in watch mode
-npx vitest watch
+pnpm exec vitest watch
 ```
 
 ## Commit & Pull Request Guidelines

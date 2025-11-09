@@ -1,9 +1,6 @@
 import type { LucideIcon } from 'lucide-react';
 import {
   LayoutDashboard,
-  Globe2,
-  Building2,
-  FileText,
   CalendarDays,
   Brain,
   Database,
@@ -14,7 +11,6 @@ import {
   Settings,
   HelpCircle,
   Folder,
-  Briefcase,
   MessageSquare,
   ClipboardList,
   ScrollText,
@@ -23,9 +19,9 @@ import {
   Activity,
   Download,
   UserCog,
-  ListChecks,
   PenTool,
-  Target,
+  Shield,
+  Wrench,
 } from 'lucide-react';
 
 export interface NavigationItem {
@@ -112,54 +108,6 @@ export const createNavigationSections = (
       ],
     },
     {
-      id: 'browse',
-      label: 'navigation.browse',
-      items: [
-        {
-          id: 'countries',
-          label: 'navigation.countries',
-          path: '/countries',
-          icon: Globe2,
-        },
-        {
-          id: 'organizations',
-          label: 'navigation.organizations',
-          path: '/organizations',
-          icon: Building2,
-        },
-        {
-          id: 'forums',
-          label: 'navigation.forums',
-          path: '/forums',
-          icon: Users,
-        },
-        {
-          id: 'engagements',
-          label: 'navigation.engagements',
-          path: '/engagements',
-          icon: CalendarDays,
-        },
-        {
-          id: 'themes',
-          label: 'navigation.themes',
-          path: '/themes',
-          icon: Target,
-        },
-        {
-          id: 'working-groups',
-          label: 'navigation.workingGroups',
-          path: '/working-groups',
-          icon: Briefcase,
-        },
-        {
-          id: 'persons',
-          label: 'navigation.persons',
-          path: '/persons',
-          icon: Users,
-        },
-      ],
-    },
-    {
       id: 'tools',
       label: 'Tools',
       items: [
@@ -219,8 +167,22 @@ export const createNavigationSections = (
   if (isAdmin) {
     sections.push({
       id: 'admin',
-      label: 'Admin',
+      label: 'navigation.admin',
       items: [
+        {
+          id: 'admin-system',
+          label: 'navigation.adminSystem',
+          path: '/admin/system',
+          icon: Wrench,
+          adminOnly: true,
+        },
+        {
+          id: 'admin-approvals',
+          label: 'navigation.adminApprovals',
+          path: '/admin/approvals',
+          icon: Shield,
+          adminOnly: true,
+        },
         {
           id: 'users',
           label: 'navigation.users',

@@ -14,5 +14,5 @@ import { createFileRoute } from '@tanstack/react-router'
 import { IntakeQueuePage } from '../../../pages/IntakeQueue'
 
 export const Route = createFileRoute('/_protected/my-work/intake')({
-  component: IntakeQueuePage,
+ component: IntakeQueuePage,
 })

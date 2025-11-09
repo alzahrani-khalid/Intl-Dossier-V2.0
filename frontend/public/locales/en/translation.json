@@ -49,6 +49,7 @@
     "loginSuccess": "Login successful!"
   },
   "navigation": {
+    "myWork": "My Work",
     "myAssignments": "My Assignments",
     "intakeQueue": "Intake Queue",
     "waitingQueue": "Waiting Queue",
@@ -79,6 +80,7 @@
     "settings": "Settings",
     "profile": "Profile",
     "help": "Help",
+    "getHelp": "Get Help",
     "workflow": "Workflow",
     "system": "System",
     "tasks": "Tasks",
@@ -90,6 +92,8 @@
     "export": "Export",
     "users": "Users",
     "admin": "Admin",
+    "adminSystem": "System Utilities",
+    "adminApprovals": "Approval Management",
     "accessibility": "Accessibility",
     "switchToArabic": "Switch to Arabic",
     "switchToEnglish": "Switch to English",

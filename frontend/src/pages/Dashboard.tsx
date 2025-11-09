@@ -1,7 +1,7 @@
 import { DashboardPage } from './Dashboard/DashboardPage'
 
 export default function Dashboard() {
-  return <DashboardPage />
+ return <DashboardPage />
 }
 
 export { DashboardPage }

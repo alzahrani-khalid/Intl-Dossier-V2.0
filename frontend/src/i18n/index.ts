@@ -8,6 +8,8 @@ import enIntake from './en/intake.json'
 import arIntake from './ar/intake.json'
 import enDossiers from './en/dossiers.json'
 import arDossiers from './ar/dossiers.json'
+import enDossier from './en/dossier.json'
+import arDossier from './ar/dossier.json'
 import enPositions from './en/positions.json'
 import arPositions from './ar/positions.json'
 import enAssignments from './en/assignments.json'
@@ -26,6 +28,7 @@ const resources = {
     translation: enCommon,
     intake: enIntake,
     dossiers: enDossiers,
+    dossier: enDossier,
     positions: enPositions,
     assignments: enAssignments,
     forums: enForums,
@@ -35,6 +38,7 @@ const resources = {
     translation: arCommon,
     intake: arIntake,
     dossiers: arDossiers,
+    dossier: arDossier,
     positions: arPositions,
     assignments: arAssignments,
     forums: arForums,

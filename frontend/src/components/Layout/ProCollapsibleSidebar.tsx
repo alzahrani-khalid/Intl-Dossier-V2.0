@@ -1,15 +1,30 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Link, useLocation, useNavigate } from '@tanstack/react-router';
-import { LogOut, User } from 'lucide-react';
+import { LogOut, User, Menu } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { IconArrowNarrowLeft } from '@tabler/icons-react';
 import { cn } from '@/lib/utils';
 import { useAuth } from '@/contexts/auth.context';
 import { useWorkQueueCounts } from '@/hooks/useWorkQueueCounts';
+import { useIsMobile } from '@/hooks/use-mobile';
 import { LanguageToggle } from '@/components/LanguageToggle';
 import { ThemeSelector } from '@/components/theme-selector/theme-selector';
-import { Sheet, SheetContent } from '@/components/ui/sheet';
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetTrigger,
+} from '@/components/ui/sheet';
+import { Button } from '@/components/ui/button';
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from '@/components/ui/tooltip';
 import {
   createNavigationSections,
   bottomNavigationItems,
@@ -19,17 +34,23 @@ import {
 
 interface ProCollapsibleSidebarProps {
   className?: string;
+  onLinkClick?: () => void; // Callback for mobile to close Sheet after navigation
+  isInSheet?: boolean; // Whether sidebar is rendered inside a mobile Sheet
 }
 
-export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps) {
+export function ProCollapsibleSidebar({ className, onLinkClick, isInSheet = false }: ProCollapsibleSidebarProps) {
   const { t, i18n } = useTranslation();
   const location = useLocation();
   const navigate = useNavigate();
   const { user, logout } = useAuth();
+  const isMobile = useIsMobile();
   const isRTL = i18n.language === 'ar';
 
-  // Collapsible state
+  // Collapsible state (start expanded on desktop, always expanded in Sheet)
   const [isOpen, setIsOpen] = useState(true);
+
+  // When in Sheet, always show as expanded
+  const effectiveIsOpen = isInSheet ? true : isOpen;
 
   // Fetch work queue counts
   const { data: workQueueCounts, isLoading: isLoadingCounts } = useWorkQueueCounts();
@@ -68,9 +89,14 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
 
   function SidebarLink({ item, isActive, isRTL }: SidebarLinkProps) {
     const Icon = item.icon;
+    const labelText = t(item.label, item.label);
 
-    return (
-      <Link to={item.path} className="group/link relative block">
+    const linkContent = (
+      <Link
+        to={item.path}
+        onClick={onLinkClick} // Close mobile sheet after navigation
+        className="group/link relative block"
+      >
         {/* Hover background animation */}
         <AnimatePresence>
           {isActive && (
@@ -85,10 +111,14 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
           )}
         </AnimatePresence>
 
-        {/* Link content */}
+        {/* Link content - Mobile-first with proper touch targets */}
         <div
           className={cn(
-            'relative z-20 flex items-center gap-3 px-3 py-2 rounded-lg',
+            'relative z-20 flex items-center',
+            // Mobile-first: proper touch targets and spacing
+            'gap-2 px-3 py-3 sm:gap-3 sm:py-2.5 md:py-2',
+            'min-h-11 sm:min-h-10', // WCAG AA touch target minimum
+            'rounded-lg',
             'text-sidebar-foreground transition-all duration-150',
             'group-hover/link:bg-sidebar-accent/50',
             isActive && 'font-medium text-sidebar-accent-foreground'
@@ -96,7 +126,8 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
         >
           <Icon
             className={cn(
-              'h-4 w-4 shrink-0 transition-transform duration-150',
+              // Mobile-first icon sizing
+              'h-5 w-5 sm:h-4 sm:w-4 shrink-0 transition-transform duration-150',
               'group-hover/link:translate-x-1',
               isRTL && 'group-hover/link:-translate-x-1'
             )}
@@ -104,16 +135,16 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
           <motion.span
             className="text-sm whitespace-pre"
             animate={{
-              display: isOpen ? 'inline-block' : 'none',
-              opacity: isOpen ? 1 : 0,
+              display: effectiveIsOpen ? 'inline-block' : 'none',
+              opacity: effectiveIsOpen ? 1 : 0,
             }}
             transition={{ duration: 0.15 }}
           >
-            {t(item.label, item.label)}
+            {labelText}
           </motion.span>
 
           {/* Badge for work queue counts */}
-          {item.badgeCount !== undefined && item.badgeCount > 0 && isOpen && (
+          {item.badgeCount !== undefined && item.badgeCount > 0 && effectiveIsOpen && (
             <motion.div
               className={cn(
                 'ms-auto flex h-5 min-w-5 items-center justify-center',
@@ -121,8 +152,8 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
                 'text-xs font-medium tabular-nums'
               )}
               animate={{
-                display: isOpen ? 'flex' : 'none',
-                opacity: isOpen ? 1 : 0,
+                display: effectiveIsOpen ? 'flex' : 'none',
+                opacity: effectiveIsOpen ? 1 : 0,
               }}
               transition={{ duration: 0.15 }}
             >
@@ -132,32 +163,71 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
         </div>
       </Link>
     );
+
+    // Show tooltip when sidebar is collapsed
+    if (!effectiveIsOpen) {
+      return (
+        <Tooltip delayDuration={0}>
+          <TooltipTrigger asChild>{linkContent}</TooltipTrigger>
+          <TooltipContent side={isRTL ? 'left' : 'right'} className="flex items-center gap-2">
+            {labelText}
+            {item.badgeCount !== undefined && item.badgeCount > 0 && (
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-md px-1 bg-primary text-primary-foreground text-xs font-medium">
+                {item.badgeCount > 99 ? '99+' : item.badgeCount}
+              </span>
+            )}
+          </TooltipContent>
+        </Tooltip>
+      );
+    }
+
+    return linkContent;
   }
 
   return (
-    <motion.div
-      className={cn(
-        'group/sidebar-btn relative hidden md:flex md:flex-col h-screen flex-shrink-0',
-        'bg-sidebar text-sidebar-foreground border-r border-sidebar-border',
-        className
-      )}
-      animate={{ width: isOpen ? '300px' : '70px' }}
-      transition={{ duration: 0.2, ease: 'easeInOut' }}
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      {/* Collapse/Expand Toggle Button */}
-      <button
-        onClick={() => setIsOpen(!isOpen)}
+    <TooltipProvider delayDuration={0}>
+      <motion.div
         className={cn(
-          'absolute -right-2 top-4 z-40 hidden h-5 w-5 transform items-center justify-center',
-          'rounded-sm border border-sidebar-border bg-sidebar transition duration-200',
-          'group-hover/sidebar-btn:flex',
-          isOpen ? 'rotate-0' : 'rotate-180'
+          // Mobile-first: sidebar is always full-width in Sheet, collapsible on desktop
+          'group/sidebar-btn relative flex flex-col h-screen flex-shrink-0',
+          'bg-sidebar text-sidebar-foreground',
+          // Only show border on desktop (not in mobile Sheet)
+          !isInSheet && 'border-r border-sidebar-border',
+          className
         )}
-        aria-label={isOpen ? 'Collapse sidebar' : 'Expand sidebar'}
+        // Only animate width on desktop (md:768px+), on mobile it's always full width in Sheet
+        animate={{ width: isMobile || isInSheet ? '100%' : (effectiveIsOpen ? '300px' : '70px') }}
+        transition={{ duration: 0.2, ease: 'easeInOut' }}
+        dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <IconArrowNarrowLeft className="h-3 w-3 text-sidebar-foreground" />
-      </button>
+      {/* Collapse/Expand Toggle Button - Desktop only with proper touch target */}
+      {!isInSheet && (
+        <button
+          onClick={() => setIsOpen(!isOpen)}
+          className={cn(
+            // RTL-compatible positioning
+            'absolute top-[20px] z-40',
+            isRTL ? '-start-3' : '-end-3',
+            // Touch-friendly size (44x44px minimum)
+            'min-h-11 min-w-11 flex items-center justify-center',
+            'rounded-md border-2 border-sidebar-border bg-sidebar shadow-md',
+            'transition duration-200',
+            'hover:bg-sidebar-accent hover:border-sidebar-accent-foreground/20',
+            'focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2',
+            // Only show on desktop, hide on mobile
+            'hidden md:flex',
+            // Show on hover for desktop
+            'md:opacity-0 md:group-hover/sidebar-btn:opacity-100',
+            // Rotation based on state and RTL
+            isOpen
+              ? (isRTL ? 'rotate-180' : 'rotate-0')
+              : (isRTL ? 'rotate-0' : 'rotate-180')
+          )}
+          aria-label={isOpen ? t('sidebar.collapse', 'Collapse sidebar') : t('sidebar.expand', 'Expand sidebar')}
+        >
+          <IconArrowNarrowLeft className="h-5 w-5 sm:h-4 sm:w-4 text-sidebar-foreground/80 hover:text-sidebar-foreground" />
+        </button>
+      )}
 
       {/* Header */}
       <div className="px-4 py-4">
@@ -171,8 +241,8 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
           <motion.div
             className="grid flex-1 text-start text-sm leading-tight"
             animate={{
-              display: isOpen ? 'grid' : 'none',
-              opacity: isOpen ? 1 : 0,
+              display: effectiveIsOpen ? 'grid' : 'none',
+              opacity: effectiveIsOpen ? 1 : 0,
             }}
             transition={{ duration: 0.2 }}
           >
@@ -184,16 +254,16 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
         </Link>
       </div>
 
-      {/* Navigation Content */}
-      <div className="flex-1 overflow-y-auto px-4">
+      {/* Navigation Content - Mobile-first spacing */}
+      <div className="flex-1 overflow-y-auto px-3 sm:px-4">
         {navigationSections.map((section) => (
-          <div key={section.id} className="mb-6">
-            {isOpen && (
-              <h3 className="px-2 mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+          <div key={section.id} className="mb-4 sm:mb-6">
+            {effectiveIsOpen && (
+              <h3 className="px-2 mb-2 sm:mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                 {t(section.label, section.label)}
               </h3>
             )}
-            <div className="space-y-1">
+            <div className="space-y-1 sm:space-y-1">
               {section.items.map((item) => (
                 <SidebarLink
                   key={item.id}
@@ -225,7 +295,7 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
         </div>
 
         {/* Theme & Language Controls */}
-        {isOpen && (
+        {effectiveIsOpen && (
           <div className="flex items-center justify-center gap-2 mb-4">
             <LanguageToggle compact />
             <ThemeSelector />
@@ -237,7 +307,7 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
           <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
             <span className="text-sm font-bold">{userInitials}</span>
           </div>
-          {isOpen && (
+          {effectiveIsOpen && (
             <>
               <div className="grid flex-1 text-start text-sm leading-tight min-w-0">
                 <span className="truncate font-semibold text-sidebar-foreground">
@@ -263,28 +333,66 @@ export function ProCollapsibleSidebar({ className }: ProCollapsibleSidebarProps)
         </div>
       </div>
     </motion.div>
+    </TooltipProvider>
   );
 }
 
 // Mobile wrapper component with Sheet
 export function ProCollapsibleSidebarWrapper({ children }: { children: React.ReactNode }) {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { i18n } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const isMobile = useIsMobile();
   const isRTL = i18n.language === 'ar';
+
+  // Close mobile menu after navigation
+  const handleLinkClick = () => {
+    if (isMobile) {
+      setMobileOpen(false);
+    }
+  };
 
   return (
     <>
-      {/* Mobile Sheet */}
+      {/* Mobile Menu Trigger & Sheet (< 768px) */}
       <Sheet open={mobileOpen} onOpenChange={setMobileOpen}>
+        {/* Mobile Menu Button - Fixed position on mobile only */}
+        <SheetTrigger asChild>
+          <Button
+            variant="ghost"
+            size="icon"
+            className={cn(
+              // Show only on mobile
+              'fixed top-4 z-50',
+              isRTL ? 'right-4' : 'left-4',
+              'md:hidden', // Hide on desktop (sidebar is always visible)
+              // Touch-friendly size
+              'min-h-11 min-w-11',
+              'bg-sidebar border border-sidebar-border shadow-lg',
+              'hover:bg-sidebar-accent'
+            )}
+            aria-label={t('sidebar.openMenu', 'Open menu')}
+          >
+            <Menu className="h-5 w-5" />
+          </Button>
+        </SheetTrigger>
+
+        {/* Mobile Sheet Content */}
         <SheetContent
           side={isRTL ? 'right' : 'left'}
-          className="w-[300px] p-0 bg-sidebar"
+          className="w-[300px] p-0 bg-sidebar border-sidebar-border"
         >
-          <ProCollapsibleSidebar className="md:hidden" />
+          {/* Accessibility: Required for screen readers, visually hidden */}
+          <SheetHeader className="sr-only">
+            <SheetTitle>{t('sidebar.title', 'Navigation Menu')}</SheetTitle>
+            <SheetDescription>
+              {t('sidebar.description', 'Main navigation menu for the application')}
+            </SheetDescription>
+          </SheetHeader>
+          <ProCollapsibleSidebar onLinkClick={handleLinkClick} isInSheet={true} />
         </SheetContent>
       </Sheet>
 
-      {/* Desktop Sidebar */}
+      {/* Desktop Sidebar (≥ 768px) */}
       <ProCollapsibleSidebar className="hidden md:flex" />
 
       {/* Main Content */}

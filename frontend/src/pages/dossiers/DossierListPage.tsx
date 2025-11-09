@@ -1,26 +1,22 @@
 /**
- * DossierListPage Component
- * Part of: 026-unified-dossier-architecture implementation (User Story 1 - T056)
- *
- * List view for all dossiers with type filtering, search, and pagination.
- * Mobile-first, RTL-compatible, with responsive grid layout.
+ * DossierListPage Component (Enhanced)
+ * Enhanced version with header stats cards and expandable dossier cards
  *
  * Features:
- * - Responsive grid (1 col mobile → 2 col tablet → 3 col desktop)
- * - RTL support via logical properties
- * - Type filtering with badges
- * - Search functionality
- * - Pagination controls
- * - Loading states and error handling
- * - Touch-friendly UI (44x44px min)
- * - Accessibility compliant (WCAG AA)
+ * - Filterable header cards showing type statistics
+ * - Expandable dossier cards with map/flag visualization
+ * - Mobile-first responsive design
+ * - RTL support with logical properties
+ * - Smooth animations with Framer Motion
  */
 
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, Link } from '@tanstack/react-router';
-import { useDossiers } from '@/hooks/useDossier';
-import { UniversalDossierCard } from '@/components/Dossier/UniversalDossierCard';
+import { useDossiers, useDossierCounts } from '@/hooks/useDossier';
+import { usePrefetchIntelligence } from '@/hooks/useIntelligence';
+import { ExpandableDossierCard } from '@/components/Dossier/ExpandableDossierCard';
+import { DossierTypeStatsCard, DossierTypeStatsCardSkeleton } from '@/components/Dossier/DossierTypeStatsCard';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -30,15 +26,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from '@/components/ui/command';
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import {
   Plus,
   Search,
-  Filter,
   ChevronLeft,
   ChevronRight,
-  Loader2,
+  ChevronsUpDown,
+  Check,
   AlertCircle,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -50,7 +55,7 @@ const DOSSIER_TYPES: DossierType[] = [
   'organization',
   'forum',
   'engagement',
-  'theme',
+  'topic',
   'working_group',
   'person',
 ];
@@ -68,13 +73,26 @@ export function DossierListPage() {
     page_size: 12,
     sort_by: 'updated_at',
     sort_order: 'desc',
+    status: ['active'], // Default to showing only active dossiers
   });
 
   // Local state for search input (debounced)
   const [searchInput, setSearchInput] = useState('');
 
+  // Track active expanded card
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
+
+  // Track status filter popover state
+  const [statusFilterOpen, setStatusFilterOpen] = useState(false);
+
   // Fetch dossiers with filters
   const { data, isLoading, isError, error } = useDossiers(filters);
+
+  // Fetch dossier counts for header cards
+  const { data: counts, isLoading: countsLoading } = useDossierCounts();
+
+  // Prefetch intelligence data on hover (T100 - Performance optimization)
+  const prefetchIntelligence = usePrefetchIntelligence();
 
   const handleFilterChange = (key: keyof DossierFilters, value: unknown) => {
     setFilters((prev) => ({
@@ -108,20 +126,99 @@ export function DossierListPage() {
     }));
   };
 
+  const handleToggleStatus = (status: DossierStatus) => {
+    setFilters((prev) => {
+      const currentStatuses = Array.isArray(prev.status) ? prev.status : prev.status ? [prev.status] : [];
+      
+      if (currentStatuses.includes(status)) {
+        // Remove status
+        const newStatuses = currentStatuses.filter(s => s !== status);
+        return {
+          ...prev,
+          status: newStatuses.length > 0 ? newStatuses : undefined,
+          page: 1,
+        };
+      } else {
+        // Add status
+        return {
+          ...prev,
+          status: [...currentStatuses, status],
+          page: 1,
+        };
+      }
+    });
+  };
+
   const handlePageChange = (newPage: number) => {
     setFilters((prev) => ({ ...prev, page: newPage }));
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const handleViewDossier = (id: string) => {
-    navigate({ to: '/dossiers/$id', params: { id } });
+  const handleViewDossier = (id: string, type?: DossierType) => {
+    // Route to type-specific detail page based on dossier type
+    switch (type) {
+      case 'country':
+        navigate({ to: '/dossiers/countries/$id', params: { id } });
+        break;
+      case 'organization':
+        navigate({ to: '/dossiers/organizations/$id', params: { id } });
+        break;
+      case 'person':
+        navigate({ to: '/dossiers/persons/$id', params: { id } });
+        break;
+      case 'engagement':
+        navigate({ to: '/dossiers/engagements/$id', params: { id } });
+        break;
+      case 'forum':
+        navigate({ to: '/dossiers/forums/$id', params: { id } });
+        break;
+      case 'working_group':
+        navigate({ to: '/dossiers/working_groups/$id', params: { id } });
+        break;
+      case 'topic':
+        navigate({ to: '/dossiers/topics/$id', params: { id } });
+        break;
+      default:
+        // Fallback to generic detail page
+        navigate({ to: '/dossiers/$id', params: { id } });
+    }
   };
 
   const handleEditDossier = (id: string) => {
     navigate({ to: '/dossiers/$id/edit', params: { id } });
   };
 
+  const handleTypeCardClick = (type: DossierType) => {
+    // Toggle filter: if already selected, clear it; otherwise set it
+    if (filters.type === type) {
+      handleFilterChange('type', undefined);
+    } else {
+      handleFilterChange('type', type);
+    }
+  };
+
   const totalPages = data ? Math.ceil(data.total / (filters.page_size || 12)) : 0;
+
+  // Calculate stats for header cards
+  const getTypeStats = (type: DossierType) => {
+    const typeCount = counts?.[type];
+    if (!typeCount) {
+      return { count: 0, percentage: 0, activeCount: 0, inactiveCount: 0 };
+    }
+
+    // Calculate total active dossiers across all types for percentage
+    const totalActive = counts
+      ? Object.values(counts).reduce((sum, val) => sum + val.active, 0)
+      : 0;
+    const percentage = totalActive > 0 ? (typeCount.active / totalActive) * 100 : 0;
+
+    return {
+      count: typeCount.total,
+      percentage,
+      activeCount: typeCount.active,
+      inactiveCount: typeCount.inactive,
+    };
+  };
 
   return (
     <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -137,9 +234,8 @@ export function DossierListPage() {
         </div>
         <Link to="/dossiers/create">
           <Button
-            size="lg"
             className={cn(
-              "min-h-11 w-full sm:w-auto",
+              "w-full sm:w-auto",
               "shadow-md hover:shadow-lg",
               "transition-all duration-200"
             )}
@@ -150,13 +246,45 @@ export function DossierListPage() {
         </Link>
       </div>
 
-      {/* Filters Section with Modern Glass Effect */}
+      {/* Type Stats Header Cards */}
+      <div className="mb-10">
+        <h2 className="text-xl sm:text-2xl font-bold text-start mb-4 sm:mb-6">
+          {t('list.typeOverview')}
+        </h2>
+        {countsLoading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
+            {Array.from({ length: 7 }).map((_, i) => (
+              <DossierTypeStatsCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
+            {DOSSIER_TYPES.map((type) => {
+              const stats = getTypeStats(type);
+              return (
+                <DossierTypeStatsCard
+                  key={type}
+                  type={type}
+                  totalCount={stats.count}
+                  activeCount={stats.activeCount}
+                  inactiveCount={stats.inactiveCount}
+                  percentage={stats.percentage}
+                  isSelected={filters.type === type}
+                  onClick={() => handleTypeCardClick(type)}
+                />
+              );
+            })}
+          </div>
+        )}
+      </div>
+
+      {/* Search and Filters Section */}
       <div className={cn(
         "rounded-3xl border border-black/5 p-5 sm:p-7 mb-8 space-y-6",
         "bg-white/60 backdrop-blur-xl",
         "shadow-[0_6px_20px_rgba(0,0,0,0.08),0_2px_6px_rgba(0,0,0,0.04)]"
       )}>
-        {/* Search Bar with Modern Style */}
+        {/* Search Bar */}
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <div className="flex-1">
             <div className="relative">
@@ -185,9 +313,8 @@ export function DossierListPage() {
           </div>
           <Button
             onClick={handleSearch}
-            size="lg"
             className={cn(
-              "min-h-12 w-full sm:w-auto px-6",
+              "w-full sm:w-auto px-6",
               "rounded-xl",
               "shadow-md hover:shadow-lg",
               "transition-all duration-200"
@@ -198,198 +325,130 @@ export function DossierListPage() {
           </Button>
         </div>
 
-        {/* Filter Controls with Modern Styling */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-          {/* Type Filter */}
-          <Select
-            value={filters.type}
-            onValueChange={(value) => handleFilterChange('type', value as DossierType)}
-          >
-            <SelectTrigger className={cn(
-              "h-12",
-              "bg-white/40 border border-black/5",
-              "rounded-xl",
-              "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
-              "hover:bg-white/60 hover:border-black/10",
-              "transition-all duration-150"
-            )}>
-              <SelectValue placeholder={t('list.filterByType')} />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              {DOSSIER_TYPES.map((type) => (
-                <SelectItem key={type} value={type}>
-                  {t(`type.${type}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        {/* Filter Controls */}
+        <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+            {/* Status Filter - Multiselect */}
+            <div className="space-y-2">
+              <Popover open={statusFilterOpen} onOpenChange={setStatusFilterOpen}>
+                <PopoverTrigger asChild>
+                  <Button
+                    variant="outline"
+                    role="combobox"
+                    aria-expanded={statusFilterOpen}
+                    className={cn(
+                      "h-12 justify-between w-full",
+                      "bg-white/40 border border-black/5",
+                      "rounded-xl",
+                      "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
+                      "hover:bg-white/60 hover:border-black/10",
+                      "transition-all duration-150"
+                    )}
+                  >
+                    <span>
+                      {filters.status && (Array.isArray(filters.status) ? filters.status : [filters.status]).length > 0
+                        ? `${(Array.isArray(filters.status) ? filters.status : [filters.status]).length} status(es) selected`
+                        : t('list.filterByStatus')}
+                    </span>
+                    <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+                  </Button>
+                </PopoverTrigger>
+                <PopoverContent className="w-[250px] p-0" align="start">
+                  <Command>
+                    <CommandInput placeholder={t('filter.search_status', 'Search statuses...')} />
+                    <CommandList>
+                      <CommandEmpty>{t('filter.no_status_found', 'No status found')}</CommandEmpty>
+                      <CommandGroup>
+                        {DOSSIER_STATUSES.map((status) => {
+                          const currentStatuses = Array.isArray(filters.status) ? filters.status : filters.status ? [filters.status] : [];
+                          const isSelected = currentStatuses.includes(status);
+                          
+                          return (
+                            <CommandItem
+                              key={status}
+                              value={status}
+                              onSelect={() => handleToggleStatus(status)}
+                            >
+                              <Check
+                                className={cn(
+                                  "me-2 h-4 w-4",
+                                  isSelected ? "opacity-100" : "opacity-0"
+                                )}
+                              />
+                              {t(`status.${status}`)}
+                            </CommandItem>
+                          );
+                        })}
+                      </CommandGroup>
+                    </CommandList>
+                  </Command>
+                </PopoverContent>
+              </Popover>
+              {/* Show selected statuses as badges */}
+              {filters.status && (Array.isArray(filters.status) ? filters.status : [filters.status]).length > 0 && (
+                <div className="flex flex-wrap gap-1">
+                  {(Array.isArray(filters.status) ? filters.status : [filters.status]).map((status) => (
+                    <Badge key={status} variant="secondary" className="text-xs">
+                      {t(`status.${status}`)}
+                    </Badge>
+                  ))}
+                </div>
+              )}
+            </div>
 
-          {/* Status Filter */}
-          <Select
-            value={filters.status}
-            onValueChange={(value) => handleFilterChange('status', value as DossierStatus)}
-          >
-            <SelectTrigger className={cn(
-              "h-12",
-              "bg-white/40 border border-black/5",
-              "rounded-xl",
-              "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
-              "hover:bg-white/60 hover:border-black/10",
-              "transition-all duration-150"
-            )}>
-              <SelectValue placeholder={t('list.filterByStatus')} />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              {DOSSIER_STATUSES.map((status) => (
-                <SelectItem key={status} value={status}>
-                  {t(`status.${status}`)}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            {/* Sort By */}
+            <Select
+              value={filters.sort_by}
+              onValueChange={(value) => handleFilterChange('sort_by', value)}
+            >
+              <SelectTrigger className={cn(
+                "h-12",
+                "bg-white/40 border border-black/5",
+                "rounded-xl",
+                "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
+                "hover:bg-white/60 hover:border-black/10",
+                "transition-all duration-150"
+              )}>
+                <SelectValue placeholder={t('list.sortBy')} />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl">
+                <SelectItem value="updated_at">{t('list.sortUpdated')}</SelectItem>
+                <SelectItem value="created_at">{t('list.sortCreated')}</SelectItem>
+                <SelectItem value="name_en">{t('list.sortNameEn')}</SelectItem>
+                <SelectItem value="name_ar">{t('list.sortNameAr')}</SelectItem>
+              </SelectContent>
+            </Select>
 
-          {/* Sort By */}
-          <Select
-            value={filters.sort_by}
-            onValueChange={(value) => handleFilterChange('sort_by', value)}
-          >
-            <SelectTrigger className={cn(
-              "h-12",
-              "bg-white/40 border border-black/5",
-              "rounded-xl",
-              "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
-              "hover:bg-white/60 hover:border-black/10",
-              "transition-all duration-150"
-            )}>
-              <SelectValue placeholder={t('list.sortBy')} />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="updated_at">{t('list.sortUpdated')}</SelectItem>
-              <SelectItem value="created_at">{t('list.sortCreated')}</SelectItem>
-              <SelectItem value="name_en">{t('list.sortNameEn')}</SelectItem>
-              <SelectItem value="name_ar">{t('list.sortNameAr')}</SelectItem>
-            </SelectContent>
-          </Select>
-
-          {/* Sort Order */}
-          <Select
-            value={filters.sort_order}
-            onValueChange={(value) => handleFilterChange('sort_order', value as 'asc' | 'desc')}
-          >
-            <SelectTrigger className={cn(
-              "h-12",
-              "bg-white/40 border border-black/5",
-              "rounded-xl",
-              "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
-              "hover:bg-white/60 hover:border-black/10",
-              "transition-all duration-150"
-            )}>
-              <SelectValue placeholder={t('list.sortOrder')} />
-            </SelectTrigger>
-            <SelectContent className="rounded-xl">
-              <SelectItem value="desc">{t('list.sortDesc')}</SelectItem>
-              <SelectItem value="asc">{t('list.sortAsc')}</SelectItem>
-            </SelectContent>
-          </Select>
+            {/* Sort Order */}
+            <Select
+              value={filters.sort_order}
+              onValueChange={(value) => handleFilterChange('sort_order', value as 'asc' | 'desc')}
+            >
+              <SelectTrigger className={cn(
+                "h-12",
+                "bg-white/40 border border-black/5",
+                "rounded-xl",
+                "shadow-[inset_0_1px_3px_rgba(0,0,0,0.04)]",
+                "hover:bg-white/60 hover:border-black/10",
+                "transition-all duration-150"
+              )}>
+                <SelectValue placeholder={t('list.sortOrder')} />
+              </SelectTrigger>
+              <SelectContent className="rounded-xl">
+                <SelectItem value="desc">{t('list.sortDesc')}</SelectItem>
+                <SelectItem value="asc">{t('list.sortAsc')}</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
         </div>
 
-        {/* Active Filters with Modern Badge Styling */}
-        {(filters.type || filters.status || filters.search) && (
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            <span className="text-sm font-medium text-muted-foreground/70">{t('list.activeFilters')}:</span>
-            {filters.type && (
-              <Badge
-                variant="secondary"
-                className={cn(
-                  "text-xs sm:text-sm px-3 py-1.5",
-                  "bg-white/60 border border-black/5",
-                  "rounded-lg",
-                  "shadow-sm",
-                  "hover:bg-white/80",
-                  "transition-colors duration-150"
-                )}
-              >
-                {t(`type.${filters.type}`)}
-                <button
-                  onClick={handleClearType}
-                  className={cn(
-                    'ms-2 text-muted-foreground/60',
-                    'hover:text-destructive',
-                    'font-semibold text-base',
-                    'transition-colors duration-150'
-                  )}
-                  aria-label={t('list.clearFilter')}
-                >
-                  ×
-                </button>
-              </Badge>
-            )}
-            {filters.status && (
-              <Badge
-                variant="secondary"
-                className={cn(
-                  "text-xs sm:text-sm px-3 py-1.5",
-                  "bg-white/60 border border-black/5",
-                  "rounded-lg",
-                  "shadow-sm",
-                  "hover:bg-white/80",
-                  "transition-colors duration-150"
-                )}
-              >
-                {t(`status.${filters.status}`)}
-                <button
-                  onClick={handleClearStatus}
-                  className={cn(
-                    'ms-2 text-muted-foreground/60',
-                    'hover:text-destructive',
-                    'font-semibold text-base',
-                    'transition-colors duration-150'
-                  )}
-                  aria-label={t('list.clearFilter')}
-                >
-                  ×
-                </button>
-              </Badge>
-            )}
-            {filters.search && (
-              <Badge
-                variant="secondary"
-                className={cn(
-                  "text-xs sm:text-sm px-3 py-1.5",
-                  "bg-white/60 border border-black/5",
-                  "rounded-lg",
-                  "shadow-sm",
-                  "hover:bg-white/80",
-                  "transition-colors duration-150"
-                )}
-              >
-                {t('list.searchQuery')}: "{filters.search}"
-                <button
-                  onClick={() => {
-                    setSearchInput('');
-                    handleFilterChange('search', undefined);
-                  }}
-                  className={cn(
-                    'ms-2 text-muted-foreground/60',
-                    'hover:text-destructive',
-                    'font-semibold text-base',
-                    'transition-colors duration-150'
-                  )}
-                  aria-label={t('list.clearFilter')}
-                >
-                  ×
-                </button>
-              </Badge>
-            )}
-          </div>
-        )}
       </div>
 
       {/* Results Section */}
       {isLoading && (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-64 sm:h-72 rounded-2xl" />
+            <Skeleton key={i} className="h-72 sm:h-80 rounded-2xl" />
           ))}
         </div>
       )}
@@ -413,17 +472,19 @@ export function DossierListPage() {
       {!isLoading && !isError && data && (
         <>
           {/* Results Count */}
-          <div className="flex items-center justify-between mb-6">
-            <p className="text-sm font-medium text-muted-foreground/70 text-start">
-              {t('list.showing', {
-                from: (filters.page! - 1) * filters.page_size! + 1,
-                to: Math.min(filters.page! * filters.page_size!, data.total),
-                total: data.total,
-              })}
-            </p>
-          </div>
+          {data.total > 0 && (
+            <div className="flex items-center justify-between mb-6">
+              <p className="text-sm font-medium text-muted-foreground/70 text-start">
+                {t('list.showing', {
+                  from: ((filters.page || 1) - 1) * (filters.page_size || 12) + 1,
+                  to: Math.min((filters.page || 1) * (filters.page_size || 12), data.total),
+                  total: data.total,
+                })}
+              </p>
+            </div>
+          )}
 
-          {/* Dossiers Grid */}
+          {/* Expandable Dossiers Grid */}
           {data.data.length === 0 ? (
             <div className={cn(
               "text-center py-16 px-4",
@@ -435,17 +496,21 @@ export function DossierListPage() {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 mb-10">
               {data.data.map((dossier) => (
-                <UniversalDossierCard
+                <ExpandableDossierCard
                   key={dossier.id}
                   dossier={dossier}
+                  isActive={activeCardId === dossier.id}
+                  onActivate={() => setActiveCardId(dossier.id)}
+                  onDeactivate={() => setActiveCardId(null)}
                   onView={handleViewDossier}
                   onEdit={handleEditDossier}
+                  onMouseEnter={() => prefetchIntelligence(dossier.id)}
                 />
               ))}
             </div>
           )}
 
-          {/* Pagination with Modern Styling */}
+          {/* Pagination */}
           {totalPages > 1 && (
             <div className={cn(
               "flex flex-col sm:flex-row items-center justify-between gap-4",
@@ -453,16 +518,16 @@ export function DossierListPage() {
               "border-t border-black/5"
             )}>
               <p className="text-sm font-medium text-muted-foreground/70">
-                {t('list.page', { current: filters.page, total: totalPages })}
+                {t('list.page', { current: filters.page || 1, total: totalPages })}
               </p>
               <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handlePageChange(filters.page! - 1)}
-                  disabled={filters.page === 1}
+                  onClick={() => handlePageChange((filters.page || 1) - 1)}
+                  disabled={(filters.page || 1) === 1}
                   className={cn(
-                    "min-h-11 min-w-11 px-4",
+                    "px-4",
                     "rounded-xl",
                     "bg-white/40 border border-black/5",
                     "hover:bg-white/60 hover:border-black/10",
@@ -479,10 +544,10 @@ export function DossierListPage() {
                 <Button
                   variant="outline"
                   size="sm"
-                  onClick={() => handlePageChange(filters.page! + 1)}
-                  disabled={filters.page === totalPages}
+                  onClick={() => handlePageChange((filters.page || 1) + 1)}
+                  disabled={(filters.page || 1) === totalPages}
                   className={cn(
-                    "min-h-11 min-w-11 px-4",
+                    "px-4",
                     "rounded-xl",
                     "bg-white/40 border border-black/5",
                     "hover:bg-white/60 hover:border-black/10",

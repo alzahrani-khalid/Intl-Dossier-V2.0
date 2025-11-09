@@ -10,488 +10,488 @@ import { supabase } from '@/lib/supabase'
 import { format } from 'date-fns'
 
 interface IntelligenceReport {
-  id: string
-  report_number: string
-  title_en: string
-  title_ar: string
-  executive_summary_en: string
-  executive_summary_ar: string
-  confidence_level: 'low' | 'medium' | 'high' | 'verified'
-  classification: 'public' | 'internal' | 'confidential' | 'restricted'
-  analysis_type: string[]
-  key_findings: Array<Record<string, unknown>>
-  recommendations: Array<Record<string, unknown>>
-  status: string
-  author: {
-    full_name: string
-  }
-  reviewed_by: {
-    full_name: string
-  } | null
-  approved_by: {
-    full_name: string
-  } | null
-  created_at: string
-  published_at: string | null
+ id: string
+ report_number: string
+ title_en: string
+ title_ar: string
+ executive_summary_en: string
+ executive_summary_ar: string
+ confidence_level: 'low' | 'medium' | 'high' | 'verified'
+ classification: 'public' | 'internal' | 'confidential' | 'restricted'
+ analysis_type: string[]
+ key_findings: Array<Record<string, unknown>>
+ recommendations: Array<Record<string, unknown>>
+ status: string
+ author: {
+ full_name: string
+ }
+ reviewed_by: {
+ full_name: string
+ } | null
+ approved_by: {
+ full_name: string
+ } | null
+ created_at: string
+ published_at: string | null
 }
 
 type IntelligenceReportRow = {
-  id: string
-  report_number?: string | null
-  title?: string | null
-  title_en?: string | null
-  title_ar?: string | null
-  executive_summary_en?: string | null
-  executive_summary_ar?: string | null
-  summary_en?: string | null
-  summary_ar?: string | null
-  summary?: string | null
-  confidence_level?: string | null
-  confidence?: string | null
-  classification?: string | null
-  analysis_type?: string[] | string | null
-  analysis_types?: string[] | null
-  key_findings?: unknown
-  findings?: unknown
-  recommendations?: unknown
-  status?: string | null
-  author?: { full_name?: string | null } | null
-  author_name?: string | null
-  created_by?: string | null
-  reviewed_by?: { full_name?: string | null } | null
-  reviewed_by_name?: string | null
-  approved_by?: { full_name?: string | null } | null
-  approved_by_name?: string | null
-  created_at?: string | null
-  createdAt?: string | null
-  published_at?: string | null
+ id: string
+ report_number?: string | null
+ title?: string | null
+ title_en?: string | null
+ title_ar?: string | null
+ executive_summary_en?: string | null
+ executive_summary_ar?: string | null
+ summary_en?: string | null
+ summary_ar?: string | null
+ summary?: string | null
+ confidence_level?: string | null
+ confidence?: string | null
+ classification?: string | null
+ analysis_type?: string[] | string | null
+ analysis_types?: string[] | null
+ key_findings?: unknown
+ findings?: unknown
+ recommendations?: unknown
+ status?: string | null
+ author?: { full_name?: string | null } | null
+ author_name?: string | null
+ created_by?: string | null
+ reviewed_by?: { full_name?: string | null } | null
+ reviewed_by_name?: string | null
+ approved_by?: { full_name?: string | null } | null
+ approved_by_name?: string | null
+ created_at?: string | null
+ createdAt?: string | null
+ published_at?: string | null
 }
 
 export function IntelligencePage() {
-  const { t, i18n } = useTranslation()
-  const [searchTerm, setSearchTerm] = useState('')
-  const [filterConfidence, setFilterConfidence] = useState<string>('all')
-  const [filterClassification, setFilterClassification] = useState<string>('all')
-  const [similaritySearch, setSimilaritySearch] = useState('')
-  const isRTL = i18n.language === 'ar'
+ const { t, i18n } = useTranslation()
+ const [searchTerm, setSearchTerm] = useState('')
+ const [filterConfidence, setFilterConfidence] = useState<string>('all')
+ const [filterClassification, setFilterClassification] = useState<string>('all')
+ const [similaritySearch, setSimilaritySearch] = useState('')
+ const isRTL = i18n.language === 'ar'
 
-  const { data: reports, isLoading } = useQuery({
-    queryKey: ['intelligence', searchTerm, filterConfidence, filterClassification],
-    queryFn: async () => {
-      const { data, error } = await supabase
-        .from('intelligence_reports')
-        .select('*')
-        .order('created_at', { ascending: false })
+ const { data: reports, isLoading } = useQuery({
+ queryKey: ['intelligence', searchTerm, filterConfidence, filterClassification],
+ queryFn: async () => {
+ const { data, error } = await supabase
+ .from('intelligence_reports')
+ .select('*')
+ .order('created_at', { ascending: false })
 
-      if (error) {
-        console.error('Failed to load intelligence reports', error)
-        throw error
-      }
+ if (error) {
+ console.error('Failed to load intelligence reports', error)
+ throw error
+ }
 
-      const normalized = (data as IntelligenceReportRow[] | null)?.map((raw) => {
-        const titleEn = raw.title_en ?? raw.title ?? 'Untitled report'
-        const titleAr = raw.title_ar ?? titleEn
-        const summaryEn = raw.executive_summary_en ?? raw.summary_en ?? raw.summary ?? ''
-        const summaryAr = raw.executive_summary_ar ?? raw.summary_ar ?? summaryEn
-        const confidence = raw.confidence_level ?? raw.confidence ?? 'medium'
-        const classification = raw.classification ?? 'internal'
-        const status = raw.status ?? 'draft'
-        const createdAt = raw.created_at ?? raw.createdAt ?? new Date().toISOString()
-        const publishedAt = raw.published_at ?? null
+ const normalized = (data as IntelligenceReportRow[] | null)?.map((raw) => {
+ const titleEn = raw.title_en ?? raw.title ?? 'Untitled report'
+ const titleAr = raw.title_ar ?? titleEn
+ const summaryEn = raw.executive_summary_en ?? raw.summary_en ?? raw.summary ?? ''
+ const summaryAr = raw.executive_summary_ar ?? raw.summary_ar ?? summaryEn
+ const confidence = raw.confidence_level ?? raw.confidence ?? 'medium'
+ const classification = raw.classification ?? 'internal'
+ const status = raw.status ?? 'draft'
+ const createdAt = raw.created_at ?? raw.createdAt ?? new Date().toISOString()
+ const publishedAt = raw.published_at ?? null
 
-        const normalizeArray = (value: unknown) => {
-          if (Array.isArray(value)) return value
-          if (typeof value === 'string') {
-            const trimmed = value.trim()
-            if (!trimmed) return []
-            try {
-              const parsed = JSON.parse(trimmed)
-              if (Array.isArray(parsed)) return parsed
-              if (typeof parsed === 'string') return [parsed]
-            } catch {
-              return [trimmed]
-            }
-            return []
-          }
-          return []
-        }
+ const normalizeArray = (value: unknown) => {
+ if (Array.isArray(value)) return value
+ if (typeof value === 'string') {
+ const trimmed = value.trim()
+ if (!trimmed) return []
+ try {
+ const parsed = JSON.parse(trimmed)
+ if (Array.isArray(parsed)) return parsed
+ if (typeof parsed === 'string') return [parsed]
+ } catch {
+ return [trimmed]
+ }
+ return []
+ }
+ return []
+ }
 
-        return {
-          id: raw.id,
-          report_number: raw.report_number ?? raw.id ?? 'N/A',
-          title_en: titleEn,
-          title_ar: titleAr,
-          executive_summary_en: summaryEn,
-          executive_summary_ar: summaryAr,
-          confidence_level: confidence,
-          classification,
-          analysis_type: normalizeArray(
-            raw.analysis_type && !Array.isArray(raw.analysis_type)
-              ? raw.analysis_type
-              : raw.analysis_types ?? raw.analysis_type ?? []
-          ) as string[],
-          key_findings: normalizeArray(raw.key_findings ?? raw.findings ?? []) as Array<Record<string, unknown>>,
-          recommendations: normalizeArray(raw.recommendations ?? []) as Array<Record<string, unknown>>,
-          status,
-          author: {
-            full_name: raw.author?.full_name ?? raw.author_name ?? raw.created_by ?? '—'
-          },
-          reviewed_by: raw.reviewed_by
-            ? { full_name: raw.reviewed_by.full_name ?? '—' }
-            : raw.reviewed_by_name
-              ? { full_name: raw.reviewed_by_name }
-              : null,
-          approved_by: raw.approved_by
-            ? { full_name: raw.approved_by.full_name ?? '—' }
-            : raw.approved_by_name
-              ? { full_name: raw.approved_by_name }
-              : null,
-          created_at: createdAt,
-          published_at: publishedAt
-        } satisfies IntelligenceReport
-      }) ?? []
+ return {
+ id: raw.id,
+ report_number: raw.report_number ?? raw.id ?? 'N/A',
+ title_en: titleEn,
+ title_ar: titleAr,
+ executive_summary_en: summaryEn,
+ executive_summary_ar: summaryAr,
+ confidence_level: confidence,
+ classification,
+ analysis_type: normalizeArray(
+ raw.analysis_type && !Array.isArray(raw.analysis_type)
+ ? raw.analysis_type
+ : raw.analysis_types ?? raw.analysis_type ?? []
+ ) as string[],
+ key_findings: normalizeArray(raw.key_findings ?? raw.findings ?? []) as Array<Record<string, unknown>>,
+ recommendations: normalizeArray(raw.recommendations ?? []) as Array<Record<string, unknown>>,
+ status,
+ author: {
+ full_name: raw.author?.full_name ?? raw.author_name ?? raw.created_by ?? '—'
+ },
+ reviewed_by: raw.reviewed_by
+ ? { full_name: raw.reviewed_by.full_name ?? '—' }
+ : raw.reviewed_by_name
+ ? { full_name: raw.reviewed_by_name }
+ : null,
+ approved_by: raw.approved_by
+ ? { full_name: raw.approved_by.full_name ?? '—' }
+ : raw.approved_by_name
+ ? { full_name: raw.approved_by_name }
+ : null,
+ created_at: createdAt,
+ published_at: publishedAt
+ } satisfies IntelligenceReport
+ }) ?? []
 
-      return normalized.filter((report) => {
-        const matchesConfidence =
-          filterConfidence === 'all' ? true : report.confidence_level === filterConfidence
-        const matchesClassification =
-          filterClassification === 'all' ? true : report.classification === filterClassification
-        const matchesSearch = searchTerm
-          ? [
-              report.report_number,
-              report.title_en,
-              report.title_ar,
-              report.executive_summary_en,
-              report.executive_summary_ar
-            ]
-              .filter(Boolean)
-              .some((value) => value.toLowerCase().includes(searchTerm.toLowerCase()))
-          : true
+ return normalized.filter((report) => {
+ const matchesConfidence =
+ filterConfidence === 'all' ? true : report.confidence_level === filterConfidence
+ const matchesClassification =
+ filterClassification === 'all' ? true : report.classification === filterClassification
+ const matchesSearch = searchTerm
+ ? [
+ report.report_number,
+ report.title_en,
+ report.title_ar,
+ report.executive_summary_en,
+ report.executive_summary_ar
+ ]
+ .filter(Boolean)
+ .some((value) => value.toLowerCase().includes(searchTerm.toLowerCase()))
+ : true
 
-        return matchesConfidence && matchesClassification && matchesSearch
-      })
-    }
-  })
+ return matchesConfidence && matchesClassification && matchesSearch
+ })
+ }
+ })
 
-  const similaritySearchMutation = useMutation({
-    mutationFn: async (searchQuery: string) => {
-      const { data, error } = await supabase.rpc('search_intelligence_by_similarity', {
-        query_text: searchQuery,
-        match_threshold: 0.7,
-        match_count: 10
-      })
+ const similaritySearchMutation = useMutation({
+ mutationFn: async (searchQuery: string) => {
+ const { data, error } = await supabase.rpc('search_intelligence_by_similarity', {
+ query_text: searchQuery,
+ match_threshold: 0.7,
+ match_count: 10
+ })
 
-      if (error) throw error
-      return data
-    }
-  })
+ if (error) throw error
+ return data
+ }
+ })
 
-  const ConfidenceIndicator = ({ level }: { level: string }) => {
-    const configs = {
-      low: { color: 'text-gray-600', bgColor: 'bg-gray-100', icon: '25%' },
-      medium: { color: 'text-yellow-600', bgColor: 'bg-yellow-100', icon: '50%' },
-      high: { color: 'text-blue-600', bgColor: 'bg-blue-100', icon: '75%' },
-      verified: { color: 'text-green-600', bgColor: 'bg-green-100', icon: '100%' }
-    }
-    const config = configs[level as keyof typeof configs]
+ const ConfidenceIndicator = ({ level }: { level: string }) => {
+ const configs = {
+ low: { color: 'text-gray-600', bgColor: 'bg-gray-100', icon: '25%' },
+ medium: { color: 'text-yellow-600', bgColor: 'bg-yellow-100', icon: '50%' },
+ high: { color: 'text-blue-600', bgColor: 'bg-blue-100', icon: '75%' },
+ verified: { color: 'text-green-600', bgColor: 'bg-green-100', icon: '100%' }
+ }
+ const config = configs[level as keyof typeof configs]
 
-    return (
-      <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}>
-        <Shield className="h-3 w-3 me-1" />
-        {t(`intelligence.confidenceLevels.${level}`)} ({config.icon})
-      </div>
-    )
-  }
+ return (
+ <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}>
+ <Shield className="h-3 w-3 me-1" />
+ {t(`intelligence.confidenceLevels.${level}`)} ({config.icon})
+ </div>
+ )
+ }
 
-  const ClassificationBadge = ({ classification }: { classification: string }) => {
-    const configs = {
-      public: { color: 'text-green-800', bgColor: 'bg-green-100' },
-      internal: { color: 'text-blue-800', bgColor: 'bg-blue-100' },
-      confidential: { color: 'text-orange-800', bgColor: 'bg-orange-100' },
-      restricted: { color: 'text-red-800', bgColor: 'bg-red-100' }
-    }
-    const config = configs[classification as keyof typeof configs]
+ const ClassificationBadge = ({ classification }: { classification: string }) => {
+ const configs = {
+ public: { color: 'text-green-800', bgColor: 'bg-green-100' },
+ internal: { color: 'text-blue-800', bgColor: 'bg-blue-100' },
+ confidential: { color: 'text-orange-800', bgColor: 'bg-orange-100' },
+ restricted: { color: 'text-red-800', bgColor: 'bg-red-100' }
+ }
+ const config = configs[classification as keyof typeof configs]
 
-    return (
-      <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}>
-        {t(`intelligence.classification.${classification}`)}
-      </span>
-    )
-  }
+ return (
+ <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}>
+ {t(`intelligence.classification.${classification}`)}
+ </span>
+ )
+ }
 
-  const AnalysisTypeBadges = ({ types }: { types: string[] }) => {
-    const typeIcons = {
-      trends: <TrendingUp className="h-3 w-3" />,
-      patterns: <Brain className="h-3 w-3" />,
-      predictions: <Target className="h-3 w-3" />,
-      risks: <AlertTriangle className="h-3 w-3" />,
-      opportunities: <Target className="h-3 w-3" />
-    }
+ const AnalysisTypeBadges = ({ types }: { types: string[] }) => {
+ const typeIcons = {
+ trends: <TrendingUp className="h-3 w-3" />,
+ patterns: <Brain className="h-3 w-3" />,
+ predictions: <Target className="h-3 w-3" />,
+ risks: <AlertTriangle className="h-3 w-3" />,
+ opportunities: <Target className="h-3 w-3" />
+ }
 
-    return (
-      <div className="flex flex-wrap gap-1">
-        {types?.map((type, i) => (
-          <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs">
-            {typeIcons[type as keyof typeof typeIcons]}
-            {t(`intelligence.analysisTypes.${type}`)}
-          </span>
-        ))}
-      </div>
-    )
-  }
+ return (
+ <div className="flex flex-wrap gap-1">
+ {types?.map((type, i) => (
+ <span key={i} className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs">
+ {typeIcons[type as keyof typeof typeIcons]}
+ {t(`intelligence.analysisTypes.${type}`)}
+ </span>
+ ))}
+ </div>
+ )
+ }
 
-  const columns = [
-    {
-      key: 'report',
-      header: t('intelligence.report'),
-      cell: (report: IntelligenceReport) => (
-        <div>
-          <div className="font-mono text-xs text-muted-foreground mb-1">
-            {report.report_number}
-          </div>
-          <div className="font-medium">
-            {isRTL ? report.title_ar : report.title_en}
-          </div>
-          <div className="text-sm text-muted-foreground line-clamp-2 mt-1">
-            {isRTL ? report.executive_summary_ar : report.executive_summary_en}
-          </div>
-        </div>
-      )
-    },
-    {
-      key: 'analysis',
-      header: t('intelligence.analysisType'),
-      cell: (report: IntelligenceReport) => (
-        <AnalysisTypeBadges types={report.analysis_type} />
-      )
-    },
-    {
-      key: 'confidence',
-      header: t('intelligence.confidence'),
-      cell: (report: IntelligenceReport) => (
-        <ConfidenceIndicator level={report.confidence_level} />
-      )
-    },
-    {
-      key: 'classification',
-      header: t('intelligence.classification'),
-      cell: (report: IntelligenceReport) => (
-        <ClassificationBadge classification={report.classification} />
-      )
-    },
-    {
-      key: 'findings',
-      header: t('intelligence.keyFindings'),
-      cell: (report: IntelligenceReport) => (
-        <div className="text-sm">
-          <span className="font-medium">{report.key_findings?.length || 0}</span>
-          <span className="text-muted-foreground"> {t('intelligence.findings')}</span>
-        </div>
-      )
-    },
-    {
-      key: 'status',
-      header: t('intelligence.status'),
-      cell: (report: IntelligenceReport) => (
-        <div className="space-y-1">
-          <span className={`
-            inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
-            ${report.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
-            ${report.status === 'review' ? 'bg-yellow-100 text-yellow-800' : ''}
-            ${report.status === 'approved' ? 'bg-blue-100 text-blue-800' : ''}
-            ${report.status === 'published' ? 'bg-green-100 text-green-800' : ''}
-          `}>
-            {t(`intelligence.statuses.${report.status}`)}
-          </span>
-          {report.published_at && (
-            <div className="text-xs text-muted-foreground">
-              {format(new Date(report.published_at), 'dd MMM yyyy')}
-            </div>
-          )}
-        </div>
-      )
-    },
-    {
-      key: 'people',
-      header: t('intelligence.people'),
-      cell: (report: IntelligenceReport) => (
-        <div className="text-sm space-y-1">
-          <div>
-            <span className="text-muted-foreground">{t('intelligence.author')}:</span> {report.author.full_name}
-          </div>
-          {report.reviewed_by && (
-            <div>
-              <span className="text-muted-foreground">{t('intelligence.reviewer')}:</span> {report.reviewed_by.full_name}
-            </div>
-          )}
-          {report.approved_by && (
-            <div>
-              <span className="text-muted-foreground">{t('intelligence.approver')}:</span> {report.approved_by.full_name}
-            </div>
-          )}
-        </div>
-      )
-    },
-    {
-      key: 'actions',
-      header: '',
-      cell: () => (
-        <Button size="sm" variant="ghost">
-          <Download className="h-4 w-4" />
-        </Button>
-      )
-    }
-  ]
+ const columns = [
+ {
+ key: 'report',
+ header: t('intelligence.report'),
+ cell: (report: IntelligenceReport) => (
+ <div>
+ <div className="font-mono text-xs text-muted-foreground mb-1">
+ {report.report_number}
+ </div>
+ <div className="font-medium">
+ {isRTL ? report.title_ar : report.title_en}
+ </div>
+ <div className="text-sm text-muted-foreground line-clamp-2 mt-1">
+ {isRTL ? report.executive_summary_ar : report.executive_summary_en}
+ </div>
+ </div>
+ )
+ },
+ {
+ key: 'analysis',
+ header: t('intelligence.analysisType'),
+ cell: (report: IntelligenceReport) => (
+ <AnalysisTypeBadges types={report.analysis_type} />
+ )
+ },
+ {
+ key: 'confidence',
+ header: t('intelligence.confidence'),
+ cell: (report: IntelligenceReport) => (
+ <ConfidenceIndicator level={report.confidence_level} />
+ )
+ },
+ {
+ key: 'classification',
+ header: t('intelligence.classification'),
+ cell: (report: IntelligenceReport) => (
+ <ClassificationBadge classification={report.classification} />
+ )
+ },
+ {
+ key: 'findings',
+ header: t('intelligence.keyFindings'),
+ cell: (report: IntelligenceReport) => (
+ <div className="text-sm">
+ <span className="font-medium">{report.key_findings?.length || 0}</span>
+ <span className="text-muted-foreground"> {t('intelligence.findings')}</span>
+ </div>
+ )
+ },
+ {
+ key: 'status',
+ header: t('intelligence.status'),
+ cell: (report: IntelligenceReport) => (
+ <div className="space-y-1">
+ <span className={`
+ inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+ ${report.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
+ ${report.status === 'review' ? 'bg-yellow-100 text-yellow-800' : ''}
+ ${report.status === 'approved' ? 'bg-blue-100 text-blue-800' : ''}
+ ${report.status === 'published' ? 'bg-green-100 text-green-800' : ''}
+ `}>
+ {t(`intelligence.statuses.${report.status}`)}
+ </span>
+ {report.published_at && (
+ <div className="text-xs text-muted-foreground">
+ {format(new Date(report.published_at), 'dd MMM yyyy')}
+ </div>
+ )}
+ </div>
+ )
+ },
+ {
+ key: 'people',
+ header: t('intelligence.people'),
+ cell: (report: IntelligenceReport) => (
+ <div className="text-sm space-y-1">
+ <div>
+ <span className="text-muted-foreground">{t('intelligence.author')}:</span> {report.author.full_name}
+ </div>
+ {report.reviewed_by && (
+ <div>
+ <span className="text-muted-foreground">{t('intelligence.reviewer')}:</span> {report.reviewed_by.full_name}
+ </div>
+ )}
+ {report.approved_by && (
+ <div>
+ <span className="text-muted-foreground">{t('intelligence.approver')}:</span> {report.approved_by.full_name}
+ </div>
+ )}
+ </div>
+ )
+ },
+ {
+ key: 'actions',
+ header: '',
+ cell: () => (
+ <Button size="sm" variant="ghost">
+ <Download className="h-4 w-4" />
+ </Button>
+ )
+ }
+ ]
 
-  const confidenceLevels = ['low', 'medium', 'high', 'verified']
-  const classifications = ['public', 'internal', 'confidential', 'restricted']
+ const confidenceLevels = ['low', 'medium', 'high', 'verified']
+ const classifications = ['public', 'internal', 'confidential', 'restricted']
 
-  return (
-    <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-3xl font-bold">{t('navigation.intelligence')}</h1>
-        <Button>
-          <Plus className="h-4 w-4 me-2" />
-          {t('intelligence.createReport')}
-        </Button>
-      </div>
+ return (
+ <div className="container mx-auto py-6">
+ <div className="flex justify-between items-center mb-6">
+ <h1 className="text-3xl font-bold">{t('navigation.intelligence')}</h1>
+ <Button>
+ <Plus className="h-4 w-4 me-2" />
+ {t('intelligence.createReport')}
+ </Button>
+ </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mb-6">
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('intelligence.totalReports')}</CardTitle>
-            <Brain className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">{reports?.length || 0}</div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('intelligence.verifiedReports')}</CardTitle>
-            <Shield className="h-4 w-4 text-green-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {reports?.filter(r => r.confidence_level === 'verified').length || 0}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('intelligence.pendingReview')}</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-yellow-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {reports?.filter(r => r.status === 'review').length || 0}
-            </div>
-          </CardContent>
-        </Card>
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">{t('intelligence.published')}</CardTitle>
-            <Target className="h-4 w-4 text-blue-600" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold">
-              {reports?.filter(r => r.status === 'published').length || 0}
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+ <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mb-6">
+ <Card>
+ <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+ <CardTitle className="text-sm font-medium">{t('intelligence.totalReports')}</CardTitle>
+ <Brain className="h-4 w-4 text-muted-foreground" />
+ </CardHeader>
+ <CardContent>
+ <div className="text-2xl font-bold">{reports?.length || 0}</div>
+ </CardContent>
+ </Card>
+ <Card>
+ <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+ <CardTitle className="text-sm font-medium">{t('intelligence.verifiedReports')}</CardTitle>
+ <Shield className="h-4 w-4 text-green-600" />
+ </CardHeader>
+ <CardContent>
+ <div className="text-2xl font-bold">
+ {reports?.filter(r => r.confidence_level === 'verified').length || 0}
+ </div>
+ </CardContent>
+ </Card>
+ <Card>
+ <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+ <CardTitle className="text-sm font-medium">{t('intelligence.pendingReview')}</CardTitle>
+ <AlertTriangle className="h-4 w-4 text-yellow-600" />
+ </CardHeader>
+ <CardContent>
+ <div className="text-2xl font-bold">
+ {reports?.filter(r => r.status === 'review').length || 0}
+ </div>
+ </CardContent>
+ </Card>
+ <Card>
+ <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+ <CardTitle className="text-sm font-medium">{t('intelligence.published')}</CardTitle>
+ <Target className="h-4 w-4 text-blue-600" />
+ </CardHeader>
+ <CardContent>
+ <div className="text-2xl font-bold">
+ {reports?.filter(r => r.status === 'published').length || 0}
+ </div>
+ </CardContent>
+ </Card>
+ </div>
 
-      <Card className="mb-6">
-        <CardHeader>
-          <CardTitle>{t('intelligence.search')}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div className="flex gap-4">
-              <Input
-                placeholder={t('intelligence.searchPlaceholder')}
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="max-w-sm"
-              />
-              <div className="flex-1 flex gap-2">
-                <Input
-                  placeholder={t('intelligence.similaritySearchPlaceholder')}
-                  value={similaritySearch}
-                  onChange={(e) => setSimilaritySearch(e.target.value)}
-                />
-                <Button
-                  onClick={() => similaritySearchMutation.mutate(similaritySearch)}
-                  disabled={!similaritySearch || similaritySearchMutation.isPending}
-                >
-                  <Search className="h-4 w-4 me-2" />
-                  {t('intelligence.vectorSearch')}
-                </Button>
-              </div>
-            </div>
-            <div className="flex gap-4">
-              <div className="flex gap-2">
-                <span className="text-sm text-muted-foreground mt-2">{t('intelligence.confidence')}:</span>
-                <Button
-                  variant={filterConfidence === 'all' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterConfidence('all')}
-                >
-                  {t('common.all')}
-                </Button>
-                {confidenceLevels.map(level => (
-                  <Button
-                    key={level}
-                    variant={filterConfidence === level ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setFilterConfidence(level)}
-                  >
-                    {t(`intelligence.confidenceLevels.${level}`)}
-                  </Button>
-                ))}
-              </div>
-              <div className="flex gap-2">
-                <span className="text-sm text-muted-foreground mt-2">{t('intelligence.classification')}:</span>
-                <Button
-                  variant={filterClassification === 'all' ? 'default' : 'outline'}
-                  size="sm"
-                  onClick={() => setFilterClassification('all')}
-                >
-                  {t('common.all')}
-                </Button>
-                {classifications.map(cls => (
-                  <Button
-                    key={cls}
-                    variant={filterClassification === cls ? 'default' : 'outline'}
-                    size="sm"
-                    onClick={() => setFilterClassification(cls)}
-                  >
-                    {t(`intelligence.classifications.${cls}`)}
-                  </Button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+ <Card className="mb-6">
+ <CardHeader>
+ <CardTitle>{t('intelligence.search')}</CardTitle>
+ </CardHeader>
+ <CardContent>
+ <div className="space-y-4">
+ <div className="flex gap-4">
+ <Input
+ placeholder={t('intelligence.searchPlaceholder')}
+ value={searchTerm}
+ onChange={(e) => setSearchTerm(e.target.value)}
+ className="max-w-sm"
+ />
+ <div className="flex-1 flex gap-2">
+ <Input
+ placeholder={t('intelligence.similaritySearchPlaceholder')}
+ value={similaritySearch}
+ onChange={(e) => setSimilaritySearch(e.target.value)}
+ />
+ <Button
+ onClick={() => similaritySearchMutation.mutate(similaritySearch)}
+ disabled={!similaritySearch || similaritySearchMutation.isPending}
+ >
+ <Search className="h-4 w-4 me-2" />
+ {t('intelligence.vectorSearch')}
+ </Button>
+ </div>
+ </div>
+ <div className="flex gap-4">
+ <div className="flex gap-2">
+ <span className="text-sm text-muted-foreground mt-2">{t('intelligence.confidence')}:</span>
+ <Button
+ variant={filterConfidence === 'all' ? 'default' : 'outline'}
+ size="sm"
+ onClick={() => setFilterConfidence('all')}
+ >
+ {t('common.all')}
+ </Button>
+ {confidenceLevels.map(level => (
+ <Button
+ key={level}
+ variant={filterConfidence === level ? 'default' : 'outline'}
+ size="sm"
+ onClick={() => setFilterConfidence(level)}
+ >
+ {t(`intelligence.confidenceLevels.${level}`)}
+ </Button>
+ ))}
+ </div>
+ <div className="flex gap-2">
+ <span className="text-sm text-muted-foreground mt-2">{t('intelligence.classification')}:</span>
+ <Button
+ variant={filterClassification === 'all' ? 'default' : 'outline'}
+ size="sm"
+ onClick={() => setFilterClassification('all')}
+ >
+ {t('common.all')}
+ </Button>
+ {classifications.map(cls => (
+ <Button
+ key={cls}
+ variant={filterClassification === cls ? 'default' : 'outline'}
+ size="sm"
+ onClick={() => setFilterClassification(cls)}
+ >
+ {t(`intelligence.classifications.${cls}`)}
+ </Button>
+ ))}
+ </div>
+ </div>
+ </div>
+ </CardContent>
+ </Card>
 
-      <Card>
-        <CardContent className="p-0">
-          {isLoading ? (
-            <div className="p-8 text-center">{t('common.loading')}</div>
-          ) : reports && reports.length > 0 ? (
-            <DataTable
-              data={reports}
-              columns={columns}
-              onRowClick={(report) => console.log('Report clicked:', report)}
-            />
-          ) : (
-            <div className="p-8 text-center text-muted-foreground">
-              {t('common.noData')}
-            </div>
-          )}
-        </CardContent>
-      </Card>
-    </div>
-  )
+ <Card>
+ <CardContent className="p-0">
+ {isLoading ? (
+ <div className="p-8 text-center">{t('common.loading')}</div>
+ ) : reports && reports.length > 0 ? (
+ <DataTable
+ data={reports}
+ columns={columns}
+ onRowClick={(report) => console.log('Report clicked:', report)}
+ />
+ ) : (
+ <div className="p-8 text-center text-muted-foreground">
+ {t('common.noData')}
+ </div>
+ )}
+ </CardContent>
+ </Card>
+ </div>
+ )
 }

@@ -1,0 +1,328 @@
+/**
+ * Custom styling for react-vertical-timeline-component
+ * Integrated with app theme (shadcn + Tailwind CSS)
+ * Mobile-first, RTL-ready, dark mode compatible
+ */
+
+/* Container */
+.vertical-timeline::before {
+  background: hsl(var(--border)) !important;
+  width: 2px !important;
+}
+
+/* RTL support for timeline line */
+[dir='rtl'] .vertical-timeline::before {
+  left: auto !important;
+  right: 50% !important;
+}
+
+@media only screen and (max-width: 1169px) {
+  [dir='rtl'] .vertical-timeline::before {
+    right: 40px !important;
+  }
+}
+
+/* Timeline element */
+.vertical-timeline-element {
+  margin: 2em 0 !important;
+}
+
+/* Icon container */
+.vertical-timeline-element-icon {
+  box-shadow: 0 0 0 4px hsl(var(--background)), inset 0 2px 0 rgba(0, 0, 0, 0.08),
+    0 3px 0 4px rgba(0, 0, 0, 0.05) !important;
+  width: 44px !important;
+  height: 44px !important;
+  border: 2px solid hsl(var(--border)) !important;
+  transition: all 0.3s ease !important;
+}
+
+.vertical-timeline-element-icon:hover {
+  transform: scale(1.1) !important;
+  box-shadow: 0 0 0 6px hsl(var(--background)), inset 0 2px 0 rgba(0, 0, 0, 0.08),
+    0 6px 12px rgba(0, 0, 0, 0.15) !important;
+}
+
+/* RTL icon positioning */
+[dir='rtl'] .vertical-timeline-element-icon {
+  left: auto !important;
+  right: 50% !important;
+  margin-left: 0 !important;
+  margin-right: -22px !important;
+}
+
+@media only screen and (max-width: 1169px) {
+  .vertical-timeline-element-icon {
+    width: 44px !important;
+    height: 44px !important;
+    left: 18px !important;
+  }
+
+  [dir='rtl'] .vertical-timeline-element-icon {
+    left: auto !important;
+    right: 18px !important;
+    margin-right: 0 !important;
+  }
+}
+
+/* Content card */
+.vertical-timeline-element-content {
+  box-shadow: var(--shadow-md) !important;
+  background: hsl(var(--card)) !important;
+  border: 1px solid hsl(var(--border)) !important;
+  border-radius: var(--radius-lg) !important;
+  color: hsl(var(--card-foreground)) !important;
+  padding: 1.25rem !important;
+  transition: all 0.3s ease !important;
+}
+
+.vertical-timeline-element-content:hover {
+  box-shadow: var(--shadow-lg) !important;
+  border-color: hsl(var(--primary) / 0.5) !important;
+  transform: translateY(-2px) !important;
+}
+
+/* Content arrow */
+.vertical-timeline-element-content-arrow {
+  border-right-color: hsl(var(--border)) !important;
+}
+
+[dir='rtl'] .vertical-timeline-element-content-arrow {
+  border-right-color: transparent !important;
+  border-left-color: hsl(var(--border)) !important;
+}
+
+@media only screen and (max-width: 1169px) {
+  .vertical-timeline-element-content {
+    margin-left: 80px !important;
+  }
+
+  [dir='rtl'] .vertical-timeline-element-content {
+    margin-left: 0 !important;
+    margin-right: 80px !important;
+  }
+
+  .vertical-timeline-element-content-arrow {
+    border-right-color: transparent !important;
+    border-left-color: hsl(var(--border)) !important;
+  }
+
+  [dir='rtl'] .vertical-timeline-element-content-arrow {
+    border-left-color: transparent !important;
+    border-right-color: hsl(var(--border)) !important;
+  }
+}
+
+/* Date */
+.vertical-timeline-element-date {
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 0.875rem !important;
+  font-weight: 600 !important;
+  padding: 0.5rem 0 !important;
+}
+
+@media only screen and (min-width: 1170px) {
+  .vertical-timeline-element-date {
+    font-size: 1rem !important;
+  }
+}
+
+/* Subtitle (time) */
+.vertical-timeline-element-subtitle {
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 0.75rem !important;
+  margin-top: 0.25rem !important;
+}
+
+/* Title */
+.vertical-timeline-element-title {
+  color: hsl(var(--foreground)) !important;
+  font-size: 1rem !important;
+  font-weight: 600 !important;
+  margin-bottom: 0.5rem !important;
+}
+
+@media only screen and (min-width: 768px) {
+  .vertical-timeline-element-title {
+    font-size: 1.125rem !important;
+  }
+}
+
+/* Description text */
+.vertical-timeline-element-content p {
+  color: hsl(var(--muted-foreground)) !important;
+  font-size: 0.875rem !important;
+  line-height: 1.6 !important;
+  margin: 0.5rem 0 !important;
+}
+
+/* Single-side layout optimizations (Mobile & Tablet up to 1169px) */
+@media only screen and (max-width: 1169px) {
+  /* Hide library's default date - we show it prominently in the card instead */
+  .vertical-timeline-element-date {
+    display: none !important;
+  }
+}
+
+/* Mobile specific optimizations */
+@media only screen and (max-width: 767px) {
+  .vertical-timeline-element {
+    margin: 1.5em 0 !important;
+  }
+
+  .vertical-timeline-element-content {
+    padding: 1rem !important;
+    margin-left: 70px !important;
+  }
+
+  [dir='rtl'] .vertical-timeline-element-content {
+    margin-left: 0 !important;
+    margin-right: 70px !important;
+  }
+
+  .vertical-timeline-element-icon {
+    width: 40px !important;
+    height: 40px !important;
+    left: 16px !important;
+  }
+
+  [dir='rtl'] .vertical-timeline-element-icon {
+    left: auto !important;
+    right: 16px !important;
+  }
+
+  .vertical-timeline::before {
+    left: 36px !important;
+  }
+
+  [dir='rtl'] .vertical-timeline::before {
+    left: auto !important;
+    right: 36px !important;
+  }
+}
+
+/* Smooth entrance animation */
+.vertical-timeline-element-content.bounce-in {
+  animation: cd-bounce-2 0.6s;
+}
+
+@keyframes cd-bounce-2 {
+  0% {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+/* Loading skeleton styles */
+.vertical-timeline-element.skeleton .vertical-timeline-element-content {
+  background: hsl(var(--muted)) !important;
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Dark mode adjustments */
+:root[data-color-mode='dark'] .vertical-timeline-element-icon {
+  box-shadow: 0 0 0 4px hsl(var(--background)), inset 0 2px 0 rgba(255, 255, 255, 0.08),
+    0 3px 0 4px rgba(0, 0, 0, 0.3) !important;
+}
+
+:root[data-color-mode='dark'] .vertical-timeline-element-content {
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.4) !important;
+}
+
+:root[data-color-mode='dark'] .vertical-timeline-element-content:hover {
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Touch device optimizations */
+@media (hover: none) and (pointer: coarse) {
+  .vertical-timeline-element-icon {
+    min-width: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .vertical-timeline-element-content {
+    cursor: pointer !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+}
+
+/* Accessibility - focus states */
+.vertical-timeline-element-content:focus-visible {
+  outline: 2px solid hsl(var(--ring)) !important;
+  outline-offset: 2px !important;
+}
+
+.vertical-timeline-element-icon:focus-visible {
+  outline: 2px solid hsl(var(--ring)) !important;
+  outline-offset: 4px !important;
+}
+
+/* Custom event type colors */
+.timeline-icon-calendar {
+  background: hsl(221 83% 53%) !important;
+}
+
+.timeline-icon-interaction {
+  background: hsl(280 65% 60%) !important;
+}
+
+.timeline-icon-intelligence {
+  background: hsl(38 92% 50%) !important;
+}
+
+.timeline-icon-document {
+  background: hsl(240 5% 64.9%) !important;
+}
+
+.timeline-icon-mou {
+  background: hsl(142 76% 36%) !important;
+}
+
+.timeline-icon-position {
+  background: hsl(263 70% 50%) !important;
+}
+
+.timeline-icon-relationship {
+  background: hsl(340 75% 55%) !important;
+}
+
+.timeline-icon-commitment {
+  background: hsl(173 58% 39%) !important;
+}
+
+.timeline-icon-decision {
+  background: hsl(0 84% 60%) !important;
+}
+
+/* High priority indicator */
+.timeline-priority-high .vertical-timeline-element-icon {
+  animation: pulse-high 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse-high {
+  0%,
+  100% {
+    box-shadow: 0 0 0 4px hsl(var(--background)), 0 0 0 8px hsl(0 84% 60% / 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 4px hsl(var(--background)), 0 0 0 12px hsl(0 84% 60% / 0.1);
+  }
+}
+
