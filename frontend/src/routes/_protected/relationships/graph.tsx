@@ -4,10 +4,10 @@ import { createFileRoute } from '@tanstack/react-router';
 import { RelationshipGraphPage } from '@/pages/relationships/RelationshipGraphPage';
 
 export const Route = createFileRoute('/_protected/relationships/graph')({
-  component: RelationshipGraphPage,
-  validateSearch: (search: Record<string, unknown>) => {
-    return {
-      dossierId: (search.dossierId as string) || undefined,
-    };
-  },
+ component: RelationshipGraphPage,
+ validateSearch: (search: Record<string, unknown>) => {
+ return {
+ dossierId: (search.dossierId as string) || undefined,
+ };
+ },
 });

@@ -2292,4 +2292,52 @@ export type Database = {
           access_level: Database["public"]["Enums"]["access_level"]
           country_id: string | null
           created_at: string | null
-          deleted_at: string
+          deleted_at: string | null
+          description: string | null
+          file_url: string
+          id: string
+          name: string
+          organization_id: string | null
+          tags: string[] | null
+          tenant_id: string
+          type: string
+          updated_at: string | null
+          uploaded_by: string
+        }
+        Insert: {
+          access_level: Database["public"]["Enums"]["access_level"]
+          country_id?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          file_url: string
+          id?: string
+          name: string
+          organization_id?: string | null
+          tags?: string[] | null
+          tenant_id: string
+          type: string
+          updated_at?: string | null
+          uploaded_by: string
+        }
+        Update: {
+          access_level?: Database["public"]["Enums"]["access_level"]
+          country_id?: string | null
+          created_at?: string | null
+          deleted_at?: string | null
+          description?: string | null
+          file_url?: string
+          id?: string
+          name?: string
+          organization_id?: string | null
+          tags?: string[] | null
+          tenant_id?: string
+          type?: string
+          updated_at?: string | null
+          uploaded_by?: string
+        }
+        Relationships: []
+      }
+    }
+  }
+}

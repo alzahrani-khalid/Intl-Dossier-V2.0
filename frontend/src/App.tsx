@@ -15,32 +15,32 @@ import { ThemeErrorBoundary } from './components/theme-error-boundary'
 import './i18n'
 
 function AppRouter() {
-  const auth = useAuth()
-  return <RouterProvider router={router} context={{ auth }} />
+ const auth = useAuth()
+ return <RouterProvider router={router} context={{ auth }} />
 }
 
 function App() {
-  return (
-    <ErrorBoundary>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <ThemeErrorBoundary fallbackTheme="gastat" fallbackColorMode="light" fallbackLanguage="en">
-            <ThemeProvider initialTheme="gastat" initialColorMode="light">
-              <LanguageProvider initialLanguage="en">
-                <RTLWrapper>
-                  <AppRouter />
-                  <ReactQueryDevtools initialIsOpen={false} />
-                  <OfflineIndicator />
-                  <RealtimeStatus />
-                  <Toaster position="top-right" />
-                </RTLWrapper>
-              </LanguageProvider>
-            </ThemeProvider>
-          </ThemeErrorBoundary>
-        </AuthProvider>
-      </QueryClientProvider>
-    </ErrorBoundary>
-  )
+ return (
+ <ErrorBoundary>
+ <QueryClientProvider client={queryClient}>
+ <AuthProvider>
+ <ThemeErrorBoundary fallbackTheme="natural" fallbackColorMode="light" fallbackLanguage="en">
+ <ThemeProvider initialTheme="natural" initialColorMode="light">
+ <LanguageProvider initialLanguage="en">
+ <RTLWrapper>
+ <AppRouter />
+ <ReactQueryDevtools initialIsOpen={false} />
+ <OfflineIndicator />
+ <RealtimeStatus />
+ <Toaster position="top-right" />
+ </RTLWrapper>
+ </LanguageProvider>
+ </ThemeProvider>
+ </ThemeErrorBoundary>
+ </AuthProvider>
+ </QueryClientProvider>
+ </ErrorBoundary>
+ )
 }
 
 export default App

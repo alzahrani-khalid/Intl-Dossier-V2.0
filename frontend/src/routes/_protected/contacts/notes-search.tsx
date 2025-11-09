@@ -10,10 +10,10 @@ import { createFileRoute } from '@tanstack/react-router';
 import { NotesSearch } from '@/pages/contacts/NotesSearch';
 
 export const Route = createFileRoute('/_protected/contacts/notes-search')({
-  component: NotesSearch,
-  meta: () => [
-    {
-      title: 'Search Interaction Notes - GASTAT',
-    },
-  ],
+ component: NotesSearch,
+ meta: () => [
+ {
+ title: 'Search Interaction Notes - GASTAT',
+ },
+ ],
 });

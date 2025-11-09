@@ -97,39 +97,176 @@ export function ResponsiveRTLComponent() {
 
 ## UI Component Guidelines
 
-### shadcn/ui Component Strategy
-When building UI components, **ALWAYS** follow this workflow:
+### Aceternity UI Component Strategy (MANDATORY - HIGHEST PRIORITY)
 
-1. **Check shadcn MCP First**: Use `mcp__shadcn__get_items` to list available components from shadcn/ui
-2. **Check Custom Registries**: If component not found in shadcn, search these verified registries in order:
-   - tweakcn: https://tweakcn.com (Theme editor for shadcn/ui)
-   - originui: https://originui.com (Beautiful UI components with Tailwind CSS)
-   - aceternity: https://ui.aceternity.com (Next.js, Tailwind CSS, Framer Motion components)
-   - kokonutui: https://kokonutui.com (100+ UI components for Next.js)
-   - kibo-ui: https://kibo-ui.com (Composable, accessible components)
-   - skiper-ui: https://skiper-ui.com (Un-common components for shadcn/ui)
-   - magicui: https://magicui.design (UI library for Design Engineers)
-   - cult-ui: https://cult-ui.com (Components for Design Engineers)
+**Component Selection Hierarchy** - **ALWAYS** follow this order (NO EXCEPTIONS):
 
-3. **Installation**:
-   - Default registry: `npx shadcn@latest add <component>`
-   - Custom registry: `npx shadcn@latest add @registry-name/component`
-   - Direct URL: `npx shadcn@latest add https://example.com/registry/component.json`
-4. **Custom Build Only If Necessary**: Only build custom components if not available in any registry
-5. **Location**:
-   - UI components are stored in `frontend/src/components/ui/`
-   - Configuration is in `frontend/components.json`
-   - Registries can be configured in `components.json` under the `registries` key (currently not configured)
+1. **Aceternity UI (Primary)**: https://ui.aceternity.com/components
+   - **130+ components** in 18 categories
+   - Responsive & mobile-first by default
+   - Built with React 19, Tailwind CSS, Framer Motion
+   - **Install**: `npx shadcn@latest add https://ui.aceternity.com/registry/[component].json --yes`
+   - **Example**: `npx shadcn@latest add https://ui.aceternity.com/registry/bento-grid.json --yes`
+
+2. **Aceternity UI Pro (Primary+)**: https://pro.aceternity.com/components
+   - **30+ component blocks**, **7+ premium templates**
+   - Advanced animations and interactions
+   - API Key: Stored in `.env.local` (NEVER commit!)
+   - **Install**: Check Aceternity Pro docs for exact command format
+   - **Requires**: `ACETERNITY_PRO_API_KEY` environment variable
+
+3. **Kibo-UI (Secondary Fallback)**: https://www.kibo-ui.com
+   - Use ONLY if Aceternity doesn't have equivalent
+   - **Install**: `npx shadcn@latest add @kibo-ui/[component]`
+
+4. **shadcn/ui (Last Resort)**: https://ui.shadcn.com
+   - Use ONLY if Aceternity AND Kibo-UI don't have equivalent
+   - **Install**: `npx shadcn@latest add [component]`
+
+### Aceternity Component Categories (130+ components)
+
+| Category | Count | Examples |
+|----------|-------|----------|
+| **Backgrounds & Effects** | 23 | Sparkles, Aurora, Gradient animations, Spotlight |
+| **Cards** | 14 | 3D card, Hoverable card, Expandable card, Animated card |
+| **Scroll & Parallax** | 5 | Sticky scroll, Parallax effects, Container scroll |
+| **Text Components** | 9 | Typewriter, Flip words, Text generation effects |
+| **Buttons** | 4 | Animated buttons, Gradient borders, Moving borders |
+| **Navigation** | 7 | Floating navbar, Sidebar, Floating dock, Tabs |
+| **Inputs & Forms** | 3 | Signup forms, File upload, Vanish input |
+| **Overlays & Modals** | 3 | Animated modals, Tooltips, Link preview |
+| **Carousels & Sliders** | 4 | Image sliders, Testimonials |
+| **Layout & Grid** | 3 | Bento grid, Layout grid |
+| **Data & Visualization** | 5 | GitHub globe, World map, Timeline, Charts |
+| **3D Components** | 2 | 3D pins, Marquee effects |
+
+**Full catalog**: https://ui.aceternity.com/components
+
+### Before Writing ANY Component
+
+**MANDATORY CHECKLIST**:
+1. ✅ Search Aceternity UI for component (use MCP tool or website)
+2. ✅ Check Aceternity Pro for premium variants
+3. ✅ If not found, check Kibo-UI registry
+4. ✅ ONLY THEN consider shadcn/ui or custom build
+5. ✅ Verify component supports mobile-first (all Aceternity components do)
+6. ✅ Verify RTL compatibility (add logical properties if needed)
+
+### Installation Examples
+
+**Aceternity Free**:
+```bash
+# Floating navbar
+npx shadcn@latest add https://ui.aceternity.com/registry/floating-navbar.json --yes
+
+# 3D Card
+npx shadcn@latest add https://ui.aceternity.com/registry/3d-card.json --yes
+
+# Bento Grid (layout)
+npx shadcn@latest add https://ui.aceternity.com/registry/bento-grid.json --yes
+
+# Timeline
+npx shadcn@latest add https://ui.aceternity.com/registry/timeline.json --yes
+```
+
+**Aceternity Pro** (verify command format in Pro docs):
+```bash
+# Dashboard template
+npx shadcn@latest add @aceternity-pro/dashboard-template-one
+
+# Advanced card blocks
+npx shadcn@latest add @aceternity-pro/card-blocks
+```
+
+**Kibo-UI Fallback**:
+```bash
+npx shadcn@latest add @kibo-ui/kanban
+```
+
+**shadcn/ui (Last Resort)**:
+```bash
+npx shadcn@latest add form
+```
+
+### Mobile-First & RTL Requirements (MANDATORY)
+
+All Aceternity components must be adapted for:
+
+✅ **Mobile-First**: Start with base styles (320-640px), scale up
+✅ **Logical Properties**: Use `ms-*`, `me-*`, `ps-*`, `pe-*` (NOT `ml-*`, `mr-*`)
+✅ **RTL Support**: Set `dir={isRTL ? 'rtl' : 'ltr'}` on containers
+✅ **Icon Flipping**: Use `className={isRTL ? 'rotate-180' : ''}` for directional icons
+✅ **Text Alignment**: Use `text-start`/`text-end` (NOT `text-left`/`text-right`)
+
+### Aceternity Component Template
+
+```tsx
+import { useTranslation } from 'react-i18next';
+import { BentoGrid } from '@/components/ui/bento-grid';
+
+export function AceternityResponsiveComponent() {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === 'ar';
+
+  return (
+    <div
+      className="container mx-auto px-4 sm:px-6 lg:px-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
+      <BentoGrid className="gap-4 sm:gap-6 lg:gap-8">
+        {/* Aceternity components work mobile-first by default */}
+        {/* Add RTL support via logical properties and dir attribute */}
+      </BentoGrid>
+    </div>
+  );
+}
+```
+
+### Component File Locations
+- **Aceternity UI components**: `frontend/src/components/ui/` (installed via shadcn CLI)
+- **Configuration**: `frontend/components.json`
+- **Documentation**: `frontend/.aceternity/` (installation notes, guides, examples)
+- **API Key**: `frontend/.env.local` (NEVER commit!)
+
+### Key Dependencies (Already Installed)
+- ✅ `framer-motion` - Required for Aceternity animations
+- ✅ `clsx` - Conditional classnames utility
+- ✅ `tailwind-merge` - Merge Tailwind classes
+
+### MCP Server Integration (Optional)
+
+For AI-assisted component discovery, install Aceternity UI MCP server:
+
+**Claude Code Config** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+```json
+{
+  "mcpServers": {
+    "aceternityui": {
+      "command": "npx",
+      "args": ["aceternityui-mcp"]
+    }
+  }
+}
+```
+
+After restart, use MCP tools to search and discover components.
 
 ### Component Import Pattern
-- Always import from `@/components/ui/<component>` (configured in `frontend/components.json` aliases)
-- Check `frontend/src/components/ui/` for existing components before creating new ones (28 components currently available)
-- Use shadcn MCP tools to explore available components
+- Always import from `@/components/ui/<component>`
+- Example: `import { BentoGrid } from '@/components/ui/bento-grid'`
+- Check `frontend/src/components/ui/` for installed components
+- Refer to `frontend/.aceternity/INSTALLATION_NOTES.md` for verified installations
+
+### shadcn/ui Fallback Strategy (DEPRECATED AS PRIMARY)
+**⚠️ IMPORTANT**: shadcn/ui is now a LAST RESORT fallback only. Use Aceternity UI as the primary component library for all new components. Only use shadcn/ui when:
+1. Aceternity doesn't have the component
+2. Kibo-UI doesn't have the component
+3. Building a custom component isn't feasible
 
 ## Recent Changes
+- 029-dynamic-country-intelligence: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
+- 028-type-specific-dossier-pages: Added TypeScript 5.8+ (strict mode), React 19 + TanStack Router v5 (routing), TanStack Query v5 (data fetching), Aceternity UI (primary components), shadcn/ui (fallback), Tailwind CSS (styling), i18next (internationalization), React Flow (network graphs for country/organization views), Framer Motion (animations)
 - 027-contact-directory: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Auth, RLS, Storage), OCR (tesseract.js v5.0+, @google-cloud/vision v4.3+, sharp v0.33+), Document Parsing (unpdf v1.0.1+, mammoth v1.8.0+), franc-min (language detection)
-- 026-unified-dossier-architecture: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS (backend), React 19 (frontend)
-- 025-unified-tasks-model: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS (backend), React 19 (frontend)
   - ✅ Feature spec: Expo-based mobile app with offline-first architecture
   - ✅ Research: Jest + RNTL (unit tests), Maestro (E2E), React Native Paper (UI), WatermelonDB (offline sync)
   - ✅ Data model: 11 entities with WatermelonDB schema, offline storage cleanup strategy

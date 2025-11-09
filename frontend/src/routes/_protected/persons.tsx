@@ -8,10 +8,10 @@ import { createFileRoute, redirect } from '@tanstack/react-router'
  * accessible via the Contact Directory at /contacts
  */
 export const Route = createFileRoute('/_protected/persons')({
-  beforeLoad: () => {
-    throw redirect({
-      to: '/contacts',
-      replace: true,
-    })
-  },
+ beforeLoad: () => {
+ throw redirect({
+ to: '/contacts',
+ replace: true,
+ })
+ },
 })

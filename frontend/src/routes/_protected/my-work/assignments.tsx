@@ -13,5 +13,5 @@ import { createFileRoute } from '@tanstack/react-router'
 import { MyAssignmentsPage } from '../../../pages/MyAssignments'
 
 export const Route = createFileRoute('/_protected/my-work/assignments')({
-  component: MyAssignmentsPage,
+ component: MyAssignmentsPage,
 })
