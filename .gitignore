@@ -101,3 +101,6 @@ uploads/
 # Test files
 test-results/
 playwright-report/
+
+# Chrome DevTools screenshots
+.devtools-screenshots/

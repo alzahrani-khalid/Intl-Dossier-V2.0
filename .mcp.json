@@ -1,28 +1,11 @@
 {
   "mcpServers": {
-    "fetch-mcp": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "fetch-mcp@latest"
-      ],
-      "env": {}
-    },
     "filesystem": {
       "type": "stdio",
       "command": "npx",
       "args": [
         "@modelcontextprotocol/server-filesystem@latest",
         "."
-      ],
-      "env": {}
-    },
-    "sequential-thinking": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "-y",
-        "@modelcontextprotocol/server-sequential-thinking"
       ],
       "env": {}
     },
@@ -44,13 +27,6 @@
       "env": {
         "REGISTRY_URL": "https://www.kibo-ui.com/r/registry.json"
       }
-    },
-    "playwright": {
-      "type": "stdio",
-      "command": "npx",
-      "args": [
-        "@playwright/mcp@latest"
-      ]
     },
     "supabase": {
       "type": "stdio",

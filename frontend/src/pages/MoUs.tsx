@@ -1,7 +1,7 @@
 import { MousPage } from './MoUs/MousPage'
 
 export default function MoUs() {
-  return <MousPage />
+ return <MousPage />
 }
 
 export { MousPage }

@@ -150,6 +150,40 @@ serve(async (req) => {
 
     const response: Record<string, unknown> = { ...dossier };
 
+    // Fetch type-specific extension data
+    const dossierType = dossier.type;
+    let extensionData = null;
+
+    if (dossierType) {
+      const extensionTableMap: Record<string, string> = {
+        country: 'countries',
+        organization: 'organizations',
+        forum: 'forums',
+        engagement: 'engagements',
+        topic: 'topics',
+        working_group: 'working_groups',
+        person: 'persons',
+      };
+
+      const extensionTable = extensionTableMap[dossierType];
+      if (extensionTable) {
+        const { data: extension, error: extensionError } = await supabaseClient
+          .from(extensionTable)
+          .select("*")
+          .eq("id", dossierId)
+          .maybeSingle();
+
+        if (!extensionError && extension) {
+          extensionData = extension;
+        }
+      }
+    }
+
+    // Add extension data to response
+    if (extensionData) {
+      response.extension = extensionData;
+    }
+
     // Include stats if requested
     if (includeStats) {
       // Query source tables directly for stats (no materialized view needed)

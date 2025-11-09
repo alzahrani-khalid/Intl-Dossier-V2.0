@@ -49,6 +49,7 @@
     "loginSuccess": "تم تسجيل الدخول بنجاح!"
   },
   "navigation": {
+    "myWork": "عملي",
     "myAssignments": "تكليفاتي",
     "intakeQueue": "قائمة الاستقبال",
     "waitingQueue": "قائمة الانتظار",
@@ -79,6 +80,7 @@
     "settings": "الإعدادات",
     "profile": "الملف الشخصي",
     "help": "المساعدة",
+    "getHelp": "الحصول على المساعدة",
     "workflow": "سير العمل",
     "system": "النظام",
     "tasks": "المهام",
@@ -90,6 +92,8 @@
     "export": "تصدير",
     "users": "المستخدمون",
     "admin": "الإدارة",
+    "adminSystem": "أدوات النظام",
+    "adminApprovals": "إدارة الموافقات",
     "accessibility": "إمكانية الوصول",
     "switchToArabic": "التبديل إلى العربية",
     "switchToEnglish": "التبديل إلى الإنجليزية",

@@ -36,9 +36,11 @@ See [mobile/README.md](./mobile/README.md) for detailed mobile setup instruction
 ### Prerequisites
 
 - **Node.js**: 18+ LTS
-- **pnpm**: 10.x+ (Package manager)
+- **pnpm**: 10.x+ (Package manager) - **REQUIRED**
 - **Git**: Latest version
 - **Supabase Account**: For backend services
+
+> ⚠️ **IMPORTANT**: This project enforces pnpm usage. Using npm or yarn will fail.
 
 ### Web Application Setup
 
@@ -48,7 +50,9 @@ git clone <repository-url>
 cd Intl-DossierV2.0
 
 # Install pnpm globally (if not installed)
-npm install -g pnpm
+curl -fsSL https://get.pnpm.io/install.sh | sh -
+# OR using npm (one-time only)
+npm install -g pnpm@10
 
 # Install dependencies (monorepo)
 pnpm install
