@@ -584,5 +584,28 @@
     "tab_coming_soon": "This feature is coming soon",
     "recent_briefs_title": "Recent Briefs",
     "view_all_briefs": "View All Briefs"
-  }
+  },
+  "type": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "theme": "Theme",
+    "engagement": "Engagement",
+    "working_group": "Working Group",
+    "person": "Person"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived"
+  },
+  "time": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{{count}} days ago",
+    "weeksAgo": "{{count}} weeks ago",
+    "monthsAgo": "{{count}} months ago",
+    "yearsAgo": "{{count}} years ago"
+  },
+  "untitled": "Untitled Dossier"
 }

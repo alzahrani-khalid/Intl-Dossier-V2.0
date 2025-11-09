@@ -269,6 +269,7 @@ This constitution establishes the fundamental principles, architectural guidelin
 ## Article X: Development & Operations
 
 ### 10.1 Development Standards
+- **Package Manager**: pnpm 10.x+ is mandatory - npm and yarn are prohibited (enforced via preinstall hook)
 - **Monorepo Structure**: Turborepo for build orchestration
 - **TypeScript**: Strict mode for all code
 - **2-Space Indentation**: Consistent formatting
@@ -276,22 +277,22 @@ This constitution establishes the fundamental principles, architectural guidelin
 - **Git Workflow**: Feature branches with pull request reviews
 
 ### 10.2 Build & Deployment
-- **Build Commands**: `npm run build` for production builds
-- **Type Checking**: `npm run typecheck` for TypeScript validation
-- **Linting**: `npm run lint` for code quality
-- **Testing**: `npm run test` for unit and integration tests
-- **E2E Testing**: `npx playwright test` for end-to-end testing
+- **Build Commands**: `pnpm build` for production builds
+- **Type Checking**: `pnpm typecheck` for TypeScript validation
+- **Linting**: `pnpm lint` for code quality
+- **Testing**: `pnpm test` for unit and integration tests
+- **E2E Testing**: `pnpm exec playwright test` for end-to-end testing
 
 ### 10.3 Database Management
-- **Migrations**: `npm run db:migrate` for schema changes
-- **Seeding**: `npm run db:seed` for initial data
-- **Rollback**: `npm run db:rollback` for migration reversal
-- **Reset**: `npm run db:reset` for complete database reset
+- **Migrations**: `pnpm run db:migrate` for schema changes
+- **Seeding**: `pnpm run db:seed` for initial data
+- **Rollback**: `pnpm run db:rollback` for migration reversal
+- **Reset**: `pnpm run db:reset` for complete database reset
 
 ### 10.4 Docker Operations
-- **Development**: `npm run docker:up` for local development
-- **Shutdown**: `npm run docker:down` for clean shutdown
-- **Logs**: `npm run docker:logs` for service monitoring
+- **Development**: `pnpm run docker:up` for local development
+- **Shutdown**: `pnpm run docker:down` for clean shutdown
+- **Logs**: `pnpm run docker:logs` for service monitoring
 - **Health Checks**: Built-in health monitoring for all services
 
 ---

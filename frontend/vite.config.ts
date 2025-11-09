@@ -12,6 +12,7 @@ export default defineConfig({
   },
   server: {
     port: 3000,
+    host: true, // Expose on network (shows both localhost and network IP)
     watch: {
       ignored: ['**/node_modules/**', '**/dist/**', '**/.git/**', '**/routeTree.gen.ts'],
     },

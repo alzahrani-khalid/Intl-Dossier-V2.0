@@ -52,7 +52,7 @@ cd intl-dossier
 
 2. Install dependencies:
 ```bash
-npm install
+pnpm install
 ```
 
 3. Configure environment variables:
@@ -63,22 +63,22 @@ cp .env.example .env
 
 4. Start Supabase locally:
 ```bash
-npx supabase start
+pnpm exec supabase start
 ```
 
 5. Run migrations:
 ```bash
-npm run db:migrate
+pnpm run db:migrate
 ```
 
 6. Seed demo data:
 ```bash
-npm run db:seed
+pnpm run db:seed
 ```
 
 7. Start development servers:
 ```bash
-npm run dev
+pnpm dev
 ```
 
 The application will be available at:
@@ -117,49 +117,49 @@ The application will be available at:
 
 ### Unit Tests
 ```bash
-npm run test:unit
+pnpm run test:unit
 ```
 
 ### Integration Tests
 ```bash
-npm run test:integration
+pnpm run test:integration
 ```
 
 ### E2E Tests
 ```bash
-npm run test:e2e
+pnpm run test:e2e
 ```
 
 ### Performance Tests
 ```bash
-npm run test:performance
+pnpm run test:performance
 ```
 
 ### Accessibility Tests
 ```bash
-npm run test:a11y
+pnpm run test:a11y
 ```
 
 ### All Tests
 ```bash
-npm test
+pnpm test
 ```
 
 ## Deployment
 
 ### Development
 ```bash
-npm run deploy:dev
+pnpm run deploy:dev
 ```
 
 ### Staging
 ```bash
-npm run deploy:staging
+pnpm run deploy:staging
 ```
 
 ### Production
 ```bash
-npm run deploy:production
+pnpm run deploy:production
 ```
 
 ## API Documentation

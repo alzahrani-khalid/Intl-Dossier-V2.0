@@ -1,0 +1,97 @@
+# Docker Compose for AnythingLLM
+# Feature: 029-dynamic-country-intelligence
+# Purpose: Self-hosted RAG workspace management for country intelligence
+
+version: '3.8'
+
+services:
+  anythingllm:
+    image: mintplexlabs/anythingllm:latest
+    container_name: anythingllm
+    ports:
+      - "3001:3001"
+    environment:
+      # Server configuration
+      - SERVER_PORT=3001
+      - STORAGE_DIR=/app/server/storage
+
+      # Authentication (multi-user mode)
+      - AUTH_TOKEN=${ANYTHINGLLM_API_KEY}
+      - JWT_SECRET=${JWT_SECRET}
+
+      # OpenAI configuration (for embeddings and LLM)
+      - OPEN_AI_KEY=${OPENAI_API_KEY}
+      - EMBEDDING_ENGINE=openai
+      - EMBEDDING_MODEL_PREF=text-embedding-ada-002
+      - EMBEDDING_MODEL_MAX_CHUNK_LENGTH=800
+
+      # LLM configuration
+      - LLM_PROVIDER=openai
+      - OPEN_MODEL_PREF=gpt-4
+      - OPEN_MODEL_MAX_TOKENS=4096
+
+      # Vector database (using LanceDB - built-in)
+      - VECTOR_DB=lancedb
+
+      # Document chunking strategy
+      - TEXT_SPLITTER_CHUNK_SIZE=800
+      - TEXT_SPLITTER_CHUNK_OVERLAP=80
+
+      # Performance settings
+      - MAX_CONCURRENT_EMBEDDINGS=5
+      - EMBEDDING_BATCH_SIZE=10
+
+      # Security
+      - DISABLE_TELEMETRY=true
+      - SIMPLE_SSO_ENABLED=false
+
+    volumes:
+      # Persist AnythingLLM data (workspaces, documents, embeddings)
+      - anythingllm_storage:/app/server/storage
+      - anythingllm_documents:/app/collector/hotdir
+      - anythingllm_outputs:/app/collector/outputs
+
+    networks:
+      - intl-dossier-network
+
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  anythingllm_storage:
+    driver: local
+  anythingllm_documents:
+    driver: local
+  anythingllm_outputs:
+    driver: local
+
+networks:
+  intl-dossier-network:
+    driver: bridge
+    name: intl-dossier-network
+
+# Usage Instructions:
+# 1. Create .env file in this directory with:
+#    ANYTHINGLLM_API_KEY=your-api-key-here
+#    JWT_SECRET=your-jwt-secret-here
+#    OPENAI_API_KEY=your-openai-api-key
+#
+# 2. Deploy: docker-compose up -d
+# 3. Access UI: http://localhost:3001
+# 4. Create admin account on first launch
+# 5. Generate API key in Settings → API Keys
+# 6. Test connection: curl http://localhost:3001/api/ping
+#
+# Architecture notes:
+# - Uses LanceDB (built-in) for vector storage
+# - OpenAI text-embedding-ada-002 (1536-dim) for embeddings
+# - GPT-4 for LLM inference
+# - 800-character chunks with 10% overlap
+# - Persists data in Docker volumes
+# - Integrated with Supabase Edge Functions via REST API

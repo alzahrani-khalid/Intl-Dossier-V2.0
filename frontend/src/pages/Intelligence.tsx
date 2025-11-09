@@ -1,7 +1,7 @@
 import { IntelligencePage } from './intelligence/IntelligencePage'
 
 export default function Intelligence() {
-  return <IntelligencePage />
+ return <IntelligencePage />
 }
 
 export { IntelligencePage }

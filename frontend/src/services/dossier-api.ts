@@ -4,7 +4,7 @@
  *
  * Typed API client for unified dossier operations using Class Table Inheritance pattern.
  * Handles authentication, error handling, and response parsing for all 7 dossier types:
- * country, organization, forum, engagement, theme, working_group, person
+ * country, organization, forum, engagement, topic, working_group, person
  */
 
 import { supabase } from '@/lib/supabase';
@@ -24,7 +24,7 @@ type DossierUpdate = Database['public']['Tables']['dossiers']['Update'];
 /**
  * Dossier Types
  */
-export type DossierType = 'country' | 'organization' | 'forum' | 'engagement' | 'theme' | 'working_group' | 'person';
+export type DossierType = 'country' | 'organization' | 'forum' | 'engagement' | 'topic' | 'working_group' | 'person';
 export type DossierStatus = 'active' | 'inactive' | 'archived' | 'deleted';
 
 /**
@@ -73,9 +73,9 @@ export interface EngagementExtension {
   location_ar?: string;
 }
 
-export interface ThemeExtension {
-  theme_category?: 'policy' | 'technical' | 'strategic' | 'operational';
-  parent_theme_id?: string;
+export interface TopicExtension {
+  topic_category?: 'policy' | 'technical' | 'strategic' | 'operational';
+  parent_topic_id?: string;
 }
 
 export interface WorkingGroupExtension {
@@ -102,7 +102,7 @@ export type DossierExtensionData =
   | OrganizationExtension
   | ForumExtension
   | EngagementExtension
-  | ThemeExtension
+  | TopicExtension
   | WorkingGroupExtension
   | PersonExtension;
 
@@ -136,10 +136,11 @@ export interface UpdateDossierRequest {
 
 export interface DossierFilters {
   type?: DossierType;
-  status?: DossierStatus;
+  status?: DossierStatus | DossierStatus[]; // Single or multiple statuses
   sensitivity_level?: number;
   tags?: string[];
   search?: string;
+  is_active?: boolean;
   page?: number;
   page_size?: number;
   sort_by?: 'created_at' | 'updated_at' | 'name_en' | 'name_ar';
@@ -232,9 +233,10 @@ export async function createDossier(
 /**
  * Get a dossier by ID with extension data
  */
-export async function getDossier(id: string): Promise<DossierWithExtension> {
+export async function getDossier(id: string, include?: string[]): Promise<DossierWithExtension> {
   const headers = await getAuthHeaders();
-  const response = await fetch(`${supabaseUrl}/functions/v1/dossiers-get?id=${id}`, {
+  const includeParam = include && include.length > 0 ? `&include=${include.join(',')}` : '';
+  const response = await fetch(`${supabaseUrl}/functions/v1/dossiers-get?id=${id}${includeParam}`, {
     method: 'GET',
     headers,
   });
@@ -387,4 +389,69 @@ export async function unlinkDocumentFromDossier(
   });
 
   return handleResponse<void>(response);
+}
+
+/**
+ * Type Count with Status Breakdown Interface
+ */
+export interface DossierTypeCount {
+  type: DossierType;
+  total: number;
+  active: number;
+  inactive: number;
+  archived: number;
+}
+
+/**
+ * Get dossier counts by type with status breakdown
+ * More efficient than fetching counts separately for each type and status
+ */
+export async function getDossierCountsByType(): Promise<Record<DossierType, DossierTypeCount>> {
+  const { data, error } = await supabase
+    .from('dossiers')
+    .select('type, status')
+    .not('status', 'eq', 'deleted'); // Exclude deleted dossiers from counts
+
+  if (error) {
+    throw new DossierAPIError(
+      error.message || 'Failed to fetch dossier counts',
+      500,
+      'COUNTS_FETCH_FAILED',
+      error
+    );
+  }
+
+  // Initialize counts object
+  const types: DossierType[] = ['country', 'organization', 'forum', 'engagement', 'topic', 'working_group', 'person'];
+  const counts: Record<DossierType, DossierTypeCount> = {} as any;
+
+  types.forEach((type) => {
+    counts[type] = {
+      type,
+      total: 0,
+      active: 0,
+      inactive: 0,
+      archived: 0,
+    };
+  });
+
+  // Aggregate counts
+  data?.forEach((row) => {
+    const type = row.type as DossierType;
+    const status = row.status as DossierStatus;
+
+    if (counts[type]) {
+      counts[type].total++;
+
+      if (status === 'active') {
+        counts[type].active++;
+      } else if (status === 'inactive') {
+        counts[type].inactive++;
+      } else if (status === 'archived') {
+        counts[type].archived++;
+      }
+    }
+  });
+
+  return counts;
 }

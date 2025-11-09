@@ -14,5 +14,5 @@ import { createFileRoute } from '@tanstack/react-router'
 import { WaitingQueuePage } from '../../../pages/WaitingQueue'
 
 export const Route = createFileRoute('/_protected/my-work/waiting')({
-  component: WaitingQueuePage,
+ component: WaitingQueuePage,
 })
