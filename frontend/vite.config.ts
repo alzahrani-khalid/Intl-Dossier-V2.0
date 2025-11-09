@@ -5,12 +5,12 @@ import path from 'path'
 
 export default defineConfig({
   plugins: [
-    react(),
     TanStackRouterVite({
       // Disable auto-generation in dev mode to prevent infinite loops
       autoCodeSplitting: true,
       generatedRouteTree: './src/routeTree.gen.ts',
     }),
+    react(),
   ],
   resolve: {
     alias: {
