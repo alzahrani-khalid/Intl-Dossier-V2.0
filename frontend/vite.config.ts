@@ -4,7 +4,14 @@ import { TanStackRouterVite } from '@tanstack/router-plugin/vite'
 import path from 'path'
 
 export default defineConfig({
-  plugins: [react(), TanStackRouterVite()],
+  plugins: [
+    react(),
+    TanStackRouterVite({
+      // Disable auto-generation in dev mode to prevent infinite loops
+      autoCodeSplitting: true,
+      generatedRouteTree: './src/routeTree.gen.ts',
+    }),
+  ],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -13,7 +20,17 @@ export default defineConfig({
   server: {
     port: 3000,
     watch: {
-      ignored: ['**/node_modules/**', '**/dist/**', '**/.git/**', '**/routeTree.gen.ts'],
+      ignored: [
+        '**/node_modules/**',
+        '**/dist/**',
+        '**/.git/**',
+        '**/routeTree.gen.ts',
+        '**/.tanstack/**',
+        '**/coverage/**',
+        '**/.vite/**',
+      ],
+      // Disable file system polling to prevent excessive CPU usage
+      usePolling: false,
     },
     proxy: {
       '/api': {
