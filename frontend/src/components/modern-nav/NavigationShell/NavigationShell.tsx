@@ -9,22 +9,22 @@ import { cn } from '@/lib/utils';
 import { navigationCategories } from '../navigationData';
 
 export interface NavigationShellProps {
-  /** Icon rail items */
-  iconRailItems?: IconRailItem[];
-  /** User name for profile */
-  userName?: string;
-  /** User email for profile */
-  userEmail?: string;
-  /** User avatar URL */
-  userAvatar?: string;
-  /** Logout handler */
-  onLogout?: () => void;
-  /** Content to display in main area */
-  children: ReactNode;
-  /** Custom class name */
-  className?: string;
-  /** Default panel open state (desktop only) */
-  defaultPanelOpen?: boolean;
+ /** Icon rail items */
+ iconRailItems?: IconRailItem[];
+ /** User name for profile */
+ userName?: string;
+ /** User email for profile */
+ userEmail?: string;
+ /** User avatar URL */
+ userAvatar?: string;
+ /** Logout handler */
+ onLogout?: () => void;
+ /** Content to display in main area */
+ children: ReactNode;
+ /** Custom class name */
+ className?: string;
+ /** Default panel open state (desktop only) */
+ defaultPanelOpen?: boolean;
 }
 
 /**
@@ -53,186 +53,210 @@ export interface NavigationShellProps {
  * @example
  * ```tsx
  * <NavigationShell
- *   userName="John Doe"
- *   userEmail="customerpop@gmail.com"
- *   onLogout={handleLogout}
+ * userName="John Doe"
+ * userEmail="customerpop@gmail.com"
+ * onLogout={handleLogout}
  * >
- *   <YourContentHere />
+ * <YourContentHere />
  * </NavigationShell>
  * ```
  */
 export function NavigationShell({
-  iconRailItems,
-  userName,
-  userEmail,
-  userAvatar,
-  onLogout,
-  children,
-  className,
-  defaultPanelOpen = true,
+ iconRailItems,
+ userName,
+ userEmail,
+ userAvatar,
+ onLogout,
+ children,
+ className,
+ defaultPanelOpen = true,
 }: NavigationShellProps) {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
-  const location = useLocation();
+ const { i18n } = useTranslation();
+ const isRTL = i18n.language === 'ar';
+ const location = useLocation();
 
-  // Panel state
-  const [isPanelOpen, setIsPanelOpen] = useState(defaultPanelOpen);
+ // Panel state - only open by default on desktop (>=768px)
+ const [isPanelOpen, setIsPanelOpen] = useState(() => {
+ if (typeof window !== 'undefined') {
+ return window.innerWidth >= 768 ? defaultPanelOpen : false;
+ }
+ return false;
+ });
 
-  // Mobile menu state
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+ // Mobile menu state
+ const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Active category state (for ExpandedPanel content sync)
-  const [activeCategory, setActiveCategory] = useState<string>('dashboard');
+ // Active category state (for ExpandedPanel content sync)
+ const [activeCategory, setActiveCategory] = useState<string>('dashboard');
 
-  // Detect active category based on current route
-  useEffect(() => {
-    const currentPath = location.pathname;
+ // Handle responsive panel state on window resize
+ useEffect(() => {
+ const handleResize = () => {
+ const isMobile = window.innerWidth < 768;
+ if (isMobile) {
+ // Close desktop panel on mobile
+ setIsPanelOpen(false);
+ // Close mobile menu if open
+ setIsMobileMenuOpen(false);
+ }
+ };
 
-    // Find which category contains the current route
-    for (const category of navigationCategories) {
-      // Check if category's main path matches
-      if (currentPath === category.path || currentPath.startsWith(`${category.path}/`)) {
-        setActiveCategory(category.id);
-        return;
-      }
+ window.addEventListener('resize', handleResize);
+ return () => window.removeEventListener('resize', handleResize);
+ }, []);
 
-      // Check if any of the category's items match
-      for (const item of category.items) {
-        if (currentPath === item.path || currentPath.startsWith(`${item.path}/`)) {
-          setActiveCategory(category.id);
-          return;
-        }
-      }
-    }
-  }, [location.pathname]);
+ // Detect active category based on current route
+ useEffect(() => {
+ const currentPath = location.pathname;
 
-  const togglePanel = () => setIsPanelOpen((prev) => !prev);
-  const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
+ // Find which category contains the current route
+ for (const category of navigationCategories) {
+ // Check if category's main path matches
+ if (currentPath === category.path || currentPath.startsWith(`${category.path}/`)) {
+ setActiveCategory(category.id);
+ return;
+ }
 
-  // Handle category change from IconRail
-  const handleCategoryChange = (categoryId: string) => {
-    setActiveCategory(categoryId);
-    // Auto-open panel when category is clicked (desktop only)
-    setIsPanelOpen(true);
-  };
+ // Check if any of the category's items match
+ for (const item of category.items) {
+ if (currentPath === item.path || currentPath.startsWith(`${item.path}/`)) {
+ setActiveCategory(category.id);
+ return;
+ }
+ }
+ }
+ }, [location.pathname]);
 
-  return (
-    <div
-      className={cn('flex h-screen w-full overflow-hidden', className)}
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
-      {/* Mobile Menu Button - Only visible on mobile */}
-      <div className="fixed top-0 start-0 z-50 p-4 md:hidden">
-        <Button
-          variant="ghost"
-          size="icon"
-          onClick={toggleMobileMenu}
-          className={cn(
-            'h-11 w-11 rounded-lg',
-            'bg-background border border-content-border',
-            'hover:bg-panel-hover',
-            'focus-visible:ring-2 focus-visible:ring-icon-rail-active-indicator'
-          )}
-          aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
-        >
-          {isMobileMenuOpen ? (
-            <X className="h-5 w-5" />
-          ) : (
-            <Menu className="h-5 w-5" />
-          )}
-        </Button>
-      </div>
+ const togglePanel = () => setIsPanelOpen((prev) => !prev);
+ const toggleMobileMenu = () => setIsMobileMenuOpen((prev) => !prev);
 
-      {/* Mobile Menu Overlay */}
-      {isMobileMenuOpen && (
-        <div
-          className="fixed inset-0 z-40 bg-black/50 md:hidden"
-          onClick={toggleMobileMenu}
-          aria-hidden="true"
-        />
-      )}
+ // Handle category change from IconRail
+ const handleCategoryChange = (categoryId: string) => {
+ setActiveCategory(categoryId);
+ // Auto-open panel when category is clicked (desktop only)
+ setIsPanelOpen(true);
+ };
 
-      {/* Icon Rail - Hidden on mobile, visible on tablet+ */}
-      <IconRail
-        items={iconRailItems}
-        activeCategory={activeCategory}
-        onCategoryChange={handleCategoryChange}
-        className="hidden md:flex"
-      />
+ return (
+ <div
+ className={cn('flex h-screen w-full overflow-hidden', className)}
+ dir={isRTL ? 'rtl' : 'ltr'}
+ >
+ {/* Mobile Menu Button - Only visible on mobile */}
+ <div className="fixed top-0 start-0 z-50 p-4 md:hidden">
+ <Button
+ variant="ghost"
+ size="icon"
+ onClick={toggleMobileMenu}
+ className={cn(
+ 'h-11 w-11 rounded-lg',
+ 'bg-background border border-content-border',
+ 'hover:bg-panel-hover',
+ 'focus-visible:ring-2 focus-visible:ring-icon-rail-active-indicator'
+ )}
+ aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+ >
+ {isMobileMenuOpen ? (
+ <X className="h-5 w-5" />
+ ) : (
+ <Menu className="h-5 w-5" />
+ )}
+ </Button>
+ </div>
 
-      {/* Expanded Panel - Full screen overlay on mobile, sidebar on desktop */}
-      <div
-        className={cn(
-          // Mobile: Full screen overlay
-          'fixed inset-y-0 start-0 z-40 md:static md:z-auto',
+ {/* Mobile Menu Overlay */}
+ {isMobileMenuOpen && (
+ <div
+ className="fixed inset-0 z-40 bg-black/50 md:hidden"
+ onClick={toggleMobileMenu}
+ aria-hidden="true"
+ />
+ )}
 
-          // Transitions
-          'transition-transform duration-250 ease-in-out',
+ {/* Icon Rail - Hidden on mobile, visible on tablet+ */}
+ <IconRail
+ items={iconRailItems}
+ activeCategory={activeCategory}
+ onCategoryChange={handleCategoryChange}
+ className="hidden md:flex"
+ />
 
-          // Mobile visibility
-          'md:flex',
-          !isMobileMenuOpen && '-translate-x-full md:translate-x-0',
-          isMobileMenuOpen && 'translate-x-0',
+ {/* Expanded Panel - Full screen overlay on mobile, sidebar on desktop */}
+ <div
+ className={cn(
+ // Mobile: Full screen overlay
+ 'fixed inset-y-0 start-0 z-40 w-full md:w-auto md:static md:z-auto',
 
-          // Desktop visibility
-          !isPanelOpen && 'md:-translate-x-full',
-          isPanelOpen && 'md:translate-x-0',
+ // FIXED: Solid background for mobile
+ 'bg-sidebar',
 
-          // RTL support
-          isRTL && [
-            !isMobileMenuOpen && 'translate-x-full md:-translate-x-0',
-            isMobileMenuOpen && '-translate-x-0',
-            !isPanelOpen && 'md:translate-x-full',
-            isPanelOpen && 'md:-translate-x-0',
-          ]
-        )}
-      >
-        <ExpandedPanel
-          isOpen={true}
-          onClose={() => {
-            setIsMobileMenuOpen(false);
-            setIsPanelOpen(false);
-          }}
-          userName={userName}
-          userEmail={userEmail}
-          userAvatar={userAvatar}
-          onLogout={onLogout}
-          activeCategory={activeCategory}
-        />
-      </div>
+ // Transitions
+ 'transition-transform duration-250 ease-in-out',
 
-      {/* Main Content Area */}
-      <main
-        className={cn(
-          // Layout
-          'flex-1 overflow-auto',
+ // Mobile visibility
+ 'md:flex',
+ !isMobileMenuOpen && '-translate-x-full md:translate-x-0',
+ isMobileMenuOpen && 'translate-x-0',
 
-          // Background
-          'bg-background',
+ // Desktop visibility
+ !isPanelOpen && 'md:-translate-x-full',
+ isPanelOpen && 'md:translate-x-0',
 
-          // Responsive padding
-          'px-4 sm:px-6 lg:px-8',
-          'pt-20 md:pt-6 lg:pt-8',
-          'pb-6 lg:pb-8',
+ // RTL support
+ isRTL && [
+ !isMobileMenuOpen && 'translate-x-full md:-translate-x-0',
+ isMobileMenuOpen && '-translate-x-0',
+ !isPanelOpen && 'md:translate-x-full',
+ isPanelOpen && 'md:-translate-x-0',
+ ]
+ )}
+ >
+ <ExpandedPanel
+ isOpen={true}
+ onClose={() => {
+ setIsMobileMenuOpen(false);
+ setIsPanelOpen(false);
+ }}
+ userName={userName}
+ userEmail={userEmail}
+ userAvatar={userAvatar}
+ onLogout={onLogout}
+ activeCategory={activeCategory}
+ className="flex md:hidden lg:flex w-full md:w-auto" />
+ </div>
 
-          // Match IconRail height with margin
-          'my-2 me-2 h-[calc(100vh-16px)]',
+ {/* Main Content Area */}
+ <main
+ className={cn(
+ // Layout
+ 'flex-1 overflow-auto',
 
-          // Rounded corners only on the right side (end side for RTL)
-          'rounded-e-[12px]'
-        )}
-        style={{
-          backgroundColor: '#f7f9fa',
-          backgroundImage: 'linear-gradient(rgba(247, 249, 250, 0.85), rgba(247, 249, 250, 0.85)), url(/white-texture.jpg)',
-          backgroundRepeat: 'no-repeat',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center'
-        }}
-      >
-        {children}
-      </main>
-    </div>
-  );
+ // Background
+ 'bg-background',
+
+ // Responsive padding
+ 'px-4 sm:px-6 lg:px-8',
+ 'pt-20 md:pt-6 lg:pt-8',
+ 'pb-6 lg:pb-8',
+
+ // Match IconRail height with margin
+ 'my-2 me-2 h-[calc(100vh-16px)]',
+
+ // Rounded corners only on the right side (end side for RTL)
+ 'rounded-e-[12px]'
+ )}
+ style={{
+ backgroundColor: '#f7f9fa',
+ backgroundImage: 'linear-gradient(rgba(247, 249, 250, 0.85), rgba(247, 249, 250, 0.85)), url(/white-texture.jpg)',
+ backgroundRepeat: 'no-repeat',
+ backgroundSize: 'cover',
+ backgroundPosition: 'center'
+ }}
+ >
+ {children}
+ </main>
+ </div>
+ );
 }
 
 NavigationShell.displayName = 'NavigationShell';

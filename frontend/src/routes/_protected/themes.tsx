@@ -2,5 +2,5 @@ import { createFileRoute } from '@tanstack/react-router'
 import Themes from '../../pages/Themes'
 
 export const Route = createFileRoute('/_protected/themes')({
-  component: Themes,
+ component: Themes,
 })

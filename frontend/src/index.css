@@ -1,6 +1,9 @@
 /* Modern Navigation Design Tokens - @import must come first */
 @import './styles/modern-nav-tokens.css';
 
+/* Flag Icons CSS */
+@import 'flag-icons/css/flag-icons.min.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -97,50 +100,57 @@
     --transition-slow: 350ms;
   }
 
-  /* Light mode colors - GASTAT theme default */
-  :root[data-theme="gastat"][data-color-mode="light"] {
-    /* Core colors */
-    --primary: 139.6552 52.7273% 43.1373%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 218.5401 79.1908% 66.0784%;
-    --secondary-foreground: 0 0% 100%;
-    --accent: 189.635 81.0651% 66.8627%;
-    --accent-foreground: 0 0% 20%;
+  /* Light mode colors - Natural theme (shadcn default) */
+  :root[data-theme="natural"][data-color-mode="light"] {
+    /* Core colors - using neutral gray scale */
+    --primary: 0 0% 20.5%;                    /* oklch(0.205 0 0) - Dark gray */
+    --primary-foreground: 0 0% 98.5%;        /* oklch(0.985 0 0) - Off white */
+    --secondary: 0 0% 97%;                    /* oklch(0.97 0 0) - Very light gray */
+    --secondary-foreground: 0 0% 20.5%;      /* oklch(0.205 0 0) - Dark gray */
+    --accent: 0 0% 97%;                       /* oklch(0.97 0 0) - Very light gray */
+    --accent-foreground: 0 0% 20.5%;         /* oklch(0.205 0 0) - Dark gray */
 
     /* Neutral colors */
-    --background: 0 0% 52.549%;
-    --foreground: 0 0% 100%;
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 20%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 20%;
+    --background: 0 0% 100%;                  /* oklch(1 0 0) - Pure white */
+    --foreground: 0 0% 14.5%;                /* oklch(0.145 0 0) - Almost black */
+    --card: 0 0% 100%;                        /* oklch(1 0 0) - White */
+    --card-foreground: 0 0% 14.5%;           /* oklch(0.145 0 0) - Almost black */
+    --popover: 0 0% 100%;                     /* oklch(1 0 0) - White */
+    --popover-foreground: 0 0% 14.5%;        /* oklch(0.145 0 0) - Almost black */
 
     /* UI colors */
-    --muted: 50.4 26.8817% 81.7647%;
-    --muted-foreground: 0 0% 43.1373%;
-    --border: 0 0% 83.1373%;
-    --input: 0 0% 83.1373%;
-    --ring: 139.6552 52.7273% 43.1373%;
+    --muted: 0 0% 97%;                        /* oklch(0.97 0 0) - Light gray */
+    --muted-foreground: 0 0% 55.6%;          /* oklch(0.556 0 0) - Medium gray */
+    --border: 0 0% 92.2%;                     /* oklch(0.922 0 0) - Light border */
+    --input: 0 0% 92.2%;                      /* oklch(0.922 0 0) - Light input */
+    --ring: 0 0% 70.8%;                       /* oklch(0.708 0 0) - Gray ring */
 
     /* Semantic colors */
-    --destructive: 0 84.2365% 60.1961%;
+    --destructive: 0 84% 60%;                 /* Red */
     --destructive-foreground: 0 0% 100%;
-    --success: 138.871 70.4545% 34.5098%;
+    --success: 142 71% 45%;                   /* Green */
     --success-foreground: 0 0% 100%;
-    --warning: 37.4286 91.3043% 54.902%;
-    --warning-foreground: 0 0% 20%;
-    --info: 218.5401 79.1908% 66.0784%;
+    --warning: 38 92% 50%;                    /* Orange */
+    --warning-foreground: 0 0% 100%;
+    --info: 221 83% 53%;                      /* Blue */
     --info-foreground: 0 0% 100%;
 
     /* Sidebar */
-    --sidebar: 240 9.0909% 97.8431%;
-    --sidebar-foreground: 0 0% 20%;
-    --sidebar-primary: 139.6552 52.7273% 43.1373%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 189.635 81.0651% 66.8627%;
-    --sidebar-accent-foreground: 0 0% 20%;
-    --sidebar-border: 0 0% 83.1373%;
-    --sidebar-ring: 139.6552 52.7273% 43.1373%;
+    --sidebar: 0 0% 98.5%;                    /* Off white */
+    --sidebar-foreground: 0 0% 14.5%;
+    --sidebar-primary: 0 0% 20.5%;
+    --sidebar-primary-foreground: 0 0% 98.5%;
+    --sidebar-accent: 0 0% 97%;
+    --sidebar-accent-foreground: 0 0% 20.5%;
+    --sidebar-border: 0 0% 92.2%;
+    --sidebar-ring: 0 0% 70.8%;
+
+    /* Chart colors */
+    --chart-1: 41 89% 65%;                    /* Warm yellow */
+    --chart-2: 185 59% 60%;                   /* Cyan */
+    --chart-3: 227 35% 40%;                   /* Blue */
+    --chart-4: 84 76% 83%;                    /* Light green */
+    --chart-5: 70 75% 77%;                    /* Yellow green */
 
     /* Shadows */
     --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
@@ -150,177 +160,304 @@
     --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
   }
 
-  /* Dark mode colors - GASTAT theme */
-  :root[data-theme="gastat"][data-color-mode="dark"] {
+  /* Dark mode colors - Natural theme */
+  :root[data-theme="natural"][data-color-mode="dark"] {
     /* Core colors */
-    --primary: 139.6552 52.7273% 43.1373%;
-    --primary-foreground: 0 0% 100%;
-    --secondary: 220.1351 59.2% 49.0196%;
-    --secondary-foreground: 0 0% 89.8039%;
-    --accent: 243.75 26.087% 36.0784%;
-    --accent-foreground: 0 0% 89.8039%;
+    --primary: 0 0% 92.2%;                    /* Light gray */
+    --primary-foreground: 0 0% 20.5%;        /* Dark gray */
+    --secondary: 0 0% 26.9%;                  /* Dark gray */
+    --secondary-foreground: 0 0% 98.5%;      /* Off white */
+    --accent: 0 0% 37.1%;                     /* Medium gray */
+    --accent-foreground: 0 0% 98.5%;         /* Off white */
 
     /* Neutral colors */
-    --background: 220 14.7541% 11.9608%;
-    --foreground: 0 0% 89.8039%;
-    --card: 197.1429 6.9307% 19.8039%;
-    --card-foreground: 0 0% 89.8039%;
-    --popover: 197.1429 6.9307% 19.8039%;
-    --popover-foreground: 0 0% 89.8039%;
+    --background: 0 0% 14.5%;                 /* Almost black */
+    --foreground: 0 0% 98.5%;                /* Off white */
+    --card: 0 0% 20.5%;                       /* Dark gray */
+    --card-foreground: 0 0% 98.5%;           /* Off white */
+    --popover: 0 0% 26.9%;                    /* Dark gray */
+    --popover-foreground: 0 0% 98.5%;        /* Off white */
 
     /* UI colors */
-    --muted: 0 0% 26.6667%;
-    --muted-foreground: 0 0% 63.9216%;
-    --border: 0 0% 26.6667%;
-    --input: 0 0% 26.6667%;
-    --ring: 139.6552 52.7273% 43.1373%;
+    --muted: 0 0% 26.9%;                      /* Dark gray */
+    --muted-foreground: 0 0% 70.8%;          /* Medium light gray */
+    --border: 0 0% 100% / 10%;                /* Transparent white */
+    --input: 0 0% 100% / 15%;                 /* Transparent white */
+    --ring: 0 0% 55.6%;                       /* Medium gray */
 
     /* Semantic colors */
-    --destructive: 0 84.2365% 60.1961%;
+    --destructive: 0 62% 70%;                 /* Light red */
     --destructive-foreground: 0 0% 100%;
-    --success: 139.6552 52.7273% 43.1373%;
-    --success-foreground: 202.5 28.5714% 5.4902%;
-    --warning: 37.4286 91.3043% 54.902%;
-    --warning-foreground: 202.5 28.5714% 5.4902%;
-    --info: 218.5401 79.1908% 66.0784%;
-    --info-foreground: 202.5 28.5714% 5.4902%;
+    --success: 142 71% 45%;                   /* Green */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;                    /* Orange */
+    --warning-foreground: 0 0% 14.5%;
+    --info: 221 83% 53%;                      /* Blue */
+    --info-foreground: 0 0% 100%;
 
     /* Sidebar */
-    --sidebar: 220 14.7541% 18%;
-    --sidebar-foreground: 0 0% 89.8039%;
-    --sidebar-primary: 139.6552 52.7273% 43.1373%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 218.5401 79.1908% 66.0784%;
-    --sidebar-accent-foreground: 0 0% 89.8039%;
-    --sidebar-border: 0 0% 26.6667%;
-    --sidebar-ring: 139.6552 52.7273% 43.1373%;
+    --sidebar: 0 0% 20.5%;
+    --sidebar-foreground: 0 0% 98.5%;
+    --sidebar-primary: 264 97% 49%;           /* Purple accent */
+    --sidebar-primary-foreground: 0 0% 98.5%;
+    --sidebar-accent: 0 0% 26.9%;
+    --sidebar-accent-foreground: 0 0% 98.5%;
+    --sidebar-border: 0 0% 100% / 10%;
+    --sidebar-ring: 0 0% 43.9%;
+
+    /* Chart colors */
+    --chart-1: 264 97% 49%;                   /* Purple */
+    --chart-2: 162 68% 70%;                   /* Teal */
+    --chart-3: 70 75% 77%;                    /* Yellow green */
+    --chart-4: 304 105% 63%;                  /* Pink */
+    --chart-5: 16 98% 65%;                    /* Orange */
 
     /* Shadows */
-    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.1);
-    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.2);
-    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.2);
-    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.2);
-    --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.4);
+    --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
   }
 
-  /* Light mode colors - Blue Sky theme (Twitter) */
-  :root[data-theme="blue-sky"][data-color-mode="light"] {
-    /* Twitter Blue primary brand colors */
-    --primary: 205 98% 53%;              /* #1D9BF0 - Twitter Blue */
-    --primary-foreground: 0 0% 100%;     /* White text on primary */
-    --secondary: 204 14% 93%;           /* #E7ECEF - Light gray with better contrast */
-    --secondary-foreground: 204 39% 7%;  /* #0F1419 - Almost black */
-    --accent: 205 82% 91%;              /* #D4E5F9 - Blue tinted accent */
-    --accent-foreground: 204 39% 7%;     /* #0F1419 - Dark text */
+  /* Light mode colors - Slate theme */
+  :root[data-theme="slate"][data-color-mode="light"] {
+    /* Core colors - cooler slate tones */
+    --primary: 222.2 47.4% 11.2%;            /* Dark slate */
+    --primary-foreground: 210 40% 98%;       /* Off white with blue tint */
+    --secondary: 210 40% 96.1%;              /* Very light slate */
+    --secondary-foreground: 222.2 47.4% 11.2%;
+    --accent: 210 40% 96.1%;                 /* Very light slate */
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    /* Neutral colors */
+    --background: 0 0% 100%;                  /* Pure white */
+    --foreground: 222.2 47.4% 11.2%;         /* Dark slate */
+    --card: 0 0% 100%;                        /* White */
+    --card-foreground: 222.2 47.4% 11.2%;
+    --popover: 0 0% 100%;                     /* White */
+    --popover-foreground: 222.2 47.4% 11.2%;
+
+    /* UI colors */
+    --muted: 210 40% 96.1%;                   /* Light slate */
+    --muted-foreground: 215.4 16.3% 46.9%;   /* Medium slate */
+    --border: 214.3 31.8% 91.4%;             /* Light slate border */
+    --input: 214.3 31.8% 91.4%;              /* Light slate input */
+    --ring: 222.2 47.4% 11.2%;               /* Dark slate ring */
+
+    /* Semantic colors */
+    --destructive: 0 84.2% 60.2%;            /* Red */
+    --destructive-foreground: 210 40% 98%;
+    --success: 142 71% 45%;                   /* Green */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;                    /* Orange */
+    --warning-foreground: 0 0% 100%;
+    --info: 221 83% 53%;                      /* Blue */
+    --info-foreground: 0 0% 100%;
+
+    /* Sidebar */
+    --sidebar: 210 40% 98%;
+    --sidebar-foreground: 222.2 47.4% 11.2%;
+    --sidebar-primary: 222.2 47.4% 11.2%;
+    --sidebar-primary-foreground: 210 40% 98%;
+    --sidebar-accent: 210 40% 96.1%;
+    --sidebar-accent-foreground: 222.2 47.4% 11.2%;
+    --sidebar-border: 214.3 31.8% 91.4%;
+    --sidebar-ring: 222.2 47.4% 11.2%;
+
+    /* Chart colors */
+    --chart-1: 12 76% 61%;                    /* Coral */
+    --chart-2: 173 58% 39%;                   /* Teal */
+    --chart-3: 197 37% 24%;                   /* Dark blue */
+    --chart-4: 43 74% 66%;                    /* Yellow */
+    --chart-5: 27 87% 67%;                    /* Orange */
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  }
+
+  /* Dark mode colors - Slate theme */
+  :root[data-theme="slate"][data-color-mode="dark"] {
+    /* Core colors */
+    --primary: 210 40% 98%;                   /* Light slate */
+    --primary-foreground: 222.2 47.4% 11.2%; /* Dark slate */
+    --secondary: 217.2 32.6% 17.5%;          /* Dark slate */
+    --secondary-foreground: 210 40% 98%;
+    --accent: 217.2 32.6% 17.5%;             /* Dark slate */
+    --accent-foreground: 210 40% 98%;
+
+    /* Neutral colors */
+    --background: 222.2 84% 4.9%;            /* Very dark slate */
+    --foreground: 210 40% 98%;               /* Light slate */
+    --card: 222.2 84% 4.9%;                  /* Very dark slate */
+    --card-foreground: 210 40% 98%;
+    --popover: 222.2 84% 4.9%;               /* Very dark slate */
+    --popover-foreground: 210 40% 98%;
+
+    /* UI colors */
+    --muted: 217.2 32.6% 17.5%;              /* Dark slate */
+    --muted-foreground: 215 20.2% 65.1%;     /* Medium slate */
+    --border: 217.2 32.6% 17.5%;             /* Dark slate border */
+    --input: 217.2 32.6% 17.5%;              /* Dark slate input */
+    --ring: 212.7 26.8% 83.9%;               /* Light slate ring */
+
+    /* Semantic colors */
+    --destructive: 0 62.8% 30.6%;            /* Dark red */
+    --destructive-foreground: 210 40% 98%;
+    --success: 142 71% 45%;                   /* Green */
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;                    /* Orange */
+    --warning-foreground: 222.2 84% 4.9%;
+    --info: 221 83% 53%;                      /* Blue */
+    --info-foreground: 0 0% 100%;
+
+    /* Sidebar */
+    --sidebar: 222.2 84% 4.9%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 217.2 91.2% 59.8%;    /* Blue accent */
+    --sidebar-primary-foreground: 222.2 47.4% 11.2%;
+    --sidebar-accent: 217.2 32.6% 17.5%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 217.2 32.6% 17.5%;
+    --sidebar-ring: 224.3 76.3% 48%;
+
+    /* Chart colors */
+    --chart-1: 220 70% 50%;                   /* Blue */
+    --chart-2: 160 60% 45%;                   /* Teal */
+    --chart-3: 30 80% 55%;                    /* Orange */
+    --chart-4: 280 65% 60%;                   /* Purple */
+    --chart-5: 340 75% 55%;                   /* Pink */
+
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.4);
+    --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
+  }
+
+  /* Light mode colors - Zinc theme (shadcn default) */
+  :root[data-theme="zinc"][data-color-mode="light"] {
+    /* Core colors - neutral zinc tones */
+    --primary: 240 5.9% 10%;            /* #18181B - Deep zinc */
+    --primary-foreground: 0 0% 98%;     /* #FAFAFA - Off white */
+    --secondary: 240 4.8% 95.9%;        /* #F4F4F5 - Very light zinc */
+    --secondary-foreground: 240 5.9% 10%; /* #18181B - Deep zinc */
+    --accent: 240 4.8% 95.9%;           /* #F4F4F5 - Very light zinc */
+    --accent-foreground: 240 5.9% 10%;  /* #18181B - Deep zinc */
 
     /* Neutral colors */
     --background: 0 0% 100%;             /* #FFFFFF - Pure white */
-    --foreground: 204 39% 7%;           /* #0F1419 - Twitter black */
-    --card: 0 0% 100%;                   /* #FFFFFF - White cards */
-    --card-foreground: 204 39% 7%;      /* #0F1419 - Dark text */
-    --popover: 0 0% 100%;                /* #FFFFFF - White popovers */
-    --popover-foreground: 204 39% 7%;   /* #0F1419 - Dark text */
+    --foreground: 240 10% 3.9%;         /* #09090B - Almost black */
+    --card: 0 0% 100%;                   /* #FFFFFF - White */
+    --card-foreground: 240 10% 3.9%;    /* #09090B - Almost black */
+    --popover: 0 0% 100%;                /* #FFFFFF - White */
+    --popover-foreground: 240 10% 3.9%; /* #09090B - Almost black */
 
     /* UI colors */
-    --muted: 204 14% 93%;               /* #E7ECEF - Light gray background */
-    --muted-foreground: 207 8% 32%;     /* #4B5563 - Darker gray for better contrast */
-    --border: 204 16% 87%;               /* #CFD9DE - Twitter border */
-    --input: 204 16% 87%;                /* #CFD9DE - Input borders */
-    --ring: 205 98% 53%;                 /* #1D9BF0 - Focus ring */
+    --muted: 240 4.8% 95.9%;            /* #F4F4F5 - Light zinc */
+    --muted-foreground: 240 3.8% 46.1%; /* #71717A - Medium zinc */
+    --border: 240 5.9% 90%;              /* #E4E4E7 - Light border */
+    --input: 240 5.9% 90%;               /* #E4E4E7 - Light input */
+    --ring: 240 5.9% 10%;                /* #18181B - Focus ring */
 
     /* Semantic colors */
-    --destructive: 353 88% 58%;         /* #F4212E - Twitter red */
-    --destructive-foreground: 0 0% 100%;
-    --success: 146 72% 38%;             /* #00BA7C - Twitter green */
-    --success-foreground: 0 0% 100%;
-    --warning: 37 100% 51%;             /* #FFD400 - Twitter yellow */
-    --warning-foreground: 204 39% 7%;
-    --info: 205 98% 53%;                /* #1D9BF0 - Twitter blue */
-    --info-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;       /* Red */
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 76% 36%;              /* Green */
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;               /* Orange */
+    --warning-foreground: 240 10% 3.9%;
+    --info: 221 83% 53%;                 /* Blue */
+    --info-foreground: 0 0% 98%;
 
     /* Sidebar */
-    --sidebar: 0 0% 100%;               /* White sidebar */
-    --sidebar-foreground: 204 39% 7%;
-    --sidebar-primary: 205 98% 53%;     /* Twitter blue */
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 205 82% 91%;      /* Blue tinted accent */
-    --sidebar-accent-foreground: 204 39% 7%;
-    --sidebar-border: 204 16% 87%;      /* Twitter border */
-    --sidebar-ring: 205 98% 53%;        /* Focus ring */
+    --sidebar: 0 0% 98%;                 /* Off white */
+    --sidebar-foreground: 240 5.3% 26.1%;
+    --sidebar-primary: 240 5.9% 10%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 4.8% 95.9%;
+    --sidebar-accent-foreground: 240 5.9% 10%;
+    --sidebar-border: 240 5.9% 90%;
+    --sidebar-ring: 240 5.9% 10%;
 
-    /* Chart colors - Twitter inspired palette */
-    --chart-1: 205 98% 53%;             /* Twitter blue */
-    --chart-2: 146 72% 38%;             /* Twitter green */
-    --chart-3: 37 100% 51%;             /* Twitter yellow */
-    --chart-4: 353 88% 58%;             /* Twitter red */
-    --chart-5: 279 65% 56%;             /* Twitter purple */
+    /* Chart colors */
+    --chart-1: 12 76% 61%;               /* Coral */
+    --chart-2: 173 58% 39%;              /* Teal */
+    --chart-3: 197 37% 24%;              /* Dark blue */
+    --chart-4: 43 74% 66%;               /* Yellow */
+    --chart-5: 27 87% 67%;               /* Orange */
 
-    /* Twitter-inspired subtle shadows */
-    --shadow-sm: rgba(101, 119, 134, 0.2) 0px 0px 15px, rgba(101, 119, 134, 0.15) 0px 0px 3px 1px;
-    --shadow: rgba(101, 119, 134, 0.2) 0px 1px 8px, rgba(101, 119, 134, 0.25) 0px 0px 1px;
-    --shadow-md: rgba(101, 119, 134, 0.2) 0px 2px 12px, rgba(101, 119, 134, 0.25) 0px 0px 2px;
-    --shadow-lg: rgba(101, 119, 134, 0.2) 0px 4px 20px, rgba(101, 119, 134, 0.15) 0px 1px 3px;
-    --shadow-xl: rgba(101, 119, 134, 0.2) 0px 8px 28px, rgba(101, 119, 134, 0.15) 0px 2px 4px;
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
   }
 
-  /* Dark mode colors - Blue Sky theme (Twitter Dark) */
-  :root[data-theme="blue-sky"][data-color-mode="dark"] {
-    /* Twitter Blue adapted for dark mode */
-    --primary: 205 92% 62%;             /* #1D9BF0 brightened for dark */
-    --primary-foreground: 0 0% 100%;    /* White text */
-    --secondary: 207 13% 16%;           /* #1E2732 - Dark secondary */
-    --secondary-foreground: 204 5% 97%; /* #F7F9F9 - Light text */
-    --accent: 208 18% 19%;              /* #263340 - Dark accent */
-    --accent-foreground: 204 5% 97%;    /* Light text */
+  /* Dark mode colors - Zinc theme */
+  :root[data-theme="zinc"][data-color-mode="dark"] {
+    /* Core colors */
+    --primary: 0 0% 98%;                 /* #FAFAFA - Off white */
+    --primary-foreground: 240 5.9% 10%;  /* #18181B - Deep zinc */
+    --secondary: 240 3.7% 15.9%;         /* #27272A - Dark zinc */
+    --secondary-foreground: 0 0% 98%;    /* #FAFAFA - Light text */
+    --accent: 240 3.7% 15.9%;            /* #27272A - Dark accent */
+    --accent-foreground: 0 0% 98%;       /* Light text */
 
-    /* Dark theme backgrounds */
-    --background: 209 33% 12%;          /* #15202B - Twitter dark bg */
-    --foreground: 204 5% 97%;           /* #F7F9F9 - Light text */
-    --card: 207 13% 16%;                /* #1E2732 - Elevated surface */
-    --card-foreground: 204 5% 97%;      /* Light text */
-    --popover: 207 13% 16%;             /* #1E2732 - Dark popover */
-    --popover-foreground: 204 5% 97%;   /* Light text */
+    /* Neutral colors */
+    --background: 240 10% 3.9%;          /* #09090B - Very dark zinc */
+    --foreground: 0 0% 98%;              /* #FAFAFA - Light text */
+    --card: 240 10% 3.9%;                /* #09090B - Dark card */
+    --card-foreground: 0 0% 98%;         /* Light text */
+    --popover: 240 10% 3.9%;             /* #09090B - Dark popover */
+    --popover-foreground: 0 0% 98%;      /* Light text */
 
-    /* UI colors for dark mode */
-    --muted: 208 18% 19%;               /* #263340 - Muted dark */
-    --muted-foreground: 206 5% 69%;     /* #8B98A5 - Muted text */
-    --border: 207 13% 28%;              /* #38444D - Dark border */
-    --input: 207 13% 28%;               /* #38444D - Dark input */
-    --ring: 205 92% 62%;                /* Twitter blue for focus */
+    /* UI colors */
+    --muted: 240 3.7% 15.9%;             /* #27272A - Muted dark */
+    --muted-foreground: 240 5% 64.9%;    /* #A1A1AA - Muted text */
+    --border: 240 3.7% 15.9%;            /* #27272A - Dark border */
+    --input: 240 3.7% 15.9%;             /* #27272A - Dark input */
+    --ring: 240 4.9% 83.9%;              /* #D4D4D8 - Light ring */
 
-    /* Semantic colors (brightened for dark mode) */
-    --destructive: 353 88% 58%;         /* #F4212E - Twitter red */
-    --destructive-foreground: 0 0% 100%;
-    --success: 146 72% 45%;             /* #00BA7C brightened */
-    --success-foreground: 0 0% 100%;
-    --warning: 37 100% 51%;             /* #FFD400 - Yellow */
-    --warning-foreground: 209 33% 12%;
-    --info: 205 92% 62%;                /* Twitter blue brightened */
-    --info-foreground: 0 0% 100%;
+    /* Semantic colors */
+    --destructive: 0 62.8% 30.6%;        /* Dark red */
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 76% 36%;              /* Green */
+    --success-foreground: 0 0% 98%;
+    --warning: 38 92% 50%;               /* Orange */
+    --warning-foreground: 240 10% 3.9%;
+    --info: 221 83% 53%;                 /* Blue */
+    --info-foreground: 0 0% 98%;
 
-    /* Sidebar for dark mode */
-    --sidebar: 209 33% 18%;             /* Lighter dark sidebar */
-    --sidebar-foreground: 204 5% 97%;
-    --sidebar-primary: 205 92% 62%;     /* Twitter blue */
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 208 18% 19%;      /* Dark accent */
-    --sidebar-accent-foreground: 204 5% 97%;
-    --sidebar-border: 207 13% 28%;      /* Dark border */
-    --sidebar-ring: 205 92% 62%;        /* Focus ring */
+    /* Sidebar */
+    --sidebar: 240 5.9% 10%;             /* Dark sidebar */
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 0 0% 98%;
+    --sidebar-primary-foreground: 240 5.9% 10%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 240 4.9% 83.9%;
 
-    /* Chart colors - Twitter dark palette */
-    --chart-1: 205 92% 62%;             /* Twitter blue brightened */
-    --chart-2: 146 72% 45%;             /* Twitter green brightened */
-    --chart-3: 37 100% 51%;             /* Twitter yellow */
-    --chart-4: 353 88% 58%;             /* Twitter red */
-    --chart-5: 279 65% 65%;             /* Twitter purple brightened */
+    /* Chart colors */
+    --chart-1: 220 70% 50%;              /* Blue */
+    --chart-2: 160 60% 45%;              /* Teal */
+    --chart-3: 30 80% 55%;               /* Orange */
+    --chart-4: 280 65% 60%;              /* Purple */
+    --chart-5: 340 75% 55%;              /* Pink */
 
-    /* Dark mode shadows (more subtle) */
-    --shadow-sm: rgba(0, 0, 0, 0.3) 0px 0px 15px, rgba(0, 0, 0, 0.25) 0px 0px 3px 1px;
-    --shadow: rgba(0, 0, 0, 0.3) 0px 1px 8px, rgba(0, 0, 0, 0.35) 0px 0px 1px;
-    --shadow-md: rgba(0, 0, 0, 0.3) 0px 2px 12px, rgba(0, 0, 0, 0.35) 0px 0px 2px;
-    --shadow-lg: rgba(0, 0, 0, 0.3) 0px 4px 20px, rgba(0, 0, 0, 0.25) 0px 1px 3px;
-    --shadow-xl: rgba(0, 0, 0, 0.3) 0px 8px 28px, rgba(0, 0, 0, 0.25) 0px 2px 4px;
+    /* Shadows */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.3);
+    --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.4);
+    --shadow-md: 0 10px 15px -3px rgb(0 0 0 / 0.4);
+    --shadow-lg: 0 20px 25px -5px rgb(0 0 0 / 0.4);
+    --shadow-xl: 0 25px 50px -12px rgb(0 0 0 / 0.6);
   }
 
   /* Apply base styles */
@@ -334,7 +471,6 @@
     font-size: var(--text-base);
     font-weight: 400; /* Kibo UI body weight */
     transition: background-color var(--transition-base), color var(--transition-base);
-    background-color: #868686 !important;
   }
 
   /* Kibo UI font weight overrides - redefine font-bold to use 600 instead of 700 */

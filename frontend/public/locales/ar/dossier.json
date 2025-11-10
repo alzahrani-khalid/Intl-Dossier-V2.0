@@ -7,7 +7,7 @@
     "organization": "منظمة",
     "forum": "منتدى",
     "engagement": "ارتباط",
-    "theme": "موضوع",
+    "topic": "موضوع",
     "working_group": "فريق عمل",
     "person": "شخص"
   },
@@ -16,7 +16,7 @@
     "organization": "الهيئات الحكومية والمنظمات غير الحكومية والقطاع الخاص والمنظمات الدولية",
     "forum": "المؤتمرات والقمم ومنصات النقاش متعددة الأطراف",
     "engagement": "الاجتماعات والمشاورات والتفاعلات الدبلوماسية",
-    "theme": "المجالات السياسية والأولويات الاستراتيجية ومجالات التركيز المواضيعية",
+    "topic": "المجالات السياسية والأولويات الاستراتيجية ومجالات التركيز المواضيعية",
     "working_group": "فرق العمل واللجان والهيئات التعاونية",
     "person": "الأفراد المهمون بما في ذلك السفراء والوزراء وجهات الاتصال الرئيسية"
   },
@@ -28,6 +28,7 @@
   },
   "action": {
     "view": "عرض",
+    "viewDetails": "عرض التفاصيل",
     "edit": "تحرير",
     "delete": "حذف",
     "create": "إنشاء دوسيه",
@@ -35,7 +36,11 @@
     "save": "حفظ",
     "cancel": "إلغاء",
     "back": "رجوع",
-    "next": "التالي"
+    "next": "التالي",
+    "close": "إغلاق",
+    "backToHub": "العودة إلى مركز الدوسيهات",
+    "backToList": "العودة إلى القائمة",
+    "viewCorrectType": "عرض كـ {{type}}"
   },
   "filter": {
     "all": "جميع الأنواع",
@@ -83,7 +88,7 @@
     "organizationFields": "معلومات خاصة بالمنظمة",
     "forumFields": "معلومات خاصة بالمنتدى",
     "engagementFields": "معلومات خاصة بالمشاركة",
-    "themeFields": "معلومات خاصة بالموضوع",
+    "topicFields": "معلومات خاصة بالموضوع",
     "working_groupFields": "معلومات خاصة بفريق العمل",
     "personFields": "معلومات خاصة بالشخص",
     "typeSpecificFieldsPlaceholder": "سيتم عرض الحقول الإضافية لـ {{type}} هنا",
@@ -105,65 +110,76 @@
     "create": "إنشاء دوسيه",
     "update": "تحديث الدوسيه"
   },
+  "field": {
+    "isoCode": "رمز ISO",
+    "region": "المنطقة",
+    "capital": "العاصمة",
+    "population": "عدد السكان",
+    "gdp": "الناتج المحلي الإجمالي",
+    "languages": "اللغات",
+    "governmentType": "نوع الحكومة"
+  },
+  "common": {
+    "notAvailable": "غير متاح"
+  },
   "list": {
     "title": "جميع الدوسيهات",
-    "subtitle": "تصفح وإدارة جميع الكيانات في النظام",
-    "createNew": "إنشاء دوسيه جديد",
-    "searchPlaceholder": "البحث بالاسم أو الوصف أو الوسوم...",
+    "subtitle": "تصفح وإدارة جميع دوسيهاتك",
+    "typeOverview": "تصفح حسب النوع",
+    "empty": "لا توجد دوسيهات",
+    "emptyFiltered": "لا توجد دوسيهات تطابق الفلاتر",
+    "emptyDescription": "أنشئ أول دوسيه للبدء",
+    "emptyFilteredDescription": "جرب تعديل استعلام البحث",
+    "loading": "جارٍ تحميل الدوسيهات...",
+    "error": "فشل تحميل الدوسيهات",
+    "pageInfo": "الصفحة {{current}} من {{total}}",
+    "searchPlaceholder": "البحث في الدوسيهات...",
     "search": "بحث",
+    "createNew": "إنشاء جديد",
     "filterByType": "تصفية حسب النوع",
     "filterByStatus": "تصفية حسب الحالة",
     "sortBy": "ترتيب حسب",
     "sortOrder": "الترتيب",
     "sortUpdated": "آخر تحديث",
     "sortCreated": "تاريخ الإنشاء",
-    "sortNameEn": "الاسم (بالإنجليزية)",
-    "sortNameAr": "الاسم (بالعربية)",
-    "sortDesc": "الأحدث أولاً",
-    "sortAsc": "الأقدم أولاً",
+    "sortNameEn": "الاسم (إنجليزي)",
+    "sortNameAr": "الاسم (عربي)",
+    "sortDesc": "تنازلي",
+    "sortAsc": "تصاعدي",
     "activeFilters": "الفلاتر النشطة",
     "clearFilter": "مسح الفلتر",
-    "searchQuery": "البحث",
-    "showing": "عرض {{from}}-{{to}} من {{total}} دوسيه",
-    "noDossiers": "لا توجد دوسيهات. أنشئ أول دوسيه للبدء.",
-    "page": "صفحة {{current}} من {{total}}",
+    "searchQuery": "بحث",
+    "showing": "عرض {{from}} إلى {{to}} من أصل {{total}}",
+    "noDossiers": "لا توجد دوسيهات",
+    "page": "الصفحة {{current}} من {{total}}",
     "previous": "السابق",
     "next": "التالي",
     "errorTitle": "خطأ في تحميل الدوسيهات",
-    "errorMessage": "فشل تحميل الدوسيهات. يرجى المحاولة مرة أخرى."
+    "errorMessage": "تعذر تحميل الدوسيهات. يرجى المحاولة مرة أخرى."
+  },
+  "stats": {
+    "ofTotal": "من الإجمالي",
+    "clickToFilter": "انقر للتصفية حسب هذا النوع",
+    "clickToShowAll": "انقر لعرض جميع الأنواع"
   },
   "detail": {
-    "back": "العودة إلى القائمة",
-    "edit": "تحرير الدوسيه",
-    "delete": "حذف",
-    "deleteConfirmTitle": "حذف الدوسيه؟",
-    "deleteConfirmMessage": "هل أنت متأكد من حذف '{{name}}'؟ لا يمكن التراجع عن هذا الإجراء وسيتم إزالة جميع البيانات المرتبطة.",
-    "cancel": "إلغاء",
-    "confirmDelete": "حذف الدوسيه",
-    "deleteSuccess": "تم حذف الدوسيه بنجاح",
-    "deleteError": "فشل حذف الدوسيه",
-    "created": "تاريخ الإنشاء",
-    "updated": "آخر تحديث",
-    "tags": "الوسوم",
-    "tabs": {
-      "details": "التفاصيل",
-      "relationships": "العلاقات",
-      "documents": "المستندات",
-      "calendar": "التقويم",
-      "relationshipsPlaceholder": "سيتم عرض العلاقات هنا (القصة 2)",
-      "documentsPlaceholder": "سيتم عرض المستندات ذات الصلة هنا (القصة 6)",
-      "calendarPlaceholder": "سيتم عرض أحداث التقويم هنا (القصة 4)"
-    },
-    "countryDetails": "معلومات الدولة",
-    "organizationDetails": "معلومات المنظمة",
-    "forumDetails": "معلومات المنتدى",
-    "engagementDetails": "معلومات المشاركة",
-    "themeDetails": "معلومات الموضوع",
-    "working_groupDetails": "معلومات فريق العمل",
-    "personDetails": "معلومات الشخص",
-    "noExtensionData": "لا توجد بيانات إضافية خاصة بالنوع",
-    "errorTitle": "خطأ في تحميل الدوسيه",
-    "errorMessage": "فشل تحميل الدوسيه. يرجى المحاولة مرة أخرى."
+    "title": "تفاصيل الدوسيه",
+    "loading": "جارٍ تحميل الدوسيه...",
+    "error": "فشل تحميل الدوسيه",
+    "errorGeneric": "حدث خطأ غير متوقع",
+    "notFound": "الدوسيه غير موجود",
+    "wrongType": "نوع دوسيه غير صحيح",
+    "wrongTypeDescription": "هذا الدوسيه من نوع {{actualType}}، وليس {{expectedType}}. يمكنك عرضه بالنوع الصحيح.",
+    "basicInfo": "المعلومات الأساسية",
+    "extensionInfo": "التفاصيل الخاصة بالنوع",
+    "metadata": "البيانات الوصفية",
+    "relationships": "العلاقات",
+    "calendar": "أحداث التقويم",
+    "documents": "المستندات ذات الصلة",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "آخر تحديث",
+    "id": "معرف الدوسيه",
+    "updated": "آخر تحديث"
   },
   "create": {
     "title": "إنشاء دوسيه جديد",
@@ -192,27 +208,6 @@
     "confirm": "هل أنت متأكد من حذف هذا الدوسيه؟ لا يمكن التراجع عن هذا الإجراء.",
     "success": "تم حذف الدوسيه بنجاح",
     "error": "فشل حذف الدوسيه: {{message}}"
-  },
-  "list": {
-    "title": "جميع الدوسيهات",
-    "empty": "لا توجد دوسيهات",
-    "emptyFiltered": "لا توجد دوسيهات تطابق الفلاتر",
-    "loading": "جارٍ تحميل الدوسيهات...",
-    "error": "فشل تحميل الدوسيهات"
-  },
-  "detail": {
-    "title": "تفاصيل الدوسيه",
-    "loading": "جارٍ تحميل الدوسيه...",
-    "error": "فشل تحميل الدوسيه",
-    "notFound": "الدوسيه غير موجود",
-    "basicInfo": "المعلومات الأساسية",
-    "extensionInfo": "التفاصيل الخاصة بالنوع",
-    "metadata": "البيانات الوصفية",
-    "relationships": "العلاقات",
-    "calendar": "أحداث التقويم",
-    "documents": "المستندات ذات الصلة",
-    "createdAt": "تاريخ الإنشاء",
-    "updatedAt": "آخر تحديث"
   },
   "dossier": {
     "nav": {
@@ -256,12 +251,246 @@
     "classification": {
       "notice": "يحتوي هذا النظام على معلومات مصنفة. الوصول غير المصرح به ممنوع."
     }
+  },
+  "time": {
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "daysAgo": "منذ {{count}} أيام",
+    "weeksAgo": "منذ {{count}} أسابيع",
+    "monthsAgo": "منذ {{count}} أشهر",
+    "yearsAgo": "منذ {{count}} سنوات"
+  },
+  "hub": {
+    "title": "مركز الدوسيهات",
+    "subtitle": "التنقل المركزي لجميع أنواع الدوسيهات",
+    "viewAll": "عرض جميع {{type}}",
+    "count": "{{count}} دوسيهات",
+    "noDossiers": "لم يتم العثور على دوسيهات",
+    "loading": "جاري تحميل مركز الدوسيهات..."
+  },
+  "intelligence": {
+    "title": "المعلومات الاستخباراتية",
+    "types": {
+      "economic": "اقتصادية",
+      "political": "سياسية",
+      "security": "أمنية",
+      "bilateral": "ثنائية",
+      "general": "عامة",
+      "all": "معلومات استخباراتية"
+    },
+    "confidence": {
+      "low": "ثقة منخفضة",
+      "medium": "ثقة متوسطة",
+      "high": "ثقة عالية",
+      "verified": "موثقة"
+    },
+    "status": {
+      "fresh": "بيانات حديثة",
+      "stale": "بيانات قديمة",
+      "refreshing": "جاري التحديث...",
+      "error": "خطأ",
+      "expired": "منتهية الصلاحية"
+    },
+    "refresh": {
+      "loading": "جاري تحديث المعلومات الاستخباراتية...",
+      "success": "تم تحديث المعلومات الاستخباراتية بنجاح",
+      "error": "فشل التحديث: {{message}}",
+      "conflict": "عملية تحديث قيد التنفيذ بالفعل. يرجى الانتظار.",
+      "serviceUnavailable": "خدمة المعلومات الاستخباراتية غير متاحة مؤقتاً. البيانات المخزنة مؤقتاً لا تزال متاحة."
+    },
+    "backgroundRefresh": {
+      "success": "بيانات {{type}} الحديثة متاحة الآن"
+    },
+    "lastUpdated": "آخر تحديث",
+    "staleWarning": "قد تكون البيانات قديمة",
+    "emptyState": "لا توجد معلومات استخباراتية {{type}} متاحة",
+    "refreshButton": "تحديث المعلومات الاستخباراتية",
+    "viewFullReport": "عرض التقرير الكامل",
+    "dataSources": "مصادر البيانات",
+    "generatedBy": "أُنشئ بواسطة AnythingLLM"
+  },
+  "engagement": {
+    "viewKanban": "عرض لوحة كانبان",
+    "logAfterAction": "تسجيل بعد الإجراء"
+  },
+  "timeline": {
+    "title": "المخطط الزمني",
+    "loading_more": "جارٍ تحميل المزيد من الأحداث...",
+    "load_more": "تحميل المزيد من الأحداث",
+    "end": "نهاية المخطط الزمني",
+    "show_more": "إظهار المزيد",
+    "show_less": "إظهار أقل",
+    "view_details": "عرض التفاصيل الكاملة",
+    "filters": "الفلاتر",
+    "search_placeholder": "البحث في أحداث المخطط الزمني...",
+    "event_types": "أنواع الأحداث",
+    "priority_filter": "الأولوية",
+    "status_filter": "الحالة",
+    "date_range": "نطاق التاريخ",
+    "from_date": "من تاريخ",
+    "to_date": "إلى تاريخ",
+    "custom_range": "نطاق مخصص",
+    "apply_custom_range": "تطبيق النطاق المخصص",
+    "last_7_days": "آخر 7 أيام",
+    "last_30_days": "آخر 30 يومًا",
+    "last_90_days": "آخر 90 يومًا",
+    "last_year": "آخر سنة",
+    "all_time": "كل الأوقات",
+    "reset_filters": "إعادة تعيين جميع الفلاتر",
+    "all_priorities": "جميع الأولويات",
+    "all_statuses": "جميع الحالات",
+    "priority": {
+      "high": "أولوية عالية",
+      "medium": "أولوية متوسطة",
+      "low": "أولوية منخفضة"
+    },
+    "status": {
+      "planned": "مخطط",
+      "ongoing": "جارٍ",
+      "completed": "مكتمل",
+      "cancelled": "ملغى",
+      "postponed": "مؤجل"
+    },
+    "location": "الموقع",
+    "join_virtual": "الانضمام إلى الاجتماع الافتراضي",
+    "virtual": "افتراضي",
+    "in_person": "حضوري",
+    "participants": "المشاركون",
+    "more": "المزيد",
+    "attachments": "المرفقات",
+    "confidence": "الثقة",
+    "empty": {
+      "title": "لم يتم العثور على أحداث",
+      "description": "لا توجد أحداث في المخطط الزمني تطابق الفلاتر الحالية",
+      "country": "لم يتم العثور على أحداث في المخطط الزمني لهذه الدولة. ستظهر الأحداث مثل التقارير الاستخباراتية ومذكرات التفاهم والاجتماعات الثنائية هنا.",
+      "organization": "لم يتم العثور على أحداث في المخطط الزمني لهذه المنظمة. ستظهر الأحداث مثل التفاعلات والشراكات والاجتماعات هنا.",
+      "person": "لم يتم العثور على أحداث في المخطط الزمني لهذا الشخص. ستظهر الأحداث مثل الاجتماعات وتغييرات المنصب والتفاعلات هنا.",
+      "engagement": "لم يتم العثور على أحداث في المخطط الزمني لهذا الارتباط. ستظهر الأحداث مثل الجلسات والقرارات والالتزامات هنا."
+    },
+    "error": {
+      "title": "خطأ في تحميل المخطط الزمني",
+      "description": "تعذر تحميل أحداث المخطط الزمني. يرجى المحاولة مرة أخرى."
+    }
+  },
+  "sections": {
+    "country": {
+      "geographicContext": "السياق الجغرافي",
+      "geographicContextDescription": "الموقع والمنطقة والمعلومات الديموغرافية",
+      "geographicContextEmpty": "لا توجد بيانات جغرافية متاحة",
+      "worldMap": "خريطة العالم",
+      "worldMapDescription": "الموقع المرئي على خريطة العالم",
+      "worldMapPlaceholder": "الخريطة التفاعلية قادمة في الإصدار المستقبلي",
+      "diplomaticRelations": "العلاقات الدبلوماسية",
+      "diplomaticRelationsDescription": "شبكة العلاقات الدولية",
+      "diplomaticRelationsEmpty": "لم يتم العثور على علاقات دبلوماسية",
+      "diplomaticRelationsEmptyDescription": "ستظهر العلاقات مع الدول الأخرى هنا",
+      "diplomaticRelationsPlaceholder": "تصور الرسم البياني للشبكة قادم في مرحلة التحسين",
+      "bilateralAgreements": "الاتفاقيات الثنائية",
+      "bilateralAgreementsDescription": "الاتفاقيات النشطة والتاريخية",
+      "bilateralAgreementsEmpty": "لم يتم العثور على اتفاقيات ثنائية",
+      "bilateralAgreementsEmptyDescription": "ستظهر الاتفاقيات بين الدول هنا",
+      "bilateralAgreementsPlaceholder": "تكامل بيانات العلاقات قيد الانتظار",
+      "keyOfficials": "المسؤولون الرئيسيون",
+      "keyOfficialsDescription": "ممثلو الحكومة وجهات الاتصال",
+      "keyOfficialsEmpty": "لم يتم العثور على مسؤولين رئيسيين",
+      "keyOfficialsEmptyDescription": "ستظهر الشخصيات المهمة وجهات الاتصال هنا",
+      "keyOfficialsPlaceholder": "ستملأ علاقات دوسيهات الأشخاص هذا القسم"
+    },
+    "organization": {
+      "institutionalProfile": "الملف المؤسسي",
+      "institutionalProfileDescription": "نظرة عامة وتفاصيل المنظمة",
+      "orgHierarchy": "التسلسل الهرمي للمنظمة",
+      "orgHierarchyDescription": "الهيكل التنظيمي وخطوط التقارير",
+      "keyContacts": "جهات الاتصال الرئيسية",
+      "keyContactsDescription": "جهات الاتصال والممثلون الأساسيون",
+      "activeMous": "مذكرات التفاهم النشطة",
+      "activeMousDescription": "مذكرات التفاهم والاتفاقيات"
+    },
+    "person": {
+      "professionalProfile": "الملف المهني",
+      "professionalProfileDescription": "السيرة الذاتية والتعليم والمنصب الحالي",
+      "positionsHeld": "المناصب التي شغلها",
+      "positionsHeldDescription": "التاريخ الوظيفي والأدوار",
+      "positionsHeldEmpty": "لم يتم العثور على مناصب",
+      "positionsHeldEmptyDescription": "سيظهر التاريخ الوظيفي هنا",
+      "positionsHeldPlaceholder": "ستملأ روابط المناصب هذا القسم",
+      "organizationAffiliations": "الانتماءات التنظيمية",
+      "organizationAffiliationsDescription": "المنظمات المرتبطة والعضويات",
+      "organizationAffiliationsEmpty": "لم يتم العثور على انتماءات",
+      "organizationAffiliationsEmptyDescription": "ستظهر المنظمات المرتبطة هنا",
+      "organizationAffiliationsPlaceholder": "ستملأ علاقات المنظمات هذا القسم",
+      "interactionHistory": "تاريخ التفاعلات",
+      "interactionHistoryDescription": "الاجتماعات والارتباطات والاتصالات",
+      "interactionHistoryEmpty": "لم يتم العثور على تفاعلات",
+      "interactionHistoryEmptyDescription": "ستظهر الاجتماعات والاتصالات هنا",
+      "interactionHistoryPlaceholder": "ستملأ بيانات المشاركة والتقويم هذا القسم"
+    },
+    "engagement": {
+      "information": "المعلومات",
+      "informationDescription": "معلومات المشاركة",
+      "positions": "المواقف",
+      "positionsDescription": "المواقف المرفقة والاقتراحات",
+      "date": "التاريخ",
+      "location": "الموقع",
+      "description": "الوصف",
+      "createdBy": "تم الإنشاء بواسطة",
+      "eventTimeline": "الجدول الزمني للأحداث",
+      "eventTimelineDescription": "تسلسل الأحداث الزمني",
+      "eventTimelineEmpty": "لم يتم العثور على أحداث",
+      "eventTimelineEmptyDescription": "سيظهر الجدول الزمني للأحداث هنا",
+      "eventTimelinePlaceholder": "تكامل إدخالات التقويم قيد الانتظار",
+      "participantsList": "المشاركون",
+      "participantsListDescription": "الحاضرون وأدوارهم",
+      "participantsListEmpty": "لم يتم العثور على مشاركين",
+      "participantsListEmptyDescription": "ستظهر قائمة الحاضرين هنا",
+      "participantsListPlaceholder": "ستملأ علاقات دوسيهات الأشخاص هذا القسم",
+      "outcomesSummary": "ملخص النتائج",
+      "outcomesSummaryDescription": "القرارات والنتائج الرئيسية",
+      "outcomesSummaryEmpty": "لم يتم تسجيل نتائج",
+      "outcomesSummaryEmptyDescription": "ستظهر القرارات والنتائج الرئيسية هنا",
+      "outcomesSummaryPlaceholder": "تكامل تتبع القرارات قريباً",
+      "followUpActions": "إجراءات المتابعة",
+      "followUpActionsDescription": "المهام والخطوات التالية",
+      "followUpActionsEmpty": "لا توجد إجراءات متابعة",
+      "followUpActionsEmptyDescription": "ستظهر المهام والخطوات التالية هنا",
+      "followUpActionsPlaceholder": "تكامل نظام التعيينات قيد الانتظار"
+    },
+    "forum": {
+      "memberOrganizations": "المنظمات الأعضاء",
+      "memberOrganizationsDescription": "الكيانات المشاركة",
+      "meetingSchedule": "جدول الاجتماعات",
+      "meetingScheduleDescription": "الاجتماعات القادمة والسابقة",
+      "deliverablesTracker": "متتبع المخرجات",
+      "deliverablesTrackerDescription": "المهام والمعالم والنواتج",
+      "decisionLogs": "سجلات القرارات",
+      "decisionLogsDescription": "القرارات الرسمية والقرارات"
+    },
+    "workingGroup": {
+      "memberOrganizations": "المنظمات الأعضاء",
+      "memberOrganizationsDescription": "الكيانات المشاركة",
+      "meetingSchedule": "جدول الاجتماعات",
+      "meetingScheduleDescription": "الاجتماعات القادمة والسابقة",
+      "deliverablesTracker": "متتبع المخرجات",
+      "deliverablesTrackerDescription": "المهام والمعالم والنواتج",
+      "decisionLogs": "سجلات القرارات",
+      "decisionLogsDescription": "القرارات الرسمية والقرارات"
+    },
+    "shared": {
+      "relationships": "العلاقات",
+      "relationshipsDescription": "الدوسيهات والكيانات المتصلة",
+      "documents": "الوثائق",
+      "documentsDescription": "الملفات والمرفقات والمراجع",
+      "timeline": "الجدول الزمني",
+      "timelineDescription": "تاريخ الأحداث الزمني",
+      "overview": "نظرة عامة",
+      "overviewDescription": "ملخص والمعلومات الرئيسية"
+    },
+    "collapsible": {
+      "expand": "توسيع القسم",
+      "collapse": "طي القسم",
+      "loading": "جاري تحميل القسم...",
+      "error": "فشل تحميل القسم",
+      "empty": "لا توجد بيانات متاحة"
+    }
   }
 }
-
-
-
-
-
-
-

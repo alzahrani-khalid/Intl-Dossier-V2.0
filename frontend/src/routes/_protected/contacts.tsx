@@ -10,10 +10,10 @@ import { createFileRoute } from '@tanstack/react-router';
 import { ContactsDirectory } from '@/pages/contacts/ContactsDirectory';
 
 export const Route = createFileRoute('/_protected/contacts')({
-  component: ContactsDirectory,
-  meta: () => [
-    {
-      title: 'Contact Directory - GASTAT',
-    },
-  ],
+ component: ContactsDirectory,
+ meta: () => [
+ {
+ title: 'Contact Directory - GASTAT',
+ },
+ ],
 });

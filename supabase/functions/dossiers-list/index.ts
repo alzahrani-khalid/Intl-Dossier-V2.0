@@ -4,11 +4,12 @@ import { corsHeaders } from "../_shared/cors.ts";
 
 interface ListDossiersQuery {
   type?: string;
-  status?: string;
+  status?: string | string[]; // Single or multiple statuses
   sensitivity?: string;
   owner_id?: string;
   tags?: string[];
   search?: string;
+  is_active?: boolean;
   cursor?: string;
   limit?: number;
 }
@@ -79,13 +80,30 @@ serve(async (req) => {
 
     // Parse query parameters
     const url = new URL(req.url);
+    const isActiveParam = url.searchParams.get("is_active");
+    const statusParam = url.searchParams.get("status");
+    
+    // Parse status: can be a single value or a JSON array
+    let parsedStatus: string | string[] | undefined = undefined;
+    if (statusParam) {
+      try {
+        // Try to parse as JSON array first
+        const parsed = JSON.parse(statusParam);
+        parsedStatus = Array.isArray(parsed) ? parsed : statusParam;
+      } catch {
+        // If not JSON, treat as single value
+        parsedStatus = statusParam;
+      }
+    }
+    
     const params: ListDossiersQuery = {
       type: url.searchParams.get("type") || undefined,
-      status: url.searchParams.get("status") || undefined,
+      status: parsedStatus,
       sensitivity: url.searchParams.get("sensitivity") || undefined,
       owner_id: url.searchParams.get("owner_id") || undefined,
       tags: url.searchParams.get("tags")?.split(",").filter(Boolean) || undefined,
       search: url.searchParams.get("search") || undefined,
+      is_active: isActiveParam === "true" ? true : (isActiveParam === "false" ? false : undefined),
       cursor: url.searchParams.get("cursor") || undefined,
       limit: Math.min(parseInt(url.searchParams.get("limit") || "50"), 100),
     };
@@ -101,7 +119,12 @@ serve(async (req) => {
       query = query.eq("type", params.type);
     }
     if (params.status) {
-      query = query.eq("status", params.status);
+      // Handle single status or multiple statuses
+      if (Array.isArray(params.status)) {
+        query = query.in("status", params.status);
+      } else {
+        query = query.eq("status", params.status);
+      }
     }
     if (params.sensitivity) {
       query = query.eq("sensitivity_level", params.sensitivity);
@@ -122,6 +145,9 @@ serve(async (req) => {
     if (params.search && params.search.trim().length > 0) {
       // Full-text search using search_vector (only if non-empty after trimming)
       query = query.textSearch("search_vector", params.search.trim());
+    }
+    if (params.is_active !== undefined) {
+      query = query.eq("is_active", params.is_active);
     }
 
     // Cursor-based pagination
