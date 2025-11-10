@@ -251,5 +251,28 @@
     "tab_coming_soon": "هذه الميزة قريباً",
     "recent_briefs_title": "الملخصات الأخيرة",
     "view_all_briefs": "عرض جميع الملخصات"
-  }
+  },
+  "type": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "theme": "موضوع",
+    "engagement": "ارتباط",
+    "working_group": "فريق عمل",
+    "person": "شخص"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف"
+  },
+  "time": {
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "daysAgo": "منذ {{count}} أيام",
+    "weeksAgo": "منذ {{count}} أسابيع",
+    "monthsAgo": "منذ {{count}} أشهر",
+    "yearsAgo": "منذ {{count}} سنوات"
+  },
+  "untitled": "دوسيه بدون عنوان"
 }

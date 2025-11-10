@@ -1,7 +1,7 @@
-import { LoginPage } from '../auth/LoginPage'
+import { LoginPageAceternity } from '../auth/LoginPageAceternity'
 
 export default function Login() {
-  return <LoginPage />
+ return <LoginPageAceternity />
 }
 
-export { LoginPage }
+export { LoginPageAceternity as LoginPage }

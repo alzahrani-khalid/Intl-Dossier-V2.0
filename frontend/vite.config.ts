@@ -20,6 +20,7 @@ export default defineConfig({
   server: {
     host: true, // Expose to network
     port: 3000,
+    host: true, // Expose on network (shows both localhost and network IP)
     watch: {
       ignored: [
         '**/node_modules/**',

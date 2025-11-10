@@ -1,0 +1,724 @@
+openapi: 3.0.3
+info:
+  title: Dynamic Country Intelligence API
+  version: 1.0.0
+  description: |
+    API for dynamic country intelligence system with AnythingLLM integration.
+    Provides cached intelligence data with TTL-based expiration and manual/automatic refresh capabilities.
+  contact:
+    name: API Support
+    email: support@intl-dossier.gov.sa
+
+servers:
+  - url: https://zkrcjzdemdmwhearhfgg.supabase.co/functions/v1
+    description: Staging Environment
+  - url: http://localhost:54321/functions/v1
+    description: Local Development
+
+security:
+  - BearerAuth: []
+
+tags:
+  - name: Intelligence
+    description: Intelligence data retrieval and refresh operations
+
+paths:
+  /intelligence-get:
+    get:
+      operationId: getIntelligence
+      summary: Fetch cached intelligence for an entity
+      description: |
+        Retrieves cached intelligence data for a specified entity (typically a country dossier).
+        Returns intelligence with freshness indicators, TTL status, and data source metadata.
+        Supports filtering by intelligence type for selective data retrieval.
+      tags:
+        - Intelligence
+      parameters:
+        - name: entity_id
+          in: query
+          required: true
+          description: UUID of the dossier entity (e.g., country ID)
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+        - name: intelligence_type
+          in: query
+          required: false
+          description: Filter by specific intelligence type. If omitted, returns all types.
+          schema:
+            type: string
+            enum:
+              - economic
+              - political
+              - security
+              - bilateral
+              - general
+          example: "economic"
+
+        - name: include_stale
+          in: query
+          required: false
+          description: Include stale/expired intelligence in results
+          schema:
+            type: boolean
+            default: true
+          example: true
+
+        - name: language
+          in: query
+          required: false
+          description: Preferred language for content (en or ar)
+          schema:
+            type: string
+            enum:
+              - en
+              - ar
+            default: en
+          example: "en"
+
+      responses:
+        '200':
+          description: Successfully retrieved intelligence data
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IntelligenceReport'
+                  meta:
+                    type: object
+                    properties:
+                      total_count:
+                        type: integer
+                        description: Total number of intelligence items returned
+                        example: 4
+                      fresh_count:
+                        type: integer
+                        description: Number of fresh (non-expired) items
+                        example: 3
+                      stale_count:
+                        type: integer
+                        description: Number of stale items
+                        example: 1
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /intelligence-refresh:
+    post:
+      operationId: refreshIntelligence
+      summary: Trigger manual intelligence refresh
+      description: |
+        Initiates a manual refresh of intelligence data for a specified entity.
+        Supports selective refresh by intelligence type to avoid unnecessary API calls.
+        Returns immediately with refresh status; data is updated asynchronously.
+        Implements locking mechanism to prevent concurrent refreshes.
+      tags:
+        - Intelligence
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RefreshIntelligenceRequest'
+
+      responses:
+        '200':
+          description: Refresh initiated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    required:
+                      - refresh_id
+                      - status
+                      - entity_id
+                      - intelligence_types
+                      - triggered_by
+                      - triggered_at
+                    properties:
+                      refresh_id:
+                        type: string
+                        format: uuid
+                        description: Unique identifier for this refresh operation
+                        example: "660e8400-e29b-41d4-a716-446655440001"
+                      status:
+                        type: string
+                        enum:
+                          - initiated
+                          - in_progress
+                          - completed
+                          - failed
+                        example: "in_progress"
+                      entity_id:
+                        type: string
+                        format: uuid
+                        example: "550e8400-e29b-41d4-a716-446655440000"
+                      intelligence_types:
+                        type: array
+                        items:
+                          type: string
+                          enum:
+                            - economic
+                            - political
+                            - security
+                            - bilateral
+                        example: ["economic", "political"]
+                      triggered_by:
+                        type: string
+                        format: uuid
+                        description: User ID who triggered the refresh
+                        example: "770e8400-e29b-41d4-a716-446655440002"
+                      triggered_at:
+                        type: string
+                        format: date-time
+                        example: "2025-01-30T14:30:00Z"
+                      estimated_completion:
+                        type: string
+                        format: date-time
+                        description: Estimated completion time
+                        example: "2025-01-30T14:30:10Z"
+                  message_en:
+                    type: string
+                    example: "Intelligence refresh initiated successfully"
+                  message_ar:
+                    type: string
+                    example: "تم بدء تحديث المعلومات الاستخباراتية بنجاح"
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '409':
+          description: Refresh already in progress
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - error
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    required:
+                      - code
+                      - message_en
+                      - message_ar
+                    properties:
+                      code:
+                        type: string
+                        example: "REFRESH_IN_PROGRESS"
+                      message_en:
+                        type: string
+                        example: "A refresh operation is already in progress for this entity"
+                      message_ar:
+                        type: string
+                        example: "عملية تحديث قيد التنفيذ بالفعل لهذا الكيان"
+                      in_progress_since:
+                        type: string
+                        format: date-time
+                        example: "2025-01-30T14:29:30Z"
+        '500':
+          $ref: '#/components/responses/InternalError'
+        '503':
+          description: AnythingLLM service unavailable
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - error
+                properties:
+                  success:
+                    type: boolean
+                    example: false
+                  error:
+                    type: object
+                    required:
+                      - code
+                      - message_en
+                      - message_ar
+                    properties:
+                      code:
+                        type: string
+                        example: "SERVICE_UNAVAILABLE"
+                      message_en:
+                        type: string
+                        example: "AnythingLLM service is currently unavailable. Cached data remains accessible."
+                      message_ar:
+                        type: string
+                        example: "خدمة AnythingLLM غير متاحة حاليًا. البيانات المخزنة مؤقتًا لا تزال متاحة."
+                      retry_after:
+                        type: integer
+                        description: Suggested retry delay in seconds
+                        example: 60
+
+  /intelligence-batch-update:
+    post:
+      operationId: batchUpdateIntelligence
+      summary: Background job for automatic intelligence refresh
+      description: |
+        Internal endpoint for background job scheduler (cron) to automatically refresh expired intelligence.
+        Processes all expired intelligence items based on TTL configuration.
+        Requires service role key authentication.
+      tags:
+        - Intelligence
+      security:
+        - ServiceRoleAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BatchUpdateRequest'
+
+      responses:
+        '200':
+          description: Batch update completed
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - data
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  data:
+                    type: object
+                    required:
+                      - batch_id
+                      - processed_count
+                      - success_count
+                      - failure_count
+                      - started_at
+                      - completed_at
+                      - duration_ms
+                    properties:
+                      batch_id:
+                        type: string
+                        format: uuid
+                        description: Unique identifier for this batch operation
+                        example: "880e8400-e29b-41d4-a716-446655440003"
+                      processed_count:
+                        type: integer
+                        description: Total number of intelligence items processed
+                        example: 25
+                      success_count:
+                        type: integer
+                        description: Number of successful refreshes
+                        example: 23
+                      failure_count:
+                        type: integer
+                        description: Number of failed refreshes
+                        example: 2
+                      started_at:
+                        type: string
+                        format: date-time
+                        example: "2025-01-30T02:00:00Z"
+                      completed_at:
+                        type: string
+                        format: date-time
+                        example: "2025-01-30T02:05:30Z"
+                      duration_ms:
+                        type: integer
+                        description: Total duration in milliseconds
+                        example: 330000
+                      failures:
+                        type: array
+                        description: Details of failed refresh operations
+                        items:
+                          type: object
+                          properties:
+                            entity_id:
+                              type: string
+                              format: uuid
+                            intelligence_type:
+                              type: string
+                            error_code:
+                              type: string
+                            error_message:
+                              type: string
+                  message_en:
+                    type: string
+                    example: "Batch intelligence refresh completed"
+                  message_ar:
+                    type: string
+                    example: "تم إكمال تحديث المعلومات الاستخباراتية بالدفعة"
+
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token for authenticated users
+
+    ServiceRoleAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase service role key for internal operations
+
+  schemas:
+    IntelligenceReport:
+      type: object
+      required:
+        - id
+        - entity_id
+        - entity_type
+        - intelligence_type
+        - title
+        - content
+        - confidence_score
+        - refresh_status
+        - cache_expires_at
+        - last_refreshed_at
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique intelligence report ID
+          example: "990e8400-e29b-41d4-a716-446655440004"
+        entity_id:
+          type: string
+          format: uuid
+          description: ID of the linked dossier entity
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        entity_type:
+          type: string
+          enum:
+            - country
+            - organization
+            - forum
+            - topic
+            - working_group
+          example: "country"
+        intelligence_type:
+          type: string
+          enum:
+            - economic
+            - political
+            - security
+            - bilateral
+            - general
+          description: Classification of intelligence domain
+          example: "economic"
+        title:
+          type: string
+          description: Intelligence report title (English)
+          example: "Saudi Arabia Economic Indicators Q1 2025"
+        title_ar:
+          type: string
+          description: Intelligence report title (Arabic)
+          example: "المؤشرات الاقتصادية للمملكة العربية السعودية للربع الأول 2025"
+        content:
+          type: string
+          description: Full intelligence content (English)
+          example: "GDP growth rate: 3.2%, Inflation: 2.1%, Trade balance: +$15B..."
+        content_ar:
+          type: string
+          description: Full intelligence content (Arabic)
+          example: "معدل نمو الناتج المحلي الإجمالي: 3.2%، التضخم: 2.1%، الميزان التجاري: +15 مليار دولار..."
+        confidence_score:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Confidence level of the analysis (0-100)
+          example: 85
+        refresh_status:
+          type: string
+          enum:
+            - fresh
+            - stale
+            - refreshing
+            - error
+            - expired
+          description: Current cache status
+          example: "fresh"
+        cache_expires_at:
+          type: string
+          format: date-time
+          description: TTL expiration timestamp
+          example: "2025-01-31T14:30:00Z"
+        cache_created_at:
+          type: string
+          format: date-time
+          description: When this cached intelligence was first created
+          example: "2025-01-30T14:30:00Z"
+        last_refreshed_at:
+          type: string
+          format: date-time
+          description: Most recent refresh timestamp
+          example: "2025-01-30T14:30:00Z"
+        is_expired:
+          type: boolean
+          description: Whether the cache has expired based on TTL
+          example: false
+        time_until_expiry_hours:
+          type: number
+          format: float
+          description: Hours remaining until expiration
+          example: 23.5
+        data_sources_metadata:
+          type: array
+          description: Comprehensive metadata about data sources
+          items:
+            type: object
+            required:
+              - source
+              - retrieved_at
+            properties:
+              source:
+                type: string
+                description: Source identifier (e.g., 'world_bank_api', 'anythingllm')
+                example: "world_bank_api"
+              endpoint:
+                type: string
+                description: API endpoint or resource used
+                example: "/v2/country/SAU/indicator/NY.GDP.MKTP.CD"
+              retrieved_at:
+                type: string
+                format: date-time
+                example: "2025-01-30T14:25:00Z"
+              confidence:
+                type: integer
+                minimum: 0
+                maximum: 100
+                description: Confidence in this source
+                example: 95
+        anythingllm_workspace_id:
+          type: string
+          description: AnythingLLM workspace used for RAG queries
+          example: "country-saudi-arabia"
+        anythingllm_query:
+          type: string
+          description: Query sent to AnythingLLM
+          example: "Analyze current economic indicators for Saudi Arabia including GDP, inflation, and trade balance"
+        anythingllm_response_metadata:
+          type: object
+          description: Metadata from AnythingLLM response
+          properties:
+            model:
+              type: string
+              example: "gpt-4-turbo"
+            tokens_used:
+              type: integer
+              example: 1250
+            sources_cited:
+              type: array
+              items:
+                type: string
+              example: ["World Bank API", "IMF Reports", "Trade Ministry Data"]
+        version:
+          type: integer
+          description: Version number for historical tracking
+          example: 1
+        created_at:
+          type: string
+          format: date-time
+          example: "2025-01-30T14:30:00Z"
+        updated_at:
+          type: string
+          format: date-time
+          example: "2025-01-30T14:30:00Z"
+
+    RefreshIntelligenceRequest:
+      type: object
+      required:
+        - entity_id
+      properties:
+        entity_id:
+          type: string
+          format: uuid
+          description: UUID of the dossier entity to refresh
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        intelligence_types:
+          type: array
+          description: Specific intelligence types to refresh. If omitted, refreshes all types.
+          items:
+            type: string
+            enum:
+              - economic
+              - political
+              - security
+              - bilateral
+          example: ["economic", "political"]
+        force:
+          type: boolean
+          description: Force refresh even if cache is fresh
+          default: false
+          example: false
+        priority:
+          type: string
+          enum:
+            - low
+            - normal
+            - high
+          description: Priority level for the refresh operation
+          default: normal
+          example: "normal"
+
+    BatchUpdateRequest:
+      type: object
+      properties:
+        limit:
+          type: integer
+          description: Maximum number of items to process in this batch
+          minimum: 1
+          maximum: 100
+          default: 50
+          example: 50
+        intelligence_types:
+          type: array
+          description: Filter by specific intelligence types. If omitted, processes all types.
+          items:
+            type: string
+            enum:
+              - economic
+              - political
+              - security
+              - bilateral
+              - general
+          example: ["economic", "political"]
+        dry_run:
+          type: boolean
+          description: If true, simulates the batch update without making changes
+          default: false
+          example: false
+
+    ErrorResponse:
+      type: object
+      required:
+        - success
+        - error
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: object
+          required:
+            - code
+            - message_en
+            - message_ar
+          properties:
+            code:
+              type: string
+              description: Machine-readable error code
+              example: "VALIDATION_ERROR"
+            message_en:
+              type: string
+              description: Human-readable error message (English)
+              example: "Invalid entity_id format"
+            message_ar:
+              type: string
+              description: Human-readable error message (Arabic)
+              example: "تنسيق معرف الكيان غير صالح"
+            details:
+              type: object
+              description: Additional error details
+              additionalProperties: true
+            correlation_id:
+              type: string
+              format: uuid
+              description: Unique error tracking ID
+              example: "aa0e8400-e29b-41d4-a716-446655440005"
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "VALIDATION_ERROR"
+              message_en: "Invalid request parameters"
+              message_ar: "معلمات الطلب غير صالحة"
+              details:
+                field: "entity_id"
+                reason: "Must be a valid UUID"
+              correlation_id: "bb0e8400-e29b-41d4-a716-446655440006"
+
+    Unauthorized:
+      description: Authentication required or invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "UNAUTHORIZED"
+              message_en: "Missing or invalid authorization header"
+              message_ar: "رأس التفويض مفقود أو غير صالح"
+              correlation_id: "cc0e8400-e29b-41d4-a716-446655440007"
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "NOT_FOUND"
+              message_en: "Intelligence data not found for the specified entity"
+              message_ar: "لم يتم العثور على بيانات استخباراتية للكيان المحدد"
+              correlation_id: "dd0e8400-e29b-41d4-a716-446655440008"
+
+    InternalError:
+      description: Unexpected server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            success: false
+            error:
+              code: "INTERNAL_ERROR"
+              message_en: "An unexpected error occurred"
+              message_ar: "حدث خطأ غير متوقع"
+              correlation_id: "ee0e8400-e29b-41d4-a716-446655440009"

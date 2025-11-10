@@ -15,8 +15,8 @@ import { ThemeErrorBoundary } from './components/theme-error-boundary'
 import './i18n'
 
 function AppRouter() {
-  const auth = useAuth()
-  return <RouterProvider router={router} context={{ auth }} />
+ const auth = useAuth()
+ return <RouterProvider router={router} context={{ auth }} />
 }
 
 function App() {
@@ -24,8 +24,8 @@ function App() {
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
         <AuthProvider>
-          <ThemeErrorBoundary fallbackTheme="zinc" fallbackColorMode="light" fallbackLanguage="en">
-            <ThemeProvider initialTheme="zinc" initialColorMode="light">
+          <ThemeErrorBoundary fallbackTheme="natural" fallbackColorMode="light" fallbackLanguage="en">
+            <ThemeProvider initialTheme="natural" initialColorMode="light">
               <LanguageProvider initialLanguage="en">
                 <RTLWrapper>
                   <AppRouter />

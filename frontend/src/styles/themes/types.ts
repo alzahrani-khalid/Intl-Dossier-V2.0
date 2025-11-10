@@ -51,7 +51,7 @@ export interface ThemeVariables {
 }
 
 export interface ThemeConfiguration {
-  name: 'gastat' | 'blueSky';
+  name: 'gastat' | 'natural' | 'zinc';
   displayName: {
     en: string;
     ar: string;
@@ -87,7 +87,7 @@ export interface LanguageConfiguration {
 export interface UserPreference {
   id: string;
   userId: string;
-  theme: 'gastat' | 'blueSky';
+  theme: 'gastat' | 'natural' | 'zinc';
   colorMode: 'light' | 'dark' | 'system';
   language: 'en' | 'ar';
   createdAt: string;
@@ -95,7 +95,7 @@ export interface UserPreference {
 }
 
 export interface PreferenceUpdate {
-  theme?: 'gastat' | 'blueSky';
+  theme?: 'gastat' | 'natural' | 'zinc';
   colorMode?: 'light' | 'dark' | 'system';
   language?: 'en' | 'ar';
 }
