@@ -152,7 +152,7 @@ function CountriesListPage() {
                   <TableRow key={dossier.id}>
                     <TableCell className="font-medium">
                       <Link
-                        to={`/dossiers/${dossier.id}`}
+                        to={`/dossiers/countries/${dossier.id}`}
                         className="hover:text-primary hover:underline"
                       >
                         {dossier.name_en}
@@ -171,7 +171,7 @@ function CountriesListPage() {
                     </TableCell>
                     <TableCell className="text-end">
                       <Button variant="ghost" size="sm" asChild>
-                        <Link to={`/dossiers/${dossier.id}`}>
+                        <Link to={`/dossiers/countries/${dossier.id}`}>
                           {t('action.view')}
                         </Link>
                       </Button>
@@ -187,7 +187,7 @@ function CountriesListPage() {
             {filteredDossiers.map((dossier) => (
               <Link
                 key={dossier.id}
-                to={`/dossiers/${dossier.id}`}
+                to={`/dossiers/countries/${dossier.id}`}
                 className="block p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
               >
                 <div className="flex items-start justify-between gap-3 mb-3">
