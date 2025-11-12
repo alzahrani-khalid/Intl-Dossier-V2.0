@@ -440,5 +440,54 @@
     "error": "Failed to load intelligence",
     "empty": "No intelligence available for this entity",
     "retry": "Retry"
+  },
+  "timeline": {
+    "search_placeholder": "Search timeline events...",
+    "filters": "Filters",
+    "event_types": "Event Types",
+    "priority_filter": "Priority",
+    "all_priorities": "All Priorities",
+    "priority": {
+      "high": "High Priority",
+      "medium": "Medium Priority",
+      "low": "Low Priority"
+    },
+    "status_filter": "Status",
+    "all_statuses": "All Statuses",
+    "status": {
+      "planned": "Planned",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "postponed": "Postponed"
+    },
+    "date_range": "Date Range",
+    "last_7_days": "Last 7 Days",
+    "last_30_days": "Last 30 Days",
+    "last_90_days": "Last 90 Days",
+    "last_year": "Last Year",
+    "all_time": "All Time",
+    "custom_range": "Custom Range",
+    "from_date": "From Date",
+    "to_date": "To Date",
+    "apply_custom_range": "Apply Range",
+    "reset_filters": "Reset All Filters",
+    "end": "End of timeline",
+    "empty": {
+      "country": "No timeline events found for this country",
+      "organization": "No timeline events found for this organization",
+      "person": "No timeline events found for this person",
+      "engagement": "No timeline events found for this engagement",
+      "forum": "No timeline events found for this forum",
+      "working_group": "No timeline events found for this working group",
+      "topic": "No timeline events found for this topic"
+    }
+  },
+  "tabs": {
+    "timeline": "Timeline",
+    "relationships": "Relationships",
+    "positions": "Positions",
+    "mous": "MoUs",
+    "contacts": "Contacts"
   }
 }

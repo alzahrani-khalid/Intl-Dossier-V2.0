@@ -22,7 +22,7 @@ interface EngagementTimelineProps {
 }
 
 export function EngagementTimeline({ dossierId, className }: EngagementTimelineProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('dossier');
   const [showFilters, setShowFilters] = useState(false);
 
   const defaultEventTypes = getDefaultEventTypes('Engagement');

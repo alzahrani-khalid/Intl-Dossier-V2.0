@@ -68,7 +68,7 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
  * Empty state component
  */
 function TimelineEmptyState({ message }: { message: string }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('dossier');
   return (
     <div className="flex flex-col items-center justify-center py-16 sm:py-20 lg:py-24 text-center px-4">
       <div className="rounded-full bg-muted p-8 sm:p-10 lg:p-12 mb-6 sm:mb-8">
@@ -88,7 +88,7 @@ function TimelineEmptyState({ message }: { message: string }) {
  * Error state component
  */
 function TimelineErrorState({ error }: { error: Error }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('dossier');
   return (
     <Alert variant="destructive" className="mb-6 mx-4">
       <AlertTitle>{t('timeline.error.title')}</AlertTitle>
@@ -109,7 +109,7 @@ export function EnhancedVerticalTimeline({
   emptyMessage,
   className,
 }: EnhancedVerticalTimelineProps) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('dossier');
   const isRTL = i18n.language === 'ar';
   const loadMoreRef = useRef<HTMLDivElement>(null);
 

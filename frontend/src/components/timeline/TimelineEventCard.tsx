@@ -103,7 +103,7 @@ const formatEventDate = (dateString: string, locale: string): string => {
 };
 
 export function TimelineEventCard({ event, isFirst, isLast, className }: TimelineEventCardProps) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('dossier');
   const navigate = useNavigate();
   const isRTL = i18n.language === 'ar';
   const [isExpanded, setIsExpanded] = useState(false);

@@ -193,9 +193,9 @@ export function DossierTypeStatsCard({
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.3 }}
               className={cn(
-                "inline-block px-1.5 py-0.5 sm:px-3 sm:py-1 rounded",
+                "inline-block px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded",
                 "bg-white/25 backdrop-blur-sm",
-                "text-sm sm:text-2xl font-bold leading-none"
+                "text-[10px] sm:text-base font-bold leading-none"
               )}
             >
               {totalCount}

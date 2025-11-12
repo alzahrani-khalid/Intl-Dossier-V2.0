@@ -23,7 +23,7 @@ interface CountryTimelineProps {
 }
 
 export function CountryTimeline({ dossierId, className }: CountryTimelineProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('dossier');
   const [showFilters, setShowFilters] = useState(false);
 
   // Initialize with default event types for Country dossiers

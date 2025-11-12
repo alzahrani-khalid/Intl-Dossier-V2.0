@@ -23,7 +23,7 @@ interface OrganizationTimelineProps {
 }
 
 export function OrganizationTimeline({ dossierId, className }: OrganizationTimelineProps) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('dossier');
   const [showFilters, setShowFilters] = useState(false);
 
   const defaultEventTypes = getDefaultEventTypes('Organization');
