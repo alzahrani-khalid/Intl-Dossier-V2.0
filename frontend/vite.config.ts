@@ -18,9 +18,8 @@ export default defineConfig({
     },
   },
   server: {
-    host: true, // Expose to network
-    port: 3000,
     host: true, // Expose on network (shows both localhost and network IP)
+    port: 3000,
     watch: {
       ignored: [
         '**/node_modules/**',
@@ -30,6 +29,8 @@ export default defineConfig({
         '**/.tanstack/**',
         '**/coverage/**',
         '**/.vite/**',
+        '**/public/assets/**', // Ignore static assets (maps, flags)
+        '**/.DS_Store',
       ],
       // Disable file system polling to prevent excessive CPU usage
       usePolling: false,

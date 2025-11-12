@@ -157,7 +157,7 @@ export function EnhancedVerticalTimelineCard({
   event,
   index,
 }: EnhancedVerticalTimelineCardProps) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('dossier');
   const navigate = useNavigate();
   const isRTL = i18n.language === 'ar';
   const [isActive, setIsActive] = useState(false);

@@ -64,7 +64,7 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
  * Empty state component
  */
 function TimelineEmptyState({ message }: { message: string }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('dossier');
   return (
     <div className="flex flex-col items-center justify-center py-12 sm:py-16 lg:py-20 text-center">
       <div className="rounded-full bg-muted p-6 sm:p-8 lg:p-10 mb-4 sm:mb-6">
@@ -82,7 +82,7 @@ function TimelineEmptyState({ message }: { message: string }) {
  * Error state component
  */
 function TimelineErrorState({ error }: { error: Error }) {
-  const { t } = useTranslation();
+  const { t } = useTranslation('dossier');
   return (
     <Alert variant="destructive" className="mb-6">
       <AlertTitle>{t('timeline.error.title')}</AlertTitle>
@@ -103,7 +103,7 @@ export function AceternityVerticalTimeline({
   emptyMessage,
   className,
 }: AceternityVerticalTimelineProps) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('dossier');
   const isRTL = i18n.language === 'ar';
   const containerRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<HTMLDivElement>(null);

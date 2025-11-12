@@ -71,7 +71,7 @@ export function TimelineFilters({
   onRefresh,
   className,
 }: TimelineFiltersProps) {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('dossier');
   const isRTL = i18n.language === 'ar';
 
   const [searchInput, setSearchInput] = useState(filters.search_query || '');
