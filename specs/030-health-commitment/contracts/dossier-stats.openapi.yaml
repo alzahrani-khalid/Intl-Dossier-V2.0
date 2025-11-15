@@ -1,0 +1,613 @@
+openapi: 3.0.3
+info:
+  title: Dossier Stats API
+  description: |
+    API for retrieving dossier statistics including engagement counts, commitment metrics,
+    document totals, and relationship health scores.
+
+    This API supports:
+    - Single dossier stats retrieval
+    - Bulk stats queries for dashboard views
+    - Dashboard health aggregations grouped by region/bloc
+    - Optional stats filtering (request only needed metrics)
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier System
+    email: support@stats.gov.sa
+
+servers:
+  - url: https://{project-ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions
+    variables:
+      project-ref:
+        default: zkrcjzdemdmwhearhfgg
+        description: Supabase project reference ID
+
+paths:
+  /dossier-stats:
+    get:
+      summary: Get stats for a single dossier
+      description: |
+        Retrieve comprehensive statistics for a specific dossier including:
+        - Active and overdue commitment counts
+        - Total document count
+        - Recent activity count (last 90 days)
+        - Relationship health score with component breakdown
+
+        Performance SLA: ≤500ms p95 response time
+      operationId: getDossierStats
+      tags:
+        - Dossier Stats
+      parameters:
+        - name: dossierId
+          in: query
+          required: true
+          description: UUID of the dossier
+          schema:
+            type: string
+            format: uuid
+            example: "550e8400-e29b-41d4-a716-446655440000"
+
+        - name: include
+          in: query
+          required: false
+          description: |
+            Comma-separated list of stat categories to include. Reduces payload size.
+            Omit to include all stats.
+          schema:
+            type: string
+            example: "commitments,health"
+            enum:
+              - commitments
+              - engagements
+              - documents
+              - health
+
+      responses:
+        '200':
+          description: Dossier stats retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DossierStats'
+              examples:
+                sufficientData:
+                  summary: Dossier with sufficient data
+                  value:
+                    dossierId: "550e8400-e29b-41d4-a716-446655440000"
+                    commitments:
+                      active: 5
+                      overdue: 2
+                      upcoming: 3
+                      fulfilled: 12
+                      total: 19
+                    engagements:
+                      total365d: 24
+                      recent90d: 8
+                      latestDate: "2025-11-10T14:30:00Z"
+                    documents:
+                      total: 45
+                    health:
+                      overallScore: 78
+                      components:
+                        engagementFrequency: 80
+                        commitmentFulfillment: 75
+                        recencyScore: 100
+                      sufficientData: true
+                      calculatedAt: "2025-11-15T12:00:00Z"
+                    dataFreshness:
+                      statsUpdatedAt: "2025-11-15T11:45:00Z"
+                      isCurrent: true
+
+                insufficientData:
+                  summary: Dossier with insufficient data
+                  value:
+                    dossierId: "550e8400-e29b-41d4-a716-446655440001"
+                    commitments:
+                      active: 1
+                      overdue: 0
+                      upcoming: 1
+                      fulfilled: 0
+                      total: 1
+                    engagements:
+                      total365d: 2
+                      recent90d: 2
+                      latestDate: "2025-11-12T10:00:00Z"
+                    documents:
+                      total: 3
+                    health:
+                      overallScore: null
+                      sufficientData: false
+                      reason: "Insufficient data: requires ≥3 engagements and ≥1 commitment"
+                    dataFreshness:
+                      statsUpdatedAt: "2025-11-15T11:45:00Z"
+                      isCurrent: true
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      summary: Get stats for multiple dossiers (bulk query)
+      description: |
+        Retrieve stats for multiple dossiers in a single request. Optimized for dashboard views.
+
+        Performance SLA: ≤1s for 25 dossiers
+      operationId: getBulkDossierStats
+      tags:
+        - Dossier Stats
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - dossierIds
+              properties:
+                dossierIds:
+                  type: array
+                  description: Array of dossier UUIDs (max 100)
+                  items:
+                    type: string
+                    format: uuid
+                  minItems: 1
+                  maxItems: 100
+                  example:
+                    - "550e8400-e29b-41d4-a716-446655440000"
+                    - "550e8400-e29b-41d4-a716-446655440001"
+
+                include:
+                  type: array
+                  description: Stat categories to include (omit for all)
+                  items:
+                    type: string
+                    enum:
+                      - commitments
+                      - engagements
+                      - documents
+                      - health
+                  example:
+                    - commitments
+                    - health
+
+      responses:
+        '200':
+          description: Bulk stats retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - stats
+                  - totalCount
+                properties:
+                  stats:
+                    type: array
+                    description: Array of dossier stats (same schema as single GET)
+                    items:
+                      $ref: '#/components/schemas/DossierStats'
+                  totalCount:
+                    type: integer
+                    description: Number of dossiers returned
+                    example: 25
+              example:
+                stats:
+                  - dossierId: "550e8400-e29b-41d4-a716-446655440000"
+                    commitments:
+                      active: 5
+                      overdue: 2
+                    health:
+                      overallScore: 78
+                  - dossierId: "550e8400-e29b-41d4-a716-446655440001"
+                    commitments:
+                      active: 2
+                      overdue: 0
+                    health:
+                      overallScore: 85
+                totalCount: 2
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /dossier-stats/dashboard-aggregations:
+    post:
+      summary: Get aggregated health scores for dashboard
+      description: |
+        Retrieve grouped health score statistics for dashboard visualizations.
+        Supports grouping by region, bloc, or classification.
+
+        Performance SLA: ≤2s for regional aggregations
+      operationId: getDashboardHealthAggregations
+      tags:
+        - Dashboard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - groupBy
+              properties:
+                groupBy:
+                  type: string
+                  description: Field to group dossiers by
+                  enum:
+                    - region
+                    - bloc
+                    - classification
+                  example: region
+
+                filter:
+                  type: object
+                  description: Optional filters to apply before aggregation
+                  properties:
+                    dossierType:
+                      type: string
+                      enum:
+                        - country
+                        - organization
+                        - forum
+                      example: country
+
+                    minHealthScore:
+                      type: integer
+                      minimum: 0
+                      maximum: 100
+                      description: Only include dossiers with health score >= this value
+                      example: 60
+
+      responses:
+        '200':
+          description: Dashboard aggregations retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - aggregations
+                  - totalDossiers
+                properties:
+                  aggregations:
+                    type: array
+                    description: Grouped health score statistics
+                    items:
+                      $ref: '#/components/schemas/HealthAggregation'
+                  totalDossiers:
+                    type: integer
+                    description: Total number of dossiers included in aggregations
+                    example: 78
+              example:
+                aggregations:
+                  - groupValue: "Middle East"
+                    averageHealthScore: 78
+                    dossierCount: 25
+                    healthDistribution:
+                      excellent: 8
+                      good: 12
+                      fair: 4
+                      poor: 1
+                  - groupValue: "Europe"
+                    averageHealthScore: 85
+                    dossierCount: 30
+                    healthDistribution:
+                      excellent: 18
+                      good: 10
+                      fair: 2
+                      poor: 0
+                  - groupValue: "Asia"
+                    averageHealthScore: 62
+                    dossierCount: 23
+                    healthDistribution:
+                      excellent: 3
+                      good: 10
+                      fair: 8
+                      poor: 2
+                totalDossiers: 78
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    DossierStats:
+      type: object
+      required:
+        - dossierId
+        - dataFreshness
+      properties:
+        dossierId:
+          type: string
+          format: uuid
+          description: UUID of the dossier
+
+        commitments:
+          type: object
+          description: Commitment metrics (omitted if not requested)
+          required:
+            - active
+            - overdue
+            - upcoming
+            - fulfilled
+            - total
+          properties:
+            active:
+              type: integer
+              minimum: 0
+              description: Count of commitments with status pending or in_progress
+              example: 5
+
+            overdue:
+              type: integer
+              minimum: 0
+              description: Count of commitments past due date and not completed/cancelled
+              example: 2
+
+            upcoming:
+              type: integer
+              minimum: 0
+              description: Count of commitments due within 30 days (not completed/cancelled)
+              example: 3
+
+            fulfilled:
+              type: integer
+              minimum: 0
+              description: Count of commitments with status completed
+              example: 12
+
+            total:
+              type: integer
+              minimum: 0
+              description: Total count of non-cancelled commitments
+              example: 19
+
+        engagements:
+          type: object
+          description: Engagement metrics (omitted if not requested)
+          required:
+            - total365d
+            - recent90d
+            - latestDate
+          properties:
+            total365d:
+              type: integer
+              minimum: 0
+              description: Count of engagements in last 365 days
+              example: 24
+
+            recent90d:
+              type: integer
+              minimum: 0
+              description: Count of engagements in last 90 days
+              example: 8
+
+            latestDate:
+              type: string
+              format: date-time
+              nullable: true
+              description: Timestamp of most recent engagement (null if no engagements)
+              example: "2025-11-10T14:30:00Z"
+
+        documents:
+          type: object
+          description: Document metrics (omitted if not requested)
+          required:
+            - total
+          properties:
+            total:
+              type: integer
+              minimum: 0
+              description: Total count of documents linked to dossier
+              example: 45
+
+        health:
+          type: object
+          description: Relationship health score (omitted if not requested)
+          required:
+            - sufficientData
+          properties:
+            overallScore:
+              type: integer
+              nullable: true
+              minimum: 0
+              maximum: 100
+              description: Composite health score (null if insufficient data)
+              example: 78
+
+            components:
+              type: object
+              description: Component breakdown (only present if sufficientData=true)
+              required:
+                - engagementFrequency
+                - commitmentFulfillment
+                - recencyScore
+              properties:
+                engagementFrequency:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                  description: Engagement frequency score (0-100 scale)
+                  example: 80
+
+                commitmentFulfillment:
+                  type: integer
+                  minimum: 0
+                  maximum: 100
+                  description: Commitment fulfillment rate (0-100 scale)
+                  example: 75
+
+                recencyScore:
+                  type: integer
+                  enum: [10, 40, 70, 100]
+                  description: Recency score (spec 009 thresholds)
+                  example: 100
+
+            sufficientData:
+              type: boolean
+              description: Whether dossier has sufficient data for health score (≥3 engagements, ≥1 commitment)
+              example: true
+
+            reason:
+              type: string
+              description: Explanation when sufficientData=false
+              example: "Insufficient data: requires ≥3 engagements and ≥1 commitment"
+
+            calculatedAt:
+              type: string
+              format: date-time
+              description: When health score was last calculated (only if sufficientData=true)
+              example: "2025-11-15T12:00:00Z"
+
+        dataFreshness:
+          type: object
+          description: Data freshness indicators
+          required:
+            - statsUpdatedAt
+            - isCurrent
+          properties:
+            statsUpdatedAt:
+              type: string
+              format: date-time
+              description: When materialized views were last refreshed
+              example: "2025-11-15T11:45:00Z"
+
+            isCurrent:
+              type: boolean
+              description: Whether stats are current (<60 minutes old)
+              example: true
+
+    HealthAggregation:
+      type: object
+      required:
+        - groupValue
+        - averageHealthScore
+        - dossierCount
+        - healthDistribution
+      properties:
+        groupValue:
+          type: string
+          description: Value of the groupBy field (e.g., region name)
+          example: "Middle East"
+
+        averageHealthScore:
+          type: integer
+          minimum: 0
+          maximum: 100
+          description: Average health score for dossiers in this group
+          example: 78
+
+        dossierCount:
+          type: integer
+          minimum: 0
+          description: Number of dossiers in this group
+          example: 25
+
+        healthDistribution:
+          type: object
+          description: Count of dossiers by health tier
+          required:
+            - excellent
+            - good
+            - fair
+            - poor
+          properties:
+            excellent:
+              type: integer
+              minimum: 0
+              description: Count with health score 80-100
+              example: 8
+
+            good:
+              type: integer
+              minimum: 0
+              description: Count with health score 60-79
+              example: 12
+
+            fair:
+              type: integer
+              minimum: 0
+              description: Count with health score 40-59
+              example: 4
+
+            poor:
+              type: integer
+              minimum: 0
+              description: Count with health score 0-39
+              example: 1
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: "INVALID_REQUEST"
+
+        message:
+          type: string
+          description: Human-readable error message
+          example: "dossierId parameter is required"
+
+        details:
+          type: object
+          description: Additional error context
+          additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "INVALID_REQUEST"
+            message: "dossierId parameter is required"
+
+    NotFound:
+      description: Dossier not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "NOT_FOUND"
+            message: "Dossier with ID 550e8400-e29b-41d4-a716-446655440000 not found"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "INTERNAL_ERROR"
+            message: "An unexpected error occurred"
+            details:
+              timestamp: "2025-11-15T14:30:00Z"
+              requestId: "req_abc123"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token (obtained via Supabase Auth)
+
+security:
+  - BearerAuth: []

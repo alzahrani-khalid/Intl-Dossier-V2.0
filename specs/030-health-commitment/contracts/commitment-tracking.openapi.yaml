@@ -1,0 +1,491 @@
+openapi: 3.0.3
+info:
+  title: Commitment Tracking API
+  description: |
+    API for automated commitment tracking including:
+    - Detecting overdue commitments
+    - Sending notifications to commitment owners
+    - Triggering health score recalculation after status changes
+
+    This API is primarily used by scheduled jobs, but can be manually triggered for testing.
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier System
+    email: support@stats.gov.sa
+
+servers:
+  - url: https://{project-ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions
+    variables:
+      project-ref:
+        default: zkrcjzdemdmwhearhfgg
+        description: Supabase project reference ID
+
+paths:
+  /detect-overdue-commitments:
+    post:
+      summary: Detect and mark overdue commitments
+      description: |
+        Batch process to detect commitments with:
+        - due_date < current_date
+        - status IN ('pending', 'in_progress')
+
+        Actions performed:
+        1. Update status to 'overdue'
+        2. Send notifications to commitment owners and dossier owners
+        3. Trigger health score recalculation for affected dossiers
+
+        This endpoint is called by a scheduled job (daily at 2:00 AM AST) but can be
+        manually triggered for testing or immediate processing.
+
+        Performance: ~5 seconds for 100 overdue commitments
+      operationId: detectOverdueCommitments
+      tags:
+        - Commitment Tracking
+      requestBody:
+        required: false
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                dryRun:
+                  type: boolean
+                  default: false
+                  description: |
+                    If true, returns list of overdue commitments without updating status or sending notifications.
+                    Useful for testing.
+                  example: false
+
+                dossierId:
+                  type: string
+                  format: uuid
+                  description: |
+                    Optional: Limit detection to commitments for a specific dossier.
+                    Omit to check all dossiers.
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+
+      responses:
+        '200':
+          description: Overdue commitments detected and processed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OverdueDetectionResponse'
+              examples:
+                normalExecution:
+                  summary: Normal execution (dryRun=false)
+                  value:
+                    overdueCount: 12
+                    affectedDossiers: 8
+                    notificationsSent: 20
+                    healthScoresRecalculated: 8
+                    executionTimeMs: 4823
+                    dryRun: false
+                    commitments:
+                      - id: "com_001"
+                        dossierId: "550e8400-e29b-41d4-a716-446655440000"
+                        description: "Finalize data sharing agreement"
+                        dueDate: "2025-11-10"
+                        ownerId: "user_123"
+                        previousStatus: "in_progress"
+                        newStatus: "overdue"
+                      - id: "com_002"
+                        dossierId: "550e8400-e29b-41d4-a716-446655440001"
+                        description: "Submit quarterly report"
+                        dueDate: "2025-11-12"
+                        ownerId: "user_456"
+                        previousStatus: "pending"
+                        newStatus: "overdue"
+
+                dryRunExecution:
+                  summary: Dry run execution (dryRun=true)
+                  value:
+                    overdueCount: 12
+                    affectedDossiers: 8
+                    notificationsSent: 0
+                    healthScoresRecalculated: 0
+                    executionTimeMs: 127
+                    dryRun: true
+                    commitments:
+                      - id: "com_001"
+                        dossierId: "550e8400-e29b-41d4-a716-446655440000"
+                        description: "Finalize data sharing agreement"
+                        dueDate: "2025-11-10"
+                        ownerId: "user_123"
+                        previousStatus: "in_progress"
+                        newStatus: "overdue"
+
+                noOverdueCommitments:
+                  summary: No overdue commitments found
+                  value:
+                    overdueCount: 0
+                    affectedDossiers: 0
+                    notificationsSent: 0
+                    healthScoresRecalculated: 0
+                    executionTimeMs: 89
+                    dryRun: false
+                    commitments: []
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /refresh-commitment-stats:
+    post:
+      summary: Refresh commitment statistics materialized view
+      description: |
+        Manually trigger refresh of `dossier_commitment_stats` materialized view.
+
+        Normally called by scheduled job (every 15 minutes) but can be manually triggered for:
+        - Testing
+        - Immediate refresh after bulk commitment updates
+        - Recovery from failed refresh
+
+        Performance: ~5 seconds for 500 dossiers with 5,000 commitments
+      operationId: refreshCommitmentStats
+      tags:
+        - Commitment Tracking
+      responses:
+        '200':
+          description: Materialized view refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - refreshedAt
+                  - executionTimeMs
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether refresh completed successfully
+                    example: true
+
+                  refreshedAt:
+                    type: string
+                    format: date-time
+                    description: Timestamp when refresh completed
+                    example: "2025-11-15T14:30:00Z"
+
+                  executionTimeMs:
+                    type: integer
+                    minimum: 0
+                    description: Time taken to refresh materialized view (milliseconds)
+                    example: 4823
+
+                  rowsUpdated:
+                    type: integer
+                    minimum: 0
+                    description: Number of dossiers with updated commitment stats
+                    example: 500
+              example:
+                success: true
+                refreshedAt: "2025-11-15T14:30:00Z"
+                executionTimeMs: 4823
+                rowsUpdated: 500
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+  /trigger-health-recalculation:
+    post:
+      summary: Trigger health score recalculation for affected dossiers
+      description: |
+        Trigger health score recalculation after commitment status changes.
+
+        This endpoint is called automatically by:
+        - Database trigger when commitment status changes
+        - Overdue detection job after marking commitments overdue
+
+        Can also be manually triggered for:
+        - Testing
+        - Manual correction of health scores
+        - Recovery from calculation failures
+
+        Performance: ~2 minutes for 100 dossiers (2-minute SLA)
+      operationId: triggerHealthRecalculation
+      tags:
+        - Commitment Tracking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - dossierIds
+              properties:
+                dossierIds:
+                  type: array
+                  description: Array of dossier UUIDs to recalculate (max 100)
+                  items:
+                    type: string
+                    format: uuid
+                  minItems: 1
+                  maxItems: 100
+                  example:
+                    - "550e8400-e29b-41d4-a716-446655440000"
+                    - "550e8400-e29b-41d4-a716-446655440001"
+
+                priority:
+                  type: string
+                  enum:
+                    - high
+                    - normal
+                  default: normal
+                  description: |
+                    Calculation priority:
+                    - high: Immediate synchronous calculation (blocks until done)
+                    - normal: Asynchronous calculation (returns immediately, processes in background)
+                  example: normal
+
+      responses:
+        '200':
+          description: Health recalculation triggered successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - success
+                  - dossierCount
+                  - triggeredAt
+                properties:
+                  success:
+                    type: boolean
+                    description: Whether recalculation was triggered successfully
+                    example: true
+
+                  dossierCount:
+                    type: integer
+                    minimum: 0
+                    description: Number of dossiers queued for recalculation
+                    example: 8
+
+                  triggeredAt:
+                    type: string
+                    format: date-time
+                    description: Timestamp when recalculation was triggered
+                    example: "2025-11-15T14:30:00Z"
+
+                  priority:
+                    type: string
+                    enum:
+                      - high
+                      - normal
+                    description: Calculation priority used
+                    example: normal
+
+                  estimatedCompletionTime:
+                    type: string
+                    format: date-time
+                    description: |
+                      Estimated timestamp when recalculation will complete.
+                      Only present for normal priority (async).
+                    example: "2025-11-15T14:32:00Z"
+
+                  results:
+                    type: array
+                    description: |
+                      Recalculation results (only present for high priority / synchronous mode)
+                    items:
+                      type: object
+                      required:
+                        - dossierId
+                        - success
+                      properties:
+                        dossierId:
+                          type: string
+                          format: uuid
+                          example: "550e8400-e29b-41d4-a716-446655440000"
+
+                        success:
+                          type: boolean
+                          example: true
+
+                        overallScore:
+                          type: integer
+                          nullable: true
+                          minimum: 0
+                          maximum: 100
+                          example: 78
+
+                        error:
+                          type: string
+                          description: Error message (only if success=false)
+                          example: "Calculation timeout"
+              example:
+                success: true
+                dossierCount: 8
+                triggeredAt: "2025-11-15T14:30:00Z"
+                priority: normal
+                estimatedCompletionTime: "2025-11-15T14:32:00Z"
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    OverdueDetectionResponse:
+      type: object
+      required:
+        - overdueCount
+        - affectedDossiers
+        - notificationsSent
+        - healthScoresRecalculated
+        - executionTimeMs
+        - dryRun
+        - commitments
+      properties:
+        overdueCount:
+          type: integer
+          minimum: 0
+          description: Number of commitments marked as overdue
+          example: 12
+
+        affectedDossiers:
+          type: integer
+          minimum: 0
+          description: Number of unique dossiers with overdue commitments
+          example: 8
+
+        notificationsSent:
+          type: integer
+          minimum: 0
+          description: Number of notifications sent to commitment owners (0 if dryRun=true)
+          example: 20
+
+        healthScoresRecalculated:
+          type: integer
+          minimum: 0
+          description: Number of dossiers with recalculated health scores (0 if dryRun=true)
+          example: 8
+
+        executionTimeMs:
+          type: integer
+          minimum: 0
+          description: Total execution time (milliseconds)
+          example: 4823
+
+        dryRun:
+          type: boolean
+          description: Whether this was a dry run (no updates or notifications)
+          example: false
+
+        commitments:
+          type: array
+          description: List of overdue commitments detected
+          items:
+            type: object
+            required:
+              - id
+              - dossierId
+              - description
+              - dueDate
+              - ownerId
+              - previousStatus
+              - newStatus
+            properties:
+              id:
+                type: string
+                description: Commitment UUID
+                example: "com_001"
+
+              dossierId:
+                type: string
+                format: uuid
+                description: Dossier UUID
+                example: "550e8400-e29b-41d4-a716-446655440000"
+
+              description:
+                type: string
+                description: Commitment description
+                example: "Finalize data sharing agreement"
+
+              dueDate:
+                type: string
+                format: date
+                description: Original due date
+                example: "2025-11-10"
+
+              ownerId:
+                type: string
+                description: User UUID of commitment owner
+                example: "user_123"
+
+              previousStatus:
+                type: string
+                enum:
+                  - pending
+                  - in_progress
+                description: Status before update
+                example: "in_progress"
+
+              newStatus:
+                type: string
+                enum:
+                  - overdue
+                description: Status after update (always 'overdue')
+                example: "overdue"
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: "INVALID_REQUEST"
+
+        message:
+          type: string
+          description: Human-readable error message
+          example: "Invalid request parameters"
+
+        details:
+          type: object
+          description: Additional error context
+          additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "INVALID_REQUEST"
+            message: "dossierIds array cannot be empty"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "INTERNAL_ERROR"
+            message: "Failed to refresh materialized view"
+            details:
+              timestamp: "2025-11-15T14:30:00Z"
+              requestId: "req_abc123"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token (obtained via Supabase Auth)
+
+security:
+  - BearerAuth: []
