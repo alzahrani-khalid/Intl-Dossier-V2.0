@@ -50,13 +50,16 @@ export async function handleDashboardAggregations(
     const startTime = Date.now();
 
     // Build the query - join health_scores with dossiers to access grouping fields
+    // Select all possible grouping columns to avoid dynamic template issues
     let query = supabaseClient
       .from("health_scores")
       .select(`
         overall_score,
         dossier_id,
         dossiers!inner (
-          ${groupBy},
+          region,
+          bloc,
+          classification,
           type,
           id
         )
