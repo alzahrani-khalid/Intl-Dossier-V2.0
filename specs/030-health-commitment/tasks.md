@@ -207,72 +207,72 @@ This is a web application with the following structure:
 
 ### Supabase Edge Functions for User Story 3
 
-- [ ] T115 [P] [US3] Create supabase/functions/detect-overdue-commitments/index.ts Edge Function
-- [ ] T116 [US3] Implement POST /detect-overdue-commitments endpoint per commitment-tracking.openapi.yaml contract
-- [ ] T117 [US3] Validate request body: dryRun boolean (default false), dossierId optional UUID filter
-- [ ] T118 [US3] Query commitments table: WHERE due_date < CURRENT_DATE AND status IN ('pending', 'in_progress')
-- [ ] T119 [US3] Apply optional dossierId filter if provided
-- [ ] T120 [US3] If dryRun=true: return list of overdue commitments without updating status or sending notifications
-- [ ] T121 [US3] If dryRun=false: update status to 'overdue' for all matched commitments
-- [ ] T122 [US3] Implement sendOverdueNotification(commitment) function to send in-app notification to commitment owner and dossier owner
-- [ ] T123 [US3] Notification message format: "{description} is overdue (due {due_date}). Dossier: {dossier_name}. Recommended: Update status or extend deadline."
-- [ ] T124 [US3] Call POST /trigger-health-recalculation for affected dossier_ids to update health scores
-- [ ] T125 [US3] Return OverdueDetectionResponse with overdueCount, affectedDossiers, notificationsSent, healthScoresRecalculated, executionTimeMs, commitments array
-- [ ] T126 [US3] Add error handling for notification failures (log error but continue processing other commitments)
-- [ ] T127 [P] [US3] Create supabase/functions/refresh-commitment-stats/index.ts Edge Function
-- [ ] T128 [US3] Implement POST /refresh-commitment-stats endpoint per commitment-tracking.openapi.yaml contract
-- [ ] T129 [US3] Call refresh_commitment_stats() database function to refresh materialized view concurrently
-- [ ] T130 [US3] Measure execution time and return response with success=true, refreshedAt timestamp, executionTimeMs, rowsUpdated count
-- [ ] T131 [US3] Add error handling for materialized view refresh failures (return 500 with details)
-- [ ] T132 [P] [US3] Create supabase/functions/trigger-health-recalculation/index.ts Edge Function
-- [ ] T133 [US3] Implement POST /trigger-health-recalculation endpoint per commitment-tracking.openapi.yaml contract
-- [ ] T134 [US3] Validate request body: dossierIds array required (min 1, max 100), priority enum (high, normal) default=normal
-- [ ] T135 [US3] If priority=high: synchronously call POST /calculate-health-score for each dossier (blocking, returns results)
-- [ ] T136 [US3] If priority=normal: queue health calculations to background job via Redis (non-blocking, returns immediately)
-- [ ] T137 [US3] Return response with success=true, dossierCount, triggeredAt, priority, estimatedCompletionTime (for normal priority), results array (for high priority)
-- [ ] T138 [US3] Deploy Edge Functions: `supabase functions deploy detect-overdue-commitments && supabase functions deploy refresh-commitment-stats && supabase functions deploy trigger-health-recalculation`
+- [X] T115 [P] [US3] Create supabase/functions/detect-overdue-commitments/index.ts Edge Function
+- [X] T116 [US3] Implement POST /detect-overdue-commitments endpoint per commitment-tracking.openapi.yaml contract
+- [X] T117 [US3] Validate request body: dryRun boolean (default false), dossierId optional UUID filter
+- [X] T118 [US3] Query commitments table: WHERE due_date < CURRENT_DATE AND status IN ('pending', 'in_progress')
+- [X] T119 [US3] Apply optional dossierId filter if provided
+- [X] T120 [US3] If dryRun=true: return list of overdue commitments without updating status or sending notifications
+- [X] T121 [US3] If dryRun=false: update status to 'overdue' for all matched commitments
+- [X] T122 [US3] Implement sendOverdueNotification(commitment) function to send in-app notification to commitment owner and dossier owner
+- [X] T123 [US3] Notification message format: "{description} is overdue (due {due_date}). Dossier: {dossier_name}. Recommended: Update status or extend deadline."
+- [X] T124 [US3] Call POST /trigger-health-recalculation for affected dossier_ids to update health scores
+- [X] T125 [US3] Return OverdueDetectionResponse with overdueCount, affectedDossiers, notificationsSent, healthScoresRecalculated, executionTimeMs, commitments array
+- [X] T126 [US3] Add error handling for notification failures (log error but continue processing other commitments)
+- [X] T127 [P] [US3] Create supabase/functions/refresh-commitment-stats/index.ts Edge Function
+- [X] T128 [US3] Implement POST /refresh-commitment-stats endpoint per commitment-tracking.openapi.yaml contract
+- [X] T129 [US3] Call refresh_commitment_stats() database function to refresh materialized view concurrently
+- [X] T130 [US3] Measure execution time and return response with success=true, refreshedAt timestamp, executionTimeMs, rowsUpdated count
+- [X] T131 [US3] Add error handling for materialized view refresh failures (return 500 with details)
+- [X] T132 [P] [US3] Create supabase/functions/trigger-health-recalculation/index.ts Edge Function
+- [X] T133 [US3] Implement POST /trigger-health-recalculation endpoint per commitment-tracking.openapi.yaml contract
+- [X] T134 [US3] Validate request body: dossierIds array required (min 1, max 100), priority enum (high, normal) default=normal
+- [X] T135 [US3] If priority=high: synchronously call POST /calculate-health-score for each dossier (blocking, returns results)
+- [X] T136 [US3] If priority=normal: queue health calculations to background job via Redis (non-blocking, returns immediately)
+- [X] T137 [US3] Return response with success=true, dossierCount, triggeredAt, priority, estimatedCompletionTime (for normal priority), results array (for high priority)
+- [X] T138 [US3] Deploy Edge Functions: `supabase functions deploy detect-overdue-commitments && supabase functions deploy refresh-commitment-stats && supabase functions deploy trigger-health-recalculation`
 
 ### Backend Scheduled Jobs for User Story 3
 
-- [ ] T139 [P] [US3] Create backend/src/jobs/refresh-health-scores.job.ts scheduled job
-- [ ] T140 [US3] Implement cron schedule '*/15 * * * *' (every 15 minutes) using node-cron
-- [ ] T141 [US3] Implement Redis distributed locking with lockKey='job:refresh-health-scores', expiration=900s (15 minutes)
-- [ ] T142 [US3] Use redis.set(lockKey, '1', 'EX', 900, 'NX') to acquire lock (skip if lock already held)
-- [ ] T143 [US3] Call POST /refresh-commitment-stats Edge Function to refresh materialized view
-- [ ] T144 [US3] Query health_scores table: WHERE calculated_at < NOW() - INTERVAL '60 minutes' to find stale scores
-- [ ] T145 [US3] For each stale dossier, call POST /calculate-health-score Edge Function to recalculate
-- [ ] T146 [US3] Log job execution: '[HEALTH-REFRESH] Starting', '[HEALTH-REFRESH] Materialized views refreshed', '[HEALTH-REFRESH] Recalculated {count} stale health scores'
-- [ ] T147 [US3] Delete Redis lock in finally block to ensure cleanup on success or failure
-- [ ] T148 [US3] Implement error handling with structured logging: console.error('[HEALTH-REFRESH] Job failed:', error)
-- [ ] T149 [US3] Add TODO comment for operations team alert integration (Sentry, Prometheus) on consecutive failures
-- [ ] T150 [P] [US3] Create backend/src/jobs/detect-overdue-commitments.job.ts scheduled job
-- [ ] T151 [US3] Implement cron schedule '0 2 * * *' (daily at 2:00 AM AST) using node-cron
-- [ ] T152 [US3] Implement Redis distributed locking with lockKey='job:detect-overdue-commitments', expiration=3600s (1 hour)
-- [ ] T153 [US3] Call POST /detect-overdue-commitments Edge Function with dryRun=false
-- [ ] T154 [US3] Log job execution: '[OVERDUE-CHECK] Marked {count} commitments as overdue', '[OVERDUE-CHECK] Sent {count} notifications'
-- [ ] T155 [US3] Delete Redis lock in finally block
-- [ ] T156 [US3] Implement error handling with structured logging
-- [ ] T157 [P] [US3] Register scheduled jobs in backend/src/index.ts or backend/src/app.ts during server startup
-- [ ] T158 [US3] Add environment variable check: ENABLE_SCHEDULED_JOBS=true before registering jobs
-- [ ] T159 [US3] Log job registration: console.log('[HEALTH-REFRESH] Scheduled job registered: every 15 minutes'), console.log('[OVERDUE-CHECK] Scheduled job registered: daily at 2:00 AM')
-- [ ] T160 [US3] Start backend service with scheduled jobs: `cd backend && pnpm dev`
-- [ ] T161 [US3] Verify jobs are registered in console logs
+- [X] T139 [P] [US3] Create backend/src/jobs/refresh-health-scores.job.ts scheduled job
+- [X] T140 [US3] Implement cron schedule '*/15 * * * *' (every 15 minutes) using node-cron
+- [X] T141 [US3] Implement Redis distributed locking with lockKey='job:refresh-health-scores', expiration=900s (15 minutes)
+- [X] T142 [US3] Use redis.set(lockKey, '1', 'EX', 900, 'NX') to acquire lock (skip if lock already held)
+- [X] T143 [US3] Call POST /refresh-commitment-stats Edge Function to refresh materialized view
+- [X] T144 [US3] Query health_scores table: WHERE calculated_at < NOW() - INTERVAL '60 minutes' to find stale scores
+- [X] T145 [US3] For each stale dossier, call POST /calculate-health-score Edge Function to recalculate
+- [X] T146 [US3] Log job execution: '[HEALTH-REFRESH] Starting', '[HEALTH-REFRESH] Materialized views refreshed', '[HEALTH-REFRESH] Recalculated {count} stale health scores'
+- [X] T147 [US3] Delete Redis lock in finally block to ensure cleanup on success or failure
+- [X] T148 [US3] Implement error handling with structured logging: console.error('[HEALTH-REFRESH] Job failed:', error)
+- [X] T149 [US3] Add TODO comment for operations team alert integration (Sentry, Prometheus) on consecutive failures
+- [X] T150 [P] [US3] Create backend/src/jobs/detect-overdue-commitments.job.ts scheduled job
+- [X] T151 [US3] Implement cron schedule '0 2 * * *' (daily at 2:00 AM AST) using node-cron
+- [X] T152 [US3] Implement Redis distributed locking with lockKey='job:detect-overdue-commitments', expiration=3600s (1 hour)
+- [X] T153 [US3] Call POST /detect-overdue-commitments Edge Function with dryRun=false
+- [X] T154 [US3] Log job execution: '[OVERDUE-CHECK] Marked {count} commitments as overdue', '[OVERDUE-CHECK] Sent {count} notifications'
+- [X] T155 [US3] Delete Redis lock in finally block
+- [X] T156 [US3] Implement error handling with structured logging
+- [X] T157 [P] [US3] Register scheduled jobs in backend/src/index.ts or backend/src/app.ts during server startup
+- [X] T158 [US3] Add environment variable check: ENABLE_SCHEDULED_JOBS=true before registering jobs
+- [X] T159 [US3] Log job registration: console.log('[HEALTH-REFRESH] Scheduled job registered: every 15 minutes'), console.log('[OVERDUE-CHECK] Scheduled job registered: daily at 2:00 AM')
+- [X] T160 [US3] Start backend service with scheduled jobs: `cd backend && pnpm dev`
+- [X] T161 [US3] Verify jobs are registered in console logs
 
 ### Frontend Components for User Story 3
 
-- [ ] T162 [P] [US3] Create frontend/src/components/commitments/CommitmentsList.tsx component (if not exists)
-- [ ] T163 [US3] Display commitment cards with status badge, due date, owner name, description
-- [ ] T164 [US3] Apply visual indicator for upcoming commitments (due within 30 days): yellow badge with "Upcoming" label and days remaining
-- [ ] T165 [US3] Apply visual indicator for overdue commitments: red badge with "Overdue" label and days overdue
-- [ ] T166 [US3] Add status update action button to change status (pending → in_progress → completed)
-- [ ] T167 [US3] Trigger TanStack Query mutation on status update to call PATCH /commitments/{id} endpoint
-- [ ] T168 [US3] Invalidate useDossierStats() query cache after status update to refetch latest stats
-- [ ] T169 [US3] Verify health score recalculation is triggered via backend job (check network tab for POST /calculate-health-score within 2 minutes)
-- [ ] T170 [P] [US3] Create frontend/src/components/commitments/PersonalCommitmentsDashboard.tsx component
-- [ ] T171 [US3] Fetch commitments assigned to current user: WHERE owner_id = auth.uid()
-- [ ] T172 [US3] Display commitments sorted by due_date ASC with dossier context (dossier name, type)
-- [ ] T173 [US3] Add quick status update actions (Mark In Progress, Mark Completed buttons)
-- [ ] T174 [US3] Verify status updates trigger health score recalculation for associated dossiers
+- [X] T162 [P] [US3] Create frontend/src/components/commitments/CommitmentsList.tsx component (if not exists)
+- [X] T163 [US3] Display commitment cards with status badge, due date, owner name, description
+- [X] T164 [US3] Apply visual indicator for upcoming commitments (due within 30 days): yellow badge with "Upcoming" label and days remaining
+- [X] T165 [US3] Apply visual indicator for overdue commitments: red badge with "Overdue" label and days overdue
+- [X] T166 [US3] Add status update action button to change status (pending → in_progress → completed)
+- [X] T167 [US3] Trigger TanStack Query mutation on status update to call PATCH /commitments/{id} endpoint
+- [X] T168 [US3] Invalidate useDossierStats() query cache after status update to refetch latest stats
+- [X] T169 [US3] Verify health score recalculation is triggered via backend job (check network tab for POST /calculate-health-score within 2 minutes)
+- [X] T170 [P] [US3] Create frontend/src/components/commitments/PersonalCommitmentsDashboard.tsx component
+- [X] T171 [US3] Fetch commitments assigned to current user: WHERE owner_id = auth.uid()
+- [X] T172 [US3] Display commitments sorted by due_date ASC with dossier context (dossier name, type)
+- [X] T173 [US3] Add quick status update actions (Mark In Progress, Mark Completed buttons)
+- [X] T174 [US3] Verify status updates trigger health score recalculation for associated dossiers
 
 **Checkpoint**: All core user stories (US1, US2, US3) should now be independently functional - commitment tracking is automated
 
@@ -286,38 +286,38 @@ This is a web application with the following structure:
 
 ### Backend Notification System for User Story 4
 
-- [ ] T175 [P] [US4] Create backend/src/services/notification.service.ts notification service
-- [ ] T176 [US4] Implement sendInAppNotification(userId: string, title: string, message: string, metadata: object) function
-- [ ] T177 [US4] Insert notification record into notifications table (user_id, title, message, metadata, created_at, read=false)
-- [ ] T178 [US4] Implement getNotifications(userId: string, unreadOnly?: boolean) function to fetch user notifications
-- [ ] T179 [US4] Implement markNotificationAsRead(notificationId: string) function to update read=true
-- [ ] T180 [P] [US4] Extend backend/src/jobs/refresh-health-scores.job.ts to send health score drop notifications
-- [ ] T181 [US4] After health score recalculation, compare new score with previous score from health_scores table
-- [ ] T182 [US4] If new score < 60 AND previous score >= 60 (threshold crossed from good to fair), send notification
-- [ ] T183 [US4] Notification title: "Relationship health score dropped for {dossier_name}"
-- [ ] T184 [US4] Notification message: "Health score is now {new_score} (was {previous_score}). Contributing factors: {factors}."
-- [ ] T185 [US4] Fetch contributing factors from health score components (e.g., "2 commitments became overdue", "engagement frequency decreased")
-- [ ] T186 [US4] Send notification to dossier owner (fetch owner_id from dossiers table)
-- [ ] T187 [US4] Log notification sending: console.log('[HEALTH-NOTIFICATION] Sent notification to user {userId} for dossier {dossierId}')
-- [ ] T188 [P] [US4] Extend backend/src/jobs/detect-overdue-commitments.job.ts to send overdue commitment notifications
-- [ ] T189 [US4] After marking commitments as overdue, send notification to commitment owner AND dossier owner
-- [ ] T190 [US4] Use sendOverdueNotification() function implemented in T122
+- [X] T175 [P] [US4] Create backend/src/services/notification.service.ts notification service
+- [X] T176 [US4] Implement sendInAppNotification(userId: string, title: string, message: string, metadata: object) function
+- [X] T177 [US4] Insert notification record into notifications table (user_id, title, message, metadata, created_at, read=false)
+- [X] T178 [US4] Implement getNotifications(userId: string, unreadOnly?: boolean) function to fetch user notifications
+- [X] T179 [US4] Implement markNotificationAsRead(notificationId: string) function to update read=true
+- [X] T180 [P] [US4] Extend backend/src/jobs/refresh-health-scores.job.ts to send health score drop notifications
+- [X] T181 [US4] After health score recalculation, compare new score with previous score from health_scores table
+- [X] T182 [US4] If new score < 60 AND previous score >= 60 (threshold crossed from good to fair), send notification
+- [X] T183 [US4] Notification title: "Relationship health score dropped for {dossier_name}"
+- [X] T184 [US4] Notification message: "Health score is now {new_score} (was {previous_score}). Contributing factors: {factors}."
+- [X] T185 [US4] Fetch contributing factors from health score components (e.g., "2 commitments became overdue", "engagement frequency decreased")
+- [X] T186 [US4] Send notification to dossier owner (fetch owner_id from dossiers table)
+- [X] T187 [US4] Log notification sending: console.log('[HEALTH-NOTIFICATION] Sent notification to user {userId} for dossier {dossierId}')
+- [X] T188 [P] [US4] Extend backend/src/jobs/detect-overdue-commitments.job.ts to send overdue commitment notifications
+- [X] T189 [US4] After marking commitments as overdue, send notification to commitment owner AND dossier owner
+- [X] T190 [US4] Use sendOverdueNotification() function implemented in T122
 
 ### Frontend Notification Components for User Story 4
 
-- [ ] T191 [P] [US4] Create frontend/src/components/notifications/NotificationBell.tsx component
-- [ ] T192 [US4] Display notification bell icon in app header with unread count badge
-- [ ] T193 [US4] Implement useNotifications() TanStack Query hook to fetch notifications for current user
-- [ ] T194 [US4] Poll for new notifications every 30 seconds using refetchInterval: 30000
-- [ ] T195 [US4] Show notification dropdown on bell click with list of unread notifications
-- [ ] T196 [US4] Display notification title, message, timestamp with color-coded icon based on type (health score drop = orange, overdue commitment = red)
-- [ ] T197 [US4] Implement click handler to mark notification as read via PATCH /notifications/{id}
-- [ ] T198 [US4] Navigate to relevant dossier page when notification clicked (extract dossier_id from metadata)
-- [ ] T199 [US4] Invalidate useDossierStats() query cache when navigating to dossier to fetch latest stats
-- [ ] T200 [P] [US4] Verify health score cache refresh is visible to user without manual page refresh
-- [ ] T201 [US4] Test scenario: Mark commitment as overdue → Wait 2 minutes → Check dossier page shows updated health score
-- [ ] T202 [US4] Verify background refetch in useDossierStats() hook (refetchInterval: 5 * 60 * 1000) picks up cache refresh
-- [ ] T203 [US4] Verify TanStack Query stale-while-revalidate pattern: user sees cached data immediately, updated data appears seamlessly
+- [X] T191 [P] [US4] Create frontend/src/components/notifications/NotificationBell.tsx component
+- [X] T192 [US4] Display notification bell icon in app header with unread count badge
+- [X] T193 [US4] Implement useNotifications() TanStack Query hook to fetch notifications for current user
+- [X] T194 [US4] Poll for new notifications every 30 seconds using refetchInterval: 30000
+- [X] T195 [US4] Show notification dropdown on bell click with list of unread notifications
+- [X] T196 [US4] Display notification title, message, timestamp with color-coded icon based on type (health score drop = orange, overdue commitment = red)
+- [X] T197 [US4] Implement click handler to mark notification as read via PATCH /notifications/{id}
+- [X] T198 [US4] Navigate to relevant dossier page when notification clicked (extract dossier_id from metadata)
+- [X] T199 [US4] Invalidate useDossierStats() query cache when navigating to dossier to fetch latest stats
+- [X] T200 [P] [US4] Verify health score cache refresh is visible to user without manual page refresh
+- [X] T201 [US4] Test scenario: Mark commitment as overdue → Wait 2 minutes → Check dossier page shows updated health score
+- [X] T202 [US4] Verify background refetch in useDossierStats() hook (refetchInterval: 5 * 60 * 1000) picks up cache refresh
+- [X] T203 [US4] Verify TanStack Query stale-while-revalidate pattern: user sees cached data immediately, updated data appears seamlessly
 
 **Checkpoint**: All user stories (US1-US4) should now be independently functional - real-time updates implemented
 
