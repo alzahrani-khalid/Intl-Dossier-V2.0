@@ -6,7 +6,7 @@
  * Connects to Supabase Edge Functions: dossier-stats, calculate-health-score
  */
 
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '@/lib/supabase';
 
 /**
  * Dossier statistics response
