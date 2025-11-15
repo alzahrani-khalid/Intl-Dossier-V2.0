@@ -1,7 +1,7 @@
 import { SupabaseClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
 
 interface DashboardAggregationsRequest {
-  groupBy: "region" | "bloc" | "classification";
+  groupBy: "region" | "org_type"; // region for countries, org_type for organizations
   filter?: {
     dossierType?: "country" | "organization" | "forum";
     minHealthScore?: number;
@@ -36,57 +36,68 @@ export async function handleDashboardAggregations(
     const { groupBy, filter } = body;
 
     // Validate groupBy field
-    if (!groupBy || !["region", "bloc", "classification"].includes(groupBy)) {
+    if (!groupBy || !["region", "org_type"].includes(groupBy)) {
       return {
         data: null,
         error: {
           code: "INVALID_GROUP_BY",
-          message_en: 'groupBy must be one of: "region", "bloc", "classification"',
-          message_ar: 'يجب أن يكون groupBy أحد: "region", "bloc", "classification"',
+          message_en: 'groupBy must be one of: "region" (countries), "org_type" (organizations). Note: "bloc" and "classification" are not yet supported.',
+          message_ar: 'يجب أن يكون groupBy أحد: "region" (للدول), "org_type" (للمنظمات). ملاحظة: "bloc" و "classification" غير مدعومين حاليًا.',
         },
       };
     }
 
     const startTime = Date.now();
 
-    // Build the query - join health_scores with dossiers to access grouping fields
-    // Select all possible grouping columns to avoid dynamic template issues
+    // Determine which type-specific table to join based on groupBy
+    // region -> countries table, org_type -> organizations table
+    let typeTable: string;
+    let typeField: string;
+    let dossierType: string;
+
+    if (groupBy === "region") {
+      typeTable = "countries";
+      typeField = "region";
+      dossierType = "country";
+    } else if (groupBy === "org_type") {
+      typeTable = "organizations";
+      typeField = "org_type";
+      dossierType = "organization";
+    } else {
+      return {
+        data: null,
+        error: {
+          code: "INVALID_GROUP_BY",
+          message_en: `Unsupported groupBy field: ${groupBy}`,
+          message_ar: `حقل groupBy غير مدعوم: ${groupBy}`,
+        },
+      };
+    }
+
+    // Build the query - join health_scores with dossiers, then with type-specific table
     let query = supabaseClient
       .from("health_scores")
       .select(`
         overall_score,
-        dossier_id,
-        dossiers!inner (
-          region,
-          bloc,
-          classification,
-          type,
-          id
-        )
-      `);
+        dossier_id
+      `)
+      .not("overall_score", "is", null);
 
-    // Apply optional filters
-    if (filter?.dossierType) {
-      query = query.eq("dossiers.type", filter.dossierType);
-    }
-
+    // Apply optional minHealthScore filter
     if (filter?.minHealthScore !== undefined && filter.minHealthScore !== null) {
       query = query.gte("overall_score", filter.minHealthScore);
     }
 
-    // Only include dossiers with calculated health scores (not null)
-    query = query.not("overall_score", "is", null);
-
     const { data: healthScoresData, error: healthScoresError } = await query;
 
     if (healthScoresError) {
-      console.error("Error fetching health scores for aggregation:", healthScoresError);
+      console.error("Error fetching health scores:", healthScoresError);
       return {
         data: null,
         error: {
           code: "QUERY_ERROR",
-          message_en: "Failed to fetch health scores for aggregation",
-          message_ar: "فشل في جلب درجات الصحة للتجميع",
+          message_en: "Failed to fetch health scores",
+          message_ar: "فشل في جلب درجات الصحة",
           details: healthScoresError,
         },
       };
@@ -103,6 +114,34 @@ export async function handleDashboardAggregations(
       };
     }
 
+    // Get dossier IDs
+    const dossierIds = healthScoresData.map((hs: any) => hs.dossier_id);
+
+    // Now fetch the type-specific data with grouping field
+    const { data: typeData, error: typeError } = await supabaseClient
+      .from(typeTable)
+      .select(`id, ${typeField}`)
+      .in("id", dossierIds);
+
+    if (typeError) {
+      console.error(`Error fetching ${typeTable} data:`, typeError);
+      return {
+        data: null,
+        error: {
+          code: "QUERY_ERROR",
+          message_en: `Failed to fetch ${typeTable} data`,
+          message_ar: `فشل في جلب بيانات ${typeTable}`,
+          details: typeError,
+        },
+      };
+    }
+
+    // Create a map of dossier_id -> grouping value
+    const groupingMap = new Map<string, string>();
+    (typeData || []).forEach((record: any) => {
+      groupingMap.set(record.id, record[typeField]);
+    });
+
     // Group by specified field and calculate aggregations
     const groupMap = new Map<string, {
       scores: number[];
@@ -110,7 +149,7 @@ export async function handleDashboardAggregations(
     }>();
 
     healthScoresData.forEach((record: any) => {
-      const groupValue = record.dossiers?.[groupBy];
+      const groupValue = groupingMap.get(record.dossier_id);
       if (!groupValue) return; // Skip if group value is null/undefined
 
       if (!groupMap.has(groupValue)) {

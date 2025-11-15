@@ -269,14 +269,14 @@ export interface DashboardAggregationsFilter {
 }
 
 /**
- * Get dashboard health aggregations grouped by region, bloc, or classification
+ * Get dashboard health aggregations grouped by region or org_type
  *
- * @param groupBy - Field to group by (region, bloc, or classification)
+ * @param groupBy - Field to group by (region for countries, org_type for organizations)
  * @param filter - Optional filter criteria
  * @returns Dashboard aggregations
  */
 export async function getDashboardAggregations(
-  groupBy: 'region' | 'bloc' | 'classification',
+  groupBy: 'region' | 'org_type',
   filter?: DashboardAggregationsFilter
 ): Promise<DashboardAggregationsResponse> {
   const { data: session } = await supabase.auth.getSession();

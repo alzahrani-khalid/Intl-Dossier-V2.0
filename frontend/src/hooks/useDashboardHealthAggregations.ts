@@ -15,8 +15,10 @@ import {
 export interface UseDashboardHealthAggregationsOptions {
   /**
    * Field to group aggregations by
+   * - 'region': Group countries by region
+   * - 'org_type': Group organizations by organization type
    */
-  groupBy: 'region' | 'bloc' | 'classification';
+  groupBy: 'region' | 'org_type';
   /**
    * Optional filter criteria
    */

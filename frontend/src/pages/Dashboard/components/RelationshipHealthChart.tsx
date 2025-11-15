@@ -15,8 +15,10 @@ import { getHealthScoreColor, getHealthScoreLabel } from '@/services/dossier-sta
 interface RelationshipHealthChartProps {
   /**
    * Field to group aggregations by (default: 'region')
+   * - 'region': Group countries by region
+   * - 'org_type': Group organizations by organization type
    */
-  groupBy?: 'region' | 'bloc' | 'classification';
+  groupBy?: 'region' | 'org_type';
   /**
    * Optional filter to apply to aggregations
    */
