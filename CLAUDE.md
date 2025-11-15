@@ -264,9 +264,9 @@ After restart, use MCP tools to search and discover components.
 3. Building a custom component isn't feasible
 
 ## Recent Changes
+- 030-health-commitment: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Edge Functions), Vite
 - 029-dynamic-country-intelligence: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
 - 028-type-specific-dossier-pages: Added TypeScript 5.8+ (strict mode), React 19 + TanStack Router v5 (routing), TanStack Query v5 (data fetching), Aceternity UI (primary components), shadcn/ui (fallback), Tailwind CSS (styling), i18next (internationalization), React Flow (network graphs for country/organization views), Framer Motion (animations)
-- 027-contact-directory: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Auth, RLS, Storage), OCR (tesseract.js v5.0+, @google-cloud/vision v4.3+, sharp v0.33+), Document Parsing (unpdf v1.0.1+, mammoth v1.8.0+), franc-min (language detection)
   - ✅ Feature spec: Expo-based mobile app with offline-first architecture
   - ✅ Research: Jest + RNTL (unit tests), Maestro (E2E), React Native Paper (UI), WatermelonDB (offline sync)
   - ✅ Data model: 11 entities with WatermelonDB schema, offline storage cleanup strategy
@@ -306,3 +306,7 @@ When testing the application using browser automation tools (Chrome MCP, Playwri
 - **Email**: kazahrani@stats.gov.sa
 - **Password**: itisme
 <!-- MANUAL ADDITIONS END -->
+
+## Active Technologies
+- TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Edge Functions), Vite (030-health-commitment)
+- PostgreSQL 15+ with pgvector extension, materialized views for aggregations, Redis 7.x for caching (030-health-commitment)

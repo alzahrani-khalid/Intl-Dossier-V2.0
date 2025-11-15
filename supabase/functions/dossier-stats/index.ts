@@ -1,6 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
 import { corsHeaders } from "../_shared/cors.ts";
+import { handleDashboardAggregations } from "./dashboard-aggregations.ts";
 
 serve(async (req) => {
   // Handle CORS
@@ -312,8 +313,36 @@ serve(async (req) => {
       });
     }
 
-    // Handle POST request for bulk dossier stats (User Story 2)
+    // Handle POST request for bulk dossier stats or dashboard aggregations (User Story 2)
     if (req.method === "POST") {
+      const url = new URL(req.url);
+      const pathname = url.pathname;
+
+      // Handle POST /dossier-stats/dashboard-aggregations
+      if (pathname.endsWith("/dashboard-aggregations")) {
+        const body = await req.json();
+        const { data, error } = await handleDashboardAggregations(supabaseClient, body);
+
+        if (error) {
+          return new Response(
+            JSON.stringify({ error }),
+            {
+              status: error.code === "INVALID_GROUP_BY" ? 400 : 500,
+              headers: { ...corsHeaders, "Content-Type": "application/json" },
+            }
+          );
+        }
+
+        return new Response(JSON.stringify(data), {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            "Content-Type": "application/json",
+          },
+        });
+      }
+
+      // Handle POST /dossier-stats (bulk query)
       const body = await req.json();
       const { dossierIds, include } = body;
 

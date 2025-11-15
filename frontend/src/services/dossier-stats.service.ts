@@ -230,3 +230,82 @@ export function getHealthScoreLabel(score: number | null): string {
   if (score >= 40) return 'Fair';
   return 'Poor';
 }
+
+/**
+ * Health distribution breakdown by tier
+ */
+export interface HealthDistribution {
+  excellent: number; // 80-100
+  good: number; // 60-79
+  fair: number; // 40-59
+  poor: number; // 0-39
+}
+
+/**
+ * Health aggregation for a group (region, bloc, or classification)
+ */
+export interface HealthAggregation {
+  groupValue: string;
+  averageHealthScore: number;
+  dossierCount: number;
+  healthDistribution: HealthDistribution;
+}
+
+/**
+ * Dashboard aggregations response
+ */
+export interface DashboardAggregationsResponse {
+  aggregations: HealthAggregation[];
+  totalDossiers: number;
+  groupBy: string;
+}
+
+/**
+ * Dashboard aggregations request filter
+ */
+export interface DashboardAggregationsFilter {
+  dossierType?: 'country' | 'organization' | 'forum';
+  minHealthScore?: number;
+}
+
+/**
+ * Get dashboard health aggregations grouped by region, bloc, or classification
+ *
+ * @param groupBy - Field to group by (region, bloc, or classification)
+ * @param filter - Optional filter criteria
+ * @returns Dashboard aggregations
+ */
+export async function getDashboardAggregations(
+  groupBy: 'region' | 'bloc' | 'classification',
+  filter?: DashboardAggregationsFilter
+): Promise<DashboardAggregationsResponse> {
+  const { data: session } = await supabase.auth.getSession();
+
+  if (!session.session) {
+    throw new Error('User not authenticated');
+  }
+
+  const response = await fetch(
+    `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/dossier-stats/dashboard-aggregations`,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${session.session.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        groupBy,
+        filter,
+      }),
+    }
+  );
+
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(
+      error.error?.message_en || 'Failed to fetch dashboard aggregations'
+    );
+  }
+
+  return response.json();
+}

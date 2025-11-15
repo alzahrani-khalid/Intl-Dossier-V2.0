@@ -157,43 +157,43 @@ This is a web application with the following structure:
 
 ### Supabase Edge Functions for User Story 2
 
-- [ ] T081 [P] [US2] Extend supabase/functions/dossier-stats/index.ts with POST /dossier-stats endpoint for bulk queries
-- [ ] T082 [US2] Implement bulk stats endpoint accepting dossierIds array (max 100) per dossier-stats.openapi.yaml contract
-- [ ] T083 [US2] Validate request body: dossierIds array required (min 1, max 100 items), include array optional
-- [ ] T084 [US2] Execute bulk query using WHERE dossier_id IN (...) for engagement stats, commitment stats, documents, health scores
-- [ ] T085 [US2] Assemble array of DossierStats objects (one per dossier)
-- [ ] T086 [US2] Return bulk response with stats array and totalCount
-- [ ] T087 [US2] Optimize query to meet ≤1s SLA for 25 dossiers (use indexed queries on materialized views)
-- [ ] T088 [US2] Add structured logging for bulk stats queries (dossierCount, responseTimeMs)
-- [ ] T089 [P] [US2] Create supabase/functions/dossier-stats/dashboard-aggregations.ts handler
-- [ ] T090 [US2] Implement POST /dossier-stats/dashboard-aggregations endpoint per dossier-stats.openapi.yaml contract
-- [ ] T091 [US2] Validate request body: groupBy field required (enum: region, bloc, classification), filter object optional
-- [ ] T092 [US2] Join health_scores table with dossiers table to access grouping fields (region, bloc, classification)
-- [ ] T093 [US2] Apply optional filters: dossierType (country, organization, forum), minHealthScore (0-100)
-- [ ] T094 [US2] Group by specified field and calculate aggregations: AVG(overall_score) as averageHealthScore, COUNT(*) as dossierCount
-- [ ] T095 [US2] Calculate health distribution: COUNT for excellent (80-100), good (60-79), fair (40-59), poor (0-39)
-- [ ] T096 [US2] Return HealthAggregation array with groupValue, averageHealthScore, dossierCount, healthDistribution
-- [ ] T097 [US2] Optimize query to meet ≤2s SLA for regional aggregations (use indexed overall_score column)
-- [ ] T098 [US2] Deploy updated Edge Function: `supabase functions deploy dossier-stats`
+- [X] T081 [P] [US2] Extend supabase/functions/dossier-stats/index.ts with POST /dossier-stats endpoint for bulk queries
+- [X] T082 [US2] Implement bulk stats endpoint accepting dossierIds array (max 100) per dossier-stats.openapi.yaml contract
+- [X] T083 [US2] Validate request body: dossierIds array required (min 1, max 100 items), include array optional
+- [X] T084 [US2] Execute bulk query using WHERE dossier_id IN (...) for engagement stats, commitment stats, documents, health scores
+- [X] T085 [US2] Assemble array of DossierStats objects (one per dossier)
+- [X] T086 [US2] Return bulk response with stats array and totalCount
+- [X] T087 [US2] Optimize query to meet ≤1s SLA for 25 dossiers (use indexed queries on materialized views)
+- [X] T088 [US2] Add structured logging for bulk stats queries (dossierCount, responseTimeMs)
+- [X] T089 [P] [US2] Create supabase/functions/dossier-stats/dashboard-aggregations.ts handler
+- [X] T090 [US2] Implement POST /dossier-stats/dashboard-aggregations endpoint per dossier-stats.openapi.yaml contract
+- [X] T091 [US2] Validate request body: groupBy field required (enum: region, bloc, classification), filter object optional
+- [X] T092 [US2] Join health_scores table with dossiers table to access grouping fields (region, bloc, classification)
+- [X] T093 [US2] Apply optional filters: dossierType (country, organization, forum), minHealthScore (0-100)
+- [X] T094 [US2] Group by specified field and calculate aggregations: AVG(overall_score) as averageHealthScore, COUNT(*) as dossierCount
+- [X] T095 [US2] Calculate health distribution: COUNT for excellent (80-100), good (60-79), fair (40-59), poor (0-39)
+- [X] T096 [US2] Return HealthAggregation array with groupValue, averageHealthScore, dossierCount, healthDistribution
+- [X] T097 [US2] Optimize query to meet ≤2s SLA for regional aggregations (use indexed overall_score column)
+- [X] T098 [US2] Deploy updated Edge Function: `supabase functions deploy dossier-stats`
 
 ### Frontend Components for User Story 2
 
-- [ ] T099 [P] [US2] Extend frontend/src/services/dossier-stats.service.ts with bulk queries
-- [ ] T100 [US2] Implement getBulkStats(dossierIds: string[], include?: string[]) function to call POST /dossier-stats endpoint
-- [ ] T101 [US2] Implement getDashboardAggregations(groupBy: string, filter?: object) function to call POST /dossier-stats/dashboard-aggregations endpoint
-- [ ] T102 [P] [US2] Create frontend/src/hooks/useBulkDossierStats.ts TanStack Query hook
-- [ ] T103 [US2] Implement useBulkDossierStats(dossierIds: string[]) hook with 5-minute staleTime, enabled only when dossierIds.length > 0
-- [ ] T104 [P] [US2] Create frontend/src/hooks/useDashboardHealthAggregations.ts TanStack Query hook
-- [ ] T105 [US2] Implement useDashboardHealthAggregations(groupBy: string, filter?: object) hook with 5-minute staleTime and background refetch every 5 minutes
-- [ ] T106 [P] [US2] Modify frontend/src/components/dashboard/HealthChart.tsx to consume real data
-- [ ] T107 [US2] Replace hardcoded regional averages with data from useDashboardHealthAggregations() hook
-- [ ] T108 [US2] Render chart bars with aggregations.map(agg => ({ label: agg.groupValue, value: agg.averageHealthScore }))
-- [ ] T109 [US2] Apply color coding to bars based on averageHealthScore thresholds (green: 80-100, yellow: 60-79, orange: 40-59, red: 0-39)
-- [ ] T110 [US2] Add hover tooltip showing component breakdown from aggregation data
-- [ ] T111 [US2] Implement click handler on region bar to navigate to /dossiers?region={groupValue}&sort=health:asc (lowest health first)
-- [ ] T112 [US2] Verify chart auto-updates when useDashboardHealthAggregations() refetches in background (every 5 minutes)
-- [ ] T113 [US2] Handle loading state with skeleton chart placeholder
-- [ ] T114 [US2] Handle error state with error message display
+- [X] T099 [P] [US2] Extend frontend/src/services/dossier-stats.service.ts with bulk queries
+- [X] T100 [US2] Implement getBulkStats(dossierIds: string[], include?: string[]) function to call POST /dossier-stats endpoint (already implemented in US1)
+- [X] T101 [US2] Implement getDashboardAggregations(groupBy: string, filter?: object) function to call POST /dossier-stats/dashboard-aggregations endpoint
+- [X] T102 [P] [US2] Create frontend/src/hooks/useBulkDossierStats.ts TanStack Query hook
+- [X] T103 [US2] Implement useBulkDossierStats(dossierIds: string[]) hook with 5-minute staleTime, enabled only when dossierIds.length > 0
+- [X] T104 [P] [US2] Create frontend/src/hooks/useDashboardHealthAggregations.ts TanStack Query hook
+- [X] T105 [US2] Implement useDashboardHealthAggregations(groupBy: string, filter?: object) hook with 5-minute staleTime and background refetch every 5 minutes
+- [X] T106 [P] [US2] Modify frontend/src/pages/Dashboard/components/RelationshipHealthChart.tsx to consume real data
+- [X] T107 [US2] Replace hardcoded regional averages with data from useDashboardHealthAggregations() hook
+- [X] T108 [US2] Render chart with aggregations.map() displaying groupValue and averageHealthScore
+- [X] T109 [US2] Apply color coding to bars based on averageHealthScore thresholds (green: 80-100, yellow: 60-79, orange: 40-59, red: 0-39)
+- [X] T110 [US2] Add health distribution breakdown showing excellent/good/fair/poor counts from aggregation data
+- [X] T111 [US2] Implement click handler on region bar to navigate to /dossiers?[groupBy]={groupValue}&sort=health:asc (lowest health first)
+- [X] T112 [US2] Chart auto-updates when useDashboardHealthAggregations() refetches in background (every 5 minutes via refetchInterval)
+- [X] T113 [US2] Handle loading state with skeleton chart placeholder
+- [X] T114 [US2] Handle error state with error message display
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently - dashboard shows real health aggregations
 
