@@ -1,4 +1,4 @@
-import cron from "node-cron";
+import * as cron from "node-cron";
 import Redis from "ioredis";
 import { sendHealthScoreDropNotification } from "../services/notification.service";
 
@@ -8,6 +8,44 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
 // Initialize Redis client
 const redis = new Redis(REDIS_URL);
+
+// Type definitions for API responses
+interface RefreshStatsResponse {
+  success: boolean;
+  rowsUpdated: number;
+  executionTimeMs: number;
+}
+
+interface StaleHealthScore {
+  dossier_id: string;
+  overall_score: number;
+  engagement_frequency: number;
+  commitment_fulfillment: number;
+  recency_score: number;
+}
+
+interface HealthScoreComponents {
+  engagementFrequency: number;
+  commitmentFulfillment: number;
+  recencyScore: number;
+}
+
+interface RecalculationResult {
+  dossierId: string;
+  overallScore: number | null;
+  components: HealthScoreComponents;
+}
+
+interface TriggerRecalculationResponse {
+  success: boolean;
+  dossierCount: number;
+  results?: RecalculationResult[];
+}
+
+interface DossierInfo {
+  name: string;
+  owner_id: string;
+}
 
 /**
  * Call Edge Function to refresh commitment stats materialized view
@@ -29,7 +67,7 @@ async function refreshMaterializedViews(): Promise<void> {
     throw new Error(`Failed to refresh materialized views: ${errorText}`);
   }
 
-  const result = await response.json();
+  const result = (await response.json()) as RefreshStatsResponse;
   console.log(
     `[HEALTH-REFRESH] Materialized views refreshed: ${result.rowsUpdated} rows in ${result.executionTimeMs}ms`
   );
@@ -57,11 +95,11 @@ async function recalculateStaleHealthScores(): Promise<number> {
     throw new Error("Failed to query stale health scores");
   }
 
-  const staleScores = await response.json();
+  const staleScores = (await response.json()) as StaleHealthScore[];
 
   // Store previous scores for comparison
   const previousScoresMap = new Map(
-    staleScores.map((score: any) => [
+    staleScores.map((score) => [
       score.dossier_id,
       {
         overall_score: score.overall_score,
@@ -73,7 +111,7 @@ async function recalculateStaleHealthScores(): Promise<number> {
   );
 
   const staleDossierIds = staleScores.map(
-    (score: any) => score.dossier_id
+    (score) => score.dossier_id
   );
 
   if (staleDossierIds.length === 0) {
@@ -101,7 +139,7 @@ async function recalculateStaleHealthScores(): Promise<number> {
     throw new Error("Failed to trigger health recalculation");
   }
 
-  const result = await recalcResponse.json();
+  const result = (await recalcResponse.json()) as TriggerRecalculationResponse;
 
   // T181-T187: Check for health score drops and send notifications
   if (result.results && Array.isArray(result.results)) {
@@ -144,7 +182,7 @@ async function recalculateStaleHealthScores(): Promise<number> {
             );
 
             if (dossierResponse.ok) {
-              const dossiers = await dossierResponse.json();
+              const dossiers = (await dossierResponse.json()) as DossierInfo[];
               if (dossiers.length > 0 && dossiers[0].owner_id) {
                 // T183-T187: Send health score drop notification
                 await sendHealthScoreDropNotification(

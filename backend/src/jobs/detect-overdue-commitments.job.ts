@@ -1,4 +1,4 @@
-import cron from "node-cron";
+import * as cron from "node-cron";
 import Redis from "ioredis";
 
 const SUPABASE_URL = process.env.SUPABASE_URL || "";
@@ -7,6 +7,14 @@ const REDIS_URL = process.env.REDIS_URL || "redis://localhost:6379";
 
 // Initialize Redis client
 const redis = new Redis(REDIS_URL);
+
+// Type definition for API response
+interface OverdueDetectionResponse {
+  overdueCount: number;
+  notificationsSent: number;
+  healthScoresRecalculated: number;
+  executionTimeMs: number;
+}
 
 /**
  * Main job execution with Redis distributed locking
@@ -52,7 +60,7 @@ async function executeJob(): Promise<void> {
       throw new Error(`Failed to detect overdue commitments: ${errorText}`);
     }
 
-    const result = await response.json();
+    const result = (await response.json()) as OverdueDetectionResponse;
 
     console.log(
       `[OVERDUE-CHECK] Marked ${result.overdueCount} commitments as overdue`
