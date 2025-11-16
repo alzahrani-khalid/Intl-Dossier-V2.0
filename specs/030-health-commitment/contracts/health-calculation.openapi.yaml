@@ -1,0 +1,319 @@
+openapi: 3.0.3
+info:
+  title: Health Calculation API
+  description: |
+    API for on-demand relationship health score calculation using spec 009 formula.
+
+    This API supports:
+    - On-demand health score calculation for single dossier
+    - Fallback calculation when cached scores are stale
+    - Component breakdown for tooltip displays
+
+    Performance SLA: ≤400ms timeout for fallback scenario
+  version: 1.0.0
+  contact:
+    name: GASTAT International Dossier System
+    email: support@stats.gov.sa
+
+servers:
+  - url: https://{project-ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions
+    variables:
+      project-ref:
+        default: zkrcjzdemdmwhearhfgg
+        description: Supabase project reference ID
+
+paths:
+  /calculate-health-score:
+    post:
+      summary: Calculate health score for a dossier
+      description: |
+        Calculate relationship health score using spec 009 formula:
+        `overall_score = (engagement_frequency * 0.30) + (commitment_fulfillment * 0.40) + (recency_score * 0.30)`
+
+        Where:
+        - engagement_frequency: 0-100 scale (50 engagements/year = 100 points)
+        - commitment_fulfillment: percentage of completed commitments (0-100)
+        - recency_score: 100 (≤30d), 70 (30-90d), 40 (90-180d), 10 (>180d)
+
+        Minimum data requirements:
+        - ≥3 engagements in last 365 days
+        - ≥1 commitment (excluding cancelled)
+
+        Performance SLA: ≤400ms timeout
+      operationId: calculateHealthScore
+      tags:
+        - Health Calculation
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - dossierId
+              properties:
+                dossierId:
+                  type: string
+                  format: uuid
+                  description: UUID of the dossier
+                  example: "550e8400-e29b-41d4-a716-446655440000"
+
+                forceRecalculation:
+                  type: boolean
+                  default: false
+                  description: |
+                    Force recalculation even if cached score is current.
+                    Useful for debugging or manual refresh.
+                  example: false
+
+      responses:
+        '200':
+          description: Health score calculated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthScoreResponse'
+              examples:
+                sufficientData:
+                  summary: Calculation with sufficient data
+                  value:
+                    dossierId: "550e8400-e29b-41d4-a716-446655440000"
+                    overallScore: 78
+                    components:
+                      engagementFrequency: 80
+                      commitmentFulfillment: 75
+                      recencyScore: 70
+                    sufficientData: true
+                    calculatedAt: "2025-11-15T14:30:00Z"
+                    calculationTimeMs: 45
+                    cached: false
+
+                insufficientData:
+                  summary: Insufficient data for calculation
+                  value:
+                    dossierId: "550e8400-e29b-41d4-a716-446655440001"
+                    overallScore: null
+                    sufficientData: false
+                    reason: "Insufficient data: requires ≥3 engagements (found 2) and ≥1 commitment (found 0)"
+                    calculatedAt: "2025-11-15T14:30:00Z"
+                    calculationTimeMs: 12
+
+                cachedScore:
+                  summary: Returned cached score (current)
+                  value:
+                    dossierId: "550e8400-e29b-41d4-a716-446655440002"
+                    overallScore: 85
+                    components:
+                      engagementFrequency: 90
+                      commitmentFulfillment: 80
+                      recencyScore: 100
+                    sufficientData: true
+                    calculatedAt: "2025-11-15T14:15:00Z"
+                    calculationTimeMs: 3
+                    cached: true
+
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+
+        '504':
+          description: Calculation timeout (exceeded 400ms SLA)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                error: "CALCULATION_TIMEOUT"
+                message: "Health score calculation exceeded 400ms timeout"
+                details:
+                  dossierId: "550e8400-e29b-41d4-a716-446655440000"
+                  timeoutMs: 400
+
+components:
+  schemas:
+    HealthScoreResponse:
+      type: object
+      required:
+        - dossierId
+        - sufficientData
+        - calculatedAt
+        - calculationTimeMs
+      properties:
+        dossierId:
+          type: string
+          format: uuid
+          description: UUID of the dossier
+          example: "550e8400-e29b-41d4-a716-446655440000"
+
+        overallScore:
+          type: integer
+          nullable: true
+          minimum: 0
+          maximum: 100
+          description: |
+            Composite health score (null if insufficient data).
+            Formula: ROUND((engagement_frequency * 0.30) + (commitment_fulfillment * 0.40) + (recency_score * 0.30))
+          example: 78
+
+        components:
+          type: object
+          description: Component breakdown (only present if sufficientData=true)
+          required:
+            - engagementFrequency
+            - commitmentFulfillment
+            - recencyScore
+          properties:
+            engagementFrequency:
+              type: integer
+              minimum: 0
+              maximum: 100
+              description: |
+                Engagement frequency score (0-100 scale).
+                Formula: MIN(100, (engagements_last_365d * 2))
+                (50 engagements/year = 100 points)
+              example: 80
+
+            commitmentFulfillment:
+              type: integer
+              minimum: 0
+              maximum: 100
+              description: |
+                Commitment fulfillment rate (0-100 scale).
+                Formula: (fulfilled_commitments / total_commitments) * 100
+                Edge case: If no commitments, defaults to 100
+              example: 75
+
+            recencyScore:
+              type: integer
+              enum: [10, 40, 70, 100]
+              description: |
+                Recency score based on days since last engagement.
+                Spec 009 thresholds:
+                - 100: ≤30 days
+                - 70: 31-90 days
+                - 40: 91-180 days
+                - 10: >180 days
+              example: 70
+
+        sufficientData:
+          type: boolean
+          description: |
+            Whether dossier has sufficient data for health score calculation.
+            Requirements: ≥3 engagements (last 365 days) AND ≥1 commitment (non-cancelled)
+          example: true
+
+        reason:
+          type: string
+          description: Explanation when sufficientData=false
+          example: "Insufficient data: requires ≥3 engagements (found 2) and ≥1 commitment (found 0)"
+
+        calculatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when health score was calculated
+          example: "2025-11-15T14:30:00Z"
+
+        calculationTimeMs:
+          type: integer
+          minimum: 0
+          description: Time taken to calculate health score (milliseconds)
+          example: 45
+
+        cached:
+          type: boolean
+          default: false
+          description: |
+            Whether this score was returned from cache (true) or freshly calculated (false).
+            Cached scores are used when calculated_at < 60 minutes ago and forceRecalculation=false.
+          example: false
+
+        dataSource:
+          type: object
+          description: Data sources used for calculation (debug information)
+          properties:
+            engagementStatsFrom:
+              type: string
+              enum:
+                - materialized_view
+                - fallback_query
+              description: Source of engagement stats
+              example: "materialized_view"
+
+            commitmentStatsFrom:
+              type: string
+              enum:
+                - materialized_view
+                - fallback_query
+              description: Source of commitment stats
+              example: "materialized_view"
+
+    Error:
+      type: object
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code
+          example: "INVALID_REQUEST"
+
+        message:
+          type: string
+          description: Human-readable error message
+          example: "dossierId is required"
+
+        details:
+          type: object
+          description: Additional error context
+          additionalProperties: true
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "INVALID_REQUEST"
+            message: "dossierId is required"
+
+    NotFound:
+      description: Dossier not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "NOT_FOUND"
+            message: "Dossier with ID 550e8400-e29b-41d4-a716-446655440000 not found"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "INTERNAL_ERROR"
+            message: "An unexpected error occurred during health score calculation"
+            details:
+              timestamp: "2025-11-15T14:30:00Z"
+              requestId: "req_abc123"
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token (obtained via Supabase Auth)
+
+security:
+  - BearerAuth: []

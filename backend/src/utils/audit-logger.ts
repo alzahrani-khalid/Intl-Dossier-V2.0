@@ -149,7 +149,7 @@ export async function logAuditEvent(entry: AuditLogEntry): Promise<string | null
 
     return data.id;
   } catch (error) {
-    logError('Audit logging error', error);
+    logError('Audit logging error', error instanceof Error ? error : new Error(String(error)));
     return null;
   }
 }
@@ -438,7 +438,7 @@ export async function queryAuditLogs(filters: {
 
     return data || [];
   } catch (error) {
-    logError('Audit log query error', error);
+    logError('Audit log query error', error instanceof Error ? error : new Error(String(error)));
     return [];
   }
 }

@@ -12,10 +12,12 @@ import {
   Commitment,
   Risk,
   FollowUpAction,
-  decisionSchema,
-  commitmentSchema,
-  riskSchema,
-  followUpActionSchema,
+  OwnerType,
+  CommitmentPriority,
+  CommitmentStatus,
+  TrackingType,
+  RiskSeverity,
+  RiskLikelihood,
 } from './after-action.types';
 
 /**
@@ -176,31 +178,54 @@ export const extractionRequestAsyncSchema = z.object({
   language: z.enum(['en', 'ar', 'auto']).default('auto'),
 });
 
-// Extracted decision schema
-export const extractedDecisionSchema = decisionSchema.extend({
+// Extracted decision schema (defined directly since decisionSchema uses .refine())
+export const extractedDecisionSchema = z.object({
+  description: z.string().min(10).max(2000),
+  rationale: z.string().max(2000).optional(),
+  decision_maker: z.string().min(2).max(200),
+  decided_at: z.coerce.date(),
+  supporting_context: z.string().max(2000).optional(),
   ai_extracted: z.literal(true),
   confidence_score: z.number().min(0).max(1),
-}).omit({ id: true, after_action_id: true, created_at: true });
+});
 
-// Extracted commitment schema
-export const extractedCommitmentSchema = commitmentSchema.extend({
+// Extracted commitment schema (defined directly since commitmentSchema uses .refine())
+export const extractedCommitmentSchema = z.object({
+  description: z.string().min(10).max(2000),
+  owner_type: z.nativeEnum(OwnerType),
+  owner_internal_id: z.string().uuid().optional(),
+  owner_external_id: z.string().uuid().optional(),
+  due_date: z.coerce.date(),
+  priority: z.nativeEnum(CommitmentPriority).default(CommitmentPriority.MEDIUM),
+  status: z.nativeEnum(CommitmentStatus).default(CommitmentStatus.PENDING),
+  tracking_type: z.nativeEnum(TrackingType),
+  completion_notes: z.string().max(2000).optional(),
+  completed_at: z.coerce.date().optional(),
   ai_extracted: z.literal(true),
   confidence_score: z.number().min(0).max(1),
   suggested_owner_name: z.string().optional(),
   suggested_owner_confidence: z.number().min(0).max(1).optional(),
-}).omit({ id: true, after_action_id: true, dossier_id: true, created_at: true, updated_at: true });
+});
 
-// Extracted risk schema
-export const extractedRiskSchema = riskSchema.extend({
+// Extracted risk schema (defined directly since riskSchema uses .refine())
+export const extractedRiskSchema = z.object({
+  description: z.string().min(10).max(2000),
+  severity: z.nativeEnum(RiskSeverity),
+  likelihood: z.nativeEnum(RiskLikelihood),
+  mitigation_strategy: z.string().max(2000).optional(),
+  owner_id: z.string().uuid().optional(),
   ai_extracted: z.literal(true),
   confidence_score: z.number().min(0).max(1),
-}).omit({ id: true, after_action_id: true, created_at: true });
+});
 
-// Extracted follow-up action schema
-export const extractedFollowUpActionSchema = followUpActionSchema.extend({
+// Extracted follow-up action schema (defined directly since followUpActionSchema uses .refine())
+export const extractedFollowUpActionSchema = z.object({
+  description: z.string().min(10).max(2000),
+  owner_id: z.string().uuid().optional(),
+  due_date: z.coerce.date().optional(),
   ai_extracted: z.literal(true),
   confidence_score: z.number().min(0).max(1),
-}).omit({ id: true, after_action_id: true, created_at: true });
+});
 
 // Extraction response schema
 export const extractionResponseSchema = z.object({

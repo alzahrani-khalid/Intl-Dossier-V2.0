@@ -8,9 +8,21 @@ import exportContractRouter from './api/contract/export';
 import analyticsContractRouter from './api/contract/analytics';
 import accessibilityContractRouter from './api/contract/accessibility';
 import auditContractRouter from './api/contract/audit';
+import { scheduleHealthScoresRefreshJob } from './jobs/refresh-health-scores.job.js';
+import { scheduleOverdueCommitmentsDetectionJob } from './jobs/detect-overdue-commitments.job.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
+
+// Register scheduled jobs if enabled
+const ENABLE_SCHEDULED_JOBS = process.env.ENABLE_SCHEDULED_JOBS === 'true';
+if (ENABLE_SCHEDULED_JOBS) {
+  logInfo('Scheduled jobs enabled, registering...');
+  scheduleHealthScoresRefreshJob();
+  scheduleOverdueCommitmentsDetectionJob();
+} else {
+  logInfo('Scheduled jobs disabled (set ENABLE_SCHEDULED_JOBS=true to enable)');
+}
 
 // Apply security middleware
 app.use(securityMiddleware.httpsRedirect);
