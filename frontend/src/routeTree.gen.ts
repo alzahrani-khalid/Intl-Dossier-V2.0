@@ -39,6 +39,7 @@ import { Route as ProtectedDataLibraryRouteImport } from './routes/_protected/da
 import { Route as ProtectedDashboardRouteImport } from './routes/_protected/dashboard'
 import { Route as ProtectedCountriesRouteImport } from './routes/_protected/countries'
 import { Route as ProtectedContactsRouteImport } from './routes/_protected/contacts'
+import { Route as ProtectedCommitmentsRouteImport } from './routes/_protected/commitments'
 import { Route as ProtectedCalendarRouteImport } from './routes/_protected/calendar'
 import { Route as ProtectedBriefsRouteImport } from './routes/_protected/briefs'
 import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected/analytics'
@@ -238,6 +239,11 @@ const ProtectedCountriesRoute = ProtectedCountriesRouteImport.update({
 const ProtectedContactsRoute = ProtectedContactsRouteImport.update({
   id: '/contacts',
   path: '/contacts',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedCommitmentsRoute = ProtectedCommitmentsRouteImport.update({
+  id: '/commitments',
+  path: '/commitments',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedCalendarRoute = ProtectedCalendarRouteImport.update({
@@ -529,6 +535,7 @@ export interface FileRoutesByFullPath {
   '/analytics': typeof ProtectedAnalyticsRoute
   '/briefs': typeof ProtectedBriefsRoute
   '/calendar': typeof ProtectedCalendarRouteWithChildren
+  '/commitments': typeof ProtectedCommitmentsRoute
   '/contacts': typeof ProtectedContactsRouteWithChildren
   '/countries': typeof ProtectedCountriesRoute
   '/dashboard': typeof ProtectedDashboardRoute
@@ -610,6 +617,7 @@ export interface FileRoutesByTo {
   '/analytics': typeof ProtectedAnalyticsRoute
   '/briefs': typeof ProtectedBriefsRoute
   '/calendar': typeof ProtectedCalendarRouteWithChildren
+  '/commitments': typeof ProtectedCommitmentsRoute
   '/contacts': typeof ProtectedContactsRouteWithChildren
   '/countries': typeof ProtectedCountriesRoute
   '/dashboard': typeof ProtectedDashboardRoute
@@ -691,6 +699,7 @@ export interface FileRoutesById {
   '/_protected/analytics': typeof ProtectedAnalyticsRoute
   '/_protected/briefs': typeof ProtectedBriefsRoute
   '/_protected/calendar': typeof ProtectedCalendarRouteWithChildren
+  '/_protected/commitments': typeof ProtectedCommitmentsRoute
   '/_protected/contacts': typeof ProtectedContactsRouteWithChildren
   '/_protected/countries': typeof ProtectedCountriesRoute
   '/_protected/dashboard': typeof ProtectedDashboardRoute
@@ -774,6 +783,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/briefs'
     | '/calendar'
+    | '/commitments'
     | '/contacts'
     | '/countries'
     | '/dashboard'
@@ -855,6 +865,7 @@ export interface FileRouteTypes {
     | '/analytics'
     | '/briefs'
     | '/calendar'
+    | '/commitments'
     | '/contacts'
     | '/countries'
     | '/dashboard'
@@ -935,6 +946,7 @@ export interface FileRouteTypes {
     | '/_protected/analytics'
     | '/_protected/briefs'
     | '/_protected/calendar'
+    | '/_protected/commitments'
     | '/_protected/contacts'
     | '/_protected/countries'
     | '/_protected/dashboard'
@@ -1226,6 +1238,13 @@ declare module '@tanstack/react-router' {
       path: '/contacts'
       fullPath: '/contacts'
       preLoaderRoute: typeof ProtectedContactsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/commitments': {
+      id: '/_protected/commitments'
+      path: '/commitments'
+      fullPath: '/commitments'
+      preLoaderRoute: typeof ProtectedCommitmentsRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/calendar': {
@@ -1688,6 +1707,7 @@ interface ProtectedRouteChildren {
   ProtectedAnalyticsRoute: typeof ProtectedAnalyticsRoute
   ProtectedBriefsRoute: typeof ProtectedBriefsRoute
   ProtectedCalendarRoute: typeof ProtectedCalendarRouteWithChildren
+  ProtectedCommitmentsRoute: typeof ProtectedCommitmentsRoute
   ProtectedContactsRoute: typeof ProtectedContactsRouteWithChildren
   ProtectedCountriesRoute: typeof ProtectedCountriesRoute
   ProtectedDashboardRoute: typeof ProtectedDashboardRoute
@@ -1751,6 +1771,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAnalyticsRoute: ProtectedAnalyticsRoute,
   ProtectedBriefsRoute: ProtectedBriefsRoute,
   ProtectedCalendarRoute: ProtectedCalendarRouteWithChildren,
+  ProtectedCommitmentsRoute: ProtectedCommitmentsRoute,
   ProtectedContactsRoute: ProtectedContactsRouteWithChildren,
   ProtectedCountriesRoute: ProtectedCountriesRoute,
   ProtectedDashboardRoute: ProtectedDashboardRoute,

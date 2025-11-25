@@ -1,0 +1,91 @@
+{
+  "title": "Commitments",
+  "backToDossier": "Back to Dossier",
+  "empty": {
+    "title": "No commitments found",
+    "description": {
+      "all": "There are no commitments to display",
+      "filtered": "No commitments match your current filters"
+    }
+  },
+  "status": {
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  "ownerType": {
+    "internal": "Internal",
+    "external": "External"
+  },
+  "trackingMode": {
+    "automatic": "Automatic",
+    "manual": "Manual"
+  },
+  "fields": {
+    "title": "Title",
+    "description": "Description",
+    "dueDate": "Due Date",
+    "status": "Status",
+    "priority": "Priority",
+    "ownerType": "Owner Type",
+    "owner": "Owner",
+    "trackingMode": "Tracking Mode",
+    "proofRequired": "Proof Required",
+    "completionNotes": "Completion Notes",
+    "completedAt": "Completed At",
+    "createdAt": "Created",
+    "updatedAt": "Updated",
+    "createdBy": "Created By",
+    "updatedBy": "Updated By"
+  },
+  "overdue": "Overdue",
+  "overdueBy": "Overdue by {{days}} days",
+  "dueIn": "Due in {{days}} days",
+  "dueToday": "Due today",
+  "filters": {
+    "title": "Filter Commitments",
+    "status": "Status",
+    "priority": "Priority",
+    "overdue": "Show Overdue Only",
+    "reset": "Reset Filters",
+    "apply": "Apply Filters"
+  },
+  "list": {
+    "title": "All Commitments",
+    "subtitle": "{{count}} commitments found",
+    "loadMore": "Load More",
+    "noMore": "No more commitments"
+  },
+  "card": {
+    "viewDetails": "View Details",
+    "linkedToDossier": "Linked to Dossier",
+    "afterAction": "After Action"
+  },
+  "errors": {
+    "loadFailed": "Failed to load commitments",
+    "updateFailed": "Failed to update commitment",
+    "generic": "An error occurred while loading commitments. Please try again."
+  },
+  "loading": "Loading commitments...",
+  "actions": {
+    "create": "Create Commitment",
+    "edit": "Edit Commitment",
+    "delete": "Delete Commitment",
+    "complete": "Mark Complete",
+    "reopen": "Reopen"
+  },
+  "healthScore": {
+    "title": "Commitment Health",
+    "fulfillmentRate": "Fulfillment Rate",
+    "onTime": "On Time",
+    "overdue": "Overdue",
+    "totalCommitments": "Total Commitments"
+  }
+}

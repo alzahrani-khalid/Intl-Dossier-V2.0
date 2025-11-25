@@ -152,6 +152,27 @@
     "networkError": "خطأ في الشبكة. يرجى التحقق من الاتصال.",
     "unknownError": "حدث خطأ غير معروف. يرجى المحاولة مرة أخرى."
   },
+  "error": {
+    "failedToLoadData": "فشل تحميل البيانات",
+    "unknownError": "حدث خطأ غير معروف"
+  },
+  "dashboard": {
+    "title": "لوحة القيادة",
+    "noHealthData": "لا توجد بيانات لدرجة الصحة",
+    "healthDataHint": "ستظهر درجات الصحة هنا بمجرد تتبع الالتزامات والتفاعلات",
+    "regionFilter": "تصفية حسب المنطقة",
+    "orgTypeFilter": "تصفية حسب نوع المنظمة",
+    "allRegions": "جميع المناطق",
+    "allOrgTypes": "جميع أنواع المنظمات",
+    "healthScoreLabel": "درجة الصحة",
+    "dossierCount": "{{count}} ملف",
+    "overallHealth": "صحة العلاقة",
+    "dossiers": "ملفات",
+    "excellent": "ممتاز",
+    "good": "جيد",
+    "fair": "مقبول",
+    "poor": "ضعيف"
+  },
   "preferences": {
     "title": "التفضيلات",
     "appearance": "المظهر",

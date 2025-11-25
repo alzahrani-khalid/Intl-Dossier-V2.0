@@ -1,0 +1,91 @@
+{
+  "title": "الالتزامات",
+  "backToDossier": "العودة إلى الملف",
+  "empty": {
+    "title": "لم يتم العثور على التزامات",
+    "description": {
+      "all": "لا توجد التزامات للعرض",
+      "filtered": "لا توجد التزامات تطابق الفلاتر الحالية"
+    }
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "cancelled": "ملغي"
+  },
+  "priority": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "critical": "حرج"
+  },
+  "ownerType": {
+    "internal": "داخلي",
+    "external": "خارجي"
+  },
+  "trackingMode": {
+    "automatic": "تلقائي",
+    "manual": "يدوي"
+  },
+  "fields": {
+    "title": "العنوان",
+    "description": "الوصف",
+    "dueDate": "تاريخ الاستحقاق",
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "ownerType": "نوع المسؤول",
+    "owner": "المسؤول",
+    "trackingMode": "وضع التتبع",
+    "proofRequired": "الدليل مطلوب",
+    "completionNotes": "ملاحظات الإكمال",
+    "completedAt": "اكتمل في",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "تاريخ التحديث",
+    "createdBy": "أنشئ بواسطة",
+    "updatedBy": "حُدّث بواسطة"
+  },
+  "overdue": "متأخر",
+  "overdueBy": "متأخر بـ {{days}} يوم",
+  "dueIn": "مستحق خلال {{days}} يوم",
+  "dueToday": "مستحق اليوم",
+  "filters": {
+    "title": "تصفية الالتزامات",
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "overdue": "إظهار المتأخرة فقط",
+    "reset": "إعادة تعيين الفلاتر",
+    "apply": "تطبيق الفلاتر"
+  },
+  "list": {
+    "title": "جميع الالتزامات",
+    "subtitle": "تم العثور على {{count}} التزام",
+    "loadMore": "تحميل المزيد",
+    "noMore": "لا مزيد من الالتزامات"
+  },
+  "card": {
+    "viewDetails": "عرض التفاصيل",
+    "linkedToDossier": "مرتبط بالملف",
+    "afterAction": "إجراء المتابعة"
+  },
+  "errors": {
+    "loadFailed": "فشل تحميل الالتزامات",
+    "updateFailed": "فشل تحديث الالتزام",
+    "generic": "حدث خطأ أثناء تحميل الالتزامات. يرجى المحاولة مرة أخرى."
+  },
+  "loading": "جارِ تحميل الالتزامات...",
+  "actions": {
+    "create": "إنشاء التزام",
+    "edit": "تعديل الالتزام",
+    "delete": "حذف الالتزام",
+    "complete": "وضع علامة كمكتمل",
+    "reopen": "إعادة فتح"
+  },
+  "healthScore": {
+    "title": "صحة الالتزامات",
+    "fulfillmentRate": "معدل الوفاء",
+    "onTime": "في الوقت المحدد",
+    "overdue": "متأخر",
+    "totalCommitments": "إجمالي الالتزامات"
+  }
+}
