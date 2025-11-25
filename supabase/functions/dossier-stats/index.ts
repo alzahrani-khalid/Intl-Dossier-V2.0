@@ -128,11 +128,13 @@ serve(async (req) => {
               .maybeSingle()
           : Promise.resolve({ data: null, error: null }),
 
+        // Query document_relations junction table (polymorphic design)
+        // entity_id = dossierId links documents to dossiers
         include.includes("documents")
           ? supabaseClient
-              .from("documents")
-              .select("id", { count: "exact", head: true })
-              .eq("dossier_id", dossierId)
+              .from("document_relations")
+              .select("document_id", { count: "exact", head: true })
+              .eq("entity_id", dossierId)
           : Promise.resolve({ data: null, count: 0, error: null }),
 
         include.includes("health")
@@ -181,12 +183,12 @@ serve(async (req) => {
         );
       }
 
-      // Documents query is optional - if table doesn't exist or query fails, log warning and continue
+      // Documents query is optional - if query fails, log warning and continue
       if (documentsResult.error) {
         console.warn(JSON.stringify({
           timestamp: new Date().toISOString(),
           level: "WARN",
-          message: "Documents query failed (table may not exist)",
+          message: "Document relations query failed",
           dossierId,
           error: documentsResult.error.message,
         }));
@@ -410,11 +412,13 @@ serve(async (req) => {
               .in("dossier_id", dossierIds)
           : Promise.resolve({ data: [], error: null }),
 
+        // Query document_relations junction table (polymorphic design)
+        // entity_id = dossierId links documents to dossiers
         includeCategories.includes("documents")
           ? supabaseClient
-              .from("documents")
-              .select("dossier_id")
-              .in("dossier_id", dossierIds)
+              .from("document_relations")
+              .select("entity_id")
+              .in("entity_id", dossierIds)
           : Promise.resolve({ data: [], error: null }),
 
         includeCategories.includes("health")
@@ -425,12 +429,12 @@ serve(async (req) => {
           : Promise.resolve({ data: [], error: null }),
       ]);
 
-      // Documents query is optional - if table doesn't exist, log warning and continue
+      // Documents query is optional - if query fails, log warning and continue
       if (documentsResult.error) {
         console.warn(JSON.stringify({
           timestamp: new Date().toISOString(),
           level: "WARN",
-          message: "Bulk documents query failed (table may not exist)",
+          message: "Bulk document relations query failed",
           dossierCount: dossierIds.length,
           error: documentsResult.error.message,
         }));
@@ -462,10 +466,10 @@ serve(async (req) => {
         );
       }
 
-      // Group document counts by dossier_id
+      // Group document counts by entity_id (dossier_id in document_relations)
       const documentCounts: Record<string, number> = {};
-      (documentsResult.data || []).forEach((doc: { dossier_id: string }) => {
-        documentCounts[doc.dossier_id] = (documentCounts[doc.dossier_id] || 0) + 1;
+      (documentsResult.data || []).forEach((rel: { entity_id: string }) => {
+        documentCounts[rel.entity_id] = (documentCounts[rel.entity_id] || 0) + 1;
       });
 
       // Build lookup maps
