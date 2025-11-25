@@ -152,6 +152,27 @@
     "networkError": "Network error. Please check your connection.",
     "unknownError": "An unknown error occurred. Please try again."
   },
+  "error": {
+    "failedToLoadData": "Failed to load data",
+    "unknownError": "An unknown error occurred"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "noHealthData": "No health score data available",
+    "healthDataHint": "Health scores will appear here once engagements and commitments are tracked",
+    "regionFilter": "Filter by Region",
+    "orgTypeFilter": "Filter by Organization Type",
+    "allRegions": "All Regions",
+    "allOrgTypes": "All Organization Types",
+    "healthScoreLabel": "Health Score",
+    "dossierCount": "{{count}} dossiers",
+    "overallHealth": "Overall Health",
+    "dossiers": "dossiers",
+    "excellent": "Excellent",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor"
+  },
   "preferences": {
     "title": "Preferences",
     "appearance": "Appearance",

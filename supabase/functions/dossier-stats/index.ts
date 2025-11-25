@@ -181,22 +181,18 @@ serve(async (req) => {
         );
       }
 
+      // Documents query is optional - if table doesn't exist or query fails, log warning and continue
       if (documentsResult.error) {
-        console.error("Error fetching documents:", documentsResult.error);
-        return new Response(
-          JSON.stringify({
-            error: {
-              code: "QUERY_ERROR",
-              message_en: "Failed to fetch documents",
-              message_ar: "فشل في جلب المستندات",
-              details: documentsResult.error,
-            },
-          }),
-          {
-            status: 500,
-            headers: { ...corsHeaders, "Content-Type": "application/json" },
-          }
-        );
+        console.warn(JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: "WARN",
+          message: "Documents query failed (table may not exist)",
+          dossierId,
+          error: documentsResult.error.message,
+        }));
+        // Reset to safe default - don't fail the entire request
+        documentsResult.count = 0;
+        documentsResult.error = null;
       }
 
       if (healthScoreResult.error) {
@@ -429,12 +425,25 @@ serve(async (req) => {
           : Promise.resolve({ data: [], error: null }),
       ]);
 
-      // Check for errors
-      if (engagementStatsResult.error || commitmentStatsResult.error || documentsResult.error || healthScoresResult.error) {
+      // Documents query is optional - if table doesn't exist, log warning and continue
+      if (documentsResult.error) {
+        console.warn(JSON.stringify({
+          timestamp: new Date().toISOString(),
+          level: "WARN",
+          message: "Bulk documents query failed (table may not exist)",
+          dossierCount: dossierIds.length,
+          error: documentsResult.error.message,
+        }));
+        // Reset to safe default
+        documentsResult.data = [];
+        documentsResult.error = null;
+      }
+
+      // Check for critical errors (engagement, commitment, health are required)
+      if (engagementStatsResult.error || commitmentStatsResult.error || healthScoresResult.error) {
         console.error("Error fetching bulk stats:", {
           engagement: engagementStatsResult.error,
           commitment: commitmentStatsResult.error,
-          documents: documentsResult.error,
           health: healthScoresResult.error,
         });
 

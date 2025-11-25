@@ -15,7 +15,7 @@ const upload = multer({
   limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
   fileFilter: (req, file, cb) => {
     const allowedTypes = [
-      'application/pdf', 'application/msword', 
+      'application/pdf', 'application/msword',
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
       'application/vnd.ms-excel', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
       'image/jpeg', 'image/png', 'image/gif'
@@ -55,13 +55,13 @@ router.post('/', requirePermission(['upload_document']), upload.single('file'),
       if (!req.file) {
         return res.status(400).json({ error: 'File is required' });
       }
-      
-      const document = await documentService.upload(req.file,{
+
+      const document = await documentService.upload(req.file, {
         file: req.file,
         metadata: req.body,
         uploadedBy: req.user?.id
       });
-      
+
       res.status(201).json({ data: document });
     } catch (error) {
       next(error);
