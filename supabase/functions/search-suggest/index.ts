@@ -151,8 +151,8 @@ serve(async (req: Request) => {
         } else if (tableName === 'dossiers') {
           titleField = 'name_en';
           titleFieldAr = 'name_ar';
-          descField = 'summary_en';
-          descFieldAr = 'summary_ar';
+          descField = 'description_en';
+          descFieldAr = 'description_ar';
         }
 
         selectFields += `, ${titleField}, ${titleFieldAr}`;

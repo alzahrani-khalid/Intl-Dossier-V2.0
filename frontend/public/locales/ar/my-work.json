@@ -1,0 +1,101 @@
+{
+  "title": "عملي",
+  "subtitle": "تتبع التزاماتك ومهامك وتذاكر الاستقبال في مكان واحد",
+
+  "stats": {
+    "totalActive": "إجمالي النشط",
+    "overdue": "متأخر",
+    "dueToday": "مستحق اليوم",
+    "dueThisWeek": "مستحق هذا الأسبوع"
+  },
+
+  "metrics": {
+    "title": "إنتاجيتك",
+    "completed30d": "مكتمل (30 يوم)",
+    "onTimeRate": "معدل الإنجاز في الوقت",
+    "avgCompletionTime": "متوسط وقت الإنجاز"
+  },
+
+  "tabs": {
+    "all": "الكل",
+    "commitments": "الالتزامات",
+    "tasks": "المهام",
+    "intake": "الاستقبال"
+  },
+
+  "source": {
+    "commitment": "التزام",
+    "task": "مهمة",
+    "intake": "استقبال"
+  },
+
+  "trackingType": {
+    "delivery": "تسليم",
+    "followUp": "متابعة",
+    "sla": "اتفاقية مستوى الخدمة"
+  },
+
+  "priority": {
+    "low": "منخفضة",
+    "medium": "متوسطة",
+    "high": "عالية",
+    "critical": "حرجة",
+    "urgent": "عاجلة"
+  },
+
+  "status": {
+    "overdue": "متأخر",
+    "pending": "قيد الانتظار",
+    "inProgress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "cancelled": "ملغي"
+  },
+
+  "deadline": {
+    "today": "اليوم",
+    "tomorrow": "غداً",
+    "dueToday": "مستحق اليوم",
+    "dueTomorrow": "مستحق غداً",
+    "dueInDays": "مستحق خلال {{count}} أيام",
+    "dueInDays_one": "مستحق خلال يوم واحد"
+  },
+
+  "filters": {
+    "trackingType": "النوع",
+    "all": "جميع الأنواع"
+  },
+
+  "search": {
+    "placeholder": "البحث في عناصر العمل..."
+  },
+
+  "sort": {
+    "label": "ترتيب",
+    "deadlineAsc": "الموعد النهائي (الأقرب)",
+    "deadlineDesc": "الموعد النهائي (الأبعد)",
+    "priorityDesc": "الأولوية (من الأعلى للأدنى)",
+    "priorityAsc": "الأولوية (من الأدنى للأعلى)",
+    "createdDesc": "الأحدث أولاً",
+    "createdAsc": "الأقدم أولاً"
+  },
+
+  "team": {
+    "title": "عبء عمل الفريق",
+    "members": "أعضاء",
+    "active": "نشط",
+    "overdue": "متأخر",
+    "onTime": "في الوقت"
+  },
+
+  "empty": {
+    "title": "لم يتم العثور على عناصر عمل",
+    "description": "جرب تعديل الفلاتر أو تحقق لاحقاً"
+  },
+
+  "error": {
+    "loading": "فشل تحميل عناصر العمل",
+    "retry": "إعادة المحاولة"
+  },
+
+  "loadMore": "تحميل المزيد"
+}

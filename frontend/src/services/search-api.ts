@@ -79,6 +79,35 @@ export interface AutocompleteResponse {
 }
 
 /**
+ * Search Suggest Response (from search-suggest Edge Function)
+ */
+interface SearchSuggestItem {
+  id: string;
+  type: string;
+  title_en: string;
+  title_ar: string;
+  preview_en: string;
+  preview_ar: string;
+  score: number;
+  match_position: number;
+}
+
+interface SearchSuggestResponse {
+  suggestions: SearchSuggestItem[];
+  query: {
+    original: string;
+    normalized: string;
+    language_detected: string;
+  };
+  took_ms: number;
+  cache_hit: boolean;
+  metadata: {
+    total_suggestions: number;
+    types_searched: string[];
+  };
+}
+
+/**
  * API Error class
  */
 export class SearchAPIError extends Error {
@@ -189,6 +218,7 @@ export async function searchDossiers(
 
 /**
  * Autocomplete search for quick suggestions
+ * Uses search-suggest Edge Function with 'q' parameter and 'type=dossiers'
  */
 export async function autocompleteDossiers(
   request: AutocompleteRequest
@@ -196,23 +226,40 @@ export async function autocompleteDossiers(
   const headers = await getAuthHeaders();
   const params = new URLSearchParams();
 
-  params.append('query', request.query);
+  // search-suggest uses 'q' parameter (not 'query')
+  params.append('q', request.query);
 
+  // Filter to dossiers type by default
   if (request.types && request.types.length > 0) {
-    params.append('types', JSON.stringify(request.types));
+    params.append('type', request.types.join(','));
+  } else {
+    params.append('type', 'dossiers');
   }
 
   if (request.limit !== undefined) {
     params.append('limit', String(request.limit));
   }
 
-  const url = `${supabaseUrl}/functions/v1/search/autocomplete?${params.toString()}`;
+  // Use search-suggest endpoint (not search/autocomplete)
+  const url = `${supabaseUrl}/functions/v1/search-suggest?${params.toString()}`;
   const response = await fetch(url, {
     method: 'GET',
     headers,
   });
 
-  return handleResponse<AutocompleteResponse>(response);
+  // Transform search-suggest response to AutocompleteResponse format
+  const suggestResponse = await handleResponse<SearchSuggestResponse>(response);
+
+  return {
+    suggestions: suggestResponse.suggestions.map((s) => ({
+      id: s.id,
+      type: (s.type === 'dossier' ? 'country' : s.type) as DossierType, // Map 'dossier' to actual type
+      name_en: s.title_en,
+      name_ar: s.title_ar,
+      status: 'active', // Default status since search-suggest doesn't return it
+    })),
+    query: suggestResponse.query.original,
+  };
 }
 
 /**

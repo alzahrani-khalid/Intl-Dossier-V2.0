@@ -31,6 +31,7 @@ Authorization: Bearer <token>
 4. [Analytics](./analytics.md) - Clustering and analysis endpoints
 5. [Accessibility](./accessibility.md) - User accessibility preferences
 6. [Security & Audit](./security.md) - Audit logging and security features
+7. [Unified Work Management](./unified-work-management.md) - Consolidated work items (commitments, tasks, intake)
 
 ## Common Response Codes
 

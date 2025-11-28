@@ -1,0 +1,798 @@
+openapi: 3.0.3
+info:
+  title: Commitments Management API
+  description: |
+    API contracts for Commitments Management v1.1.
+    This feature provides full lifecycle management of commitments with CRUD operations,
+    inline status updates, advanced filtering, and evidence upload capabilities.
+
+    **Authentication**: All endpoints require Supabase JWT authentication via `Authorization: Bearer <token>`.
+
+    **Note**: Most operations are performed directly via Supabase client with RLS.
+    Edge Functions are used only for file uploads that require server-side validation.
+  version: 1.1.0
+  contact:
+    name: Intl-Dossier Team
+
+servers:
+  - url: https://{project_ref}.supabase.co
+    description: Supabase Project
+    variables:
+      project_ref:
+        default: zkrcjzdemdmwhearthfgg
+        description: Supabase project reference
+
+tags:
+  - name: Commitments
+    description: CRUD operations for commitments
+  - name: Status
+    description: Status management operations
+  - name: Evidence
+    description: Evidence upload and retrieval
+  - name: History
+    description: Audit trail and status history
+
+paths:
+  /rest/v1/commitments:
+    get:
+      tags:
+        - Commitments
+      summary: List commitments with filters
+      description: |
+        Retrieve commitments with optional filtering and cursor-based pagination.
+        Supports filtering by status, priority, owner type, overdue status, and dossier.
+        Results are ordered by due_date ascending, then id ascending.
+      operationId: listCommitments
+      parameters:
+        - name: dossier_id
+          in: query
+          description: Filter by dossier ID
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          description: Filter by status (comma-separated for multiple)
+          schema:
+            type: string
+            example: "pending,in_progress"
+        - name: priority
+          in: query
+          description: Filter by priority (comma-separated for multiple)
+          schema:
+            type: string
+            example: "high,critical"
+        - name: owner_type
+          in: query
+          description: Filter by owner type
+          schema:
+            type: string
+            enum: [internal, external]
+        - name: overdue
+          in: query
+          description: Filter to show only overdue commitments
+          schema:
+            type: boolean
+        - name: cursor_due_date
+          in: query
+          description: Cursor for pagination (due_date of last item)
+          schema:
+            type: string
+            format: date-time
+        - name: cursor_id
+          in: query
+          description: Cursor for pagination (id of last item)
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          description: Number of items to return (default 20, max 100)
+          schema:
+            type: integer
+            default: 20
+            minimum: 1
+            maximum: 100
+      responses:
+        '200':
+          description: List of commitments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Commitment'
+                  count:
+                    type: integer
+                    description: Total count of matching commitments
+                  next_cursor:
+                    $ref: '#/components/schemas/PaginationCursor'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+    post:
+      tags:
+        - Commitments
+      summary: Create a new commitment
+      description: |
+        Create a new commitment for a dossier.
+        User must have dossier assignment to create commitments.
+      operationId: createCommitment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommitmentCreate'
+      responses:
+        '201':
+          description: Commitment created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commitment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+
+  /rest/v1/commitments/{id}:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Commitment ID
+        schema:
+          type: string
+          format: uuid
+
+    get:
+      tags:
+        - Commitments
+      summary: Get commitment details
+      description: |
+        Retrieve full details of a specific commitment including owner information.
+      operationId: getCommitment
+      responses:
+        '200':
+          description: Commitment details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommitmentDetail'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      tags:
+        - Commitments
+      summary: Update commitment details
+      description: |
+        Update commitment fields (title, description, due_date, priority, owner).
+        Does not allow status changes - use the status endpoint for that.
+      operationId: updateCommitment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommitmentUpdate'
+      responses:
+        '200':
+          description: Commitment updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commitment'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    delete:
+      tags:
+        - Commitments
+      summary: Delete/Cancel a commitment
+      description: |
+        Mark a commitment as cancelled (soft delete).
+        Requires optional cancellation reason.
+      operationId: deleteCommitment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                cancellation_reason:
+                  type: string
+                  maxLength: 500
+                  description: Optional reason for cancellation
+      responses:
+        '200':
+          description: Commitment cancelled successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commitment'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /rest/v1/commitments/{id}/status:
+    parameters:
+      - name: id
+        in: path
+        required: true
+        description: Commitment ID
+        schema:
+          type: string
+          format: uuid
+
+    patch:
+      tags:
+        - Status
+      summary: Update commitment status
+      description: |
+        Update the status of a commitment.
+        Valid transitions:
+        - pending -> in_progress, cancelled
+        - in_progress -> pending, completed, cancelled
+        - completed -> (none for non-admin)
+        - cancelled -> (none)
+
+        Status changes are recorded in the audit trail automatically.
+      operationId: updateCommitmentStatus
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - status
+              properties:
+                status:
+                  $ref: '#/components/schemas/CommitmentStatus'
+                notes:
+                  type: string
+                  maxLength: 500
+                  description: Optional notes for status change
+      responses:
+        '200':
+          description: Status updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Commitment'
+        '400':
+          description: Invalid status transition
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              example:
+                code: INVALID_STATUS_TRANSITION
+                message: Cannot change status from completed (admin required)
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /rest/v1/commitment_status_history:
+    get:
+      tags:
+        - History
+      summary: Get status history for a commitment
+      description: |
+        Retrieve the full status change history for a commitment.
+        Results are ordered by changed_at descending (newest first).
+      operationId: getStatusHistory
+      parameters:
+        - name: commitment_id
+          in: query
+          required: true
+          description: Commitment ID to get history for
+          schema:
+            type: string
+            format: uuid
+        - name: limit
+          in: query
+          description: Number of records to return
+          schema:
+            type: integer
+            default: 50
+            maximum: 100
+      responses:
+        '200':
+          description: Status history records
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StatusHistoryRecord'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /functions/v1/commitment-upload-evidence:
+    post:
+      tags:
+        - Evidence
+      summary: Upload evidence file
+      description: |
+        Upload an evidence file for a commitment.
+        Accepted formats: PDF, JPG, PNG, DOCX.
+        Maximum file size: 10MB.
+
+        This endpoint is implemented as an Edge Function to handle
+        server-side validation and Supabase Storage operations.
+      operationId: uploadEvidence
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - commitment_id
+                - file
+              properties:
+                commitment_id:
+                  type: string
+                  format: uuid
+                  description: ID of the commitment to attach evidence to
+                file:
+                  type: string
+                  format: binary
+                  description: Evidence file (PDF, JPG, PNG, or DOCX)
+      responses:
+        '200':
+          description: Evidence uploaded successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                    example: true
+                  proof_url:
+                    type: string
+                    description: Storage path of uploaded file
+                  evidence_submitted_at:
+                    type: string
+                    format: date-time
+        '400':
+          description: Invalid file or missing commitment_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+              examples:
+                file_too_large:
+                  value:
+                    code: FILE_TOO_LARGE
+                    message: File exceeds maximum size of 10MB
+                invalid_format:
+                  value:
+                    code: INVALID_FILE_FORMAT
+                    message: Unsupported file format. Allowed: PDF, JPG, PNG, DOCX
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          description: Commitment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /functions/v1/commitment-get-evidence-url:
+    post:
+      tags:
+        - Evidence
+      summary: Get signed URL for evidence download
+      description: |
+        Generate a signed URL for downloading evidence file.
+        URLs expire after 1 hour.
+      operationId: getEvidenceUrl
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - commitment_id
+              properties:
+                commitment_id:
+                  type: string
+                  format: uuid
+      responses:
+        '200':
+          description: Signed URL generated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  signed_url:
+                    type: string
+                    format: uri
+                    description: Signed URL for downloading evidence
+                  expires_at:
+                    type: string
+                    format: date-time
+                    description: URL expiration timestamp
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          description: Commitment or evidence not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+components:
+  schemas:
+    CommitmentStatus:
+      type: string
+      enum:
+        - pending
+        - in_progress
+        - completed
+        - cancelled
+      description: Current status of the commitment
+
+    CommitmentPriority:
+      type: string
+      enum:
+        - low
+        - medium
+        - high
+        - critical
+      description: Priority level of the commitment
+
+    OwnerType:
+      type: string
+      enum:
+        - internal
+        - external
+      description: Type of commitment owner
+
+    Commitment:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        after_action_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+        due_date:
+          type: string
+          format: date
+        priority:
+          $ref: '#/components/schemas/CommitmentPriority'
+        status:
+          $ref: '#/components/schemas/CommitmentStatus'
+        owner_type:
+          $ref: '#/components/schemas/OwnerType'
+        owner_internal_id:
+          type: string
+          format: uuid
+          nullable: true
+        owner_external_id:
+          type: string
+          format: uuid
+          nullable: true
+        tracking_type:
+          type: string
+          enum: [one_time, recurring]
+        proof_required:
+          type: boolean
+        proof_url:
+          type: string
+          nullable: true
+        evidence_submitted_at:
+          type: string
+          format: date-time
+          nullable: true
+        completion_notes:
+          type: string
+          nullable: true
+        completed_at:
+          type: string
+          format: date-time
+          nullable: true
+        status_changed_at:
+          type: string
+          format: date-time
+          nullable: true
+        ai_extracted:
+          type: boolean
+        confidence_score:
+          type: number
+          format: float
+          nullable: true
+        created_by:
+          type: string
+          format: uuid
+          nullable: true
+        updated_by:
+          type: string
+          format: uuid
+          nullable: true
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CommitmentDetail:
+      allOf:
+        - $ref: '#/components/schemas/Commitment'
+        - type: object
+          properties:
+            owner:
+              oneOf:
+                - $ref: '#/components/schemas/InternalOwner'
+                - $ref: '#/components/schemas/ExternalOwner'
+              nullable: true
+            dossier:
+              type: object
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                name:
+                  type: string
+                type:
+                  type: string
+            status_history:
+              type: array
+              items:
+                $ref: '#/components/schemas/StatusHistoryRecord'
+              description: Recent status changes (latest 10)
+
+    InternalOwner:
+      type: object
+      properties:
+        type:
+          type: string
+          const: internal
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+
+    ExternalOwner:
+      type: object
+      properties:
+        type:
+          type: string
+          const: external
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        organization:
+          type: string
+          nullable: true
+
+    CommitmentCreate:
+      type: object
+      required:
+        - dossier_id
+        - title
+        - due_date
+        - priority
+        - owner_type
+      properties:
+        dossier_id:
+          type: string
+          format: uuid
+        after_action_id:
+          type: string
+          format: uuid
+          nullable: true
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 2000
+        due_date:
+          type: string
+          format: date
+        priority:
+          $ref: '#/components/schemas/CommitmentPriority'
+        owner_type:
+          $ref: '#/components/schemas/OwnerType'
+        owner_internal_id:
+          type: string
+          format: uuid
+          description: Required when owner_type is 'internal'
+        owner_external_id:
+          type: string
+          format: uuid
+          description: Required when owner_type is 'external'
+        tracking_type:
+          type: string
+          enum: [one_time, recurring]
+          default: one_time
+        proof_required:
+          type: boolean
+          default: false
+
+    CommitmentUpdate:
+      type: object
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 2000
+        due_date:
+          type: string
+          format: date
+        priority:
+          $ref: '#/components/schemas/CommitmentPriority'
+        owner_type:
+          $ref: '#/components/schemas/OwnerType'
+        owner_internal_id:
+          type: string
+          format: uuid
+          nullable: true
+        owner_external_id:
+          type: string
+          format: uuid
+          nullable: true
+        proof_required:
+          type: boolean
+        completion_notes:
+          type: string
+          maxLength: 2000
+
+    StatusHistoryRecord:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        commitment_id:
+          type: string
+          format: uuid
+        old_status:
+          $ref: '#/components/schemas/CommitmentStatus'
+          nullable: true
+        new_status:
+          $ref: '#/components/schemas/CommitmentStatus'
+        changed_by:
+          type: string
+          format: uuid
+        changed_at:
+          type: string
+          format: date-time
+        notes:
+          type: string
+          nullable: true
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+            email:
+              type: string
+              format: email
+
+    PaginationCursor:
+      type: object
+      nullable: true
+      properties:
+        due_date:
+          type: string
+          format: date-time
+        id:
+          type: string
+          format: uuid
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+          description: Error code for programmatic handling
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          additionalProperties: true
+          description: Additional error details
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: UNAUTHORIZED
+            message: Authentication required
+
+    Forbidden:
+      description: Insufficient permissions
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: FORBIDDEN
+            message: You do not have permission to access this resource
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            code: NOT_FOUND
+            message: Commitment not found
+
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+security:
+  - BearerAuth: []

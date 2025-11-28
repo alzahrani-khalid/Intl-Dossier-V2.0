@@ -1,0 +1,101 @@
+{
+  "title": "My Work",
+  "subtitle": "Track your commitments, tasks, and intake tickets in one place",
+
+  "stats": {
+    "totalActive": "Total Active",
+    "overdue": "Overdue",
+    "dueToday": "Due Today",
+    "dueThisWeek": "Due This Week"
+  },
+
+  "metrics": {
+    "title": "Your Productivity",
+    "completed30d": "Completed (30d)",
+    "onTimeRate": "On-Time Rate",
+    "avgCompletionTime": "Avg Completion"
+  },
+
+  "tabs": {
+    "all": "All",
+    "commitments": "Commitments",
+    "tasks": "Tasks",
+    "intake": "Intake"
+  },
+
+  "source": {
+    "commitment": "Commitment",
+    "task": "Task",
+    "intake": "Intake"
+  },
+
+  "trackingType": {
+    "delivery": "Delivery",
+    "followUp": "Follow-up",
+    "sla": "SLA"
+  },
+
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical",
+    "urgent": "Urgent"
+  },
+
+  "status": {
+    "overdue": "Overdue",
+    "pending": "Pending",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled"
+  },
+
+  "deadline": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "dueToday": "Due today",
+    "dueTomorrow": "Due tomorrow",
+    "dueInDays": "Due in {{count}} days",
+    "dueInDays_one": "Due in {{count}} day"
+  },
+
+  "filters": {
+    "trackingType": "Type",
+    "all": "All Types"
+  },
+
+  "search": {
+    "placeholder": "Search work items..."
+  },
+
+  "sort": {
+    "label": "Sort",
+    "deadlineAsc": "Deadline (Earliest)",
+    "deadlineDesc": "Deadline (Latest)",
+    "priorityDesc": "Priority (High to Low)",
+    "priorityAsc": "Priority (Low to High)",
+    "createdDesc": "Newest First",
+    "createdAsc": "Oldest First"
+  },
+
+  "team": {
+    "title": "Team Workload",
+    "members": "members",
+    "active": "Active",
+    "overdue": "overdue",
+    "onTime": "On-time"
+  },
+
+  "empty": {
+    "title": "No work items found",
+    "description": "Try adjusting your filters or check back later"
+  },
+
+  "error": {
+    "loading": "Failed to load work items",
+    "retry": "Retry"
+  },
+
+  "loadMore": "Load More"
+}
