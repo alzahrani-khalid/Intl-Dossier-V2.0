@@ -93,13 +93,14 @@ export default {
         sm: 'calc(var(--radius) - 4px)',
       },
       fontFamily: {
-        // Display font for headings
+        // Display font for headings (Inter)
         display: ['var(--display-family)', 'system-ui', 'sans-serif'],
-        // Text font for body
+        // Text font for body (Inter for LTR)
         text: ['var(--text-family)', 'system-ui', 'sans-serif'],
-        // Legacy support
+        // Arabic font (Alexandria for RTL)
+        arabic: ['var(--text-family-rtl)', 'system-ui', 'sans-serif'],
+        // Default sans-serif
         sans: ['var(--text-family)', 'system-ui', 'sans-serif'],
-        arabic: ['var(--text-family)', 'system-ui', 'sans-serif'],
       },
       screens: {
         sm: '640px',

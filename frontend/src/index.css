@@ -5,8 +5,9 @@
 @import 'flag-icons/css/flag-icons.min.css';
 
 /* Google Fonts - Canvas Theme */
-@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;600&display=swap');
+/* Inter for UI (compact, modern) + Alexandria for Arabic RTL support */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@300;400;500;600;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -48,10 +49,11 @@
     --primary-950: 159 66% 10.4%;
     --primary-1000: 161 70.4% 5.3%;
 
-    /* Typography */
-    --display-family: 'Space Grotesk', system-ui, sans-serif;
+    /* Typography - Inter for LTR, Alexandria for RTL */
+    --display-family: 'Inter', system-ui, sans-serif;
     --display-weight: 600;
-    --text-family: 'Alexandria', system-ui, sans-serif;
+    --text-family: 'Inter', system-ui, sans-serif;
+    --text-family-rtl: 'Alexandria', system-ui, sans-serif;
     --text-weight: 400;
 
     /* Radius tokens */
@@ -62,16 +64,17 @@
     --radius-xl: 0.75rem;
     --radius-full: 9999px;
 
-    /* Font sizes - Kibo UI scale (14px base) */
+    /* Font sizes - Compact UI scale (13px base like shadcn reference) */
+    --text-2xs: 0.6875rem; /* 11px */
     --text-xs: 0.75rem; /* 12px */
-    --text-sm: 0.875rem; /* 14px - Kibo UI base */
-    --text-base: 0.875rem; /* 14px - changed from 16px to match Kibo UI */
+    --text-sm: 0.8125rem; /* 13px - shadcn/ui base */
+    --text-base: 0.875rem; /* 14px */
     --text-lg: 1rem; /* 16px */
     --text-xl: 1.125rem; /* 18px */
-    --text-2xl: 1.5rem; /* 24px */
-    --text-3xl: 1.875rem; /* 30px */
-    --text-4xl: 2.25rem; /* 36px */
-    --text-5xl: 3rem; /* 48px */
+    --text-2xl: 1.25rem; /* 20px */
+    --text-3xl: 1.5rem; /* 24px */
+    --text-4xl: 1.875rem; /* 30px */
+    --text-5xl: 2.25rem; /* 36px */
 
     /* Font weights */
     --font-light: 300;
@@ -266,20 +269,21 @@
     font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
   }
 
-  /* RTL/LTR support - Alexandria supports Arabic natively */
-  html[dir='rtl'],
-  html[dir='rtl'] body,
-  html[dir='rtl'] * {
-    font-family: var(--text-family);
-  }
-
+  /* LTR support - Inter for English */
   html[dir='ltr'],
   html[dir='ltr'] body,
   html[dir='ltr'] * {
     font-family: var(--text-family);
   }
 
-  /* Headings in LTR use display font (Space Grotesk) */
+  /* RTL support - Alexandria for Arabic */
+  html[dir='rtl'],
+  html[dir='rtl'] body,
+  html[dir='rtl'] * {
+    font-family: var(--text-family-rtl);
+  }
+
+  /* Headings in LTR use Inter (display weight) */
   html[dir='ltr'] h1,
   html[dir='ltr'] h2,
   html[dir='ltr'] h3,
@@ -287,16 +291,17 @@
   html[dir='ltr'] h5,
   html[dir='ltr'] h6 {
     font-family: var(--display-family);
+    font-weight: var(--display-weight);
   }
 
-  /* Headings in RTL use text font (Alexandria) - Space Grotesk doesn't support Arabic */
+  /* Headings in RTL use Alexandria - Inter doesn't support Arabic */
   html[dir='rtl'] h1,
   html[dir='rtl'] h2,
   html[dir='rtl'] h3,
   html[dir='rtl'] h4,
   html[dir='rtl'] h5,
   html[dir='rtl'] h6 {
-    font-family: var(--text-family);
+    font-family: var(--text-family-rtl);
     font-weight: var(--font-semibold);
   }
 }
