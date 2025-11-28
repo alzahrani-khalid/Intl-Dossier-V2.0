@@ -37,6 +37,10 @@
         "--access-token",
         "sbp_5b308210608d3be8f51d26eca2e0a909ae2eef39"
       ]
+    },
+    "rtrvr": {
+      "type": "sse",
+      "url": "https://www.rtrvr.ai/mcp?apiKey=rtrvr_Q_CurLeAA1oJo0Tj0s24xNbY2S3raZFq4TVgObehKlU&deviceId=c2u3iimCxb4"
     }
   }
 }

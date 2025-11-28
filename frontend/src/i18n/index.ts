@@ -20,7 +20,9 @@ import enContacts from './en/contacts.json'
 import arContacts from './ar/contacts.json'
 import enCommitments from './en/commitments.json'
 import arCommitments from './ar/commitments.json'
-// Force reload - updated 2025-11-18 - v4 - Added commitments namespace
+import enWorkCreation from './en/work-creation.json'
+import arWorkCreation from './ar/work-creation.json'
+// Force reload - updated 2025-11-28 - v5 - Added work-creation namespace
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = typeof supportedLanguages[number]
@@ -36,6 +38,7 @@ const resources = {
     forums: enForums,
     contacts: enContacts,
     commitments: enCommitments,
+    'work-creation': enWorkCreation,
   },
   ar: {
     translation: arCommon,
@@ -47,6 +50,7 @@ const resources = {
     forums: arForums,
     contacts: arContacts,
     commitments: arCommitments,
+    'work-creation': arWorkCreation,
   },
 }
 

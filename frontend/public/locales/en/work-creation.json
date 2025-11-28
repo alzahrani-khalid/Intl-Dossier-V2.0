@@ -1,0 +1,66 @@
+{
+  "palette": {
+    "placeholder": "What would you like to create?",
+    "noResults": "No results found",
+    "workTypes": "Work Item Types",
+    "createCommitment": "New Commitment",
+    "commitmentDescription": "Track promises and deliverables linked to a dossier",
+    "createTask": "New Task",
+    "taskDescription": "Create a task for yourself or assign to others",
+    "createIntake": "New Intake Request",
+    "intakeDescription": "Submit a new request through the intake system",
+    "selectDossier": "Select Dossier",
+    "dossierRequired": "Commitments must be linked to a dossier. Please select one:"
+  },
+  "form": {
+    "selectDossier": "Select a dossier",
+    "changeDossier": "Change dossier",
+    "searchDossiers": "Search dossiers...",
+    "recentDossiers": "Recent Dossiers",
+    "searchResults": "Search Results",
+    "noDossiersFound": "No dossiers found",
+    "typeToSearch": "Type at least 2 characters to search",
+    "searching": "Searching...",
+    "clear": "Clear",
+    "linkedTo": "Linked to",
+    "creating": "Creating...",
+    "createCommitment": "Create Commitment",
+    "createTask": "Create Task",
+    "createIntake": "Submit Request",
+    "taskTitle": "Task Title",
+    "taskTitlePlaceholder": "Enter task title",
+    "taskDescription": "Description",
+    "taskDescriptionPlaceholder": "Enter task details (optional)",
+    "assignee": "Assignee",
+    "assigneePlaceholder": "Enter user ID",
+    "assigneeHint": "Enter the user ID of the assignee",
+    "priority": "Priority",
+    "selectPriority": "Select priority",
+    "slaDeadline": "SLA Deadline",
+    "selectDate": "Select date",
+    "taskCreated": "Task created successfully",
+    "taskError": "Failed to create task",
+    "intakeCreated": "Intake request created successfully",
+    "intakeError": "Failed to create intake request"
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+  "actions": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "continue": "Continue",
+    "create": "Create"
+  },
+  "success": {
+    "commitmentCreated": "Commitment created successfully",
+    "taskCreated": "Task created successfully",
+    "intakeCreated": "Intake request submitted successfully"
+  },
+  "errors": {
+    "createFailed": "Failed to create work item"
+  }
+}

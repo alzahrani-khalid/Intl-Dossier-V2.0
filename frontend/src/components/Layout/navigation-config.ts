@@ -22,6 +22,8 @@ import {
   PenTool,
   Shield,
   Wrench,
+  Briefcase,
+  FileCheck,
 } from 'lucide-react';
 
 export interface NavigationItem {
@@ -49,11 +51,24 @@ export const createNavigationSections = (
       label: 'navigation.myWork',
       items: [
         {
+          id: 'unified-work',
+          label: 'navigation.unifiedWork',
+          path: '/my-work',
+          icon: Briefcase,
+          badgeCount: counts.assignments + counts.intake + counts.waiting,
+        },
+        {
           id: 'my-assignments',
           label: 'navigation.myAssignments',
           path: '/tasks',
           icon: CheckSquare,
           badgeCount: counts.assignments,
+        },
+        {
+          id: 'commitments',
+          label: 'navigation.commitments',
+          path: '/commitments',
+          icon: FileCheck,
         },
         {
           id: 'intake-queue',

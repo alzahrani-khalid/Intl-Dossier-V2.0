@@ -1,91 +1,145 @@
 {
   "title": "الالتزامات",
-  "backToDossier": "العودة إلى الملف",
-  "empty": {
-    "title": "لم يتم العثور على التزامات",
-    "description": {
-      "all": "لا توجد التزامات للعرض",
-      "filtered": "لا توجد التزامات تطابق الفلاتر الحالية"
-    }
+  "subtitle": "تتبع وإدارة الالتزامات",
+  "pageTitle": "التزاماتي",
+  "actions": {
+    "create": "إضافة التزام",
+    "edit": "تعديل",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "uploadEvidence": "رفع الدليل",
+    "downloadEvidence": "تحميل الدليل",
+    "viewDetails": "عرض التفاصيل",
+    "updateStatus": "تحديث الحالة",
+    "clearFilters": "مسح الفلاتر",
+    "applyFilters": "تطبيق الفلاتر"
   },
   "status": {
     "pending": "قيد الانتظار",
     "in_progress": "قيد التنفيذ",
     "completed": "مكتمل",
-    "cancelled": "ملغي"
+    "cancelled": "ملغي",
+    "overdue": "متأخر",
+    "updated": "تم تحديث الحالة بنجاح",
+    "updateFailed": "فشل في تحديث الحالة",
+    "loading": "جارِ التحميل..."
   },
   "priority": {
+    "label": "الأولوية",
     "low": "منخفض",
     "medium": "متوسط",
     "high": "عالي",
     "critical": "حرج"
   },
   "ownerType": {
+    "label": "نوع المسؤول",
     "internal": "داخلي",
     "external": "خارجي"
   },
-  "trackingMode": {
-    "automatic": "تلقائي",
-    "manual": "يدوي"
-  },
-  "fields": {
+  "form": {
     "title": "العنوان",
+    "titlePlaceholder": "أدخل عنوان الالتزام",
     "description": "الوصف",
+    "descriptionPlaceholder": "أدخل وصف الالتزام",
     "dueDate": "تاريخ الاستحقاق",
-    "status": "الحالة",
     "priority": "الأولوية",
     "ownerType": "نوع المسؤول",
     "owner": "المسؤول",
-    "trackingMode": "وضع التتبع",
+    "selectOwner": "اختر المسؤول",
     "proofRequired": "الدليل مطلوب",
-    "completionNotes": "ملاحظات الإكمال",
-    "completedAt": "اكتمل في",
-    "createdAt": "تاريخ الإنشاء",
-    "updatedAt": "تاريخ التحديث",
-    "createdBy": "أنشئ بواسطة",
-    "updatedBy": "حُدّث بواسطة"
+    "proofRequiredDescription": "مطلوب رفع دليل للإكمال",
+    "trackingMode": "وضع التتبع",
+    "manual": "يدوي",
+    "automatic": "تلقائي"
   },
-  "overdue": "متأخر",
-  "overdueBy": "متأخر بـ {{days}} يوم",
-  "dueIn": "مستحق خلال {{days}} يوم",
-  "dueToday": "مستحق اليوم",
   "filters": {
     "title": "تصفية الالتزامات",
     "status": "الحالة",
     "priority": "الأولوية",
-    "overdue": "إظهار المتأخرة فقط",
-    "reset": "إعادة تعيين الفلاتر",
-    "apply": "تطبيق الفلاتر"
+    "ownerType": "نوع المسؤول",
+    "overdue": "المتأخرة فقط",
+    "overdueDescription": "إظهار الالتزامات المتأخرة فقط",
+    "dueDate": "تاريخ الاستحقاق",
+    "dueDateFrom": "من",
+    "dueDateTo": "إلى",
+    "clear": "مسح الفلاتر",
+    "apply": "تطبيق"
   },
-  "list": {
-    "title": "جميع الالتزامات",
-    "subtitle": "تم العثور على {{count}} التزام",
-    "loadMore": "تحميل المزيد",
-    "noMore": "لا مزيد من الالتزامات"
+  "detail": {
+    "title": "تفاصيل الالتزام",
+    "dossier": "الملف",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "آخر تحديث",
+    "createdBy": "أنشئ بواسطة",
+    "updatedBy": "حُدّث بواسطة",
+    "completedAt": "اكتمل في",
+    "evidence": "الدليل",
+    "evidenceSubmittedAt": "تم تقديم الدليل",
+    "noEvidence": "لم يتم رفع دليل",
+    "statusHistory": "سجل الحالة",
+    "noHistory": "لا توجد تغييرات مسجلة"
+  },
+  "evidence": {
+    "title": "رفع الدليل",
+    "description": "رفع المستندات الداعمة لهذا الالتزام",
+    "dropzone": "اسحب وأفلت الملفات هنا، أو انقر للاختيار",
+    "camera": "التقاط صورة",
+    "maxSize": "الحد الأقصى لحجم الملف: 10 ميغابايت",
+    "allowedTypes": "المسموح: PDF، JPG، PNG، DOCX",
+    "uploading": "جارِ الرفع...",
+    "uploadSuccess": "تم رفع الدليل بنجاح",
+    "uploadFailed": "فشل في رفع الدليل",
+    "invalidType": "نوع ملف غير صالح",
+    "fileTooLarge": "الملف يتجاوز 10 ميغابايت"
   },
   "card": {
-    "viewDetails": "عرض التفاصيل",
-    "linkedToDossier": "مرتبط بالملف",
-    "afterAction": "إجراء المتابعة"
+    "dueIn": "مستحق خلال {{days}} يوم",
+    "dueToday": "مستحق اليوم",
+    "overdueDays": "متأخر {{days}} يوم",
+    "noTitle": "التزام بدون عنوان"
+  },
+  "list": {
+    "empty": "لم يتم العثور على التزامات",
+    "emptyFiltered": "لا توجد التزامات تطابق الفلاتر",
+    "loadMore": "تحميل المزيد",
+    "endOfList": "نهاية القائمة",
+    "loading": "جارِ تحميل الالتزامات..."
+  },
+  "validation": {
+    "titleRequired": "العنوان مطلوب",
+    "titleMaxLength": "يجب أن يكون العنوان أقل من 200 حرف",
+    "descriptionRequired": "الوصف مطلوب",
+    "dueDateRequired": "تاريخ الاستحقاق مطلوب",
+    "dueDateFuture": "يجب أن يكون تاريخ الاستحقاق في المستقبل",
+    "ownerRequired": "المسؤول مطلوب"
   },
   "errors": {
-    "loadFailed": "فشل تحميل الالتزامات",
-    "updateFailed": "فشل تحديث الالتزام",
-    "generic": "حدث خطأ أثناء تحميل الالتزامات. يرجى المحاولة مرة أخرى."
+    "loadFailed": "فشل في تحميل الالتزامات",
+    "createFailed": "فشل في إنشاء الالتزام",
+    "updateFailed": "فشل في تحديث الالتزام",
+    "deleteFailed": "فشل في حذف الالتزام",
+    "statusUpdateFailed": "فشل في تحديث الحالة",
+    "uploadFailed": "فشل في رفع الدليل",
+    "invalidTransition": "انتقال حالة غير صالح"
   },
-  "loading": "جارِ تحميل الالتزامات...",
-  "actions": {
-    "create": "إنشاء التزام",
-    "edit": "تعديل الالتزام",
-    "delete": "حذف الالتزام",
-    "complete": "وضع علامة كمكتمل",
-    "reopen": "إعادة فتح"
+  "success": {
+    "created": "تم إنشاء الالتزام بنجاح",
+    "updated": "تم تحديث الالتزام بنجاح",
+    "deleted": "تم حذف الالتزام بنجاح",
+    "statusUpdated": "تم تحديث الحالة بنجاح"
   },
-  "healthScore": {
-    "title": "صحة الالتزامات",
-    "fulfillmentRate": "معدل الوفاء",
-    "onTime": "في الوقت المحدد",
-    "overdue": "متأخر",
-    "totalCommitments": "إجمالي الالتزامات"
+  "confirm": {
+    "delete": "هل أنت متأكد من حذف هذا الالتزام؟",
+    "cancel": "هل أنت متأكد من إلغاء هذا الالتزام؟",
+    "cancelReason": "سبب الإلغاء",
+    "cancelReasonPlaceholder": "أدخل سبب الإلغاء"
+  },
+  "timeline": {
+    "created": "تم إنشاء الالتزام",
+    "statusChanged": "تم تغيير الحالة من {{from}} إلى {{to}}",
+    "evidenceUploaded": "تم رفع الدليل",
+    "updated": "تم تحديث الالتزام",
+    "by": "بواسطة {{user}}"
   }
 }

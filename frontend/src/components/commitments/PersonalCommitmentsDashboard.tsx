@@ -1,143 +1,85 @@
+/**
+ * PersonalCommitmentsDashboard Component v1.1
+ * Feature: 031-commitments-management
+ *
+ * Dashboard showing user's commitments with quick status updates
+ * Mobile-first, RTL-compatible, accessible
+ */
+
 import { useTranslation } from 'react-i18next';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { createClient } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
+import { useQuery } from '@tanstack/react-query';
 import { CommitmentsList } from './CommitmentsList';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Loader2 } from 'lucide-react';
-
-interface Commitment {
-  id: string;
-  dossier_id: string;
-  dossier_name: string;
-  dossier_type: 'country' | 'organization' | 'forum';
-  description: string;
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'overdue';
-  due_date: string;
-  owner_id: string;
-  owner_name: string;
-  priority: 'low' | 'medium' | 'high';
-  created_at: string;
-}
+import type { CommitmentStatus } from '@/types/commitment.types';
 
 export function PersonalCommitmentsDashboard() {
-  const { t, i18n } = useTranslation();
+  const { t, i18n } = useTranslation('commitments');
   const isRTL = i18n.language === 'ar';
-  const supabase = createClient();
-  const queryClient = useQueryClient();
 
-  // T171: Fetch commitments assigned to current user
-  const { data: commitments, isLoading, error } = useQuery({
-    queryKey: ['personalCommitments'],
+  // Get current user ID for filtering
+  const { data: userData, isLoading: userLoading } = useQuery({
+    queryKey: ['currentUser'],
     queryFn: async () => {
       const { data: { user } } = await supabase.auth.getUser();
-      if (!user) throw new Error('Not authenticated');
-
-      // Fetch commitments where owner_id = auth.uid()
-      const { data, error } = await supabase
-        .from('commitments')
-        .select(`
-          id,
-          dossier_id,
-          description,
-          status,
-          due_date,
-          owner_id,
-          priority,
-          created_at,
-          dossiers (
-            name,
-            type
-          ),
-          profiles!commitments_owner_id_fkey (
-            full_name
-          )
-        `)
-        .eq('owner_id', user.id)
-        .order('due_date', { ascending: true }); // T172: Sort by due_date ASC
-
-      if (error) throw error;
-
-      // Transform data to match Commitment interface
-      return data.map((commitment: any) => ({
-        id: commitment.id,
-        dossier_id: commitment.dossier_id,
-        dossier_name: commitment.dossiers?.name || 'Unknown',
-        dossier_type: commitment.dossiers?.type || 'country',
-        description: commitment.description,
-        status: commitment.status,
-        due_date: commitment.due_date,
-        owner_id: commitment.owner_id,
-        owner_name: commitment.profiles?.full_name || 'Unknown',
-        priority: commitment.priority,
-        created_at: commitment.created_at,
-      })) as Commitment[];
+      return user;
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes
-    refetchInterval: 5 * 60 * 1000, // Refetch every 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
-  // T173: Quick status update mutation
-  const quickUpdateMutation = useMutation({
-    mutationFn: async ({ commitmentId, newStatus }: { commitmentId: string; newStatus: string }) => {
-      const { data, error } = await supabase
-        .from('commitments')
-        .update({ status: newStatus, updated_at: new Date().toISOString() })
-        .eq('id', commitmentId)
-        .select()
-        .single();
+  // Stats query for quick counts
+  const { data: stats } = useQuery({
+    queryKey: ['commitmentStats', userData?.id],
+    queryFn: async () => {
+      if (!userData?.id) return { active: 0, overdue: 0, completed: 0 };
 
-      if (error) throw error;
-      return data;
-    },
-    onSuccess: (_, variables) => {
-      // Invalidate queries to refetch fresh data
-      queryClient.invalidateQueries({ queryKey: ['personalCommitments'] });
-      queryClient.invalidateQueries({ queryKey: ['dossierStats'] });
+      // Count active (pending + in_progress)
+      const { count: activeCount } = await supabase
+        .from('aa_commitments')
+        .select('*', { count: 'exact', head: true })
+        .or(`owner_user_id.eq.${userData.id}`)
+        .in('status', ['pending', 'in_progress']);
 
-      // T174: Health score recalculation is triggered via backend job
-      // (This happens automatically within 2 minutes)
+      // Count overdue
+      const today = new Date().toISOString().split('T')[0];
+      const { count: overdueCount } = await supabase
+        .from('aa_commitments')
+        .select('*', { count: 'exact', head: true })
+        .or(`owner_user_id.eq.${userData.id}`)
+        .lt('due_date', today)
+        .not('status', 'in', '(completed,cancelled)');
+
+      // Count completed
+      const { count: completedCount } = await supabase
+        .from('aa_commitments')
+        .select('*', { count: 'exact', head: true })
+        .or(`owner_user_id.eq.${userData.id}`)
+        .eq('status', 'completed');
+
+      return {
+        active: activeCount ?? 0,
+        overdue: overdueCount ?? 0,
+        completed: completedCount ?? 0,
+      };
     },
+    enabled: !!userData?.id,
+    staleTime: 2 * 60 * 1000,
   });
 
-  const handleQuickUpdate = (commitmentId: string, newStatus: string) => {
-    quickUpdateMutation.mutate({ commitmentId, newStatus });
-  };
-
-  const filterByStatus = (status: string[]) => {
-    return commitments?.filter((c) => status.includes(c.status)) || [];
-  };
-
-  const activeCommitments = filterByStatus(['pending', 'in_progress', 'overdue']);
-  const completedCommitments = filterByStatus(['completed']);
-  const overdueCommitments = filterByStatus(['overdue']);
-
-  if (isLoading) {
+  if (userLoading) {
     return (
       <div className="flex items-center justify-center py-12" dir={isRTL ? 'rtl' : 'ltr'}>
         <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
-        <span className="ms-3 text-gray-600">{t('commitments.loading')}</span>
+        <span className="ms-3 text-gray-600">{t('list.loading')}</span>
       </div>
     );
   }
 
-  if (error) {
-    return (
-      <div className="py-12 px-4" dir={isRTL ? 'rtl' : 'ltr'}>
-        <Card className="border-red-200 bg-red-50">
-          <CardHeader>
-            <CardTitle className="text-red-800 text-start">
-              {t('commitments.error.title')}
-            </CardTitle>
-            <CardDescription className="text-red-600 text-start">
-              {t('commitments.error.message')}
-            </CardDescription>
-          </CardHeader>
-        </Card>
-      </div>
-    );
-  }
+  const activeStatuses: CommitmentStatus[] = ['pending', 'in_progress'];
+  const overdueStatuses: CommitmentStatus[] = ['pending', 'in_progress']; // overdue filter applied separately
+  const completedStatuses: CommitmentStatus[] = ['completed'];
 
   return (
     <div
@@ -147,10 +89,10 @@ export function PersonalCommitmentsDashboard() {
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
-          {t('commitments.myCommitments')}
+          {t('pageTitle')}
         </h1>
         <p className="text-sm sm:text-base text-gray-600 text-start">
-          {t('commitments.dashboardDescription')}
+          {t('subtitle')}
         </p>
       </div>
 
@@ -159,10 +101,10 @@ export function PersonalCommitmentsDashboard() {
         <Card>
           <CardHeader className="pb-3">
             <CardDescription className="text-start">
-              {t('commitments.stats.active')}
+              {t('status.pending')} / {t('status.in_progress')}
             </CardDescription>
             <CardTitle className="text-2xl sm:text-3xl text-start">
-              {activeCommitments.length}
+              {stats?.active ?? 0}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -170,10 +112,10 @@ export function PersonalCommitmentsDashboard() {
         <Card>
           <CardHeader className="pb-3">
             <CardDescription className="text-start">
-              {t('commitments.stats.overdue')}
+              {t('status.overdue')}
             </CardDescription>
             <CardTitle className="text-2xl sm:text-3xl text-red-600 text-start">
-              {overdueCommitments.length}
+              {stats?.overdue ?? 0}
             </CardTitle>
           </CardHeader>
         </Card>
@@ -181,47 +123,50 @@ export function PersonalCommitmentsDashboard() {
         <Card>
           <CardHeader className="pb-3">
             <CardDescription className="text-start">
-              {t('commitments.stats.completed')}
+              {t('status.completed')}
             </CardDescription>
             <CardTitle className="text-2xl sm:text-3xl text-green-600 text-start">
-              {completedCommitments.length}
+              {stats?.completed ?? 0}
             </CardTitle>
           </CardHeader>
         </Card>
       </div>
 
-      {/* T173: Quick status update actions for each commitment */}
+      {/* Tabs with CommitmentsList for each status */}
       <Tabs defaultValue="active" className="w-full">
         <TabsList className="grid w-full grid-cols-3 mb-4">
           <TabsTrigger value="active">
-            {t('commitments.tabs.active')} ({activeCommitments.length})
+            {t('status.pending')} ({stats?.active ?? 0})
           </TabsTrigger>
           <TabsTrigger value="overdue">
-            {t('commitments.tabs.overdue')} ({overdueCommitments.length})
+            {t('status.overdue')} ({stats?.overdue ?? 0})
           </TabsTrigger>
           <TabsTrigger value="completed">
-            {t('commitments.tabs.completed')} ({completedCommitments.length})
+            {t('status.completed')} ({stats?.completed ?? 0})
           </TabsTrigger>
         </TabsList>
 
         <TabsContent value="active">
           <CommitmentsList
-            commitments={activeCommitments}
-            showDossierContext={true}
+            ownerId={userData?.id}
+            status={activeStatuses}
+            showFilters={false}
           />
         </TabsContent>
 
         <TabsContent value="overdue">
           <CommitmentsList
-            commitments={overdueCommitments}
-            showDossierContext={true}
+            ownerId={userData?.id}
+            overdue={true}
+            showFilters={false}
           />
         </TabsContent>
 
         <TabsContent value="completed">
           <CommitmentsList
-            commitments={completedCommitments}
-            showDossierContext={true}
+            ownerId={userData?.id}
+            status={completedStatuses}
+            showFilters={false}
           />
         </TabsContent>
       </Tabs>

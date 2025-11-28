@@ -264,9 +264,15 @@ After restart, use MCP tools to search and discover components.
 3. Building a custom component isn't feasible
 
 ## Recent Changes
+- 032-unified-work-management: Unified "My Work" dashboard consolidating commitments, tasks, and intake tickets
+  - ✅ Database: 7 migrations (unified_work_items VIEW, user_work_summary VIEW, user_productivity_metrics MV, RPC functions)
+  - ✅ Edge Function: unified-work-list (list, summary, metrics, team workload)
+  - ✅ Frontend: 8 components, 5 hooks, i18n (EN/AR), real-time with 300ms debounce
+  - ✅ Features: Cursor pagination, URL state sync, manager team workload view
+  - 📊 Status: Implemented and documented
+- 031-commitments-management: Added TypeScript 5.8+ (strict mode) + React 19, TanStack Router v5, TanStack Query v5, Supabase JS v2, i18next, Framer Motion, Aceternity UI
 - 030-health-commitment: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Edge Functions), Vite
 - 029-dynamic-country-intelligence: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
-- 028-type-specific-dossier-pages: Added TypeScript 5.8+ (strict mode), React 19 + TanStack Router v5 (routing), TanStack Query v5 (data fetching), Aceternity UI (primary components), shadcn/ui (fallback), Tailwind CSS (styling), i18next (internationalization), React Flow (network graphs for country/organization views), Framer Motion (animations)
   - ✅ Feature spec: Expo-based mobile app with offline-first architecture
   - ✅ Research: Jest + RNTL (unit tests), Maestro (E2E), React Native Paper (UI), WatermelonDB (offline sync)
   - ✅ Data model: 11 entities with WatermelonDB schema, offline storage cleanup strategy
@@ -310,3 +316,7 @@ When testing the application using browser automation tools (Chrome MCP, Playwri
 ## Active Technologies
 - TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Edge Functions), Vite (030-health-commitment)
 - PostgreSQL 15+ with pgvector extension, materialized views for aggregations, Redis 7.x for caching (030-health-commitment)
+- TypeScript 5.8+ (strict mode) + React 19, TanStack Router v5, TanStack Query v5, Supabase JS v2, i18next, Framer Motion, Aceternity UI (031-commitments-management)
+- PostgreSQL 15+ (Supabase), Supabase Storage (evidence files) (031-commitments-management)
+- TypeScript 5.8+ (strict mode) + React 19, TanStack Router v5, TanStack Query (useInfiniteQuery), Supabase Realtime, i18next (032-unified-work-management)
+- PostgreSQL VIEWs, Materialized VIEWs, RPC functions with cursor pagination, custom enums (tracking_type, work_source) (032-unified-work-management)

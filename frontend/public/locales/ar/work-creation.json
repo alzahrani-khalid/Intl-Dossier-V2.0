@@ -1,0 +1,66 @@
+{
+  "palette": {
+    "placeholder": "ماذا تريد إنشاء؟",
+    "noResults": "لا توجد نتائج",
+    "workTypes": "أنواع عناصر العمل",
+    "createCommitment": "التزام جديد",
+    "commitmentDescription": "تتبع الوعود والمخرجات المرتبطة بملف",
+    "createTask": "مهمة جديدة",
+    "taskDescription": "إنشاء مهمة لنفسك أو تعيينها للآخرين",
+    "createIntake": "طلب استقبال جديد",
+    "intakeDescription": "تقديم طلب جديد عبر نظام الاستقبال",
+    "selectDossier": "اختر الملف",
+    "dossierRequired": "يجب ربط الالتزامات بملف. يرجى اختيار واحد:"
+  },
+  "form": {
+    "selectDossier": "اختر ملفًا",
+    "changeDossier": "تغيير الملف",
+    "searchDossiers": "البحث في الملفات...",
+    "recentDossiers": "الملفات الأخيرة",
+    "searchResults": "نتائج البحث",
+    "noDossiersFound": "لم يتم العثور على ملفات",
+    "typeToSearch": "اكتب حرفين على الأقل للبحث",
+    "searching": "جاري البحث...",
+    "clear": "مسح",
+    "linkedTo": "مرتبط بـ",
+    "creating": "جاري الإنشاء...",
+    "createCommitment": "إنشاء التزام",
+    "createTask": "إنشاء مهمة",
+    "createIntake": "تقديم الطلب",
+    "taskTitle": "عنوان المهمة",
+    "taskTitlePlaceholder": "أدخل عنوان المهمة",
+    "taskDescription": "الوصف",
+    "taskDescriptionPlaceholder": "أدخل تفاصيل المهمة (اختياري)",
+    "assignee": "المكلف",
+    "assigneePlaceholder": "أدخل معرف المستخدم",
+    "assigneeHint": "أدخل معرف المستخدم للشخص المكلف",
+    "priority": "الأولوية",
+    "selectPriority": "اختر الأولوية",
+    "slaDeadline": "موعد SLA النهائي",
+    "selectDate": "اختر التاريخ",
+    "taskCreated": "تم إنشاء المهمة بنجاح",
+    "taskError": "فشل إنشاء المهمة",
+    "intakeCreated": "تم إنشاء طلب الاستقبال بنجاح",
+    "intakeError": "فشل إنشاء طلب الاستقبال"
+  },
+  "priority": {
+    "low": "منخفضة",
+    "medium": "متوسطة",
+    "high": "عالية",
+    "urgent": "عاجلة"
+  },
+  "actions": {
+    "back": "رجوع",
+    "cancel": "إلغاء",
+    "continue": "متابعة",
+    "create": "إنشاء"
+  },
+  "success": {
+    "commitmentCreated": "تم إنشاء الالتزام بنجاح",
+    "taskCreated": "تم إنشاء المهمة بنجاح",
+    "intakeCreated": "تم تقديم طلب الاستقبال بنجاح"
+  },
+  "errors": {
+    "createFailed": "فشل إنشاء عنصر العمل"
+  }
+}

@@ -50,7 +50,9 @@
   },
   "navigation": {
     "myWork": "My Work",
+    "unifiedWork": "All Work",
     "myAssignments": "My Assignments",
+    "commitments": "Commitments",
     "intakeQueue": "Intake Queue",
     "waitingQueue": "Waiting Queue",
     "dashboard": "Dashboard",

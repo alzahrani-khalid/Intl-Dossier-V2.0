@@ -179,8 +179,9 @@ export function DossierListPage() {
         navigate({ to: '/dossiers/topics/$id', params: { id } });
         break;
       default:
-        // Fallback to generic detail page
-        navigate({ to: '/dossiers/$id', params: { id } });
+        // Fallback to countries route when type is unknown (should rarely happen)
+        console.warn(`Unknown dossier type: ${type}, defaulting to countries route`);
+        navigate({ to: '/dossiers/countries/$id', params: { id } });
     }
   };
 

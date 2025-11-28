@@ -50,7 +50,9 @@
   },
   "navigation": {
     "myWork": "عملي",
+    "unifiedWork": "جميع الأعمال",
     "myAssignments": "تكليفاتي",
+    "commitments": "الالتزامات",
     "intakeQueue": "قائمة الاستقبال",
     "waitingQueue": "قائمة الانتظار",
     "dashboard": "لوحة التحكم",
