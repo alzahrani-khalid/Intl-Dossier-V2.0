@@ -205,8 +205,15 @@
   /* ============================================
      BASE STYLES
      ============================================ */
-  * {
+  *,
+  *::before,
+  *::after {
     @apply border-border;
+  }
+
+  /* Apply theme font to ALL elements */
+  html {
+    font-family: var(--text-family);
   }
 
   body {
@@ -219,6 +226,7 @@
       color var(--transition-base);
   }
 
+  /* Headings use display font */
   h1,
   h2,
   h3,
@@ -229,18 +237,61 @@
     font-weight: var(--display-weight);
   }
 
-  /* RTL/LTR support - Alexandria supports Arabic natively */
-  html[dir='rtl'] body,
-  html[dir='ltr'] body {
+  /* Ensure all interactive elements inherit theme fonts */
+  button,
+  input,
+  select,
+  textarea,
+  optgroup {
+    font-family: inherit;
+  }
+
+  /* Ensure spans, divs, paragraphs, and list items use theme font */
+  p,
+  span,
+  div,
+  a,
+  li,
+  label,
+  td,
+  th {
     font-family: var(--text-family);
   }
 
+  /* Code elements use monospace */
+  code,
+  pre,
+  kbd,
+  samp {
+    font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace;
+  }
+
+  /* RTL/LTR support - Alexandria supports Arabic natively */
+  html[dir='rtl'],
+  html[dir='rtl'] body,
+  html[dir='rtl'] * {
+    font-family: var(--text-family);
+  }
+
+  html[dir='ltr'],
+  html[dir='ltr'] body,
+  html[dir='ltr'] * {
+    font-family: var(--text-family);
+  }
+
+  /* Headings in RTL still use display font */
   html[dir='rtl'] h1,
   html[dir='rtl'] h2,
   html[dir='rtl'] h3,
   html[dir='rtl'] h4,
   html[dir='rtl'] h5,
-  html[dir='rtl'] h6 {
+  html[dir='rtl'] h6,
+  html[dir='ltr'] h1,
+  html[dir='ltr'] h2,
+  html[dir='ltr'] h3,
+  html[dir='ltr'] h4,
+  html[dir='ltr'] h5,
+  html[dir='ltr'] h6 {
     font-family: var(--display-family);
   }
 }
