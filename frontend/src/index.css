@@ -359,6 +359,11 @@
 }
 
 @layer utilities {
+  /* Unicode bidi isolation - prevents parentheses reversal in mixed direction text */
+  .bidi-isolate {
+    unicode-bidi: isolate;
+  }
+
   /* Text utilities */
   .text-balance {
     text-wrap: balance;
