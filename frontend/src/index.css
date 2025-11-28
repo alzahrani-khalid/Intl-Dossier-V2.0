@@ -279,13 +279,7 @@
     font-family: var(--text-family);
   }
 
-  /* Headings in RTL still use display font */
-  html[dir='rtl'] h1,
-  html[dir='rtl'] h2,
-  html[dir='rtl'] h3,
-  html[dir='rtl'] h4,
-  html[dir='rtl'] h5,
-  html[dir='rtl'] h6,
+  /* Headings in LTR use display font (Space Grotesk) */
   html[dir='ltr'] h1,
   html[dir='ltr'] h2,
   html[dir='ltr'] h3,
@@ -293,6 +287,17 @@
   html[dir='ltr'] h5,
   html[dir='ltr'] h6 {
     font-family: var(--display-family);
+  }
+
+  /* Headings in RTL use text font (Alexandria) - Space Grotesk doesn't support Arabic */
+  html[dir='rtl'] h1,
+  html[dir='rtl'] h2,
+  html[dir='rtl'] h3,
+  html[dir='rtl'] h4,
+  html[dir='rtl'] h5,
+  html[dir='rtl'] h6 {
+    font-family: var(--text-family);
+    font-weight: var(--font-semibold);
   }
 }
 
