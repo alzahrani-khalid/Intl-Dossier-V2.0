@@ -17,86 +17,86 @@
     --icon-rail-icon-active-light: hsl(220 13% 18%);
 
     /* Icon Rail - Dark Mode (Primary from reference) */
-    --icon-rail-bg: hsl(220 15% 10%);              /* #1A1D26 */
-    --icon-rail-hover: hsl(220 15% 15%);           /* #23262F */
-    --icon-rail-active-bg: hsl(220 15% 13%);       /* #1E2129 */
-    --icon-rail-active-indicator: #4ecca3; /* Custom green */
-    --icon-rail-icon: hsl(220 5% 65%);             /* #9CA3AF - Default */
-    --icon-rail-icon-active: hsl(0 0% 100%);       /* #FFFFFF - Active */
-    --icon-rail-border: hsl(220 13% 15%);          /* Subtle separator */
+    --icon-rail-bg: hsl(220 15% 10%); /* #1A1D26 */
+    --icon-rail-hover: hsl(220 15% 15%); /* #23262F */
+    --icon-rail-active-bg: hsl(220 15% 13%); /* #1E2129 */
+    --icon-rail-active-indicator: hsl(var(--primary-600)); /* Eucalyptus green from theme */
+    --icon-rail-icon: hsl(220 5% 65%); /* #9CA3AF - Default */
+    --icon-rail-icon-active: hsl(0 0% 100%); /* #FFFFFF - Active */
+    --icon-rail-border: hsl(220 13% 15%); /* Subtle separator */
 
     /* ============================================
        EXPANDED PANEL (Middle Section - 280px)
        ============================================ */
 
     /* Panel Background - Light Mode */
-    --panel-bg: hsl(240 10% 97%);                  /* #F7F9FA */
-    --panel-border: hsl(220 13% 91%);              /* #E5E7EB */
-    --panel-text: hsl(220 13% 18%);                /* #1F2937 */
-    --panel-text-muted: hsl(220 9% 46%);           /* #6B7280 */
-    --panel-hover: hsl(220 13% 94%);               /* #F3F4F6 */
-    --panel-active: hsl(0 0% 98%);                 /* Nearly white */
-    --panel-active-text: hsl(220 13% 18%);         /* Same as panel-text */
+    --panel-bg: hsl(240 10% 97%); /* #F7F9FA */
+    --panel-border: hsl(220 13% 91%); /* #E5E7EB */
+    --panel-text: hsl(220 13% 18%); /* #1F2937 */
+    --panel-text-muted: hsl(220 9% 46%); /* #6B7280 */
+    --panel-hover: hsl(220 13% 94%); /* #F3F4F6 */
+    --panel-active: hsl(0 0% 98%); /* Nearly white */
+    --panel-active-text: hsl(220 13% 18%); /* Same as panel-text */
 
     /* Panel Background - Dark Mode */
-    --panel-bg-dark: hsl(220 15% 12%);             /* #1C1F26 */
-    --panel-border-dark: hsl(220 13% 20%);         /* #2A2E37 */
-    --panel-text-dark: hsl(0 0% 95%);              /* #F2F2F2 */
-    --panel-text-muted-dark: hsl(220 5% 65%);      /* #9CA3AF */
-    --panel-hover-dark: hsl(220 15% 16%);          /* #23262F */
+    --panel-bg-dark: hsl(220 15% 12%); /* #1C1F26 */
+    --panel-border-dark: hsl(220 13% 20%); /* #2A2E37 */
+    --panel-text-dark: hsl(0 0% 95%); /* #F2F2F2 */
+    --panel-text-muted-dark: hsl(220 5% 65%); /* #9CA3AF */
+    --panel-hover-dark: hsl(220 15% 16%); /* #23262F */
 
     /* ============================================
        BADGES & INDICATORS
        ============================================ */
 
-    --badge-bg: hsl(220 13% 91%);                  /* #E5E7EB */
-    --badge-text: hsl(220 13% 46%);                /* #6B7280 */
-    --badge-bg-dark: hsl(220 13% 20%);             /* #2A2E37 */
-    --badge-text-dark: hsl(220 5% 75%);            /* #B8BDC5 */
+    --badge-bg: hsl(220 13% 91%); /* #E5E7EB */
+    --badge-text: hsl(220 13% 46%); /* #6B7280 */
+    --badge-bg-dark: hsl(220 13% 20%); /* #2A2E37 */
+    --badge-text-dark: hsl(220 5% 75%); /* #B8BDC5 */
 
-    /* Success/Growth Indicator */
-    --success-indicator: hsl(142 71% 45%);         /* #10B981 - Green */
-    --success-bg: hsl(142 71% 45% / 0.1);          /* Green 10% */
-    --success-text: hsl(142 71% 35%);              /* Darker green */
+    /* Success/Growth Indicator - Uses theme primary for consistency */
+    --success-indicator: hsl(var(--primary-500)); /* Theme green */
+    --success-bg: hsl(var(--primary-500) / 0.1); /* Theme green 10% */
+    --success-text: hsl(var(--primary-700)); /* Darker theme green */
 
     /* Warning/Decline Indicator */
-    --warning-indicator: hsl(0 84% 60%);           /* #F87171 - Red */
-    --warning-bg: hsl(0 84% 60% / 0.1);            /* Red 10% */
-    --warning-text: hsl(0 84% 50%);                /* Darker red */
+    --warning-indicator: hsl(0 84% 60%); /* #F87171 - Red */
+    --warning-bg: hsl(0 84% 60% / 0.1); /* Red 10% */
+    --warning-text: hsl(0 84% 50%); /* Darker red */
 
     /* ============================================
        CONTENT AREA (Main Dashboard)
        ============================================ */
 
     /* Content - Light Mode */
-    --content-bg: hsl(0 0% 100%);                  /* #FFFFFF */
-    --content-card-bg: hsl(0 0% 100%);             /* #FFFFFF */
-    --content-border: hsl(220 13% 91%);            /* #E5E7EB */
-    --content-text: hsl(220 13% 18%);              /* #1F2937 */
-    --content-text-muted: hsl(220 9% 46%);         /* #6B7280 */
+    --content-bg: hsl(0 0% 100%); /* #FFFFFF */
+    --content-card-bg: hsl(0 0% 100%); /* #FFFFFF */
+    --content-border: hsl(220 13% 91%); /* #E5E7EB */
+    --content-text: hsl(220 13% 18%); /* #1F2937 */
+    --content-text-muted: hsl(220 9% 46%); /* #6B7280 */
 
     /* Content - Dark Mode */
-    --content-bg-dark: hsl(220 15% 18%);           /* Lighter dark background */
-    --content-card-bg-dark: hsl(220 15% 20%);      /* Lighter card background */
-    --content-border-dark: hsl(220 13% 24%);       /* Lighter border */
-    --content-text-dark: hsl(0 0% 95%);            /* #F2F2F2 */
-    --content-text-muted-dark: hsl(220 5% 65%);    /* #9CA3AF */
+    --content-bg-dark: hsl(220 15% 18%); /* Lighter dark background */
+    --content-card-bg-dark: hsl(220 15% 20%); /* Lighter card background */
+    --content-border-dark: hsl(220 13% 24%); /* Lighter border */
+    --content-text-dark: hsl(0 0% 95%); /* #F2F2F2 */
+    --content-text-muted-dark: hsl(220 5% 65%); /* #9CA3AF */
 
     /* ============================================
        TYPOGRAPHY SCALE
        ============================================ */
 
     /* Font Sizes */
-    --text-2xs: 0.6875rem;    /* 11px - Section headers */
-    --text-xs: 0.75rem;       /* 12px - Labels */
-    --text-sm: 0.875rem;      /* 14px - Body text */
-    --text-base: 1rem;        /* 16px - Base */
-    --text-lg: 1.125rem;      /* 18px - Subheadings */
-    --text-xl: 1.25rem;       /* 20px - Headings */
-    --text-2xl: 1.5rem;       /* 24px - Page titles */
-    --text-3xl: 1.875rem;     /* 30px - Hero text */
-    --text-4xl: 2.25rem;      /* 36px - Large headings */
-    --text-metric: 4.5rem;    /* 72px - Metric numbers */
+    --text-2xs: 0.6875rem; /* 11px - Section headers */
+    --text-xs: 0.75rem; /* 12px - Labels */
+    --text-sm: 0.875rem; /* 14px - Body text */
+    --text-base: 1rem; /* 16px - Base */
+    --text-lg: 1.125rem; /* 18px - Subheadings */
+    --text-xl: 1.25rem; /* 20px - Headings */
+    --text-2xl: 1.5rem; /* 24px - Page titles */
+    --text-3xl: 1.875rem; /* 30px - Hero text */
+    --text-4xl: 2.25rem; /* 36px - Large headings */
+    --text-metric: 4.5rem; /* 72px - Metric numbers */
 
     /* Font Weights */
     --font-normal: 400;
@@ -121,16 +121,16 @@
        ============================================ */
 
     --space-0: 0;
-    --space-1: 0.25rem;   /* 4px */
-    --space-2: 0.5rem;    /* 8px */
-    --space-3: 0.75rem;   /* 12px */
-    --space-4: 1rem;      /* 16px */
-    --space-5: 1.25rem;   /* 20px */
-    --space-6: 1.5rem;    /* 24px */
-    --space-8: 2rem;      /* 32px */
-    --space-10: 2.5rem;   /* 40px */
-    --space-12: 3rem;     /* 48px */
-    --space-16: 4rem;     /* 64px */
+    --space-1: 0.25rem; /* 4px */
+    --space-2: 0.5rem; /* 8px */
+    --space-3: 0.75rem; /* 12px */
+    --space-4: 1rem; /* 16px */
+    --space-5: 1.25rem; /* 20px */
+    --space-6: 1.5rem; /* 24px */
+    --space-8: 2rem; /* 32px */
+    --space-10: 2.5rem; /* 40px */
+    --space-12: 3rem; /* 48px */
+    --space-16: 4rem; /* 64px */
 
     /* Component-specific spacing */
     --icon-rail-width: 56px;
@@ -163,13 +163,13 @@
        BORDER RADIUS
        ============================================ */
 
-    --radius-sm: 0.25rem;    /* 4px */
+    --radius-sm: 0.25rem; /* 4px */
     --radius-DEFAULT: 0.5rem; /* 8px */
-    --radius-md: 0.375rem;   /* 6px */
-    --radius-lg: 0.5rem;     /* 8px */
-    --radius-xl: 0.75rem;    /* 12px */
-    --radius-2xl: 1rem;      /* 16px */
-    --radius-full: 9999px;   /* Fully rounded */
+    --radius-md: 0.375rem; /* 6px */
+    --radius-lg: 0.5rem; /* 8px */
+    --radius-xl: 0.75rem; /* 12px */
+    --radius-2xl: 1rem; /* 16px */
+    --radius-full: 9999px; /* Fully rounded */
 
     /* ============================================
        TRANSITIONS & ANIMATIONS

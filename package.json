@@ -56,11 +56,16 @@
   },
   "homepage": "https://github.com/alzahrani-khalid/Intl-Dossier-V2.0#readme",
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "eslint --fix",
+    "frontend/**/*.{js,jsx,ts,tsx}": [
       "prettier --write"
     ],
-    "*.{json,md,yml,yaml}": [
+    "backend/**/*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.{js,jsx,ts,tsx}": [
+      "prettier --write"
+    ],
+    "*.{json,md,yml,yaml,css}": [
       "prettier --write"
     ]
   },
