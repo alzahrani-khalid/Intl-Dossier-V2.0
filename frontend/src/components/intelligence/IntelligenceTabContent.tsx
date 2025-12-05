@@ -17,68 +17,55 @@
  * - RTL support with logical properties
  */
 
-import React, { useState, useMemo, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useAllIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence';
-import { EconomicDashboard } from '@/components/intelligence/EconomicDashboard';
-import { PoliticalAnalysis } from '@/components/intelligence/PoliticalAnalysis';
-import { SecurityAssessment } from '@/components/intelligence/SecurityAssessment';
-import { BilateralOpportunities } from '@/components/intelligence/BilateralOpportunities';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Globe, MapPin, Users, Maximize2, AlertCircle, RefreshCw } from 'lucide-react';
-import type { IntelligenceReport } from '@/types/intelligence-reports.types';
-import type { CountryDossier } from '@/lib/dossier-type-guards';
+import React, { useState, useMemo, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useAllIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence'
+import { EconomicDashboard } from '@/components/intelligence/EconomicDashboard'
+import { PoliticalAnalysis } from '@/components/intelligence/PoliticalAnalysis'
+import { SecurityAssessment } from '@/components/intelligence/SecurityAssessment'
+import { BilateralOpportunities } from '@/components/intelligence/BilateralOpportunities'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Globe, MapPin, Users, Maximize2, AlertCircle, RefreshCw } from 'lucide-react'
+import type { IntelligenceReport } from '@/types/intelligence-reports.types'
+import type { CountryDossier } from '@/lib/dossier-type-guards'
 
 interface IntelligenceTabContentProps {
-  dossierId: string;
-  dossier?: CountryDossier;
+  dossierId: string
+  dossier?: CountryDossier
 }
 
 export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabContentProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Track if auto-generation has been attempted
-  const [autoGenerationAttempted, setAutoGenerationAttempted] = React.useState(false);
+  const [autoGenerationAttempted, setAutoGenerationAttempted] = React.useState(false)
 
   // Fetch all intelligence data
-  const {
-    data: intelligenceData,
-    isLoading,
-    isError,
-    error,
-  } = useAllIntelligence(dossierId);
+  const { data: intelligenceData, isLoading, isError, error } = useAllIntelligence(dossierId)
 
   // Refresh intelligence mutation
-  const refreshMutation = useRefreshIntelligence();
+  const refreshMutation = useRefreshIntelligence()
 
   // Auto-generate intelligence when no data exists or data is stale (>1 month)
   useEffect(() => {
     // Skip if already attempted or currently generating
     if (autoGenerationAttempted || refreshMutation.isPending) {
-      return;
+      return
     }
 
     // Skip if still loading initial data
     if (isLoading) {
-      return;
+      return
     }
 
     // Case 1: No data exists (404 error or empty response)
     const hasNoData =
-      (isError && error?.status === 404) ||
-      !intelligenceData ||
-      intelligenceData.data.length === 0;
+      (isError && error?.status === 404) || !intelligenceData || intelligenceData.data.length === 0
 
     if (hasNoData) {
-      console.log('[Intelligence] No data found, triggering auto-generation...');
-      console.log('[Intelligence] Mutation state:', {
-        isPending: refreshMutation.isPending,
-        isError: refreshMutation.isError,
-        error: refreshMutation.error,
-      });
-      setAutoGenerationAttempted(true);
+      setAutoGenerationAttempted(true)
       refreshMutation.mutate(
         {
           entity_id: dossierId,
@@ -87,40 +74,34 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           priority: 'normal',
         },
         {
-          onSuccess: (data) => {
-            console.log('[Intelligence] Auto-generation triggered successfully:', data);
+          onSuccess: (_data) => {
+            // Auto-generation triggered successfully
           },
-          onError: (error) => {
-            console.error('[Intelligence] Auto-generation failed:', error);
-            console.error('[Intelligence] Error details:', {
-              status: error.status,
-              code: error.code,
-              message: error.message,
-            });
+          onError: (_error) => {
+            // Auto-generation failed
           },
-        }
-      );
-      return;
+        },
+      )
+      return
     }
 
     // Case 2: Data exists but is stale (>1 month old)
     if (intelligenceData?.data && intelligenceData.data.length > 0) {
       const oldestRefresh = Math.min(
         ...intelligenceData.data.map((report) =>
-          new Date(report.last_refreshed_at || report.created_at).getTime()
-        )
-      );
-      const oneMonthAgo = Date.now() - 30 * 24 * 60 * 60 * 1000; // 30 days
+          new Date(report.last_refreshed_at || report.created_at).getTime(),
+        ),
+      )
+      const oneMonthAgo = Date.now() - 30 * 24 * 60 * 60 * 1000 // 30 days
 
       if (oldestRefresh < oneMonthAgo) {
-        console.log('[Intelligence] Data is stale (>1 month), triggering refresh...');
-        setAutoGenerationAttempted(true);
+        setAutoGenerationAttempted(true)
         refreshMutation.mutate({
           entity_id: dossierId,
           intelligence_types: ['economic', 'political', 'security', 'bilateral'],
           force: true, // Force refresh for stale data
           priority: 'normal',
-        });
+        })
       }
     }
   }, [
@@ -131,39 +112,47 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
     error,
     autoGenerationAttempted,
     refreshMutation,
-  ]);
+  ])
 
   // No filtering - show all reports
   const filteredReports = useMemo(() => {
-    return intelligenceData?.data || [];
-  }, [intelligenceData]);
+    return intelligenceData?.data || []
+  }, [intelligenceData])
 
   // Group reports by intelligence type
   const economicReports = useMemo(
     () => filteredReports.filter((r) => r.intelligence_type === 'economic'),
-    [filteredReports]
-  );
+    [filteredReports],
+  )
 
   const politicalReports = useMemo(
     () => filteredReports.filter((r) => r.intelligence_type === 'political'),
-    [filteredReports]
-  );
+    [filteredReports],
+  )
 
   const securityReports = useMemo(
     () => filteredReports.filter((r) => r.intelligence_type === 'security'),
-    [filteredReports]
-  );
+    [filteredReports],
+  )
 
   const bilateralReports = useMemo(
     () => filteredReports.filter((r) => r.intelligence_type === 'bilateral'),
-    [filteredReports]
-  );
+    [filteredReports],
+  )
 
   // Loading state
   if (isLoading) {
     return (
-      <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'} role="status" aria-live="polite" aria-busy="true">
-        <span className="sr-only">{t('intelligence.loadingDashboard', 'Loading intelligence dashboard...')}</span>
+      <div
+        className="space-y-6"
+        dir={isRTL ? 'rtl' : 'ltr'}
+        role="status"
+        aria-live="polite"
+        aria-busy="true"
+      >
+        <span className="sr-only">
+          {t('intelligence.loadingDashboard', 'Loading intelligence dashboard...')}
+        </span>
         <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
           <Skeleton className="h-10 w-full sm:w-48" />
           <Skeleton className="h-10 w-full sm:w-48" />
@@ -175,7 +164,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           ))}
         </div>
       </div>
-    );
+    )
   }
 
   // Error state (but not 404, which is handled as empty state)
@@ -189,7 +178,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             : t('intelligence.error', 'Failed to load intelligence dashboard')}
         </AlertDescription>
       </Alert>
-    );
+    )
   }
 
   // Handle generate intelligence
@@ -199,11 +188,15 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
       intelligence_types: ['economic', 'political', 'security', 'bilateral'],
       force: false,
       priority: 'normal',
-    });
-  };
+    })
+  }
 
   // Empty state or generating state
-  if ((isError && error?.status === 404) || !intelligenceData || intelligenceData.data.length === 0) {
+  if (
+    (isError && error?.status === 404) ||
+    !intelligenceData ||
+    intelligenceData.data.length === 0
+  ) {
     // Show generating message if auto-generation is in progress
     if (refreshMutation.isPending || (autoGenerationAttempted && !refreshMutation.isError)) {
       return (
@@ -214,7 +207,10 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           aria-live="polite"
           aria-busy="true"
         >
-          <RefreshCw className="h-16 w-16 sm:h-20 sm:w-20 text-primary mb-6 animate-spin" aria-hidden="true" />
+          <RefreshCw
+            className="h-16 w-16 sm:h-20 sm:w-20 text-primary mb-6 animate-spin"
+            aria-hidden="true"
+          />
 
           <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
             {t('intelligence.generating', 'Generating Intelligence...')}
@@ -223,7 +219,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           <p className="text-sm sm:text-base text-muted-foreground mb-4 max-w-md">
             {t(
               'intelligence.generatingDescription',
-              'AI is analyzing available data to generate comprehensive intelligence insights. This may take 30-60 seconds.'
+              'AI is analyzing available data to generate comprehensive intelligence insights. This may take 30-60 seconds.',
             )}
           </p>
 
@@ -234,7 +230,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <span>✓ Bilateral relations</span>
           </div>
         </div>
-      );
+      )
     }
 
     // Show empty state with manual generate button
@@ -245,7 +241,10 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
         role="region"
         aria-live="polite"
       >
-        <AlertCircle className="h-16 w-16 sm:h-20 sm:w-20 text-muted-foreground mb-6" aria-hidden="true" />
+        <AlertCircle
+          className="h-16 w-16 sm:h-20 sm:w-20 text-muted-foreground mb-6"
+          aria-hidden="true"
+        />
 
         <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
           {t('intelligence.noData', 'No Intelligence Available')}
@@ -254,7 +253,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
         <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md">
           {t(
             'intelligence.noDataDescription',
-            'Generate AI-powered intelligence insights for this country. The system will analyze available data to provide economic, political, security, and bilateral intelligence in both English and Arabic.'
+            'Generate AI-powered intelligence insights for this country. The system will analyze available data to provide economic, political, security, and bilateral intelligence in both English and Arabic.',
           )}
         </p>
 
@@ -286,7 +285,10 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <AlertDescription>
               {refreshMutation.error instanceof Error
                 ? refreshMutation.error.message
-                : t('intelligence.generateError', 'Failed to generate intelligence. Please try again.')}
+                : t(
+                    'intelligence.generateError',
+                    'Failed to generate intelligence. Please try again.',
+                  )}
             </AlertDescription>
           </Alert>
         )}
@@ -296,17 +298,22 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <AlertDescription>
               {t(
                 'intelligence.generateSuccess',
-                'Intelligence generation started successfully. Data will appear shortly.'
+                'Intelligence generation started successfully. Data will appear shortly.',
               )}
             </AlertDescription>
           </Alert>
         )}
       </div>
-    );
+    )
   }
 
   return (
-    <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'} role="region" aria-label={t('intelligence.dashboardLabel', 'Intelligence dashboard')}>
+    <div
+      className="space-y-6"
+      dir={isRTL ? 'rtl' : 'ltr'}
+      role="region"
+      aria-label={t('intelligence.dashboardLabel', 'Intelligence dashboard')}
+    >
       {/* Header with Geographic Context */}
       <div className="flex flex-col gap-4">
         {/* Title */}
@@ -317,7 +324,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           <p className="text-xs sm:text-sm text-muted-foreground mt-1">
             {t(
               'intelligence.dashboardDescription',
-              'Comprehensive analysis across economic, political, security, and bilateral dimensions'
+              'Comprehensive analysis across economic, political, security, and bilateral dimensions',
             )}
           </p>
         </div>
@@ -342,9 +349,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
             <div className="flex items-start gap-2">
               <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
               <div className="min-w-0">
-                <p className="text-xs text-muted-foreground">
-                  {t('geographic.region', 'Region')}
-                </p>
+                <p className="text-xs text-muted-foreground">{t('geographic.region', 'Region')}</p>
                 <p className="text-sm font-semibold truncate">
                   {dossier.extension.region || 'N/A'}
                 </p>
@@ -359,10 +364,10 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
                   {t('geographic.capital', 'Capital')}
                 </p>
                 <p className="text-sm font-semibold truncate">
-                  {(isRTL ? dossier.extension.capital_ar : dossier.extension.capital_en) || 
-                   dossier.extension.capital_en || 
-                   dossier.extension.capital_ar || 
-                   'N/A'}
+                  {(isRTL ? dossier.extension.capital_ar : dossier.extension.capital_en) ||
+                    dossier.extension.capital_en ||
+                    dossier.extension.capital_ar ||
+                    'N/A'}
                 </p>
               </div>
             </div>
@@ -409,7 +414,11 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
       </div>
 
       {/* Dashboard Sections Grid - Mobile First Responsive */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6" role="list" aria-label={t('intelligence.dashboardSectionsLabel', 'Intelligence sections')}>
+      <div
+        className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6"
+        role="list"
+        aria-label={t('intelligence.dashboardSectionsLabel', 'Intelligence sections')}
+      >
         {/* Economic Dashboard */}
         <EconomicDashboard reports={economicReports} dossierId={dossierId} />
 
@@ -423,5 +432,5 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
         <BilateralOpportunities reports={bilateralReports} dossierId={dossierId} />
       </div>
     </div>
-  );
+  )
 }

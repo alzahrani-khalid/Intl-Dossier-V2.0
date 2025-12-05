@@ -6,33 +6,33 @@
  * Links tasks to after-action and parent dossier for timeline integration
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import { Database } from '../types/database.types';
-import { Commitment } from '../types/after-action.types';
-import logger from '../utils/logger';
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import { Database } from '../types/database.types'
+import { Commitment } from '../types/after-action.types'
+import logger from '../utils/logger'
 
-type Task = Database['public']['Tables']['tasks']['Insert'];
-type TaskRow = Database['public']['Tables']['tasks']['Row'];
+type Task = Database['public']['Tables']['tasks']['Insert']
+type TaskRow = Database['public']['Tables']['tasks']['Row']
 
 export interface TaskCreationParams {
-  afterActionId: string;
-  dossierId: string;
-  commitments: Commitment[];
-  createdBy: string;
+  afterActionId: string
+  dossierId: string
+  commitments: Commitment[]
+  createdBy: string
 }
 
 export interface TaskCreationResult {
-  success: boolean;
-  tasksCreated: number;
-  taskIds: string[];
-  errors: string[];
+  success: boolean
+  tasksCreated: number
+  taskIds: string[]
+  errors: string[]
 }
 
 export class TaskCreationService {
-  private supabase: SupabaseClient<Database>;
+  private supabase: SupabaseClient<Database>
 
   constructor(supabaseUrl: string, supabaseKey: string) {
-    this.supabase = createClient<Database>(supabaseUrl, supabaseKey);
+    this.supabase = createClient<Database>(supabaseUrl, supabaseKey)
   }
 
   /**
@@ -44,37 +44,35 @@ export class TaskCreationService {
    * - Tasks start in "pending" status
    * - Task titles use commitment descriptions (bilingual)
    */
-  async createTasksFromCommitments(
-    params: TaskCreationParams
-  ): Promise<TaskCreationResult> {
-    const { afterActionId, dossierId, commitments, createdBy } = params;
+  async createTasksFromCommitments(params: TaskCreationParams): Promise<TaskCreationResult> {
+    const { afterActionId, dossierId, commitments, createdBy } = params
 
     const result: TaskCreationResult = {
       success: true,
       tasksCreated: 0,
       taskIds: [],
       errors: [],
-    };
+    }
 
     logger.info('Starting task creation from commitments', {
       afterActionId,
       dossierId,
       commitmentCount: commitments.length,
       createdBy,
-    });
+    })
 
     // Validate inputs
     if (!afterActionId || !dossierId || !createdBy) {
-      const error = 'Missing required parameters: afterActionId, dossierId, or createdBy';
-      logger.error(error);
-      result.success = false;
-      result.errors.push(error);
-      return result;
+      const error = 'Missing required parameters: afterActionId, dossierId, or createdBy'
+      logger.error(error)
+      result.success = false
+      result.errors.push(error)
+      return result
     }
 
     if (!commitments || commitments.length === 0) {
-      logger.warn('No commitments provided - no tasks to create', { afterActionId });
-      return result;
+      logger.warn('No commitments provided - no tasks to create', { afterActionId })
+      return result
     }
 
     // Create tasks in transaction
@@ -85,27 +83,28 @@ export class TaskCreationService {
             commitment,
             afterActionId,
             dossierId,
-            createdBy
-          );
+            createdBy,
+          )
 
           if (task) {
-            result.tasksCreated++;
-            result.taskIds.push(task.id);
+            result.tasksCreated++
+            result.taskIds.push(task.id)
             logger.info('Task created successfully', {
               taskId: task.id,
               commitmentId: commitment.id,
-              owner: commitment.owner_type === 'internal'
-                ? commitment.internal_owner_id
-                : commitment.external_contact_id,
-            });
+              owner:
+                commitment.owner_type === 'internal'
+                  ? commitment.owner_internal_id
+                  : commitment.owner_external_id,
+            })
           }
         } catch (error) {
           const errorMsg = `Failed to create task for commitment ${commitment.id}: ${
             error instanceof Error ? error.message : 'Unknown error'
-          }`;
-          logger.error(errorMsg, { commitmentId: commitment.id, error });
-          result.errors.push(errorMsg);
-          result.success = false;
+          }`
+          logger.error(errorMsg, { commitmentId: commitment.id, error })
+          result.errors.push(errorMsg)
+          result.success = false
         }
       }
 
@@ -114,17 +113,17 @@ export class TaskCreationService {
         tasksCreated: result.tasksCreated,
         totalCommitments: commitments.length,
         errors: result.errors.length,
-      });
+      })
 
-      return result;
+      return result
     } catch (error) {
       const errorMsg = `Task creation failed: ${
         error instanceof Error ? error.message : 'Unknown error'
-      }`;
-      logger.error(errorMsg, { afterActionId, error });
-      result.success = false;
-      result.errors.push(errorMsg);
-      return result;
+      }`
+      logger.error(errorMsg, { afterActionId, error })
+      result.success = false
+      result.errors.push(errorMsg)
+      return result
     }
   }
 
@@ -136,75 +135,77 @@ export class TaskCreationService {
     commitment: Commitment,
     afterActionId: string,
     dossierId: string,
-    createdBy: string
+    createdBy: string,
   ): Promise<TaskRow | null> {
     // Determine task owner (internal user ID or external contact ID)
-    let assigneeUserId: string | null = null;
-    let externalContactId: string | null = null;
+    let assigneeUserId: string | null = null
+    let externalContactId: string | null = null
 
-    if (commitment.owner_type === 'internal' && commitment.internal_owner_id) {
-      assigneeUserId = commitment.internal_owner_id;
-    } else if (commitment.owner_type === 'external' && commitment.external_contact_id) {
-      externalContactId = commitment.external_contact_id;
+    if (commitment.owner_type === 'internal' && commitment.owner_internal_id) {
+      assigneeUserId = commitment.owner_internal_id
+    } else if (commitment.owner_type === 'external' && commitment.owner_external_id) {
+      externalContactId = commitment.owner_external_id
     } else {
       logger.warn('Commitment has no valid owner - creating unassigned task', {
         commitmentId: commitment.id,
         ownerType: commitment.owner_type,
-      });
+      })
     }
 
-    // Build task record
+    // Build task record - map commitment fields to tasks table schema
     const taskData: Task = {
-      title: commitment.description_en,
-      title_ar: commitment.description_ar || null,
-      description: `Task created from commitment in after-action record`,
-      description_ar: `مهمة تم إنشاؤها من التزام في سجل الإجراءات اللاحقة`,
-
-      // Link to dossier and after-action
-      dossier_id: dossierId,
-      related_after_action_id: afterActionId,
-      related_commitment_id: commitment.id,
+      title: commitment.description,
+      description: `Task created from commitment in after-action record. مهمة تم إنشاؤها من التزام في سجل الإجراءات اللاحقة`,
 
       // Assignment
-      assigned_to: assigneeUserId,
-      external_assignee_id: externalContactId,
+      assignee_id: assigneeUserId || createdBy, // Fall back to creator if no assignee
       created_by: createdBy,
+      last_modified_by: createdBy,
+      tenant_id: dossierId, // Using dossier_id as tenant context
 
       // Timing
-      due_date: commitment.due_date,
+      sla_deadline:
+        typeof commitment.due_date === 'string'
+          ? commitment.due_date
+          : (commitment.due_date?.toISOString() ?? null),
 
       // Status
       status: 'pending',
-      priority: commitment.priority || 'medium',
+      priority: (commitment.priority as 'low' | 'medium' | 'high' | 'urgent') || 'medium',
+      workflow_stage: 'todo',
 
-      // Metadata
-      task_type: 'commitment',
-      tags: ['after-action', 'commitment'],
+      // Type and source
+      type: 'action_item',
+      source: {
+        type: 'commitment',
+        after_action_id: afterActionId,
+        commitment_id: commitment.id,
+        dossier_id: dossierId,
+        external_contact_id: externalContactId,
+      },
 
-      // Timestamps handled by database default
-    };
+      // Default JSON fields
+      assignment: {},
+      timeline: {},
+    }
 
     // Insert task
-    const { data, error } = await this.supabase
-      .from('tasks')
-      .insert(taskData)
-      .select()
-      .single();
+    const { data, error } = await this.supabase.from('tasks').insert(taskData).select().single()
 
     if (error) {
       logger.error('Failed to insert task', {
         commitmentId: commitment.id,
         error: error.message,
-      });
-      throw new Error(`Database error: ${error.message}`);
+      })
+      throw new Error(`Database error: ${error.message}`)
     }
 
     if (!data) {
-      logger.error('Task insert returned no data', { commitmentId: commitment.id });
-      throw new Error('Task insert returned no data');
+      logger.error('Task insert returned no data', { commitmentId: commitment.id })
+      throw new Error('Task insert returned no data')
     }
 
-    return data;
+    return data
   }
 
   /**
@@ -213,12 +214,12 @@ export class TaskCreationService {
    */
   async updateTaskStatusFromCommitment(
     commitmentId: string,
-    newStatus: 'pending' | 'in_progress' | 'completed' | 'cancelled'
+    newStatus: 'pending' | 'in_progress' | 'completed' | 'cancelled',
   ): Promise<boolean> {
     logger.info('Updating task status from commitment', {
       commitmentId,
       newStatus,
-    });
+    })
 
     try {
       const { error } = await this.supabase
@@ -228,27 +229,27 @@ export class TaskCreationService {
           updated_at: new Date().toISOString(),
           completed_at: newStatus === 'completed' ? new Date().toISOString() : null,
         })
-        .eq('related_commitment_id', commitmentId);
+        .eq('related_commitment_id', commitmentId)
 
       if (error) {
         logger.error('Failed to update task status', {
           commitmentId,
           error: error.message,
-        });
-        return false;
+        })
+        return false
       }
 
       logger.info('Task status updated successfully', {
         commitmentId,
         newStatus,
-      });
-      return true;
+      })
+      return true
     } catch (error) {
       logger.error('Error updating task status', {
         commitmentId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return false;
+      })
+      return false
     }
   }
 
@@ -257,35 +258,35 @@ export class TaskCreationService {
    * Used for displaying linked tasks in after-action view
    */
   async getTasksByAfterAction(afterActionId: string): Promise<TaskRow[]> {
-    logger.info('Fetching tasks for after-action', { afterActionId });
+    logger.info('Fetching tasks for after-action', { afterActionId })
 
     try {
       const { data, error } = await this.supabase
         .from('tasks')
         .select('*')
         .eq('related_after_action_id', afterActionId)
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
 
       if (error) {
         logger.error('Failed to fetch tasks', {
           afterActionId,
           error: error.message,
-        });
-        throw new Error(`Database error: ${error.message}`);
+        })
+        throw new Error(`Database error: ${error.message}`)
       }
 
       logger.info('Tasks fetched successfully', {
         afterActionId,
         taskCount: data?.length || 0,
-      });
+      })
 
-      return data || [];
+      return data || []
     } catch (error) {
       logger.error('Error fetching tasks', {
         afterActionId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      throw error;
+      })
+      throw error
     }
   }
 
@@ -294,30 +295,30 @@ export class TaskCreationService {
    * Cascades deletion to maintain referential integrity
    */
   async deleteTasksByAfterAction(afterActionId: string): Promise<boolean> {
-    logger.info('Deleting tasks for after-action', { afterActionId });
+    logger.info('Deleting tasks for after-action', { afterActionId })
 
     try {
       const { error } = await this.supabase
         .from('tasks')
         .delete()
-        .eq('related_after_action_id', afterActionId);
+        .eq('related_after_action_id', afterActionId)
 
       if (error) {
         logger.error('Failed to delete tasks', {
           afterActionId,
           error: error.message,
-        });
-        return false;
+        })
+        return false
       }
 
-      logger.info('Tasks deleted successfully', { afterActionId });
-      return true;
+      logger.info('Tasks deleted successfully', { afterActionId })
+      return true
     } catch (error) {
       logger.error('Error deleting tasks', {
         afterActionId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return false;
+      })
+      return false
     }
   }
 }
@@ -325,7 +326,7 @@ export class TaskCreationService {
 // Export singleton instance for use across application
 export const createTaskCreationService = (
   supabaseUrl: string,
-  supabaseKey: string
+  supabaseKey: string,
 ): TaskCreationService => {
-  return new TaskCreationService(supabaseUrl, supabaseKey);
-};
+  return new TaskCreationService(supabaseUrl, supabaseKey)
+}

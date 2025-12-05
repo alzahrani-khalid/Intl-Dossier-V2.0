@@ -4,7 +4,7 @@
  * Feature: 024-intake-entity-linking
  */
 
-import { Router, Request, Response } from 'express';
+import { Router, Request, Response } from 'express'
 import {
   createEntityLink,
   getEntityLinks,
@@ -14,16 +14,12 @@ import {
   reorderEntityLinks,
   createBatchLinks,
   getEntityIntakes,
-} from '../services/link.service';
-import { createAuditLog, getIntakeAuditLogs } from '../services/link-audit.service';
-import { migrateIntakeLinksToPosition } from '../services/link-migration.service';
-import type {
-  CreateLinkRequest,
-  UpdateLinkRequest,
-  EntityLink,
-} from '../types/intake-entity-links.types';
+} from '../services/link.service'
+import { createAuditLog, getIntakeAuditLogs } from '../services/link-audit.service'
+import { migrateIntakeLinksToPosition } from '../services/link-migration.service'
+import type { CreateLinkRequest, UpdateLinkRequest } from '../types/intake-entity-links.types'
 
-const router = Router();
+const router = Router()
 
 /**
  * POST /api/intake/:intake_id/links
@@ -31,8 +27,8 @@ const router = Router();
  */
 router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params;
-    const userId = req.user?.id;
+    const { intake_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -41,7 +37,7 @@ router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Parse and validate request body
@@ -55,7 +51,7 @@ router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
       notes: req.body.notes,
       link_order: req.body.link_order,
       suggested_by: req.body.suggested_by,
-    };
+    }
 
     // Validate required fields
     if (!linkData.entity_type || !linkData.entity_id || !linkData.link_type) {
@@ -72,34 +68,28 @@ router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
             ].filter(Boolean),
           },
         },
-      });
+      })
     }
 
     // Create the entity link
-    const newLink = await createEntityLink(intake_id, userId, linkData);
+    const newLink = await createEntityLink(intake_id, userId, linkData)
 
     // Create audit log (fire-and-forget)
-    const ipAddress = req.ip || req.connection.remoteAddress;
-    const userAgent = req.headers['user-agent'];
-    createAuditLog(
-      newLink.id,
-      'created',
-      userId,
-      null,
-      newLink,
-      ipAddress,
-      userAgent
-    ).catch(error => {
-      console.error('Failed to create audit log:', error);
-    });
+    const ipAddress = req.ip || req.connection.remoteAddress
+    const userAgent = req.headers['user-agent']
+    createAuditLog(newLink.id, 'created', userId, null, newLink, ipAddress, userAgent).catch(
+      (error) => {
+        console.error('Failed to create audit log:', error)
+      },
+    )
 
     // Return success response
     return res.status(201).json({
       success: true,
       data: newLink,
-    });
+    })
   } catch (error: any) {
-    console.error('Error creating entity link:', error);
+    console.error('Error creating entity link:', error)
 
     // Handle specific error codes
     if (error.code && error.statusCode) {
@@ -110,7 +100,7 @@ router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
           message: error.message,
           details: error.details,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -120,9 +110,9 @@ router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
         code: 'INTERNAL_ERROR',
         message: 'Failed to create entity link',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * POST /api/intake/:intake_id/links/batch
@@ -131,8 +121,8 @@ router.post('/intake/:intake_id/links', async (req: Request, res: Response) => {
  */
 router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params;
-    const userId = req.user?.id;
+    const { intake_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -141,11 +131,11 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Validate request body has links array
-    const { links } = req.body;
+    const { links } = req.body
 
     if (!Array.isArray(links)) {
       return res.status(400).json({
@@ -154,7 +144,7 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
           code: 'VALIDATION_ERROR',
           message: 'Request body must contain a "links" array',
         },
-      });
+      })
     }
 
     // Validate batch size (1-50 links)
@@ -170,11 +160,11 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
             max_size: 50,
           },
         },
-      });
+      })
     }
 
     // Process batch link creation
-    const result = await createBatchLinks(intake_id, userId, links);
+    const result = await createBatchLinks(intake_id, userId, links)
 
     // T088: Enhanced error handling for partial failures
     const response = {
@@ -188,12 +178,12 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
         succeeded_count: result.succeeded.length,
         failed_count: result.failed.length,
       },
-    };
+    }
 
     // Return 201 for successful batch operation (even with partial failures)
-    return res.status(201).json(response);
+    return res.status(201).json(response)
   } catch (error: any) {
-    console.error('Error creating batch links:', error);
+    console.error('Error creating batch links:', error)
 
     // T088: Handle specific error codes with detailed messages
     if (error.code && error.statusCode) {
@@ -204,7 +194,7 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
           message: error.message,
           details: error.details,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -214,9 +204,9 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
         code: 'INTERNAL_ERROR',
         message: 'Failed to create batch links',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * POST /api/intake/:intake_id/migrate-links
@@ -225,8 +215,8 @@ router.post('/intake/:intake_id/links/batch', async (req: Request, res: Response
  */
 router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params;
-    const userId = req.user?.id;
+    const { intake_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -235,11 +225,11 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Validate request body
-    const { target_position_id, atomic } = req.body;
+    const { target_position_id, atomic } = req.body
 
     if (!target_position_id) {
       return res.status(400).json({
@@ -248,7 +238,7 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
           code: 'VALIDATION_ERROR',
           message: 'Missing required field: target_position_id',
         },
-      });
+      })
     }
 
     // Execute migration
@@ -256,8 +246,8 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
       intake_id,
       target_position_id,
       userId,
-      atomic || false
-    );
+      atomic || false,
+    )
 
     // Return migration result
     return res.status(200).json({
@@ -273,9 +263,9 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
         migration_complete: result.failed_count === 0,
         atomic_mode: atomic || false,
       },
-    });
+    })
   } catch (error: any) {
-    console.error('Error migrating links:', error);
+    console.error('Error migrating links:', error)
 
     // T088: Handle specific error codes with detailed messages
     if (error.code && error.statusCode) {
@@ -286,7 +276,7 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
           message: error.message,
           details: error.details,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -296,9 +286,9 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
         code: 'INTERNAL_ERROR',
         message: 'Failed to migrate links',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * GET /api/intake/:intake_id/links
@@ -306,8 +296,8 @@ router.post('/intake/:intake_id/migrate-links', async (req: Request, res: Respon
  */
 router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params;
-    const userId = req.user?.id;
+    const { intake_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -316,18 +306,18 @@ router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Parse query parameters
-    const includeDeleted = req.query.include_deleted === 'true';
+    const includeDeleted = req.query.include_deleted === 'true'
 
     // TODO: Check if user has access to this intake ticket
     // This would involve checking if the user is assigned to the intake
     // or has appropriate permissions to view it
 
     // Get entity links
-    const links = await getEntityLinks(intake_id, includeDeleted);
+    const links = await getEntityLinks(intake_id, includeDeleted)
 
     // Return success response
     return res.status(200).json({
@@ -336,9 +326,9 @@ router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
       total: links.length,
       page: 1,
       page_size: links.length,
-    });
+    })
   } catch (error: any) {
-    console.error('Error fetching entity links:', error);
+    console.error('Error fetching entity links:', error)
 
     // Handle specific error codes
     if (error.code && error.statusCode) {
@@ -348,7 +338,7 @@ router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
           code: error.code,
           message: error.message,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -358,9 +348,9 @@ router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
         code: 'INTERNAL_ERROR',
         message: 'Failed to fetch entity links',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * PUT /api/intake/:intake_id/links/:link_id
@@ -368,8 +358,8 @@ router.get('/intake/:intake_id/links', async (req: Request, res: Response) => {
  */
 router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Response) => {
   try {
-    const { intake_id, link_id } = req.params;
-    const userId = req.user?.id;
+    const { intake_id, link_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -378,7 +368,7 @@ router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Respon
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Parse and validate request body
@@ -386,7 +376,7 @@ router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Respon
       notes: req.body.notes,
       link_order: req.body.link_order,
       _version: req.body._version,
-    };
+    }
 
     // Validate _version field for optimistic locking
     if (typeof updateData._version !== 'number') {
@@ -396,38 +386,32 @@ router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Respon
           code: 'VALIDATION_ERROR',
           message: 'Missing or invalid _version field for optimistic locking',
         },
-      });
+      })
     }
 
     // Get old values for audit log
-    const oldLinks = await getEntityLinks(intake_id, false);
-    const oldLink = oldLinks.find(l => l.id === link_id);
+    const oldLinks = await getEntityLinks(intake_id, false)
+    const oldLink = oldLinks.find((l) => l.id === link_id)
 
     // Update the entity link
-    const updatedLink = await updateEntityLink(link_id, userId, updateData);
+    const updatedLink = await updateEntityLink(link_id, userId, updateData)
 
     // Create audit log (fire-and-forget)
-    const ipAddress = req.ip || req.connection.remoteAddress;
-    const userAgent = req.headers['user-agent'];
-    createAuditLog(
-      link_id,
-      'updated',
-      userId,
-      oldLink,
-      updatedLink,
-      ipAddress,
-      userAgent
-    ).catch(error => {
-      console.error('Failed to create audit log:', error);
-    });
+    const ipAddress = req.ip || req.connection.remoteAddress
+    const userAgent = req.headers['user-agent']
+    createAuditLog(link_id, 'updated', userId, oldLink, updatedLink, ipAddress, userAgent).catch(
+      (error) => {
+        console.error('Failed to create audit log:', error)
+      },
+    )
 
     // Return success response
     return res.status(200).json({
       success: true,
       data: updatedLink,
-    });
+    })
   } catch (error: any) {
-    console.error('Error updating entity link:', error);
+    console.error('Error updating entity link:', error)
 
     // Handle specific error codes
     if (error.code && error.statusCode) {
@@ -437,7 +421,7 @@ router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Respon
           code: error.code,
           message: error.message,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -447,9 +431,9 @@ router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Respon
         code: 'INTERNAL_ERROR',
         message: 'Failed to update entity link',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * PUT /api/intake/:intake_id/links/reorder
@@ -458,8 +442,8 @@ router.put('/intake/:intake_id/links/:link_id', async (req: Request, res: Respon
  */
 router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params;
-    const userId = req.user?.id;
+    const { intake_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -468,11 +452,11 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Parse and validate request body
-    const { link_orders } = req.body;
+    const { link_orders } = req.body
 
     if (!Array.isArray(link_orders)) {
       return res.status(400).json({
@@ -481,13 +465,13 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
           code: 'VALIDATION_ERROR',
           message: 'Request body must contain a "link_orders" array',
         },
-      });
+      })
     }
 
     // Validate each link order entry has required fields
     const invalidEntries = link_orders.filter(
-      (entry: any) => !entry.link_id || typeof entry.link_order !== 'number'
-    );
+      (entry: any) => !entry.link_id || typeof entry.link_order !== 'number',
+    )
 
     if (invalidEntries.length > 0) {
       return res.status(400).json({
@@ -499,15 +483,15 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
             invalid_count: invalidEntries.length,
           },
         },
-      });
+      })
     }
 
     // Reorder the links
-    const updatedLinks = await reorderEntityLinks(intake_id, userId, link_orders);
+    const updatedLinks = await reorderEntityLinks(intake_id, userId, link_orders)
 
     // T114: Create audit log for reorder operation (fire-and-forget)
-    const ipAddress = req.ip || req.connection.remoteAddress;
-    const userAgent = req.headers['user-agent'];
+    const ipAddress = req.ip || req.connection.remoteAddress
+    const userAgent = req.headers['user-agent']
 
     // Create a single audit log entry for the reorder operation
     createAuditLog(
@@ -520,10 +504,10 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
         new_orders: link_orders,
       },
       ipAddress,
-      userAgent
-    ).catch(error => {
-      console.error('Failed to create audit log:', error);
-    });
+      userAgent,
+    ).catch((error) => {
+      console.error('Failed to create audit log:', error)
+    })
 
     // Return success response
     return res.status(200).json({
@@ -532,9 +516,9 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
       meta: {
         updated_count: updatedLinks.length,
       },
-    });
+    })
   } catch (error: any) {
-    console.error('Error reordering entity links:', error);
+    console.error('Error reordering entity links:', error)
 
     // Handle specific error codes
     if (error.code && error.statusCode) {
@@ -545,7 +529,7 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
           message: error.message,
           details: error.details,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -555,9 +539,9 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
         code: 'INTERNAL_ERROR',
         message: 'Failed to reorder entity links',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * DELETE /api/intake/:intake_id/links/:link_id
@@ -565,8 +549,8 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
  */
 router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Response) => {
   try {
-    const { intake_id, link_id } = req.params;
-    const userId = req.user?.id;
+    const { link_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -575,34 +559,28 @@ router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Res
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Delete the entity link
-    const deletedLink = await deleteEntityLink(link_id, userId);
+    const deletedLink = await deleteEntityLink(link_id, userId)
 
     // Create audit log (fire-and-forget)
-    const ipAddress = req.ip || req.connection.remoteAddress;
-    const userAgent = req.headers['user-agent'];
-    createAuditLog(
-      link_id,
-      'deleted',
-      userId,
-      deletedLink,
-      null,
-      ipAddress,
-      userAgent
-    ).catch(error => {
-      console.error('Failed to create audit log:', error);
-    });
+    const ipAddress = req.ip || req.connection.remoteAddress
+    const userAgent = req.headers['user-agent']
+    createAuditLog(link_id, 'deleted', userId, deletedLink, null, ipAddress, userAgent).catch(
+      (error) => {
+        console.error('Failed to create audit log:', error)
+      },
+    )
 
     // Return success response
     return res.status(200).json({
       success: true,
       data: deletedLink,
-    });
+    })
   } catch (error: any) {
-    console.error('Error deleting entity link:', error);
+    console.error('Error deleting entity link:', error)
 
     // Handle specific error codes
     if (error.code && error.statusCode) {
@@ -612,7 +590,7 @@ router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Res
           code: error.code,
           message: error.message,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -622,9 +600,9 @@ router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Res
         code: 'INTERNAL_ERROR',
         message: 'Failed to delete entity link',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * POST /api/intake/:intake_id/links/:link_id/restore
@@ -632,8 +610,8 @@ router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Res
  */
 router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, res: Response) => {
   try {
-    const { intake_id, link_id } = req.params;
-    const userId = req.user?.id;
+    const { link_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -642,34 +620,28 @@ router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, re
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Restore the entity link
-    const restoredLink = await restoreEntityLink(link_id, userId);
+    const restoredLink = await restoreEntityLink(link_id, userId)
 
     // Create audit log (fire-and-forget)
-    const ipAddress = req.ip || req.connection.remoteAddress;
-    const userAgent = req.headers['user-agent'];
-    createAuditLog(
-      link_id,
-      'restored',
-      userId,
-      null,
-      restoredLink,
-      ipAddress,
-      userAgent
-    ).catch(error => {
-      console.error('Failed to create audit log:', error);
-    });
+    const ipAddress = req.ip || req.connection.remoteAddress
+    const userAgent = req.headers['user-agent']
+    createAuditLog(link_id, 'restored', userId, null, restoredLink, ipAddress, userAgent).catch(
+      (error) => {
+        console.error('Failed to create audit log:', error)
+      },
+    )
 
     // Return success response
     return res.status(200).json({
       success: true,
       data: restoredLink,
-    });
+    })
   } catch (error: any) {
-    console.error('Error restoring entity link:', error);
+    console.error('Error restoring entity link:', error)
 
     // Handle specific error codes
     if (error.code && error.statusCode) {
@@ -679,7 +651,7 @@ router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, re
           code: error.code,
           message: error.message,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -689,9 +661,9 @@ router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, re
         code: 'INTERNAL_ERROR',
         message: 'Failed to restore entity link',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * GET /api/intake/:intake_id/links/audit
@@ -699,8 +671,8 @@ router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, re
  */
 router.get('/intake/:intake_id/links/audit', async (req: Request, res: Response) => {
   try {
-    const { intake_id } = req.params;
-    const userId = req.user?.id;
+    const { intake_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -709,23 +681,23 @@ router.get('/intake/:intake_id/links/audit', async (req: Request, res: Response)
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Parse query parameters
-    const limit = parseInt(req.query.limit as string) || 100;
+    const limit = parseInt(req.query.limit as string) || 100
 
     // Get audit logs
-    const auditLogs = await getIntakeAuditLogs(intake_id, limit);
+    const auditLogs = await getIntakeAuditLogs(intake_id, limit)
 
     // Return success response
     return res.status(200).json({
       success: true,
       data: auditLogs,
       total: auditLogs.length,
-    });
+    })
   } catch (error: any) {
-    console.error('Error fetching audit logs:', error);
+    console.error('Error fetching audit logs:', error)
 
     // Generic error response
     return res.status(500).json({
@@ -734,9 +706,9 @@ router.get('/intake/:intake_id/links/audit', async (req: Request, res: Response)
         code: 'INTERNAL_ERROR',
         message: 'Failed to fetch audit logs',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * GET /api/entities/:entity_type/:entity_id/intakes
@@ -747,8 +719,8 @@ router.get('/intake/:intake_id/links/audit', async (req: Request, res: Response)
  */
 router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res: Response) => {
   try {
-    const { entity_type, entity_id } = req.params;
-    const userId = req.user?.id;
+    const { entity_type, entity_id } = req.params
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -757,7 +729,7 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Get user profile for clearance level
@@ -765,19 +737,28 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
       .from('profiles')
       .select('clearance_level')
       .eq('user_id', userId)
-      .single();
+      .single()
 
     // Parse query parameters
-    const page = parseInt(req.query.page as string) || 1;
-    const pageSize = parseInt(req.query.page_size as string) || 50;
-    const linkType = req.query.link_type as string | undefined;
+    const page = parseInt(req.query.page as string) || 1
+    const pageSize = parseInt(req.query.page_size as string) || 50
+    const linkType = req.query.link_type as string | undefined
 
     // Validate entity_type
     const validEntityTypes = [
-      'dossier', 'country', 'organization', 'forum', 'working_group',
-      'topic', 'position', 'mou', 'engagement', 'assignment',
-      'commitment', 'intelligence_signal'
-    ];
+      'dossier',
+      'country',
+      'organization',
+      'forum',
+      'working_group',
+      'topic',
+      'position',
+      'mou',
+      'engagement',
+      'assignment',
+      'commitment',
+      'intelligence_signal',
+    ]
 
     if (!validEntityTypes.includes(entity_type)) {
       return res.status(400).json({
@@ -789,12 +770,12 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
             valid_types: validEntityTypes,
           },
         },
-      });
+      })
     }
 
     // Validate link_type if provided
     if (linkType) {
-      const validLinkTypes = ['primary', 'related', 'mentioned', 'requested', 'assigned_to'];
+      const validLinkTypes = ['primary', 'related', 'mentioned', 'requested', 'assigned_to']
       if (!validLinkTypes.includes(linkType)) {
         return res.status(400).json({
           success: false,
@@ -805,7 +786,7 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
               valid_types: validLinkTypes,
             },
           },
-        });
+        })
       }
     }
 
@@ -815,7 +796,7 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
       pageSize,
       linkType: linkType as any,
       userClearanceLevel: userProfile?.clearance_level,
-    });
+    })
 
     // Return success response
     return res.status(200).json({
@@ -827,9 +808,9 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
         entity_id,
         link_type: linkType || 'all',
       },
-    });
+    })
   } catch (error: any) {
-    console.error('Error fetching entity intakes:', error);
+    console.error('Error fetching entity intakes:', error)
 
     // Handle specific error codes
     if (error.code && error.statusCode) {
@@ -840,7 +821,7 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
           message: error.message,
           details: error.details,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -850,8 +831,8 @@ router.get('/entities/:entity_type/:entity_id/intakes', async (req: Request, res
         code: 'INTERNAL_ERROR',
         message: 'Failed to fetch entity intakes',
       },
-    });
+    })
   }
-});
+})
 
-export default router;
+export default router

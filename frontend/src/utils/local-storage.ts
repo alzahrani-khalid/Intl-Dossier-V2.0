@@ -27,19 +27,19 @@
  * ```
  */
 
-import type { TaskUpdate } from '@/types/database.types';
+import type { TaskUpdate } from '@/types/database.types'
 
 // IndexedDB configuration
-const DB_NAME = 'intl-dossier-offline';
-const DB_VERSION = 1;
-const STORE_NAME = 'task-drafts';
-const TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+const DB_NAME = 'intl-dossier-offline'
+const DB_VERSION = 1
+const STORE_NAME = 'task-drafts'
+const TTL_MS = 7 * 24 * 60 * 60 * 1000 // 7 days
 
 export interface TaskDraft {
-  taskId: string;
-  updates: Partial<TaskUpdate>;
-  timestamp: number;
-  originalUpdatedAt?: string; // For optimistic locking
+  taskId: string
+  updates: Partial<TaskUpdate>
+  timestamp: number
+  originalUpdatedAt?: string // For optimistic locking
 }
 
 /**
@@ -47,30 +47,30 @@ export interface TaskDraft {
  */
 async function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
-    const request = indexedDB.open(DB_NAME, DB_VERSION);
+    const request = indexedDB.open(DB_NAME, DB_VERSION)
 
     request.onerror = () => {
-      reject(new Error('Failed to open IndexedDB'));
-    };
+      reject(new Error('Failed to open IndexedDB'))
+    }
 
     request.onsuccess = () => {
-      resolve(request.result);
-    };
+      resolve(request.result)
+    }
 
     request.onupgradeneeded = (event) => {
-      const db = (event.target as IDBOpenDBRequest).result;
+      const db = (event.target as IDBOpenDBRequest).result
 
       // Create object store if it doesn't exist
       if (!db.objectStoreNames.contains(STORE_NAME)) {
         const objectStore = db.createObjectStore(STORE_NAME, {
           keyPath: 'taskId',
-        });
+        })
 
         // Create index for timestamp-based queries
-        objectStore.createIndex('timestamp', 'timestamp', { unique: false });
+        objectStore.createIndex('timestamp', 'timestamp', { unique: false })
       }
-    };
-  });
+    }
+  })
 }
 
 /**
@@ -84,32 +84,26 @@ async function openDB(): Promise<IDBDatabase> {
 export async function saveTaskDraft(
   taskId: string,
   updates: Partial<TaskUpdate>,
-  originalUpdatedAt?: string
+  originalUpdatedAt?: string,
 ): Promise<void> {
-  try {
-    const db = await openDB();
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
+  const db = await openDB()
+  const transaction = db.transaction([STORE_NAME], 'readwrite')
+  const store = transaction.objectStore(STORE_NAME)
 
-    const draft: TaskDraft = {
-      taskId,
-      updates,
-      timestamp: Date.now(),
-      originalUpdatedAt,
-    };
-
-    await new Promise<void>((resolve, reject) => {
-      const request = store.put(draft);
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error('Failed to save draft'));
-    });
-
-    db.close();
-    console.log(`[LocalStorage] Saved draft for task ${taskId}`);
-  } catch (error) {
-    console.error('[LocalStorage] Error saving draft:', error);
-    throw error;
+  const draft: TaskDraft = {
+    taskId,
+    updates,
+    timestamp: Date.now(),
+    originalUpdatedAt,
   }
+
+  await new Promise<void>((resolve, reject) => {
+    const request = store.put(draft)
+    request.onsuccess = () => resolve()
+    request.onerror = () => reject(new Error('Failed to save draft'))
+  })
+
+  db.close()
 }
 
 /**
@@ -120,31 +114,29 @@ export async function saveTaskDraft(
  */
 export async function getTaskDraft(taskId: string): Promise<TaskDraft | null> {
   try {
-    const db = await openDB();
-    const transaction = db.transaction([STORE_NAME], 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
+    const db = await openDB()
+    const transaction = db.transaction([STORE_NAME], 'readonly')
+    const store = transaction.objectStore(STORE_NAME)
 
     const draft = await new Promise<TaskDraft | null>((resolve, reject) => {
-      const request = store.get(taskId);
+      const request = store.get(taskId)
       request.onsuccess = () => {
-        const result = request.result as TaskDraft | undefined;
+        const result = request.result as TaskDraft | undefined
 
         // Check if draft is stale (older than TTL)
         if (result && Date.now() - result.timestamp > TTL_MS) {
-          console.log(`[LocalStorage] Draft for task ${taskId} is stale, ignoring`);
-          resolve(null);
+          resolve(null)
         } else {
-          resolve(result || null);
+          resolve(result || null)
         }
-      };
-      request.onerror = () => reject(new Error('Failed to get draft'));
-    });
+      }
+      request.onerror = () => reject(new Error('Failed to get draft'))
+    })
 
-    db.close();
-    return draft;
-  } catch (error) {
-    console.error('[LocalStorage] Error getting draft:', error);
-    return null;
+    db.close()
+    return draft
+  } catch (_error) {
+    return null
   }
 }
 
@@ -155,23 +147,17 @@ export async function getTaskDraft(taskId: string): Promise<TaskDraft | null> {
  * @returns {Promise<void>}
  */
 export async function clearTaskDraft(taskId: string): Promise<void> {
-  try {
-    const db = await openDB();
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
+  const db = await openDB()
+  const transaction = db.transaction([STORE_NAME], 'readwrite')
+  const store = transaction.objectStore(STORE_NAME)
 
-    await new Promise<void>((resolve, reject) => {
-      const request = store.delete(taskId);
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error('Failed to clear draft'));
-    });
+  await new Promise<void>((resolve, reject) => {
+    const request = store.delete(taskId)
+    request.onsuccess = () => resolve()
+    request.onerror = () => reject(new Error('Failed to clear draft'))
+  })
 
-    db.close();
-    console.log(`[LocalStorage] Cleared draft for task ${taskId}`);
-  } catch (error) {
-    console.error('[LocalStorage] Error clearing draft:', error);
-    throw error;
-  }
+  db.close()
 }
 
 /**
@@ -181,34 +167,29 @@ export async function clearTaskDraft(taskId: string): Promise<void> {
  */
 export async function getAllTaskDrafts(): Promise<TaskDraft[]> {
   try {
-    const db = await openDB();
-    const transaction = db.transaction([STORE_NAME], 'readonly');
-    const store = transaction.objectStore(STORE_NAME);
+    const db = await openDB()
+    const transaction = db.transaction([STORE_NAME], 'readonly')
+    const store = transaction.objectStore(STORE_NAME)
 
     const drafts = await new Promise<TaskDraft[]>((resolve, reject) => {
-      const request = store.getAll();
+      const request = store.getAll()
       request.onsuccess = () => {
-        const results = request.result as TaskDraft[];
+        const results = request.result as TaskDraft[]
 
         // Filter out stale drafts
         const validDrafts = results.filter((draft) => {
-          const isValid = Date.now() - draft.timestamp <= TTL_MS;
-          if (!isValid) {
-            console.log(`[LocalStorage] Ignoring stale draft for task ${draft.taskId}`);
-          }
-          return isValid;
-        });
+          return Date.now() - draft.timestamp <= TTL_MS
+        })
 
-        resolve(validDrafts);
-      };
-      request.onerror = () => reject(new Error('Failed to get all drafts'));
-    });
+        resolve(validDrafts)
+      }
+      request.onerror = () => reject(new Error('Failed to get all drafts'))
+    })
 
-    db.close();
-    return drafts;
-  } catch (error) {
-    console.error('[LocalStorage] Error getting all drafts:', error);
-    return [];
+    db.close()
+    return drafts
+  } catch (_error) {
+    return []
   }
 }
 
@@ -219,49 +200,47 @@ export async function getAllTaskDrafts(): Promise<TaskDraft[]> {
  */
 export async function clearStaleDrafts(): Promise<number> {
   try {
-    const db = await openDB();
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
-    const index = store.index('timestamp');
+    const db = await openDB()
+    const transaction = db.transaction([STORE_NAME], 'readwrite')
+    const store = transaction.objectStore(STORE_NAME)
+    const index = store.index('timestamp')
 
-    const now = Date.now();
-    const staleThreshold = now - TTL_MS;
+    const now = Date.now()
+    const staleThreshold = now - TTL_MS
 
-    const staleDrafts: string[] = [];
+    const staleDrafts: string[] = []
 
     // Find stale drafts
     await new Promise<void>((resolve, reject) => {
-      const request = index.openCursor();
+      const request = index.openCursor()
       request.onsuccess = (event) => {
-        const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result;
+        const cursor = (event.target as IDBRequest<IDBCursorWithValue>).result
         if (cursor) {
-          const draft = cursor.value as TaskDraft;
+          const draft = cursor.value as TaskDraft
           if (draft.timestamp < staleThreshold) {
-            staleDrafts.push(draft.taskId);
+            staleDrafts.push(draft.taskId)
           }
-          cursor.continue();
+          cursor.continue()
         } else {
-          resolve();
+          resolve()
         }
-      };
-      request.onerror = () => reject(new Error('Failed to find stale drafts'));
-    });
+      }
+      request.onerror = () => reject(new Error('Failed to find stale drafts'))
+    })
 
     // Delete stale drafts
     for (const taskId of staleDrafts) {
       await new Promise<void>((resolve, reject) => {
-        const request = store.delete(taskId);
-        request.onsuccess = () => resolve();
-        request.onerror = () => reject(new Error('Failed to delete stale draft'));
-      });
+        const request = store.delete(taskId)
+        request.onsuccess = () => resolve()
+        request.onerror = () => reject(new Error('Failed to delete stale draft'))
+      })
     }
 
-    db.close();
-    console.log(`[LocalStorage] Cleared ${staleDrafts.length} stale drafts`);
-    return staleDrafts.length;
-  } catch (error) {
-    console.error('[LocalStorage] Error clearing stale drafts:', error);
-    return 0;
+    db.close()
+    return staleDrafts.length
+  } catch (_error) {
+    return 0
   }
 }
 
@@ -271,23 +250,17 @@ export async function clearStaleDrafts(): Promise<number> {
  * @returns {Promise<void>}
  */
 export async function clearAllTaskDrafts(): Promise<void> {
-  try {
-    const db = await openDB();
-    const transaction = db.transaction([STORE_NAME], 'readwrite');
-    const store = transaction.objectStore(STORE_NAME);
+  const db = await openDB()
+  const transaction = db.transaction([STORE_NAME], 'readwrite')
+  const store = transaction.objectStore(STORE_NAME)
 
-    await new Promise<void>((resolve, reject) => {
-      const request = store.clear();
-      request.onsuccess = () => resolve();
-      request.onerror = () => reject(new Error('Failed to clear all drafts'));
-    });
+  await new Promise<void>((resolve, reject) => {
+    const request = store.clear()
+    request.onsuccess = () => resolve()
+    request.onerror = () => reject(new Error('Failed to clear all drafts'))
+  })
 
-    db.close();
-    console.log('[LocalStorage] Cleared all drafts');
-  } catch (error) {
-    console.error('[LocalStorage] Error clearing all drafts:', error);
-    throw error;
-  }
+  db.close()
 }
 
 /**
@@ -296,5 +269,5 @@ export async function clearAllTaskDrafts(): Promise<void> {
  * @returns {boolean} True if IndexedDB is supported
  */
 export function isIndexedDBSupported(): boolean {
-  return typeof indexedDB !== 'undefined';
+  return typeof indexedDB !== 'undefined'
 }

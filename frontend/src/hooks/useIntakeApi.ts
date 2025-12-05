@@ -4,8 +4,8 @@
  * Provides React hooks for all intake-related API operations
  */
 
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '../lib/supabase';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { supabase } from '../lib/supabase'
 import {
   IntakeFormData,
   TicketResponse,
@@ -21,10 +21,10 @@ import {
   TriageSuggestions,
   DuplicateCandidate,
   Attachment,
-} from '../types/intake';
+} from '../types/intake'
 
 // API base URL
-const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1';
+const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
 
 // Query keys
 export const intakeKeys = {
@@ -37,34 +37,33 @@ export const intakeKeys = {
   attachments: (id: string) => [...intakeKeys.tickets(), 'attachments', id] as const,
   health: () => [...intakeKeys.all, 'health'] as const,
   aiHealth: () => [...intakeKeys.all, 'ai-health'] as const,
-};
+}
 
 // Helper to get auth headers
 const getAuthHeaders = async () => {
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
   if (!session) {
-    console.error('❌ No active session found');
-    throw new Error('No active session');
+    throw new Error('No active session')
   }
-
-  console.log('✅ Auth token:', session.access_token?.substring(0, 20) + '...');
 
   return {
     'Content-Type': 'application/json',
-    'Authorization': `Bearer ${session.access_token}`,
-  };
-};
+    Authorization: `Bearer ${session.access_token}`,
+  }
+}
 
 /**
  * Create Ticket
  */
 export const useCreateTicket = () => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: CreateTicketRequest): Promise<TicketResponse> => {
-      const headers = await getAuthHeaders();
+      const headers = await getAuthHeaders()
 
       // Transform camelCase to snake_case for API
       const payload = {
@@ -77,71 +76,70 @@ export const useCreateTicket = () => {
         dossier_id: data.dossierId,
         type_specific_fields: data.typeSpecificFields,
         attachments: data.attachments,
-      };
+      }
 
       const response = await fetch(`${API_BASE_URL}/intake-tickets-create`, {
         method: 'POST',
         headers,
         body: JSON.stringify(payload),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to create ticket');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to create ticket')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() });
+      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
     },
-  });
-};
+  })
+}
 
 /**
  * List Tickets
  */
 export const useTicketList = (filters?: {
-  status?: string;
-  requestType?: string;
-  sensitivity?: string;
-  urgency?: string;
-  assignedTo?: string;
-  assignedUnit?: string;
-  slaBreached?: boolean;
-  createdAfter?: string;
-  createdBefore?: string;
-  page?: number;
-  limit?: number;
+  status?: string
+  requestType?: string
+  sensitivity?: string
+  urgency?: string
+  assignedTo?: string
+  assignedUnit?: string
+  slaBreached?: boolean
+  createdAfter?: string
+  createdBefore?: string
+  page?: number
+  limit?: number
 }) => {
   return useQuery({
     queryKey: intakeKeys.ticketList(filters),
     queryFn: async (): Promise<TicketListResponse> => {
-      const headers = await getAuthHeaders();
-      const params = new URLSearchParams();
+      const headers = await getAuthHeaders()
+      const params = new URLSearchParams()
 
       if (filters) {
         Object.entries(filters).forEach(([key, value]) => {
           if (value !== undefined && value !== null) {
-            params.append(key, String(value));
+            params.append(key, String(value))
           }
-        });
+        })
       }
 
-      const response = await fetch(
-        `${API_BASE_URL}/intake-tickets-list?${params.toString()}`,
-        { headers }
-      );
+      const response = await fetch(`${API_BASE_URL}/intake-tickets-list?${params.toString()}`, {
+        headers,
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to fetch tickets');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to fetch tickets')
       }
 
-      return response.json();
+      return response.json()
     },
-  });
-};
+  })
+}
 
 /**
  * Get Ticket Detail
@@ -150,50 +148,50 @@ export const useTicket = (ticketId: string) => {
   return useQuery({
     queryKey: intakeKeys.ticket(ticketId),
     queryFn: async (): Promise<TicketDetailResponse> => {
-      const headers = await getAuthHeaders();
+      const headers = await getAuthHeaders()
       const response = await fetch(`${API_BASE_URL}/intake-tickets-get?id=${ticketId}`, {
         headers,
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to fetch ticket');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to fetch ticket')
       }
 
-      return response.json();
+      return response.json()
     },
     enabled: !!ticketId,
-  });
-};
+  })
+}
 
 /**
  * Update Ticket
  */
 export const useUpdateTicket = (ticketId: string) => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: UpdateTicketRequest): Promise<TicketResponse> => {
-      const headers = await getAuthHeaders();
+      const headers = await getAuthHeaders()
       const response = await fetch(`${API_BASE_URL}/intake-tickets-update`, {
         method: 'PATCH',
         headers,
         body: JSON.stringify({ id: ticketId, ...data }),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to update ticket');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to update ticket')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) });
-      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() });
+      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) })
+      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
     },
-  });
-};
+  })
+}
 
 /**
  * Get Triage Suggestions
@@ -202,39 +200,36 @@ export const useTriageSuggestions = (ticketId: string) => {
   return useQuery({
     queryKey: intakeKeys.triage(ticketId),
     queryFn: async (): Promise<TriageSuggestions> => {
-      const headers = await getAuthHeaders();
-      const response = await fetch(
-        `${API_BASE_URL}/intake-tickets-triage/${ticketId}/triage`,
-        {
-          method: 'GET',
-          headers
-        }
-      );
+      const headers = await getAuthHeaders()
+      const response = await fetch(`${API_BASE_URL}/intake-tickets-triage/${ticketId}/triage`, {
+        method: 'GET',
+        headers,
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to fetch triage suggestions');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to fetch triage suggestions')
       }
 
-      return response.json();
+      return response.json()
     },
     enabled: !!ticketId,
     staleTime: 5 * 60 * 1000, // 5 minutes
-  });
-};
+  })
+}
 
 /**
  * Apply Triage
  */
 export const useApplyTriage = (ticketId: string) => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: ApplyTriageRequest): Promise<TicketResponse> => {
-      const headers = await getAuthHeaders();
+      const headers = await getAuthHeaders()
 
       // Transform decision_type to action as expected by the Edge Function
-      const action = data.decision_type === 'ai_suggestion' ? 'accept' : 'override';
+      const action = data.decision_type === 'ai_suggestion' ? 'accept' : 'override'
 
       const requestBody = {
         action,
@@ -244,86 +239,88 @@ export const useApplyTriage = (ticketId: string) => {
         assigned_unit: data.suggested_unit,
         override_reason: data.override_reason,
         override_reason_ar: data.override_reason_ar,
-      };
+      }
 
       const response = await fetch(`${API_BASE_URL}/intake-tickets-triage/${ticketId}/triage`, {
         method: 'POST',
         headers,
         body: JSON.stringify(requestBody),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to apply triage');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to apply triage')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) });
-      queryClient.invalidateQueries({ queryKey: intakeKeys.triage(ticketId) });
-      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() });
+      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) })
+      queryClient.invalidateQueries({ queryKey: intakeKeys.triage(ticketId) })
+      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
     },
-  });
-};
+  })
+}
 
 /**
  * Assign Ticket
  */
 export const useAssignTicket = (ticketId: string) => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: AssignTicketRequest): Promise<TicketResponse> => {
-      const headers = await getAuthHeaders();
+      const headers = await getAuthHeaders()
       const response = await fetch(`${API_BASE_URL}/intake-tickets-assign`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ id: ticketId, ...data }),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to assign ticket');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to assign ticket')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) });
-      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() });
+      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) })
+      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
     },
-  });
-};
+  })
+}
 
 /**
  * Convert Ticket
  */
 export const useConvertTicket = (ticketId: string) => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (data: ConvertTicketRequest): Promise<{ success: boolean; artifactId: string }> => {
-      const headers = await getAuthHeaders();
+    mutationFn: async (
+      data: ConvertTicketRequest,
+    ): Promise<{ success: boolean; artifactId: string }> => {
+      const headers = await getAuthHeaders()
       const response = await fetch(`${API_BASE_URL}/intake-tickets-convert`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ id: ticketId, ...data }),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to convert ticket');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to convert ticket')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) });
-      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() });
+      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) })
+      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
     },
-  });
-};
+  })
+}
 
 /**
  * Get Duplicate Candidates
@@ -332,79 +329,79 @@ export const useDuplicateCandidates = (ticketId: string, threshold = 0.65) => {
   return useQuery({
     queryKey: intakeKeys.duplicates(ticketId),
     queryFn: async (): Promise<{ candidates: DuplicateCandidate[] }> => {
-      const headers = await getAuthHeaders();
+      const headers = await getAuthHeaders()
       const response = await fetch(
         `${API_BASE_URL}/intake-tickets-duplicates?id=${ticketId}&threshold=${threshold}`,
-        { headers }
-      );
+        { headers },
+      )
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to fetch duplicates');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to fetch duplicates')
       }
 
-      return response.json();
+      return response.json()
     },
     enabled: !!ticketId,
-  });
-};
+  })
+}
 
 /**
  * Merge Tickets
  */
 export const useMergeTickets = (ticketId: string) => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: MergeTicketsRequest): Promise<TicketResponse> => {
-      const headers = await getAuthHeaders();
+      const headers = await getAuthHeaders()
       const response = await fetch(`${API_BASE_URL}/intake-tickets-merge`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ id: ticketId, ...data }),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to merge tickets');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to merge tickets')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() });
+      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
     },
-  });
-};
+  })
+}
 
 /**
  * Close Ticket
  */
 export const useCloseTicket = (ticketId: string) => {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return useMutation({
     mutationFn: async (data: CloseTicketRequest): Promise<TicketResponse> => {
-      const headers = await getAuthHeaders();
+      const headers = await getAuthHeaders()
       const response = await fetch(`${API_BASE_URL}/intake-tickets-close`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ id: ticketId, ...data }),
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to close ticket');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to close ticket')
       }
 
-      return response.json();
+      return response.json()
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) });
-      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() });
+      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) })
+      queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() })
     },
-  });
-};
+  })
+}
 
 /**
  * Upload Attachment
@@ -412,29 +409,31 @@ export const useCloseTicket = (ticketId: string) => {
 export const useUploadAttachment = () => {
   return useMutation({
     mutationFn: async (formData: FormData): Promise<Attachment> => {
-      const { data: { session } } = await supabase.auth.getSession();
+      const {
+        data: { session },
+      } = await supabase.auth.getSession()
 
       if (!session) {
-        throw new Error('No active session');
+        throw new Error('No active session')
       }
 
       const response = await fetch(`${API_BASE_URL}/intake-tickets-attachments`, {
         method: 'POST',
         headers: {
-          'Authorization': `Bearer ${session.access_token}`,
+          Authorization: `Bearer ${session.access_token}`,
         },
         body: formData,
-      });
+      })
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to upload attachment');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to upload attachment')
       }
 
-      return response.json();
+      return response.json()
     },
-  });
-};
+  })
+}
 
 /**
  * Delete Attachment
@@ -442,22 +441,22 @@ export const useUploadAttachment = () => {
 export const useDeleteAttachment = () => {
   return useMutation({
     mutationFn: async (attachmentId: string): Promise<void> => {
-      const headers = await getAuthHeaders();
+      const headers = await getAuthHeaders()
       const response = await fetch(
         `${API_BASE_URL}/intake-tickets-attachments?id=${attachmentId}`,
         {
           method: 'DELETE',
           headers,
-        }
-      );
+        },
+      )
 
       if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.message || 'Failed to delete attachment');
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to delete attachment')
       }
     },
-  });
-};
+  })
+}
 
 /**
  * Get SLA Preview
@@ -466,9 +465,9 @@ export const useGetSLAPreview = (urgency: string) => {
   return useQuery({
     queryKey: ['sla-preview', urgency],
     queryFn: async (): Promise<{
-      acknowledgmentMinutes: number;
-      resolutionHours: number;
-      businessHoursOnly: boolean;
+      acknowledgmentMinutes: number
+      resolutionHours: number
+      businessHoursOnly: boolean
     }> => {
       // This would typically come from an API endpoint
       // For now, return default values based on urgency
@@ -477,13 +476,13 @@ export const useGetSLAPreview = (urgency: string) => {
         high: { acknowledgmentMinutes: 30, resolutionHours: 8, businessHoursOnly: true },
         medium: { acknowledgmentMinutes: 60, resolutionHours: 24, businessHoursOnly: true },
         low: { acknowledgmentMinutes: 120, resolutionHours: 72, businessHoursOnly: true },
-      };
+      }
 
-      return slaMap[urgency as keyof typeof slaMap] || slaMap.medium;
+      return slaMap[urgency as keyof typeof slaMap] || slaMap.medium
     },
     enabled: !!urgency,
-  });
-};
+  })
+}
 
 /**
  * Health Check
@@ -492,15 +491,15 @@ export const useHealthCheck = () => {
   return useQuery({
     queryKey: intakeKeys.health(),
     queryFn: async () => {
-      const response = await fetch(`${API_BASE_URL}/intake-health`);
+      const response = await fetch(`${API_BASE_URL}/intake-health`)
       if (!response.ok) {
-        throw new Error('Health check failed');
+        throw new Error('Health check failed')
       }
-      return response.json();
+      return response.json()
     },
     refetchInterval: 30000, // 30 seconds
-  });
-};
+  })
+}
 
 /**
  * AI Health Check
@@ -515,7 +514,7 @@ export const useAIHealthCheck = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-      });
+      })
 
       if (!response.ok) {
         // Return a degraded status instead of throwing
@@ -529,11 +528,11 @@ export const useAIHealthCheck = () => {
           fallback_active: true,
           last_success: null,
           timestamp: new Date().toISOString(),
-        };
+        }
       }
-      return response.json();
+      return response.json()
     },
     refetchInterval: 60000, // 60 seconds
     retry: false, // Don't retry health checks
-  });
-};
+  })
+}

@@ -42,13 +42,11 @@ class RealtimeManager {
 
   private handleOnline = () => {
     this.isOnline = true
-    console.log('Network restored, reconnecting channels...')
     this.reconnectAllChannels()
   }
 
   private handleOffline = () => {
     this.isOnline = false
-    console.log('Network lost, queueing messages...')
   }
 
   private startHeartbeat() {
@@ -57,7 +55,6 @@ class RealtimeManager {
         // Check channel health
         const state = channel.state
         if (state === 'errored' || state === 'closed') {
-          console.log(`Channel ${name} unhealthy, attempting reconnect...`)
           this.reconnectChannel(name)
         }
       })
@@ -67,7 +64,6 @@ class RealtimeManager {
   subscribe(config: RealtimeConfig): RealtimeChannel {
     const existingChannel = this.channels.get(config.channel)
     if (existingChannel) {
-      console.log(`Reusing existing channel: ${config.channel}`)
       return existingChannel
     }
 
@@ -131,26 +127,19 @@ class RealtimeManager {
 
     // Setup database change handler
     if (config.onDatabaseChange) {
-      channel.on(
-        'postgres_changes',
-        { event: '*', schema: 'public' },
-        (payload) => {
-          config.onDatabaseChange!(payload)
-        }
-      )
+      channel.on('postgres_changes', { event: '*', schema: 'public' }, (payload) => {
+        config.onDatabaseChange!(payload)
+      })
     }
 
     // Subscribe with error handling
-    channel.subscribe((status, err) => {
+    channel.subscribe((status, _err) => {
       if (status === 'SUBSCRIBED') {
-        console.log(`Successfully subscribed to channel: ${config.channel}`)
         this.reconnectAttempts.set(config.channel, 0)
         this.flushMessageQueue(config.channel, channel)
       } else if (status === 'CHANNEL_ERROR') {
-        console.error(`Error subscribing to channel ${config.channel}:`, err)
         this.handleChannelError(config.channel, config)
       } else if (status === 'TIMED_OUT') {
-        console.error(`Subscription timed out for channel: ${config.channel}`)
         this.handleChannelError(config.channel, config)
       }
     })
@@ -163,7 +152,6 @@ class RealtimeManager {
     const attempts = this.reconnectAttempts.get(channelName) || 0
     if (attempts < this.maxReconnectAttempts) {
       const delay = this.baseReconnectDelay * Math.pow(2, attempts) // Exponential backoff
-      console.log(`Reconnecting channel ${channelName} in ${delay}ms (attempt ${attempts + 1})`)
 
       const timeout = setTimeout(() => {
         this.reconnectAttempts.set(channelName, attempts + 1)
@@ -172,8 +160,6 @@ class RealtimeManager {
       }, delay)
 
       this.reconnectTimeouts.set(channelName, timeout)
-    } else {
-      console.error(`Max reconnection attempts reached for channel: ${channelName}`)
     }
   }
 
@@ -185,10 +171,9 @@ class RealtimeManager {
   }
 
   private reconnectAllChannels() {
-    this.channels.forEach((channel, name) => {
+    this.channels.forEach((channel, _name) => {
       if (channel.state !== 'joined') {
-        console.log(`Reconnecting channel: ${name}`)
-        this.reconnectChannel(name)
+        this.reconnectChannel(_name)
       }
     })
   }
@@ -208,7 +193,6 @@ class RealtimeManager {
 
       // Clear message queue
       this.messageQueue.delete(channelName)
-      console.log(`Unsubscribed from channel: ${channelName}`)
     }
   }
 
@@ -241,13 +225,11 @@ class RealtimeManager {
       this.messageQueue.set(channelName, [])
     }
     this.messageQueue.get(channelName)!.push({ event, payload })
-    console.log(`Message queued for channel ${channelName}`)
   }
 
   private flushMessageQueue(channelName: string, channel: RealtimeChannel) {
     const queue = this.messageQueue.get(channelName)
     if (queue && queue.length > 0) {
-      console.log(`Flushing ${queue.length} queued messages for channel ${channelName}`)
       queue.forEach(({ event, payload }) => {
         channel.send({
           type: 'broadcast',
@@ -259,10 +241,7 @@ class RealtimeManager {
     }
   }
 
-  async trackPresence(
-    channelName: string,
-    user: PresenceUser
-  ): Promise<void> {
+  async trackPresence(channelName: string, user: PresenceUser): Promise<void> {
     const channel = this.channels.get(channelName)
     if (channel) {
       const presenceState = {
@@ -273,10 +252,7 @@ class RealtimeManager {
     }
   }
 
-  async updatePresence(
-    channelName: string,
-    updates: Partial<PresenceUser>
-  ): Promise<void> {
+  async updatePresence(channelName: string, updates: Partial<PresenceUser>): Promise<void> {
     const channel = this.channels.get(channelName)
     if (channel) {
       const currentState = channel.presenceState()
@@ -318,8 +294,7 @@ class RealtimeManager {
 export const realtimeManager = new RealtimeManager()
 
 // Export convenience functions
-export const subscribeToChannel = (config: RealtimeConfig) =>
-  realtimeManager.subscribe(config)
+export const subscribeToChannel = (config: RealtimeConfig) => realtimeManager.subscribe(config)
 
 export const unsubscribeFromChannel = (channelName: string) =>
   realtimeManager.unsubscribe(channelName)

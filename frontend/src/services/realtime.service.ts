@@ -5,44 +5,44 @@
  * Provides automatic reconnection with exponential backoff for reliability.
  */
 
-import { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js';
-import { supabase } from '@/lib/supabase';
+import { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/supabase-js'
+import { supabase } from '@/lib/supabase'
 
 type AssignmentPayload = RealtimePostgresChangesPayload<{
-  id: string;
-  work_item_id: string;
-  work_item_type: string;
-  assignee_id: string;
-  sla_deadline: string;
-  priority: string;
-  status: string;
-  warning_sent_at: string | null;
-  escalated_at: string | null;
-}>;
+  id: string
+  work_item_id: string
+  work_item_type: string
+  assignee_id: string
+  sla_deadline: string
+  priority: string
+  status: string
+  warning_sent_at: string | null
+  escalated_at: string | null
+}>
 
 type QueuePayload = RealtimePostgresChangesPayload<{
-  id: string;
-  work_item_id: string;
-  work_item_type: string;
-  priority: string;
-  created_at: string;
-}>;
+  id: string
+  work_item_id: string
+  work_item_type: string
+  priority: string
+  created_at: string
+}>
 
 export interface RealtimeServiceConfig {
-  userId?: string;
-  unitId?: string;
-  onAssignmentUpdate?: (payload: AssignmentPayload) => void;
-  onQueueUpdate?: (payload: QueuePayload) => void;
-  onError?: (error: Error) => void;
+  userId?: string
+  unitId?: string
+  onAssignmentUpdate?: (payload: AssignmentPayload) => void
+  onQueueUpdate?: (payload: QueuePayload) => void
+  onError?: (error: Error) => void
 }
 
 export class RealtimeService {
-  private assignmentChannel: RealtimeChannel | null = null;
-  private queueChannel: RealtimeChannel | null = null;
-  private reconnectAttempts = 0;
-  private maxReconnectAttempts = 10;
-  private reconnectDelay = 1000; // Start with 1 second
-  private isConnected = false;
+  private assignmentChannel: RealtimeChannel | null = null
+  private queueChannel: RealtimeChannel | null = null
+  private reconnectAttempts = 0
+  private maxReconnectAttempts = 10
+  private reconnectDelay = 1000 // Start with 1 second
+  private isConnected = false
 
   constructor(private config: RealtimeServiceConfig) {}
 
@@ -51,13 +51,13 @@ export class RealtimeService {
    */
   async subscribeToAssignments(): Promise<void> {
     if (!this.config.userId) {
-      throw new Error('userId is required to subscribe to assignments');
+      throw new Error('userId is required to subscribe to assignments')
     }
 
     try {
       // Unsubscribe from existing channel if present
       if (this.assignmentChannel) {
-        await this.assignmentChannel.unsubscribe();
+        await this.assignmentChannel.unsubscribe()
       }
 
       this.assignmentChannel = supabase
@@ -71,22 +71,21 @@ export class RealtimeService {
             filter: `assignee_id=eq.${this.config.userId}`,
           },
           (payload: AssignmentPayload) => {
-            this.handleAssignmentUpdate(payload);
-          }
+            this.handleAssignmentUpdate(payload)
+          },
         )
         .subscribe((status) => {
           if (status === 'SUBSCRIBED') {
-            this.isConnected = true;
-            this.reconnectAttempts = 0;
-            console.log('[Realtime] Connected to assignment updates');
+            this.isConnected = true
+            this.reconnectAttempts = 0
           } else if (status === 'CHANNEL_ERROR') {
-            this.handleConnectionError(new Error('Assignment channel error'));
+            this.handleConnectionError(new Error('Assignment channel error'))
           } else if (status === 'TIMED_OUT') {
-            this.handleConnectionError(new Error('Assignment channel timeout'));
+            this.handleConnectionError(new Error('Assignment channel timeout'))
           }
-        });
+        })
     } catch (error) {
-      this.handleConnectionError(error as Error);
+      this.handleConnectionError(error as Error)
     }
   }
 
@@ -97,7 +96,7 @@ export class RealtimeService {
     try {
       // Unsubscribe from existing channel if present
       if (this.queueChannel) {
-        await this.queueChannel.unsubscribe();
+        await this.queueChannel.unsubscribe()
       }
 
       const channelConfig = this.config.unitId
@@ -111,24 +110,24 @@ export class RealtimeService {
             event: '*' as const,
             schema: 'public' as const,
             table: 'assignment_queue' as const,
-          };
+          }
 
       this.queueChannel = supabase
         .channel('queue-updates')
         .on('postgres_changes', channelConfig, (payload: QueuePayload) => {
-          this.handleQueueUpdate(payload);
+          this.handleQueueUpdate(payload)
         })
         .subscribe((status) => {
           if (status === 'SUBSCRIBED') {
-            console.log('[Realtime] Connected to queue updates');
+            // Connected to queue updates
           } else if (status === 'CHANNEL_ERROR') {
-            this.handleConnectionError(new Error('Queue channel error'));
+            this.handleConnectionError(new Error('Queue channel error'))
           } else if (status === 'TIMED_OUT') {
-            this.handleConnectionError(new Error('Queue channel timeout'));
+            this.handleConnectionError(new Error('Queue channel timeout'))
           }
-        });
+        })
     } catch (error) {
-      this.handleConnectionError(error as Error);
+      this.handleConnectionError(error as Error)
     }
   }
 
@@ -136,21 +135,20 @@ export class RealtimeService {
    * Unsubscribe from all channels
    */
   async unsubscribe(): Promise<void> {
-    const promises: Promise<'ok' | 'timed out' | 'error'>[] = [];
+    const promises: Promise<'ok' | 'timed out' | 'error'>[] = []
 
     if (this.assignmentChannel) {
-      promises.push(this.assignmentChannel.unsubscribe());
-      this.assignmentChannel = null;
+      promises.push(this.assignmentChannel.unsubscribe())
+      this.assignmentChannel = null
     }
 
     if (this.queueChannel) {
-      promises.push(this.queueChannel.unsubscribe());
-      this.queueChannel = null;
+      promises.push(this.queueChannel.unsubscribe())
+      this.queueChannel = null
     }
 
-    await Promise.all(promises);
-    this.isConnected = false;
-    console.log('[Realtime] Unsubscribed from all channels');
+    await Promise.all(promises)
+    this.isConnected = false
   }
 
   /**
@@ -158,7 +156,7 @@ export class RealtimeService {
    */
   private handleAssignmentUpdate(payload: AssignmentPayload): void {
     if (this.config.onAssignmentUpdate) {
-      this.config.onAssignmentUpdate(payload);
+      this.config.onAssignmentUpdate(payload)
     }
   }
 
@@ -167,7 +165,7 @@ export class RealtimeService {
    */
   private handleQueueUpdate(payload: QueuePayload): void {
     if (this.config.onQueueUpdate) {
-      this.config.onQueueUpdate(payload);
+      this.config.onQueueUpdate(payload)
     }
   }
 
@@ -175,35 +173,31 @@ export class RealtimeService {
    * Handle connection errors with exponential backoff reconnection
    */
   private handleConnectionError(error: Error): void {
-    console.error('[Realtime] Connection error:', error);
+    console.error('[Realtime] Connection error:', error)
 
     if (this.config.onError) {
-      this.config.onError(error);
+      this.config.onError(error)
     }
 
     // Attempt reconnection with exponential backoff
     if (this.reconnectAttempts < this.maxReconnectAttempts) {
-      this.reconnectAttempts++;
-      const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1);
-
-      console.log(
-        `[Realtime] Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`
-      );
+      this.reconnectAttempts++
+      const delay = this.reconnectDelay * Math.pow(2, this.reconnectAttempts - 1)
 
       setTimeout(async () => {
         try {
           if (this.config.userId) {
-            await this.subscribeToAssignments();
+            await this.subscribeToAssignments()
           }
           if (this.config.unitId !== undefined) {
-            await this.subscribeToQueue();
+            await this.subscribeToQueue()
           }
-        } catch (reconnectError) {
-          console.error('[Realtime] Reconnection failed:', reconnectError);
+        } catch (_reconnectError) {
+          // Reconnection failed silently
         }
-      }, delay);
+      }, delay)
     } else {
-      console.error('[Realtime] Max reconnection attempts reached. Please refresh the page.');
+      console.error('[Realtime] Max reconnection attempts reached. Please refresh the page.')
     }
   }
 
@@ -211,14 +205,14 @@ export class RealtimeService {
    * Get connection status
    */
   getConnectionStatus(): boolean {
-    return this.isConnected;
+    return this.isConnected
   }
 
   /**
    * Reset reconnection attempts (call after successful manual reconnection)
    */
   resetReconnectionAttempts(): void {
-    this.reconnectAttempts = 0;
+    this.reconnectAttempts = 0
   }
 }
 
@@ -226,5 +220,5 @@ export class RealtimeService {
  * Create a new Realtime service instance
  */
 export function createRealtimeService(config: RealtimeServiceConfig): RealtimeService {
-  return new RealtimeService(config);
+  return new RealtimeService(config)
 }

@@ -1,12 +1,12 @@
-import { Router } from 'express';
-import { z } from 'zod';
-import { validate, paginationSchema, idParamSchema } from '../utils/validation';
-import { requirePermission } from '../middleware/auth';
-import { ContactService } from '../services/ContactService';
+import { Router } from 'express'
+import { z } from 'zod'
+import { validate, idParamSchema } from '../utils/validation'
+import { requirePermission } from '../middleware/auth'
+import { ContactService } from '../services/ContactService'
 
-const router = Router();
+const router = Router()
 
-const contactService = new ContactService();
+const contactService = new ContactService()
 
 const createContactSchema = z.object({
   first_name: z.string().min(2).max(100),
@@ -21,14 +21,16 @@ const createContactSchema = z.object({
   mobile: z.string().optional(),
   preferred_language: z.enum(['ar', 'en']).default('en'),
   expertise_areas: z.array(z.string()).default([]),
-  communication_preferences: z.object({
-    email: z.boolean().default(true),
-    whatsapp: z.boolean().default(false),
-    sms: z.boolean().default(false)
-  }).default({ email: true, whatsapp: false, sms: false })
-});
+  communication_preferences: z
+    .object({
+      email: z.boolean().default(true),
+      whatsapp: z.boolean().default(false),
+      sms: z.boolean().default(false),
+    })
+    .default({ email: true, whatsapp: false, sms: false }),
+})
 
-const updateContactSchema = createContactSchema.partial();
+const updateContactSchema = createContactSchema.partial()
 
 const contactSearchSchema = z.object({
   organization_id: z.string().uuid().optional(),
@@ -41,151 +43,156 @@ const contactSearchSchema = z.object({
   active: z.boolean().optional(),
   search: z.string().optional(),
   limit: z.number().min(1).max(100).default(50),
-  offset: z.number().min(0).default(0)
-});
+  offset: z.number().min(0).default(0),
+})
 
 // CRUD operations for contacts
 router.get('/', validate({ query: contactSearchSchema }), async (req, res, next) => {
   try {
-    const result = await contactService.findAll(req.query);
-    res.json(result);
+    const result = await contactService.findAll(req.query)
+    res.json(result)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
 router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const contact = await contactService.findById(req.params.id!);
+    const contact = await contactService.findById(req.params.id!)
     if (!contact) {
-      return res.status(404).json({ error: 'Contact not found' });
+      return res.status(404).json({ error: 'Contact not found' })
     }
-    res.json(contact);
+    res.json(contact)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-router.post('/', requirePermission(['manage_contacts']),
+router.post(
+  '/',
+  requirePermission(['manage_contacts']),
   validate({ body: createContactSchema }),
   async (req, res, next) => {
     try {
-      const contact = await contactService.create(req.body, req.user?.id!);
-      res.status(201).json(contact);
+      const contact = await contactService.create(req.body, req.user!.id)
+      res.status(201).json(contact)
     } catch (error) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
-router.put('/:id', requirePermission(['manage_contacts']),
+router.put(
+  '/:id',
+  requirePermission(['manage_contacts']),
   validate({ params: idParamSchema, body: updateContactSchema }),
   async (req, res, next) => {
     try {
-      const contact = await contactService.update(req.params.id!, req.body, req.user?.id!);
-      res.json(contact);
+      const contact = await contactService.update(req.params.id!, req.body, req.user!.id)
+      res.json(contact)
     } catch (error) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
-router.delete('/:id', requirePermission(['manage_contacts']),
+router.delete(
+  '/:id',
+  requirePermission(['manage_contacts']),
   validate({ params: idParamSchema }),
   async (req, res, next) => {
     try {
-      await contactService.delete(req.params.id!, req.user?.id!);
-      res.json({ success: true });
+      await contactService.delete(req.params.id!, req.user!.id)
+      res.json({ success: true })
     } catch (error) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 // Add interaction to contact
-router.post('/:id/interactions', requirePermission(['manage_contacts']),
+router.post(
+  '/:id/interactions',
+  requirePermission(['manage_contacts']),
   validate({
     params: idParamSchema,
     body: z.object({
       type: z.enum(['email', 'meeting', 'call', 'event']),
       summary: z.string().min(1).max(500),
-      sentiment: z.enum(['positive', 'neutral', 'negative']).default('neutral')
-    })
+      sentiment: z.enum(['positive', 'neutral', 'negative']).default('neutral'),
+    }),
   }),
   async (req, res, next) => {
     try {
-      const contact = await contactService.addInteraction(
-        req.params.id!,
-        req.body,
-        req.user?.id!
-      );
-      res.json(contact);
+      const contact = await contactService.addInteraction(req.params.id!, req.body, req.user!.id)
+      res.json(contact)
     } catch (error) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 // Get contacts by organization
-router.get('/organization/:organizationId',
+router.get(
+  '/organization/:organizationId',
   validate({ params: z.object({ organizationId: z.string().uuid() }) }),
   async (req, res, next) => {
     try {
-      const contacts = await contactService.findByOrganization(req.params.organizationId!);
-      res.json({ data: contacts });
+      const contacts = await contactService.findByOrganization(req.params.organizationId!)
+      res.json({ data: contacts })
     } catch (error) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 // Get contacts by country
-router.get('/country/:countryId',
+router.get(
+  '/country/:countryId',
   validate({ params: z.object({ countryId: z.string().uuid() }) }),
   async (req, res, next) => {
     try {
-      const contacts = await contactService.findByCountry(req.params.countryId!);
-      res.json({ data: contacts });
+      const contacts = await contactService.findByCountry(req.params.countryId!)
+      res.json({ data: contacts })
     } catch (error) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 // Get high-influence contacts
-router.get('/high-influence/:threshold',
-  validate({ params: z.object({ threshold: z.string().transform(val => parseInt(val)) }) }),
+router.get(
+  '/high-influence/:threshold',
+  validate({ params: z.object({ threshold: z.string().transform((val) => parseInt(val)) }) }),
   async (req, res, next) => {
     try {
-      const threshold = parseInt(req.params.threshold!) || 70;
-      const contacts = await contactService.getHighInfluenceContacts(threshold);
-      res.json({ data: contacts });
+      const threshold = parseInt(req.params.threshold!) || 70
+      const contacts = await contactService.getHighInfluenceContacts(threshold)
+      res.json({ data: contacts })
     } catch (error) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 // Get high-influence contacts with default threshold
-router.get('/high-influence',
-  async (req, res, next) => {
-    try {
-      const contacts = await contactService.getHighInfluenceContacts(70);
-      res.json({ data: contacts });
-    } catch (error) {
-      next(error);
-    }
+router.get('/high-influence', async (req, res, next) => {
+  try {
+    const contacts = await contactService.getHighInfluenceContacts(70)
+    res.json({ data: contacts })
+  } catch (error) {
+    next(error)
   }
-);
+})
 
 // Get contact statistics
 router.get('/stats/overview', async (req, res, next) => {
   try {
-    const stats = await contactService.getStatistics();
-    res.json(stats);
+    const stats = await contactService.getStatistics()
+    res.json(stats)
   } catch (error) {
-    next(error);
+    next(error)
   }
-});
+})
 
-export default router;
+export default router
