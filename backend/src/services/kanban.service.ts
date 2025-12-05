@@ -3,33 +3,33 @@
  * Feature: 016-implement-kanban
  */
 
-import { createClient, SupabaseClient } from '@supabase/supabase-js';
-import type { Database } from '../types/database';
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
+import type { Database } from '../types/database.types'
 
-export type SortOption = 'created_at' | 'sla_deadline' | 'priority';
+export type SortOption = 'created_at' | 'sla_deadline' | 'priority'
 
 export interface AssignmentCard {
-  id: string;
-  title: string;
+  id: string
+  title: string
   assignee: {
-    id: string;
-    name: string;
-    avatar_url: string | null;
-  } | null;
-  priority: 'high' | 'medium' | 'low';
-  overall_sla_deadline: string | null;
-  current_stage_sla_deadline: string | null;
-  created_at: string;
+    id: string
+    name: string
+    avatar_url: string | null
+  } | null
+  priority: 'high' | 'medium' | 'low'
+  overall_sla_deadline: string | null
+  current_stage_sla_deadline: string | null
+  created_at: string
 }
 
 export interface KanbanBoardData {
   columns: {
-    todo: AssignmentCard[];
-    in_progress: AssignmentCard[];
-    review: AssignmentCard[];
-    done: AssignmentCard[];
-    cancelled: AssignmentCard[];
-  };
+    todo: AssignmentCard[]
+    in_progress: AssignmentCard[]
+    review: AssignmentCard[]
+    done: AssignmentCard[]
+    cancelled: AssignmentCard[]
+  }
 }
 
 export class KanbanService {
@@ -37,12 +37,13 @@ export class KanbanService {
 
   async getEngagementKanbanBoard(
     engagementId: string,
-    sort: SortOption = 'created_at'
+    sort: SortOption = 'created_at',
   ): Promise<KanbanBoardData> {
     // Fetch all assignments for engagement with assignee details
     const { data: assignments, error } = await this.supabase
       .from('assignments')
-      .select(`
+      .select(
+        `
         id,
         title,
         workflow_stage,
@@ -55,11 +56,12 @@ export class KanbanService {
           full_name,
           avatar_url
         )
-      `)
+      `,
+      )
       .eq('engagement_id', engagementId)
-      .order(this.getSortColumn(sort), { ascending: this.getSortAscending(sort) });
+      .order(this.getSortColumn(sort), { ascending: this.getSortAscending(sort) })
 
-    if (error) throw error;
+    if (error) throw error
 
     // Group assignments by workflow_stage
     const columns: KanbanBoardData['columns'] = {
@@ -67,45 +69,47 @@ export class KanbanService {
       in_progress: [],
       review: [],
       done: [],
-      cancelled: []
-    };
+      cancelled: [],
+    }
 
     assignments?.forEach((assignment: any) => {
       const card: AssignmentCard = {
         id: assignment.id,
         title: assignment.title,
-        assignee: assignment.assignee ? {
-          id: assignment.assignee.id,
-          name: assignment.assignee.full_name,
-          avatar_url: assignment.assignee.avatar_url
-        } : null,
+        assignee: assignment.assignee
+          ? {
+              id: assignment.assignee.id,
+              name: assignment.assignee.full_name,
+              avatar_url: assignment.assignee.avatar_url,
+            }
+          : null,
         priority: assignment.priority as 'high' | 'medium' | 'low',
         overall_sla_deadline: assignment.overall_sla_deadline,
         current_stage_sla_deadline: assignment.current_stage_sla_deadline,
-        created_at: assignment.created_at
-      };
-
-      const stage = assignment.workflow_stage as keyof typeof columns;
-      if (stage in columns) {
-        columns[stage].push(card);
+        created_at: assignment.created_at,
       }
-    });
 
-    return { columns };
+      const stage = assignment.workflow_stage as keyof typeof columns
+      if (stage in columns) {
+        columns[stage].push(card)
+      }
+    })
+
+    return { columns }
   }
 
   private getSortColumn(sort: SortOption): string {
     const sortColumns: Record<SortOption, string> = {
-      'created_at': 'created_at',
-      'sla_deadline': 'overall_sla_deadline',
-      'priority': 'priority'
-    };
-    return sortColumns[sort];
+      created_at: 'created_at',
+      sla_deadline: 'overall_sla_deadline',
+      priority: 'priority',
+    }
+    return sortColumns[sort]
   }
 
   private getSortAscending(sort: SortOption): boolean {
     // created_at and sla_deadline: ASC (oldest/most urgent first)
     // priority: DESC (high → medium → low)
-    return sort !== 'priority';
+    return sort !== 'priority'
   }
 }

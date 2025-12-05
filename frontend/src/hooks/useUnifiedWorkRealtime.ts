@@ -1,20 +1,20 @@
 // Feature 032: Unified Work Management Realtime Subscription Hook
-import { useEffect, useRef, useCallback, useState } from 'react';
-import { useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
-import { unifiedWorkKeys, useInvalidateUnifiedWork } from './useUnifiedWork';
-import type { RealtimeChannel } from '@supabase/supabase-js';
+import { useEffect, useRef, useCallback, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { supabase } from '@/lib/supabase'
+import { unifiedWorkKeys, useInvalidateUnifiedWork } from './useUnifiedWork'
+import type { RealtimeChannel } from '@supabase/supabase-js'
 
 // Debounce time to prevent excessive invalidations (300ms as per spec)
-const DEBOUNCE_MS = 300;
+const DEBOUNCE_MS = 300
 
 interface UseUnifiedWorkRealtimeOptions {
   /** User ID to filter events for */
-  userId?: string;
+  userId?: string
   /** Whether to enable the subscription */
-  enabled?: boolean;
+  enabled?: boolean
   /** Custom debounce time in ms */
-  debounceMs?: number;
+  debounceMs?: number
 }
 
 /**
@@ -27,54 +27,52 @@ export function useUnifiedWorkRealtime({
   enabled = true,
   debounceMs = DEBOUNCE_MS,
 }: UseUnifiedWorkRealtimeOptions = {}) {
-  const queryClient = useQueryClient();
-  const { invalidateAll, invalidateSummary } = useInvalidateUnifiedWork();
-  const channelRef = useRef<RealtimeChannel | null>(null);
-  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
-  const pendingInvalidationsRef = useRef<Set<string>>(new Set());
+  const queryClient = useQueryClient()
+  const { invalidateAll, invalidateSummary } = useInvalidateUnifiedWork()
+  const channelRef = useRef<RealtimeChannel | null>(null)
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null)
+  const pendingInvalidationsRef = useRef<Set<string>>(new Set())
 
   // Debounced invalidation handler
   const debouncedInvalidate = useCallback(() => {
     if (debounceTimerRef.current) {
-      clearTimeout(debounceTimerRef.current);
+      clearTimeout(debounceTimerRef.current)
     }
 
     debounceTimerRef.current = setTimeout(() => {
-      const pending = pendingInvalidationsRef.current;
+      const pending = pendingInvalidationsRef.current
 
       if (pending.has('all')) {
-        invalidateAll();
+        invalidateAll()
       } else {
         if (pending.has('summary')) {
-          invalidateSummary();
+          invalidateSummary()
         }
         if (pending.has('items')) {
-          queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.items() });
+          queryClient.invalidateQueries({ queryKey: unifiedWorkKeys.items() })
         }
       }
 
-      pendingInvalidationsRef.current.clear();
-    }, debounceMs);
-  }, [debounceMs, invalidateAll, invalidateSummary, queryClient]);
+      pendingInvalidationsRef.current.clear()
+    }, debounceMs)
+  }, [debounceMs, invalidateAll, invalidateSummary, queryClient])
 
   // Queue an invalidation
   const queueInvalidation = useCallback(
     (type: 'all' | 'summary' | 'items') => {
-      pendingInvalidationsRef.current.add(type);
-      debouncedInvalidate();
+      pendingInvalidationsRef.current.add(type)
+      debouncedInvalidate()
     },
-    [debouncedInvalidate]
-  );
+    [debouncedInvalidate],
+  )
 
   useEffect(() => {
     if (!enabled) {
-      return;
+      return
     }
 
     // Create a unique channel name
-    const channelName = userId
-      ? `unified-work:${userId}`
-      : `unified-work:all`;
+    const channelName = userId ? `unified-work:${userId}` : `unified-work:all`
 
     // Subscribe to realtime changes
     const channel = supabase
@@ -88,10 +86,9 @@ export function useUnifiedWorkRealtime({
           table: 'aa_commitments',
           ...(userId && { filter: `owner_user_id=eq.${userId}` }),
         },
-        (payload) => {
-          console.debug('[Realtime] aa_commitments change:', payload.eventType);
-          queueInvalidation('all');
-        }
+        (_payload) => {
+          queueInvalidation('all')
+        },
       )
       // Listen to tasks changes
       .on(
@@ -102,10 +99,9 @@ export function useUnifiedWorkRealtime({
           table: 'tasks',
           ...(userId && { filter: `assignee_id=eq.${userId}` }),
         },
-        (payload) => {
-          console.debug('[Realtime] tasks change:', payload.eventType);
-          queueInvalidation('all');
-        }
+        (_payload) => {
+          queueInvalidation('all')
+        },
       )
       // Listen to intake_tickets changes
       .on(
@@ -116,39 +112,38 @@ export function useUnifiedWorkRealtime({
           table: 'intake_tickets',
           ...(userId && { filter: `assigned_to=eq.${userId}` }),
         },
-        (payload) => {
-          console.debug('[Realtime] intake_tickets change:', payload.eventType);
-          queueInvalidation('all');
-        }
+        (_payload) => {
+          queueInvalidation('all')
+        },
       )
-      .subscribe((status) => {
-        console.debug('[Realtime] Subscription status:', status);
-      });
+      .subscribe((_status) => {
+        // Subscription status changed
+      })
 
-    channelRef.current = channel;
+    channelRef.current = channel
 
     // Cleanup
     return () => {
       if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
+        clearTimeout(debounceTimerRef.current)
       }
       if (channelRef.current) {
-        supabase.removeChannel(channelRef.current);
-        channelRef.current = null;
+        supabase.removeChannel(channelRef.current)
+        channelRef.current = null
       }
-    };
-  }, [enabled, userId, queueInvalidation]);
+    }
+  }, [enabled, userId, queueInvalidation])
 
   return {
     /** Manually trigger an invalidation */
     forceInvalidate: () => {
-      pendingInvalidationsRef.current.clear();
+      pendingInvalidationsRef.current.clear()
       if (debounceTimerRef.current) {
-        clearTimeout(debounceTimerRef.current);
+        clearTimeout(debounceTimerRef.current)
       }
-      invalidateAll();
+      invalidateAll()
     },
-  };
+  }
 }
 
 /**
@@ -157,23 +152,25 @@ export function useUnifiedWorkRealtime({
  * the subscription is created with the correct userId filter
  */
 export function useCurrentUserId() {
-  const [userId, setUserId] = useState<string | undefined>();
+  const [userId, setUserId] = useState<string | undefined>()
 
   useEffect(() => {
     // Get initial user
     supabase.auth.getUser().then(({ data }) => {
-      setUserId(data.user?.id);
-    });
+      setUserId(data.user?.id)
+    })
 
     // Listen for auth state changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
-      setUserId(session?.user?.id);
-    });
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_, session) => {
+      setUserId(session?.user?.id)
+    })
 
     return () => {
-      subscription.unsubscribe();
-    };
-  }, []);
+      subscription.unsubscribe()
+    }
+  }, [])
 
-  return userId;
+  return userId
 }

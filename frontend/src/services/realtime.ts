@@ -52,20 +52,18 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
       const { subscriptions } = get()
 
       try {
-        const channel = supabase
-          .channel(`${table}-${event}-${subscriptionId}`)
-          .on(
-            'postgres_changes' as any,
-            {
-              event,
-              schema: 'public',
-              table,
-              filter
-            } as any,
-            (payload: any) => {
-              callback(payload)
-            }
-          )
+        const channel = supabase.channel(`${table}-${event}-${subscriptionId}`).on(
+          'postgres_changes' as any,
+          {
+            event,
+            schema: 'public',
+            table,
+            filter,
+          } as any,
+          (payload: any) => {
+            callback(payload)
+          },
+        )
 
         // Subscribe to the channel
         channel.subscribe((status) => {
@@ -82,7 +80,7 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
           table,
           event,
           callback,
-          status: 'subscribed'
+          status: 'subscribed',
         }
 
         subscriptions.set(subscriptionId, subscription)
@@ -141,9 +139,9 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
                 {
                   event: subscription.event,
                   schema: 'public',
-                  table: subscription.table
+                  table: subscription.table,
                 },
-                subscription.callback
+                subscription.callback,
               )
 
             newChannel.subscribe((status) => {
@@ -166,7 +164,7 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
           isConnecting: false,
           connectionStatus: 'connected',
           lastError: null,
-          subscriptions: newSubscriptions
+          subscriptions: newSubscriptions,
         })
       } catch (error) {
         console.error('Failed to reconnect:', error)
@@ -174,7 +172,7 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
           isConnected: false,
           isConnecting: false,
           connectionStatus: 'error',
-          lastError: error instanceof Error ? error.message : 'Unknown error'
+          lastError: error instanceof Error ? error.message : 'Unknown error',
         })
       }
     },
@@ -183,19 +181,19 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
       set({
         connectionStatus: status,
         isConnected: status === 'connected',
-        isConnecting: status === 'reconnecting'
+        isConnecting: status === 'reconnecting',
       })
     },
 
     setError: (error) => {
       set({ lastError: error })
-    }
-  }))
+    },
+  })),
 )
 
 // Connection status monitoring
 const connectionStateToStatus = (
-  state: RealtimeConnectionState
+  state: RealtimeConnectionState,
 ): RealtimeState['connectionStatus'] => {
   switch (state) {
     case 'open':
@@ -234,7 +232,11 @@ const setupConnectionMonitoring = () => {
         updateFromRealtime('open')
       } else if (heartbeatStatus === 'sent') {
         updateFromRealtime('connecting')
-      } else if (heartbeatStatus === 'timeout' || heartbeatStatus === 'error' || heartbeatStatus === 'disconnected') {
+      } else if (
+        heartbeatStatus === 'timeout' ||
+        heartbeatStatus === 'error' ||
+        heartbeatStatus === 'disconnected'
+      ) {
         console.error('Realtime heartbeat issue:', heartbeatStatus)
         setConnectionStatus('error')
         setError(`Realtime heartbeat ${heartbeatStatus}`)
@@ -273,14 +275,15 @@ setupConnectionMonitoring()
 
 // Hook for easy subscription management
 export function useRealtimeSubscription() {
-  const { subscribe, unsubscribe, unsubscribeAll, isConnected, connectionStatus } = useRealtimeStore()
+  const { subscribe, unsubscribe, unsubscribeAll, isConnected, connectionStatus } =
+    useRealtimeStore()
 
   return {
     subscribe,
     unsubscribe,
     unsubscribeAll,
     isConnected,
-    connectionStatus
+    connectionStatus,
   }
 }
 
@@ -289,7 +292,7 @@ export function useTableSubscription<T extends { [key: string]: any } = any>(
   table: string,
   event: 'INSERT' | 'UPDATE' | 'DELETE' | '*',
   callback: (payload: RealtimePostgresChangesPayload<T>) => void,
-  filter?: string
+  filter?: string,
 ) {
   const { subscribe, unsubscribe } = useRealtimeStore()
 
@@ -298,7 +301,7 @@ export function useTableSubscription<T extends { [key: string]: any } = any>(
       table,
       event,
       callback,
-      filter
+      filter,
     })
 
     return () => {
@@ -316,9 +319,9 @@ export function usePresence(channelName: string) {
     const channel = supabase.channel(channelName, {
       config: {
         presence: {
-          key: crypto.randomUUID()
-        }
-      }
+          key: crypto.randomUUID(),
+        },
+      },
     })
 
     channel
@@ -326,17 +329,17 @@ export function usePresence(channelName: string) {
         const newPresence = channel.presenceState()
         setPresence(new Map(Object.entries(newPresence)))
       })
-      .on('presence', { event: 'join' }, ({ key, newPresences }) => {
-        console.log('User joined:', key, newPresences)
+      .on('presence', { event: 'join' }, ({ key: _key, newPresences: _newPresences }) => {
+        // User joined
       })
-      .on('presence', { event: 'leave' }, ({ key, leftPresences }) => {
-        console.log('User left:', key, leftPresences)
+      .on('presence', { event: 'leave' }, ({ key: _key, leftPresences: _leftPresences }) => {
+        // User left
       })
       .subscribe(async (status) => {
         if (status === 'SUBSCRIBED') {
           await channel.track({
             user_id: crypto.randomUUID(),
-            online_at: new Date().toISOString()
+            online_at: new Date().toISOString(),
           })
           setIsOnline(true)
         } else {
@@ -355,7 +358,7 @@ export function usePresence(channelName: string) {
     track: (data: any) => {
       const channel = supabase.channel(channelName)
       return channel.track(data)
-    }
+    },
   }
 }
 

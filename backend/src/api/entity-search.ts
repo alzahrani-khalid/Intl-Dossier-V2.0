@@ -4,14 +4,15 @@
  * Feature: 024-intake-entity-linking
  */
 
-import { Router, Request, Response } from 'express';
-import { searchEntities, getEntityMetadata, invalidateEntityCache } from '../services/entity-search.service';
-import type {
-  EntitySearchResult,
-  EntityType,
-} from '../types/intake-entity-links.types';
+import { Router, Request, Response } from 'express'
+import {
+  searchEntities,
+  getEntityMetadata,
+  invalidateEntityCache,
+} from '../services/entity-search.service'
+import type { EntityType } from '../types/intake-entity-links.types'
 
-const router = Router();
+const router = Router()
 
 /**
  * GET /api/entities/search
@@ -26,7 +27,7 @@ const router = Router();
  */
 router.get('/entities/search', async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -35,15 +36,15 @@ router.get('/entities/search', async (req: Request, res: Response) => {
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
     // Parse query parameters
-    const query = req.query.q as string;
-    const entityTypesParam = req.query.entity_types as string;
-    const limitParam = req.query.limit as string;
-    const offsetParam = req.query.offset as string;
-    const minConfidenceParam = req.query.min_confidence as string;
+    const query = req.query.q as string
+    const entityTypesParam = req.query.entity_types as string
+    const limitParam = req.query.limit as string
+    const offsetParam = req.query.offset as string
+    const minConfidenceParam = req.query.min_confidence as string
 
     // Validate required query parameter
     if (!query || query.trim().length === 0) {
@@ -53,22 +54,31 @@ router.get('/entities/search', async (req: Request, res: Response) => {
           code: 'VALIDATION_ERROR',
           message: 'Missing required query parameter: q',
         },
-      });
+      })
     }
 
     // Parse entity types
-    let entityTypes: EntityType[] | undefined;
+    let entityTypes: EntityType[] | undefined
     if (entityTypesParam) {
-      entityTypes = entityTypesParam.split(',').map(type => type.trim()) as EntityType[];
+      entityTypes = entityTypesParam.split(',').map((type) => type.trim()) as EntityType[]
 
       // Validate entity types
       const validTypes: EntityType[] = [
-        'dossier', 'position', 'mou', 'engagement', 'assignment',
-        'commitment', 'intelligence_signal', 'organization',
-        'country', 'forum', 'working_group', 'topic'
-      ];
+        'dossier',
+        'position',
+        'mou',
+        'engagement',
+        'assignment',
+        'commitment',
+        'intelligence_signal',
+        'organization',
+        'country',
+        'forum',
+        'working_group',
+        'topic',
+      ]
 
-      const invalidTypes = entityTypes.filter(type => !validTypes.includes(type));
+      const invalidTypes = entityTypes.filter((type) => !validTypes.includes(type))
       if (invalidTypes.length > 0) {
         return res.status(400).json({
           success: false,
@@ -80,16 +90,16 @@ router.get('/entities/search', async (req: Request, res: Response) => {
               invalid_types: invalidTypes,
             },
           },
-        });
+        })
       }
     }
 
     // Parse pagination parameters
-    const limit = limitParam ? Math.min(parseInt(limitParam), 50) : 10;
-    const offset = offsetParam ? parseInt(offsetParam) : 0;
+    const limit = limitParam ? Math.min(parseInt(limitParam), 50) : 10
+    const offset = offsetParam ? parseInt(offsetParam) : 0
 
     // Parse min confidence
-    const minConfidence = minConfidenceParam ? parseFloat(minConfidenceParam) : undefined;
+    const minConfidence = minConfidenceParam ? parseFloat(minConfidenceParam) : undefined
 
     // Validate pagination parameters
     if (limit < 1 || isNaN(limit)) {
@@ -99,7 +109,7 @@ router.get('/entities/search', async (req: Request, res: Response) => {
           code: 'VALIDATION_ERROR',
           message: 'Invalid limit parameter. Must be between 1 and 50.',
         },
-      });
+      })
     }
 
     if (offset < 0 || isNaN(offset)) {
@@ -109,7 +119,7 @@ router.get('/entities/search', async (req: Request, res: Response) => {
           code: 'VALIDATION_ERROR',
           message: 'Invalid offset parameter. Must be 0 or greater.',
         },
-      });
+      })
     }
 
     // Perform entity search
@@ -121,8 +131,8 @@ router.get('/entities/search', async (req: Request, res: Response) => {
         limit,
         offset,
       },
-      userId
-    );
+      userId,
+    )
 
     // Return success response
     return res.status(200).json({
@@ -133,9 +143,9 @@ router.get('/entities/search', async (req: Request, res: Response) => {
         limit,
         offset,
       },
-    });
+    })
   } catch (error: any) {
-    console.error('Error searching entities:', error);
+    console.error('Error searching entities:', error)
 
     // Handle specific error codes
     if (error.code && error.statusCode) {
@@ -145,7 +155,7 @@ router.get('/entities/search', async (req: Request, res: Response) => {
           code: error.code,
           message: error.message,
         },
-      });
+      })
     }
 
     // Generic error response
@@ -155,9 +165,9 @@ router.get('/entities/search', async (req: Request, res: Response) => {
         code: 'SEARCH_FAILED',
         message: 'Failed to search entities',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * GET /api/entities/:entity_type/:entity_id
@@ -165,7 +175,7 @@ router.get('/entities/search', async (req: Request, res: Response) => {
  */
 router.get('/entities/:entity_type/:entity_id', async (req: Request, res: Response) => {
   try {
-    const userId = req.user?.id;
+    const userId = req.user?.id
 
     if (!userId) {
       return res.status(401).json({
@@ -174,17 +184,26 @@ router.get('/entities/:entity_type/:entity_id', async (req: Request, res: Respon
           code: 'UNAUTHORIZED',
           message: 'User not authenticated',
         },
-      });
+      })
     }
 
-    const { entity_type, entity_id } = req.params;
+    const { entity_type, entity_id } = req.params
 
     // Validate entity type
     const validTypes: EntityType[] = [
-      'dossier', 'position', 'mou', 'engagement', 'assignment',
-      'commitment', 'intelligence_signal', 'organization',
-      'country', 'forum', 'working_group', 'topic'
-    ];
+      'dossier',
+      'position',
+      'mou',
+      'engagement',
+      'assignment',
+      'commitment',
+      'intelligence_signal',
+      'organization',
+      'country',
+      'forum',
+      'working_group',
+      'topic',
+    ]
 
     if (!validTypes.includes(entity_type as EntityType)) {
       return res.status(400).json({
@@ -196,11 +215,11 @@ router.get('/entities/:entity_type/:entity_id', async (req: Request, res: Respon
             valid_types: validTypes,
           },
         },
-      });
+      })
     }
 
     // Get entity metadata
-    const metadata = await getEntityMetadata(entity_type as EntityType, entity_id);
+    const metadata = await getEntityMetadata(entity_type as EntityType, entity_id)
 
     if (!metadata) {
       return res.status(404).json({
@@ -209,16 +228,16 @@ router.get('/entities/:entity_type/:entity_id', async (req: Request, res: Respon
           code: 'ENTITY_NOT_FOUND',
           message: `${entity_type} with ID ${entity_id} not found`,
         },
-      });
+      })
     }
 
     // Return success response
     return res.status(200).json({
       success: true,
       data: metadata,
-    });
+    })
   } catch (error: any) {
-    console.error('Error fetching entity metadata:', error);
+    console.error('Error fetching entity metadata:', error)
 
     // Generic error response
     return res.status(500).json({
@@ -227,71 +246,83 @@ router.get('/entities/:entity_type/:entity_id', async (req: Request, res: Respon
         code: 'FETCH_FAILED',
         message: 'Failed to fetch entity metadata',
       },
-    });
+    })
   }
-});
+})
 
 /**
  * POST /api/entities/:entity_type/:entity_id/invalidate-cache
  * Invalidates cache for a specific entity
  * (Admin endpoint - should be protected with appropriate middleware)
  */
-router.post('/entities/:entity_type/:entity_id/invalidate-cache', async (req: Request, res: Response) => {
-  try {
-    const userId = req.user?.id;
+router.post(
+  '/entities/:entity_type/:entity_id/invalidate-cache',
+  async (req: Request, res: Response) => {
+    try {
+      const userId = req.user?.id
 
-    if (!userId) {
-      return res.status(401).json({
+      if (!userId) {
+        return res.status(401).json({
+          success: false,
+          error: {
+            code: 'UNAUTHORIZED',
+            message: 'User not authenticated',
+          },
+        })
+      }
+
+      // TODO: Add admin/permission check here
+
+      const { entity_type, entity_id } = req.params
+
+      // Validate entity type
+      const validTypes: EntityType[] = [
+        'dossier',
+        'position',
+        'mou',
+        'engagement',
+        'assignment',
+        'commitment',
+        'intelligence_signal',
+        'organization',
+        'country',
+        'forum',
+        'working_group',
+        'topic',
+      ]
+
+      if (!validTypes.includes(entity_type as EntityType)) {
+        return res.status(400).json({
+          success: false,
+          error: {
+            code: 'INVALID_ENTITY_TYPE',
+            message: `Invalid entity type: ${entity_type}`,
+          },
+        })
+      }
+
+      // Invalidate cache
+      await invalidateEntityCache(entity_type as EntityType, entity_id)
+
+      // Return success response
+      return res.status(200).json({
+        success: true,
+        message: 'Cache invalidated successfully',
+      })
+    } catch (error: any) {
+      console.error('Error invalidating entity cache:', error)
+
+      // Generic error response
+      return res.status(500).json({
         success: false,
         error: {
-          code: 'UNAUTHORIZED',
-          message: 'User not authenticated',
+          code: 'INVALIDATION_FAILED',
+          message: 'Failed to invalidate entity cache',
         },
-      });
+      })
     }
-
-    // TODO: Add admin/permission check here
-
-    const { entity_type, entity_id } = req.params;
-
-    // Validate entity type
-    const validTypes: EntityType[] = [
-      'dossier', 'position', 'mou', 'engagement', 'assignment',
-      'commitment', 'intelligence_signal', 'organization',
-      'country', 'forum', 'working_group', 'topic'
-    ];
-
-    if (!validTypes.includes(entity_type as EntityType)) {
-      return res.status(400).json({
-        success: false,
-        error: {
-          code: 'INVALID_ENTITY_TYPE',
-          message: `Invalid entity type: ${entity_type}`,
-        },
-      });
-    }
-
-    // Invalidate cache
-    await invalidateEntityCache(entity_type as EntityType, entity_id);
-
-    // Return success response
-    return res.status(200).json({
-      success: true,
-      message: 'Cache invalidated successfully',
-    });
-  } catch (error: any) {
-    console.error('Error invalidating entity cache:', error);
-
-    // Generic error response
-    return res.status(500).json({
-      success: false,
-      error: {
-        code: 'INVALIDATION_FAILED',
-        message: 'Failed to invalidate entity cache',
-      },
-    });
-  }
-});
+  },
+)
 
 /**
  * GET /api/entities/types
@@ -372,14 +403,14 @@ router.get('/entities/types', async (req: Request, res: Response) => {
         description: 'A subject or theme of discussion',
         can_be_primary: false,
       },
-    ];
+    ]
 
     return res.status(200).json({
       success: true,
       data: entityTypes,
-    });
+    })
   } catch (error: any) {
-    console.error('Error fetching entity types:', error);
+    console.error('Error fetching entity types:', error)
 
     // Generic error response
     return res.status(500).json({
@@ -388,8 +419,8 @@ router.get('/entities/types', async (req: Request, res: Response) => {
         code: 'FETCH_FAILED',
         message: 'Failed to fetch entity types',
       },
-    });
+    })
   }
-});
+})
 
-export default router;
+export default router

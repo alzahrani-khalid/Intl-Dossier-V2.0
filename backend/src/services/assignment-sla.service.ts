@@ -4,16 +4,16 @@
  * (Separate from intake ticket SLA service)
  */
 
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from '../types/database';
+import { createClient } from '@supabase/supabase-js'
+import type { Database } from '../types/database.types'
 
-type WorkItemType = Database['public']['Enums']['work_item_type'];
-type PriorityLevel = Database['public']['Enums']['priority_level'];
+type WorkItemType = Database['public']['Enums']['work_item_type']
+type PriorityLevel = Database['public']['Enums']['priority_level']
 
 const supabase = createClient<Database>(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!
-);
+  process.env.SUPABASE_SERVICE_ROLE_KEY!,
+)
 
 /**
  * Calculate SLA deadline for a work item assignment
@@ -25,7 +25,7 @@ const supabase = createClient<Database>(
 export async function calculateSLADeadline(
   workItemType: WorkItemType,
   priority: PriorityLevel,
-  assignedAt: Date
+  assignedAt: Date,
 ): Promise<Date> {
   // Lookup deadline hours from sla_configs
   const { data: config, error } = await supabase
@@ -33,20 +33,20 @@ export async function calculateSLADeadline(
     .select('deadline_hours')
     .eq('work_item_type', workItemType)
     .eq('priority', priority)
-    .single();
+    .single()
 
   if (error || !config) {
     console.warn(
       `No SLA config found for ${workItemType}/${priority}, defaulting to 48 hours`,
-      error
-    );
+      error,
+    )
     // Default to 48 hours if no config found
-    return new Date(assignedAt.getTime() + 48 * 60 * 60 * 1000);
+    return new Date(assignedAt.getTime() + 48 * 60 * 60 * 1000)
   }
 
   // Calculate deadline: assigned_at + deadline_hours
-  const deadlineMs = assignedAt.getTime() + (Number(config.deadline_hours) * 60 * 60 * 1000);
-  return new Date(deadlineMs);
+  const deadlineMs = assignedAt.getTime() + Number(config.deadline_hours) * 60 * 60 * 1000
+  return new Date(deadlineMs)
 }
 
 /**
@@ -55,27 +55,24 @@ export async function calculateSLADeadline(
  * @param assignedAt - When assignment was created
  * @returns 'ok' | 'warning' | 'breached'
  */
-export function getSLAStatus(
-  deadline: Date,
-  assignedAt: Date
-): 'ok' | 'warning' | 'breached' {
-  const now = Date.now();
-  const deadlineTime = deadline.getTime();
-  const assignedTime = assignedAt.getTime();
+export function getSLAStatus(deadline: Date, assignedAt: Date): 'ok' | 'warning' | 'breached' {
+  const now = Date.now()
+  const deadlineTime = deadline.getTime()
+  const assignedTime = assignedAt.getTime()
 
   if (now >= deadlineTime) {
-    return 'breached';
+    return 'breached'
   }
 
-  const totalDuration = deadlineTime - assignedTime;
-  const elapsed = now - assignedTime;
-  const elapsedPercent = elapsed / totalDuration;
+  const totalDuration = deadlineTime - assignedTime
+  const elapsed = now - assignedTime
+  const elapsedPercent = elapsed / totalDuration
 
   if (elapsedPercent >= 0.75) {
-    return 'warning'; // 75% threshold
+    return 'warning' // 75% threshold
   }
 
-  return 'ok';
+  return 'ok'
 }
 
 /**
@@ -84,7 +81,7 @@ export function getSLAStatus(
  * @returns Seconds remaining (negative if breached)
  */
 export function getRemainingTime(deadline: Date): number {
-  const now = Date.now();
-  const deadlineTime = deadline.getTime();
-  return Math.floor((deadlineTime - now) / 1000);
+  const now = Date.now()
+  const deadlineTime = deadline.getTime()
+  return Math.floor((deadlineTime - now) / 1000)
 }

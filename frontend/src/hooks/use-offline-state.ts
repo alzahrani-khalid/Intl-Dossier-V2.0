@@ -18,17 +18,17 @@
  * ```
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 
 export interface OfflineState {
   /** True if the browser is currently online */
-  isOnline: boolean;
+  isOnline: boolean
   /** True if the browser is currently offline */
-  isOffline: boolean;
+  isOffline: boolean
   /** Timestamp of last online event */
-  lastOnlineAt: Date | null;
+  lastOnlineAt: Date | null
   /** Timestamp of last offline event */
-  lastOfflineAt: Date | null;
+  lastOfflineAt: Date | null
 }
 
 /**
@@ -39,48 +39,42 @@ export interface OfflineState {
 export function useOfflineState(): OfflineState {
   // Initialize with current navigator.onLine state
   const [isOnline, setIsOnline] = useState<boolean>(() =>
-    typeof navigator !== 'undefined' ? navigator.onLine : true
-  );
+    typeof navigator !== 'undefined' ? navigator.onLine : true,
+  )
 
-  const [lastOnlineAt, setLastOnlineAt] = useState<Date | null>(null);
-  const [lastOfflineAt, setLastOfflineAt] = useState<Date | null>(null);
+  const [lastOnlineAt, setLastOnlineAt] = useState<Date | null>(null)
+  const [lastOfflineAt, setLastOfflineAt] = useState<Date | null>(null)
 
   useEffect(() => {
     // Handler for online event
     const handleOnline = () => {
-      setIsOnline(true);
-      setLastOnlineAt(new Date());
-
-      // Log for debugging
-      console.log('[OfflineState] Connection restored');
-    };
+      setIsOnline(true)
+      setLastOnlineAt(new Date())
+    }
 
     // Handler for offline event
     const handleOffline = () => {
-      setIsOnline(false);
-      setLastOfflineAt(new Date());
-
-      // Log for debugging
-      console.log('[OfflineState] Connection lost');
-    };
+      setIsOnline(false)
+      setLastOfflineAt(new Date())
+    }
 
     // Add event listeners
-    window.addEventListener('online', handleOnline);
-    window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', handleOnline)
+    window.addEventListener('offline', handleOffline)
 
     // Cleanup event listeners on unmount
     return () => {
-      window.removeEventListener('online', handleOnline);
-      window.removeEventListener('offline', handleOffline);
-    };
-  }, []);
+      window.removeEventListener('online', handleOnline)
+      window.removeEventListener('offline', handleOffline)
+    }
+  }, [])
 
   return {
     isOnline,
     isOffline: !isOnline,
     lastOnlineAt,
     lastOfflineAt,
-  };
+  }
 }
 
 /**
@@ -92,21 +86,21 @@ export function useOfflineState(): OfflineState {
  */
 export function useOfflineStateWithCallback(
   onOnline?: () => void,
-  onOffline?: () => void
+  onOffline?: () => void,
 ): OfflineState {
-  const offlineState = useOfflineState();
+  const offlineState = useOfflineState()
 
   useEffect(() => {
     if (offlineState.isOnline && offlineState.lastOnlineAt && onOnline) {
-      onOnline();
+      onOnline()
     }
-  }, [offlineState.isOnline, offlineState.lastOnlineAt, onOnline]);
+  }, [offlineState.isOnline, offlineState.lastOnlineAt, onOnline])
 
   useEffect(() => {
     if (offlineState.isOffline && offlineState.lastOfflineAt && onOffline) {
-      onOffline();
+      onOffline()
     }
-  }, [offlineState.isOffline, offlineState.lastOfflineAt, onOffline]);
+  }, [offlineState.isOffline, offlineState.lastOfflineAt, onOffline])
 
-  return offlineState;
+  return offlineState
 }

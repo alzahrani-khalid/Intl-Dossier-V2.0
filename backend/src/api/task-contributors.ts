@@ -10,16 +10,16 @@
  * - RLS-aware (only task owners can manage contributors)
  */
 
-import { Router, Request, Response, NextFunction } from 'express';
-import { z } from 'zod';
-import { validate, idParamSchema } from '../utils/validation';
-import { authenticateToken } from '../middleware/auth';
-import { taskContributorsService } from '../services/task-contributors.service';
+import { Router, Request, Response, NextFunction } from 'express'
+import { z } from 'zod'
+import { validate } from '../utils/validation'
+import { authenticateToken } from '../middleware/auth'
+import { taskContributorsService } from '../services/task-contributors.service'
 
-const router = Router();
+const router = Router()
 
 // Apply authentication to all routes
-router.use(authenticateToken);
+router.use(authenticateToken)
 
 // ============================================================================
 // VALIDATION SCHEMAS
@@ -28,25 +28,21 @@ router.use(authenticateToken);
 const addContributorSchema = z.object({
   user_id: z.string().uuid(),
   role: z.string().optional(),
-});
+})
 
 const addMultipleContributorsSchema = z.object({
   user_ids: z.array(z.string().uuid()).min(1),
   role: z.string().optional(),
-});
-
-const removeContributorSchema = z.object({
-  user_id: z.string().uuid(),
-});
+})
 
 const removeMultipleContributorsSchema = z.object({
   user_ids: z.array(z.string().uuid()).min(1),
-});
+})
 
 const replaceContributorsSchema = z.object({
   user_ids: z.array(z.string().uuid()),
   role: z.string().optional(),
-});
+})
 
 // ============================================================================
 // CONTRIBUTOR ENDPOINTS
@@ -65,9 +61,9 @@ router.post(
   }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.id
       if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
       const contributor = await taskContributorsService.addContributor({
@@ -75,14 +71,14 @@ router.post(
         user_id: req.body.user_id,
         added_by: userId,
         role: req.body.role,
-      });
+      })
 
-      res.status(201).json(contributor);
+      res.status(201).json(contributor)
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * POST /task-contributors/:taskId/bulk
@@ -97,24 +93,24 @@ router.post(
   }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const userId = req.user?.id;
+      const userId = req.user?.id
       if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
       const contributors = await taskContributorsService.addMultipleContributors(
         req.params.taskId,
         req.body.user_ids,
         userId,
-        req.body.role
-      );
+        req.body.role,
+      )
 
-      res.status(201).json({ contributors, total_count: contributors.length });
+      res.status(201).json({ contributors, total_count: contributors.length })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * GET /task-contributors/:taskId
@@ -125,14 +121,14 @@ router.get(
   validate({ params: z.object({ taskId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const contributors = await taskContributorsService.getTaskContributors(req.params.taskId);
+      const contributors = await taskContributorsService.getTaskContributors(req.params.taskId)
 
-      res.json({ contributors, total_count: contributors.length });
+      res.json({ contributors, total_count: contributors.length })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * GET /task-contributors/:taskId/history
@@ -143,14 +139,14 @@ router.get(
   validate({ params: z.object({ taskId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const contributors = await taskContributorsService.getContributorHistory(req.params.taskId);
+      const contributors = await taskContributorsService.getContributorHistory(req.params.taskId)
 
-      res.json({ contributors, total_count: contributors.length });
+      res.json({ contributors, total_count: contributors.length })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * GET /task-contributors/user/:userId/tasks
@@ -161,38 +157,33 @@ router.get(
   validate({ params: z.object({ userId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const contributorTasks = await taskContributorsService.getContributorTasks(
-        req.params.userId
-      );
+      const contributorTasks = await taskContributorsService.getContributorTasks(req.params.userId)
 
-      res.json({ contributor_tasks: contributorTasks, total_count: contributorTasks.length });
+      res.json({ contributor_tasks: contributorTasks, total_count: contributorTasks.length })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * GET /task-contributors/me/tasks
  * Get all tasks where current user is a contributor
  */
-router.get(
-  '/me/tasks',
-  async (req: Request, res: Response, next: NextFunction) => {
-    try {
-      const userId = req.user?.id;
-      if (!userId) {
-        return res.status(401).json({ error: 'User not authenticated' });
-      }
-
-      const contributorTasks = await taskContributorsService.getContributorTasks(userId);
-
-      res.json({ contributor_tasks: contributorTasks, total_count: contributorTasks.length });
-    } catch (error: any) {
-      next(error);
+router.get('/me/tasks', async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const userId = req.user?.id
+    if (!userId) {
+      return res.status(401).json({ error: 'User not authenticated' })
     }
+
+    const contributorTasks = await taskContributorsService.getContributorTasks(userId)
+
+    res.json({ contributor_tasks: contributorTasks, total_count: contributorTasks.length })
+  } catch (error: any) {
+    next(error)
   }
-);
+})
 
 /**
  * GET /task-contributors/:taskId/count
@@ -203,14 +194,14 @@ router.get(
   validate({ params: z.object({ taskId: z.string().uuid() }) }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const count = await taskContributorsService.getContributorCount(req.params.taskId);
+      const count = await taskContributorsService.getContributorCount(req.params.taskId)
 
-      res.json({ count });
+      res.json({ count })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * DELETE /task-contributors/:taskId/:userId
@@ -227,23 +218,23 @@ router.delete(
   }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const removedBy = req.user?.id;
+      const removedBy = req.user?.id
       if (!removedBy) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
       await taskContributorsService.removeContributor({
         task_id: req.params.taskId,
         user_id: req.params.userId,
         removed_by: removedBy,
-      });
+      })
 
-      res.json({ success: true, message: 'Contributor removed successfully' });
+      res.json({ success: true, message: 'Contributor removed successfully' })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * DELETE /task-contributors/:taskId/bulk
@@ -258,23 +249,23 @@ router.delete(
   }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const removedBy = req.user?.id;
+      const removedBy = req.user?.id
       if (!removedBy) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
       await taskContributorsService.removeMultipleContributors(
         req.params.taskId,
         req.body.user_ids,
-        removedBy
-      );
+        removedBy,
+      )
 
-      res.json({ success: true, message: 'Contributors removed successfully' });
+      res.json({ success: true, message: 'Contributors removed successfully' })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * PUT /task-contributors/:taskId/replace
@@ -290,24 +281,24 @@ router.put(
   }),
   async (req: Request, res: Response, next: NextFunction) => {
     try {
-      const updatedBy = req.user?.id;
+      const updatedBy = req.user?.id
       if (!updatedBy) {
-        return res.status(401).json({ error: 'User not authenticated' });
+        return res.status(401).json({ error: 'User not authenticated' })
       }
 
       const contributors = await taskContributorsService.replaceContributors(
         req.params.taskId,
         req.body.user_ids,
         updatedBy,
-        req.body.role
-      );
+        req.body.role,
+      )
 
-      res.json({ contributors, total_count: contributors.length });
+      res.json({ contributors, total_count: contributors.length })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * GET /task-contributors/:taskId/is-contributor/:userId
@@ -325,14 +316,14 @@ router.get(
     try {
       const isContributor = await taskContributorsService.isContributor(
         req.params.taskId,
-        req.params.userId
-      );
+        req.params.userId,
+      )
 
-      res.json({ is_contributor: isContributor });
+      res.json({ is_contributor: isContributor })
     } catch (error: any) {
-      next(error);
+      next(error)
     }
-  }
-);
+  },
+)
 
-export default router;
+export default router

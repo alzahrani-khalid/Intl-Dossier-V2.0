@@ -1,12 +1,18 @@
-import { Router } from 'express';
-import { z } from 'zod';
-import { EventService } from '../services/EventService';
-import { validate, paginationSchema, idParamSchema, createBilingualError, getRequestLanguage, dateRangeSchema } from '../utils/validation';
-import { requirePermission } from '../middleware/auth';
-import { logInfo, logError } from '../utils/logger';
+import { Router } from 'express'
+import { z } from 'zod'
+import { EventService } from '../services/EventService'
+import {
+  validate,
+  paginationSchema,
+  idParamSchema,
+  createBilingualError,
+  getRequestLanguage,
+} from '../utils/validation'
+import { requirePermission } from '../middleware/auth'
+import { logInfo, logError } from '../utils/logger'
 
-const router = Router();
-const eventService = new EventService();
+const router = Router()
+const eventService = new EventService()
 
 // Validation schemas
 const createEventSchema = z.object({
@@ -17,24 +23,32 @@ const createEventSchema = z.object({
   end_date: z.string().datetime(),
   location: z.string(),
   virtual_link: z.string().url().optional(),
-  attendees: z.array(z.object({
-    type: z.enum(['country', 'organization', 'contact']),
-    id: z.string().uuid(),
-    role: z.enum(['host', 'participant', 'observer', 'speaker']).default('participant'),
-    confirmed: z.boolean().default(false)
-  })).optional(),
-  agenda: z.array(z.object({
-    time: z.string(),
-    topic: z.string(),
-    presenter: z.string().optional()
-  })).optional(),
+  attendees: z
+    .array(
+      z.object({
+        type: z.enum(['country', 'organization', 'contact']),
+        id: z.string().uuid(),
+        role: z.enum(['host', 'participant', 'observer', 'speaker']).default('participant'),
+        confirmed: z.boolean().default(false),
+      }),
+    )
+    .optional(),
+  agenda: z
+    .array(
+      z.object({
+        time: z.string(),
+        topic: z.string(),
+        presenter: z.string().optional(),
+      }),
+    )
+    .optional(),
   documents: z.array(z.string().uuid()).optional(),
   tags: z.array(z.string()).optional(),
   visibility: z.enum(['public', 'internal', 'restricted']).default('internal'),
-  metadata: z.record(z.string(), z.any()).optional()
-});
+  metadata: z.record(z.string(), z.any()).optional(),
+})
 
-const updateEventSchema = createEventSchema.partial();
+const updateEventSchema = createEventSchema.partial()
 
 const eventFiltersSchema = z.object({
   type: z.enum(['meeting', 'conference', 'workshop', 'ceremony', 'visit', 'other']).optional(),
@@ -49,8 +63,8 @@ const eventFiltersSchema = z.object({
   created_by: z.string().uuid().optional(),
   ...paginationSchema.shape,
   sort: z.string().optional(),
-  order: z.enum(['asc', 'desc']).optional()
-});
+  order: z.enum(['asc', 'desc']).optional(),
+})
 
 /**
  * @route GET /api/events
@@ -59,16 +73,16 @@ const eventFiltersSchema = z.object({
  */
 router.get('/', validate({ query: eventFiltersSchema }), async (req, res, next) => {
   try {
-    const filters = req.query;
-    const userId = req.user?.id;
+    const filters = req.query
+    const userId = req.user?.id
 
-    logInfo('Fetching events', { filters, userId });
+    logInfo('Fetching events', { filters, userId })
 
     const result = await eventService.findAll({
       ...filters,
       limit: Number(filters.limit) || 20,
-      offset: Number(filters.offset) || 0
-    });
+      offset: Number(filters.offset) || 0,
+    })
 
     res.json({
       data: result.data,
@@ -76,14 +90,14 @@ router.get('/', validate({ query: eventFiltersSchema }), async (req, res, next) 
         page: Math.floor((Number(filters.offset) || 0) / (Number(filters.limit) || 20)) + 1,
         limit: Number(filters.limit) || 20,
         total: result.total,
-        pages: Math.ceil(result.total / (Number(filters.limit) || 20))
-      }
-    });
+        pages: Math.ceil(result.total / (Number(filters.limit) || 20)),
+      },
+    })
   } catch (error) {
-    logError('Failed to fetch events', error as Error);
-    next(error);
+    logError('Failed to fetch events', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route GET /api/events/calendar
@@ -92,31 +106,31 @@ router.get('/', validate({ query: eventFiltersSchema }), async (req, res, next) 
  */
 router.get('/calendar', async (req, res, next) => {
   try {
-    const { start_date, end_date } = req.query;
-    const userId = req.user?.id;
+    const { start_date, end_date } = req.query
+    const userId = req.user?.id
 
     if (!start_date || !end_date) {
       return res.status(400).json({
         error: createBilingualError(
           'Start date and end date are required',
           'تاريخ البداية وتاريخ النهاية مطلوبان',
-          getRequestLanguage(req)
-        )
-      });
+          getRequestLanguage(req),
+        ),
+      })
     }
 
     const events = await eventService.getCalendarEvents(
       start_date as string,
       end_date as string,
-      userId
-    );
+      userId,
+    )
 
-    res.json({ data: events });
+    res.json({ data: events })
   } catch (error) {
-    logError('Failed to fetch calendar events', error as Error);
-    next(error);
+    logError('Failed to fetch calendar events', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route GET /api/events/upcoming
@@ -125,79 +139,87 @@ router.get('/calendar', async (req, res, next) => {
  */
 router.get('/upcoming', async (req, res, next) => {
   try {
-    const limit = Number(req.query.limit) || 10;
-    const events = await eventService.getUpcomingEvents(limit);
-    res.json({ data: events });
+    const limit = Number(req.query.limit) || 10
+    const events = await eventService.getUpcomingEvents(limit)
+    res.json({ data: events })
   } catch (error) {
-    logError('Failed to fetch upcoming events', error as Error);
-    next(error);
+    logError('Failed to fetch upcoming events', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route GET /api/events/country/:countryId
  * @desc Get events by country
  * @access Private
  */
-router.get('/country/:countryId', validate({
-  params: z.object({ countryId: z.string().uuid() })
-}), async (req, res, next) => {
-  try {
-    const events = await eventService.findByCountry(req.params.countryId);
-    res.json({ data: events });
-  } catch (error) {
-    logError('Failed to fetch events by country', error as Error);
-    next(error);
-  }
-});
+router.get(
+  '/country/:countryId',
+  validate({
+    params: z.object({ countryId: z.string().uuid() }),
+  }),
+  async (req, res, next) => {
+    try {
+      const events = await eventService.findByCountry(req.params.countryId)
+      res.json({ data: events })
+    } catch (error) {
+      logError('Failed to fetch events by country', error as Error)
+      next(error)
+    }
+  },
+)
 
 /**
  * @route GET /api/events/organization/:organizationId
  * @desc Get events by organization
  * @access Private
  */
-router.get('/organization/:organizationId', validate({
-  params: z.object({ organizationId: z.string().uuid() })
-}), async (req, res, next) => {
-  try {
-    const events = await eventService.findByOrganization(req.params.organizationId);
-    res.json({ data: events });
-  } catch (error) {
-    logError('Failed to fetch events by organization', error as Error);
-    next(error);
-  }
-});
+router.get(
+  '/organization/:organizationId',
+  validate({
+    params: z.object({ organizationId: z.string().uuid() }),
+  }),
+  async (req, res, next) => {
+    try {
+      const events = await eventService.findByOrganization(req.params.organizationId)
+      res.json({ data: events })
+    } catch (error) {
+      logError('Failed to fetch events by organization', error as Error)
+      next(error)
+    }
+  },
+)
 
 /**
  * @route GET /api/events/conflicts
  * @desc Check for scheduling conflicts
  * @access Private
  */
-router.post('/conflicts', validate({
-  body: z.object({
-    start_date: z.string().datetime(),
-    end_date: z.string().datetime(),
-    exclude_event_id: z.string().uuid().optional()
-  })
-}), async (req, res, next) => {
-  try {
-    const { start_date, end_date, exclude_event_id } = req.body;
+router.post(
+  '/conflicts',
+  validate({
+    body: z.object({
+      start_date: z.string().datetime(),
+      end_date: z.string().datetime(),
+      exclude_event_id: z.string().uuid().optional(),
+    }),
+  }),
+  async (req, res, next) => {
+    try {
+      const { start_date, end_date, exclude_event_id } = req.body
 
-    const conflicts = await eventService.checkConflicts(
-      start_date,
-      end_date,
-      exclude_event_id
-    );
+      const conflicts = await eventService.checkConflicts(start_date, end_date, exclude_event_id)
 
-    res.json({
-      hasConflicts: conflicts.length > 0,
-      conflicts
-    });
-  } catch (error) {
-    logError('Failed to check event conflicts', error as Error);
-    next(error);
-  }
-});
+      res.json({
+        hasConflicts: conflicts.length > 0,
+        conflicts,
+      })
+    } catch (error) {
+      logError('Failed to check event conflicts', error as Error)
+      next(error)
+    }
+  },
+)
 
 /**
  * @route GET /api/events/stats
@@ -206,13 +228,13 @@ router.post('/conflicts', validate({
  */
 router.get('/stats', async (req, res, next) => {
   try {
-    const stats = await eventService.getStatistics();
-    res.json(stats);
+    const stats = await eventService.getStatistics()
+    res.json(stats)
   } catch (error) {
-    logError('Failed to fetch event statistics', error as Error);
-    next(error);
+    logError('Failed to fetch event statistics', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route GET /api/events/:id
@@ -221,27 +243,23 @@ router.get('/stats', async (req, res, next) => {
  */
 router.get('/:id', validate({ params: idParamSchema }), async (req, res, next) => {
   try {
-    const { id } = req.params;
+    const { id } = req.params
 
-    const event = await eventService.findById(id);
+    const event = await eventService.findById(id)
 
     if (!event) {
-      const lang = getRequestLanguage(req);
+      const lang = getRequestLanguage(req)
       return res.status(404).json({
-        error: createBilingualError(
-          'Event not found',
-          'الحدث غير موجود',
-          lang
-        )
-      });
+        error: createBilingualError('Event not found', 'الحدث غير موجود', lang),
+      })
     }
 
-    res.json(event);
+    res.json(event)
   } catch (error) {
-    logError('Failed to fetch event', error as Error);
-    next(error);
+    logError('Failed to fetch event', error as Error)
+    next(error)
   }
-});
+})
 
 /**
  * @route POST /api/events
@@ -254,28 +272,24 @@ router.post(
   validate({ body: createEventSchema }),
   async (req, res, next) => {
     try {
-      const eventData = req.body;
-      const userId = req.user?.id;
-      const lang = getRequestLanguage(req);
+      const eventData = req.body
+      const userId = req.user?.id
+      const lang = getRequestLanguage(req)
 
-      logInfo('Creating new event', { eventData, userId });
+      logInfo('Creating new event', { eventData, userId })
 
-      const event = await eventService.create(eventData, userId!);
+      const event = await eventService.create(eventData, userId!)
 
       res.status(201).json({
         data: event,
-        message: createBilingualError(
-          'Event created successfully',
-          'تم إنشاء الحدث بنجاح',
-          lang
-        )
-      });
+        message: createBilingualError('Event created successfully', 'تم إنشاء الحدث بنجاح', lang),
+      })
     } catch (error) {
-      logError('Failed to create event', error as Error);
-      next(error);
+      logError('Failed to create event', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * @route PUT /api/events/:id
@@ -287,31 +301,27 @@ router.put(
   requirePermission(['manage_event']),
   validate({
     params: idParamSchema,
-    body: updateEventSchema
+    body: updateEventSchema,
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const updates = req.body;
-      const userId = req.user?.id;
-      const lang = getRequestLanguage(req);
+      const { id } = req.params
+      const updates = req.body
+      const userId = req.user?.id
+      const lang = getRequestLanguage(req)
 
-      const event = await eventService.update(id, updates, userId!);
+      const event = await eventService.update(id, updates, userId!)
 
       res.json({
         data: event,
-        message: createBilingualError(
-          'Event updated successfully',
-          'تم تحديث الحدث بنجاح',
-          lang
-        )
-      });
+        message: createBilingualError('Event updated successfully', 'تم تحديث الحدث بنجاح', lang),
+      })
     } catch (error) {
-      logError('Failed to update event', error as Error);
-      next(error);
+      logError('Failed to update event', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * @route DELETE /api/events/:id
@@ -324,25 +334,21 @@ router.delete(
   validate({ params: idParamSchema }),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const userId = req.user?.id;
-      const lang = getRequestLanguage(req);
+      const { id } = req.params
+      const userId = req.user?.id
+      const lang = getRequestLanguage(req)
 
-      await eventService.delete(id, userId!);
+      await eventService.delete(id, userId!)
 
       res.json({
-        message: createBilingualError(
-          'Event deleted successfully',
-          'تم حذف الحدث بنجاح',
-          lang
-        )
-      });
+        message: createBilingualError('Event deleted successfully', 'تم حذف الحدث بنجاح', lang),
+      })
     } catch (error) {
-      logError('Failed to delete event', error as Error);
-      next(error);
+      logError('Failed to delete event', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * @route POST /api/events/:id/attendees
@@ -358,32 +364,32 @@ router.post(
       type: z.enum(['country', 'organization', 'contact']),
       id: z.string().uuid(),
       role: z.enum(['host', 'participant', 'observer', 'speaker']),
-      confirmed: z.boolean().optional()
-    })
+      confirmed: z.boolean().optional(),
+    }),
   }),
   async (req, res, next) => {
     try {
-      const { id } = req.params;
-      const attendee = req.body;
-      const userId = req.user?.id;
-      const lang = getRequestLanguage(req);
+      const { id } = req.params
+      const attendee = req.body
+      const userId = req.user?.id
+      const lang = getRequestLanguage(req)
 
-      const event = await eventService.addAttendee(id, attendee, userId!);
+      const event = await eventService.addAttendee(id, attendee, userId!)
 
       res.json({
         data: event,
         message: createBilingualError(
           'Attendee added successfully',
           'تمت إضافة الحضور بنجاح',
-          lang
-        )
-      });
+          lang,
+        ),
+      })
     } catch (error) {
-      logError('Failed to add attendee', error as Error);
-      next(error);
+      logError('Failed to add attendee', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
 /**
  * @route DELETE /api/events/:id/attendees/:attendeeId
@@ -396,30 +402,30 @@ router.delete(
   validate({
     params: z.object({
       id: z.string().uuid(),
-      attendeeId: z.string().uuid()
-    })
+      attendeeId: z.string().uuid(),
+    }),
   }),
   async (req, res, next) => {
     try {
-      const { id, attendeeId } = req.params;
-      const userId = req.user?.id;
-      const lang = getRequestLanguage(req);
+      const { id, attendeeId } = req.params
+      const userId = req.user?.id
+      const lang = getRequestLanguage(req)
 
-      const event = await eventService.removeAttendee(id, attendeeId, userId!);
+      const event = await eventService.removeAttendee(id, attendeeId, userId!)
 
       res.json({
         data: event,
         message: createBilingualError(
           'Attendee removed successfully',
           'تمت إزالة الحضور بنجاح',
-          lang
-        )
-      });
+          lang,
+        ),
+      })
     } catch (error) {
-      logError('Failed to remove attendee', error as Error);
-      next(error);
+      logError('Failed to remove attendee', error as Error)
+      next(error)
     }
-  }
-);
+  },
+)
 
-export default router;
+export default router

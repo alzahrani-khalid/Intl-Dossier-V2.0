@@ -79,7 +79,6 @@ function DossierDetailPage() {
   // Handlers
   const handleEdit = () => {
     // TODO: Open edit modal or navigate to edit page
-    console.log('Edit dossier', id)
   }
 
   const handleArchive = async () => {
@@ -95,7 +94,6 @@ function DossierDetailPage() {
 
   const handleGenerateBrief = () => {
     // TODO: Navigate to brief generation page when route is implemented
-    console.log('Generate brief for dossier', id)
   }
 
   const handleTabChange = (tab: TabType) => {
@@ -112,9 +110,7 @@ function DossierDetailPage() {
       // Refresh the page to get latest data
       window.location.reload()
     } else if (resolution === 'keep-mine') {
-      // Keep local changes - retry with force flag
-      // This would need to be implemented in the mutation
-      console.log('Force update with local changes')
+      // TODO: Keep local changes - retry with force flag
     }
     setShowConflictDialog(false)
   }
