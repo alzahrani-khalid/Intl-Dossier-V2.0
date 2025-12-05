@@ -121,4 +121,25 @@ Non-compliance blocks production deployment. All PRs must include compliance che
 - **Migration Plan**: If migrating away from Supabase, pg_cron logic must be refactored to containerized cron daemon
 - **Review Date**: 2026-01-01
 
-**Version**: 2.1.1 | **Last Amended**: 2025-09-25
+### Exception 2: Cloud LLM Providers for AI Features (Feature 033-ai-brief-generation)
+
+- **Principle Affected**: §4 Data Sovereignty
+- **Violation**: Cloud LLM providers (OpenAI, Anthropic, Google) process data outside Saudi infrastructure
+- **Justification**:
+  - Brief generation and AI chat require frontier model capabilities not available in self-hosted solutions
+  - Private LLM (vLLM/Ollama) remains default; cloud is opt-in per organization policy
+  - Data classification routing enforced: "secret" data NEVER sent to cloud providers
+  - "confidential" data requires explicit org policy approval for cloud routing
+  - All AI operations logged with full observability (tokens, costs, provider used)
+  - Monthly spend caps prevent runaway costs
+  - Arabic language detection routes to appropriate models per org preference
+- **Safeguards Required**:
+  - LLM Router MUST enforce data classification before any cloud request
+  - Organization admins MUST explicitly enable cloud providers in policy
+  - 100% of AI runs MUST be logged in ai_runs table for audit
+  - Private LLM fallback MUST be available when cloud is unavailable
+- **Approved By**: Technical Stakeholders (2025-12-05)
+- **Migration Plan**: If data sovereignty requirements change, disable cloud providers via organization_llm_policies.allow_cloud_for_confidential = false
+- **Review Date**: 2026-06-01
+
+**Version**: 2.2.0 | **Last Amended**: 2025-12-05
