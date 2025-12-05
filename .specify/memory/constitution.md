@@ -1,50 +1,124 @@
-# [PROJECT_NAME] Constitution
-<!-- Example: Spec Constitution, TaskFlow Constitution, etc. -->
+# GASTAT International Dossier System Constitution
+
+**Version 2.1.1** | **Effective**: September 2025
 
 ## Core Principles
 
-### [PRINCIPLE_1_NAME]
-<!-- Example: I. Library-First -->
-[PRINCIPLE_1_DESCRIPTION]
-<!-- Example: Every feature starts as a standalone library; Libraries must be self-contained, independently testable, documented; Clear purpose required - no organizational-only libraries -->
+### 1. Bilingual Excellence
 
-### [PRINCIPLE_2_NAME]
-<!-- Example: II. CLI Interface -->
-[PRINCIPLE_2_DESCRIPTION]
-<!-- Example: Every library exposes functionality via CLI; Text in/out protocol: stdin/args → stdout, errors → stderr; Support JSON + human-readable formats -->
+- Arabic and English support from day one
+- RTL/LTR seamless switching
+- Equal priority for both languages
+- Cultural conventions respected
 
-### [PRINCIPLE_3_NAME]
-<!-- Example: III. Test-First (NON-NEGOTIABLE) -->
-[PRINCIPLE_3_DESCRIPTION]
-<!-- Example: TDD mandatory: Tests written → User approved → Tests fail → Then implement; Red-Green-Refactor cycle strictly enforced -->
+### 2. Type Safety
 
-### [PRINCIPLE_4_NAME]
-<!-- Example: IV. Integration Testing -->
-[PRINCIPLE_4_DESCRIPTION]
-<!-- Example: Focus areas requiring integration tests: New library contract tests, Contract changes, Inter-service communication, Shared schemas -->
+- TypeScript strict mode mandatory
+- No `any` types (except documented edge cases)
+- Explicit return types required
+- Components <200 lines max
 
-### [PRINCIPLE_5_NAME]
-<!-- Example: V. Observability, VI. Versioning & Breaking Changes, VII. Simplicity -->
-[PRINCIPLE_5_DESCRIPTION]
-<!-- Example: Text I/O ensures debuggability; Structured logging required; Or: MAJOR.MINOR.BUILD format; Or: Start simple, YAGNI principles -->
+### 3. Security-First
 
-## [SECTION_2_NAME]
-<!-- Example: Additional Constraints, Security Requirements, Performance Standards, etc. -->
+- MFA mandatory for all users
+- RLS enforced at database level
+- Input validation client + server
+- Rate limiting on all APIs
+- Encryption at rest and in transit
 
-[SECTION_2_CONTENT]
-<!-- Example: Technology stack requirements, compliance standards, deployment policies, etc. -->
+### 4. Data Sovereignty
 
-## [SECTION_3_NAME]
-<!-- Example: Development Workflow, Review Process, Quality Gates, etc. -->
+- Fully self-hostable system
+- No external cloud dependencies
+- Data stays within Saudi infrastructure
+- AnythingLLM containerized locally
+- Offline fallback mechanisms
 
-[SECTION_3_CONTENT]
-<!-- Example: Code review requirements, testing gates, deployment approval process, etc. -->
+### 5. Resilient Architecture
+
+- Error boundaries on all components
+- Graceful network failure handling
+- AI service fallback workflows
+- Timeout controls on async operations
+- Bilingual error messages
+
+### 6. Accessibility
+
+- WCAG 2.1 Level AA compliance
+- Full keyboard navigation
+- Screen reader compatibility
+- Proper ARIA labels and roles
+- Tested in both languages
+
+### 7. Container-First
+
+- Docker containerization mandatory
+- Docker Compose orchestration
+- Health checks on all services
+- Resource limits defined
+- Multi-stage builds preferred
+
+## Technology Stack
+
+**Frontend**: Vite + React 18+ + TypeScript + TanStack Router + TanStack Query + Tailwind CSS + RTL/LTR support
+
+**Backend**: Supabase (PostgreSQL + RLS + Auth + Realtime + Storage) + RESTful APIs
+
+**AI**: AnythingLLM (self-hosted) + pgvector + local embeddings + fallback responses
+
+**Infrastructure**: Docker + Docker Compose + Traefik + Prometheus/Grafana
+
+## Development Standards
+
+**Code Quality**:
+
+- TypeScript strict checks pass
+- Both languages tested
+- Security checklist completed
+- Accessibility audit passed
+- 80%+ test coverage
+
+**Testing**:
+
+- Unit tests for business logic
+- Integration tests for APIs
+- E2E tests for critical flows
+- Performance tests for RTL
+- Security tests for auth
+
+**Deployment**:
+
+- Feature branches → isolated containers
+- Staging mirrors production
+- 2-person approval for production
+- Reversible migrations only
+- Zero-downtime deployments
 
 ## Governance
-<!-- Example: Constitution supersedes all other practices; Amendments require documentation, approval, migration plan -->
 
-[GOVERNANCE_RULES]
-<!-- Example: All PRs/reviews must verify compliance; Complexity must be justified; Use [GUIDANCE_FILE] for runtime development guidance -->
+Constitution supersedes all practices. Deviations require:
 
-**Version**: [CONSTITUTION_VERSION] | **Ratified**: [RATIFICATION_DATE] | **Last Amended**: [LAST_AMENDED_DATE]
-<!-- Example: Version: 2.1.1 | Ratified: 2025-06-13 | Last Amended: 2025-07-16 -->
+1. Written justification
+2. Impact analysis
+3. Migration plan
+4. Technical stakeholder approval
+5. Version increment
+
+Non-compliance blocks production deployment. All PRs must include compliance checklist.
+
+## Approved Exceptions
+
+### Exception 1: pg_cron for SLA Monitoring (Feature 013-assignment-engine-sla)
+
+- **Principle Affected**: §7 Container-First
+- **Violation**: pg_cron extension runs within managed Supabase PostgreSQL, not as separate container
+- **Justification**:
+  - SLA monitoring requires sub-minute scheduling (30-second intervals) for 5,000+ concurrent assignments
+  - External cron container would require database credentials, increasing attack surface
+  - pg_cron is PostgreSQL-native extension, managed by Supabase platform
+  - Containerized alternative would add latency and complexity without security benefit
+- **Approved By**: Technical Stakeholders (2025-10-02)
+- **Migration Plan**: If migrating away from Supabase, pg_cron logic must be refactored to containerized cron daemon
+- **Review Date**: 2026-01-01
+
+**Version**: 2.1.1 | **Last Amended**: 2025-09-25
