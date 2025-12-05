@@ -1,0 +1,111 @@
+{
+  "title": "Work Board",
+  "viewModes": {
+    "list": "List View",
+    "board": "Board View"
+  },
+  "columnModes": {
+    "label": "Group by",
+    "status": "Status",
+    "priority": "Priority",
+    "trackingType": "Tracking Type"
+  },
+  "columns": {
+    "todo": "To Do",
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "review": "Review",
+    "done": "Done",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "resolved": "Resolved",
+    "closed": "Closed",
+    "urgent": "Urgent",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "delivery": "Delivery",
+    "follow_up": "Follow-up",
+    "sla": "SLA"
+  },
+  "sources": {
+    "task": "Task",
+    "commitment": "Commitment",
+    "intake": "Intake"
+  },
+  "card": {
+    "overdue": "Overdue",
+    "dueToday": "Due today",
+    "dueTomorrow": "Due tomorrow",
+    "dueIn": "Due in {{count}} day",
+    "dueIn_plural": "Due in {{count}} days",
+    "noDueDate": "No due date",
+    "assignedTo": "Assigned to",
+    "unassigned": "Unassigned"
+  },
+  "filters": {
+    "title": "Filters",
+    "source": "Source",
+    "allSources": "All sources",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "priority": "Priority",
+    "allPriorities": "All priorities",
+    "overdueOnly": "Overdue only",
+    "clear": "Clear filters"
+  },
+  "sorting": {
+    "label": "Sort by",
+    "deadline": "Deadline",
+    "created_at": "Created date",
+    "priority": "Priority"
+  },
+  "empty": {
+    "noItems": "No work items",
+    "noItemsDescription": "You have no active work items at the moment",
+    "noItemsInColumn": "No items in this column",
+    "dragHere": "Drag items here",
+    "createFirst": "Create your first work item"
+  },
+  "success": {
+    "statusUpdated": "Status updated",
+    "statusUpdatedDescription": "The item has been moved successfully"
+  },
+  "errors": {
+    "loadFailed": "Failed to load board",
+    "loadFailedDescription": "There was an error loading your work items. Please try again.",
+    "updateFailed": "Failed to update status",
+    "updateFailedDescription": "Could not move the item. Please try again.",
+    "invalidTransition": "Cannot move to {{column}}",
+    "invalidTransitionDescription": "This item type does not support this status transition",
+    "unauthorized": "You don't have permission",
+    "unauthorizedDescription": "You are not authorized to modify this item"
+  },
+  "actions": {
+    "retry": "Retry",
+    "loadMore": "Load more",
+    "refresh": "Refresh",
+    "openItem": "Open item",
+    "editItem": "Edit item"
+  },
+  "context": {
+    "personal": "My Work",
+    "dossier": "Dossier Work",
+    "engagement": "Engagement Tasks"
+  },
+  "realtime": {
+    "connected": "Live updates active",
+    "disconnected": "Reconnecting...",
+    "newItem": "New item added",
+    "itemUpdated": "Item updated",
+    "itemRemoved": "Item removed"
+  },
+  "accessibility": {
+    "dragHandle": "Drag to move",
+    "columnDropZone": "Drop zone for {{column}}",
+    "itemCount": "{{count}} item",
+    "itemCount_plural": "{{count}} items",
+    "boardNavigation": "Use arrow keys to navigate between columns",
+    "itemSelected": "{{title}} selected, press Space to pick up"
+  }
+}

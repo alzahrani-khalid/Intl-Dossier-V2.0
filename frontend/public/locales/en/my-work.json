@@ -1,6 +1,8 @@
 {
   "title": "My Work",
   "subtitle": "Track your commitments, tasks, and intake tickets in one place",
+  "viewBoard": "Board View",
+  "viewList": "List View",
 
   "stats": {
     "totalActive": "Total Active",

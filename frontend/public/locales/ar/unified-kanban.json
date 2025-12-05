@@ -1,0 +1,111 @@
+{
+  "title": "لوحة العمل",
+  "viewModes": {
+    "list": "عرض القائمة",
+    "board": "عرض اللوحة"
+  },
+  "columnModes": {
+    "label": "تجميع حسب",
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "trackingType": "نوع التتبع"
+  },
+  "columns": {
+    "todo": "للتنفيذ",
+    "pending": "قيد الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "review": "مراجعة",
+    "done": "مكتمل",
+    "completed": "مكتمل",
+    "cancelled": "ملغى",
+    "resolved": "تم الحل",
+    "closed": "مغلق",
+    "urgent": "عاجل",
+    "high": "عالي",
+    "medium": "متوسط",
+    "low": "منخفض",
+    "delivery": "تسليم",
+    "follow_up": "متابعة",
+    "sla": "اتفاقية الخدمة"
+  },
+  "sources": {
+    "task": "مهمة",
+    "commitment": "التزام",
+    "intake": "طلب"
+  },
+  "card": {
+    "overdue": "متأخر",
+    "dueToday": "مستحق اليوم",
+    "dueTomorrow": "مستحق غداً",
+    "dueIn": "مستحق خلال {{count}} يوم",
+    "dueIn_plural": "مستحق خلال {{count}} أيام",
+    "noDueDate": "بدون موعد استحقاق",
+    "assignedTo": "مسند إلى",
+    "unassigned": "غير مسند"
+  },
+  "filters": {
+    "title": "التصفية",
+    "source": "المصدر",
+    "allSources": "جميع المصادر",
+    "status": "الحالة",
+    "allStatuses": "جميع الحالات",
+    "priority": "الأولوية",
+    "allPriorities": "جميع الأولويات",
+    "overdueOnly": "المتأخرة فقط",
+    "clear": "مسح التصفية"
+  },
+  "sorting": {
+    "label": "ترتيب حسب",
+    "deadline": "تاريخ الاستحقاق",
+    "created_at": "تاريخ الإنشاء",
+    "priority": "الأولوية"
+  },
+  "empty": {
+    "noItems": "لا توجد عناصر عمل",
+    "noItemsDescription": "ليس لديك عناصر عمل نشطة حالياً",
+    "noItemsInColumn": "لا توجد عناصر في هذا العمود",
+    "dragHere": "اسحب العناصر هنا",
+    "createFirst": "أنشئ أول عنصر عمل"
+  },
+  "success": {
+    "statusUpdated": "تم تحديث الحالة",
+    "statusUpdatedDescription": "تم نقل العنصر بنجاح"
+  },
+  "errors": {
+    "loadFailed": "فشل تحميل اللوحة",
+    "loadFailedDescription": "حدث خطأ أثناء تحميل عناصر العمل. يرجى المحاولة مرة أخرى.",
+    "updateFailed": "فشل تحديث الحالة",
+    "updateFailedDescription": "تعذر نقل العنصر. يرجى المحاولة مرة أخرى.",
+    "invalidTransition": "لا يمكن النقل إلى {{column}}",
+    "invalidTransitionDescription": "هذا النوع من العناصر لا يدعم هذا الانتقال",
+    "unauthorized": "ليس لديك صلاحية",
+    "unauthorizedDescription": "غير مصرح لك بتعديل هذا العنصر"
+  },
+  "actions": {
+    "retry": "إعادة المحاولة",
+    "loadMore": "تحميل المزيد",
+    "refresh": "تحديث",
+    "openItem": "فتح العنصر",
+    "editItem": "تعديل العنصر"
+  },
+  "context": {
+    "personal": "أعمالي",
+    "dossier": "أعمال الملف",
+    "engagement": "مهام المشاركة"
+  },
+  "realtime": {
+    "connected": "التحديثات المباشرة نشطة",
+    "disconnected": "جاري إعادة الاتصال...",
+    "newItem": "تمت إضافة عنصر جديد",
+    "itemUpdated": "تم تحديث العنصر",
+    "itemRemoved": "تمت إزالة العنصر"
+  },
+  "accessibility": {
+    "dragHandle": "اسحب للنقل",
+    "columnDropZone": "منطقة الإفلات لـ {{column}}",
+    "itemCount": "{{count}} عنصر",
+    "itemCount_plural": "{{count}} عناصر",
+    "boardNavigation": "استخدم مفاتيح الأسهم للتنقل بين الأعمدة",
+    "itemSelected": "تم تحديد {{title}}، اضغط مسافة للالتقاط"
+  }
+}

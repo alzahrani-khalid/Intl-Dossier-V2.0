@@ -3,6 +3,7 @@
 Last updated: 2025-10-07
 
 ## Core Tech Stack
+
 - **Frontend**: React 19+, TypeScript 5.0+ (strict mode), TanStack Router/Query v5, Tailwind CSS, shadcn/ui, i18next, React Flow (network graphs)
 - **Mobile**: Expo SDK 52+, React Native 0.81+, TypeScript 5.8+, React Native Paper 5.12+ (Material Design 3), WatermelonDB 0.28+ (offline-first), React Navigation 7+, expo-local-authentication (biometrics), expo-notifications (push), i18next (internationalization)
 - **Backend**: Node.js 18+ LTS, Supabase (PostgreSQL 15+, Auth, RLS, Realtime, Storage), Redis 7.x
@@ -11,6 +12,7 @@ Last updated: 2025-10-07
 - **Additional**: @dnd-kit/core (drag-and-drop), Vite (build tool)
 
 ## Project Structure
+
 ```
 backend/          # Express + TypeScript API
 frontend/         # React 19 + Vite app
@@ -20,6 +22,7 @@ supabase/         # Migrations, seed data, Edge Functions
 ```
 
 ## Commands
+
 - **Dev**: `pnpm dev` (monorepo via Turborepo)
 - **Build**: `pnpm build`
 - **Test**: `pnpm test`, `pnpm lint`, `pnpm typecheck`
@@ -28,6 +31,7 @@ supabase/         # Migrations, seed data, Edge Functions
 ## Mobile-First & Responsive Design (MANDATORY)
 
 ### Core Principles
+
 - **ALWAYS** start with mobile layout (320px+), then scale up
 - **NEVER** write desktop-first CSS or components
 - **Breakpoints**: base (0-640px) → sm (640px+) → md (768px+) → lg (1024px+) → xl (1280px+) → 2xl (1536px+)
@@ -35,6 +39,7 @@ supabase/         # Migrations, seed data, Edge Functions
 - **Spacing**: Min 8px gap between interactive elements
 
 ### Essential Patterns
+
 ```tsx
 // Responsive container, grid, flexbox, typography
 <div className="container mx-auto px-4 sm:px-6 lg:px-8">
@@ -48,6 +53,7 @@ supabase/         # Migrations, seed data, Edge Functions
 ## Arabic RTL Support Guidelines (MANDATORY)
 
 ### RTL Detection & Implementation
+
 ```tsx
 import { useTranslation } from 'react-i18next';
 const { i18n } = useTranslation();
@@ -55,23 +61,25 @@ const isRTL = i18n.language === 'ar';
 ```
 
 ### RTL-Safe Tailwind Classes (REQUIRED)
+
 **NEVER** use `left`, `right`, `ml-*`, `mr-*`, `pl-*`, `pr-*`
 **ALWAYS** use logical properties:
 
-| ❌ Avoid | ✅ Use Instead | Description |
-|---------|---------------|-------------|
-| `ml-*` | `ms-*` | Margin start |
-| `mr-*` | `me-*` | Margin end |
-| `pl-*` | `ps-*` | Padding start |
-| `pr-*` | `pe-*` | Padding end |
-| `left-*` | `start-*` | Position start |
-| `right-*` | `end-*` | Position end |
-| `text-left` | `text-start` | Text align start |
-| `text-right` | `text-end` | Text align end |
-| `rounded-l-*` | `rounded-s-*` | Border radius start |
-| `rounded-r-*` | `rounded-e-*` | Border radius end |
+| ❌ Avoid      | ✅ Use Instead | Description         |
+| ------------- | -------------- | ------------------- |
+| `ml-*`        | `ms-*`         | Margin start        |
+| `mr-*`        | `me-*`         | Margin end          |
+| `pl-*`        | `ps-*`         | Padding start       |
+| `pr-*`        | `pe-*`         | Padding end         |
+| `left-*`      | `start-*`      | Position start      |
+| `right-*`     | `end-*`        | Position end        |
+| `text-left`   | `text-start`   | Text align start    |
+| `text-right`  | `text-end`     | Text align end      |
+| `rounded-l-*` | `rounded-s-*`  | Border radius start |
+| `rounded-r-*` | `rounded-e-*`  | Border radius end   |
 
 ### RTL Component Template
+
 ```tsx
 import { useTranslation } from 'react-i18next';
 
@@ -125,26 +133,27 @@ export function ResponsiveRTLComponent() {
 
 ### Aceternity Component Categories (130+ components)
 
-| Category | Count | Examples |
-|----------|-------|----------|
-| **Backgrounds & Effects** | 23 | Sparkles, Aurora, Gradient animations, Spotlight |
-| **Cards** | 14 | 3D card, Hoverable card, Expandable card, Animated card |
-| **Scroll & Parallax** | 5 | Sticky scroll, Parallax effects, Container scroll |
-| **Text Components** | 9 | Typewriter, Flip words, Text generation effects |
-| **Buttons** | 4 | Animated buttons, Gradient borders, Moving borders |
-| **Navigation** | 7 | Floating navbar, Sidebar, Floating dock, Tabs |
-| **Inputs & Forms** | 3 | Signup forms, File upload, Vanish input |
-| **Overlays & Modals** | 3 | Animated modals, Tooltips, Link preview |
-| **Carousels & Sliders** | 4 | Image sliders, Testimonials |
-| **Layout & Grid** | 3 | Bento grid, Layout grid |
-| **Data & Visualization** | 5 | GitHub globe, World map, Timeline, Charts |
-| **3D Components** | 2 | 3D pins, Marquee effects |
+| Category                  | Count | Examples                                                |
+| ------------------------- | ----- | ------------------------------------------------------- |
+| **Backgrounds & Effects** | 23    | Sparkles, Aurora, Gradient animations, Spotlight        |
+| **Cards**                 | 14    | 3D card, Hoverable card, Expandable card, Animated card |
+| **Scroll & Parallax**     | 5     | Sticky scroll, Parallax effects, Container scroll       |
+| **Text Components**       | 9     | Typewriter, Flip words, Text generation effects         |
+| **Buttons**               | 4     | Animated buttons, Gradient borders, Moving borders      |
+| **Navigation**            | 7     | Floating navbar, Sidebar, Floating dock, Tabs           |
+| **Inputs & Forms**        | 3     | Signup forms, File upload, Vanish input                 |
+| **Overlays & Modals**     | 3     | Animated modals, Tooltips, Link preview                 |
+| **Carousels & Sliders**   | 4     | Image sliders, Testimonials                             |
+| **Layout & Grid**         | 3     | Bento grid, Layout grid                                 |
+| **Data & Visualization**  | 5     | GitHub globe, World map, Timeline, Charts               |
+| **3D Components**         | 2     | 3D pins, Marquee effects                                |
 
 **Full catalog**: https://ui.aceternity.com/components
 
 ### Before Writing ANY Component
 
 **MANDATORY CHECKLIST**:
+
 1. ✅ Search Aceternity UI for component (use MCP tool or website)
 2. ✅ Check Aceternity Pro for premium variants
 3. ✅ If not found, check Kibo-UI registry
@@ -155,6 +164,7 @@ export function ResponsiveRTLComponent() {
 ### Installation Examples
 
 **Aceternity Free**:
+
 ```bash
 # Floating navbar
 npx shadcn@latest add https://ui.aceternity.com/registry/floating-navbar.json --yes
@@ -170,6 +180,7 @@ npx shadcn@latest add https://ui.aceternity.com/registry/timeline.json --yes
 ```
 
 **Aceternity Pro** (verify command format in Pro docs):
+
 ```bash
 # Dashboard template
 npx shadcn@latest add @aceternity-pro/dashboard-template-one
@@ -179,11 +190,13 @@ npx shadcn@latest add @aceternity-pro/card-blocks
 ```
 
 **Kibo-UI Fallback**:
+
 ```bash
 npx shadcn@latest add @kibo-ui/kanban
 ```
 
 **shadcn/ui (Last Resort)**:
+
 ```bash
 npx shadcn@latest add form
 ```
@@ -209,10 +222,7 @@ export function AceternityResponsiveComponent() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <div className="container mx-auto px-4 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       <BentoGrid className="gap-4 sm:gap-6 lg:gap-8">
         {/* Aceternity components work mobile-first by default */}
         {/* Add RTL support via logical properties and dir attribute */}
@@ -223,12 +233,14 @@ export function AceternityResponsiveComponent() {
 ```
 
 ### Component File Locations
+
 - **Aceternity UI components**: `frontend/src/components/ui/` (installed via shadcn CLI)
 - **Configuration**: `frontend/components.json`
 - **Documentation**: `frontend/.aceternity/` (installation notes, guides, examples)
 - **API Key**: `frontend/.env.local` (NEVER commit!)
 
 ### Key Dependencies (Already Installed)
+
 - ✅ `framer-motion` - Required for Aceternity animations
 - ✅ `clsx` - Conditional classnames utility
 - ✅ `tailwind-merge` - Merge Tailwind classes
@@ -238,6 +250,7 @@ export function AceternityResponsiveComponent() {
 For AI-assisted component discovery, install Aceternity UI MCP server:
 
 **Claude Code Config** (`~/Library/Application Support/Claude/claude_desktop_config.json`):
+
 ```json
 {
   "mcpServers": {
@@ -252,18 +265,95 @@ For AI-assisted component discovery, install Aceternity UI MCP server:
 After restart, use MCP tools to search and discover components.
 
 ### Component Import Pattern
+
 - Always import from `@/components/ui/<component>`
 - Example: `import { BentoGrid } from '@/components/ui/bento-grid'`
 - Check `frontend/src/components/ui/` for installed components
 - Refer to `frontend/.aceternity/INSTALLATION_NOTES.md` for verified installations
 
 ### shadcn/ui Fallback Strategy (DEPRECATED AS PRIMARY)
+
 **⚠️ IMPORTANT**: shadcn/ui is now a LAST RESORT fallback only. Use Aceternity UI as the primary component library for all new components. Only use shadcn/ui when:
+
 1. Aceternity doesn't have the component
 2. Kibo-UI doesn't have the component
 3. Building a custom component isn't feasible
 
+## Work Management Terminology (MANDATORY)
+
+Use consistent terminology across all work-related features. This glossary is the single source of truth.
+
+### Unified Terms
+
+| Term          | Definition                                                                  | Replaces                          |
+| ------------- | --------------------------------------------------------------------------- | --------------------------------- |
+| **Work Item** | Any trackable unit of work in the system                                    | Task, Assignment                  |
+| **Assignee**  | Person responsible for completing work                                      | Owner, Assigned To, Assigned User |
+| **Deadline**  | Target completion date/time                                                 | Due Date, SLA Deadline            |
+| **Priority**  | Importance level: `low`, `medium`, `high`, `urgent`                         | `critical` (use `urgent` instead) |
+| **Status**    | Current state: `pending`, `in_progress`, `review`, `completed`, `cancelled` | Workflow Stage (for display)      |
+
+### Source Types
+
+Work items originate from different sources, identified by the `source` field:
+
+| Source         | Description                                    | Typical Use Case          |
+| -------------- | ---------------------------------------------- | ------------------------- |
+| **task**       | Internal operational work with Kanban workflow | Assignments, action items |
+| **commitment** | Promises from after-action records             | Deliverables, follow-ups  |
+| **intake**     | Service requests through intake system         | Support tickets, requests |
+
+### Tracking Types
+
+Work items are categorized by how they're tracked:
+
+| Tracking Type | Description                | Typical Sources              |
+| ------------- | -------------------------- | ---------------------------- |
+| **delivery**  | Deliverable-based tracking | Internal commitments, tasks  |
+| **follow_up** | External party follow-up   | External commitments         |
+| **sla**       | SLA-driven with deadlines  | Intake tickets, urgent tasks |
+
+### Workflow Stages (Tasks Only)
+
+Kanban board positions for tasks:
+
+| Stage         | Description              |
+| ------------- | ------------------------ |
+| `todo`        | Not started, in backlog  |
+| `in_progress` | Actively being worked on |
+| `review`      | Pending review/approval  |
+| `done`        | Successfully completed   |
+| `cancelled`   | Explicitly cancelled     |
+
+### Code Usage
+
+```typescript
+// Always use unified types from work-item.types.ts
+import type { WorkItem, WorkSource, Priority, TrackingType } from '@/types/work-item.types';
+
+// Always use unified i18n namespace
+import { useTranslation } from 'react-i18next';
+const { t } = useTranslation('unified-kanban');
+
+// Correct terminology
+t('priority.urgent'); // NOT 'priority.critical'
+t('status.in_progress'); // Consistent naming
+t('columns.todo'); // Workflow stage for display
+```
+
+### Database Column Naming
+
+| Field           | Type        | Description                                        |
+| --------------- | ----------- | -------------------------------------------------- |
+| `assignee_id`   | UUID        | User responsible (NOT `owner_id`, `assigned_to`)   |
+| `deadline`      | TIMESTAMPTZ | Target completion (NOT `due_date`, `sla_deadline`) |
+| `priority`      | ENUM        | `low`, `medium`, `high`, `urgent`                  |
+| `status`        | ENUM        | Current state                                      |
+| `source`        | ENUM        | `commitment`, `task`, `intake`                     |
+| `tracking_type` | ENUM        | `delivery`, `follow_up`, `sla`                     |
+
 ## Recent Changes
+
 - 032-unified-work-management: Unified "My Work" dashboard consolidating commitments, tasks, and intake tickets
   - ✅ Database: 7 migrations (unified_work_items VIEW, user_work_summary VIEW, user_productivity_metrics MV, RPC functions)
   - ✅ Edge Function: unified-work-list (list, summary, metrics, team workload)
@@ -293,9 +383,11 @@ After restart, use MCP tools to search and discover components.
   - ⏳ Remaining: Test execution and validation (contract, integration, E2E, performance tests)
 
 <!-- MANUAL ADDITIONS START -->
+
 ## Deployment Configuration
 
 ### Staging Environment
+
 - **Project Name**: Intl-Dossier
 - **Project ID**: zkrcjzdemdmwhearhfgg
 - **Region**: eu-west-2
@@ -303,17 +395,21 @@ After restart, use MCP tools to search and discover components.
 - **Host**: db.zkrcjzdemdmwhearhfgg.supabase.co
 
 ### Deployment Commands
+
 - Migrations: Use Supabase MCP to apply migrations
 - Edge Functions: Deploy via Supabase CLI or MCP
 - Realtime: Enable via Supabase dashboard or MCP
 
 ### Test Credentials for Browser/Chrome MCP
+
 When testing the application using browser automation tools (Chrome MCP, Playwright, etc.), use these credentials:
+
 - **Email**: kazahrani@stats.gov.sa
 - **Password**: itisme
 <!-- MANUAL ADDITIONS END -->
 
 ## Active Technologies
+
 - TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Edge Functions), Vite (030-health-commitment)
 - PostgreSQL 15+ with pgvector extension, materialized views for aggregations, Redis 7.x for caching (030-health-commitment)
 - TypeScript 5.8+ (strict mode) + React 19, TanStack Router v5, TanStack Query v5, Supabase JS v2, i18next, Framer Motion, Aceternity UI (031-commitments-management)

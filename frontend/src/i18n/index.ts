@@ -22,10 +22,12 @@ import enCommitments from './en/commitments.json'
 import arCommitments from './ar/commitments.json'
 import enWorkCreation from './en/work-creation.json'
 import arWorkCreation from './ar/work-creation.json'
-// Force reload - updated 2025-11-28 - v5 - Added work-creation namespace
+import enUnifiedKanban from './en/unified-kanban.json'
+import arUnifiedKanban from './ar/unified-kanban.json'
+// Force reload - updated 2025-12-03 - v6 - Added unified-kanban namespace
 
 const supportedLanguages = ['en', 'ar'] as const
-export type SupportedLanguage = typeof supportedLanguages[number]
+export type SupportedLanguage = (typeof supportedLanguages)[number]
 
 const resources = {
   en: {
@@ -39,6 +41,7 @@ const resources = {
     contacts: enContacts,
     commitments: enCommitments,
     'work-creation': enWorkCreation,
+    'unified-kanban': enUnifiedKanban,
   },
   ar: {
     translation: arCommon,
@@ -51,6 +54,7 @@ const resources = {
     contacts: arContacts,
     commitments: arCommitments,
     'work-creation': arWorkCreation,
+    'unified-kanban': arUnifiedKanban,
   },
 }
 
