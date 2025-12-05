@@ -549,7 +549,7 @@ router.put('/intake/:intake_id/links/reorder', async (req: Request, res: Respons
  */
 router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Response) => {
   try {
-    const { link_id } = req.params
+    const { intake_id, link_id } = req.params
     const userId = req.user?.id
 
     if (!userId) {
@@ -610,7 +610,7 @@ router.delete('/intake/:intake_id/links/:link_id', async (req: Request, res: Res
  */
 router.post('/intake/:intake_id/links/:link_id/restore', async (req: Request, res: Response) => {
   try {
-    const { link_id } = req.params
+    const { intake_id, link_id } = req.params
     const userId = req.user?.id
 
     if (!userId) {
