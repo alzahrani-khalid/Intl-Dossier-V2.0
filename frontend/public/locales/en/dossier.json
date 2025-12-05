@@ -8,6 +8,7 @@
     "forum": "Forum",
     "engagement": "Engagement",
     "topic": "Topic",
+    "theme": "Theme",
     "working_group": "Working Group",
     "person": "Person"
   },
@@ -17,6 +18,7 @@
     "forum": "Conferences, summits, and multilateral discussion platforms",
     "engagement": "Meetings, consultations, and diplomatic interactions",
     "topic": "Policy areas, strategic priorities, and topical focus areas",
+    "theme": "Policy areas, strategic priorities, and topical focus areas",
     "working_group": "Task forces, committees, and collaborative working bodies",
     "person": "VIP individuals including ambassadors, ministers, and key contacts"
   },

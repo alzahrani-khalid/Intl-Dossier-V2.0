@@ -61,11 +61,13 @@ import { Route as ProtectedPositionsPositionIdRouteImport } from './routes/_prot
 import { Route as ProtectedPositionsIdRouteImport } from './routes/_protected/positions/$id'
 import { Route as ProtectedMyWorkWaitingRouteImport } from './routes/_protected/my-work/waiting'
 import { Route as ProtectedMyWorkIntakeRouteImport } from './routes/_protected/my-work/intake'
+import { Route as ProtectedMyWorkBoardRouteImport } from './routes/_protected/my-work/board'
 import { Route as ProtectedMyWorkAssignmentsRouteImport } from './routes/_protected/my-work/assignments'
 import { Route as ProtectedIntakeQueueRouteImport } from './routes/_protected/intake/queue'
 import { Route as ProtectedIntakeNewRouteImport } from './routes/_protected/intake/new'
 import { Route as ProtectedHelpCommitmentsRouteImport } from './routes/_protected/help/commitments'
 import { Route as ProtectedEngagementsEngagementIdRouteImport } from './routes/_protected/engagements/$engagementId'
+import { Route as ProtectedDossiersCreateRouteImport } from './routes/_protected/dossiers/create'
 import { Route as ProtectedDossiersIdRouteImport } from './routes/_protected/dossiers/$id'
 import { Route as ProtectedContactsNotesSearchRouteImport } from './routes/_protected/contacts/notes-search'
 import { Route as ProtectedContactsCreateRouteImport } from './routes/_protected/contacts/create'
@@ -359,6 +361,11 @@ const ProtectedMyWorkIntakeRoute = ProtectedMyWorkIntakeRouteImport.update({
   path: '/intake',
   getParentRoute: () => ProtectedMyWorkRoute,
 } as any)
+const ProtectedMyWorkBoardRoute = ProtectedMyWorkBoardRouteImport.update({
+  id: '/board',
+  path: '/board',
+  getParentRoute: () => ProtectedMyWorkRoute,
+} as any)
 const ProtectedMyWorkAssignmentsRoute =
   ProtectedMyWorkAssignmentsRouteImport.update({
     id: '/assignments',
@@ -387,6 +394,11 @@ const ProtectedEngagementsEngagementIdRoute =
     path: '/engagements/$engagementId',
     getParentRoute: () => ProtectedRoute,
   } as any)
+const ProtectedDossiersCreateRoute = ProtectedDossiersCreateRouteImport.update({
+  id: '/dossiers/create',
+  path: '/dossiers/create',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedDossiersIdRoute = ProtectedDossiersIdRouteImport.update({
   id: '/dossiers/$id',
   path: '/dossiers/$id',
@@ -588,11 +600,13 @@ export interface FileRoutesByFullPath {
   '/contacts/create': typeof ProtectedContactsCreateRoute
   '/contacts/notes-search': typeof ProtectedContactsNotesSearchRoute
   '/dossiers/$id': typeof ProtectedDossiersIdRoute
+  '/dossiers/create': typeof ProtectedDossiersCreateRoute
   '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
   '/help/commitments': typeof ProtectedHelpCommitmentsRoute
   '/intake/new': typeof ProtectedIntakeNewRoute
   '/intake/queue': typeof ProtectedIntakeQueueRoute
   '/my-work/assignments': typeof ProtectedMyWorkAssignmentsRoute
+  '/my-work/board': typeof ProtectedMyWorkBoardRoute
   '/my-work/intake': typeof ProtectedMyWorkIntakeRoute
   '/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
   '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
@@ -670,11 +684,13 @@ export interface FileRoutesByTo {
   '/contacts/create': typeof ProtectedContactsCreateRoute
   '/contacts/notes-search': typeof ProtectedContactsNotesSearchRoute
   '/dossiers/$id': typeof ProtectedDossiersIdRoute
+  '/dossiers/create': typeof ProtectedDossiersCreateRoute
   '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
   '/help/commitments': typeof ProtectedHelpCommitmentsRoute
   '/intake/new': typeof ProtectedIntakeNewRoute
   '/intake/queue': typeof ProtectedIntakeQueueRoute
   '/my-work/assignments': typeof ProtectedMyWorkAssignmentsRoute
+  '/my-work/board': typeof ProtectedMyWorkBoardRoute
   '/my-work/intake': typeof ProtectedMyWorkIntakeRoute
   '/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
   '/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
@@ -757,11 +773,13 @@ export interface FileRoutesById {
   '/_protected/contacts/create': typeof ProtectedContactsCreateRoute
   '/_protected/contacts/notes-search': typeof ProtectedContactsNotesSearchRoute
   '/_protected/dossiers/$id': typeof ProtectedDossiersIdRoute
+  '/_protected/dossiers/create': typeof ProtectedDossiersCreateRoute
   '/_protected/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
   '/_protected/help/commitments': typeof ProtectedHelpCommitmentsRoute
   '/_protected/intake/new': typeof ProtectedIntakeNewRoute
   '/_protected/intake/queue': typeof ProtectedIntakeQueueRoute
   '/_protected/my-work/assignments': typeof ProtectedMyWorkAssignmentsRoute
+  '/_protected/my-work/board': typeof ProtectedMyWorkBoardRoute
   '/_protected/my-work/intake': typeof ProtectedMyWorkIntakeRoute
   '/_protected/my-work/waiting': typeof ProtectedMyWorkWaitingRoute
   '/_protected/positions/$id': typeof ProtectedPositionsIdRouteWithChildren
@@ -844,11 +862,13 @@ export interface FileRouteTypes {
     | '/contacts/create'
     | '/contacts/notes-search'
     | '/dossiers/$id'
+    | '/dossiers/create'
     | '/engagements/$engagementId'
     | '/help/commitments'
     | '/intake/new'
     | '/intake/queue'
     | '/my-work/assignments'
+    | '/my-work/board'
     | '/my-work/intake'
     | '/my-work/waiting'
     | '/positions/$id'
@@ -926,11 +946,13 @@ export interface FileRouteTypes {
     | '/contacts/create'
     | '/contacts/notes-search'
     | '/dossiers/$id'
+    | '/dossiers/create'
     | '/engagements/$engagementId'
     | '/help/commitments'
     | '/intake/new'
     | '/intake/queue'
     | '/my-work/assignments'
+    | '/my-work/board'
     | '/my-work/intake'
     | '/my-work/waiting'
     | '/positions/$id'
@@ -1012,11 +1034,13 @@ export interface FileRouteTypes {
     | '/_protected/contacts/create'
     | '/_protected/contacts/notes-search'
     | '/_protected/dossiers/$id'
+    | '/_protected/dossiers/create'
     | '/_protected/engagements/$engagementId'
     | '/_protected/help/commitments'
     | '/_protected/intake/new'
     | '/_protected/intake/queue'
     | '/_protected/my-work/assignments'
+    | '/_protected/my-work/board'
     | '/_protected/my-work/intake'
     | '/_protected/my-work/waiting'
     | '/_protected/positions/$id'
@@ -1429,6 +1453,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedMyWorkIntakeRouteImport
       parentRoute: typeof ProtectedMyWorkRoute
     }
+    '/_protected/my-work/board': {
+      id: '/_protected/my-work/board'
+      path: '/board'
+      fullPath: '/my-work/board'
+      preLoaderRoute: typeof ProtectedMyWorkBoardRouteImport
+      parentRoute: typeof ProtectedMyWorkRoute
+    }
     '/_protected/my-work/assignments': {
       id: '/_protected/my-work/assignments'
       path: '/assignments'
@@ -1462,6 +1493,13 @@ declare module '@tanstack/react-router' {
       path: '/engagements/$engagementId'
       fullPath: '/engagements/$engagementId'
       preLoaderRoute: typeof ProtectedEngagementsEngagementIdRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/dossiers/create': {
+      id: '/_protected/dossiers/create'
+      path: '/dossiers/create'
+      fullPath: '/dossiers/create'
+      preLoaderRoute: typeof ProtectedDossiersCreateRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/dossiers/$id': {
@@ -1702,6 +1740,7 @@ const ProtectedIntakeRouteWithChildren = ProtectedIntakeRoute._addFileChildren(
 
 interface ProtectedMyWorkRouteChildren {
   ProtectedMyWorkAssignmentsRoute: typeof ProtectedMyWorkAssignmentsRoute
+  ProtectedMyWorkBoardRoute: typeof ProtectedMyWorkBoardRoute
   ProtectedMyWorkIntakeRoute: typeof ProtectedMyWorkIntakeRoute
   ProtectedMyWorkWaitingRoute: typeof ProtectedMyWorkWaitingRoute
   ProtectedMyWorkIndexRoute: typeof ProtectedMyWorkIndexRoute
@@ -1709,6 +1748,7 @@ interface ProtectedMyWorkRouteChildren {
 
 const ProtectedMyWorkRouteChildren: ProtectedMyWorkRouteChildren = {
   ProtectedMyWorkAssignmentsRoute: ProtectedMyWorkAssignmentsRoute,
+  ProtectedMyWorkBoardRoute: ProtectedMyWorkBoardRoute,
   ProtectedMyWorkIntakeRoute: ProtectedMyWorkIntakeRoute,
   ProtectedMyWorkWaitingRoute: ProtectedMyWorkWaitingRoute,
   ProtectedMyWorkIndexRoute: ProtectedMyWorkIndexRoute,
@@ -1811,6 +1851,7 @@ interface ProtectedRouteChildren {
   ProtectedAdminSystemRoute: typeof ProtectedAdminSystemRoute
   ProtectedAfterActionsAfterActionIdRoute: typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   ProtectedDossiersIdRoute: typeof ProtectedDossiersIdRoute
+  ProtectedDossiersCreateRoute: typeof ProtectedDossiersCreateRoute
   ProtectedEngagementsEngagementIdRoute: typeof ProtectedEngagementsEngagementIdRouteWithChildren
   ProtectedHelpCommitmentsRoute: typeof ProtectedHelpCommitmentsRoute
   ProtectedRelationshipsGraphRoute: typeof ProtectedRelationshipsGraphRoute
@@ -1875,6 +1916,7 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAfterActionsAfterActionIdRoute:
     ProtectedAfterActionsAfterActionIdRouteWithChildren,
   ProtectedDossiersIdRoute: ProtectedDossiersIdRoute,
+  ProtectedDossiersCreateRoute: ProtectedDossiersCreateRoute,
   ProtectedEngagementsEngagementIdRoute:
     ProtectedEngagementsEngagementIdRouteWithChildren,
   ProtectedHelpCommitmentsRoute: ProtectedHelpCommitmentsRoute,

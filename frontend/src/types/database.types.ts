@@ -12,6 +12,31 @@ export type Database = {
   __InternalSupabase: {
     PostgrestVersion: "13.0.5"
   }
+  graphql_public: {
+    Tables: {
+      [_ in never]: never
+    }
+    Views: {
+      [_ in never]: never
+    }
+    Functions: {
+      graphql: {
+        Args: {
+          extensions?: Json
+          operationName?: string
+          query?: string
+          variables?: Json
+        }
+        Returns: Json
+      }
+    }
+    Enums: {
+      [_ in never]: never
+    }
+    CompositeTypes: {
+      [_ in never]: never
+    }
+  }
   public: {
     Tables: {
       aa_attachments: {
@@ -60,55 +85,85 @@ export type Database = {
       }
       aa_commitments: {
         Row: {
-          after_action_id: string
+          after_action_id: string | null
           ai_confidence: number | null
           completed_at: string | null
+          completion_notes: string | null
           created_at: string | null
+          created_by: string | null
+          created_from_entity: Json | null
+          created_from_route: string | null
           description: string
           dossier_id: string
           due_date: string
+          evidence_submitted_at: string | null
           id: string
           owner_contact_id: string | null
           owner_type: string
           owner_user_id: string | null
           priority: string
+          proof_required: boolean
+          proof_url: string | null
           status: string
+          status_changed_at: string | null
+          title: string
           tracking_mode: string
           updated_at: string | null
+          updated_by: string | null
         }
         Insert: {
-          after_action_id: string
+          after_action_id?: string | null
           ai_confidence?: number | null
           completed_at?: string | null
+          completion_notes?: string | null
           created_at?: string | null
+          created_by?: string | null
+          created_from_entity?: Json | null
+          created_from_route?: string | null
           description: string
           dossier_id: string
           due_date: string
+          evidence_submitted_at?: string | null
           id?: string
           owner_contact_id?: string | null
           owner_type: string
           owner_user_id?: string | null
           priority?: string
+          proof_required?: boolean
+          proof_url?: string | null
           status?: string
+          status_changed_at?: string | null
+          title: string
           tracking_mode: string
           updated_at?: string | null
+          updated_by?: string | null
         }
         Update: {
-          after_action_id?: string
+          after_action_id?: string | null
           ai_confidence?: number | null
           completed_at?: string | null
+          completion_notes?: string | null
           created_at?: string | null
+          created_by?: string | null
+          created_from_entity?: Json | null
+          created_from_route?: string | null
           description?: string
           dossier_id?: string
           due_date?: string
+          evidence_submitted_at?: string | null
           id?: string
           owner_contact_id?: string | null
           owner_type?: string
           owner_user_id?: string | null
           priority?: string
+          proof_required?: boolean
+          proof_url?: string | null
           status?: string
+          status_changed_at?: string | null
+          title?: string
           tracking_mode?: string
           updated_at?: string | null
+          updated_by?: string | null
         }
         Relationships: [
           {
@@ -1342,6 +1397,36 @@ export type Database = {
         }
         Relationships: []
       }
+      background_jobs: {
+        Row: {
+          created_at: string
+          error_message: string | null
+          id: string
+          job_type: string
+          payload: Json
+          processed_at: string | null
+          status: string
+        }
+        Insert: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          job_type: string
+          payload: Json
+          processed_at?: string | null
+          status?: string
+        }
+        Update: {
+          created_at?: string
+          error_message?: string | null
+          id?: string
+          job_type?: string
+          payload?: Json
+          processed_at?: string | null
+          status?: string
+        }
+        Relationships: []
+      }
       briefing_packs: {
         Row: {
           engagement_id: string
@@ -1742,6 +1827,44 @@ export type Database = {
             columns: ["comment_id"]
             isOneToOne: false
             referencedRelation: "assignment_comments"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      commitment_status_history: {
+        Row: {
+          changed_at: string
+          changed_by: string
+          commitment_id: string
+          id: string
+          new_status: string
+          notes: string | null
+          old_status: string | null
+        }
+        Insert: {
+          changed_at?: string
+          changed_by: string
+          commitment_id: string
+          id?: string
+          new_status: string
+          notes?: string | null
+          old_status?: string | null
+        }
+        Update: {
+          changed_at?: string
+          changed_by?: string
+          commitment_id?: string
+          id?: string
+          new_status?: string
+          notes?: string | null
+          old_status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commitment_status_history_commitment_id_fkey"
+            columns: ["commitment_id"]
+            isOneToOne: false
+            referencedRelation: "aa_commitments"
             referencedColumns: ["id"]
           },
         ]
@@ -3135,6 +3258,50 @@ export type Database = {
           },
         ]
       }
+      health_scores: {
+        Row: {
+          calculated_at: string
+          commitment_fulfillment: number
+          created_at: string
+          dossier_id: string
+          engagement_frequency: number
+          id: string
+          overall_score: number | null
+          recency_score: number
+          updated_at: string
+        }
+        Insert: {
+          calculated_at?: string
+          commitment_fulfillment: number
+          created_at?: string
+          dossier_id: string
+          engagement_frequency: number
+          id?: string
+          overall_score?: number | null
+          recency_score: number
+          updated_at?: string
+        }
+        Update: {
+          calculated_at?: string
+          commitment_fulfillment?: number
+          created_at?: string
+          dossier_id?: string
+          engagement_frequency?: number
+          id?: string
+          overall_score?: number | null
+          recency_score?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "health_scores_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: true
+            referencedRelation: "dossiers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intake_attachments: {
         Row: {
           deleted_at: string | null
@@ -3304,6 +3471,8 @@ export type Database = {
           converted_to_type: Database["public"]["Enums"]["request_type"] | null
           created_at: string
           created_by: string
+          created_from_entity: Json | null
+          created_from_route: string | null
           description: string
           description_ar: string
           dossier_id: string | null
@@ -3337,6 +3506,8 @@ export type Database = {
           converted_to_type?: Database["public"]["Enums"]["request_type"] | null
           created_at?: string
           created_by: string
+          created_from_entity?: Json | null
+          created_from_route?: string | null
           description: string
           description_ar: string
           dossier_id?: string | null
@@ -3370,6 +3541,8 @@ export type Database = {
           converted_to_type?: Database["public"]["Enums"]["request_type"] | null
           created_at?: string
           created_by?: string
+          created_from_entity?: Json | null
+          created_from_route?: string | null
           description?: string
           description_ar?: string
           dossier_id?: string | null
@@ -5846,6 +6019,8 @@ export type Database = {
           completed_by: string | null
           created_at: string
           created_by: string
+          created_from_entity: Json | null
+          created_from_route: string | null
           deleted_at: string | null
           dependencies: Json | null
           description: string | null
@@ -5877,6 +6052,8 @@ export type Database = {
           completed_by?: string | null
           created_at?: string
           created_by: string
+          created_from_entity?: Json | null
+          created_from_route?: string | null
           deleted_at?: string | null
           dependencies?: Json | null
           description?: string | null
@@ -5908,6 +6085,8 @@ export type Database = {
           completed_by?: string | null
           created_at?: string
           created_by?: string
+          created_from_entity?: Json | null
+          created_from_route?: string | null
           deleted_at?: string | null
           dependencies?: Json | null
           description?: string | null
@@ -6756,6 +6935,36 @@ export type Database = {
           },
         ]
       }
+      dossier_commitment_stats: {
+        Row: {
+          active_commitments: number | null
+          dossier_id: string | null
+          fulfilled_commitments: number | null
+          fulfillment_rate: number | null
+          overdue_commitments: number | null
+          total_commitments: number | null
+          upcoming_commitments: number | null
+        }
+        Relationships: []
+      }
+      dossier_engagement_stats: {
+        Row: {
+          dossier_id: string | null
+          engagement_frequency_score: number | null
+          latest_engagement_date: string | null
+          recent_engagements_90d: number | null
+          total_engagements_365d: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dossier_interactions_dossier_id_fkey"
+            columns: ["dossier_id"]
+            isOneToOne: false
+            referencedRelation: "dossiers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       intelligence_cache_status: {
         Row: {
           cache_expires_at: string | null
@@ -6883,6 +7092,62 @@ export type Database = {
           title_ar?: string | null
           title_en?: string | null
           workflow_state?: never
+        }
+        Relationships: []
+      }
+      unified_work_items: {
+        Row: {
+          assigned_to: string | null
+          completed_at: string | null
+          created_at: string | null
+          days_until_due: number | null
+          deadline: string | null
+          description: string | null
+          dossier_id: string | null
+          id: string | null
+          is_overdue: boolean | null
+          metadata: Json | null
+          priority: string | null
+          source: Database["public"]["Enums"]["work_source"] | null
+          status: string | null
+          title: string | null
+          tracking_type: Database["public"]["Enums"]["tracking_type"] | null
+          updated_at: string | null
+        }
+        Relationships: []
+      }
+      user_productivity_metrics: {
+        Row: {
+          avg_completion_hours_30d: number | null
+          avg_completion_hours_all: number | null
+          commitment_completed_30d: number | null
+          completed_count_30d: number | null
+          completed_count_all: number | null
+          first_completion: string | null
+          intake_completed_30d: number | null
+          last_completion: string | null
+          last_refreshed_at: string | null
+          on_time_rate_30d: number | null
+          on_time_rate_all: number | null
+          task_completed_30d: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
+      user_work_summary: {
+        Row: {
+          commitment_count: number | null
+          delivery_count: number | null
+          due_this_week: number | null
+          due_today: number | null
+          follow_up_count: number | null
+          high_priority_count: number | null
+          intake_count: number | null
+          overdue_count: number | null
+          sla_count: number | null
+          task_count: number | null
+          total_active: number | null
+          user_id: string | null
         }
         Relationships: []
       }
@@ -7144,14 +7409,135 @@ export type Database = {
         }[]
       }
       get_system_user_id: { Args: never; Returns: string }
+      get_team_member_ids: {
+        Args: { manager_user_id?: string }
+        Returns: string[]
+      }
+      get_team_workload: {
+        Args: { requesting_user_id?: string }
+        Returns: {
+          commitment_count: number
+          completed_count_30d: number
+          due_this_week: number
+          high_priority_count: number
+          intake_count: number
+          on_time_rate_30d: number
+          overdue_count: number
+          task_count: number
+          total_active: number
+          user_email: string
+          user_id: string
+        }[]
+      }
+      get_unified_work_items: {
+        Args: {
+          p_cursor_deadline?: string
+          p_cursor_id?: string
+          p_dossier_id?: string
+          p_is_overdue?: boolean
+          p_limit?: number
+          p_priorities?: string[]
+          p_search_query?: string
+          p_sort_by?: string
+          p_sort_order?: string
+          p_sources?: Database["public"]["Enums"]["work_source"][]
+          p_statuses?: string[]
+          p_tracking_types?: Database["public"]["Enums"]["tracking_type"][]
+          p_user_id?: string
+        }
+        Returns: {
+          assigned_to: string
+          completed_at: string
+          created_at: string
+          days_until_due: number
+          deadline: string
+          description: string
+          dossier_id: string
+          has_more: boolean
+          id: string
+          is_overdue: boolean
+          metadata: Json
+          priority: string
+          source: Database["public"]["Enums"]["work_source"]
+          status: string
+          title: string
+          tracking_type: Database["public"]["Enums"]["tracking_type"]
+          updated_at: string
+        }[]
+      }
+      get_unified_work_kanban: {
+        Args: {
+          p_column_mode?: Database["public"]["Enums"]["kanban_column_mode"]
+          p_context_id?: string
+          p_context_type: Database["public"]["Enums"]["kanban_context_type"]
+          p_limit_per_column?: number
+          p_source_filter?: string[]
+        }
+        Returns: {
+          assignee_avatar_url: string
+          assignee_id: string
+          assignee_name: string
+          column_key: string
+          created_at: string
+          days_until_due: number
+          deadline: string
+          description: string
+          dossier_id: string
+          engagement_id: string
+          id: string
+          is_overdue: boolean
+          metadata: Json
+          priority: string
+          source: string
+          status: string
+          title: string
+          title_ar: string
+          tracking_type: string
+          updated_at: string
+          workflow_stage: string
+        }[]
+      }
       get_user_clearance_level: { Args: { user_id: string }; Returns: number }
       get_user_max_sensitivity: {
         Args: { p_user_id: string }
         Returns: Database["public"]["Enums"]["sensitivity_level"]
       }
+      get_user_productivity_metrics: {
+        Args: { p_user_id?: string }
+        Returns: {
+          avg_completion_hours_30d: number
+          avg_completion_hours_all: number
+          commitment_completed_30d: number
+          completed_count_30d: number
+          completed_count_all: number
+          intake_completed_30d: number
+          last_refreshed_at: string
+          on_time_rate_30d: number
+          on_time_rate_all: number
+          task_completed_30d: number
+          user_id: string
+        }[]
+      }
       get_user_role: { Args: never; Returns: string }
       get_user_unit: { Args: never; Returns: string }
       get_user_units: { Args: { p_user_id: string }; Returns: string[] }
+      get_user_work_summary: {
+        Args: { p_user_id?: string }
+        Returns: {
+          commitment_count: number
+          delivery_count: number
+          due_this_week: number
+          due_today: number
+          follow_up_count: number
+          high_priority_count: number
+          intake_count: number
+          overdue_count: number
+          sla_count: number
+          task_count: number
+          total_active: number
+          user_id: string
+        }[]
+      }
       http: {
         Args: { request: Database["public"]["CompositeTypes"]["http_request"] }
         Returns: Database["public"]["CompositeTypes"]["http_response"]
@@ -7297,6 +7683,7 @@ export type Database = {
       }
       is_manager: { Args: never; Returns: boolean }
       is_supervisor: { Args: { p_user_id: string }; Returns: boolean }
+      is_team_manager: { Args: { check_user_id?: string }; Returns: boolean }
       lock_intelligence_for_refresh: {
         Args: {
           p_entity_id: string
@@ -7382,7 +7769,10 @@ export type Database = {
       normalize_vector: { Args: { v: string }; Returns: string }
       process_stale_queue_items: { Args: never; Returns: undefined }
       refresh_aa_commitment_summary: { Args: never; Returns: undefined }
+      refresh_commitment_stats: { Args: never; Returns: undefined }
+      refresh_engagement_stats: { Args: never; Returns: undefined }
       refresh_organization_summary: { Args: never; Returns: undefined }
+      refresh_user_productivity_metrics: { Args: never; Returns: undefined }
       restore_dossier: { Args: { dossier_id: string }; Returns: undefined }
       rollback_ticket_conversion: {
         Args: {
@@ -7738,6 +8128,8 @@ export type Database = {
         | "risk"
         | "best_practice"
         | "news"
+      kanban_column_mode: "status" | "priority" | "tracking_type"
+      kanban_context_type: "personal" | "dossier" | "engagement"
       language_preference: "en" | "ar"
       language_proficiency: "native" | "fluent" | "professional" | "basic"
       likelihood: "unlikely" | "possible" | "likely" | "certain"
@@ -7836,6 +8228,7 @@ export type Database = {
         | "converted"
         | "closed"
         | "merged"
+      tracking_type: "delivery" | "follow_up" | "sla"
       urgency_level: "low" | "medium" | "high" | "critical"
       urgent_priority: "urgent" | "high" | "medium" | "low"
       user_role:
@@ -7850,6 +8243,7 @@ export type Database = {
         | "moderator"
       visibility_level: "public" | "internal" | "restricted"
       work_item_type: "dossier" | "ticket" | "position" | "task"
+      work_source: "commitment" | "task" | "intake"
       workspace_type: "project" | "committee" | "initiative" | "temporary"
     }
     CompositeTypes: {
@@ -7992,6 +8386,9 @@ export type CompositeTypes<
     : never
 
 export const Constants = {
+  graphql_public: {
+    Enums: {},
+  },
   public: {
     Enums: {
       aa_commitment_status: [
@@ -8154,6 +8551,8 @@ export const Constants = {
         "best_practice",
         "news",
       ],
+      kanban_column_mode: ["status", "priority", "tracking_type"],
+      kanban_context_type: ["personal", "dossier", "engagement"],
       language_preference: ["en", "ar"],
       language_proficiency: ["native", "fluent", "professional", "basic"],
       likelihood: ["unlikely", "possible", "likely", "certain"],
@@ -8257,6 +8656,7 @@ export const Constants = {
         "closed",
         "merged",
       ],
+      tracking_type: ["delivery", "follow_up", "sla"],
       urgency_level: ["low", "medium", "high", "critical"],
       urgent_priority: ["urgent", "high", "medium", "low"],
       user_role: [
@@ -8272,6 +8672,7 @@ export const Constants = {
       ],
       visibility_level: ["public", "internal", "restricted"],
       work_item_type: ["dossier", "ticket", "position", "task"],
+      work_source: ["commitment", "task", "intake"],
       workspace_type: ["project", "committee", "initiative", "temporary"],
     },
   },
