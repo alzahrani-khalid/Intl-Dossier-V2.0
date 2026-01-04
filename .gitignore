@@ -105,3 +105,10 @@ playwright-report/
 # Chrome DevTools screenshots
 .devtools-screenshots/
 .factory/
+
+# Build artifacts
+.pnpm-buildable-deps
+
+# AnythingLLM local storage
+docker/anythingllm-storage/
+
