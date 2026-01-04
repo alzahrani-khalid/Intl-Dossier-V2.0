@@ -1,0 +1,536 @@
+openapi: 3.1.0
+info:
+  title: AI Brief Generation API
+  version: 1.0.0
+  description: API contracts for AI Brief Generation & Intelligence Layer
+
+servers:
+  - url: /api/ai
+    description: AI API endpoints
+
+paths:
+  /briefs/generate:
+    post:
+      summary: Generate an AI brief for an engagement
+      operationId: generateBrief
+      tags: [Briefs]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BriefGenerateRequest'
+      responses:
+        '200':
+          description: SSE stream of brief generation
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/BriefStreamEvent'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '429':
+          $ref: '#/components/responses/RateLimited'
+        '503':
+          $ref: '#/components/responses/SpendCapReached'
+
+  /briefs/{briefId}:
+    get:
+      summary: Get a generated brief by ID
+      operationId: getBrief
+      tags: [Briefs]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: briefId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Brief retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Brief'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /chat:
+    post:
+      summary: Send a chat message (SSE streaming response)
+      operationId: chat
+      tags: [Chat]
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ChatRequest'
+      responses:
+        '200':
+          description: SSE stream of chat response
+          content:
+            text/event-stream:
+              schema:
+                $ref: '#/components/schemas/ChatStreamEvent'
+
+  /intake/{ticketId}/propose-links:
+    post:
+      summary: Generate AI entity link suggestions for an intake ticket
+      operationId: proposeLinks
+      tags: [Entity Linking]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: ticketId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Link proposals generated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LinkProposalsResponse'
+
+  /proposals/{proposalId}/approve:
+    post:
+      summary: Approve an entity link proposal
+      operationId: approveProposal
+      tags: [Entity Linking]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: proposalId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Proposal approved and link created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApprovalResponse'
+
+  /proposals/{proposalId}/reject:
+    post:
+      summary: Reject an entity link proposal
+      operationId: rejectProposal
+      tags: [Entity Linking]
+      security:
+        - BearerAuth: []
+      parameters:
+        - name: proposalId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                reason:
+                  type: string
+                  description: Optional rejection reason for feedback
+      responses:
+        '200':
+          description: Proposal rejected
+
+  /health:
+    get:
+      summary: AI service health check
+      operationId: healthCheck
+      tags: [System]
+      responses:
+        '200':
+          description: Service healthy
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/HealthResponse'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    BriefGenerateRequest:
+      type: object
+      required:
+        - engagement_id
+      properties:
+        engagement_id:
+          type: string
+          format: uuid
+          description: ID of the engagement to generate brief for
+        dossier_id:
+          type: string
+          format: uuid
+          description: Optional specific dossier context
+        custom_prompt:
+          type: string
+          maxLength: 2000
+          description: User guidance for brief focus
+          example: 'Focus on trade agreements and economic relations'
+
+    BriefStreamEvent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [progress, content, citation, complete, error]
+        data:
+          oneOf:
+            - $ref: '#/components/schemas/ProgressEvent'
+            - $ref: '#/components/schemas/ContentEvent'
+            - $ref: '#/components/schemas/CitationEvent'
+            - $ref: '#/components/schemas/CompleteEvent'
+            - $ref: '#/components/schemas/ErrorEvent'
+
+    ProgressEvent:
+      type: object
+      properties:
+        stage:
+          type: string
+          enum: [retrieving, generating, citing]
+        message:
+          type: string
+        progress:
+          type: number
+          minimum: 0
+          maximum: 100
+
+    ContentEvent:
+      type: object
+      properties:
+        section:
+          type: string
+          enum:
+            [
+              executive_summary,
+              background,
+              participants,
+              positions,
+              commitments,
+              historical_context,
+              talking_points,
+              recommendations,
+            ]
+        content:
+          type: string
+          description: Streamed content chunk
+
+    CitationEvent:
+      type: object
+      properties:
+        citation:
+          $ref: '#/components/schemas/Citation'
+
+    CompleteEvent:
+      type: object
+      properties:
+        brief_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [completed, partial]
+        duration_ms:
+          type: integer
+
+    ErrorEvent:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+        retryable:
+          type: boolean
+
+    Brief:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        engagement_id:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [generating, completed, partial, failed]
+        title:
+          type: string
+        executive_summary:
+          type: string
+        background:
+          type: string
+        key_participants:
+          type: array
+          items:
+            $ref: '#/components/schemas/Participant'
+        relevant_positions:
+          type: array
+          items:
+            $ref: '#/components/schemas/PositionSummary'
+        active_commitments:
+          type: array
+          items:
+            $ref: '#/components/schemas/CommitmentSummary'
+        historical_context:
+          type: string
+        talking_points:
+          type: array
+          items:
+            type: string
+        recommendations:
+          type: string
+        citations:
+          type: array
+          items:
+            $ref: '#/components/schemas/Citation'
+        created_at:
+          type: string
+          format: date-time
+        completed_at:
+          type: string
+          format: date-time
+
+    Participant:
+      type: object
+      properties:
+        name:
+          type: string
+        role:
+          type: string
+        organization:
+          type: string
+        dossier_id:
+          type: string
+          format: uuid
+
+    PositionSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        summary:
+          type: string
+        relevance:
+          type: string
+          description: Why this position is relevant
+
+    CommitmentSummary:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        status:
+          type: string
+        due_date:
+          type: string
+          format: date
+
+    Citation:
+      type: object
+      properties:
+        entity_type:
+          type: string
+          enum: [dossier, position, commitment, engagement]
+        entity_id:
+          type: string
+          format: uuid
+        entity_name:
+          type: string
+        excerpt:
+          type: string
+          description: Relevant excerpt from source
+        deep_link:
+          type: string
+          format: uri
+          description: Deep link to source entity
+
+    ChatRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          maxLength: 4000
+        session_id:
+          type: string
+          description: Optional session ID for conversation continuity
+        context:
+          type: object
+          properties:
+            current_page:
+              type: string
+              description: Current page context
+            selected_entity_id:
+              type: string
+              format: uuid
+
+    ChatStreamEvent:
+      type: object
+      properties:
+        type:
+          type: string
+          enum: [content, tool_start, tool_result, citation, complete, error]
+        data:
+          type: object
+
+    LinkProposalsResponse:
+      type: object
+      properties:
+        run_id:
+          type: string
+          format: uuid
+        proposals:
+          type: array
+          items:
+            $ref: '#/components/schemas/LinkProposal'
+        summary:
+          type: string
+          description: AI-generated summary of suggestions
+
+    LinkProposal:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        entity_type:
+          type: string
+          enum: [dossier, position, person, engagement, commitment]
+        entity_id:
+          type: string
+          format: uuid
+        entity_name:
+          type: string
+        confidence_score:
+          type: number
+          minimum: 0
+          maximum: 100
+        confidence_level:
+          type: string
+          enum: [high, medium, low]
+          description: 'high: >=80, medium: 70-79, low: <70'
+        justification:
+          type: string
+        expires_at:
+          type: string
+          format: date-time
+
+    ApprovalResponse:
+      type: object
+      properties:
+        link_id:
+          type: string
+          format: uuid
+        message:
+          type: string
+
+    HealthResponse:
+      type: object
+      properties:
+        status:
+          type: string
+          enum: [ok, degraded, error]
+        embeddings:
+          type: string
+          enum: [bge-m3, openai-fallback]
+        dimensions:
+          type: integer
+          example: 1024
+        providers:
+          type: array
+          items:
+            type: string
+        redis:
+          type: string
+          enum: [connected, disconnected]
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+
+    RateLimited:
+      description: Rate limit exceeded
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+              - type: object
+                properties:
+                  retry_after_seconds:
+                    type: integer
+
+    SpendCapReached:
+      description: Organization AI spend cap reached
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+              - type: object
+                properties:
+                  current_spend:
+                    type: number
+                  monthly_cap:
+                    type: number
+
+    ErrorResponse:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: string
+          description: Error code for programmatic handling
+          example: 'AI_SPEND_CAP_REACHED'
+        message:
+          type: string
+          description: Human-readable error message
+        details:
+          type: object
+          description: Additional error context

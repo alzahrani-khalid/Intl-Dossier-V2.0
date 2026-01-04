@@ -1,0 +1,37 @@
+{
+  "title": "AI Assistant",
+  "inputPlaceholder": "Ask a question...",
+  "clearChat": "Clear chat",
+  "minimize": "Minimize",
+  "expand": "Expand",
+  "close": "Close",
+  "welcomeTitle": "How can I help you?",
+  "welcomeMessage": "Ask me about dossiers, commitments, engagements, or any other information in the system.",
+  "suggestion1": "What are our active commitments?",
+  "suggestion2": "Find dossiers about trade agreements",
+  "suggestion3": "Show recent engagements",
+  "sending": "Sending...",
+  "thinking": "Thinking...",
+  "retry": "Retry",
+  "cancel": "Cancel",
+  "errors": {
+    "failed": "Failed to send message. Please try again.",
+    "timeout": "Response timed out. Please try again.",
+    "unauthorized": "Please log in to use the chat.",
+    "disabled": "AI Chat is currently disabled."
+  },
+  "toolNames": {
+    "search_entities": "Searching...",
+    "get_dossier": "Loading dossier...",
+    "query_commitments": "Finding commitments...",
+    "get_engagement_history": "Loading engagements..."
+  },
+  "citations": {
+    "title": "Sources",
+    "dossier": "Dossier",
+    "commitment": "Commitment",
+    "engagement": "Engagement",
+    "position": "Position",
+    "viewSource": "View source"
+  }
+}

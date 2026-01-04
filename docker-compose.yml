@@ -1,88 +1,32 @@
-version: '3.8'
-
 services:
-  # Supabase Services
+  # ===========================================
+  # CORE SERVICES (always needed)
+  # ===========================================
+
   postgres:
-    image: supabase/postgres:15.1.0.117
-    container_name: intake-postgres
+    image: postgres:16-alpine
+    container_name: intl-dossier-postgres
     ports:
-      - "54322:5432"
+      - '54322:5432'
     environment:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: postgres
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./backend/migrations:/docker-entrypoint-initdb.d
+      - ./supabase/migrations:/docker-entrypoint-initdb.d/migrations:ro
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      test: ['CMD-SHELL', 'pg_isready -U postgres']
       interval: 10s
       timeout: 5s
       retries: 5
+    networks:
+      - intl-dossier
 
-  supabase-studio:
-    image: supabase/studio:latest
-    container_name: intake-studio
-    ports:
-      - "54323:3000"
-    environment:
-      STUDIO_PG_META_URL: http://postgres:5432
-      POSTGRES_PASSWORD: postgres
-    depends_on:
-      - postgres
-
-  supabase-kong:
-    image: kong:2.8.1
-    container_name: intake-kong
-    ports:
-      - "54321:8000"
-    environment:
-      KONG_DATABASE: "off"
-      KONG_DECLARATIVE_CONFIG: /var/lib/kong/kong.yml
-    volumes:
-      - ./docker/kong.yml:/var/lib/kong/kong.yml
-    depends_on:
-      - postgres
-
-  # AnythingLLM for AI Services
-  anythingllm:
-    image: mintplexlabs/anythingllm:latest
-    container_name: intake-anythingllm
-    ports:
-      - "3001:3001"
-    volumes:
-      - anythingllm_data:/app/server/storage
-      - ./docker/anythingllm.env:/app/server/.env
-    environment:
-      STORAGE_DIR: /app/server/storage
-      SERVER_PORT: 3001
-      ENABLE_HTTPS: false
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:3001/api/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-
-  # pgvector Extension Setup
-  pgvector-setup:
-    image: pgvector/pgvector:pg15
-    container_name: intake-pgvector-setup
-    command: |
-      sh -c "
-        PGPASSWORD=postgres psql -h postgres -U postgres -d postgres -c 'CREATE EXTENSION IF NOT EXISTS vector;' &&
-        PGPASSWORD=postgres psql -h postgres -U postgres -d postgres -c 'CREATE EXTENSION IF NOT EXISTS pg_trgm;' &&
-        PGPASSWORD=postgres psql -h postgres -U postgres -d postgres -c 'CREATE EXTENSION IF NOT EXISTS btree_gin;'
-      "
-    depends_on:
-      postgres:
-        condition: service_healthy
-    restart: "no"
-
-  # Redis for caching and rate limiting
   redis:
     image: redis:7-alpine
-    container_name: intake-redis
+    container_name: intl-dossier-redis
     ports:
-      - "6379:6379"
+      - '6379:6379'
     volumes:
       - redis_data:/data
     command: >
@@ -91,94 +35,128 @@ services:
       --maxmemory-policy allkeys-lru
       --save 60 1000
       --appendonly yes
-    deploy:
-      resources:
-        limits:
-          memory: 512M
-          cpus: '1.0'
     healthcheck:
-      test: ["CMD", "redis-cli", "ping"]
+      test: ['CMD', 'redis-cli', 'ping']
       interval: 10s
       timeout: 3s
       retries: 3
+    networks:
+      - intl-dossier
 
-  # Prometheus for metrics
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: intake-prometheus
+  # ===========================================
+  # AI SERVICES (profile: ai)
+  # ===========================================
+
+  anythingllm:
+    image: mintplexlabs/anythingllm:latest
+    container_name: intl-dossier-anythingllm
+    profiles: ['ai', 'full']
     ports:
-      - "9090:9090"
+      - '3001:3001'
     volumes:
-      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml
+      - anythingllm_data:/app/server/storage
+    environment:
+      STORAGE_DIR: /app/server/storage
+      SERVER_PORT: 3001
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # MONITORING SERVICES (profile: monitoring)
+  # ===========================================
+
+  prometheus:
+    image: prom/prometheus:v2.47.0
+    container_name: intl-dossier-prometheus
+    profiles: ['monitoring', 'full']
+    ports:
+      - '9090:9090'
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - ./docker/alert_rules.yml:/etc/prometheus/alert_rules.yml:ro
       - prometheus_data:/prometheus
     command:
       - '--config.file=/etc/prometheus/prometheus.yml'
       - '--storage.tsdb.path=/prometheus'
-    depends_on:
-      - backend
-      - frontend
+      - '--storage.tsdb.retention.time=15d'
+      - '--web.enable-lifecycle'
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '--spider', 'http://localhost:9090/-/healthy']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - intl-dossier
 
-  # Backend Service
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    container_name: intake-backend
+  grafana:
+    image: grafana/grafana:10.2.0
+    container_name: intl-dossier-grafana
+    profiles: ['monitoring', 'full']
     ports:
-      - "4000:4000"
+      - '3002:3000'
     environment:
-      NODE_ENV: development
-      DATABASE_URL: postgresql://postgres:postgres@postgres:5432/postgres
-      REDIS_URL: redis://redis:6379
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: 'false'
+      GF_INSTALL_PLUGINS: grafana-piechart-panel
     volumes:
-      - ./backend:/app
-      - /app/node_modules
+      - grafana_data:/var/lib/grafana
     depends_on:
-      postgres:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      anythingllm:
-        condition: service_healthy
-    command: npm run dev
+      - prometheus
+    networks:
+      - intl-dossier
 
-  # Frontend Service
-  frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    container_name: intake-frontend
+  node-exporter:
+    image: prom/node-exporter:v1.6.1
+    container_name: intl-dossier-node-exporter
+    profiles: ['monitoring', 'full']
     ports:
-      - "3000:3000"
-    environment:
-      NODE_ENV: development
-      VITE_SUPABASE_URL: http://localhost:54321
-      VITE_SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      - '9100:9100'
     volumes:
-      - ./frontend:/app
-      - /app/node_modules
+      - /proc:/host/proc:ro
+      - /sys:/host/sys:ro
+      - /:/rootfs:ro
+    command:
+      - '--path.procfs=/host/proc'
+      - '--path.sysfs=/host/sys'
+      - '--path.rootfs=/rootfs'
+      - '--collector.filesystem.mount-points-exclude=^/(sys|proc|dev|host|etc)($$|/)'
+    networks:
+      - intl-dossier
+
+  redis-exporter:
+    image: oliver006/redis_exporter:latest
+    container_name: intl-dossier-redis-exporter
+    profiles: ['monitoring', 'full']
+    ports:
+      - '9121:9121'
+    environment:
+      REDIS_ADDR: redis://redis:6379
     depends_on:
-      - backend
-    command: npm run dev
+      - redis
+    networks:
+      - intl-dossier
 
-  # ClamAV for Virus Scanning (using mkodockx for ARM support)
-  clamav:
-    image: mkodockx/docker-clamav:alpine
-    container_name: intake-clamav
-    ports:
-      - "3310:3310"
-    volumes:
-      - clamav_data:/var/lib/clamav
-    environment:
-      - CLAMD_STARTUP_TIMEOUT=1800
-
+# ===========================================
+# VOLUMES
+# ===========================================
 volumes:
   postgres_data:
-  anythingllm_data:
   redis_data:
+  anythingllm_data:
   prometheus_data:
-  clamav_data:
+  grafana_data:
 
+# ===========================================
+# NETWORKS
+# ===========================================
 networks:
-  default:
-    name: intake-network
+  intl-dossier:
+    name: intl-dossier
+    driver: bridge
