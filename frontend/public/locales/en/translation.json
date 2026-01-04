@@ -11,7 +11,7 @@
     "deleted": "Deleted",
     "edit": "Edit",
     "add": "Add",
-    "search": "Search",
+    "search": "Search...",
     "filter": "Filter",
     "export": "Export",
     "import": "Import",
@@ -28,11 +28,25 @@
     "clearAll": "Clear All",
     "all": "All",
     "noData": "No data available",
+    "noResults": "No results found.",
     "language": "Language",
     "logout": "Logout",
     "welcome": "Welcome",
     "english": "English",
-    "arabic": "Arabic"
+    "arabic": "Arabic",
+    "columns": "Columns",
+    "toggleColumns": "Toggle columns",
+    "showing": "Showing",
+    "of": "of",
+    "page": "Page",
+    "firstPage": "First page",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "lastPage": "Last page",
+    "cardView": "Card view",
+    "tableView": "Table view",
+    "download": "Download",
+    "view": "View"
   },
   "auth": {
     "login": "Login",
@@ -96,6 +110,8 @@
     "admin": "Admin",
     "adminSystem": "System Utilities",
     "adminApprovals": "Approval Management",
+    "aiUsage": "AI Usage",
+    "aiSettings": "AI Settings",
     "accessibility": "Accessibility",
     "switchToArabic": "Switch to Arabic",
     "switchToEnglish": "Switch to English",
@@ -422,6 +438,28 @@
   },
   "errors": {
     "failed_to_load": "Failed to load data"
+  },
+  "ai": {
+    "errors": {
+      "title": "AI Error",
+      "rateLimitExceeded": "Too many requests. Please wait a moment and try again.",
+      "spendCapReached": "AI usage limit reached. Please contact your administrator.",
+      "providerUnavailable": "AI service is temporarily unavailable. Please try again later.",
+      "modelUnavailable": "The AI model is not available. Please try a different request.",
+      "generationFailed": "Failed to generate content. Please try again.",
+      "contextTooLong": "The input is too long. Please shorten your request.",
+      "contentFiltered": "The request was filtered due to content policy. Please revise your input.",
+      "timeout": "The request timed out. Please try again.",
+      "unauthorized": "You are not authorized to use this feature. Please log in again.",
+      "featureDisabled": "This AI feature is currently disabled for your organization.",
+      "networkError": "Network error. Please check your connection and try again.",
+      "unknown": "An unexpected error occurred. Please try again.",
+      "retryAfter": "Try again in {{seconds}} seconds",
+      "retryNow": "Click to retry",
+      "contactAdmin": "Contact your administrator to increase the limit",
+      "loginAgain": "Please log in again",
+      "shortenInput": "Try with a shorter input"
+    }
   },
   "notifications": {
     "title": "Notifications",

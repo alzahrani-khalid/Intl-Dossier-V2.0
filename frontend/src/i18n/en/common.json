@@ -125,6 +125,8 @@
     "admin": "Admin",
     "adminSystem": "System Utilities",
     "adminApprovals": "Approval Management",
+    "aiUsage": "AI Usage",
+    "aiSettings": "AI Settings",
     "settings": "Settings",
     "profile": "Profile",
     "help": "Help",
