@@ -9,6 +9,7 @@
 
 import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
 import { Plus, Trash, Link as LinkIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
@@ -16,6 +17,7 @@ import { cn } from '@/lib/utils'
 import { EntitySearchDialog } from './EntitySearchDialog'
 import { LinkList } from './LinkList'
 import { AISuggestionPanel } from './AISuggestionPanel'
+import EntityLinkSuggestions from '@/components/ai/EntityLinkSuggestions'
 import {
   useEntityLinks,
   useCreateEntityLink,
@@ -40,6 +42,8 @@ export interface EntityLinkManagerProps {
   canRestore?: boolean
   /** Enable drag-and-drop reordering */
   enableReorder?: boolean
+  /** Use new AI agent-based suggestions (Feature 033) */
+  useAgentSuggestions?: boolean
   /** Additional CSS classes */
   className?: string
 }
@@ -67,10 +71,12 @@ export function EntityLinkManager({
   classificationLevel,
   canRestore = false,
   enableReorder = false,
+  useAgentSuggestions = true,
   className,
 }: EntityLinkManagerProps) {
   const { t, i18n } = useTranslation()
   const isRTL = i18n.language === 'ar'
+  const navigate = useNavigate()
 
   const [isSearchDialogOpen, setIsSearchDialogOpen] = useState(false)
   const [activeTab, setActiveTab] = useState<'active' | 'deleted'>('active')
@@ -171,6 +177,32 @@ export function EntityLinkManager({
     }
   }
 
+  // Handle entity link click (navigate to entity)
+  const handleLinkClick = (entityType: string, entityId: string) => {
+    switch (entityType) {
+      case 'dossier':
+        navigate({ to: '/dossiers/$id', params: { id: entityId } })
+        break
+      case 'position':
+        navigate({ to: '/positions/$id', params: { id: entityId } })
+        break
+      case 'person':
+        navigate({ to: '/persons/$id', params: { id: entityId } })
+        break
+      case 'engagement':
+        navigate({ to: '/engagements/$engagementId', params: { engagementId: entityId } })
+        break
+      case 'commitment':
+        navigate({ to: '/commitments', search: { id: entityId } })
+        break
+      default:
+        navigate({
+          to: '/search',
+          search: { q: entityId, type: entityType, includeArchived: false },
+        })
+    }
+  }
+
   return (
     <div
       className={cn(
@@ -216,15 +248,19 @@ export function EntityLinkManager({
         </Button>
       </div>
 
-      {/* AI Suggestions Panel */}
+      {/* AI Suggestions Panel - Use new agent-based suggestions (Feature 033) or legacy */}
       <div className="mb-6 sm:mb-8">
-        <AISuggestionPanel
-          intakeId={intakeId}
-          onManualSearchClick={() => setIsSearchDialogOpen(true)}
-          onSuggestionAccepted={(_link) => {
-            // Link is automatically added via mutation
-          }}
-        />
+        {useAgentSuggestions ? (
+          <EntityLinkSuggestions ticketId={intakeId} onLinkClick={handleLinkClick} />
+        ) : (
+          <AISuggestionPanel
+            intakeId={intakeId}
+            onManualSearchClick={() => setIsSearchDialogOpen(true)}
+            onSuggestionAccepted={(_link) => {
+              // Link is automatically added via mutation
+            }}
+          />
+        )}
       </div>
 
       {/* Tabs for active/deleted links */}

@@ -1,17 +1,17 @@
-FROM node:18-alpine
+FROM node:20-alpine
 
 WORKDIR /app
 
+# Install pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
+
 # Install dependencies
-COPY package*.json ./
-RUN npm ci
+COPY package.json pnpm-lock.yaml* ./
+RUN pnpm install --frozen-lockfile
 
 # Copy source code
 COPY . .
 
-# Build TypeScript
-RUN npm run build
+EXPOSE 4000
 
-EXPOSE 3000
-
-CMD ["npm", "start"]
+CMD ["pnpm", "dev"]

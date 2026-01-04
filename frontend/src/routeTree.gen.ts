@@ -76,6 +76,8 @@ import { Route as ProtectedCalendarNewRouteImport } from './routes/_protected/ca
 import { Route as ProtectedAfterActionsAfterActionIdRouteImport } from './routes/_protected/after-actions/$afterActionId'
 import { Route as ProtectedAdminSystemRouteImport } from './routes/_protected/admin/system'
 import { Route as ProtectedAdminApprovalsRouteImport } from './routes/_protected/admin/approvals'
+import { Route as ProtectedAdminAiUsageRouteImport } from './routes/_protected/admin/ai-usage'
+import { Route as ProtectedAdminAiSettingsRouteImport } from './routes/_protected/admin/ai-settings'
 import { Route as ProtectedDossiersWorking_groupsIndexRouteImport } from './routes/_protected/dossiers/working_groups/index'
 import { Route as ProtectedDossiersTopicsIndexRouteImport } from './routes/_protected/dossiers/topics/index'
 import { Route as ProtectedDossiersPersonsIndexRouteImport } from './routes/_protected/dossiers/persons/index'
@@ -160,12 +162,11 @@ const ProtectedReportsRoute = ProtectedReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedPrototypeDossierRoute =
-  ProtectedPrototypeDossierRouteImport.update({
-    id: '/prototype-dossier',
-    path: '/prototype-dossier',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
+const ProtectedPrototypeDossierRoute = ProtectedPrototypeDossierRouteImport.update({
+  id: '/prototype-dossier',
+  path: '/prototype-dossier',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedPositionsRoute = ProtectedPositionsRouteImport.update({
   id: '/positions',
   path: '/positions',
@@ -296,12 +297,11 @@ const ProtectedHelpIndexRoute = ProtectedHelpIndexRouteImport.update({
   path: '/help/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedEngagementsIndexRoute =
-  ProtectedEngagementsIndexRouteImport.update({
-    id: '/engagements/',
-    path: '/engagements/',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
+const ProtectedEngagementsIndexRoute = ProtectedEngagementsIndexRouteImport.update({
+  id: '/engagements/',
+  path: '/engagements/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedDossiersIndexRoute = ProtectedDossiersIndexRouteImport.update({
   id: '/dossiers/',
   path: '/dossiers/',
@@ -312,40 +312,36 @@ const ProtectedApprovalsIndexRoute = ProtectedApprovalsIndexRouteImport.update({
   path: '/approvals/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedAfterActionsIndexRoute =
-  ProtectedAfterActionsIndexRouteImport.update({
-    id: '/after-actions/',
-    path: '/after-actions/',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
+const ProtectedAfterActionsIndexRoute = ProtectedAfterActionsIndexRouteImport.update({
+  id: '/after-actions/',
+  path: '/after-actions/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedTasksQueueRoute = ProtectedTasksQueueRouteImport.update({
   id: '/tasks/queue',
   path: '/tasks/queue',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedTasksEscalationsRoute =
-  ProtectedTasksEscalationsRouteImport.update({
-    id: '/tasks/escalations',
-    path: '/tasks/escalations',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
+const ProtectedTasksEscalationsRoute = ProtectedTasksEscalationsRouteImport.update({
+  id: '/tasks/escalations',
+  path: '/tasks/escalations',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedTasksIdRoute = ProtectedTasksIdRouteImport.update({
   id: '/tasks/$id',
   path: '/tasks/$id',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedRelationshipsGraphRoute =
-  ProtectedRelationshipsGraphRouteImport.update({
-    id: '/relationships/graph',
-    path: '/relationships/graph',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedPositionsPositionIdRoute =
-  ProtectedPositionsPositionIdRouteImport.update({
-    id: '/$positionId',
-    path: '/$positionId',
-    getParentRoute: () => ProtectedPositionsRoute,
-  } as any)
+const ProtectedRelationshipsGraphRoute = ProtectedRelationshipsGraphRouteImport.update({
+  id: '/relationships/graph',
+  path: '/relationships/graph',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPositionsPositionIdRoute = ProtectedPositionsPositionIdRouteImport.update({
+  id: '/$positionId',
+  path: '/$positionId',
+  getParentRoute: () => ProtectedPositionsRoute,
+} as any)
 const ProtectedPositionsIdRoute = ProtectedPositionsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -366,12 +362,11 @@ const ProtectedMyWorkBoardRoute = ProtectedMyWorkBoardRouteImport.update({
   path: '/board',
   getParentRoute: () => ProtectedMyWorkRoute,
 } as any)
-const ProtectedMyWorkAssignmentsRoute =
-  ProtectedMyWorkAssignmentsRouteImport.update({
-    id: '/assignments',
-    path: '/assignments',
-    getParentRoute: () => ProtectedMyWorkRoute,
-  } as any)
+const ProtectedMyWorkAssignmentsRoute = ProtectedMyWorkAssignmentsRouteImport.update({
+  id: '/assignments',
+  path: '/assignments',
+  getParentRoute: () => ProtectedMyWorkRoute,
+} as any)
 const ProtectedIntakeQueueRoute = ProtectedIntakeQueueRouteImport.update({
   id: '/queue',
   path: '/queue',
@@ -382,18 +377,16 @@ const ProtectedIntakeNewRoute = ProtectedIntakeNewRouteImport.update({
   path: '/new',
   getParentRoute: () => ProtectedIntakeRoute,
 } as any)
-const ProtectedHelpCommitmentsRoute =
-  ProtectedHelpCommitmentsRouteImport.update({
-    id: '/help/commitments',
-    path: '/help/commitments',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedEngagementsEngagementIdRoute =
-  ProtectedEngagementsEngagementIdRouteImport.update({
-    id: '/engagements/$engagementId',
-    path: '/engagements/$engagementId',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
+const ProtectedHelpCommitmentsRoute = ProtectedHelpCommitmentsRouteImport.update({
+  id: '/help/commitments',
+  path: '/help/commitments',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedEngagementsEngagementIdRoute = ProtectedEngagementsEngagementIdRouteImport.update({
+  id: '/engagements/$engagementId',
+  path: '/engagements/$engagementId',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedDossiersCreateRoute = ProtectedDossiersCreateRouteImport.update({
   id: '/dossiers/create',
   path: '/dossiers/create',
@@ -404,23 +397,21 @@ const ProtectedDossiersIdRoute = ProtectedDossiersIdRouteImport.update({
   path: '/dossiers/$id',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedContactsNotesSearchRoute =
-  ProtectedContactsNotesSearchRouteImport.update({
-    id: '/notes-search',
-    path: '/notes-search',
-    getParentRoute: () => ProtectedContactsRoute,
-  } as any)
+const ProtectedContactsNotesSearchRoute = ProtectedContactsNotesSearchRouteImport.update({
+  id: '/notes-search',
+  path: '/notes-search',
+  getParentRoute: () => ProtectedContactsRoute,
+} as any)
 const ProtectedContactsCreateRoute = ProtectedContactsCreateRouteImport.update({
   id: '/create',
   path: '/create',
   getParentRoute: () => ProtectedContactsRoute,
 } as any)
-const ProtectedContactsContactIdRoute =
-  ProtectedContactsContactIdRouteImport.update({
-    id: '/$contactId',
-    path: '/$contactId',
-    getParentRoute: () => ProtectedContactsRoute,
-  } as any)
+const ProtectedContactsContactIdRoute = ProtectedContactsContactIdRouteImport.update({
+  id: '/$contactId',
+  path: '/$contactId',
+  getParentRoute: () => ProtectedContactsRoute,
+} as any)
 const ProtectedCalendarNewRoute = ProtectedCalendarNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -442,114 +433,109 @@ const ProtectedAdminApprovalsRoute = ProtectedAdminApprovalsRouteImport.update({
   path: '/admin/approvals',
   getParentRoute: () => ProtectedRoute,
 } as any)
+const ProtectedAdminAiUsageRoute = ProtectedAdminAiUsageRouteImport.update({
+  id: '/admin/ai-usage',
+  path: '/admin/ai-usage',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAdminAiSettingsRoute = ProtectedAdminAiSettingsRouteImport.update({
+  id: '/admin/ai-settings',
+  path: '/admin/ai-settings',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedDossiersWorking_groupsIndexRoute =
   ProtectedDossiersWorking_groupsIndexRouteImport.update({
     id: '/dossiers/working_groups/',
     path: '/dossiers/working_groups/',
     getParentRoute: () => ProtectedRoute,
   } as any)
-const ProtectedDossiersTopicsIndexRoute =
-  ProtectedDossiersTopicsIndexRouteImport.update({
-    id: '/dossiers/topics/',
-    path: '/dossiers/topics/',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedDossiersPersonsIndexRoute =
-  ProtectedDossiersPersonsIndexRouteImport.update({
-    id: '/dossiers/persons/',
-    path: '/dossiers/persons/',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
+const ProtectedDossiersTopicsIndexRoute = ProtectedDossiersTopicsIndexRouteImport.update({
+  id: '/dossiers/topics/',
+  path: '/dossiers/topics/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedDossiersPersonsIndexRoute = ProtectedDossiersPersonsIndexRouteImport.update({
+  id: '/dossiers/persons/',
+  path: '/dossiers/persons/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedDossiersOrganizationsIndexRoute =
   ProtectedDossiersOrganizationsIndexRouteImport.update({
     id: '/dossiers/organizations/',
     path: '/dossiers/organizations/',
     getParentRoute: () => ProtectedRoute,
   } as any)
-const ProtectedDossiersForumsIndexRoute =
-  ProtectedDossiersForumsIndexRouteImport.update({
-    id: '/dossiers/forums/',
-    path: '/dossiers/forums/',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedDossiersEngagementsIndexRoute =
-  ProtectedDossiersEngagementsIndexRouteImport.update({
-    id: '/dossiers/engagements/',
-    path: '/dossiers/engagements/',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedDossiersCountriesIndexRoute =
-  ProtectedDossiersCountriesIndexRouteImport.update({
-    id: '/dossiers/countries/',
-    path: '/dossiers/countries/',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedPositionsIdVersionsRoute =
-  ProtectedPositionsIdVersionsRouteImport.update({
-    id: '/versions',
-    path: '/versions',
-    getParentRoute: () => ProtectedPositionsIdRoute,
-  } as any)
-const ProtectedPositionsIdApprovalsRoute =
-  ProtectedPositionsIdApprovalsRouteImport.update({
-    id: '/approvals',
-    path: '/approvals',
-    getParentRoute: () => ProtectedPositionsIdRoute,
-  } as any)
-const ProtectedIntakeTicketsIdRoute =
-  ProtectedIntakeTicketsIdRouteImport.update({
-    id: '/tickets/$id',
-    path: '/tickets/$id',
-    getParentRoute: () => ProtectedIntakeRoute,
-  } as any)
+const ProtectedDossiersForumsIndexRoute = ProtectedDossiersForumsIndexRouteImport.update({
+  id: '/dossiers/forums/',
+  path: '/dossiers/forums/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedDossiersEngagementsIndexRoute = ProtectedDossiersEngagementsIndexRouteImport.update({
+  id: '/dossiers/engagements/',
+  path: '/dossiers/engagements/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedDossiersCountriesIndexRoute = ProtectedDossiersCountriesIndexRouteImport.update({
+  id: '/dossiers/countries/',
+  path: '/dossiers/countries/',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedPositionsIdVersionsRoute = ProtectedPositionsIdVersionsRouteImport.update({
+  id: '/versions',
+  path: '/versions',
+  getParentRoute: () => ProtectedPositionsIdRoute,
+} as any)
+const ProtectedPositionsIdApprovalsRoute = ProtectedPositionsIdApprovalsRouteImport.update({
+  id: '/approvals',
+  path: '/approvals',
+  getParentRoute: () => ProtectedPositionsIdRoute,
+} as any)
+const ProtectedIntakeTicketsIdRoute = ProtectedIntakeTicketsIdRouteImport.update({
+  id: '/tickets/$id',
+  path: '/tickets/$id',
+  getParentRoute: () => ProtectedIntakeRoute,
+} as any)
 const ProtectedEngagementsEngagementIdAfterActionRoute =
   ProtectedEngagementsEngagementIdAfterActionRouteImport.update({
     id: '/after-action',
     path: '/after-action',
     getParentRoute: () => ProtectedEngagementsEngagementIdRoute,
   } as any)
-const ProtectedDossiersWorking_groupsIdRoute =
-  ProtectedDossiersWorking_groupsIdRouteImport.update({
-    id: '/dossiers/working_groups/$id',
-    path: '/dossiers/working_groups/$id',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedDossiersTopicsIdRoute =
-  ProtectedDossiersTopicsIdRouteImport.update({
-    id: '/dossiers/topics/$id',
-    path: '/dossiers/topics/$id',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedDossiersPersonsIdRoute =
-  ProtectedDossiersPersonsIdRouteImport.update({
-    id: '/dossiers/persons/$id',
-    path: '/dossiers/persons/$id',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedDossiersOrganizationsIdRoute =
-  ProtectedDossiersOrganizationsIdRouteImport.update({
-    id: '/dossiers/organizations/$id',
-    path: '/dossiers/organizations/$id',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedDossiersForumsIdRoute =
-  ProtectedDossiersForumsIdRouteImport.update({
-    id: '/dossiers/forums/$id',
-    path: '/dossiers/forums/$id',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedDossiersEngagementsIdRoute =
-  ProtectedDossiersEngagementsIdRouteImport.update({
-    id: '/dossiers/engagements/$id',
-    path: '/dossiers/engagements/$id',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
-const ProtectedDossiersCountriesIdRoute =
-  ProtectedDossiersCountriesIdRouteImport.update({
-    id: '/dossiers/countries/$id',
-    path: '/dossiers/countries/$id',
-    getParentRoute: () => ProtectedRoute,
-  } as any)
+const ProtectedDossiersWorking_groupsIdRoute = ProtectedDossiersWorking_groupsIdRouteImport.update({
+  id: '/dossiers/working_groups/$id',
+  path: '/dossiers/working_groups/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedDossiersTopicsIdRoute = ProtectedDossiersTopicsIdRouteImport.update({
+  id: '/dossiers/topics/$id',
+  path: '/dossiers/topics/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedDossiersPersonsIdRoute = ProtectedDossiersPersonsIdRouteImport.update({
+  id: '/dossiers/persons/$id',
+  path: '/dossiers/persons/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedDossiersOrganizationsIdRoute = ProtectedDossiersOrganizationsIdRouteImport.update({
+  id: '/dossiers/organizations/$id',
+  path: '/dossiers/organizations/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedDossiersForumsIdRoute = ProtectedDossiersForumsIdRouteImport.update({
+  id: '/dossiers/forums/$id',
+  path: '/dossiers/forums/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedDossiersEngagementsIdRoute = ProtectedDossiersEngagementsIdRouteImport.update({
+  id: '/dossiers/engagements/$id',
+  path: '/dossiers/engagements/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedDossiersCountriesIdRoute = ProtectedDossiersCountriesIdRouteImport.update({
+  id: '/dossiers/countries/$id',
+  path: '/dossiers/countries/$id',
+  getParentRoute: () => ProtectedRoute,
+} as any)
 const ProtectedAfterActionsAfterActionIdVersionsRoute =
   ProtectedAfterActionsAfterActionIdVersionsRouteImport.update({
     id: '/versions',
@@ -592,6 +578,8 @@ export interface FileRoutesByFullPath {
   '/users': typeof ProtectedUsersRoute
   '/word-assistant': typeof ProtectedWordAssistantRoute
   '/working-groups': typeof ProtectedWorkingGroupsRoute
+  '/admin/ai-settings': typeof ProtectedAdminAiSettingsRoute
+  '/admin/ai-usage': typeof ProtectedAdminAiUsageRoute
   '/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/admin/system': typeof ProtectedAdminSystemRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
@@ -676,6 +664,8 @@ export interface FileRoutesByTo {
   '/users': typeof ProtectedUsersRoute
   '/word-assistant': typeof ProtectedWordAssistantRoute
   '/working-groups': typeof ProtectedWorkingGroupsRoute
+  '/admin/ai-settings': typeof ProtectedAdminAiSettingsRoute
+  '/admin/ai-usage': typeof ProtectedAdminAiUsageRoute
   '/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/admin/system': typeof ProtectedAdminSystemRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
@@ -765,6 +755,8 @@ export interface FileRoutesById {
   '/_protected/users': typeof ProtectedUsersRoute
   '/_protected/word-assistant': typeof ProtectedWordAssistantRoute
   '/_protected/working-groups': typeof ProtectedWorkingGroupsRoute
+  '/_protected/admin/ai-settings': typeof ProtectedAdminAiSettingsRoute
+  '/_protected/admin/ai-usage': typeof ProtectedAdminAiUsageRoute
   '/_protected/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/_protected/admin/system': typeof ProtectedAdminSystemRoute
   '/_protected/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
@@ -854,6 +846,8 @@ export interface FileRouteTypes {
     | '/users'
     | '/word-assistant'
     | '/working-groups'
+    | '/admin/ai-settings'
+    | '/admin/ai-usage'
     | '/admin/approvals'
     | '/admin/system'
     | '/after-actions/$afterActionId'
@@ -938,6 +932,8 @@ export interface FileRouteTypes {
     | '/users'
     | '/word-assistant'
     | '/working-groups'
+    | '/admin/ai-settings'
+    | '/admin/ai-usage'
     | '/admin/approvals'
     | '/admin/system'
     | '/after-actions/$afterActionId'
@@ -1026,6 +1022,8 @@ export interface FileRouteTypes {
     | '/_protected/users'
     | '/_protected/word-assistant'
     | '/_protected/working-groups'
+    | '/_protected/admin/ai-settings'
+    | '/_protected/admin/ai-usage'
     | '/_protected/admin/approvals'
     | '/_protected/admin/system'
     | '/_protected/after-actions/$afterActionId'
@@ -1558,6 +1556,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedAdminApprovalsRouteImport
       parentRoute: typeof ProtectedRoute
     }
+    '/_protected/admin/ai-usage': {
+      id: '/_protected/admin/ai-usage'
+      path: '/admin/ai-usage'
+      fullPath: '/admin/ai-usage'
+      preLoaderRoute: typeof ProtectedAdminAiUsageRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/ai-settings': {
+      id: '/_protected/admin/ai-settings'
+      path: '/admin/ai-settings'
+      fullPath: '/admin/ai-settings'
+      preLoaderRoute: typeof ProtectedAdminAiSettingsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
     '/_protected/dossiers/working_groups/': {
       id: '/_protected/dossiers/working_groups/'
       path: '/dossiers/working_groups'
@@ -1702,8 +1714,9 @@ const ProtectedCalendarRouteChildren: ProtectedCalendarRouteChildren = {
   ProtectedCalendarNewRoute: ProtectedCalendarNewRoute,
 }
 
-const ProtectedCalendarRouteWithChildren =
-  ProtectedCalendarRoute._addFileChildren(ProtectedCalendarRouteChildren)
+const ProtectedCalendarRouteWithChildren = ProtectedCalendarRoute._addFileChildren(
+  ProtectedCalendarRouteChildren,
+)
 
 interface ProtectedContactsRouteChildren {
   ProtectedContactsContactIdRoute: typeof ProtectedContactsContactIdRoute
@@ -1717,8 +1730,9 @@ const ProtectedContactsRouteChildren: ProtectedContactsRouteChildren = {
   ProtectedContactsNotesSearchRoute: ProtectedContactsNotesSearchRoute,
 }
 
-const ProtectedContactsRouteWithChildren =
-  ProtectedContactsRoute._addFileChildren(ProtectedContactsRouteChildren)
+const ProtectedContactsRouteWithChildren = ProtectedContactsRoute._addFileChildren(
+  ProtectedContactsRouteChildren,
+)
 
 interface ProtectedIntakeRouteChildren {
   ProtectedIntakeNewRoute: typeof ProtectedIntakeNewRoute
@@ -1768,8 +1782,9 @@ const ProtectedPositionsIdRouteChildren: ProtectedPositionsIdRouteChildren = {
   ProtectedPositionsIdVersionsRoute: ProtectedPositionsIdVersionsRoute,
 }
 
-const ProtectedPositionsIdRouteWithChildren =
-  ProtectedPositionsIdRoute._addFileChildren(ProtectedPositionsIdRouteChildren)
+const ProtectedPositionsIdRouteWithChildren = ProtectedPositionsIdRoute._addFileChildren(
+  ProtectedPositionsIdRouteChildren,
+)
 
 interface ProtectedPositionsRouteChildren {
   ProtectedPositionsIdRoute: typeof ProtectedPositionsIdRouteWithChildren
@@ -1783,8 +1798,9 @@ const ProtectedPositionsRouteChildren: ProtectedPositionsRouteChildren = {
   ProtectedPositionsIndexRoute: ProtectedPositionsIndexRoute,
 }
 
-const ProtectedPositionsRouteWithChildren =
-  ProtectedPositionsRoute._addFileChildren(ProtectedPositionsRouteChildren)
+const ProtectedPositionsRouteWithChildren = ProtectedPositionsRoute._addFileChildren(
+  ProtectedPositionsRouteChildren,
+)
 
 interface ProtectedAfterActionsAfterActionIdRouteChildren {
   ProtectedAfterActionsAfterActionIdVersionsRoute: typeof ProtectedAfterActionsAfterActionIdVersionsRoute
@@ -1847,6 +1863,8 @@ interface ProtectedRouteChildren {
   ProtectedUsersRoute: typeof ProtectedUsersRoute
   ProtectedWordAssistantRoute: typeof ProtectedWordAssistantRoute
   ProtectedWorkingGroupsRoute: typeof ProtectedWorkingGroupsRoute
+  ProtectedAdminAiSettingsRoute: typeof ProtectedAdminAiSettingsRoute
+  ProtectedAdminAiUsageRoute: typeof ProtectedAdminAiUsageRoute
   ProtectedAdminApprovalsRoute: typeof ProtectedAdminApprovalsRoute
   ProtectedAdminSystemRoute: typeof ProtectedAdminSystemRoute
   ProtectedAfterActionsAfterActionIdRoute: typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
@@ -1911,14 +1929,14 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedUsersRoute: ProtectedUsersRoute,
   ProtectedWordAssistantRoute: ProtectedWordAssistantRoute,
   ProtectedWorkingGroupsRoute: ProtectedWorkingGroupsRoute,
+  ProtectedAdminAiSettingsRoute: ProtectedAdminAiSettingsRoute,
+  ProtectedAdminAiUsageRoute: ProtectedAdminAiUsageRoute,
   ProtectedAdminApprovalsRoute: ProtectedAdminApprovalsRoute,
   ProtectedAdminSystemRoute: ProtectedAdminSystemRoute,
-  ProtectedAfterActionsAfterActionIdRoute:
-    ProtectedAfterActionsAfterActionIdRouteWithChildren,
+  ProtectedAfterActionsAfterActionIdRoute: ProtectedAfterActionsAfterActionIdRouteWithChildren,
   ProtectedDossiersIdRoute: ProtectedDossiersIdRoute,
   ProtectedDossiersCreateRoute: ProtectedDossiersCreateRoute,
-  ProtectedEngagementsEngagementIdRoute:
-    ProtectedEngagementsEngagementIdRouteWithChildren,
+  ProtectedEngagementsEngagementIdRoute: ProtectedEngagementsEngagementIdRouteWithChildren,
   ProtectedHelpCommitmentsRoute: ProtectedHelpCommitmentsRoute,
   ProtectedRelationshipsGraphRoute: ProtectedRelationshipsGraphRoute,
   ProtectedTasksIdRoute: ProtectedTasksIdRoute,
@@ -1936,23 +1954,17 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedDossiersOrganizationsIdRoute: ProtectedDossiersOrganizationsIdRoute,
   ProtectedDossiersPersonsIdRoute: ProtectedDossiersPersonsIdRoute,
   ProtectedDossiersTopicsIdRoute: ProtectedDossiersTopicsIdRoute,
-  ProtectedDossiersWorking_groupsIdRoute:
-    ProtectedDossiersWorking_groupsIdRoute,
+  ProtectedDossiersWorking_groupsIdRoute: ProtectedDossiersWorking_groupsIdRoute,
   ProtectedDossiersCountriesIndexRoute: ProtectedDossiersCountriesIndexRoute,
-  ProtectedDossiersEngagementsIndexRoute:
-    ProtectedDossiersEngagementsIndexRoute,
+  ProtectedDossiersEngagementsIndexRoute: ProtectedDossiersEngagementsIndexRoute,
   ProtectedDossiersForumsIndexRoute: ProtectedDossiersForumsIndexRoute,
-  ProtectedDossiersOrganizationsIndexRoute:
-    ProtectedDossiersOrganizationsIndexRoute,
+  ProtectedDossiersOrganizationsIndexRoute: ProtectedDossiersOrganizationsIndexRoute,
   ProtectedDossiersPersonsIndexRoute: ProtectedDossiersPersonsIndexRoute,
   ProtectedDossiersTopicsIndexRoute: ProtectedDossiersTopicsIndexRoute,
-  ProtectedDossiersWorking_groupsIndexRoute:
-    ProtectedDossiersWorking_groupsIndexRoute,
+  ProtectedDossiersWorking_groupsIndexRoute: ProtectedDossiersWorking_groupsIndexRoute,
 }
 
-const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
-  ProtectedRouteChildren,
-)
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(ProtectedRouteChildren)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,

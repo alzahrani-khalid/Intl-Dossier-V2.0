@@ -7,11 +7,23 @@ import { validate, createBilingualError, getRequestLanguage } from '../utils/val
 import { requirePermission } from '../middleware/auth'
 import { logInfo, logError } from '../utils/logger'
 import multer from 'multer'
+import briefsRouter from './ai/briefs.js'
+import chatRouter from './ai/chat.js'
+import intakeLinkingRouter from './ai/intake-linking.js'
 
 const router = Router()
 const briefService = new BriefService()
 const voiceService = new VoiceService()
 const intelligenceService = new IntelligenceService()
+
+// Mount AI brief generation routes (SSE streaming)
+router.use('/briefs', briefsRouter)
+
+// Mount AI chat routes (SSE streaming)
+router.use('/chat', chatRouter)
+
+// Mount AI entity linking routes
+router.use('/', intakeLinkingRouter)
 
 // Configure multer for audio file uploads
 const upload = multer({

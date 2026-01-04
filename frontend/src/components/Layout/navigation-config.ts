@@ -1,4 +1,4 @@
-import type { LucideIcon } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react'
 import {
   LayoutDashboard,
   CalendarDays,
@@ -24,26 +24,28 @@ import {
   Wrench,
   Briefcase,
   FileCheck,
-} from 'lucide-react';
+  Sparkles,
+  Sliders,
+} from 'lucide-react'
 
 export interface NavigationItem {
-  id: string;
-  label: string;
-  path: string;
-  icon: LucideIcon;
-  badgeCount?: number;
-  adminOnly?: boolean;
+  id: string
+  label: string
+  path: string
+  icon: LucideIcon
+  badgeCount?: number
+  adminOnly?: boolean
 }
 
 export interface NavigationSection {
-  id: string;
-  label: string;
-  items: NavigationItem[];
+  id: string
+  label: string
+  items: NavigationItem[]
 }
 
 export const createNavigationSections = (
   counts: { assignments: number; intake: number; waiting: number },
-  isAdmin: boolean
+  isAdmin: boolean,
 ): NavigationSection[] => {
   const sections: NavigationSection[] = [
     {
@@ -176,7 +178,7 @@ export const createNavigationSections = (
         },
       ],
     },
-  ];
+  ]
 
   // Add admin section if user is admin
   if (isAdmin) {
@@ -196,6 +198,20 @@ export const createNavigationSections = (
           label: 'navigation.adminApprovals',
           path: '/admin/approvals',
           icon: Shield,
+          adminOnly: true,
+        },
+        {
+          id: 'ai-usage',
+          label: 'navigation.aiUsage',
+          path: '/admin/ai-usage',
+          icon: Sparkles,
+          adminOnly: true,
+        },
+        {
+          id: 'ai-settings',
+          label: 'navigation.aiSettings',
+          path: '/admin/ai-settings',
+          icon: Sliders,
           adminOnly: true,
         },
         {
@@ -220,11 +236,11 @@ export const createNavigationSections = (
           adminOnly: true,
         },
       ],
-    });
+    })
   }
 
-  return sections;
-};
+  return sections
+}
 
 export const bottomNavigationItems: NavigationItem[] = [
   {
@@ -239,4 +255,4 @@ export const bottomNavigationItems: NavigationItem[] = [
     path: '/help',
     icon: HelpCircle,
   },
-];
+]

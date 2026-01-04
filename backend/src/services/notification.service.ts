@@ -1,30 +1,30 @@
-import { createClient } from '@supabase/supabase-js';
+import { createClient } from '@supabase/supabase-js'
 
 const supabase = createClient(
   process.env.SUPABASE_URL || '',
-  process.env.SUPABASE_SERVICE_KEY || ''
-);
+  process.env.SUPABASE_SERVICE_KEY || '',
+)
 
 interface NotificationMetadata {
-  dossierId?: string;
-  commitmentId?: string;
-  type?: 'health_score_drop' | 'commitment_overdue' | 'general';
+  dossierId?: string
+  commitmentId?: string
+  type?: 'health_score_drop' | 'commitment_overdue' | 'general'
   healthScore?: {
-    previous: number;
-    current: number;
-    factors: string[];
-  };
-  [key: string]: any;
+    previous: number
+    current: number
+    factors: string[]
+  }
+  [key: string]: any
 }
 
 interface Notification {
-  id: string;
-  user_id: string;
-  title: string;
-  message: string;
-  metadata: NotificationMetadata;
-  read: boolean;
-  created_at: string;
+  id: string
+  user_id: string
+  title: string
+  message: string
+  metadata: NotificationMetadata
+  read: boolean
+  created_at: string
 }
 
 /**
@@ -39,7 +39,7 @@ export async function sendInAppNotification(
   userId: string,
   title: string,
   message: string,
-  metadata: NotificationMetadata = {}
+  metadata: NotificationMetadata = {},
 ): Promise<Notification> {
   // T177: Insert notification record into notifications table
   const { data, error } = await supabase
@@ -53,15 +53,15 @@ export async function sendInAppNotification(
       created_at: new Date().toISOString(),
     })
     .select()
-    .single();
+    .single()
 
   if (error) {
-    console.error('[NOTIFICATION-SERVICE] Failed to send notification:', error);
-    throw new Error(`Failed to send notification: ${error.message}`);
+    console.error('[NOTIFICATION-SERVICE] Failed to send notification:', error)
+    throw new Error(`Failed to send notification: ${error.message}`)
   }
 
-  console.log(`[NOTIFICATION-SERVICE] Sent notification to user ${userId}: "${title}"`);
-  return data as Notification;
+  console.log(`[NOTIFICATION-SERVICE] Sent notification to user ${userId}: "${title}"`)
+  return data as Notification
 }
 
 /**
@@ -72,26 +72,26 @@ export async function sendInAppNotification(
  */
 export async function getNotifications(
   userId: string,
-  unreadOnly: boolean = false
+  unreadOnly: boolean = false,
 ): Promise<Notification[]> {
   let query = supabase
     .from('notifications')
     .select('*')
     .eq('user_id', userId)
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
 
   if (unreadOnly) {
-    query = query.eq('read', false);
+    query = query.eq('read', false)
   }
 
-  const { data, error } = await query;
+  const { data, error } = await query
 
   if (error) {
-    console.error('[NOTIFICATION-SERVICE] Failed to fetch notifications:', error);
-    throw new Error(`Failed to fetch notifications: ${error.message}`);
+    console.error('[NOTIFICATION-SERVICE] Failed to fetch notifications:', error)
+    throw new Error(`Failed to fetch notifications: ${error.message}`)
   }
 
-  return (data as Notification[]) || [];
+  return (data as Notification[]) || []
 }
 
 /**
@@ -105,15 +105,15 @@ export async function markNotificationAsRead(notificationId: string): Promise<No
     .update({ read: true })
     .eq('id', notificationId)
     .select()
-    .single();
+    .single()
 
   if (error) {
-    console.error('[NOTIFICATION-SERVICE] Failed to mark notification as read:', error);
-    throw new Error(`Failed to mark notification as read: ${error.message}`);
+    console.error('[NOTIFICATION-SERVICE] Failed to mark notification as read:', error)
+    throw new Error(`Failed to mark notification as read: ${error.message}`)
   }
 
-  console.log(`[NOTIFICATION-SERVICE] Marked notification ${notificationId} as read`);
-  return data as Notification;
+  console.log(`[NOTIFICATION-SERVICE] Marked notification ${notificationId} as read`)
+  return data as Notification
 }
 
 /**
@@ -131,13 +131,13 @@ export async function sendHealthScoreDropNotification(
   ownerId: string,
   previousScore: number,
   newScore: number,
-  factors: string[]
+  factors: string[],
 ): Promise<void> {
   // T183: Notification title
-  const title = `Relationship health score dropped for ${dossierName}`;
+  const title = `Relationship health score dropped for ${dossierName}`
 
   // T184: Notification message
-  const message = `Health score is now ${newScore} (was ${previousScore}). Contributing factors: ${factors.join(', ')}.`;
+  const message = `Health score is now ${newScore} (was ${previousScore}). Contributing factors: ${factors.join(', ')}.`
 
   // T185: Include contributing factors in metadata
   await sendInAppNotification(ownerId, title, message, {
@@ -148,10 +148,10 @@ export async function sendHealthScoreDropNotification(
       current: newScore,
       factors,
     },
-  });
+  })
 
   // T187: Log notification sending
-  console.log(`[HEALTH-NOTIFICATION] Sent notification to user ${ownerId} for dossier ${dossierId}`);
+  console.log(`[HEALTH-NOTIFICATION] Sent notification to user ${ownerId} for dossier ${dossierId}`)
 }
 
 /**
@@ -162,33 +162,33 @@ export async function sendHealthScoreDropNotification(
  */
 export async function sendOverdueNotification(
   commitment: {
-    id: string;
-    dossier_id: string;
-    description: string;
-    due_date: string;
-    owner_id: string;
+    id: string
+    dossier_id: string
+    description: string
+    due_date: string
+    owner_id: string
   },
   dossierName: string,
-  dossierOwnerId?: string
+  dossierOwnerId?: string,
 ): Promise<void> {
-  const title = 'Commitment is overdue';
-  const message = `${commitment.description} is overdue (due ${commitment.due_date}). Dossier: ${dossierName}. Recommended: Update status or extend deadline.`;
+  const title = 'Commitment is overdue'
+  const message = `${commitment.description} is overdue (due ${commitment.due_date}). Dossier: ${dossierName}. Recommended: Update status or extend deadline.`
 
   const metadata = {
     dossierId: commitment.dossier_id,
     commitmentId: commitment.id,
     type: 'commitment_overdue' as const,
-  };
+  }
 
   // Send notification to commitment owner
-  await sendInAppNotification(commitment.owner_id, title, message, metadata);
+  await sendInAppNotification(commitment.owner_id, title, message, metadata)
 
   // T189: Send notification to dossier owner as well (if provided and different)
   if (dossierOwnerId && dossierOwnerId !== commitment.owner_id) {
-    await sendInAppNotification(dossierOwnerId, title, message, metadata);
+    await sendInAppNotification(dossierOwnerId, title, message, metadata)
   }
 
-  console.log(`[OVERDUE-NOTIFICATION] Sent notification for commitment ${commitment.id}`);
+  console.log(`[OVERDUE-NOTIFICATION] Sent notification for commitment ${commitment.id}`)
 }
 
 export default {
@@ -197,4 +197,59 @@ export default {
   markNotificationAsRead,
   sendHealthScoreDropNotification,
   sendOverdueNotification,
-};
+}
+
+/**
+ * NotificationService class for after-action integration
+ */
+export class NotificationService {
+  private supabaseUrl: string
+  private supabaseKey: string
+
+  constructor(supabaseUrl: string, supabaseKey: string) {
+    this.supabaseUrl = supabaseUrl
+    this.supabaseKey = supabaseKey
+  }
+
+  /**
+   * Notify commitment owners when an after-action is published
+   */
+  async notifyCommitmentOwners(
+    afterActionId: string,
+    afterActionTitle: string,
+    commitments: Array<{ owner_id?: string; description?: string }>,
+  ): Promise<{ notified: number; errors: string[] }> {
+    const result = { notified: 0, errors: [] as string[] }
+
+    for (const commitment of commitments) {
+      if (!commitment.owner_id) continue
+
+      try {
+        await sendInAppNotification(
+          commitment.owner_id,
+          `New commitment assigned: ${afterActionTitle}`,
+          commitment.description || 'A new commitment has been assigned to you.',
+          {
+            type: 'general',
+            afterActionId,
+          },
+        )
+        result.notified++
+      } catch (error) {
+        result.errors.push(`Failed to notify ${commitment.owner_id}: ${error}`)
+      }
+    }
+
+    return result
+  }
+}
+
+/**
+ * Factory function for creating NotificationService instance
+ */
+export const createNotificationService = (
+  supabaseUrl: string,
+  supabaseKey: string,
+): NotificationService => {
+  return new NotificationService(supabaseUrl, supabaseKey)
+}
