@@ -354,6 +354,8 @@ t('columns.todo'); // Workflow stage for display
 
 ## Recent Changes
 
+- 033-ai-brief-generation: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS, React 19 + @mastra/core (agents), @xenova/transformers (BGE-M3), TanStack Router/Query v5, Supabase JS v2, i18nex
+
 - 032-unified-work-management: Unified "My Work" dashboard consolidating commitments, tasks, and intake tickets
   - ✅ Database: 7 migrations (unified_work_items VIEW, user_work_summary VIEW, user_productivity_metrics MV, RPC functions)
   - ✅ Edge Function: unified-work-list (list, summary, metrics, team workload)
@@ -361,8 +363,6 @@ t('columns.todo'); // Workflow stage for display
   - ✅ Features: Cursor pagination, URL state sync, manager team workload view
   - 📊 Status: Implemented and documented
 - 031-commitments-management: Added TypeScript 5.8+ (strict mode) + React 19, TanStack Router v5, TanStack Query v5, Supabase JS v2, i18next, Framer Motion, Aceternity UI
-- 030-health-commitment: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Edge Functions), Vite
-- 029-dynamic-country-intelligence: Added [if applicable, e.g., PostgreSQL, CoreData, files or N/A]
   - ✅ Feature spec: Expo-based mobile app with offline-first architecture
   - ✅ Research: Jest + RNTL (unit tests), Maestro (E2E), React Native Paper (UI), WatermelonDB (offline sync)
   - ✅ Data model: 11 entities with WatermelonDB schema, offline storage cleanup strategy
@@ -409,6 +409,9 @@ When testing the application using browser automation tools (Chrome MCP, Playwri
 <!-- MANUAL ADDITIONS END -->
 
 ## Active Technologies
+
+- TypeScript 5.8+ (strict mode), Node.js 18+ LTS, React 19 + @mastra/core (agents), @xenova/transformers (BGE-M3), TanStack Router/Query v5, Supabase JS v2, i18nex (033-ai-brief-generation)
+- PostgreSQL 15+ (Supabase) with pgvector extension, Redis 7.x for caching (033-ai-brief-generation)
 
 - TypeScript 5.8+ (strict mode), Node.js 18+ LTS + React 19, TanStack Router v5, TanStack Query v5, Supabase (PostgreSQL 15+, Edge Functions), Vite (030-health-commitment)
 - PostgreSQL 15+ with pgvector extension, materialized views for aggregations, Redis 7.x for caching (030-health-commitment)
