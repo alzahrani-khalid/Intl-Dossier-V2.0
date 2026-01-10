@@ -14,15 +14,16 @@
  * - RTL support with logical properties
  */
 
-import { useTranslation } from 'react-i18next';
-import { formatDistanceToNow } from 'date-fns';
-import { ar, enUS } from 'date-fns/locale';
-import { Card } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
-import { ConfidenceBadge } from './ConfidenceBadge';
-import type { IntelligenceReport } from '@/types/intelligence-reports.types';
-import { getConfidenceLevel } from '@/utils/intelligence-helpers';
+import { memo, useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { formatDistanceToNow } from 'date-fns'
+import { ar, enUS } from 'date-fns/locale'
+import { Card } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Button } from '@/components/ui/button'
+import { ConfidenceBadge } from './ConfidenceBadge'
+import type { IntelligenceReport } from '@/types/intelligence-reports.types'
+import { getConfidenceLevel } from '@/utils/intelligence-helpers'
 import {
   TrendingUp,
   Shield,
@@ -32,16 +33,16 @@ import {
   AlertTriangle,
   CheckCircle,
   RefreshCw,
-  ExternalLink
-} from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+  ExternalLink,
+} from 'lucide-react'
+import { Link } from '@tanstack/react-router'
 
 interface IntelligenceInsightProps {
-  intelligence: IntelligenceReport;
-  onRefresh?: () => void;
-  isRefreshing?: boolean;
-  dossierType?: string;
-  dossierId: string;
+  intelligence: IntelligenceReport
+  onRefresh?: () => void
+  isRefreshing?: boolean
+  dossierType?: string
+  dossierId: string
 }
 
 const intelligenceIcons = {
@@ -50,40 +51,57 @@ const intelligenceIcons = {
   security: Shield,
   bilateral: Globe,
   general: Globe,
-} as const;
+} as const
 
-export function IntelligenceInsight({
+/**
+ * IntelligenceInsight component (memoized for performance - T055)
+ */
+export const IntelligenceInsight = memo(function IntelligenceInsight({
   intelligence,
   onRefresh,
   isRefreshing = false,
   dossierType = 'countries',
-  dossierId
+  dossierId,
 }: IntelligenceInsightProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const locale = isRTL ? ar : enUS;
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const locale = isRTL ? ar : enUS
 
-  const Icon = intelligenceIcons[intelligence.intelligence_type] || Globe;
+  const Icon = intelligenceIcons[intelligence.intelligence_type] || Globe
 
-  // Determine if cache is stale
-  const isStale = intelligence.cache_expires_at
-    ? new Date(intelligence.cache_expires_at) < new Date()
-    : false;
+  // Memoized derived values for performance (T055)
+  const { isStale, title, content, lastUpdated, truncatedContent } = useMemo(() => {
+    // Determine if cache is stale
+    const stale = intelligence.cache_expires_at
+      ? new Date(intelligence.cache_expires_at) < new Date()
+      : false
 
-  // Get localized content (title and content with fallback)
-  const title = (isRTL && intelligence.title_ar) ? intelligence.title_ar : intelligence.title;
-  const content = (isRTL && intelligence.content_ar) ? intelligence.content_ar : intelligence.content;
+    // Get localized content (title and content with fallback)
+    const localizedTitle =
+      isRTL && intelligence.title_ar ? intelligence.title_ar : intelligence.title
+    const localizedContent =
+      isRTL && intelligence.content_ar ? intelligence.content_ar : intelligence.content
 
-  // Format last updated timestamp
-  const lastUpdated = intelligence.last_refreshed_at
-    ? formatDistanceToNow(new Date(intelligence.last_refreshed_at), {
-        addSuffix: true,
-        locale,
-      })
-    : t('intelligence.never_updated', 'Never updated');
+    // Format last updated timestamp
+    const updated = intelligence.last_refreshed_at
+      ? formatDistanceToNow(new Date(intelligence.last_refreshed_at), {
+          addSuffix: true,
+          locale,
+        })
+      : t('intelligence.never_updated', 'Never updated')
 
-  // Truncate content for inline display (show first 200 characters)
-  const truncatedContent = content.length > 200 ? `${content.substring(0, 200)}...` : content;
+    // Truncate content for inline display (show first 200 characters)
+    const truncated =
+      localizedContent.length > 200 ? `${localizedContent.substring(0, 200)}...` : localizedContent
+
+    return {
+      isStale: stale,
+      title: localizedTitle,
+      content: localizedContent,
+      lastUpdated: updated,
+      truncatedContent: truncated,
+    }
+  }, [intelligence, isRTL, locale, t])
 
   return (
     <Card
@@ -102,17 +120,18 @@ export function IntelligenceInsight({
             <Icon className="h-4 w-4 text-primary" />
           </div>
           <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-semibold text-foreground line-clamp-2">
-              {title}
-            </h4>
+            <h4 className="text-sm font-semibold text-foreground line-clamp-2">{title}</h4>
             <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-              <Badge
-                variant="outline"
-                className="text-xs py-0 px-1.5"
-              >
-                {t(`intelligence.types.${intelligence.intelligence_type}`, intelligence.intelligence_type)}
+              <Badge variant="outline" className="text-xs py-0 px-1.5">
+                {t(
+                  `intelligence.types.${intelligence.intelligence_type}`,
+                  intelligence.intelligence_type,
+                )}
               </Badge>
-              <ConfidenceBadge level={getConfidenceLevel(intelligence.confidence_score)} size="sm" />
+              <ConfidenceBadge
+                level={getConfidenceLevel(intelligence.confidence_score)}
+                size="sm"
+              />
               {isStale && (
                 <Badge
                   variant="secondary"
@@ -173,9 +192,11 @@ export function IntelligenceInsight({
           className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline group"
         >
           <span>{t('intelligence.view_full_report', 'View Full Report')}</span>
-          <ExternalLink className={`h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${isRTL ? 'rotate-180' : ''}`} />
+          <ExternalLink
+            className={`h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${isRTL ? 'rotate-180' : ''}`}
+          />
         </Link>
       </div>
     </Card>
-  );
-}
+  )
+})

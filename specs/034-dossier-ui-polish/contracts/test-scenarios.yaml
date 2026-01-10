@@ -1,0 +1,374 @@
+# Test Scenarios Contract: Dossier UI Polish
+# Feature: 034-dossier-ui-polish
+# Date: 2025-01-04
+
+version: '1.0'
+feature: dossier-ui-polish
+
+# Dossier types to test
+dossier_types:
+  - country
+  - organization
+  - person
+  - engagement
+  - forum
+  - working_group
+
+# Viewport configurations
+viewports:
+  iphone_se:
+    width: 320
+    height: 568
+    device_scale_factor: 2
+  iphone_12:
+    width: 375
+    height: 812
+    device_scale_factor: 3
+  iphone_14_pro_max:
+    width: 414
+    height: 896
+    device_scale_factor: 3
+  tablet:
+    width: 768
+    height: 1024
+    device_scale_factor: 2
+  desktop:
+    width: 1280
+    height: 800
+    device_scale_factor: 1
+
+# Language configurations
+languages:
+  english:
+    code: en
+    direction: ltr
+    name: English
+  arabic:
+    code: ar
+    direction: rtl
+    name: العربية
+
+# ============================================================================
+# RTL Test Scenarios
+# ============================================================================
+rtl_tests:
+  # US1: Arabic Users Experience Full RTL Support
+  layout_mirroring:
+    name: 'Layout mirrors correctly in RTL'
+    priority: P1
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - set_language: arabic
+      - wait_for: page_load
+    assertions:
+      - selector: 'html'
+        attribute: 'dir'
+        value: 'rtl'
+      - selector: "[data-testid='sidebar']"
+        position: 'right'
+      - selector: "[data-testid='breadcrumbs']"
+        direction: 'rtl'
+
+  icon_flipping:
+    name: 'Directional icons flip in RTL'
+    priority: P1
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - set_language: arabic
+    assertions:
+      - selector: "[data-testid='chevron-right']"
+        transform: 'rotate(180deg)'
+      - selector: "[data-testid='arrow-right']"
+        transform: 'rotate(180deg)'
+
+  text_alignment:
+    name: 'Text aligns to start (right in RTL)'
+    priority: P1
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - set_language: arabic
+    assertions:
+      - selector: 'h1, h2, h3, p'
+        css_property: 'text-align'
+        value: 'start'
+
+  form_inputs:
+    name: 'Form inputs align correctly in RTL'
+    priority: P1
+    steps:
+      - navigate_to: '/dossiers/create'
+      - set_language: arabic
+    assertions:
+      - selector: 'label'
+        position: 'right_of_input'
+      - selector: "input[type='text']"
+        css_property: 'text-align'
+        value: 'start'
+
+  modal_animation:
+    name: 'Modals animate from correct direction in RTL'
+    priority: P2
+    steps:
+      - navigate_to: '/dossiers/countries/{test_id}'
+      - set_language: arabic
+      - click: "[data-testid='open-modal-button']"
+    assertions:
+      - animation_direction: 'right_to_left'
+
+  bidirectional_text:
+    name: 'Mixed Arabic/English text renders correctly'
+    priority: P2
+    steps:
+      - navigate_to: '/dossiers/countries/{test_id}'
+      - set_language: arabic
+    assertions:
+      - selector: "[data-testid='mixed-content']"
+        no_layout_break: true
+
+# ============================================================================
+# Mobile Test Scenarios
+# ============================================================================
+mobile_tests:
+  # US2: Mobile Users Can Use All Dossier Pages
+  no_horizontal_overflow:
+    name: 'No horizontal overflow on mobile'
+    priority: P1
+    for_each: dossier_types
+    viewports: [iphone_se, iphone_12, iphone_14_pro_max]
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - wait_for: page_load
+    assertions:
+      - selector: 'body'
+        css_property: 'overflow-x'
+        not_value: 'scroll'
+      - page_width_equals: viewport_width
+
+  touch_targets:
+    name: 'All touch targets are at least 44x44px'
+    priority: P1
+    for_each: dossier_types
+    viewports: [iphone_se, iphone_12, iphone_14_pro_max]
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+    assertions:
+      - selector: "button, a, [role='button'], input, select"
+        min_width: 44
+        min_height: 44
+
+  content_stacking:
+    name: 'Content stacks vertically on mobile'
+    priority: P1
+    for_each: dossier_types
+    viewports: [iphone_se]
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+    assertions:
+      - selector: "[data-testid='card-grid']"
+        css_property: 'flex-direction'
+        value: 'column'
+
+  horizontal_table_scroll:
+    name: 'Wide tables scroll horizontally within container'
+    priority: P2
+    for_each: [country, organization, engagement]
+    viewports: [iphone_se, iphone_12]
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - scroll_to: "[data-testid='data-table']"
+    assertions:
+      - selector: "[data-testid='table-container']"
+        css_property: 'overflow-x'
+        value: 'auto'
+      - page_width_equals: viewport_width # Container doesn't expand page
+
+  collapsible_sections:
+    name: 'Sections expand/collapse correctly on mobile'
+    priority: P1
+    for_each: dossier_types
+    viewports: [iphone_se]
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - tap: "[data-testid='section-header-0']"
+    assertions:
+      - selector: "[data-testid='section-content-0']"
+        visible: true
+
+# ============================================================================
+# Accessibility Test Scenarios
+# ============================================================================
+a11y_tests:
+  # US3: Users with Disabilities Can Access All Features
+  axe_core_scan:
+    name: 'Zero critical/serious axe-core violations'
+    priority: P1
+    for_each: dossier_types
+    languages: [english, arabic]
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - set_language: '{language}'
+      - run: axe_scan
+    assertions:
+      - critical_violations: 0
+      - serious_violations: 0
+
+  keyboard_navigation:
+    name: 'Full keyboard navigation through page'
+    priority: P1
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - press: 'Tab'
+        repeat: 30
+    assertions:
+      - all_interactive_elements_reachable: true
+      - focus_visible: true
+
+  focus_indicators:
+    name: 'Focus indicators meet contrast requirements'
+    priority: P1
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - press: 'Tab'
+    assertions:
+      - selector: ':focus-visible'
+        outline_contrast_ratio: '>=3:1'
+
+  collapsible_aria:
+    name: 'Collapsible sections announce state'
+    priority: P1
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - focus: "[data-testid='section-header-0']"
+    assertions:
+      - selector: "[data-testid='section-header-0']"
+        attribute: 'aria-expanded'
+        value_type: 'boolean'
+      - selector: "[data-testid='section-header-0']"
+        attribute: 'aria-controls'
+        exists: true
+
+  screen_reader_order:
+    name: 'Content reads in logical order'
+    priority: P2
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - run: screen_reader_simulation
+    assertions:
+      - heading_order: 'sequential' # h1, h2, h3 in order
+      - content_order: 'logical'
+
+  image_alt_text:
+    name: 'Images have appropriate alt text'
+    priority: P2
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+    assertions:
+      - selector: "img:not([role='presentation'])"
+        attribute: 'alt'
+        not_empty: true
+      - selector: "img[role='presentation'], img[aria-hidden='true']"
+        attribute: 'alt'
+        value: ''
+
+# ============================================================================
+# Performance Test Scenarios
+# ============================================================================
+performance_tests:
+  # US4: Application Performs Well on All Devices
+  initial_render:
+    name: 'Page renders within 1 second'
+    priority: P1
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+    assertions:
+      - largest_contentful_paint: '<1000ms'
+
+  section_expand:
+    name: 'Section expansion completes within 300ms'
+    priority: P2
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - click: "[data-testid='section-header-0']"
+    assertions:
+      - animation_duration: '<300ms'
+
+  scroll_performance:
+    name: 'Scrolling maintains 60fps'
+    priority: P2
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - scroll: 'to_bottom'
+    assertions:
+      - frame_rate: '>=60fps'
+      - dropped_frames: '<5'
+
+  no_unnecessary_rerenders:
+    name: "Components don't re-render unnecessarily"
+    priority: P3
+    for_each: dossier_types
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - enable: react_profiler
+      - interact: 'expand_section'
+    assertions:
+      - rerender_count: 'minimal' # Only affected components
+
+# ============================================================================
+# Combined Scenarios (RTL + Mobile + A11y)
+# ============================================================================
+combined_tests:
+  rtl_mobile_complete:
+    name: 'RTL works correctly on mobile viewports'
+    priority: P1
+    for_each: dossier_types
+    viewports: [iphone_se, iphone_12]
+    language: arabic
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - set_language: arabic
+    assertions:
+      - include: rtl_tests.layout_mirroring.assertions
+      - include: mobile_tests.no_horizontal_overflow.assertions
+      - include: mobile_tests.touch_targets.assertions
+
+  rtl_a11y_complete:
+    name: 'RTL pages pass accessibility tests'
+    priority: P1
+    for_each: dossier_types
+    language: arabic
+    steps:
+      - navigate_to: '/dossiers/{type}/{test_id}'
+      - set_language: arabic
+      - run: axe_scan
+    assertions:
+      - critical_violations: 0
+      - serious_violations: 0
+      - keyboard_navigation: 'complete'
+
+# ============================================================================
+# Test Execution Summary
+# ============================================================================
+summary:
+  total_scenarios: 25
+  by_priority:
+    P1: 15
+    P2: 8
+    P3: 2
+  by_category:
+    rtl: 6
+    mobile: 5
+    a11y: 6
+    performance: 4
+    combined: 4
+  estimated_execution_time: '~15 minutes'

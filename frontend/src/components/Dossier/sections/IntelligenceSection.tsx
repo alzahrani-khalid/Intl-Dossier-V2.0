@@ -6,31 +6,28 @@
  * Mobile-first, RTL-compatible, with loading/error states
  */
 
-import { useTranslation } from 'react-i18next';
-import { useIntelligenceByType } from '@/hooks/useIntelligence';
-import { IntelligenceCard } from '@/components/intelligence/IntelligenceCard';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle } from 'lucide-react';
+import { useTranslation } from 'react-i18next'
+import { useIntelligenceByType } from '@/hooks/useIntelligence'
+import { IntelligenceCard } from '@/components/intelligence/IntelligenceCard'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { AlertCircle } from 'lucide-react'
 
 interface IntelligenceSectionProps {
-  entityId: string;
-  intelligenceType: 'economic' | 'political' | 'security' | 'bilateral';
+  entityId: string
+  intelligenceType: 'economic' | 'political' | 'security' | 'bilateral'
 }
 
-export function IntelligenceSection({
-  entityId,
-  intelligenceType,
-}: IntelligenceSectionProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+export function IntelligenceSection({ entityId, intelligenceType }: IntelligenceSectionProps) {
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   const {
     data: intelligence,
     isLoading,
     isError,
     error,
-  } = useIntelligenceByType(entityId, intelligenceType);
+  } = useIntelligenceByType(entityId, intelligenceType)
 
   // Loading state
   if (isLoading) {
@@ -38,38 +35,35 @@ export function IntelligenceSection({
       <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
         <Skeleton className="h-48 w-full" />
       </div>
-    );
+    )
   }
 
   // Error state
   if (isError) {
     return (
       <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
-        <AlertCircle className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+        <AlertCircle className="h-4 w-4 me-2" />
         <AlertDescription>
           {error instanceof Error
             ? error.message
             : t('intelligence.error', 'Failed to load intelligence')}
         </AlertDescription>
       </Alert>
-    );
+    )
   }
 
   // Empty state
   if (!intelligence) {
     return (
-      <div
-        className="py-8 text-center text-sm text-muted-foreground"
-        dir={isRTL ? 'rtl' : 'ltr'}
-      >
+      <div className="py-8 text-center text-sm text-muted-foreground" dir={isRTL ? 'rtl' : 'ltr'}>
         <p>{t('intelligence.empty', 'No intelligence available for this entity')}</p>
       </div>
-    );
+    )
   }
 
   return (
     <div dir={isRTL ? 'rtl' : 'ltr'}>
       <IntelligenceCard intelligence={intelligence} />
     </div>
-  );
+  )
 }
