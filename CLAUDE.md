@@ -354,6 +354,8 @@ t('columns.todo'); // Workflow stage for display
 
 ## Recent Changes
 
+- 034-dossier-ui-polish: Added TypeScript 5.0+ (strict mode), React 19+ + TanStack Router, TanStack Query, Tailwind CSS, i18next, Framer Motion, Aceternity UI
+
 - 033-ai-brief-generation: Added TypeScript 5.8+ (strict mode), Node.js 18+ LTS, React 19 + @mastra/core (agents), @xenova/transformers (BGE-M3), TanStack Router/Query v5, Supabase JS v2, i18nex
 
 - 032-unified-work-management: Unified "My Work" dashboard consolidating commitments, tasks, and intake tickets
@@ -362,7 +364,6 @@ t('columns.todo'); // Workflow stage for display
   - ✅ Frontend: 8 components, 5 hooks, i18n (EN/AR), real-time with 300ms debounce
   - ✅ Features: Cursor pagination, URL state sync, manager team workload view
   - 📊 Status: Implemented and documented
-- 031-commitments-management: Added TypeScript 5.8+ (strict mode) + React 19, TanStack Router v5, TanStack Query v5, Supabase JS v2, i18next, Framer Motion, Aceternity UI
   - ✅ Feature spec: Expo-based mobile app with offline-first architecture
   - ✅ Research: Jest + RNTL (unit tests), Maestro (E2E), React Native Paper (UI), WatermelonDB (offline sync)
   - ✅ Data model: 11 entities with WatermelonDB schema, offline storage cleanup strategy
@@ -409,6 +410,9 @@ When testing the application using browser automation tools (Chrome MCP, Playwri
 <!-- MANUAL ADDITIONS END -->
 
 ## Active Technologies
+
+- TypeScript 5.0+ (strict mode), React 19+ + TanStack Router, TanStack Query, Tailwind CSS, i18next, Framer Motion, Aceternity UI (034-dossier-ui-polish)
+- N/A (frontend-only polish, no database changes) (034-dossier-ui-polish)
 
 - TypeScript 5.8+ (strict mode), Node.js 18+ LTS, React 19 + @mastra/core (agents), @xenova/transformers (BGE-M3), TanStack Router/Query v5, Supabase JS v2, i18nex (033-ai-brief-generation)
 - PostgreSQL 15+ (Supabase) with pgvector extension, Redis 7.x for caching (033-ai-brief-generation)

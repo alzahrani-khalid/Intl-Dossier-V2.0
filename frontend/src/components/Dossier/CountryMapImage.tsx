@@ -24,21 +24,21 @@
  * <CountryMapImage countryCode="us" size="lg" className="h-64" />
  */
 
-import { Globe } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { Globe } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { useState } from 'react'
 
 export interface CountryMapImageProps {
   /** ISO 2-letter country code (e.g., 'sa', 'us', 'cn') - case insensitive */
-  countryCode: string;
+  countryCode: string
   /** Optional CSS classes */
-  className?: string;
+  className?: string
   /** Base size for the image (used as fallback if srcset fails) */
-  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl'
   /** Show loading state */
-  showLoading?: boolean;
+  showLoading?: boolean
   /** Optional alt text override */
-  alt?: string;
+  alt?: string
 }
 
 /**
@@ -51,7 +51,7 @@ const SIZE_MAP = {
   md: 256,
   lg: 512,
   xl: 1024,
-} as const;
+} as const
 
 export function CountryMapImage({
   countryCode,
@@ -60,25 +60,25 @@ export function CountryMapImage({
   showLoading = true,
   alt,
 }: CountryMapImageProps) {
-  const [imageError, setImageError] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [imageError, setImageError] = useState(false)
+  const [isLoading, setIsLoading] = useState(true)
 
   // Normalize country code to lowercase for URL
-  const normalizedCode = countryCode.toLowerCase().trim();
+  const normalizedCode = countryCode.toLowerCase().trim()
 
   // Base size for fallback
-  const baseSize = SIZE_MAP[size];
+  const baseSize = SIZE_MAP[size]
 
   // Available PNG sizes for srcset
-  const availableSizes = [16, 24, 32, 48, 64, 80, 96, 128, 256, 512, 1024];
+  const availableSizes = [16, 24, 32, 48, 64, 80, 96, 128, 256, 512, 1024]
 
   // Build paths
-  const basePath = `/assets/maps/all_countries/${normalizedCode}`;
-  const svgPath = `${basePath}/vector.svg`;
-  const pngPath = (sizeInPx: number) => `${basePath}/${sizeInPx}.png`;
+  const basePath = `/assets/maps/all_countries/${normalizedCode}`
+  const svgPath = `${basePath}/vector.svg`
+  const pngPath = (sizeInPx: number) => `${basePath}/${sizeInPx}.png`
 
   // Build srcset for responsive loading
-  const srcSet = availableSizes.map((s) => `${pngPath(s)} ${s}w`).join(', ');
+  const srcSet = availableSizes.map((s) => `${pngPath(s)} ${s}w`).join(', ')
 
   // Build sizes attribute for optimal image selection
   // Mobile: use smaller images, Desktop: use larger images
@@ -88,19 +88,19 @@ export function CountryMapImage({
     (max-width: 768px) 256px,
     (max-width: 1024px) 512px,
     ${baseSize}px
-  `.trim();
+  `.trim()
 
   // Handle image load error - fallback to Globe icon
   const handleError = () => {
-    console.warn(`Country map not found for code: ${normalizedCode}`);
-    setImageError(true);
-    setIsLoading(false);
-  };
+    console.warn(`Country map not found for code: ${normalizedCode}`)
+    setImageError(true)
+    setIsLoading(false)
+  }
 
   // Handle successful image load
   const handleLoad = () => {
-    setIsLoading(false);
-  };
+    setIsLoading(false)
+  }
 
   // Fallback UI for missing country maps or future countries
   if (imageError || !normalizedCode) {
@@ -110,17 +110,17 @@ export function CountryMapImage({
           'relative overflow-hidden flex items-center justify-center',
           'bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg',
           'min-h-32 sm:min-h-48',
-          className
+          className,
         )}
         title={alt || `Map not available for ${countryCode.toUpperCase()}`}
       >
         <Globe className="h-16 w-16 sm:h-24 sm:w-24 text-primary/30" strokeWidth={1.5} />
         {/* Optional: Show country code */}
-        <span className="absolute bottom-2 right-2 text-xs text-muted-foreground font-mono">
+        <span className="absolute bottom-2 end-2 text-xs text-muted-foreground font-mono">
           {countryCode.toUpperCase()}
         </span>
       </div>
-    );
+    )
   }
 
   return (
@@ -128,7 +128,7 @@ export function CountryMapImage({
       className={cn(
         'relative overflow-hidden flex items-center justify-center',
         'bg-gradient-to-br from-primary/5 to-primary/10 rounded-lg',
-        className
+        className,
       )}
     >
       {/* Loading skeleton */}
@@ -160,7 +160,7 @@ export function CountryMapImage({
             'object-contain w-full h-full transition-opacity duration-300',
             isLoading ? 'opacity-0' : 'opacity-100',
             // Add subtle filter for better visual integration
-            'filter drop-shadow-sm'
+            'filter drop-shadow-sm',
           )}
           style={{
             // Ensure map doesn't exceed container
@@ -175,7 +175,7 @@ export function CountryMapImage({
         {countryCode.toUpperCase()}
       </span>
     </div>
-  );
+  )
 }
 
 /**
@@ -193,5 +193,5 @@ export function CountryMapImageSimple({
       size={size}
       showLoading={false}
     />
-  );
+  )
 }

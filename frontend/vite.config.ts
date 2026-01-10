@@ -19,7 +19,7 @@ export default defineConfig({
   },
   server: {
     host: true, // Expose on network (shows both localhost and network IP)
-    port: 3000,
+    port: 5173,
     watch: {
       ignored: [
         '**/node_modules/**',
@@ -45,8 +45,8 @@ export default defineConfig({
     // Add cache-busting headers for HTML in dev mode
     headers: {
       'Cache-Control': 'no-cache, no-store, must-revalidate, max-age=0',
-      'Pragma': 'no-cache',
-      'Expires': '0',
+      Pragma: 'no-cache',
+      Expires: '0',
     },
   },
   build: {
@@ -61,49 +61,55 @@ export default defineConfig({
         manualChunks: (id) => {
           // Core React libraries
           if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
-            return 'react-vendor';
+            return 'react-vendor'
           }
 
           // TanStack libraries
-          if (id.includes('node_modules/@tanstack/react-router') ||
-              id.includes('node_modules/@tanstack/react-query')) {
-            return 'tanstack-vendor';
+          if (
+            id.includes('node_modules/@tanstack/react-router') ||
+            id.includes('node_modules/@tanstack/react-query')
+          ) {
+            return 'tanstack-vendor'
           }
 
           // i18n libraries
           if (id.includes('node_modules/i18next') || id.includes('node_modules/react-i18next')) {
-            return 'i18n-vendor';
+            return 'i18n-vendor'
           }
 
           // UI libraries (shadcn, Radix UI)
           if (id.includes('node_modules/@radix-ui') || id.includes('node_modules/cmdk')) {
-            return 'ui-vendor';
+            return 'ui-vendor'
           }
 
           // Chart/visualization libraries (React Flow for graph viz)
-          if (id.includes('node_modules/reactflow') || id.includes('node_modules/@xyflow') ||
-              id.includes('node_modules/d3') || id.includes('node_modules/recharts')) {
-            return 'visualization-vendor';
+          if (
+            id.includes('node_modules/reactflow') ||
+            id.includes('node_modules/@xyflow') ||
+            id.includes('node_modules/d3') ||
+            id.includes('node_modules/recharts')
+          ) {
+            return 'visualization-vendor'
           }
 
           // Form libraries
           if (id.includes('node_modules/react-hook-form') || id.includes('node_modules/zod')) {
-            return 'form-vendor';
+            return 'form-vendor'
           }
 
           // Date libraries
           if (id.includes('node_modules/date-fns') || id.includes('node_modules/dayjs')) {
-            return 'date-vendor';
+            return 'date-vendor'
           }
 
           // Supabase client
           if (id.includes('node_modules/@supabase')) {
-            return 'supabase-vendor';
+            return 'supabase-vendor'
           }
 
           // Other large node_modules
           if (id.includes('node_modules')) {
-            return 'vendor-misc';
+            return 'vendor-misc'
           }
         },
         // T132: Optimize chunk file names for better caching

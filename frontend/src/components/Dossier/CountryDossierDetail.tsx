@@ -14,28 +14,28 @@
  * URL state management for active tab
  */
 
-import { useState, lazy, Suspense } from 'react';
-import { useNavigate } from '@tanstack/react-router';
-import { useTranslation } from 'react-i18next';
-import { Skeleton } from '@/components/ui/skeleton';
-import QueryErrorBoundary from '@/components/QueryErrorBoundary';
+import { useState, lazy, Suspense } from 'react'
+import { useNavigate } from '@tanstack/react-router'
+import { useTranslation } from 'react-i18next'
+import { Skeleton } from '@/components/ui/skeleton'
+import QueryErrorBoundary from '@/components/QueryErrorBoundary'
 
 // Lazy load intelligence dashboard for better performance
-const IntelligenceTabContent = lazy(
-  () => import('@/components/intelligence/IntelligenceTabContent').then((module) => ({
+const IntelligenceTabContent = lazy(() =>
+  import('@/components/intelligence/IntelligenceTabContent').then((module) => ({
     default: module.IntelligenceTabContent,
-  }))
-);
-import { CountryTimeline } from '@/components/timeline/CountryTimeline';
-import { RelationshipGraph } from '@/components/dossiers/RelationshipGraph';
-import { DossierPositionsTab } from '@/components/positions/DossierPositionsTab';
-import { DossierMoUsTab } from '@/components/dossiers/DossierMoUsTab';
-import { KeyContactsPanel } from '@/components/KeyContactsPanel';
-import type { CountryDossier } from '@/lib/dossier-type-guards';
+  })),
+)
+import { CountryTimeline } from '@/components/timeline/CountryTimeline'
+import { RelationshipGraph } from '@/components/dossiers/RelationshipGraph'
+import { DossierPositionsTab } from '@/components/positions/DossierPositionsTab'
+import { DossierMoUsTab } from '@/components/dossiers/DossierMoUsTab'
+import { KeyContactsPanel } from '@/components/KeyContactsPanel'
+import type { CountryDossier } from '@/lib/dossier-type-guards'
 
 interface CountryDossierDetailProps {
-  dossier: CountryDossier;
-  initialTab?: string;
+  dossier: CountryDossier
+  initialTab?: string
 }
 
 type CountryTabType =
@@ -44,21 +44,21 @@ type CountryTabType =
   | 'relationships'
   | 'positions'
   | 'mous'
-  | 'contacts';
+  | 'contacts'
 
 export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const navigate = useNavigate();
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const navigate = useNavigate()
 
   // Active tab state
   const [activeTab, setActiveTab] = useState<CountryTabType>(
-    (initialTab as CountryTabType) || 'intelligence'
-  );
+    (initialTab as CountryTabType) || 'intelligence',
+  )
 
   // Ensure extension data exists
   if (!dossier.extension) {
-    console.error('Country dossier extension data is missing:', dossier);
+    console.error('Country dossier extension data is missing:', dossier)
   }
 
   // Tab definitions for country dossier
@@ -87,16 +87,16 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
       id: 'contacts',
       label: t('tabs.contacts', 'Contacts'),
     },
-  ];
+  ]
 
   const handleTabChange = (tab: CountryTabType) => {
-    setActiveTab(tab);
+    setActiveTab(tab)
     // Update URL to reflect active tab
     navigate({
       search: { tab } as any,
       replace: true,
-    });
-  };
+    })
+  }
 
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -106,21 +106,21 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
           {/* Mobile: Horizontal Scrollable Tabs with Fade Indicators */}
           <div className="relative">
             {/* Scroll fade indicators */}
-            <div className={`absolute ${isRTL ? 'left-0' : 'right-0'} top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-${isRTL ? 'l' : 'r'} from-transparent to-white dark:to-gray-800 pointer-events-none z-10`} />
+            <div className="absolute end-0 top-0 bottom-0 w-8 sm:w-12 bg-gradient-to-e from-transparent to-white dark:to-gray-800 pointer-events-none z-10" />
             <nav
               className="-mb-px flex overflow-x-auto scrollbar-hide px-4 sm:px-6"
               aria-label={t('detail.tabs_label', 'Country dossier sections')}
               role="tablist"
             >
               {tabs.map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => !tab.disabled && handleTabChange(tab.id)}
-                disabled={tab.disabled}
-                role="tab"
-                aria-selected={activeTab === tab.id}
-                aria-controls={`${tab.id}-panel`}
-                className={`
+                <button
+                  key={tab.id}
+                  onClick={() => !tab.disabled && handleTabChange(tab.id)}
+                  disabled={tab.disabled}
+                  role="tab"
+                  aria-selected={activeTab === tab.id}
+                  aria-controls={`${tab.id}-panel`}
+                  className={`
                   flex-shrink-0 min-h-11 py-3 px-3 sm:px-4 md:px-6 border-b-2 font-medium text-xs sm:text-sm md:text-base
                   transition-all duration-200 ease-in-out
                   ${
@@ -131,18 +131,18 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
                   ${tab.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}
                   focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-500 rounded-t-md
                 `}
-              >
-                <span className="whitespace-nowrap flex items-center gap-1.5">
-                  {tab.label}
-                  {tab.id === 'intelligence' && (
-                    <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-black text-white dark:bg-white dark:text-black">
-                      Beta
-                    </span>
-                  )}
-                </span>
-              </button>
-            ))}
-          </nav>
+                >
+                  <span className="whitespace-nowrap flex items-center gap-1.5">
+                    {tab.label}
+                    {tab.id === 'intelligence' && (
+                      <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-black text-white dark:bg-white dark:text-black">
+                        Beta
+                      </span>
+                    )}
+                  </span>
+                </button>
+              ))}
+            </nav>
           </div>
         </div>
 
@@ -150,11 +150,7 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
         <div className="p-4 sm:p-6">
           {/* Intelligence Tab (Feature 029 - Comprehensive Dashboard with Filtering) */}
           {activeTab === 'intelligence' && (
-            <div
-              id="intelligence-panel"
-              role="tabpanel"
-              aria-labelledby="intelligence-tab"
-            >
+            <div id="intelligence-panel" role="tabpanel" aria-labelledby="intelligence-tab">
               <QueryErrorBoundary>
                 <Suspense
                   fallback={
@@ -180,60 +176,40 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
 
           {/* Timeline Tab - Unified Timeline with Multi-Source Events */}
           {activeTab === 'timeline' && (
-            <div
-              id="timeline-panel"
-              role="tabpanel"
-              aria-labelledby="timeline-tab"
-            >
+            <div id="timeline-panel" role="tabpanel" aria-labelledby="timeline-tab">
               <CountryTimeline dossierId={dossier.id} />
             </div>
           )}
 
           {/* Relationships Tab */}
           {activeTab === 'relationships' && (
-            <div
-              id="relationships-panel"
-              role="tabpanel"
-              aria-labelledby="relationships-tab"
-            >
+            <div id="relationships-panel" role="tabpanel" aria-labelledby="relationships-tab">
               <RelationshipGraph dossierId={dossier.id} />
             </div>
           )}
 
           {/* Positions Tab */}
           {activeTab === 'positions' && (
-            <div
-              id="positions-panel"
-              role="tabpanel"
-              aria-labelledby="positions-tab"
-            >
+            <div id="positions-panel" role="tabpanel" aria-labelledby="positions-tab">
               <DossierPositionsTab dossierId={dossier.id} />
             </div>
           )}
 
           {/* MoUs Tab */}
           {activeTab === 'mous' && (
-            <div
-              id="mous-panel"
-              role="tabpanel"
-              aria-labelledby="mous-tab"
-            >
+            <div id="mous-panel" role="tabpanel" aria-labelledby="mous-tab">
               <DossierMoUsTab dossierId={dossier.id} />
             </div>
           )}
 
           {/* Contacts Tab */}
           {activeTab === 'contacts' && (
-            <div
-              id="contacts-panel"
-              role="tabpanel"
-              aria-labelledby="contacts-tab"
-            >
+            <div id="contacts-panel" role="tabpanel" aria-labelledby="contacts-tab">
               <KeyContactsPanel dossierId={dossier.id} />
             </div>
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }

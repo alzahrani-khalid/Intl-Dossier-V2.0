@@ -5,6 +5,7 @@ import { VoiceService } from '../services/VoiceService'
 import { IntelligenceService } from '../services/IntelligenceService'
 import { validate, createBilingualError, getRequestLanguage } from '../utils/validation'
 import { requirePermission } from '../middleware/auth'
+import { supabaseAuth } from '../middleware/supabase-auth.js'
 import { logInfo, logError } from '../utils/logger'
 import multer from 'multer'
 import briefsRouter from './ai/briefs.js'
@@ -12,6 +13,9 @@ import chatRouter from './ai/chat.js'
 import intakeLinkingRouter from './ai/intake-linking.js'
 
 const router = Router()
+
+// Apply Supabase authentication to all AI routes
+router.use(supabaseAuth)
 const briefService = new BriefService()
 const voiceService = new VoiceService()
 const intelligenceService = new IntelligenceService()

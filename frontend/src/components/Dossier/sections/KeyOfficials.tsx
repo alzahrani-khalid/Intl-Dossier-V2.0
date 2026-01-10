@@ -7,23 +7,24 @@
  * Mobile-first layout with RTL support.
  */
 
-import { useTranslation } from 'react-i18next';
-import { Users, User } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Link } from '@tanstack/react-router';
-import { IntelligenceInsight } from '@/components/intelligence/IntelligenceInsight';
-import { useIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence';
-import { useKeyOfficials } from '@/hooks/useKeyOfficials';
-import { PersonCard } from '@/components/Dossier/PersonCard';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useMemo } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Users, User } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Link } from '@tanstack/react-router'
+import { IntelligenceInsight } from '@/components/intelligence/IntelligenceInsight'
+import { useIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence'
+import { useKeyOfficials } from '@/hooks/useKeyOfficials'
+import { PersonCard } from '@/components/Dossier/PersonCard'
+import { Skeleton } from '@/components/ui/skeleton'
 
 interface KeyOfficialsProps {
-  dossierId: string;
+  dossierId: string
 }
 
 export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Fetch political intelligence for inline widget (Feature 029 - User Story 4 - T061)
   const {
@@ -33,29 +34,33 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
   } = useIntelligence({
     entity_id: dossierId,
     intelligence_type: 'political',
-  });
+  })
 
   // Refresh mutation for political intelligence
-  const { mutate: refreshPolitical, isPending: isRefreshingPolitical } = useRefreshIntelligence();
+  const { mutate: refreshPolitical, isPending: isRefreshingPolitical } = useRefreshIntelligence()
 
   const handlePoliticalRefresh = () => {
     refreshPolitical({
       entity_id: dossierId,
       intelligence_types: ['political'],
-    });
-  };
+    })
+  }
 
   // Fetch person dossiers related to this country (T083)
   const {
     data: keyOfficials,
     isLoading: isLoadingOfficials,
     error: officialsError,
-  } = useKeyOfficials({ countryId: dossierId });
+  } = useKeyOfficials({ countryId: dossierId })
 
   // Extract AI profile summary from political intelligence (T086)
-  const aiProfileSummary =
-    politicalIntelligence?.data?.[0]?.analysis_en ||
-    politicalIntelligence?.data?.[0]?.analysis_ar;
+  // Memoized to prevent recalculation on every render (T055 - Performance)
+  const aiProfileSummary = useMemo(() => {
+    if (!politicalIntelligence?.data?.[0]) return null
+    return isRTL
+      ? politicalIntelligence.data[0].analysis_ar || politicalIntelligence.data[0].analysis_en
+      : politicalIntelligence.data[0].analysis_en || politicalIntelligence.data[0].analysis_ar
+  }, [politicalIntelligence?.data, isRTL])
 
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -125,7 +130,10 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
             </h3>
 
             <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 px-4">
-              {t('sections.country.keyOfficialsEmptyDescription', 'No key officials have been linked to this country yet.')}
+              {t(
+                'sections.country.keyOfficialsEmptyDescription',
+                'No key officials have been linked to this country yet.',
+              )}
             </p>
 
             {aiProfileSummary && (
@@ -179,7 +187,7 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
                   }}
                   onView={() => {
                     // Navigate to person detail
-                    window.location.href = `/dossiers/persons/${person.id}`;
+                    window.location.href = `/dossiers/persons/${person.id}`
                   }}
                 />
               ))}
@@ -188,5 +196,5 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
         )}
       </div>
     </div>
-  );
+  )
 }

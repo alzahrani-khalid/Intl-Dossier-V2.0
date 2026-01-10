@@ -101,20 +101,126 @@ async function searchEntities(
   _organizationId: string,
 ): Promise<{ results: Array<{ id: string; type: string; title: string; snippet: string }> }> {
   try {
-    const response = await getSemanticSearchService().search({
-      query: input.query,
-      entityTypes: input.entityTypes,
-      limit: input.limit || 10,
-    })
+    const results: Array<{ id: string; type: string; title: string; snippet: string }> = []
 
-    return {
-      results: response.results.map((r) => ({
-        id: r.id,
-        type: r.type,
-        title: r.title_en || r.title_ar,
-        snippet: (r.description_en || r.description_ar || '').substring(0, 200) + '...',
-      })),
+    // First, try semantic search for supported entity types (positions, documents, briefs)
+    try {
+      const response = await getSemanticSearchService().search({
+        query: input.query,
+        entityTypes: input.entityTypes?.filter((t) =>
+          ['positions', 'documents', 'briefs'].includes(t),
+        ),
+        limit: input.limit || 10,
+      })
+
+      results.push(
+        ...response.results.map((r) => ({
+          id: r.id,
+          type: r.type,
+          title: r.title_en || r.title_ar,
+          snippet: (r.description_en || r.description_ar || '').substring(0, 200) + '...',
+        })),
+      )
+    } catch (semanticError) {
+      logger.warn('Semantic search unavailable, using text fallback', { error: semanticError })
     }
+
+    // Also search dossiers directly via text matching (semantic search doesn't support dossiers)
+    const shouldSearchDossiers = !input.entityTypes || input.entityTypes.includes('dossier')
+    if (shouldSearchDossiers) {
+      // Extract meaningful search terms (remove common words)
+      const stopWords = [
+        'dossiers',
+        'dossier',
+        'about',
+        'find',
+        'search',
+        'for',
+        'the',
+        'a',
+        'an',
+        'in',
+        'on',
+      ]
+      const searchTerms = input.query
+        .toLowerCase()
+        .split(/\s+/)
+        .filter((word) => word.length > 2 && !stopWords.includes(word))
+
+      const searchTerm = searchTerms.length > 0 ? searchTerms[0] : input.query
+      logger.info('Searching dossiers with term', {
+        originalQuery: input.query,
+        searchTerm,
+        allTerms: searchTerms,
+      })
+
+      // Use textSearch on search_vector column for better results
+      const { data: dossierResults, error: dossierError } = await supabaseAdmin
+        .from('dossiers')
+        .select('id, name_en, name_ar, type, description_en, description_ar')
+        .eq('is_active', true)
+        .textSearch('search_vector', searchTerm, { type: 'websearch' })
+        .limit(input.limit || 10)
+
+      if (dossierError) {
+        logger.warn('textSearch failed, trying ilike fallback', {
+          error: dossierError.message,
+          searchTerm,
+        })
+        // Fallback to ilike if textSearch fails
+        const { data: fallbackResults, error: fallbackError } = await supabaseAdmin
+          .from('dossiers')
+          .select('id, name_en, name_ar, type, description_en, description_ar')
+          .eq('is_active', true)
+          .ilike('name_en', `%${searchTerm}%`)
+          .limit(input.limit || 10)
+
+        if (!fallbackError && fallbackResults && fallbackResults.length > 0) {
+          logger.info('Fallback ilike search results', { count: fallbackResults.length })
+          results.push(
+            ...fallbackResults.map((d) => ({
+              id: d.id,
+              type: d.type || 'dossier',
+              title: d.name_en || d.name_ar || 'Unknown',
+              snippet: (d.description_en || d.description_ar || '').substring(0, 200) + '...',
+            })),
+          )
+        }
+      } else if (dossierResults && dossierResults.length > 0) {
+        logger.info('Dossier textSearch results', { count: dossierResults.length, searchTerm })
+        results.push(
+          ...dossierResults.map((d) => ({
+            id: d.id,
+            type: d.type || 'dossier',
+            title: d.name_en || d.name_ar || 'Unknown',
+            snippet: (d.description_en || d.description_ar || '').substring(0, 200) + '...',
+          })),
+        )
+      } else {
+        logger.info('No dossier results from textSearch, trying ilike', { searchTerm })
+        // Try ilike as last resort
+        const { data: ilikeResults } = await supabaseAdmin
+          .from('dossiers')
+          .select('id, name_en, name_ar, type, description_en, description_ar')
+          .eq('is_active', true)
+          .ilike('name_en', `%${searchTerm}%`)
+          .limit(input.limit || 10)
+
+        if (ilikeResults && ilikeResults.length > 0) {
+          logger.info('ilike fallback results', { count: ilikeResults.length })
+          results.push(
+            ...ilikeResults.map((d) => ({
+              id: d.id,
+              type: d.type || 'dossier',
+              title: d.name_en || d.name_ar || 'Unknown',
+              snippet: (d.description_en || d.description_ar || '').substring(0, 200) + '...',
+            })),
+          )
+        }
+      }
+    }
+
+    return { results }
   } catch (error) {
     logger.error('Search entities failed', { error, input })
     return { results: [] }
@@ -123,24 +229,25 @@ async function searchEntities(
 
 async function getDossier(
   input: { dossierId: string },
-  organizationId: string,
+  _organizationId: string,
 ): Promise<{ dossier: Record<string, unknown> | null }> {
   try {
     const { data, error } = await supabaseAdmin
       .from('dossiers')
       .select(
         `
-        id, name_en, name_ar, dossier_type, 
-        overview_en, overview_ar, background_en, background_ar,
-        created_at, updated_at,
-        positions:dossier_positions(id, title_en, title_ar, stance, created_at)
+        id, name_en, name_ar, type,
+        description_en, description_ar,
+        status, sensitivity_level, tags, metadata,
+        created_at, updated_at
       `,
       )
       .eq('id', input.dossierId)
-      .eq('organization_id', organizationId)
+      .eq('is_active', true)
       .single()
 
     if (error || !data) {
+      logger.warn('Dossier not found', { dossierId: input.dossierId, error: error?.message })
       return { dossier: null }
     }
 
@@ -153,33 +260,25 @@ async function getDossier(
 
 async function queryCommitments(
   input: {
-    dossierId?: string
-    engagementId?: string
     status?: string
     limit?: number
   },
-  organizationId: string,
+  _organizationId: string,
 ): Promise<{ commitments: Array<Record<string, unknown>> }> {
   try {
     let query = supabaseAdmin
       .from('commitments')
       .select(
         `
-        id, description_en, description_ar, status, priority,
-        deadline, owner_name, created_at,
-        dossier:dossiers(id, name_en, name_ar)
+        id, title, type, status, priority,
+        source, responsible, timeline, tracking,
+        created_at, updated_at
       `,
       )
-      .eq('organization_id', organizationId)
+      .eq('is_deleted', false)
       .order('created_at', { ascending: false })
       .limit(input.limit || 10)
 
-    if (input.dossierId) {
-      query = query.eq('dossier_id', input.dossierId)
-    }
-    if (input.engagementId) {
-      query = query.eq('engagement_id', input.engagementId)
-    }
     if (input.status) {
       query = query.eq('status', input.status)
     }
@@ -200,38 +299,20 @@ async function queryCommitments(
 
 async function getEngagementHistory(
   input: {
-    dossierId?: string
     limit?: number
-    startDate?: string
-    endDate?: string
   },
-  organizationId: string,
+  _organizationId: string,
 ): Promise<{ engagements: Array<Record<string, unknown>> }> {
   try {
-    let query = supabaseAdmin
+    const { data, error } = await supabaseAdmin
       .from('engagements')
       .select(
         `
-        id, name_en, name_ar, engagement_type, 
-        start_date, end_date, location_en, location_ar,
-        description_en, description_ar, created_at
+        id, engagement_type, engagement_category,
+        location_en, location_ar
       `,
       )
-      .eq('organization_id', organizationId)
-      .order('start_date', { ascending: false })
       .limit(input.limit || 10)
-
-    if (input.dossierId) {
-      query = query.contains('dossier_ids', [input.dossierId])
-    }
-    if (input.startDate) {
-      query = query.gte('start_date', input.startDate)
-    }
-    if (input.endDate) {
-      query = query.lte('start_date', input.endDate)
-    }
-
-    const { data, error } = await query
 
     if (error) {
       logger.error('Get engagement history failed', { error, input })
@@ -242,6 +323,40 @@ async function getEngagementHistory(
   } catch (error) {
     logger.error('Get engagement history failed', { error, input })
     return { engagements: [] }
+  }
+}
+
+// New function to list dossiers by type
+async function listDossiers(
+  input: {
+    type?: string
+    limit?: number
+  },
+  _organizationId: string,
+): Promise<{ dossiers: Array<Record<string, unknown>> }> {
+  try {
+    let query = supabaseAdmin
+      .from('dossiers')
+      .select('id, name_en, name_ar, type, status, description_en, description_ar')
+      .eq('is_active', true)
+      .order('name_en', { ascending: true })
+      .limit(input.limit || 20)
+
+    if (input.type) {
+      query = query.eq('type', input.type)
+    }
+
+    const { data, error } = await query
+
+    if (error) {
+      logger.error('List dossiers failed', { error, input })
+      return { dossiers: [] }
+    }
+
+    return { dossiers: data || [] }
+  } catch (error) {
+    logger.error('List dossiers failed', { error, input })
+    return { dossiers: [] }
   }
 }
 
@@ -265,45 +380,47 @@ export class ChatAssistantAgent {
           searchEntities(input as { query: string; entityTypes?: string[]; limit?: number }, ''),
       },
       {
-        name: 'get_dossier',
-        description: 'Get detailed information about a specific dossier including its positions',
+        name: 'list_dossiers',
+        description:
+          'List all dossiers, optionally filtered by type (country, organization, topic, engagement, person)',
         parameters: {
-          dossierId: { type: 'string', description: 'Dossier ID', required: true },
+          type: {
+            type: 'string',
+            description:
+              'Filter by dossier type (country, organization, topic, engagement, person)',
+          },
+          limit: { type: 'number', description: 'Max results', default: 20 },
+        },
+        execute: async (input) => listDossiers(input as { type?: string; limit?: number }, ''),
+      },
+      {
+        name: 'get_dossier',
+        description: 'Get detailed information about a specific dossier by ID',
+        parameters: {
+          dossierId: { type: 'string', description: 'Dossier ID (UUID)', required: true },
         },
         execute: async (input) => getDossier(input as { dossierId: string }, ''),
       },
       {
         name: 'query_commitments',
-        description: 'Query commitments with optional filters',
+        description: 'Query commitments with optional status filter',
         parameters: {
-          dossierId: { type: 'string', description: 'Filter by dossier ID' },
-          engagementId: { type: 'string', description: 'Filter by engagement ID' },
           status: {
             type: 'string',
-            description: 'Filter by status (pending, in_progress, completed, overdue)',
+            description: 'Filter by status (pending, in_progress, completed, cancelled)',
           },
           limit: { type: 'number', description: 'Max results', default: 10 },
         },
         execute: async (input) =>
-          queryCommitments(
-            input as { dossierId?: string; engagementId?: string; status?: string; limit?: number },
-            '',
-          ),
+          queryCommitments(input as { status?: string; limit?: number }, ''),
       },
       {
         name: 'get_engagement_history',
-        description: 'Get past engagements, optionally filtered by dossier or date range',
+        description: 'Get past engagements',
         parameters: {
-          dossierId: { type: 'string', description: 'Filter by dossier ID' },
-          startDate: { type: 'string', description: 'Start date (ISO format)' },
-          endDate: { type: 'string', description: 'End date (ISO format)' },
           limit: { type: 'number', description: 'Max results', default: 10 },
         },
-        execute: async (input) =>
-          getEngagementHistory(
-            input as { dossierId?: string; limit?: number; startDate?: string; endDate?: string },
-            '',
-          ),
+        execute: async (input) => getEngagementHistory(input as { limit?: number }, ''),
       },
     ])
 
@@ -478,6 +595,34 @@ export class ChatAssistantAgent {
     // Simple heuristics for tool selection
     // In production, this could use another LLM call for better routing
 
+    // List dossiers patterns - "what countries", "list all", "show me"
+    if (
+      lowerMessage.includes('what countries') ||
+      lowerMessage.includes('which countries') ||
+      lowerMessage.includes('list countries') ||
+      lowerMessage.includes('list all dossiers') ||
+      lowerMessage.includes('show me all') ||
+      lowerMessage.includes('what dossiers') ||
+      lowerMessage.includes('ما هي الدول') ||
+      lowerMessage.includes('قائمة الملفات')
+    ) {
+      // Determine type filter
+      let typeFilter: string | undefined
+      if (lowerMessage.includes('countr') || lowerMessage.includes('دول')) {
+        typeFilter = 'country'
+      } else if (lowerMessage.includes('organization') || lowerMessage.includes('منظم')) {
+        typeFilter = 'organization'
+      } else if (lowerMessage.includes('topic') || lowerMessage.includes('موضوع')) {
+        typeFilter = 'topic'
+      }
+
+      return {
+        shouldUseTool: true,
+        toolName: 'list_dossiers',
+        toolInput: { type: typeFilter, limit: 20 },
+      }
+    }
+
     // Search patterns
     if (
       lowerMessage.includes('find') ||
@@ -601,18 +746,14 @@ export class ChatAssistantAgent {
           input as { query: string; entityTypes?: string[]; limit?: number },
           organizationId,
         )
+      case 'list_dossiers':
+        return listDossiers(input as { type?: string; limit?: number }, organizationId)
       case 'get_dossier':
         return getDossier(input as { dossierId: string }, organizationId)
       case 'query_commitments':
-        return queryCommitments(
-          input as { dossierId?: string; engagementId?: string; status?: string; limit?: number },
-          organizationId,
-        )
+        return queryCommitments(input as { status?: string; limit?: number }, organizationId)
       case 'get_engagement_history':
-        return getEngagementHistory(
-          input as { dossierId?: string; limit?: number; startDate?: string; endDate?: string },
-          organizationId,
-        )
+        return getEngagementHistory(input as { limit?: number }, organizationId)
       default:
         throw new Error(`Unknown tool: ${toolName}`)
     }
@@ -647,6 +788,21 @@ export class ChatAssistantAgent {
       })
     }
 
+    // Extract from dossiers list (list_dossiers tool)
+    if (Array.isArray(result.dossiers)) {
+      for (const item of result.dossiers) {
+        if (item && typeof item === 'object' && 'id' in item) {
+          citations.push({
+            type: ((item as Record<string, unknown>).type as string) || 'dossier',
+            id: (item as Record<string, unknown>).id as string,
+            title:
+              (((item as Record<string, unknown>).name_en ||
+                (item as Record<string, unknown>).name_ar) as string) || 'Dossier',
+          })
+        }
+      }
+    }
+
     // Extract from commitments
     if (Array.isArray(result.commitments)) {
       for (const item of result.commitments) {
@@ -654,9 +810,7 @@ export class ChatAssistantAgent {
           citations.push({
             type: 'commitment',
             id: (item as Record<string, unknown>).id as string,
-            title:
-              (((item as Record<string, unknown>).description_en ||
-                (item as Record<string, unknown>).description_ar) as string) || 'Commitment',
+            title: ((item as Record<string, unknown>).title as string) || 'Commitment',
           })
         }
       }
