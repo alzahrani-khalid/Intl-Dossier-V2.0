@@ -1,0 +1,111 @@
+{
+  "title": "البحث في المستندات",
+  "subtitle": "البحث داخل محتوى المستندات",
+  "description": "البحث في جميع المستندات المرفوعة باستخدام النص المستخرج بتقنية OCR",
+
+  "search": {
+    "placeholder": "البحث في محتوى المستندات...",
+    "minCharacters": "أدخل حرفين على الأقل للبحث",
+    "noResults": "لم يتم العثور على مستندات مطابقة لبحثك",
+    "searching": "جاري البحث...",
+    "resultsCount": "تم العثور على {{count}} مستند",
+    "resultsCount_plural": "تم العثور على {{count}} مستندات",
+    "processingTime": "اكتمل البحث في {{time}} مللي ثانية",
+    "clearSearch": "مسح البحث"
+  },
+
+  "filters": {
+    "title": "التصفية",
+    "language": "اللغة",
+    "languageOptions": {
+      "all": "جميع اللغات",
+      "en": "الإنجليزية فقط",
+      "ar": "العربية فقط"
+    },
+    "confidence": "دقة التعرف",
+    "confidenceOptions": {
+      "all": "الكل",
+      "high": "عالية (+80%)",
+      "medium": "متوسطة (+50%)",
+      "low": "منخفضة (أي)"
+    },
+    "documentType": "نوع المستند",
+    "ownerType": "نوع الكيان",
+    "reset": "إعادة تعيين التصفية"
+  },
+
+  "result": {
+    "title": "العنوان",
+    "snippet": "معاينة المحتوى",
+    "relevance": "درجة الصلة",
+    "confidence": "دقة التعرف",
+    "detectedLanguages": "اللغات المكتشفة",
+    "fileSize": "حجم الملف",
+    "uploadedOn": "تاريخ الرفع",
+    "viewDocument": "عرض المستند",
+    "downloadDocument": "تحميل"
+  },
+
+  "ocr": {
+    "status": "حالة التعرف",
+    "pending": "في انتظار المعالجة",
+    "processing": "جاري المعالجة...",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "skipped": "تم تخطيه (نوع غير مدعوم)",
+    "notProcessed": "لم تتم المعالجة",
+
+    "actions": {
+      "process": "معالجة المستند",
+      "reprocess": "إعادة معالجة المستند",
+      "processSelected": "معالجة المحدد",
+      "processAll": "معالجة جميع المستندات"
+    },
+
+    "method": {
+      "tesseract": "التعرف المحلي (Tesseract)",
+      "google_vision": "التعرف السحابي (Google Vision)",
+      "pdf_extract": "استخراج نص PDF",
+      "native_text": "نص أصلي"
+    },
+
+    "progress": {
+      "uploading": "جاري رفع المستند...",
+      "extracting": "جاري استخراج النص...",
+      "indexing": "جاري فهرسة المحتوى...",
+      "complete": "اكتملت المعالجة"
+    },
+
+    "errors": {
+      "unsupportedType": "نوع الملف هذا غير مدعوم للتعرف الضوئي",
+      "fileTooLarge": "الملف كبير جداً لمعالجة التعرف الضوئي",
+      "processingFailed": "فشلت معالجة التعرف الضوئي. يرجى المحاولة مرة أخرى.",
+      "noTextFound": "لم يتم استخراج أي نص من هذا المستند"
+    }
+  },
+
+  "languages": {
+    "en": "الإنجليزية",
+    "ar": "العربية",
+    "bilingual": "ثنائي اللغة (EN/AR)",
+    "unknown": "غير معروف"
+  },
+
+  "tooltips": {
+    "ocrConfidence": "درجة الثقة تشير إلى مدى دقة استخراج النص (0-100%)",
+    "searchLanguage": "تصفية النتائج حسب لغة النص المستخرج",
+    "relevanceScore": "الدرجات الأعلى تشير إلى تطابق أفضل مع استعلام البحث الخاص بك"
+  },
+
+  "empty": {
+    "title": "لا توجد مستندات مفهرسة",
+    "description": "ارفع مستندات لتمكين البحث في المحتوى. الصيغ المدعومة: PDF، PNG، JPEG، TIFF.",
+    "action": "رفع المستندات"
+  },
+
+  "processing": {
+    "title": "المستندات قيد المعالجة",
+    "description": "{{count}} مستند قيد المعالجة حالياً لاستخراج النص",
+    "description_plural": "{{count}} مستندات قيد المعالجة حالياً لاستخراج النص"
+  }
+}

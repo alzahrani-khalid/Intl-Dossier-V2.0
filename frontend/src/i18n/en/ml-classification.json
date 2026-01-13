@@ -1,0 +1,137 @@
+{
+  "title": "ML Classification",
+  "description": "Machine learning-powered ticket classification",
+
+  "predictions": {
+    "title": "Predictions",
+    "type": "Request Type",
+    "sensitivity": "Sensitivity",
+    "urgency": "Urgency",
+    "priority": "Priority",
+    "unit": "Suggested Unit",
+    "assignee": "Suggested Assignee"
+  },
+
+  "confidence": {
+    "title": "Confidence",
+    "overall": "Overall Confidence",
+    "very_high": "Very High",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "very_low": "Very Low",
+    "percentage": "{{value}}%"
+  },
+
+  "explanation": {
+    "title": "Explanation",
+    "keywords_matched": "Keywords Matched",
+    "similar_tickets": "Similar Tickets",
+    "historical_pattern": "Historical Pattern",
+    "matching_rules": "Matching Rules",
+    "content_analysis": "Content Analysis",
+    "deadline_detected": "Deadline Detected",
+    "no_keywords": "No specific keywords matched",
+    "based_on_history": "Based on {{count}} similar tickets"
+  },
+
+  "model": {
+    "title": "Model Information",
+    "name": "Model Name",
+    "version": "Version",
+    "status": "Status",
+    "accuracy": "Accuracy",
+    "training_samples": "Training Samples",
+    "activated_at": "Activated At",
+    "powered_by": "Powered by ML",
+    "fallback_mode": "Using fallback rules"
+  },
+
+  "model_status": {
+    "training": "Training",
+    "validating": "Validating",
+    "active": "Active",
+    "deprecated": "Deprecated",
+    "failed": "Failed"
+  },
+
+  "feedback": {
+    "title": "Provide Feedback",
+    "accept": "Accept Suggestions",
+    "reject": "Reject Suggestions",
+    "correct": "Correct & Submit",
+    "notes": "Feedback Notes",
+    "notes_placeholder": "Optional notes about your correction...",
+    "submitted": "Feedback submitted successfully",
+    "used_for_training": "Your feedback will be used to improve the model",
+    "thank_you": "Thank you for your feedback!"
+  },
+
+  "actions": {
+    "get_predictions": "Get ML Predictions",
+    "refresh": "Refresh Predictions",
+    "apply": "Apply Predictions",
+    "view_details": "View Details",
+    "view_explanation": "View Explanation"
+  },
+
+  "performance": {
+    "title": "Model Performance",
+    "acceptance_rate": "Acceptance Rate",
+    "correction_rate": "Correction Rate",
+    "total_predictions": "Total Predictions",
+    "accuracy_by_field": "Accuracy by Field",
+    "period": "Last {{days}} days"
+  },
+
+  "rules": {
+    "title": "Assignment Rules",
+    "add_rule": "Add Rule",
+    "edit_rule": "Edit Rule",
+    "delete_rule": "Delete Rule",
+    "rule_name": "Rule Name",
+    "description": "Description",
+    "match_criteria": "Match Criteria",
+    "assignment_target": "Assignment Target",
+    "priority": "Priority",
+    "times_applied": "Times Applied",
+    "success_rate": "Success Rate",
+    "active": "Active",
+    "inactive": "Inactive"
+  },
+
+  "patterns": {
+    "title": "Keyword Patterns",
+    "add_pattern": "Add Pattern",
+    "edit_pattern": "Edit Pattern",
+    "delete_pattern": "Delete Pattern",
+    "pattern": "Pattern",
+    "pattern_type": "Type",
+    "indicates": "Indicates",
+    "weight": "Weight",
+    "match_count": "Match Count",
+    "accuracy": "Accuracy",
+    "keyword": "Keyword",
+    "regex": "Regex",
+    "phrase": "Phrase"
+  },
+
+  "cache": {
+    "cached": "Cached result",
+    "fresh": "Fresh prediction",
+    "cached_at": "Cached at {{time}}"
+  },
+
+  "processing": {
+    "analyzing": "Analyzing ticket...",
+    "generating": "Generating predictions...",
+    "time": "Processing time: {{ms}}ms"
+  },
+
+  "errors": {
+    "no_model": "No active classification model available",
+    "prediction_failed": "Failed to generate predictions",
+    "feedback_failed": "Failed to submit feedback",
+    "load_failed": "Failed to load classification data"
+  }
+}

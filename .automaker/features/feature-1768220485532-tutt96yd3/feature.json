@@ -1,0 +1,10 @@
+{
+  "category": "enhancement",
+  "description": "Display an AI-assisted creation flow where users answer 3-4 simple questions (topic, target audience, key message) and the system generates a starter outline with suggested sections and placeholder content they can refine.\n\n**Rationale:** Policy briefs require specific structure and expertise. Starting from scratch is intimidating. AI scaffolding lowers the barrier to entry while teaching users the expected format through example.",
+  "title": "Policy Brief Empty State with AI Co-Creation Prompt",
+  "status": "verified",
+  "id": "feature-1768220485532-tutt96yd3",
+  "branchName": "main",
+  "startedAt": "2026-01-12T12:34:19.294Z",
+  "updatedAt": "2026-01-12T17:49:35.686Z"
+}

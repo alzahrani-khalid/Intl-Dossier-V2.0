@@ -1,17 +1,13 @@
-import { createFileRoute, redirect } from '@tanstack/react-router'
-
 /**
- * Legacy /persons route - redirects to unified /contacts route
- * Part of: Enhanced Unified Dossier Architecture
+ * Persons Layout Route
+ * Feature: persons-entity-management
  *
- * Persons are now managed through the unified dossiers table (type='person')
- * accessible via the Contact Directory at /contacts
+ * Layout route for persons feature.
+ * Renders child routes via Outlet.
  */
+
+import { createFileRoute, Outlet } from '@tanstack/react-router'
+
 export const Route = createFileRoute('/_protected/persons')({
- beforeLoad: () => {
- throw redirect({
- to: '/contacts',
- replace: true,
- })
- },
+  component: () => <Outlet />,
 })

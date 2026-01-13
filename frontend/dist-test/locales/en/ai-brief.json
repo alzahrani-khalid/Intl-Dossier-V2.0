@@ -1,0 +1,82 @@
+{
+  "title": "Generate AI Brief",
+  "description": "Generate a comprehensive brief using AI analysis",
+  "generate": "Generate Brief",
+  "generating": "Generating...",
+  "cancel": "Cancel",
+  "retry": "Retry",
+  "startOver": "Start over",
+  "close": "Close",
+  "success": "Brief generated successfully!",
+  "viewBrief": "Open Brief",
+  "generateAnother": "Generate Another",
+  "customPrompt": "Custom instructions (optional)",
+  "customPromptPlaceholder": "e.g., Focus on trade agreements and recent developments",
+  "showAdvanced": "Show options",
+  "hideAdvanced": "Hide options",
+  "copy": "Copy",
+  "print": "Print",
+  "export": "Export",
+  "citations": "citations",
+  "source": "Source",
+  "deadline": "Deadline",
+  "phases": {
+    "context": "Gathering context...",
+    "generating": "Generating brief...",
+    "success": "Complete",
+    "error": "Error"
+  },
+  "steps": {
+    "context": "Context",
+    "generating": "Generate",
+    "review": "Review"
+  },
+  "status": {
+    "generating": "Generating",
+    "completed": "Completed",
+    "partial": "Partial",
+    "failed": "Failed"
+  },
+  "sections": {
+    "executiveSummary": "Executive Summary",
+    "background": "Background",
+    "keyParticipants": "Key Participants",
+    "positions": "Relevant Positions",
+    "commitments": "Active Commitments",
+    "historicalContext": "Historical Context",
+    "talkingPoints": "Talking Points",
+    "recommendations": "Recommendations",
+    "citations": "Sources & Citations"
+  },
+  "errors": {
+    "title": "AI Error",
+    "timeout": "Generation timed out. Try again with a simpler context.",
+    "failed": "Brief generation failed. Please try again.",
+    "noTarget": "Please select an engagement or dossier to generate a brief for.",
+    "cancelled": "Generation was cancelled.",
+    "briefFetchFailed": "Brief was generated but could not be retrieved. Please try again.",
+    "rateLimitExceeded": "Too many requests. Please wait a moment and try again.",
+    "spendCapReached": "AI usage limit reached. Please contact your administrator.",
+    "providerUnavailable": "AI service is temporarily unavailable. Please try again later.",
+    "modelUnavailable": "The AI model is not available. Please try a different request.",
+    "generationFailed": "Failed to generate content. Please try again.",
+    "contextTooLong": "The input is too long. Please shorten your request.",
+    "contentFiltered": "The request was filtered due to content policy. Please revise your input.",
+    "unauthorized": "You are not authorized to use this feature. Please log in again.",
+    "featureDisabled": "This AI feature is currently disabled for your organization.",
+    "networkError": "Network error. Please check your connection and try again.",
+    "unknown": "An unexpected error occurred. Please try again."
+  },
+  "fallback": {
+    "title": "Manual Brief Entry",
+    "description": "AI service is unavailable. You can enter the brief details manually.",
+    "switchToManual": "Enter Manually",
+    "summary": "Executive Summary",
+    "summaryPlaceholder": "Enter a brief executive summary...",
+    "background": "Background",
+    "backgroundPlaceholder": "Enter background information...",
+    "recommendations": "Recommendations",
+    "recommendationsPlaceholder": "Enter your recommendations...",
+    "submit": "Submit Brief"
+  }
+}

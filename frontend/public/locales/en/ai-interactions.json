@@ -1,0 +1,140 @@
+{
+  "title": "AI Interactions",
+  "description": "View and manage AI interaction history for governance and accountability",
+
+  "type": {
+    "generation": "Generation",
+    "suggestion": "Suggestion",
+    "classification": "Classification",
+    "extraction": "Extraction",
+    "translation": "Translation",
+    "summarization": "Summarization",
+    "analysis": "Analysis",
+    "chat": "Chat"
+  },
+
+  "content": {
+    "brief": "Brief",
+    "position": "Position",
+    "summary": "Summary",
+    "analysis": "Analysis",
+    "recommendation": "Recommendation",
+    "entity_link": "Entity Link",
+    "translation": "Translation",
+    "extraction": "Extraction",
+    "chat_response": "Chat Response"
+  },
+
+  "status": {
+    "pending": "Pending",
+    "running": "Running",
+    "completed": "Completed",
+    "failed": "Failed",
+    "cancelled": "Cancelled"
+  },
+
+  "decision": {
+    "approved": "Approved",
+    "approved_with_edits": "Approved with Edits",
+    "rejected": "Rejected",
+    "revision_requested": "Revision Requested",
+    "pending": "Pending",
+    "expired": "Expired",
+    "auto_approved": "Auto-Approved"
+  },
+
+  "classification": {
+    "public": "Public",
+    "internal": "Internal",
+    "confidential": "Confidential",
+    "secret": "Secret"
+  },
+
+  "filter": {
+    "all_types": "All Types",
+    "all_statuses": "All Statuses",
+    "date_range": "Date Range",
+    "user": "User"
+  },
+
+  "event": {
+    "interaction_started": "Interaction Started",
+    "prompt_sent": "Prompt Sent",
+    "response_received": "Response Received",
+    "user_edit": "User Edit",
+    "approval_requested": "Approval Requested",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "revision_requested": "Revision Requested",
+    "content_published": "Content Published",
+    "content_retracted": "Content Retracted",
+    "policy_violation": "Policy Violation",
+    "risk_flagged": "Risk Flagged",
+    "review_escalated": "Review Escalated"
+  },
+
+  "detail": {
+    "title": "AI Interaction Details",
+    "overview": "Overview",
+    "prompt": "User Prompt",
+    "system_prompt": "System Prompt",
+    "response": "AI Response",
+    "user_edits": "User Edits",
+    "audit_trail": "Governance Audit Trail",
+    "metrics": "Metrics",
+    "context": "Context Sources"
+  },
+
+  "error": {
+    "load_failed": "Failed to load AI interactions",
+    "not_found": "Interaction not found",
+    "log_failed": "Failed to log interaction"
+  },
+
+  "empty": {
+    "no_interactions": "No AI interactions found",
+    "no_edits": "No user edits recorded",
+    "no_decisions": "No approval decisions yet"
+  },
+
+  "action": {
+    "view_details": "View Details",
+    "approve": "Approve",
+    "reject": "Reject",
+    "request_revision": "Request Revision",
+    "edit": "Edit",
+    "export": "Export"
+  },
+
+  "showing": "Showing",
+  "of": "of",
+  "previous": "Previous",
+  "next": "Next",
+  "expand": "Expand",
+  "collapse": "Collapse",
+  "view_details": "View Details",
+  "prompt": "Prompt",
+  "response": "Response",
+  "no_response": "No response",
+  "model": "Model",
+  "type": "Type",
+  "content_type": "Content Type",
+  "status": "Status",
+  "edits": "edits",
+  "version": "Version",
+  "changed": "changed",
+  "reason": "Reason",
+  "contains_pii": "Contains PII",
+  "classification": "Classification",
+
+  "governance": {
+    "title": "AI Governance Dashboard",
+    "description": "Monitor and audit AI interactions for compliance and accountability",
+    "total_interactions": "Total Interactions",
+    "approval_rate": "Approval Rate",
+    "edit_rate": "Edit Rate",
+    "avg_response_time": "Avg Response Time",
+    "total_cost": "Total Cost",
+    "pii_flagged": "PII Flagged"
+  }
+}

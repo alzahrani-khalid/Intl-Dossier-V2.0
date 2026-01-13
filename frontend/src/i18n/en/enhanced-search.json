@@ -1,0 +1,207 @@
+{
+  "title": "Enhanced Search",
+  "description": "Search with intelligent suggestions, fuzzy matching, and adaptive filters",
+
+  "search": {
+    "placeholder": "Search dossiers, documents, people...",
+    "button": "Search",
+    "clear": "Clear search",
+    "noQuery": "Enter a search term to begin"
+  },
+
+  "suggestions": {
+    "loading": "Loading suggestions...",
+    "noResults": "No suggestions found. Try a different search term.",
+    "fuzzyMatch": "Similar",
+    "sections": {
+      "history": "Recent Searches",
+      "titles": "Matching Titles",
+      "tags": "Matching Tags",
+      "popular": "Popular Searches"
+    },
+    "keyboardHints": {
+      "navigate": "↑↓ to navigate",
+      "select": "Enter to select"
+    }
+  },
+
+  "results": {
+    "count": "results",
+    "found": "{{count}} result found",
+    "found_plural": "{{count}} results found",
+    "noResults": "No results found",
+    "noResultsHint": "Try adjusting your search or removing some filters"
+  },
+
+  "history": {
+    "title": "Search History",
+    "clear": "Clear History",
+    "clearConfirm": "Are you sure you want to clear your search history?",
+    "empty": "No search history yet",
+    "searchedAt": "Searched {{time}}",
+    "resultsFound": "{{count}} results"
+  },
+
+  "filters": {
+    "adaptive": {
+      "title": "Filters",
+      "clearAll": "Clear all",
+      "status": "Status",
+      "type": "Type",
+      "dateRange": "Updated",
+      "sensitivity": "Sensitivity",
+      "activeCount": "{{count}} filter active",
+      "activeCount_plural": "{{count}} filters active"
+    },
+    "a11y": {
+      "adaptiveFilters": "Adaptive search filters with result counts"
+    }
+  },
+
+  "entityTypes": {
+    "dossier": "Dossier",
+    "engagement": "Engagement",
+    "position": "Position",
+    "document": "Document",
+    "person": "Person",
+    "organization": "Organization",
+    "forum": "Forum",
+    "country": "Country",
+    "theme": "Theme"
+  },
+
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived",
+    "draft": "Draft",
+    "published": "Published"
+  },
+
+  "type": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "theme": "Theme"
+  },
+
+  "dateRange": {
+    "last_7_days": "Last 7 days",
+    "last_30_days": "Last 30 days",
+    "last_90_days": "Last 90 days"
+  },
+
+  "sensitivity": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High"
+  },
+
+  "errors": {
+    "suggestionsError": "Failed to load suggestions. Please try again.",
+    "historyError": "Failed to load search history.",
+    "filterCountsError": "Failed to load filter counts."
+  },
+
+  "a11y": {
+    "searchInput": "Search input with suggestions",
+    "suggestionsList": "Search suggestions",
+    "filterOption": "Filter option {{label}} with {{count}} results",
+    "selectedFilter": "{{label}} filter is selected",
+    "clearSearch": "Clear search text"
+  },
+
+  "hints": {
+    "typoCorrection": "Did you mean: {{suggestion}}?",
+    "tryAlternatives": "Try searching for:",
+    "popularNow": "Popular right now"
+  },
+
+  "noResults": {
+    "didYouMean": "Did you mean?",
+    "relatedTerms": "Try searching for",
+    "popularSearches": "Popular searches",
+    "recentlyAdded": "Recently added",
+    "searchTips": "Search tips",
+    "createNew": "Create a new {{type}}",
+    "createNewHint": "No results found. Would you like to create \"{{name}}\" as a new entry?",
+    "createButton": "Create {{type}}",
+    "typoSuggestion": "Search for \"{{term}}\" instead",
+    "similarResults": "Similar results",
+    "noSuggestionsFound": "No suggestions available",
+    "loadingError": "Could not load suggestions",
+    "findingSuggestions": "Finding suggestions...",
+    "workspaceHistory": "Successful searches in this workspace",
+    "results": "results",
+    "actionableTips": "Suggestions to improve your search",
+    "filtersActive": "You have {{count}} active filter(s)",
+    "tryRemovingFilters": "Try removing some filters to broaden your search",
+    "clearFilters": "Clear filters",
+    "tryThis": "Try this",
+    "entityLabels": {
+      "dossier": "Dossier",
+      "country": "Country",
+      "organization": "Organization",
+      "forum": "Forum",
+      "theme": "Theme",
+      "engagement": "Engagement",
+      "position": "Position",
+      "document": "Document",
+      "person": "Person"
+    }
+  },
+
+  "filterPresets": {
+    "title": "Try these popular filters",
+    "description": "Quick filters based on common queries",
+    "showMore": "Show more presets",
+    "showLess": "Show fewer presets",
+    "applyPreset": "Apply filter",
+    "resultsExpected": "~{{count}} results",
+    "noPresets": "No preset filters available",
+    "loading": "Loading filter suggestions...",
+    "error": "Could not load filter presets",
+    "categories": {
+      "dossier": "Dossiers",
+      "intake": "Intake Requests",
+      "brief": "Briefs",
+      "engagement": "Engagements",
+      "workflow": "Workflow",
+      "geographic": "Geographic"
+    },
+    "presets": {
+      "activeMena": {
+        "name": "Active dossiers in MENA region",
+        "description": "All active dossiers for Middle East and North Africa"
+      },
+      "highPriorityBriefs": {
+        "name": "High-priority briefs due this month",
+        "description": "Urgent and high-priority briefs with deadlines this month"
+      },
+      "unassignedIntake": {
+        "name": "Unassigned intake requests",
+        "description": "Service requests waiting for assignment"
+      },
+      "overdueTasks": {
+        "name": "Overdue tasks",
+        "description": "Work items past their deadline"
+      },
+      "recentEngagements": {
+        "name": "Recent engagements",
+        "description": "Engagements updated in the last 7 days"
+      },
+      "sensitiveDossiers": {
+        "name": "High-sensitivity dossiers",
+        "description": "Dossiers marked as highly sensitive"
+      },
+      "pendingReview": {
+        "name": "Pending review",
+        "description": "Items waiting for approval or review"
+      },
+      "myAssignments": {
+        "name": "My assignments",
+        "description": "All work items assigned to you"
+      }
+    }
+  }
+}

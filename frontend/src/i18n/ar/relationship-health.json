@@ -1,0 +1,136 @@
+{
+  "title": "صحة العلاقات",
+  "subtitle": "نظام تسجيل آلي للعلاقات الثنائية",
+
+  "scores": {
+    "overall": "الدرجة الإجمالية",
+    "frequency": "تكرار التفاعل",
+    "compliance": "الالتزام بالوعود",
+    "reciprocity": "المعاملة بالمثل",
+    "quality": "جودة التفاعل",
+    "recency": "الحداثة"
+  },
+
+  "healthLevels": {
+    "excellent": "ممتاز",
+    "good": "جيد",
+    "fair": "مقبول",
+    "poor": "ضعيف",
+    "critical": "حرج",
+    "unknown": "غير معروف"
+  },
+
+  "trends": {
+    "improving": "في تحسن",
+    "stable": "مستقر",
+    "declining": "في انخفاض"
+  },
+
+  "components": {
+    "title": "مكونات الدرجة",
+    "engagementFrequency": "تكرار التفاعل",
+    "commitmentCompliance": "الالتزام بالوعود",
+    "reciprocity": "المعاملة بالمثل",
+    "interactionQuality": "جودة التفاعل",
+    "recency": "الحداثة"
+  },
+
+  "breakdown": {
+    "title": "التفاصيل",
+    "engagements365d": "التفاعلات (365 يوم)",
+    "engagements90d": "التفاعلات (90 يوم)",
+    "engagements30d": "التفاعلات (30 يوم)",
+    "daysSinceEngagement": "أيام منذ آخر تفاعل",
+    "commitments": "الالتزامات المنجزة",
+    "overdue": "متأخرة"
+  },
+
+  "trend": {
+    "title": "اتجاه الصحة",
+    "overallScore": "الدرجة الإجمالية",
+    "componentTrends": "اتجاهات المكونات",
+    "dataPoints": "نقاط البيانات",
+    "highScore": "أعلى درجة",
+    "lowScore": "أدنى درجة",
+    "noHistory": "لا توجد بيانات تاريخية متاحة بعد"
+  },
+
+  "alerts": {
+    "title": "تنبيهات الصحة",
+    "noAlerts": "لا توجد تنبيهات - العلاقة صحية!",
+    "overdueCommitments": "{{count}} التزام(ات) متأخرة",
+    "markRead": "تحديد كمقروء",
+    "dismiss": "تجاهل",
+    "viewAll": "عرض كل التنبيهات",
+    "types": {
+      "scoreCritical": "درجة حرجة",
+      "scoreDeclining": "انخفاض الدرجة",
+      "engagementGap": "فجوة في التفاعل",
+      "commitmentOverdue": "التزامات متأخرة",
+      "reciprocityImbalance": "عدم توازن المعاملة بالمثل",
+      "scoreImproving": "تحسن الدرجة"
+    },
+    "severity": {
+      "critical": "حرج",
+      "high": "عالي",
+      "medium": "متوسط",
+      "low": "منخفض"
+    }
+  },
+
+  "actions": {
+    "calculate": "حساب الدرجة",
+    "recalculate": "إعادة الحساب",
+    "refresh": "تحديث",
+    "viewDetails": "عرض التفاصيل",
+    "viewHistory": "عرض التاريخ"
+  },
+
+  "status": {
+    "calculating": "جاري حساب درجة الصحة...",
+    "calculated": "تم حساب درجة الصحة",
+    "error": "فشل في حساب درجة الصحة",
+    "insufficientData": "بيانات غير كافية للتسجيل (يلزم 3 تفاعلات على الأقل)"
+  },
+
+  "filters": {
+    "all": "جميع العلاقات",
+    "needsAttention": "تحتاج اهتمام",
+    "improving": "في تحسن",
+    "declining": "في انخفاض",
+    "healthy": "صحية"
+  },
+
+  "stats": {
+    "title": "نظرة عامة على صحة العلاقات",
+    "total": "إجمالي العلاقات",
+    "average": "متوسط الدرجات",
+    "improving": "في تحسن",
+    "declining": "في انخفاض",
+    "needsAttention": "تحتاج اهتمام"
+  },
+
+  "weights": {
+    "title": "أوزان الدرجات",
+    "description": "كيف يتم حساب الدرجة الإجمالية",
+    "engagementFrequency": "تكرار التفاعل (25%)",
+    "commitmentCompliance": "الالتزام بالوعود (35%)",
+    "reciprocity": "المعاملة بالمثل (15%)",
+    "interactionQuality": "جودة التفاعل (10%)",
+    "recency": "الحداثة (15%)"
+  },
+
+  "tooltips": {
+    "overallScore": "درجة مركبة بناءً على تكرار التفاعل والالتزام بالوعود والمعاملة بالمثل وجودة التفاعل والحداثة",
+    "engagementFrequency": "عدد مرات حدوث التفاعلات. 50 تفاعل سنوياً = 100 نقطة",
+    "commitmentCompliance": "نسبة الالتزامات المنجزة في الوقت المحدد",
+    "reciprocity": "توازن التفاعل من كلا الطرفين. التوازن المثالي = 100",
+    "interactionQuality": "بناءً على نتائج التفاعل (إيجابي/محايد/سلبي)",
+    "recency": "أيام منذ آخر تفاعل. ≤30 يوم=100، 30-90 يوم=70، 90-180 يوم=40، >180 يوم=10"
+  },
+
+  "empty": {
+    "title": "لا توجد علاقات ثنائية",
+    "description": "أنشئ علاقات ثنائية لبدء تتبع درجات الصحة"
+  }
+}

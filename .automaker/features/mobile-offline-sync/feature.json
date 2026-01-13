@@ -1,0 +1,14 @@
+{
+  "id": "mobile-offline-sync",
+  "category": "Mobile",
+  "title": "Mobile Offline-First Sync",
+  "description": "Offline data synchronization for React Native mobile app using local SQLite database. Enables viewing and editing dossiers without connectivity, with automatic sync when online. Includes conflict resolution.",
+  "status": "completed",
+  "priority": 2,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.668Z",
+  "updatedAt": "2026-01-11T12:43:46.713Z",
+  "branchName": "main",
+  "startedAt": "2026-01-11T12:31:13.829Z"
+}

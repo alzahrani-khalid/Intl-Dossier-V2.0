@@ -1,0 +1,134 @@
+{
+  "title": "Audit Logs",
+  "description": "View and search audit trail of all system activities",
+  "filters": {
+    "title": "Filters",
+    "table": "Table",
+    "operation": "Operation",
+    "user": "User",
+    "user_email": "User Email",
+    "date_range": "Date Range",
+    "ip_address": "IP Address",
+    "search": "Search",
+    "search_placeholder": "Search by email, table, or content...",
+    "clear_all": "Clear All",
+    "apply": "Apply",
+    "active_filters": "Active Filters"
+  },
+  "date_presets": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last_7_days": "Last 7 Days",
+    "last_30_days": "Last 30 Days",
+    "last_90_days": "Last 90 Days",
+    "this_month": "This Month",
+    "last_month": "Last Month",
+    "custom": "Custom Range"
+  },
+  "operations": {
+    "INSERT": "Created",
+    "UPDATE": "Updated",
+    "DELETE": "Deleted",
+    "all": "All Operations"
+  },
+  "columns": {
+    "timestamp": "Timestamp",
+    "table": "Table",
+    "operation": "Operation",
+    "user": "User",
+    "ip_address": "IP Address",
+    "changes": "Changes",
+    "actions": "Actions"
+  },
+  "detail": {
+    "title": "Audit Log Details",
+    "record_id": "Record ID",
+    "session_id": "Session ID",
+    "request_id": "Request ID",
+    "user_agent": "User Agent",
+    "changed_fields": "Changed Fields",
+    "old_value": "Previous Value",
+    "new_value": "New Value",
+    "no_changes": "No changes recorded",
+    "related_logs": "Related Changes",
+    "view_related": "View Related Logs",
+    "close": "Close"
+  },
+  "export": {
+    "title": "Export Audit Logs",
+    "button": "Export",
+    "format": "Format",
+    "csv": "CSV",
+    "json": "JSON",
+    "exporting": "Exporting...",
+    "success": "Audit logs exported successfully",
+    "error": "Failed to export audit logs",
+    "max_records": "Maximum {{count}} records"
+  },
+  "statistics": {
+    "title": "Statistics",
+    "period": "Period",
+    "total_events": "Total Events",
+    "by_operation": "By Operation",
+    "by_table": "By Table",
+    "no_data": "No statistics available for this period"
+  },
+  "pagination": {
+    "showing": "Showing {{from}} to {{to}} of {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{page}} of {{pages}}",
+    "per_page": "Per page"
+  },
+  "empty": {
+    "title": "No Audit Logs Found",
+    "description": "No audit events match your current filters",
+    "clear_filters": "Clear filters to see all logs"
+  },
+  "loading": {
+    "title": "Loading audit logs...",
+    "statistics": "Loading statistics..."
+  },
+  "error": {
+    "title": "Error Loading Audit Logs",
+    "description": "Failed to load audit log data",
+    "retry": "Try Again",
+    "permission_denied": "You do not have permission to view audit logs"
+  },
+  "tables": {
+    "users": "Users",
+    "countries": "Countries",
+    "organizations": "Organizations",
+    "mous": "MoUs",
+    "events": "Events",
+    "forums": "Forums",
+    "briefs": "Briefs",
+    "intelligence_reports": "Intelligence Reports",
+    "data_library_items": "Data Library",
+    "intake_tickets": "Intake Tickets",
+    "commitments": "Commitments",
+    "tasks": "Tasks",
+    "engagements": "Engagements",
+    "persons": "Persons",
+    "positions": "Positions",
+    "working_groups": "Working Groups",
+    "themes": "Themes",
+    "documents": "Documents",
+    "relationships": "Relationships"
+  },
+  "sort": {
+    "label": "Sort",
+    "timestamp": "Timestamp",
+    "table_name": "Table",
+    "operation": "Operation",
+    "user_email": "User",
+    "asc": "Ascending",
+    "desc": "Descending"
+  },
+  "time": {
+    "just_now": "Just now",
+    "minutes_ago": "{{count}} min ago",
+    "hours_ago": "{{count}}h ago",
+    "days_ago": "{{count}}d ago"
+  }
+}

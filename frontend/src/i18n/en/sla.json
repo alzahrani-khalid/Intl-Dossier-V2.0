@@ -1,0 +1,199 @@
+{
+  "title": "SLA Monitoring",
+  "subtitle": "Monitor service level agreements and compliance",
+
+  "overview": {
+    "complianceRate": "Compliance Rate",
+    "totalItems": "Total Items",
+    "atRisk": "At Risk",
+    "breached": "Breached",
+    "processed": "Items processed",
+    "approachingDeadline": "Approaching deadline",
+    "requiresAttention": "Requires attention",
+    "avgResolutionTime": "Average Resolution Time",
+    "avgResolutionSubtitle": "Across all resolved items",
+    "met": "Met",
+    "breachedLabel": "Breached"
+  },
+
+  "charts": {
+    "complianceTrend": "Compliance Trend",
+    "complianceTrendDescription": "SLA compliance rate over time",
+    "lineChart": "Line Chart",
+    "areaChart": "Area Chart",
+    "compliance": "Compliance %",
+    "noDataAvailable": "No trend data available"
+  },
+
+  "tables": {
+    "complianceBreakdown": "Compliance Breakdown",
+    "complianceBreakdownDescription": "SLA metrics by type and assignee",
+    "byType": "By Type",
+    "byAssignee": "By Assignee",
+    "requestType": "Request Type",
+    "total": "Total",
+    "met": "Met",
+    "breached": "Breached",
+    "compliance": "Compliance",
+    "avgTime": "Avg. Time",
+    "assignee": "Assignee",
+    "progress": "Progress",
+    "atRisk": "At Risk",
+    "noDataByType": "No data available by type",
+    "noDataByAssignee": "No data available by assignee"
+  },
+
+  "atRisk": {
+    "title": "At Risk Items",
+    "description": "Items approaching SLA breach",
+    "refresh": "Refresh",
+    "slaProgress": "SLA Progress",
+    "remaining": "remaining",
+    "breached": "Breached",
+    "noItemsAtRisk": "No items at risk"
+  },
+
+  "escalations": {
+    "title": "Escalations",
+    "description": "SLA breach escalation events",
+    "filterByStatus": "Filter by status",
+    "allStatuses": "All Statuses",
+    "triggered": "Triggered",
+    "acknowledged": "Acknowledged",
+    "resolved": "Resolved",
+    "dismissed": "Dismissed",
+    "level": "Level",
+    "acknowledge": "Acknowledge",
+    "resolve": "Resolve",
+    "resolveTitle": "Resolve Escalation",
+    "resolveDescription": "Mark this escalation as resolved",
+    "notes": "Resolution Notes",
+    "notesPlaceholder": "Add notes about how this was resolved...",
+    "confirmResolve": "Confirm Resolution",
+    "resolutionNotes": "Resolution notes",
+    "noEscalations": "No escalations"
+  },
+
+  "policies": {
+    "title": "SLA Policies",
+    "subtitle": "Configure SLA targets and escalation rules",
+    "create": "Create Policy",
+    "edit": "Edit Policy",
+    "formDescription": "Configure SLA targets and escalation workflows",
+    "basicInfo": "Basic Information",
+    "name": "Policy Name",
+    "namePlaceholder": "Enter policy name",
+    "nameAr": "Policy Name (Arabic)",
+    "nameArPlaceholder": "Enter policy name in Arabic",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter description",
+    "descriptionAr": "Description (Arabic)",
+    "descriptionArPlaceholder": "Enter description in Arabic",
+    "matchingCriteria": "Matching Criteria",
+    "matchingCriteriaDescription": "Leave empty to apply to all items",
+    "requestType": "Request Type",
+    "allTypes": "All Types",
+    "sensitivity": "Sensitivity",
+    "allSensitivities": "All Sensitivities",
+    "urgency": "Urgency",
+    "allUrgencies": "All Urgencies",
+    "priority": "Priority",
+    "allPriorities": "All Priorities",
+    "slaTargets": "SLA Targets",
+    "acknowledgmentTarget": "Acknowledgment Target",
+    "acknowledgmentTargetHelp": "Time to first response",
+    "resolutionTarget": "Resolution Target",
+    "resolutionTargetHelp": "Time to complete resolution",
+    "warningThreshold": "Warning Threshold",
+    "warningThresholdHelp": "Send warning at this % of SLA",
+    "minutes": "minutes",
+    "businessHoursOnly": "Business hours only",
+    "escalationSettings": "Escalation Settings",
+    "enableEscalation": "Enable Escalation",
+    "escalationLevel": "Level",
+    "afterMinutes": "After (minutes)",
+    "notifyRole": "Notify Role",
+    "addEscalationLevel": "Add Escalation Level",
+    "notificationChannels": "Notification Channels",
+    "isActive": "Policy Active"
+  },
+
+  "types": {
+    "engagement": "Engagement",
+    "position": "Position",
+    "mou_action": "MOU Action",
+    "foresight": "Foresight"
+  },
+
+  "sensitivity": {
+    "public": "Public",
+    "internal": "Internal",
+    "confidential": "Confidential",
+    "secret": "Secret"
+  },
+
+  "urgency": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+
+  "roles": {
+    "supervisor": "Supervisor",
+    "manager": "Manager",
+    "admin": "Admin",
+    "director": "Director"
+  },
+
+  "channels": {
+    "in_app": "In-App",
+    "email": "Email",
+    "sms": "SMS",
+    "push": "Push Notification"
+  },
+
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "saving": "Saving...",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View"
+  },
+
+  "tabs": {
+    "dashboard": "Dashboard",
+    "policies": "Policies",
+    "escalations": "Escalations"
+  },
+
+  "filters": {
+    "dateRange": "Date Range",
+    "last7Days": "Last 7 Days",
+    "last30Days": "Last 30 Days",
+    "last90Days": "Last 90 Days",
+    "entityType": "Entity Type",
+    "ticket": "Tickets",
+    "commitment": "Commitments",
+    "task": "Tasks"
+  },
+
+  "empty": {
+    "noPolicies": "No SLA policies configured",
+    "createFirst": "Create your first SLA policy to start monitoring"
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load SLA data",
+    "saveFailed": "Failed to save policy",
+    "deleteFailed": "Failed to delete policy"
+  }
+}

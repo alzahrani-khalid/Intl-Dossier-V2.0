@@ -1,0 +1,169 @@
+{
+  "title": "سياسات الاحتفاظ بالبيانات",
+  "description": "إعداد دورة حياة البيانات وفترات الاحتفاظ والحجوزات القانونية",
+
+  "tabs": {
+    "overview": "نظرة عامة",
+    "policies": "السياسات",
+    "legalHolds": "الحجوزات القانونية",
+    "pending": "معلق",
+    "history": "السجل"
+  },
+
+  "stats": {
+    "activePolicies": "السياسات النشطة",
+    "legalHolds": "الحجوزات القانونية",
+    "pendingActions": "الإجراءات المعلقة",
+    "expiringSoon": "تنتهي قريباً",
+    "underHold": "قيد الحجز"
+  },
+
+  "actions": {
+    "runProcessor": "تشغيل المعالج",
+    "newPolicy": "سياسة جديدة",
+    "newLegalHold": "حجز قانوني جديد",
+    "edit": "تعديل",
+    "release": "إطلاق"
+  },
+
+  "period": {
+    "permanent": "دائم",
+    "year": "سنة",
+    "years": "سنوات",
+    "days": "أيام"
+  },
+
+  "action": {
+    "archive": "أرشفة",
+    "softDelete": "حذف مبدئي",
+    "hardDelete": "حذف نهائي",
+    "anonymize": "إخفاء الهوية"
+  },
+
+  "overview": {
+    "byEntityType": "الإحصائيات حسب نوع الكيان",
+    "noStats": "لا توجد بيانات تتبع احتفاظ بعد",
+    "tracked": "متتبع",
+    "recentExecutions": "التنفيذات الأخيرة",
+    "noExecutions": "لا توجد عمليات تنفيذ للمعالج بعد",
+    "expiringAlert": "كيانات تنتهي قريباً",
+    "expiringAlertDesc": "{{count}} كيان ستنتهي صلاحيتها خلال الـ 30 يوماً القادمة. راجعها في علامة التبويب المعلق."
+  },
+
+  "policies": {
+    "title": "سياسات الاحتفاظ",
+    "description": "إعداد مدة الاحتفاظ بالبيانات وما يحدث عند انتهاء صلاحيتها",
+    "empty": "لا توجد سياسات",
+    "emptyDesc": "أنشئ أول سياسة احتفاظ لبدء إدارة دورة حياة البيانات",
+    "name": "الاسم",
+    "entityType": "نوع الكيان",
+    "retention": "الاحتفاظ",
+    "action": "الإجراء",
+    "status": "الحالة",
+    "actions": "الإجراءات"
+  },
+
+  "legalHolds": {
+    "title": "الحجوزات القانونية",
+    "description": "منع البيانات من الأرشفة أو الحذف أثناء الإجراءات القانونية",
+    "empty": "لا توجد حجوزات قانونية",
+    "emptyDesc": "تمنع الحجوزات القانونية حذف البيانات أثناء الإجراءات القانونية",
+    "reference": "المرجع",
+    "name": "الاسم",
+    "matter": "القضية القانونية",
+    "effectiveDate": "تاريخ السريان",
+    "status": "الحالة",
+    "actions": "الإجراءات"
+  },
+
+  "pending": {
+    "actions": "إجراءات الاحتفاظ المعلقة",
+    "actionsDesc": "الكيانات التي تجاوزت فترة الاحتفاظ بها",
+    "noActions": "لا توجد إجراءات معلقة",
+    "expiring": "تنتهي قريباً",
+    "expiringDesc": "الكيانات التي تنتهي خلال 30 يوماً",
+    "noExpiring": "لا توجد كيانات تنتهي قريباً"
+  },
+
+  "history": {
+    "title": "سجل التنفيذ",
+    "description": "سجل جميع عمليات تنفيذ معالج الاحتفاظ",
+    "empty": "لا يوجد سجل تنفيذ",
+    "emptyDesc": "شغّل معالج الاحتفاظ لرؤية سجل التنفيذ",
+    "date": "التاريخ",
+    "type": "النوع",
+    "processed": "معالج",
+    "archived": "مؤرشف",
+    "deleted": "محذوف",
+    "warned": "تحذيرات",
+    "errors": "أخطاء",
+    "status": "الحالة"
+  },
+
+  "dialog": {
+    "editPolicy": "تعديل السياسة",
+    "newPolicy": "سياسة احتفاظ جديدة",
+    "policyDesc": "إعداد مدة الاحتفاظ بالبيانات وما يحدث عند انتهاء صلاحيتها",
+    "code": "رمز السياسة",
+    "priority": "الأولوية",
+    "nameEn": "الاسم (بالإنجليزية)",
+    "nameAr": "الاسم (بالعربية)",
+    "entityType": "نوع الكيان",
+    "documentClass": "فئة المستند (اختياري)",
+    "retentionDays": "أيام الاحتفاظ",
+    "warningDays": "أيام التحذير",
+    "action": "الإجراء",
+    "regulatoryReference": "المرجع التنظيمي (اختياري)",
+    "complianceNotes": "ملاحظات الامتثال",
+    "cancel": "إلغاء",
+    "save": "حفظ السياسة",
+    "saving": "جارٍ الحفظ...",
+    "newLegalHold": "حجز قانوني جديد",
+    "legalHoldDesc": "إنشاء حجز قانوني لمنع البيانات من الأرشفة أو الحذف",
+    "reference": "رقم المرجع",
+    "legalMatter": "القضية القانونية",
+    "reasonEn": "السبب (بالإنجليزية)",
+    "reasonAr": "السبب (بالعربية)",
+    "notifyCustodians": "إخطار الحراس",
+    "createHold": "إنشاء حجز قانوني",
+    "creating": "جارٍ الإنشاء..."
+  },
+
+  "processor": {
+    "title": "تشغيل معالج الاحتفاظ",
+    "description": "تنفيذ سياسات الاحتفاظ على الكيانات منتهية الصلاحية",
+    "warning": "تحذير",
+    "warningDesc": "سيؤدي تشغيل المعالج إلى أرشفة أو حذف البيانات منتهية الصلاحية. استخدم التشغيل التجريبي أولاً لمعاينة التغييرات.",
+    "dryRun": "تشغيل تجريبي (معاينة فقط)",
+    "sendWarnings": "إرسال تحذيرات انتهاء الصلاحية",
+    "batchSize": "حجم الدفعة",
+    "entityType": "نوع الكيان (اختياري)",
+    "running": "جارٍ التشغيل...",
+    "preview": "معاينة",
+    "run": "تشغيل المعالج"
+  },
+
+  "messages": {
+    "policyCreated": "تم إنشاء السياسة \"{{name}}\" بنجاح",
+    "policyCreateError": "فشل في إنشاء السياسة: {{error}}",
+    "policyUpdated": "تم تحديث السياسة بنجاح",
+    "policyUpdateError": "فشل في تحديث السياسة: {{error}}",
+    "policyArchived": "تم أرشفة السياسة بنجاح",
+    "policyArchiveError": "فشل في أرشفة السياسة: {{error}}",
+    "policyApplied": "تم تطبيق سياسة الاحتفاظ بنجاح",
+    "policyApplyError": "فشل في تطبيق السياسة: {{error}}",
+    "legalHoldCreated": "تم إنشاء الحجز القانوني \"{{name}}\" بنجاح",
+    "legalHoldCreateError": "فشل في إنشاء الحجز القانوني: {{error}}",
+    "legalHoldUpdated": "تم تحديث الحجز القانوني بنجاح",
+    "legalHoldUpdateError": "فشل في تحديث الحجز القانوني: {{error}}",
+    "legalHoldReleased": "تم إطلاق الحجز القانوني، {{count}} كيان متأثر",
+    "legalHoldReleaseError": "فشل في إطلاق الحجز القانوني: {{error}}",
+    "legalHoldDeleted": "تم حذف الحجز القانوني بنجاح",
+    "legalHoldDeleteError": "فشل في حذف الحجز القانوني: {{error}}",
+    "manualHoldSet": "تم تعيين الحجز اليدوي بنجاح",
+    "manualHoldError": "فشل في تعيين الحجز اليدوي: {{error}}",
+    "dryRunComplete": "اكتمل التشغيل التجريبي: {{processed}} عنصر سيتم معالجته ({{archived}} مؤرشف، {{deleted}} محذوف)",
+    "processorComplete": "اكتمل المعالج: {{processed}} عنصر معالج، {{archived}} مؤرشف، {{deleted}} محذوف، {{warned}} تحذير مرسل",
+    "processorError": "فشل المعالج: {{error}}"
+  }
+}

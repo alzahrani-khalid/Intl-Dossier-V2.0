@@ -1,0 +1,212 @@
+{
+  "title": "الويب هوك",
+  "subtitle": "تكوين إشعارات الأحداث في الوقت الفعلي للأنظمة الخارجية",
+  "description": "إرسال إشعارات تلقائية عند حدوث أحداث في مؤسستك",
+
+  "navigation": {
+    "webhooks": "الويب هوك",
+    "settings": "إعدادات الويب هوك"
+  },
+
+  "headings": {
+    "list": "الويب هوك المكونة",
+    "create": "إنشاء ويب هوك",
+    "edit": "تعديل الويب هوك",
+    "details": "تفاصيل الويب هوك",
+    "deliveries": "سجل التسليم",
+    "statistics": "الإحصائيات",
+    "templates": "قوالب التكامل",
+    "events": "الأحداث المشترك فيها",
+    "authentication": "المصادقة",
+    "advanced": "إعدادات متقدمة"
+  },
+
+  "labels": {
+    "name": "الاسم",
+    "nameEn": "الاسم (إنجليزي)",
+    "nameAr": "الاسم (عربي)",
+    "description": "الوصف",
+    "descriptionEn": "الوصف (إنجليزي)",
+    "descriptionAr": "الوصف (عربي)",
+    "url": "رابط الويب هوك",
+    "httpMethod": "طريقة HTTP",
+    "authType": "نوع المصادقة",
+    "authSecret": "المفتاح السري",
+    "authUsername": "اسم المستخدم",
+    "authPassword": "كلمة المرور",
+    "events": "الأحداث",
+    "status": "الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "autoDisabled": "معطل تلقائياً",
+    "lastTriggered": "آخر تشغيل",
+    "lastSuccess": "آخر نجاح",
+    "lastFailure": "آخر فشل",
+    "successRate": "معدل النجاح",
+    "failureCount": "عدد الإخفاقات",
+    "successCount": "عدد النجاحات",
+    "maxRetries": "أقصى عدد للمحاولات",
+    "retryDelay": "تأخير إعادة المحاولة (ثواني)",
+    "timeout": "المهلة (ثواني)",
+    "autoDisableThreshold": "التعطيل التلقائي بعد الإخفاقات",
+    "includeFullPayload": "تضمين بيانات الكيان الكاملة",
+    "customHeaders": "رؤوس مخصصة",
+    "payloadTemplate": "قالب الحمولة"
+  },
+
+  "placeholders": {
+    "name": "أدخل اسم الويب هوك",
+    "url": "https://example.com/webhook",
+    "secret": "أدخل المفتاح السري",
+    "search": "البحث في الويب هوك..."
+  },
+
+  "authTypes": {
+    "none": "بدون مصادقة",
+    "hmac_sha256": "توقيع HMAC SHA-256",
+    "bearer_token": "رمز Bearer",
+    "basic_auth": "المصادقة الأساسية"
+  },
+
+  "httpMethods": {
+    "POST": "POST",
+    "PUT": "PUT",
+    "PATCH": "PATCH"
+  },
+
+  "eventCategories": {
+    "dossier": "الملفات",
+    "engagement": "الارتباطات",
+    "commitment": "الالتزامات",
+    "intake": "تذاكر الاستقبال",
+    "document": "المستندات",
+    "calendar": "التقويم",
+    "relationship": "العلاقات",
+    "sla": "اتفاقية مستوى الخدمة"
+  },
+
+  "events": {
+    "dossier.created": "إنشاء ملف",
+    "dossier.updated": "تحديث ملف",
+    "dossier.deleted": "حذف ملف",
+    "engagement.created": "إنشاء ارتباط",
+    "engagement.updated": "تحديث ارتباط",
+    "engagement.completed": "اكتمال ارتباط",
+    "commitment.created": "إنشاء التزام",
+    "commitment.updated": "تحديث التزام",
+    "commitment.fulfilled": "تنفيذ التزام",
+    "commitment.overdue": "تأخر التزام",
+    "intake.created": "إنشاء تذكرة استقبال",
+    "intake.updated": "تحديث تذكرة استقبال",
+    "intake.resolved": "حل تذكرة استقبال",
+    "document.uploaded": "رفع مستند",
+    "document.deleted": "حذف مستند",
+    "calendar.event_created": "إنشاء حدث تقويم",
+    "calendar.event_updated": "تحديث حدث تقويم",
+    "calendar.event_reminder": "تذكير حدث تقويم",
+    "relationship.created": "إنشاء علاقة",
+    "relationship.updated": "تحديث علاقة",
+    "sla.warning": "تحذير اتفاقية الخدمة",
+    "sla.breach": "انتهاك اتفاقية الخدمة"
+  },
+
+  "deliveryStatus": {
+    "pending": "قيد الانتظار",
+    "delivered": "تم التسليم",
+    "failed": "فشل",
+    "retrying": "جاري إعادة المحاولة"
+  },
+
+  "statistics": {
+    "totalDeliveries": "إجمالي التسليمات",
+    "successfulDeliveries": "ناجحة",
+    "failedDeliveries": "فاشلة",
+    "pendingDeliveries": "قيد الانتظار",
+    "avgResponseTime": "متوسط وقت الاستجابة",
+    "successRate": "معدل النجاح",
+    "last30Days": "آخر 30 يوم",
+    "last7Days": "آخر 7 أيام",
+    "today": "اليوم"
+  },
+
+  "templates": {
+    "slack": "سلاك",
+    "slackDescription": "إرسال الإشعارات إلى قنوات سلاك",
+    "teams": "مايكروسوفت تيمز",
+    "teamsDescription": "إرسال الإشعارات إلى قنوات تيمز",
+    "discord": "ديسكورد",
+    "discordDescription": "إرسال الإشعارات إلى خوادم ديسكورد",
+    "generic": "ويب هوك عام",
+    "genericDescription": "إرسال JSON خام إلى أي نقطة نهاية HTTP",
+    "useTemplate": "استخدام القالب"
+  },
+
+  "actions": {
+    "create": "إنشاء ويب هوك",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "test": "اختبار",
+    "enable": "تفعيل",
+    "disable": "تعطيل",
+    "viewDeliveries": "عرض التسليمات",
+    "viewDetails": "عرض التفاصيل",
+    "copy": "نسخ",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "refresh": "تحديث"
+  },
+
+  "messages": {
+    "created": "تم إنشاء الويب هوك \"{{name}}\" بنجاح",
+    "createError": "فشل في إنشاء الويب هوك: {{error}}",
+    "updated": "تم تحديث الويب هوك بنجاح",
+    "updateError": "فشل في تحديث الويب هوك: {{error}}",
+    "deleted": "تم حذف الويب هوك بنجاح",
+    "deleteError": "فشل في حذف الويب هوك: {{error}}",
+    "enabled": "تم تفعيل الويب هوك",
+    "disabled": "تم تعطيل الويب هوك",
+    "toggleError": "فشل في تبديل حالة الويب هوك: {{error}}",
+    "testSuccess": "اختبار الويب هوك ناجح ({{responseTime}} مللي ثانية)",
+    "testFailed": "فشل اختبار الويب هوك: {{error}}",
+    "testError": "فشل في اختبار الويب هوك: {{error}}",
+    "urlCopied": "تم نسخ الرابط إلى الحافظة",
+    "noWebhooks": "لا توجد ويب هوك مكونة",
+    "noDeliveries": "لا يوجد سجل تسليم",
+    "confirmDelete": "هل أنت متأكد من حذف هذا الويب هوك؟ لا يمكن التراجع عن هذا الإجراء.",
+    "autoDisabledWarning": "تم تعطيل هذا الويب هوك تلقائياً بسبب الإخفاقات المتكررة. أعد التفعيل لاستئناف التسليم."
+  },
+
+  "validation": {
+    "nameRequired": "الاسم مطلوب",
+    "urlRequired": "الرابط مطلوب",
+    "urlInvalid": "الرجاء إدخال رابط HTTP أو HTTPS صالح",
+    "eventsRequired": "يجب اختيار حدث واحد على الأقل",
+    "secretRequired": "المفتاح السري مطلوب لنوع المصادقة هذا",
+    "usernameRequired": "اسم المستخدم مطلوب للمصادقة الأساسية",
+    "passwordRequired": "كلمة المرور مطلوبة للمصادقة الأساسية"
+  },
+
+  "help": {
+    "hmacSignature": "سنقوم بتوقيع كل حمولة طلب باستخدام HMAC-SHA256 وتضمين التوقيع في رأس X-Webhook-Signature.",
+    "bearerToken": "سيتم إرسال مفتاحك السري كرمز Bearer في رأس التفويض.",
+    "basicAuth": "سيتم استخدام مصادقة HTTP الأساسية القياسية.",
+    "retries": "عدد محاولات إعادة المحاولة للتسليمات الفاشلة (0-10)",
+    "retryDelay": "التأخير الأساسي بين محاولات إعادة المحاولة بالثواني (10-3600)",
+    "timeout": "مهلة الطلب بالثواني (5-120)",
+    "autoDisable": "سيتم تعطيل الويب هوك تلقائياً بعد هذا العدد من الإخفاقات المتتالية",
+    "payloadTemplate": "تخصيص حمولة JSON المرسلة إلى نقطة النهاية الخاصة بك. استخدم صيغة {{variable}} للقيم الديناميكية."
+  },
+
+  "empty": {
+    "title": "لا توجد ويب هوك مكونة",
+    "description": "أنشئ أول ويب هوك لتلقي إشعارات في الوقت الفعلي عند حدوث الأحداث.",
+    "action": "إنشاء ويب هوك"
+  },
+
+  "filters": {
+    "all": "جميع الويب هوك",
+    "active": "النشطة فقط",
+    "inactive": "غير النشطة فقط",
+    "byEvent": "تصفية حسب الحدث"
+  }
+}

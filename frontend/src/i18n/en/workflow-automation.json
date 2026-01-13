@@ -1,0 +1,359 @@
+{
+  "title": "Workflow Automation",
+  "subtitle": "Create and manage automated workflows",
+  "description": "Build no-code workflows to automate common processes based on events, conditions, and actions.",
+
+  "navigation": {
+    "rules": "Workflow Rules",
+    "executions": "Execution History",
+    "templates": "Notification Templates"
+  },
+
+  "headings": {
+    "list": "Workflow Rules",
+    "create": "Create Workflow Rule",
+    "edit": "Edit Workflow Rule",
+    "executions": "Execution History",
+    "templates": "Notification Templates",
+    "builder": "Workflow Builder"
+  },
+
+  "labels": {
+    "name": "Name",
+    "name_en": "Name (English)",
+    "name_ar": "Name (Arabic)",
+    "description": "Description",
+    "description_en": "Description (English)",
+    "description_ar": "Description (Arabic)",
+    "trigger": "Trigger",
+    "trigger_type": "Trigger Type",
+    "entity_type": "Entity Type",
+    "conditions": "Conditions",
+    "condition_logic": "Condition Logic",
+    "actions": "Actions",
+    "is_active": "Active",
+    "status": "Status",
+    "field": "Field",
+    "operator": "Operator",
+    "value": "Value",
+    "action_type": "Action Type",
+    "configuration": "Configuration",
+    "settings": "Settings",
+    "run_once": "Run Once Per Entity",
+    "max_executions": "Max Executions/Hour",
+    "cooldown": "Cooldown (minutes)",
+    "cron_expression": "Cron Expression",
+    "last_triggered": "Last Triggered",
+    "created_at": "Created At",
+    "executions": "Executions",
+    "success_rate": "Success Rate"
+  },
+
+  "placeholders": {
+    "search": "Search workflows...",
+    "name_en": "Enter workflow name",
+    "name_ar": "Enter Arabic name",
+    "description_en": "Describe what this workflow does",
+    "description_ar": "Arabic description",
+    "select_trigger": "Select a trigger",
+    "select_entity": "Select entity type",
+    "select_field": "Select field",
+    "select_operator": "Select operator",
+    "enter_value": "Enter value",
+    "select_action": "Select action type",
+    "cron_expression": "e.g., 0 9 * * 1 (every Monday at 9am)"
+  },
+
+  "actions": {
+    "create": "Create Workflow",
+    "edit": "Edit",
+    "delete": "Delete",
+    "duplicate": "Duplicate",
+    "activate": "Activate",
+    "deactivate": "Deactivate",
+    "test": "Test Rule",
+    "viewExecutions": "View Executions",
+    "retry": "Retry",
+    "addCondition": "Add Condition",
+    "removeCondition": "Remove Condition",
+    "addAction": "Add Action",
+    "removeAction": "Remove Action",
+    "save": "Save",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish"
+  },
+
+  "messages": {
+    "created": "Workflow rule created successfully",
+    "updated": "Workflow rule updated successfully",
+    "deleted": "Workflow rule deleted successfully",
+    "activated": "Workflow activated",
+    "deactivated": "Workflow deactivated",
+    "duplicated": "Workflow duplicated successfully",
+    "testPassed": "Test passed - conditions matched",
+    "testFailed": "Test failed - conditions not matched",
+    "retryQueued": "Retry queued successfully",
+    "noRules": "No workflow rules found",
+    "noExecutions": "No executions found",
+    "confirmDelete": "Are you sure you want to delete this workflow rule?",
+    "confirmDeactivate": "Are you sure you want to deactivate this workflow?"
+  },
+
+  "validation": {
+    "nameRequired": "Name is required",
+    "triggerRequired": "Trigger type is required",
+    "entityRequired": "Entity type is required",
+    "actionsRequired": "At least one action is required",
+    "fieldRequired": "Field is required",
+    "operatorRequired": "Operator is required",
+    "valueRequired": "Value is required",
+    "invalidCron": "Invalid cron expression"
+  },
+
+  "help": {
+    "trigger": "Choose when this workflow should be triggered",
+    "conditions": "Add conditions to filter when the workflow should run",
+    "conditionLogic": "Choose whether all conditions must match (AND) or any condition (OR)",
+    "actions": "Define what actions should be executed when triggered",
+    "runOnce": "If enabled, this workflow will only run once per entity",
+    "maxExecutions": "Limit how many times this workflow can run per hour",
+    "cooldown": "Minimum time between executions for the same entity",
+    "cronExpression": "Schedule expression in cron format"
+  },
+
+  "triggers": {
+    "ticket_created": {
+      "label": "Ticket Created",
+      "description": "When a new intake ticket is created"
+    },
+    "ticket_updated": {
+      "label": "Ticket Updated",
+      "description": "When an intake ticket is updated"
+    },
+    "status_changed": {
+      "label": "Status Changed",
+      "description": "When the status of an entity changes"
+    },
+    "deadline_approaching": {
+      "label": "Deadline Approaching",
+      "description": "When a deadline is approaching (configurable days)"
+    },
+    "deadline_overdue": {
+      "label": "Deadline Overdue",
+      "description": "When a deadline has passed"
+    },
+    "assignment_changed": {
+      "label": "Assignment Changed",
+      "description": "When the assignee of an entity changes"
+    },
+    "priority_changed": {
+      "label": "Priority Changed",
+      "description": "When the priority of an entity changes"
+    },
+    "field_changed": {
+      "label": "Field Changed",
+      "description": "When a specific field value changes"
+    },
+    "comment_added": {
+      "label": "Comment Added",
+      "description": "When a new comment is added"
+    },
+    "document_uploaded": {
+      "label": "Document Uploaded",
+      "description": "When a document is uploaded"
+    },
+    "engagement_created": {
+      "label": "Engagement Created",
+      "description": "When a new engagement is created"
+    },
+    "commitment_created": {
+      "label": "Commitment Created",
+      "description": "When a new commitment is created"
+    },
+    "commitment_due": {
+      "label": "Commitment Due",
+      "description": "When a commitment deadline is reached"
+    },
+    "schedule_cron": {
+      "label": "Scheduled",
+      "description": "Run on a schedule (cron expression)"
+    },
+    "manual": {
+      "label": "Manual",
+      "description": "Triggered manually by user"
+    }
+  },
+
+  "actionTypes": {
+    "notify_user": {
+      "label": "Notify User",
+      "description": "Send notification to a specific user"
+    },
+    "notify_role": {
+      "label": "Notify Role",
+      "description": "Send notification to all users with a role"
+    },
+    "notify_assignee": {
+      "label": "Notify Assignee",
+      "description": "Send notification to the current assignee"
+    },
+    "assign_user": {
+      "label": "Assign User",
+      "description": "Assign the entity to a specific user"
+    },
+    "assign_role": {
+      "label": "Assign Role",
+      "description": "Assign to a user with a specific role"
+    },
+    "update_field": {
+      "label": "Update Field",
+      "description": "Update a field value on the entity"
+    },
+    "update_status": {
+      "label": "Update Status",
+      "description": "Change the status of the entity"
+    },
+    "update_priority": {
+      "label": "Update Priority",
+      "description": "Change the priority of the entity"
+    },
+    "add_tag": {
+      "label": "Add Tag",
+      "description": "Add a tag to the entity"
+    },
+    "remove_tag": {
+      "label": "Remove Tag",
+      "description": "Remove a tag from the entity"
+    },
+    "create_task": {
+      "label": "Create Task",
+      "description": "Create a follow-up task"
+    },
+    "create_comment": {
+      "label": "Create Comment",
+      "description": "Add a system comment"
+    },
+    "send_email": {
+      "label": "Send Email",
+      "description": "Send an email notification"
+    },
+    "call_webhook": {
+      "label": "Call Webhook",
+      "description": "Call an external webhook"
+    },
+    "delay": {
+      "label": "Delay",
+      "description": "Wait before executing next action"
+    }
+  },
+
+  "entities": {
+    "intake_ticket": "Intake Ticket",
+    "engagement": "Engagement",
+    "commitment": "Commitment",
+    "task": "Task",
+    "dossier": "Dossier",
+    "position": "Position",
+    "document": "Document",
+    "calendar_entry": "Calendar Entry"
+  },
+
+  "operators": {
+    "equals": "Equals",
+    "not_equals": "Not Equals",
+    "contains": "Contains",
+    "not_contains": "Does Not Contain",
+    "starts_with": "Starts With",
+    "ends_with": "Ends With",
+    "greater_than": "Greater Than",
+    "less_than": "Less Than",
+    "greater_than_or_equal": "Greater Than or Equal",
+    "less_than_or_equal": "Less Than or Equal",
+    "is_empty": "Is Empty",
+    "is_not_empty": "Is Not Empty",
+    "in_list": "In List",
+    "not_in_list": "Not In List",
+    "between": "Between",
+    "changed_to": "Changed To",
+    "changed_from": "Changed From",
+    "has_changed": "Has Changed"
+  },
+
+  "conditionLogicOptions": {
+    "all": "All conditions must match (AND)",
+    "any": "Any condition must match (OR)"
+  },
+
+  "executionStatus": {
+    "pending": "Pending",
+    "running": "Running",
+    "completed": "Completed",
+    "failed": "Failed",
+    "cancelled": "Cancelled",
+    "paused": "Paused"
+  },
+
+  "builder": {
+    "steps": {
+      "trigger": "Trigger",
+      "conditions": "Conditions",
+      "actions": "Actions",
+      "settings": "Settings",
+      "review": "Review"
+    },
+    "stepDescriptions": {
+      "trigger": "Choose what event will trigger this workflow",
+      "conditions": "Define when the workflow should run",
+      "actions": "Configure what happens when triggered",
+      "settings": "Set execution limits and options",
+      "review": "Review and save your workflow"
+    },
+    "whenThis": "When this happens...",
+    "ifThese": "If these conditions are met...",
+    "thenDo": "Then do these actions...",
+    "noConditions": "No conditions added. The workflow will run every time the trigger fires.",
+    "noActions": "No actions added. Add at least one action."
+  },
+
+  "stats": {
+    "totalRules": "Total Rules",
+    "activeRules": "Active Rules",
+    "totalExecutions": "Total Executions",
+    "successRate": "Success Rate",
+    "avgDuration": "Avg Duration"
+  },
+
+  "filters": {
+    "all": "All",
+    "active": "Active",
+    "inactive": "Inactive",
+    "byTrigger": "By Trigger",
+    "byEntity": "By Entity"
+  },
+
+  "test": {
+    "title": "Test Workflow Rule",
+    "selectEntity": "Select an entity to test against",
+    "dryRun": "Dry run (don't execute actions)",
+    "runTest": "Run Test",
+    "results": "Test Results",
+    "conditionsResult": "Conditions Result",
+    "actionsToExecute": "Actions to Execute",
+    "wouldExecute": "Would Execute",
+    "conditionDetails": "Condition Details"
+  },
+
+  "categories": {
+    "event": "Event Triggers",
+    "time": "Time-based Triggers",
+    "manual": "Manual Triggers",
+    "notification": "Notifications",
+    "assignment": "Assignments",
+    "update": "Updates",
+    "create": "Create Records",
+    "external": "External Integrations",
+    "control": "Flow Control"
+  }
+}

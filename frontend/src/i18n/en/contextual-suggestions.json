@@ -1,0 +1,116 @@
+{
+  "title": "Suggested for You",
+  "urgentBadge": "Urgent",
+  "emptyTitle": "No Suggestions",
+  "emptyDescription": "You're all caught up! Check back later for personalized recommendations.",
+  "loading": "Loading suggestions...",
+  "error": "Unable to load suggestions",
+  "retry": "Try Again",
+
+  "categories": {
+    "upcoming_event": "Upcoming Events",
+    "expiring_mou": "Expiring MOUs",
+    "overdue_commitment": "Overdue Items",
+    "pending_task": "Pending Tasks",
+    "seasonal": "Organizational Calendar",
+    "anniversary": "Anniversaries",
+    "quick_action": "Quick Actions"
+  },
+
+  "timeframes": {
+    "today": "Today",
+    "tomorrow": "Tomorrow",
+    "inDays": "In {{count}} days",
+    "inWeeks": "In {{count}} weeks",
+    "daysAgo": "{{count}} days ago",
+    "overdue": "Overdue",
+    "overdueBy": "{{count}} days overdue"
+  },
+
+  "badges": {
+    "urgent": "Urgent",
+    "highPriority": "High Priority",
+    "expiringSoon": "Expiring Soon",
+    "actionRequired": "Action Required",
+    "newItem": "New"
+  },
+
+  "actions": {
+    "viewDetails": "View Details",
+    "takeAction": "Take Action",
+    "dismiss": "Dismiss",
+    "remindLater": "Remind Later",
+    "createNew": "Create New"
+  },
+
+  "seasonal": {
+    "unGeneralAssembly": {
+      "title": "Prepare for UN General Assembly",
+      "description": "The UN General Assembly is approaching. Review your country positions and prepare briefing materials."
+    },
+    "g20Summit": {
+      "title": "G20 Summit Preparation",
+      "description": "The G20 Summit is coming up. Coordinate with relevant departments and prepare position papers."
+    },
+    "annualReview": {
+      "title": "Annual Bilateral Review",
+      "description": "Time for the annual bilateral relationships review. Assess progress and set priorities for the year."
+    },
+    "quarterlyReview": {
+      "title": "Quarterly Commitment Review",
+      "description": "Review Q{{quarter}} commitments progress and update status for upcoming deliverables."
+    },
+    "budgetPlanning": {
+      "title": "Budget Planning Cycle",
+      "description": "Annual budget planning cycle has started. Review resource allocations and submit proposals."
+    }
+  },
+
+  "suggestions": {
+    "upcomingEngagement": {
+      "title": "Prepare for {{name}}",
+      "description": "Engagement scheduled for {{date}}{{location}}. Review briefings and prepare materials."
+    },
+    "expiringMou": {
+      "title": "MOU Expiring: {{name}}",
+      "description": "MOU with {{counterparty}} expires on {{date}}. {{action}}"
+    },
+    "overdueCommitment": {
+      "title": "Overdue: {{name}}",
+      "description": "This commitment was due {{days}} ago. Take immediate action to address this."
+    },
+    "pendingTask": {
+      "title": "{{name}}",
+      "description": "Due {{date}}. Review and complete this task."
+    }
+  },
+
+  "quickActions": {
+    "createDossier": {
+      "title": "Create a Country Dossier",
+      "description": "Start tracking a bilateral relationship by creating a country dossier."
+    },
+    "addEngagement": {
+      "title": "Log an Engagement",
+      "description": "Record a meeting, delegation, or official visit."
+    },
+    "reviewCommitments": {
+      "title": "Review Your Commitments",
+      "description": "Check the status of pending commitments and update progress."
+    },
+    "uploadDocument": {
+      "title": "Upload a Document",
+      "description": "Add important documents to your dossiers for easy access."
+    },
+    "addContact": {
+      "title": "Add a Contact",
+      "description": "Add key contacts to track relationships with important individuals."
+    }
+  },
+
+  "metadata": {
+    "upcomingEvents": "{{count}} upcoming events",
+    "expiringMous": "{{count}} MOUs expiring",
+    "overdueItems": "{{count}} overdue"
+  }
+}

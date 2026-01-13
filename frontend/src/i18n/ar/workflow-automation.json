@@ -1,0 +1,359 @@
+{
+  "title": "أتمتة سير العمل",
+  "subtitle": "إنشاء وإدارة سير العمل التلقائي",
+  "description": "قم ببناء سير عمل بدون برمجة لأتمتة العمليات الشائعة بناءً على الأحداث والشروط والإجراءات.",
+
+  "navigation": {
+    "rules": "قواعد سير العمل",
+    "executions": "سجل التنفيذ",
+    "templates": "قوالب الإشعارات"
+  },
+
+  "headings": {
+    "list": "قواعد سير العمل",
+    "create": "إنشاء قاعدة سير عمل",
+    "edit": "تعديل قاعدة سير العمل",
+    "executions": "سجل التنفيذ",
+    "templates": "قوالب الإشعارات",
+    "builder": "منشئ سير العمل"
+  },
+
+  "labels": {
+    "name": "الاسم",
+    "name_en": "الاسم (الإنجليزية)",
+    "name_ar": "الاسم (العربية)",
+    "description": "الوصف",
+    "description_en": "الوصف (الإنجليزية)",
+    "description_ar": "الوصف (العربية)",
+    "trigger": "المشغل",
+    "trigger_type": "نوع المشغل",
+    "entity_type": "نوع الكيان",
+    "conditions": "الشروط",
+    "condition_logic": "منطق الشروط",
+    "actions": "الإجراءات",
+    "is_active": "نشط",
+    "status": "الحالة",
+    "field": "الحقل",
+    "operator": "العامل",
+    "value": "القيمة",
+    "action_type": "نوع الإجراء",
+    "configuration": "التكوين",
+    "settings": "الإعدادات",
+    "run_once": "تشغيل مرة واحدة لكل كيان",
+    "max_executions": "الحد الأقصى للتنفيذات/ساعة",
+    "cooldown": "فترة الانتظار (بالدقائق)",
+    "cron_expression": "تعبير كرون",
+    "last_triggered": "آخر تشغيل",
+    "created_at": "تاريخ الإنشاء",
+    "executions": "عمليات التنفيذ",
+    "success_rate": "معدل النجاح"
+  },
+
+  "placeholders": {
+    "search": "البحث في سير العمل...",
+    "name_en": "أدخل اسم سير العمل",
+    "name_ar": "أدخل الاسم بالعربية",
+    "description_en": "صف ما يفعله سير العمل هذا",
+    "description_ar": "الوصف بالعربية",
+    "select_trigger": "اختر مشغل",
+    "select_entity": "اختر نوع الكيان",
+    "select_field": "اختر الحقل",
+    "select_operator": "اختر العامل",
+    "enter_value": "أدخل القيمة",
+    "select_action": "اختر نوع الإجراء",
+    "cron_expression": "مثال: 0 9 * * 1 (كل إثنين الساعة 9 صباحاً)"
+  },
+
+  "actions": {
+    "create": "إنشاء سير عمل",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "duplicate": "نسخ",
+    "activate": "تفعيل",
+    "deactivate": "إلغاء التفعيل",
+    "test": "اختبار القاعدة",
+    "viewExecutions": "عرض التنفيذات",
+    "retry": "إعادة المحاولة",
+    "addCondition": "إضافة شرط",
+    "removeCondition": "إزالة الشرط",
+    "addAction": "إضافة إجراء",
+    "removeAction": "إزالة الإجراء",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "next": "التالي",
+    "finish": "إنهاء"
+  },
+
+  "messages": {
+    "created": "تم إنشاء قاعدة سير العمل بنجاح",
+    "updated": "تم تحديث قاعدة سير العمل بنجاح",
+    "deleted": "تم حذف قاعدة سير العمل بنجاح",
+    "activated": "تم تفعيل سير العمل",
+    "deactivated": "تم إلغاء تفعيل سير العمل",
+    "duplicated": "تم نسخ سير العمل بنجاح",
+    "testPassed": "نجح الاختبار - الشروط مطابقة",
+    "testFailed": "فشل الاختبار - الشروط غير مطابقة",
+    "retryQueued": "تمت إضافة إعادة المحاولة للقائمة بنجاح",
+    "noRules": "لم يتم العثور على قواعد سير عمل",
+    "noExecutions": "لم يتم العثور على تنفيذات",
+    "confirmDelete": "هل أنت متأكد من حذف قاعدة سير العمل هذه؟",
+    "confirmDeactivate": "هل أنت متأكد من إلغاء تفعيل سير العمل هذا؟"
+  },
+
+  "validation": {
+    "nameRequired": "الاسم مطلوب",
+    "triggerRequired": "نوع المشغل مطلوب",
+    "entityRequired": "نوع الكيان مطلوب",
+    "actionsRequired": "مطلوب إجراء واحد على الأقل",
+    "fieldRequired": "الحقل مطلوب",
+    "operatorRequired": "العامل مطلوب",
+    "valueRequired": "القيمة مطلوبة",
+    "invalidCron": "تعبير كرون غير صالح"
+  },
+
+  "help": {
+    "trigger": "اختر متى يجب تشغيل سير العمل هذا",
+    "conditions": "أضف شروطاً لتحديد متى يجب تشغيل سير العمل",
+    "conditionLogic": "اختر ما إذا كان يجب تطابق جميع الشروط (و) أو أي شرط (أو)",
+    "actions": "حدد الإجراءات التي يجب تنفيذها عند التشغيل",
+    "runOnce": "إذا تم التفعيل، سيتم تشغيل سير العمل هذا مرة واحدة فقط لكل كيان",
+    "maxExecutions": "تحديد عدد مرات تشغيل سير العمل في الساعة",
+    "cooldown": "الحد الأدنى للوقت بين التنفيذات لنفس الكيان",
+    "cronExpression": "تعبير الجدولة بتنسيق كرون"
+  },
+
+  "triggers": {
+    "ticket_created": {
+      "label": "إنشاء تذكرة",
+      "description": "عند إنشاء تذكرة استقبال جديدة"
+    },
+    "ticket_updated": {
+      "label": "تحديث تذكرة",
+      "description": "عند تحديث تذكرة استقبال"
+    },
+    "status_changed": {
+      "label": "تغيير الحالة",
+      "description": "عند تغيير حالة كيان"
+    },
+    "deadline_approaching": {
+      "label": "اقتراب الموعد النهائي",
+      "description": "عند اقتراب موعد نهائي (قابل للتكوين بالأيام)"
+    },
+    "deadline_overdue": {
+      "label": "تجاوز الموعد النهائي",
+      "description": "عند تجاوز الموعد النهائي"
+    },
+    "assignment_changed": {
+      "label": "تغيير التعيين",
+      "description": "عند تغيير المعين لكيان"
+    },
+    "priority_changed": {
+      "label": "تغيير الأولوية",
+      "description": "عند تغيير أولوية كيان"
+    },
+    "field_changed": {
+      "label": "تغيير حقل",
+      "description": "عند تغيير قيمة حقل محدد"
+    },
+    "comment_added": {
+      "label": "إضافة تعليق",
+      "description": "عند إضافة تعليق جديد"
+    },
+    "document_uploaded": {
+      "label": "رفع مستند",
+      "description": "عند رفع مستند"
+    },
+    "engagement_created": {
+      "label": "إنشاء تفاعل",
+      "description": "عند إنشاء تفاعل جديد"
+    },
+    "commitment_created": {
+      "label": "إنشاء التزام",
+      "description": "عند إنشاء التزام جديد"
+    },
+    "commitment_due": {
+      "label": "استحقاق الالتزام",
+      "description": "عند الوصول إلى موعد استحقاق الالتزام"
+    },
+    "schedule_cron": {
+      "label": "مجدول",
+      "description": "تشغيل وفق جدول زمني (تعبير كرون)"
+    },
+    "manual": {
+      "label": "يدوي",
+      "description": "يتم تشغيله يدوياً بواسطة المستخدم"
+    }
+  },
+
+  "actionTypes": {
+    "notify_user": {
+      "label": "إشعار مستخدم",
+      "description": "إرسال إشعار لمستخدم محدد"
+    },
+    "notify_role": {
+      "label": "إشعار دور",
+      "description": "إرسال إشعار لجميع المستخدمين بدور معين"
+    },
+    "notify_assignee": {
+      "label": "إشعار المعين",
+      "description": "إرسال إشعار للمعين الحالي"
+    },
+    "assign_user": {
+      "label": "تعيين مستخدم",
+      "description": "تعيين الكيان لمستخدم محدد"
+    },
+    "assign_role": {
+      "label": "تعيين بالدور",
+      "description": "تعيين لمستخدم بدور محدد"
+    },
+    "update_field": {
+      "label": "تحديث حقل",
+      "description": "تحديث قيمة حقل في الكيان"
+    },
+    "update_status": {
+      "label": "تحديث الحالة",
+      "description": "تغيير حالة الكيان"
+    },
+    "update_priority": {
+      "label": "تحديث الأولوية",
+      "description": "تغيير أولوية الكيان"
+    },
+    "add_tag": {
+      "label": "إضافة وسم",
+      "description": "إضافة وسم للكيان"
+    },
+    "remove_tag": {
+      "label": "إزالة وسم",
+      "description": "إزالة وسم من الكيان"
+    },
+    "create_task": {
+      "label": "إنشاء مهمة",
+      "description": "إنشاء مهمة متابعة"
+    },
+    "create_comment": {
+      "label": "إنشاء تعليق",
+      "description": "إضافة تعليق نظام"
+    },
+    "send_email": {
+      "label": "إرسال بريد إلكتروني",
+      "description": "إرسال إشعار بريد إلكتروني"
+    },
+    "call_webhook": {
+      "label": "استدعاء ويب هوك",
+      "description": "استدعاء ويب هوك خارجي"
+    },
+    "delay": {
+      "label": "تأخير",
+      "description": "الانتظار قبل تنفيذ الإجراء التالي"
+    }
+  },
+
+  "entities": {
+    "intake_ticket": "تذكرة استقبال",
+    "engagement": "تفاعل",
+    "commitment": "التزام",
+    "task": "مهمة",
+    "dossier": "ملف",
+    "position": "منصب",
+    "document": "مستند",
+    "calendar_entry": "إدخال تقويم"
+  },
+
+  "operators": {
+    "equals": "يساوي",
+    "not_equals": "لا يساوي",
+    "contains": "يحتوي على",
+    "not_contains": "لا يحتوي على",
+    "starts_with": "يبدأ بـ",
+    "ends_with": "ينتهي بـ",
+    "greater_than": "أكبر من",
+    "less_than": "أصغر من",
+    "greater_than_or_equal": "أكبر من أو يساوي",
+    "less_than_or_equal": "أصغر من أو يساوي",
+    "is_empty": "فارغ",
+    "is_not_empty": "غير فارغ",
+    "in_list": "في القائمة",
+    "not_in_list": "ليس في القائمة",
+    "between": "بين",
+    "changed_to": "تغير إلى",
+    "changed_from": "تغير من",
+    "has_changed": "تم تغييره"
+  },
+
+  "conditionLogicOptions": {
+    "all": "يجب تطابق جميع الشروط (و)",
+    "any": "يجب تطابق أي شرط (أو)"
+  },
+
+  "executionStatus": {
+    "pending": "معلق",
+    "running": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "cancelled": "ملغي",
+    "paused": "متوقف مؤقتاً"
+  },
+
+  "builder": {
+    "steps": {
+      "trigger": "المشغل",
+      "conditions": "الشروط",
+      "actions": "الإجراءات",
+      "settings": "الإعدادات",
+      "review": "المراجعة"
+    },
+    "stepDescriptions": {
+      "trigger": "اختر الحدث الذي سيشغل سير العمل هذا",
+      "conditions": "حدد متى يجب تشغيل سير العمل",
+      "actions": "قم بتكوين ما يحدث عند التشغيل",
+      "settings": "ضع حدود التنفيذ والخيارات",
+      "review": "راجع واحفظ سير العمل"
+    },
+    "whenThis": "عندما يحدث هذا...",
+    "ifThese": "إذا تحققت هذه الشروط...",
+    "thenDo": "قم بهذه الإجراءات...",
+    "noConditions": "لم تتم إضافة شروط. سيتم تشغيل سير العمل في كل مرة يتم فيها تشغيل المشغل.",
+    "noActions": "لم تتم إضافة إجراءات. أضف إجراء واحد على الأقل."
+  },
+
+  "stats": {
+    "totalRules": "إجمالي القواعد",
+    "activeRules": "القواعد النشطة",
+    "totalExecutions": "إجمالي التنفيذات",
+    "successRate": "معدل النجاح",
+    "avgDuration": "متوسط المدة"
+  },
+
+  "filters": {
+    "all": "الكل",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "byTrigger": "حسب المشغل",
+    "byEntity": "حسب الكيان"
+  },
+
+  "test": {
+    "title": "اختبار قاعدة سير العمل",
+    "selectEntity": "اختر كياناً للاختبار عليه",
+    "dryRun": "تشغيل تجريبي (بدون تنفيذ الإجراءات)",
+    "runTest": "تشغيل الاختبار",
+    "results": "نتائج الاختبار",
+    "conditionsResult": "نتيجة الشروط",
+    "actionsToExecute": "الإجراءات للتنفيذ",
+    "wouldExecute": "سيتم التنفيذ",
+    "conditionDetails": "تفاصيل الشروط"
+  },
+
+  "categories": {
+    "event": "مشغلات الأحداث",
+    "time": "مشغلات زمنية",
+    "manual": "مشغلات يدوية",
+    "notification": "الإشعارات",
+    "assignment": "التعيينات",
+    "update": "التحديثات",
+    "create": "إنشاء سجلات",
+    "external": "التكاملات الخارجية",
+    "control": "التحكم في التدفق"
+  }
+}

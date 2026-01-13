@@ -76,15 +76,57 @@
     "notes_placeholder": "أضف أي ملاحظات عن هذا الرابط..."
   },
   "consistency": {
-    "title": "فحص الاتساق",
-    "score": "درجة الاتساق",
+    "title": "تحليل الاتساق",
+    "loading": "جاري تحميل فحص الاتساق...",
+    "runCheck": "تشغيل الفحص",
+    "noCheck": "لم يتم تشغيل فحص الاتساق بعد.",
+    "noCheckHint": "قم بتشغيل فحص لتحليل هذا الموقف مقابل المستودع الحالي.",
+    "overallScore": "الدرجة الإجمالية",
+    "riskLevel": "مستوى المخاطر",
+    "risk": {
+      "low": "مخاطر منخفضة",
+      "medium": "مخاطر متوسطة",
+      "high": "مخاطر عالية",
+      "critical": "مخاطر حرجة"
+    },
+    "humanReviewRequired": "المراجعة مطلوبة",
+    "autoApproved": "معتمد تلقائياً",
+    "aiUnavailable": "الذكاء الاصطناعي غير متاح",
+    "conflicts": "التعارضات",
     "noConflicts": "لا توجد تعارضات",
+    "similarPositions": "المواقف المماثلة",
+    "noSimilar": "لم يتم العثور على مواقف مماثلة",
+    "recommendations": "التوصيات",
+    "severity": {
+      "low": "منخفضة",
+      "medium": "متوسطة",
+      "high": "عالية",
+      "critical": "حرجة"
+    },
+    "priority": {
+      "low": "أولوية منخفضة",
+      "medium": "أولوية متوسطة",
+      "high": "أولوية عالية"
+    },
+    "relationship": {
+      "duplicate": "مكرر",
+      "related": "ذو صلة",
+      "supersedes": "يحل محل",
+      "superseded_by": "محلول محله"
+    },
+    "suggestedResolution": "الحل المقترح",
+    "reviewRequired": "المراجعة البشرية مطلوبة",
+    "reviewNotesPlaceholder": "أضف ملاحظات المراجعة (اختياري)...",
+    "approve": "موافقة",
+    "requestRevision": "طلب مراجعة",
+    "reject": "رفض",
+    "outdated": "قديم",
+    "score": "درجة الاتساق",
     "noConflictsDescription": "هذا الموقف متسق مع جميع المواقف المنشورة الأخرى.",
     "conflictsFound": "تعارضات موجودة",
     "conflictsFoundDescription": "هذا الموقف لديه تعارضات مع مواقف أخرى تحتاج إلى مراجعة.",
     "aiServiceStatus": "خدمة الذكاء الاصطناعي",
     "aiAvailable": "متاحة",
-    "aiUnavailable": "غير متاحة",
     "checkTrigger": "مشغل الفحص",
     "manual": "فحص يدوي",
     "automaticOnSubmit": "تلقائي عند الإرسال",
@@ -102,7 +144,11 @@
     "conflictTypes": {
       "contradiction": "تناقض",
       "ambiguity": "غموض",
-      "overlap": "تداخل"
+      "overlap": "تداخل",
+      "redundancy": "تكرار",
+      "gap": "فجوة",
+      "outdated": "قديم",
+      "semantic_conflict": "تعارض دلالي"
     },
     "severityLevels": {
       "high": "عالية",

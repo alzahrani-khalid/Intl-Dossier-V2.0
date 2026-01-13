@@ -1,0 +1,154 @@
+{
+  "title": "Plan Future Milestones",
+  "subtitle": "Create forward-looking timeline content",
+  "emptyState": {
+    "title": "Start Planning Your Timeline",
+    "description": "No events yet? Turn this empty timeline into a planning canvas. Project future engagements, set policy deadlines, and schedule relationship reviews.",
+    "cta": "Add First Milestone",
+    "hint": "Milestones you create here will appear on your timeline and can be converted to actual events when the time comes."
+  },
+  "types": {
+    "engagement": "Planned Engagement",
+    "policy_deadline": "Policy Deadline",
+    "relationship_review": "Relationship Review",
+    "document_due": "Document Due",
+    "follow_up": "Follow-up",
+    "renewal": "Renewal",
+    "custom": "Custom Milestone"
+  },
+  "typeDescriptions": {
+    "engagement": "Schedule a meeting, consultation, or diplomatic interaction",
+    "policy_deadline": "Mark important policy dates and submission deadlines",
+    "relationship_review": "Plan periodic relationship assessments",
+    "document_due": "Track document preparation and submission dates",
+    "follow_up": "Set reminders for follow-up actions",
+    "renewal": "Track MOU, agreement, or contract renewal dates",
+    "custom": "Create a custom milestone type"
+  },
+  "status": {
+    "planned": "Planned",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "postponed": "Postponed",
+    "cancelled": "Cancelled"
+  },
+  "priority": {
+    "high": "High Priority",
+    "medium": "Medium Priority",
+    "low": "Low Priority"
+  },
+  "form": {
+    "addMilestone": "Add Milestone",
+    "editMilestone": "Edit Milestone",
+    "milestoneType": "Milestone Type",
+    "selectType": "Select milestone type",
+    "titleEn": "Title (English)",
+    "titleAr": "Title (Arabic)",
+    "titleEnPlaceholder": "Enter milestone title",
+    "titleArPlaceholder": "Enter milestone title in Arabic",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "descriptionEnPlaceholder": "Describe the milestone",
+    "descriptionArPlaceholder": "Describe the milestone in Arabic",
+    "targetDate": "Target Date",
+    "targetTime": "Target Time",
+    "endDate": "End Date (Optional)",
+    "priority": "Priority",
+    "selectPriority": "Select priority",
+    "notesEn": "Notes (English)",
+    "notesAr": "Notes (Arabic)",
+    "notesPlaceholder": "Additional notes or context",
+    "expectedOutcomeEn": "Expected Outcome (English)",
+    "expectedOutcomeAr": "Expected Outcome (Arabic)",
+    "expectedOutcomePlaceholder": "What do you expect to achieve?",
+    "save": "Save Milestone",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this milestone?"
+  },
+  "reminders": {
+    "title": "Reminders",
+    "addReminder": "Add Reminder",
+    "removeReminder": "Remove",
+    "enabled": "Enabled",
+    "disabled": "Disabled",
+    "daysBefore": "Days Before",
+    "hoursBefore": "Hours Before",
+    "frequency": "Frequency",
+    "channels": "Notification Channels",
+    "frequencyOptions": {
+      "once": "Once",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "custom": "Custom"
+    },
+    "channelOptions": {
+      "in_app": "In-App",
+      "email": "Email",
+      "push": "Push Notification"
+    },
+    "customMessage": "Custom Message (Optional)"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "markComplete": "Mark Complete",
+    "postpone": "Postpone",
+    "convertToEvent": "Convert to Event",
+    "viewDetails": "View Details"
+  },
+  "convert": {
+    "title": "Convert to Event",
+    "description": "Convert this planned milestone into an actual timeline event.",
+    "selectEventType": "Select Event Type",
+    "eventTypes": {
+      "calendar": "Calendar Event",
+      "commitment": "Commitment",
+      "decision": "Decision"
+    },
+    "confirm": "Convert",
+    "success": "Milestone converted to event successfully"
+  },
+  "stats": {
+    "total": "Total Milestones",
+    "upcoming": "Upcoming",
+    "thisWeek": "This Week",
+    "thisMonth": "This Month",
+    "overdue": "Overdue"
+  },
+  "filters": {
+    "all": "All Milestones",
+    "byType": "By Type",
+    "byStatus": "By Status",
+    "byPriority": "By Priority"
+  },
+  "sort": {
+    "targetDate": "Target Date",
+    "priority": "Priority",
+    "createdAt": "Date Created"
+  },
+  "quickAdd": {
+    "title": "Quick Add",
+    "selectTemplate": "Select a template to quickly add a milestone"
+  },
+  "messages": {
+    "createSuccess": "Milestone created successfully",
+    "updateSuccess": "Milestone updated successfully",
+    "deleteSuccess": "Milestone deleted successfully",
+    "createError": "Failed to create milestone",
+    "updateError": "Failed to update milestone",
+    "deleteError": "Failed to delete milestone",
+    "reminderSet": "Reminder set for {{days}} days before"
+  },
+  "dueIn": {
+    "overdue": "Overdue",
+    "today": "Due Today",
+    "tomorrow": "Due Tomorrow",
+    "days": "{{count}} day left",
+    "days_plural": "{{count}} days left",
+    "weeks": "{{count}} week left",
+    "weeks_plural": "{{count}} weeks left",
+    "months": "{{count}} month left",
+    "months_plural": "{{count}} months left"
+  }
+}

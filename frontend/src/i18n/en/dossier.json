@@ -42,7 +42,9 @@
     "close": "Close",
     "backToHub": "Back to Dossiers Hub",
     "backToList": "Back to List",
-    "viewCorrectType": "View as {{type}}"
+    "viewCorrectType": "View as {{type}}",
+    "exportGraph": "Export Graph",
+    "addRelationship": "Add Relationship"
   },
   "filter": {
     "all": "All Types",
@@ -444,6 +446,7 @@
     "retry": "Retry"
   },
   "timeline": {
+    "title": "Interactive Timeline",
     "search_placeholder": "Search timeline events...",
     "filters": "Filters",
     "event_types": "Event Types",
@@ -474,8 +477,25 @@
     "to_date": "To Date",
     "apply_custom_range": "Apply Range",
     "reset_filters": "Reset All Filters",
+    "loading_more": "Loading more...",
+    "load_more": "Load More",
     "end": "End of timeline",
+    "location": "Location",
+    "join_virtual": "Join Virtual Meeting",
+    "participants": "Participants",
+    "more": "more",
+    "attachments": "Attachments",
+    "confidence": "Confidence",
+    "show_more": "Show More",
+    "show_less": "Show Less",
+    "view_details": "View Details",
+    "error": {
+      "title": "Error",
+      "description": "Failed to load timeline"
+    },
     "empty": {
+      "title": "No Events",
+      "description": "No timeline events to display",
       "country": "No timeline events found for this country",
       "organization": "No timeline events found for this organization",
       "person": "No timeline events found for this person",
@@ -483,6 +503,49 @@
       "forum": "No timeline events found for this forum",
       "working_group": "No timeline events found for this working group",
       "topic": "No timeline events found for this topic"
+    },
+    "zoom": {
+      "zoom_in": "Zoom In",
+      "zoom_out": "Zoom Out",
+      "go_today": "Go to Today",
+      "scroll_back": "Scroll Back",
+      "scroll_forward": "Scroll Forward",
+      "fit_all": "Fit All Events",
+      "day": "Day",
+      "week": "Week",
+      "month": "Month",
+      "quarter": "Quarter",
+      "year": "Year",
+      "all": "All Time"
+    },
+    "annotations": {
+      "toggle": "Toggle Annotations",
+      "create_title": "Add Annotation",
+      "create_description": "Add a note, marker, or highlight to this event",
+      "edit_title": "Edit Annotation",
+      "edit_description": "Update your annotation",
+      "type": "Annotation Type",
+      "content_en": "Content (English)",
+      "content_ar": "Content (Arabic)",
+      "content_placeholder_en": "Enter your annotation...",
+      "content_placeholder_ar": "أدخل ملاحظتك...",
+      "color": "Color",
+      "visibility": "Visibility",
+      "add": "Add Annotation",
+      "types": {
+        "note": "Note",
+        "marker": "Marker",
+        "highlight": "Highlight",
+        "milestone": "Milestone"
+      },
+      "visibility_options": {
+        "private": "Private",
+        "private_desc": "Only you can see this",
+        "team": "Team",
+        "team_desc": "Visible to your team",
+        "public": "Public",
+        "public_desc": "Visible to all users"
+      }
     }
   },
   "tabs": {
@@ -490,6 +553,63 @@
     "relationships": "Relationships",
     "positions": "Positions",
     "mous": "MoUs",
-    "contacts": "Contacts"
+    "contacts": "Contacts",
+    "comments": "Comments"
+  },
+  "carousel": {
+    "previous": "Previous",
+    "next": "Next",
+    "label": "Related items carousel",
+    "pagination": "Carousel pagination",
+    "empty": "No items to display",
+    "itemCount": "{{current}} of {{total}}",
+    "relatedDossiers": "Related Dossiers",
+    "linkedPersons": "Linked Persons",
+    "connectedOrganizations": "Connected Organizations",
+    "viewAll": "View All"
+  },
+  "views": {
+    "carousel": "Carousel",
+    "list": "List",
+    "graph": "Network"
+  },
+  "templates": {
+    "title": "Dossier Templates",
+    "subtitle": "Choose a pre-configured template to get started quickly",
+    "gallery": {
+      "title": "Template Gallery",
+      "description": "Select a template to preview its structure before creating your dossier",
+      "viewAll": "View All Templates",
+      "startFromScratch": "Start from Scratch",
+      "startFromScratchDescription": "Create a dossier without using a template"
+    },
+    "preview": {
+      "title": "Template Preview",
+      "useTemplate": "Use This Template",
+      "sections": "Sections",
+      "requiredSections": "Required Sections",
+      "optionalSections": "Optional Sections",
+      "recommendedTags": "Recommended Tags",
+      "useCases": "Use Cases",
+      "exampleName": "Example Name",
+      "dossierType": "Dossier Type",
+      "close": "Close Preview"
+    },
+    "category": {
+      "all": "All Templates",
+      "bilateral": "Bilateral Relations",
+      "regional": "Regional Analysis",
+      "thematic": "Thematic Briefs",
+      "organizational": "Organizations & Forums"
+    },
+    "card": {
+      "clickToPreview": "Click to preview structure",
+      "sectionsCount": "{{count}} sections",
+      "required": "required"
+    },
+    "empty": {
+      "title": "No templates available",
+      "description": "Templates help you create structured dossiers quickly"
+    }
   }
 }

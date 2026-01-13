@@ -1,0 +1,10 @@
+{
+  "category": "ui",
+  "description": "Enable real-time collaborative editing with Google Docs-style track changes, suggestions, and inline comments. Show who made each change with accept/reject workflows for document authors.\n\n**Rationale:** Policy briefs require input from multiple stakeholders. Without collaborative drafting tools, teams resort to email chains and version confusion, slowing diplomatic work.",
+  "title": "Collaborative Drafting with Track Changes",
+  "status": "completed",
+  "id": "feature-1768132644479-5mrqfb1e4",
+  "branchName": "main",
+  "startedAt": "2026-01-11T22:40:09.396Z",
+  "updatedAt": "2026-01-11T23:07:40.553Z"
+}

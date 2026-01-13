@@ -1,0 +1,104 @@
+{
+  "required": "هذا الحقل مطلوب",
+  "required.suggestion": "يرجى إدخال قيمة للمتابعة",
+
+  "minLength": "يجب أن يكون {{min}} حرفًا على الأقل (حاليًا {{current}})",
+  "minLength.suggestion": "أضف {{remaining}} حرف/أحرف إضافية للوصول إلى الحد الأدنى",
+
+  "maxLength": "لا يمكن تجاوز {{max}} حرفًا (حاليًا {{current}})",
+  "maxLength.suggestion": "احذف {{excess}} حرف/أحرف للوصول إلى الحد المسموح",
+  "maxLength.approaching": "متبقي {{remaining}} حرف",
+
+  "email": {
+    "invalid": "يرجى إدخال عنوان بريد إلكتروني صحيح",
+    "suggestion": "يجب أن يكون البريد الإلكتروني بالصيغة: name@example.com",
+    "missingAt": "عنوان البريد الإلكتروني يفتقد رمز @",
+    "missingAt.suggestion": "أضف @ متبوعًا بنطاق بريدك الإلكتروني (مثل: @gmail.com)",
+    "missingDomain": "عنوان البريد الإلكتروني يفتقد النطاق",
+    "missingDomain.suggestion": "أضف نطاقًا بعد @ (مثل: .com، .org)",
+    "invalidPosition": "رمز @ في موضع غير صحيح",
+    "invalidPosition.suggestion": "تأكد من وجود نص قبل وبعد @",
+    "hasSpaces": "لا يمكن أن تحتوي عناوين البريد الإلكتروني على مسافات",
+    "hasSpaces.suggestion": "احذف أي مسافات من عنوان البريد الإلكتروني"
+  },
+
+  "url": {
+    "invalid": "يرجى إدخال رابط صحيح",
+    "suggestion": "يجب أن يبدأ الرابط بـ https:// أو http://",
+    "missingProtocol": "الرابط يفتقد البروتوكول (https:// أو http://)",
+    "missingProtocol.suggestion": "أضف https:// في البداية",
+    "missingDomain": "الرابط يفتقد نطاقًا صحيحًا",
+    "missingDomain.suggestion": "أضف نطاقًا مثل example.com"
+  },
+
+  "phone": {
+    "invalid": "يرجى إدخال رقم هاتف صحيح",
+    "suggestion": "استخدم الصيغة: +966 5X XXX XXXX أو ما شابه",
+    "noDigits": "يجب أن يحتوي رقم الهاتف على أرقام",
+    "noDigits.suggestion": "أدخل رقم هاتفك باستخدام الأرقام",
+    "tooShort": "رقم الهاتف قصير جدًا (الحد الأدنى {{minDigits}} أرقام)",
+    "tooShort.suggestion": "أدخل رقم هاتفك الكامل بما في ذلك رمز المنطقة"
+  },
+
+  "alphanumeric": {
+    "invalid": "مسموح فقط بالأحرف والأرقام",
+    "suggestion": "احذف أي رموز خاصة"
+  },
+
+  "arabic": {
+    "invalid": "مسموح فقط بالنص العربي في هذا الحقل",
+    "suggestion": "انتقل إلى لوحة المفاتيح العربية"
+  },
+
+  "specialChars": {
+    "invalid": "الرموز الخاصة مثل < > { } [ ] \\ غير مسموح بها",
+    "suggestion": "احذف أي رموز خاصة من إدخالك"
+  },
+
+  "dateFormat": {
+    "invalid": "يرجى إدخال تاريخ صحيح",
+    "suggestion": "استخدم الصيغة: YYYY-MM-DD"
+  },
+
+  "generic": {
+    "invalid": "هذه القيمة غير صحيحة",
+    "suggestion": "يرجى التحقق من إدخالك والمحاولة مرة أخرى"
+  },
+
+  "password": {
+    "strength": {
+      "weak": "ضعيف",
+      "fair": "مقبول",
+      "good": "جيد",
+      "strong": "قوي"
+    },
+    "improvements": "لتقوية كلمة المرور:",
+    "addLength": "استخدم 8 أحرف على الأقل",
+    "addLowercase": "أضف أحرفًا صغيرة (a-z)",
+    "addUppercase": "أضف أحرفًا كبيرة (A-Z)",
+    "addNumber": "أضف أرقامًا (0-9)",
+    "addSpecial": "أضف رموزًا خاصة (!@#$%^&*)"
+  },
+
+  "suggestions": {
+    "apply": "تطبيق الاقتراح"
+  },
+
+  "summary": {
+    "title": "يرجى إصلاح {{count}} خطأ/أخطاء قبل المتابعة",
+    "title_one": "يرجى إصلاح خطأ واحد قبل المتابعة",
+    "title_other": "يرجى إصلاح {{count}} أخطاء قبل المتابعة"
+  },
+
+  "fields": {
+    "email": "البريد الإلكتروني",
+    "password": "كلمة المرور",
+    "name": "الاسم",
+    "title": "العنوان",
+    "description": "الوصف",
+    "phone": "الهاتف",
+    "url": "الرابط",
+    "date": "التاريخ",
+    "message": "الرسالة"
+  }
+}

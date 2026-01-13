@@ -1,0 +1,96 @@
+{
+  "title": "Semantic Search",
+  "description": "Find related content using natural language queries with AI-powered semantic understanding",
+
+  "search": {
+    "placeholder": "Natural language semantic search...",
+    "button": "Search",
+    "searching": "Searching...",
+    "clear": "Clear search"
+  },
+
+  "entityTypes": {
+    "label": "Search In",
+    "selectAll": "Select All",
+    "deselectAll": "Clear All",
+    "dossierCategory": "Dossiers",
+    "contentCategory": "Content",
+    "peopleCategory": "People & Groups",
+    "dossiers": "All Dossiers",
+    "country": "Countries",
+    "organization": "Organizations",
+    "forum": "Forums",
+    "theme": "Themes",
+    "positions": "Positions",
+    "documents": "Documents",
+    "briefs": "Briefs",
+    "engagements": "Engagements",
+    "persons": "People",
+    "external_contacts": "External Contacts",
+    "working_groups": "Working Groups"
+  },
+
+  "advanced": {
+    "title": "Advanced Options",
+    "similarity": "Similarity Threshold",
+    "similarityHint": "Higher values return more precise matches but fewer results",
+    "limit": "Maximum Results",
+    "dossierTypes": "Filter by Dossier Type",
+    "dossierTypesHint": "Leave empty to search all dossier types",
+    "includeFulltext": "Include Full-Text Results",
+    "includeFulltextHint": "Combine semantic search with traditional keyword matching for broader coverage",
+    "includeMetadata": "Include Metadata",
+    "includeMetadataHint": "Return additional entity metadata like tags, status, and relationships"
+  },
+
+  "matchType": {
+    "semantic": "Semantic Match",
+    "fulltext": "Keyword Match",
+    "hybrid": "Hybrid Match"
+  },
+
+  "results": {
+    "title": "{{count}} result found",
+    "title_plural": "{{count}} results found",
+    "noResults": "No results found",
+    "noResultsHint": "Try adjusting your search query or lowering the similarity threshold",
+    "viewDetails": "View Details"
+  },
+
+  "performance": {
+    "embedding": "Embedding",
+    "vector": "Vector Search",
+    "fulltext": "Full-Text",
+    "total": "Total",
+    "language": "Language"
+  },
+
+  "errors": {
+    "searchFailed": "Search failed. Please try again.",
+    "authRequired": "Authentication required to perform search",
+    "serviceUnavailable": "Semantic search service is temporarily unavailable",
+    "invalidQuery": "Please enter a search query",
+    "noEntityTypes": "Please select at least one entity type"
+  },
+
+  "hints": {
+    "naturalLanguage": "Use natural language queries like \"What are our positions on climate change?\" or \"Find meetings with Saudi officials\"",
+    "arabicSupport": "Arabic queries are fully supported - try searching in Arabic for better results in Arabic content",
+    "hybridMode": "Enable hybrid mode to combine semantic understanding with exact keyword matching"
+  },
+
+  "examples": {
+    "title": "Example Queries",
+    "query1": "International trade agreements with Asian countries",
+    "query2": "Climate policy positions and related engagements",
+    "query3": "Documents about bilateral cooperation"
+  },
+
+  "a11y": {
+    "searchInput": "Semantic search input field",
+    "entityTypeToggle": "Toggle {{type}} in search",
+    "similaritySlider": "Adjust similarity threshold",
+    "resultsRegion": "Search results",
+    "resultItem": "Search result: {{title}}"
+  }
+}

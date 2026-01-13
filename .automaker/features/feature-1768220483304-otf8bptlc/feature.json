@@ -1,0 +1,10 @@
+{
+  "category": "enhancement",
+  "description": "When no relationships exist between entities, display an interactive wizard that walks users through creating their first country-to-country, organization-to-position, or other entity relationships. Include visual examples of how relationships appear once created.\n\n**Rationale:** The system heavily relies on relationship tracking between entities. New users may not understand how to establish these connections or why they're valuable. A guided wizard reduces friction and demonstrates the core value proposition immediately.",
+  "title": "Relationship Graph Empty State with Connection Wizard",
+  "status": "verified",
+  "id": "feature-1768220483304-otf8bptlc",
+  "branchName": "main",
+  "startedAt": "2026-01-12T12:23:37.294Z",
+  "updatedAt": "2026-01-12T12:34:18.496Z"
+}

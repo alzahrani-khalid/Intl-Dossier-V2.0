@@ -1,0 +1,14 @@
+{
+  "id": "geographic-visualization",
+  "category": "UI",
+  "title": "Geographic Relationship Map",
+  "description": "Interactive world map visualizing relationships by country, engagement activity heatmaps, and regional groupings. Supports filtering by relationship type, time period, and engagement intensity.",
+  "status": "completed",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.671Z",
+  "updatedAt": "2026-01-11T21:31:31.907Z",
+  "branchName": "main",
+  "startedAt": "2026-01-11T21:12:09.567Z"
+}

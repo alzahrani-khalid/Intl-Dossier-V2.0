@@ -1,0 +1,218 @@
+{
+  "hint": {
+    "dismiss": "Dismiss hint",
+    "expand": "Show more",
+    "collapse": "Show less",
+    "gotIt": "Got it"
+  },
+  "tiers": {
+    "basic": "Getting Started",
+    "intermediate": "Tips & Tricks",
+    "advanced": "Advanced Features"
+  },
+  "hints": {
+    "count": "{{count}} tips",
+    "count_one": "{{count}} tip",
+    "section": {
+      "title": "Helpful Tips"
+    },
+    "unlock": {
+      "intermediate": "Complete your first action to unlock more tips",
+      "advanced": "Return later to discover advanced features"
+    },
+    "keyboard": {
+      "available": "Keyboard shortcuts available"
+    }
+  },
+  "experience": {
+    "beginner": "Beginner",
+    "intermediate": "Intermediate",
+    "advanced": "Advanced",
+    "expert": "Expert"
+  },
+  "settings": {
+    "title": "Hint Settings",
+    "hintsEnabled": "Show helpful hints",
+    "hintsEnabledDescription": "Display contextual tips throughout the application",
+    "keyboardShortcuts": "Show keyboard shortcuts",
+    "keyboardShortcutsDescription": "Display keyboard shortcut hints",
+    "advancedFeatures": "Show advanced features",
+    "advancedFeaturesDescription": "Reveal tips for power user features",
+    "reset": "Reset all hints",
+    "resetDescription": "Show all hints again as if you were a new user"
+  },
+  "pages": {
+    "dossiers": {
+      "empty": {
+        "basic": {
+          "create": {
+            "title": "Create Your First Dossier",
+            "content": "Dossiers help you organize information about countries, organizations, forums, and more."
+          },
+          "types": {
+            "title": "Choose the Right Type",
+            "content": "Select from Country, Organization, Forum, Working Group, or Person dossiers based on what you're tracking."
+          }
+        },
+        "intermediate": {
+          "relationships": {
+            "title": "Connect Your Dossiers",
+            "content": "Link related dossiers to build a network of relationships and see the bigger picture.",
+            "expanded": "Use the Relationships tab to create connections between entities like MOUs, partnerships, or memberships."
+          },
+          "documents": {
+            "title": "Attach Documents",
+            "content": "Keep all relevant files in one place by attaching documents to your dossiers."
+          }
+        },
+        "advanced": {
+          "briefs": {
+            "title": "Generate AI Briefs",
+            "content": "Let AI summarize your dossier information into concise briefing documents.",
+            "action": "Learn about AI briefs"
+          },
+          "shortcuts": {
+            "title": "Quick Navigation",
+            "content": "Press Ctrl+K (Cmd+K on Mac) to quickly search and navigate to any dossier.",
+            "shortcut": "Ctrl+K"
+          }
+        }
+      }
+    },
+    "engagements": {
+      "empty": {
+        "basic": {
+          "create": {
+            "title": "Track Your Engagements",
+            "content": "Engagements help you manage meetings, events, and interactions with stakeholders."
+          },
+          "calendar": {
+            "title": "Calendar Integration",
+            "content": "View your engagements on a calendar to plan your schedule effectively."
+          }
+        },
+        "intermediate": {
+          "afterAction": {
+            "title": "Record After-Action Notes",
+            "content": "Document outcomes, commitments, and follow-up items after each engagement.",
+            "expanded": "After-action records help track what was discussed and ensure nothing falls through the cracks."
+          },
+          "link": {
+            "title": "Link to Dossiers",
+            "content": "Connect engagements to relevant dossiers for better context and tracking."
+          }
+        },
+        "advanced": {
+          "analytics": {
+            "title": "Engagement Analytics",
+            "content": "View insights about your engagement patterns and stakeholder relationships.",
+            "action": "View analytics"
+          }
+        }
+      }
+    },
+    "myWork": {
+      "empty": {
+        "basic": {
+          "overview": {
+            "title": "Your Work Dashboard",
+            "content": "See all your tasks, commitments, and follow-ups in one unified view."
+          },
+          "priorities": {
+            "title": "Manage Priorities",
+            "content": "Use the Kanban board to organize work by status and priority."
+          }
+        },
+        "intermediate": {
+          "filters": {
+            "title": "Filter Your View",
+            "content": "Use filters to focus on specific types of work or time periods.",
+            "expanded": "Filter by source (tasks, commitments, intake), status, priority, or due date."
+          },
+          "deadlines": {
+            "title": "Track Deadlines",
+            "content": "Items are color-coded by urgency to help you stay on top of deadlines."
+          }
+        },
+        "advanced": {
+          "bulk": {
+            "title": "Bulk Actions",
+            "content": "Select multiple items to update status, assign, or complete in bulk.",
+            "shortcut": "Shift+Click"
+          }
+        }
+      }
+    },
+    "calendar": {
+      "empty": {
+        "basic": {
+          "events": {
+            "title": "Schedule Events",
+            "content": "Add meetings, deadlines, and important dates to your calendar."
+          },
+          "views": {
+            "title": "Multiple Views",
+            "content": "Switch between month, week, and day views to see your schedule."
+          }
+        },
+        "intermediate": {
+          "recurring": {
+            "title": "Recurring Events",
+            "content": "Set up events that repeat daily, weekly, monthly, or on custom schedules."
+          },
+          "link": {
+            "title": "Link to Records",
+            "content": "Connect calendar events to engagements and dossiers for context."
+          }
+        },
+        "advanced": {
+          "sync": {
+            "title": "Calendar Sync",
+            "content": "Sync with external calendars like Google Calendar or Outlook.",
+            "action": "Configure sync"
+          },
+          "conflicts": {
+            "title": "Conflict Detection",
+            "content": "The system automatically detects scheduling conflicts and suggests alternatives."
+          }
+        }
+      }
+    },
+    "documents": {
+      "empty": {
+        "basic": {
+          "upload": {
+            "title": "Upload Documents",
+            "content": "Store and organize important files in a central location."
+          },
+          "organize": {
+            "title": "Stay Organized",
+            "content": "Attach documents to dossiers and engagements for easy retrieval."
+          }
+        },
+        "intermediate": {
+          "search": {
+            "title": "Search Content",
+            "content": "Search within document contents to find what you need quickly.",
+            "expanded": "Full-text search works on PDFs, Word documents, and other text-based files."
+          },
+          "versions": {
+            "title": "Version History",
+            "content": "Track changes with automatic version history for all documents."
+          }
+        },
+        "advanced": {
+          "ocr": {
+            "title": "OCR Support",
+            "content": "Scanned documents are automatically processed to make text searchable."
+          },
+          "templates": {
+            "title": "Document Templates",
+            "content": "Create templates for commonly used document types.",
+            "action": "Manage templates"
+          }
+        }
+      }
+    }
+  }
+}

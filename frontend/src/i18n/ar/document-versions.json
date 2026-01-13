@@ -1,0 +1,74 @@
+{
+  "history": {
+    "title": "سجل الإصدارات",
+    "noVersions": "لا يوجد سجل إصدارات متاح",
+    "current": "الحالي",
+    "selectedCount": "{{count}} محدد",
+    "selectVersion": "تحديد الإصدار {{version}}"
+  },
+  "comparison": {
+    "title": "مقارنة الإصدارات",
+    "subtitle": "مقارنة الإصدار {{a}} مع الإصدار {{b}}",
+    "sizeChange": "تغيير الحجم",
+    "noChange": "لا تغيير",
+    "noTextDiff": "لم يتم العثور على اختلافات نصية",
+    "noTextDiffDesc": "محتوى النص في هذه الإصدارات متطابق.",
+    "binaryFile": "مقارنة ملف ثنائي",
+    "binaryFileDesc": "هذا النوع من الملفات لا يدعم المقارنة النصية. قم بتنزيل كلا الإصدارين للمقارنة يدوياً."
+  },
+  "diff": {
+    "oldVersion": "الإصدار القديم",
+    "newVersion": "الإصدار الجديد",
+    "hunkHeader": "التغييرات في السطور {{oldStart}}-{{oldEnd}}"
+  },
+  "stats": {
+    "additions": "{{count}} إضافات",
+    "deletions": "{{count}} حذف",
+    "similarity": "{{percent}}% تشابه"
+  },
+  "viewMode": {
+    "inline": "مضمن",
+    "sideBySide": "جنباً إلى جنب",
+    "unified": "موحد"
+  },
+  "changeType": {
+    "initial": "أولي",
+    "update": "محدث",
+    "major_revision": "مراجعة رئيسية",
+    "minor_edit": "تعديل بسيط",
+    "revert": "استعادة"
+  },
+  "modal": {
+    "title": "سجل الإصدارات"
+  },
+  "tabs": {
+    "history": "السجل",
+    "compare": "مقارنة"
+  },
+  "compare": {
+    "selectVersions": "حدد إصدارين من السجل للمقارنة"
+  },
+  "dialogs": {
+    "revert": {
+      "title": "استعادة إلى الإصدار {{version}}؟",
+      "description": "سيؤدي هذا إلى إنشاء إصدار جديد بناءً على الإصدار المحدد. سيتم الاحتفاظ بالإصدار الحالي في السجل.",
+      "reasonLabel": "السبب (اختياري)",
+      "reasonPlaceholder": "لماذا تقوم بالاستعادة؟"
+    }
+  },
+  "actions": {
+    "compare": "مقارنة",
+    "revert": "استعادة",
+    "reverting": "جاري الاستعادة...",
+    "revertTo": "استعادة إلى هذا الإصدار",
+    "download": "تنزيل",
+    "downloadVersionA": "تنزيل v{{version}}",
+    "downloadVersionB": "تنزيل v{{version}}",
+    "cancel": "إلغاء",
+    "clearSelection": "مسح",
+    "goToHistory": "الذهاب إلى السجل"
+  },
+  "common": {
+    "unknown": "غير معروف"
+  }
+}

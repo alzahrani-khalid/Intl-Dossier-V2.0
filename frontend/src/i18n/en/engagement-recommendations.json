@@ -1,0 +1,129 @@
+{
+  "title": "Engagement Recommendations",
+  "panelTitle": "AI Recommendations",
+  "description": "AI-driven suggestions for proactive engagement based on relationship health, upcoming events, and strategic priorities.",
+
+  "noRecommendations": "No Recommendations",
+  "noRecommendationsDescription": "All caught up! There are no pending engagement recommendations at this time.",
+  "noMatchingRecommendations": "No recommendations match your current filters. Try adjusting your filter criteria.",
+  "noHighPriority": "No high-priority recommendations at this time.",
+
+  "filterByType": "Filter by Type",
+  "filterByUrgency": "Filter by Urgency",
+  "recommendationType": "Recommendation Type",
+  "urgencyLevel": "Urgency Level",
+  "urgency": "Urgency",
+  "activeFilters": "{{count}} filter(s) active",
+  "clearFilters": "Clear filters",
+
+  "accept": "Accept",
+  "dismiss": "Dismiss",
+  "viewDetails": "View Details",
+  "viewAll": "View All Recommendations",
+  "loadMore": "Load More",
+  "generate": "Generate",
+  "retry": "Retry",
+
+  "expiringSoon": "Expiring Soon",
+  "healthScore": "Health:",
+  "confidenceTooltip": "AI confidence score indicates how certain the system is about this recommendation",
+
+  "pendingRecommendations": "Pending",
+  "criticalUrgency": "Critical",
+  "acceptanceRate": "Acceptance Rate",
+  "avgConfidence": "Avg. Confidence",
+  "highPriority": "High Priority",
+  "byType": "By Type",
+
+  "errorLoading": "Failed to load recommendations. Please try again.",
+
+  "types": {
+    "proactive_outreach": "Proactive Outreach",
+    "follow_up": "Follow Up",
+    "commitment_reminder": "Commitment Reminder",
+    "relationship_maintenance": "Relationship Maintenance",
+    "strategic_opportunity": "Strategic Opportunity",
+    "risk_mitigation": "Risk Mitigation",
+    "reciprocity_balance": "Reciprocity Balance"
+  },
+
+  "urgencies": {
+    "low": "Low",
+    "normal": "Normal",
+    "high": "High",
+    "critical": "Critical"
+  },
+
+  "statuses": {
+    "pending": "Pending",
+    "viewed": "Viewed",
+    "accepted": "Accepted",
+    "dismissed": "Dismissed",
+    "expired": "Expired",
+    "superseded": "Superseded"
+  },
+
+  "formats": {
+    "in_person": "In Person",
+    "virtual": "Virtual",
+    "hybrid": "Hybrid",
+    "phone_call": "Phone Call",
+    "email": "Email",
+    "formal_letter": "Formal Letter"
+  },
+
+  "feedbackTypes": {
+    "helpful": "Helpful",
+    "not_helpful": "Not Helpful",
+    "timing_wrong": "Timing Wrong",
+    "already_planned": "Already Planned",
+    "not_relevant": "Not Relevant",
+    "too_early": "Too Early",
+    "too_late": "Too Late"
+  },
+
+  "details": {
+    "suggestedAction": "Suggested Action",
+    "optimalTiming": "Optimal Timing",
+    "timingReason": "Timing Reason",
+    "suggestedFormat": "Suggested Format",
+    "suggestedType": "Suggested Engagement Type",
+    "reasoning": "AI Reasoning",
+    "factors": "Contributing Factors",
+    "triggers": "Triggers",
+    "relatedCommitments": "Related Commitments",
+    "relatedEvents": "Related Events"
+  },
+
+  "actions": {
+    "createEngagement": "Create Engagement",
+    "scheduleMeeting": "Schedule Meeting",
+    "sendEmail": "Send Email",
+    "addToCalendar": "Add to Calendar",
+    "provideFeedback": "Provide Feedback"
+  },
+
+  "feedback": {
+    "title": "How was this recommendation?",
+    "helpful": "This was helpful",
+    "notHelpful": "This was not helpful",
+    "additionalFeedback": "Additional feedback (optional)",
+    "submit": "Submit Feedback",
+    "thankYou": "Thank you for your feedback!"
+  },
+
+  "generation": {
+    "generating": "Generating recommendations...",
+    "success": "Successfully generated {{count}} recommendation(s)",
+    "noNew": "No new recommendations were generated",
+    "error": "Failed to generate recommendations"
+  },
+
+  "priorities": {
+    "1": "Very Low",
+    "2": "Low",
+    "3": "Medium",
+    "4": "High",
+    "5": "Critical"
+  }
+}

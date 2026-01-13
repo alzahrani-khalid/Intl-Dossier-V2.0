@@ -1,0 +1,10 @@
+{
+  "category": "enhancement",
+  "description": "Instead of showing completely empty screens, progressively reveal helpful content as users hover or interact: basic tips on initial view, advanced features on first interaction, keyboard shortcuts on subsequent visits. Track user progress to avoid repetition.\n\n**Rationale:** Overwhelming users with all information at once leads to cognitive overload. Progressive disclosure respects user attention, reveals information at the right moment, and adapts to user experience level.",
+  "title": "Progressive Empty State Content Reveals",
+  "status": "verified",
+  "id": "feature-1768200712404-1eu19n1m6",
+  "branchName": "main",
+  "startedAt": "2026-01-12T11:42:33.311Z",
+  "updatedAt": "2026-01-12T11:57:42.812Z"
+}

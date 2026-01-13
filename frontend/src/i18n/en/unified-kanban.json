@@ -4,6 +4,35 @@
     "list": "List View",
     "board": "Board View"
   },
+  "swimlanes": {
+    "none": "No Swimlanes",
+    "byAssignee": "By Assignee",
+    "byPriority": "By Priority",
+    "unassigned": "Unassigned",
+    "collapse": "Collapse",
+    "expand": "Expand"
+  },
+  "wip": {
+    "limit": "WIP Limit",
+    "limitReached": "WIP Limit Reached",
+    "limitReachedDescription": "Column {{column}} has reached its limit of {{limit}} items",
+    "approaching": "Approaching WIP limit",
+    "overLimit": "Over WIP limit"
+  },
+  "bulkActions": {
+    "select": "Select",
+    "cancel": "Cancel",
+    "selectAll": "Select All",
+    "selected": "selected",
+    "moveTo": "Move to",
+    "assign": "Assign",
+    "unassign": "Unassign",
+    "priority": "Set Priority",
+    "clearSelection": "Clear Selection",
+    "success": "Bulk action completed",
+    "partialSuccess": "{{succeeded}} of {{total}} items updated",
+    "failed": "Bulk action failed"
+  },
   "columnModes": {
     "label": "Group by",
     "status": "Status",

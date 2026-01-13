@@ -1,0 +1,494 @@
+{
+  "search": {
+    "noQuery": {
+      "title": "Start Your Search",
+      "description": "Enter a search term to find documents, dossiers, engagements, and more across the system.",
+      "hint": "Try searching for country names, organization names, or keywords from documents"
+    },
+    "noResults": {
+      "title": "No Results Found",
+      "description": "We couldn't find anything matching your search criteria.",
+      "descriptionWithQuery": "No results found for \"{{query}}\"",
+      "hint": "Try using different keywords or check your spelling",
+      "hintWithFilters": "You have {{count}} active filters that may be limiting results",
+      "clearFilters": "Clear Filters"
+    },
+    "error": {
+      "title": "Search Failed",
+      "description": "We encountered an error while searching. Please try again.",
+      "retry": "Retry Search"
+    }
+  },
+  "list": {
+    "generic": {
+      "title": "No Items Found",
+      "firstTitle": "Get Started",
+      "description": "There are no items to display at this time.",
+      "firstDescription": "Create your first item to get started with this section.",
+      "hint": "Items you create or import will appear here",
+      "create": "Create New",
+      "createFirst": "Create First Item",
+      "import": "Import"
+    },
+    "document": {
+      "title": "No Documents",
+      "firstTitle": "Add Your First Document",
+      "description": "No documents have been added to this section yet.",
+      "firstDescription": "Upload documents to keep all your important files organized and easily accessible.",
+      "hint": "Supported formats: PDF, DOCX, XLSX, images, and more",
+      "create": "Upload Document",
+      "createFirst": "Upload First Document",
+      "import": "Import from Drive"
+    },
+    "dossier": {
+      "title": "No Dossiers",
+      "firstTitle": "Create Your First Dossier",
+      "description": "Dossiers help you organize information about countries, organizations, and topics.",
+      "firstDescription": "Start by creating a dossier to track important relationships and activities.",
+      "hint": "Dossiers can contain documents, engagements, MOUs, and intelligence signals",
+      "create": "Create Dossier",
+      "createFirst": "Create First Dossier",
+      "import": "Import Dossiers"
+    },
+    "engagement": {
+      "title": "No Engagements",
+      "firstTitle": "Log Your First Engagement",
+      "description": "No engagements have been recorded yet.",
+      "firstDescription": "Track meetings, conferences, workshops, and other international engagements.",
+      "hint": "Add after-action records to engagements to capture decisions and commitments",
+      "create": "Create Engagement",
+      "createFirst": "Create First Engagement",
+      "import": "Import Engagements"
+    },
+    "commitment": {
+      "title": "No Commitments",
+      "firstTitle": "Track Your First Commitment",
+      "description": "No commitments have been recorded from engagements.",
+      "firstDescription": "Commitments help you track promises and deliverables from meetings and events.",
+      "hint": "Commitments are automatically created from after-action records",
+      "create": "Add Commitment",
+      "createFirst": "Add First Commitment",
+      "import": "Import Commitments"
+    },
+    "organization": {
+      "title": "No Organizations",
+      "firstTitle": "Add Your First Organization",
+      "description": "Organizations you work with will appear here.",
+      "firstDescription": "Add international organizations, government bodies, and partner institutions.",
+      "hint": "Organizations can be linked to dossiers, MOUs, and engagements",
+      "create": "Add Organization",
+      "createFirst": "Add First Organization",
+      "import": "Import Organizations"
+    },
+    "country": {
+      "title": "No Countries",
+      "firstTitle": "Add Your First Country",
+      "description": "Countries in your portfolio will be displayed here.",
+      "firstDescription": "Add countries to track relationships, agreements, and engagement history.",
+      "hint": "Each country can have its own dossier with detailed information",
+      "create": "Add Country",
+      "createFirst": "Add First Country",
+      "import": "Import Countries"
+    },
+    "forum": {
+      "title": "No Forums",
+      "firstTitle": "Add Your First Forum",
+      "description": "International forums and conferences will appear here.",
+      "firstDescription": "Track recurring international forums, working groups, and conferences.",
+      "hint": "Link forums to engagements to track participation over time",
+      "create": "Add Forum",
+      "createFirst": "Add First Forum",
+      "import": "Import Forums"
+    },
+    "event": {
+      "title": "No Events",
+      "firstTitle": "Schedule Your First Event",
+      "description": "Upcoming events and meetings will appear here.",
+      "firstDescription": "Add events to your calendar to stay organized and track deadlines.",
+      "hint": "Events can be linked to engagements and dossiers",
+      "create": "Create Event",
+      "createFirst": "Create First Event",
+      "import": "Import Events"
+    },
+    "task": {
+      "title": "No Tasks",
+      "firstTitle": "Create Your First Task",
+      "description": "Your tasks and assignments will appear here.",
+      "firstDescription": "Create tasks to track your work and stay organized.",
+      "hint": "Tasks can be assigned, prioritized, and tracked through completion",
+      "create": "Create Task",
+      "createFirst": "Create First Task",
+      "import": "Import Tasks"
+    },
+    "person": {
+      "title": "No Contacts",
+      "firstTitle": "Add Your First Contact",
+      "description": "Key contacts and personnel will appear here.",
+      "firstDescription": "Add contacts to track relationships with important individuals.",
+      "hint": "Contacts can be linked to organizations and engagements",
+      "create": "Add Contact",
+      "createFirst": "Add First Contact",
+      "import": "Import Contacts"
+    },
+    "position": {
+      "title": "No Positions",
+      "firstTitle": "Create Your First Position",
+      "description": "Policy positions and stances will be listed here.",
+      "firstDescription": "Document official positions on international topics and issues.",
+      "hint": "Positions help maintain consistency across engagements",
+      "create": "Create Position",
+      "createFirst": "Create First Position",
+      "import": "Import Positions"
+    },
+    "mou": {
+      "title": "No MOUs",
+      "firstTitle": "Add Your First MOU",
+      "description": "Memoranda of Understanding will be tracked here.",
+      "firstDescription": "Track agreements, their status, and renewal dates.",
+      "hint": "Get notified when MOUs are approaching expiration",
+      "create": "Add MOU",
+      "createFirst": "Add First MOU",
+      "import": "Import MOUs"
+    },
+    "relationship": {
+      "title": "No Relationships",
+      "firstTitle": "Create Your First Relationship",
+      "description": "Relationships between entities will appear here.",
+      "firstDescription": "Connect dossiers together to build a network of linked information.",
+      "hint": "Relationships can be visualized in a network graph view",
+      "create": "Add Relationship",
+      "createFirst": "Add First Relationship",
+      "import": "Import Relationships"
+    },
+    "brief": {
+      "title": "No Briefs",
+      "firstTitle": "Generate Your First Brief",
+      "description": "AI-generated briefing documents will appear here.",
+      "firstDescription": "Generate comprehensive briefings using AI to summarize your dossier data.",
+      "hint": "Briefs pull together information from documents, engagements, and relationships",
+      "create": "Generate Brief",
+      "createFirst": "Generate First Brief",
+      "import": "Import Briefs"
+    }
+  },
+  "dashboard": {
+    "generic": {
+      "title": "No Data Available",
+      "description": "Data will appear here once activities are recorded in the system.",
+      "hint": "Start by creating engagements, logging commitments, or adding dossiers",
+      "action": "Get Started"
+    },
+    "overview": {
+      "title": "Welcome to Your Dashboard",
+      "description": "Your dashboard provides a comprehensive overview of activities and metrics.",
+      "hint": "Data will populate as you add engagements, dossiers, and track commitments",
+      "action": "Configure Dashboard"
+    },
+    "analytics": {
+      "title": "No Analytics Data",
+      "description": "Analytics will be available once there's enough activity data to analyze.",
+      "hint": "Record engagements and track commitments to see trends and insights",
+      "action": "View Analytics"
+    },
+    "activity": {
+      "title": "No Recent Activity",
+      "description": "Recent activities will be shown here as you use the system.",
+      "hint": "Create engagements, update dossiers, or log commitments to see activity",
+      "action": "Create Engagement"
+    },
+    "notifications": {
+      "title": "No Notifications",
+      "description": "You're all caught up! New notifications will appear here.",
+      "hint": "Notifications include reminders, updates, and alerts from the system",
+      "action": "Notification Settings"
+    },
+    "calendar": {
+      "title": "No Upcoming Events",
+      "description": "Your calendar is empty. Schedule events to see them here.",
+      "hint": "Add meetings, deadlines, and important dates to stay organized",
+      "action": "Add Event"
+    },
+    "tasks": {
+      "title": "No Pending Tasks",
+      "description": "Great work! You have no pending tasks.",
+      "hint": "Tasks from commitments and assignments will appear here",
+      "action": "Create Task"
+    },
+    "metrics": {
+      "title": "No Metrics Available",
+      "description": "Key performance metrics will be displayed once data is available.",
+      "hint": "Track commitments and engagements to see your performance metrics",
+      "action": "View Settings"
+    },
+    "recent": {
+      "title": "No Recent Items",
+      "description": "Items you've recently viewed or edited will appear here.",
+      "hint": "This section updates automatically as you work",
+      "action": "Browse Dossiers"
+    },
+    "configure": "Configure"
+  },
+  "video": {
+    "replayLabel": "Watch Again",
+    "transcriptToggle": "Toggle Transcript",
+    "transcriptTitle": "Transcript",
+    "dismiss": "Dismiss",
+    "durationLabel": "{{duration}} video",
+    "watchTutorial": "Watch Tutorial",
+    "close": "Close",
+    "previous": "Previous",
+    "next": "Next",
+    "showTutorials": "Show video tutorial",
+    "hideTutorial": "Hide tutorial",
+    "tutorials": {
+      "dossier": {
+        "create": {
+          "title": "Creating a Country Dossier",
+          "description": "See how a diplomat creates a comprehensive country dossier in under a minute.",
+          "transcript": {
+            "0": "Welcome to this quick tutorial on creating a country dossier.",
+            "1": "First, click the 'Create Dossier' button in the top right corner.",
+            "2": "Select 'Country' as the dossier type, then choose the country from the dropdown list.",
+            "3": "Add key details like bilateral relationship status and priority level. Click 'Create' to finish."
+          }
+        }
+      },
+      "engagement": {
+        "linkBrief": {
+          "title": "Linking Briefs to Engagements",
+          "description": "Learn how policy analysts connect briefing documents to international engagements.",
+          "transcript": {
+            "0": "This tutorial shows you how to link briefs to engagements for better context.",
+            "1": "Open an engagement and navigate to the 'Related Documents' tab.",
+            "2": "Click 'Link Brief' and select from existing briefs or generate a new one.",
+            "3": "The linked brief will now appear in your engagement summary for quick reference."
+          }
+        }
+      },
+      "commitment": {
+        "track": {
+          "title": "Tracking Commitments",
+          "description": "Follow up on promises and deliverables from meetings and events.",
+          "transcript": {
+            "0": "Commitments help you track promises made during engagements.",
+            "1": "After creating an after-action record, commitments are automatically extracted.",
+            "2": "View all commitments in the 'My Work' dashboard and filter by status.",
+            "3": "Update commitment status as you make progress to keep stakeholders informed."
+          }
+        }
+      },
+      "document": {
+        "upload": {
+          "title": "Uploading Documents",
+          "description": "Quick guide to uploading and organizing documents in the system.",
+          "transcript": {
+            "0": "Uploading documents is simple and keeps your files organized.",
+            "1": "Click 'Upload Document' and drag files or browse your computer.",
+            "2": "Add tags and link to relevant dossiers for easy discovery.",
+            "3": "Your documents are now searchable and linked to your dossiers."
+          }
+        }
+      },
+      "organization": {
+        "manage": {
+          "title": "Managing Organizations",
+          "description": "Add and link international organizations to your dossiers.",
+          "transcript": {
+            "0": "Organizations represent the entities you work with internationally.",
+            "1": "Create an organization by clicking 'Add Organization' and entering details.",
+            "2": "Link organizations to dossiers and track your engagement history.",
+            "3": "View all interactions with an organization in one consolidated timeline."
+          }
+        }
+      },
+      "country": {
+        "portfolio": {
+          "title": "Building Your Country Portfolio",
+          "description": "How diplomats organize and track countries in their portfolio.",
+          "transcript": {
+            "0": "Your country portfolio is the hub for all bilateral relationships.",
+            "1": "Add countries you're responsible for and set their priority levels.",
+            "2": "Each country gets a dedicated dossier with MOUs, engagements, and contacts.",
+            "3": "Use the dashboard to see upcoming deadlines and relationship health scores."
+          }
+        }
+      },
+      "mou": {
+        "trackRenewals": {
+          "title": "Tracking MOU Renewals",
+          "description": "Never miss an MOU expiration with automated renewal tracking.",
+          "transcript": {
+            "0": "MOUs require careful tracking to ensure timely renewals.",
+            "1": "Add an MOU with its expiration date and the system will track it.",
+            "2": "You'll receive notifications as the expiration date approaches.",
+            "3": "Update the status as negotiations progress to keep everyone informed."
+          }
+        }
+      },
+      "relationship": {
+        "network": {
+          "title": "Visualizing the Relationship Network",
+          "description": "Explore connections between countries, organizations, and topics.",
+          "transcript": {
+            "0": "The relationship network shows how entities are connected.",
+            "1": "Navigate to the Network Graph view from any dossier.",
+            "2": "Zoom and pan to explore connections. Click nodes for details.",
+            "3": "Use filters to focus on specific relationship types or time periods."
+          }
+        }
+      }
+    }
+  },
+  "intake": {
+    "requester": {
+      "badge": "Requester",
+      "title": "Ready to Submit a Request?",
+      "description": "Submit support requests for engagement support, position development, MoU actions, or foresight analysis. Our team will review and process your request promptly.",
+      "examplesTitle": "Example Requests You Can Submit",
+      "hint": "Click on any example above to start with a pre-filled template, or create a new request from scratch.",
+      "examples": {
+        "engagement": {
+          "title": "Request for Technical Cooperation",
+          "description": "Need support for an upcoming bilateral meeting with a partner organization on data sharing protocols."
+        },
+        "position": {
+          "title": "Policy Position Development",
+          "description": "Requesting development of an official stance on emerging international data governance standards."
+        },
+        "mou": {
+          "title": "MoU Renewal Support",
+          "description": "The agreement with Organization X expires in 3 months. Need to initiate renewal discussions."
+        },
+        "foresight": {
+          "title": "Trend Analysis Request",
+          "description": "Requesting analysis of emerging statistical methodologies and their implications for our operations."
+        }
+      },
+      "actions": {
+        "create": "Submit New Request",
+        "createDescription": "Create a new support request",
+        "viewStatus": "View My Requests",
+        "viewStatusDescription": "Check the status of your submitted requests"
+      }
+    },
+    "reviewer": {
+      "badge": "Reviewer",
+      "title": "No Pending Reviews",
+      "description": "When new requests are submitted, they'll appear here for your review and triage. Use the evaluation criteria below to ensure consistent processing.",
+      "criteriaTitle": "Evaluation Criteria",
+      "hint": "New requests will be sorted by urgency and submission time. AI suggestions will help speed up your review process.",
+      "criteria": {
+        "completeness": {
+          "title": "Completeness Check",
+          "description": "Verify all required information is provided and clear"
+        },
+        "urgency": {
+          "title": "Urgency Assessment",
+          "description": "Evaluate priority based on deadlines and impact"
+        },
+        "classification": {
+          "title": "Type Classification",
+          "description": "Confirm or adjust the request type category"
+        },
+        "routing": {
+          "title": "Assignment Routing",
+          "description": "Identify the appropriate team or individual"
+        }
+      },
+      "actions": {
+        "accessQueue": "Access Review Queue",
+        "accessQueueDescription": "View all requests pending review",
+        "viewAll": "View All Tickets",
+        "viewAllDescription": "Browse the complete ticket history"
+      }
+    },
+    "assignee": {
+      "badge": "Assignee",
+      "title": "No Assigned Tasks",
+      "description": "Great work! You currently have no pending assignments. When requests are assigned to you, they'll appear here with all the details you need to take action.",
+      "workflowTitle": "How Your Tasks Will Appear",
+      "hint": "You'll receive notifications when new tasks are assigned. Priority tasks will be highlighted for immediate attention.",
+      "steps": {
+        "notification": {
+          "title": "Receive Notification",
+          "description": "Get alerted when a new task is assigned to you"
+        },
+        "review": {
+          "title": "Review Details",
+          "description": "Access the full request with context and attachments"
+        },
+        "action": {
+          "title": "Take Action",
+          "description": "Work on the request and update its progress"
+        },
+        "complete": {
+          "title": "Mark Complete",
+          "description": "Close the task and provide resolution notes"
+        }
+      },
+      "actions": {
+        "viewAssignments": "View My Assignments",
+        "viewAssignmentsDescription": "See all tasks assigned to you",
+        "browse": "Browse All Tickets",
+        "browseDescription": "View the complete ticket list"
+      }
+    },
+    "viewer": {
+      "badge": "Viewer",
+      "title": "Intake Queue Overview",
+      "description": "You have view access to the intake system. Browse tickets and track request statuses, but submissions and reviews require appropriate permissions.",
+      "hint": "Contact your administrator to request additional permissions if needed.",
+      "actions": {
+        "browse": "Browse Tickets",
+        "browseDescription": "View all tickets in the system"
+      }
+    }
+  },
+  "collaboration": {
+    "teamActivity": {
+      "title": "Your Team is Active!",
+      "description": "Others on your team have created {{entityType}}. Consider collaborating to share knowledge and best practices.",
+      "statsLabel": "Team Activity",
+      "totalCreated": "{{count}} {{entityType}} created by team",
+      "recentlyAdded": "{{count}} added in the last 30 days",
+      "contributors": "{{count}} team members contributing"
+    },
+    "topContributors": {
+      "title": "Top Contributors",
+      "viewProfile": "View profile",
+      "contributions": "{{count}} contributions"
+    },
+    "invite": {
+      "title": "Invite Team Members",
+      "description": "Invite colleagues to collaborate and share their expertise.",
+      "buttonLabel": "Invite Colleague",
+      "searchPlaceholder": "Search by name or email...",
+      "suggestedUsers": "Suggested Team Members",
+      "noSuggestions": "No suggestions available",
+      "sendInvitation": "Send Invitation",
+      "sending": "Sending...",
+      "selectTemplate": "Select a message template",
+      "customMessage": "Add a personal message (optional)",
+      "customMessagePlaceholder": "Add a note to your invitation...",
+      "preview": "Preview Message",
+      "emailLabel": "Email address",
+      "emailPlaceholder": "colleague@example.com"
+    },
+    "dialog": {
+      "title": "Invite to Collaborate",
+      "subtitle": "Send an invitation to collaborate on {{entityType}}",
+      "cancel": "Cancel",
+      "send": "Send Invitation",
+      "success": "Invitation sent successfully!",
+      "error": "Failed to send invitation"
+    },
+    "emptyTeam": {
+      "title": "Be the First!",
+      "description": "You'll be the first to create {{entityType}} in your team. Start building and invite others to contribute."
+    },
+    "encouragement": {
+      "title": "Build Together",
+      "description": "Collaboration strengthens your organization's knowledge base. Every contribution counts!"
+    }
+  }
+}

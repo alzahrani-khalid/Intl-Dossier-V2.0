@@ -1,5 +1,9 @@
 {
+  "pageTitle": "المنتديات",
+  "pageSubtitle": "المنتديات والمؤتمرات والاجتماعات الدولية المتعددة الأطراف",
   "title": "العنوان",
+  "name": "الاسم",
+  "description": "الوصف",
   "dates": "التواريخ",
   "location": "الموقع",
   "venue": "المكان",
@@ -8,13 +12,35 @@
   "status": "الحالة",
   "virtual": "افتراضي",
   "addForum": "إضافة منتدى",
+  "editForum": "تعديل المنتدى",
+  "deleteForum": "حذف المنتدى",
+  "viewDetails": "عرض التفاصيل",
   "countries": "الدول",
   "organizations": "المنظمات",
   "years": "سنوات",
   "organizer": "المنظم",
+  "registrationFee": "رسوم التسجيل",
+  "currency": "العملة",
+  "agendaUrl": "رابط جدول الأعمال",
+  "liveStreamUrl": "رابط البث المباشر",
+  "keynoteSpeakers": "المتحدثون الرئيسيون",
+  "sponsors": "الرعاة",
+  "numberOfSessions": "عدد الجلسات",
+  "sensitivityLevel": "مستوى الحساسية",
+  "tags": "الوسوم",
+  "createdAt": "تاريخ الإنشاء",
+  "updatedAt": "آخر تحديث",
   "noCountries": "لا توجد دول مشاركة",
   "noOrganizations": "لا توجد منظمات مشاركة",
+  "noForumsFound": "لم يتم العثور على منتديات",
+  "noForumsDescription": "أنشئ منتداك الأول لبدء تتبع الاجتماعات والمؤتمرات الدولية.",
+  "searchPlaceholder": "البحث في المنتديات...",
+  "filterByStatus": "تصفية حسب الحالة",
+  "allStatuses": "جميع الحالات",
   "statuses": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف",
     "scheduled": "مجدول",
     "ongoing": "جاري",
     "completed": "مكتمل",
@@ -25,5 +51,35 @@
     "observer": "مراقب",
     "guest": "ضيف",
     "sponsor": "راعي"
+  },
+  "metrics": {
+    "totalForums": "إجمالي المنتديات",
+    "activeForums": "المنتديات النشطة",
+    "upcomingForums": "المنتديات القادمة"
+  },
+  "table": {
+    "name": "اسم المنتدى",
+    "status": "الحالة",
+    "sessions": "الجلسات",
+    "created": "تاريخ الإنشاء",
+    "actions": "الإجراءات"
+  },
+  "createDialog": {
+    "title": "إنشاء منتدى جديد",
+    "description": "إضافة منتدى أو مؤتمر دولي جديد"
+  },
+  "deleteDialog": {
+    "title": "حذف المنتدى",
+    "description": "هل أنت متأكد من حذف هذا المنتدى؟ لا يمكن التراجع عن هذا الإجراء.",
+    "confirm": "حذف",
+    "cancel": "إلغاء"
+  },
+  "form": {
+    "nameEn": "الاسم (بالإنجليزية)",
+    "nameAr": "الاسم (بالعربية)",
+    "descriptionEn": "الوصف (بالإنجليزية)",
+    "descriptionAr": "الوصف (بالعربية)",
+    "save": "حفظ المنتدى",
+    "cancel": "إلغاء"
   }
 }

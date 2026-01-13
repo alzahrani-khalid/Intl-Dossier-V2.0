@@ -1,0 +1,210 @@
+{
+  "title": "MoU Renewals",
+  "pageTitle": "MoU Renewal Management",
+  "description": "Manage MoU expiration alerts and renewal workflows",
+
+  "tabs": {
+    "expiring": "Expiring MoUs",
+    "alerts": "Alerts",
+    "renewals": "Active Renewals",
+    "history": "Version History"
+  },
+
+  "status": {
+    "expired": "Expired",
+    "active": "Active",
+    "renewed": "Renewed"
+  },
+
+  "renewalStatus": {
+    "pending": "Pending",
+    "initiated": "Initiated",
+    "negotiation": "In Negotiation",
+    "approved": "Approved",
+    "signed": "Signed",
+    "completed": "Completed",
+    "declined": "Declined",
+    "expired": "Expired"
+  },
+
+  "alertType": {
+    "expiration_90_days": "90 Days Warning",
+    "expiration_60_days": "60 Days Warning",
+    "expiration_30_days": "30 Days Warning",
+    "expiration_7_days": "7 Days Warning",
+    "expired": "Expired",
+    "renewal_initiated": "Renewal Initiated",
+    "renewal_approved": "Renewal Approved",
+    "renewal_completed": "Renewal Completed"
+  },
+
+  "alertStatus": {
+    "pending": "Pending",
+    "sent": "Sent",
+    "acknowledged": "Acknowledged",
+    "dismissed": "Dismissed"
+  },
+
+  "expiresIn": "Expires in {{days}} days",
+  "expiresIn_one": "Expires in {{days}} day",
+  "autoRenewal": "Auto-renewal",
+  "timeRemaining": "Time Remaining",
+  "currentExpiry": "Current Expiry",
+  "acknowledgedAt": "Acknowledged at {{date}}",
+
+  "urgency": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical",
+    "expired": "Expired"
+  },
+
+  "actions": {
+    "initiateRenewal": "Initiate Renewal",
+    "viewRenewal": "View Renewal",
+    "viewMou": "View MoU",
+    "viewDetails": "View Details",
+    "acknowledge": "Acknowledge",
+    "dismiss": "Dismiss",
+    "cancel": "Cancel",
+    "save": "Save",
+    "startNegotiation": "Start Negotiation",
+    "approve": "Approve",
+    "sign": "Sign",
+    "complete": "Complete",
+    "decline": "Decline",
+    "addNegotiation": "Add Negotiation",
+    "viewHistory": "View History"
+  },
+
+  "dialogs": {
+    "initiateRenewal": {
+      "title": "Initiate MoU Renewal",
+      "description": "Start the renewal process for this MoU. You can specify the renewal period and add notes."
+    },
+    "updateStatus": {
+      "title": "Update Renewal Status",
+      "description": "Change the status of this renewal process."
+    },
+    "addNegotiation": {
+      "title": "Record Negotiation",
+      "description": "Record a negotiation session for this renewal."
+    },
+    "completeRenewal": {
+      "title": "Complete Renewal",
+      "description": "Link the renewed MoU to complete the renewal process."
+    }
+  },
+
+  "form": {
+    "renewalPeriod": "Renewal Period",
+    "selectPeriod": "Select renewal period",
+    "proposedExpiry": "Proposed new expiry date",
+    "customExpiryDate": "Custom Expiry Date (Optional)",
+    "customExpiryDescription": "Override the calculated expiry date if needed",
+    "selectDate": "Select a date",
+    "notesEn": "Notes (English)",
+    "notesAr": "Notes (Arabic)",
+    "notesPlaceholder": "Enter any notes about this renewal...",
+    "notesPlaceholderAr": "Enter notes in Arabic...",
+    "declineReason": "Decline Reason",
+    "declineReasonPlaceholder": "Provide a reason for declining this renewal...",
+    "negotiationSummary": "Negotiation Summary",
+    "negotiationSummaryPlaceholder": "Summarize the negotiation discussion...",
+    "proposedChanges": "Proposed Changes",
+    "outcome": "Outcome",
+    "nextSteps": "Next Steps",
+    "nextMeetingDate": "Next Meeting Date",
+    "termsChanged": "Terms Changed",
+    "changesSummary": "Changes Summary"
+  },
+
+  "periods": {
+    "6": "6 months",
+    "12": "1 year",
+    "24": "2 years",
+    "36": "3 years",
+    "60": "5 years"
+  },
+
+  "outcome": {
+    "positive": "Positive",
+    "negative": "Negative",
+    "pending": "Pending",
+    "follow_up_required": "Follow-up Required"
+  },
+
+  "versionHistory": {
+    "title": "Version History",
+    "noVersions": "No version history available",
+    "versionCount": "{{count}} versions",
+    "versionCount_one": "{{count}} version",
+    "version": "Version {{number}}",
+    "current": "Current",
+    "ongoing": "Ongoing",
+    "changes": "Changes"
+  },
+
+  "dashboard": {
+    "title": "Renewal Dashboard",
+    "expiringMous": "Expiring MoUs",
+    "pendingAlerts": "Pending Alerts",
+    "activeRenewals": "Active Renewals",
+    "inNegotiation": "In Negotiation",
+    "noExpiringMous": "No MoUs expiring in the next 90 days",
+    "noPendingAlerts": "No pending alerts",
+    "noActiveRenewals": "No active renewals"
+  },
+
+  "filters": {
+    "all": "All",
+    "expiringSoon": "Expiring Soon",
+    "expired": "Expired",
+    "byStatus": "By Status",
+    "byUrgency": "By Urgency",
+    "daysAhead": "Days Ahead"
+  },
+
+  "empty": {
+    "noRenewals": "No renewals found",
+    "noAlerts": "No alerts found",
+    "noNegotiations": "No negotiations recorded yet"
+  },
+
+  "success": {
+    "initiated": "Renewal initiated successfully",
+    "statusUpdated": "Renewal status updated",
+    "completed": "Renewal completed successfully",
+    "alertAcknowledged": "Alert acknowledged",
+    "alertDismissed": "Alert dismissed",
+    "negotiationAdded": "Negotiation recorded successfully"
+  },
+
+  "errors": {
+    "initiateFailed": "Failed to initiate renewal",
+    "statusUpdateFailed": "Failed to update renewal status",
+    "completeFailed": "Failed to complete renewal",
+    "acknowledgeFailed": "Failed to acknowledge alert",
+    "dismissFailed": "Failed to dismiss alert",
+    "negotiationFailed": "Failed to record negotiation",
+    "fetchFailed": "Failed to fetch data"
+  },
+
+  "tooltips": {
+    "autoRenewal": "This MoU is set to automatically renew",
+    "pendingAlerts": "Number of pending alerts for this MoU",
+    "urgencyLevel": "Urgency level based on days until expiry"
+  },
+
+  "workflow": {
+    "description": "The renewal workflow progresses through these stages:",
+    "stages": {
+      "initiated": "Renewal process has been started",
+      "negotiation": "Terms are being negotiated with parties",
+      "approved": "Renewal has been approved internally",
+      "signed": "New MoU has been signed",
+      "completed": "Renewal is complete with new MoU linked"
+    }
+  }
+}

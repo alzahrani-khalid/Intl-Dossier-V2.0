@@ -46,6 +46,7 @@
     "previous": "السابق",
     "submit": "إرسال",
     "reset": "إعادة تعيين",
+    "unsaved": "غير محفوظ",
     "logout": "تسجيل الخروج",
     "profile": "الملف الشخصي",
     "settings": "الإعدادات",
@@ -142,13 +143,32 @@
     "wordAssistant": "مساعد الوثائق",
     "getHelp": "الحصول على مساعدة",
     "search": "بحث",
-    "openNotifications": "فتح الإشعارات"
+    "openNotifications": "فتح الإشعارات",
+    "delegations": "التفويضات",
+    "customDashboard": "لوحة التحكم المخصصة",
+    "slaMonitoring": "مراقبة اتفاقية مستوى الخدمة",
+    "tags": "الوسوم",
+    "webhooks": "الويب هوك",
+    "workflowAutomation": "أتمتة سير العمل",
+    "briefingBooks": "كتب الإحاطة"
   },
   "search": {
+    "title": "البحث",
+    "description": "البحث في جميع الكيانات في النظام",
+    "placeholder": "البحث في الملفات والمستندات والأشخاص...",
     "searchPlaceholder": "بحث...",
     "noResults": "لا توجد نتائج",
     "searching": "جاري البحث...",
-    "clearSearch": "مسح البحث"
+    "clearSearch": "مسح البحث",
+    "includeArchived": "تضمين المؤرشف",
+    "modes": {
+      "keyword": "كلمة مفتاحية",
+      "semantic": "دلالي"
+    },
+    "suggestions": {
+      "label": "اقتراحات البحث",
+      "noResults": "لا توجد اقتراحات"
+    }
   },
   "errors": {
     "preferenceSaveFailed": "فشل حفظ التفضيلات. التغييرات محفوظة محلياً.",
@@ -279,6 +299,15 @@
     "thu": "الخميس",
     "fri": "الجمعة",
     "sat": "السبت"
+  },
+  "days": {
+    "sunday": "الأحد",
+    "monday": "الإثنين",
+    "tuesday": "الثلاثاء",
+    "wednesday": "الأربعاء",
+    "thursday": "الخميس",
+    "friday": "الجمعة",
+    "saturday": "السبت"
   },
   "intelligence": {
     "report": "التقرير",
@@ -986,5 +1015,35 @@
       "stillUseManualSearch": "أو استخدم البحث اليدوي",
       "retry": "إعادة المحاولة"
     }
+  },
+  "pullToRefresh": {
+    "pullToRefresh": "اسحب للتحديث",
+    "releaseToRefresh": "اترك للتحديث",
+    "refreshing": "جاري التحديث...",
+    "updated": "تم التحديث",
+    "updatedItems": "تم تحديث {{count}} عناصر",
+    "justNow": "الآن",
+    "minutesAgo": "منذ {{count}} دقيقة",
+    "hoursAgo": "منذ {{count}} ساعة",
+    "neverSynced": "لم تتم المزامنة",
+    "syncing": "جاري المزامنة...",
+    "offlineQueue": "{{count}} في انتظار المزامنة",
+    "itemCount": "{{count}} عناصر",
+    "loading": "جاري التحميل..."
+  },
+  "sidebar": {
+    "toggle": "تبديل الشريط الجانبي",
+    "collapse": "طي الشريط الجانبي",
+    "expand": "توسيع الشريط الجانبي",
+    "openMenu": "فتح القائمة",
+    "closeMenu": "إغلاق القائمة",
+    "title": "قائمة التنقل",
+    "description": "قائمة التنقل الرئيسية للتطبيق"
+  },
+  "header": {
+    "scrollUp": "مرر للأعلى لمزيد من الخيارات",
+    "collapsed": "تم طي الرأس",
+    "expanded": "تم توسيع الرأس",
+    "contextTitle": "القسم الحالي"
   }
 }

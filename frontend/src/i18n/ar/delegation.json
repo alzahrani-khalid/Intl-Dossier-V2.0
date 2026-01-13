@@ -1,0 +1,155 @@
+{
+  "title": "إدارة التفويض",
+  "description": "إدارة تفويضات الصلاحيات المؤقتة للأدوار البديلة وتغطية الإجازات",
+  "tabs": {
+    "granted": "الممنوحة",
+    "received": "المستلمة",
+    "all": "الكل"
+  },
+  "badge": {
+    "active": "نشط",
+    "expired": "منتهي",
+    "revoked": "ملغي",
+    "expiringSoon": "ينتهي قريباً"
+  },
+  "list": {
+    "title": "تفويضاتي",
+    "granted": "الصلاحيات التي منحتها",
+    "received": "الصلاحيات التي استلمتها",
+    "empty": {
+      "granted": "لم تمنح أي تفويضات",
+      "received": "لم تستلم أي تفويضات",
+      "all": "لا توجد تفويضات"
+    },
+    "emptyDescription": {
+      "granted": "فوّض صلاحياتك لزميل عند غيابك",
+      "received": "ستظهر التفويضات التي تستلمها هنا",
+      "all": "لا توجد سجلات تفويض للعرض"
+    },
+    "showActiveOnly": "عرض النشطة فقط",
+    "showExpiring": "تنتهي خلال 7 أيام"
+  },
+  "card": {
+    "from": "من",
+    "to": "إلى",
+    "reason": "السبب",
+    "validFrom": "صالح من",
+    "validUntil": "صالح حتى",
+    "expiresIn": "ينتهي خلال {{days}} أيام",
+    "expiresToday": "ينتهي اليوم",
+    "expiresTomorrow": "ينتهي غداً",
+    "expired": "انتهى منذ {{days}} أيام",
+    "revokedAt": "تم الإلغاء في",
+    "revokedBy": "ألغي بواسطة",
+    "revocationReason": "سبب الإلغاء",
+    "resourceType": "نوع المورد",
+    "resourceId": "معرّف المورد",
+    "allResources": "جميع الموارد"
+  },
+  "create": {
+    "title": "إنشاء تفويض",
+    "description": "فوّض صلاحياتك لمستخدم آخر مؤقتاً",
+    "buttonText": "إنشاء تفويض",
+    "form": {
+      "grantee": "التفويض إلى",
+      "granteePlaceholder": "اختر مستخدماً للتفويض إليه",
+      "granteeDescription": "المستخدم الذي سيستلم صلاحياتك",
+      "validFrom": "تاريخ البدء",
+      "validFromDescription": "متى يصبح التفويض نشطاً",
+      "validUntil": "تاريخ الانتهاء",
+      "validUntilPlaceholder": "اختر تاريخ الانتهاء",
+      "validUntilDescription": "متى ينتهي التفويض (90 يوماً كحد أقصى)",
+      "reason": "السبب",
+      "reasonPlaceholder": "مثال: تغطية إجازة، دور بديل، تسليم مهام",
+      "reasonDescription": "اشرح سبب هذا التفويض (10 أحرف كحد أدنى)",
+      "resourceType": "نوع المورد (اختياري)",
+      "resourceTypePlaceholder": "جميع الموارد",
+      "resourceTypeDescription": "تقييد التفويض لنوع مورد محدد",
+      "resourceId": "معرّف المورد (اختياري)",
+      "resourceIdPlaceholder": "جميع موارد هذا النوع",
+      "resourceIdDescription": "تقييد التفويض لمورد محدد"
+    },
+    "validation": {
+      "selectGrant": "الرجاء اختيار مستخدم للتفويض إليه",
+      "selectEndDate": "الرجاء اختيار تاريخ انتهاء",
+      "endDateFuture": "يجب أن يكون تاريخ الانتهاء في المستقبل",
+      "endDateMax": "فترة التفويض القصوى هي 90 يوماً",
+      "reasonRequired": "السبب مطلوب (10 أحرف كحد أدنى)",
+      "reasonMinLength": "يجب أن يكون السبب 10 أحرف على الأقل"
+    },
+    "success": "تم إنشاء التفويض بنجاح",
+    "error": "فشل في إنشاء التفويض"
+  },
+  "revoke": {
+    "title": "إلغاء التفويض",
+    "description": "هل أنت متأكد من إلغاء هذا التفويض؟ لا يمكن التراجع عن هذا الإجراء.",
+    "buttonText": "إلغاء",
+    "form": {
+      "reason": "السبب (اختياري)",
+      "reasonPlaceholder": "لماذا تلغي هذا التفويض؟"
+    },
+    "confirm": "إلغاء التفويض",
+    "success": "تم إلغاء التفويض بنجاح",
+    "error": "فشل في إلغاء التفويض"
+  },
+  "validation": {
+    "title": "التحقق",
+    "checking": "جارٍ التحقق من صلاحية التفويض...",
+    "valid": "التفويض صالح",
+    "invalid": "التفويض غير صالح",
+    "issues": {
+      "circular_delegation": "هذا سيُنشئ تفويضاً دائرياً",
+      "cannot_delegate_own_permissions": "لا يمكنك تفويض صلاحيات لنفسك",
+      "insufficient_permissions": "ليس لديك صلاحيات للتفويض",
+      "user_already_has_delegation": "المستخدم لديه تفويض نشط منك بالفعل",
+      "user_not_found": "المستخدم غير موجود",
+      "cannot_delegate_to_inactive": "لا يمكن التفويض لمستخدم غير نشط"
+    }
+  },
+  "notification": {
+    "expiringTitle": "تفويضات تنتهي قريباً",
+    "expiringDescription": "لديك {{count}} تفويض(ات) تنتهي خلال 7 أيام",
+    "expiringDescriptionSingle": "لديك تفويض واحد ينتهي قريباً",
+    "viewAll": "عرض الكل",
+    "dismiss": "إخفاء"
+  },
+  "history": {
+    "title": "سجل التفويضات",
+    "description": "عرض جميع التفويضات السابقة",
+    "noHistory": "لا يوجد سجل تفويضات"
+  },
+  "actions": {
+    "create": "إنشاء تفويض",
+    "revoke": "إلغاء",
+    "view": "عرض التفاصيل",
+    "extend": "تمديد",
+    "viewHistory": "عرض السجل"
+  },
+  "resourceTypes": {
+    "all": "جميع الموارد",
+    "dossier": "الملفات",
+    "country": "الدول",
+    "organization": "المنظمات",
+    "mou": "مذكرات التفاهم",
+    "forum": "المنتديات",
+    "brief": "الموجزات",
+    "intelligence_report": "تقارير الاستخبارات",
+    "data_library_item": "مكتبة البيانات"
+  },
+  "filters": {
+    "status": "الحالة",
+    "statusAll": "جميع الحالات",
+    "statusActive": "النشطة فقط",
+    "statusExpired": "المنتهية",
+    "statusRevoked": "الملغاة",
+    "expiringSoon": "تنتهي قريباً"
+  },
+  "table": {
+    "grantee": "المفوّض إليه",
+    "grantor": "مفوّض من",
+    "validPeriod": "فترة الصلاحية",
+    "status": "الحالة",
+    "reason": "السبب",
+    "actions": "الإجراءات"
+  }
+}

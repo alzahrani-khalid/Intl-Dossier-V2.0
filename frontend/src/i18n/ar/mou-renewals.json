@@ -1,0 +1,210 @@
+{
+  "title": "تجديد مذكرات التفاهم",
+  "pageTitle": "إدارة تجديد مذكرات التفاهم",
+  "description": "إدارة تنبيهات انتهاء الصلاحية وعمليات التجديد",
+
+  "tabs": {
+    "expiring": "مذكرات منتهية الصلاحية",
+    "alerts": "التنبيهات",
+    "renewals": "التجديدات النشطة",
+    "history": "سجل الإصدارات"
+  },
+
+  "status": {
+    "expired": "منتهية الصلاحية",
+    "active": "نشطة",
+    "renewed": "مُجددة"
+  },
+
+  "renewalStatus": {
+    "pending": "قيد الانتظار",
+    "initiated": "تم البدء",
+    "negotiation": "قيد التفاوض",
+    "approved": "تمت الموافقة",
+    "signed": "تم التوقيع",
+    "completed": "مكتمل",
+    "declined": "مرفوض",
+    "expired": "منتهي الصلاحية"
+  },
+
+  "alertType": {
+    "expiration_90_days": "تحذير 90 يوم",
+    "expiration_60_days": "تحذير 60 يوم",
+    "expiration_30_days": "تحذير 30 يوم",
+    "expiration_7_days": "تحذير 7 أيام",
+    "expired": "منتهي الصلاحية",
+    "renewal_initiated": "تم بدء التجديد",
+    "renewal_approved": "تمت الموافقة على التجديد",
+    "renewal_completed": "اكتمل التجديد"
+  },
+
+  "alertStatus": {
+    "pending": "قيد الانتظار",
+    "sent": "تم الإرسال",
+    "acknowledged": "تم الإقرار",
+    "dismissed": "تم التجاهل"
+  },
+
+  "expiresIn": "تنتهي خلال {{days}} يوم",
+  "expiresIn_one": "تنتهي خلال {{days}} يوم",
+  "autoRenewal": "تجديد تلقائي",
+  "timeRemaining": "الوقت المتبقي",
+  "currentExpiry": "تاريخ الانتهاء الحالي",
+  "acknowledgedAt": "تم الإقرار في {{date}}",
+
+  "urgency": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "critical": "حرج",
+    "expired": "منتهي"
+  },
+
+  "actions": {
+    "initiateRenewal": "بدء التجديد",
+    "viewRenewal": "عرض التجديد",
+    "viewMou": "عرض المذكرة",
+    "viewDetails": "عرض التفاصيل",
+    "acknowledge": "إقرار",
+    "dismiss": "تجاهل",
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "startNegotiation": "بدء التفاوض",
+    "approve": "موافقة",
+    "sign": "توقيع",
+    "complete": "إكمال",
+    "decline": "رفض",
+    "addNegotiation": "إضافة مفاوضة",
+    "viewHistory": "عرض السجل"
+  },
+
+  "dialogs": {
+    "initiateRenewal": {
+      "title": "بدء تجديد مذكرة التفاهم",
+      "description": "ابدأ عملية التجديد لهذه المذكرة. يمكنك تحديد فترة التجديد وإضافة ملاحظات."
+    },
+    "updateStatus": {
+      "title": "تحديث حالة التجديد",
+      "description": "تغيير حالة عملية التجديد هذه."
+    },
+    "addNegotiation": {
+      "title": "تسجيل مفاوضة",
+      "description": "تسجيل جلسة مفاوضة لهذا التجديد."
+    },
+    "completeRenewal": {
+      "title": "إكمال التجديد",
+      "description": "ربط المذكرة المجددة لإكمال عملية التجديد."
+    }
+  },
+
+  "form": {
+    "renewalPeriod": "فترة التجديد",
+    "selectPeriod": "اختر فترة التجديد",
+    "proposedExpiry": "تاريخ الانتهاء الجديد المقترح",
+    "customExpiryDate": "تاريخ انتهاء مخصص (اختياري)",
+    "customExpiryDescription": "تجاوز تاريخ الانتهاء المحسوب إذا لزم الأمر",
+    "selectDate": "اختر تاريخاً",
+    "notesEn": "ملاحظات (الإنجليزية)",
+    "notesAr": "ملاحظات (العربية)",
+    "notesPlaceholder": "أدخل أي ملاحظات حول هذا التجديد...",
+    "notesPlaceholderAr": "أدخل الملاحظات بالعربية...",
+    "declineReason": "سبب الرفض",
+    "declineReasonPlaceholder": "قدم سبباً لرفض هذا التجديد...",
+    "negotiationSummary": "ملخص المفاوضة",
+    "negotiationSummaryPlaceholder": "لخص مناقشة المفاوضة...",
+    "proposedChanges": "التغييرات المقترحة",
+    "outcome": "النتيجة",
+    "nextSteps": "الخطوات التالية",
+    "nextMeetingDate": "تاريخ الاجتماع القادم",
+    "termsChanged": "تم تغيير الشروط",
+    "changesSummary": "ملخص التغييرات"
+  },
+
+  "periods": {
+    "6": "6 أشهر",
+    "12": "سنة واحدة",
+    "24": "سنتان",
+    "36": "3 سنوات",
+    "60": "5 سنوات"
+  },
+
+  "outcome": {
+    "positive": "إيجابي",
+    "negative": "سلبي",
+    "pending": "قيد الانتظار",
+    "follow_up_required": "متابعة مطلوبة"
+  },
+
+  "versionHistory": {
+    "title": "سجل الإصدارات",
+    "noVersions": "لا يوجد سجل إصدارات متاح",
+    "versionCount": "{{count}} إصدارات",
+    "versionCount_one": "إصدار {{count}}",
+    "version": "الإصدار {{number}}",
+    "current": "الحالي",
+    "ongoing": "مستمر",
+    "changes": "التغييرات"
+  },
+
+  "dashboard": {
+    "title": "لوحة التجديد",
+    "expiringMous": "مذكرات منتهية الصلاحية",
+    "pendingAlerts": "تنبيهات معلقة",
+    "activeRenewals": "تجديدات نشطة",
+    "inNegotiation": "قيد التفاوض",
+    "noExpiringMous": "لا توجد مذكرات تنتهي صلاحيتها خلال 90 يوماً القادمة",
+    "noPendingAlerts": "لا توجد تنبيهات معلقة",
+    "noActiveRenewals": "لا توجد تجديدات نشطة"
+  },
+
+  "filters": {
+    "all": "الكل",
+    "expiringSoon": "تنتهي قريباً",
+    "expired": "منتهية",
+    "byStatus": "حسب الحالة",
+    "byUrgency": "حسب الأولوية",
+    "daysAhead": "الأيام القادمة"
+  },
+
+  "empty": {
+    "noRenewals": "لا توجد تجديدات",
+    "noAlerts": "لا توجد تنبيهات",
+    "noNegotiations": "لم يتم تسجيل أي مفاوضات بعد"
+  },
+
+  "success": {
+    "initiated": "تم بدء التجديد بنجاح",
+    "statusUpdated": "تم تحديث حالة التجديد",
+    "completed": "تم إكمال التجديد بنجاح",
+    "alertAcknowledged": "تم الإقرار بالتنبيه",
+    "alertDismissed": "تم تجاهل التنبيه",
+    "negotiationAdded": "تم تسجيل المفاوضة بنجاح"
+  },
+
+  "errors": {
+    "initiateFailed": "فشل بدء التجديد",
+    "statusUpdateFailed": "فشل تحديث حالة التجديد",
+    "completeFailed": "فشل إكمال التجديد",
+    "acknowledgeFailed": "فشل الإقرار بالتنبيه",
+    "dismissFailed": "فشل تجاهل التنبيه",
+    "negotiationFailed": "فشل تسجيل المفاوضة",
+    "fetchFailed": "فشل جلب البيانات"
+  },
+
+  "tooltips": {
+    "autoRenewal": "تم تعيين هذه المذكرة للتجديد التلقائي",
+    "pendingAlerts": "عدد التنبيهات المعلقة لهذه المذكرة",
+    "urgencyLevel": "مستوى الأولوية بناءً على الأيام حتى الانتهاء"
+  },
+
+  "workflow": {
+    "description": "تمر عملية التجديد بهذه المراحل:",
+    "stages": {
+      "initiated": "تم بدء عملية التجديد",
+      "negotiation": "يتم التفاوض على الشروط مع الأطراف",
+      "approved": "تمت الموافقة على التجديد داخلياً",
+      "signed": "تم توقيع المذكرة الجديدة",
+      "completed": "اكتمل التجديد مع ربط المذكرة الجديدة"
+    }
+  }
+}

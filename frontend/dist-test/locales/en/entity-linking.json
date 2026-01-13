@@ -1,0 +1,45 @@
+{
+  "title": "Entity Links",
+  "description": "AI-suggested and manually linked entities",
+  "suggestLinks": "Suggest Links",
+  "pendingProposals": "AI Suggestions",
+  "linkedEntities": "Linked Entities",
+  "noLinks": "No linked entities yet",
+  "noLinksHint": "Click \"Suggest Links\" to get AI recommendations",
+  "confidence": {
+    "label": "confidence",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "actions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "delete": "Remove",
+    "retry": "Retry"
+  },
+  "entityTypes": {
+    "dossier": "Dossier",
+    "position": "Position",
+    "person": "Person",
+    "engagement": "Engagement",
+    "commitment": "Commitment"
+  },
+  "badges": {
+    "aiSuggested": "AI",
+    "manual": "Manual"
+  },
+  "errors": {
+    "generateFailed": "Failed to generate suggestions",
+    "approveFailed": "Failed to approve proposal",
+    "rejectFailed": "Failed to reject proposal",
+    "deleteFailed": "Failed to remove link",
+    "loadFailed": "Failed to load links"
+  },
+  "success": {
+    "approved": "Link approved",
+    "rejected": "Proposal rejected",
+    "deleted": "Link removed",
+    "generated": "Suggestions generated"
+  }
+}

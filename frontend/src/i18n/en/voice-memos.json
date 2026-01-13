@@ -1,0 +1,82 @@
+{
+  "title": "Voice Memos",
+  "untitledMemo": "Untitled Voice Memo",
+  "unknownUser": "Unknown User",
+
+  "status": {
+    "recording": "Recording",
+    "processing": "Processing",
+    "transcribing": "Transcribing",
+    "completed": "Completed",
+    "failed": "Failed",
+    "processingDescription": "Uploading and processing audio...",
+    "transcribingDescription": "Transcribing audio to text..."
+  },
+
+  "permissions": {
+    "microphoneRequired": "Microphone Permission Required",
+    "microphoneDescription": "Please enable microphone access in your device settings to record voice memos."
+  },
+
+  "instructions": {
+    "tapToStart": "Tap the microphone to start recording",
+    "recording": "Recording... Tap stop when finished",
+    "paused": "Recording paused. Tap play to resume"
+  },
+
+  "warnings": {
+    "maxDurationApproaching": "Recording will stop in {{remaining}}"
+  },
+
+  "save": {
+    "title": "Save Voice Memo",
+    "duration": "Duration: {{duration}}",
+    "titleLabel": "Title (optional)",
+    "titlePlaceholder": "Enter a title for this voice memo",
+    "descriptionLabel": "Description (optional)",
+    "descriptionPlaceholder": "Add notes or context about this recording"
+  },
+
+  "transcription": {
+    "title": "Transcription",
+    "confidence": "Confidence: {{value}}%",
+    "noTranscription": "No transcription available",
+    "pending": "Transcription pending",
+    "inProgress": "Transcription in progress..."
+  },
+
+  "buttons": {
+    "record": "Record",
+    "stop": "Stop",
+    "pause": "Pause",
+    "resume": "Resume",
+    "save": "Save",
+    "discard": "Discard",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "download": "Download",
+    "retry": "Retry Transcription"
+  },
+
+  "delete": {
+    "title": "Delete Voice Memo",
+    "description": "Are you sure you want to delete this voice memo? This action cannot be undone."
+  },
+
+  "empty": {
+    "noVoiceMemos": "No voice memos yet",
+    "addFirst": "Record your first voice memo to capture insights and notes on the go."
+  },
+
+  "errors": {
+    "recordingFailed": "Recording Failed",
+    "uploadFailed": "Upload Failed",
+    "playbackFailed": "Playback Failed",
+    "transcriptionFailed": "Transcription Failed",
+    "saveFailed": "Save Failed",
+    "deleteFailed": "Delete Failed",
+    "permissionDenied": "Permission Denied"
+  },
+
+  "buffering": "Buffering..."
+}

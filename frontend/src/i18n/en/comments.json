@@ -1,0 +1,71 @@
+{
+  "title": "Comments",
+  "loading": "Loading comments...",
+  "loadingMore": "Loading more comments...",
+  "loadMore": "Load more comments",
+  "empty": "No comments yet. Be the first to comment!",
+  "error": "Failed to load comments",
+  "retry": "Retry",
+  "edited": "edited",
+  "confirmDelete": "Are you sure you want to delete this comment?",
+  "showReplies": "Show {{count}} replies",
+  "hideReplies": "Hide replies",
+  "loadingReplies": "Loading replies...",
+
+  "form": {
+    "placeholder": "Write a comment... Use @ to mention someone",
+    "submit": "Post",
+    "update": "Update",
+    "cancel": "Cancel",
+    "submitting": "Posting...",
+    "keyboardHint": "Ctrl+Enter to submit",
+    "markdownHint": "Supports **bold**, *italic*, `code`, and [links](url)",
+    "searchingUsers": "Searching...",
+    "typeToSearch": "Type to search users",
+    "noUsersFound": "No users found"
+  },
+
+  "visibility": {
+    "public": "Public",
+    "internal": "Internal Only",
+    "team": "Team Only",
+    "private": "Private"
+  },
+
+  "actions": {
+    "reply": "Reply",
+    "edit": "Edit",
+    "delete": "Delete"
+  },
+
+  "reactions": {
+    "add": "React",
+    "thumbsUp": "Thumbs up",
+    "thumbsDown": "Thumbs down",
+    "heart": "Heart",
+    "celebration": "Celebration",
+    "smile": "Smile",
+    "confused": "Confused",
+    "rocket": "Rocket",
+    "eyes": "Eyes",
+    "checkmark": "Checkmark",
+    "question": "Question",
+    "idea": "Idea",
+    "fire": "Fire"
+  },
+
+  "messages": {
+    "created": "Comment posted successfully",
+    "createError": "Failed to post comment: {{error}}",
+    "updated": "Comment updated",
+    "updateError": "Failed to update comment: {{error}}",
+    "deleted": "Comment deleted",
+    "deleteError": "Failed to delete comment: {{error}}"
+  },
+
+  "notifications": {
+    "mention": "mentioned you in a comment",
+    "reply": "replied to your comment",
+    "reaction": "reacted to your comment"
+  }
+}

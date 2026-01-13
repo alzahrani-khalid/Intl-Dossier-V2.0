@@ -1,0 +1,131 @@
+{
+  "title": "جهات الاتصال الرئيسية",
+  "subtitle": "إدارة شبكة جهات الاتصال الرئيسية وأصحاب المصلحة",
+  "actions": {
+    "createPerson": "إضافة شخص",
+    "createFirst": "إضافة أول شخص",
+    "edit": "تعديل",
+    "archive": "أرشفة",
+    "cancel": "إلغاء",
+    "create": "إنشاء شخص",
+    "save": "حفظ التغييرات",
+    "loadMore": "تحميل المزيد",
+    "backToList": "العودة للقائمة",
+    "addRole": "إضافة منصب",
+    "addAffiliation": "إضافة انتماء",
+    "addConnection": "إضافة علاقة"
+  },
+  "search": {
+    "placeholder": "البحث بالاسم، المنصب، البريد الإلكتروني..."
+  },
+  "filters": {
+    "title": "التصفية",
+    "importance": "الأهمية",
+    "allImportance": "جميع المستويات",
+    "clear": "مسح",
+    "apply": "تطبيق"
+  },
+  "stats": {
+    "total": "{{count}} شخص",
+    "roles": "المناصب",
+    "affiliations": "الانتماءات",
+    "connections": "العلاقات"
+  },
+  "tabs": {
+    "overview": "نظرة عامة",
+    "career": "المسيرة المهنية",
+    "network": "الشبكة"
+  },
+  "sections": {
+    "profile": "الملف الشخصي",
+    "currentRole": "المنصب الحالي",
+    "biography": "السيرة الذاتية",
+    "careerHistory": "التاريخ الوظيفي",
+    "affiliations": "الانتماءات المؤسسية",
+    "relationships": "الشبكة المهنية",
+    "engagements": "المشاركات الأخيرة"
+  },
+  "profile": {
+    "languages": "اللغات",
+    "expertise": "مجالات الخبرة"
+  },
+  "role": {
+    "current": "حالي",
+    "since": "منذ {{date}}",
+    "present": "حتى الآن"
+  },
+  "affiliation": {
+    "active": "نشط"
+  },
+  "engagement": {
+    "attended": "حضر"
+  },
+  "create": {
+    "title": "إضافة شخص جديد",
+    "subtitle": "إنشاء ملف جهة اتصال جديد",
+    "sections": {
+      "basicInfo": "المعلومات الأساسية",
+      "basicInfoDescription": "أدخل اسم الشخص ومنصبه",
+      "contactInfo": "معلومات الاتصال",
+      "professionalDetails": "التفاصيل المهنية",
+      "biography": "السيرة الذاتية"
+    }
+  },
+  "form": {
+    "nameEn": "الاسم (بالإنجليزية)",
+    "nameAr": "الاسم (بالعربية)",
+    "titleEn": "المنصب (بالإنجليزية)",
+    "titleAr": "المنصب (بالعربية)",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "linkedin": "لينكد إن",
+    "twitter": "تويتر / X",
+    "importanceLevel": "مستوى الأهمية",
+    "importanceLevelDescription": "ما مدى أهمية جهة الاتصال هذه؟",
+    "languages": "اللغات",
+    "languagesDescription": "قائمة اللغات مفصولة بفواصل",
+    "expertiseAreas": "مجالات الخبرة",
+    "expertiseAreasDescription": "قائمة مجالات الخبرة مفصولة بفواصل",
+    "biographyEn": "السيرة الذاتية (بالإنجليزية)",
+    "biographyAr": "السيرة الذاتية (بالعربية)"
+  },
+  "empty": {
+    "title": "لا يوجد أشخاص حتى الآن",
+    "description": "ابدأ في بناء شبكة جهات الاتصال بإضافة أصحاب المصلحة الرئيسيين",
+    "noResults": "لم يتم العثور على أشخاص",
+    "noResultsDescription": "حاول تعديل البحث أو التصفية",
+    "roles": "لا يوجد تاريخ وظيفي مسجل",
+    "affiliations": "لا توجد انتماءات مسجلة",
+    "relationships": "لا توجد علاقات مسجلة"
+  },
+  "error": {
+    "title": "فشل تحميل الأشخاص",
+    "message": "حدث خطأ أثناء جلب البيانات",
+    "notFound": "الشخص غير موجود",
+    "notFoundDescription": "الشخص الذي تبحث عنه غير موجود"
+  },
+  "archive": {
+    "title": "أرشفة الشخص؟",
+    "description": "سيؤدي هذا إلى أرشفة الشخص وإخفائه من القائمة. يمكن التراجع عن هذا الإجراء."
+  },
+  "messages": {
+    "created": "تم إنشاء الشخص \"{{name}}\" بنجاح",
+    "createError": "فشل إنشاء الشخص: {{error}}",
+    "updated": "تم تحديث الشخص بنجاح",
+    "updateError": "فشل تحديث الشخص: {{error}}",
+    "archived": "تم أرشفة الشخص بنجاح",
+    "archiveError": "فشل أرشفة الشخص: {{error}}",
+    "roleAdded": "تمت إضافة المنصب بنجاح",
+    "roleAddError": "فشل إضافة المنصب: {{error}}",
+    "roleDeleted": "تم حذف المنصب بنجاح",
+    "roleDeleteError": "فشل حذف المنصب: {{error}}",
+    "affiliationAdded": "تمت إضافة الانتماء بنجاح",
+    "affiliationAddError": "فشل إضافة الانتماء: {{error}}",
+    "affiliationDeleted": "تم حذف الانتماء بنجاح",
+    "affiliationDeleteError": "فشل حذف الانتماء: {{error}}",
+    "relationshipAdded": "تمت إضافة العلاقة بنجاح",
+    "relationshipAddError": "فشل إضافة العلاقة: {{error}}",
+    "relationshipDeleted": "تم حذف العلاقة بنجاح",
+    "relationshipDeleteError": "فشل حذف العلاقة: {{error}}"
+  }
+}

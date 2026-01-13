@@ -1,0 +1,175 @@
+{
+  "title": "Collaborative Editing",
+  "description": "Real-time collaborative document editing",
+
+  "status": {
+    "connected": "Connected",
+    "disconnected": "Disconnected",
+    "connecting": "Connecting...",
+    "editing": "Editing",
+    "idle": "Idle",
+    "locked": "Locked"
+  },
+
+  "editors": {
+    "count": "{{count}} editors",
+    "count_one": "{{count}} editor",
+    "singleEditing": "{{name}} is editing",
+    "multipleEditing": "{{count}} people editing"
+  },
+
+  "toolbar": {
+    "save": "Save",
+    "saving": "Saving...",
+    "pendingItems": "Pending",
+    "settings": "Settings"
+  },
+
+  "panel": {
+    "title": "Review Panel"
+  },
+
+  "tabs": {
+    "suggestions": "Suggestions",
+    "changes": "Changes",
+    "comments": "Comments"
+  },
+
+  "suggestions": {
+    "title": "Suggestions",
+    "pendingCount": "{{count}} pending suggestions",
+    "pendingCount_one": "{{count}} pending suggestion",
+    "noPending": "No pending suggestions",
+    "empty": "No suggestions yet",
+    "accept": "Accept",
+    "reject": "Reject",
+    "addComment": "Add comment",
+    "resolvedBy": "Resolved by {{name}}",
+    "filter": {
+      "all": "All",
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected"
+    },
+    "status": {
+      "pending": "Pending",
+      "accepted": "Accepted",
+      "rejected": "Rejected",
+      "resolved": "Resolved"
+    },
+    "changeType": {
+      "insertion": "Added",
+      "deletion": "Deleted",
+      "replacement": "Replaced",
+      "formatting": "Formatted"
+    }
+  },
+
+  "trackChanges": {
+    "title": "Track Changes",
+    "pendingCount": "{{count}} pending changes",
+    "pendingCount_one": "{{count}} pending change",
+    "allResolved": "All changes resolved",
+    "empty": "No track changes",
+    "accept": "Accept",
+    "reject": "Reject",
+    "acceptAll": "Accept all",
+    "rejectAll": "Reject all",
+    "bulkActions": "Actions",
+    "accepted": "Accepted",
+    "rejected": "Rejected",
+    "pendingReview": "Pending review",
+    "original": "Original",
+    "new": "New",
+    "by": "by {{name}}",
+    "changeType": {
+      "insertion": "Insertion",
+      "deletion": "Deletion",
+      "replacement": "Replacement",
+      "formatting": "Formatting"
+    }
+  },
+
+  "comments": {
+    "title": "Comments",
+    "thread": "Comment Thread",
+    "openCount": "{{count}} open comments",
+    "openCount_one": "{{count}} open comment",
+    "empty": "No comments yet",
+    "resolve": "Resolve",
+    "reopen": "Reopen",
+    "reply": "Reply",
+    "addReply": "Add reply",
+    "edit": "Edit",
+    "delete": "Delete",
+    "edited": "edited",
+    "replyPlaceholder": "Write a reply...",
+    "replyCount": "{{count}} replies",
+    "replyCount_one": "{{count}} reply",
+    "status": {
+      "open": "Open",
+      "resolved": "Resolved",
+      "dismissed": "Dismissed"
+    }
+  },
+
+  "collaborators": {
+    "title": "Collaborators",
+    "add": "Add collaborator",
+    "remove": "Remove",
+    "permissions": "Permissions",
+    "canEdit": "Can edit",
+    "canSuggest": "Can suggest",
+    "canComment": "Can comment",
+    "canResolve": "Can resolve",
+    "canManage": "Can manage"
+  },
+
+  "settings": {
+    "title": "Collaboration Settings",
+    "description": "Configure how collaboration works for this document",
+    "trackChanges": "Track Changes",
+    "trackChangesDescription": "Record all changes with authorship information",
+    "suggestions": "Suggestions Mode",
+    "suggestionsDescription": "Allow collaborators to suggest changes instead of editing directly",
+    "documentLock": "Document Lock",
+    "documentLockDescription": "Prevent all editing while locked",
+    "lockDocument": "Lock Document",
+    "unlockDocument": "Unlock Document"
+  },
+
+  "editor": {
+    "placeholder": "Start typing or paste content here...",
+    "selectText": "Select text to add a comment or suggestion"
+  },
+
+  "notifications": {
+    "suggestionCreated": "New suggestion from {{name}}",
+    "suggestionAccepted": "Your suggestion was accepted",
+    "suggestionRejected": "Your suggestion was rejected",
+    "changeAccepted": "Your change was accepted",
+    "changeRejected": "Your change was rejected",
+    "commentAdded": "{{name}} commented on your text",
+    "commentResolved": "Comment was resolved",
+    "editorJoined": "{{name}} joined editing",
+    "editorLeft": "{{name}} left editing",
+    "documentLocked": "Document was locked by {{name}}",
+    "documentUnlocked": "Document was unlocked"
+  },
+
+  "errors": {
+    "connectionFailed": "Failed to connect to collaborative editing",
+    "saveFailed": "Failed to save changes",
+    "suggestionFailed": "Failed to create suggestion",
+    "resolveFailed": "Failed to resolve",
+    "commentFailed": "Failed to add comment"
+  },
+
+  "common": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "loading": "Loading...",
+    "retry": "Retry"
+  }
+}

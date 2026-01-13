@@ -1,0 +1,323 @@
+{
+  "title": "Working Groups",
+  "subtitle": "Manage committees, task forces, and collaborative working groups across partnerships",
+  "pageDescription": "Track membership, mandates, deliverables, and meetings for all working groups",
+
+  "metrics": {
+    "totalGroups": "Total Groups",
+    "activeGroups": "Active Groups",
+    "totalMembers": "Total Members",
+    "totalMembersHint": "Across all working groups",
+    "totalDeliverables": "Total Deliverables",
+    "completedDeliverables": "Completed Deliverables",
+    "upcomingMeetings": "Upcoming Meetings"
+  },
+
+  "filters": {
+    "title": "Filters & Search",
+    "search": "Search",
+    "searchPlaceholder": "Search by name, mandate, or description...",
+    "status": "Status",
+    "allStatuses": "All statuses",
+    "type": "Type",
+    "allTypes": "All types",
+    "parentForum": "Parent Forum",
+    "allForums": "All forums",
+    "leadOrganization": "Lead Organization",
+    "allOrganizations": "All organizations",
+    "clearFilters": "Clear filters"
+  },
+
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived",
+    "suspended": "Suspended",
+    "disbanded": "Disbanded"
+  },
+
+  "types": {
+    "committee": "Committee",
+    "task_force": "Task Force",
+    "advisory_board": "Advisory Board",
+    "technical_group": "Technical Group",
+    "steering_committee": "Steering Committee"
+  },
+
+  "memberRoles": {
+    "chair": "Chair",
+    "co_chair": "Co-Chair",
+    "vice_chair": "Vice Chair",
+    "secretary": "Secretary",
+    "member": "Member",
+    "observer": "Observer",
+    "advisor": "Advisor",
+    "liaison": "Liaison"
+  },
+
+  "memberStatus": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "pending": "Pending",
+    "suspended": "Suspended"
+  },
+
+  "deliverableStatus": {
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "review": "Under Review",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "deferred": "Deferred"
+  },
+
+  "deliverablePriority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+
+  "deliverableTypes": {
+    "document": "Document",
+    "report": "Report",
+    "recommendation": "Recommendation",
+    "standard": "Standard",
+    "guideline": "Guideline",
+    "framework": "Framework",
+    "action_plan": "Action Plan",
+    "other": "Other"
+  },
+
+  "meetingFrequency": {
+    "weekly": "Weekly",
+    "biweekly": "Bi-weekly",
+    "monthly": "Monthly",
+    "quarterly": "Quarterly",
+    "biannually": "Bi-annually",
+    "annually": "Annually",
+    "as_needed": "As Needed"
+  },
+
+  "meetingStatus": {
+    "scheduled": "Scheduled",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "postponed": "Postponed"
+  },
+
+  "table": {
+    "name": "Name",
+    "type": "Type",
+    "status": "Status",
+    "members": "Members",
+    "deliverables": "Deliverables",
+    "nextMeeting": "Next Meeting",
+    "leadOrg": "Lead Organization",
+    "established": "Established",
+    "updated": "Last Updated",
+    "actions": "Actions",
+    "empty": "No working groups match the current filters",
+    "loading": "Loading working groups..."
+  },
+
+  "actions": {
+    "add": "Add Working Group",
+    "edit": "Edit",
+    "view": "View Details",
+    "archive": "Archive",
+    "restore": "Restore",
+    "delete": "Delete",
+    "addMember": "Add Member",
+    "addDeliverable": "Add Deliverable",
+    "scheduleMeeting": "Schedule Meeting"
+  },
+
+  "createDialog": {
+    "title": "Create Working Group",
+    "description": "Create a new committee, task force, or collaborative working group"
+  },
+
+  "editDialog": {
+    "title": "Edit Working Group",
+    "description": "Update working group details"
+  },
+
+  "viewDialog": {
+    "title": "Working Group Details"
+  },
+
+  "memberDialog": {
+    "title": "Add Member",
+    "editTitle": "Edit Member",
+    "description": "Add an organization or person as a member"
+  },
+
+  "deliverableDialog": {
+    "title": "Add Deliverable",
+    "editTitle": "Edit Deliverable",
+    "description": "Track a deliverable for this working group"
+  },
+
+  "meetingDialog": {
+    "title": "Schedule Meeting",
+    "editTitle": "Edit Meeting",
+    "description": "Schedule a new meeting for this working group"
+  },
+
+  "form": {
+    "nameEn": "Name (English)",
+    "nameEnPlaceholder": "e.g., Data Standards Technical Committee",
+    "nameAr": "Name (Arabic)",
+    "nameArPlaceholder": "e.g., اللجنة الفنية لمعايير البيانات",
+    "summaryEn": "Summary (English)",
+    "summaryAr": "Summary (Arabic)",
+    "type": "Working Group Type",
+    "typePlaceholder": "Select type...",
+    "status": "Status",
+    "statusPlaceholder": "Select status...",
+    "mandateEn": "Mandate (English)",
+    "mandateEnPlaceholder": "Describe the working group's mandate and objectives...",
+    "mandateAr": "Mandate (Arabic)",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "meetingFrequency": "Meeting Frequency",
+    "meetingFrequencyPlaceholder": "Select frequency...",
+    "establishedDate": "Established Date",
+    "disbandmentDate": "Disbandment Date",
+    "parentForum": "Parent Forum",
+    "parentForumPlaceholder": "Select parent forum (optional)...",
+    "leadOrganization": "Lead Organization",
+    "leadOrganizationPlaceholder": "Select lead organization (optional)...",
+    "chairPerson": "Chair Person",
+    "chairPersonPlaceholder": "Select chair person (optional)...",
+    "secretaryPerson": "Secretary",
+    "secretaryPersonPlaceholder": "Select secretary (optional)...",
+    "objectives": "Key Objectives",
+    "objectivesPlaceholder": "Add key objectives (one per line)...",
+    "sensitivityLevel": "Sensitivity Level",
+    "tags": "Tags",
+    "tagsPlaceholder": "Add tags...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "create": "Create Working Group",
+    "update": "Update Working Group"
+  },
+
+  "memberForm": {
+    "memberType": "Member Type",
+    "organization": "Organization",
+    "person": "Person",
+    "selectOrganization": "Select organization...",
+    "selectPerson": "Select person...",
+    "role": "Role",
+    "rolePlaceholder": "Select role...",
+    "status": "Status",
+    "joinedDate": "Joined Date",
+    "leftDate": "Left Date",
+    "representingCountry": "Representing Country",
+    "representingCountryPlaceholder": "Select country...",
+    "canVote": "Can Vote",
+    "canPropose": "Can Propose",
+    "notes": "Notes"
+  },
+
+  "deliverableForm": {
+    "titleEn": "Title (English)",
+    "titleAr": "Title (Arabic)",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "type": "Deliverable Type",
+    "priority": "Priority",
+    "status": "Status",
+    "dueDate": "Due Date",
+    "plannedStartDate": "Planned Start Date",
+    "plannedEndDate": "Planned End Date",
+    "assignedToMember": "Assigned to Member",
+    "assignedToOrg": "Assigned to Organization",
+    "progress": "Progress (%)",
+    "documentUrl": "Document URL",
+    "notes": "Notes"
+  },
+
+  "meetingForm": {
+    "titleEn": "Title (English)",
+    "titleAr": "Title (Arabic)",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "meetingDate": "Meeting Date & Time",
+    "endDate": "End Date & Time",
+    "locationEn": "Location (English)",
+    "locationAr": "Location (Arabic)",
+    "isVirtual": "Virtual Meeting",
+    "meetingUrl": "Meeting URL",
+    "agendaUrl": "Agenda URL",
+    "expectedAttendees": "Expected Attendees",
+    "notes": "Notes"
+  },
+
+  "sections": {
+    "overview": "Overview",
+    "members": "Members",
+    "deliverables": "Deliverables",
+    "meetings": "Meetings",
+    "decisions": "Decisions",
+    "timeline": "Timeline"
+  },
+
+  "tabs": {
+    "all": "All",
+    "active": "Active",
+    "suspended": "Suspended",
+    "disbanded": "Disbanded"
+  },
+
+  "messages": {
+    "created": "Working group \"{{name}}\" created successfully",
+    "createError": "Failed to create working group: {{error}}",
+    "updated": "Working group updated successfully",
+    "updateError": "Failed to update working group: {{error}}",
+    "archived": "Working group archived successfully",
+    "archiveError": "Failed to archive working group: {{error}}",
+    "restored": "Working group restored successfully",
+    "memberAdded": "Member added successfully",
+    "memberAddError": "Failed to add member: {{error}}",
+    "memberUpdated": "Member updated successfully",
+    "memberRemoved": "Member removed successfully",
+    "deliverableAdded": "Deliverable added successfully",
+    "deliverableUpdated": "Deliverable updated successfully",
+    "deliverableDeleted": "Deliverable deleted successfully",
+    "meetingScheduled": "Meeting scheduled successfully",
+    "meetingUpdated": "Meeting updated successfully",
+    "meetingCancelled": "Meeting cancelled"
+  },
+
+  "confirmations": {
+    "archive": "Are you sure you want to archive this working group?",
+    "archiveDescription": "This will hide the working group from the main list. You can restore it later.",
+    "removeMember": "Are you sure you want to remove this member?",
+    "removeMemberDescription": "This action cannot be undone.",
+    "deleteDeliverable": "Are you sure you want to delete this deliverable?",
+    "deleteDeliverableDescription": "This action cannot be undone.",
+    "cancelMeeting": "Are you sure you want to cancel this meeting?",
+    "cancelMeetingDescription": "All attendees will be notified."
+  },
+
+  "empty": {
+    "title": "No working groups yet",
+    "description": "Create your first working group to get started",
+    "noMembers": "No members yet",
+    "addFirstMember": "Add the first member to this working group",
+    "noDeliverables": "No deliverables yet",
+    "addFirstDeliverable": "Add the first deliverable to track progress",
+    "noMeetings": "No meetings scheduled",
+    "scheduleFirstMeeting": "Schedule the first meeting"
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load working groups",
+    "notFound": "Working group not found",
+    "unauthorized": "You don't have permission to perform this action"
+  }
+}

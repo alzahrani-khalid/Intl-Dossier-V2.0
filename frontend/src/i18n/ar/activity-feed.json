@@ -1,0 +1,138 @@
+{
+  "title": "سجل النشاطات",
+  "subtitle": "النشاطات الأخيرة عبر جميع الكيانات",
+  "empty": "لا توجد نشاطات لعرضها",
+  "loading": "جاري تحميل النشاطات...",
+  "loadMore": "تحميل المزيد",
+  "error": {
+    "title": "فشل تحميل النشاطات",
+    "retry": "إعادة المحاولة"
+  },
+  "filters": {
+    "title": "الفلاتر",
+    "search": "بحث في النشاطات...",
+    "clear": "مسح",
+    "clearAll": "مسح جميع الفلاتر",
+    "entityType": "نوع الكيان",
+    "actionType": "نوع الإجراء",
+    "dateRange": "الفترة الزمنية",
+    "user": "المستخدم",
+    "followedOnly": "المتابعة فقط",
+    "applied": "الفلاتر المطبقة"
+  },
+  "datePresets": {
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "last7Days": "آخر 7 أيام",
+    "last30Days": "آخر 30 يوم",
+    "last90Days": "آخر 90 يوم",
+    "thisMonth": "هذا الشهر",
+    "lastMonth": "الشهر الماضي",
+    "custom": "نطاق مخصص",
+    "from": "من",
+    "to": "إلى",
+    "clearDates": "مسح التاريخ"
+  },
+  "entityTypes": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "person": "شخص",
+    "engagement": "ارتباط",
+    "forum": "منتدى",
+    "workingGroup": "مجموعة عمل",
+    "theme": "موضوع",
+    "mou": "مذكرة تفاهم",
+    "document": "وثيقة",
+    "event": "حدث",
+    "contact": "جهة اتصال",
+    "task": "مهمة",
+    "brief": "موجز",
+    "commitment": "التزام",
+    "deliverable": "مخرج",
+    "position": "موقف",
+    "relationship": "علاقة",
+    "intelligence": "استخبارات",
+    "intakeTicket": "تذكرة"
+  },
+  "actionTypes": {
+    "create": "إنشاء",
+    "update": "تحديث",
+    "delete": "حذف",
+    "comment": "تعليق",
+    "statusChange": "تغيير الحالة",
+    "upload": "رفع",
+    "download": "تحميل",
+    "view": "عرض",
+    "share": "مشاركة",
+    "assign": "تعيين",
+    "mention": "إشارة",
+    "approval": "موافقة",
+    "rejection": "رفض",
+    "archive": "أرشفة",
+    "restore": "استعادة"
+  },
+  "actions": {
+    "created": "أنشأ",
+    "updated": "حدّث",
+    "deleted": "حذف",
+    "commented": "علّق على",
+    "changedStatus": "غيّر حالة",
+    "uploaded": "رفع",
+    "downloaded": "حمّل",
+    "viewed": "شاهد",
+    "shared": "شارك",
+    "assigned": "عيّن",
+    "mentioned": "أُشير إليه في",
+    "approved": "وافق على",
+    "rejected": "رفض",
+    "archived": "أرشف",
+    "restored": "استعاد"
+  },
+  "follow": {
+    "follow": "متابعة",
+    "unfollow": "إلغاء المتابعة",
+    "following": "يتابع",
+    "followTooltip": "متابعة للحصول على إشعارات عند حدوث تغييرات",
+    "unfollowTooltip": "إلغاء متابعة للتوقف عن تلقي التحديثات",
+    "followSuccess": "تم متابعة العنصر بنجاح",
+    "unfollowSuccess": "تم إلغاء متابعة العنصر بنجاح",
+    "followError": "فشل في متابعة العنصر",
+    "unfollowError": "فشل في إلغاء متابعة العنصر"
+  },
+  "preferences": {
+    "title": "تفضيلات سجل النشاطات",
+    "defaultEntityTypes": "أنواع الكيانات الافتراضية",
+    "defaultActionTypes": "أنواع الإجراءات الافتراضية",
+    "itemsPerPage": "العناصر في الصفحة",
+    "showOwnActivities": "إظهار نشاطاتي",
+    "compactView": "العرض المختصر",
+    "emailDigestFrequency": "تكرار ملخص البريد الإلكتروني",
+    "pushNotifications": "الإشعارات الفورية",
+    "save": "حفظ التفضيلات",
+    "saveSuccess": "تم حفظ التفضيلات بنجاح",
+    "saveError": "فشل في حفظ التفضيلات"
+  },
+  "emailFrequency": {
+    "realtime": "فوري",
+    "hourly": "كل ساعة",
+    "daily": "يومي",
+    "weekly": "أسبوعي",
+    "never": "أبداً"
+  },
+  "followReason": {
+    "manual": "متابعة يدوية",
+    "autoCreator": "متابعة تلقائية (المنشئ)",
+    "autoAssignee": "متابعة تلقائية (المكلف)",
+    "autoMention": "متابعة تلقائية (مُشار إليه)",
+    "autoTeam": "متابعة تلقائية (عضو الفريق)"
+  },
+  "stats": {
+    "followingCount": "يتابع {{count}} عنصر",
+    "followingCountPlural": "يتابع {{count}} عناصر",
+    "noFollowing": "لا يتابع أي عناصر"
+  },
+  "hints": {
+    "followedOnlyEmpty": "جرب إلغاء تحديد \"المتابعة فقط\" لرؤية جميع النشاطات",
+    "noFiltersMatch": "لا توجد نشاطات تطابق الفلاتر الحالية"
+  }
+}

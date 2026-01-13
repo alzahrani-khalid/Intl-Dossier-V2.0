@@ -1,0 +1,172 @@
+{
+  "title": "Document Templates",
+  "description": "Create documents from pre-built templates with guided wizards",
+
+  "actions": {
+    "createFromTemplate": "Create from Template",
+    "selectTemplate": "Select Template",
+    "startWizard": "Start Wizard",
+    "continue": "Continue",
+    "back": "Back",
+    "next": "Next Step",
+    "finish": "Finish",
+    "save": "Save Draft",
+    "saveDraft": "Save as Draft",
+    "cancel": "Cancel",
+    "preview": "Preview",
+    "download": "Download",
+    "generate": "Generate Document",
+    "delete": "Delete",
+    "edit": "Edit",
+    "duplicate": "Duplicate"
+  },
+
+  "categories": {
+    "all": "All Templates",
+    "country_profile": "Country Profile",
+    "policy_brief": "Policy Brief",
+    "engagement_report": "Engagement Report",
+    "meeting_notes": "Meeting Notes",
+    "position_paper": "Position Paper",
+    "mou_summary": "MOU Summary",
+    "strategic_analysis": "Strategic Analysis",
+    "custom": "Custom Template"
+  },
+
+  "wizard": {
+    "title": "Document Wizard",
+    "stepOf": "Step {{current}} of {{total}}",
+    "progress": "Progress",
+    "requiredFields": "Required fields are marked with *",
+    "optionalSection": "This section is optional",
+    "skipSection": "Skip this section",
+    "allFieldsComplete": "All required fields are complete",
+    "missingFields": "{{count}} required field(s) missing",
+    "unsavedChanges": "You have unsaved changes",
+    "confirmExit": "Are you sure you want to exit? Your progress will be saved as a draft.",
+    "savingProgress": "Saving progress...",
+    "progressSaved": "Progress saved",
+    "completing": "Completing document...",
+    "completed": "Document completed successfully"
+  },
+
+  "templates": {
+    "selectTitle": "Choose a Template",
+    "selectDescription": "Select a template to create your document. Each template includes guided steps to help you fill in all required information.",
+    "noTemplates": "No templates available for this entity type",
+    "searchPlaceholder": "Search templates...",
+    "filterByCategory": "Filter by category",
+    "systemTemplate": "System Template",
+    "customTemplate": "Custom Template",
+    "targetEntities": "Available for: {{entities}}",
+    "sections": "{{count}} sections",
+    "fields": "{{count}} fields"
+  },
+
+  "documents": {
+    "myDocuments": "My Documents",
+    "drafts": "Drafts",
+    "completed": "Completed",
+    "noDrafts": "No draft documents",
+    "noCompleted": "No completed documents",
+    "createdOn": "Created on {{date}}",
+    "lastEdited": "Last edited {{date}}",
+    "completedOn": "Completed on {{date}}",
+    "resumeDraft": "Resume Draft",
+    "viewDocument": "View Document",
+    "deleteConfirm": "Are you sure you want to delete this document?",
+    "deleteSuccess": "Document deleted successfully"
+  },
+
+  "fields": {
+    "text": "Text",
+    "textarea": "Text Area",
+    "rich_text": "Rich Text",
+    "date": "Date",
+    "date_range": "Date Range",
+    "select": "Dropdown",
+    "multiselect": "Multi-Select",
+    "entity_reference": "Entity Reference",
+    "file_attachment": "File Attachment",
+    "number": "Number",
+    "currency": "Currency",
+    "percentage": "Percentage",
+    "boolean": "Yes/No",
+    "tags": "Tags",
+    "url": "URL",
+    "selectOption": "Select an option...",
+    "selectMultiple": "Select one or more...",
+    "selectEntity": "Search and select...",
+    "noOptions": "No options available",
+    "uploadFile": "Upload file",
+    "dragDropFile": "Drag and drop a file here, or click to browse",
+    "dateFrom": "From",
+    "dateTo": "To"
+  },
+
+  "validation": {
+    "required": "This field is required",
+    "minLength": "Minimum {{min}} characters required",
+    "maxLength": "Maximum {{max}} characters allowed",
+    "min": "Value must be at least {{min}}",
+    "max": "Value must be at most {{max}}",
+    "pattern": "Invalid format",
+    "invalidDate": "Invalid date",
+    "invalidUrl": "Invalid URL format",
+    "invalidEmail": "Invalid email format",
+    "fileTooLarge": "File size exceeds {{max}} MB limit",
+    "invalidFileType": "Invalid file type"
+  },
+
+  "classification": {
+    "label": "Classification Level",
+    "public": "Public",
+    "internal": "Internal",
+    "confidential": "Confidential",
+    "secret": "Secret",
+    "inheritFromTemplate": "Use template default"
+  },
+
+  "entityTypes": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "engagement": "Engagement",
+    "theme": "Theme",
+    "working_group": "Working Group",
+    "person": "Person"
+  },
+
+  "suggestions": {
+    "title": "Suggested Entities",
+    "description": "Based on recent interactions and relationships",
+    "addSuggestion": "Add",
+    "noSuggestions": "No suggestions available"
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load templates",
+    "saveFailed": "Failed to save document",
+    "createFailed": "Failed to create document",
+    "deleteFailed": "Failed to delete document",
+    "validationFailed": "Please fix the errors before continuing",
+    "networkError": "Network error. Please check your connection."
+  },
+
+  "success": {
+    "documentCreated": "Document created successfully",
+    "documentSaved": "Document saved successfully",
+    "documentCompleted": "Document completed successfully",
+    "documentDeleted": "Document deleted successfully"
+  },
+
+  "accessibility": {
+    "wizardNavigation": "Wizard navigation",
+    "currentStep": "Current step: {{step}}",
+    "stepComplete": "Step {{step}} complete",
+    "stepIncomplete": "Step {{step}} incomplete",
+    "requiredField": "Required field",
+    "optionalField": "Optional field",
+    "fieldError": "Field has error: {{error}}"
+  }
+}

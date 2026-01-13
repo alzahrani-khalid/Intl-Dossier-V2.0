@@ -1,0 +1,30 @@
+{
+  "step": "Step {{number}}: {{title}}",
+  "stepOf": "Step {{current}} of {{total}}",
+  "next": "Next",
+  "back": "Back",
+  "cancel": "Cancel",
+  "complete": "Complete",
+  "create": "Create",
+  "submit": "Submit",
+  "saveDraft": "Save Draft",
+  "saving": "Saving...",
+  "draftSaved": "Draft saved",
+  "draftRestored": "Draft restored from your previous session",
+  "clearDraft": "Clear Draft",
+  "discardDraft": "Discard Draft",
+  "discardDraftConfirm": "Are you sure you want to discard your draft? This action cannot be undone.",
+  "unsavedChanges": "You have unsaved changes",
+  "unsavedChangesMessage": "Your progress will be lost if you leave now. Would you like to save a draft?",
+  "validation": {
+    "required": "Please complete all required fields before proceeding",
+    "invalid": "Please fix the errors before proceeding"
+  },
+  "progress": {
+    "title": "Progress",
+    "complete": "Complete",
+    "incomplete": "Incomplete"
+  },
+  "optional": "(Optional)",
+  "required": "Required"
+}

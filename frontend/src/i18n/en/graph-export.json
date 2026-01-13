@@ -1,0 +1,71 @@
+{
+  "title": "Export Knowledge Graph",
+  "description": "Export relationship graph data in standard formats for external analysis tools and graph databases.",
+  "format": {
+    "label": "Export Format",
+    "rdf": "RDF",
+    "graphml": "GraphML",
+    "json-ld": "JSON-LD"
+  },
+  "rdfFormat": {
+    "label": "RDF Serialization",
+    "turtle": "Turtle (.ttl)",
+    "ntriples": "N-Triples (.nt)",
+    "rdfxml": "RDF/XML (.rdf)"
+  },
+  "scope": {
+    "label": "Export Scope",
+    "full": "Full knowledge graph",
+    "subgraph": "Subgraph from {{name}}",
+    "filtered": "Filtered export"
+  },
+  "maxDepth": {
+    "label": "Traversal Depth",
+    "value": "{{depth}} degrees of separation"
+  },
+  "language": {
+    "label": "Content Language",
+    "en": "English only",
+    "ar": "Arabic only",
+    "both": "Both languages"
+  },
+  "options": {
+    "label": "Export Options",
+    "includeMetadata": "Include metadata (summaries, tags)",
+    "includeTemporalInfo": "Include temporal validity",
+    "includeInactive": "Include inactive relationships"
+  },
+  "filters": {
+    "label": "Advanced Filters",
+    "relationshipTypes": "Relationship Types",
+    "dossierTypes": "Dossier Types",
+    "clearAll": "Clear all"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "export": "Export Graph",
+    "exporting": "Exporting..."
+  },
+  "progress": {
+    "fetching": "Fetching graph data...",
+    "processing": "Processing graph structure...",
+    "generating": "Generating export file...",
+    "complete": "Export complete",
+    "error": "Export failed"
+  },
+  "success": {
+    "title": "Export Successful",
+    "message": "Successfully exported {{nodes}} nodes and {{edges}} edges"
+  },
+  "error": {
+    "title": "Export Failed",
+    "unauthorized": "You are not authorized to export this data",
+    "noData": "No data available to export",
+    "general": "An error occurred during export"
+  },
+  "tooltip": {
+    "rdf": "Resource Description Framework - Standard for semantic web data interchange",
+    "graphml": "XML-based format for graph visualization tools like Gephi and Neo4j",
+    "jsonld": "JSON format with linked data semantics for web applications"
+  }
+}

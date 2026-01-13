@@ -1,0 +1,104 @@
+{
+  "title": "مزامنة التقويم",
+  "description": "اربط وزامن تقويماتك الخارجية",
+  "addConnection": "إضافة تقويم",
+  "noConnections": "لم يتم ربط أي تقويم بعد",
+  "connectFirst": "اربط تقويمك الأول",
+  "noAccountLinked": "لم يتم ربط حساب",
+
+  "status": {
+    "active": "نشط",
+    "pending": "قيد الانتظار",
+    "paused": "متوقف مؤقتاً",
+    "error": "خطأ",
+    "disconnected": "غير متصل"
+  },
+
+  "syncNow": "مزامنة الآن",
+  "syncing": "جارٍ المزامنة...",
+  "lastSync": "آخر مزامنة",
+  "disconnect": "قطع الاتصال",
+  "cancel": "إلغاء",
+  "add": "إضافة",
+  "adding": "جارٍ الإضافة...",
+
+  "disconnectConfirm": {
+    "title": "قطع اتصال التقويم",
+    "description": "هل أنت متأكد من قطع اتصال {{provider}}؟ سيؤدي ذلك إلى إيقاف مزامنة الأحداث وإزالة جميع روابط المزامنة."
+  },
+
+  "connect": {
+    "title": "ربط تقويم",
+    "description": "اختر خدمة تقويم للربط",
+    "google_calendar": "المزامنة مع تقويم جوجل",
+    "outlook": "المزامنة مع مايكروسوفت أوتلوك",
+    "exchange": "المزامنة مع مايكروسوفت إكستشينج"
+  },
+
+  "settings": {
+    "syncEnabled": "المزامنة مفعلة",
+    "syncDirection": "اتجاه المزامنة",
+    "conflictStrategy": "حل التعارضات",
+    "syncPastDays": "مزامنة الأيام الماضية",
+    "syncFutureDays": "مزامنة الأيام القادمة"
+  },
+
+  "calendars": {
+    "title": "التقويمات",
+    "primary": "الأساسي"
+  },
+
+  "sections": {
+    "connected": "التقويمات المتصلة",
+    "icalFeeds": "اشتراكات موجز iCal",
+    "conflicts": "تعارضات المزامنة"
+  },
+
+  "ical": {
+    "add": "إضافة موجز",
+    "addTitle": "إضافة موجز iCal",
+    "addDescription": "اشترك في موجز iCal لعرض الأحداث من مصادر خارجية",
+    "feedUrl": "رابط الموجز",
+    "feedName": "اسم الموجز",
+    "feedNamePlaceholder": "مثل: العطلات الرسمية",
+    "color": "لون التقويم",
+    "events": "أحداث",
+    "noFeeds": "لا توجد اشتراكات موجز iCal",
+    "addFirst": "اشترك في موجزك الأول"
+  },
+
+  "conflicts": {
+    "detected": "تم اكتشاف تعارض في المزامنة",
+    "pending": "{{count}} تعارض(ات) تحتاج إلى حل",
+    "pending_one": "تعارض واحد يحتاج إلى حل",
+    "pending_other": "{{count}} تعارضات تحتاج إلى حل",
+    "resolvePrompt": "يرجى مراجعة وحل التعارضات لمتابعة المزامنة",
+    "internal": "الحدث الداخلي",
+    "external": "الحدث الخارجي",
+    "keepInternal": "الاحتفاظ بالداخلي",
+    "keepExternal": "الاحتفاظ بالخارجي",
+    "ignore": "تجاهل"
+  },
+
+  "direction": {
+    "import_only": "استيراد فقط",
+    "export_only": "تصدير فقط",
+    "two_way": "مزامنة ثنائية الاتجاه"
+  },
+
+  "strategy": {
+    "internal_wins": "الداخلي يفوز",
+    "external_wins": "الخارجي يفوز",
+    "newest_wins": "الأحدث يفوز",
+    "manual": "حل يدوي"
+  },
+
+  "oauth": {
+    "connecting": "جارٍ ربط التقويم",
+    "pleaseWait": "يرجى الانتظار بينما نقوم بربط تقويمك...",
+    "success": "تم ربط التقويم!",
+    "redirecting": "جارٍ إعادة التوجيه إلى الإعدادات...",
+    "error": "فشل الاتصال",
+    "backToSettings": "العودة إلى الإعدادات"
+  }
+}

@@ -1,0 +1,131 @@
+{
+  "title": "Key Contacts",
+  "subtitle": "Manage your network of key contacts and stakeholders",
+  "actions": {
+    "createPerson": "Add Person",
+    "createFirst": "Add First Person",
+    "edit": "Edit",
+    "archive": "Archive",
+    "cancel": "Cancel",
+    "create": "Create Person",
+    "save": "Save Changes",
+    "loadMore": "Load More",
+    "backToList": "Back to List",
+    "addRole": "Add Role",
+    "addAffiliation": "Add Affiliation",
+    "addConnection": "Add Connection"
+  },
+  "search": {
+    "placeholder": "Search by name, title, email..."
+  },
+  "filters": {
+    "title": "Filters",
+    "importance": "Importance",
+    "allImportance": "All levels",
+    "clear": "Clear",
+    "apply": "Apply"
+  },
+  "stats": {
+    "total": "{{count}} persons",
+    "roles": "Roles",
+    "affiliations": "Affiliations",
+    "connections": "Connections"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "career": "Career",
+    "network": "Network"
+  },
+  "sections": {
+    "profile": "Profile",
+    "currentRole": "Current Position",
+    "biography": "Biography",
+    "careerHistory": "Career History",
+    "affiliations": "Organization Affiliations",
+    "relationships": "Professional Network",
+    "engagements": "Recent Engagements"
+  },
+  "profile": {
+    "languages": "Languages",
+    "expertise": "Expertise"
+  },
+  "role": {
+    "current": "Current",
+    "since": "Since {{date}}",
+    "present": "Present"
+  },
+  "affiliation": {
+    "active": "Active"
+  },
+  "engagement": {
+    "attended": "Attended"
+  },
+  "create": {
+    "title": "Add New Person",
+    "subtitle": "Create a new contact profile",
+    "sections": {
+      "basicInfo": "Basic Information",
+      "basicInfoDescription": "Enter the person's name and title",
+      "contactInfo": "Contact Information",
+      "professionalDetails": "Professional Details",
+      "biography": "Biography"
+    }
+  },
+  "form": {
+    "nameEn": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "titleEn": "Title (English)",
+    "titleAr": "Title (Arabic)",
+    "email": "Email",
+    "phone": "Phone",
+    "linkedin": "LinkedIn",
+    "twitter": "Twitter / X",
+    "importanceLevel": "Importance Level",
+    "importanceLevelDescription": "How important is this contact?",
+    "languages": "Languages",
+    "languagesDescription": "Comma-separated list of languages",
+    "expertiseAreas": "Expertise Areas",
+    "expertiseAreasDescription": "Comma-separated list of expertise areas",
+    "biographyEn": "Biography (English)",
+    "biographyAr": "Biography (Arabic)"
+  },
+  "empty": {
+    "title": "No persons yet",
+    "description": "Start building your contact network by adding key stakeholders",
+    "noResults": "No persons found",
+    "noResultsDescription": "Try adjusting your search or filters",
+    "roles": "No career history recorded",
+    "affiliations": "No affiliations recorded",
+    "relationships": "No connections recorded"
+  },
+  "error": {
+    "title": "Failed to load persons",
+    "message": "An error occurred while fetching data",
+    "notFound": "Person not found",
+    "notFoundDescription": "The person you are looking for does not exist"
+  },
+  "archive": {
+    "title": "Archive Person?",
+    "description": "This will archive the person and hide them from the list. This action can be undone."
+  },
+  "messages": {
+    "created": "Person \"{{name}}\" created successfully",
+    "createError": "Failed to create person: {{error}}",
+    "updated": "Person updated successfully",
+    "updateError": "Failed to update person: {{error}}",
+    "archived": "Person archived successfully",
+    "archiveError": "Failed to archive person: {{error}}",
+    "roleAdded": "Role added successfully",
+    "roleAddError": "Failed to add role: {{error}}",
+    "roleDeleted": "Role deleted successfully",
+    "roleDeleteError": "Failed to delete role: {{error}}",
+    "affiliationAdded": "Affiliation added successfully",
+    "affiliationAddError": "Failed to add affiliation: {{error}}",
+    "affiliationDeleted": "Affiliation deleted successfully",
+    "affiliationDeleteError": "Failed to delete affiliation: {{error}}",
+    "relationshipAdded": "Connection added successfully",
+    "relationshipAddError": "Failed to add connection: {{error}}",
+    "relationshipDeleted": "Connection removed successfully",
+    "relationshipDeleteError": "Failed to remove connection: {{error}}"
+  }
+}

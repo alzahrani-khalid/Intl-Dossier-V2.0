@@ -1,0 +1,14 @@
+{
+  "id": "export-import-templates",
+  "category": "API",
+  "title": "Bulk Export/Import Templates",
+  "description": "Excel and CSV templates for bulk data operations with validation. Supports exporting entity data for offline editing and re-importing with change detection and conflict resolution.",
+  "status": "completed",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.666Z",
+  "updatedAt": "2026-01-11T12:21:48.378Z",
+  "branchName": "main",
+  "startedAt": "2026-01-11T11:58:16.847Z"
+}

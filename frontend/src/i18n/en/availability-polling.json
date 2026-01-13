@@ -1,0 +1,218 @@
+{
+  "title": "Availability Polling",
+  "subtitle": "Find the best meeting time for everyone",
+  "description": "Create polls, invite participants, and find the optimal meeting time",
+  "createPoll": "Create Poll",
+  "myPolls": "My Polls",
+  "allPolls": "All Polls",
+  "noPollsFound": "No polls found",
+  "noPollsDescription": "Create a new availability poll to find the best meeting time.",
+
+  "tabs": {
+    "myPolls": "My Polls",
+    "invited": "Invited",
+    "all": "All Polls"
+  },
+
+  "empty": {
+    "title": "No Polls Found",
+    "description": "Get started by creating your first availability poll"
+  },
+
+  "create": {
+    "title": "Create Poll",
+    "subtitle": "Set up a new availability poll"
+  },
+
+  "status": {
+    "draft": "Draft",
+    "active": "Active",
+    "closed": "Closed",
+    "scheduled": "Scheduled",
+    "cancelled": "Cancelled"
+  },
+
+  "votingRules": {
+    "simple_majority": "Simple Majority",
+    "simple_majority_desc": "The option with the most votes wins",
+    "consensus": "Consensus",
+    "consensus_desc": "Everyone must agree on the option",
+    "unanimous": "Unanimous",
+    "unanimous_desc": "All participants must be available",
+    "organizer_decides": "Organizer Decides",
+    "organizer_decides_desc": "The organizer makes the final decision"
+  },
+
+  "responses": {
+    "available": "Available",
+    "unavailable": "Unavailable",
+    "maybe": "Maybe",
+    "notResponded": "Not Responded"
+  },
+
+  "form": {
+    "meetingTitle": "Meeting Title",
+    "meetingTitleEn": "Meeting Title (English)",
+    "meetingTitleAr": "Meeting Title (Arabic)",
+    "meetingTitlePlaceholder": "Enter meeting title",
+    "description": "Description",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "descriptionPlaceholder": "Describe the purpose of this meeting",
+    "deadline": "Voting Deadline",
+    "deadlineHelp": "Participants must submit their responses by this date",
+    "votingRule": "Voting Rule",
+    "minParticipants": "Minimum Participants Required",
+    "minParticipantsHelp": "Minimum number of participants needed for the poll to be valid",
+    "duration": "Meeting Duration",
+    "durationMinutes": "{{count}} minutes",
+    "minutes": "min",
+    "location": "Location",
+    "locationEn": "Location (English)",
+    "locationAr": "Location (Arabic)",
+    "locationPlaceholder": "Enter meeting location",
+    "isVirtual": "Virtual Meeting",
+    "virtualLink": "Virtual Meeting Link",
+    "virtualLinkPlaceholder": "Enter video conferencing link",
+    "organizerNotes": "Organizer Notes",
+    "organizerNotesPlaceholder": "Internal notes (only visible to you)",
+    "linkToDossier": "Link to Dossier",
+    "selectDossier": "Select a dossier (optional)"
+  },
+
+  "slots": {
+    "title": "Time Slots",
+    "addSlot": "Add Time Slot",
+    "addMultipleSlots": "Add Multiple Slots",
+    "removeSlot": "Remove Slot",
+    "noSlots": "No time slots added yet",
+    "noSlotsDescription": "Add at least one time slot for participants to vote on.",
+    "startTime": "Start Time",
+    "endTime": "End Time",
+    "venueEn": "Venue (English)",
+    "venueAr": "Venue (Arabic)",
+    "venuePlaceholder": "Optional venue suggestion",
+    "preference": "Your Preference",
+    "preferenceHelp": "Higher preference will be weighted in the results",
+    "availableCount": "{{count}} available",
+    "unavailableCount": "{{count}} unavailable",
+    "maybeCount": "{{count}} maybe",
+    "bestSlot": "Best Option",
+    "selectedSlot": "Selected"
+  },
+
+  "participants": {
+    "title": "Participants",
+    "addParticipant": "Add Participant",
+    "removeParticipant": "Remove Participant",
+    "noParticipants": "No participants invited yet",
+    "noParticipantsDescription": "Invite participants to vote on the time slots.",
+    "searchUsers": "Search users...",
+    "required": "Required",
+    "optional": "Optional",
+    "responded": "Responded",
+    "pending": "Pending",
+    "invitedAt": "Invited {{date}}",
+    "reminderSent": "Reminder sent {{date}}",
+    "sendReminder": "Send Reminder",
+    "responseRate": "{{responded}} of {{total}} responded ({{rate}}%)"
+  },
+
+  "voting": {
+    "title": "Vote on Time Slots",
+    "vote": "Vote",
+    "subtitle": "Select your availability for each proposed time",
+    "submitVotes": "Submit Votes",
+    "updateVotes": "Update Votes",
+    "votesSubmitted": "Votes submitted successfully",
+    "votesUpdated": "Votes updated successfully",
+    "selectAll": "Select All",
+    "clearAll": "Clear All",
+    "markAllAvailable": "Mark All Available",
+    "markAllUnavailable": "Mark All Unavailable",
+    "addNote": "Add Note",
+    "notePlaceholder": "Optional note for this slot",
+    "deadline": "Voting ends {{date}}",
+    "deadlinePassed": "Voting has ended",
+    "pollClosed": "This poll is closed"
+  },
+
+  "results": {
+    "title": "Results",
+    "subtitle": "{{responded}} of {{total}} participants responded",
+    "view": "View",
+    "manage": "Manage",
+    "optimalSlots": "Best Time Slots",
+    "optimalSlotsDescription": "Ranked by participant availability and your preferences",
+    "noOptimalSlots": "Not enough responses to determine the best time",
+    "score": "Score: {{score}}%",
+    "breakdown": "Score Breakdown",
+    "availabilityScore": "Availability",
+    "preferenceScore": "Your Preference",
+    "canClose": "Poll can be closed",
+    "needMoreResponses": "Need {{count}} more responses",
+    "selectAndSchedule": "Select & Schedule Meeting",
+    "viewAllResponses": "View All Responses"
+  },
+
+  "actions": {
+    "activate": "Activate Poll",
+    "activateConfirm": "Once activated, participants can start voting. You can still modify slots and participants.",
+    "close": "Close Poll",
+    "closeConfirm": "Close this poll and select the best time slot?",
+    "schedule": "Schedule Meeting",
+    "scheduleConfirm": "Create a calendar event for the selected time slot?",
+    "cancel": "Cancel Poll",
+    "cancelConfirm": "Are you sure you want to cancel this poll?",
+    "delete": "Delete Poll",
+    "deleteConfirm": "This action cannot be undone. All votes and data will be lost.",
+    "duplicate": "Duplicate Poll",
+    "share": "Share Poll",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link copied to clipboard"
+  },
+
+  "notifications": {
+    "pollCreated": "Poll created successfully",
+    "pollUpdated": "Poll updated successfully",
+    "pollActivated": "Poll activated - participants can now vote",
+    "pollClosed": "Poll closed successfully",
+    "pollScheduled": "Meeting scheduled successfully",
+    "pollCancelled": "Poll cancelled",
+    "pollDeleted": "Poll deleted",
+    "slotAdded": "Time slot added",
+    "slotRemoved": "Time slot removed",
+    "participantAdded": "Participant added",
+    "participantRemoved": "Participant removed",
+    "reminderSent": "Reminder sent to participant"
+  },
+
+  "errors": {
+    "createFailed": "Failed to create poll",
+    "updateFailed": "Failed to update poll",
+    "activateFailed": "Failed to activate poll",
+    "closeFailed": "Failed to close poll",
+    "scheduleFailed": "Failed to schedule meeting",
+    "voteFailed": "Failed to submit votes",
+    "loadFailed": "Failed to load poll details",
+    "noSlots": "Please add at least one time slot before activating",
+    "deadlinePassed": "Cannot vote after the deadline",
+    "notAuthorized": "You are not authorized to perform this action"
+  },
+
+  "matrix": {
+    "title": "Response Matrix",
+    "participant": "Participant",
+    "showAll": "Show All",
+    "hideUnresponded": "Hide Unresponded",
+    "exportMatrix": "Export Matrix"
+  },
+
+  "filters": {
+    "status": "Status",
+    "allStatuses": "All Statuses",
+    "dateRange": "Date Range",
+    "createdBy": "Created By",
+    "myPollsOnly": "My Polls Only"
+  }
+}

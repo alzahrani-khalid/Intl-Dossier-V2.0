@@ -1,0 +1,134 @@
+{
+  "title": "سجلات التدقيق",
+  "description": "عرض والبحث في سجل المراجعة لجميع أنشطة النظام",
+  "filters": {
+    "title": "التصفية",
+    "table": "الجدول",
+    "operation": "العملية",
+    "user": "المستخدم",
+    "user_email": "البريد الإلكتروني",
+    "date_range": "النطاق الزمني",
+    "ip_address": "عنوان IP",
+    "search": "بحث",
+    "search_placeholder": "البحث بالبريد أو الجدول أو المحتوى...",
+    "clear_all": "مسح الكل",
+    "apply": "تطبيق",
+    "active_filters": "التصفيات النشطة"
+  },
+  "date_presets": {
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "last_7_days": "آخر 7 أيام",
+    "last_30_days": "آخر 30 يوم",
+    "last_90_days": "آخر 90 يوم",
+    "this_month": "هذا الشهر",
+    "last_month": "الشهر الماضي",
+    "custom": "نطاق مخصص"
+  },
+  "operations": {
+    "INSERT": "إنشاء",
+    "UPDATE": "تحديث",
+    "DELETE": "حذف",
+    "all": "جميع العمليات"
+  },
+  "columns": {
+    "timestamp": "الوقت",
+    "table": "الجدول",
+    "operation": "العملية",
+    "user": "المستخدم",
+    "ip_address": "عنوان IP",
+    "changes": "التغييرات",
+    "actions": "الإجراءات"
+  },
+  "detail": {
+    "title": "تفاصيل سجل التدقيق",
+    "record_id": "معرف السجل",
+    "session_id": "معرف الجلسة",
+    "request_id": "معرف الطلب",
+    "user_agent": "وكيل المستخدم",
+    "changed_fields": "الحقول المتغيرة",
+    "old_value": "القيمة السابقة",
+    "new_value": "القيمة الجديدة",
+    "no_changes": "لم يتم تسجيل أي تغييرات",
+    "related_logs": "التغييرات ذات الصلة",
+    "view_related": "عرض السجلات ذات الصلة",
+    "close": "إغلاق"
+  },
+  "export": {
+    "title": "تصدير سجلات التدقيق",
+    "button": "تصدير",
+    "format": "الصيغة",
+    "csv": "CSV",
+    "json": "JSON",
+    "exporting": "جارٍ التصدير...",
+    "success": "تم تصدير سجلات التدقيق بنجاح",
+    "error": "فشل تصدير سجلات التدقيق",
+    "max_records": "الحد الأقصى {{count}} سجل"
+  },
+  "statistics": {
+    "title": "الإحصائيات",
+    "period": "الفترة",
+    "total_events": "إجمالي الأحداث",
+    "by_operation": "حسب العملية",
+    "by_table": "حسب الجدول",
+    "no_data": "لا توجد إحصائيات متاحة لهذه الفترة"
+  },
+  "pagination": {
+    "showing": "عرض {{from}} إلى {{to}} من {{total}}",
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة {{page}} من {{pages}}",
+    "per_page": "لكل صفحة"
+  },
+  "empty": {
+    "title": "لم يتم العثور على سجلات تدقيق",
+    "description": "لا توجد أحداث تدقيق تطابق معايير التصفية الحالية",
+    "clear_filters": "امسح التصفيات لعرض جميع السجلات"
+  },
+  "loading": {
+    "title": "جارٍ تحميل سجلات التدقيق...",
+    "statistics": "جارٍ تحميل الإحصائيات..."
+  },
+  "error": {
+    "title": "خطأ في تحميل سجلات التدقيق",
+    "description": "فشل في تحميل بيانات سجل التدقيق",
+    "retry": "حاول مرة أخرى",
+    "permission_denied": "ليس لديك صلاحية لعرض سجلات التدقيق"
+  },
+  "tables": {
+    "users": "المستخدمون",
+    "countries": "الدول",
+    "organizations": "المنظمات",
+    "mous": "مذكرات التفاهم",
+    "events": "الفعاليات",
+    "forums": "المنتديات",
+    "briefs": "الموجزات",
+    "intelligence_reports": "تقارير المعلومات",
+    "data_library_items": "مكتبة البيانات",
+    "intake_tickets": "تذاكر الاستقبال",
+    "commitments": "الالتزامات",
+    "tasks": "المهام",
+    "engagements": "الارتباطات",
+    "persons": "الأشخاص",
+    "positions": "المناصب",
+    "working_groups": "مجموعات العمل",
+    "themes": "المواضيع",
+    "documents": "الوثائق",
+    "relationships": "العلاقات"
+  },
+  "sort": {
+    "label": "الترتيب",
+    "timestamp": "الوقت",
+    "table_name": "الجدول",
+    "operation": "العملية",
+    "user_email": "المستخدم",
+    "asc": "تصاعدي",
+    "desc": "تنازلي"
+  },
+  "time": {
+    "just_now": "الآن",
+    "minutes_ago": "منذ {{count}} دقيقة",
+    "hours_ago": "منذ {{count}} ساعة",
+    "days_ago": "منذ {{count}} يوم"
+  }
+}

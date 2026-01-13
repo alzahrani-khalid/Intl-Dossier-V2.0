@@ -1,0 +1,30 @@
+{
+  "step": "الخطوة {{number}}: {{title}}",
+  "stepOf": "الخطوة {{current}} من {{total}}",
+  "next": "التالي",
+  "back": "السابق",
+  "cancel": "إلغاء",
+  "complete": "إتمام",
+  "create": "إنشاء",
+  "submit": "إرسال",
+  "saveDraft": "حفظ المسودة",
+  "saving": "جاري الحفظ...",
+  "draftSaved": "تم حفظ المسودة",
+  "draftRestored": "تمت استعادة المسودة من جلستك السابقة",
+  "clearDraft": "مسح المسودة",
+  "discardDraft": "تجاهل المسودة",
+  "discardDraftConfirm": "هل أنت متأكد من رغبتك في تجاهل المسودة؟ لا يمكن التراجع عن هذا الإجراء.",
+  "unsavedChanges": "لديك تغييرات غير محفوظة",
+  "unsavedChangesMessage": "سيتم فقدان تقدمك إذا غادرت الآن. هل تريد حفظ مسودة؟",
+  "validation": {
+    "required": "يرجى إكمال جميع الحقول المطلوبة قبل المتابعة",
+    "invalid": "يرجى تصحيح الأخطاء قبل المتابعة"
+  },
+  "progress": {
+    "title": "التقدم",
+    "complete": "مكتمل",
+    "incomplete": "غير مكتمل"
+  },
+  "optional": "(اختياري)",
+  "required": "مطلوب"
+}

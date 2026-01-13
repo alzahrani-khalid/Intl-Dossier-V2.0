@@ -1,0 +1,144 @@
+{
+  "title": "الالتزامات",
+  "subtitle": "تتبع وإدارة الالتزامات",
+  "pageTitle": "التزاماتي",
+  "actions": {
+    "create": "إضافة التزام",
+    "edit": "تعديل",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "uploadEvidence": "رفع الدليل",
+    "downloadEvidence": "تحميل الدليل",
+    "viewDetails": "عرض التفاصيل",
+    "updateStatus": "تحديث الحالة",
+    "clearFilters": "مسح الفلاتر",
+    "applyFilters": "تطبيق الفلاتر"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "cancelled": "ملغي",
+    "overdue": "متأخر",
+    "updated": "تم تحديث الحالة بنجاح",
+    "updateFailed": "فشل تحديث الحالة"
+  },
+  "priority": {
+    "label": "الأولوية",
+    "low": "منخفضة",
+    "medium": "متوسطة",
+    "high": "عالية",
+    "critical": "حرجة"
+  },
+  "ownerType": {
+    "label": "نوع المالك",
+    "internal": "داخلي",
+    "external": "خارجي"
+  },
+  "form": {
+    "title": "العنوان",
+    "titlePlaceholder": "أدخل عنوان الالتزام",
+    "description": "الوصف",
+    "descriptionPlaceholder": "أدخل وصف الالتزام",
+    "dueDate": "تاريخ الاستحقاق",
+    "priority": "الأولوية",
+    "ownerType": "نوع المالك",
+    "owner": "المالك",
+    "selectOwner": "اختر المالك",
+    "proofRequired": "الدليل مطلوب",
+    "proofRequiredDescription": "يتطلب رفع دليل للإكمال",
+    "trackingMode": "وضع التتبع",
+    "manual": "يدوي",
+    "automatic": "تلقائي"
+  },
+  "filters": {
+    "title": "فلترة الالتزامات",
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "ownerType": "نوع المالك",
+    "overdue": "المتأخرة فقط",
+    "overdueDescription": "عرض الالتزامات المتأخرة فقط",
+    "dueDate": "تاريخ الاستحقاق",
+    "dueDateFrom": "من",
+    "dueDateTo": "إلى",
+    "clear": "مسح الفلاتر",
+    "apply": "تطبيق"
+  },
+  "detail": {
+    "title": "تفاصيل الالتزام",
+    "dossier": "الملف",
+    "createdAt": "تاريخ الإنشاء",
+    "updatedAt": "آخر تحديث",
+    "createdBy": "أنشئ بواسطة",
+    "updatedBy": "حُدّث بواسطة",
+    "completedAt": "تاريخ الإكمال",
+    "evidence": "الدليل",
+    "evidenceSubmittedAt": "تاريخ تقديم الدليل",
+    "noEvidence": "لم يتم رفع أي دليل",
+    "statusHistory": "سجل الحالة",
+    "noHistory": "لا توجد تغييرات مسجلة"
+  },
+  "evidence": {
+    "title": "رفع الدليل",
+    "description": "رفع المستندات الداعمة لهذا الالتزام",
+    "dropzone": "اسحب وأفلت الملفات هنا، أو انقر للاختيار",
+    "camera": "التقاط صورة",
+    "maxSize": "الحد الأقصى لحجم الملف: 10 ميجابايت",
+    "allowedTypes": "المسموح: PDF، JPG، PNG، DOCX",
+    "uploading": "جارٍ الرفع...",
+    "uploadSuccess": "تم رفع الدليل بنجاح",
+    "uploadFailed": "فشل رفع الدليل",
+    "invalidType": "نوع ملف غير صالح",
+    "fileTooLarge": "حجم الملف يتجاوز 10 ميجابايت"
+  },
+  "card": {
+    "dueIn": "يستحق خلال {{days}} أيام",
+    "dueToday": "يستحق اليوم",
+    "overdueDays": "متأخر {{days}} أيام",
+    "noTitle": "التزام بدون عنوان"
+  },
+  "list": {
+    "empty": "لا توجد التزامات",
+    "emptyFiltered": "لا توجد التزامات تطابق الفلاتر",
+    "loadMore": "تحميل المزيد",
+    "endOfList": "نهاية القائمة",
+    "loading": "جارٍ تحميل الالتزامات..."
+  },
+  "validation": {
+    "titleRequired": "العنوان مطلوب",
+    "titleMaxLength": "العنوان يجب أن يكون أقل من 200 حرف",
+    "descriptionRequired": "الوصف مطلوب",
+    "dueDateRequired": "تاريخ الاستحقاق مطلوب",
+    "dueDateFuture": "تاريخ الاستحقاق يجب أن يكون في المستقبل",
+    "ownerRequired": "المالك مطلوب"
+  },
+  "errors": {
+    "loadFailed": "فشل تحميل الالتزامات",
+    "createFailed": "فشل إنشاء الالتزام",
+    "updateFailed": "فشل تحديث الالتزام",
+    "deleteFailed": "فشل حذف الالتزام",
+    "statusUpdateFailed": "فشل تحديث الحالة",
+    "uploadFailed": "فشل رفع الدليل",
+    "invalidTransition": "انتقال حالة غير صالح"
+  },
+  "success": {
+    "created": "تم إنشاء الالتزام بنجاح",
+    "updated": "تم تحديث الالتزام بنجاح",
+    "deleted": "تم حذف الالتزام بنجاح",
+    "statusUpdated": "تم تحديث الحالة بنجاح"
+  },
+  "confirm": {
+    "delete": "هل أنت متأكد من حذف هذا الالتزام؟",
+    "cancel": "هل أنت متأكد من إلغاء هذا الالتزام؟",
+    "cancelReason": "سبب الإلغاء",
+    "cancelReasonPlaceholder": "أدخل سبب الإلغاء"
+  },
+  "timeline": {
+    "created": "تم إنشاء الالتزام",
+    "statusChanged": "تم تغيير الحالة من {{from}} إلى {{to}}",
+    "evidenceUploaded": "تم رفع الدليل",
+    "updated": "تم تحديث الالتزام",
+    "by": "بواسطة {{user}}"
+  }
+}

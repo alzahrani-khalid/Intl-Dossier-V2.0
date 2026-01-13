@@ -1,0 +1,14 @@
+{
+  "id": "themes-entity-management",
+  "category": "Core",
+  "title": "Themes Entity Management",
+  "description": "Implement themes entity for topical areas and issue domains (e.g., SDGs, Climate Statistics, Digital Economy). Themes enable cross-cutting analysis and relationship tracking across entities. Includes taxonomy management and bilingual labels.",
+  "status": "completed",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.660Z",
+  "updatedAt": "2026-01-10T16:45:53.948Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T16:26:42.983Z"
+}

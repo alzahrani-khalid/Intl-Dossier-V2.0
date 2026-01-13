@@ -42,7 +42,9 @@
     "close": "إغلاق",
     "backToHub": "العودة إلى مركز الدوسيهات",
     "backToList": "العودة إلى القائمة",
-    "viewCorrectType": "عرض كـ {{type}}"
+    "viewCorrectType": "عرض كـ {{type}}",
+    "exportGraph": "تصدير الرسم البياني",
+    "addRelationship": "إضافة علاقة"
   },
   "filter": {
     "all": "جميع الأنواع",
@@ -444,6 +446,7 @@
     "retry": "إعادة المحاولة"
   },
   "timeline": {
+    "title": "الجدول الزمني التفاعلي",
     "search_placeholder": "البحث في أحداث الجدول الزمني...",
     "filters": "الفلاتر",
     "event_types": "أنواع الأحداث",
@@ -474,8 +477,25 @@
     "to_date": "إلى تاريخ",
     "apply_custom_range": "تطبيق النطاق",
     "reset_filters": "إعادة تعيين كل الفلاتر",
+    "loading_more": "جاري التحميل...",
+    "load_more": "تحميل المزيد",
     "end": "نهاية الجدول الزمني",
+    "location": "الموقع",
+    "join_virtual": "الانضمام للاجتماع الافتراضي",
+    "participants": "المشاركون",
+    "more": "المزيد",
+    "attachments": "المرفقات",
+    "confidence": "الثقة",
+    "show_more": "عرض المزيد",
+    "show_less": "عرض أقل",
+    "view_details": "عرض التفاصيل",
+    "error": {
+      "title": "خطأ",
+      "description": "فشل تحميل الجدول الزمني"
+    },
     "empty": {
+      "title": "لا توجد أحداث",
+      "description": "لا توجد أحداث لعرضها",
       "country": "لا توجد أحداث زمنية لهذا البلد",
       "organization": "لا توجد أحداث زمنية لهذه المنظمة",
       "person": "لا توجد أحداث زمنية لهذا الشخص",
@@ -483,6 +503,49 @@
       "forum": "لا توجد أحداث زمنية لهذا المنتدى",
       "working_group": "لا توجد أحداث زمنية لهذا الفريق العامل",
       "topic": "لا توجد أحداث زمنية لهذا الموضوع"
+    },
+    "zoom": {
+      "zoom_in": "تكبير",
+      "zoom_out": "تصغير",
+      "go_today": "الذهاب لليوم",
+      "scroll_back": "التمرير للخلف",
+      "scroll_forward": "التمرير للأمام",
+      "fit_all": "احتواء كل الأحداث",
+      "day": "يوم",
+      "week": "أسبوع",
+      "month": "شهر",
+      "quarter": "ربع سنة",
+      "year": "سنة",
+      "all": "كل الأوقات"
+    },
+    "annotations": {
+      "toggle": "تبديل الملاحظات",
+      "create_title": "إضافة ملاحظة",
+      "create_description": "أضف ملاحظة أو علامة أو تمييز لهذا الحدث",
+      "edit_title": "تحرير الملاحظة",
+      "edit_description": "تحديث ملاحظتك",
+      "type": "نوع الملاحظة",
+      "content_en": "المحتوى (بالإنجليزية)",
+      "content_ar": "المحتوى (بالعربية)",
+      "content_placeholder_en": "أدخل ملاحظتك بالإنجليزية...",
+      "content_placeholder_ar": "أدخل ملاحظتك...",
+      "color": "اللون",
+      "visibility": "الرؤية",
+      "add": "إضافة ملاحظة",
+      "types": {
+        "note": "ملاحظة",
+        "marker": "علامة",
+        "highlight": "تمييز",
+        "milestone": "معلم"
+      },
+      "visibility_options": {
+        "private": "خاص",
+        "private_desc": "أنت فقط يمكنك رؤية هذا",
+        "team": "الفريق",
+        "team_desc": "مرئي لفريقك",
+        "public": "عام",
+        "public_desc": "مرئي لجميع المستخدمين"
+      }
     }
   },
   "tabs": {
@@ -490,6 +553,63 @@
     "relationships": "العلاقات",
     "positions": "المناصب",
     "mous": "مذكرات التفاهم",
-    "contacts": "جهات الاتصال"
+    "contacts": "جهات الاتصال",
+    "comments": "تعليقات"
+  },
+  "carousel": {
+    "previous": "السابق",
+    "next": "التالي",
+    "label": "عرض العناصر ذات الصلة",
+    "pagination": "تصفح العرض الدوار",
+    "empty": "لا توجد عناصر للعرض",
+    "itemCount": "{{current}} من {{total}}",
+    "relatedDossiers": "الدوسيهات ذات الصلة",
+    "linkedPersons": "الأشخاص المرتبطون",
+    "connectedOrganizations": "المنظمات المتصلة",
+    "viewAll": "عرض الكل"
+  },
+  "views": {
+    "carousel": "عرض دوار",
+    "list": "قائمة",
+    "graph": "شبكة"
+  },
+  "templates": {
+    "title": "قوالب الدوسيهات",
+    "subtitle": "اختر قالبًا مُعدًّا مسبقًا للبدء بسرعة",
+    "gallery": {
+      "title": "معرض القوالب",
+      "description": "اختر قالبًا لمعاينة هيكله قبل إنشاء دوسيهك",
+      "viewAll": "عرض جميع القوالب",
+      "startFromScratch": "البدء من الصفر",
+      "startFromScratchDescription": "إنشاء دوسيه بدون استخدام قالب"
+    },
+    "preview": {
+      "title": "معاينة القالب",
+      "useTemplate": "استخدام هذا القالب",
+      "sections": "الأقسام",
+      "requiredSections": "الأقسام المطلوبة",
+      "optionalSections": "الأقسام الاختيارية",
+      "recommendedTags": "الوسوم الموصى بها",
+      "useCases": "حالات الاستخدام",
+      "exampleName": "اسم مثال",
+      "dossierType": "نوع الدوسيه",
+      "close": "إغلاق المعاينة"
+    },
+    "category": {
+      "all": "جميع القوالب",
+      "bilateral": "العلاقات الثنائية",
+      "regional": "التحليل الإقليمي",
+      "thematic": "الإحاطات الموضوعية",
+      "organizational": "المنظمات والمنتديات"
+    },
+    "card": {
+      "clickToPreview": "انقر لمعاينة الهيكل",
+      "sectionsCount": "{{count}} أقسام",
+      "required": "مطلوب"
+    },
+    "empty": {
+      "title": "لا توجد قوالب متاحة",
+      "description": "تساعدك القوالب في إنشاء دوسيهات منظمة بسرعة"
+    }
   }
 }

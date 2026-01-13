@@ -1,0 +1,76 @@
+{
+  "title": "ملخص الذكاء الاصطناعي",
+  "description": "إنشاء ملخص تنفيذي باستخدام تحليل الذكاء الاصطناعي",
+  "descriptionWithName": "إنشاء ملخص تنفيذي لـ {{name}}",
+  "generate": "إنشاء الملخص",
+  "generating": "جاري إنشاء الملخص...",
+  "retry": "إعادة المحاولة",
+  "startOver": "البدء من جديد",
+  "generateAnother": "إنشاء ملخص جديد",
+  "showOptions": "تخصيص الملخص",
+  "hideOptions": "إخفاء الخيارات",
+
+  "options": {
+    "length": "طول الملخص",
+    "focus": "مجالات التركيز"
+  },
+
+  "length": {
+    "brief": "موجز (~150 كلمة)",
+    "standard": "قياسي (~300 كلمة)",
+    "detailed": "مفصل (~500 كلمة)"
+  },
+
+  "focus": {
+    "all": "جميع المجالات",
+    "activity": "النشاط الأخير",
+    "relationships": "العلاقات",
+    "commitments": "الالتزامات",
+    "strategic": "الاستراتيجية"
+  },
+
+  "sections": {
+    "executiveSummary": "الملخص التنفيذي",
+    "keyHighlights": "النقاط الرئيسية",
+    "details": "التفاصيل"
+  },
+
+  "importance": {
+    "high": "عالية",
+    "medium": "متوسطة",
+    "low": "منخفضة"
+  },
+
+  "confidence": {
+    "high": "ثقة عالية",
+    "medium": "ثقة متوسطة",
+    "low": "ثقة منخفضة"
+  },
+
+  "metadata": {
+    "dataPoints": "تم تحليل {{count}} نقطة بيانات",
+    "generatedAt": "تم الإنشاء في {{date}}"
+  },
+
+  "fallback": {
+    "title": "تم إنشاء ملخص أساسي",
+    "message": "خدمة الذكاء الاصطناعي غير متاحة. تم إنشاء ملخص أساسي من البيانات المتاحة."
+  },
+
+  "entity": {
+    "dossier": "ملف",
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "person": "شخص",
+    "engagement": "مشاركة",
+    "theme": "موضوع"
+  },
+
+  "errors": {
+    "title": "خطأ في الملخص",
+    "generationFailed": "فشل إنشاء الملخص. يرجى المحاولة مرة أخرى.",
+    "entityNotFound": "الكيان غير موجود أو الوصول مرفوض.",
+    "invalidRequest": "معلمات الطلب غير صالحة."
+  }
+}

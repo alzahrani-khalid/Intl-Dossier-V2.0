@@ -1,0 +1,148 @@
+{
+  "title": "Smart Import Available",
+  "description": "Import data from connected services to populate this section",
+  "loading": "Checking available data sources...",
+  "recommended": "Recommended",
+  "notConnected": "Not Connected",
+  "itemsAvailable": "{{count}} items available",
+  "noSources": {
+    "description": "Connect external services to enable smart import",
+    "connectAction": "Connect Services"
+  },
+  "compact": {
+    "suggestion": "Import data from {{source}}",
+    "action": "Import"
+  },
+  "preview": {
+    "title": "Import Preview",
+    "description": "Select items to import from {{source}}",
+    "selectSource": "Select a data source",
+    "loading": "Loading preview...",
+    "error": "Failed to load preview",
+    "errorTitle": "Error",
+    "selectAll": "Select all",
+    "selected": "{{count}} of {{total}} selected",
+    "mappings": "Mappings",
+    "fieldMappings": "Field Mappings",
+    "required": "Required",
+    "noItems": "No items to import",
+    "warnings": "Warnings",
+    "selectItem": "Select {{title}}"
+  },
+  "import": {
+    "success": "Import Complete",
+    "partialSuccess": "Import Completed with Errors",
+    "error": "Import failed",
+    "summary": "{{created}} created, {{skipped}} skipped, {{failed}} failed"
+  },
+  "actions": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "import": "Import {{count}} Items",
+    "importing": "Importing..."
+  },
+  "sources": {
+    "calendar": {
+      "google": {
+        "name": "Google Calendar",
+        "description": "Import events from your Google Calendar"
+      },
+      "outlook": {
+        "name": "Outlook Calendar",
+        "description": "Import events from your Outlook Calendar"
+      },
+      "exchange": {
+        "name": "Exchange Calendar",
+        "description": "Import events from your Exchange Calendar"
+      },
+      "connect": {
+        "name": "Connect Calendar",
+        "description": "Connect Google or Outlook to import events"
+      }
+    },
+    "email": {
+      "contacts": {
+        "name": "Email Contacts",
+        "description": "Extract contacts from recent email signatures"
+      },
+      "attachments": {
+        "name": "Email Attachments",
+        "description": "Import documents from email attachments"
+      }
+    },
+    "documents": {
+      "existing": {
+        "name": "Existing Documents",
+        "description": "Link documents already uploaded to the system"
+      },
+      "templates": {
+        "name": "Document Templates",
+        "description": "Create documents from pre-defined templates"
+      }
+    },
+    "dossiers": {
+      "related": {
+        "name": "Related Dossiers",
+        "description": "Import data from related dossiers in the system"
+      }
+    }
+  },
+  "sections": {
+    "documents": {
+      "suggestionTitle": "Import Documents",
+      "suggestionDescription": "Quickly populate this section with documents from other sources"
+    },
+    "contacts": {
+      "suggestionTitle": "Import Contacts",
+      "suggestionDescription": "Add contacts from email signatures or existing records"
+    },
+    "events": {
+      "suggestionTitle": "Import Events",
+      "suggestionDescription": "Sync events from your calendar to this engagement"
+    },
+    "briefs": {
+      "suggestionTitle": "Generate Briefs",
+      "suggestionDescription": "Create briefing documents from existing materials"
+    },
+    "relationships": {
+      "suggestionTitle": "Add Relationships",
+      "suggestionDescription": "Link to related dossiers and entities"
+    }
+  },
+  "mapping": {
+    "autoDetected": "Auto-detected",
+    "manual": "Manual",
+    "confidence": "{{percent}}% confidence",
+    "sourceField": "Source Field",
+    "targetField": "Target Field",
+    "transform": "Transform",
+    "transforms": {
+      "none": "None",
+      "lowercase": "Lowercase",
+      "uppercase": "Uppercase",
+      "trim": "Trim whitespace",
+      "parse_date": "Parse as date",
+      "extract_email": "Extract email"
+    }
+  },
+  "status": {
+    "connected": "Connected",
+    "disconnected": "Not Connected",
+    "partial": "Partially Connected",
+    "error": "Connection Error",
+    "syncing": "Syncing...",
+    "lastSync": "Last synced {{time}}"
+  },
+  "errors": {
+    "noSource": "No data source selected",
+    "noItems": "No items selected for import",
+    "previewFailed": "Failed to load preview: {{error}}",
+    "importFailed": "Import failed: {{error}}",
+    "mappingRequired": "Required field '{{field}}' has no mapping"
+  },
+  "confirmations": {
+    "skipErrors": "Skip items with errors",
+    "updateExisting": "Update existing items",
+    "overwrite": "This will overwrite {{count}} existing items"
+  }
+}

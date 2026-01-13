@@ -1,0 +1,108 @@
+{
+  "title": "AI Policy Brief Assistant",
+  "subtitle": "Answer a few questions to generate a policy brief outline",
+  "description": "Policy briefs require specific structure and expertise. Let AI help you get started with a structured outline based on your inputs.",
+
+  "steps": {
+    "topic": {
+      "title": "What is your topic?",
+      "description": "Describe the main subject of your policy brief",
+      "label": "Policy Brief Topic",
+      "placeholder": "e.g., The impact of AI on the labor market in Saudi Arabia...",
+      "help": "Briefly describe the topic your policy brief will address"
+    },
+    "audience": {
+      "title": "Who is your audience?",
+      "description": "Select the primary audience for this brief",
+      "label": "Target Audience"
+    },
+    "message": {
+      "title": "What is your key message?",
+      "description": "Summarize the main point you want to convey",
+      "label": "Key Message",
+      "placeholder": "What is the main point or recommendation you want to convey to your audience?",
+      "help": "Summarize the core message or recommendation in 2-3 sentences"
+    },
+    "context": {
+      "label": "Additional Context (Optional)",
+      "placeholder": "Any additional information that might help generate a better outline..."
+    },
+    "generate": {
+      "title": "Generate Outline",
+      "description": "AI will create a structured outline based on your inputs"
+    }
+  },
+
+  "audiences": {
+    "policymakers": "Policymakers & Government Officials",
+    "executives": "Executive Leadership",
+    "technical": "Technical Experts",
+    "general": "General Stakeholders",
+    "diplomatic": "Diplomatic Corps"
+  },
+
+  "generation": {
+    "generating": "Generating outline...",
+    "generatingDescription": "AI is creating a custom policy brief structure for you",
+    "success": "Outline generated successfully!",
+    "successDescription": "Review the sections below and edit as needed",
+    "failed": "Generation Failed",
+    "failedDescription": "An error occurred while generating the outline. Please try again.",
+    "retry": "Retry",
+    "regenerate": "Regenerate"
+  },
+
+  "outline": {
+    "title": "Generated Outline",
+    "sections": "Suggested Sections",
+    "sectionsCount": "{{count}} sections",
+    "required": "Required",
+    "optional": "Optional"
+  },
+
+  "sections": {
+    "executiveSummary": "Executive Summary",
+    "background": "Background & Context",
+    "problemStatement": "Problem Statement",
+    "analysis": "Analysis & Key Findings",
+    "policyOptions": "Policy Options",
+    "recommendations": "Recommendations",
+    "implementation": "Implementation Considerations",
+    "conclusion": "Conclusion"
+  },
+
+  "actions": {
+    "next": "Next",
+    "back": "Back",
+    "cancel": "Cancel",
+    "generateOutline": "Generate Outline",
+    "useOutline": "Use This Outline",
+    "edit": "Edit",
+    "save": "Save"
+  },
+
+  "sectionSaved": "Section saved successfully",
+
+  "progress": {
+    "step": "Step {{current}} of {{total}}"
+  },
+
+  "errors": {
+    "topicRequired": "Topic must be at least 10 characters",
+    "audienceRequired": "Please select a target audience",
+    "messageRequired": "Key message must be at least 20 characters",
+    "generationFailed": "Failed to generate outline",
+    "unauthorized": "Please sign in to use this feature"
+  },
+
+  "help": {
+    "title": "About AI-Assisted Policy Briefs",
+    "description": "This tool helps you create structured policy briefs by generating an outline based on your topic, audience, and key message. You can then edit and refine the generated sections to create your final document.",
+    "benefits": [
+      "Get a professional structure instantly",
+      "Tailored content suggestions for your audience",
+      "Edit and customize every section",
+      "Learn policy brief best practices through example"
+    ]
+  }
+}

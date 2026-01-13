@@ -46,6 +46,7 @@
     "previous": "Previous",
     "submit": "Submit",
     "reset": "Reset",
+    "unsaved": "Unsaved",
     "logout": "Logout",
     "profile": "Profile",
     "settings": "Settings",
@@ -142,13 +143,32 @@
     "wordAssistant": "Word Assistant",
     "getHelp": "Get Help",
     "search": "Search",
-    "openNotifications": "Open notifications"
+    "openNotifications": "Open notifications",
+    "delegations": "Delegations",
+    "customDashboard": "Custom Dashboard",
+    "slaMonitoring": "SLA Monitoring",
+    "tags": "Tags",
+    "webhooks": "Webhooks",
+    "workflowAutomation": "Workflow Automation",
+    "briefingBooks": "Briefing Books"
   },
   "search": {
+    "title": "Search",
+    "description": "Search across all entities in the system",
+    "placeholder": "Search dossiers, documents, people...",
     "searchPlaceholder": "Search...",
     "noResults": "No results found",
     "searching": "Searching...",
-    "clearSearch": "Clear search"
+    "clearSearch": "Clear search",
+    "includeArchived": "Include archived",
+    "modes": {
+      "keyword": "Keyword",
+      "semantic": "Semantic"
+    },
+    "suggestions": {
+      "label": "Search suggestions",
+      "noResults": "No suggestions found"
+    }
   },
   "errors": {
     "preferenceSaveFailed": "Failed to save preferences. Changes are stored locally.",
@@ -279,6 +299,15 @@
     "thu": "Thu",
     "fri": "Fri",
     "sat": "Sat"
+  },
+  "days": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
   },
   "intelligence": {
     "report": "Report",
@@ -986,5 +1015,35 @@
       "stillUseManualSearch": "Or use manual search",
       "retry": "Retry"
     }
+  },
+  "pullToRefresh": {
+    "pullToRefresh": "Pull to refresh",
+    "releaseToRefresh": "Release to refresh",
+    "refreshing": "Refreshing...",
+    "updated": "Updated",
+    "updatedItems": "Updated {{count}} items",
+    "justNow": "Just now",
+    "minutesAgo": "{{count}}m ago",
+    "hoursAgo": "{{count}}h ago",
+    "neverSynced": "Never synced",
+    "syncing": "Syncing...",
+    "offlineQueue": "{{count}} pending sync",
+    "itemCount": "{{count}} items",
+    "loading": "Loading..."
+  },
+  "sidebar": {
+    "toggle": "Toggle sidebar",
+    "collapse": "Collapse sidebar",
+    "expand": "Expand sidebar",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "title": "Navigation Menu",
+    "description": "Main navigation menu for the application"
+  },
+  "header": {
+    "scrollUp": "Scroll up for more options",
+    "collapsed": "Header collapsed",
+    "expanded": "Header expanded",
+    "contextTitle": "Current section"
   }
 }

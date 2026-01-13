@@ -1,0 +1,302 @@
+{
+  "title": "Analytics Dashboard",
+  "subtitle": "High-level metrics and insights across your organization",
+
+  "tabs": {
+    "overview": "Overview",
+    "engagements": "Engagements",
+    "relationships": "Relationships",
+    "commitments": "Commitments",
+    "workload": "Workload"
+  },
+
+  "timeRange": {
+    "label": "Time Range",
+    "7d": "Last 7 days",
+    "30d": "Last 30 days",
+    "90d": "Last 90 days",
+    "365d": "Last year",
+    "custom": "Custom range"
+  },
+
+  "export": {
+    "button": "Export",
+    "title": "Export Analytics",
+    "format": "Format",
+    "formats": {
+      "csv": "CSV",
+      "xlsx": "Excel",
+      "pdf": "PDF Report",
+      "png": "Chart Images"
+    },
+    "includeCharts": "Include charts",
+    "sections": "Sections to export",
+    "exporting": "Exporting...",
+    "success": "Export completed successfully",
+    "error": "Failed to export data"
+  },
+
+  "summary": {
+    "title": "Summary",
+    "totalEngagements": "Total Engagements",
+    "avgHealthScore": "Avg. Health Score",
+    "fulfillmentRate": "Fulfillment Rate",
+    "totalActiveWork": "Active Work Items",
+    "criticalAlerts": "Critical Alerts",
+    "overdueItems": "Overdue Items",
+    "needsAttention": "Needs Attention",
+    "fromPrevious": "from previous period",
+    "noChange": "No change"
+  },
+
+  "engagements": {
+    "title": "Engagement Metrics",
+    "description": "Track engagement activity and outcomes over time",
+    "total": "Total Engagements",
+    "avgPerWeek": "Avg. per Week",
+    "byType": "By Type",
+    "byOutcome": "By Outcome",
+    "trend": "Engagement Trend",
+    "engagementCount": "Engagements",
+    "count": "Count",
+    "tabs": {
+      "trend": "Trend",
+      "byType": "By Type",
+      "byOutcome": "By Outcome"
+    },
+    "outcomes": {
+      "positive": "Positive",
+      "neutral": "Neutral",
+      "negative": "Negative"
+    },
+    "types": {
+      "meeting": "Meeting",
+      "call": "Phone Call",
+      "email": "Email",
+      "visit": "Site Visit",
+      "event": "Event",
+      "other": "Other"
+    },
+    "noData": "No engagement data available for this period"
+  },
+
+  "relationships": {
+    "title": "Relationship Health",
+    "description": "Monitor relationship health trends and distributions",
+    "avgScore": "Average Score",
+    "distribution": "Health Distribution",
+    "byLevel": "By Health Level",
+    "byTrend": "By Trend",
+    "scoreTrend": "Score Trend Over Time",
+    "critical": "Critical",
+    "improving": "Improving",
+    "declining": "Declining",
+    "count": "Count",
+    "tabs": {
+      "distribution": "Distribution",
+      "trend": "Score Trend",
+      "byTrend": "By Trend"
+    },
+    "healthLevels": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor",
+      "critical": "Critical",
+      "unknown": "Unknown"
+    },
+    "trends": {
+      "improving": "Improving",
+      "stable": "Stable",
+      "declining": "Declining"
+    },
+    "levels": {
+      "excellent": "Excellent",
+      "good": "Good",
+      "fair": "Fair",
+      "poor": "Poor",
+      "critical": "Critical",
+      "unknown": "Unknown"
+    },
+    "trends": {
+      "improving": "Improving",
+      "stable": "Stable",
+      "declining": "Declining"
+    },
+    "noData": "No relationship health data available"
+  },
+
+  "commitments": {
+    "title": "Commitment Fulfillment",
+    "description": "Track commitment completion and fulfillment rates",
+    "total": "Total Commitments",
+    "completed": "Completed",
+    "completedOnTime": "Completed On Time",
+    "completedLate": "Completed Late",
+    "overdue": "Overdue",
+    "pending": "Pending",
+    "fulfillmentRate": "Fulfillment Rate",
+    "onTimeRate": "On-Time Rate",
+    "avgCompletionDays": "Avg. Completion Days",
+    "avgDays": "Avg. Days",
+    "trend": "Fulfillment Trend",
+    "bySource": "By Source",
+    "byTrackingType": "By Tracking Type",
+    "tabs": {
+      "byStatus": "By Status",
+      "trend": "Trend",
+      "bySource": "By Source"
+    },
+    "sources": {
+      "commitment": "Commitments",
+      "task": "Tasks",
+      "intake": "Intake Tickets"
+    },
+    "trackingTypes": {
+      "delivery": "Delivery",
+      "follow_up": "Follow-up",
+      "sla": "SLA"
+    },
+    "noData": "No commitment data available for this period"
+  },
+
+  "workload": {
+    "title": "Workload Distribution",
+    "description": "Analyze team workload and task distribution",
+    "totalActive": "Total Active Items",
+    "totalItems": "Total Items",
+    "overdueItems": "Overdue Items",
+    "avgPerUser": "Avg. per User",
+    "maxPerUser": "Max per User",
+    "overloaded": "Overloaded Users",
+    "idle": "Idle Users",
+    "byUser": "By User",
+    "byPriority": "By Priority",
+    "byStatus": "By Status",
+    "userWorkload": "User Workload",
+    "topUsers": "Top Users by Workload",
+    "count": "Count",
+    "tabs": {
+      "byUser": "By User",
+      "byPriority": "By Priority",
+      "byStatus": "By Status"
+    },
+    "priorities": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "statuses": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "review": "In Review",
+      "completed": "Completed"
+    },
+    "noData": "No workload data available"
+  },
+
+  "charts": {
+    "loading": "Loading chart data...",
+    "error": "Failed to load chart",
+    "noData": "No data to display",
+    "showLegend": "Show legend",
+    "hideLegend": "Hide legend",
+    "fullscreen": "View fullscreen",
+    "download": "Download chart"
+  },
+
+  "filters": {
+    "apply": "Apply",
+    "reset": "Reset",
+    "department": "Department",
+    "region": "Region",
+    "dossierType": "Dossier Type",
+    "all": "All"
+  },
+
+  "alerts": {
+    "title": "Alerts & Insights",
+    "criticalRelationships": "{{count}} relationship(s) in critical health",
+    "overdueCommitments": "{{count}} overdue commitment(s) require attention",
+    "overloadedTeam": "{{count}} team member(s) have excessive workload",
+    "decliningHealth": "{{count}} relationship(s) showing declining health"
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load analytics data",
+    "exportFailed": "Failed to export data",
+    "networkError": "Network error. Please try again.",
+    "unauthorized": "You do not have permission to view analytics",
+    "noData": "No data available"
+  },
+
+  "loading": {
+    "dashboard": "Loading analytics dashboard...",
+    "metrics": "Loading metrics...",
+    "charts": "Loading charts..."
+  },
+
+  "empty": {
+    "title": "No Data Available",
+    "description": "There is no analytics data available for the selected time range.",
+    "suggestion": "Try selecting a different time range or check back later."
+  },
+
+  "refresh": {
+    "button": "Refresh",
+    "lastUpdated": "Last updated: {{time}}"
+  },
+
+  "accessibility": {
+    "chartRegion": "{{title}} chart",
+    "metricCard": "{{title}}: {{value}}",
+    "trendUp": "Increased by {{value}}",
+    "trendDown": "Decreased by {{value}}",
+    "trendNeutral": "No significant change"
+  },
+
+  "preview": {
+    "comingSoon": "Preview",
+    "insightsYouWillGain": "Insights you'll gain",
+    "showSampleData": "See example with sample data",
+    "hideSampleData": "Hide sample data",
+    "sampleDataActive": "You're viewing sample data. This is how your analytics will look once you have real data.",
+
+    "engagements": {
+      "title": "Engagement Analytics Preview",
+      "description": "Track engagement activity, trends, and outcomes across your organization",
+      "insight1": "See engagement trends over time to identify peak activity periods",
+      "insight2": "Analyze engagement types to understand communication preferences",
+      "insight3": "Track outcomes to measure engagement effectiveness"
+    },
+    "relationships": {
+      "title": "Relationship Health Preview",
+      "description": "Monitor relationship health scores and identify areas needing attention",
+      "insight1": "View health distribution to prioritize relationship maintenance",
+      "insight2": "Track score trends to identify improving or declining relationships",
+      "insight3": "Get alerts for critical relationships that need immediate attention"
+    },
+    "commitments": {
+      "title": "Commitment Tracking Preview",
+      "description": "Monitor commitment fulfillment rates and delivery performance",
+      "insight1": "Track fulfillment rates to ensure promises are kept",
+      "insight2": "Identify overdue commitments before they become critical",
+      "insight3": "Analyze completion trends by source (meetings, tasks, intake)"
+    },
+    "workload": {
+      "title": "Workload Distribution Preview",
+      "description": "Analyze team workload balance and identify capacity issues",
+      "insight1": "Identify overloaded team members to prevent burnout",
+      "insight2": "Balance work distribution across your team",
+      "insight3": "Track priority distribution to ensure urgent items get attention"
+    },
+    "overview": {
+      "title": "Analytics Overview Preview",
+      "description": "Get a comprehensive view of all key metrics in one place",
+      "insight1": "See all critical metrics at a glance",
+      "insight2": "Identify trends across engagements, relationships, and commitments",
+      "insight3": "Access detailed analytics with one click"
+    }
+  }
+}

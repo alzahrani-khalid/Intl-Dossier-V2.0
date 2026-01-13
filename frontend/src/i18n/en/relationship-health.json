@@ -1,0 +1,136 @@
+{
+  "title": "Relationship Health",
+  "subtitle": "Automated scoring for bilateral relationships",
+
+  "scores": {
+    "overall": "Overall Score",
+    "frequency": "Engagement Frequency",
+    "compliance": "Commitment Compliance",
+    "reciprocity": "Reciprocity",
+    "quality": "Interaction Quality",
+    "recency": "Recency"
+  },
+
+  "healthLevels": {
+    "excellent": "Excellent",
+    "good": "Good",
+    "fair": "Fair",
+    "poor": "Poor",
+    "critical": "Critical",
+    "unknown": "Unknown"
+  },
+
+  "trends": {
+    "improving": "Improving",
+    "stable": "Stable",
+    "declining": "Declining"
+  },
+
+  "components": {
+    "title": "Score Components",
+    "engagementFrequency": "Engagement Frequency",
+    "commitmentCompliance": "Commitment Compliance",
+    "reciprocity": "Reciprocity",
+    "interactionQuality": "Interaction Quality",
+    "recency": "Recency"
+  },
+
+  "breakdown": {
+    "title": "Detailed Breakdown",
+    "engagements365d": "Engagements (365 days)",
+    "engagements90d": "Engagements (90 days)",
+    "engagements30d": "Engagements (30 days)",
+    "daysSinceEngagement": "Days Since Last Engagement",
+    "commitments": "Commitments Completed",
+    "overdue": "Overdue"
+  },
+
+  "trend": {
+    "title": "Health Trend",
+    "overallScore": "Overall Score",
+    "componentTrends": "Component Trends",
+    "dataPoints": "Data Points",
+    "highScore": "High Score",
+    "lowScore": "Low Score",
+    "noHistory": "No historical data available yet"
+  },
+
+  "alerts": {
+    "title": "Health Alerts",
+    "noAlerts": "No alerts - relationship is healthy!",
+    "overdueCommitments": "{{count}} overdue commitment(s)",
+    "markRead": "Mark as read",
+    "dismiss": "Dismiss",
+    "viewAll": "View all alerts",
+    "types": {
+      "scoreCritical": "Critical Score",
+      "scoreDeclining": "Score Declining",
+      "engagementGap": "Engagement Gap",
+      "commitmentOverdue": "Overdue Commitments",
+      "reciprocityImbalance": "Reciprocity Imbalance",
+      "scoreImproving": "Score Improving"
+    },
+    "severity": {
+      "critical": "Critical",
+      "high": "High",
+      "medium": "Medium",
+      "low": "Low"
+    }
+  },
+
+  "actions": {
+    "calculate": "Calculate Score",
+    "recalculate": "Recalculate",
+    "refresh": "Refresh",
+    "viewDetails": "View Details",
+    "viewHistory": "View History"
+  },
+
+  "status": {
+    "calculating": "Calculating health score...",
+    "calculated": "Health score calculated",
+    "error": "Failed to calculate health score",
+    "insufficientData": "Insufficient data for scoring (need at least 3 engagements)"
+  },
+
+  "filters": {
+    "all": "All Relationships",
+    "needsAttention": "Needs Attention",
+    "improving": "Improving",
+    "declining": "Declining",
+    "healthy": "Healthy"
+  },
+
+  "stats": {
+    "title": "Relationship Health Overview",
+    "total": "Total Relationships",
+    "average": "Average Score",
+    "improving": "Improving",
+    "declining": "Declining",
+    "needsAttention": "Needs Attention"
+  },
+
+  "weights": {
+    "title": "Score Weights",
+    "description": "How the overall score is calculated",
+    "engagementFrequency": "Engagement Frequency (25%)",
+    "commitmentCompliance": "Commitment Compliance (35%)",
+    "reciprocity": "Reciprocity (15%)",
+    "interactionQuality": "Interaction Quality (10%)",
+    "recency": "Recency (15%)"
+  },
+
+  "tooltips": {
+    "overallScore": "Composite score based on engagement frequency, commitment compliance, reciprocity, interaction quality, and recency",
+    "engagementFrequency": "How often interactions occur. 50 engagements per year = 100 points",
+    "commitmentCompliance": "Percentage of commitments completed on time",
+    "reciprocity": "Balance of engagement from both parties. Perfect balance = 100",
+    "interactionQuality": "Based on engagement outcomes (positive/neutral/negative)",
+    "recency": "Days since last engagement. ≤30d=100, 30-90d=70, 90-180d=40, >180d=10"
+  },
+
+  "empty": {
+    "title": "No Bilateral Relationships",
+    "description": "Create bilateral relationships to start tracking health scores"
+  }
+}

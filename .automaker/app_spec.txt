@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project_specification>
+  <project_name>GASTAT International Dossier Management System (Intl-Dossier v2.0)</project_name>
+
+  <overview>
+    The International Dossier Management System (Intl-Dossier v2.0) is an AI-assisted relationship management and engagement operations platform designed for GASTAT&apos;s international work. The system centralizes dossiers, commitments, events, documents, and activity history to enable teams to prepare faster for international engagements (briefs, context, contacts, positions), track commitments (MoUs, deliverables, obligations) with accountability, coordinate work across departments with clear ownership and audit trails, and leverage AI to summarize, recommend actions, and surface insights while maintaining governance. The platform implements a unified dossier architecture using Class Table Inheritance pattern to consolidate entity models into a single coherent system. It supports seven entity types (countries, organizations, forums, engagements, themes, working groups, and persons) with a universal relationship model enabling graph-like navigation between entities. The system provides full bilingual support (Arabic/English) with complete RTL/LTR support, role-based access control with Row Level Security, and comprehensive audit logging for compliance.
+  </overview>
+
+  <technology_stack>
+    <technology>React 19 with TypeScript (strict mode)</technology>
+    <technology>Vite 5.x build system</technology>
+    <technology>TanStack Router for file-based routing</technology>
+    <technology>TanStack Query (React Query v5) for server state</technology>
+    <technology>Tailwind CSS 3.4+ with RTL support</technology>
+    <technology>shadcn/ui component library</technology>
+    <technology>Radix UI primitives</technology>
+    <technology>Framer Motion for animations</technology>
+    <technology>i18next for internationalization (Arabic/English)</technology>
+    <technology>Zustand and Jotai for client state management</technology>
+    <technology>React Hook Form with Zod validation</technology>
+    <technology>Node.js 18+ with Express 5.x</technology>
+    <technology>TypeScript for backend</technology>
+    <technology>Supabase PostgreSQL 15+ database</technology>
+    <technology>Supabase Auth (JWT-based)</technology>
+    <technology>Row Level Security (RLS) policies</technology>
+    <technology>pgvector for semantic search/embeddings</technology>
+    <technology>Redis/Upstash for caching and queues</technology>
+    <technology>BullMQ for background job processing</technology>
+    <technology>Socket.io for real-time features</technology>
+    <technology>OpenAI/Anthropic AI integration</technology>
+    <technology>LangChain for AI orchestration</technology>
+    <technology>AnythingLLM for self-hosted AI</technology>
+    <technology>Docker with docker-compose</technology>
+    <technology>Turbo monorepo with pnpm workspaces</technology>
+    <technology>Vitest for testing</technology>
+    <technology>Playwright for E2E testing</technology>
+    <technology>ESLint and Prettier</technology>
+    <technology>Husky for git hooks</technology>
+    <technology>GitHub Actions CI/CD</technology>
+    <technology>React Native with Expo for mobile</technology>
+  </technology_stack>
+
+  <core_capabilities>
+    <capability>Unified Dossier Management - Centralized entity management for countries, organizations, forums, engagements, themes, working groups, and persons using Class Table Inheritance pattern</capability>
+    <capability>Relationship Graph Model - Universal relationship model supporting any-to-any entity relationships with bidirectional queries and graph traversal</capability>
+    <capability>Commitment Tracking - MoU lifecycle management (draft → active → expiring → renewed/closed) with deliverables, milestones, and SLA tracking</capability>
+    <capability>Engagement Operations - Full lifecycle support for events/meetings/missions including pre-engagement briefs, during-engagement notes, and post-engagement after-action reports</capability>
+    <capability>AI-Assisted Brief Generation - Context-aware brief generation using OpenAI/Anthropic with bilingual support and human review workflows</capability>
+    <capability>Intake &amp; Assignment Workflow - Structured request capture with triage queue, assignment, SLA/aging tracking, and audit trails</capability>
+    <capability>Full-Text and Semantic Search - PostgreSQL full-text search with pgvector embeddings for AI-assisted discovery across all entities</capability>
+    <capability>Document Management - Document storage with metadata, version history, access control, and entity linking</capability>
+    <capability>Bilingual Support - Complete Arabic/English support with RTL layout, i18n localization, and bilingual data fields</capability>
+    <capability>Role-Based Access Control - Supabase Auth with RLS policies, clearance-level filtering, and permission delegation</capability>
+    <capability>Real-time Collaboration - WebSocket-based real-time updates for presence and live data synchronization</capability>
+    <capability>Calendar &amp; Event Scheduling - Unified calendar with conflict detection, participant management, and recurring events</capability>
+    <capability>Position Repository - Policy position management with versioning, approval workflows, and consistency checking</capability>
+    <capability>Contact Directory - Comprehensive contact management with organization affiliations, communication logs, and notes</capability>
+    <capability>Multi-Factor Authentication - MFA enrollment and verification with recovery options</capability>
+    <capability>Audit Logging - Comprehensive audit trails for sensitive operations including AI interactions</capability>
+    <capability>Mobile Application - React Native/Expo mobile app with offline-first architecture and biometric authentication</capability>
+    <capability>Export &amp; Reporting - PDF generation, Excel export, and customizable report templates</capability>
+  </core_capabilities>
+
+  <implemented_features>
+    <feature>
+      <name>Unified Dossier Architecture</name>
+      <description>Class Table Inheritance pattern with base dossiers table and 7 extension tables (countries, organizations, forums, engagements, themes, working_groups, persons). Single ID namespace eliminates dual entity representation issues.</description>
+      <file_locations>
+        <location>docs/architecture.md</location>
+        <location>supabase/migrations/002_countries.sql</location>
+        <location>supabase/migrations/003_organizations.sql</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Countries Management</name>
+      <description>Full country entity management with ISO codes (alpha-2/3), bilingual names (English/Arabic), regional classification, full-text search indexes, and RLS policies.</description>
+      <file_locations>
+        <location>supabase/migrations/002_countries.sql</location>
+        <location>backend/src/api/countries.ts</location>
+        <location>frontend/src/pages/Countries.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Organizations Management</name>
+      <description>Hierarchical organization management with parent-child relationships, cycle prevention, recursive hierarchy queries, organization types (government, NGO, private, international, academic), and country associations.</description>
+      <file_locations>
+        <location>supabase/migrations/003_organizations.sql</location>
+        <location>backend/src/services/OrganizationService.ts</location>
+        <location>frontend/src/pages/Organizations.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>MoU/Commitment Management</name>
+      <description>Complete MoU lifecycle with workflow states (draft → internal_review → external_review → negotiation → signed → active → renewed/expired), auto-reference number generation, workflow transition validation, document versioning, and workflow history tracking.</description>
+      <file_locations>
+        <location>supabase/migrations/004_mous.sql</location>
+        <location>backend/src/services/MoUService.ts</location>
+        <location>frontend/src/pages/MoUs.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Events &amp; Calendar</name>
+      <description>Event scheduling with conflict detection, participant management, virtual event support, registration handling, event documents, and availability checking functions.</description>
+      <file_locations>
+        <location>supabase/migrations/005_events.sql</location>
+        <location>backend/src/services/EventService.ts</location>
+        <location>frontend/src/components/Calendar/UnifiedCalendar.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Intake Ticketing System</name>
+      <description>Front Door Intake system with ticket types (engagement, position, mou_action, foresight), sensitivity/urgency/priority classification, auto-generated ticket numbers, status workflow, and AI-assisted triage.</description>
+      <file_locations>
+        <location>supabase/migrations/20250129001_create_intake_tickets_table.sql</location>
+        <location>frontend/src/pages/IntakeQueue.tsx</location>
+        <location>frontend/src/components/IntakeForm.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>AI Brief Generation</name>
+      <description>AI-powered brief generation using AnythingLLM integration with template-based sections, multi-language support (English/Arabic), confidence scoring, and review workflows.</description>
+      <file_locations>
+        <location>backend/src/services/BriefService.ts</location>
+        <location>backend/src/integrations/anythingllm.service.ts</location>
+        <location>frontend/src/pages/Briefs/BriefsPage.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>User Authentication &amp; Authorization</name>
+      <description>Supabase Auth integration with JWT tokens, user profiles linked via triggers, role-based access (admin/editor/viewer), MFA support, and Row Level Security policies on all tables.</description>
+      <file_locations>
+        <location>supabase/migrations/001_users.sql</location>
+        <location>backend/src/services/AuthService.ts</location>
+        <location>backend/src/middleware/auth.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Search &amp; Intelligence</name>
+      <description>Full-text search with PostgreSQL GIN indexes, bilingual search support (English/Arabic text search configurations), and semantic search with pgvector embeddings.</description>
+      <file_locations>
+        <location>backend/src/services/SearchService.ts</location>
+        <location>supabase/migrations/027_create_vector_embeddings.sql</location>
+        <location>frontend/src/pages/SearchPage.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Position Management</name>
+      <description>Policy position repository with type classification, version history, approval workflows, consistency checking against existing positions, and emergency correction capabilities.</description>
+      <file_locations>
+        <location>supabase/migrations/20250101003_create_positions.sql</location>
+        <location>backend/src/api/positions.ts</location>
+        <location>frontend/src/routes/_protected/positions.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Contact Directory</name>
+      <description>Contact management with organization affiliations, communication logging, notes search, VCard export support, and relationship tracking.</description>
+      <file_locations>
+        <location>backend/src/services/ContactService.ts</location>
+        <location>frontend/src/pages/contacts/ContactsDirectory.tsx</location>
+        <location>frontend/src/pages/contacts/ContactDetails.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>After-Action Reports</name>
+      <description>Post-engagement reporting with versioning, outcomes tracking, follow-up task generation, and publishing workflows.</description>
+      <file_locations>
+        <location>backend/src/api/after-action.ts</location>
+        <location>frontend/src/pages/after-action/AfterActionListPage.tsx</location>
+        <location>frontend/src/components/AfterActionForm.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Dashboard &amp; Analytics</name>
+      <description>Executive dashboard with stat cards, activity feeds, upcoming events, relationship health charts, and productivity metrics.</description>
+      <file_locations>
+        <location>frontend/src/pages/Dashboard/DashboardPage.tsx</location>
+        <location>frontend/src/pages/Dashboard/components/StatCard.tsx</location>
+        <location>frontend/src/pages/Dashboard/components/RelationshipHealthChart.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Relationship Graph Visualization</name>
+      <description>Interactive relationship graph using React Flow with bidirectional relationship queries, entity navigation, and visual relationship mapping.</description>
+      <file_locations>
+        <location>frontend/src/pages/relationships/RelationshipGraphPage.tsx</location>
+        <location>backend/src/api/relationships.ts</location>
+        <location>backend/src/services/RelationshipHealthService.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Document Management</name>
+      <description>Document upload, storage via Supabase Storage, metadata management, version tracking, and entity linking.</description>
+      <file_locations>
+        <location>backend/src/services/DocumentService.ts</location>
+        <location>backend/src/api/documents.ts</location>
+        <location>frontend/src/components/Dossier/DocumentList.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>My Work &amp; Task Management</name>
+      <description>Personal work dashboard with assignment tracking, task management, SLA monitoring, escalation handling, and workload visualization.</description>
+      <file_locations>
+        <location>frontend/src/pages/my-work/MyWorkDashboard.tsx</location>
+        <location>frontend/src/pages/MyAssignments.tsx</location>
+        <location>backend/src/services/TaskService.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Multi-Factor Authentication</name>
+      <description>MFA enrollment, verification, and recovery with TOTP support using speakeasy library and QR code generation.</description>
+      <file_locations>
+        <location>backend/src/api/auth/mfa/enroll.ts</location>
+        <location>backend/src/api/auth/mfa/verify.ts</location>
+        <location>frontend/src/components/MFASetup.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Export &amp; Reporting</name>
+      <description>Data export in multiple formats (PDF, Excel, CSV) with customizable report templates and scheduled report generation.</description>
+      <file_locations>
+        <location>backend/src/services/ExportService.ts</location>
+        <location>backend/src/api/export/index.ts</location>
+        <location>frontend/src/routes/_protected/export.tsx</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Real-time Collaboration</name>
+      <description>WebSocket server with Socket.io for real-time updates, presence tracking, and live data synchronization across clients.</description>
+      <file_locations>
+        <location>backend/src/realtime/WebSocketServer.ts</location>
+        <location>frontend/src/hooks/usePresence.ts</location>
+        <location>frontend/src/hooks/useKanbanRealtime.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Responsive Design System</name>
+      <description>Mobile-first responsive design with breakpoint management, design tokens, and consistent RTL support across all components.</description>
+      <file_locations>
+        <location>docs/features/responsive-design.md</location>
+        <location>frontend/src/hooks/use-responsive.ts</location>
+        <location>frontend/src/types/breakpoint.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Voice Assistant Integration</name>
+      <description>Voice command support for hands-free operation with speech-to-text and text-to-speech capabilities.</description>
+      <file_locations>
+        <location>backend/src/services/VoiceService.ts</location>
+        <location>backend/src/api/voice.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>Scheduled Jobs</name>
+      <description>Background job processing with node-cron for health score refresh, overdue commitment detection, and other scheduled tasks.</description>
+      <file_locations>
+        <location>backend/src/jobs/index.ts</location>
+        <location>backend/src/index.ts</location>
+      </file_locations>
+    </feature>
+    <feature>
+      <name>API Rate Limiting</name>
+      <description>Configurable rate limiting with Redis-backed storage, per-user and per-endpoint limits, and policy management.</description>
+      <file_locations>
+        <location>backend/src/middleware/rateLimiter.ts</location>
+        <location>backend/src/services/rate-limit.service.ts</location>
+        <location>supabase/migrations/028_create_rate_limit_policies.sql</location>
+      </file_locations>
+    </feature>
+  </implemented_features>
+
+  <additional_requirements>
+    <requirement>Node.js &gt;= 18.0.0 required</requirement>
+    <requirement>pnpm &gt;= 10.0.0 package manager (enforced)</requirement>
+    <requirement>PostgreSQL 15+ with Supabase</requirement>
+    <requirement>Redis for caching and background jobs</requirement>
+    <requirement>Docker and docker-compose for local development</requirement>
+    <requirement>Supabase CLI for database migrations</requirement>
+    <requirement>Environment variables for Supabase URL/keys, AI API keys, Redis connection</requirement>
+    <requirement>HTTPS required for production deployment</requirement>
+    <requirement>50MB file size limit for document uploads</requirement>
+    <requirement>Supported document types: PDF, DOCX</requirement>
+  </additional_requirements>
+
+  <development_guidelines>
+    <guideline>Use TypeScript strict mode for all code</guideline>
+    <guideline>Follow monorepo structure with pnpm workspaces (backend, frontend, shared)</guideline>
+    <guideline>Use Turbo for build orchestration and caching</guideline>
+    <guideline>Apply Prettier formatting on commit via Husky pre-commit hooks</guideline>
+    <guideline>Use ESLint with React and TypeScript plugins</guideline>
+    <guideline>Implement Row Level Security (RLS) on all database tables</guideline>
+    <guideline>Use TanStack Query for all server state management</guideline>
+    <guideline>Prefer editing existing files over creating new ones</guideline>
+    <guideline>Use shadcn/ui components consistently</guideline>
+    <guideline>Implement bilingual fields (name_en, name_ar) for user-facing content</guideline>
+    <guideline>Use full-text search indexes for searchable fields</guideline>
+    <guideline>Apply RTL-aware CSS using logical properties (ms-/me- instead of ml-/mr-)</guideline>
+    <guideline>Document all API endpoints and database functions</guideline>
+    <guideline>Write unit tests with Vitest and E2E tests with Playwright</guideline>
+    <guideline>Use conventional commit messages</guideline>
+    <guideline>Never commit sensitive credentials or API keys</guideline>
+  </development_guidelines>
+
+  <implementation_roadmap>
+    <phase>
+      <name>Phase 1: Foundation</name>
+      <status>completed</status>
+      <description>Core dossiers, documents, authentication, search baseline - Countries, Organizations, Users, basic CRUD operations, Supabase Auth integration, RLS policies</description>
+    </phase>
+    <phase>
+      <name>Phase 2: Intelligence Layer</name>
+      <status>completed</status>
+      <description>AI briefs, semantic retrieval, initial agents/workflows - Brief generation service, AnythingLLM integration, pgvector embeddings, AI-assisted triage</description>
+    </phase>
+    <phase>
+      <name>Phase 3: Engagement Management</name>
+      <status>completed</status>
+      <description>Events/meetings/missions end-to-end - Event scheduling with conflict detection, calendar management, after-action reports, engagement lifecycle</description>
+    </phase>
+    <phase>
+      <name>Phase 4: Unified Dossier Architecture</name>
+      <status>completed</status>
+      <description>Class Table Inheritance refactor - Single ID namespace, universal relationship model, 7 entity types, calendar events separation, polymorphic document linking</description>
+    </phase>
+    <phase>
+      <name>Phase 5: Intake &amp; Assignment</name>
+      <status>completed</status>
+      <description>Front Door Intake system - Ticket management, triage workflow, SLA tracking, assignment queue, AI classification</description>
+    </phase>
+    <phase>
+      <name>Phase 6: Commitment Tracking</name>
+      <status>completed</status>
+      <description>MoU lifecycle and deliverables - Workflow states, milestone tracking, renewal management, deadline alerts, health scoring</description>
+    </phase>
+    <phase>
+      <name>Phase 7: Position Repository</name>
+      <status>completed</status>
+      <description>Policy positions with approvals - Version history, consistency checking, approval workflows, emergency corrections, audience targeting</description>
+    </phase>
+    <phase>
+      <name>Phase 8: Advanced Features</name>
+      <status>in_progress</status>
+      <description>Foresight, predictive analytics, expanded automation - AI recommendations, relationship health analytics, proactive alerts, mobile offline sync</description>
+    </phase>
+  </implementation_roadmap>
+</project_specification>

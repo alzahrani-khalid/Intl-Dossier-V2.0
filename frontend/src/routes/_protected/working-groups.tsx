@@ -1,6 +1,6 @@
 import { createFileRoute } from '@tanstack/react-router'
-import WorkingGroups from '../../pages/WorkingGroups'
+import WorkingGroupsPage from '../../pages/WorkingGroupsPage'
 
 export const Route = createFileRoute('/_protected/working-groups')({
- component: WorkingGroups,
+  component: WorkingGroupsPage,
 })

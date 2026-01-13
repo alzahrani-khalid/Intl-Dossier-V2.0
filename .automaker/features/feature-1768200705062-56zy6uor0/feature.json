@@ -1,0 +1,10 @@
+{
+  "category": "enhancement",
+  "description": "Display role-specific checklists in empty states that guide users through essential setup steps (e.g., 'Create your first dossier', 'Add key relationships', 'Set up notifications'). Track completion and celebrate milestones with visual feedback.\n\n**Rationale:** Different user roles have different onboarding needs. Contextual checklists reduce cognitive load and provide clear path forward, increasing successful adoption and reducing support requests.",
+  "title": "Contextual 'Getting Started' Checklists",
+  "status": "verified",
+  "id": "feature-1768200705062-56zy6uor0",
+  "branchName": "main",
+  "startedAt": "2026-01-12T09:01:08.195Z",
+  "updatedAt": "2026-01-12T09:35:32.760Z"
+}

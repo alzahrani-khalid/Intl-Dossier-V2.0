@@ -1,0 +1,20 @@
+{
+  "id": "universal-relationship-crud",
+  "category": "Core",
+  "title": "Universal Relationship CRUD",
+  "description": "Build REST API and UI for creating, reading, updating, and deleting relationships between any dossier types. Supports relationship types (member_of, participates_in, cooperates_with, etc.) with metadata and validity periods.",
+  "status": "completed",
+  "priority": 1,
+  "complexity": "complex",
+  "dependencies": [
+    "forums-entity-management",
+    "themes-entity-management",
+    "working-groups-entity-management",
+    "persons-entity-management",
+    "engagements-entity-management"
+  ],
+  "createdAt": "2026-01-10T15:57:25.661Z",
+  "updatedAt": "2026-01-10T17:42:15.837Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T17:26:13.726Z"
+}

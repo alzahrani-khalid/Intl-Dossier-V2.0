@@ -1,0 +1,193 @@
+{
+  "title": "الوسوم",
+  "management": {
+    "title": "إدارة الوسوم",
+    "description": "تنظيم وإدارة الوسوم الهرمية عبر كياناتك"
+  },
+  "hierarchy": {
+    "title": "هيكل الوسوم",
+    "root": "الوسوم الرئيسية",
+    "children": "الوسوم الفرعية",
+    "parent": "الوسم الأب",
+    "noParent": "بدون أب (وسم رئيسي)",
+    "level": "المستوى {{level}}",
+    "path": "المسار",
+    "expand": "توسيع",
+    "collapse": "طي",
+    "expandAll": "توسيع الكل",
+    "collapseAll": "طي الكل"
+  },
+  "actions": {
+    "create": "إنشاء وسم",
+    "edit": "تعديل الوسم",
+    "delete": "حذف الوسم",
+    "merge": "دمج الوسوم",
+    "rename": "إعادة تسمية الوسم",
+    "addChild": "إضافة وسم فرعي",
+    "addSynonym": "إضافة مرادف",
+    "assign": "تعيين وسم",
+    "unassign": "إزالة الوسم",
+    "search": "البحث في الوسوم...",
+    "filter": "تصفية الوسوم",
+    "refresh": "تحديث",
+    "viewAnalytics": "عرض التحليلات"
+  },
+  "form": {
+    "nameEn": "الاسم (الإنجليزية)",
+    "nameAr": "الاسم (العربية)",
+    "descriptionEn": "الوصف (الإنجليزية)",
+    "descriptionAr": "الوصف (العربية)",
+    "color": "اللون",
+    "icon": "الأيقونة",
+    "parent": "الوسم الأب",
+    "synonyms": "المرادفات",
+    "sortOrder": "ترتيب العرض",
+    "isActive": "نشط",
+    "selectColor": "اختر لوناً",
+    "selectIcon": "اختر أيقونة",
+    "selectParent": "اختر الوسم الأب",
+    "noSynonyms": "لم تتم إضافة مرادفات",
+    "addSynonym": "إضافة مرادف",
+    "synonymEn": "مرادف (الإنجليزية)",
+    "synonymAr": "مرادف (العربية)"
+  },
+  "merge": {
+    "title": "دمج الوسوم",
+    "description": "دمج وسم في آخر. سيتم نقل جميع التعيينات إلى الوسم المستهدف.",
+    "sourceTag": "الوسم المصدر (سيتم حذفه)",
+    "targetTag": "الوسم المستهدف (سيتم الاحتفاظ به)",
+    "reason": "سبب الدمج",
+    "warning": "لا يمكن التراجع عن هذا الإجراء. سيتم حذف الوسم المصدر نهائياً.",
+    "confirm": "تأكيد الدمج",
+    "success": "تم دمج الوسوم بنجاح",
+    "assignmentsTransferred": "تم نقل {{count}} تعيين"
+  },
+  "rename": {
+    "title": "إعادة تسمية الوسم",
+    "description": "إعادة تسمية هذا الوسم. سيتم حفظ الاسم القديم كمرادف.",
+    "currentName": "الاسم الحالي",
+    "newName": "الاسم الجديد",
+    "reason": "سبب إعادة التسمية",
+    "success": "تمت إعادة تسمية الوسم بنجاح"
+  },
+  "delete": {
+    "title": "حذف الوسم",
+    "description": "هل أنت متأكد من رغبتك في حذف هذا الوسم؟",
+    "warning": "سيؤدي هذا إلى إزالة الوسم من جميع الكيانات المعينة.",
+    "childrenWarning": "يحتوي هذا الوسم على {{count}} وسوم فرعية ستصبح وسوم رئيسية.",
+    "systemWarning": "لا يمكن حذف وسوم النظام.",
+    "confirm": "حذف الوسم",
+    "success": "تم حذف الوسم بنجاح"
+  },
+  "assignment": {
+    "title": "تعيينات الوسوم",
+    "assigned": "الوسوم المعينة",
+    "available": "الوسوم المتاحة",
+    "suggestions": "الوسوم المقترحة",
+    "noAssigned": "لم يتم تعيين وسوم",
+    "noAvailable": "لا توجد وسوم متاحة",
+    "noSuggestions": "لا توجد اقتراحات",
+    "assignSuccess": "تم تعيين الوسم بنجاح",
+    "unassignSuccess": "تم إزالة الوسم بنجاح",
+    "confidence": "الثقة: {{score}}%",
+    "autoAssigned": "معين تلقائياً"
+  },
+  "suggestions": {
+    "title": "الوسوم المقترحة",
+    "reason": {
+      "similar_entities": "مستخدم في عناصر مشابهة",
+      "popular_in_type": "شائع لهذا النوع",
+      "ai_recommended": "موصى به من الذكاء الاصطناعي"
+    },
+    "apply": "تطبيق الاقتراح",
+    "dismiss": "رفض"
+  },
+  "search": {
+    "placeholder": "البحث في الوسوم...",
+    "noResults": "لم يتم العثور على وسوم",
+    "matchType": {
+      "exact": "تطابق تام",
+      "prefix": "يبدأ بـ",
+      "partial": "يحتوي على",
+      "synonym": "مرادف",
+      "fuzzy": "مشابه"
+    },
+    "recentlyUsed": "المستخدمة مؤخراً",
+    "popular": "الوسوم الشائعة"
+  },
+  "analytics": {
+    "title": "تحليلات الوسوم",
+    "overview": "نظرة عامة",
+    "totalTags": "إجمالي الوسوم",
+    "activeTags": "الوسوم النشطة",
+    "totalAssignments": "إجمالي التعيينات",
+    "autoAssigned": "معين تلقائياً",
+    "usageByEntity": "الاستخدام حسب نوع الكيان",
+    "topTags": "الوسوم الأكثر استخداماً",
+    "unusedTags": "الوسوم غير المستخدمة",
+    "recentActivity": "النشاط الأخير",
+    "assignmentTrend": "اتجاه التعيينات",
+    "avgConfidence": "متوسط الثقة",
+    "entityBreakdown": {
+      "dossier": "الملفات",
+      "document": "المستندات",
+      "brief": "الموجزات",
+      "engagement": "التفاعلات",
+      "person": "الأشخاص",
+      "working_group": "مجموعات العمل",
+      "forum": "المنتديات",
+      "organization": "المنظمات",
+      "country": "الدول"
+    }
+  },
+  "history": {
+    "title": "سجل الوسوم",
+    "mergeHistory": "سجل الدمج",
+    "renameHistory": "سجل إعادة التسمية",
+    "noHistory": "لا يوجد سجل متاح",
+    "mergedInto": "تم دمج \"{{source}}\" في \"{{target}}\"",
+    "renamedFrom": "تمت إعادة التسمية من \"{{old}}\" إلى \"{{new}}\""
+  },
+  "filters": {
+    "all": "جميع الوسوم",
+    "active": "النشطة فقط",
+    "inactive": "غير النشطة فقط",
+    "system": "وسوم النظام",
+    "custom": "الوسوم المخصصة",
+    "unused": "الوسوم غير المستخدمة",
+    "byLevel": "حسب المستوى",
+    "byColor": "حسب اللون"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "system": "نظام"
+  },
+  "empty": {
+    "title": "لا توجد وسوم",
+    "description": "أنشئ أول وسم لبدء تنظيم كياناتك.",
+    "action": "إنشاء وسم"
+  },
+  "errors": {
+    "loadFailed": "فشل تحميل الوسوم",
+    "createFailed": "فشل إنشاء الوسم",
+    "updateFailed": "فشل تحديث الوسم",
+    "deleteFailed": "فشل حذف الوسم",
+    "mergeFailed": "فشل دمج الوسوم",
+    "renameFailed": "فشل إعادة تسمية الوسم",
+    "assignFailed": "فشل تعيين الوسم",
+    "unassignFailed": "فشل إزالة الوسم",
+    "nameRequired": "اسم الوسم مطلوب",
+    "invalidColor": "تنسيق اللون غير صالح",
+    "circularReference": "لا يمكن إنشاء مرجع دائري في الهيكل",
+    "systemTagProtected": "لا يمكن تعديل وسوم النظام"
+  },
+  "tooltips": {
+    "usage": "مستخدم {{count}} مرة",
+    "children": "{{count}} وسوم فرعية",
+    "level": "مستوى الهيكل {{level}}",
+    "systemTag": "هذا وسم نظام ولا يمكن حذفه",
+    "autoAssigned": "تم تعيين هذا الوسم تلقائياً",
+    "confidence": "درجة ثقة التعيين"
+  }
+}

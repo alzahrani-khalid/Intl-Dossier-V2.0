@@ -1,0 +1,274 @@
+import { u as w, r as f, j as e } from './react-vendor-Buoak6m3.js'
+import { L as i } from './tanstack-vendor-BZC-rs5U.js'
+import { u as L } from './useDossier-CiPcwRKl.js'
+import {
+  B as l,
+  I as C,
+  N as _,
+  O as T,
+  P as b,
+  Q as c,
+  R as $,
+  U as m,
+  m as j,
+} from './index-qYY0KoZ1.js'
+import { bH as v, b9 as k, aS as D } from './vendor-misc-BiJvMP0A.js'
+import './date-vendor-s0MkYge4.js'
+import './i18n-vendor-Coo-X0AG.js'
+import './ui-vendor-DTR9u_Vg.js'
+import './supabase-vendor-CTsC8ILD.js'
+import './form-vendor-BX1BhTCI.js'
+import './visualization-vendor-f5uYUx4I.js'
+function A() {
+  const { t, i18n: y } = w('dossier'),
+    d = y.language === 'ar',
+    [a, N] = f.useState(''),
+    [o, g] = f.useState(1),
+    x = 20,
+    { data: n, isLoading: h, error: u } = L('engagement', o, x),
+    r = n?.data.filter((s) => {
+      if (!a) return !0
+      const p = a.toLowerCase()
+      return (
+        s.name_en.toLowerCase().includes(p) ||
+        s.name_ar?.toLowerCase().includes(p) ||
+        s.description_en?.toLowerCase().includes(p) ||
+        s.description_ar?.toLowerCase().includes(p)
+      )
+    })
+  return e.jsxs('div', {
+    className: 'container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8',
+    dir: d ? 'rtl' : 'ltr',
+    children: [
+      e.jsxs('header', {
+        className:
+          'flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8',
+        children: [
+          e.jsxs('div', {
+            className: 'flex items-center gap-3',
+            children: [
+              e.jsx(v, { className: 'h-6 w-6 sm:h-8 sm:w-8 text-primary' }),
+              e.jsxs('div', {
+                children: [
+                  e.jsx('h1', {
+                    className: 'text-2xl sm:text-3xl md:text-4xl font-bold',
+                    children: t('type.engagement'),
+                  }),
+                  e.jsx('p', {
+                    className: 'text-sm sm:text-base text-muted-foreground mt-1',
+                    children: t('typeDescription.engagement'),
+                  }),
+                ],
+              }),
+            ],
+          }),
+          e.jsx(l, {
+            asChild: !0,
+            children: e.jsxs(i, {
+              to: '/dossiers/create',
+              children: [e.jsx(k, { className: 'h-4 w-4 me-2' }), t('action.create')],
+            }),
+          }),
+        ],
+      }),
+      e.jsx('div', {
+        className: 'mb-6',
+        children: e.jsx(C, {
+          type: 'text',
+          placeholder: t('filter.search'),
+          value: a,
+          onChange: (s) => N(s.target.value),
+          className: 'max-w-md',
+        }),
+      }),
+      h &&
+        e.jsxs('div', {
+          className: 'flex items-center justify-center py-12 sm:py-16 lg:py-20',
+          children: [
+            e.jsx(D, { className: 'h-8 w-8 sm:h-10 sm:w-10 animate-spin text-muted-foreground' }),
+            e.jsx('span', {
+              className: 'ms-3 text-muted-foreground text-sm sm:text-base',
+              children: t('list.loading'),
+            }),
+          ],
+        }),
+      u &&
+        !h &&
+        e.jsxs('div', {
+          className: 'bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6',
+          role: 'alert',
+          children: [
+            e.jsx('h3', {
+              className: 'text-base sm:text-lg font-semibold text-destructive mb-2',
+              children: t('list.error'),
+            }),
+            e.jsx('p', {
+              className: 'text-sm sm:text-base text-destructive/90',
+              children: u.message,
+            }),
+          ],
+        }),
+      !h &&
+        !u &&
+        r?.length === 0 &&
+        e.jsxs('div', {
+          className:
+            'flex flex-col items-center justify-center py-12 sm:py-16 lg:py-20 text-center',
+          children: [
+            e.jsx(v, { className: 'h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mb-4' }),
+            e.jsx('h3', {
+              className: 'text-base sm:text-lg font-semibold mb-2',
+              children: t(a ? 'list.emptyFiltered' : 'list.empty'),
+            }),
+            e.jsx('p', {
+              className: 'text-sm sm:text-base text-muted-foreground max-w-md mb-6',
+              children: t(a ? 'list.emptyFilteredDescription' : 'list.emptyDescription'),
+            }),
+            !a &&
+              e.jsx(l, {
+                asChild: !0,
+                children: e.jsx(i, { to: '/dossiers/create', children: t('action.create') }),
+              }),
+          ],
+        }),
+      !h &&
+        !u &&
+        r &&
+        r.length > 0 &&
+        e.jsxs(e.Fragment, {
+          children: [
+            e.jsx('div', {
+              className: 'hidden md:block rounded-lg border overflow-hidden',
+              children: e.jsxs(_, {
+                children: [
+                  e.jsx(T, {
+                    children: e.jsxs(b, {
+                      children: [
+                        e.jsx(c, { children: t('form.nameEn') }),
+                        e.jsx(c, { children: t('form.nameAr') }),
+                        e.jsx(c, { children: t('form.status') }),
+                        e.jsx(c, { children: t('form.sensitivityLevel') }),
+                        e.jsx(c, { className: 'text-end', children: t('action.more') }),
+                      ],
+                    }),
+                  }),
+                  e.jsx($, {
+                    children: r.map((s) =>
+                      e.jsxs(
+                        b,
+                        {
+                          children: [
+                            e.jsx(m, {
+                              className: 'font-medium',
+                              children: e.jsx(i, {
+                                to: `/dossiers/engagements/${s.id}`,
+                                className: 'hover:text-primary hover:underline',
+                                children: s.name_en,
+                              }),
+                            }),
+                            e.jsx(m, { children: s.name_ar }),
+                            e.jsx(m, {
+                              children: e.jsx(j, {
+                                variant: s.status === 'active' ? 'default' : 'secondary',
+                                children: t(`status.${s.status}`),
+                              }),
+                            }),
+                            e.jsx(m, {
+                              children: e.jsx(j, {
+                                variant: 'outline',
+                                children: t(`sensitivityLevel.${s.sensitivity_level}`),
+                              }),
+                            }),
+                            e.jsx(m, {
+                              className: 'text-end',
+                              children: e.jsx(l, {
+                                variant: 'ghost',
+                                size: 'sm',
+                                asChild: !0,
+                                children: e.jsx(i, {
+                                  to: `/dossiers/engagements/${s.id}`,
+                                  children: t('action.view'),
+                                }),
+                              }),
+                            }),
+                          ],
+                        },
+                        s.id,
+                      ),
+                    ),
+                  }),
+                ],
+              }),
+            }),
+            e.jsx('div', {
+              className: 'md:hidden space-y-4',
+              children: r.map((s) =>
+                e.jsxs(
+                  i,
+                  {
+                    to: `/dossiers/engagements/${s.id}`,
+                    className:
+                      'block p-4 rounded-lg border bg-card hover:bg-accent transition-colors',
+                    children: [
+                      e.jsxs('div', {
+                        className: 'flex items-start justify-between gap-3 mb-3',
+                        children: [
+                          e.jsx('h3', {
+                            className: 'font-semibold text-base',
+                            children: d ? s.name_ar : s.name_en,
+                          }),
+                          e.jsx(j, {
+                            variant: s.status === 'active' ? 'default' : 'secondary',
+                            children: t(`status.${s.status}`),
+                          }),
+                        ],
+                      }),
+                      (d ? s.description_ar : s.description_en) &&
+                        e.jsx('p', {
+                          className: 'text-sm text-muted-foreground mb-3 line-clamp-2',
+                          children: d ? s.description_ar : s.description_en,
+                        }),
+                      e.jsx('div', {
+                        className: 'flex items-center gap-2',
+                        children: e.jsx(j, {
+                          variant: 'outline',
+                          className: 'text-xs',
+                          children: t(`sensitivityLevel.${s.sensitivity_level}`),
+                        }),
+                      }),
+                    ],
+                  },
+                  s.id,
+                ),
+              ),
+            }),
+            n &&
+              n.total > x &&
+              e.jsxs('div', {
+                className: 'mt-8 flex items-center justify-between',
+                children: [
+                  e.jsx(l, {
+                    variant: 'outline',
+                    disabled: o === 1,
+                    onClick: () => g((s) => Math.max(1, s - 1)),
+                    children: t('action.back'),
+                  }),
+                  e.jsx('span', {
+                    className: 'text-sm text-muted-foreground',
+                    children: t('list.pageInfo', { current: o, total: Math.ceil(n.total / x) }),
+                  }),
+                  e.jsx(l, {
+                    variant: 'outline',
+                    disabled: o * x >= n.total,
+                    onClick: () => g((s) => s + 1),
+                    children: t('action.next'),
+                  }),
+                ],
+              }),
+          ],
+        }),
+    ],
+  })
+}
+export { A as component }
+//# sourceMappingURL=index-Dr3ELM89.js.map

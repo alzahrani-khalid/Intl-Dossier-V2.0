@@ -1,0 +1,155 @@
+{
+  "title": "Delegation Management",
+  "description": "Manage temporary permission delegations for acting roles and vacation coverage",
+  "tabs": {
+    "granted": "Granted",
+    "received": "Received",
+    "all": "All"
+  },
+  "badge": {
+    "active": "Active",
+    "expired": "Expired",
+    "revoked": "Revoked",
+    "expiringSoon": "Expiring Soon"
+  },
+  "list": {
+    "title": "My Delegations",
+    "granted": "Permissions I Granted",
+    "received": "Permissions I Received",
+    "empty": {
+      "granted": "You haven't granted any delegations",
+      "received": "You haven't received any delegations",
+      "all": "No delegations found"
+    },
+    "emptyDescription": {
+      "granted": "Delegate your permissions to a colleague when you're away",
+      "received": "Delegations you receive will appear here",
+      "all": "No delegation records to display"
+    },
+    "showActiveOnly": "Show active only",
+    "showExpiring": "Expiring within 7 days"
+  },
+  "card": {
+    "from": "From",
+    "to": "To",
+    "reason": "Reason",
+    "validFrom": "Valid From",
+    "validUntil": "Valid Until",
+    "expiresIn": "Expires in {{days}} days",
+    "expiresToday": "Expires today",
+    "expiresTomorrow": "Expires tomorrow",
+    "expired": "Expired {{days}} days ago",
+    "revokedAt": "Revoked At",
+    "revokedBy": "Revoked By",
+    "revocationReason": "Revocation Reason",
+    "resourceType": "Resource Type",
+    "resourceId": "Resource ID",
+    "allResources": "All Resources"
+  },
+  "create": {
+    "title": "Create Delegation",
+    "description": "Delegate your permissions to another user temporarily",
+    "buttonText": "Create Delegation",
+    "form": {
+      "grantee": "Delegate To",
+      "granteePlaceholder": "Select a user to delegate to",
+      "granteeDescription": "The user who will receive your permissions",
+      "validFrom": "Start Date",
+      "validFromDescription": "When the delegation should become active",
+      "validUntil": "End Date",
+      "validUntilPlaceholder": "Select end date",
+      "validUntilDescription": "When the delegation should expire (max 90 days)",
+      "reason": "Reason",
+      "reasonPlaceholder": "e.g., Vacation coverage, Acting role, Task handoff",
+      "reasonDescription": "Explain why this delegation is needed (min 10 characters)",
+      "resourceType": "Resource Type (Optional)",
+      "resourceTypePlaceholder": "All resources",
+      "resourceTypeDescription": "Limit delegation to specific resource type",
+      "resourceId": "Resource ID (Optional)",
+      "resourceIdPlaceholder": "All resources of this type",
+      "resourceIdDescription": "Limit delegation to a specific resource"
+    },
+    "validation": {
+      "selectGrant": "Please select a user to delegate to",
+      "selectEndDate": "Please select an end date",
+      "endDateFuture": "End date must be in the future",
+      "endDateMax": "Maximum delegation period is 90 days",
+      "reasonRequired": "Reason is required (min 10 characters)",
+      "reasonMinLength": "Reason must be at least 10 characters"
+    },
+    "success": "Delegation created successfully",
+    "error": "Failed to create delegation"
+  },
+  "revoke": {
+    "title": "Revoke Delegation",
+    "description": "Are you sure you want to revoke this delegation? This action cannot be undone.",
+    "buttonText": "Revoke",
+    "form": {
+      "reason": "Reason (Optional)",
+      "reasonPlaceholder": "Why are you revoking this delegation?"
+    },
+    "confirm": "Revoke Delegation",
+    "success": "Delegation revoked successfully",
+    "error": "Failed to revoke delegation"
+  },
+  "validation": {
+    "title": "Validation",
+    "checking": "Checking if delegation is valid...",
+    "valid": "Delegation is valid",
+    "invalid": "Delegation is not valid",
+    "issues": {
+      "circular_delegation": "This would create a circular delegation",
+      "cannot_delegate_own_permissions": "You cannot delegate permissions to yourself",
+      "insufficient_permissions": "You don't have permissions to delegate",
+      "user_already_has_delegation": "User already has an active delegation from you",
+      "user_not_found": "User not found",
+      "cannot_delegate_to_inactive": "Cannot delegate to inactive user"
+    }
+  },
+  "notification": {
+    "expiringTitle": "Delegations Expiring Soon",
+    "expiringDescription": "You have {{count}} delegation(s) expiring within 7 days",
+    "expiringDescriptionSingle": "You have 1 delegation expiring soon",
+    "viewAll": "View All",
+    "dismiss": "Dismiss"
+  },
+  "history": {
+    "title": "Delegation History",
+    "description": "View all past delegations",
+    "noHistory": "No delegation history"
+  },
+  "actions": {
+    "create": "Create Delegation",
+    "revoke": "Revoke",
+    "view": "View Details",
+    "extend": "Extend",
+    "viewHistory": "View History"
+  },
+  "resourceTypes": {
+    "all": "All Resources",
+    "dossier": "Dossiers",
+    "country": "Countries",
+    "organization": "Organizations",
+    "mou": "MOUs",
+    "forum": "Forums",
+    "brief": "Briefs",
+    "intelligence_report": "Intelligence Reports",
+    "data_library_item": "Data Library"
+  },
+  "filters": {
+    "status": "Status",
+    "statusAll": "All Status",
+    "statusActive": "Active Only",
+    "statusExpired": "Expired",
+    "statusRevoked": "Revoked",
+    "expiringSoon": "Expiring Soon"
+  },
+  "table": {
+    "grantee": "Delegate",
+    "grantor": "Granted By",
+    "validPeriod": "Valid Period",
+    "status": "Status",
+    "reason": "Reason",
+    "actions": "Actions"
+  }
+}

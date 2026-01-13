@@ -1,0 +1,204 @@
+{
+  "title": "انتهاء صلاحية المحتوى",
+  "description": "إدارة حداثة المحتوى وجداول المراجعة",
+
+  "status": {
+    "current": "حالي",
+    "review_pending": "في انتظار المراجعة",
+    "outdated": "قديم",
+    "refreshing": "جاري التحديث",
+    "archived": "مؤرشف"
+  },
+
+  "statusDescription": {
+    "current": "المحتوى محدث وصالح",
+    "review_pending": "المحتوى يقترب من انتهاء الصلاحية ويحتاج مراجعة",
+    "outdated": "انتهت صلاحية المحتوى ويتطلب اهتماما فوريا",
+    "refreshing": "جاري تحديث المحتوى",
+    "archived": "تم أرشفة المحتوى"
+  },
+
+  "badge": {
+    "expiresIn": "ينتهي خلال {{days}} أيام",
+    "expiresToday": "ينتهي اليوم",
+    "expired": "انتهى منذ {{days}} أيام",
+    "expiredToday": "انتهى اليوم",
+    "noExpiration": "لم يتم تحديد تاريخ انتهاء"
+  },
+
+  "actions": {
+    "setExpiration": "تحديد تاريخ الانتهاء",
+    "extendExpiration": "تمديد الصلاحية",
+    "markReviewed": "تحديد كمراجع",
+    "requestReview": "طلب مراجعة",
+    "viewHistory": "عرض السجل",
+    "archiveContent": "أرشفة المحتوى",
+    "refreshBrief": "تحديث الملخص"
+  },
+
+  "settings": {
+    "title": "إعدادات الانتهاء",
+    "expirationDate": "تاريخ الانتهاء",
+    "expirationRule": "قاعدة الانتهاء",
+    "customDate": "تاريخ مخصص",
+    "useRule": "استخدام قاعدة",
+    "autoRefresh": "التحديث التلقائي للملخصات عند الانتهاء",
+    "autoRefreshDescription": "إعادة إنشاء ملخصات الذكاء الاصطناعي تلقائيا عند انتهاء الصلاحية",
+    "selectRule": "اختر قاعدة",
+    "noRulesAvailable": "لا توجد قواعد متاحة لهذا النوع"
+  },
+
+  "extend": {
+    "title": "تمديد الصلاحية",
+    "extensionPeriod": "فترة التمديد",
+    "customDays": "مخصص (أيام)",
+    "reason": "سبب التمديد",
+    "reasonPlaceholder": "لماذا هذا التمديد مطلوب؟",
+    "confirm": "تمديد الصلاحية",
+    "cancel": "إلغاء",
+    "presets": {
+      "1week": "أسبوع واحد",
+      "2weeks": "أسبوعين",
+      "1month": "شهر واحد",
+      "3months": "3 أشهر",
+      "6months": "6 أشهر",
+      "1year": "سنة واحدة"
+    }
+  },
+
+  "review": {
+    "title": "تحديد كمراجع",
+    "notes": "ملاحظات المراجعة",
+    "notesPlaceholder": "صف ما تمت مراجعته أو تحديثه...",
+    "confirm": "تأكيد المراجعة",
+    "cancel": "إلغاء",
+    "requestTitle": "طلب مراجعة المحتوى",
+    "requestMessage": "رسالة للمالكين",
+    "requestPlaceholder": "اشرح لماذا المراجعة مطلوبة...",
+    "requestConfirm": "إرسال الطلب",
+    "lastReviewed": "آخر مراجعة",
+    "reviewedBy": "تمت المراجعة بواسطة",
+    "neverReviewed": "لم تتم مراجعته أبدا"
+  },
+
+  "history": {
+    "title": "سجل الانتهاء",
+    "noHistory": "لا يوجد سجل متاح",
+    "events": {
+      "created": "تم تحديد تاريخ الانتهاء",
+      "warning_sent": "تم إرسال إشعار التحذير",
+      "critical_warning_sent": "تم إرسال التحذير الحرج",
+      "expired": "انتهت صلاحية المحتوى",
+      "reviewed": "تمت مراجعة المحتوى",
+      "extended": "تم تمديد الصلاحية",
+      "refreshed": "تم تحديث المحتوى",
+      "archived": "تم أرشفة المحتوى",
+      "restored": "تمت استعادة المحتوى",
+      "rule_changed": "تم تغيير قاعدة الانتهاء"
+    },
+    "by": "بواسطة",
+    "system": "النظام"
+  },
+
+  "dashboard": {
+    "title": "نظرة عامة على انتهاء المحتوى",
+    "totalTracked": "إجمالي المتتبع",
+    "currentContent": "حالي",
+    "pendingReview": "في انتظار المراجعة",
+    "outdatedContent": "قديم",
+    "expiring7Days": "ينتهي خلال 7 أيام",
+    "expiring30Days": "ينتهي خلال 30 يوما",
+    "viewAll": "عرض الكل",
+    "noData": "لا توجد بيانات انتهاء متاحة"
+  },
+
+  "list": {
+    "title": "المحتوى المنتهي",
+    "noExpiring": "لا يوجد محتوى ينتهي في الإطار الزمني المحدد",
+    "filters": {
+      "entityType": "نوع الكيان",
+      "all": "جميع الأنواع",
+      "dossier": "الملفات",
+      "brief": "الملخصات",
+      "ai_brief": "ملخصات الذكاء الاصطناعي",
+      "position": "المواقف",
+      "timeframe": "الإطار الزمني",
+      "days7": "الـ 7 أيام القادمة",
+      "days14": "الـ 14 يوما القادمة",
+      "days30": "الـ 30 يوما القادمة",
+      "days60": "الـ 60 يوما القادمة",
+      "days90": "الـ 90 يوما القادمة",
+      "includeExpired": "تضمين المنتهية"
+    },
+    "columns": {
+      "name": "الاسم",
+      "type": "النوع",
+      "expiresIn": "ينتهي خلال",
+      "status": "الحالة",
+      "actions": "الإجراءات"
+    }
+  },
+
+  "rules": {
+    "title": "قواعد الانتهاء",
+    "description": "تكوين فترات وإجراءات الانتهاء الافتراضية",
+    "noRules": "لم يتم تكوين قواعد انتهاء",
+    "fields": {
+      "name": "اسم القاعدة",
+      "entityType": "نوع الكيان",
+      "dossierType": "نوع الملف",
+      "sensitivityLevel": "مستوى الحساسية",
+      "expirationDays": "الانتهاء الافتراضي (أيام)",
+      "warningDays": "فترة التحذير (أيام)",
+      "criticalDays": "الفترة الحرجة (أيام)",
+      "warningAction": "إجراء التحذير",
+      "criticalAction": "الإجراء الحرج",
+      "expirationAction": "إجراء الانتهاء",
+      "autoArchive": "الأرشفة التلقائية بعد (أيام)",
+      "autoRefresh": "التحديث التلقائي للملخصات"
+    },
+    "actions": {
+      "notify_owners": "إشعار المالكين",
+      "notify_reviewers": "إشعار المراجعين",
+      "mark_outdated": "تحديد كقديم",
+      "archive_content": "أرشفة المحتوى",
+      "require_review": "طلب مراجعة",
+      "trigger_brief_refresh": "تشغيل تحديث الملخص"
+    }
+  },
+
+  "notifications": {
+    "expirationWarning": "انتهاء المحتوى قريبا",
+    "expirationWarningBody": "\"{{name}}\" سينتهي خلال {{days}} أيام",
+    "expirationCritical": "انتهاء المحتوى حرج",
+    "expirationCriticalBody": "\"{{name}}\" سينتهي خلال {{days}} أيام. مطلوب مراجعة فورية.",
+    "contentExpired": "انتهت صلاحية المحتوى",
+    "contentExpiredBody": "\"{{name}}\" انتهت صلاحيته ويعتبر الآن قديما",
+    "reviewRequested": "طلب مراجعة المحتوى",
+    "reviewRequestedBody": "تم طلب مراجعة لـ \"{{name}}\"",
+    "reviewComplete": "اكتملت مراجعة المحتوى",
+    "reviewCompleteBody": "تمت مراجعة \"{{name}}\" وتحديده كحالي",
+    "extensionApplied": "تم تمديد الصلاحية",
+    "extensionAppliedBody": "تم تمديد صلاحية \"{{name}}\" بـ {{days}} أيام"
+  },
+
+  "errors": {
+    "fetchFailed": "فشل في جلب بيانات الانتهاء",
+    "setFailed": "فشل في تحديد تاريخ الانتهاء",
+    "extendFailed": "فشل في تمديد الصلاحية",
+    "reviewFailed": "فشل في تحديد كمراجع",
+    "requestFailed": "فشل في إرسال طلب المراجعة"
+  },
+
+  "success": {
+    "expirationSet": "تم تحديد تاريخ الانتهاء بنجاح",
+    "expirationExtended": "تم تمديد الصلاحية بنجاح",
+    "markedReviewed": "تم تحديد المحتوى كمراجع",
+    "reviewRequested": "تم إرسال طلب المراجعة لمالكي المحتوى"
+  },
+
+  "confirmations": {
+    "archiveContent": "هل أنت متأكد من أنك تريد أرشفة هذا المحتوى؟ سيتم تحديده كمؤرشف ولن يظهر في القوائم النشطة.",
+    "resetExpiration": "هل أنت متأكد من أنك تريد إعادة تعيين تاريخ الانتهاء؟ سيبدأ فترة انتهاء جديدة من اليوم."
+  }
+}

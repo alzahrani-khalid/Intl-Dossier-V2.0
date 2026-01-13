@@ -215,6 +215,9 @@ export default function MyWorkDashboard() {
         hasMore={items.hasNextPage}
         onLoadMore={() => items.fetchNextPage()}
         isFetchingMore={items.isFetchingNextPage}
+        onRefresh={async () => {
+          await items.refetch()
+        }}
       />
     </div>
   )

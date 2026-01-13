@@ -1,7 +1,13 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
-import { corsHeaders } from "../_shared/cors.ts";
-import { generateBriefTemplate, prePopulateTemplate } from "../_shared/brief-template.ts";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { corsHeaders } from '../_shared/cors.ts';
+import { generateBriefTemplate, prePopulateTemplate } from '../_shared/brief-template.ts';
+import {
+  createAIInteractionLogger,
+  extractClientInfo,
+  type AIInteractionType,
+  type AIContentType,
+} from '../_shared/ai-interaction-logger.ts';
 
 interface GenerateBriefRequest {
   date_range_start?: string;
@@ -19,49 +25,49 @@ interface BriefContent {
 
 serve(async (req) => {
   // Handle CORS
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
-  if (req.method !== "POST") {
+  if (req.method !== 'POST') {
     return new Response(
       JSON.stringify({
         error: {
-          code: "METHOD_NOT_ALLOWED",
-          message_en: "Method not allowed",
-          message_ar: "الطريقة غير مسموح بها",
+          code: 'METHOD_NOT_ALLOWED',
+          message_en: 'Method not allowed',
+          message_ar: 'الطريقة غير مسموح بها',
         },
       }),
       {
         status: 405,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   }
 
   try {
     // Get auth token
-    const authHeader = req.headers.get("Authorization");
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
         JSON.stringify({
           error: {
-            code: "UNAUTHORIZED",
-            message_en: "Missing authorization header",
-            message_ar: "رأس التفويض مفقود",
+            code: 'UNAUTHORIZED',
+            message_en: 'Missing authorization header',
+            message_ar: 'رأس التفويض مفقود',
           },
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
     // Create Supabase client with user context
     const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_ANON_KEY") ?? "",
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
       {
         global: {
           headers: { Authorization: authHeader },
@@ -79,35 +85,35 @@ serve(async (req) => {
       return new Response(
         JSON.stringify({
           error: {
-            code: "UNAUTHORIZED",
-            message_en: "Invalid user session",
-            message_ar: "جلسة مستخدم غير صالحة",
+            code: 'UNAUTHORIZED',
+            message_en: 'Invalid user session',
+            message_ar: 'جلسة مستخدم غير صالحة',
           },
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
     // Extract dossier ID from URL
     const url = new URL(req.url);
-    const pathParts = url.pathname.split("/");
-    const dossierId = pathParts[pathParts.indexOf("dossiers") + 1];
+    const pathParts = url.pathname.split('/');
+    const dossierId = pathParts[pathParts.indexOf('dossiers') + 1];
 
     if (!dossierId) {
       return new Response(
         JSON.stringify({
           error: {
-            code: "MISSING_ID",
-            message_en: "Dossier ID is required",
-            message_ar: "معرف الملف مطلوب",
+            code: 'MISSING_ID',
+            message_en: 'Dossier ID is required',
+            message_ar: 'معرف الملف مطلوب',
           },
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -117,53 +123,58 @@ serve(async (req) => {
 
     // Fetch dossier data
     const { data: dossier, error: dossierError } = await supabaseClient
-      .from("dossiers")
-      .select("*")
-      .eq("id", dossierId)
+      .from('dossiers')
+      .select('*')
+      .eq('id', dossierId)
       .single();
 
     if (dossierError || !dossier) {
       return new Response(
         JSON.stringify({
           error: {
-            code: "NOT_FOUND",
-            message_en: "Dossier not found or access denied",
-            message_ar: "الملف غير موجود أو الوصول مرفوض",
+            code: 'NOT_FOUND',
+            message_en: 'Dossier not found or access denied',
+            message_ar: 'الملف غير موجود أو الوصول مرفوض',
           },
         }),
         {
           status: 404,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
     // Fetch timeline events in date range
     let timelineQuery = supabaseClient
-      .from("dossier_timeline")
-      .select("*")
-      .eq("dossier_id", dossierId);
+      .from('dossier_timeline')
+      .select('*')
+      .eq('dossier_id', dossierId);
 
     if (body.date_range_start) {
-      timelineQuery = timelineQuery.gte("event_date", body.date_range_start);
+      timelineQuery = timelineQuery.gte('event_date', body.date_range_start);
     }
     if (body.date_range_end) {
-      timelineQuery = timelineQuery.lte("event_date", body.date_range_end);
+      timelineQuery = timelineQuery.lte('event_date', body.date_range_end);
     }
 
     const { data: timelineEvents, error: timelineError } = await timelineQuery
-      .order("event_date", { ascending: false })
+      .order('event_date', { ascending: false })
       .limit(50);
 
     if (timelineError) {
-      console.error("Error fetching timeline:", timelineError);
+      console.error('Error fetching timeline:', timelineError);
     }
 
     const events = timelineEvents || [];
 
     // Try AI generation with 60s timeout
-    const anythingLlmUrl = Deno.env.get("ANYTHINGLLM_URL");
-    const anythingLlmKey = Deno.env.get("ANYTHINGLLM_API_KEY");
+    const anythingLlmUrl = Deno.env.get('ANYTHINGLLM_URL');
+    const anythingLlmKey = Deno.env.get('ANYTHINGLLM_API_KEY');
+
+    // Initialize AI interaction logger
+    const aiLogger = createAIInteractionLogger('dossiers-briefs-generate');
+    const clientInfo = extractClientInfo(req);
+    let interactionId: string | undefined;
 
     if (anythingLlmUrl && anythingLlmKey) {
       try {
@@ -172,12 +183,15 @@ serve(async (req) => {
 
 Dossier: ${dossier.name_en} / ${dossier.name_ar}
 Type: ${dossier.type}
-Summary: ${dossier.summary_en || "N/A"}
+Summary: ${dossier.summary_en || 'N/A'}
 
 Recent Events (${events.length}):
-${events.slice(0, 10).map((e, i) => `${i + 1}. [${e.event_type}] ${e.event_title_en} (${e.event_date})`).join("\n")}
+${events
+  .slice(0, 10)
+  .map((e, i) => `${i + 1}. [${e.event_type}] ${e.event_title_en} (${e.event_date})`)
+  .join('\n')}
 
-Sections to include: ${body.sections?.join(", ") || "all"}
+Sections to include: ${body.sections?.join(', ') || 'all'}
 
 Return JSON with this exact structure:
 {
@@ -201,19 +215,54 @@ Return JSON with this exact structure:
   }
 }`;
 
+        // Log AI interaction start
+        try {
+          // Get user's organization ID
+          const { data: userProfile } = await supabaseClient
+            .from('users')
+            .select('organization_id')
+            .eq('id', user.id)
+            .single();
+
+          const result = await aiLogger.startInteraction({
+            organizationId: userProfile?.organization_id || 'unknown',
+            userId: user.id,
+            interactionType: 'generation' as AIInteractionType,
+            contentType: 'brief' as AIContentType,
+            modelProvider: 'ollama', // AnythingLLM typically uses local models
+            modelName: 'llama2', // Default model
+            userPrompt: prompt,
+            targetEntityType: 'dossier',
+            targetEntityId: dossierId,
+            contextSources: events.slice(0, 10).map((e) => ({
+              type: 'timeline_event',
+              id: e.id,
+              snippet: e.event_title_en,
+            })),
+            dataClassification: 'internal',
+            requestIp: clientInfo.ip,
+            userAgent: clientInfo.userAgent,
+          });
+          interactionId = result.interactionId;
+        } catch (logError) {
+          console.warn('Failed to log AI interaction start:', logError);
+        }
+
+        const startTime = Date.now();
+
         // Call AI with timeout
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 60000); // 60s timeout
 
         const aiResponse = await fetch(`${anythingLlmUrl}/api/chat`, {
-          method: "POST",
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${anythingLlmKey}`,
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${anythingLlmKey}`,
           },
           body: JSON.stringify({
             message: prompt,
-            mode: "chat",
+            mode: 'chat',
           }),
           signal: controller.signal,
         });
@@ -226,36 +275,69 @@ Return JSON with this exact structure:
 
         const aiData = await aiResponse.json();
         const briefData = JSON.parse(aiData.textResponse);
+        const latencyMs = Date.now() - startTime;
+
+        // Log AI interaction completion
+        if (interactionId) {
+          try {
+            await aiLogger.completeInteraction({
+              interactionId,
+              status: 'completed',
+              aiResponse: aiData.textResponse,
+              aiResponseStructured: briefData,
+              latencyMs,
+              // Token counts would come from AI provider if available
+              responseTokenCount: aiData.textResponse?.length || 0,
+            });
+          } catch (logError) {
+            console.warn('Failed to log AI interaction completion:', logError);
+          }
+        }
 
         // Insert brief into database
         const { data: brief, error: insertError } = await supabaseClient
-          .from("briefs")
+          .from('briefs')
           .insert({
             dossier_id: dossierId,
             content_en: briefData.en,
             content_ar: briefData.ar,
             date_range_start: body.date_range_start || null,
             date_range_end: body.date_range_end || null,
-            generated_by: "ai",
+            generated_by: 'ai',
             generated_by_user_id: user.id,
           })
           .select()
           .single();
 
         if (insertError) {
-          console.error("Error inserting brief:", insertError);
-          throw new Error("Failed to save brief");
+          console.error('Error inserting brief:', insertError);
+          throw new Error('Failed to save brief');
         }
 
         return new Response(JSON.stringify(brief), {
           status: 201,
           headers: {
             ...corsHeaders,
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
         });
       } catch (aiError) {
-        console.warn("AI generation failed or timed out:", aiError);
+        console.warn('AI generation failed or timed out:', aiError);
+
+        // Log AI interaction failure
+        if (interactionId) {
+          try {
+            await aiLogger.completeInteraction({
+              interactionId,
+              status: 'failed',
+              errorMessage: aiError instanceof Error ? aiError.message : 'Unknown error',
+              latencyMs: Date.now() - (startTime || Date.now()),
+            });
+          } catch (logError) {
+            console.warn('Failed to log AI interaction failure:', logError);
+          }
+        }
+
         // Fall through to fallback template
       }
     }
@@ -278,9 +360,10 @@ Return JSON with this exact structure:
     return new Response(
       JSON.stringify({
         error: {
-          code: "AI_UNAVAILABLE",
-          message_en: "AI service is unavailable. Please use the manual template to create a brief.",
-          message_ar: "خدمة الذكاء الاصطناعي غير متاحة. يرجى استخدام النموذج اليدوي لإنشاء موجز.",
+          code: 'AI_UNAVAILABLE',
+          message_en:
+            'AI service is unavailable. Please use the manual template to create a brief.',
+          message_ar: 'خدمة الذكاء الاصطناعي غير متاحة. يرجى استخدام النموذج اليدوي لإنشاء موجز.',
         },
         fallback: {
           template,
@@ -291,24 +374,24 @@ Return JSON with this exact structure:
         status: 503,
         headers: {
           ...corsHeaders,
-          "Content-Type": "application/json",
+          'Content-Type': 'application/json',
         },
       }
     );
   } catch (error) {
-    console.error("Unexpected error:", error);
+    console.error('Unexpected error:', error);
     return new Response(
       JSON.stringify({
         error: {
-          code: "INTERNAL_ERROR",
-          message_en: "An unexpected error occurred",
-          message_ar: "حدث خطأ غير متوقع",
+          code: 'INTERNAL_ERROR',
+          message_en: 'An unexpected error occurred',
+          message_ar: 'حدث خطأ غير متوقع',
           correlation_id: crypto.randomUUID(),
         },
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   }

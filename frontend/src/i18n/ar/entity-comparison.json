@@ -1,0 +1,205 @@
+{
+  "title": "مقارنة الكيانات",
+  "subtitle": "قارن بين عدة كيانات جنباً إلى جنب",
+  "description": "اختر كيانات من نفس النوع لمقارنة حقولها وتحديد الاختلافات",
+
+  "selector": {
+    "title": "اختر الكيانات للمقارنة",
+    "subtitle": "اختر {{min}}-{{max}} كيانات من نفس النوع",
+    "selectType": "اختر نوع الكيان",
+    "selectTypePlaceholder": "اختر نوعاً...",
+    "searchPlaceholder": "ابحث عن كيانات...",
+    "selectedCount": "{{count}} محدد",
+    "selectedCountOne": "{{count}} محدد",
+    "selectedCountOther": "{{count}} محددة",
+    "minRequired": "اختر على الأقل {{min}} كيانات",
+    "maxReached": "الحد الأقصى {{max}} كيانات",
+    "noEntitiesFound": "لم يتم العثور على كيانات",
+    "noEntitiesDescription": "حاول تعديل البحث أو اختر نوعاً مختلفاً",
+    "loadingEntities": "جاري تحميل الكيانات...",
+    "compareButton": "قارن المحدد",
+    "clearSelection": "مسح الكل",
+    "entityTypes": {
+      "country": "الدول",
+      "organization": "المنظمات",
+      "person": "الأشخاص",
+      "engagement": "المشاركات",
+      "forum": "المنتديات",
+      "working_group": "مجموعات العمل",
+      "topic": "المواضيع"
+    }
+  },
+
+  "table": {
+    "field": "الحقل",
+    "noDataAvailable": "غير متوفر",
+    "category": {
+      "base": "المعلومات الأساسية",
+      "extension": "التفاصيل الخاصة بالنوع",
+      "metadata": "البيانات الوصفية"
+    },
+    "viewMode": {
+      "table": "عرض جدول",
+      "side_by_side": "جنباً إلى جنب",
+      "highlights_only": "الاختلافات فقط"
+    },
+    "empty": {
+      "title": "لا توجد بيانات مقارنة",
+      "description": "اختر كيانات لبدء المقارنة"
+    },
+    "filters": {
+      "title": "المرشحات",
+      "showDifferences": "عرض الاختلافات فقط",
+      "showBaseFields": "الحقول الأساسية",
+      "showExtensionFields": "الحقول الخاصة بالنوع",
+      "showMetadataFields": "البيانات الوصفية",
+      "resetFilters": "إعادة تعيين المرشحات"
+    }
+  },
+
+  "difference": {
+    "same": "متطابق",
+    "different": "مختلف",
+    "added": "مضاف",
+    "removed": "محذوف",
+    "modified": "معدّل"
+  },
+
+  "summary": {
+    "title": "ملخص المقارنة",
+    "totalFields": "إجمالي الحقول",
+    "sameFields": "الحقول المتطابقة",
+    "differentFields": "الحقول المختلفة",
+    "similarity": "نسبة التشابه",
+    "mostDifferent": "أكثر الحقول اختلافاً"
+  },
+
+  "export": {
+    "title": "تصدير المقارنة",
+    "subtitle": "تنزيل تقرير المقارنة",
+    "format": "الصيغة",
+    "formats": {
+      "csv": "CSV (جدول بيانات)",
+      "json": "JSON (بيانات)",
+      "pdf": "PDF (مستند)",
+      "xlsx": "Excel (جدول بيانات)"
+    },
+    "options": {
+      "includeHeader": "تضمين العنوان",
+      "includeSummary": "تضمين الملخص",
+      "onlyDifferences": "الحقول المختلفة فقط"
+    },
+    "language": "لغة التقرير",
+    "languages": {
+      "en": "الإنجليزية",
+      "ar": "العربية"
+    },
+    "exportButton": "تصدير",
+    "downloading": "جاري تحضير التنزيل...",
+    "success": "تم التصدير بنجاح",
+    "error": "فشل التصدير: {{message}}"
+  },
+
+  "fields": {
+    "base": {
+      "id": "المعرّف",
+      "name_en": "الاسم (إنجليزي)",
+      "name_ar": "الاسم (عربي)",
+      "description_en": "الوصف (إنجليزي)",
+      "description_ar": "الوصف (عربي)",
+      "created_at": "تاريخ الإنشاء",
+      "updated_at": "تاريخ التحديث",
+      "created_by": "أنشأ بواسطة",
+      "updated_by": "حدّث بواسطة"
+    },
+    "country": {
+      "iso_code_2": "رمز ISO (2)",
+      "iso_code_3": "رمز ISO (3)",
+      "capital_en": "العاصمة (إنجليزي)",
+      "capital_ar": "العاصمة (عربي)",
+      "region": "المنطقة",
+      "subregion": "المنطقة الفرعية",
+      "population": "السكان",
+      "area_sq_km": "المساحة (كم\u00b2)",
+      "flag_url": "رابط العلم"
+    },
+    "organization": {
+      "org_code": "رمز المنظمة",
+      "org_type": "نوع المنظمة",
+      "parent_org_id": "المنظمة الأم",
+      "head_count": "عدد الموظفين",
+      "established_date": "تاريخ التأسيس",
+      "website_url": "الموقع الإلكتروني"
+    },
+    "person": {
+      "title": "اللقب",
+      "photo_url": "رابط الصورة",
+      "birth_date": "تاريخ الميلاد",
+      "nationality": "الجنسية",
+      "education": "التعليم",
+      "languages": "اللغات",
+      "current_position": "المنصب الحالي"
+    },
+    "engagement": {
+      "engagement_type": "نوع المشاركة",
+      "start_date": "تاريخ البدء",
+      "end_date": "تاريخ الانتهاء",
+      "location": "الموقع",
+      "participants": "المشاركون",
+      "outcomes": "النتائج"
+    },
+    "forum": {
+      "forum_type": "نوع المنتدى",
+      "member_organizations": "المنظمات الأعضاء",
+      "meeting_frequency": "تكرار الاجتماعات",
+      "next_meeting_date": "الاجتماع القادم",
+      "deliverables": "المخرجات"
+    },
+    "working_group": {
+      "parent_forum_id": "المنتدى الأم",
+      "chair_organization": "المنظمة الرئيسية",
+      "mandate": "التفويض",
+      "start_date": "تاريخ البدء",
+      "end_date": "تاريخ الانتهاء",
+      "members": "الأعضاء"
+    },
+    "topic": {
+      "topic_category": "الفئة",
+      "parent_topic_id": "الموضوع الأم"
+    }
+  },
+
+  "actions": {
+    "back": "رجوع",
+    "compare": "قارن",
+    "export": "تصدير",
+    "share": "مشاركة",
+    "print": "طباعة",
+    "refresh": "تحديث"
+  },
+
+  "errors": {
+    "loadFailed": "فشل تحميل الكيانات",
+    "compareFailed": "فشل إنشاء المقارنة",
+    "typeMismatch": "يجب أن تكون جميع الكيانات من نفس النوع",
+    "minEntities": "مطلوب على الأقل {{min}} كيانات",
+    "maxEntities": "يمكن مقارنة {{max}} كيانات كحد أقصى",
+    "invalidEntity": "كيان غير صالح محدد",
+    "networkError": "خطأ في الشبكة. يرجى المحاولة مرة أخرى."
+  },
+
+  "loading": {
+    "entities": "جاري تحميل الكيانات...",
+    "comparison": "جاري إنشاء المقارنة...",
+    "export": "جاري تحضير التصدير..."
+  },
+
+  "accessibility": {
+    "comparisonTable": "جدول مقارنة الكيانات",
+    "selectEntity": "اختر {{name}} للمقارنة",
+    "deselectEntity": "إلغاء اختيار {{name}}",
+    "differenceIndicator": "الحقل {{field}} هو {{difference}} عبر الكيانات",
+    "exportButton": "تصدير تقرير المقارنة",
+    "viewModeToggle": "تبديل وضع عرض المقارنة"
+  }
+}

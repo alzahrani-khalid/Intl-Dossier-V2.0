@@ -1,0 +1,291 @@
+{
+  "title": "Briefing Books",
+  "subtitle": "Compile customized briefing materials for meetings and travel",
+  "newBriefingBook": "New Briefing Book",
+  "myBriefingBooks": "My Briefing Books",
+  "templates": "Templates",
+  "recentBooks": "Recent Books",
+
+  "builder": {
+    "title": "Build Briefing Book",
+    "step1": "Select Entities",
+    "step2": "Configure Sections",
+    "step3": "Set Options",
+    "step4": "Review & Generate",
+
+    "configuration": {
+      "title": "Briefing Book Title",
+      "titlePlaceholder": "Enter briefing book title",
+      "description": "Description (Optional)",
+      "descriptionPlaceholder": "Purpose of this briefing book"
+    },
+
+    "entities": {
+      "title": "Select Entities",
+      "subtitle": "Choose countries, organizations, forums, or themes to include",
+      "searchPlaceholder": "Search entities...",
+      "selected": "{{count}} selected",
+      "noSelection": "No entities selected",
+      "addEntity": "Add Entity",
+      "removeEntity": "Remove",
+      "countries": "Countries",
+      "organizations": "Organizations",
+      "forums": "Forums",
+      "themes": "Themes",
+      "selectAll": "Select All",
+      "clearAll": "Clear All"
+    },
+
+    "dateRange": {
+      "title": "Date Range",
+      "subtitle": "Filter content by date range",
+      "startDate": "Start Date",
+      "endDate": "End Date",
+      "presets": {
+        "last30days": "Last 30 Days",
+        "last90days": "Last 90 Days",
+        "last6months": "Last 6 Months",
+        "lastYear": "Last Year",
+        "custom": "Custom Range"
+      }
+    },
+
+    "topics": {
+      "title": "Topics",
+      "subtitle": "Filter content by topic categories",
+      "selectAll": "Select All",
+      "clearAll": "Clear All"
+    },
+
+    "sections": {
+      "title": "Sections",
+      "subtitle": "Configure which sections to include",
+      "enableAll": "Enable All",
+      "disableAll": "Disable All",
+      "reorder": "Drag to reorder",
+      "sectionTypes": {
+        "executive_summary": "Executive Summary",
+        "entity_overview": "Entity Overview",
+        "key_contacts": "Key Contacts",
+        "recent_engagements": "Recent Engagements",
+        "positions": "Positions & Talking Points",
+        "mou_agreements": "MoU Agreements",
+        "commitments": "Commitments & Deliverables",
+        "timeline": "Timeline",
+        "documents": "Related Documents",
+        "relationship_map": "Relationship Map",
+        "intelligence": "Intelligence & Signals",
+        "custom": "Custom Section"
+      },
+      "addCustom": "Add Custom Section",
+      "customContent": "Custom Content"
+    },
+
+    "options": {
+      "title": "Export Options",
+      "format": {
+        "title": "Output Format",
+        "pdf": "PDF Document",
+        "pdfDesc": "Best for printing and offline reading",
+        "docx": "Word Document (DOCX)",
+        "docxDesc": "Editable format for further customization",
+        "html": "HTML Document",
+        "htmlDesc": "Web-ready format"
+      },
+      "language": {
+        "title": "Primary Language",
+        "en": "English",
+        "ar": "Arabic",
+        "bilingual": "Include bilingual content",
+        "bilingualDesc": "Include both English and Arabic text"
+      },
+      "layout": {
+        "title": "Layout Options",
+        "tableOfContents": "Include table of contents",
+        "tableOfContentsDesc": "Automatically generated with page numbers",
+        "pageNumbers": "Include page numbers",
+        "bookmarks": "Include bookmarks",
+        "bookmarksDesc": "Clickable navigation in PDF",
+        "coverPage": "Include cover page",
+        "executiveSummary": "Include executive summary",
+        "executiveSummaryDesc": "AI-generated overview of key points"
+      },
+      "sensitivity": {
+        "title": "Sensitivity Filter",
+        "description": "Maximum sensitivity level to include",
+        "low": "Low only",
+        "medium": "Medium and below",
+        "high": "All levels"
+      },
+      "branding": {
+        "title": "Branding",
+        "headerText": "Header Text",
+        "headerPlaceholder": "Custom header text (optional)",
+        "footerText": "Footer Text",
+        "footerPlaceholder": "Custom footer text (optional)"
+      }
+    },
+
+    "review": {
+      "title": "Review & Generate",
+      "summary": "Summary",
+      "entitiesCount": "{{count}} entities",
+      "sectionsCount": "{{count}} sections",
+      "estimatedPages": "Estimated {{count}} pages",
+      "dateRangeLabel": "Date Range",
+      "formatLabel": "Format",
+      "languageLabel": "Language",
+      "topicsLabel": "Topics",
+      "noTopics": "All topics",
+      "includesLabel": "Includes",
+      "tableOfContents": "Table of contents",
+      "bookmarks": "Bookmarks",
+      "coverPage": "Cover page",
+      "executiveSummary": "Executive summary",
+      "bilingualContent": "Bilingual content"
+    }
+  },
+
+  "generation": {
+    "title": "Generating Briefing Book",
+    "subtitle": "This may take a few minutes depending on the content",
+    "stages": {
+      "initializing": "Initializing...",
+      "fetching": "Fetching data...",
+      "compiling": "Compiling content...",
+      "formatting": "Formatting document...",
+      "generating": "Generating {{format}}...",
+      "uploading": "Uploading file...",
+      "complete": "Generation complete!",
+      "error": "Generation failed"
+    },
+    "processingEntity": "Processing {{entity}}...",
+    "processingSection": "Processing {{section}}...",
+    "cancel": "Cancel",
+    "cancelConfirm": "Are you sure you want to cancel the generation?"
+  },
+
+  "preview": {
+    "title": "Preview",
+    "download": "Download",
+    "regenerate": "Regenerate",
+    "share": "Share",
+    "pageOf": "Page {{current}} of {{total}}",
+    "zoom": "Zoom",
+    "fitWidth": "Fit Width",
+    "fitPage": "Fit Page",
+    "print": "Print"
+  },
+
+  "list": {
+    "title": "My Briefing Books",
+    "empty": "No briefing books yet",
+    "emptyDescription": "Create your first briefing book to compile materials for meetings and travel",
+    "createFirst": "Create Briefing Book",
+    "columns": {
+      "title": "Title",
+      "entities": "Entities",
+      "format": "Format",
+      "status": "Status",
+      "created": "Created",
+      "actions": "Actions"
+    },
+    "status": {
+      "draft": "Draft",
+      "generating": "Generating",
+      "ready": "Ready",
+      "expired": "Expired",
+      "failed": "Failed"
+    },
+    "actions": {
+      "download": "Download",
+      "view": "View",
+      "duplicate": "Duplicate",
+      "delete": "Delete",
+      "regenerate": "Regenerate"
+    },
+    "filters": {
+      "all": "All",
+      "ready": "Ready",
+      "generating": "Generating",
+      "failed": "Failed"
+    }
+  },
+
+  "templates": {
+    "title": "Templates",
+    "subtitle": "Save time with pre-configured templates",
+    "useTemplate": "Use Template",
+    "saveAsTemplate": "Save as Template",
+    "defaultTemplates": {
+      "executive": {
+        "name": "Executive Briefing",
+        "description": "High-level overview with key contacts and recent engagements"
+      },
+      "comprehensive": {
+        "name": "Comprehensive Report",
+        "description": "Full dossier with all sections and documents"
+      },
+      "quickReference": {
+        "name": "Quick Reference",
+        "description": "Compact format with essential information only"
+      },
+      "travelBrief": {
+        "name": "Travel Brief",
+        "description": "Key contacts, positions, and upcoming commitments"
+      }
+    }
+  },
+
+  "topics": {
+    "statistics": "Statistics",
+    "economy": "Economy",
+    "trade": "Trade",
+    "technology": "Technology",
+    "environment": "Environment",
+    "health": "Health",
+    "education": "Education",
+    "governance": "Governance",
+    "cooperation": "International Cooperation",
+    "other": "Other"
+  },
+
+  "actions": {
+    "generate": "Generate Briefing Book",
+    "generating": "Generating...",
+    "cancel": "Cancel",
+    "back": "Back",
+    "next": "Next",
+    "save": "Save",
+    "saveTemplate": "Save as Template",
+    "download": "Download",
+    "delete": "Delete",
+    "duplicate": "Duplicate",
+    "share": "Share"
+  },
+
+  "success": {
+    "created": "Briefing book created successfully",
+    "generated": "Briefing book generated successfully",
+    "downloaded": "Briefing book downloaded",
+    "deleted": "Briefing book deleted",
+    "templateSaved": "Template saved successfully"
+  },
+
+  "errors": {
+    "noEntities": "Please select at least one entity",
+    "noSections": "Please enable at least one section",
+    "generationFailed": "Failed to generate briefing book",
+    "downloadFailed": "Failed to download briefing book",
+    "deleteFailed": "Failed to delete briefing book",
+    "loadFailed": "Failed to load briefing books",
+    "templateSaveFailed": "Failed to save template"
+  },
+
+  "confirmDelete": {
+    "title": "Delete Briefing Book",
+    "message": "Are you sure you want to delete this briefing book? This action cannot be undone.",
+    "confirm": "Delete",
+    "cancel": "Cancel"
+  }
+}

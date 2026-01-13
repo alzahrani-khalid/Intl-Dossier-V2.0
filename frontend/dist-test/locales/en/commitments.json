@@ -1,0 +1,144 @@
+{
+  "title": "Commitments",
+  "subtitle": "Track and manage commitments",
+  "pageTitle": "My Commitments",
+  "actions": {
+    "create": "Add Commitment",
+    "edit": "Edit",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "uploadEvidence": "Upload Evidence",
+    "downloadEvidence": "Download Evidence",
+    "viewDetails": "View Details",
+    "updateStatus": "Update Status",
+    "clearFilters": "Clear Filters",
+    "applyFilters": "Apply Filters"
+  },
+  "status": {
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "overdue": "Overdue",
+    "updated": "Status updated successfully",
+    "updateFailed": "Failed to update status"
+  },
+  "priority": {
+    "label": "Priority",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+  "ownerType": {
+    "label": "Owner Type",
+    "internal": "Internal",
+    "external": "External"
+  },
+  "form": {
+    "title": "Title",
+    "titlePlaceholder": "Enter commitment title",
+    "description": "Description",
+    "descriptionPlaceholder": "Enter commitment description",
+    "dueDate": "Due Date",
+    "priority": "Priority",
+    "ownerType": "Owner Type",
+    "owner": "Owner",
+    "selectOwner": "Select owner",
+    "proofRequired": "Proof Required",
+    "proofRequiredDescription": "Evidence upload required for completion",
+    "trackingMode": "Tracking Mode",
+    "manual": "Manual",
+    "automatic": "Automatic"
+  },
+  "filters": {
+    "title": "Filter Commitments",
+    "status": "Status",
+    "priority": "Priority",
+    "ownerType": "Owner Type",
+    "overdue": "Overdue Only",
+    "overdueDescription": "Show only overdue commitments",
+    "dueDate": "Due Date",
+    "dueDateFrom": "From",
+    "dueDateTo": "To",
+    "clear": "Clear Filters",
+    "apply": "Apply"
+  },
+  "detail": {
+    "title": "Commitment Details",
+    "dossier": "Dossier",
+    "createdAt": "Created At",
+    "updatedAt": "Last Updated",
+    "createdBy": "Created By",
+    "updatedBy": "Updated By",
+    "completedAt": "Completed At",
+    "evidence": "Evidence",
+    "evidenceSubmittedAt": "Evidence Submitted",
+    "noEvidence": "No evidence uploaded",
+    "statusHistory": "Status History",
+    "noHistory": "No status changes recorded"
+  },
+  "evidence": {
+    "title": "Upload Evidence",
+    "description": "Upload supporting documents for this commitment",
+    "dropzone": "Drag & drop files here, or click to select",
+    "camera": "Take Photo",
+    "maxSize": "Maximum file size: 10MB",
+    "allowedTypes": "Allowed: PDF, JPG, PNG, DOCX",
+    "uploading": "Uploading...",
+    "uploadSuccess": "Evidence uploaded successfully",
+    "uploadFailed": "Failed to upload evidence",
+    "invalidType": "Invalid file type",
+    "fileTooLarge": "File exceeds 10MB limit"
+  },
+  "card": {
+    "dueIn": "Due in {{days}} days",
+    "dueToday": "Due today",
+    "overdueDays": "{{days}} days overdue",
+    "noTitle": "Untitled Commitment"
+  },
+  "list": {
+    "empty": "No commitments found",
+    "emptyFiltered": "No commitments match your filters",
+    "loadMore": "Load More",
+    "endOfList": "End of list",
+    "loading": "Loading commitments..."
+  },
+  "validation": {
+    "titleRequired": "Title is required",
+    "titleMaxLength": "Title must be less than 200 characters",
+    "descriptionRequired": "Description is required",
+    "dueDateRequired": "Due date is required",
+    "dueDateFuture": "Due date must be in the future",
+    "ownerRequired": "Owner is required"
+  },
+  "errors": {
+    "loadFailed": "Failed to load commitments",
+    "createFailed": "Failed to create commitment",
+    "updateFailed": "Failed to update commitment",
+    "deleteFailed": "Failed to delete commitment",
+    "statusUpdateFailed": "Failed to update status",
+    "uploadFailed": "Failed to upload evidence",
+    "invalidTransition": "Invalid status transition"
+  },
+  "success": {
+    "created": "Commitment created successfully",
+    "updated": "Commitment updated successfully",
+    "deleted": "Commitment deleted successfully",
+    "statusUpdated": "Status updated successfully"
+  },
+  "confirm": {
+    "delete": "Are you sure you want to delete this commitment?",
+    "cancel": "Are you sure you want to cancel this commitment?",
+    "cancelReason": "Cancellation Reason",
+    "cancelReasonPlaceholder": "Enter reason for cancellation"
+  },
+  "timeline": {
+    "created": "Commitment created",
+    "statusChanged": "Status changed from {{from}} to {{to}}",
+    "evidenceUploaded": "Evidence uploaded",
+    "updated": "Commitment updated",
+    "by": "by {{user}}"
+  }
+}

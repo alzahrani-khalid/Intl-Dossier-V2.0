@@ -1,0 +1,93 @@
+{
+  "page": {
+    "title": "Geographic Visualization",
+    "description": "Interactive map showing country relationships and engagement activity"
+  },
+  "tabs": {
+    "map": "Map View",
+    "list": "List View"
+  },
+  "summary": {
+    "totalCountries": "Countries",
+    "countriesWithEngagements": "with Engagements",
+    "engagements": "Engagements",
+    "relationships": "Relationships",
+    "regions": "Regions",
+    "active": "active",
+    "activeCountries": "Active"
+  },
+  "filters": {
+    "filters": "Filters",
+    "timeRange": {
+      "label": "Time Period",
+      "7d": "Last 7 Days",
+      "30d": "Last 30 Days",
+      "90d": "Last 90 Days",
+      "365d": "Last Year",
+      "custom": "Custom Range"
+    },
+    "regions": "Regions",
+    "allRegions": "All Regions",
+    "relationshipTypes": "Relationship Types",
+    "allTypes": "All Types",
+    "minIntensity": "Min. Intensity",
+    "showFlows": "Relationship Flows",
+    "showHeatmap": "Engagement Heatmap",
+    "showRegions": "Regional Groupings",
+    "reset": "Reset",
+    "selected": "selected"
+  },
+  "legend": {
+    "intensity": "Engagement Intensity",
+    "regions": "Regions",
+    "flows": "Relationship Flows"
+  },
+  "country": {
+    "totalEngagements": "Total Engagements",
+    "recentEngagements": "Recent (30d)",
+    "upcomingEngagements": "Upcoming",
+    "lastEngagement": "Last",
+    "nextEngagement": "Next"
+  },
+  "regions": {
+    "title": "Regional Breakdown",
+    "countries": "countries",
+    "engagements": "eng."
+  },
+  "list": {
+    "title": "Countries by Engagement",
+    "description": "Click on a country to view its dossier",
+    "country": "Country",
+    "region": "Region",
+    "engagements": "Engagements",
+    "recent": "Recent",
+    "upcoming": "Upcoming",
+    "intensity": "Intensity",
+    "loading": "Loading countries...",
+    "noData": "No countries found"
+  },
+  "intensity": {
+    "none": "No Activity",
+    "low": "Low Activity",
+    "medium": "Medium Activity",
+    "high": "High Activity",
+    "very_high": "Very High Activity"
+  },
+  "regionLabels": {
+    "africa": "Africa",
+    "americas": "Americas",
+    "asia": "Asia",
+    "europe": "Europe",
+    "oceania": "Oceania"
+  },
+  "viewMode": {
+    "relationships": "Relationships",
+    "engagements": "Engagements",
+    "combined": "Combined View",
+    "regional": "Regional Groups"
+  },
+  "error": {
+    "loadFailed": "Failed to load map data"
+  },
+  "close": "Close"
+}

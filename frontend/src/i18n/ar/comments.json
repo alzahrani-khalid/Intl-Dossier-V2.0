@@ -1,0 +1,71 @@
+{
+  "title": "التعليقات",
+  "loading": "جاري تحميل التعليقات...",
+  "loadingMore": "جاري تحميل المزيد من التعليقات...",
+  "loadMore": "تحميل المزيد من التعليقات",
+  "empty": "لا توجد تعليقات بعد. كن أول من يعلق!",
+  "error": "فشل في تحميل التعليقات",
+  "retry": "إعادة المحاولة",
+  "edited": "تم التعديل",
+  "confirmDelete": "هل أنت متأكد من حذف هذا التعليق؟",
+  "showReplies": "عرض {{count}} ردود",
+  "hideReplies": "إخفاء الردود",
+  "loadingReplies": "جاري تحميل الردود...",
+
+  "form": {
+    "placeholder": "اكتب تعليقاً... استخدم @ للإشارة إلى شخص ما",
+    "submit": "نشر",
+    "update": "تحديث",
+    "cancel": "إلغاء",
+    "submitting": "جاري النشر...",
+    "keyboardHint": "Ctrl+Enter للإرسال",
+    "markdownHint": "يدعم **غامق**، *مائل*، `كود`، و[روابط](url)",
+    "searchingUsers": "جاري البحث...",
+    "typeToSearch": "اكتب للبحث عن المستخدمين",
+    "noUsersFound": "لم يتم العثور على مستخدمين"
+  },
+
+  "visibility": {
+    "public": "عام",
+    "internal": "داخلي فقط",
+    "team": "الفريق فقط",
+    "private": "خاص"
+  },
+
+  "actions": {
+    "reply": "رد",
+    "edit": "تعديل",
+    "delete": "حذف"
+  },
+
+  "reactions": {
+    "add": "تفاعل",
+    "thumbsUp": "إعجاب",
+    "thumbsDown": "عدم إعجاب",
+    "heart": "قلب",
+    "celebration": "احتفال",
+    "smile": "ابتسامة",
+    "confused": "حيرة",
+    "rocket": "صاروخ",
+    "eyes": "عيون",
+    "checkmark": "علامة صح",
+    "question": "سؤال",
+    "idea": "فكرة",
+    "fire": "نار"
+  },
+
+  "messages": {
+    "created": "تم نشر التعليق بنجاح",
+    "createError": "فشل في نشر التعليق: {{error}}",
+    "updated": "تم تحديث التعليق",
+    "updateError": "فشل في تحديث التعليق: {{error}}",
+    "deleted": "تم حذف التعليق",
+    "deleteError": "فشل في حذف التعليق: {{error}}"
+  },
+
+  "notifications": {
+    "mention": "أشار إليك في تعليق",
+    "reply": "رد على تعليقك",
+    "reaction": "تفاعل مع تعليقك"
+  }
+}

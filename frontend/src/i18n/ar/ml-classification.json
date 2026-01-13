@@ -1,0 +1,137 @@
+{
+  "title": "تصنيف الذكاء الاصطناعي",
+  "description": "تصنيف التذاكر بالتعلم الآلي",
+
+  "predictions": {
+    "title": "التوقعات",
+    "type": "نوع الطلب",
+    "sensitivity": "الحساسية",
+    "urgency": "الاستعجال",
+    "priority": "الأولوية",
+    "unit": "الوحدة المقترحة",
+    "assignee": "المسؤول المقترح"
+  },
+
+  "confidence": {
+    "title": "مستوى الثقة",
+    "overall": "الثقة الإجمالية",
+    "very_high": "عالية جداً",
+    "high": "عالية",
+    "medium": "متوسطة",
+    "low": "منخفضة",
+    "very_low": "منخفضة جداً",
+    "percentage": "{{value}}%"
+  },
+
+  "explanation": {
+    "title": "الشرح",
+    "keywords_matched": "الكلمات المفتاحية المطابقة",
+    "similar_tickets": "التذاكر المشابهة",
+    "historical_pattern": "النمط التاريخي",
+    "matching_rules": "القواعد المطابقة",
+    "content_analysis": "تحليل المحتوى",
+    "deadline_detected": "تم اكتشاف موعد نهائي",
+    "no_keywords": "لم تتطابق كلمات مفتاحية محددة",
+    "based_on_history": "بناءً على {{count}} تذاكر مشابهة"
+  },
+
+  "model": {
+    "title": "معلومات النموذج",
+    "name": "اسم النموذج",
+    "version": "الإصدار",
+    "status": "الحالة",
+    "accuracy": "الدقة",
+    "training_samples": "عينات التدريب",
+    "activated_at": "تاريخ التفعيل",
+    "powered_by": "مدعوم بالتعلم الآلي",
+    "fallback_mode": "استخدام القواعد الاحتياطية"
+  },
+
+  "model_status": {
+    "training": "قيد التدريب",
+    "validating": "قيد التحقق",
+    "active": "نشط",
+    "deprecated": "قديم",
+    "failed": "فشل"
+  },
+
+  "feedback": {
+    "title": "تقديم ملاحظات",
+    "accept": "قبول الاقتراحات",
+    "reject": "رفض الاقتراحات",
+    "correct": "تصحيح وإرسال",
+    "notes": "ملاحظات",
+    "notes_placeholder": "ملاحظات اختيارية حول التصحيح...",
+    "submitted": "تم إرسال الملاحظات بنجاح",
+    "used_for_training": "سيتم استخدام ملاحظاتك لتحسين النموذج",
+    "thank_you": "شكراً على ملاحظاتك!"
+  },
+
+  "actions": {
+    "get_predictions": "الحصول على توقعات الذكاء الاصطناعي",
+    "refresh": "تحديث التوقعات",
+    "apply": "تطبيق التوقعات",
+    "view_details": "عرض التفاصيل",
+    "view_explanation": "عرض الشرح"
+  },
+
+  "performance": {
+    "title": "أداء النموذج",
+    "acceptance_rate": "معدل القبول",
+    "correction_rate": "معدل التصحيح",
+    "total_predictions": "إجمالي التوقعات",
+    "accuracy_by_field": "الدقة حسب الحقل",
+    "period": "آخر {{days}} يوم"
+  },
+
+  "rules": {
+    "title": "قواعد التخصيص",
+    "add_rule": "إضافة قاعدة",
+    "edit_rule": "تعديل القاعدة",
+    "delete_rule": "حذف القاعدة",
+    "rule_name": "اسم القاعدة",
+    "description": "الوصف",
+    "match_criteria": "معايير المطابقة",
+    "assignment_target": "هدف التخصيص",
+    "priority": "الأولوية",
+    "times_applied": "مرات التطبيق",
+    "success_rate": "معدل النجاح",
+    "active": "نشط",
+    "inactive": "غير نشط"
+  },
+
+  "patterns": {
+    "title": "أنماط الكلمات المفتاحية",
+    "add_pattern": "إضافة نمط",
+    "edit_pattern": "تعديل النمط",
+    "delete_pattern": "حذف النمط",
+    "pattern": "النمط",
+    "pattern_type": "النوع",
+    "indicates": "يشير إلى",
+    "weight": "الوزن",
+    "match_count": "عدد المطابقات",
+    "accuracy": "الدقة",
+    "keyword": "كلمة مفتاحية",
+    "regex": "تعبير نمطي",
+    "phrase": "عبارة"
+  },
+
+  "cache": {
+    "cached": "نتيجة مخزنة مؤقتاً",
+    "fresh": "توقع جديد",
+    "cached_at": "مخزن في {{time}}"
+  },
+
+  "processing": {
+    "analyzing": "جاري تحليل التذكرة...",
+    "generating": "جاري إنشاء التوقعات...",
+    "time": "وقت المعالجة: {{ms}} مللي ثانية"
+  },
+
+  "errors": {
+    "no_model": "لا يوجد نموذج تصنيف نشط متاح",
+    "prediction_failed": "فشل في إنشاء التوقعات",
+    "feedback_failed": "فشل في إرسال الملاحظات",
+    "load_failed": "فشل في تحميل بيانات التصنيف"
+  }
+}

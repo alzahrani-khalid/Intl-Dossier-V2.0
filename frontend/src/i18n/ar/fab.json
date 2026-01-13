@@ -1,0 +1,86 @@
+{
+  "actions": "إجراءات",
+  "closeSpeedDial": "إغلاق قائمة الإجراءات السريعة",
+  "openSpeedDial": "فتح قائمة الإجراءات السريعة",
+  "longPressHint": "اضغط مطولاً لمزيد من الإجراءات",
+  "primaryAction": "الإجراء الرئيسي",
+  "contextActions": {
+    "create": "إنشاء",
+    "edit": "تعديل",
+    "comment": "إضافة تعليق",
+    "addNew": "إضافة جديد",
+    "search": "بحث",
+    "filter": "تصفية"
+  },
+  "speedDialActions": {
+    "newDossier": "ملف جديد",
+    "newEngagement": "مشاركة جديدة",
+    "newBrief": "موجز جديد",
+    "newEvent": "حدث جديد",
+    "newTask": "مهمة جديدة",
+    "newCommitment": "التزام جديد",
+    "scheduleEvent": "جدولة حدث",
+    "uploadDocument": "رفع مستند",
+    "addContact": "إضافة جهة اتصال",
+    "addNote": "إضافة ملاحظة",
+    "generateReport": "إنشاء تقرير",
+    "exportData": "تصدير البيانات"
+  },
+  "contexts": {
+    "dossierList": {
+      "primary": "إنشاء ملف",
+      "description": "إنشاء ملف جديد"
+    },
+    "dossierDetail": {
+      "primary": "تعديل الملف",
+      "description": "تعديل هذا الملف"
+    },
+    "engagementList": {
+      "primary": "إنشاء مشاركة",
+      "description": "تسجيل مشاركة جديدة"
+    },
+    "engagementDetail": {
+      "primary": "تسجيل ما بعد الإجراء",
+      "description": "تسجيل ما بعد الإجراء لهذه المشاركة"
+    },
+    "briefDetail": {
+      "primary": "إضافة تعليق",
+      "description": "إضافة تعليق على هذا الموجز"
+    },
+    "calendar": {
+      "primary": "حدث جديد",
+      "description": "جدولة حدث جديد"
+    },
+    "kanban": {
+      "primary": "مهمة جديدة",
+      "description": "إنشاء مهمة جديدة"
+    },
+    "search": {
+      "primary": "بحث متقدم",
+      "description": "فتح خيارات البحث المتقدم"
+    },
+    "dashboard": {
+      "primary": "إضافة سريعة",
+      "description": "إضافة محتوى جديد بسرعة"
+    },
+    "persons": {
+      "primary": "إضافة شخص",
+      "description": "إضافة شخص جديد"
+    },
+    "forums": {
+      "primary": "إضافة منتدى",
+      "description": "إنشاء منتدى جديد"
+    },
+    "settings": {
+      "primary": "حفظ التغييرات",
+      "description": "حفظ إعداداتك"
+    }
+  },
+  "accessibility": {
+    "fabButton": "زر الإجراء العائم",
+    "speedDialMenu": "قائمة الإجراءات السريعة",
+    "speedDialItem": "إجراء سريع: {{action}}",
+    "expandedState": "القائمة موسعة، {{count}} إجراءات متاحة",
+    "collapsedState": "القائمة مطوية"
+  }
+}

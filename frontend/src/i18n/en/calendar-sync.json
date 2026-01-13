@@ -1,0 +1,104 @@
+{
+  "title": "Calendar Sync",
+  "description": "Connect and sync your external calendars",
+  "addConnection": "Add Calendar",
+  "noConnections": "No calendars connected yet",
+  "connectFirst": "Connect your first calendar",
+  "noAccountLinked": "No account linked",
+
+  "status": {
+    "active": "Active",
+    "pending": "Pending",
+    "paused": "Paused",
+    "error": "Error",
+    "disconnected": "Disconnected"
+  },
+
+  "syncNow": "Sync Now",
+  "syncing": "Syncing...",
+  "lastSync": "Last sync",
+  "disconnect": "Disconnect",
+  "cancel": "Cancel",
+  "add": "Add",
+  "adding": "Adding...",
+
+  "disconnectConfirm": {
+    "title": "Disconnect Calendar",
+    "description": "Are you sure you want to disconnect {{provider}}? This will stop syncing events and remove all sync mappings."
+  },
+
+  "connect": {
+    "title": "Connect Calendar",
+    "description": "Choose a calendar service to connect",
+    "google_calendar": "Sync with Google Calendar",
+    "outlook": "Sync with Microsoft Outlook",
+    "exchange": "Sync with Microsoft Exchange"
+  },
+
+  "settings": {
+    "syncEnabled": "Sync Enabled",
+    "syncDirection": "Sync Direction",
+    "conflictStrategy": "Conflict Resolution",
+    "syncPastDays": "Sync Past Days",
+    "syncFutureDays": "Sync Future Days"
+  },
+
+  "calendars": {
+    "title": "Calendars",
+    "primary": "Primary"
+  },
+
+  "sections": {
+    "connected": "Connected Calendars",
+    "icalFeeds": "iCal Feed Subscriptions",
+    "conflicts": "Sync Conflicts"
+  },
+
+  "ical": {
+    "add": "Add Feed",
+    "addTitle": "Add iCal Feed",
+    "addDescription": "Subscribe to an iCal feed to view events from external sources",
+    "feedUrl": "Feed URL",
+    "feedName": "Feed Name",
+    "feedNamePlaceholder": "e.g., Public Holidays",
+    "color": "Calendar Color",
+    "events": "events",
+    "noFeeds": "No iCal feeds subscribed",
+    "addFirst": "Subscribe to your first feed"
+  },
+
+  "conflicts": {
+    "detected": "Sync Conflict Detected",
+    "pending": "{{count}} conflict(s) need resolution",
+    "pending_one": "1 conflict needs resolution",
+    "pending_other": "{{count}} conflicts need resolution",
+    "resolvePrompt": "Please review and resolve the conflicts to continue syncing",
+    "internal": "Internal Event",
+    "external": "External Event",
+    "keepInternal": "Keep Internal",
+    "keepExternal": "Keep External",
+    "ignore": "Ignore"
+  },
+
+  "direction": {
+    "import_only": "Import Only",
+    "export_only": "Export Only",
+    "two_way": "Two-Way Sync"
+  },
+
+  "strategy": {
+    "internal_wins": "Internal Wins",
+    "external_wins": "External Wins",
+    "newest_wins": "Newest Wins",
+    "manual": "Manual Resolution"
+  },
+
+  "oauth": {
+    "connecting": "Connecting Calendar",
+    "pleaseWait": "Please wait while we connect your calendar...",
+    "success": "Calendar Connected!",
+    "redirecting": "Redirecting to settings...",
+    "error": "Connection Failed",
+    "backToSettings": "Back to Settings"
+  }
+}

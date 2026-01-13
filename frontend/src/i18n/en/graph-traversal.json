@@ -1,0 +1,134 @@
+{
+  "title": "Graph Traversal",
+  "description": "Explore relationships between entities",
+
+  "operations": {
+    "traverse": "Explore Network",
+    "shortestPath": "Find Shortest Path",
+    "allPaths": "Find All Paths",
+    "connectedEntities": "Connected Entities",
+    "relationshipChain": "Relationship Chain",
+    "commonConnections": "Common Connections",
+    "statistics": "Graph Statistics"
+  },
+
+  "params": {
+    "startDossier": "Starting Entity",
+    "targetDossier": "Target Entity",
+    "dossierA": "First Entity",
+    "dossierB": "Second Entity",
+    "maxDegrees": "Maximum Degrees",
+    "maxDepth": "Maximum Depth",
+    "maxPaths": "Maximum Paths",
+    "maxEntities": "Maximum Entities",
+    "relationshipTypes": "Relationship Types",
+    "relationshipChain": "Relationship Chain",
+    "includeInactive": "Include Inactive",
+    "dossierTypeFilter": "Entity Types",
+    "bidirectional": "Bidirectional"
+  },
+
+  "labels": {
+    "degrees": "degrees of separation",
+    "hops": "hops",
+    "paths": "paths",
+    "entities": "entities",
+    "connections": "connections",
+    "nodes": "nodes",
+    "edges": "edges",
+    "density": "density",
+    "avgDegree": "average degree",
+    "maxDegree": "maximum degree",
+    "isolated": "isolated nodes",
+    "queryTime": "query time",
+    "ms": "ms"
+  },
+
+  "directions": {
+    "outgoing": "Outgoing",
+    "incoming": "Incoming",
+    "bidirectional": "Bidirectional"
+  },
+
+  "results": {
+    "pathFound": "Path found",
+    "pathNotFound": "No path exists between these entities",
+    "pathLength": "Path length: {{length}} hops",
+    "pathsFound": "{{count}} path(s) found",
+    "entitiesFound": "{{count}} connected entities found",
+    "chainsFound": "{{count}} matching chain(s) found",
+    "connectionsFound": "{{count}} common connection(s) found",
+    "noResults": "No results found",
+    "emptyGraph": "No relationships to display"
+  },
+
+  "actions": {
+    "search": "Search",
+    "explore": "Explore",
+    "findPath": "Find Path",
+    "findAllPaths": "Find All Paths",
+    "findConnections": "Find Connections",
+    "analyze": "Analyze",
+    "reset": "Reset",
+    "export": "Export",
+    "viewDetails": "View Details",
+    "highlightPath": "Highlight Path",
+    "clearHighlight": "Clear Highlight"
+  },
+
+  "tooltips": {
+    "maxDegrees": "Maximum number of relationship hops to explore (1-6)",
+    "maxDepth": "Maximum path length to search for",
+    "maxPaths": "Limit on number of paths to return",
+    "maxEntities": "Limit on number of entities to return",
+    "includeInactive": "Include historical and terminated relationships",
+    "bidirectional": "Follow relationships in both directions"
+  },
+
+  "statistics": {
+    "title": "Network Statistics",
+    "totalNodes": "Total Nodes",
+    "totalEdges": "Total Edges",
+    "graphDensity": "Graph Density",
+    "avgDegree": "Average Degree",
+    "maxDegree": "Maximum Degree",
+    "isolatedNodes": "Isolated Nodes",
+    "typeDistribution": "Type Distribution"
+  },
+
+  "errors": {
+    "traverseFailed": "Failed to traverse relationship graph",
+    "shortestPathFailed": "Failed to find shortest path",
+    "allPathsFailed": "Failed to find paths between entities",
+    "connectedEntitiesFailed": "Failed to find connected entities",
+    "relationshipChainFailed": "Failed to find relationship chains",
+    "commonConnectionsFailed": "Failed to find common connections",
+    "statisticsFailed": "Failed to load graph statistics",
+    "invalidParams": "Invalid parameters provided",
+    "maxDegreesExceeded": "Maximum degrees exceeded (limit: 6)",
+    "unauthorized": "You don't have permission to view this data"
+  },
+
+  "success": {
+    "pathFound": "Path found with {{length}} hops",
+    "pathsFound": "Found {{count}} path(s)"
+  },
+
+  "info": {
+    "noPathFound": "No path found between these entities",
+    "searching": "Searching...",
+    "loading": "Loading graph data..."
+  },
+
+  "visualization": {
+    "zoomIn": "Zoom In",
+    "zoomOut": "Zoom Out",
+    "fitView": "Fit View",
+    "layout": {
+      "force": "Force Layout",
+      "circular": "Circular Layout",
+      "hierarchical": "Hierarchical Layout",
+      "radial": "Radial Layout"
+    }
+  }
+}

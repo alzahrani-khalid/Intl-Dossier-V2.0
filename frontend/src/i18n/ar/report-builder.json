@@ -1,0 +1,324 @@
+{
+  "title": "منشئ التقارير",
+  "subtitle": "إنشاء تقارير مخصصة بالسحب والإفلات",
+  "description": "قم ببناء تقارير مخصصة عن طريق تحديد الكيانات وتطبيق الفلاتر واختيار التصورات",
+
+  "tabs": {
+    "builder": "المنشئ",
+    "preview": "معاينة",
+    "saved": "التقارير المحفوظة"
+  },
+
+  "entities": {
+    "title": "مصادر البيانات",
+    "description": "حدد الكيانات لتضمينها في تقريرك",
+    "dossiers": "الملفات",
+    "engagements": "الارتباطات",
+    "commitments": "الالتزامات",
+    "work_items": "عناصر العمل",
+    "calendar_entries": "أحداث التقويم",
+    "persons": "الأشخاص",
+    "organizations": "المنظمات",
+    "forums": "المنتديات",
+    "documents": "المستندات",
+    "relationships": "العلاقات"
+  },
+
+  "fields": {
+    "title": "الحقول المتاحة",
+    "description": "اسحب الحقول إلى الأعمدة أو الفلاتر أو التجميعات",
+    "search": "البحث في الحقول...",
+    "noFields": "حدد كيانًا لرؤية الحقول المتاحة",
+    "dragHint": "اسحب للإضافة"
+  },
+
+  "columns": {
+    "title": "أعمدة التقرير",
+    "description": "قم بتكوين الأعمدة التي سيتم عرضها",
+    "empty": "اسحب الحقول هنا لإضافة أعمدة",
+    "visible": "مرئي",
+    "hidden": "مخفي",
+    "reorder": "اسحب لإعادة الترتيب"
+  },
+
+  "filters": {
+    "title": "الفلاتر",
+    "description": "فلترة بياناتك",
+    "empty": "لم يتم تطبيق فلاتر",
+    "addFilter": "إضافة فلتر",
+    "addGroup": "إضافة مجموعة",
+    "logic": {
+      "and": "و",
+      "or": "أو"
+    },
+    "operators": {
+      "equals": "يساوي",
+      "not_equals": "لا يساوي",
+      "contains": "يحتوي على",
+      "not_contains": "لا يحتوي على",
+      "starts_with": "يبدأ بـ",
+      "ends_with": "ينتهي بـ",
+      "greater_than": "أكبر من",
+      "less_than": "أصغر من",
+      "greater_than_or_equal": "أكبر من أو يساوي",
+      "less_than_or_equal": "أصغر من أو يساوي",
+      "between": "بين",
+      "in": "في القائمة",
+      "not_in": "ليس في القائمة",
+      "is_null": "فارغ",
+      "is_not_null": "ليس فارغ"
+    },
+    "value": "القيمة",
+    "valueEnd": "القيمة النهائية",
+    "remove": "إزالة الفلتر"
+  },
+
+  "groupings": {
+    "title": "التجميع حسب",
+    "description": "تجميع النتائج حسب قيم الحقول",
+    "empty": "اسحب الحقول هنا لتجميع البيانات",
+    "remove": "إزالة التجميع"
+  },
+
+  "aggregations": {
+    "title": "التجميعات",
+    "description": "حساب القيم الملخصة",
+    "empty": "لم يتم تكوين تجميعات",
+    "addAggregation": "إضافة تجميع",
+    "functions": {
+      "count": "العدد",
+      "count_distinct": "العدد المميز",
+      "sum": "المجموع",
+      "avg": "المتوسط",
+      "min": "الحد الأدنى",
+      "max": "الحد الأقصى",
+      "first": "الأول",
+      "last": "الأخير"
+    },
+    "remove": "إزالة التجميع"
+  },
+
+  "sorting": {
+    "title": "الترتيب حسب",
+    "description": "ترتيب نتائجك",
+    "empty": "لم يتم تكوين ترتيب",
+    "addSort": "إضافة ترتيب",
+    "direction": {
+      "asc": "تصاعدي",
+      "desc": "تنازلي"
+    },
+    "remove": "إزالة الترتيب"
+  },
+
+  "visualization": {
+    "title": "التصور",
+    "description": "اختر كيفية عرض بياناتك",
+    "types": {
+      "table": "جدول",
+      "bar_chart": "رسم بياني شريطي",
+      "line_chart": "رسم بياني خطي",
+      "pie_chart": "رسم بياني دائري",
+      "area_chart": "رسم بياني مساحي",
+      "donut_chart": "رسم بياني حلقي",
+      "scatter_plot": "رسم بياني مبعثر",
+      "heatmap": "خريطة حرارية",
+      "card": "بطاقة",
+      "kpi": "مؤشر أداء رئيسي"
+    },
+    "settings": {
+      "title": "عنوان الرسم البياني",
+      "xAxis": "حقل المحور السيني",
+      "yAxis": "حقل المحور الصادي",
+      "colorField": "حقل اللون",
+      "sizeField": "حقل الحجم",
+      "showLegend": "إظهار وسيلة الإيضاح",
+      "showLabels": "إظهار التسميات",
+      "showGrid": "إظهار الشبكة"
+    }
+  },
+
+  "preview": {
+    "title": "معاينة التقرير",
+    "description": "معاينة نتائج تقريرك",
+    "refresh": "تحديث المعاينة",
+    "loading": "جاري تحميل المعاينة...",
+    "noData": "لا توجد بيانات للعرض",
+    "error": "خطأ في تحميل المعاينة",
+    "rowCount": "{{count}} صف",
+    "executionTime": "تم التنفيذ في {{time}} مللي ثانية",
+    "limitWarning": "عرض أول {{limit}} صف"
+  },
+
+  "save": {
+    "title": "حفظ التقرير",
+    "description": "احفظ هذا التقرير للاستخدام المستقبلي",
+    "name": "اسم التقرير",
+    "namePlaceholder": "أدخل اسم التقرير",
+    "nameAr": "اسم التقرير (عربي)",
+    "nameArPlaceholder": "أدخل اسم التقرير بالعربية",
+    "descriptionLabel": "الوصف",
+    "descriptionPlaceholder": "أدخل وصف التقرير",
+    "descriptionAr": "الوصف (عربي)",
+    "descriptionArPlaceholder": "أدخل الوصف بالعربية",
+    "accessLevel": "مستوى الوصول",
+    "accessLevels": {
+      "private": "خاص - أنت فقط",
+      "team": "الفريق - أعضاء فريقك",
+      "organization": "المنظمة - جميع الأعضاء",
+      "public": "عام - الجميع"
+    },
+    "tags": "الوسوم",
+    "tagsPlaceholder": "إضافة وسوم...",
+    "saveButton": "حفظ التقرير",
+    "updateButton": "تحديث التقرير",
+    "saving": "جاري الحفظ...",
+    "success": "تم حفظ التقرير بنجاح",
+    "error": "فشل في حفظ التقرير"
+  },
+
+  "share": {
+    "title": "مشاركة التقرير",
+    "description": "شارك هذا التقرير مع الآخرين",
+    "shareWith": "المشاركة مع المستخدمين",
+    "searchUsers": "البحث عن المستخدمين...",
+    "copyLink": "نسخ الرابط",
+    "linkCopied": "تم نسخ الرابط إلى الحافظة",
+    "permissions": {
+      "view": "يمكنه العرض",
+      "edit": "يمكنه التحرير"
+    }
+  },
+
+  "schedule": {
+    "title": "جدولة التقرير",
+    "description": "جدولة إنشاء التقرير التلقائي",
+    "name": "اسم الجدول",
+    "namePlaceholder": "أدخل اسم الجدول",
+    "frequency": "التكرار",
+    "frequencies": {
+      "once": "مرة واحدة",
+      "daily": "يومي",
+      "weekly": "أسبوعي",
+      "monthly": "شهري",
+      "quarterly": "ربع سنوي"
+    },
+    "dayOfWeek": "يوم الأسبوع",
+    "dayOfMonth": "يوم الشهر",
+    "time": "الوقت",
+    "timezone": "المنطقة الزمنية",
+    "exportFormat": "تنسيق التصدير",
+    "formats": {
+      "pdf": "PDF",
+      "excel": "Excel",
+      "csv": "CSV",
+      "json": "JSON"
+    },
+    "recipients": "المستلمون",
+    "recipientsPlaceholder": "أدخل عناوين البريد الإلكتروني",
+    "addRecipient": "إضافة مستلم",
+    "isActive": "نشط",
+    "nextRun": "التشغيل التالي",
+    "lastRun": "التشغيل الأخير",
+    "status": {
+      "success": "نجح",
+      "failed": "فشل",
+      "pending": "قيد الانتظار"
+    },
+    "createButton": "إنشاء الجدول",
+    "updateButton": "تحديث الجدول",
+    "deleteButton": "حذف الجدول",
+    "success": "تم إنشاء الجدول بنجاح",
+    "error": "فشل في إنشاء الجدول"
+  },
+
+  "savedReports": {
+    "title": "التقارير المحفوظة",
+    "description": "عرض وإدارة تقاريرك المحفوظة",
+    "search": "البحث في التقارير...",
+    "empty": "لا توجد تقارير محفوظة",
+    "emptyDescription": "قم بإنشاء وحفظ تقرير لرؤيته هنا",
+    "filters": {
+      "all": "جميع التقارير",
+      "mine": "تقاريري",
+      "shared": "المشاركة معي",
+      "favorites": "المفضلة"
+    },
+    "sortBy": {
+      "name": "الاسم",
+      "createdAt": "تاريخ الإنشاء",
+      "updatedAt": "آخر تعديل"
+    },
+    "actions": {
+      "open": "فتح",
+      "edit": "تحرير",
+      "duplicate": "نسخ",
+      "share": "مشاركة",
+      "schedule": "جدولة",
+      "export": "تصدير",
+      "delete": "حذف",
+      "favorite": "إضافة إلى المفضلة",
+      "unfavorite": "إزالة من المفضلة"
+    },
+    "confirmDelete": {
+      "title": "حذف التقرير",
+      "description": "هل أنت متأكد من رغبتك في حذف هذا التقرير؟ لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "حذف",
+      "cancel": "إلغاء"
+    }
+  },
+
+  "export": {
+    "title": "تصدير التقرير",
+    "description": "تصدير بيانات تقريرك",
+    "format": "تنسيق التصدير",
+    "includeCharts": "تضمين الرسوم البيانية",
+    "exportButton": "تصدير",
+    "exporting": "جاري التصدير...",
+    "success": "تم تصدير التقرير بنجاح",
+    "error": "فشل في تصدير التقرير"
+  },
+
+  "actions": {
+    "new": "تقرير جديد",
+    "save": "حفظ",
+    "saveAs": "حفظ باسم",
+    "share": "مشاركة",
+    "schedule": "جدولة",
+    "export": "تصدير",
+    "preview": "معاينة",
+    "run": "تشغيل التقرير",
+    "reset": "إعادة تعيين",
+    "clear": "مسح الكل",
+    "undo": "تراجع",
+    "redo": "إعادة"
+  },
+
+  "errors": {
+    "noEntity": "يرجى تحديد مصدر بيانات واحد على الأقل",
+    "noColumns": "يرجى إضافة عمود واحد على الأقل",
+    "invalidFilter": "تكوين الفلتر غير صالح",
+    "loadFailed": "فشل في تحميل التقرير",
+    "saveFailed": "فشل في حفظ التقرير",
+    "executeFailed": "فشل في تنفيذ التقرير",
+    "exportFailed": "فشل في تصدير التقرير"
+  },
+
+  "tooltips": {
+    "addColumn": "إضافة هذا الحقل كعمود",
+    "addFilter": "التصفية حسب هذا الحقل",
+    "addGrouping": "التجميع حسب هذا الحقل",
+    "removeItem": "إزالة هذا العنصر",
+    "dragToReorder": "اسحب لإعادة الترتيب"
+  },
+
+  "fieldTypes": {
+    "string": "نص",
+    "number": "رقم",
+    "date": "تاريخ",
+    "datetime": "تاريخ ووقت",
+    "boolean": "نعم/لا",
+    "enum": "فئة",
+    "uuid": "معرف",
+    "json": "كائن"
+  }
+}

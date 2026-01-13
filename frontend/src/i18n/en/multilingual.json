@@ -1,0 +1,120 @@
+{
+  "multiLanguageContent": "Multi-Language Content",
+  "multiLanguageContentDescription": "Manage content in multiple languages with translation support",
+
+  "addLanguage": "Add Language",
+  "removeLanguage": "Remove Language",
+  "removeLanguageConfirm": "Are you sure you want to remove {{language}}? All content in this language will be deleted.",
+  "selectLanguage": "Select a language",
+  "primaryLanguage": "Primary Language",
+  "setAsPrimary": "Set as Primary Language",
+
+  "translate": "Translate",
+  "translateFieldTooltip": "Auto-translate this field from the primary language",
+  "translateAllMissing": "Translate All Missing Fields",
+  "translating": "Translating...",
+  "translationComplete": "Translation complete",
+  "translationFailed": "Translation failed",
+
+  "saveChanges": "Save Changes",
+  "saving": "Saving...",
+  "saved": "Saved",
+  "unsavedChanges": "You have unsaved changes",
+  "cancel": "Cancel",
+  "remove": "Remove",
+
+  "completeness": "Completeness",
+  "complete": "Complete",
+  "incomplete": "Incomplete",
+  "missingFields": "{{count}} missing fields",
+
+  "contentLanguage": "Content Language",
+  "availableLanguages": "Available Languages",
+  "addNewLanguage": "Add New Language",
+
+  "machineTranslated": "Machine Translated",
+  "humanReviewed": "Human Reviewed",
+  "pendingReview": "Pending Review",
+  "approved": "Approved",
+  "draft": "Draft",
+  "published": "Published",
+
+  "confidence": {
+    "high": "High confidence",
+    "medium": "Medium confidence",
+    "low": "Low confidence",
+    "unknown": "Unknown confidence"
+  },
+
+  "languages": {
+    "ar": "Arabic",
+    "en": "English",
+    "fr": "French",
+    "es": "Spanish",
+    "zh": "Chinese",
+    "ru": "Russian",
+    "pt": "Portuguese",
+    "de": "German",
+    "it": "Italian",
+    "ja": "Japanese",
+    "ko": "Korean",
+    "tr": "Turkish",
+    "fa": "Persian",
+    "ur": "Urdu",
+    "hi": "Hindi"
+  },
+
+  "fields": {
+    "name": "Name",
+    "description": "Description",
+    "summary": "Summary",
+    "content": "Content",
+    "title": "Title",
+    "notes": "Notes",
+    "objectives": "Objectives",
+    "outcomes": "Outcomes",
+    "biography": "Biography",
+    "mandate": "Mandate",
+    "capital": "Capital",
+    "address": "Address",
+    "location": "Location",
+    "venue": "Venue"
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load translations",
+    "saveFailed": "Failed to save translation",
+    "translateFailed": "Translation failed. Please try again.",
+    "noSourceContent": "No source content available for translation",
+    "unauthorized": "You are not authorized to edit this content",
+    "networkError": "Network error. Please check your connection."
+  },
+
+  "hints": {
+    "primaryLanguage": "The primary language is used as the source for automatic translations",
+    "machineTranslation": "Machine translations should be reviewed before publishing",
+    "rtlLanguage": "This language uses right-to-left text direction"
+  },
+
+  "dossierFields": {
+    "name": "Dossier Name",
+    "description": "Description",
+    "summary": "Summary"
+  },
+
+  "briefFields": {
+    "title": "Brief Title",
+    "summary": "Executive Summary",
+    "content": "Brief Content"
+  },
+
+  "engagementFields": {
+    "name": "Engagement Name",
+    "description": "Description",
+    "objectives": "Objectives",
+    "outcomes": "Outcomes",
+    "location": "Location",
+    "venue": "Venue",
+    "notes": "Notes"
+  }
+}

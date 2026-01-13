@@ -1,0 +1,14 @@
+{
+  "id": "ai-summary-generation",
+  "category": "Intelligence",
+  "title": "AI Entity Summary Generation",
+  "description": "Automatically generate executive summaries for any entity using AI. Summarizes recent activity, key relationships, open commitments, and strategic importance. Supports customizable summary length and focus.",
+  "status": "completed",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.672Z",
+  "updatedAt": "2026-01-10T18:07:35.916Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T17:54:13.340Z"
+}

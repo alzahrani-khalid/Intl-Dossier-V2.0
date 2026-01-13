@@ -1,0 +1,124 @@
+{
+  "title": "الموجزات",
+  "description": "الموجزات المُنشأة بالذكاء الاصطناعي والمرتبطة بهذا الارتباط",
+
+  "tabs": {
+    "briefs": "الموجزات",
+    "context": "السياق"
+  },
+
+  "sections": {
+    "linkedBriefs": "الموجزات المرتبطة",
+    "generateNew": "إنشاء موجز جديد",
+    "context": "سياق الموجز",
+    "participants": "المشاركون الرئيسيون",
+    "positions": "المواقف ذات الصلة",
+    "commitments": "الالتزامات النشطة",
+    "recentInteractions": "التفاعلات الأخيرة",
+    "agenda": "بنود الأجندة"
+  },
+
+  "labels": {
+    "briefType": "نوع الموجز",
+    "status": "الحالة",
+    "createdAt": "تاريخ الإنشاء",
+    "completedAt": "تاريخ الاكتمال",
+    "source": "المصدر",
+    "hasCitations": "يحتوي على اقتباسات",
+    "customPrompt": "تعليمات مخصصة",
+    "language": "اللغة",
+    "dateRange": "النطاق الزمني"
+  },
+
+  "briefTypes": {
+    "legacy": "موجز كلاسيكي",
+    "ai": "مُنشأ بالذكاء الاصطناعي"
+  },
+
+  "statuses": {
+    "completed": "مكتمل",
+    "generating": "قيد الإنشاء",
+    "failed": "فشل"
+  },
+
+  "sources": {
+    "ai": "مُنشأ بالذكاء الاصطناعي",
+    "manual": "يدوي"
+  },
+
+  "actions": {
+    "generate": "إنشاء موجز",
+    "generateWithAI": "إنشاء بالذكاء الاصطناعي",
+    "link": "ربط موجز",
+    "unlink": "إلغاء الربط",
+    "view": "عرض الموجز",
+    "download": "تحميل",
+    "refresh": "تحديث السياق",
+    "cancel": "إلغاء"
+  },
+
+  "generateDialog": {
+    "title": "إنشاء موجز بالذكاء الاصطناعي",
+    "description": "إنشاء موجز شامل قبل الاجتماع بمساعدة الذكاء الاصطناعي",
+    "customPromptPlaceholder": "أضف أي تعليمات محددة للذكاء الاصطناعي...",
+    "languageEn": "الإنجليزية",
+    "languageAr": "العربية",
+    "startDate": "تاريخ البدء",
+    "endDate": "تاريخ الانتهاء",
+    "generating": "جاري إنشاء الموجز...",
+    "contextInfo": "سيستخدم الذكاء الاصطناعي {{participantCount}} مشارك، {{positionCount}} موقف، و{{commitmentCount}} التزام نشط"
+  },
+
+  "linkDialog": {
+    "title": "ربط موجز موجود",
+    "description": "ربط موجز موجود بهذا الارتباط",
+    "searchPlaceholder": "البحث عن الموجزات...",
+    "noBriefs": "لا توجد موجزات متاحة للربط"
+  },
+
+  "empty": {
+    "title": "لا توجد موجزات بعد",
+    "description": "قم بإنشاء موجز بالذكاء الاصطناعي أو ربط موجز موجود بهذا الارتباط",
+    "contextTitle": "سياق الموجز",
+    "contextDescription": "سيتم استخدام هذا السياق لإنشاء موجزات شاملة"
+  },
+
+  "context": {
+    "engagement": "تفاصيل الارتباط",
+    "hostInfo": "معلومات المضيف",
+    "participantCount": "{{count}} مشارك",
+    "participantCount_plural": "{{count}} مشاركين",
+    "positionCount": "{{count}} موقف ذو صلة",
+    "positionCount_plural": "{{count}} مواقف ذات صلة",
+    "commitmentCount": "{{count}} التزام نشط",
+    "commitmentCount_plural": "{{count}} التزامات نشطة",
+    "interactionCount": "{{count}} تفاعل أخير",
+    "interactionCount_plural": "{{count}} تفاعلات أخيرة",
+    "previousBriefs": "{{count}} موجز سابق تم إنشاؤه",
+    "previousBriefs_plural": "{{count}} موجزات سابقة تم إنشاؤها"
+  },
+
+  "messages": {
+    "generated": "تم إنشاء الموجز بنجاح",
+    "generateError": "فشل في إنشاء الموجز: {{error}}",
+    "linked": "تم ربط الموجز بنجاح",
+    "linkError": "فشل في ربط الموجز: {{error}}",
+    "unlinked": "تم إلغاء ربط الموجز بنجاح",
+    "unlinkError": "فشل في إلغاء ربط الموجز: {{error}}",
+    "aiUnavailable": "خدمة الذكاء الاصطناعي غير متاحة. استخدم القالب لإنشاء موجز يدوي."
+  },
+
+  "tooltips": {
+    "generate": "إنشاء موجز جديد بالذكاء الاصطناعي لهذا الارتباط",
+    "link": "ربط موجز موجود من مصدر آخر",
+    "unlink": "إزالة الرابط بين هذا الموجز والارتباط",
+    "citations": "يتضمن هذا الموجز اقتباسات من المصادر"
+  },
+
+  "card": {
+    "viewDetails": "عرض التفاصيل",
+    "generatedBy": "تم إنشاؤه بواسطة {{source}}",
+    "citations": "{{count}} اقتباس",
+    "citations_plural": "{{count}} اقتباسات"
+  }
+}

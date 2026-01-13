@@ -1,0 +1,23 @@
+{
+  "title": "Relationship Graph",
+  "description": "Explore connections between entities",
+  "noDossier": "No dossier selected. Please select a dossier to view its relationship graph.",
+  "maxDegrees": "Degrees of Separation",
+  "degree": "degree",
+  "degrees": "degrees",
+  "relationshipType": "Relationship Type",
+  "allTypes": "All Types",
+  "refresh": "Refresh",
+  "nodes": "Entities",
+  "edges": "Relationships",
+  "maxDegree": "Max Degree",
+  "queryTime": "Query Time",
+  "error": "Failed to load graph data",
+  "graphView": "Graph View",
+  "listView": "List View",
+  "legend": "Legend",
+  "country": "Country",
+  "organization": "Organization",
+  "individual": "Individual",
+  "forum": "Forum"
+}

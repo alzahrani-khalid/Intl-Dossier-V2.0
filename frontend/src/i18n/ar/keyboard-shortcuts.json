@@ -1,0 +1,82 @@
+{
+  "title": "اختصارات لوحة المفاتيح",
+  "searchPlaceholder": "اكتب أمرًا أو ابحث...",
+  "noResults": "لم يتم العثور على نتائج.",
+  "tryDifferentSearch": "جرب مصطلح بحث مختلف.",
+
+  "categories": {
+    "navigation": "التنقل",
+    "actions": "الإجراءات",
+    "editing": "التحرير",
+    "view": "العرض",
+    "help": "المساعدة"
+  },
+
+  "quickActions": {
+    "title": "إجراءات سريعة",
+    "dashboard": "الانتقال إلى لوحة المعلومات",
+    "myWork": "الانتقال إلى أعمالي",
+    "dossiers": "الانتقال إلى الملفات",
+    "calendar": "الانتقال إلى التقويم",
+    "tasks": "الانتقال إلى المهام",
+    "analytics": "الانتقال إلى التحليلات",
+    "settings": "الانتقال إلى الإعدادات"
+  },
+
+  "shortcuts": {
+    "goToDashboard": "الانتقال إلى لوحة المعلومات",
+    "goToMyWork": "الانتقال إلى أعمالي",
+    "goToDossiers": "الانتقال إلى الملفات",
+    "goToCalendar": "الانتقال إلى التقويم",
+    "goToTasks": "الانتقال إلى المهام",
+    "goToAnalytics": "الانتقال إلى التحليلات",
+    "goToSettings": "الانتقال إلى الإعدادات",
+    "goBack": "الرجوع",
+    "goForward": "التقدم",
+    "newTask": "إنشاء مهمة جديدة",
+    "save": "حفظ",
+    "delete": "حذف",
+    "edit": "تحرير",
+    "refresh": "تحديث",
+    "moveUp": "التحرك لأعلى",
+    "moveDown": "التحرك لأسفل",
+    "select": "تحديد",
+    "toggle": "تبديل التحديد",
+    "first": "الانتقال إلى العنصر الأول",
+    "last": "الانتقال إلى العنصر الأخير",
+    "openCommandPalette": "فتح لوحة الأوامر",
+    "showShortcuts": "عرض اختصارات لوحة المفاتيح",
+    "closeModal": "إغلاق",
+    "submit": "إرسال",
+    "cancel": "إلغاء",
+    "search": "التركيز على البحث",
+    "escape": "إلغاء / إغلاق"
+  },
+
+  "footer": {
+    "navigate": "تنقل",
+    "select": "تحديد",
+    "close": "إغلاق",
+    "toOpen": "للفتح"
+  },
+
+  "guide": {
+    "title": "اختصارات لوحة المفاتيح",
+    "showAll": "عرض جميع الاختصارات",
+    "hint": "اضغط ? لرؤية جميع الاختصارات"
+  },
+
+  "hints": {
+    "commandPalette": "اضغط {{key}} لفتح لوحة الأوامر",
+    "navigation": "استخدم مفاتيح الأسهم للتنقل",
+    "submit": "اضغط Enter للإرسال",
+    "cancel": "اضغط Escape للإلغاء"
+  },
+
+  "accessibility": {
+    "shortcutList": "قائمة اختصارات لوحة المفاتيح",
+    "shortcutItem": "{{description}}، اضغط {{key}}",
+    "commandPaletteOpened": "تم فتح لوحة الأوامر",
+    "commandPaletteClosed": "تم إغلاق لوحة الأوامر"
+  }
+}

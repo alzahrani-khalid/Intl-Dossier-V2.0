@@ -1,0 +1,134 @@
+{
+  "title": "تصفح الرسم البياني",
+  "description": "استكشاف العلاقات بين الكيانات",
+
+  "operations": {
+    "traverse": "استكشاف الشبكة",
+    "shortestPath": "إيجاد أقصر مسار",
+    "allPaths": "إيجاد جميع المسارات",
+    "connectedEntities": "الكيانات المتصلة",
+    "relationshipChain": "سلسلة العلاقات",
+    "commonConnections": "الاتصالات المشتركة",
+    "statistics": "إحصائيات الرسم البياني"
+  },
+
+  "params": {
+    "startDossier": "الكيان البدء",
+    "targetDossier": "الكيان الهدف",
+    "dossierA": "الكيان الأول",
+    "dossierB": "الكيان الثاني",
+    "maxDegrees": "الحد الأقصى للدرجات",
+    "maxDepth": "الحد الأقصى للعمق",
+    "maxPaths": "الحد الأقصى للمسارات",
+    "maxEntities": "الحد الأقصى للكيانات",
+    "relationshipTypes": "أنواع العلاقات",
+    "relationshipChain": "سلسلة العلاقات",
+    "includeInactive": "تضمين غير النشطة",
+    "dossierTypeFilter": "أنواع الكيانات",
+    "bidirectional": "ثنائي الاتجاه"
+  },
+
+  "labels": {
+    "degrees": "درجات الفصل",
+    "hops": "قفزات",
+    "paths": "مسارات",
+    "entities": "كيانات",
+    "connections": "اتصالات",
+    "nodes": "عُقد",
+    "edges": "روابط",
+    "density": "الكثافة",
+    "avgDegree": "متوسط الدرجة",
+    "maxDegree": "أقصى درجة",
+    "isolated": "عُقد معزولة",
+    "queryTime": "وقت الاستعلام",
+    "ms": "مللي ثانية"
+  },
+
+  "directions": {
+    "outgoing": "صادر",
+    "incoming": "وارد",
+    "bidirectional": "ثنائي الاتجاه"
+  },
+
+  "results": {
+    "pathFound": "تم العثور على مسار",
+    "pathNotFound": "لا يوجد مسار بين هذه الكيانات",
+    "pathLength": "طول المسار: {{length}} قفزة",
+    "pathsFound": "تم العثور على {{count}} مسار",
+    "entitiesFound": "تم العثور على {{count}} كيان متصل",
+    "chainsFound": "تم العثور على {{count}} سلسلة مطابقة",
+    "connectionsFound": "تم العثور على {{count}} اتصال مشترك",
+    "noResults": "لم يتم العثور على نتائج",
+    "emptyGraph": "لا توجد علاقات للعرض"
+  },
+
+  "actions": {
+    "search": "بحث",
+    "explore": "استكشاف",
+    "findPath": "إيجاد المسار",
+    "findAllPaths": "إيجاد جميع المسارات",
+    "findConnections": "إيجاد الاتصالات",
+    "analyze": "تحليل",
+    "reset": "إعادة تعيين",
+    "export": "تصدير",
+    "viewDetails": "عرض التفاصيل",
+    "highlightPath": "تمييز المسار",
+    "clearHighlight": "إزالة التمييز"
+  },
+
+  "tooltips": {
+    "maxDegrees": "الحد الأقصى لعدد قفزات العلاقات للاستكشاف (1-6)",
+    "maxDepth": "الحد الأقصى لطول المسار للبحث",
+    "maxPaths": "الحد الأقصى لعدد المسارات للإرجاع",
+    "maxEntities": "الحد الأقصى لعدد الكيانات للإرجاع",
+    "includeInactive": "تضمين العلاقات التاريخية والمنتهية",
+    "bidirectional": "تتبع العلاقات في كلا الاتجاهين"
+  },
+
+  "statistics": {
+    "title": "إحصائيات الشبكة",
+    "totalNodes": "إجمالي العُقد",
+    "totalEdges": "إجمالي الروابط",
+    "graphDensity": "كثافة الرسم البياني",
+    "avgDegree": "متوسط الدرجة",
+    "maxDegree": "أقصى درجة",
+    "isolatedNodes": "العُقد المعزولة",
+    "typeDistribution": "توزيع الأنواع"
+  },
+
+  "errors": {
+    "traverseFailed": "فشل في تصفح الرسم البياني للعلاقات",
+    "shortestPathFailed": "فشل في إيجاد أقصر مسار",
+    "allPathsFailed": "فشل في إيجاد المسارات بين الكيانات",
+    "connectedEntitiesFailed": "فشل في إيجاد الكيانات المتصلة",
+    "relationshipChainFailed": "فشل في إيجاد سلاسل العلاقات",
+    "commonConnectionsFailed": "فشل في إيجاد الاتصالات المشتركة",
+    "statisticsFailed": "فشل في تحميل إحصائيات الرسم البياني",
+    "invalidParams": "المعلمات المقدمة غير صالحة",
+    "maxDegreesExceeded": "تم تجاوز الحد الأقصى للدرجات (الحد: 6)",
+    "unauthorized": "ليس لديك صلاحية لعرض هذه البيانات"
+  },
+
+  "success": {
+    "pathFound": "تم العثور على مسار بـ {{length}} قفزة",
+    "pathsFound": "تم العثور على {{count}} مسار"
+  },
+
+  "info": {
+    "noPathFound": "لم يتم العثور على مسار بين هذه الكيانات",
+    "searching": "جاري البحث...",
+    "loading": "جاري تحميل بيانات الرسم البياني..."
+  },
+
+  "visualization": {
+    "zoomIn": "تكبير",
+    "zoomOut": "تصغير",
+    "fitView": "ملاءمة العرض",
+    "layout": {
+      "force": "تخطيط القوة",
+      "circular": "تخطيط دائري",
+      "hierarchical": "تخطيط هرمي",
+      "radial": "تخطيط شعاعي"
+    }
+  }
+}

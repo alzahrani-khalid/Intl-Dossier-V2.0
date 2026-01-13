@@ -1,0 +1,14 @@
+{
+  "id": "timeline-view",
+  "category": "UI",
+  "title": "Entity Timeline Visualization",
+  "description": "Interactive timeline view showing entity history, events, commitments, and relationship changes over time. Supports filtering by event type, zooming, and annotation. Useful for engagement history.",
+  "status": "completed",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.669Z",
+  "updatedAt": "2026-01-11T20:21:42.016Z",
+  "branchName": "main",
+  "startedAt": "2026-01-11T20:05:16.558Z"
+}

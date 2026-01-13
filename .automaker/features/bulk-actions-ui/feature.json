@@ -1,0 +1,14 @@
+{
+  "id": "bulk-actions-ui",
+  "category": "UI",
+  "title": "Bulk Actions Interface",
+  "description": "Multi-select and bulk operation UI for entities, documents, and tickets. Supports bulk status updates, assignments, tagging, export, and deletion with confirmation workflows and undo capability.",
+  "status": "completed",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.670Z",
+  "updatedAt": "2026-01-10T18:28:04.638Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T18:08:13.335Z"
+}

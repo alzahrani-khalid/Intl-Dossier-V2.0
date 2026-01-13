@@ -1,0 +1,148 @@
+{
+  "title": "الاستيراد الذكي متاح",
+  "description": "استيراد البيانات من الخدمات المتصلة لملء هذا القسم",
+  "loading": "جارٍ التحقق من مصادر البيانات المتاحة...",
+  "recommended": "موصى به",
+  "notConnected": "غير متصل",
+  "itemsAvailable": "{{count}} عنصر متاح",
+  "noSources": {
+    "description": "اربط الخدمات الخارجية لتفعيل الاستيراد الذكي",
+    "connectAction": "ربط الخدمات"
+  },
+  "compact": {
+    "suggestion": "استيراد البيانات من {{source}}",
+    "action": "استيراد"
+  },
+  "preview": {
+    "title": "معاينة الاستيراد",
+    "description": "اختر العناصر للاستيراد من {{source}}",
+    "selectSource": "اختر مصدر البيانات",
+    "loading": "جارٍ تحميل المعاينة...",
+    "error": "فشل تحميل المعاينة",
+    "errorTitle": "خطأ",
+    "selectAll": "تحديد الكل",
+    "selected": "{{count}} من {{total}} محدد",
+    "mappings": "التعيينات",
+    "fieldMappings": "تعيينات الحقول",
+    "required": "مطلوب",
+    "noItems": "لا توجد عناصر للاستيراد",
+    "warnings": "تحذيرات",
+    "selectItem": "تحديد {{title}}"
+  },
+  "import": {
+    "success": "اكتمل الاستيراد",
+    "partialSuccess": "اكتمل الاستيراد مع أخطاء",
+    "error": "فشل الاستيراد",
+    "summary": "{{created}} تم إنشاؤها، {{skipped}} تم تخطيها، {{failed}} فشلت"
+  },
+  "actions": {
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "import": "استيراد {{count}} عنصر",
+    "importing": "جارٍ الاستيراد..."
+  },
+  "sources": {
+    "calendar": {
+      "google": {
+        "name": "تقويم Google",
+        "description": "استيراد الأحداث من تقويم Google"
+      },
+      "outlook": {
+        "name": "تقويم Outlook",
+        "description": "استيراد الأحداث من تقويم Outlook"
+      },
+      "exchange": {
+        "name": "تقويم Exchange",
+        "description": "استيراد الأحداث من تقويم Exchange"
+      },
+      "connect": {
+        "name": "ربط التقويم",
+        "description": "اربط Google أو Outlook لاستيراد الأحداث"
+      }
+    },
+    "email": {
+      "contacts": {
+        "name": "جهات اتصال البريد",
+        "description": "استخراج جهات الاتصال من توقيعات البريد الأخيرة"
+      },
+      "attachments": {
+        "name": "مرفقات البريد",
+        "description": "استيراد المستندات من مرفقات البريد"
+      }
+    },
+    "documents": {
+      "existing": {
+        "name": "المستندات الموجودة",
+        "description": "ربط المستندات المرفوعة مسبقاً في النظام"
+      },
+      "templates": {
+        "name": "قوالب المستندات",
+        "description": "إنشاء مستندات من قوالب محددة مسبقاً"
+      }
+    },
+    "dossiers": {
+      "related": {
+        "name": "الملفات ذات الصلة",
+        "description": "استيراد البيانات من الملفات ذات الصلة في النظام"
+      }
+    }
+  },
+  "sections": {
+    "documents": {
+      "suggestionTitle": "استيراد المستندات",
+      "suggestionDescription": "ملء هذا القسم بسرعة بمستندات من مصادر أخرى"
+    },
+    "contacts": {
+      "suggestionTitle": "استيراد جهات الاتصال",
+      "suggestionDescription": "إضافة جهات اتصال من توقيعات البريد أو السجلات الموجودة"
+    },
+    "events": {
+      "suggestionTitle": "استيراد الأحداث",
+      "suggestionDescription": "مزامنة الأحداث من التقويم إلى هذه المشاركة"
+    },
+    "briefs": {
+      "suggestionTitle": "إنشاء الموجزات",
+      "suggestionDescription": "إنشاء وثائق إحاطة من المواد الموجودة"
+    },
+    "relationships": {
+      "suggestionTitle": "إضافة العلاقات",
+      "suggestionDescription": "الربط بالملفات والكيانات ذات الصلة"
+    }
+  },
+  "mapping": {
+    "autoDetected": "تم الكشف تلقائياً",
+    "manual": "يدوي",
+    "confidence": "{{percent}}% ثقة",
+    "sourceField": "حقل المصدر",
+    "targetField": "حقل الهدف",
+    "transform": "تحويل",
+    "transforms": {
+      "none": "بدون",
+      "lowercase": "أحرف صغيرة",
+      "uppercase": "أحرف كبيرة",
+      "trim": "إزالة المسافات",
+      "parse_date": "تحليل كتاريخ",
+      "extract_email": "استخراج البريد"
+    }
+  },
+  "status": {
+    "connected": "متصل",
+    "disconnected": "غير متصل",
+    "partial": "متصل جزئياً",
+    "error": "خطأ في الاتصال",
+    "syncing": "جارٍ المزامنة...",
+    "lastSync": "آخر مزامنة {{time}}"
+  },
+  "errors": {
+    "noSource": "لم يتم تحديد مصدر بيانات",
+    "noItems": "لم يتم تحديد عناصر للاستيراد",
+    "previewFailed": "فشل تحميل المعاينة: {{error}}",
+    "importFailed": "فشل الاستيراد: {{error}}",
+    "mappingRequired": "الحقل المطلوب '{{field}}' ليس له تعيين"
+  },
+  "confirmations": {
+    "skipErrors": "تخطي العناصر ذات الأخطاء",
+    "updateExisting": "تحديث العناصر الموجودة",
+    "overwrite": "سيؤدي هذا إلى استبدال {{count}} عنصر موجود"
+  }
+}

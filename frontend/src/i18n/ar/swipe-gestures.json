@@ -1,0 +1,55 @@
+{
+  "title": "إيماءات السحب",
+  "instructions": {
+    "swipeRight": "اسحب لليمين لـ {{action}}",
+    "swipeLeft": "اسحب لليسار لـ {{action}}",
+    "longPress": "اضغط مطولاً للمزيد من الخيارات",
+    "releaseToConfirm": "حرر للتأكيد"
+  },
+  "actions": {
+    "favorite": "المفضلة",
+    "unfavorite": "إزالة من المفضلة",
+    "pin": "تثبيت",
+    "unpin": "إلغاء التثبيت",
+    "archive": "أرشفة",
+    "unarchive": "إلغاء الأرشفة",
+    "delete": "حذف",
+    "edit": "تحرير",
+    "view": "عرض",
+    "share": "مشاركة",
+    "more": "المزيد من الخيارات"
+  },
+  "feedback": {
+    "favorited": "تمت الإضافة إلى المفضلة",
+    "unfavorited": "تمت الإزالة من المفضلة",
+    "pinned": "تم التثبيت",
+    "unpinned": "تم إلغاء التثبيت",
+    "archived": "تمت الأرشفة",
+    "unarchived": "تم إلغاء الأرشفة",
+    "deleted": "تم الحذف",
+    "actionCancelled": "تم إلغاء الإجراء"
+  },
+  "contextMenu": {
+    "title": "الإجراءات",
+    "favorite": "إضافة إلى المفضلة",
+    "unfavorite": "إزالة من المفضلة",
+    "pin": "تثبيت في الأعلى",
+    "unpin": "إلغاء التثبيت",
+    "archive": "أرشفة",
+    "delete": "حذف",
+    "edit": "تحرير",
+    "view": "عرض التفاصيل",
+    "share": "مشاركة",
+    "copyLink": "نسخ الرابط"
+  },
+  "accessibility": {
+    "swipeableCard": "بطاقة قابلة للسحب. {{content}}. اسحب لليمين لـ {{rightAction}}، اسحب لليسار لـ {{leftAction}}، أو اضغط مطولاً للمزيد من الخيارات.",
+    "swipeProgress": "تقدم السحب: {{progress}}%",
+    "actionTriggered": "تم تفعيل إجراء {{action}}"
+  },
+  "hints": {
+    "enableSwipe": "تفعيل إيماءات السحب للإجراءات السريعة",
+    "disableSwipe": "تعطيل إيماءات السحب",
+    "swipeDisabled": "إيماءات السحب معطلة"
+  }
+}

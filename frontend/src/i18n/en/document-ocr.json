@@ -1,0 +1,111 @@
+{
+  "title": "Document Search",
+  "subtitle": "Search within document content",
+  "description": "Search across all uploaded documents using OCR-extracted text",
+
+  "search": {
+    "placeholder": "Search document content...",
+    "minCharacters": "Enter at least 2 characters to search",
+    "noResults": "No documents found matching your search",
+    "searching": "Searching...",
+    "resultsCount": "{{count}} document found",
+    "resultsCount_plural": "{{count}} documents found",
+    "processingTime": "Search completed in {{time}}ms",
+    "clearSearch": "Clear search"
+  },
+
+  "filters": {
+    "title": "Filters",
+    "language": "Language",
+    "languageOptions": {
+      "all": "All Languages",
+      "en": "English Only",
+      "ar": "Arabic Only"
+    },
+    "confidence": "OCR Confidence",
+    "confidenceOptions": {
+      "all": "All",
+      "high": "High (80%+)",
+      "medium": "Medium (50%+)",
+      "low": "Low (any)"
+    },
+    "documentType": "Document Type",
+    "ownerType": "Entity Type",
+    "reset": "Reset Filters"
+  },
+
+  "result": {
+    "title": "Title",
+    "snippet": "Content Preview",
+    "relevance": "Relevance Score",
+    "confidence": "OCR Confidence",
+    "detectedLanguages": "Detected Languages",
+    "fileSize": "File Size",
+    "uploadedOn": "Uploaded On",
+    "viewDocument": "View Document",
+    "downloadDocument": "Download"
+  },
+
+  "ocr": {
+    "status": "OCR Status",
+    "pending": "Pending Processing",
+    "processing": "Processing...",
+    "completed": "Completed",
+    "failed": "Failed",
+    "skipped": "Skipped (Unsupported Type)",
+    "notProcessed": "Not Processed",
+
+    "actions": {
+      "process": "Process Document",
+      "reprocess": "Reprocess Document",
+      "processSelected": "Process Selected",
+      "processAll": "Process All Documents"
+    },
+
+    "method": {
+      "tesseract": "Local OCR (Tesseract)",
+      "google_vision": "Cloud OCR (Google Vision)",
+      "pdf_extract": "PDF Text Extraction",
+      "native_text": "Native Text"
+    },
+
+    "progress": {
+      "uploading": "Uploading document...",
+      "extracting": "Extracting text...",
+      "indexing": "Indexing content...",
+      "complete": "Processing complete"
+    },
+
+    "errors": {
+      "unsupportedType": "This file type is not supported for OCR",
+      "fileTooLarge": "File is too large for OCR processing",
+      "processingFailed": "OCR processing failed. Please try again.",
+      "noTextFound": "No text could be extracted from this document"
+    }
+  },
+
+  "languages": {
+    "en": "English",
+    "ar": "Arabic",
+    "bilingual": "Bilingual (EN/AR)",
+    "unknown": "Unknown"
+  },
+
+  "tooltips": {
+    "ocrConfidence": "Confidence score indicates how accurate the text extraction is (0-100%)",
+    "searchLanguage": "Filter results by the language of extracted text",
+    "relevanceScore": "Higher scores indicate better matches for your search query"
+  },
+
+  "empty": {
+    "title": "No Documents Indexed",
+    "description": "Upload documents to enable content search. Supported formats: PDF, PNG, JPEG, TIFF.",
+    "action": "Upload Documents"
+  },
+
+  "processing": {
+    "title": "Documents Being Processed",
+    "description": "{{count}} document is currently being processed for text extraction",
+    "description_plural": "{{count}} documents are currently being processed for text extraction"
+  }
+}

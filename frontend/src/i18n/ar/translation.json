@@ -1,0 +1,104 @@
+{
+  "translate": "ترجمة",
+  "translating": "جاري الترجمة...",
+  "success": "اكتملت الترجمة",
+  "noTextToTranslate": "لا يوجد نص للترجمة",
+  "translateFromTo": "ترجمة من {{from}} إلى {{to}}",
+  "confidenceScore": "الثقة: {{score}}%",
+
+  "languages": {
+    "en": "الإنجليزية",
+    "ar": "العربية"
+  },
+
+  "direction": {
+    "en_to_ar": "من الإنجليزية إلى العربية",
+    "ar_to_en": "من العربية إلى الإنجليزية",
+    "auto": "اكتشاف تلقائي"
+  },
+
+  "confidence": {
+    "high": "ثقة عالية",
+    "medium": "ثقة متوسطة",
+    "low": "ثقة منخفضة",
+    "pending": "في انتظار المراجعة"
+  },
+
+  "contentType": {
+    "title": "عنوان",
+    "description": "وصف",
+    "summary": "ملخص",
+    "content": "محتوى",
+    "comment": "تعليق",
+    "position": "موقف",
+    "commitment": "التزام",
+    "document": "مستند",
+    "general": "عام"
+  },
+
+  "errors": {
+    "UNAUTHORIZED": "يرجى تسجيل الدخول لاستخدام الترجمة",
+    "NO_TEXT": "يرجى إدخال نص للترجمة",
+    "TRANSLATION_FAILED": "فشلت الترجمة. يرجى المحاولة مرة أخرى.",
+    "TEXT_TOO_LONG": "النص طويل جداً (الحد الأقصى 10,000 حرف)",
+    "BATCH_TOO_LARGE": "عدد كبير جداً من العناصر (الحد الأقصى 20)",
+    "CANCELLED": "تم إلغاء الترجمة",
+    "AI_UNAVAILABLE": "خدمة الذكاء الاصطناعي غير متاحة. تم تطبيق ترجمة أساسية.",
+    "default": "حدث خطأ"
+  },
+
+  "preferences": {
+    "title": "تفضيلات الترجمة",
+    "autoTranslate": "ترجمة تلقائية عند تغيير المحتوى",
+    "preferredSourceLanguage": "اللغة المصدر المفضلة",
+    "showConfidenceIndicators": "إظهار مؤشرات الثقة",
+    "saveHistory": "حفظ سجل الترجمة",
+    "saved": "تم حفظ التفضيلات"
+  },
+
+  "history": {
+    "title": "سجل الترجمة",
+    "empty": "لا يوجد سجل ترجمة",
+    "viewAll": "عرض جميع الترجمات",
+    "original": "الأصلي",
+    "translated": "المترجم",
+    "edited": "معدل",
+    "approved": "معتمد",
+    "pending": "في انتظار المراجعة"
+  },
+
+  "glossary": {
+    "title": "قاموس الترجمة",
+    "searchPlaceholder": "البحث في المصطلحات...",
+    "empty": "لم يتم العثور على مصطلحات مطابقة",
+    "addTerm": "إضافة مصطلح",
+    "category": "الفئة",
+    "categories": {
+      "general": "عام",
+      "government": "حكومي",
+      "diplomatic": "دبلوماسي",
+      "legal": "قانوني",
+      "organization": "تنظيمي",
+      "documentation": "توثيق"
+    }
+  },
+
+  "actions": {
+    "approve": "اعتماد الترجمة",
+    "edit": "تعديل الترجمة",
+    "retry": "إعادة الترجمة",
+    "copy": "نسخ الترجمة",
+    "copied": "تم النسخ!",
+    "useOriginal": "استخدام الأصلي",
+    "useTranslation": "استخدام الترجمة"
+  },
+
+  "panel": {
+    "title": "مساعد الترجمة",
+    "description": "ترجمة بالذكاء الاصطناعي بين العربية والإنجليزية",
+    "sourceLabel": "النص المصدر",
+    "targetLabel": "النص المترجم",
+    "translateButton": "ترجمة",
+    "clearButton": "مسح"
+  }
+}

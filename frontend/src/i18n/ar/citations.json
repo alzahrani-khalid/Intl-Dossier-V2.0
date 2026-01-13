@@ -1,0 +1,158 @@
+{
+  "title": "الاستشهادات",
+  "description": "تتبع المراجع بين الملفات والموجزات والمصادر الخارجية",
+
+  "empty": {
+    "title": "لا توجد استشهادات",
+    "description": "تتبع المراجع إلى الملفات والمستندات والمصادر الخارجية الأخرى."
+  },
+
+  "sections": {
+    "outgoing": "المراجع",
+    "incoming": "مستشهد بها في"
+  },
+
+  "direction": {
+    "outgoing": "يستشهد بـ",
+    "incoming": "مستشهد بها في"
+  },
+
+  "badges": {
+    "external": "خارجي"
+  },
+
+  "views": {
+    "list": "قائمة",
+    "graph": "رسم بياني"
+  },
+
+  "stats": {
+    "outgoing": "{{count}} مرجع",
+    "incoming": "{{count}} استشهاد",
+    "external": "خارجي"
+  },
+
+  "network": {
+    "title": "شبكة الاستشهادات",
+    "legend": "دليل",
+    "startNode": "الكيان الحالي",
+    "internal": "مرجع داخلي",
+    "external": "مصدر خارجي",
+    "stats": "{{nodes}} عقدة، {{edges}} اتصال",
+    "empty": "لم يتم العثور على استشهادات لهذا الكيان",
+    "error": "فشل في تحميل شبكة الاستشهادات"
+  },
+
+  "form": {
+    "createTitle": "إضافة استشهاد",
+    "editTitle": "تعديل الاستشهاد",
+    "description": "إضافة مرجع من \"{{name}}\" إلى مصدر آخر.",
+    "descriptionGeneric": "إضافة مرجع إلى مصدر آخر.",
+    "tabs": {
+      "internal": "مرجع داخلي",
+      "external": "مصدر خارجي"
+    },
+    "fields": {
+      "entityType": "نوع المرجع",
+      "entityId": "معرف الكيان",
+      "sourceType": "نوع المصدر",
+      "url": "الرابط",
+      "title": "العنوان",
+      "author": "المؤلف",
+      "date": "التاريخ",
+      "context": "السياق / المقتطف",
+      "note": "ملاحظة",
+      "relevance": "درجة الصلة"
+    },
+    "placeholders": {
+      "selectType": "اختر النوع",
+      "entityId": "أدخل معرف UUID للكيان",
+      "title": "عنوان المصدر",
+      "author": "اسم المؤلف",
+      "context": "اقتبس أو صف المحتوى ذي الصلة...",
+      "note": "أضف ملاحظة حول هذا الاستشهاد..."
+    },
+    "hints": {
+      "entityId": "أدخل معرف UUID للملف أو المستند أو الكيان الآخر الذي تريد الإشارة إليه.",
+      "relevance": "ما مدى صلة هذا الاستشهاد بالمستند المصدر؟"
+    },
+    "errors": {
+      "required": "هذا الحقل مطلوب",
+      "invalidUrl": "الرجاء إدخال رابط صالح"
+    }
+  },
+
+  "dialogs": {
+    "delete": {
+      "title": "حذف الاستشهاد",
+      "description": "هل أنت متأكد من حذف هذا الاستشهاد؟ لا يمكن التراجع عن هذا الإجراء."
+    }
+  },
+
+  "actions": {
+    "addCitation": "إضافة استشهاد",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "deleting": "جاري الحذف...",
+    "cancel": "إلغاء",
+    "save": "حفظ التغييرات",
+    "create": "إضافة استشهاد",
+    "saving": "جاري الحفظ...",
+    "open": "فتح",
+    "view": "عرض",
+    "more": "المزيد"
+  },
+
+  "relevance": "الصلة",
+  "unknown": "غير معروف",
+
+  "alerts": {
+    "title": "تنبيهات الاستشهادات",
+    "description": "إشعارات عند تحديث المصادر المستشهد بها",
+    "empty": "لا توجد تنبيهات",
+    "emptyDescription": "سيتم إعلامك عند تحديث المصادر المرجعية أو أرشفتها.",
+    "resolve": "حل",
+    "resolving": "جاري الحل...",
+    "resolved": "تم الحل",
+    "unread": "غير مقروء",
+    "all": "جميع التنبيهات",
+    "types": {
+      "source_updated": "تم تحديث المصدر",
+      "source_archived": "تم أرشفة المصدر",
+      "source_deleted": "تم حذف المصدر",
+      "link_broken": "رابط معطل",
+      "new_version": "إصدار جديد متاح"
+    },
+    "messages": {
+      "source_updated": "تم تحديث المصدر المرجعي منذ إنشاء هذا الاستشهاد.",
+      "source_archived": "تم أرشفة المصدر المرجعي.",
+      "source_deleted": "تم حذف المصدر المرجعي.",
+      "link_broken": "لم يعد الرابط الخارجي قابلاً للوصول.",
+      "new_version": "يتوفر إصدار جديد من المصدر المرجعي."
+    }
+  },
+
+  "sourceTypes": {
+    "dossier": "ملف",
+    "brief": "موجز",
+    "ai_brief": "موجز ذكاء اصطناعي",
+    "document": "مستند",
+    "position": "موقف",
+    "mou": "مذكرة تفاهم",
+    "engagement": "ارتباط",
+    "external_url": "رابط خارجي",
+    "external_document": "مستند خارجي",
+    "academic_paper": "ورقة أكاديمية",
+    "news_article": "مقال إخباري",
+    "government_doc": "مستند حكومي",
+    "report": "تقرير"
+  },
+
+  "status": {
+    "active": "نشط",
+    "source_updated": "المصدر محدث",
+    "source_archived": "المصدر مؤرشف",
+    "source_deleted": "المصدر محذوف",
+    "broken": "رابط معطل"
+  }
+}

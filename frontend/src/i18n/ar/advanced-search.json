@@ -1,0 +1,254 @@
+{
+  "title": "البحث المتقدم",
+  "description": "البحث في الملفات والمشاركات والمواقف والمستندات مع مرشحات متقدمة",
+
+  "search": {
+    "placeholder": "أدخل كلمة البحث...",
+    "button": "بحث",
+    "clear": "مسح البحث",
+    "noQuery": "أدخل مصطلح بحث أو أضف مرشحات للبدء"
+  },
+
+  "entityTypes": {
+    "label": "البحث في",
+    "dossier": "الملفات",
+    "engagement": "المشاركات",
+    "position": "المواقف",
+    "document": "المستندات",
+    "person": "الأشخاص",
+    "organization": "المنظمات",
+    "forum": "المنتديات",
+    "country": "الدول",
+    "theme": "المواضيع",
+    "selectAll": "تحديد الكل",
+    "deselectAll": "إلغاء تحديد الكل"
+  },
+
+  "filters": {
+    "title": "المرشحات",
+    "add": "إضافة مرشح",
+    "remove": "إزالة المرشح",
+    "clear": "مسح كل المرشحات",
+    "activeCount": "{{count}} مرشح نشط",
+    "activeCount_plural": "{{count}} مرشحات نشطة",
+    "noFilters": "لا توجد مرشحات مطبقة"
+  },
+
+  "conditions": {
+    "title": "شروط التصفية",
+    "add": "إضافة شرط",
+    "group": "إنشاء مجموعة",
+    "field": "الحقل",
+    "operator": "العامل",
+    "value": "القيمة",
+    "negate": "نفي (NOT)",
+    "placeholder": "أدخل القيمة..."
+  },
+
+  "operators": {
+    "equals": "يساوي",
+    "not_equals": "لا يساوي",
+    "contains": "يحتوي على",
+    "not_contains": "لا يحتوي على",
+    "starts_with": "يبدأ بـ",
+    "ends_with": "ينتهي بـ",
+    "greater_than": "أكبر من",
+    "less_than": "أصغر من",
+    "greater_equal": "أكبر أو يساوي",
+    "less_equal": "أصغر أو يساوي",
+    "between": "بين",
+    "not_between": "ليس بين",
+    "in": "في القائمة",
+    "not_in": "ليس في القائمة",
+    "is_null": "فارغ",
+    "is_not_null": "غير فارغ",
+    "matches_regex": "يطابق النمط"
+  },
+
+  "logic": {
+    "title": "المنطق",
+    "and": "و",
+    "or": "أو",
+    "not": "ليس",
+    "description": "كيفية دمج المرشحات المتعددة",
+    "andDescription": "يجب أن تتطابق جميع الشروط",
+    "orDescription": "يمكن أن يتطابق أي شرط"
+  },
+
+  "dateRange": {
+    "title": "نطاق التاريخ",
+    "from": "من",
+    "to": "إلى",
+    "preset": "اختيار سريع",
+    "custom": "نطاق مخصص",
+    "clear": "مسح نطاق التاريخ",
+    "presets": {
+      "today": "اليوم",
+      "yesterday": "أمس",
+      "last_7_days": "آخر 7 أيام",
+      "last_30_days": "آخر 30 يوماً",
+      "last_90_days": "آخر 90 يوماً",
+      "this_month": "هذا الشهر",
+      "this_year": "هذه السنة",
+      "next_7_days": "الأيام السبعة القادمة",
+      "next_30_days": "الثلاثون يوماً القادمة"
+    }
+  },
+
+  "status": {
+    "title": "الحالة",
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف",
+    "draft": "مسودة",
+    "published": "منشور",
+    "deleted": "محذوف"
+  },
+
+  "tags": {
+    "title": "الوسوم",
+    "placeholder": "اختر أو أدخل الوسوم...",
+    "add": "إضافة وسم"
+  },
+
+  "sorting": {
+    "title": "الترتيب حسب",
+    "relevance": "الصلة",
+    "date": "التاريخ",
+    "title_sort": "العنوان",
+    "ascending": "تصاعدي",
+    "descending": "تنازلي"
+  },
+
+  "options": {
+    "title": "الخيارات",
+    "includeArchived": "تضمين المؤرشف",
+    "excludeArchived": "استبعاد المؤرشف"
+  },
+
+  "templates": {
+    "title": "قوالب البحث",
+    "saved": "عمليات البحث المحفوظة",
+    "quick": "بحث سريع",
+    "popular": "الأكثر استخداماً",
+    "recent": "الأخيرة",
+    "system": "قوالب النظام",
+    "custom": "قوالبي",
+    "create": "حفظ كقالب",
+    "createTitle": "إنشاء قالب بحث",
+    "update": "تحديث القالب",
+    "delete": "حذف القالب",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذا القالب؟",
+    "name": "اسم القالب",
+    "nameEn": "الاسم (إنجليزي)",
+    "nameAr": "الاسم (عربي)",
+    "description": "الوصف",
+    "descriptionEn": "الوصف (إنجليزي)",
+    "descriptionAr": "الوصف (عربي)",
+    "icon": "الأيقونة",
+    "color": "اللون",
+    "makePublic": "جعله عاماً",
+    "publicDescription": "القوالب العامة يمكن استخدامها من جميع المستخدمين",
+    "useCount": "استخدم {{count}} مرة",
+    "useCount_plural": "استخدم {{count}} مرات",
+    "noTemplates": "لا توجد قوالب",
+    "loadTemplate": "تحميل القالب",
+    "applyTemplate": "تطبيق"
+  },
+
+  "results": {
+    "title": "نتائج البحث",
+    "found": "تم العثور على {{count}} نتيجة",
+    "found_plural": "تم العثور على {{count}} نتائج",
+    "noResults": "لا توجد نتائج",
+    "noResultsHint": "حاول تعديل معايير البحث أو إزالة بعض المرشحات",
+    "loading": "جاري البحث...",
+    "loadMore": "تحميل المزيد",
+    "took": "اكتمل البحث في {{ms}} مللي ثانية"
+  },
+
+  "result": {
+    "type": "النوع",
+    "status": "الحالة",
+    "created": "تاريخ الإنشاء",
+    "updated": "تاريخ التحديث",
+    "viewDetails": "عرض التفاصيل",
+    "matchedConditions": "الشروط المتطابقة"
+  },
+
+  "relationships": {
+    "title": "مرشحات العلاقات",
+    "add": "إضافة مرشح علاقة",
+    "source": "الكيان المصدر",
+    "target": "الكيان المرتبط",
+    "type": "نوع العلاقة",
+    "depth": "عمق البحث",
+    "types": {
+      "parent_of": "أب لـ",
+      "child_of": "ابن لـ",
+      "linked_to": "مرتبط بـ",
+      "related_to": "متصل بـ",
+      "member_of": "عضو في",
+      "has_member": "لديه عضو",
+      "assigned_to": "مخصص لـ",
+      "owned_by": "مملوك من",
+      "created_by": "منشأ بواسطة",
+      "updated_by": "محدث بواسطة",
+      "mentions": "يذكر",
+      "mentioned_by": "مذكور بواسطة"
+    }
+  },
+
+  "fields": {
+    "title_en": "العنوان (إنجليزي)",
+    "title_ar": "العنوان (عربي)",
+    "status": "الحالة",
+    "type": "النوع",
+    "sensitivity_level": "مستوى الحساسية",
+    "tags": "الوسوم",
+    "created_at": "تاريخ الإنشاء",
+    "updated_at": "تاريخ التحديث",
+    "start_date": "تاريخ البدء",
+    "end_date": "تاريخ الانتهاء",
+    "location": "الموقع",
+    "file_type": "نوع الملف",
+    "file_size": "حجم الملف",
+    "email": "البريد الإلكتروني",
+    "department": "القسم"
+  },
+
+  "actions": {
+    "search": "بحث",
+    "reset": "إعادة تعيين",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "apply": "تطبيق",
+    "export": "تصدير النتائج",
+    "share": "مشاركة البحث"
+  },
+
+  "errors": {
+    "searchFailed": "فشل البحث. يرجى المحاولة مرة أخرى.",
+    "templateCreateFailed": "فشل إنشاء القالب",
+    "templateUpdateFailed": "فشل تحديث القالب",
+    "templateDeleteFailed": "فشل حذف القالب",
+    "noEntityTypes": "يرجى تحديد نوع كيان واحد على الأقل للبحث"
+  },
+
+  "success": {
+    "templateCreated": "تم إنشاء القالب بنجاح",
+    "templateUpdated": "تم تحديث القالب بنجاح",
+    "templateDeleted": "تم حذف القالب بنجاح"
+  },
+
+  "a11y": {
+    "searchForm": "نموذج البحث المتقدم",
+    "filterSection": "مرشحات البحث",
+    "resultsSection": "نتائج البحث",
+    "templateList": "قائمة قوالب البحث",
+    "removeCondition": "إزالة هذا الشرط",
+    "toggleNegate": "تبديل عامل NOT",
+    "expandFilters": "توسيع المرشحات",
+    "collapseFilters": "طي المرشحات"
+  }
+}

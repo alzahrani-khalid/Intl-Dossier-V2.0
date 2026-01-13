@@ -1,0 +1,10 @@
+{
+  "category": "enhancement",
+  "description": "Automatically expand touch targets for all interactive elements to minimum 48x48dp (iOS/Android standard), with increased spacing between adjacent tappable items. Add visual hit area indicators on long-press for power users.\n\n**Rationale:** Small touch targets (under 44px) cause 70% of mobile tap errors. Meeting platform standards reduces user frustration and accidental taps, especially for users with accessibility needs or in mobile contexts.",
+  "title": "Smart Touch Target Expansion",
+  "status": "verified",
+  "id": "feature-1768220552871-1fuzve5oi",
+  "branchName": "main",
+  "startedAt": "2026-01-12T20:03:45.376Z",
+  "updatedAt": "2026-01-12T20:09:30.647Z"
+}

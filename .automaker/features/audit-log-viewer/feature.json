@@ -1,0 +1,14 @@
+{
+  "id": "audit-log-viewer",
+  "category": "Compliance",
+  "title": "Comprehensive Audit Log Viewer",
+  "description": "UI for searching, filtering, and exporting audit logs with advanced query capabilities. Shows who did what, when, and from where. Includes tamper-proof log storage and retention policies.",
+  "status": "completed",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.665Z",
+  "updatedAt": "2026-01-10T18:12:11.165Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T17:58:13.418Z"
+}

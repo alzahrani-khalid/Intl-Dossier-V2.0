@@ -1,0 +1,84 @@
+{
+  "title": "معاينة المستند",
+  "loading": {
+    "document": "جاري تحميل المستند...",
+    "pdf": "جاري تحميل ملف PDF...",
+    "image": "جاري تحميل الصورة...",
+    "thumbnail": "جاري تحميل الصورة المصغرة..."
+  },
+  "actions": {
+    "preview": "معاينة",
+    "download": "تحميل",
+    "downloadInstead": "تحميل بدلاً من ذلك",
+    "print": "طباعة",
+    "close": "إغلاق",
+    "openInNewTab": "فتح في علامة تبويب جديدة",
+    "zoomIn": "تكبير",
+    "zoomOut": "تصغير",
+    "fitToScreen": "ملائمة الشاشة",
+    "fitToWidth": "ملائمة العرض",
+    "rotateLeft": "تدوير لليسار",
+    "rotateRight": "تدوير لليمين",
+    "firstPage": "الصفحة الأولى",
+    "lastPage": "الصفحة الأخيرة",
+    "previousPage": "الصفحة السابقة",
+    "nextPage": "الصفحة التالية",
+    "save": "حفظ",
+    "delete": "حذف",
+    "cancel": "إلغاء"
+  },
+  "tools": {
+    "highlight": "تمييز",
+    "comment": "إضافة تعليق",
+    "draw": "رسم",
+    "text": "إضافة نص",
+    "color": "اللون"
+  },
+  "placeholders": {
+    "addComment": "أضف تعليقاً...",
+    "addText": "أدخل النص..."
+  },
+  "pdf": {
+    "pageInfo": "صفحة {{current}} من {{total}}",
+    "goToPage": "انتقل إلى الصفحة"
+  },
+  "image": {
+    "zoomLevel": "{{level}}%",
+    "rotation": "{{degrees}}°"
+  },
+  "errors": {
+    "loadFailed": "فشل تحميل المستند",
+    "pdfLoadFailed": "فشل تحميل ملف PDF",
+    "imageLoadFailed": "فشل تحميل الصورة",
+    "previewNotAvailable": "المعاينة غير متاحة",
+    "downloadFailed": "فشل التحميل"
+  },
+  "unsupported": {
+    "title": "المعاينة غير متاحة",
+    "description": "لا يمكن معاينة هذا النوع من الملفات في المتصفح. يمكنك تحميله للعرض محلياً."
+  },
+  "hints": {
+    "pinchToZoom": "اضغط للتكبير، اسحب للتحريك",
+    "useArrowKeys": "استخدم مفاتيح الأسهم للتنقل بين الصفحات",
+    "scrollToZoom": "مرر للتكبير والتصغير"
+  },
+  "annotations": {
+    "title": "التعليقات التوضيحية",
+    "noAnnotations": "لا توجد تعليقات توضيحية بعد",
+    "addFirst": "انقر لإضافة أول تعليق توضيحي",
+    "saved": "تم حفظ التعليقات التوضيحية",
+    "deleted": "تم حذف التعليق التوضيحي"
+  },
+  "thumbnails": {
+    "generating": "جاري إنشاء الصورة المصغرة...",
+    "notAvailable": "الصورة المصغرة غير متاحة"
+  },
+  "fileTypes": {
+    "pdf": "مستند PDF",
+    "image": "صورة",
+    "word": "مستند Word",
+    "excel": "جدول بيانات Excel",
+    "text": "ملف نصي",
+    "unsupported": "نوع ملف غير معروف"
+  }
+}

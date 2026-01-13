@@ -1,0 +1,67 @@
+{
+  "title": "Sample Data",
+  "banner": {
+    "title": "Sample Data Active",
+    "description": "This workspace contains sample data from the \"{{templateName}}\" template.",
+    "descriptionMultiple": "This workspace contains sample data from {{count}} templates.",
+    "removeButton": "Remove Sample Data",
+    "removeAll": "Remove All Sample Data",
+    "viewDetails": "View Details"
+  },
+  "emptyState": {
+    "title": "Get Started with Sample Data",
+    "description": "Explore the platform with realistic sample dossiers, relationships, and events. Choose a theme that matches your interests.",
+    "hint": "Sample data can be removed at any time with a single click.",
+    "buttonText": "Populate Sample Data",
+    "orCreateOwn": "or create your own dossier"
+  },
+  "templates": {
+    "title": "Choose a Template",
+    "description": "Select a themed template to populate your workspace with realistic sample data.",
+    "tradeRelations": {
+      "name": "Trade Relations",
+      "description": "Bilateral trade agreements, economic partnerships, and commercial diplomacy"
+    },
+    "culturalExchange": {
+      "name": "Cultural Exchange",
+      "description": "Cultural diplomacy, educational partnerships, and heritage preservation"
+    },
+    "securityCooperation": {
+      "name": "Security Cooperation",
+      "description": "Defense agreements, regional stability initiatives, and allied partnerships"
+    },
+    "diplomaticRelations": {
+      "name": "Diplomatic Relations",
+      "description": "Embassies, consulates, bilateral agreements, and international organizations"
+    }
+  },
+  "dialog": {
+    "populateTitle": "Populate Sample Data",
+    "populateDescription": "This will create {{dossierCount}} dossiers, {{relationshipCount}} relationships, and {{eventCount}} events based on the \"{{templateName}}\" template.",
+    "populateConfirm": "Populate Now",
+    "populateCancel": "Cancel",
+    "removeTitle": "Remove Sample Data",
+    "removeDescription": "This will permanently remove all sample data including {{dossierCount}} dossiers, {{relationshipCount}} relationships, {{eventCount}} events, and {{contactCount}} contacts.",
+    "removeConfirm": "Remove Sample Data",
+    "removeCancel": "Keep Sample Data"
+  },
+  "notifications": {
+    "populateSuccess": "Sample data populated successfully! You now have {{dossierCount}} sample dossiers to explore.",
+    "populateError": "Failed to populate sample data. Please try again.",
+    "removeSuccess": "Sample data removed successfully.",
+    "removeError": "Failed to remove sample data. Please try again."
+  },
+  "stats": {
+    "dossiers": "{{count}} Dossiers",
+    "relationships": "{{count}} Relationships",
+    "events": "{{count}} Events",
+    "contacts": "{{count}} Contacts"
+  },
+  "loading": {
+    "populating": "Populating sample data...",
+    "removing": "Removing sample data..."
+  },
+  "badge": {
+    "sampleData": "Sample Data"
+  }
+}
