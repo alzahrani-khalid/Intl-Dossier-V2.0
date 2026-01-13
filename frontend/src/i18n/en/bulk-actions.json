@@ -1,0 +1,221 @@
+{
+  "title": "Bulk Actions",
+  "description": "Perform actions on multiple items at once",
+
+  "selection": {
+    "selected": "{{count}} selected",
+    "selectAll": "Select all",
+    "clearSelection": "Clear selection",
+    "maxReached": "Maximum selection reached",
+    "maxReachedDescription": "You can select up to {{max}} items at a time",
+    "selectItem": "Select item",
+    "deselectItem": "Deselect item",
+    "allSelected": "All items selected",
+    "partiallySelected": "Some items selected"
+  },
+
+  "actions": {
+    "title": "Actions",
+    "updateStatus": "Update Status",
+    "assign": "Assign",
+    "unassign": "Unassign",
+    "addTags": "Add Tags",
+    "removeTags": "Remove Tags",
+    "export": "Export",
+    "delete": "Delete",
+    "archive": "Archive",
+    "restore": "Restore",
+    "sendReminder": "Send Reminder",
+    "escalate": "Escalate",
+    "changePriority": "Change Priority",
+    "moreActions": "More Actions"
+  },
+
+  "confirmation": {
+    "title": "Confirm {{action}}",
+    "description": "You are about to {{action}} {{count}} {{entityType}}(s).",
+    "warning": "This action cannot be undone.",
+    "undoAvailable": "You will have {{seconds}} seconds to undo this action.",
+    "confirm": "Confirm",
+    "cancel": "Cancel",
+    "processing": "Processing...",
+
+    "updateStatus": {
+      "title": "Update Status",
+      "description": "Change the status of {{count}} item(s) to:",
+      "selectStatus": "Select new status"
+    },
+
+    "assign": {
+      "title": "Assign Items",
+      "description": "Assign {{count}} item(s) to:",
+      "selectAssignee": "Select assignee"
+    },
+
+    "addTags": {
+      "title": "Add Tags",
+      "description": "Add tags to {{count}} item(s):",
+      "selectTags": "Select or create tags",
+      "tagPlaceholder": "Type to search or create tags..."
+    },
+
+    "removeTags": {
+      "title": "Remove Tags",
+      "description": "Remove tags from {{count}} item(s):",
+      "selectTags": "Select tags to remove"
+    },
+
+    "export": {
+      "title": "Export Items",
+      "description": "Export {{count}} item(s) to:",
+      "selectFormat": "Select export format",
+      "formats": {
+        "csv": "CSV (Comma Separated)",
+        "xlsx": "Excel (XLSX)",
+        "pdf": "PDF Document",
+        "json": "JSON Data"
+      }
+    },
+
+    "delete": {
+      "title": "Delete Items",
+      "description": "Are you sure you want to delete {{count}} item(s)?",
+      "warning": "This action is destructive and may affect related data.",
+      "permanentWarning": "Deleted items cannot be recovered."
+    },
+
+    "archive": {
+      "title": "Archive Items",
+      "description": "Archive {{count}} item(s)?",
+      "note": "Archived items can be restored later."
+    },
+
+    "changePriority": {
+      "title": "Change Priority",
+      "description": "Change the priority of {{count}} item(s) to:",
+      "selectPriority": "Select new priority"
+    },
+
+    "escalate": {
+      "title": "Escalate Items",
+      "description": "Escalate {{count}} item(s)?",
+      "reason": "Reason (optional)",
+      "reasonPlaceholder": "Enter escalation reason..."
+    }
+  },
+
+  "progress": {
+    "title": "Processing...",
+    "processing": "Processing {{current}} of {{total}}",
+    "completed": "Completed",
+    "failed": "Failed",
+    "cancelled": "Cancelled",
+    "cancel": "Cancel",
+    "pleaseWait": "Please wait while we process your request"
+  },
+
+  "result": {
+    "success": "Successfully {{action}} {{count}} item(s)",
+    "partialSuccess": "{{success}} of {{total}} item(s) {{action}} successfully",
+    "failed": "Failed to {{action}} items",
+    "failedItems": "{{count}} item(s) failed",
+    "viewFailures": "View failures",
+    "retry": "Retry",
+    "retryFailed": "Retry failed items"
+  },
+
+  "undo": {
+    "message": "{{action}} {{count}} item(s)",
+    "undo": "Undo",
+    "undoing": "Undoing...",
+    "undoSuccess": "Successfully undone",
+    "undoFailed": "Failed to undo",
+    "timeRemaining": "{{seconds}}s remaining",
+    "immediateUndo": "Action completed. Click to undo.",
+    "countdown": "Undo available for {{seconds}}s",
+    "keyboardHint": "Press Ctrl+Z to undo",
+    "paused": "Paused"
+  },
+
+  "preview": {
+    "title": "Review Items",
+    "description": "Review and modify the items to {{action}}:",
+    "includedCount": "{{count}} included",
+    "excludedCount": "{{count}} excluded",
+    "includeAll": "Include all",
+    "excludeAll": "Exclude all",
+    "showExcluded": "Show excluded",
+    "hideExcluded": "Hide excluded",
+    "searchPlaceholder": "Search items...",
+    "noResults": "No items match your search",
+    "noItems": "No items to preview",
+    "noItemsWarning": "No items selected. Please include at least one item.",
+    "includeItem": "Include {{name}}",
+    "excludeItem": "Exclude {{name}}",
+    "selectItems": "Select items to include",
+    "deselectItems": "Deselect items to exclude",
+    "itemsToProcess": "{{count}} item(s) will be processed",
+    "excludedFromAction": "{{count}} item(s) will be excluded from this action"
+  },
+
+  "entityTypes": {
+    "entity": "item",
+    "entity_plural": "items",
+    "document": "document",
+    "document_plural": "documents",
+    "ticket": "ticket",
+    "ticket_plural": "tickets",
+    "dossier": "dossier",
+    "dossier_plural": "dossiers",
+    "engagement": "engagement",
+    "engagement_plural": "engagements",
+    "commitment": "commitment",
+    "commitment_plural": "commitments",
+    "deliverable": "deliverable",
+    "deliverable_plural": "deliverables",
+    "person": "person",
+    "person_plural": "persons",
+    "working-group": "working group",
+    "working-group_plural": "working groups"
+  },
+
+  "status": {
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "draft": "Draft",
+    "review": "Review",
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "archived": "Archived"
+  },
+
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+
+  "errors": {
+    "noSelection": "No items selected",
+    "selectionRequired": "Please select at least one item",
+    "maxExceeded": "Cannot select more than {{max}} items",
+    "actionFailed": "Action failed",
+    "networkError": "Network error. Please try again.",
+    "unauthorized": "You don't have permission to perform this action",
+    "invalidItems": "Some selected items are invalid",
+    "itemNotFound": "Item not found: {{id}}"
+  },
+
+  "accessibility": {
+    "toolbar": "Bulk actions toolbar",
+    "selectionCheckbox": "Selection checkbox for {{name}}",
+    "selectAllCheckbox": "Select all items checkbox",
+    "actionButton": "{{action}} action button",
+    "progressBar": "Action progress: {{progress}}%",
+    "closeDialog": "Close dialog",
+    "undoButton": "Undo last action"
+  }
+}

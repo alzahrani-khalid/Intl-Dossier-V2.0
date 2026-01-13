@@ -1,0 +1,219 @@
+{
+  "title": "التصدير والاستيراد",
+  "export": {
+    "title": "تصدير البيانات",
+    "description": "تحميل البيانات كملف Excel أو CSV",
+    "button": "تصدير",
+    "downloading": "جاري التحميل...",
+    "format": {
+      "label": "صيغة التصدير",
+      "csv": "CSV (مفصولة بفواصل)",
+      "xlsx": "Excel (XLSX)",
+      "json": "JSON",
+      "pdf": "PDF"
+    },
+    "options": {
+      "title": "خيارات التصدير",
+      "includeTemplate": "تضمين رؤوس القالب",
+      "includeExample": "تضمين صف بيانات نموذجي",
+      "selectedOnly": "تصدير العناصر المحددة فقط",
+      "allData": "تصدير جميع البيانات المتاحة"
+    },
+    "columns": {
+      "title": "اختر الأعمدة",
+      "selectAll": "تحديد الكل",
+      "deselectAll": "إلغاء تحديد الكل"
+    },
+    "language": {
+      "title": "لغة العناوين",
+      "en": "الإنجليزية",
+      "ar": "العربية",
+      "both": "كلاهما (الإنجليزية والعربية)"
+    },
+    "success": {
+      "title": "اكتمل التصدير",
+      "message": "تم تصدير {{count}} سجل بنجاح"
+    },
+    "error": {
+      "title": "فشل التصدير",
+      "noData": "لا توجد بيانات متاحة للتصدير",
+      "tooManyRecords": "عدد السجلات كبير جداً. الحد الأقصى {{max}} سجل.",
+      "unauthorized": "ليس لديك صلاحية لتصدير هذه البيانات",
+      "unknown": "حدث خطأ غير معروف أثناء التصدير"
+    }
+  },
+  "import": {
+    "title": "استيراد البيانات",
+    "description": "رفع ملف Excel أو CSV لاستيراد البيانات",
+    "button": "استيراد",
+    "uploading": "جاري الرفع...",
+    "dropzone": {
+      "title": "اسحب الملف هنا أو انقر للتصفح",
+      "subtitle": "يدعم ملفات CSV و Excel (XLSX)",
+      "maxSize": "الحد الأقصى لحجم الملف: {{size}} ميجابايت"
+    },
+    "mode": {
+      "title": "وضع الاستيراد",
+      "create": "إنشاء سجلات جديدة فقط",
+      "createDescription": "سيتم تخطي الصفوف التي تطابق السجلات الموجودة",
+      "update": "تحديث السجلات الموجودة فقط",
+      "updateDescription": "سيتم تخطي الصفوف التي لا تطابق السجلات الموجودة",
+      "upsert": "إنشاء أو تحديث السجلات",
+      "upsertDescription": "سيتم إنشاء سجلات جديدة وتحديث الموجودة"
+    },
+    "conflictResolution": {
+      "title": "حل التعارضات",
+      "skip": "تخطي الصفوف المتعارضة",
+      "skipDescription": "عدم تعديل السجلات الموجودة",
+      "overwrite": "استبدال البيانات الموجودة",
+      "overwriteDescription": "استبدال جميع الحقول بالقيم المستوردة",
+      "merge": "دمج التغييرات",
+      "mergeDescription": "تحديث الحقول غير الفارغة فقط من الاستيراد",
+      "manual": "الحل يدوياً",
+      "manualDescription": "مراجعة كل تعارض قبل الاستيراد"
+    },
+    "validation": {
+      "title": "نتائج التحقق",
+      "validating": "جاري التحقق من الملف...",
+      "summary": {
+        "title": "ملخص الملف",
+        "totalRows": "إجمالي الصفوف",
+        "validRows": "الصفوف الصالحة",
+        "invalidRows": "الصفوف غير الصالحة",
+        "warningRows": "صفوف بتحذيرات",
+        "conflictRows": "الصفوف المتعارضة"
+      },
+      "status": {
+        "valid": "صالح",
+        "invalid": "غير صالح",
+        "warning": "تحذير",
+        "conflict": "تعارض"
+      },
+      "errors": {
+        "title": "أخطاء التحقق",
+        "showAll": "عرض جميع الأخطاء",
+        "hideErrors": "إخفاء الأخطاء",
+        "errorCount": "تم العثور على {{count}} خطأ",
+        "warningCount": "تم العثور على {{count}} تحذير"
+      },
+      "noErrors": "لم يتم العثور على أخطاء. جاهز للاستيراد.",
+      "hasErrors": "يرجى إصلاح الأخطاء قبل الاستيراد.",
+      "hasWarnings": "بعض الصفوف بها تحذيرات. يمكنك المتابعة بالاستيراد."
+    },
+    "conflicts": {
+      "title": "حل التعارضات",
+      "description": "الصفوف التالية تطابق سجلات موجودة. اختر كيفية التعامل مع كل تعارض.",
+      "row": "الصف {{number}}",
+      "existingRecord": "السجل الموجود",
+      "importedData": "البيانات المستوردة",
+      "field": "الحقل",
+      "currentValue": "القيمة الحالية",
+      "newValue": "القيمة الجديدة",
+      "action": "الإجراء",
+      "actions": {
+        "skip": "تخطي",
+        "overwrite": "استبدال",
+        "merge": "دمج"
+      },
+      "applyToAll": "تطبيق على جميع التعارضات"
+    },
+    "preview": {
+      "title": "معاينة التغييرات",
+      "showingRows": "عرض {{shown}} من {{total}} صف",
+      "columns": "الأعمدة المكتشفة: {{count}}",
+      "newRecord": "جديد",
+      "updateRecord": "تحديث",
+      "skipRecord": "تخطي"
+    },
+    "execute": {
+      "title": "تنفيذ الاستيراد",
+      "button": "بدء الاستيراد",
+      "confirm": "هل أنت متأكد من استيراد {{count}} سجل؟",
+      "confirmWithConflicts": "هل أنت متأكد؟ سيتم {{action}} {{conflicts}} سجل متعارض.",
+      "importing": "جاري الاستيراد..."
+    },
+    "success": {
+      "title": "اكتمل الاستيراد",
+      "message": "تم استيراد {{success}} من {{total}} سجل بنجاح",
+      "created": "تم إنشاء {{count}} سجل",
+      "updated": "تم تحديث {{count}} سجل",
+      "skipped": "تم تخطي {{count}} سجل"
+    },
+    "error": {
+      "title": "فشل الاستيراد",
+      "parseError": "فشل في تحليل الملف. يرجى التحقق من صيغة الملف.",
+      "encodingError": "خطأ في ترميز الملف. يرجى استخدام ترميز UTF-8.",
+      "invalidFormat": "صيغة ملف غير صالحة. يرجى استخدام CSV أو XLSX.",
+      "emptyFile": "الملف فارغ",
+      "tooLarge": "الملف كبير جداً. الحد الأقصى {{size}} ميجابايت",
+      "missingColumns": "أعمدة مطلوبة مفقودة: {{columns}}",
+      "partialSuccess": "اكتمل الاستيراد جزئياً. فشل {{failed}} من {{total}} صف.",
+      "unauthorized": "ليس لديك صلاحية لاستيراد البيانات",
+      "unknown": "حدث خطأ غير معروف أثناء الاستيراد"
+    }
+  },
+  "template": {
+    "title": "تحميل القالب",
+    "description": "تحميل ملف قالب بالصيغة الصحيحة وعناوين الأعمدة",
+    "button": "تحميل القالب",
+    "options": {
+      "includeSample": "تضمين صف بيانات نموذجي",
+      "format": "صيغة القالب"
+    },
+    "success": "تم تحميل القالب بنجاح",
+    "instructions": {
+      "title": "تعليمات القالب",
+      "requiredFields": "الحقول المطلوبة مميزة بعلامة النجمة (*)",
+      "dateFormat": "التواريخ يجب أن تكون بصيغة: YYYY-MM-DD",
+      "booleanFormat": "القيم المنطقية: true/false أو yes/no",
+      "enumNote": "للحقول المنسدلة، استخدم القيم المحددة بالضبط",
+      "encoding": "احفظ الملف بترميز UTF-8 للحفاظ على النص العربي"
+    }
+  },
+  "progress": {
+    "uploading": "جاري رفع الملف...",
+    "parsing": "جاري تحليل الملف...",
+    "validating": "جاري التحقق من البيانات...",
+    "importing": "جاري استيراد السجلات...",
+    "fetching": "جاري جلب البيانات...",
+    "generating": "جاري إنشاء الملف...",
+    "complete": "اكتمل!",
+    "error": "حدث خطأ"
+  },
+  "errors": {
+    "required_field": "هذا الحقل مطلوب",
+    "invalid_type": "نوع بيانات غير صالح. المتوقع {{expected}}",
+    "invalid_format": "صيغة غير صالحة",
+    "invalid_enum": "قيمة غير صالحة. القيم المسموحة: {{values}}",
+    "max_length_exceeded": "القيمة تتجاوز الحد الأقصى {{max}} حرف",
+    "min_value": "القيمة يجب أن تكون على الأقل {{min}}",
+    "max_value": "القيمة يجب ألا تتجاوز {{max}}",
+    "pattern_mismatch": "القيمة لا تطابق النمط المطلوب",
+    "duplicate_row": "تم اكتشاف صف مكرر",
+    "duplicate_identifier": "معرف مكرر: {{field}}",
+    "invalid_reference": "السجل المرجعي غير موجود: {{reference}}",
+    "encoding_error": "خطأ في ترميز الأحرف",
+    "parse_error": "فشل في تحليل القيمة",
+    "conflict_detected": "تعارض مع سجل موجود"
+  },
+  "entities": {
+    "dossier": "الملفات",
+    "person": "الأشخاص",
+    "engagement": "الارتباطات",
+    "working-group": "مجموعات العمل",
+    "commitment": "الالتزامات",
+    "deliverable": "المخرجات"
+  },
+  "common": {
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "back": "رجوع",
+    "next": "التالي",
+    "finish": "إنهاء",
+    "retry": "إعادة المحاولة",
+    "download": "تحميل",
+    "upload": "رفع",
+    "clear": "مسح",
+    "reset": "إعادة تعيين"
+  }
+}

@@ -1,0 +1,168 @@
+{
+  "checklist": {
+    "title": "Getting Started",
+    "subtitle": "Complete these steps to get the most out of the system",
+    "progress": "{{completed}} of {{total}} completed",
+    "progressPercentage": "{{percentage}}% complete",
+    "estimatedTime": "~{{minutes}} min",
+    "totalEstimatedTime": "Estimated time: {{minutes}} minutes",
+    "skip": "Skip",
+    "skipAll": "Skip All",
+    "dismiss": "Dismiss",
+    "dismissConfirm": "Are you sure you want to dismiss onboarding? You can resume it later from settings.",
+    "resume": "Resume Onboarding",
+    "reset": "Start Over",
+    "resetConfirm": "This will reset all your progress. Are you sure?",
+    "completed": "Completed",
+    "skipped": "Skipped",
+    "required": "Required",
+    "optional": "Optional",
+    "locked": "Complete previous steps first",
+    "getStarted": "Get Started",
+    "continue": "Continue",
+    "viewAll": "View All Steps",
+    "hideCompleted": "Hide Completed",
+    "showCompleted": "Show Completed",
+    "nextStep": "Next Step",
+    "allComplete": "All Done!",
+    "allCompleteMessage": "Congratulations! You've completed all onboarding steps."
+  },
+  "milestones": {
+    "celebration": {
+      "25": {
+        "title": "Great Start!",
+        "message": "You're 25% through your onboarding journey. Keep going!"
+      },
+      "50": {
+        "title": "Halfway There!",
+        "message": "You've completed half of your setup. You're doing great!"
+      },
+      "75": {
+        "title": "Almost Done!",
+        "message": "Just a few more steps to complete your onboarding."
+      },
+      "100": {
+        "title": "Onboarding Complete!",
+        "message": "Congratulations! You're all set to use the system effectively."
+      }
+    },
+    "badge": {
+      "25": "Quick Learner",
+      "50": "Making Progress",
+      "75": "Almost Pro",
+      "100": "Fully Onboarded"
+    }
+  },
+  "admin": {
+    "createDossier": {
+      "title": "Create your first dossier",
+      "description": "Dossiers are the core of the system. Create one for a country, organization, or topic.",
+      "hint": "Start with a country dossier to organize bilateral relationships"
+    },
+    "addRelationship": {
+      "title": "Add key relationships",
+      "description": "Connect dossiers together to build a network of linked information."
+    },
+    "configureNotifications": {
+      "title": "Set up notifications",
+      "description": "Configure alerts for deadlines, renewals, and important updates."
+    },
+    "createEngagement": {
+      "title": "Log an engagement",
+      "description": "Record meetings, conferences, and other international engagements."
+    },
+    "uploadDocument": {
+      "title": "Upload a document",
+      "description": "Add supporting documents like MOUs, agreements, or reports."
+    },
+    "generateBrief": {
+      "title": "Generate an AI brief",
+      "description": "Use AI to create comprehensive briefing documents from your dossier data."
+    }
+  },
+  "editor": {
+    "createDossier": {
+      "title": "Create your first dossier",
+      "description": "Start organizing information by creating a dossier for a country or organization.",
+      "hint": "Dossiers help centralize all related information in one place"
+    },
+    "addRelationship": {
+      "title": "Link dossiers together",
+      "description": "Create relationships between dossiers to show how entities are connected."
+    },
+    "createEngagement": {
+      "title": "Record an engagement",
+      "description": "Log meetings, workshops, or conferences you've attended or organized."
+    },
+    "uploadDocument": {
+      "title": "Add a document",
+      "description": "Upload documents to keep important files organized and searchable."
+    },
+    "configureNotifications": {
+      "title": "Customize notifications",
+      "description": "Choose which updates and reminders you want to receive."
+    }
+  },
+  "viewer": {
+    "exploreDossiers": {
+      "title": "Explore dossiers",
+      "description": "Browse existing dossiers to see information about countries and organizations."
+    },
+    "viewEngagements": {
+      "title": "View engagements",
+      "description": "See the history of meetings, conferences, and international activities."
+    },
+    "configureNotifications": {
+      "title": "Set up notifications",
+      "description": "Get notified about updates to dossiers and engagements you follow."
+    }
+  },
+  "analyst": {
+    "createDossier": {
+      "title": "Create a country dossier",
+      "description": "Build comprehensive dossiers for countries in your portfolio.",
+      "hint": "Include bilateral history, key contacts, and active agreements"
+    },
+    "addRelationship": {
+      "title": "Map relationships",
+      "description": "Document how countries and organizations are connected."
+    },
+    "createPosition": {
+      "title": "Document a position",
+      "description": "Record official positions on international topics for consistency."
+    },
+    "generateBrief": {
+      "title": "Create an AI briefing",
+      "description": "Generate comprehensive briefs using AI from your dossier data."
+    },
+    "uploadDocument": {
+      "title": "Upload source documents",
+      "description": "Add agreements, reports, and other supporting materials."
+    }
+  },
+  "manager": {
+    "exploreDashboard": {
+      "title": "Explore your dashboard",
+      "description": "Get an overview of activities, metrics, and team performance."
+    },
+    "viewTeamWork": {
+      "title": "Review team workload",
+      "description": "See commitments, tasks, and deadlines across your team."
+    },
+    "createEngagement": {
+      "title": "Create an engagement",
+      "description": "Plan and record international meetings and conferences."
+    },
+    "configureNotifications": {
+      "title": "Set up alerts",
+      "description": "Get notified about deadlines, escalations, and important updates."
+    }
+  },
+  "emptyState": {
+    "title": "Welcome! Let's get you started",
+    "description": "Complete a few quick steps to set up your workspace and learn the essentials.",
+    "startButton": "Start Onboarding",
+    "laterButton": "Maybe Later",
+    "showChecklistButton": "Show Setup Checklist"
+  }
+}

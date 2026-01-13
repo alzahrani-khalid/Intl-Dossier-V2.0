@@ -1,0 +1,10 @@
+{
+  "category": "ui",
+  "description": "Provide pre-built templates for common document types (country profiles, policy briefs, engagement reports) with guided wizards that prompt for required fields and suggest related entities.\n\n**Rationale:** New users face steep learning curves with complex systems. Templates ensure consistency, reduce training time, and help maintain organizational standards across teams.",
+  "title": "Template Library and Quick Start Wizards",
+  "status": "completed",
+  "id": "feature-1768132641996-toxpyubri",
+  "branchName": "main",
+  "startedAt": "2026-01-11T22:33:09.402Z",
+  "updatedAt": "2026-01-11T22:59:02.122Z"
+}

@@ -1,0 +1,120 @@
+{
+  "multiLanguageContent": "المحتوى متعدد اللغات",
+  "multiLanguageContentDescription": "إدارة المحتوى بلغات متعددة مع دعم الترجمة",
+
+  "addLanguage": "إضافة لغة",
+  "removeLanguage": "إزالة اللغة",
+  "removeLanguageConfirm": "هل أنت متأكد من إزالة {{language}}؟ سيتم حذف كل المحتوى بهذه اللغة.",
+  "selectLanguage": "اختر لغة",
+  "primaryLanguage": "اللغة الرئيسية",
+  "setAsPrimary": "تعيين كلغة رئيسية",
+
+  "translate": "ترجمة",
+  "translateFieldTooltip": "ترجمة تلقائية لهذا الحقل من اللغة الرئيسية",
+  "translateAllMissing": "ترجمة جميع الحقول المفقودة",
+  "translating": "جاري الترجمة...",
+  "translationComplete": "اكتملت الترجمة",
+  "translationFailed": "فشلت الترجمة",
+
+  "saveChanges": "حفظ التغييرات",
+  "saving": "جاري الحفظ...",
+  "saved": "تم الحفظ",
+  "unsavedChanges": "لديك تغييرات غير محفوظة",
+  "cancel": "إلغاء",
+  "remove": "إزالة",
+
+  "completeness": "الاكتمال",
+  "complete": "مكتمل",
+  "incomplete": "غير مكتمل",
+  "missingFields": "{{count}} حقول مفقودة",
+
+  "contentLanguage": "لغة المحتوى",
+  "availableLanguages": "اللغات المتاحة",
+  "addNewLanguage": "إضافة لغة جديدة",
+
+  "machineTranslated": "ترجمة آلية",
+  "humanReviewed": "مراجعة بشرية",
+  "pendingReview": "في انتظار المراجعة",
+  "approved": "معتمد",
+  "draft": "مسودة",
+  "published": "منشور",
+
+  "confidence": {
+    "high": "ثقة عالية",
+    "medium": "ثقة متوسطة",
+    "low": "ثقة منخفضة",
+    "unknown": "ثقة غير معروفة"
+  },
+
+  "languages": {
+    "ar": "العربية",
+    "en": "الإنجليزية",
+    "fr": "الفرنسية",
+    "es": "الإسبانية",
+    "zh": "الصينية",
+    "ru": "الروسية",
+    "pt": "البرتغالية",
+    "de": "الألمانية",
+    "it": "الإيطالية",
+    "ja": "اليابانية",
+    "ko": "الكورية",
+    "tr": "التركية",
+    "fa": "الفارسية",
+    "ur": "الأردية",
+    "hi": "الهندية"
+  },
+
+  "fields": {
+    "name": "الاسم",
+    "description": "الوصف",
+    "summary": "الملخص",
+    "content": "المحتوى",
+    "title": "العنوان",
+    "notes": "الملاحظات",
+    "objectives": "الأهداف",
+    "outcomes": "النتائج",
+    "biography": "السيرة الذاتية",
+    "mandate": "التفويض",
+    "capital": "العاصمة",
+    "address": "العنوان",
+    "location": "الموقع",
+    "venue": "المكان"
+  },
+
+  "errors": {
+    "loadFailed": "فشل تحميل الترجمات",
+    "saveFailed": "فشل حفظ الترجمة",
+    "translateFailed": "فشلت الترجمة. يرجى المحاولة مرة أخرى.",
+    "noSourceContent": "لا يوجد محتوى مصدر متاح للترجمة",
+    "unauthorized": "غير مصرح لك بتحرير هذا المحتوى",
+    "networkError": "خطأ في الشبكة. يرجى التحقق من اتصالك."
+  },
+
+  "hints": {
+    "primaryLanguage": "تُستخدم اللغة الرئيسية كمصدر للترجمات التلقائية",
+    "machineTranslation": "يجب مراجعة الترجمات الآلية قبل النشر",
+    "rtlLanguage": "هذه اللغة تستخدم اتجاه الكتابة من اليمين إلى اليسار"
+  },
+
+  "dossierFields": {
+    "name": "اسم الملف",
+    "description": "الوصف",
+    "summary": "الملخص"
+  },
+
+  "briefFields": {
+    "title": "عنوان الموجز",
+    "summary": "الملخص التنفيذي",
+    "content": "محتوى الموجز"
+  },
+
+  "engagementFields": {
+    "name": "اسم المشاركة",
+    "description": "الوصف",
+    "objectives": "الأهداف",
+    "outcomes": "النتائج",
+    "location": "الموقع",
+    "venue": "المكان",
+    "notes": "الملاحظات"
+  }
+}

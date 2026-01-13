@@ -1,0 +1,10 @@
+{
+  "category": "ui",
+  "description": "Automatically detect and track citations between dossiers, briefs, and external sources. Visualize citation networks and identify when referenced documents are updated or archived.\n\n**Rationale:** Policy documents build on previous work and external sources. Tracking these relationships helps maintain consistency and alerts users when foundational documents change.",
+  "title": "Cross-Reference and Citation Tracker",
+  "status": "completed",
+  "id": "feature-1768132646728-ikawryw0f",
+  "branchName": "main",
+  "startedAt": "2026-01-11T22:59:09.425Z",
+  "updatedAt": "2026-01-11T23:24:11.138Z"
+}

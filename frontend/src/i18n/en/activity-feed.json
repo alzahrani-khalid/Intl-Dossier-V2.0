@@ -1,0 +1,138 @@
+{
+  "title": "Activity Feed",
+  "subtitle": "Recent activities across all entities",
+  "empty": "No activities to display",
+  "loading": "Loading activities...",
+  "loadMore": "Load more",
+  "error": {
+    "title": "Failed to load activities",
+    "retry": "Try again"
+  },
+  "filters": {
+    "title": "Filters",
+    "search": "Search activities...",
+    "clear": "Clear",
+    "clearAll": "Clear all filters",
+    "entityType": "Entity Type",
+    "actionType": "Action Type",
+    "dateRange": "Date Range",
+    "user": "User",
+    "followedOnly": "Following only",
+    "applied": "Applied filters"
+  },
+  "datePresets": {
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "last7Days": "Last 7 days",
+    "last30Days": "Last 30 days",
+    "last90Days": "Last 90 days",
+    "thisMonth": "This month",
+    "lastMonth": "Last month",
+    "custom": "Custom range",
+    "from": "From",
+    "to": "To",
+    "clearDates": "Clear dates"
+  },
+  "entityTypes": {
+    "country": "Country",
+    "organization": "Organization",
+    "person": "Person",
+    "engagement": "Engagement",
+    "forum": "Forum",
+    "workingGroup": "Working Group",
+    "theme": "Theme",
+    "mou": "MoU",
+    "document": "Document",
+    "event": "Event",
+    "contact": "Contact",
+    "task": "Task",
+    "brief": "Brief",
+    "commitment": "Commitment",
+    "deliverable": "Deliverable",
+    "position": "Position",
+    "relationship": "Relationship",
+    "intelligence": "Intelligence",
+    "intakeTicket": "Intake Ticket"
+  },
+  "actionTypes": {
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "comment": "Comment",
+    "statusChange": "Status Change",
+    "upload": "Upload",
+    "download": "Download",
+    "view": "View",
+    "share": "Share",
+    "assign": "Assign",
+    "mention": "Mention",
+    "approval": "Approval",
+    "rejection": "Rejection",
+    "archive": "Archive",
+    "restore": "Restore"
+  },
+  "actions": {
+    "created": "created",
+    "updated": "updated",
+    "deleted": "deleted",
+    "commented": "commented on",
+    "changedStatus": "changed status of",
+    "uploaded": "uploaded",
+    "downloaded": "downloaded",
+    "viewed": "viewed",
+    "shared": "shared",
+    "assigned": "assigned",
+    "mentioned": "mentioned in",
+    "approved": "approved",
+    "rejected": "rejected",
+    "archived": "archived",
+    "restored": "restored"
+  },
+  "follow": {
+    "follow": "Follow",
+    "unfollow": "Unfollow",
+    "following": "Following",
+    "followTooltip": "Follow to get notified of changes",
+    "unfollowTooltip": "Unfollow to stop receiving updates",
+    "followSuccess": "Successfully followed entity",
+    "unfollowSuccess": "Successfully unfollowed entity",
+    "followError": "Failed to follow entity",
+    "unfollowError": "Failed to unfollow entity"
+  },
+  "preferences": {
+    "title": "Activity Feed Preferences",
+    "defaultEntityTypes": "Default entity types",
+    "defaultActionTypes": "Default action types",
+    "itemsPerPage": "Items per page",
+    "showOwnActivities": "Show my activities",
+    "compactView": "Compact view",
+    "emailDigestFrequency": "Email digest frequency",
+    "pushNotifications": "Push notifications",
+    "save": "Save preferences",
+    "saveSuccess": "Preferences saved successfully",
+    "saveError": "Failed to save preferences"
+  },
+  "emailFrequency": {
+    "realtime": "Real-time",
+    "hourly": "Hourly",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "never": "Never"
+  },
+  "followReason": {
+    "manual": "Manually followed",
+    "autoCreator": "Auto-followed (creator)",
+    "autoAssignee": "Auto-followed (assignee)",
+    "autoMention": "Auto-followed (mentioned)",
+    "autoTeam": "Auto-followed (team member)"
+  },
+  "stats": {
+    "followingCount": "Following {{count}} item",
+    "followingCountPlural": "Following {{count}} items",
+    "noFollowing": "Not following any items"
+  },
+  "hints": {
+    "followedOnlyEmpty": "Try unchecking \"Following only\" to see all activities",
+    "noFiltersMatch": "No activities match your current filters"
+  }
+}

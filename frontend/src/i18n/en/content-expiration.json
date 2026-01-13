@@ -1,0 +1,204 @@
+{
+  "title": "Content Expiration",
+  "description": "Manage content freshness and review schedules",
+
+  "status": {
+    "current": "Current",
+    "review_pending": "Review Pending",
+    "outdated": "Outdated",
+    "refreshing": "Refreshing",
+    "archived": "Archived"
+  },
+
+  "statusDescription": {
+    "current": "Content is up-to-date and valid",
+    "review_pending": "Content is approaching expiration and needs review",
+    "outdated": "Content has expired and requires immediate attention",
+    "refreshing": "Content is being refreshed",
+    "archived": "Content has been archived"
+  },
+
+  "badge": {
+    "expiresIn": "Expires in {{days}} days",
+    "expiresToday": "Expires today",
+    "expired": "Expired {{days}} days ago",
+    "expiredToday": "Expired today",
+    "noExpiration": "No expiration set"
+  },
+
+  "actions": {
+    "setExpiration": "Set Expiration",
+    "extendExpiration": "Extend Expiration",
+    "markReviewed": "Mark as Reviewed",
+    "requestReview": "Request Review",
+    "viewHistory": "View History",
+    "archiveContent": "Archive Content",
+    "refreshBrief": "Refresh Brief"
+  },
+
+  "settings": {
+    "title": "Expiration Settings",
+    "expirationDate": "Expiration Date",
+    "expirationRule": "Expiration Rule",
+    "customDate": "Custom Date",
+    "useRule": "Use Rule",
+    "autoRefresh": "Auto-refresh briefs on expiration",
+    "autoRefreshDescription": "Automatically regenerate AI briefs when content expires",
+    "selectRule": "Select a rule",
+    "noRulesAvailable": "No rules available for this entity type"
+  },
+
+  "extend": {
+    "title": "Extend Expiration",
+    "extensionPeriod": "Extension Period",
+    "customDays": "Custom (days)",
+    "reason": "Reason for Extension",
+    "reasonPlaceholder": "Why is this extension needed?",
+    "confirm": "Extend Expiration",
+    "cancel": "Cancel",
+    "presets": {
+      "1week": "1 Week",
+      "2weeks": "2 Weeks",
+      "1month": "1 Month",
+      "3months": "3 Months",
+      "6months": "6 Months",
+      "1year": "1 Year"
+    }
+  },
+
+  "review": {
+    "title": "Mark as Reviewed",
+    "notes": "Review Notes",
+    "notesPlaceholder": "Describe what was reviewed or updated...",
+    "confirm": "Confirm Review",
+    "cancel": "Cancel",
+    "requestTitle": "Request Content Review",
+    "requestMessage": "Message to Owners",
+    "requestPlaceholder": "Explain why a review is needed...",
+    "requestConfirm": "Send Request",
+    "lastReviewed": "Last reviewed",
+    "reviewedBy": "Reviewed by",
+    "neverReviewed": "Never reviewed"
+  },
+
+  "history": {
+    "title": "Expiration History",
+    "noHistory": "No history available",
+    "events": {
+      "created": "Expiration set",
+      "warning_sent": "Warning notification sent",
+      "critical_warning_sent": "Critical warning sent",
+      "expired": "Content expired",
+      "reviewed": "Content reviewed",
+      "extended": "Expiration extended",
+      "refreshed": "Content refreshed",
+      "archived": "Content archived",
+      "restored": "Content restored",
+      "rule_changed": "Expiration rule changed"
+    },
+    "by": "by",
+    "system": "System"
+  },
+
+  "dashboard": {
+    "title": "Content Expiration Overview",
+    "totalTracked": "Total Tracked",
+    "currentContent": "Current",
+    "pendingReview": "Pending Review",
+    "outdatedContent": "Outdated",
+    "expiring7Days": "Expiring in 7 Days",
+    "expiring30Days": "Expiring in 30 Days",
+    "viewAll": "View All",
+    "noData": "No expiration data available"
+  },
+
+  "list": {
+    "title": "Expiring Content",
+    "noExpiring": "No content expiring in the selected timeframe",
+    "filters": {
+      "entityType": "Entity Type",
+      "all": "All Types",
+      "dossier": "Dossiers",
+      "brief": "Briefs",
+      "ai_brief": "AI Briefs",
+      "position": "Positions",
+      "timeframe": "Timeframe",
+      "days7": "Next 7 Days",
+      "days14": "Next 14 Days",
+      "days30": "Next 30 Days",
+      "days60": "Next 60 Days",
+      "days90": "Next 90 Days",
+      "includeExpired": "Include Expired"
+    },
+    "columns": {
+      "name": "Name",
+      "type": "Type",
+      "expiresIn": "Expires In",
+      "status": "Status",
+      "actions": "Actions"
+    }
+  },
+
+  "rules": {
+    "title": "Expiration Rules",
+    "description": "Configure default expiration periods and actions",
+    "noRules": "No expiration rules configured",
+    "fields": {
+      "name": "Rule Name",
+      "entityType": "Entity Type",
+      "dossierType": "Dossier Type",
+      "sensitivityLevel": "Sensitivity Level",
+      "expirationDays": "Default Expiration (days)",
+      "warningDays": "Warning Period (days)",
+      "criticalDays": "Critical Period (days)",
+      "warningAction": "Warning Action",
+      "criticalAction": "Critical Action",
+      "expirationAction": "Expiration Action",
+      "autoArchive": "Auto-archive After (days)",
+      "autoRefresh": "Auto-refresh Briefs"
+    },
+    "actions": {
+      "notify_owners": "Notify Owners",
+      "notify_reviewers": "Notify Reviewers",
+      "mark_outdated": "Mark as Outdated",
+      "archive_content": "Archive Content",
+      "require_review": "Require Review",
+      "trigger_brief_refresh": "Trigger Brief Refresh"
+    }
+  },
+
+  "notifications": {
+    "expirationWarning": "Content Expiring Soon",
+    "expirationWarningBody": "\"{{name}}\" will expire in {{days}} days",
+    "expirationCritical": "Content Expiration Critical",
+    "expirationCriticalBody": "\"{{name}}\" will expire in {{days}} days. Immediate review required.",
+    "contentExpired": "Content Expired",
+    "contentExpiredBody": "\"{{name}}\" has expired and is now marked as outdated",
+    "reviewRequested": "Content Review Requested",
+    "reviewRequestedBody": "A review has been requested for \"{{name}}\"",
+    "reviewComplete": "Content Review Complete",
+    "reviewCompleteBody": "\"{{name}}\" has been reviewed and marked as current",
+    "extensionApplied": "Expiration Extended",
+    "extensionAppliedBody": "\"{{name}}\" expiration extended by {{days}} days"
+  },
+
+  "errors": {
+    "fetchFailed": "Failed to fetch expiration data",
+    "setFailed": "Failed to set expiration",
+    "extendFailed": "Failed to extend expiration",
+    "reviewFailed": "Failed to mark as reviewed",
+    "requestFailed": "Failed to request review"
+  },
+
+  "success": {
+    "expirationSet": "Expiration date set successfully",
+    "expirationExtended": "Expiration extended successfully",
+    "markedReviewed": "Content marked as reviewed",
+    "reviewRequested": "Review request sent to content owners"
+  },
+
+  "confirmations": {
+    "archiveContent": "Are you sure you want to archive this content? This will mark it as archived and it will no longer appear in active lists.",
+    "resetExpiration": "Are you sure you want to reset the expiration? This will start a new expiration period from today."
+  }
+}

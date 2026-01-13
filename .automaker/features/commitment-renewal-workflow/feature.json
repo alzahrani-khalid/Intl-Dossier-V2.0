@@ -1,0 +1,14 @@
+{
+  "id": "commitment-renewal-workflow",
+  "category": "Core",
+  "title": "Commitment Renewal Workflow",
+  "description": "Automated MoU renewal process with expiration alerts (90/60/30 days), renewal initiation workflow, and historical version linking. Tracks renewal negotiations and generates new reference numbers.",
+  "status": "completed",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": ["commitment-deliverables"],
+  "createdAt": "2026-01-10T15:57:25.662Z",
+  "updatedAt": "2026-01-10T18:39:57.225Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T18:12:13.318Z"
+}

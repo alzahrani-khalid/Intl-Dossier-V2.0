@@ -1,0 +1,84 @@
+{
+  "title": "Document Preview",
+  "loading": {
+    "document": "Loading document...",
+    "pdf": "Loading PDF...",
+    "image": "Loading image...",
+    "thumbnail": "Loading thumbnail..."
+  },
+  "actions": {
+    "preview": "Preview",
+    "download": "Download",
+    "downloadInstead": "Download instead",
+    "print": "Print",
+    "close": "Close",
+    "openInNewTab": "Open in new tab",
+    "zoomIn": "Zoom in",
+    "zoomOut": "Zoom out",
+    "fitToScreen": "Fit to screen",
+    "fitToWidth": "Fit to width",
+    "rotateLeft": "Rotate left",
+    "rotateRight": "Rotate right",
+    "firstPage": "First page",
+    "lastPage": "Last page",
+    "previousPage": "Previous page",
+    "nextPage": "Next page",
+    "save": "Save",
+    "delete": "Delete",
+    "cancel": "Cancel"
+  },
+  "tools": {
+    "highlight": "Highlight",
+    "comment": "Add comment",
+    "draw": "Draw",
+    "text": "Add text",
+    "color": "Color"
+  },
+  "placeholders": {
+    "addComment": "Add a comment...",
+    "addText": "Enter text..."
+  },
+  "pdf": {
+    "pageInfo": "Page {{current}} of {{total}}",
+    "goToPage": "Go to page"
+  },
+  "image": {
+    "zoomLevel": "{{level}}%",
+    "rotation": "{{degrees}}°"
+  },
+  "errors": {
+    "loadFailed": "Failed to load document",
+    "pdfLoadFailed": "Failed to load PDF",
+    "imageLoadFailed": "Failed to load image",
+    "previewNotAvailable": "Preview not available",
+    "downloadFailed": "Download failed"
+  },
+  "unsupported": {
+    "title": "Preview Not Available",
+    "description": "This file type cannot be previewed in the browser. You can download it to view locally."
+  },
+  "hints": {
+    "pinchToZoom": "Pinch to zoom, drag to pan",
+    "useArrowKeys": "Use arrow keys to navigate pages",
+    "scrollToZoom": "Scroll to zoom"
+  },
+  "annotations": {
+    "title": "Annotations",
+    "noAnnotations": "No annotations yet",
+    "addFirst": "Click to add the first annotation",
+    "saved": "Annotations saved",
+    "deleted": "Annotation deleted"
+  },
+  "thumbnails": {
+    "generating": "Generating thumbnail...",
+    "notAvailable": "Thumbnail not available"
+  },
+  "fileTypes": {
+    "pdf": "PDF Document",
+    "image": "Image",
+    "word": "Word Document",
+    "excel": "Excel Spreadsheet",
+    "text": "Text File",
+    "unsupported": "Unknown File Type"
+  }
+}

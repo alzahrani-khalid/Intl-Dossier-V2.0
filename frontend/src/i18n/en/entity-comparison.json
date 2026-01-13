@@ -1,0 +1,205 @@
+{
+  "title": "Entity Comparison",
+  "subtitle": "Compare multiple entities side-by-side",
+  "description": "Select entities of the same type to compare their fields and identify differences",
+
+  "selector": {
+    "title": "Select Entities to Compare",
+    "subtitle": "Choose {{min}}-{{max}} entities of the same type",
+    "selectType": "Select Entity Type",
+    "selectTypePlaceholder": "Choose a type...",
+    "searchPlaceholder": "Search entities...",
+    "selectedCount": "{{count}} selected",
+    "selectedCountOne": "{{count}} selected",
+    "selectedCountOther": "{{count}} selected",
+    "minRequired": "Select at least {{min}} entities",
+    "maxReached": "Maximum {{max}} entities allowed",
+    "noEntitiesFound": "No entities found",
+    "noEntitiesDescription": "Try adjusting your search or select a different type",
+    "loadingEntities": "Loading entities...",
+    "compareButton": "Compare Selected",
+    "clearSelection": "Clear All",
+    "entityTypes": {
+      "country": "Countries",
+      "organization": "Organizations",
+      "person": "People",
+      "engagement": "Engagements",
+      "forum": "Forums",
+      "working_group": "Working Groups",
+      "topic": "Topics"
+    }
+  },
+
+  "table": {
+    "field": "Field",
+    "noDataAvailable": "N/A",
+    "category": {
+      "base": "Basic Information",
+      "extension": "Type-Specific Details",
+      "metadata": "Metadata"
+    },
+    "viewMode": {
+      "table": "Table View",
+      "side_by_side": "Side by Side",
+      "highlights_only": "Differences Only"
+    },
+    "empty": {
+      "title": "No Comparison Data",
+      "description": "Select entities to start comparing"
+    },
+    "filters": {
+      "title": "Filters",
+      "showDifferences": "Show only differences",
+      "showBaseFields": "Basic fields",
+      "showExtensionFields": "Type-specific fields",
+      "showMetadataFields": "Metadata fields",
+      "resetFilters": "Reset Filters"
+    }
+  },
+
+  "difference": {
+    "same": "Identical",
+    "different": "Different",
+    "added": "Added",
+    "removed": "Removed",
+    "modified": "Modified"
+  },
+
+  "summary": {
+    "title": "Comparison Summary",
+    "totalFields": "Total Fields",
+    "sameFields": "Identical Fields",
+    "differentFields": "Different Fields",
+    "similarity": "Similarity",
+    "mostDifferent": "Most Different Fields"
+  },
+
+  "export": {
+    "title": "Export Comparison",
+    "subtitle": "Download comparison report",
+    "format": "Format",
+    "formats": {
+      "csv": "CSV (Spreadsheet)",
+      "json": "JSON (Data)",
+      "pdf": "PDF (Document)",
+      "xlsx": "Excel (Spreadsheet)"
+    },
+    "options": {
+      "includeHeader": "Include header",
+      "includeSummary": "Include summary",
+      "onlyDifferences": "Only different fields"
+    },
+    "language": "Report Language",
+    "languages": {
+      "en": "English",
+      "ar": "Arabic"
+    },
+    "exportButton": "Export",
+    "downloading": "Preparing download...",
+    "success": "Export completed successfully",
+    "error": "Export failed: {{message}}"
+  },
+
+  "fields": {
+    "base": {
+      "id": "ID",
+      "name_en": "Name (English)",
+      "name_ar": "Name (Arabic)",
+      "description_en": "Description (English)",
+      "description_ar": "Description (Arabic)",
+      "created_at": "Created At",
+      "updated_at": "Updated At",
+      "created_by": "Created By",
+      "updated_by": "Updated By"
+    },
+    "country": {
+      "iso_code_2": "ISO Code (2)",
+      "iso_code_3": "ISO Code (3)",
+      "capital_en": "Capital (English)",
+      "capital_ar": "Capital (Arabic)",
+      "region": "Region",
+      "subregion": "Sub-region",
+      "population": "Population",
+      "area_sq_km": "Area (km\u00b2)",
+      "flag_url": "Flag URL"
+    },
+    "organization": {
+      "org_code": "Organization Code",
+      "org_type": "Organization Type",
+      "parent_org_id": "Parent Organization",
+      "head_count": "Employee Count",
+      "established_date": "Established Date",
+      "website_url": "Website"
+    },
+    "person": {
+      "title": "Title",
+      "photo_url": "Photo URL",
+      "birth_date": "Birth Date",
+      "nationality": "Nationality",
+      "education": "Education",
+      "languages": "Languages",
+      "current_position": "Current Position"
+    },
+    "engagement": {
+      "engagement_type": "Engagement Type",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "location": "Location",
+      "participants": "Participants",
+      "outcomes": "Outcomes"
+    },
+    "forum": {
+      "forum_type": "Forum Type",
+      "member_organizations": "Member Organizations",
+      "meeting_frequency": "Meeting Frequency",
+      "next_meeting_date": "Next Meeting",
+      "deliverables": "Deliverables"
+    },
+    "working_group": {
+      "parent_forum_id": "Parent Forum",
+      "chair_organization": "Chair Organization",
+      "mandate": "Mandate",
+      "start_date": "Start Date",
+      "end_date": "End Date",
+      "members": "Members"
+    },
+    "topic": {
+      "topic_category": "Category",
+      "parent_topic_id": "Parent Topic"
+    }
+  },
+
+  "actions": {
+    "back": "Back",
+    "compare": "Compare",
+    "export": "Export",
+    "share": "Share",
+    "print": "Print",
+    "refresh": "Refresh"
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load entities",
+    "compareFailed": "Failed to generate comparison",
+    "typeMismatch": "All entities must be of the same type",
+    "minEntities": "At least {{min}} entities are required",
+    "maxEntities": "Maximum {{max}} entities can be compared",
+    "invalidEntity": "Invalid entity selected",
+    "networkError": "Network error. Please try again."
+  },
+
+  "loading": {
+    "entities": "Loading entities...",
+    "comparison": "Generating comparison...",
+    "export": "Preparing export..."
+  },
+
+  "accessibility": {
+    "comparisonTable": "Entity comparison table",
+    "selectEntity": "Select {{name}} for comparison",
+    "deselectEntity": "Deselect {{name}}",
+    "differenceIndicator": "Field {{field}} is {{difference}} across entities",
+    "exportButton": "Export comparison report",
+    "viewModeToggle": "Toggle comparison view mode"
+  }
+}

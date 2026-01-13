@@ -1,0 +1,103 @@
+{
+  "loading": {
+    "progress": "جاري التحميل...",
+    "processing": "جاري المعالجة...",
+    "pleaseWait": "يرجى الانتظار أثناء معالجة طلبك"
+  },
+  "status": {
+    "idle": "جاهز",
+    "pending": "جاري التحضير...",
+    "processing": "جاري المعالجة",
+    "paused": "متوقف مؤقتاً",
+    "completed": "مكتمل",
+    "error": "خطأ",
+    "cancelled": "ملغى"
+  },
+  "statusMessage": {
+    "completed": "اكتملت العملية بنجاح",
+    "error": "حدث خطأ أثناء المعالجة",
+    "cancelled": "تم إلغاء العملية"
+  },
+  "controls": {
+    "cancel": "إلغاء",
+    "pause": "إيقاف مؤقت",
+    "resume": "استئناف",
+    "retry": "إعادة المحاولة"
+  },
+  "eta": {
+    "calculating": "جاري الحساب...",
+    "remaining": "{{time}} متبقي",
+    "seconds": "{{count}} ثانية",
+    "seconds_plural": "{{count}} ثواني",
+    "minutes": "{{count}} دقيقة",
+    "minutes_plural": "{{count}} دقائق",
+    "hours": "{{count}} ساعة",
+    "hours_plural": "{{count}} ساعات"
+  },
+  "items": {
+    "processing": "معالجة {{current}} من {{total}}",
+    "processed": "تمت معالجة {{count}} عنصر",
+    "processed_plural": "تمت معالجة {{count}} عناصر"
+  },
+  "skeleton": {
+    "loading": "جاري تحميل المحتوى...",
+    "loadingData": "جاري تحميل البيانات...",
+    "loadingItems": "جاري تحميل العناصر...",
+    "loadingChart": "جاري تحميل الرسم البياني...",
+    "loadingTable": "جاري تحميل الجدول...",
+    "loadingForm": "جاري تحميل النموذج..."
+  },
+  "empty": {
+    "title": "لا توجد بيانات",
+    "description": "لا توجد بيانات للعرض في الوقت الحالي",
+    "noResults": "لم يتم العثور على نتائج",
+    "tryAgain": "حاول تعديل الفلاتر أو معايير البحث"
+  },
+  "error": {
+    "title": "حدث خطأ ما",
+    "description": "واجهنا خطأ أثناء تحميل البيانات",
+    "networkError": "خطأ في الشبكة. يرجى التحقق من اتصالك.",
+    "timeout": "انتهت مهلة الطلب. يرجى المحاولة مرة أخرى.",
+    "retry": "إعادة المحاولة"
+  },
+  "infiniteScroll": {
+    "loadMore": "تحميل المزيد",
+    "loading": "جاري تحميل المزيد...",
+    "endOfList": "وصلت إلى النهاية",
+    "noMoreItems": "لا توجد عناصر أخرى للتحميل"
+  },
+  "batch": {
+    "processingBatch": "معالجة الدفعة {{current}} من {{total}}",
+    "itemsRemaining": "{{count}} عناصر متبقية",
+    "estimatedTime": "الوقت المقدر: {{time}}"
+  },
+  "upload": {
+    "uploading": "جاري الرفع...",
+    "uploadProgress": "الرفع: {{progress}}%",
+    "preparing": "جاري تحضير الرفع...",
+    "processing": "جاري معالجة الملف...",
+    "almostDone": "على وشك الانتهاء..."
+  },
+  "download": {
+    "preparing": "جاري تحضير التنزيل...",
+    "downloading": "التنزيل: {{progress}}%",
+    "processing": "جاري معالجة الملف...",
+    "almostDone": "على وشك الانتهاء..."
+  },
+  "sync": {
+    "syncing": "جاري المزامنة...",
+    "syncProgress": "المزامنة: {{progress}}%",
+    "lastSync": "آخر مزامنة: {{time}}"
+  },
+  "search": {
+    "searching": "جاري البحث...",
+    "indexing": "جاري فهرسة النتائج...",
+    "analyzing": "جاري تحليل الاستعلام..."
+  },
+  "ai": {
+    "thinking": "الذكاء الاصطناعي يفكر...",
+    "generating": "جاري إنشاء الاستجابة...",
+    "processing": "المعالجة بالذكاء الاصطناعي...",
+    "analyzing": "جاري تحليل المحتوى..."
+  }
+}

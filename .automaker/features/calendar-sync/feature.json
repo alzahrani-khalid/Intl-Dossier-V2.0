@@ -1,0 +1,14 @@
+{
+  "id": "calendar-sync",
+  "category": "Integration",
+  "title": "External Calendar Synchronization",
+  "description": "Two-way sync with external calendar systems (Google Calendar, Outlook, Exchange). Users can subscribe to event feeds, sync personal calendars, and receive external event updates.",
+  "status": "completed",
+  "priority": 3,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.667Z",
+  "updatedAt": "2026-01-11T21:07:17.901Z",
+  "branchName": "main",
+  "startedAt": "2026-01-11T20:39:09.697Z"
+}

@@ -1,0 +1,247 @@
+{
+  "common": {
+    "tourDialog": "Guided Tour Dialog",
+    "stepOf": "Step {{current}} of {{total}}",
+    "next": "Next",
+    "back": "Back",
+    "skipTour": "Skip tour",
+    "closeTour": "Close tour",
+    "complete": "Complete",
+    "done": "Done",
+    "startCreating": "Start Creating",
+    "uploadFirst": "Upload First",
+    "generateFirst": "Generate First"
+  },
+  "trigger": {
+    "title": "New here? Let us show you around!",
+    "cardTitle": "Need help getting started?",
+    "startTour": "Start Tour",
+    "takeQuickTour": "Take a quick tour",
+    "dismiss": "Dismiss",
+    "estimatedTime": "~{{minutes}} min"
+  },
+  "settings": {
+    "title": "Tour Settings",
+    "enableTours": "Enable guided tours",
+    "enableToursDescription": "Show tour suggestions when entering empty sections",
+    "resetTours": "Reset All Tours",
+    "resetToursDescription": "Allow tours to show again for all sections"
+  },
+  "tours": {
+    "dossier": {
+      "name": "Creating Your First Dossier",
+      "description": "Learn how to create and organize dossiers for countries, organizations, and more.",
+      "steps": {
+        "welcome": {
+          "title": "Welcome to Dossiers!",
+          "content": "Dossiers are your central hub for organizing information about countries, organizations, forums, and other key entities. Let's walk through creating your first one.",
+          "hint": "Dossiers can contain documents, relationships, engagements, and intelligence signals."
+        },
+        "typeSelection": {
+          "title": "Choose Your Dossier Type",
+          "content": "Select the type that best matches what you're tracking. Each type has specialized fields and features.",
+          "hint": "Country dossiers include maps and flag visualizations. Organization dossiers track structure and contacts."
+        },
+        "basicInfo": {
+          "title": "Fill in Basic Information",
+          "content": "Every dossier needs a name and basic details. This helps you find and organize your dossiers later.",
+          "hint": "Be descriptive but concise – you can add more details in the dossier's sections."
+        },
+        "bilingual": {
+          "title": "Bilingual Support",
+          "content": "Enter names in both English and Arabic to support your team's language preferences.",
+          "hint": "Arabic names are displayed when the interface is in Arabic mode."
+        },
+        "finish": {
+          "title": "You're Ready to Go!",
+          "content": "That's all the basics! Once created, you can add documents, track relationships, and build a complete picture of your subject."
+        }
+      }
+    },
+    "relationship": {
+      "name": "Connecting Your Data",
+      "description": "Discover how to create relationships between dossiers and visualize your network.",
+      "steps": {
+        "intro": {
+          "title": "Understanding Relationships",
+          "content": "Relationships connect your dossiers together, creating a network of linked information that you can explore and analyze.",
+          "hint": "Track partnerships, memberships, collaborations, and more."
+        },
+        "sourceTarget": {
+          "title": "Connect Two Entities",
+          "content": "Select the source and target dossiers you want to connect. The relationship flows from source to target.",
+          "hint": "Example: 'Saudi Arabia' → 'is member of' → 'United Nations'"
+        },
+        "type": {
+          "title": "Define the Relationship Type",
+          "content": "Choose how these entities are connected. This helps categorize and filter your relationship network.",
+          "hint": "Common types: Partnership, Membership, Collaboration, Subsidiary"
+        },
+        "graphView": {
+          "title": "Visualize Your Network",
+          "content": "Switch to graph view to see your relationships as an interactive network diagram. Zoom, pan, and explore connections.",
+          "hint": "Click on nodes to navigate to dossiers, or drag to rearrange the layout."
+        },
+        "finish": {
+          "title": "Start Building Your Network!",
+          "content": "You now know how to create and visualize relationships. Start connecting your dossiers to build a comprehensive network."
+        }
+      }
+    },
+    "document": {
+      "name": "Uploading Documents",
+      "description": "Learn to attach and organize documents within your dossiers.",
+      "steps": {
+        "intro": {
+          "title": "Documents Keep Everything Together",
+          "content": "Attach relevant files to your dossiers – agreements, reports, correspondence, and more. Everything stays organized and accessible.",
+          "hint": "Supported formats: PDF, Word, Excel, images, and more."
+        },
+        "upload": {
+          "title": "Upload Your First Document",
+          "content": "Drag and drop files or click to browse. You can upload multiple documents at once.",
+          "hint": "Large files may take a moment to upload. Progress is shown for each file."
+        },
+        "classification": {
+          "title": "Classify for Security",
+          "content": "Set the appropriate classification level for your documents. This controls who can view and access them.",
+          "hint": "Follow your organization's data classification guidelines."
+        },
+        "finish": {
+          "title": "Keep Your Documents Organized!",
+          "content": "Upload documents as you work to keep all relevant files in one place. You can preview, download, or delete them anytime."
+        }
+      }
+    },
+    "engagement": {
+      "name": "Tracking Engagements",
+      "description": "Record meetings, conferences, and interactions with international partners.",
+      "steps": {
+        "intro": {
+          "title": "Track Every Interaction",
+          "content": "Engagements capture meetings, conferences, workshops, and other interactions. Build a complete history of your international activities.",
+          "hint": "Link engagements to dossiers to see the full picture."
+        },
+        "type": {
+          "title": "Select Engagement Type",
+          "content": "Choose the type that best describes this engagement. This helps with reporting and analysis.",
+          "hint": "Types include: Meeting, Conference, Workshop, Official Visit, Phone Call"
+        },
+        "dates": {
+          "title": "Set the Timeline",
+          "content": "Record when the engagement starts and ends. For single-day events, the end date is optional.",
+          "hint": "Past engagements can be logged for historical records."
+        },
+        "participants": {
+          "title": "Add Participants",
+          "content": "Record who was involved – both internal team members and external contacts.",
+          "hint": "Participants can be linked to person dossiers for detailed tracking."
+        },
+        "finish": {
+          "title": "Start Logging Engagements!",
+          "content": "After creating an engagement, add after-action records to capture outcomes, decisions, and commitments."
+        }
+      }
+    },
+    "brief": {
+      "name": "Generating AI Briefs",
+      "description": "Use AI to generate comprehensive briefing documents from your dossier data.",
+      "steps": {
+        "intro": {
+          "title": "AI-Powered Briefings",
+          "content": "Generate comprehensive briefing documents using AI. Briefs pull together information from your dossier's documents, engagements, and relationships.",
+          "hint": "Great for preparing for meetings or creating executive summaries."
+        },
+        "aiGenerate": {
+          "title": "Generate with AI",
+          "content": "Click to have AI analyze your dossier's content and generate a structured briefing document.",
+          "hint": "Generation typically takes 30-60 seconds depending on content volume."
+        },
+        "customize": {
+          "title": "Customize Your Brief",
+          "content": "After generation, you can edit and customize the brief. Add context, adjust sections, or highlight key points.",
+          "hint": "Briefs can be exported as PDF or Word documents."
+        },
+        "finish": {
+          "title": "Generate Your First Brief!",
+          "content": "AI briefs save hours of preparation time. The more data in your dossier, the richer the generated brief."
+        }
+      }
+    },
+    "position": {
+      "name": "Documenting Positions",
+      "description": "Record and track official positions on international topics.",
+      "steps": {
+        "intro": {
+          "title": "Maintain Consistent Positions",
+          "content": "Document your organization's official positions on international topics. This ensures consistency across all engagements.",
+          "hint": "Positions can be linked to specific dossiers and topics."
+        },
+        "topic": {
+          "title": "Define the Topic",
+          "content": "Clearly state what topic or issue this position addresses. Be specific to avoid confusion.",
+          "hint": "Example: 'Climate Change Carbon Reduction Targets' rather than just 'Climate'"
+        },
+        "stance": {
+          "title": "State Your Position",
+          "content": "Document the official stance and rationale. Include any supporting arguments or talking points.",
+          "hint": "Include context on when this position was established and by whom."
+        },
+        "finish": {
+          "title": "Document Your Positions!",
+          "content": "Well-documented positions ensure your team speaks with one voice. Reference them during engagement preparation."
+        }
+      }
+    },
+    "mou": {
+      "name": "Managing MOUs",
+      "description": "Track memoranda of understanding and their renewal dates.",
+      "steps": {
+        "intro": {
+          "title": "Track Your Agreements",
+          "content": "MOUs (Memoranda of Understanding) formalize partnerships. Track their status, terms, and renewal dates in one place.",
+          "hint": "Get notified before MOUs expire so you can plan renewals."
+        },
+        "parties": {
+          "title": "Identify the Parties",
+          "content": "Specify who is party to this agreement. Link to existing organization or country dossiers.",
+          "hint": "Multi-party MOUs can include multiple organizations."
+        },
+        "dates": {
+          "title": "Set Important Dates",
+          "content": "Record when the MOU was signed, when it takes effect, and when it expires.",
+          "hint": "Renewal reminders are sent 90, 60, and 30 days before expiration."
+        },
+        "finish": {
+          "title": "Start Tracking MOUs!",
+          "content": "Keep your agreements organized and never miss a renewal. Attach the signed document for easy reference."
+        }
+      }
+    },
+    "commitment": {
+      "name": "Tracking Commitments",
+      "description": "Capture and follow up on promises made during engagements.",
+      "steps": {
+        "intro": {
+          "title": "Never Drop a Commitment",
+          "content": "Commitments are promises made during engagements – by your team or by external parties. Track them to ensure follow-through.",
+          "hint": "Commitments can be deliverables, follow-ups, or action items."
+        },
+        "type": {
+          "title": "Categorize the Commitment",
+          "content": "Is this a deliverable you need to produce, a follow-up with an external party, or an internal action item?",
+          "hint": "Different types have different tracking workflows."
+        },
+        "deadline": {
+          "title": "Set a Deadline",
+          "content": "When does this need to be completed? Setting deadlines ensures accountability and enables reminders.",
+          "hint": "Overdue commitments are highlighted in your work dashboard."
+        },
+        "finish": {
+          "title": "Track Your Commitments!",
+          "content": "Commitments flow to your 'My Work' dashboard. Stay on top of promises and build trust with partners."
+        }
+      }
+    }
+  }
+}

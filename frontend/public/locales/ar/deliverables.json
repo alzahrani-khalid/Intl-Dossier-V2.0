@@ -1,0 +1,155 @@
+{
+  "title": "المخرجات",
+  "subtitle": "تتبع وإدارة مخرجات مذكرات التفاهم",
+  "pageTitle": "مخرجات مذكرات التفاهم",
+  "actions": {
+    "create": "إضافة مخرج",
+    "edit": "تعديل",
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ...",
+    "update": "تحديث",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "viewDetails": "عرض التفاصيل",
+    "updateStatus": "تحديث الحالة",
+    "markInProgress": "تعيين قيد التنفيذ",
+    "markCompleted": "تعيين مكتمل",
+    "menu": "الإجراءات"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "not_started": "لم يبدأ",
+    "in_progress": "قيد التنفيذ",
+    "at_risk": "معرض للخطر",
+    "delayed": "متأخر",
+    "completed": "مكتمل",
+    "cancelled": "ملغى",
+    "updated": "تم تحديث الحالة بنجاح"
+  },
+  "priority": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "urgent": "عاجل"
+  },
+  "form": {
+    "titleEn": "العنوان (بالإنجليزية)",
+    "titleEnPlaceholder": "أدخل عنوان المخرج بالإنجليزية",
+    "titleAr": "العنوان (بالعربية)",
+    "titleArPlaceholder": "أدخل عنوان المخرج بالعربية",
+    "descriptionEn": "الوصف (بالإنجليزية)",
+    "descriptionAr": "الوصف (بالعربية)",
+    "descriptionPlaceholder": "أدخل الوصف",
+    "dueDate": "تاريخ الاستحقاق",
+    "selectDate": "اختر التاريخ",
+    "priority": "الأولوية",
+    "selectPriority": "اختر الأولوية",
+    "status": "الحالة",
+    "selectStatus": "اختر الحالة",
+    "responsiblePartyType": "الجهة المسؤولة",
+    "selectResponsibleType": "اختر نوع المسؤول",
+    "internal": "داخلي (موظف)",
+    "external": "خارجي (شريك)",
+    "responsibleUser": "المستخدم المسؤول",
+    "responsibleUserPlaceholder": "أدخل معرف المستخدم",
+    "contactName": "اسم جهة الاتصال",
+    "contactNamePlaceholder": "أدخل اسم جهة الاتصال",
+    "contactEmail": "البريد الإلكتروني",
+    "contactEmailPlaceholder": "أدخل البريد الإلكتروني",
+    "notes": "ملاحظات",
+    "notesPlaceholder": "أدخل أي ملاحظات إضافية"
+  },
+  "filters": {
+    "title": "تصفية المخرجات",
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "dateRange": "نطاق التاريخ",
+    "dueDateFrom": "من تاريخ",
+    "dueDateTo": "إلى تاريخ",
+    "overdueOnly": "المتأخرة فقط",
+    "assignedUser": "المستخدم المعين",
+    "selectDate": "اختر التاريخ",
+    "from": "من",
+    "to": "إلى",
+    "clear": "مسح",
+    "clearAll": "مسح الكل",
+    "apply": "تطبيق",
+    "removeFilter": "إزالة تصفية {{filter}}"
+  },
+  "bulkActions": {
+    "selectAll": "تحديد الكل",
+    "deselectAll": "إلغاء تحديد الكل",
+    "selected": "{{count}} محدد",
+    "selectStatus": "اختر الحالة",
+    "apply": "تطبيق",
+    "cancel": "إلغاء"
+  },
+  "milestones": {
+    "title": "المراحل",
+    "count": "{{completed}}/{{total}} مكتمل",
+    "empty": "لا توجد مراحل محددة",
+    "created": "تم إنشاء المرحلة بنجاح",
+    "createFailed": "فشل في إنشاء المرحلة",
+    "updated": "تم تحديث المرحلة بنجاح",
+    "updateFailed": "فشل في تحديث المرحلة",
+    "deleted": "تم حذف المرحلة بنجاح",
+    "deleteFailed": "فشل في حذف المرحلة"
+  },
+  "history": {
+    "title": "السجل",
+    "empty": "لا توجد تغييرات مسجلة",
+    "statusChanged": "تم تغيير الحالة من {{from}} إلى {{to}}",
+    "statusSet": "تم تعيين الحالة إلى {{status}}"
+  },
+  "documents": {
+    "title": "المستندات",
+    "empty": "لا توجد مستندات مرفقة"
+  },
+  "list": {
+    "empty": "لا توجد مخرجات",
+    "emptyDescription": "أنشئ أول مخرج لبدء تتبع تقدم مذكرة التفاهم.",
+    "emptyFiltered": "لا توجد مخرجات تطابق معايير التصفية",
+    "emptyFilteredDescription": "حاول تعديل معايير التصفية لرؤية المزيد من النتائج.",
+    "loadMore": "تحميل المزيد",
+    "endOfList": "نهاية القائمة",
+    "loading": "جارٍ تحميل المخرجات..."
+  },
+  "pagination": {
+    "previous": "السابق",
+    "next": "التالي",
+    "page": "صفحة {{current}} من {{total}}"
+  },
+  "progress": "التقدم",
+  "healthScore": "الصحة",
+  "dueDate": "تاريخ الاستحقاق",
+  "responsible": "المسؤول",
+  "created": "تاريخ الإنشاء",
+  "completed": "تاريخ الإكمال",
+  "notes": "ملاحظات",
+  "completionNotes": "ملاحظات الإكمال",
+  "unassigned": "غير معين",
+  "unknown": "غير معروف",
+  "daysOverdue": "متأخر {{days}} يوم",
+  "daysLeft": "متبقي {{days}} يوم",
+  "confirmDelete": "هل أنت متأكد من حذف هذا المخرج؟ لا يمكن التراجع عن هذا الإجراء.",
+  "validation": {
+    "titleRequired": "العنوان مطلوب",
+    "titleMaxLength": "يجب أن يكون العنوان أقل من 200 حرف",
+    "dueDateRequired": "تاريخ الاستحقاق مطلوب"
+  },
+  "errors": {
+    "loadFailed": "فشل في تحميل المخرجات",
+    "createFailed": "فشل في إنشاء المخرج",
+    "updateFailed": "فشل في تحديث المخرج",
+    "deleteFailed": "فشل في حذف المخرج",
+    "statusUpdateFailed": "فشل في تحديث الحالة",
+    "bulkUpdateFailed": "فشل في تحديث المخرجات"
+  },
+  "success": {
+    "created": "تم إنشاء المخرج بنجاح",
+    "updated": "تم تحديث المخرج بنجاح",
+    "deleted": "تم حذف المخرج بنجاح",
+    "statusUpdated": "تم تحديث الحالة بنجاح",
+    "bulkUpdated": "تم تحديث {{count}} مخرج"
+  }
+}

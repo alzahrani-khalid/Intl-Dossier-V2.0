@@ -1,0 +1,86 @@
+{
+  "actions": "Actions",
+  "closeSpeedDial": "Close quick actions menu",
+  "openSpeedDial": "Open quick actions menu",
+  "longPressHint": "Hold for more actions",
+  "primaryAction": "Primary action",
+  "contextActions": {
+    "create": "Create",
+    "edit": "Edit",
+    "comment": "Add Comment",
+    "addNew": "Add New",
+    "search": "Search",
+    "filter": "Filter"
+  },
+  "speedDialActions": {
+    "newDossier": "New Dossier",
+    "newEngagement": "New Engagement",
+    "newBrief": "New Brief",
+    "newEvent": "New Event",
+    "newTask": "New Task",
+    "newCommitment": "New Commitment",
+    "scheduleEvent": "Schedule Event",
+    "uploadDocument": "Upload Document",
+    "addContact": "Add Contact",
+    "addNote": "Add Note",
+    "generateReport": "Generate Report",
+    "exportData": "Export Data"
+  },
+  "contexts": {
+    "dossierList": {
+      "primary": "Create Dossier",
+      "description": "Create a new dossier entry"
+    },
+    "dossierDetail": {
+      "primary": "Edit Dossier",
+      "description": "Edit this dossier"
+    },
+    "engagementList": {
+      "primary": "Create Engagement",
+      "description": "Log a new engagement"
+    },
+    "engagementDetail": {
+      "primary": "Log After Action",
+      "description": "Log after action for this engagement"
+    },
+    "briefDetail": {
+      "primary": "Add Comment",
+      "description": "Add a comment to this brief"
+    },
+    "calendar": {
+      "primary": "New Event",
+      "description": "Schedule a new event"
+    },
+    "kanban": {
+      "primary": "New Task",
+      "description": "Create a new task"
+    },
+    "search": {
+      "primary": "Advanced Search",
+      "description": "Open advanced search options"
+    },
+    "dashboard": {
+      "primary": "Quick Add",
+      "description": "Quickly add new content"
+    },
+    "persons": {
+      "primary": "Add Person",
+      "description": "Add a new person"
+    },
+    "forums": {
+      "primary": "Add Forum",
+      "description": "Create a new forum"
+    },
+    "settings": {
+      "primary": "Save Changes",
+      "description": "Save your settings"
+    }
+  },
+  "accessibility": {
+    "fabButton": "Floating action button",
+    "speedDialMenu": "Quick actions menu",
+    "speedDialItem": "Quick action: {{action}}",
+    "expandedState": "Menu expanded, {{count}} actions available",
+    "collapsedState": "Menu collapsed"
+  }
+}

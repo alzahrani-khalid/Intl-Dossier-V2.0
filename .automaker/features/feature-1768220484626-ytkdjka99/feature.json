@@ -1,0 +1,10 @@
+{
+  "category": "enhancement",
+  "description": "When the mobile app has no pending offline actions, show an animated illustration explaining how offline-first works, with a 'Try it' button that simulates creating an entry while offline and syncing when reconnected.\n\n**Rationale:** Offline-first is a key differentiator but abstract to users. An interactive demo in the empty state builds confidence in the feature before users need it in critical situations (flights, remote areas).",
+  "title": "Mobile Offline Queue Empty State with Sync Preview",
+  "status": "verified",
+  "id": "feature-1768220484626-ytkdjka99",
+  "branchName": "main",
+  "startedAt": "2026-01-12T12:23:37.787Z",
+  "updatedAt": "2026-01-12T12:33:41.231Z"
+}

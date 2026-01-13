@@ -1,0 +1,10 @@
+{
+  "category": "enhancement",
+  "description": "Remember user-specific filter selections, sort orders, column visibility, and view preferences across sessions. Allow users to save custom views with names and set defaults for different entity types.\n\n**Rationale:** Users waste time reconfiguring the same filters and views every session. Persistent preferences respect user workflows, reduce repetitive tasks, and allow power users to work more efficiently.",
+  "title": "Persistent Filter and Sort Preferences",
+  "status": "verified",
+  "id": "feature-1768200597887-je5aii0v8",
+  "branchName": "main",
+  "startedAt": "2026-01-12T07:42:17.230Z",
+  "updatedAt": "2026-01-12T08:00:21.546Z"
+}

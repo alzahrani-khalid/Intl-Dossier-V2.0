@@ -1,0 +1,302 @@
+{
+  "title": "لوحة التحكم",
+  "customDashboard": "لوحة التحكم المخصصة",
+  "editMode": "وضع التحرير",
+  "exitEditMode": "الخروج من وضع التحرير",
+  "addWidget": "إضافة عنصر",
+  "removeWidget": "إزالة العنصر",
+  "configureWidget": "تكوين العنصر",
+  "resetLayout": "إعادة تعيين التخطيط",
+  "saveLayout": "حفظ التخطيط",
+  "layoutSaved": "تم حفظ التخطيط بنجاح",
+  "layoutReset": "تم إعادة تعيين التخطيط إلى الافتراضي",
+
+  "widgetLibrary": {
+    "title": "مكتبة العناصر",
+    "description": "اسحب العناصر لإضافتها إلى لوحة التحكم",
+    "search": "البحث في العناصر...",
+    "categories": {
+      "all": "جميع العناصر",
+      "metrics": "المقاييس والمؤشرات",
+      "data": "البيانات والرسوم البيانية",
+      "lists": "القوائم والمهام",
+      "other": "أخرى"
+    }
+  },
+
+  "widgetTypes": {
+    "kpi-card": {
+      "name": "بطاقة مؤشر الأداء",
+      "description": "عرض مؤشرات الأداء الرئيسية مع الاتجاهات"
+    },
+    "chart": {
+      "name": "رسم بياني",
+      "description": "تصور البيانات بأنواع مختلفة من الرسوم البيانية"
+    },
+    "upcoming-events": {
+      "name": "الأحداث القادمة",
+      "description": "عرض المواعيد النهائية والأحداث القادمة"
+    },
+    "task-list": {
+      "name": "قائمة المهام",
+      "description": "عرض المهام وبنود العمل"
+    },
+    "notifications": {
+      "name": "الإشعارات",
+      "description": "عرض الإشعارات والتنبيهات الأخيرة"
+    },
+    "activity-feed": {
+      "name": "سجل النشاط",
+      "description": "تتبع النشاط والتغييرات الأخيرة"
+    },
+    "quick-actions": {
+      "name": "الإجراءات السريعة",
+      "description": "الوصول إلى الإجراءات المستخدمة بشكل متكرر"
+    },
+    "stats-summary": {
+      "name": "ملخص الإحصائيات",
+      "description": "نظرة عامة على الإحصائيات الرئيسية"
+    }
+  },
+
+  "metrics": {
+    "active-dossiers": "الملفات النشطة",
+    "pending-tasks": "المهام المعلقة",
+    "overdue-items": "العناصر المتأخرة",
+    "completed-this-week": "المكتملة هذا الأسبوع",
+    "response-rate": "معدل الاستجابة",
+    "engagement-count": "المشاركات",
+    "intake-volume": "حجم الاستقبال",
+    "sla-compliance": "الامتثال لاتفاقية مستوى الخدمة",
+    "custom": "مقياس مخصص"
+  },
+
+  "chartTypes": {
+    "line": "رسم بياني خطي",
+    "bar": "رسم بياني شريطي",
+    "pie": "رسم بياني دائري",
+    "donut": "رسم بياني حلقي",
+    "area": "رسم بياني مساحي",
+    "sparkline": "خط مصغر"
+  },
+
+  "dataSources": {
+    "work-items-by-status": "بنود العمل حسب الحالة",
+    "work-items-by-source": "بنود العمل حسب المصدر",
+    "completion-trend": "اتجاه الإنجاز",
+    "intake-volume-trend": "اتجاه حجم الاستقبال",
+    "engagement-distribution": "توزيع المشاركات",
+    "priority-breakdown": "تفصيل الأولويات",
+    "team-workload": "عبء عمل الفريق",
+    "custom": "مصدر بيانات مخصص"
+  },
+
+  "eventTypes": {
+    "meeting": "اجتماع",
+    "deadline": "موعد نهائي",
+    "follow-up": "متابعة",
+    "engagement": "مشاركة",
+    "mou-renewal": "تجديد مذكرة التفاهم",
+    "all": "جميع الأحداث"
+  },
+
+  "settings": {
+    "title": "إعدادات العنصر",
+    "general": "عام",
+    "appearance": "المظهر",
+    "data": "البيانات",
+    "refresh": "التحديث",
+
+    "widgetTitle": "عنوان العنصر",
+    "widgetSize": "حجم العنصر",
+    "refreshInterval": "فترة التحديث",
+    "autoRefresh": "التحديث التلقائي",
+
+    "sizes": {
+      "small": "صغير (1×1)",
+      "medium": "متوسط (2×1)",
+      "large": "كبير (3×2)",
+      "full": "العرض الكامل (4×2)"
+    },
+
+    "intervals": {
+      "never": "أبداً",
+      "30s": "30 ثانية",
+      "1m": "دقيقة واحدة",
+      "5m": "5 دقائق",
+      "10m": "10 دقائق",
+      "30m": "30 دقيقة"
+    },
+
+    "kpi": {
+      "metric": "المقياس",
+      "showTrend": "إظهار الاتجاه",
+      "showSparkline": "إظهار الخط المصغر",
+      "targetValue": "القيمة المستهدفة",
+      "comparisonPeriod": "فترة المقارنة"
+    },
+
+    "chart": {
+      "chartType": "نوع الرسم البياني",
+      "dataSource": "مصدر البيانات",
+      "showLegend": "إظهار وسيلة الإيضاح",
+      "showGrid": "إظهار خطوط الشبكة",
+      "dateRange": "نطاق التاريخ"
+    },
+
+    "events": {
+      "maxItems": "الحد الأقصى للعناصر",
+      "showPastEvents": "إظهار الأحداث الماضية",
+      "eventTypes": "أنواع الأحداث",
+      "dateRange": "نطاق التاريخ"
+    },
+
+    "tasks": {
+      "maxItems": "الحد الأقصى للعناصر",
+      "showCompleted": "إظهار المكتملة",
+      "groupBy": "تجميع حسب",
+      "sortBy": "ترتيب حسب",
+      "filterSource": "تصفية حسب المصدر"
+    },
+
+    "notifications": {
+      "maxItems": "الحد الأقصى للعناصر",
+      "showRead": "إظهار المقروءة",
+      "categories": "الفئات"
+    },
+
+    "activity": {
+      "maxItems": "الحد الأقصى للعناصر",
+      "activityTypes": "أنواع النشاط",
+      "showTimestamps": "إظهار الطوابع الزمنية"
+    }
+  },
+
+  "periods": {
+    "day": "يوم",
+    "week": "أسبوع",
+    "month": "شهر",
+    "quarter": "ربع سنة",
+    "year": "سنة",
+    "today": "اليوم"
+  },
+
+  "groupBy": {
+    "none": "بدون",
+    "source": "المصدر",
+    "priority": "الأولوية",
+    "status": "الحالة"
+  },
+
+  "sortBy": {
+    "deadline": "الموعد النهائي",
+    "priority": "الأولوية",
+    "created_at": "تاريخ الإنشاء"
+  },
+
+  "sources": {
+    "commitment": "التزام",
+    "task": "مهمة",
+    "intake": "استقبال",
+    "all": "جميع المصادر"
+  },
+
+  "notificationCategories": {
+    "task-assigned": "تعيين مهمة",
+    "deadline-approaching": "اقتراب الموعد النهائي",
+    "status-change": "تغيير الحالة",
+    "mention": "إشارة",
+    "system": "النظام",
+    "all": "جميع الفئات"
+  },
+
+  "activityTypes": {
+    "created": "إنشاء",
+    "updated": "تحديث",
+    "completed": "إكمال",
+    "commented": "تعليق",
+    "assigned": "تعيين",
+    "status-change": "تغيير الحالة",
+    "all": "جميع الأنشطة"
+  },
+
+  "quickActions": {
+    "createDossier": "إنشاء ملف",
+    "createTask": "إنشاء مهمة",
+    "createIntake": "إنشاء استقبال",
+    "search": "بحث",
+    "viewCalendar": "عرض التقويم",
+    "viewReports": "عرض التقارير"
+  },
+
+  "emptyStates": {
+    "noWidgets": "لم تتم إضافة عناصر بعد",
+    "addWidgetHint": "انقر على 'إضافة عنصر' لتخصيص لوحة التحكم",
+    "noData": "لا توجد بيانات متاحة",
+    "noEvents": "لا توجد أحداث قادمة",
+    "noTasks": "لم يتم العثور على مهام",
+    "noNotifications": "لا توجد إشعارات",
+    "noActivity": "لا يوجد نشاط حديث"
+  },
+
+  "trends": {
+    "up": "ارتفاع",
+    "down": "انخفاض",
+    "neutral": "لا تغيير",
+    "increase": "زيادة",
+    "decrease": "نقصان",
+    "fromLastPeriod": "من {{period}} الماضي"
+  },
+
+  "actions": {
+    "viewAll": "عرض الكل",
+    "refresh": "تحديث",
+    "expand": "توسيع",
+    "collapse": "طي",
+    "duplicate": "تكرار",
+    "delete": "حذف"
+  },
+
+  "confirmations": {
+    "deleteWidget": "هل أنت متأكد من إزالة هذا العنصر؟",
+    "resetLayout": "هل أنت متأكد من إعادة تعيين التخطيط الافتراضي؟ ستفقد جميع التخصيصات."
+  },
+
+  "errors": {
+    "loadFailed": "فشل تحميل بيانات العنصر",
+    "saveFailed": "فشل حفظ التخطيط",
+    "configInvalid": "تكوين العنصر غير صالح"
+  },
+
+  "accessibility": {
+    "dragHandle": "اسحب لإعادة ترتيب العنصر",
+    "removeButton": "إزالة عنصر {{widget}}",
+    "settingsButton": "فتح إعدادات {{widget}}",
+    "widgetRegion": "منطقة عنصر {{widget}}"
+  },
+
+  "benchmarks": {
+    "title": "فرق مثل فريقك",
+    "description": "تتتبع المؤسسات المشابهة لمؤسستك عادةً {{dossiers}} ملفًا، و{{relationships}} علاقة، و{{briefs}} موجزًا نشطًا.",
+    "organizations": "مؤسسة",
+    "dismiss": "إغلاق المعاينة",
+    "customize": "تخصيص لوحة التحكم",
+    "typicalRange": "النطاق النموذجي: {{min}}-{{max}} ملف",
+    "categories": {
+      "dossiers": "الملفات النشطة",
+      "relationships": "العلاقات",
+      "briefs": "الموجزات النشطة",
+      "engagements": "المشاركات الشهرية",
+      "commitments": "الالتزامات النشطة",
+      "mous": "مذكرات التفاهم النشطة"
+    },
+    "descriptions": {
+      "dossiers": "ملفات الدول والمنظمات والمواضيع",
+      "relationships": "الروابط المتتبعة بين الكيانات",
+      "briefs": "موجزات الاستخبارات المولدة بالذكاء الاصطناعي",
+      "engagements": "الاجتماعات والفعاليات شهريًا",
+      "commitments": "الوعود والمخرجات الجارية",
+      "mous": "مذكرات التفاهم"
+    }
+  }
+}

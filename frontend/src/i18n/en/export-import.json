@@ -1,0 +1,219 @@
+{
+  "title": "Export & Import",
+  "export": {
+    "title": "Export Data",
+    "description": "Download data as Excel or CSV file",
+    "button": "Export",
+    "downloading": "Downloading...",
+    "format": {
+      "label": "Export Format",
+      "csv": "CSV (Comma-separated)",
+      "xlsx": "Excel (XLSX)",
+      "json": "JSON",
+      "pdf": "PDF"
+    },
+    "options": {
+      "title": "Export Options",
+      "includeTemplate": "Include template headers",
+      "includeExample": "Include example data row",
+      "selectedOnly": "Export selected items only",
+      "allData": "Export all accessible data"
+    },
+    "columns": {
+      "title": "Select Columns",
+      "selectAll": "Select All",
+      "deselectAll": "Deselect All"
+    },
+    "language": {
+      "title": "Header Language",
+      "en": "English",
+      "ar": "Arabic",
+      "both": "Both (English & Arabic)"
+    },
+    "success": {
+      "title": "Export Complete",
+      "message": "Successfully exported {{count}} records"
+    },
+    "error": {
+      "title": "Export Failed",
+      "noData": "No data available to export",
+      "tooManyRecords": "Too many records to export. Maximum {{max}} allowed.",
+      "unauthorized": "You don't have permission to export this data",
+      "unknown": "An unknown error occurred during export"
+    }
+  },
+  "import": {
+    "title": "Import Data",
+    "description": "Upload Excel or CSV file to import data",
+    "button": "Import",
+    "uploading": "Uploading...",
+    "dropzone": {
+      "title": "Drop file here or click to browse",
+      "subtitle": "Supports CSV and Excel (XLSX) files",
+      "maxSize": "Maximum file size: {{size}}MB"
+    },
+    "mode": {
+      "title": "Import Mode",
+      "create": "Create new records only",
+      "createDescription": "Will skip rows that match existing records",
+      "update": "Update existing records only",
+      "updateDescription": "Will skip rows that don't match existing records",
+      "upsert": "Create or update records",
+      "upsertDescription": "Will create new records and update existing ones"
+    },
+    "conflictResolution": {
+      "title": "Conflict Resolution",
+      "skip": "Skip conflicting rows",
+      "skipDescription": "Don't modify existing records",
+      "overwrite": "Overwrite existing data",
+      "overwriteDescription": "Replace all fields with imported values",
+      "merge": "Merge changes",
+      "mergeDescription": "Only update non-empty fields from import",
+      "manual": "Resolve manually",
+      "manualDescription": "Review each conflict before importing"
+    },
+    "validation": {
+      "title": "Validation Results",
+      "validating": "Validating file...",
+      "summary": {
+        "title": "File Summary",
+        "totalRows": "Total rows",
+        "validRows": "Valid rows",
+        "invalidRows": "Invalid rows",
+        "warningRows": "Rows with warnings",
+        "conflictRows": "Conflicting rows"
+      },
+      "status": {
+        "valid": "Valid",
+        "invalid": "Invalid",
+        "warning": "Warning",
+        "conflict": "Conflict"
+      },
+      "errors": {
+        "title": "Validation Errors",
+        "showAll": "Show all errors",
+        "hideErrors": "Hide errors",
+        "errorCount": "{{count}} error(s) found",
+        "warningCount": "{{count}} warning(s) found"
+      },
+      "noErrors": "No errors found. Ready to import.",
+      "hasErrors": "Please fix the errors before importing.",
+      "hasWarnings": "Some rows have warnings. You can proceed with import."
+    },
+    "conflicts": {
+      "title": "Resolve Conflicts",
+      "description": "The following rows match existing records. Choose how to handle each conflict.",
+      "row": "Row {{number}}",
+      "existingRecord": "Existing Record",
+      "importedData": "Imported Data",
+      "field": "Field",
+      "currentValue": "Current Value",
+      "newValue": "New Value",
+      "action": "Action",
+      "actions": {
+        "skip": "Skip",
+        "overwrite": "Overwrite",
+        "merge": "Merge"
+      },
+      "applyToAll": "Apply to all conflicts"
+    },
+    "preview": {
+      "title": "Preview Changes",
+      "showingRows": "Showing {{shown}} of {{total}} rows",
+      "columns": "Columns detected: {{count}}",
+      "newRecord": "New",
+      "updateRecord": "Update",
+      "skipRecord": "Skip"
+    },
+    "execute": {
+      "title": "Execute Import",
+      "button": "Start Import",
+      "confirm": "Are you sure you want to import {{count}} records?",
+      "confirmWithConflicts": "Are you sure? {{conflicts}} conflicting records will be {{action}}.",
+      "importing": "Importing..."
+    },
+    "success": {
+      "title": "Import Complete",
+      "message": "Successfully imported {{success}} of {{total}} records",
+      "created": "{{count}} records created",
+      "updated": "{{count}} records updated",
+      "skipped": "{{count}} records skipped"
+    },
+    "error": {
+      "title": "Import Failed",
+      "parseError": "Failed to parse file. Please check the file format.",
+      "encodingError": "File encoding error. Please use UTF-8 encoding.",
+      "invalidFormat": "Invalid file format. Please use CSV or XLSX.",
+      "emptyFile": "File is empty",
+      "tooLarge": "File is too large. Maximum size is {{size}}MB",
+      "missingColumns": "Missing required columns: {{columns}}",
+      "partialSuccess": "Import partially completed. {{failed}} of {{total}} rows failed.",
+      "unauthorized": "You don't have permission to import data",
+      "unknown": "An unknown error occurred during import"
+    }
+  },
+  "template": {
+    "title": "Download Template",
+    "description": "Download a template file with the correct format and column headers",
+    "button": "Download Template",
+    "options": {
+      "includeSample": "Include sample data row",
+      "format": "Template format"
+    },
+    "success": "Template downloaded successfully",
+    "instructions": {
+      "title": "Template Instructions",
+      "requiredFields": "Required fields are marked with an asterisk (*)",
+      "dateFormat": "Dates should be in format: YYYY-MM-DD",
+      "booleanFormat": "Boolean values: true/false or yes/no",
+      "enumNote": "For dropdown fields, use the exact values provided",
+      "encoding": "Save the file with UTF-8 encoding to preserve Arabic text"
+    }
+  },
+  "progress": {
+    "uploading": "Uploading file...",
+    "parsing": "Parsing file...",
+    "validating": "Validating data...",
+    "importing": "Importing records...",
+    "fetching": "Fetching data...",
+    "generating": "Generating file...",
+    "complete": "Complete!",
+    "error": "An error occurred"
+  },
+  "errors": {
+    "required_field": "This field is required",
+    "invalid_type": "Invalid data type. Expected {{expected}}",
+    "invalid_format": "Invalid format",
+    "invalid_enum": "Invalid value. Allowed values: {{values}}",
+    "max_length_exceeded": "Value exceeds maximum length of {{max}} characters",
+    "min_value": "Value must be at least {{min}}",
+    "max_value": "Value must not exceed {{max}}",
+    "pattern_mismatch": "Value doesn't match the required pattern",
+    "duplicate_row": "Duplicate row detected",
+    "duplicate_identifier": "Duplicate identifier: {{field}}",
+    "invalid_reference": "Referenced record not found: {{reference}}",
+    "encoding_error": "Character encoding error",
+    "parse_error": "Failed to parse value",
+    "conflict_detected": "Conflict with existing record"
+  },
+  "entities": {
+    "dossier": "Dossiers",
+    "person": "Persons",
+    "engagement": "Engagements",
+    "working-group": "Working Groups",
+    "commitment": "Commitments",
+    "deliverable": "Deliverables"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "finish": "Finish",
+    "retry": "Retry",
+    "download": "Download",
+    "upload": "Upload",
+    "clear": "Clear",
+    "reset": "Reset"
+  }
+}

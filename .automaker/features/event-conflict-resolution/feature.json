@@ -1,0 +1,14 @@
+{
+  "id": "event-conflict-resolution",
+  "category": "Core",
+  "title": "Advanced Event Conflict Resolution",
+  "description": "Enhanced calendar conflict detection with AI-assisted rescheduling suggestions. Considers participant availability, priority scoring, and travel logistics. Supports bulk rescheduling and what-if scenarios.",
+  "status": "completed",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.664Z",
+  "updatedAt": "2026-01-11T11:56:07.645Z",
+  "branchName": "main",
+  "startedAt": "2026-01-11T11:36:39.927Z"
+}

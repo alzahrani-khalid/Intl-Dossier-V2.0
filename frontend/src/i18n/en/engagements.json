@@ -1,0 +1,220 @@
+{
+  "title": "Engagements",
+  "subtitle": "Manage bilateral meetings, missions, and delegations",
+  "actions": {
+    "createEngagement": "New Engagement",
+    "createFirst": "Create First Engagement",
+    "edit": "Edit",
+    "archive": "Archive",
+    "cancel": "Cancel",
+    "create": "Create Engagement",
+    "save": "Save Changes",
+    "loadMore": "Load More",
+    "backToList": "Back to List",
+    "addParticipant": "Add Participant",
+    "addAgendaItem": "Add Agenda Item",
+    "viewDetails": "View Details"
+  },
+  "search": {
+    "placeholder": "Search engagements..."
+  },
+  "filters": {
+    "title": "Filters",
+    "type": "Type",
+    "category": "Category",
+    "status": "Status",
+    "allTypes": "All Types",
+    "allCategories": "All Categories",
+    "allStatuses": "All Statuses",
+    "dateRange": "Date Range",
+    "clear": "Clear",
+    "apply": "Apply"
+  },
+  "stats": {
+    "total": "{{count}} engagements",
+    "participants": "Participants",
+    "agendaItems": "Agenda Items",
+    "upcoming": "Upcoming",
+    "completed": "Completed"
+  },
+  "tabs": {
+    "overview": "Overview",
+    "participants": "Participants",
+    "agenda": "Agenda",
+    "outcomes": "Outcomes",
+    "briefs": "Briefs"
+  },
+  "sections": {
+    "details": "Details",
+    "schedule": "Schedule",
+    "location": "Location",
+    "delegation": "Delegation",
+    "objectives": "Objectives",
+    "outcomes": "Outcomes",
+    "notes": "Notes",
+    "participants": "Participants",
+    "agenda": "Agenda"
+  },
+  "types": {
+    "bilateral_meeting": "Bilateral Meeting",
+    "mission": "Mission",
+    "delegation": "Delegation",
+    "summit": "Summit",
+    "working_group": "Working Group",
+    "roundtable": "Roundtable",
+    "official_visit": "Official Visit",
+    "consultation": "Consultation",
+    "other": "Other"
+  },
+  "categories": {
+    "diplomatic": "Diplomatic",
+    "statistical": "Statistical",
+    "technical": "Technical",
+    "economic": "Economic",
+    "cultural": "Cultural",
+    "educational": "Educational",
+    "research": "Research",
+    "other": "Other"
+  },
+  "statuses": {
+    "planned": "Planned",
+    "confirmed": "Confirmed",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "postponed": "Postponed",
+    "cancelled": "Cancelled"
+  },
+  "delegationLevels": {
+    "head_of_state": "Head of State",
+    "ministerial": "Ministerial",
+    "senior_official": "Senior Official",
+    "director": "Director",
+    "expert": "Expert",
+    "technical": "Technical"
+  },
+  "participantRoles": {
+    "host": "Host",
+    "guest": "Guest",
+    "delegate": "Delegate",
+    "head_of_delegation": "Head of Delegation",
+    "speaker": "Speaker",
+    "observer": "Observer",
+    "organizer": "Organizer",
+    "support_staff": "Support Staff",
+    "interpreter": "Interpreter",
+    "other": "Other"
+  },
+  "attendanceStatus": {
+    "expected": "Expected",
+    "confirmed": "Confirmed",
+    "attended": "Attended",
+    "no_show": "No Show",
+    "cancelled": "Cancelled",
+    "tentative": "Tentative"
+  },
+  "agendaItemStatus": {
+    "planned": "Planned",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "skipped": "Skipped",
+    "postponed": "Postponed"
+  },
+  "form": {
+    "nameEn": "Title (English)",
+    "nameAr": "Title (Arabic)",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "engagementType": "Engagement Type",
+    "engagementCategory": "Category",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "locationEn": "Location (English)",
+    "locationAr": "Location (Arabic)",
+    "venueEn": "Venue (English)",
+    "venueAr": "Venue (Arabic)",
+    "isVirtual": "Virtual Meeting",
+    "virtualLink": "Virtual Meeting Link",
+    "hostCountry": "Host Country",
+    "hostOrganization": "Host Organization",
+    "delegationSize": "Delegation Size",
+    "delegationLevel": "Delegation Level",
+    "objectivesEn": "Objectives (English)",
+    "objectivesAr": "Objectives (Arabic)",
+    "outcomesEn": "Outcomes (English)",
+    "outcomesAr": "Outcomes (Arabic)",
+    "notesEn": "Notes (English)",
+    "notesAr": "Notes (Arabic)",
+    "status": "Status",
+    "participant": {
+      "type": "Participant Type",
+      "person": "Person",
+      "organization": "Organization",
+      "country": "Country",
+      "external": "External",
+      "selectDossier": "Select Dossier",
+      "externalNameEn": "Name (English)",
+      "externalNameAr": "Name (Arabic)",
+      "externalTitleEn": "Title (English)",
+      "externalTitleAr": "Title (Arabic)",
+      "externalOrgEn": "Organization (English)",
+      "externalOrgAr": "Organization (Arabic)",
+      "role": "Role",
+      "attendanceStatus": "Attendance Status"
+    },
+    "agenda": {
+      "titleEn": "Title (English)",
+      "titleAr": "Title (Arabic)",
+      "descriptionEn": "Description (English)",
+      "descriptionAr": "Description (Arabic)",
+      "startTime": "Start Time",
+      "endTime": "End Time",
+      "duration": "Duration (minutes)",
+      "status": "Status",
+      "outcomeEn": "Outcome (English)",
+      "outcomeAr": "Outcome (Arabic)"
+    }
+  },
+  "empty": {
+    "title": "No engagements yet",
+    "description": "Schedule your first bilateral meeting, mission, or delegation",
+    "noResults": "No engagements found",
+    "noResultsDescription": "Try adjusting your search or filters",
+    "participants": "No participants added",
+    "participantsDescription": "Add participants to this engagement",
+    "agenda": "No agenda items",
+    "agendaDescription": "Add agenda items to structure this engagement"
+  },
+  "error": {
+    "title": "Failed to load engagements",
+    "message": "An error occurred while fetching data",
+    "notFound": "Engagement not found",
+    "notFoundDescription": "The engagement you are looking for does not exist"
+  },
+  "archive": {
+    "title": "Archive Engagement?",
+    "description": "This will archive the engagement and hide it from the list. This action can be undone."
+  },
+  "messages": {
+    "created": "Engagement \"{{name}}\" created successfully",
+    "createError": "Failed to create engagement: {{error}}",
+    "updated": "Engagement updated successfully",
+    "updateError": "Failed to update engagement: {{error}}",
+    "archived": "Engagement archived successfully",
+    "archiveError": "Failed to archive engagement: {{error}}",
+    "participantAdded": "Participant added successfully",
+    "participantAddError": "Failed to add participant: {{error}}",
+    "participantRemoved": "Participant removed successfully",
+    "participantRemoveError": "Failed to remove participant: {{error}}",
+    "agendaItemAdded": "Agenda item added successfully",
+    "agendaItemAddError": "Failed to add agenda item: {{error}}",
+    "agendaItemUpdated": "Agenda item updated successfully",
+    "agendaItemUpdateError": "Failed to update agenda item: {{error}}",
+    "agendaItemRemoved": "Agenda item removed successfully",
+    "agendaItemRemoveError": "Failed to remove agenda item: {{error}}"
+  },
+  "card": {
+    "participants": "{{count}} participants",
+    "virtual": "Virtual",
+    "inPerson": "In Person"
+  }
+}

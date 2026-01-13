@@ -1,0 +1,323 @@
+{
+  "title": "مجموعات العمل",
+  "subtitle": "إدارة اللجان وفرق العمل ومجموعات العمل التعاونية عبر الشراكات",
+  "pageDescription": "تتبع العضوية والتفويضات والتسليمات والاجتماعات لجميع مجموعات العمل",
+
+  "metrics": {
+    "totalGroups": "إجمالي المجموعات",
+    "activeGroups": "المجموعات النشطة",
+    "totalMembers": "إجمالي الأعضاء",
+    "totalMembersHint": "عبر جميع مجموعات العمل",
+    "totalDeliverables": "إجمالي التسليمات",
+    "completedDeliverables": "التسليمات المكتملة",
+    "upcomingMeetings": "الاجتماعات القادمة"
+  },
+
+  "filters": {
+    "title": "الفلاتر والبحث",
+    "search": "بحث",
+    "searchPlaceholder": "البحث بالاسم أو التفويض أو الوصف...",
+    "status": "الحالة",
+    "allStatuses": "جميع الحالات",
+    "type": "النوع",
+    "allTypes": "جميع الأنواع",
+    "parentForum": "المنتدى الأم",
+    "allForums": "جميع المنتديات",
+    "leadOrganization": "المنظمة الرائدة",
+    "allOrganizations": "جميع المنظمات",
+    "clearFilters": "مسح الفلاتر"
+  },
+
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف",
+    "suspended": "معلق",
+    "disbanded": "منحل"
+  },
+
+  "types": {
+    "committee": "لجنة",
+    "task_force": "فريق عمل",
+    "advisory_board": "مجلس استشاري",
+    "technical_group": "مجموعة فنية",
+    "steering_committee": "لجنة توجيهية"
+  },
+
+  "memberRoles": {
+    "chair": "رئيس",
+    "co_chair": "رئيس مشارك",
+    "vice_chair": "نائب الرئيس",
+    "secretary": "أمين السر",
+    "member": "عضو",
+    "observer": "مراقب",
+    "advisor": "مستشار",
+    "liaison": "ضابط اتصال"
+  },
+
+  "memberStatus": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "pending": "قيد الانتظار",
+    "suspended": "معلق"
+  },
+
+  "deliverableStatus": {
+    "pending": "قيد الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "review": "قيد المراجعة",
+    "completed": "مكتمل",
+    "cancelled": "ملغى",
+    "deferred": "مؤجل"
+  },
+
+  "deliverablePriority": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "urgent": "عاجل"
+  },
+
+  "deliverableTypes": {
+    "document": "مستند",
+    "report": "تقرير",
+    "recommendation": "توصية",
+    "standard": "معيار",
+    "guideline": "دليل إرشادي",
+    "framework": "إطار عمل",
+    "action_plan": "خطة عمل",
+    "other": "أخرى"
+  },
+
+  "meetingFrequency": {
+    "weekly": "أسبوعي",
+    "biweekly": "كل أسبوعين",
+    "monthly": "شهري",
+    "quarterly": "ربع سنوي",
+    "biannually": "نصف سنوي",
+    "annually": "سنوي",
+    "as_needed": "حسب الحاجة"
+  },
+
+  "meetingStatus": {
+    "scheduled": "مجدول",
+    "in_progress": "جاري",
+    "completed": "منتهي",
+    "cancelled": "ملغى",
+    "postponed": "مؤجل"
+  },
+
+  "table": {
+    "name": "الاسم",
+    "type": "النوع",
+    "status": "الحالة",
+    "members": "الأعضاء",
+    "deliverables": "التسليمات",
+    "nextMeeting": "الاجتماع القادم",
+    "leadOrg": "المنظمة الرائدة",
+    "established": "تاريخ التأسيس",
+    "updated": "آخر تحديث",
+    "actions": "الإجراءات",
+    "empty": "لا توجد مجموعات عمل تطابق الفلاتر الحالية",
+    "loading": "جاري تحميل مجموعات العمل..."
+  },
+
+  "actions": {
+    "add": "إضافة مجموعة عمل",
+    "edit": "تعديل",
+    "view": "عرض التفاصيل",
+    "archive": "أرشفة",
+    "restore": "استعادة",
+    "delete": "حذف",
+    "addMember": "إضافة عضو",
+    "addDeliverable": "إضافة تسليم",
+    "scheduleMeeting": "جدولة اجتماع"
+  },
+
+  "createDialog": {
+    "title": "إنشاء مجموعة عمل",
+    "description": "إنشاء لجنة أو فريق عمل أو مجموعة عمل تعاونية جديدة"
+  },
+
+  "editDialog": {
+    "title": "تعديل مجموعة العمل",
+    "description": "تحديث تفاصيل مجموعة العمل"
+  },
+
+  "viewDialog": {
+    "title": "تفاصيل مجموعة العمل"
+  },
+
+  "memberDialog": {
+    "title": "إضافة عضو",
+    "editTitle": "تعديل العضو",
+    "description": "إضافة منظمة أو شخص كعضو"
+  },
+
+  "deliverableDialog": {
+    "title": "إضافة تسليم",
+    "editTitle": "تعديل التسليم",
+    "description": "تتبع تسليم لمجموعة العمل هذه"
+  },
+
+  "meetingDialog": {
+    "title": "جدولة اجتماع",
+    "editTitle": "تعديل الاجتماع",
+    "description": "جدولة اجتماع جديد لمجموعة العمل هذه"
+  },
+
+  "form": {
+    "nameEn": "الاسم (بالإنجليزية)",
+    "nameEnPlaceholder": "مثال: اللجنة الفنية لمعايير البيانات",
+    "nameAr": "الاسم (بالعربية)",
+    "nameArPlaceholder": "مثال: Data Standards Technical Committee",
+    "summaryEn": "الملخص (بالإنجليزية)",
+    "summaryAr": "الملخص (بالعربية)",
+    "type": "نوع مجموعة العمل",
+    "typePlaceholder": "اختر النوع...",
+    "status": "الحالة",
+    "statusPlaceholder": "اختر الحالة...",
+    "mandateEn": "التفويض (بالإنجليزية)",
+    "mandateEnPlaceholder": "وصف تفويض وأهداف مجموعة العمل...",
+    "mandateAr": "التفويض (بالعربية)",
+    "descriptionEn": "الوصف (بالإنجليزية)",
+    "descriptionAr": "الوصف (بالعربية)",
+    "meetingFrequency": "تكرار الاجتماعات",
+    "meetingFrequencyPlaceholder": "اختر التكرار...",
+    "establishedDate": "تاريخ التأسيس",
+    "disbandmentDate": "تاريخ الحل",
+    "parentForum": "المنتدى الأم",
+    "parentForumPlaceholder": "اختر المنتدى الأم (اختياري)...",
+    "leadOrganization": "المنظمة الرائدة",
+    "leadOrganizationPlaceholder": "اختر المنظمة الرائدة (اختياري)...",
+    "chairPerson": "الرئيس",
+    "chairPersonPlaceholder": "اختر الرئيس (اختياري)...",
+    "secretaryPerson": "أمين السر",
+    "secretaryPersonPlaceholder": "اختر أمين السر (اختياري)...",
+    "objectives": "الأهداف الرئيسية",
+    "objectivesPlaceholder": "أضف الأهداف الرئيسية (هدف واحد لكل سطر)...",
+    "sensitivityLevel": "مستوى الحساسية",
+    "tags": "الوسوم",
+    "tagsPlaceholder": "أضف وسوم...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "create": "إنشاء مجموعة العمل",
+    "update": "تحديث مجموعة العمل"
+  },
+
+  "memberForm": {
+    "memberType": "نوع العضو",
+    "organization": "منظمة",
+    "person": "شخص",
+    "selectOrganization": "اختر المنظمة...",
+    "selectPerson": "اختر الشخص...",
+    "role": "الدور",
+    "rolePlaceholder": "اختر الدور...",
+    "status": "الحالة",
+    "joinedDate": "تاريخ الانضمام",
+    "leftDate": "تاريخ المغادرة",
+    "representingCountry": "يمثل الدولة",
+    "representingCountryPlaceholder": "اختر الدولة...",
+    "canVote": "يحق له التصويت",
+    "canPropose": "يحق له تقديم المقترحات",
+    "notes": "ملاحظات"
+  },
+
+  "deliverableForm": {
+    "titleEn": "العنوان (بالإنجليزية)",
+    "titleAr": "العنوان (بالعربية)",
+    "descriptionEn": "الوصف (بالإنجليزية)",
+    "descriptionAr": "الوصف (بالعربية)",
+    "type": "نوع التسليم",
+    "priority": "الأولوية",
+    "status": "الحالة",
+    "dueDate": "تاريخ الاستحقاق",
+    "plannedStartDate": "تاريخ البدء المخطط",
+    "plannedEndDate": "تاريخ الانتهاء المخطط",
+    "assignedToMember": "مسند إلى عضو",
+    "assignedToOrg": "مسند إلى منظمة",
+    "progress": "نسبة الإنجاز (%)",
+    "documentUrl": "رابط المستند",
+    "notes": "ملاحظات"
+  },
+
+  "meetingForm": {
+    "titleEn": "العنوان (بالإنجليزية)",
+    "titleAr": "العنوان (بالعربية)",
+    "descriptionEn": "الوصف (بالإنجليزية)",
+    "descriptionAr": "الوصف (بالعربية)",
+    "meetingDate": "تاريخ ووقت الاجتماع",
+    "endDate": "تاريخ ووقت الانتهاء",
+    "locationEn": "الموقع (بالإنجليزية)",
+    "locationAr": "الموقع (بالعربية)",
+    "isVirtual": "اجتماع افتراضي",
+    "meetingUrl": "رابط الاجتماع",
+    "agendaUrl": "رابط جدول الأعمال",
+    "expectedAttendees": "الحضور المتوقع",
+    "notes": "ملاحظات"
+  },
+
+  "sections": {
+    "overview": "نظرة عامة",
+    "members": "الأعضاء",
+    "deliverables": "التسليمات",
+    "meetings": "الاجتماعات",
+    "decisions": "القرارات",
+    "timeline": "الجدول الزمني"
+  },
+
+  "tabs": {
+    "all": "الكل",
+    "active": "نشط",
+    "suspended": "معلق",
+    "disbanded": "منحل"
+  },
+
+  "messages": {
+    "created": "تم إنشاء مجموعة العمل \"{{name}}\" بنجاح",
+    "createError": "فشل في إنشاء مجموعة العمل: {{error}}",
+    "updated": "تم تحديث مجموعة العمل بنجاح",
+    "updateError": "فشل في تحديث مجموعة العمل: {{error}}",
+    "archived": "تمت أرشفة مجموعة العمل بنجاح",
+    "archiveError": "فشل في أرشفة مجموعة العمل: {{error}}",
+    "restored": "تمت استعادة مجموعة العمل بنجاح",
+    "memberAdded": "تمت إضافة العضو بنجاح",
+    "memberAddError": "فشل في إضافة العضو: {{error}}",
+    "memberUpdated": "تم تحديث العضو بنجاح",
+    "memberRemoved": "تمت إزالة العضو بنجاح",
+    "deliverableAdded": "تمت إضافة التسليم بنجاح",
+    "deliverableUpdated": "تم تحديث التسليم بنجاح",
+    "deliverableDeleted": "تم حذف التسليم بنجاح",
+    "meetingScheduled": "تمت جدولة الاجتماع بنجاح",
+    "meetingUpdated": "تم تحديث الاجتماع بنجاح",
+    "meetingCancelled": "تم إلغاء الاجتماع"
+  },
+
+  "confirmations": {
+    "archive": "هل أنت متأكد من أرشفة مجموعة العمل هذه؟",
+    "archiveDescription": "سيؤدي هذا إلى إخفاء مجموعة العمل من القائمة الرئيسية. يمكنك استعادتها لاحقاً.",
+    "removeMember": "هل أنت متأكد من إزالة هذا العضو؟",
+    "removeMemberDescription": "لا يمكن التراجع عن هذا الإجراء.",
+    "deleteDeliverable": "هل أنت متأكد من حذف هذا التسليم؟",
+    "deleteDeliverableDescription": "لا يمكن التراجع عن هذا الإجراء.",
+    "cancelMeeting": "هل أنت متأكد من إلغاء هذا الاجتماع؟",
+    "cancelMeetingDescription": "سيتم إخطار جميع الحضور."
+  },
+
+  "empty": {
+    "title": "لا توجد مجموعات عمل بعد",
+    "description": "أنشئ أول مجموعة عمل للبدء",
+    "noMembers": "لا يوجد أعضاء بعد",
+    "addFirstMember": "أضف أول عضو لمجموعة العمل هذه",
+    "noDeliverables": "لا توجد تسليمات بعد",
+    "addFirstDeliverable": "أضف أول تسليم لتتبع التقدم",
+    "noMeetings": "لا توجد اجتماعات مجدولة",
+    "scheduleFirstMeeting": "جدول أول اجتماع"
+  },
+
+  "errors": {
+    "loadFailed": "فشل في تحميل مجموعات العمل",
+    "notFound": "مجموعة العمل غير موجودة",
+    "unauthorized": "ليس لديك صلاحية لتنفيذ هذا الإجراء"
+  }
+}

@@ -1,0 +1,221 @@
+{
+  "title": "الإجراءات الجماعية",
+  "description": "تنفيذ إجراءات على عناصر متعددة في وقت واحد",
+
+  "selection": {
+    "selected": "{{count}} محدد",
+    "selectAll": "تحديد الكل",
+    "clearSelection": "إلغاء التحديد",
+    "maxReached": "تم الوصول للحد الأقصى",
+    "maxReachedDescription": "يمكنك تحديد حتى {{max}} عنصر في المرة الواحدة",
+    "selectItem": "تحديد العنصر",
+    "deselectItem": "إلغاء تحديد العنصر",
+    "allSelected": "تم تحديد جميع العناصر",
+    "partiallySelected": "تم تحديد بعض العناصر"
+  },
+
+  "actions": {
+    "title": "الإجراءات",
+    "updateStatus": "تحديث الحالة",
+    "assign": "تعيين",
+    "unassign": "إلغاء التعيين",
+    "addTags": "إضافة علامات",
+    "removeTags": "إزالة العلامات",
+    "export": "تصدير",
+    "delete": "حذف",
+    "archive": "أرشفة",
+    "restore": "استعادة",
+    "sendReminder": "إرسال تذكير",
+    "escalate": "تصعيد",
+    "changePriority": "تغيير الأولوية",
+    "moreActions": "المزيد من الإجراءات"
+  },
+
+  "confirmation": {
+    "title": "تأكيد {{action}}",
+    "description": "أنت على وشك {{action}} {{count}} {{entityType}}.",
+    "warning": "لا يمكن التراجع عن هذا الإجراء.",
+    "undoAvailable": "سيكون لديك {{seconds}} ثانية للتراجع عن هذا الإجراء.",
+    "confirm": "تأكيد",
+    "cancel": "إلغاء",
+    "processing": "جاري المعالجة...",
+
+    "updateStatus": {
+      "title": "تحديث الحالة",
+      "description": "تغيير حالة {{count}} عنصر إلى:",
+      "selectStatus": "اختر الحالة الجديدة"
+    },
+
+    "assign": {
+      "title": "تعيين العناصر",
+      "description": "تعيين {{count}} عنصر إلى:",
+      "selectAssignee": "اختر المسؤول"
+    },
+
+    "addTags": {
+      "title": "إضافة علامات",
+      "description": "إضافة علامات إلى {{count}} عنصر:",
+      "selectTags": "اختر أو أنشئ علامات",
+      "tagPlaceholder": "اكتب للبحث أو إنشاء علامات..."
+    },
+
+    "removeTags": {
+      "title": "إزالة العلامات",
+      "description": "إزالة العلامات من {{count}} عنصر:",
+      "selectTags": "اختر العلامات للإزالة"
+    },
+
+    "export": {
+      "title": "تصدير العناصر",
+      "description": "تصدير {{count}} عنصر إلى:",
+      "selectFormat": "اختر صيغة التصدير",
+      "formats": {
+        "csv": "CSV (مفصول بفواصل)",
+        "xlsx": "Excel (XLSX)",
+        "pdf": "مستند PDF",
+        "json": "بيانات JSON"
+      }
+    },
+
+    "delete": {
+      "title": "حذف العناصر",
+      "description": "هل أنت متأكد من حذف {{count}} عنصر؟",
+      "warning": "هذا الإجراء مدمر وقد يؤثر على البيانات المرتبطة.",
+      "permanentWarning": "لا يمكن استعادة العناصر المحذوفة."
+    },
+
+    "archive": {
+      "title": "أرشفة العناصر",
+      "description": "أرشفة {{count}} عنصر؟",
+      "note": "يمكن استعادة العناصر المؤرشفة لاحقاً."
+    },
+
+    "changePriority": {
+      "title": "تغيير الأولوية",
+      "description": "تغيير أولوية {{count}} عنصر إلى:",
+      "selectPriority": "اختر الأولوية الجديدة"
+    },
+
+    "escalate": {
+      "title": "تصعيد العناصر",
+      "description": "تصعيد {{count}} عنصر؟",
+      "reason": "السبب (اختياري)",
+      "reasonPlaceholder": "أدخل سبب التصعيد..."
+    }
+  },
+
+  "progress": {
+    "title": "جاري المعالجة...",
+    "processing": "معالجة {{current}} من {{total}}",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "cancelled": "ملغى",
+    "cancel": "إلغاء",
+    "pleaseWait": "يرجى الانتظار أثناء معالجة طلبك"
+  },
+
+  "result": {
+    "success": "تم {{action}} {{count}} عنصر بنجاح",
+    "partialSuccess": "تم {{action}} {{success}} من {{total}} عنصر بنجاح",
+    "failed": "فشل {{action}} العناصر",
+    "failedItems": "فشل {{count}} عنصر",
+    "viewFailures": "عرض الإخفاقات",
+    "retry": "إعادة المحاولة",
+    "retryFailed": "إعادة محاولة العناصر الفاشلة"
+  },
+
+  "undo": {
+    "message": "{{action}} {{count}} عنصر",
+    "undo": "تراجع",
+    "undoing": "جاري التراجع...",
+    "undoSuccess": "تم التراجع بنجاح",
+    "undoFailed": "فشل التراجع",
+    "timeRemaining": "{{seconds}} ثانية متبقية",
+    "immediateUndo": "تم الإجراء. انقر للتراجع.",
+    "countdown": "التراجع متاح لمدة {{seconds}} ثانية",
+    "keyboardHint": "اضغط Ctrl+Z للتراجع",
+    "paused": "متوقف مؤقتاً"
+  },
+
+  "preview": {
+    "title": "مراجعة العناصر",
+    "description": "راجع وعدّل العناصر لـ {{action}}:",
+    "includedCount": "{{count}} مضمّن",
+    "excludedCount": "{{count}} مستبعد",
+    "includeAll": "تضمين الكل",
+    "excludeAll": "استبعاد الكل",
+    "showExcluded": "إظهار المستبعدين",
+    "hideExcluded": "إخفاء المستبعدين",
+    "searchPlaceholder": "البحث في العناصر...",
+    "noResults": "لا توجد عناصر مطابقة لبحثك",
+    "noItems": "لا توجد عناصر للمعاينة",
+    "noItemsWarning": "لم يتم تحديد عناصر. يرجى تضمين عنصر واحد على الأقل.",
+    "includeItem": "تضمين {{name}}",
+    "excludeItem": "استبعاد {{name}}",
+    "selectItems": "حدد العناصر للتضمين",
+    "deselectItems": "ألغِ تحديد العناصر للاستبعاد",
+    "itemsToProcess": "سيتم معالجة {{count}} عنصر",
+    "excludedFromAction": "سيتم استبعاد {{count}} عنصر من هذا الإجراء"
+  },
+
+  "entityTypes": {
+    "entity": "عنصر",
+    "entity_plural": "عناصر",
+    "document": "مستند",
+    "document_plural": "مستندات",
+    "ticket": "تذكرة",
+    "ticket_plural": "تذاكر",
+    "dossier": "ملف",
+    "dossier_plural": "ملفات",
+    "engagement": "ارتباط",
+    "engagement_plural": "ارتباطات",
+    "commitment": "التزام",
+    "commitment_plural": "التزامات",
+    "deliverable": "مخرج",
+    "deliverable_plural": "مخرجات",
+    "person": "شخص",
+    "person_plural": "أشخاص",
+    "working-group": "مجموعة عمل",
+    "working-group_plural": "مجموعات عمل"
+  },
+
+  "status": {
+    "pending": "معلق",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "cancelled": "ملغى",
+    "draft": "مسودة",
+    "review": "مراجعة",
+    "approved": "معتمد",
+    "rejected": "مرفوض",
+    "archived": "مؤرشف"
+  },
+
+  "priority": {
+    "low": "منخفضة",
+    "medium": "متوسطة",
+    "high": "عالية",
+    "urgent": "عاجلة"
+  },
+
+  "errors": {
+    "noSelection": "لم يتم تحديد عناصر",
+    "selectionRequired": "يرجى تحديد عنصر واحد على الأقل",
+    "maxExceeded": "لا يمكن تحديد أكثر من {{max}} عنصر",
+    "actionFailed": "فشل الإجراء",
+    "networkError": "خطأ في الشبكة. يرجى المحاولة مرة أخرى.",
+    "unauthorized": "ليس لديك صلاحية لتنفيذ هذا الإجراء",
+    "invalidItems": "بعض العناصر المحددة غير صالحة",
+    "itemNotFound": "العنصر غير موجود: {{id}}"
+  },
+
+  "accessibility": {
+    "toolbar": "شريط أدوات الإجراءات الجماعية",
+    "selectionCheckbox": "مربع اختيار لـ {{name}}",
+    "selectAllCheckbox": "مربع اختيار تحديد جميع العناصر",
+    "actionButton": "زر إجراء {{action}}",
+    "progressBar": "تقدم الإجراء: {{progress}}%",
+    "closeDialog": "إغلاق النافذة",
+    "undoButton": "التراجع عن الإجراء الأخير"
+  }
+}

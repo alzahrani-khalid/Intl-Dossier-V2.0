@@ -1,0 +1,140 @@
+{
+  "title": "تفاعلات الذكاء الاصطناعي",
+  "description": "عرض وإدارة سجل تفاعلات الذكاء الاصطناعي للحوكمة والمساءلة",
+
+  "type": {
+    "generation": "توليد",
+    "suggestion": "اقتراح",
+    "classification": "تصنيف",
+    "extraction": "استخراج",
+    "translation": "ترجمة",
+    "summarization": "تلخيص",
+    "analysis": "تحليل",
+    "chat": "محادثة"
+  },
+
+  "content": {
+    "brief": "ملخص",
+    "position": "موقف",
+    "summary": "ملخص",
+    "analysis": "تحليل",
+    "recommendation": "توصية",
+    "entity_link": "ربط الكيان",
+    "translation": "ترجمة",
+    "extraction": "استخراج",
+    "chat_response": "رد المحادثة"
+  },
+
+  "status": {
+    "pending": "قيد الانتظار",
+    "running": "قيد التشغيل",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "cancelled": "ملغى"
+  },
+
+  "decision": {
+    "approved": "موافق عليه",
+    "approved_with_edits": "موافق عليه مع تعديلات",
+    "rejected": "مرفوض",
+    "revision_requested": "طُلب مراجعة",
+    "pending": "قيد الانتظار",
+    "expired": "منتهي الصلاحية",
+    "auto_approved": "موافق عليه تلقائياً"
+  },
+
+  "classification": {
+    "public": "عام",
+    "internal": "داخلي",
+    "confidential": "سري",
+    "secret": "سري للغاية"
+  },
+
+  "filter": {
+    "all_types": "جميع الأنواع",
+    "all_statuses": "جميع الحالات",
+    "date_range": "نطاق التاريخ",
+    "user": "المستخدم"
+  },
+
+  "event": {
+    "interaction_started": "بدأ التفاعل",
+    "prompt_sent": "تم إرسال الطلب",
+    "response_received": "تم استلام الرد",
+    "user_edit": "تعديل المستخدم",
+    "approval_requested": "طُلبت الموافقة",
+    "approved": "تمت الموافقة",
+    "rejected": "تم الرفض",
+    "revision_requested": "طُلبت المراجعة",
+    "content_published": "تم نشر المحتوى",
+    "content_retracted": "تم سحب المحتوى",
+    "policy_violation": "مخالفة السياسة",
+    "risk_flagged": "تم الإبلاغ عن مخاطر",
+    "review_escalated": "تم تصعيد المراجعة"
+  },
+
+  "detail": {
+    "title": "تفاصيل تفاعل الذكاء الاصطناعي",
+    "overview": "نظرة عامة",
+    "prompt": "طلب المستخدم",
+    "system_prompt": "طلب النظام",
+    "response": "رد الذكاء الاصطناعي",
+    "user_edits": "تعديلات المستخدم",
+    "audit_trail": "مسار تدقيق الحوكمة",
+    "metrics": "المقاييس",
+    "context": "مصادر السياق"
+  },
+
+  "error": {
+    "load_failed": "فشل تحميل تفاعلات الذكاء الاصطناعي",
+    "not_found": "لم يتم العثور على التفاعل",
+    "log_failed": "فشل تسجيل التفاعل"
+  },
+
+  "empty": {
+    "no_interactions": "لم يتم العثور على تفاعلات للذكاء الاصطناعي",
+    "no_edits": "لم يتم تسجيل تعديلات من المستخدم",
+    "no_decisions": "لا توجد قرارات موافقة بعد"
+  },
+
+  "action": {
+    "view_details": "عرض التفاصيل",
+    "approve": "موافقة",
+    "reject": "رفض",
+    "request_revision": "طلب مراجعة",
+    "edit": "تعديل",
+    "export": "تصدير"
+  },
+
+  "showing": "عرض",
+  "of": "من",
+  "previous": "السابق",
+  "next": "التالي",
+  "expand": "توسيع",
+  "collapse": "طي",
+  "view_details": "عرض التفاصيل",
+  "prompt": "الطلب",
+  "response": "الرد",
+  "no_response": "لا يوجد رد",
+  "model": "النموذج",
+  "type": "النوع",
+  "content_type": "نوع المحتوى",
+  "status": "الحالة",
+  "edits": "تعديلات",
+  "version": "الإصدار",
+  "changed": "تم تغييره",
+  "reason": "السبب",
+  "contains_pii": "يحتوي على بيانات شخصية",
+  "classification": "التصنيف",
+
+  "governance": {
+    "title": "لوحة حوكمة الذكاء الاصطناعي",
+    "description": "مراقبة وتدقيق تفاعلات الذكاء الاصطناعي للامتثال والمساءلة",
+    "total_interactions": "إجمالي التفاعلات",
+    "approval_rate": "معدل الموافقة",
+    "edit_rate": "معدل التعديل",
+    "avg_response_time": "متوسط وقت الاستجابة",
+    "total_cost": "إجمالي التكلفة",
+    "pii_flagged": "تم الإبلاغ عن بيانات شخصية"
+  }
+}

@@ -76,15 +76,57 @@
     "notes_placeholder": "Add any notes about this link..."
   },
   "consistency": {
-    "title": "Consistency Check",
-    "score": "Consistency Score",
+    "title": "Consistency Analysis",
+    "loading": "Loading consistency check...",
+    "runCheck": "Run Check",
+    "noCheck": "No consistency check has been run yet.",
+    "noCheckHint": "Run a check to analyze this position against the existing repository.",
+    "overallScore": "Overall Score",
+    "riskLevel": "Risk Level",
+    "risk": {
+      "low": "Low Risk",
+      "medium": "Medium Risk",
+      "high": "High Risk",
+      "critical": "Critical Risk"
+    },
+    "humanReviewRequired": "Review Required",
+    "autoApproved": "Auto-Approved",
+    "aiUnavailable": "AI Unavailable",
+    "conflicts": "Conflicts",
     "noConflicts": "No conflicts detected",
+    "similarPositions": "Similar Positions",
+    "noSimilar": "No similar positions found",
+    "recommendations": "Recommendations",
+    "severity": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "critical": "Critical"
+    },
+    "priority": {
+      "low": "Low Priority",
+      "medium": "Medium Priority",
+      "high": "High Priority"
+    },
+    "relationship": {
+      "duplicate": "Duplicate",
+      "related": "Related",
+      "supersedes": "Supersedes",
+      "superseded_by": "Superseded By"
+    },
+    "suggestedResolution": "Suggested Resolution",
+    "reviewRequired": "Human Review Required",
+    "reviewNotesPlaceholder": "Add review notes (optional)...",
+    "approve": "Approve",
+    "requestRevision": "Request Revision",
+    "reject": "Reject",
+    "outdated": "Outdated",
+    "score": "Consistency Score",
     "noConflictsDescription": "This position is consistent with all other published positions.",
     "conflictsFound": "Conflicts Found",
     "conflictsFoundDescription": "This position has conflicts with other positions that need to be reviewed.",
     "aiServiceStatus": "AI Service",
     "aiAvailable": "Available",
-    "aiUnavailable": "Unavailable",
     "checkTrigger": "Check Trigger",
     "manual": "Manual Check",
     "automaticOnSubmit": "Automatic on Submit",
@@ -102,7 +144,11 @@
     "conflictTypes": {
       "contradiction": "Contradiction",
       "ambiguity": "Ambiguity",
-      "overlap": "Overlap"
+      "overlap": "Overlap",
+      "redundancy": "Redundancy",
+      "gap": "Gap",
+      "outdated": "Outdated",
+      "semantic_conflict": "Semantic Conflict"
     },
     "severityLevels": {
       "high": "High",

@@ -1,0 +1,140 @@
+{
+  "wizard": {
+    "title": "Let's Create Your First Relationship",
+    "subtitle": "Relationships help you track connections between {{name}} and other entities in your system.",
+    "dismiss": "Dismiss",
+    "skipForNow": "Skip for now",
+    "back": "Back",
+    "next": "Next",
+    "createFirstRelationship": "Create First Relationship",
+    "selected": "Selected",
+    "currentDossier": "Current dossier",
+    "networkPreviewLabel": "Network Graph View",
+    "readyToStart": "Ready to get started?",
+    "readyToStartDesc": "Click the button below to create your first relationship for {{name}}. You can always add more relationships later.",
+    "steps": {
+      "welcome": {
+        "title": "Why Create Relationships?",
+        "description": "Relationships are the backbone of your knowledge network. They connect countries, organizations, people, and events to reveal insights and patterns."
+      },
+      "examples": {
+        "title": "Common Relationship Types",
+        "description": "Here are some examples of how relationships work. Click on any example to learn more."
+      },
+      "preview": {
+        "title": "Visualize Your Network",
+        "description": "Once you create relationships, you'll be able to visualize them as an interactive network graph."
+      }
+    },
+    "benefits": {
+      "visualize": "Visualize Connections",
+      "visualizeDesc": "See how entities relate to each other in an interactive graph.",
+      "track": "Track History",
+      "trackDesc": "Monitor relationship changes over time with effective dates.",
+      "connect": "Build Networks",
+      "connectDesc": "Discover hidden patterns across your data."
+    }
+  },
+  "dialog": {
+    "createTitle": "Create Relationship",
+    "editTitle": "Edit Relationship",
+    "createDescription": "Create a new relationship for {{name}}",
+    "editDescription": "Update the relationship details"
+  },
+  "form": {
+    "targetDossier": "Related Dossier",
+    "selectDossier": "Search and select a dossier...",
+    "searchDossiers": "Type to search dossiers...",
+    "searchMinChars": "Type at least 2 characters to search",
+    "noResults": "No dossiers found",
+    "relationshipType": "Relationship Type",
+    "selectType": "Select relationship type",
+    "status": "Status",
+    "selectStatus": "Select status",
+    "effectiveFrom": "Effective From",
+    "effectiveTo": "Effective To",
+    "effectiveToHint": "Leave empty for ongoing relationship",
+    "notesEn": "Notes (English)",
+    "notesAr": "Notes (Arabic)",
+    "notesPlaceholder": "Add optional notes about this relationship..."
+  },
+  "actions": {
+    "create": "Create Relationship",
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "deleting": "Deleting..."
+  },
+  "messages": {
+    "created": "Relationship created successfully",
+    "createError": "Failed to create relationship: {{error}}",
+    "updated": "Relationship updated successfully",
+    "updateError": "Failed to update relationship: {{error}}",
+    "deleted": "Relationship deleted successfully",
+    "deleteError": "Failed to delete relationship: {{error}}",
+    "terminated": "Relationship terminated successfully",
+    "terminateError": "Failed to terminate relationship: {{error}}"
+  },
+  "types": {
+    "member_of": "Member of",
+    "participates_in": "Participates in",
+    "cooperates_with": "Cooperates with",
+    "bilateral_relation": "Bilateral relation",
+    "partnership": "Partnership",
+    "parent_of": "Parent of",
+    "subsidiary_of": "Subsidiary of",
+    "related_to": "Related to",
+    "represents": "Represents",
+    "hosted_by": "Hosted by",
+    "sponsored_by": "Sponsored by",
+    "involves": "Involves",
+    "discusses": "Discusses",
+    "participant_in": "Participant in",
+    "observer_of": "Observer of",
+    "affiliate_of": "Affiliate of",
+    "successor_of": "Successor of",
+    "predecessor_of": "Predecessor of"
+  },
+  "status": {
+    "active": "Active",
+    "historical": "Historical",
+    "terminated": "Terminated"
+  },
+  "dossierTypes": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "person": "Person",
+    "engagement": "Engagement",
+    "working_group": "Working Group",
+    "topic": "Topic"
+  },
+  "graph": {
+    "controls": {
+      "zoom": "Zoom",
+      "zoomIn": "Zoom in",
+      "zoomOut": "Zoom out",
+      "fitView": "Fit view",
+      "reset": "Reset view"
+    },
+    "gestures": {
+      "pinching": "Pinch to zoom",
+      "panning": "Drag to pan",
+      "tapping": "Tap to focus",
+      "doubleTapping": "Double-tap to expand"
+    },
+    "hints": {
+      "pinch": "Pinch to zoom",
+      "pan": "Two fingers to pan",
+      "tap": "Tap node to focus",
+      "doubleTap": "Double-tap to expand"
+    },
+    "accessibility": {
+      "zoomLevel": "Current zoom level: {{level}}%",
+      "nodeCount": "{{count}} nodes visible",
+      "edgeCount": "{{count}} connections visible",
+      "focusedNode": "Focused on {{name}}",
+      "gestureActive": "Gesture active"
+    }
+  }
+}

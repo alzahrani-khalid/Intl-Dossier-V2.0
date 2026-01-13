@@ -1,0 +1,207 @@
+{
+  "title": "البحث المحسّن",
+  "description": "البحث مع اقتراحات ذكية ومطابقة مرنة ومرشحات تكيفية",
+
+  "search": {
+    "placeholder": "البحث في الملفات والمستندات والأشخاص...",
+    "button": "بحث",
+    "clear": "مسح البحث",
+    "noQuery": "أدخل مصطلح بحث للبدء"
+  },
+
+  "suggestions": {
+    "loading": "جاري تحميل الاقتراحات...",
+    "noResults": "لم يتم العثور على اقتراحات. جرب مصطلح بحث مختلف.",
+    "fuzzyMatch": "مشابه",
+    "sections": {
+      "history": "عمليات البحث الأخيرة",
+      "titles": "العناوين المطابقة",
+      "tags": "الوسوم المطابقة",
+      "popular": "عمليات البحث الشائعة"
+    },
+    "keyboardHints": {
+      "navigate": "↑↓ للتنقل",
+      "select": "Enter للاختيار"
+    }
+  },
+
+  "results": {
+    "count": "نتائج",
+    "found": "تم العثور على {{count}} نتيجة",
+    "found_plural": "تم العثور على {{count}} نتائج",
+    "noResults": "لا توجد نتائج",
+    "noResultsHint": "حاول تعديل البحث أو إزالة بعض المرشحات"
+  },
+
+  "history": {
+    "title": "سجل البحث",
+    "clear": "مسح السجل",
+    "clearConfirm": "هل أنت متأكد أنك تريد مسح سجل البحث؟",
+    "empty": "لا يوجد سجل بحث بعد",
+    "searchedAt": "تم البحث {{time}}",
+    "resultsFound": "{{count}} نتائج"
+  },
+
+  "filters": {
+    "adaptive": {
+      "title": "المرشحات",
+      "clearAll": "مسح الكل",
+      "status": "الحالة",
+      "type": "النوع",
+      "dateRange": "تاريخ التحديث",
+      "sensitivity": "الحساسية",
+      "activeCount": "{{count}} مرشح نشط",
+      "activeCount_plural": "{{count}} مرشحات نشطة"
+    },
+    "a11y": {
+      "adaptiveFilters": "مرشحات البحث التكيفية مع عدد النتائج"
+    }
+  },
+
+  "entityTypes": {
+    "dossier": "ملف",
+    "engagement": "مشاركة",
+    "position": "موقف",
+    "document": "مستند",
+    "person": "شخص",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "country": "دولة",
+    "theme": "موضوع"
+  },
+
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف",
+    "draft": "مسودة",
+    "published": "منشور"
+  },
+
+  "type": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "theme": "موضوع"
+  },
+
+  "dateRange": {
+    "last_7_days": "آخر 7 أيام",
+    "last_30_days": "آخر 30 يوماً",
+    "last_90_days": "آخر 90 يوماً"
+  },
+
+  "sensitivity": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي"
+  },
+
+  "errors": {
+    "suggestionsError": "فشل تحميل الاقتراحات. يرجى المحاولة مرة أخرى.",
+    "historyError": "فشل تحميل سجل البحث.",
+    "filterCountsError": "فشل تحميل عدد المرشحات."
+  },
+
+  "a11y": {
+    "searchInput": "حقل البحث مع الاقتراحات",
+    "suggestionsList": "اقتراحات البحث",
+    "filterOption": "خيار المرشح {{label}} مع {{count}} نتائج",
+    "selectedFilter": "المرشح {{label}} محدد",
+    "clearSearch": "مسح نص البحث"
+  },
+
+  "hints": {
+    "typoCorrection": "هل تقصد: {{suggestion}}؟",
+    "tryAlternatives": "جرب البحث عن:",
+    "popularNow": "الشائع الآن"
+  },
+
+  "noResults": {
+    "didYouMean": "هل تقصد؟",
+    "relatedTerms": "جرب البحث عن",
+    "popularSearches": "عمليات البحث الشائعة",
+    "recentlyAdded": "المضاف حديثاً",
+    "searchTips": "نصائح البحث",
+    "createNew": "إنشاء {{type}} جديد",
+    "createNewHint": "لا توجد نتائج. هل تريد إنشاء \"{{name}}\" كإدخال جديد؟",
+    "createButton": "إنشاء {{type}}",
+    "typoSuggestion": "البحث عن \"{{term}}\" بدلاً من ذلك",
+    "similarResults": "نتائج مشابهة",
+    "noSuggestionsFound": "لا توجد اقتراحات متاحة",
+    "loadingError": "تعذر تحميل الاقتراحات",
+    "findingSuggestions": "جاري البحث عن اقتراحات...",
+    "workspaceHistory": "عمليات بحث ناجحة في مساحة العمل",
+    "results": "نتائج",
+    "actionableTips": "اقتراحات لتحسين البحث",
+    "filtersActive": "لديك {{count}} مرشح(ات) نشط",
+    "tryRemovingFilters": "جرب إزالة بعض المرشحات لتوسيع نطاق البحث",
+    "clearFilters": "مسح المرشحات",
+    "tryThis": "جرب هذا",
+    "entityLabels": {
+      "dossier": "ملف",
+      "country": "دولة",
+      "organization": "منظمة",
+      "forum": "منتدى",
+      "theme": "موضوع",
+      "engagement": "مشاركة",
+      "position": "موقف",
+      "document": "مستند",
+      "person": "شخص"
+    }
+  },
+
+  "filterPresets": {
+    "title": "جرب هذه المرشحات الشائعة",
+    "description": "مرشحات سريعة بناءً على الاستعلامات الشائعة",
+    "showMore": "إظهار المزيد من المرشحات",
+    "showLess": "إظهار مرشحات أقل",
+    "applyPreset": "تطبيق المرشح",
+    "resultsExpected": "~{{count}} نتيجة",
+    "noPresets": "لا توجد مرشحات محددة مسبقاً",
+    "loading": "جاري تحميل اقتراحات المرشحات...",
+    "error": "تعذر تحميل المرشحات المحددة مسبقاً",
+    "categories": {
+      "dossier": "الملفات",
+      "intake": "طلبات الاستلام",
+      "brief": "الملخصات",
+      "engagement": "المشاركات",
+      "workflow": "سير العمل",
+      "geographic": "الجغرافي"
+    },
+    "presets": {
+      "activeMena": {
+        "name": "الملفات النشطة في منطقة الشرق الأوسط وشمال أفريقيا",
+        "description": "جميع الملفات النشطة لمنطقة الشرق الأوسط وشمال أفريقيا"
+      },
+      "highPriorityBriefs": {
+        "name": "الملخصات ذات الأولوية العالية المستحقة هذا الشهر",
+        "description": "الملخصات العاجلة وذات الأولوية العالية مع مواعيد نهائية هذا الشهر"
+      },
+      "unassignedIntake": {
+        "name": "طلبات الاستلام غير المعينة",
+        "description": "طلبات الخدمة في انتظار التعيين"
+      },
+      "overdueTasks": {
+        "name": "المهام المتأخرة",
+        "description": "عناصر العمل التي تجاوزت موعدها النهائي"
+      },
+      "recentEngagements": {
+        "name": "المشاركات الحديثة",
+        "description": "المشاركات المحدثة في آخر 7 أيام"
+      },
+      "sensitiveDossiers": {
+        "name": "الملفات عالية الحساسية",
+        "description": "الملفات المصنفة كحساسة للغاية"
+      },
+      "pendingReview": {
+        "name": "في انتظار المراجعة",
+        "description": "العناصر في انتظار الموافقة أو المراجعة"
+      },
+      "myAssignments": {
+        "name": "تكليفاتي",
+        "description": "جميع عناصر العمل المعينة لك"
+      }
+    }
+  }
+}

@@ -4,6 +4,35 @@
     "list": "عرض القائمة",
     "board": "عرض اللوحة"
   },
+  "swimlanes": {
+    "none": "بدون مسارات",
+    "byAssignee": "حسب المسؤول",
+    "byPriority": "حسب الأولوية",
+    "unassigned": "غير مسند",
+    "collapse": "طي",
+    "expand": "توسيع"
+  },
+  "wip": {
+    "limit": "حد العمل الجاري",
+    "limitReached": "تم الوصول لحد العمل الجاري",
+    "limitReachedDescription": "العمود {{column}} وصل لحده الأقصى {{limit}} عناصر",
+    "approaching": "اقتراب من حد العمل الجاري",
+    "overLimit": "تجاوز حد العمل الجاري"
+  },
+  "bulkActions": {
+    "select": "تحديد",
+    "cancel": "إلغاء",
+    "selectAll": "تحديد الكل",
+    "selected": "محدد",
+    "moveTo": "نقل إلى",
+    "assign": "إسناد",
+    "unassign": "إلغاء الإسناد",
+    "priority": "تعيين الأولوية",
+    "clearSelection": "مسح التحديد",
+    "success": "تم تنفيذ الإجراء الجماعي",
+    "partialSuccess": "تم تحديث {{succeeded}} من {{total}} عناصر",
+    "failed": "فشل الإجراء الجماعي"
+  },
   "columnModes": {
     "label": "تجميع حسب",
     "status": "الحالة",

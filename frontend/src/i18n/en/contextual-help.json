@@ -1,0 +1,183 @@
+{
+  "formatRequirements": "Format Requirements",
+  "examples": "Examples",
+  "learnMore": "Learn More",
+  "showHelp": "Show Help",
+  "hideHelp": "Hide Help",
+  "helpFor": "Help for {{field}}",
+
+  "relationship": {
+    "targetDossier": {
+      "tooltip": "Select the entity you want to create a relationship with",
+      "title": "Related Dossier Selection",
+      "description": "Search for and select any dossier in the system to establish a formal relationship. The relationship will be tracked bidirectionally.",
+      "formatRequirements": [
+        "Type at least 2 characters to search",
+        "Select from the dropdown list"
+      ],
+      "examples": [
+        {
+          "value": "Saudi Arabia",
+          "description": "Search by English name"
+        },
+        {
+          "value": "المملكة العربية السعودية",
+          "description": "Search by Arabic name"
+        }
+      ]
+    },
+    "relationshipType": {
+      "tooltip": "The nature of the connection between these entities",
+      "title": "Relationship Type",
+      "description": "Choose the type that best describes how these two entities are connected. This affects how the relationship appears in network visualizations and reports.",
+      "types": {
+        "member_of": "Indicates entity A is a member of organization B (e.g., country is member of international forum)",
+        "participates_in": "Entity A actively participates in entity B's activities",
+        "cooperates_with": "Bilateral cooperation agreement or partnership",
+        "bilateral_relation": "Formal bilateral diplomatic or economic relationship",
+        "partnership": "Strategic partnership or alliance",
+        "parent_of": "Parent organization of another entity",
+        "subsidiary_of": "Subsidiary or subordinate organization",
+        "related_to": "General relationship that doesn't fit other categories",
+        "represents": "Entity A represents entity B in some capacity",
+        "hosted_by": "Event or entity hosted by another organization",
+        "sponsored_by": "Financial or official sponsorship relationship",
+        "involves": "Entity is involved in an engagement or event",
+        "discusses": "Engagement discusses a particular topic",
+        "participant_in": "Participant in an event or forum",
+        "observer_of": "Observer status in a forum or organization",
+        "affiliate_of": "Affiliated organization or branch",
+        "successor_of": "Entity succeeded another (historical transition)",
+        "predecessor_of": "Entity preceded another (historical transition)"
+      }
+    },
+    "status": {
+      "tooltip": "Current state of this relationship",
+      "title": "Relationship Status",
+      "description": "Track whether this relationship is currently active, has become historical, or has been formally terminated.",
+      "statuses": {
+        "active": "The relationship is currently in effect and ongoing",
+        "historical": "The relationship existed in the past but is no longer active",
+        "terminated": "The relationship was formally ended"
+      }
+    },
+    "effectiveFrom": {
+      "tooltip": "When this relationship started",
+      "title": "Effective From Date",
+      "description": "The date when this relationship officially began. Leave empty if unknown or if the relationship has always existed."
+    },
+    "effectiveTo": {
+      "tooltip": "When this relationship ends (leave empty for ongoing)",
+      "title": "Effective To Date",
+      "description": "The date when this relationship ended or is scheduled to end. Leave empty for ongoing relationships that have no defined end date."
+    },
+    "notes": {
+      "tooltip": "Additional context or details about this relationship",
+      "title": "Relationship Notes",
+      "description": "Add any relevant details, context, or documentation references that help explain this relationship. Notes are searchable and appear in relationship summaries."
+    }
+  },
+
+  "dossier": {
+    "type": {
+      "tooltip": "Select the category that best describes this entity",
+      "title": "Dossier Type Selection",
+      "description": "Each type has specific fields and visualization options. Choose the type that best represents the entity you're documenting.",
+      "types": {
+        "country": "National entities and sovereign states. Includes geographic data, capital cities, ISO codes, and regional classifications.",
+        "organization": "Government agencies, NGOs, private sector companies, and international organizations. Includes contact info and organizational hierarchy.",
+        "forum": "International forums, councils, and multilateral bodies. Supports member tracking and meeting schedules.",
+        "engagement": "Meetings, consultations, workshops, and other scheduled interactions. Links participants, outcomes, and follow-ups.",
+        "theme": "Topics, policy areas, or themes that cross-cut multiple entities. Used for categorization and research.",
+        "working_group": "Task forces, committees, and working groups within organizations or forums.",
+        "person": "Individual contacts, delegates, or officials. Includes biographical info and position history."
+      }
+    },
+    "nameEn": {
+      "tooltip": "Official name in English",
+      "title": "English Name",
+      "description": "Enter the official English name for this entity. This will be used in English language displays and reports.",
+      "formatRequirements": ["Minimum 2 characters", "Use official/formal naming conventions"]
+    },
+    "nameAr": {
+      "tooltip": "Official name in Arabic",
+      "title": "Arabic Name",
+      "description": "Enter the official Arabic name for this entity. This will be used when the interface is in Arabic.",
+      "formatRequirements": ["Minimum 2 characters", "Use official Arabic naming"]
+    },
+    "status": {
+      "tooltip": "Operational status of this entity",
+      "title": "Entity Status",
+      "description": "Indicates whether this entity is currently active, temporarily inactive, or archived for historical reference.",
+      "statuses": {
+        "active": "Entity is currently operational and can be referenced",
+        "inactive": "Entity exists but is temporarily not operational",
+        "archived": "Entity is kept for historical reference only"
+      }
+    },
+    "sensitivityLevel": {
+      "tooltip": "Classification level for access control",
+      "title": "Sensitivity Level",
+      "description": "Controls who can view and edit this dossier. Higher levels require additional permissions.",
+      "levels": {
+        "0": "Public - No restrictions",
+        "1": "Internal - Organization members only",
+        "2": "Confidential - Limited access",
+        "3": "Restricted - Senior staff only",
+        "4": "Secret - Security clearance required",
+        "5": "Top Secret - Highest level clearance"
+      }
+    },
+    "isoCode": {
+      "tooltip": "Standard ISO country code",
+      "title": "ISO Country Code",
+      "description": "The ISO 3166-1 standard country code used for international identification.",
+      "formatRequirements": [
+        "ISO 3166-1 alpha-2 (2 letters) or alpha-3 (3 letters)",
+        "Use uppercase letters"
+      ],
+      "examples": [
+        {
+          "value": "SA",
+          "description": "Saudi Arabia (2-letter)"
+        },
+        {
+          "value": "SAU",
+          "description": "Saudi Arabia (3-letter)"
+        }
+      ]
+    },
+    "organizationType": {
+      "tooltip": "Category of organization",
+      "title": "Organization Type",
+      "description": "Classifies the organization for filtering and reporting purposes.",
+      "types": {
+        "government": "Government ministries, agencies, and public sector bodies",
+        "ngo": "Non-governmental organizations and civil society groups",
+        "private": "Private sector companies and corporations",
+        "international": "International organizations and multilateral bodies",
+        "academic": "Universities, research institutions, and academic bodies"
+      }
+    },
+    "engagementType": {
+      "tooltip": "Type of engagement activity",
+      "title": "Engagement Type",
+      "description": "Categorizes the nature of this engagement for scheduling and reporting.",
+      "types": {
+        "meeting": "Formal or informal meeting between parties",
+        "consultation": "Advisory or consultation session",
+        "coordination": "Coordination meeting between departments/organizations",
+        "workshop": "Training or collaborative workshop",
+        "conference": "Conference or large-scale event",
+        "site_visit": "Physical site visit or inspection",
+        "ceremony": "Official ceremony or protocol event"
+      }
+    }
+  },
+
+  "common": {
+    "required": "This field is required",
+    "optional": "Optional",
+    "seeDocumentation": "See documentation"
+  }
+}

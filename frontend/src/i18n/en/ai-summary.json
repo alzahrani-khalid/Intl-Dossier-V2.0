@@ -1,0 +1,76 @@
+{
+  "title": "AI Summary",
+  "description": "Generate an executive summary using AI analysis",
+  "descriptionWithName": "Generate an executive summary for {{name}}",
+  "generate": "Generate Summary",
+  "generating": "Generating summary...",
+  "retry": "Retry",
+  "startOver": "Start over",
+  "generateAnother": "Generate New Summary",
+  "showOptions": "Customize summary",
+  "hideOptions": "Hide options",
+
+  "options": {
+    "length": "Summary Length",
+    "focus": "Focus Areas"
+  },
+
+  "length": {
+    "brief": "Brief (~150 words)",
+    "standard": "Standard (~300 words)",
+    "detailed": "Detailed (~500 words)"
+  },
+
+  "focus": {
+    "all": "All Areas",
+    "activity": "Recent Activity",
+    "relationships": "Relationships",
+    "commitments": "Commitments",
+    "strategic": "Strategic"
+  },
+
+  "sections": {
+    "executiveSummary": "Executive Summary",
+    "keyHighlights": "Key Highlights",
+    "details": "Details"
+  },
+
+  "importance": {
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+
+  "confidence": {
+    "high": "High Confidence",
+    "medium": "Medium Confidence",
+    "low": "Low Confidence"
+  },
+
+  "metadata": {
+    "dataPoints": "{{count}} data points analyzed",
+    "generatedAt": "Generated {{date}}"
+  },
+
+  "fallback": {
+    "title": "Basic Summary Generated",
+    "message": "AI service was unavailable. A basic summary was generated from available data."
+  },
+
+  "entity": {
+    "dossier": "Dossier",
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "person": "Person",
+    "engagement": "Engagement",
+    "theme": "Theme"
+  },
+
+  "errors": {
+    "title": "Summary Error",
+    "generationFailed": "Failed to generate summary. Please try again.",
+    "entityNotFound": "Entity not found or access denied.",
+    "invalidRequest": "Invalid request parameters."
+  }
+}

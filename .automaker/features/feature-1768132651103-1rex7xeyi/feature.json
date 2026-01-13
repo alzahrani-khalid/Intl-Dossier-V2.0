@@ -1,0 +1,10 @@
+{
+  "category": "ui",
+  "description": "Allow users to add voice memos and handwritten annotations to documents on mobile devices. Automatically transcribe voice notes and sync with desktop for later processing.\n\n**Rationale:** Diplomats often work in field conditions or during travel where typing is impractical. Voice notes and quick annotations enable capturing insights immediately without losing context.",
+  "title": "Mobile Annotation and Voice Notes",
+  "status": "completed",
+  "id": "feature-1768132651103-1rex7xeyi",
+  "branchName": "main",
+  "startedAt": "2026-01-11T23:08:09.429Z",
+  "updatedAt": "2026-01-11T23:27:08.337Z"
+}

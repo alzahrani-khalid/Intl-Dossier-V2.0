@@ -1,0 +1,10 @@
+{
+  "category": "ui",
+  "description": "Add document classification levels (Public, Internal, Confidential, Secret) with field-level access control. Implement need-to-know principles, clearance levels, and automatic redaction for unauthorized users.\n\n**Rationale:** International dossiers often contain sensitive diplomatic information requiring granular security controls beyond basic permissions. Compliance with government security standards is critical.",
+  "title": "Security Classification and Access Control",
+  "status": "completed",
+  "id": "feature-1768132510307-bpo1sg96b",
+  "branchName": "main",
+  "startedAt": "2026-01-11T22:18:09.399Z",
+  "updatedAt": "2026-01-11T22:32:58.084Z"
+}

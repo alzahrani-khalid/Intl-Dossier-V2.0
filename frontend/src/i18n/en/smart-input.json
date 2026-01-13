@@ -1,0 +1,104 @@
+{
+  "labels": {
+    "email": "Email Address",
+    "phone": "Phone Number",
+    "url": "Website URL",
+    "date": "Date",
+    "time": "Time",
+    "datetime": "Date & Time",
+    "number": "Number",
+    "currency": "Amount",
+    "creditcard": "Card Number",
+    "otp": "Verification Code",
+    "password": "Password",
+    "search": "Search"
+  },
+
+  "placeholders": {
+    "email": "name@example.com",
+    "phone": "+1 (234) 567-8900",
+    "url": "https://example.com",
+    "date": "YYYY-MM-DD",
+    "time": "HH:MM",
+    "datetime": "Select date and time",
+    "number": "Enter a number",
+    "currency": "0.00",
+    "creditcard": "1234 5678 9012 3456",
+    "otp": "Enter code",
+    "password": "Enter password",
+    "search": "Search..."
+  },
+
+  "helpText": {
+    "email": "We'll never share your email",
+    "phone": "Include country code for international numbers",
+    "url": "Include https:// or http://",
+    "creditcard": "Your card details are secure",
+    "otp": "Check your email or phone for the code"
+  },
+
+  "keyboard": {
+    "numeric": "Numeric keyboard",
+    "email": "Email keyboard",
+    "phone": "Phone keypad",
+    "url": "URL keyboard",
+    "decimal": "Decimal keyboard"
+  },
+
+  "mask": {
+    "phone": {
+      "hint": "Format: +1 (234) 567-8900",
+      "international": "International format accepted"
+    },
+    "creditcard": {
+      "hint": "Enter your 16-digit card number",
+      "spaces": "Spaces will be added automatically"
+    },
+    "date": {
+      "hint": "Format: YYYY-MM-DD",
+      "picker": "Use the date picker"
+    },
+    "currency": {
+      "hint": "Use decimal point for cents"
+    }
+  },
+
+  "select": {
+    "placeholder": "Select an option...",
+    "search": "Search options...",
+    "empty": "No options found",
+    "clear": "Clear selection",
+    "create": "Create \"{value}\"",
+    "loading": "Loading options...",
+    "showingCount": "Showing {{shown}} of {{total}} options",
+    "selectAll": "Select all",
+    "deselectAll": "Clear all",
+    "selected": "{{count}} selected",
+    "required": "Please select an option"
+  },
+
+  "errors": {
+    "invalidFormat": "Invalid format",
+    "required": "This field is required",
+    "invalidEmail": "Please enter a valid email address",
+    "invalidPhone": "Please enter a valid phone number",
+    "invalidUrl": "Please enter a valid URL",
+    "invalidDate": "Please enter a valid date",
+    "invalidNumber": "Please enter a valid number",
+    "invalidCreditcard": "Please enter a valid card number",
+    "invalidOtp": "Please enter a valid verification code"
+  },
+
+  "accessibility": {
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "clearInput": "Clear input",
+    "openCalendar": "Open calendar",
+    "closeCalendar": "Close calendar",
+    "openDropdown": "Open dropdown",
+    "closeDropdown": "Close dropdown",
+    "optionSelected": "{{option}} selected",
+    "optionDeselected": "{{option}} deselected",
+    "searchResults": "{{count}} results found"
+  }
+}

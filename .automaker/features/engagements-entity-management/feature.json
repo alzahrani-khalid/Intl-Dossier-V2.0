@@ -1,0 +1,14 @@
+{
+  "id": "engagements-entity-management",
+  "category": "Core",
+  "title": "Engagements Entity Management",
+  "description": "Implement engagements entity representing bilateral meetings, missions, and delegations as dossiers. Separates engagement metadata from calendar events. Links to participants, briefs, and outcomes.",
+  "status": "completed",
+  "priority": 1,
+  "complexity": "complex",
+  "dependencies": ["persons-entity-management"],
+  "createdAt": "2026-01-10T15:57:25.661Z",
+  "updatedAt": "2026-01-10T17:25:56.786Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T16:48:13.222Z"
+}

@@ -1,0 +1,106 @@
+{
+  "title": "التعليقات التوضيحية",
+  "readOnly": "للقراءة فقط",
+
+  "tools": {
+    "pen": "قلم",
+    "highlighter": "قلم تحديد",
+    "marker": "قلم عريض",
+    "pencil": "قلم رصاص",
+    "eraser": "ممحاة",
+    "select": "تحديد",
+    "pan": "تحريك"
+  },
+
+  "annotationType": {
+    "handwritten": "مكتوب بخط اليد",
+    "highlight": "تمييز",
+    "text_note": "ملاحظة نصية",
+    "shape": "شكل",
+    "stamp": "ختم",
+    "signature": "توقيع"
+  },
+
+  "stamps": {
+    "approved": "موافق عليه",
+    "rejected": "مرفوض",
+    "confidential": "سري",
+    "draft": "مسودة",
+    "final": "نهائي",
+    "review": "مراجعة",
+    "urgent": "عاجل",
+    "custom": "مخصص"
+  },
+
+  "colorPicker": {
+    "title": "اختر اللون",
+    "black": "أسود",
+    "red": "أحمر",
+    "blue": "أزرق",
+    "green": "أخضر",
+    "orange": "برتقالي",
+    "purple": "بنفسجي",
+    "yellow": "أصفر"
+  },
+
+  "strokeWidth": {
+    "title": "عرض الخط",
+    "thin": "رفيع",
+    "medium": "متوسط",
+    "thick": "سميك"
+  },
+
+  "buttons": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "undo": "تراجع",
+    "redo": "إعادة",
+    "clearAll": "مسح الكل",
+    "delete": "حذف",
+    "addAnnotation": "إضافة تعليق"
+  },
+
+  "actions": {
+    "saving": "جاري حفظ التعليقات...",
+    "saved": "تم حفظ التعليقات",
+    "syncing": "جاري مزامنة التعليقات...",
+    "synced": "تمت مزامنة التعليقات"
+  },
+
+  "empty": {
+    "noAnnotations": "لا توجد تعليقات",
+    "addFirst": "أضف تعليقات توضيحية لتوثيق هذا المستند."
+  },
+
+  "errors": {
+    "saveFailed": "فشل حفظ التعليقات",
+    "loadFailed": "فشل تحميل التعليقات",
+    "syncFailed": "فشل مزامنة التعليقات",
+    "deleteFailed": "فشل حذف التعليق"
+  },
+
+  "confirmation": {
+    "clearAll": {
+      "title": "مسح جميع التعليقات",
+      "description": "هل أنت متأكد من رغبتك في إزالة جميع التعليقات من هذه الصفحة؟ لا يمكن التراجع عن هذا الإجراء."
+    },
+    "delete": {
+      "title": "حذف التعليق",
+      "description": "هل أنت متأكد من رغبتك في حذف هذا التعليق؟"
+    }
+  },
+
+  "signature": {
+    "title": "إضافة توقيع",
+    "signerNameLabel": "اسمك",
+    "signerNamePlaceholder": "أدخل اسمك الكامل",
+    "drawHere": "ارسم توقيعك هنا",
+    "clear": "مسح",
+    "sign": "توقيع"
+  },
+
+  "sync": {
+    "pendingCount": "{{count}} معلق",
+    "syncNow": "مزامنة الآن"
+  }
+}

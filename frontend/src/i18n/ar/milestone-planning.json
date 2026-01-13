@@ -1,0 +1,154 @@
+{
+  "title": "تخطيط المعالم المستقبلية",
+  "subtitle": "إنشاء محتوى الجدول الزمني المستقبلي",
+  "emptyState": {
+    "title": "ابدأ تخطيط جدولك الزمني",
+    "description": "لا توجد أحداث بعد؟ حوّل هذا الجدول الزمني الفارغ إلى لوحة تخطيط. خطط للمشاركات المستقبلية، وحدد مواعيد السياسات، وجدول مراجعات العلاقات.",
+    "cta": "إضافة أول معلم",
+    "hint": "المعالم التي تنشئها هنا ستظهر في جدولك الزمني ويمكن تحويلها إلى أحداث فعلية عندما يحين الوقت."
+  },
+  "types": {
+    "engagement": "مشاركة مخططة",
+    "policy_deadline": "موعد نهائي للسياسة",
+    "relationship_review": "مراجعة العلاقة",
+    "document_due": "استحقاق المستند",
+    "follow_up": "متابعة",
+    "renewal": "تجديد",
+    "custom": "معلم مخصص"
+  },
+  "typeDescriptions": {
+    "engagement": "جدولة اجتماع أو مشاورة أو تفاعل دبلوماسي",
+    "policy_deadline": "تحديد تواريخ السياسات المهمة ومواعيد التقديم",
+    "relationship_review": "تخطيط تقييمات العلاقات الدورية",
+    "document_due": "تتبع مواعيد إعداد وتقديم المستندات",
+    "follow_up": "تعيين تذكيرات لإجراءات المتابعة",
+    "renewal": "تتبع مواعيد تجديد مذكرات التفاهم والاتفاقيات والعقود",
+    "custom": "إنشاء نوع معلم مخصص"
+  },
+  "status": {
+    "planned": "مخطط",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "postponed": "مؤجل",
+    "cancelled": "ملغي"
+  },
+  "priority": {
+    "high": "أولوية عالية",
+    "medium": "أولوية متوسطة",
+    "low": "أولوية منخفضة"
+  },
+  "form": {
+    "addMilestone": "إضافة معلم",
+    "editMilestone": "تعديل المعلم",
+    "milestoneType": "نوع المعلم",
+    "selectType": "اختر نوع المعلم",
+    "titleEn": "العنوان (الإنجليزية)",
+    "titleAr": "العنوان (العربية)",
+    "titleEnPlaceholder": "أدخل عنوان المعلم",
+    "titleArPlaceholder": "أدخل عنوان المعلم بالعربية",
+    "descriptionEn": "الوصف (الإنجليزية)",
+    "descriptionAr": "الوصف (العربية)",
+    "descriptionEnPlaceholder": "صف المعلم",
+    "descriptionArPlaceholder": "صف المعلم بالعربية",
+    "targetDate": "التاريخ المستهدف",
+    "targetTime": "الوقت المستهدف",
+    "endDate": "تاريخ الانتهاء (اختياري)",
+    "priority": "الأولوية",
+    "selectPriority": "اختر الأولوية",
+    "notesEn": "ملاحظات (الإنجليزية)",
+    "notesAr": "ملاحظات (العربية)",
+    "notesPlaceholder": "ملاحظات أو سياق إضافي",
+    "expectedOutcomeEn": "النتيجة المتوقعة (الإنجليزية)",
+    "expectedOutcomeAr": "النتيجة المتوقعة (العربية)",
+    "expectedOutcomePlaceholder": "ما الذي تتوقع تحقيقه؟",
+    "save": "حفظ المعلم",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "confirmDelete": "هل أنت متأكد من حذف هذا المعلم؟"
+  },
+  "reminders": {
+    "title": "التذكيرات",
+    "addReminder": "إضافة تذكير",
+    "removeReminder": "إزالة",
+    "enabled": "مفعّل",
+    "disabled": "معطّل",
+    "daysBefore": "أيام قبل",
+    "hoursBefore": "ساعات قبل",
+    "frequency": "التكرار",
+    "channels": "قنوات الإشعار",
+    "frequencyOptions": {
+      "once": "مرة واحدة",
+      "daily": "يومياً",
+      "weekly": "أسبوعياً",
+      "custom": "مخصص"
+    },
+    "channelOptions": {
+      "in_app": "داخل التطبيق",
+      "email": "البريد الإلكتروني",
+      "push": "إشعار فوري"
+    },
+    "customMessage": "رسالة مخصصة (اختياري)"
+  },
+  "actions": {
+    "edit": "تعديل",
+    "delete": "حذف",
+    "markComplete": "تحديد كمكتمل",
+    "postpone": "تأجيل",
+    "convertToEvent": "تحويل إلى حدث",
+    "viewDetails": "عرض التفاصيل"
+  },
+  "convert": {
+    "title": "تحويل إلى حدث",
+    "description": "تحويل هذا المعلم المخطط إلى حدث فعلي في الجدول الزمني.",
+    "selectEventType": "اختر نوع الحدث",
+    "eventTypes": {
+      "calendar": "حدث تقويم",
+      "commitment": "التزام",
+      "decision": "قرار"
+    },
+    "confirm": "تحويل",
+    "success": "تم تحويل المعلم إلى حدث بنجاح"
+  },
+  "stats": {
+    "total": "إجمالي المعالم",
+    "upcoming": "القادمة",
+    "thisWeek": "هذا الأسبوع",
+    "thisMonth": "هذا الشهر",
+    "overdue": "متأخرة"
+  },
+  "filters": {
+    "all": "جميع المعالم",
+    "byType": "حسب النوع",
+    "byStatus": "حسب الحالة",
+    "byPriority": "حسب الأولوية"
+  },
+  "sort": {
+    "targetDate": "التاريخ المستهدف",
+    "priority": "الأولوية",
+    "createdAt": "تاريخ الإنشاء"
+  },
+  "quickAdd": {
+    "title": "إضافة سريعة",
+    "selectTemplate": "اختر قالباً لإضافة معلم بسرعة"
+  },
+  "messages": {
+    "createSuccess": "تم إنشاء المعلم بنجاح",
+    "updateSuccess": "تم تحديث المعلم بنجاح",
+    "deleteSuccess": "تم حذف المعلم بنجاح",
+    "createError": "فشل في إنشاء المعلم",
+    "updateError": "فشل في تحديث المعلم",
+    "deleteError": "فشل في حذف المعلم",
+    "reminderSet": "تم تعيين تذكير قبل {{days}} أيام"
+  },
+  "dueIn": {
+    "overdue": "متأخر",
+    "today": "مستحق اليوم",
+    "tomorrow": "مستحق غداً",
+    "days": "{{count}} يوم متبقي",
+    "days_plural": "{{count}} أيام متبقية",
+    "weeks": "{{count}} أسبوع متبقي",
+    "weeks_plural": "{{count}} أسابيع متبقية",
+    "months": "{{count}} شهر متبقي",
+    "months_plural": "{{count}} أشهر متبقية"
+  }
+}

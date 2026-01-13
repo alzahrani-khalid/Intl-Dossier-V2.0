@@ -1,0 +1,158 @@
+{
+  "title": "Citations",
+  "description": "Track references between dossiers, briefs, and external sources",
+
+  "empty": {
+    "title": "No Citations",
+    "description": "Track references to other dossiers, documents, and external sources."
+  },
+
+  "sections": {
+    "outgoing": "References",
+    "incoming": "Cited By"
+  },
+
+  "direction": {
+    "outgoing": "Cites",
+    "incoming": "Cited by"
+  },
+
+  "badges": {
+    "external": "External"
+  },
+
+  "views": {
+    "list": "List",
+    "graph": "Graph"
+  },
+
+  "stats": {
+    "outgoing": "{{count}} References",
+    "incoming": "{{count}} Cited By",
+    "external": "External"
+  },
+
+  "network": {
+    "title": "Citation Network",
+    "legend": "Legend",
+    "startNode": "Current Entity",
+    "internal": "Internal Reference",
+    "external": "External Source",
+    "stats": "{{nodes}} nodes, {{edges}} connections",
+    "empty": "No citations found for this entity",
+    "error": "Failed to load citation network"
+  },
+
+  "form": {
+    "createTitle": "Add Citation",
+    "editTitle": "Edit Citation",
+    "description": "Add a reference from \"{{name}}\" to another source.",
+    "descriptionGeneric": "Add a reference to another source.",
+    "tabs": {
+      "internal": "Internal Reference",
+      "external": "External Source"
+    },
+    "fields": {
+      "entityType": "Reference Type",
+      "entityId": "Entity ID",
+      "sourceType": "Source Type",
+      "url": "URL",
+      "title": "Title",
+      "author": "Author",
+      "date": "Date",
+      "context": "Context / Excerpt",
+      "note": "Note",
+      "relevance": "Relevance Score"
+    },
+    "placeholders": {
+      "selectType": "Select type",
+      "entityId": "Enter entity UUID",
+      "title": "Source title",
+      "author": "Author name",
+      "context": "Quote or describe the relevant content...",
+      "note": "Add a note about this citation..."
+    },
+    "hints": {
+      "entityId": "Enter the UUID of the dossier, document, or other entity you want to reference.",
+      "relevance": "How relevant is this citation to the source document?"
+    },
+    "errors": {
+      "required": "This field is required",
+      "invalidUrl": "Please enter a valid URL"
+    }
+  },
+
+  "dialogs": {
+    "delete": {
+      "title": "Delete Citation",
+      "description": "Are you sure you want to delete this citation? This action cannot be undone."
+    }
+  },
+
+  "actions": {
+    "addCitation": "Add Citation",
+    "edit": "Edit",
+    "delete": "Delete",
+    "deleting": "Deleting...",
+    "cancel": "Cancel",
+    "save": "Save Changes",
+    "create": "Add Citation",
+    "saving": "Saving...",
+    "open": "Open",
+    "view": "View",
+    "more": "More"
+  },
+
+  "relevance": "Relevance",
+  "unknown": "Unknown",
+
+  "alerts": {
+    "title": "Citation Alerts",
+    "description": "Notifications when cited sources are updated",
+    "empty": "No alerts",
+    "emptyDescription": "You'll be notified when referenced sources are updated or archived.",
+    "resolve": "Resolve",
+    "resolving": "Resolving...",
+    "resolved": "Resolved",
+    "unread": "Unread",
+    "all": "All Alerts",
+    "types": {
+      "source_updated": "Source Updated",
+      "source_archived": "Source Archived",
+      "source_deleted": "Source Deleted",
+      "link_broken": "Link Broken",
+      "new_version": "New Version Available"
+    },
+    "messages": {
+      "source_updated": "The referenced source has been updated since this citation was created.",
+      "source_archived": "The referenced source has been archived.",
+      "source_deleted": "The referenced source has been deleted.",
+      "link_broken": "The external link is no longer accessible.",
+      "new_version": "A new version of the referenced source is available."
+    }
+  },
+
+  "sourceTypes": {
+    "dossier": "Dossier",
+    "brief": "Brief",
+    "ai_brief": "AI Brief",
+    "document": "Document",
+    "position": "Position",
+    "mou": "MOU",
+    "engagement": "Engagement",
+    "external_url": "External Link",
+    "external_document": "External Document",
+    "academic_paper": "Academic Paper",
+    "news_article": "News Article",
+    "government_doc": "Government Document",
+    "report": "Report"
+  },
+
+  "status": {
+    "active": "Active",
+    "source_updated": "Source Updated",
+    "source_archived": "Source Archived",
+    "source_deleted": "Source Deleted",
+    "broken": "Broken Link"
+  }
+}

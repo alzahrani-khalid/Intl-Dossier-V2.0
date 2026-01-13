@@ -1,0 +1,172 @@
+{
+  "title": "قوالب المستندات",
+  "description": "إنشاء مستندات من قوالب جاهزة باستخدام معالجات إرشادية",
+
+  "actions": {
+    "createFromTemplate": "إنشاء من قالب",
+    "selectTemplate": "اختر قالب",
+    "startWizard": "بدء المعالج",
+    "continue": "متابعة",
+    "back": "رجوع",
+    "next": "الخطوة التالية",
+    "finish": "إنهاء",
+    "save": "حفظ المسودة",
+    "saveDraft": "حفظ كمسودة",
+    "cancel": "إلغاء",
+    "preview": "معاينة",
+    "download": "تحميل",
+    "generate": "إنشاء المستند",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "duplicate": "نسخ"
+  },
+
+  "categories": {
+    "all": "جميع القوالب",
+    "country_profile": "ملف تعريف الدولة",
+    "policy_brief": "موجز السياسات",
+    "engagement_report": "تقرير التفاعل",
+    "meeting_notes": "ملاحظات الاجتماع",
+    "position_paper": "ورقة موقف",
+    "mou_summary": "ملخص مذكرة التفاهم",
+    "strategic_analysis": "تحليل استراتيجي",
+    "custom": "قالب مخصص"
+  },
+
+  "wizard": {
+    "title": "معالج المستندات",
+    "stepOf": "الخطوة {{current}} من {{total}}",
+    "progress": "التقدم",
+    "requiredFields": "الحقول المطلوبة مميزة بـ *",
+    "optionalSection": "هذا القسم اختياري",
+    "skipSection": "تخطي هذا القسم",
+    "allFieldsComplete": "جميع الحقول المطلوبة مكتملة",
+    "missingFields": "{{count}} حقل(حقول) مطلوبة ناقصة",
+    "unsavedChanges": "لديك تغييرات غير محفوظة",
+    "confirmExit": "هل أنت متأكد أنك تريد الخروج؟ سيتم حفظ تقدمك كمسودة.",
+    "savingProgress": "جاري حفظ التقدم...",
+    "progressSaved": "تم حفظ التقدم",
+    "completing": "جاري إكمال المستند...",
+    "completed": "تم إكمال المستند بنجاح"
+  },
+
+  "templates": {
+    "selectTitle": "اختر قالب",
+    "selectDescription": "اختر قالب لإنشاء مستندك. يتضمن كل قالب خطوات إرشادية لمساعدتك في ملء جميع المعلومات المطلوبة.",
+    "noTemplates": "لا توجد قوالب متاحة لهذا النوع من الكيانات",
+    "searchPlaceholder": "البحث في القوالب...",
+    "filterByCategory": "تصفية حسب الفئة",
+    "systemTemplate": "قالب النظام",
+    "customTemplate": "قالب مخصص",
+    "targetEntities": "متاح لـ: {{entities}}",
+    "sections": "{{count}} أقسام",
+    "fields": "{{count}} حقول"
+  },
+
+  "documents": {
+    "myDocuments": "مستنداتي",
+    "drafts": "المسودات",
+    "completed": "المكتملة",
+    "noDrafts": "لا توجد مستندات مسودة",
+    "noCompleted": "لا توجد مستندات مكتملة",
+    "createdOn": "أنشئ في {{date}}",
+    "lastEdited": "آخر تعديل {{date}}",
+    "completedOn": "اكتمل في {{date}}",
+    "resumeDraft": "استئناف المسودة",
+    "viewDocument": "عرض المستند",
+    "deleteConfirm": "هل أنت متأكد أنك تريد حذف هذا المستند؟",
+    "deleteSuccess": "تم حذف المستند بنجاح"
+  },
+
+  "fields": {
+    "text": "نص",
+    "textarea": "منطقة نص",
+    "rich_text": "نص منسق",
+    "date": "تاريخ",
+    "date_range": "نطاق تاريخ",
+    "select": "قائمة منسدلة",
+    "multiselect": "اختيار متعدد",
+    "entity_reference": "مرجع كيان",
+    "file_attachment": "مرفق ملف",
+    "number": "رقم",
+    "currency": "عملة",
+    "percentage": "نسبة مئوية",
+    "boolean": "نعم/لا",
+    "tags": "وسوم",
+    "url": "رابط",
+    "selectOption": "اختر خيار...",
+    "selectMultiple": "اختر واحد أو أكثر...",
+    "selectEntity": "ابحث واختر...",
+    "noOptions": "لا توجد خيارات متاحة",
+    "uploadFile": "رفع ملف",
+    "dragDropFile": "اسحب وأفلت ملف هنا، أو انقر للتصفح",
+    "dateFrom": "من",
+    "dateTo": "إلى"
+  },
+
+  "validation": {
+    "required": "هذا الحقل مطلوب",
+    "minLength": "الحد الأدنى {{min}} أحرف مطلوبة",
+    "maxLength": "الحد الأقصى {{max}} حرف مسموح",
+    "min": "يجب أن تكون القيمة {{min}} على الأقل",
+    "max": "يجب أن تكون القيمة {{max}} كحد أقصى",
+    "pattern": "تنسيق غير صالح",
+    "invalidDate": "تاريخ غير صالح",
+    "invalidUrl": "تنسيق الرابط غير صالح",
+    "invalidEmail": "تنسيق البريد الإلكتروني غير صالح",
+    "fileTooLarge": "حجم الملف يتجاوز الحد المسموح {{max}} ميجابايت",
+    "invalidFileType": "نوع الملف غير صالح"
+  },
+
+  "classification": {
+    "label": "مستوى التصنيف",
+    "public": "عام",
+    "internal": "داخلي",
+    "confidential": "سري",
+    "secret": "سري للغاية",
+    "inheritFromTemplate": "استخدم الافتراضي من القالب"
+  },
+
+  "entityTypes": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "engagement": "تفاعل",
+    "theme": "موضوع",
+    "working_group": "مجموعة عمل",
+    "person": "شخص"
+  },
+
+  "suggestions": {
+    "title": "الكيانات المقترحة",
+    "description": "بناءً على التفاعلات والعلاقات الأخيرة",
+    "addSuggestion": "إضافة",
+    "noSuggestions": "لا توجد اقتراحات متاحة"
+  },
+
+  "errors": {
+    "loadFailed": "فشل في تحميل القوالب",
+    "saveFailed": "فشل في حفظ المستند",
+    "createFailed": "فشل في إنشاء المستند",
+    "deleteFailed": "فشل في حذف المستند",
+    "validationFailed": "يرجى إصلاح الأخطاء قبل المتابعة",
+    "networkError": "خطأ في الشبكة. يرجى التحقق من اتصالك."
+  },
+
+  "success": {
+    "documentCreated": "تم إنشاء المستند بنجاح",
+    "documentSaved": "تم حفظ المستند بنجاح",
+    "documentCompleted": "تم إكمال المستند بنجاح",
+    "documentDeleted": "تم حذف المستند بنجاح"
+  },
+
+  "accessibility": {
+    "wizardNavigation": "التنقل في المعالج",
+    "currentStep": "الخطوة الحالية: {{step}}",
+    "stepComplete": "الخطوة {{step}} مكتملة",
+    "stepIncomplete": "الخطوة {{step}} غير مكتملة",
+    "requiredField": "حقل مطلوب",
+    "optionalField": "حقل اختياري",
+    "fieldError": "الحقل به خطأ: {{error}}"
+  }
+}

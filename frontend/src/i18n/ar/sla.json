@@ -1,0 +1,199 @@
+{
+  "title": "مراقبة اتفاقيات مستوى الخدمة",
+  "subtitle": "مراقبة اتفاقيات مستوى الخدمة والامتثال",
+
+  "overview": {
+    "complianceRate": "معدل الامتثال",
+    "totalItems": "إجمالي العناصر",
+    "atRisk": "معرض للخطر",
+    "breached": "متجاوز",
+    "processed": "العناصر المعالجة",
+    "approachingDeadline": "يقترب من الموعد النهائي",
+    "requiresAttention": "يتطلب الانتباه",
+    "avgResolutionTime": "متوسط وقت الحل",
+    "avgResolutionSubtitle": "عبر جميع العناصر المحلولة",
+    "met": "محقق",
+    "breachedLabel": "متجاوز"
+  },
+
+  "charts": {
+    "complianceTrend": "اتجاه الامتثال",
+    "complianceTrendDescription": "معدل الامتثال لاتفاقية مستوى الخدمة عبر الوقت",
+    "lineChart": "مخطط خطي",
+    "areaChart": "مخطط مساحي",
+    "compliance": "نسبة الامتثال %",
+    "noDataAvailable": "لا تتوفر بيانات الاتجاه"
+  },
+
+  "tables": {
+    "complianceBreakdown": "تفصيل الامتثال",
+    "complianceBreakdownDescription": "مقاييس اتفاقية مستوى الخدمة حسب النوع والمسؤول",
+    "byType": "حسب النوع",
+    "byAssignee": "حسب المسؤول",
+    "requestType": "نوع الطلب",
+    "total": "الإجمالي",
+    "met": "محقق",
+    "breached": "متجاوز",
+    "compliance": "الامتثال",
+    "avgTime": "متوسط الوقت",
+    "assignee": "المسؤول",
+    "progress": "التقدم",
+    "atRisk": "معرض للخطر",
+    "noDataByType": "لا تتوفر بيانات حسب النوع",
+    "noDataByAssignee": "لا تتوفر بيانات حسب المسؤول"
+  },
+
+  "atRisk": {
+    "title": "العناصر المعرضة للخطر",
+    "description": "العناصر التي تقترب من تجاوز اتفاقية مستوى الخدمة",
+    "refresh": "تحديث",
+    "slaProgress": "تقدم اتفاقية مستوى الخدمة",
+    "remaining": "متبقي",
+    "breached": "تم التجاوز",
+    "noItemsAtRisk": "لا توجد عناصر معرضة للخطر"
+  },
+
+  "escalations": {
+    "title": "التصعيدات",
+    "description": "أحداث تصعيد تجاوز اتفاقية مستوى الخدمة",
+    "filterByStatus": "تصفية حسب الحالة",
+    "allStatuses": "جميع الحالات",
+    "triggered": "مُفعّل",
+    "acknowledged": "تم الإقرار",
+    "resolved": "تم الحل",
+    "dismissed": "مرفوض",
+    "level": "المستوى",
+    "acknowledge": "إقرار",
+    "resolve": "حل",
+    "resolveTitle": "حل التصعيد",
+    "resolveDescription": "وضع علامة على هذا التصعيد كمحلول",
+    "notes": "ملاحظات الحل",
+    "notesPlaceholder": "أضف ملاحظات حول كيفية حل هذه المشكلة...",
+    "confirmResolve": "تأكيد الحل",
+    "resolutionNotes": "ملاحظات الحل",
+    "noEscalations": "لا توجد تصعيدات"
+  },
+
+  "policies": {
+    "title": "سياسات اتفاقية مستوى الخدمة",
+    "subtitle": "تكوين أهداف اتفاقية مستوى الخدمة وقواعد التصعيد",
+    "create": "إنشاء سياسة",
+    "edit": "تعديل السياسة",
+    "formDescription": "تكوين أهداف اتفاقية مستوى الخدمة وسير عمل التصعيد",
+    "basicInfo": "المعلومات الأساسية",
+    "name": "اسم السياسة",
+    "namePlaceholder": "أدخل اسم السياسة",
+    "nameAr": "اسم السياسة (بالعربية)",
+    "nameArPlaceholder": "أدخل اسم السياسة بالعربية",
+    "description": "الوصف",
+    "descriptionPlaceholder": "أدخل الوصف",
+    "descriptionAr": "الوصف (بالعربية)",
+    "descriptionArPlaceholder": "أدخل الوصف بالعربية",
+    "matchingCriteria": "معايير المطابقة",
+    "matchingCriteriaDescription": "اتركه فارغًا للتطبيق على جميع العناصر",
+    "requestType": "نوع الطلب",
+    "allTypes": "جميع الأنواع",
+    "sensitivity": "الحساسية",
+    "allSensitivities": "جميع مستويات الحساسية",
+    "urgency": "الإلحاح",
+    "allUrgencies": "جميع مستويات الإلحاح",
+    "priority": "الأولوية",
+    "allPriorities": "جميع الأولويات",
+    "slaTargets": "أهداف اتفاقية مستوى الخدمة",
+    "acknowledgmentTarget": "هدف الإقرار",
+    "acknowledgmentTargetHelp": "الوقت للرد الأول",
+    "resolutionTarget": "هدف الحل",
+    "resolutionTargetHelp": "الوقت لإتمام الحل",
+    "warningThreshold": "عتبة التحذير",
+    "warningThresholdHelp": "إرسال تحذير عند هذه النسبة من اتفاقية مستوى الخدمة",
+    "minutes": "دقائق",
+    "businessHoursOnly": "ساعات العمل فقط",
+    "escalationSettings": "إعدادات التصعيد",
+    "enableEscalation": "تفعيل التصعيد",
+    "escalationLevel": "المستوى",
+    "afterMinutes": "بعد (دقائق)",
+    "notifyRole": "إخطار الدور",
+    "addEscalationLevel": "إضافة مستوى تصعيد",
+    "notificationChannels": "قنوات الإشعارات",
+    "isActive": "السياسة نشطة"
+  },
+
+  "types": {
+    "engagement": "ارتباط",
+    "position": "موقف",
+    "mou_action": "إجراء مذكرة تفاهم",
+    "foresight": "استشراف"
+  },
+
+  "sensitivity": {
+    "public": "عام",
+    "internal": "داخلي",
+    "confidential": "سري",
+    "secret": "سري للغاية"
+  },
+
+  "urgency": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "critical": "حرج"
+  },
+
+  "priority": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "urgent": "عاجل"
+  },
+
+  "roles": {
+    "supervisor": "مشرف",
+    "manager": "مدير",
+    "admin": "مسؤول",
+    "director": "مدير عام"
+  },
+
+  "channels": {
+    "in_app": "داخل التطبيق",
+    "email": "البريد الإلكتروني",
+    "sms": "رسالة نصية",
+    "push": "إشعار فوري"
+  },
+
+  "common": {
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "saving": "جاري الحفظ...",
+    "delete": "حذف",
+    "edit": "تعديل",
+    "view": "عرض"
+  },
+
+  "tabs": {
+    "dashboard": "لوحة التحكم",
+    "policies": "السياسات",
+    "escalations": "التصعيدات"
+  },
+
+  "filters": {
+    "dateRange": "نطاق التاريخ",
+    "last7Days": "آخر 7 أيام",
+    "last30Days": "آخر 30 يوم",
+    "last90Days": "آخر 90 يوم",
+    "entityType": "نوع الكيان",
+    "ticket": "التذاكر",
+    "commitment": "الالتزامات",
+    "task": "المهام"
+  },
+
+  "empty": {
+    "noPolicies": "لم يتم تكوين سياسات اتفاقية مستوى الخدمة",
+    "createFirst": "قم بإنشاء أول سياسة اتفاقية مستوى الخدمة لبدء المراقبة"
+  },
+
+  "errors": {
+    "loadFailed": "فشل تحميل بيانات اتفاقية مستوى الخدمة",
+    "saveFailed": "فشل حفظ السياسة",
+    "deleteFailed": "فشل حذف السياسة"
+  }
+}

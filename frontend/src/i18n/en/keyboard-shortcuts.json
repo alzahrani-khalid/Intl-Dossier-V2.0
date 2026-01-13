@@ -1,0 +1,82 @@
+{
+  "title": "Keyboard Shortcuts",
+  "searchPlaceholder": "Type a command or search...",
+  "noResults": "No results found.",
+  "tryDifferentSearch": "Try a different search term.",
+
+  "categories": {
+    "navigation": "Navigation",
+    "actions": "Actions",
+    "editing": "Editing",
+    "view": "View",
+    "help": "Help"
+  },
+
+  "quickActions": {
+    "title": "Quick Actions",
+    "dashboard": "Go to Dashboard",
+    "myWork": "Go to My Work",
+    "dossiers": "Go to Dossiers",
+    "calendar": "Go to Calendar",
+    "tasks": "Go to Tasks",
+    "analytics": "Go to Analytics",
+    "settings": "Go to Settings"
+  },
+
+  "shortcuts": {
+    "goToDashboard": "Go to Dashboard",
+    "goToMyWork": "Go to My Work",
+    "goToDossiers": "Go to Dossiers",
+    "goToCalendar": "Go to Calendar",
+    "goToTasks": "Go to Tasks",
+    "goToAnalytics": "Go to Analytics",
+    "goToSettings": "Go to Settings",
+    "goBack": "Go Back",
+    "goForward": "Go Forward",
+    "newTask": "Create New Task",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "refresh": "Refresh",
+    "moveUp": "Move Up",
+    "moveDown": "Move Down",
+    "select": "Select",
+    "toggle": "Toggle Selection",
+    "first": "Go to First Item",
+    "last": "Go to Last Item",
+    "openCommandPalette": "Open Command Palette",
+    "showShortcuts": "Show Keyboard Shortcuts",
+    "closeModal": "Close",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "search": "Focus Search",
+    "escape": "Cancel / Close"
+  },
+
+  "footer": {
+    "navigate": "Navigate",
+    "select": "Select",
+    "close": "Close",
+    "toOpen": "to open"
+  },
+
+  "guide": {
+    "title": "Keyboard Shortcuts",
+    "showAll": "Show all shortcuts",
+    "hint": "Press ? to see all shortcuts"
+  },
+
+  "hints": {
+    "commandPalette": "Press {{key}} to open command palette",
+    "navigation": "Use arrow keys to navigate",
+    "submit": "Press Enter to submit",
+    "cancel": "Press Escape to cancel"
+  },
+
+  "accessibility": {
+    "shortcutList": "Keyboard shortcuts list",
+    "shortcutItem": "{{description}}, press {{key}}",
+    "commandPaletteOpened": "Command palette opened",
+    "commandPaletteClosed": "Command palette closed"
+  }
+}

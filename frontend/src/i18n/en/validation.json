@@ -1,0 +1,104 @@
+{
+  "required": "This field is required",
+  "required.suggestion": "Please enter a value to continue",
+
+  "minLength": "Must be at least {{min}} characters (currently {{current}})",
+  "minLength.suggestion": "Add {{remaining}} more character(s) to meet the minimum",
+
+  "maxLength": "Cannot exceed {{max}} characters (currently {{current}})",
+  "maxLength.suggestion": "Remove {{excess}} character(s) to meet the limit",
+  "maxLength.approaching": "{{remaining}} characters remaining",
+
+  "email": {
+    "invalid": "Please enter a valid email address",
+    "suggestion": "Email should be in the format: name@example.com",
+    "missingAt": "Email address is missing the @ symbol",
+    "missingAt.suggestion": "Add @ followed by your email domain (e.g., @gmail.com)",
+    "missingDomain": "Email address is missing the domain",
+    "missingDomain.suggestion": "Add a domain after the @ (e.g., .com, .org)",
+    "invalidPosition": "The @ symbol is in an invalid position",
+    "invalidPosition.suggestion": "Make sure there's text before and after the @",
+    "hasSpaces": "Email addresses cannot contain spaces",
+    "hasSpaces.suggestion": "Remove any spaces from the email address"
+  },
+
+  "url": {
+    "invalid": "Please enter a valid URL",
+    "suggestion": "URL should start with https:// or http://",
+    "missingProtocol": "URL is missing the protocol (https:// or http://)",
+    "missingProtocol.suggestion": "Add https:// at the beginning",
+    "missingDomain": "URL is missing a valid domain",
+    "missingDomain.suggestion": "Include a domain like example.com"
+  },
+
+  "phone": {
+    "invalid": "Please enter a valid phone number",
+    "suggestion": "Use format: +1 (234) 567-8900 or similar",
+    "noDigits": "Phone number must contain digits",
+    "noDigits.suggestion": "Enter your phone number using numbers",
+    "tooShort": "Phone number is too short (minimum {{minDigits}} digits)",
+    "tooShort.suggestion": "Enter your complete phone number including area code"
+  },
+
+  "alphanumeric": {
+    "invalid": "Only letters and numbers are allowed",
+    "suggestion": "Remove any special characters"
+  },
+
+  "arabic": {
+    "invalid": "Only Arabic text is allowed in this field",
+    "suggestion": "Switch to Arabic keyboard input"
+  },
+
+  "specialChars": {
+    "invalid": "Special characters like < > { } [ ] \\ are not allowed",
+    "suggestion": "Remove any special characters from your input"
+  },
+
+  "dateFormat": {
+    "invalid": "Please enter a valid date",
+    "suggestion": "Use format: YYYY-MM-DD"
+  },
+
+  "generic": {
+    "invalid": "This value is not valid",
+    "suggestion": "Please check your input and try again"
+  },
+
+  "password": {
+    "strength": {
+      "weak": "Weak",
+      "fair": "Fair",
+      "good": "Good",
+      "strong": "Strong"
+    },
+    "improvements": "To strengthen your password:",
+    "addLength": "Use at least 8 characters",
+    "addLowercase": "Add lowercase letters (a-z)",
+    "addUppercase": "Add uppercase letters (A-Z)",
+    "addNumber": "Add numbers (0-9)",
+    "addSpecial": "Add special characters (!@#$%^&*)"
+  },
+
+  "suggestions": {
+    "apply": "Apply suggestion"
+  },
+
+  "summary": {
+    "title": "Please fix {{count}} error(s) before continuing",
+    "title_one": "Please fix 1 error before continuing",
+    "title_other": "Please fix {{count}} errors before continuing"
+  },
+
+  "fields": {
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "title": "Title",
+    "description": "Description",
+    "phone": "Phone",
+    "url": "URL",
+    "date": "Date",
+    "message": "Message"
+  }
+}

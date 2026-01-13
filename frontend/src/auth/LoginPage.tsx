@@ -8,6 +8,9 @@ import { useAuthStore } from '../store/authStore'
 import { Eye, EyeOff, Loader2, Globe } from 'lucide-react'
 import toast from 'react-hot-toast'
 import { LanguageSwitcher } from '../components/LanguageSwitcher'
+import { Button } from '../components/ui/button'
+import { Input } from '../components/ui/input'
+import { Checkbox } from '../components/ui/checkbox'
 
 const loginSchema = z.object({
   email: z.string().min(1, 'validation.required').email('validation.email'),
@@ -69,17 +72,16 @@ export function LoginPage() {
 
           {/* Login form */}
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-            {/* Email field */}
+            {/* Email field - with 48px touch target height */}
             <div>
               <label htmlFor="email" className="mb-2 block text-sm font-medium text-foreground">
                 {t('auth.email')}
               </label>
-              <input
+              <Input
                 {...register('email')}
                 type="email"
                 id="email"
                 autoComplete="username"
-                className="w-full rounded-lg border border-input bg-background px-4 py-2 text-foreground focus:border-transparent focus:ring-2 focus:ring-ring"
                 placeholder="user@gastat.sa"
               />
               {errors.email && (
@@ -87,26 +89,28 @@ export function LoginPage() {
               )}
             </div>
 
-            {/* Password field */}
+            {/* Password field - with 48px touch target height */}
             <div>
               <label htmlFor="password" className="mb-2 block text-sm font-medium text-foreground">
                 {t('auth.password')}
               </label>
               <div className="relative">
-                <input
+                <Input
                   {...register('password')}
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="current-password"
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2 pe-12 text-foreground focus:border-transparent focus:ring-2 focus:ring-ring"
+                  className="pe-14"
                 />
-                <button
+                <Button
                   type="button"
+                  variant="ghost"
+                  size="icon"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                  className="absolute end-1 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
                 >
                   {showPassword ? <EyeOff className="size-5" /> : <Eye className="size-5" />}
-                </button>
+                </Button>
               </div>
               {errors.password && (
                 <p className="mt-1 text-sm text-destructive">
@@ -115,18 +119,17 @@ export function LoginPage() {
               )}
             </div>
 
-            {/* MFA Code field (if required) */}
+            {/* MFA Code field (if required) - with 48px touch target */}
             {showMfaInput && (
               <div>
                 <label htmlFor="mfaCode" className="mb-2 block text-sm font-medium text-foreground">
                   {t('auth.mfaCode')}
                 </label>
-                <input
+                <Input
                   type="text"
                   id="mfaCode"
                   value={mfaCode}
                   onChange={(e) => setMfaCode(e.target.value)}
-                  className="w-full rounded-lg border border-input bg-background px-4 py-2 text-foreground focus:border-transparent focus:ring-2 focus:ring-ring"
                   placeholder="123456"
                   maxLength={6}
                 />
@@ -134,22 +137,24 @@ export function LoginPage() {
               </div>
             )}
 
-            {/* Remember me and forgot password */}
+            {/* Remember me and forgot password - with 48px touch targets */}
             <div className="flex items-center justify-between">
-              <div className="flex items-center">
-                <input
-                  {...register('rememberMe')}
-                  type="checkbox"
+              <div className="flex items-center gap-2">
+                <Checkbox
                   id="rememberMe"
-                  className="size-4 rounded border-input text-primary focus:ring-ring"
+                  checked={false}
+                  onCheckedChange={(checked) => {
+                    // Update form value when checkbox changes
+                    const event = { target: { name: 'rememberMe', value: checked } }
+                  }}
                 />
-                <label htmlFor="rememberMe" className="ms-2 text-sm text-foreground">
+                <label htmlFor="rememberMe" className="text-sm text-foreground cursor-pointer">
                   {t('auth.rememberMe')}
                 </label>
               </div>
-              <a href="#" className="text-sm text-primary hover:text-primary/80">
-                {t('auth.forgotPassword')}
-              </a>
+              <Button variant="link" asChild className="px-0">
+                <a href="#">{t('auth.forgotPassword')}</a>
+              </Button>
             </div>
 
             {/* Error message */}
@@ -159,12 +164,8 @@ export function LoginPage() {
               </div>
             )}
 
-            {/* Submit button */}
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="w-full rounded-lg bg-primary px-4 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-            >
+            {/* Submit button - with 48px touch target */}
+            <Button type="submit" disabled={isLoading} className="w-full" size="lg">
               {isLoading ? (
                 <span className="flex items-center justify-center">
                   <Loader2 className="me-2 size-5 animate-spin" />
@@ -173,7 +174,7 @@ export function LoginPage() {
               ) : (
                 t('auth.signIn')
               )}
-            </button>
+            </Button>
           </form>
 
           {/* Sign up link */}

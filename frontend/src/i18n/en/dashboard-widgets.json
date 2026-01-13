@@ -1,0 +1,302 @@
+{
+  "title": "Dashboard",
+  "customDashboard": "Custom Dashboard",
+  "editMode": "Edit Mode",
+  "exitEditMode": "Exit Edit Mode",
+  "addWidget": "Add Widget",
+  "removeWidget": "Remove Widget",
+  "configureWidget": "Configure Widget",
+  "resetLayout": "Reset Layout",
+  "saveLayout": "Save Layout",
+  "layoutSaved": "Layout saved successfully",
+  "layoutReset": "Layout reset to default",
+
+  "widgetLibrary": {
+    "title": "Widget Library",
+    "description": "Drag widgets to add them to your dashboard",
+    "search": "Search widgets...",
+    "categories": {
+      "all": "All Widgets",
+      "metrics": "Metrics & KPIs",
+      "data": "Data & Charts",
+      "lists": "Lists & Tasks",
+      "other": "Other"
+    }
+  },
+
+  "widgetTypes": {
+    "kpi-card": {
+      "name": "KPI Card",
+      "description": "Display key performance indicators with trends"
+    },
+    "chart": {
+      "name": "Chart",
+      "description": "Visualize data with various chart types"
+    },
+    "upcoming-events": {
+      "name": "Upcoming Events",
+      "description": "Show upcoming deadlines and events"
+    },
+    "task-list": {
+      "name": "Task List",
+      "description": "Display your tasks and work items"
+    },
+    "notifications": {
+      "name": "Notifications",
+      "description": "Show recent notifications and alerts"
+    },
+    "activity-feed": {
+      "name": "Activity Feed",
+      "description": "Track recent activity and changes"
+    },
+    "quick-actions": {
+      "name": "Quick Actions",
+      "description": "Access frequently used actions"
+    },
+    "stats-summary": {
+      "name": "Stats Summary",
+      "description": "Overview of key statistics"
+    }
+  },
+
+  "metrics": {
+    "active-dossiers": "Active Dossiers",
+    "pending-tasks": "Pending Tasks",
+    "overdue-items": "Overdue Items",
+    "completed-this-week": "Completed This Week",
+    "response-rate": "Response Rate",
+    "engagement-count": "Engagements",
+    "intake-volume": "Intake Volume",
+    "sla-compliance": "SLA Compliance",
+    "custom": "Custom Metric"
+  },
+
+  "chartTypes": {
+    "line": "Line Chart",
+    "bar": "Bar Chart",
+    "pie": "Pie Chart",
+    "donut": "Donut Chart",
+    "area": "Area Chart",
+    "sparkline": "Sparkline"
+  },
+
+  "dataSources": {
+    "work-items-by-status": "Work Items by Status",
+    "work-items-by-source": "Work Items by Source",
+    "completion-trend": "Completion Trend",
+    "intake-volume-trend": "Intake Volume Trend",
+    "engagement-distribution": "Engagement Distribution",
+    "priority-breakdown": "Priority Breakdown",
+    "team-workload": "Team Workload",
+    "custom": "Custom Data Source"
+  },
+
+  "eventTypes": {
+    "meeting": "Meeting",
+    "deadline": "Deadline",
+    "follow-up": "Follow-up",
+    "engagement": "Engagement",
+    "mou-renewal": "MOU Renewal",
+    "all": "All Events"
+  },
+
+  "settings": {
+    "title": "Widget Settings",
+    "general": "General",
+    "appearance": "Appearance",
+    "data": "Data",
+    "refresh": "Refresh",
+
+    "widgetTitle": "Widget Title",
+    "widgetSize": "Widget Size",
+    "refreshInterval": "Refresh Interval",
+    "autoRefresh": "Auto Refresh",
+
+    "sizes": {
+      "small": "Small (1x1)",
+      "medium": "Medium (2x1)",
+      "large": "Large (3x2)",
+      "full": "Full Width (4x2)"
+    },
+
+    "intervals": {
+      "never": "Never",
+      "30s": "30 seconds",
+      "1m": "1 minute",
+      "5m": "5 minutes",
+      "10m": "10 minutes",
+      "30m": "30 minutes"
+    },
+
+    "kpi": {
+      "metric": "Metric",
+      "showTrend": "Show Trend",
+      "showSparkline": "Show Sparkline",
+      "targetValue": "Target Value",
+      "comparisonPeriod": "Comparison Period"
+    },
+
+    "chart": {
+      "chartType": "Chart Type",
+      "dataSource": "Data Source",
+      "showLegend": "Show Legend",
+      "showGrid": "Show Grid Lines",
+      "dateRange": "Date Range"
+    },
+
+    "events": {
+      "maxItems": "Maximum Items",
+      "showPastEvents": "Show Past Events",
+      "eventTypes": "Event Types",
+      "dateRange": "Date Range"
+    },
+
+    "tasks": {
+      "maxItems": "Maximum Items",
+      "showCompleted": "Show Completed",
+      "groupBy": "Group By",
+      "sortBy": "Sort By",
+      "filterSource": "Filter by Source"
+    },
+
+    "notifications": {
+      "maxItems": "Maximum Items",
+      "showRead": "Show Read",
+      "categories": "Categories"
+    },
+
+    "activity": {
+      "maxItems": "Maximum Items",
+      "activityTypes": "Activity Types",
+      "showTimestamps": "Show Timestamps"
+    }
+  },
+
+  "periods": {
+    "day": "Day",
+    "week": "Week",
+    "month": "Month",
+    "quarter": "Quarter",
+    "year": "Year",
+    "today": "Today"
+  },
+
+  "groupBy": {
+    "none": "None",
+    "source": "Source",
+    "priority": "Priority",
+    "status": "Status"
+  },
+
+  "sortBy": {
+    "deadline": "Deadline",
+    "priority": "Priority",
+    "created_at": "Created Date"
+  },
+
+  "sources": {
+    "commitment": "Commitment",
+    "task": "Task",
+    "intake": "Intake",
+    "all": "All Sources"
+  },
+
+  "notificationCategories": {
+    "task-assigned": "Task Assigned",
+    "deadline-approaching": "Deadline Approaching",
+    "status-change": "Status Change",
+    "mention": "Mention",
+    "system": "System",
+    "all": "All Categories"
+  },
+
+  "activityTypes": {
+    "created": "Created",
+    "updated": "Updated",
+    "completed": "Completed",
+    "commented": "Commented",
+    "assigned": "Assigned",
+    "status-change": "Status Changed",
+    "all": "All Activities"
+  },
+
+  "quickActions": {
+    "createDossier": "Create Dossier",
+    "createTask": "Create Task",
+    "createIntake": "Create Intake",
+    "search": "Search",
+    "viewCalendar": "View Calendar",
+    "viewReports": "View Reports"
+  },
+
+  "emptyStates": {
+    "noWidgets": "No widgets added yet",
+    "addWidgetHint": "Click 'Add Widget' to customize your dashboard",
+    "noData": "No data available",
+    "noEvents": "No upcoming events",
+    "noTasks": "No tasks found",
+    "noNotifications": "No notifications",
+    "noActivity": "No recent activity"
+  },
+
+  "trends": {
+    "up": "Up",
+    "down": "Down",
+    "neutral": "No change",
+    "increase": "increase",
+    "decrease": "decrease",
+    "fromLastPeriod": "from last {{period}}"
+  },
+
+  "actions": {
+    "viewAll": "View All",
+    "refresh": "Refresh",
+    "expand": "Expand",
+    "collapse": "Collapse",
+    "duplicate": "Duplicate",
+    "delete": "Delete"
+  },
+
+  "confirmations": {
+    "deleteWidget": "Are you sure you want to remove this widget?",
+    "resetLayout": "Are you sure you want to reset to the default layout? All customizations will be lost."
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load widget data",
+    "saveFailed": "Failed to save layout",
+    "configInvalid": "Invalid widget configuration"
+  },
+
+  "accessibility": {
+    "dragHandle": "Drag to reorder widget",
+    "removeButton": "Remove {{widget}} widget",
+    "settingsButton": "Open {{widget}} settings",
+    "widgetRegion": "{{widget}} widget area"
+  },
+
+  "benchmarks": {
+    "title": "Teams Like Yours",
+    "description": "Organizations similar to yours typically track {{dossiers}} dossiers, {{relationships}} relationships, and {{briefs}} active briefs.",
+    "organizations": "organizations",
+    "dismiss": "Dismiss preview",
+    "customize": "Customize Dashboard",
+    "typicalRange": "Typical range: {{min}}-{{max}} dossiers",
+    "categories": {
+      "dossiers": "Active Dossiers",
+      "relationships": "Relationships",
+      "briefs": "Active Briefs",
+      "engagements": "Monthly Engagements",
+      "commitments": "Active Commitments",
+      "mous": "Active MOUs"
+    },
+    "descriptions": {
+      "dossiers": "Country, organization, and topic dossiers",
+      "relationships": "Tracked connections between entities",
+      "briefs": "AI-generated intelligence briefs",
+      "engagements": "Meetings and events per month",
+      "commitments": "Ongoing promises and deliverables",
+      "mous": "Memoranda of Understanding"
+    }
+  }
+}

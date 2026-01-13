@@ -1,0 +1,324 @@
+{
+  "title": "Report Builder",
+  "subtitle": "Create custom reports with drag-and-drop",
+  "description": "Build custom reports by selecting entities, applying filters, and choosing visualizations",
+
+  "tabs": {
+    "builder": "Builder",
+    "preview": "Preview",
+    "saved": "Saved Reports"
+  },
+
+  "entities": {
+    "title": "Data Sources",
+    "description": "Select entities to include in your report",
+    "dossiers": "Dossiers",
+    "engagements": "Engagements",
+    "commitments": "Commitments",
+    "work_items": "Work Items",
+    "calendar_entries": "Calendar Events",
+    "persons": "Persons",
+    "organizations": "Organizations",
+    "forums": "Forums",
+    "documents": "Documents",
+    "relationships": "Relationships"
+  },
+
+  "fields": {
+    "title": "Available Fields",
+    "description": "Drag fields to columns, filters, or groupings",
+    "search": "Search fields...",
+    "noFields": "Select an entity to see available fields",
+    "dragHint": "Drag to add"
+  },
+
+  "columns": {
+    "title": "Report Columns",
+    "description": "Configure which columns to display",
+    "empty": "Drag fields here to add columns",
+    "visible": "Visible",
+    "hidden": "Hidden",
+    "reorder": "Drag to reorder"
+  },
+
+  "filters": {
+    "title": "Filters",
+    "description": "Filter your data",
+    "empty": "No filters applied",
+    "addFilter": "Add Filter",
+    "addGroup": "Add Group",
+    "logic": {
+      "and": "AND",
+      "or": "OR"
+    },
+    "operators": {
+      "equals": "Equals",
+      "not_equals": "Not equals",
+      "contains": "Contains",
+      "not_contains": "Does not contain",
+      "starts_with": "Starts with",
+      "ends_with": "Ends with",
+      "greater_than": "Greater than",
+      "less_than": "Less than",
+      "greater_than_or_equal": "Greater than or equal",
+      "less_than_or_equal": "Less than or equal",
+      "between": "Between",
+      "in": "In list",
+      "not_in": "Not in list",
+      "is_null": "Is empty",
+      "is_not_null": "Is not empty"
+    },
+    "value": "Value",
+    "valueEnd": "End value",
+    "remove": "Remove filter"
+  },
+
+  "groupings": {
+    "title": "Group By",
+    "description": "Group results by field values",
+    "empty": "Drag fields here to group data",
+    "remove": "Remove grouping"
+  },
+
+  "aggregations": {
+    "title": "Aggregations",
+    "description": "Calculate summary values",
+    "empty": "No aggregations configured",
+    "addAggregation": "Add Aggregation",
+    "functions": {
+      "count": "Count",
+      "count_distinct": "Count Distinct",
+      "sum": "Sum",
+      "avg": "Average",
+      "min": "Minimum",
+      "max": "Maximum",
+      "first": "First",
+      "last": "Last"
+    },
+    "remove": "Remove aggregation"
+  },
+
+  "sorting": {
+    "title": "Sort By",
+    "description": "Order your results",
+    "empty": "No sorting configured",
+    "addSort": "Add Sort",
+    "direction": {
+      "asc": "Ascending",
+      "desc": "Descending"
+    },
+    "remove": "Remove sort"
+  },
+
+  "visualization": {
+    "title": "Visualization",
+    "description": "Choose how to display your data",
+    "types": {
+      "table": "Table",
+      "bar_chart": "Bar Chart",
+      "line_chart": "Line Chart",
+      "pie_chart": "Pie Chart",
+      "area_chart": "Area Chart",
+      "donut_chart": "Donut Chart",
+      "scatter_plot": "Scatter Plot",
+      "heatmap": "Heatmap",
+      "card": "Card",
+      "kpi": "KPI"
+    },
+    "settings": {
+      "title": "Chart Title",
+      "xAxis": "X-Axis Field",
+      "yAxis": "Y-Axis Field",
+      "colorField": "Color Field",
+      "sizeField": "Size Field",
+      "showLegend": "Show Legend",
+      "showLabels": "Show Labels",
+      "showGrid": "Show Grid"
+    }
+  },
+
+  "preview": {
+    "title": "Report Preview",
+    "description": "Preview your report results",
+    "refresh": "Refresh Preview",
+    "loading": "Loading preview...",
+    "noData": "No data to display",
+    "error": "Error loading preview",
+    "rowCount": "{{count}} rows",
+    "executionTime": "Executed in {{time}}ms",
+    "limitWarning": "Showing first {{limit}} rows"
+  },
+
+  "save": {
+    "title": "Save Report",
+    "description": "Save this report for future use",
+    "name": "Report Name",
+    "namePlaceholder": "Enter report name",
+    "nameAr": "Report Name (Arabic)",
+    "nameArPlaceholder": "Enter Arabic report name",
+    "descriptionLabel": "Description",
+    "descriptionPlaceholder": "Enter report description",
+    "descriptionAr": "Description (Arabic)",
+    "descriptionArPlaceholder": "Enter Arabic description",
+    "accessLevel": "Access Level",
+    "accessLevels": {
+      "private": "Private - Only you",
+      "team": "Team - Your team members",
+      "organization": "Organization - All members",
+      "public": "Public - Everyone"
+    },
+    "tags": "Tags",
+    "tagsPlaceholder": "Add tags...",
+    "saveButton": "Save Report",
+    "updateButton": "Update Report",
+    "saving": "Saving...",
+    "success": "Report saved successfully",
+    "error": "Failed to save report"
+  },
+
+  "share": {
+    "title": "Share Report",
+    "description": "Share this report with others",
+    "shareWith": "Share with users",
+    "searchUsers": "Search users...",
+    "copyLink": "Copy Link",
+    "linkCopied": "Link copied to clipboard",
+    "permissions": {
+      "view": "Can view",
+      "edit": "Can edit"
+    }
+  },
+
+  "schedule": {
+    "title": "Schedule Report",
+    "description": "Schedule automatic report generation",
+    "name": "Schedule Name",
+    "namePlaceholder": "Enter schedule name",
+    "frequency": "Frequency",
+    "frequencies": {
+      "once": "Once",
+      "daily": "Daily",
+      "weekly": "Weekly",
+      "monthly": "Monthly",
+      "quarterly": "Quarterly"
+    },
+    "dayOfWeek": "Day of Week",
+    "dayOfMonth": "Day of Month",
+    "time": "Time",
+    "timezone": "Timezone",
+    "exportFormat": "Export Format",
+    "formats": {
+      "pdf": "PDF",
+      "excel": "Excel",
+      "csv": "CSV",
+      "json": "JSON"
+    },
+    "recipients": "Recipients",
+    "recipientsPlaceholder": "Enter email addresses",
+    "addRecipient": "Add Recipient",
+    "isActive": "Active",
+    "nextRun": "Next Run",
+    "lastRun": "Last Run",
+    "status": {
+      "success": "Success",
+      "failed": "Failed",
+      "pending": "Pending"
+    },
+    "createButton": "Create Schedule",
+    "updateButton": "Update Schedule",
+    "deleteButton": "Delete Schedule",
+    "success": "Schedule created successfully",
+    "error": "Failed to create schedule"
+  },
+
+  "savedReports": {
+    "title": "Saved Reports",
+    "description": "View and manage your saved reports",
+    "search": "Search reports...",
+    "empty": "No saved reports",
+    "emptyDescription": "Create and save a report to see it here",
+    "filters": {
+      "all": "All Reports",
+      "mine": "My Reports",
+      "shared": "Shared with Me",
+      "favorites": "Favorites"
+    },
+    "sortBy": {
+      "name": "Name",
+      "createdAt": "Date Created",
+      "updatedAt": "Last Modified"
+    },
+    "actions": {
+      "open": "Open",
+      "edit": "Edit",
+      "duplicate": "Duplicate",
+      "share": "Share",
+      "schedule": "Schedule",
+      "export": "Export",
+      "delete": "Delete",
+      "favorite": "Add to Favorites",
+      "unfavorite": "Remove from Favorites"
+    },
+    "confirmDelete": {
+      "title": "Delete Report",
+      "description": "Are you sure you want to delete this report? This action cannot be undone.",
+      "confirm": "Delete",
+      "cancel": "Cancel"
+    }
+  },
+
+  "export": {
+    "title": "Export Report",
+    "description": "Export your report data",
+    "format": "Export Format",
+    "includeCharts": "Include Charts",
+    "exportButton": "Export",
+    "exporting": "Exporting...",
+    "success": "Report exported successfully",
+    "error": "Failed to export report"
+  },
+
+  "actions": {
+    "new": "New Report",
+    "save": "Save",
+    "saveAs": "Save As",
+    "share": "Share",
+    "schedule": "Schedule",
+    "export": "Export",
+    "preview": "Preview",
+    "run": "Run Report",
+    "reset": "Reset",
+    "clear": "Clear All",
+    "undo": "Undo",
+    "redo": "Redo"
+  },
+
+  "errors": {
+    "noEntity": "Please select at least one data source",
+    "noColumns": "Please add at least one column",
+    "invalidFilter": "Invalid filter configuration",
+    "loadFailed": "Failed to load report",
+    "saveFailed": "Failed to save report",
+    "executeFailed": "Failed to execute report",
+    "exportFailed": "Failed to export report"
+  },
+
+  "tooltips": {
+    "addColumn": "Add this field as a column",
+    "addFilter": "Filter by this field",
+    "addGrouping": "Group by this field",
+    "removeItem": "Remove this item",
+    "dragToReorder": "Drag to reorder"
+  },
+
+  "fieldTypes": {
+    "string": "Text",
+    "number": "Number",
+    "date": "Date",
+    "datetime": "Date & Time",
+    "boolean": "Yes/No",
+    "enum": "Category",
+    "uuid": "ID",
+    "json": "Object"
+  }
+}

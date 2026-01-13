@@ -1,0 +1,14 @@
+{
+  "id": "working-groups-entity-management",
+  "category": "Core",
+  "title": "Working Groups Entity Management",
+  "description": "Implement working groups entity for committees, task forces, and collaborative bodies. Supports membership tracking, mandate management, and deliverable coordination. Links to parent forums and organizations.",
+  "status": "completed",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["forums-entity-management"],
+  "createdAt": "2026-01-10T15:57:25.660Z",
+  "updatedAt": "2026-01-10T17:13:01.135Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T16:46:13.209Z"
+}

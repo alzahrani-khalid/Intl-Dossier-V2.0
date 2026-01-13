@@ -1,0 +1,104 @@
+{
+  "labels": {
+    "email": "البريد الإلكتروني",
+    "phone": "رقم الهاتف",
+    "url": "رابط الموقع",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "datetime": "التاريخ والوقت",
+    "number": "الرقم",
+    "currency": "المبلغ",
+    "creditcard": "رقم البطاقة",
+    "otp": "رمز التحقق",
+    "password": "كلمة المرور",
+    "search": "بحث"
+  },
+
+  "placeholders": {
+    "email": "name@example.com",
+    "phone": "+966 5X XXX XXXX",
+    "url": "https://example.com",
+    "date": "YYYY-MM-DD",
+    "time": "HH:MM",
+    "datetime": "اختر التاريخ والوقت",
+    "number": "أدخل رقمًا",
+    "currency": "0.00",
+    "creditcard": "1234 5678 9012 3456",
+    "otp": "أدخل الرمز",
+    "password": "أدخل كلمة المرور",
+    "search": "بحث..."
+  },
+
+  "helpText": {
+    "email": "لن نشارك بريدك الإلكتروني أبدًا",
+    "phone": "أضف رمز الدولة للأرقام الدولية",
+    "url": "أضف https:// أو http://",
+    "creditcard": "بيانات بطاقتك آمنة",
+    "otp": "تحقق من بريدك الإلكتروني أو هاتفك للحصول على الرمز"
+  },
+
+  "keyboard": {
+    "numeric": "لوحة أرقام",
+    "email": "لوحة بريد إلكتروني",
+    "phone": "لوحة هاتف",
+    "url": "لوحة روابط",
+    "decimal": "لوحة عشرية"
+  },
+
+  "mask": {
+    "phone": {
+      "hint": "الصيغة: +966 5X XXX XXXX",
+      "international": "الصيغة الدولية مقبولة"
+    },
+    "creditcard": {
+      "hint": "أدخل رقم البطاقة المكون من 16 رقمًا",
+      "spaces": "ستُضاف المسافات تلقائيًا"
+    },
+    "date": {
+      "hint": "الصيغة: YYYY-MM-DD",
+      "picker": "استخدم منتقي التاريخ"
+    },
+    "currency": {
+      "hint": "استخدم النقطة العشرية للهللات"
+    }
+  },
+
+  "select": {
+    "placeholder": "اختر خيارًا...",
+    "search": "ابحث في الخيارات...",
+    "empty": "لا توجد خيارات",
+    "clear": "مسح الاختيار",
+    "create": "إنشاء \"{value}\"",
+    "loading": "جارٍ تحميل الخيارات...",
+    "showingCount": "عرض {{shown}} من {{total}} خيار",
+    "selectAll": "تحديد الكل",
+    "deselectAll": "إلغاء تحديد الكل",
+    "selected": "{{count}} محدد",
+    "required": "يرجى اختيار خيار"
+  },
+
+  "errors": {
+    "invalidFormat": "صيغة غير صحيحة",
+    "required": "هذا الحقل مطلوب",
+    "invalidEmail": "يرجى إدخال بريد إلكتروني صحيح",
+    "invalidPhone": "يرجى إدخال رقم هاتف صحيح",
+    "invalidUrl": "يرجى إدخال رابط صحيح",
+    "invalidDate": "يرجى إدخال تاريخ صحيح",
+    "invalidNumber": "يرجى إدخال رقم صحيح",
+    "invalidCreditcard": "يرجى إدخال رقم بطاقة صحيح",
+    "invalidOtp": "يرجى إدخال رمز تحقق صحيح"
+  },
+
+  "accessibility": {
+    "showPassword": "إظهار كلمة المرور",
+    "hidePassword": "إخفاء كلمة المرور",
+    "clearInput": "مسح الإدخال",
+    "openCalendar": "فتح التقويم",
+    "closeCalendar": "إغلاق التقويم",
+    "openDropdown": "فتح القائمة",
+    "closeDropdown": "إغلاق القائمة",
+    "optionSelected": "تم تحديد {{option}}",
+    "optionDeselected": "تم إلغاء تحديد {{option}}",
+    "searchResults": "تم العثور على {{count}} نتيجة"
+  }
+}

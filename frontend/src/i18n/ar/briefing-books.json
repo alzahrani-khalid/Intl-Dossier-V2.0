@@ -1,0 +1,291 @@
+{
+  "title": "كتب الإحاطة",
+  "subtitle": "قم بتجميع مواد الإحاطة المخصصة للاجتماعات والسفر",
+  "newBriefingBook": "كتاب إحاطة جديد",
+  "myBriefingBooks": "كتب الإحاطة الخاصة بي",
+  "templates": "القوالب",
+  "recentBooks": "الكتب الأخيرة",
+
+  "builder": {
+    "title": "إنشاء كتاب الإحاطة",
+    "step1": "اختيار الجهات",
+    "step2": "تكوين الأقسام",
+    "step3": "ضبط الخيارات",
+    "step4": "المراجعة والإنشاء",
+
+    "configuration": {
+      "title": "عنوان كتاب الإحاطة",
+      "titlePlaceholder": "أدخل عنوان كتاب الإحاطة",
+      "description": "الوصف (اختياري)",
+      "descriptionPlaceholder": "الغرض من كتاب الإحاطة هذا"
+    },
+
+    "entities": {
+      "title": "اختيار الجهات",
+      "subtitle": "اختر الدول أو المنظمات أو المنتديات أو المواضيع لتضمينها",
+      "searchPlaceholder": "البحث عن جهات...",
+      "selected": "{{count}} محدد",
+      "noSelection": "لم يتم تحديد جهات",
+      "addEntity": "إضافة جهة",
+      "removeEntity": "إزالة",
+      "countries": "الدول",
+      "organizations": "المنظمات",
+      "forums": "المنتديات",
+      "themes": "المواضيع",
+      "selectAll": "تحديد الكل",
+      "clearAll": "مسح الكل"
+    },
+
+    "dateRange": {
+      "title": "النطاق الزمني",
+      "subtitle": "تصفية المحتوى حسب النطاق الزمني",
+      "startDate": "تاريخ البداية",
+      "endDate": "تاريخ النهاية",
+      "presets": {
+        "last30days": "آخر 30 يوم",
+        "last90days": "آخر 90 يوم",
+        "last6months": "آخر 6 أشهر",
+        "lastYear": "السنة الماضية",
+        "custom": "نطاق مخصص"
+      }
+    },
+
+    "topics": {
+      "title": "المواضيع",
+      "subtitle": "تصفية المحتوى حسب فئات المواضيع",
+      "selectAll": "تحديد الكل",
+      "clearAll": "مسح الكل"
+    },
+
+    "sections": {
+      "title": "الأقسام",
+      "subtitle": "تكوين الأقسام المراد تضمينها",
+      "enableAll": "تفعيل الكل",
+      "disableAll": "تعطيل الكل",
+      "reorder": "اسحب لإعادة الترتيب",
+      "sectionTypes": {
+        "executive_summary": "الملخص التنفيذي",
+        "entity_overview": "نظرة عامة على الجهة",
+        "key_contacts": "جهات الاتصال الرئيسية",
+        "recent_engagements": "التعاملات الأخيرة",
+        "positions": "المواقف ونقاط النقاش",
+        "mou_agreements": "مذكرات التفاهم",
+        "commitments": "الالتزامات والمخرجات",
+        "timeline": "الجدول الزمني",
+        "documents": "المستندات ذات الصلة",
+        "relationship_map": "خريطة العلاقات",
+        "intelligence": "المعلومات والإشارات",
+        "custom": "قسم مخصص"
+      },
+      "addCustom": "إضافة قسم مخصص",
+      "customContent": "المحتوى المخصص"
+    },
+
+    "options": {
+      "title": "خيارات التصدير",
+      "format": {
+        "title": "تنسيق الإخراج",
+        "pdf": "مستند PDF",
+        "pdfDesc": "الأفضل للطباعة والقراءة دون اتصال",
+        "docx": "مستند Word (DOCX)",
+        "docxDesc": "تنسيق قابل للتحرير لمزيد من التخصيص",
+        "html": "مستند HTML",
+        "htmlDesc": "تنسيق جاهز للويب"
+      },
+      "language": {
+        "title": "اللغة الرئيسية",
+        "en": "الإنجليزية",
+        "ar": "العربية",
+        "bilingual": "تضمين المحتوى ثنائي اللغة",
+        "bilingualDesc": "تضمين النص بالإنجليزية والعربية"
+      },
+      "layout": {
+        "title": "خيارات التخطيط",
+        "tableOfContents": "تضمين جدول المحتويات",
+        "tableOfContentsDesc": "يتم إنشاؤه تلقائياً مع أرقام الصفحات",
+        "pageNumbers": "تضمين أرقام الصفحات",
+        "bookmarks": "تضمين الإشارات المرجعية",
+        "bookmarksDesc": "تنقل قابل للنقر في PDF",
+        "coverPage": "تضمين صفحة الغلاف",
+        "executiveSummary": "تضمين الملخص التنفيذي",
+        "executiveSummaryDesc": "نظرة عامة مُنشأة بالذكاء الاصطناعي للنقاط الرئيسية"
+      },
+      "sensitivity": {
+        "title": "مرشح الحساسية",
+        "description": "الحد الأقصى لمستوى الحساسية المراد تضمينه",
+        "low": "منخفض فقط",
+        "medium": "متوسط وأقل",
+        "high": "جميع المستويات"
+      },
+      "branding": {
+        "title": "العلامة التجارية",
+        "headerText": "نص الرأس",
+        "headerPlaceholder": "نص رأس مخصص (اختياري)",
+        "footerText": "نص التذييل",
+        "footerPlaceholder": "نص تذييل مخصص (اختياري)"
+      }
+    },
+
+    "review": {
+      "title": "المراجعة والإنشاء",
+      "summary": "الملخص",
+      "entitiesCount": "{{count}} جهات",
+      "sectionsCount": "{{count}} أقسام",
+      "estimatedPages": "يقدر بـ {{count}} صفحات",
+      "dateRangeLabel": "النطاق الزمني",
+      "formatLabel": "التنسيق",
+      "languageLabel": "اللغة",
+      "topicsLabel": "المواضيع",
+      "noTopics": "جميع المواضيع",
+      "includesLabel": "يتضمن",
+      "tableOfContents": "جدول المحتويات",
+      "bookmarks": "الإشارات المرجعية",
+      "coverPage": "صفحة الغلاف",
+      "executiveSummary": "الملخص التنفيذي",
+      "bilingualContent": "محتوى ثنائي اللغة"
+    }
+  },
+
+  "generation": {
+    "title": "جاري إنشاء كتاب الإحاطة",
+    "subtitle": "قد يستغرق هذا بضع دقائق حسب المحتوى",
+    "stages": {
+      "initializing": "جاري التهيئة...",
+      "fetching": "جاري جلب البيانات...",
+      "compiling": "جاري تجميع المحتوى...",
+      "formatting": "جاري تنسيق المستند...",
+      "generating": "جاري إنشاء {{format}}...",
+      "uploading": "جاري رفع الملف...",
+      "complete": "اكتمل الإنشاء!",
+      "error": "فشل الإنشاء"
+    },
+    "processingEntity": "جاري معالجة {{entity}}...",
+    "processingSection": "جاري معالجة {{section}}...",
+    "cancel": "إلغاء",
+    "cancelConfirm": "هل أنت متأكد أنك تريد إلغاء الإنشاء؟"
+  },
+
+  "preview": {
+    "title": "معاينة",
+    "download": "تنزيل",
+    "regenerate": "إعادة الإنشاء",
+    "share": "مشاركة",
+    "pageOf": "الصفحة {{current}} من {{total}}",
+    "zoom": "تكبير",
+    "fitWidth": "ملاءمة العرض",
+    "fitPage": "ملاءمة الصفحة",
+    "print": "طباعة"
+  },
+
+  "list": {
+    "title": "كتب الإحاطة الخاصة بي",
+    "empty": "لا توجد كتب إحاطة بعد",
+    "emptyDescription": "أنشئ أول كتاب إحاطة لتجميع المواد للاجتماعات والسفر",
+    "createFirst": "إنشاء كتاب إحاطة",
+    "columns": {
+      "title": "العنوان",
+      "entities": "الجهات",
+      "format": "التنسيق",
+      "status": "الحالة",
+      "created": "تاريخ الإنشاء",
+      "actions": "الإجراءات"
+    },
+    "status": {
+      "draft": "مسودة",
+      "generating": "جاري الإنشاء",
+      "ready": "جاهز",
+      "expired": "منتهي الصلاحية",
+      "failed": "فشل"
+    },
+    "actions": {
+      "download": "تنزيل",
+      "view": "عرض",
+      "duplicate": "تكرار",
+      "delete": "حذف",
+      "regenerate": "إعادة الإنشاء"
+    },
+    "filters": {
+      "all": "الكل",
+      "ready": "جاهز",
+      "generating": "جاري الإنشاء",
+      "failed": "فشل"
+    }
+  },
+
+  "templates": {
+    "title": "القوالب",
+    "subtitle": "وفر الوقت مع القوالب المُعدة مسبقاً",
+    "useTemplate": "استخدام القالب",
+    "saveAsTemplate": "حفظ كقالب",
+    "defaultTemplates": {
+      "executive": {
+        "name": "إحاطة تنفيذية",
+        "description": "نظرة عامة عالية المستوى مع جهات الاتصال الرئيسية والتعاملات الأخيرة"
+      },
+      "comprehensive": {
+        "name": "تقرير شامل",
+        "description": "ملف كامل مع جميع الأقسام والمستندات"
+      },
+      "quickReference": {
+        "name": "مرجع سريع",
+        "description": "تنسيق مدمج مع المعلومات الأساسية فقط"
+      },
+      "travelBrief": {
+        "name": "إحاطة السفر",
+        "description": "جهات الاتصال الرئيسية والمواقف والالتزامات القادمة"
+      }
+    }
+  },
+
+  "topics": {
+    "statistics": "الإحصاءات",
+    "economy": "الاقتصاد",
+    "trade": "التجارة",
+    "technology": "التكنولوجيا",
+    "environment": "البيئة",
+    "health": "الصحة",
+    "education": "التعليم",
+    "governance": "الحوكمة",
+    "cooperation": "التعاون الدولي",
+    "other": "أخرى"
+  },
+
+  "actions": {
+    "generate": "إنشاء كتاب الإحاطة",
+    "generating": "جاري الإنشاء...",
+    "cancel": "إلغاء",
+    "back": "رجوع",
+    "next": "التالي",
+    "save": "حفظ",
+    "saveTemplate": "حفظ كقالب",
+    "download": "تنزيل",
+    "delete": "حذف",
+    "duplicate": "تكرار",
+    "share": "مشاركة"
+  },
+
+  "success": {
+    "created": "تم إنشاء كتاب الإحاطة بنجاح",
+    "generated": "تم إنشاء كتاب الإحاطة بنجاح",
+    "downloaded": "تم تنزيل كتاب الإحاطة",
+    "deleted": "تم حذف كتاب الإحاطة",
+    "templateSaved": "تم حفظ القالب بنجاح"
+  },
+
+  "errors": {
+    "noEntities": "يرجى تحديد جهة واحدة على الأقل",
+    "noSections": "يرجى تفعيل قسم واحد على الأقل",
+    "generationFailed": "فشل في إنشاء كتاب الإحاطة",
+    "downloadFailed": "فشل في تنزيل كتاب الإحاطة",
+    "deleteFailed": "فشل في حذف كتاب الإحاطة",
+    "loadFailed": "فشل في تحميل كتب الإحاطة",
+    "templateSaveFailed": "فشل في حفظ القالب"
+  },
+
+  "confirmDelete": {
+    "title": "حذف كتاب الإحاطة",
+    "message": "هل أنت متأكد أنك تريد حذف كتاب الإحاطة هذا؟ لا يمكن التراجع عن هذا الإجراء.",
+    "confirm": "حذف",
+    "cancel": "إلغاء"
+  }
+}

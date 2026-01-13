@@ -13,55 +13,41 @@
  * - Mobile-first, RTL-compatible, accessible
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Button } from '@/components/ui/button';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
-import {
-  AlertCircle,
-  CheckCircle,
-  Plus,
-  Filter,
-  SearchX,
-  Loader2,
-} from 'lucide-react';
-import { useInfiniteCommitments } from '@/hooks/useCommitments';
-import { CommitmentCard } from './CommitmentCard';
-import { CommitmentForm } from './CommitmentForm';
-import { CommitmentFilterDrawer } from './CommitmentFilterDrawer';
-import { CommitmentDetailDrawer } from './CommitmentDetailDrawer';
-import { FilterChips } from './FilterChips';
+import { useState, useCallback, useEffect, useRef } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { AlertCircle, CheckCircle, Plus, Filter, SearchX, Loader2 } from 'lucide-react'
+import { useInfiniteCommitments } from '@/hooks/useCommitments'
+import { usePullToRefresh } from '@/hooks/usePullToRefresh'
+import { useLastSyncInfo } from '@/hooks/useLastSyncInfo'
+import { PullToRefreshIndicator, SyncStatusBar } from '@/components/ui/pull-to-refresh-indicator'
+import { CommitmentCard } from './CommitmentCard'
+import { CommitmentForm } from './CommitmentForm'
+import { CommitmentFilterDrawer } from './CommitmentFilterDrawer'
+import { CommitmentDetailDrawer } from './CommitmentDetailDrawer'
+import { FilterChips } from './FilterChips'
 import type {
   CommitmentStatus,
   CommitmentPriority,
   Commitment,
   CommitmentFilters,
-} from '@/types/commitment.types';
+} from '@/types/commitment.types'
 
 export interface CommitmentsListProps {
-  dossierId?: string;
-  status?: CommitmentStatus[];
-  priority?: CommitmentPriority[];
-  ownerId?: string;
-  overdue?: boolean;
-  dueDateFrom?: string;
-  dueDateTo?: string;
-  showFilters?: boolean;
-  showCreateButton?: boolean;
-  onFiltersChange?: (filters: CommitmentFilters) => void;
+  dossierId?: string
+  status?: CommitmentStatus[]
+  priority?: CommitmentPriority[]
+  ownerId?: string
+  overdue?: boolean
+  dueDateFrom?: string
+  dueDateTo?: string
+  showFilters?: boolean
+  showCreateButton?: boolean
+  onFiltersChange?: (filters: CommitmentFilters) => void
 }
 
 export function CommitmentsList({
@@ -76,15 +62,15 @@ export function CommitmentsList({
   showCreateButton = true,
   onFiltersChange,
 }: CommitmentsListProps) {
-  const { t, i18n } = useTranslation('commitments');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('commitments')
+  const isRTL = i18n.language === 'ar'
 
   // State for create/edit dialogs
-  const [showCreateDialog, setShowCreateDialog] = useState(false);
-  const [editingCommitment, setEditingCommitment] = useState<Commitment | null>(null);
-  const [showFilterDrawer, setShowFilterDrawer] = useState(false);
+  const [showCreateDialog, setShowCreateDialog] = useState(false)
+  const [editingCommitment, setEditingCommitment] = useState<Commitment | null>(null)
+  const [showFilterDrawer, setShowFilterDrawer] = useState(false)
   // T061: State for detail drawer
-  const [selectedCommitmentId, setSelectedCommitmentId] = useState<string | null>(null);
+  const [selectedCommitmentId, setSelectedCommitmentId] = useState<string | null>(null)
 
   // Build filters from props
   const filters: CommitmentFilters = {
@@ -95,13 +81,13 @@ export function CommitmentsList({
     overdue,
     dueDateFrom,
     dueDateTo,
-  };
+  }
 
   // Local filter state for the drawer
-  const [localFilters, setLocalFilters] = useState<CommitmentFilters>(filters);
+  const [localFilters, setLocalFilters] = useState<CommitmentFilters>(filters)
 
   // T064: Ref for scroll detection
-  const loadMoreRef = useRef<HTMLDivElement>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null)
 
   // Fetch commitments with infinite scroll pagination
   const {
@@ -112,6 +98,7 @@ export function CommitmentsList({
     fetchNextPage,
     hasNextPage,
     isFetchingNextPage,
+    refetch,
   } = useInfiniteCommitments({
     dossierId,
     status,
@@ -120,89 +107,106 @@ export function CommitmentsList({
     overdue,
     dueDateFrom,
     dueDateTo,
-  });
+  })
+
+  // Flatten pages into single array of commitments
+  const allCommitments = data?.pages.flatMap((page) => page.commitments) ?? []
+  const totalCount = data?.pages[0]?.totalCount ?? 0
+
+  // Sync info tracking for pull-to-refresh
+  const { lastSyncTime, itemsSynced, updateSyncInfo } = useLastSyncInfo('commitments-list')
+
+  // Pull-to-refresh hook
+  const {
+    handlers: pullHandlers,
+    state: pullState,
+    containerRef,
+  } = usePullToRefresh({
+    onRefresh: async () => {
+      await refetch()
+      updateSyncInfo(totalCount)
+    },
+    isRefreshing: isLoading && allCommitments.length > 0,
+    enabled: !isLoading,
+  })
 
   // T064: Scroll detection using Intersection Observer
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        const [entry] = entries;
+        const [entry] = entries
         if (entry.isIntersecting && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
+          fetchNextPage()
         }
       },
-      { threshold: 0.1, rootMargin: '100px' }
-    );
+      { threshold: 0.1, rootMargin: '100px' },
+    )
 
-    const currentRef = loadMoreRef.current;
+    const currentRef = loadMoreRef.current
     if (currentRef) {
-      observer.observe(currentRef);
+      observer.observe(currentRef)
     }
 
     return () => {
       if (currentRef) {
-        observer.unobserve(currentRef);
+        observer.unobserve(currentRef)
       }
-    };
-  }, [fetchNextPage, hasNextPage, isFetchingNextPage]);
-
-  // Flatten pages into single array of commitments
-  const allCommitments = data?.pages.flatMap((page) => page.commitments) ?? [];
-  const totalCount = data?.pages[0]?.totalCount ?? 0;
+    }
+  }, [fetchNextPage, hasNextPage, isFetchingNextPage])
 
   // Handle edit commitment
   const handleEdit = (commitment: Commitment) => {
-    setEditingCommitment(commitment);
-  };
+    setEditingCommitment(commitment)
+  }
 
   // T061: Handle card click - open detail drawer
   const handleCardClick = (commitmentId: string) => {
-    setSelectedCommitmentId(commitmentId);
-  };
+    setSelectedCommitmentId(commitmentId)
+  }
 
   // Handle form success
   const handleFormSuccess = () => {
-    setShowCreateDialog(false);
-    setEditingCommitment(null);
-  };
+    setShowCreateDialog(false)
+    setEditingCommitment(null)
+  }
 
   // Handle filter changes from drawer
   const handleFiltersChange = useCallback((newFilters: CommitmentFilters) => {
-    setLocalFilters(newFilters);
-  }, []);
+    setLocalFilters(newFilters)
+  }, [])
 
   // Apply filters
   const handleApplyFilters = useCallback(() => {
-    onFiltersChange?.(localFilters);
-  }, [localFilters, onFiltersChange]);
+    onFiltersChange?.(localFilters)
+  }, [localFilters, onFiltersChange])
 
   // Clear all filters
   const handleClearFilters = useCallback(() => {
-    const clearedFilters: CommitmentFilters = { dossierId };
-    setLocalFilters(clearedFilters);
-    onFiltersChange?.(clearedFilters);
-  }, [dossierId, onFiltersChange]);
+    const clearedFilters: CommitmentFilters = { dossierId }
+    setLocalFilters(clearedFilters)
+    onFiltersChange?.(clearedFilters)
+  }, [dossierId, onFiltersChange])
 
   // T043: Remove individual filter from chips
   const handleRemoveFilter = useCallback(
     (key: keyof CommitmentFilters, value?: string) => {
-      const newFilters = { ...filters };
+      const newFilters = { ...filters }
 
       if (key === 'status' && value) {
-        newFilters.status = filters.status?.filter((s) => s !== value);
-        if (newFilters.status?.length === 0) newFilters.status = undefined;
+        newFilters.status = filters.status?.filter((s) => s !== value)
+        if (newFilters.status?.length === 0) newFilters.status = undefined
       } else if (key === 'priority' && value) {
-        newFilters.priority = filters.priority?.filter((p) => p !== value);
-        if (newFilters.priority?.length === 0) newFilters.priority = undefined;
+        newFilters.priority = filters.priority?.filter((p) => p !== value)
+        if (newFilters.priority?.length === 0) newFilters.priority = undefined
       } else {
-        (newFilters as Record<string, unknown>)[key] = undefined;
+        ;(newFilters as Record<string, unknown>)[key] = undefined
       }
 
-      setLocalFilters(newFilters);
-      onFiltersChange?.(newFilters);
+      setLocalFilters(newFilters)
+      onFiltersChange?.(newFilters)
     },
-    [filters, onFiltersChange]
-  );
+    [filters, onFiltersChange],
+  )
 
   // Check if any filters are active (excluding dossierId)
   const hasActiveFilters =
@@ -212,7 +216,7 @@ export function CommitmentsList({
     !!filters.ownerType ||
     !!filters.overdue ||
     !!filters.dueDateFrom ||
-    !!filters.dueDateTo;
+    !!filters.dueDateTo
 
   // Loading state
   if (isLoading) {
@@ -222,7 +226,7 @@ export function CommitmentsList({
           <Skeleton key={i} className="h-32 w-full rounded-lg" />
         ))}
       </div>
-    );
+    )
   }
 
   // Error state
@@ -237,12 +241,12 @@ export function CommitmentsList({
           </AlertDescription>
         </Alert>
       </div>
-    );
+    )
   }
 
   // T044: Empty state when no results match filters
   if (!data || allCommitments.length === 0) {
-    const isFiltered = hasActiveFilters;
+    const isFiltered = hasActiveFilters
 
     return (
       <div dir={isRTL ? 'rtl' : 'ltr'}>
@@ -274,11 +278,7 @@ export function CommitmentsList({
                 )}
               </Button>
               {showCreateButton && dossierId && (
-                <Button
-                  onClick={() => setShowCreateDialog(true)}
-                  size="sm"
-                  className="min-h-11"
-                >
+                <Button onClick={() => setShowCreateDialog(true)} size="sm" className="min-h-11">
                   <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('actions.create')}
                 </Button>
@@ -306,28 +306,17 @@ export function CommitmentsList({
               <p className="text-sm text-muted-foreground max-w-md mb-6">
                 {t('list.emptyFiltered')}
               </p>
-              <Button
-                variant="outline"
-                onClick={handleClearFilters}
-                className="min-h-11"
-              >
+              <Button variant="outline" onClick={handleClearFilters} className="min-h-11">
                 {t('filters.clear')}
               </Button>
             </>
           ) : (
             <>
               <CheckCircle className="size-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">
-                {t('list.empty')}
-              </h3>
-              <p className="text-sm text-muted-foreground max-w-md mb-6">
-                {t('list.empty')}
-              </p>
+              <h3 className="text-lg font-medium text-foreground mb-2">{t('list.empty')}</h3>
+              <p className="text-sm text-muted-foreground max-w-md mb-6">{t('list.empty')}</p>
               {showCreateButton && dossierId && (
-                <Button
-                  onClick={() => setShowCreateDialog(true)}
-                  className="min-h-11"
-                >
+                <Button onClick={() => setShowCreateDialog(true)} className="min-h-11">
                   <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('actions.create')}
                 </Button>
@@ -354,9 +343,7 @@ export function CommitmentsList({
               dir={isRTL ? 'rtl' : 'ltr'}
             >
               <DialogHeader>
-                <DialogTitle className="text-start">
-                  {t('actions.create')}
-                </DialogTitle>
+                <DialogTitle className="text-start">{t('actions.create')}</DialogTitle>
               </DialogHeader>
               <CommitmentForm
                 dossierId={dossierId}
@@ -367,18 +354,33 @@ export function CommitmentsList({
           </Dialog>
         )}
       </div>
-    );
+    )
   }
 
   return (
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      {/* Sync status bar */}
+      <SyncStatusBar
+        lastSyncTime={lastSyncTime}
+        itemCount={totalCount}
+        isSyncing={isLoading && allCommitments.length > 0}
+        className="rounded-lg"
+      />
+
+      {/* Pull-to-refresh indicator */}
+      <PullToRefreshIndicator
+        pullDistance={pullState.pullDistance}
+        progress={pullState.progress}
+        status={pullState.status}
+        lastSyncTime={lastSyncTime}
+        itemsSynced={itemsSynced}
+      />
+
       {/* Header with count and actions */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1">
         <h2 className="text-xl sm:text-2xl font-bold text-foreground text-start">
           {t('title')}
-          <span className="ms-2 text-sm font-normal text-muted-foreground">
-            ({totalCount})
-          </span>
+          <span className="ms-2 text-sm font-normal text-muted-foreground">({totalCount})</span>
         </h2>
 
         <div className="flex items-center gap-2">
@@ -404,11 +406,7 @@ export function CommitmentsList({
             </Button>
           )}
           {showCreateButton && dossierId && (
-            <Button
-              onClick={() => setShowCreateDialog(true)}
-              size="sm"
-              className="min-h-11"
-            >
+            <Button onClick={() => setShowCreateDialog(true)} size="sm" className="min-h-11">
               <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
               {t('actions.create')}
             </Button>
@@ -425,14 +423,14 @@ export function CommitmentsList({
         />
       )}
 
-      {/* Commitments Grid - Mobile First */}
-      <div className="grid grid-cols-1 gap-4">
+      {/* Commitments Grid - Mobile First with Pull-to-Refresh */}
+      <div
+        ref={containerRef}
+        className="grid grid-cols-1 gap-4 overflow-auto overscroll-contain"
+        {...pullHandlers}
+      >
         {allCommitments.map((commitment) => (
-          <CommitmentCard
-            key={commitment.id}
-            commitment={commitment}
-            onEdit={handleEdit}
-          />
+          <CommitmentCard key={commitment.id} commitment={commitment} onEdit={handleEdit} />
         ))}
       </div>
 
@@ -445,17 +443,13 @@ export function CommitmentsList({
           </div>
         )}
         {hasNextPage && !isFetchingNextPage && (
-          <p className="text-sm text-muted-foreground text-center">
-            {t('list.loadMore')}
-          </p>
+          <p className="text-sm text-muted-foreground text-center">{t('list.loadMore')}</p>
         )}
       </div>
 
       {/* T066: End of list indicator */}
       {!hasNextPage && allCommitments.length > 0 && (
-        <p className="text-sm text-muted-foreground text-center py-2">
-          {t('list.endOfList')}
-        </p>
+        <p className="text-sm text-muted-foreground text-center py-2">{t('list.endOfList')}</p>
       )}
 
       {/* Filter Drawer */}
@@ -476,9 +470,7 @@ export function CommitmentsList({
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             <DialogHeader>
-              <DialogTitle className="text-start">
-                {t('actions.create')}
-              </DialogTitle>
+              <DialogTitle className="text-start">{t('actions.create')}</DialogTitle>
             </DialogHeader>
             <CommitmentForm
               dossierId={dossierId}
@@ -500,9 +492,7 @@ export function CommitmentsList({
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <SheetHeader>
-            <SheetTitle className="text-start">
-              {t('actions.edit')}
-            </SheetTitle>
+            <SheetTitle className="text-start">{t('actions.edit')}</SheetTitle>
           </SheetHeader>
           {editingCommitment && dossierId && (
             <div className="mt-6">
@@ -517,5 +507,5 @@ export function CommitmentsList({
         </SheetContent>
       </Sheet>
     </div>
-  );
+  )
 }

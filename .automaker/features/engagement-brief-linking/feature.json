@@ -1,0 +1,14 @@
+{
+  "id": "engagement-brief-linking",
+  "category": "Core",
+  "title": "Engagement Brief Linking",
+  "description": "Link AI-generated briefs to engagement dossiers with automatic context gathering. Briefs pull recent interactions, positions, and commitments from related entities. Supports pre-meeting brief workflows.",
+  "status": "completed",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": ["engagements-entity-management"],
+  "createdAt": "2026-01-10T15:57:25.662Z",
+  "updatedAt": "2026-01-10T17:41:09.410Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T17:26:13.303Z"
+}

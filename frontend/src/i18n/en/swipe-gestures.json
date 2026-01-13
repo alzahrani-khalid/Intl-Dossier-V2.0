@@ -1,0 +1,55 @@
+{
+  "title": "Swipe Gestures",
+  "instructions": {
+    "swipeRight": "Swipe right to {{action}}",
+    "swipeLeft": "Swipe left to {{action}}",
+    "longPress": "Long-press for more options",
+    "releaseToConfirm": "Release to confirm"
+  },
+  "actions": {
+    "favorite": "Favorite",
+    "unfavorite": "Remove from favorites",
+    "pin": "Pin",
+    "unpin": "Unpin",
+    "archive": "Archive",
+    "unarchive": "Unarchive",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View",
+    "share": "Share",
+    "more": "More options"
+  },
+  "feedback": {
+    "favorited": "Added to favorites",
+    "unfavorited": "Removed from favorites",
+    "pinned": "Pinned",
+    "unpinned": "Unpinned",
+    "archived": "Archived",
+    "unarchived": "Unarchived",
+    "deleted": "Deleted",
+    "actionCancelled": "Action cancelled"
+  },
+  "contextMenu": {
+    "title": "Actions",
+    "favorite": "Add to Favorites",
+    "unfavorite": "Remove from Favorites",
+    "pin": "Pin to Top",
+    "unpin": "Unpin",
+    "archive": "Archive",
+    "delete": "Delete",
+    "edit": "Edit",
+    "view": "View Details",
+    "share": "Share",
+    "copyLink": "Copy Link"
+  },
+  "accessibility": {
+    "swipeableCard": "Swipeable card. {{content}}. Swipe right to {{rightAction}}, swipe left to {{leftAction}}, or long-press for more options.",
+    "swipeProgress": "Swipe progress: {{progress}}%",
+    "actionTriggered": "{{action}} action triggered"
+  },
+  "hints": {
+    "enableSwipe": "Enable swipe gestures for quick actions",
+    "disableSwipe": "Disable swipe gestures",
+    "swipeDisabled": "Swipe gestures are disabled"
+  }
+}

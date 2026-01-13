@@ -1,0 +1,202 @@
+{
+  "title": "Notifications",
+  "notificationCenter": "Notification Center",
+  "viewAll": "View All",
+  "markAllRead": "Mark All as Read",
+  "clearAll": "Clear All",
+  "noNotifications": "No Notifications",
+  "noNotificationsDescription": "You're all caught up! Check back later for new updates.",
+  "loadMore": "Load More",
+  "loading": "Loading notifications...",
+  "justNow": "Just now",
+  "minutesAgo": "{{count}} minute ago",
+  "minutesAgo_plural": "{{count}} minutes ago",
+  "hoursAgo": "{{count}} hour ago",
+  "hoursAgo_plural": "{{count}} hours ago",
+  "daysAgo": "{{count}} day ago",
+  "daysAgo_plural": "{{count}} days ago",
+  "yesterday": "Yesterday",
+  "today": "Today",
+  "thisWeek": "This Week",
+  "older": "Older",
+
+  "categories": {
+    "all": "All",
+    "assignments": "Assignments",
+    "intake": "Service Requests",
+    "calendar": "Calendar",
+    "signals": "Intelligence Signals",
+    "mentions": "Mentions",
+    "deadlines": "Deadlines",
+    "system": "System",
+    "workflow": "Workflow"
+  },
+
+  "priority": {
+    "urgent": "Urgent",
+    "high": "High",
+    "normal": "Normal",
+    "low": "Low"
+  },
+
+  "actions": {
+    "markRead": "Mark as read",
+    "markUnread": "Mark as unread",
+    "delete": "Delete",
+    "viewDetails": "View Details",
+    "dismiss": "Dismiss",
+    "snooze": "Snooze",
+    "snoozeOptions": {
+      "15min": "15 minutes",
+      "1hour": "1 hour",
+      "4hours": "4 hours",
+      "tomorrow": "Tomorrow"
+    }
+  },
+
+  "filters": {
+    "all": "All Notifications",
+    "unread": "Unread Only",
+    "highPriority": "High Priority",
+    "byCategory": "By Category"
+  },
+
+  "preferences": {
+    "title": "Notification Preferences",
+    "description": "Configure how you receive notifications across different channels.",
+    "channels": "Notification Channels",
+    "channelsDescription": "Choose how you want to receive notifications for each category.",
+    "email": "Email",
+    "push": "Push",
+    "inApp": "In-App",
+    "sms": "SMS",
+    "sound": "Sound",
+    "categorySettings": "Category Settings",
+    "enableAll": "Enable All",
+    "disableAll": "Disable All",
+    "devices": "Registered Devices",
+    "devicesDescription": "Manage devices that receive push notifications.",
+    "noDevices": "No registered devices",
+    "noDevicesDescription": "Push notifications are not enabled. Install the mobile app to receive push notifications.",
+    "removeDevice": "Remove Device",
+    "lastUsed": "Last used",
+    "platform": {
+      "ios": "iOS",
+      "android": "Android",
+      "web": "Web Browser"
+    },
+    "digest": {
+      "title": "Digest Settings",
+      "description": "Receive summary emails instead of individual notifications.",
+      "daily": "Daily Digest",
+      "dailyDescription": "Receive a daily summary of all notifications.",
+      "weekly": "Weekly Digest",
+      "weeklyDescription": "Receive a weekly summary of all notifications.",
+      "time": "Delivery Time",
+      "day": "Delivery Day"
+    },
+    "quietHours": {
+      "title": "Quiet Hours",
+      "description": "Pause push notifications during specific hours.",
+      "enabled": "Enable Quiet Hours",
+      "enabledDescription": "Notifications during quiet hours will be queued and sent afterwards.",
+      "start": "Start Time",
+      "end": "End Time",
+      "timezone": "Timezone"
+    },
+    "save": "Save Preferences",
+    "saving": "Saving...",
+    "saved": "Preferences Saved",
+    "savedDescription": "Your notification preferences have been updated.",
+    "error": "Error",
+    "errorDescription": "Failed to save preferences. Please try again."
+  },
+
+  "badge": {
+    "new": "New",
+    "unread": "unread",
+    "many": "{{count}}+"
+  },
+
+  "empty": {
+    "title": "All caught up!",
+    "description": "You have no new notifications.",
+    "assignmentsEmpty": "No assignment notifications",
+    "intakeEmpty": "No service request notifications",
+    "calendarEmpty": "No calendar notifications",
+    "signalsEmpty": "No intelligence signals",
+    "mentionsEmpty": "No mentions",
+    "deadlinesEmpty": "No deadline alerts",
+    "systemEmpty": "No system notifications",
+    "workflowEmpty": "No workflow notifications"
+  },
+
+  "realtime": {
+    "connected": "Real-time updates active",
+    "disconnected": "Reconnecting...",
+    "newNotification": "New notification received"
+  },
+
+  "toast": {
+    "markedAsRead": "Notification marked as read",
+    "markedAllAsRead": "All notifications marked as read",
+    "deleted": "Notification deleted",
+    "snoozed": "Notification snoozed"
+  },
+
+  "errors": {
+    "fetchFailed": "Failed to load notifications",
+    "markReadFailed": "Failed to mark notification as read",
+    "deleteFailed": "Failed to delete notification",
+    "preferencesFailed": "Failed to update preferences"
+  },
+
+  "preview": {
+    "title": "What You'll See Here",
+    "description": "Before you receive any real notifications, take a moment to see examples of the types of updates you'll get and configure your preferences.",
+    "exampleBadge": "Example",
+    "ago": "ago",
+    "pauseAnimation": "Pause",
+    "playAnimation": "Play",
+    "categoriesTitle": "Notification Categories",
+    "categoriesDescription": "You'll receive updates across these 8 different categories based on your activity.",
+    "configurePreferences": "Configure Preferences",
+    "skipForNow": "Skip for Now",
+    "preferencesTitle": "Set Your Preferences",
+    "preferencesDescription": "Choose how you want to be notified for each category. You can always change these later in settings.",
+    "step1": "Preview",
+    "step2": "Configure",
+    "channelSettings": "Channel Settings",
+    "channelDescription": "Enable or disable notification channels for each category.",
+    "tip": "Pro Tip",
+    "tipDescription": "Start with fewer notifications and enable more as you get comfortable. You can always adjust these settings from the notification panel.",
+    "backToPreview": "Back to Preview",
+    "saveAndContinue": "Save & Continue",
+    "examples": {
+      "mention": {
+        "title": "Sarah mentioned you in a comment",
+        "message": "\"@you please review the latest updates to the Saudi Arabia country dossier before the meeting.\""
+      },
+      "assignment": {
+        "title": "New task assigned to you",
+        "message": "Prepare briefing document for the upcoming bilateral meeting with the UAE delegation."
+      },
+      "calendar": {
+        "title": "Meeting starting in 30 minutes",
+        "message": "Quarterly Review Meeting with Policy Team - Conference Room A"
+      },
+      "deadline": {
+        "title": "Deadline approaching",
+        "message": "MOU renewal document for Japan is due in 3 days. Review required."
+      },
+      "workflow": {
+        "title": "Approval request",
+        "message": "Document 'Strategic Partnership Framework' is pending your approval."
+      },
+      "signal": {
+        "title": "New intelligence signal detected",
+        "message": "Significant policy change reported for the European Union trade agreement."
+      }
+    }
+  }
+}

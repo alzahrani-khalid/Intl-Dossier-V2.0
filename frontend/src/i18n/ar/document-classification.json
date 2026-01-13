@@ -1,0 +1,118 @@
+{
+  "levels": {
+    "public": "عام",
+    "internal": "داخلي",
+    "confidential": "سري",
+    "secret": "سري للغاية"
+  },
+  "descriptions": {
+    "public": "بدون قيود وصول. يمكن لأي شخص الاطلاع عليه.",
+    "internal": "للاستخدام الداخلي فقط. يتطلب تصريح أساسي (المستوى 1).",
+    "confidential": "معلومات حساسة. يتطلب تصريح محلل أو أعلى (المستوى 2).",
+    "secret": "حساس للغاية. مقتصر على المدراء والإداريين (المستوى 3)."
+  },
+  "shortDescriptions": {
+    "public": "بدون قيود",
+    "internal": "تصريح أساسي",
+    "confidential": "تصريح محلل",
+    "secret": "تصريح إداري"
+  },
+  "clearanceLevels": {
+    "0": "لا يوجد",
+    "1": "أساسي",
+    "2": "قياسي",
+    "3": "عالي",
+    "4": "سري للغاية"
+  },
+  "selector": {
+    "label": "مستوى التصنيف",
+    "placeholder": "اختر التصنيف",
+    "hint": "اختر مستوى التصنيف المناسب لهذا المستند"
+  },
+  "changeDialog": {
+    "title": "تغيير التصنيف",
+    "description": "تحديث مستوى تصنيف هذا المستند",
+    "currentClassification": "التصنيف الحالي",
+    "newClassification": "التصنيف الجديد",
+    "reason": "سبب التغيير",
+    "reasonPlaceholder": "اشرح سبب الحاجة لهذا التغيير في التصنيف...",
+    "reasonHint": "مطلوب 10 أحرف على الأقل",
+    "reasonRequired": "يرجى تقديم سبب لهذا التغيير",
+    "reasonTooShort": "يجب أن يكون السبب 10 أحرف على الأقل",
+    "approvalRequired": "يتطلب موافقة",
+    "approvalDescription": "ترقية التصنيف تتطلب موافقة المسؤول. سيتم تقديم طلبك للمراجعة.",
+    "submitForApproval": "تقديم للموافقة",
+    "applyChange": "تطبيق التغيير",
+    "success": "تم تغيير التصنيف بنجاح",
+    "pendingApproval": "تم تقديم طلب تغيير التصنيف للموافقة"
+  },
+  "accessDenied": {
+    "title": "تم رفض الوصول",
+    "subtitle": "مستوى التصريح غير كافٍ",
+    "requiredClearance": "التصريح المطلوب",
+    "yourClearance": "تصريحك",
+    "description": "ليس لديك مستوى التصريح المطلوب للوصول إلى هذا المستند. تواصل مع المسؤول إذا كنت تعتقد أنه يجب أن يكون لديك صلاحية الوصول.",
+    "requestAccess": "طلب الوصول"
+  },
+  "redacted": {
+    "accessRestricted": "الوصول مقيد",
+    "fieldName": "الحقل",
+    "requiresClearance": "يتطلب تصريح {{level}} أو أعلى"
+  },
+  "documentCard": {
+    "classification": "التصنيف",
+    "changeClassification": "تغيير التصنيف",
+    "accessRestricted": "التحميل مقيد",
+    "handlingInstructions": "تعليمات التعامل",
+    "declassificationDate": "تاريخ رفع التصنيف"
+  },
+  "accessLog": {
+    "title": "سجل الوصول",
+    "description": "عرض سجل الوصول للمستند",
+    "noLogs": "لم يتم العثور على سجلات وصول",
+    "columns": {
+      "user": "المستخدم",
+      "accessType": "نوع الوصول",
+      "clearance": "التصريح",
+      "granted": "ممنوح",
+      "time": "الوقت",
+      "redactedFields": "الحقول المحجوبة"
+    },
+    "accessTypes": {
+      "view": "عرض",
+      "download": "تحميل",
+      "preview": "معاينة",
+      "metadata": "البيانات الوصفية",
+      "denied": "مرفوض"
+    },
+    "granted": {
+      "true": "نعم",
+      "false": "لا"
+    }
+  },
+  "pendingApprovals": {
+    "title": "تغييرات التصنيف المعلقة",
+    "description": "مراجعة وموافقة طلبات تغيير التصنيف",
+    "noPending": "لا توجد طلبات موافقة معلقة",
+    "columns": {
+      "document": "المستند",
+      "from": "من",
+      "to": "إلى",
+      "requestedBy": "طلب بواسطة",
+      "requestedAt": "وقت الطلب",
+      "reason": "السبب",
+      "actions": "الإجراءات"
+    },
+    "approve": "موافقة",
+    "reject": "رفض",
+    "approveSuccess": "تمت الموافقة على تغيير التصنيف",
+    "rejectSuccess": "تم رفض تغيير التصنيف"
+  },
+  "common": {
+    "cancel": "إلغاء",
+    "save": "حفظ",
+    "loading": "جاري التحميل...",
+    "error": "حدث خطأ",
+    "retry": "إعادة المحاولة"
+  }
+}

@@ -1,0 +1,116 @@
+{
+  "title": "مقترحات لك",
+  "urgentBadge": "عاجل",
+  "emptyTitle": "لا توجد مقترحات",
+  "emptyDescription": "أنت على اطلاع! تحقق لاحقاً للحصول على توصيات مخصصة.",
+  "loading": "جاري تحميل المقترحات...",
+  "error": "تعذر تحميل المقترحات",
+  "retry": "حاول مرة أخرى",
+
+  "categories": {
+    "upcoming_event": "الفعاليات القادمة",
+    "expiring_mou": "مذكرات التفاهم المنتهية",
+    "overdue_commitment": "العناصر المتأخرة",
+    "pending_task": "المهام المعلقة",
+    "seasonal": "التقويم المؤسسي",
+    "anniversary": "الذكريات السنوية",
+    "quick_action": "إجراءات سريعة"
+  },
+
+  "timeframes": {
+    "today": "اليوم",
+    "tomorrow": "غداً",
+    "inDays": "خلال {{count}} أيام",
+    "inWeeks": "خلال {{count}} أسابيع",
+    "daysAgo": "منذ {{count}} أيام",
+    "overdue": "متأخر",
+    "overdueBy": "متأخر {{count}} أيام"
+  },
+
+  "badges": {
+    "urgent": "عاجل",
+    "highPriority": "أولوية عالية",
+    "expiringSoon": "ينتهي قريباً",
+    "actionRequired": "يتطلب إجراء",
+    "newItem": "جديد"
+  },
+
+  "actions": {
+    "viewDetails": "عرض التفاصيل",
+    "takeAction": "اتخاذ إجراء",
+    "dismiss": "تجاهل",
+    "remindLater": "تذكير لاحقاً",
+    "createNew": "إنشاء جديد"
+  },
+
+  "seasonal": {
+    "unGeneralAssembly": {
+      "title": "التحضير للجمعية العامة للأمم المتحدة",
+      "description": "الجمعية العامة للأمم المتحدة تقترب. راجع مواقف دولتك وحضّر مواد الإحاطة."
+    },
+    "g20Summit": {
+      "title": "التحضير لقمة مجموعة العشرين",
+      "description": "قمة مجموعة العشرين قادمة. نسّق مع الإدارات المعنية وحضّر أوراق المواقف."
+    },
+    "annualReview": {
+      "title": "المراجعة الثنائية السنوية",
+      "description": "حان وقت المراجعة السنوية للعلاقات الثنائية. قيّم التقدم وحدد أولويات السنة."
+    },
+    "quarterlyReview": {
+      "title": "مراجعة التزامات الربع {{quarter}}",
+      "description": "راجع تقدم التزامات الربع {{quarter}} وحدّث الحالة للمخرجات القادمة."
+    },
+    "budgetPlanning": {
+      "title": "دورة تخطيط الميزانية",
+      "description": "بدأت دورة تخطيط الميزانية السنوية. راجع تخصيص الموارد وقدم المقترحات."
+    }
+  },
+
+  "suggestions": {
+    "upcomingEngagement": {
+      "title": "التحضير لـ {{name}}",
+      "description": "الارتباط مجدول في {{date}}{{location}}. راجع الإحاطات وحضّر المواد."
+    },
+    "expiringMou": {
+      "title": "مذكرة تفاهم تنتهي: {{name}}",
+      "description": "مذكرة التفاهم مع {{counterparty}} تنتهي في {{date}}. {{action}}"
+    },
+    "overdueCommitment": {
+      "title": "متأخر: {{name}}",
+      "description": "هذا الالتزام كان مستحقاً منذ {{days}}. اتخذ إجراء فوري لمعالجة هذا."
+    },
+    "pendingTask": {
+      "title": "{{name}}",
+      "description": "مستحق {{date}}. راجع وأكمل هذه المهمة."
+    }
+  },
+
+  "quickActions": {
+    "createDossier": {
+      "title": "إنشاء ملف دولة",
+      "description": "ابدأ بتتبع علاقة ثنائية من خلال إنشاء ملف دولة."
+    },
+    "addEngagement": {
+      "title": "تسجيل ارتباط",
+      "description": "سجّل اجتماعاً أو وفداً أو زيارة رسمية."
+    },
+    "reviewCommitments": {
+      "title": "مراجعة التزاماتك",
+      "description": "تحقق من حالة الالتزامات المعلقة وحدّث التقدم."
+    },
+    "uploadDocument": {
+      "title": "رفع مستند",
+      "description": "أضف المستندات المهمة إلى ملفاتك لسهولة الوصول."
+    },
+    "addContact": {
+      "title": "إضافة جهة اتصال",
+      "description": "أضف جهات الاتصال الرئيسية لتتبع العلاقات مع الأفراد المهمين."
+    }
+  },
+
+  "metadata": {
+    "upcomingEvents": "{{count}} فعالية قادمة",
+    "expiringMous": "{{count}} مذكرات تفاهم تنتهي",
+    "overdueItems": "{{count}} متأخر"
+  }
+}

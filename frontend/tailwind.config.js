@@ -109,6 +109,23 @@ export default {
         xl: '1280px',
         '2xl': '1536px',
       },
+      // Touch target sizes (iOS/Android standards)
+      spacing: {
+        // Touch target minimum sizes
+        'touch-sm': '44px', // WCAG AA minimum
+        touch: '48px', // iOS/Android recommended
+        'touch-lg': '56px', // Comfortable touch target
+      },
+      minWidth: {
+        'touch-sm': '44px',
+        touch: '48px',
+        'touch-lg': '56px',
+      },
+      minHeight: {
+        'touch-sm': '44px',
+        touch: '48px',
+        'touch-lg': '56px',
+      },
       keyframes: {
         'accordion-down': {
           from: {
@@ -126,10 +143,28 @@ export default {
             height: '0',
           },
         },
+        shimmer: {
+          '0%': {
+            transform: 'translateX(-100%)',
+          },
+          '100%': {
+            transform: 'translateX(100%)',
+          },
+        },
+        'skeleton-pulse': {
+          '0%, 100%': {
+            opacity: '1',
+          },
+          '50%': {
+            opacity: '0.5',
+          },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
+        shimmer: 'shimmer 2s infinite',
+        'skeleton-pulse': 'skeleton-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
       },
     },
   },
@@ -144,6 +179,66 @@ export default {
         },
         '.dir-ltr': {
           direction: 'ltr',
+        },
+      })
+    },
+    // Touch target utilities for mobile accessibility
+    function ({ addUtilities, addComponents, theme }) {
+      // Base touch target utilities
+      addUtilities({
+        // Optimize touch handling (disables double-tap zoom)
+        '.touch-manipulation': {
+          'touch-action': 'manipulation',
+        },
+        // Touch target expansion class
+        '.touch-target': {
+          'min-height': '48px',
+          'min-width': '48px',
+        },
+        '.touch-target-sm': {
+          'min-height': '44px',
+          'min-width': '44px',
+        },
+        '.touch-target-lg': {
+          'min-height': '56px',
+          'min-width': '56px',
+        },
+        // Touch-friendly spacing between interactive elements
+        '.touch-gap': {
+          gap: '12px', // Minimum 8px, comfortable 12px
+        },
+        '.touch-gap-tight': {
+          gap: '8px',
+        },
+        '.touch-gap-comfortable': {
+          gap: '16px',
+        },
+        // Ensure adequate padding for touch targets
+        '.touch-padding': {
+          padding: '12px',
+        },
+      })
+
+      // Touch target component utilities
+      addComponents({
+        // Wrapper that ensures 48px touch target
+        '.touch-area': {
+          display: 'inline-flex',
+          'align-items': 'center',
+          'justify-content': 'center',
+          'min-height': '48px',
+          'min-width': '48px',
+          'touch-action': 'manipulation',
+          position: 'relative',
+        },
+        // Touch-friendly button group with proper spacing
+        '.touch-button-group': {
+          display: 'flex',
+          gap: '12px',
+          '& > *': {
+            'min-height': '48px',
+            'min-width': '48px',
+          },
         },
       })
     },

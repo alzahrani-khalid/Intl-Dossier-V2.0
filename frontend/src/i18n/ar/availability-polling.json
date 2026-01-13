@@ -1,0 +1,218 @@
+{
+  "title": "استطلاع التوفر",
+  "subtitle": "ابحث عن أفضل وقت للاجتماع للجميع",
+  "description": "أنشئ استطلاعات، ادعُ المشاركين، واعثر على أفضل وقت للاجتماع",
+  "createPoll": "إنشاء استطلاع",
+  "myPolls": "استطلاعاتي",
+  "allPolls": "جميع الاستطلاعات",
+  "noPollsFound": "لم يتم العثور على استطلاعات",
+  "noPollsDescription": "أنشئ استطلاع توفر جديد للعثور على أفضل وقت للاجتماع.",
+
+  "tabs": {
+    "myPolls": "استطلاعاتي",
+    "invited": "المدعو إليها",
+    "all": "جميع الاستطلاعات"
+  },
+
+  "empty": {
+    "title": "لم يتم العثور على استطلاعات",
+    "description": "ابدأ بإنشاء أول استطلاع توفر لك"
+  },
+
+  "create": {
+    "title": "إنشاء استطلاع",
+    "subtitle": "إعداد استطلاع توفر جديد"
+  },
+
+  "status": {
+    "draft": "مسودة",
+    "active": "نشط",
+    "closed": "مغلق",
+    "scheduled": "مجدول",
+    "cancelled": "ملغى"
+  },
+
+  "votingRules": {
+    "simple_majority": "الأغلبية البسيطة",
+    "simple_majority_desc": "الخيار الذي يحصل على أكثر الأصوات يفوز",
+    "consensus": "الإجماع",
+    "consensus_desc": "يجب أن يوافق الجميع على الخيار",
+    "unanimous": "الإجماع التام",
+    "unanimous_desc": "يجب أن يكون جميع المشاركين متاحين",
+    "organizer_decides": "يقرر المنظم",
+    "organizer_decides_desc": "المنظم يتخذ القرار النهائي"
+  },
+
+  "responses": {
+    "available": "متاح",
+    "unavailable": "غير متاح",
+    "maybe": "ربما",
+    "notResponded": "لم يرد"
+  },
+
+  "form": {
+    "meetingTitle": "عنوان الاجتماع",
+    "meetingTitleEn": "عنوان الاجتماع (الإنجليزية)",
+    "meetingTitleAr": "عنوان الاجتماع (العربية)",
+    "meetingTitlePlaceholder": "أدخل عنوان الاجتماع",
+    "description": "الوصف",
+    "descriptionEn": "الوصف (الإنجليزية)",
+    "descriptionAr": "الوصف (العربية)",
+    "descriptionPlaceholder": "صف الغرض من هذا الاجتماع",
+    "deadline": "الموعد النهائي للتصويت",
+    "deadlineHelp": "يجب على المشاركين تقديم ردودهم بحلول هذا التاريخ",
+    "votingRule": "قاعدة التصويت",
+    "minParticipants": "الحد الأدنى من المشاركين المطلوبين",
+    "minParticipantsHelp": "الحد الأدنى لعدد المشاركين المطلوب لصحة الاستطلاع",
+    "duration": "مدة الاجتماع",
+    "durationMinutes": "{{count}} دقيقة",
+    "minutes": "د",
+    "location": "الموقع",
+    "locationEn": "الموقع (الإنجليزية)",
+    "locationAr": "الموقع (العربية)",
+    "locationPlaceholder": "أدخل موقع الاجتماع",
+    "isVirtual": "اجتماع افتراضي",
+    "virtualLink": "رابط الاجتماع الافتراضي",
+    "virtualLinkPlaceholder": "أدخل رابط مؤتمر الفيديو",
+    "organizerNotes": "ملاحظات المنظم",
+    "organizerNotesPlaceholder": "ملاحظات داخلية (مرئية لك فقط)",
+    "linkToDossier": "ربط بالملف",
+    "selectDossier": "اختر ملفاً (اختياري)"
+  },
+
+  "slots": {
+    "title": "الفترات الزمنية",
+    "addSlot": "إضافة فترة زمنية",
+    "addMultipleSlots": "إضافة فترات متعددة",
+    "removeSlot": "إزالة الفترة",
+    "noSlots": "لم تتم إضافة فترات زمنية بعد",
+    "noSlotsDescription": "أضف فترة زمنية واحدة على الأقل للتصويت عليها.",
+    "startTime": "وقت البدء",
+    "endTime": "وقت الانتهاء",
+    "venueEn": "المكان (الإنجليزية)",
+    "venueAr": "المكان (العربية)",
+    "venuePlaceholder": "اقتراح مكان اختياري",
+    "preference": "تفضيلك",
+    "preferenceHelp": "التفضيل الأعلى سيؤثر في النتائج",
+    "availableCount": "{{count}} متاح",
+    "unavailableCount": "{{count}} غير متاح",
+    "maybeCount": "{{count}} ربما",
+    "bestSlot": "أفضل خيار",
+    "selectedSlot": "محدد"
+  },
+
+  "participants": {
+    "title": "المشاركون",
+    "addParticipant": "إضافة مشارك",
+    "removeParticipant": "إزالة المشارك",
+    "noParticipants": "لم تتم دعوة مشاركين بعد",
+    "noParticipantsDescription": "ادعُ المشاركين للتصويت على الفترات الزمنية.",
+    "searchUsers": "البحث عن مستخدمين...",
+    "required": "مطلوب",
+    "optional": "اختياري",
+    "responded": "استجاب",
+    "pending": "قيد الانتظار",
+    "invitedAt": "تمت الدعوة {{date}}",
+    "reminderSent": "تم إرسال التذكير {{date}}",
+    "sendReminder": "إرسال تذكير",
+    "responseRate": "{{responded}} من {{total}} استجابوا ({{rate}}%)"
+  },
+
+  "voting": {
+    "title": "صوّت على الفترات الزمنية",
+    "vote": "صوّت",
+    "subtitle": "حدد توفرك لكل وقت مقترح",
+    "submitVotes": "إرسال الأصوات",
+    "updateVotes": "تحديث الأصوات",
+    "votesSubmitted": "تم إرسال الأصوات بنجاح",
+    "votesUpdated": "تم تحديث الأصوات بنجاح",
+    "selectAll": "تحديد الكل",
+    "clearAll": "مسح الكل",
+    "markAllAvailable": "تحديد الكل كمتاح",
+    "markAllUnavailable": "تحديد الكل كغير متاح",
+    "addNote": "إضافة ملاحظة",
+    "notePlaceholder": "ملاحظة اختيارية لهذه الفترة",
+    "deadline": "ينتهي التصويت {{date}}",
+    "deadlinePassed": "انتهى التصويت",
+    "pollClosed": "هذا الاستطلاع مغلق"
+  },
+
+  "results": {
+    "title": "النتائج",
+    "subtitle": "{{responded}} من {{total}} مشارك استجابوا",
+    "view": "عرض",
+    "manage": "إدارة",
+    "optimalSlots": "أفضل الفترات الزمنية",
+    "optimalSlotsDescription": "مرتبة حسب توفر المشاركين وتفضيلاتك",
+    "noOptimalSlots": "لا توجد استجابات كافية لتحديد أفضل وقت",
+    "score": "النتيجة: {{score}}%",
+    "breakdown": "تفصيل النتيجة",
+    "availabilityScore": "التوفر",
+    "preferenceScore": "تفضيلك",
+    "canClose": "يمكن إغلاق الاستطلاع",
+    "needMoreResponses": "يحتاج {{count}} استجابات إضافية",
+    "selectAndSchedule": "اختر وجدول الاجتماع",
+    "viewAllResponses": "عرض جميع الردود"
+  },
+
+  "actions": {
+    "activate": "تفعيل الاستطلاع",
+    "activateConfirm": "بمجرد التفعيل، يمكن للمشاركين البدء في التصويت. لا يزال بإمكانك تعديل الفترات والمشاركين.",
+    "close": "إغلاق الاستطلاع",
+    "closeConfirm": "هل تريد إغلاق هذا الاستطلاع واختيار أفضل فترة زمنية؟",
+    "schedule": "جدولة الاجتماع",
+    "scheduleConfirm": "هل تريد إنشاء حدث تقويم للفترة الزمنية المحددة؟",
+    "cancel": "إلغاء الاستطلاع",
+    "cancelConfirm": "هل أنت متأكد من رغبتك في إلغاء هذا الاستطلاع؟",
+    "delete": "حذف الاستطلاع",
+    "deleteConfirm": "لا يمكن التراجع عن هذا الإجراء. سيتم فقدان جميع الأصوات والبيانات.",
+    "duplicate": "تكرار الاستطلاع",
+    "share": "مشاركة الاستطلاع",
+    "copyLink": "نسخ الرابط",
+    "linkCopied": "تم نسخ الرابط"
+  },
+
+  "notifications": {
+    "pollCreated": "تم إنشاء الاستطلاع بنجاح",
+    "pollUpdated": "تم تحديث الاستطلاع بنجاح",
+    "pollActivated": "تم تفعيل الاستطلاع - يمكن للمشاركين التصويت الآن",
+    "pollClosed": "تم إغلاق الاستطلاع بنجاح",
+    "pollScheduled": "تم جدولة الاجتماع بنجاح",
+    "pollCancelled": "تم إلغاء الاستطلاع",
+    "pollDeleted": "تم حذف الاستطلاع",
+    "slotAdded": "تمت إضافة الفترة الزمنية",
+    "slotRemoved": "تمت إزالة الفترة الزمنية",
+    "participantAdded": "تمت إضافة المشارك",
+    "participantRemoved": "تمت إزالة المشارك",
+    "reminderSent": "تم إرسال التذكير للمشارك"
+  },
+
+  "errors": {
+    "createFailed": "فشل في إنشاء الاستطلاع",
+    "updateFailed": "فشل في تحديث الاستطلاع",
+    "activateFailed": "فشل في تفعيل الاستطلاع",
+    "closeFailed": "فشل في إغلاق الاستطلاع",
+    "scheduleFailed": "فشل في جدولة الاجتماع",
+    "voteFailed": "فشل في إرسال الأصوات",
+    "loadFailed": "فشل في تحميل تفاصيل الاستطلاع",
+    "noSlots": "يرجى إضافة فترة زمنية واحدة على الأقل قبل التفعيل",
+    "deadlinePassed": "لا يمكن التصويت بعد انتهاء الموعد النهائي",
+    "notAuthorized": "غير مصرح لك بتنفيذ هذا الإجراء"
+  },
+
+  "matrix": {
+    "title": "مصفوفة الردود",
+    "participant": "المشارك",
+    "showAll": "عرض الكل",
+    "hideUnresponded": "إخفاء غير المستجيبين",
+    "exportMatrix": "تصدير المصفوفة"
+  },
+
+  "filters": {
+    "status": "الحالة",
+    "allStatuses": "جميع الحالات",
+    "dateRange": "نطاق التاريخ",
+    "createdBy": "أنشئ بواسطة",
+    "myPollsOnly": "استطلاعاتي فقط"
+  }
+}

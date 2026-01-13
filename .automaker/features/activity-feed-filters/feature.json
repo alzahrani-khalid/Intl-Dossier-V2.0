@@ -1,0 +1,14 @@
+{
+  "id": "activity-feed-filters",
+  "category": "UI",
+  "title": "Advanced Activity Feed Filtering",
+  "description": "Enhanced activity feed with filters by entity type, action type, user, date range, and relationship. Supports following specific entities and receiving targeted activity notifications.",
+  "status": "completed",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.669Z",
+  "updatedAt": "2026-01-10T17:25:30.018Z",
+  "branchName": "main",
+  "startedAt": "2026-01-10T17:13:13.263Z"
+}

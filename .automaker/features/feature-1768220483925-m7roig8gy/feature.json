@@ -1,0 +1,10 @@
+{
+  "category": "enhancement",
+  "description": "Show a gallery of pre-configured dossier templates (bilateral relations, regional analysis, thematic brief) with thumbnail previews. Users can click to preview full structure before creating their first dossier.\n\n**Rationale:** Dossiers are the primary artifact in this system. Without examples, users may struggle to understand what constitutes a good dossier structure. Visual templates accelerate learning and ensure consistency across the organization.",
+  "title": "Dossier Empty State with Template Previews",
+  "status": "verified",
+  "id": "feature-1768220483925-m7roig8gy",
+  "branchName": "main",
+  "startedAt": "2026-01-12T12:23:37.544Z",
+  "updatedAt": "2026-01-12T12:34:18.060Z"
+}

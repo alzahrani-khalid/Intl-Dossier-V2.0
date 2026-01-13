@@ -1,0 +1,220 @@
+{
+  "title": "المشاركات",
+  "subtitle": "إدارة الاجتماعات الثنائية والبعثات والوفود",
+  "actions": {
+    "createEngagement": "مشاركة جديدة",
+    "createFirst": "إنشاء أول مشاركة",
+    "edit": "تعديل",
+    "archive": "أرشفة",
+    "cancel": "إلغاء",
+    "create": "إنشاء المشاركة",
+    "save": "حفظ التغييرات",
+    "loadMore": "تحميل المزيد",
+    "backToList": "العودة للقائمة",
+    "addParticipant": "إضافة مشارك",
+    "addAgendaItem": "إضافة بند أجندة",
+    "viewDetails": "عرض التفاصيل"
+  },
+  "search": {
+    "placeholder": "البحث في المشاركات..."
+  },
+  "filters": {
+    "title": "الفلاتر",
+    "type": "النوع",
+    "category": "الفئة",
+    "status": "الحالة",
+    "allTypes": "جميع الأنواع",
+    "allCategories": "جميع الفئات",
+    "allStatuses": "جميع الحالات",
+    "dateRange": "نطاق التاريخ",
+    "clear": "مسح",
+    "apply": "تطبيق"
+  },
+  "stats": {
+    "total": "{{count}} مشاركة",
+    "participants": "المشاركون",
+    "agendaItems": "بنود الأجندة",
+    "upcoming": "قادمة",
+    "completed": "مكتملة"
+  },
+  "tabs": {
+    "overview": "نظرة عامة",
+    "participants": "المشاركون",
+    "agenda": "الأجندة",
+    "outcomes": "المخرجات",
+    "briefs": "الموجزات"
+  },
+  "sections": {
+    "details": "التفاصيل",
+    "schedule": "الجدول الزمني",
+    "location": "الموقع",
+    "delegation": "الوفد",
+    "objectives": "الأهداف",
+    "outcomes": "المخرجات",
+    "notes": "ملاحظات",
+    "participants": "المشاركون",
+    "agenda": "الأجندة"
+  },
+  "types": {
+    "bilateral_meeting": "اجتماع ثنائي",
+    "mission": "بعثة",
+    "delegation": "وفد",
+    "summit": "قمة",
+    "working_group": "مجموعة عمل",
+    "roundtable": "طاولة مستديرة",
+    "official_visit": "زيارة رسمية",
+    "consultation": "استشارة",
+    "other": "أخرى"
+  },
+  "categories": {
+    "diplomatic": "دبلوماسي",
+    "statistical": "إحصائي",
+    "technical": "فني",
+    "economic": "اقتصادي",
+    "cultural": "ثقافي",
+    "educational": "تعليمي",
+    "research": "بحثي",
+    "other": "أخرى"
+  },
+  "statuses": {
+    "planned": "مخطط",
+    "confirmed": "مؤكد",
+    "in_progress": "جاري",
+    "completed": "مكتمل",
+    "postponed": "مؤجل",
+    "cancelled": "ملغي"
+  },
+  "delegationLevels": {
+    "head_of_state": "رئيس دولة",
+    "ministerial": "وزاري",
+    "senior_official": "مسؤول رفيع",
+    "director": "مدير",
+    "expert": "خبير",
+    "technical": "فني"
+  },
+  "participantRoles": {
+    "host": "مضيف",
+    "guest": "ضيف",
+    "delegate": "مندوب",
+    "head_of_delegation": "رئيس الوفد",
+    "speaker": "متحدث",
+    "observer": "مراقب",
+    "organizer": "منظم",
+    "support_staff": "طاقم دعم",
+    "interpreter": "مترجم",
+    "other": "أخرى"
+  },
+  "attendanceStatus": {
+    "expected": "متوقع",
+    "confirmed": "مؤكد",
+    "attended": "حضر",
+    "no_show": "لم يحضر",
+    "cancelled": "ملغي",
+    "tentative": "غير مؤكد"
+  },
+  "agendaItemStatus": {
+    "planned": "مخطط",
+    "in_progress": "جاري",
+    "completed": "مكتمل",
+    "skipped": "تم تخطيه",
+    "postponed": "مؤجل"
+  },
+  "form": {
+    "nameEn": "العنوان (الإنجليزية)",
+    "nameAr": "العنوان (العربية)",
+    "descriptionEn": "الوصف (الإنجليزية)",
+    "descriptionAr": "الوصف (العربية)",
+    "engagementType": "نوع المشاركة",
+    "engagementCategory": "الفئة",
+    "startDate": "تاريخ البدء",
+    "endDate": "تاريخ الانتهاء",
+    "locationEn": "الموقع (الإنجليزية)",
+    "locationAr": "الموقع (العربية)",
+    "venueEn": "المكان (الإنجليزية)",
+    "venueAr": "المكان (العربية)",
+    "isVirtual": "اجتماع افتراضي",
+    "virtualLink": "رابط الاجتماع الافتراضي",
+    "hostCountry": "الدولة المضيفة",
+    "hostOrganization": "المنظمة المضيفة",
+    "delegationSize": "حجم الوفد",
+    "delegationLevel": "مستوى الوفد",
+    "objectivesEn": "الأهداف (الإنجليزية)",
+    "objectivesAr": "الأهداف (العربية)",
+    "outcomesEn": "المخرجات (الإنجليزية)",
+    "outcomesAr": "المخرجات (العربية)",
+    "notesEn": "ملاحظات (الإنجليزية)",
+    "notesAr": "ملاحظات (العربية)",
+    "status": "الحالة",
+    "participant": {
+      "type": "نوع المشارك",
+      "person": "شخص",
+      "organization": "منظمة",
+      "country": "دولة",
+      "external": "خارجي",
+      "selectDossier": "اختر الملف",
+      "externalNameEn": "الاسم (الإنجليزية)",
+      "externalNameAr": "الاسم (العربية)",
+      "externalTitleEn": "اللقب (الإنجليزية)",
+      "externalTitleAr": "اللقب (العربية)",
+      "externalOrgEn": "المنظمة (الإنجليزية)",
+      "externalOrgAr": "المنظمة (العربية)",
+      "role": "الدور",
+      "attendanceStatus": "حالة الحضور"
+    },
+    "agenda": {
+      "titleEn": "العنوان (الإنجليزية)",
+      "titleAr": "العنوان (العربية)",
+      "descriptionEn": "الوصف (الإنجليزية)",
+      "descriptionAr": "الوصف (العربية)",
+      "startTime": "وقت البدء",
+      "endTime": "وقت الانتهاء",
+      "duration": "المدة (دقائق)",
+      "status": "الحالة",
+      "outcomeEn": "المخرج (الإنجليزية)",
+      "outcomeAr": "المخرج (العربية)"
+    }
+  },
+  "empty": {
+    "title": "لا توجد مشاركات بعد",
+    "description": "جدول أول اجتماع ثنائي أو بعثة أو وفد",
+    "noResults": "لم يتم العثور على مشاركات",
+    "noResultsDescription": "جرب تعديل البحث أو الفلاتر",
+    "participants": "لم يتم إضافة مشاركين",
+    "participantsDescription": "أضف مشاركين لهذه المشاركة",
+    "agenda": "لا توجد بنود أجندة",
+    "agendaDescription": "أضف بنود أجندة لتنظيم هذه المشاركة"
+  },
+  "error": {
+    "title": "فشل في تحميل المشاركات",
+    "message": "حدث خطأ أثناء جلب البيانات",
+    "notFound": "المشاركة غير موجودة",
+    "notFoundDescription": "المشاركة التي تبحث عنها غير موجودة"
+  },
+  "archive": {
+    "title": "أرشفة المشاركة؟",
+    "description": "سيتم أرشفة المشاركة وإخفاؤها من القائمة. يمكن التراجع عن هذا الإجراء."
+  },
+  "messages": {
+    "created": "تم إنشاء المشاركة \"{{name}}\" بنجاح",
+    "createError": "فشل في إنشاء المشاركة: {{error}}",
+    "updated": "تم تحديث المشاركة بنجاح",
+    "updateError": "فشل في تحديث المشاركة: {{error}}",
+    "archived": "تم أرشفة المشاركة بنجاح",
+    "archiveError": "فشل في أرشفة المشاركة: {{error}}",
+    "participantAdded": "تمت إضافة المشارك بنجاح",
+    "participantAddError": "فشل في إضافة المشارك: {{error}}",
+    "participantRemoved": "تمت إزالة المشارك بنجاح",
+    "participantRemoveError": "فشل في إزالة المشارك: {{error}}",
+    "agendaItemAdded": "تمت إضافة بند الأجندة بنجاح",
+    "agendaItemAddError": "فشل في إضافة بند الأجندة: {{error}}",
+    "agendaItemUpdated": "تم تحديث بند الأجندة بنجاح",
+    "agendaItemUpdateError": "فشل في تحديث بند الأجندة: {{error}}",
+    "agendaItemRemoved": "تمت إزالة بند الأجندة بنجاح",
+    "agendaItemRemoveError": "فشل في إزالة بند الأجندة: {{error}}"
+  },
+  "card": {
+    "participants": "{{count}} مشارك",
+    "virtual": "افتراضي",
+    "inPerson": "حضوري"
+  }
+}

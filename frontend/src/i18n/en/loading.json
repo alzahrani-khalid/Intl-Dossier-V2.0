@@ -1,0 +1,103 @@
+{
+  "loading": {
+    "progress": "Loading...",
+    "processing": "Processing...",
+    "pleaseWait": "Please wait while we process your request"
+  },
+  "status": {
+    "idle": "Ready",
+    "pending": "Preparing...",
+    "processing": "Processing",
+    "paused": "Paused",
+    "completed": "Completed",
+    "error": "Error",
+    "cancelled": "Cancelled"
+  },
+  "statusMessage": {
+    "completed": "Operation completed successfully",
+    "error": "An error occurred during processing",
+    "cancelled": "Operation was cancelled"
+  },
+  "controls": {
+    "cancel": "Cancel",
+    "pause": "Pause",
+    "resume": "Resume",
+    "retry": "Retry"
+  },
+  "eta": {
+    "calculating": "Calculating...",
+    "remaining": "{{time}} remaining",
+    "seconds": "{{count}} second",
+    "seconds_plural": "{{count}} seconds",
+    "minutes": "{{count}} minute",
+    "minutes_plural": "{{count}} minutes",
+    "hours": "{{count}} hour",
+    "hours_plural": "{{count}} hours"
+  },
+  "items": {
+    "processing": "Processing {{current}} of {{total}}",
+    "processed": "{{count}} item processed",
+    "processed_plural": "{{count}} items processed"
+  },
+  "skeleton": {
+    "loading": "Loading content...",
+    "loadingData": "Loading data...",
+    "loadingItems": "Loading items...",
+    "loadingChart": "Loading chart...",
+    "loadingTable": "Loading table...",
+    "loadingForm": "Loading form..."
+  },
+  "empty": {
+    "title": "No data available",
+    "description": "There is no data to display at this time",
+    "noResults": "No results found",
+    "tryAgain": "Try adjusting your filters or search criteria"
+  },
+  "error": {
+    "title": "Something went wrong",
+    "description": "We encountered an error while loading the data",
+    "networkError": "Network error. Please check your connection.",
+    "timeout": "Request timed out. Please try again.",
+    "retry": "Retry"
+  },
+  "infiniteScroll": {
+    "loadMore": "Load more",
+    "loading": "Loading more items...",
+    "endOfList": "You've reached the end",
+    "noMoreItems": "No more items to load"
+  },
+  "batch": {
+    "processingBatch": "Processing batch {{current}} of {{total}}",
+    "itemsRemaining": "{{count}} items remaining",
+    "estimatedTime": "Estimated time: {{time}}"
+  },
+  "upload": {
+    "uploading": "Uploading...",
+    "uploadProgress": "Uploading: {{progress}}%",
+    "preparing": "Preparing upload...",
+    "processing": "Processing file...",
+    "almostDone": "Almost done..."
+  },
+  "download": {
+    "preparing": "Preparing download...",
+    "downloading": "Downloading: {{progress}}%",
+    "processing": "Processing file...",
+    "almostDone": "Almost done..."
+  },
+  "sync": {
+    "syncing": "Syncing...",
+    "syncProgress": "Syncing: {{progress}}%",
+    "lastSync": "Last synced: {{time}}"
+  },
+  "search": {
+    "searching": "Searching...",
+    "indexing": "Indexing results...",
+    "analyzing": "Analyzing query..."
+  },
+  "ai": {
+    "thinking": "AI is thinking...",
+    "generating": "Generating response...",
+    "processing": "Processing with AI...",
+    "analyzing": "Analyzing content..."
+  }
+}

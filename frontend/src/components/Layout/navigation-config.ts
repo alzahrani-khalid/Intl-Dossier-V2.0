@@ -1,6 +1,7 @@
 import type { LucideIcon } from 'lucide-react'
 import {
   LayoutDashboard,
+  LayoutGrid,
   CalendarDays,
   Brain,
   Database,
@@ -26,6 +27,11 @@ import {
   FileCheck,
   Sparkles,
   Sliders,
+  Gauge,
+  Tag,
+  Webhook,
+  Workflow,
+  BookOpen,
 } from 'lucide-react'
 
 export interface NavigationItem {
@@ -99,6 +105,12 @@ export const createNavigationSections = (
           icon: LayoutDashboard,
         },
         {
+          id: 'custom-dashboard',
+          label: 'navigation.customDashboard',
+          path: '/custom-dashboard',
+          icon: LayoutGrid,
+        },
+        {
           id: 'approvals',
           label: 'navigation.approvals',
           path: '/approvals',
@@ -141,6 +153,12 @@ export const createNavigationSections = (
           icon: ScrollText,
         },
         {
+          id: 'briefing-books',
+          label: 'navigation.briefingBooks',
+          path: '/briefing-books',
+          icon: BookOpen,
+        },
+        {
           id: 'intelligence',
           label: 'navigation.intelligence',
           path: '/intelligence',
@@ -157,6 +175,12 @@ export const createNavigationSections = (
           label: 'navigation.reports',
           path: '/reports',
           icon: BarChart3,
+        },
+        {
+          id: 'sla-monitoring',
+          label: 'navigation.slaMonitoring',
+          path: '/sla-monitoring',
+          icon: Gauge,
         },
       ],
     },
@@ -233,6 +257,27 @@ export const createNavigationSections = (
           label: 'navigation.export',
           path: '/export',
           icon: Download,
+          adminOnly: true,
+        },
+        {
+          id: 'tags',
+          label: 'navigation.tags',
+          path: '/tags',
+          icon: Tag,
+          adminOnly: true,
+        },
+        {
+          id: 'webhooks',
+          label: 'navigation.webhooks',
+          path: '/settings/webhooks',
+          icon: Webhook,
+          adminOnly: true,
+        },
+        {
+          id: 'workflow-automation',
+          label: 'navigation.workflowAutomation',
+          path: '/workflow-automation',
+          icon: Workflow,
           adminOnly: true,
         },
       ],

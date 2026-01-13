@@ -1,0 +1,82 @@
+{
+  "title": "المذكرات الصوتية",
+  "untitledMemo": "مذكرة صوتية بدون عنوان",
+  "unknownUser": "مستخدم غير معروف",
+
+  "status": {
+    "recording": "جاري التسجيل",
+    "processing": "جاري المعالجة",
+    "transcribing": "جاري النسخ",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "processingDescription": "جاري رفع ومعالجة الصوت...",
+    "transcribingDescription": "جاري تحويل الصوت إلى نص..."
+  },
+
+  "permissions": {
+    "microphoneRequired": "مطلوب إذن الميكروفون",
+    "microphoneDescription": "يرجى تمكين الوصول إلى الميكروفون في إعدادات جهازك لتسجيل المذكرات الصوتية."
+  },
+
+  "instructions": {
+    "tapToStart": "اضغط على الميكروفون لبدء التسجيل",
+    "recording": "جاري التسجيل... اضغط إيقاف عند الانتهاء",
+    "paused": "التسجيل متوقف مؤقتاً. اضغط تشغيل للاستئناف"
+  },
+
+  "warnings": {
+    "maxDurationApproaching": "سيتوقف التسجيل خلال {{remaining}}"
+  },
+
+  "save": {
+    "title": "حفظ المذكرة الصوتية",
+    "duration": "المدة: {{duration}}",
+    "titleLabel": "العنوان (اختياري)",
+    "titlePlaceholder": "أدخل عنواناً لهذه المذكرة الصوتية",
+    "descriptionLabel": "الوصف (اختياري)",
+    "descriptionPlaceholder": "أضف ملاحظات أو سياق حول هذا التسجيل"
+  },
+
+  "transcription": {
+    "title": "النسخ النصي",
+    "confidence": "الثقة: {{value}}٪",
+    "noTranscription": "لا يوجد نسخ نصي متاح",
+    "pending": "النسخ النصي معلق",
+    "inProgress": "جاري النسخ النصي..."
+  },
+
+  "buttons": {
+    "record": "تسجيل",
+    "stop": "إيقاف",
+    "pause": "إيقاف مؤقت",
+    "resume": "استئناف",
+    "save": "حفظ",
+    "discard": "تجاهل",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "download": "تحميل",
+    "retry": "إعادة النسخ النصي"
+  },
+
+  "delete": {
+    "title": "حذف المذكرة الصوتية",
+    "description": "هل أنت متأكد من رغبتك في حذف هذه المذكرة الصوتية؟ لا يمكن التراجع عن هذا الإجراء."
+  },
+
+  "empty": {
+    "noVoiceMemos": "لا توجد مذكرات صوتية بعد",
+    "addFirst": "سجل أول مذكرة صوتية لالتقاط الأفكار والملاحظات أثناء التنقل."
+  },
+
+  "errors": {
+    "recordingFailed": "فشل التسجيل",
+    "uploadFailed": "فشل الرفع",
+    "playbackFailed": "فشل التشغيل",
+    "transcriptionFailed": "فشل النسخ النصي",
+    "saveFailed": "فشل الحفظ",
+    "deleteFailed": "فشل الحذف",
+    "permissionDenied": "تم رفض الإذن"
+  },
+
+  "buffering": "جاري التحميل..."
+}

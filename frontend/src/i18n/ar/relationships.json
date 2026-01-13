@@ -1,0 +1,140 @@
+{
+  "wizard": {
+    "title": "لنُنشئ أول علاقة لك",
+    "subtitle": "تساعدك العلاقات في تتبع الروابط بين {{name}} والكيانات الأخرى في نظامك.",
+    "dismiss": "إغلاق",
+    "skipForNow": "تخطي الآن",
+    "back": "رجوع",
+    "next": "التالي",
+    "createFirstRelationship": "إنشاء العلاقة الأولى",
+    "selected": "محدد",
+    "currentDossier": "الملف الحالي",
+    "networkPreviewLabel": "عرض شبكة العلاقات",
+    "readyToStart": "هل أنت مستعد للبدء؟",
+    "readyToStartDesc": "اضغط على الزر أدناه لإنشاء أول علاقة لـ {{name}}. يمكنك دائمًا إضافة المزيد من العلاقات لاحقًا.",
+    "steps": {
+      "welcome": {
+        "title": "لماذا إنشاء العلاقات؟",
+        "description": "العلاقات هي العمود الفقري لشبكة معلوماتك. تربط بين الدول والمنظمات والأشخاص والأحداث لكشف الرؤى والأنماط."
+      },
+      "examples": {
+        "title": "أنواع العلاقات الشائعة",
+        "description": "إليك بعض الأمثلة عن كيفية عمل العلاقات. اضغط على أي مثال لمعرفة المزيد."
+      },
+      "preview": {
+        "title": "تصور شبكتك",
+        "description": "بمجرد إنشاء العلاقات، ستتمكن من تصورها كشبكة رسومية تفاعلية."
+      }
+    },
+    "benefits": {
+      "visualize": "تصور الروابط",
+      "visualizeDesc": "شاهد كيف ترتبط الكيانات ببعضها في رسم بياني تفاعلي.",
+      "track": "تتبع التاريخ",
+      "trackDesc": "راقب تغييرات العلاقات بمرور الوقت مع تواريخ السريان.",
+      "connect": "بناء الشبكات",
+      "connectDesc": "اكتشف الأنماط المخفية عبر بياناتك."
+    }
+  },
+  "dialog": {
+    "createTitle": "إنشاء علاقة",
+    "editTitle": "تعديل العلاقة",
+    "createDescription": "إنشاء علاقة جديدة لـ {{name}}",
+    "editDescription": "تحديث تفاصيل العلاقة"
+  },
+  "form": {
+    "targetDossier": "الملف المرتبط",
+    "selectDossier": "ابحث واختر ملفًا...",
+    "searchDossiers": "اكتب للبحث عن الملفات...",
+    "searchMinChars": "اكتب حرفين على الأقل للبحث",
+    "noResults": "لم يتم العثور على ملفات",
+    "relationshipType": "نوع العلاقة",
+    "selectType": "اختر نوع العلاقة",
+    "status": "الحالة",
+    "selectStatus": "اختر الحالة",
+    "effectiveFrom": "تاريخ البدء",
+    "effectiveTo": "تاريخ الانتهاء",
+    "effectiveToHint": "اتركه فارغًا للعلاقات المستمرة",
+    "notesEn": "ملاحظات (الإنجليزية)",
+    "notesAr": "ملاحظات (العربية)",
+    "notesPlaceholder": "أضف ملاحظات اختيارية حول هذه العلاقة..."
+  },
+  "actions": {
+    "create": "إنشاء العلاقة",
+    "save": "حفظ التغييرات",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "deleting": "جارٍ الحذف..."
+  },
+  "messages": {
+    "created": "تم إنشاء العلاقة بنجاح",
+    "createError": "فشل في إنشاء العلاقة: {{error}}",
+    "updated": "تم تحديث العلاقة بنجاح",
+    "updateError": "فشل في تحديث العلاقة: {{error}}",
+    "deleted": "تم حذف العلاقة بنجاح",
+    "deleteError": "فشل في حذف العلاقة: {{error}}",
+    "terminated": "تم إنهاء العلاقة بنجاح",
+    "terminateError": "فشل في إنهاء العلاقة: {{error}}"
+  },
+  "types": {
+    "member_of": "عضو في",
+    "participates_in": "يشارك في",
+    "cooperates_with": "يتعاون مع",
+    "bilateral_relation": "علاقة ثنائية",
+    "partnership": "شراكة",
+    "parent_of": "الشركة الأم لـ",
+    "subsidiary_of": "تابع لـ",
+    "related_to": "مرتبط بـ",
+    "represents": "يمثل",
+    "hosted_by": "يستضيفه",
+    "sponsored_by": "برعاية",
+    "involves": "يتضمن",
+    "discusses": "يناقش",
+    "participant_in": "مشارك في",
+    "observer_of": "مراقب لـ",
+    "affiliate_of": "منتسب لـ",
+    "successor_of": "خلف لـ",
+    "predecessor_of": "سابق لـ"
+  },
+  "status": {
+    "active": "نشط",
+    "historical": "تاريخي",
+    "terminated": "منتهي"
+  },
+  "dossierTypes": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "person": "شخص",
+    "engagement": "ارتباط",
+    "working_group": "مجموعة عمل",
+    "topic": "موضوع"
+  },
+  "graph": {
+    "controls": {
+      "zoom": "تكبير",
+      "zoomIn": "تكبير",
+      "zoomOut": "تصغير",
+      "fitView": "ملاءمة العرض",
+      "reset": "إعادة تعيين العرض"
+    },
+    "gestures": {
+      "pinching": "اقرص للتكبير",
+      "panning": "اسحب للتحريك",
+      "tapping": "انقر للتركيز",
+      "doubleTapping": "انقر مرتين للتوسيع"
+    },
+    "hints": {
+      "pinch": "اقرص للتكبير",
+      "pan": "إصبعان للتحريك",
+      "tap": "انقر على العقدة للتركيز",
+      "doubleTap": "انقر مرتين للتوسيع"
+    },
+    "accessibility": {
+      "zoomLevel": "مستوى التكبير الحالي: {{level}}٪",
+      "nodeCount": "{{count}} عقد مرئية",
+      "edgeCount": "{{count}} روابط مرئية",
+      "focusedNode": "التركيز على {{name}}",
+      "gestureActive": "الإيماءة نشطة"
+    }
+  }
+}

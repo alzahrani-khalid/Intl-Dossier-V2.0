@@ -58,9 +58,29 @@ const DialogHeader = ({ className, ...props }: React.HTMLAttributes<HTMLDivEleme
 )
 DialogHeader.displayName = 'DialogHeader'
 
-const DialogFooter = ({ className, ...props }: React.HTMLAttributes<HTMLDivElement>) => (
+interface DialogFooterProps extends React.HTMLAttributes<HTMLDivElement> {
+  /**
+   * Position footer actions for mobile thumb-zone accessibility
+   * When true, adds extra bottom padding and stacks buttons for easier reach
+   * @default false
+   */
+  thumbZone?: boolean
+}
+
+const DialogFooter = ({ className, thumbZone = false, ...props }: DialogFooterProps) => (
   <div
-    className={cn('flex flex-col-reverse sm:flex-row sm:justify-end sm:space-x-2', className)}
+    className={cn(
+      'flex flex-col-reverse sm:flex-row sm:justify-end gap-2 sm:gap-2',
+      // Thumb-zone optimization: sticky bottom with safe area on mobile
+      thumbZone && [
+        'sticky bottom-0 -mx-6 -mb-6 px-6 py-4 mt-4',
+        'bg-background/95 backdrop-blur-sm border-t',
+        'pb-[max(1rem,env(safe-area-inset-bottom))] sm:pb-4',
+      ],
+      // Add spacing for RTL layouts
+      '[&>button]:w-full [&>button]:sm:w-auto [&>button]:min-h-11',
+      className,
+    )}
     {...props}
   />
 )

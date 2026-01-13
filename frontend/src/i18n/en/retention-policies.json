@@ -1,0 +1,169 @@
+{
+  "title": "Data Retention Policies",
+  "description": "Configure data lifecycle, retention periods, and legal holds",
+
+  "tabs": {
+    "overview": "Overview",
+    "policies": "Policies",
+    "legalHolds": "Legal Holds",
+    "pending": "Pending",
+    "history": "History"
+  },
+
+  "stats": {
+    "activePolicies": "Active Policies",
+    "legalHolds": "Legal Holds",
+    "pendingActions": "Pending Actions",
+    "expiringSoon": "Expiring Soon",
+    "underHold": "Under Hold"
+  },
+
+  "actions": {
+    "runProcessor": "Run Processor",
+    "newPolicy": "New Policy",
+    "newLegalHold": "New Legal Hold",
+    "edit": "Edit",
+    "release": "Release"
+  },
+
+  "period": {
+    "permanent": "Permanent",
+    "year": "Year",
+    "years": "Years",
+    "days": "Days"
+  },
+
+  "action": {
+    "archive": "Archive",
+    "softDelete": "Soft Delete",
+    "hardDelete": "Hard Delete",
+    "anonymize": "Anonymize"
+  },
+
+  "overview": {
+    "byEntityType": "Statistics by Entity Type",
+    "noStats": "No retention tracking data yet",
+    "tracked": "tracked",
+    "recentExecutions": "Recent Executions",
+    "noExecutions": "No processor executions yet",
+    "expiringAlert": "Entities Expiring Soon",
+    "expiringAlertDesc": "{{count}} entities will expire within the next 30 days. Review them in the Pending tab."
+  },
+
+  "policies": {
+    "title": "Retention Policies",
+    "description": "Configure how long data is retained and what happens when it expires",
+    "empty": "No Policies",
+    "emptyDesc": "Create your first retention policy to start managing data lifecycle",
+    "name": "Name",
+    "entityType": "Entity Type",
+    "retention": "Retention",
+    "action": "Action",
+    "status": "Status",
+    "actions": "Actions"
+  },
+
+  "legalHolds": {
+    "title": "Legal Holds",
+    "description": "Prevent data from being archived or deleted during legal proceedings",
+    "empty": "No Legal Holds",
+    "emptyDesc": "Legal holds prevent data deletion during legal proceedings",
+    "reference": "Reference",
+    "name": "Name",
+    "matter": "Legal Matter",
+    "effectiveDate": "Effective Date",
+    "status": "Status",
+    "actions": "Actions"
+  },
+
+  "pending": {
+    "actions": "Pending Retention Actions",
+    "actionsDesc": "Entities that have exceeded their retention period",
+    "noActions": "No pending actions",
+    "expiring": "Expiring Soon",
+    "expiringDesc": "Entities expiring within 30 days",
+    "noExpiring": "No entities expiring soon"
+  },
+
+  "history": {
+    "title": "Execution History",
+    "description": "Log of all retention processor executions",
+    "empty": "No Execution History",
+    "emptyDesc": "Run the retention processor to see execution history",
+    "date": "Date",
+    "type": "Type",
+    "processed": "Processed",
+    "archived": "Archived",
+    "deleted": "Deleted",
+    "warned": "Warned",
+    "errors": "Errors",
+    "status": "Status"
+  },
+
+  "dialog": {
+    "editPolicy": "Edit Policy",
+    "newPolicy": "New Retention Policy",
+    "policyDesc": "Configure how long data should be retained and what happens when it expires",
+    "code": "Policy Code",
+    "priority": "Priority",
+    "nameEn": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "entityType": "Entity Type",
+    "documentClass": "Document Class (Optional)",
+    "retentionDays": "Retention Days",
+    "warningDays": "Warning Days",
+    "action": "Action",
+    "regulatoryReference": "Regulatory Reference (Optional)",
+    "complianceNotes": "Compliance Notes",
+    "cancel": "Cancel",
+    "save": "Save Policy",
+    "saving": "Saving...",
+    "newLegalHold": "New Legal Hold",
+    "legalHoldDesc": "Create a legal hold to prevent data from being archived or deleted",
+    "reference": "Reference Number",
+    "legalMatter": "Legal Matter",
+    "reasonEn": "Reason (English)",
+    "reasonAr": "Reason (Arabic)",
+    "notifyCustodians": "Notify custodians",
+    "createHold": "Create Legal Hold",
+    "creating": "Creating..."
+  },
+
+  "processor": {
+    "title": "Run Retention Processor",
+    "description": "Execute retention policies on expired entities",
+    "warning": "Warning",
+    "warningDesc": "Running the processor will archive or delete expired data. Use dry run first to preview changes.",
+    "dryRun": "Dry Run (Preview Only)",
+    "sendWarnings": "Send expiration warnings",
+    "batchSize": "Batch Size",
+    "entityType": "Entity Type (Optional)",
+    "running": "Running...",
+    "preview": "Preview",
+    "run": "Run Processor"
+  },
+
+  "messages": {
+    "policyCreated": "Policy \"{{name}}\" created successfully",
+    "policyCreateError": "Failed to create policy: {{error}}",
+    "policyUpdated": "Policy updated successfully",
+    "policyUpdateError": "Failed to update policy: {{error}}",
+    "policyArchived": "Policy archived successfully",
+    "policyArchiveError": "Failed to archive policy: {{error}}",
+    "policyApplied": "Retention policy applied successfully",
+    "policyApplyError": "Failed to apply policy: {{error}}",
+    "legalHoldCreated": "Legal hold \"{{name}}\" created successfully",
+    "legalHoldCreateError": "Failed to create legal hold: {{error}}",
+    "legalHoldUpdated": "Legal hold updated successfully",
+    "legalHoldUpdateError": "Failed to update legal hold: {{error}}",
+    "legalHoldReleased": "Legal hold released, {{count}} entities affected",
+    "legalHoldReleaseError": "Failed to release legal hold: {{error}}",
+    "legalHoldDeleted": "Legal hold deleted successfully",
+    "legalHoldDeleteError": "Failed to delete legal hold: {{error}}",
+    "manualHoldSet": "Manual hold set successfully",
+    "manualHoldError": "Failed to set manual hold: {{error}}",
+    "dryRunComplete": "Dry run complete: {{processed}} items would be processed ({{archived}} archived, {{deleted}} deleted)",
+    "processorComplete": "Processor complete: {{processed}} items processed, {{archived}} archived, {{deleted}} deleted, {{warned}} warnings sent",
+    "processorError": "Processor failed: {{error}}"
+  }
+}

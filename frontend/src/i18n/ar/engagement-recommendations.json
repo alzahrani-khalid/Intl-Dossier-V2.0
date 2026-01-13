@@ -1,0 +1,129 @@
+{
+  "title": "توصيات التفاعل",
+  "panelTitle": "توصيات الذكاء الاصطناعي",
+  "description": "اقتراحات مدعومة بالذكاء الاصطناعي للتفاعل الاستباقي بناءً على صحة العلاقة والأحداث القادمة والأولويات الاستراتيجية.",
+
+  "noRecommendations": "لا توجد توصيات",
+  "noRecommendationsDescription": "كل شيء على ما يرام! لا توجد توصيات تفاعل معلقة في الوقت الحالي.",
+  "noMatchingRecommendations": "لا توجد توصيات تطابق الفلاتر الحالية. حاول تعديل معايير التصفية.",
+  "noHighPriority": "لا توجد توصيات ذات أولوية عالية في الوقت الحالي.",
+
+  "filterByType": "تصفية حسب النوع",
+  "filterByUrgency": "تصفية حسب الإلحاح",
+  "recommendationType": "نوع التوصية",
+  "urgencyLevel": "مستوى الإلحاح",
+  "urgency": "الإلحاح",
+  "activeFilters": "{{count}} فلتر(ات) نشطة",
+  "clearFilters": "مسح الفلاتر",
+
+  "accept": "قبول",
+  "dismiss": "رفض",
+  "viewDetails": "عرض التفاصيل",
+  "viewAll": "عرض جميع التوصيات",
+  "loadMore": "تحميل المزيد",
+  "generate": "توليد",
+  "retry": "إعادة المحاولة",
+
+  "expiringSoon": "تنتهي قريباً",
+  "healthScore": "الصحة:",
+  "confidenceTooltip": "درجة ثقة الذكاء الاصطناعي تشير إلى مدى يقين النظام بهذه التوصية",
+
+  "pendingRecommendations": "قيد الانتظار",
+  "criticalUrgency": "حرج",
+  "acceptanceRate": "معدل القبول",
+  "avgConfidence": "متوسط الثقة",
+  "highPriority": "أولوية عالية",
+  "byType": "حسب النوع",
+
+  "errorLoading": "فشل في تحميل التوصيات. يرجى المحاولة مرة أخرى.",
+
+  "types": {
+    "proactive_outreach": "تواصل استباقي",
+    "follow_up": "متابعة",
+    "commitment_reminder": "تذكير بالالتزام",
+    "relationship_maintenance": "صيانة العلاقة",
+    "strategic_opportunity": "فرصة استراتيجية",
+    "risk_mitigation": "تخفيف المخاطر",
+    "reciprocity_balance": "توازن المعاملة بالمثل"
+  },
+
+  "urgencies": {
+    "low": "منخفض",
+    "normal": "عادي",
+    "high": "مرتفع",
+    "critical": "حرج"
+  },
+
+  "statuses": {
+    "pending": "قيد الانتظار",
+    "viewed": "تمت المشاهدة",
+    "accepted": "مقبول",
+    "dismissed": "مرفوض",
+    "expired": "منتهي الصلاحية",
+    "superseded": "تم استبداله"
+  },
+
+  "formats": {
+    "in_person": "حضوري",
+    "virtual": "افتراضي",
+    "hybrid": "هجين",
+    "phone_call": "مكالمة هاتفية",
+    "email": "بريد إلكتروني",
+    "formal_letter": "خطاب رسمي"
+  },
+
+  "feedbackTypes": {
+    "helpful": "مفيد",
+    "not_helpful": "غير مفيد",
+    "timing_wrong": "التوقيت خاطئ",
+    "already_planned": "مخطط له مسبقاً",
+    "not_relevant": "غير ذي صلة",
+    "too_early": "مبكر جداً",
+    "too_late": "متأخر جداً"
+  },
+
+  "details": {
+    "suggestedAction": "الإجراء المقترح",
+    "optimalTiming": "التوقيت الأمثل",
+    "timingReason": "سبب التوقيت",
+    "suggestedFormat": "الصيغة المقترحة",
+    "suggestedType": "نوع التفاعل المقترح",
+    "reasoning": "تحليل الذكاء الاصطناعي",
+    "factors": "العوامل المساهمة",
+    "triggers": "المحفزات",
+    "relatedCommitments": "الالتزامات ذات الصلة",
+    "relatedEvents": "الأحداث ذات الصلة"
+  },
+
+  "actions": {
+    "createEngagement": "إنشاء تفاعل",
+    "scheduleMeeting": "جدولة اجتماع",
+    "sendEmail": "إرسال بريد إلكتروني",
+    "addToCalendar": "إضافة إلى التقويم",
+    "provideFeedback": "تقديم ملاحظات"
+  },
+
+  "feedback": {
+    "title": "كيف كانت هذه التوصية؟",
+    "helpful": "كانت مفيدة",
+    "notHelpful": "لم تكن مفيدة",
+    "additionalFeedback": "ملاحظات إضافية (اختياري)",
+    "submit": "إرسال الملاحظات",
+    "thankYou": "شكراً لملاحظاتك!"
+  },
+
+  "generation": {
+    "generating": "جاري توليد التوصيات...",
+    "success": "تم توليد {{count}} توصية(ات) بنجاح",
+    "noNew": "لم يتم توليد توصيات جديدة",
+    "error": "فشل في توليد التوصيات"
+  },
+
+  "priorities": {
+    "1": "منخفض جداً",
+    "2": "منخفض",
+    "3": "متوسط",
+    "4": "مرتفع",
+    "5": "حرج"
+  }
+}

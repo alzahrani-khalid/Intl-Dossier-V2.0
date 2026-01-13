@@ -1,0 +1,14 @@
+{
+  "id": "custom-report-builder",
+  "category": "Analytics",
+  "title": "Custom Report Builder",
+  "description": "Drag-and-drop report builder for creating custom views and analytics. Users select entities, filters, groupings, and visualizations. Supports saving, sharing, and scheduling report generation.",
+  "status": "completed",
+  "priority": 3,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-10T15:57:25.666Z",
+  "updatedAt": "2026-01-11T21:11:18.974Z",
+  "branchName": "main",
+  "startedAt": "2026-01-11T20:48:09.719Z"
+}

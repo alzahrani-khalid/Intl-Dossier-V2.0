@@ -1,0 +1,74 @@
+{
+  "history": {
+    "title": "Version History",
+    "noVersions": "No version history available",
+    "current": "Current",
+    "selectedCount": "{{count}} selected",
+    "selectVersion": "Select version {{version}}"
+  },
+  "comparison": {
+    "title": "Version Comparison",
+    "subtitle": "Comparing version {{a}} with version {{b}}",
+    "sizeChange": "Size change",
+    "noChange": "No change",
+    "noTextDiff": "No text differences found",
+    "noTextDiffDesc": "The text content of these versions is identical.",
+    "binaryFile": "Binary file comparison",
+    "binaryFileDesc": "This file type does not support text comparison. Download both versions to compare manually."
+  },
+  "diff": {
+    "oldVersion": "Old Version",
+    "newVersion": "New Version",
+    "hunkHeader": "Changes at lines {{oldStart}}-{{oldEnd}}"
+  },
+  "stats": {
+    "additions": "{{count}} additions",
+    "deletions": "{{count}} deletions",
+    "similarity": "{{percent}}% similar"
+  },
+  "viewMode": {
+    "inline": "Inline",
+    "sideBySide": "Side by Side",
+    "unified": "Unified"
+  },
+  "changeType": {
+    "initial": "Initial",
+    "update": "Updated",
+    "major_revision": "Major Revision",
+    "minor_edit": "Minor Edit",
+    "revert": "Reverted"
+  },
+  "modal": {
+    "title": "Version History"
+  },
+  "tabs": {
+    "history": "History",
+    "compare": "Compare"
+  },
+  "compare": {
+    "selectVersions": "Select two versions from the history to compare"
+  },
+  "dialogs": {
+    "revert": {
+      "title": "Revert to version {{version}}?",
+      "description": "This will create a new version based on the selected version. The current version will be preserved in history.",
+      "reasonLabel": "Reason (optional)",
+      "reasonPlaceholder": "Why are you reverting?"
+    }
+  },
+  "actions": {
+    "compare": "Compare",
+    "revert": "Revert",
+    "reverting": "Reverting...",
+    "revertTo": "Revert to this version",
+    "download": "Download",
+    "downloadVersionA": "Download v{{version}}",
+    "downloadVersionB": "Download v{{version}}",
+    "cancel": "Cancel",
+    "clearSelection": "Clear",
+    "goToHistory": "Go to History"
+  },
+  "common": {
+    "unknown": "Unknown"
+  }
+}

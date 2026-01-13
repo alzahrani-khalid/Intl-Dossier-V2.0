@@ -1,0 +1,93 @@
+{
+  "page": {
+    "title": "التصور الجغرافي",
+    "description": "خريطة تفاعلية تعرض علاقات الدول ونشاط المشاركات"
+  },
+  "tabs": {
+    "map": "عرض الخريطة",
+    "list": "عرض القائمة"
+  },
+  "summary": {
+    "totalCountries": "الدول",
+    "countriesWithEngagements": "مع مشاركات",
+    "engagements": "المشاركات",
+    "relationships": "العلاقات",
+    "regions": "المناطق",
+    "active": "نشط",
+    "activeCountries": "نشطة"
+  },
+  "filters": {
+    "filters": "التصفية",
+    "timeRange": {
+      "label": "الفترة الزمنية",
+      "7d": "آخر 7 أيام",
+      "30d": "آخر 30 يوم",
+      "90d": "آخر 90 يوم",
+      "365d": "آخر سنة",
+      "custom": "نطاق مخصص"
+    },
+    "regions": "المناطق",
+    "allRegions": "جميع المناطق",
+    "relationshipTypes": "أنواع العلاقات",
+    "allTypes": "جميع الأنواع",
+    "minIntensity": "الحد الأدنى للكثافة",
+    "showFlows": "تدفقات العلاقات",
+    "showHeatmap": "خريطة حرارية للمشاركات",
+    "showRegions": "التجمعات الإقليمية",
+    "reset": "إعادة تعيين",
+    "selected": "محدد"
+  },
+  "legend": {
+    "intensity": "كثافة المشاركة",
+    "regions": "المناطق",
+    "flows": "تدفقات العلاقات"
+  },
+  "country": {
+    "totalEngagements": "إجمالي المشاركات",
+    "recentEngagements": "حديثة (30 يوم)",
+    "upcomingEngagements": "قادمة",
+    "lastEngagement": "الأخيرة",
+    "nextEngagement": "التالية"
+  },
+  "regions": {
+    "title": "التوزيع الإقليمي",
+    "countries": "دولة",
+    "engagements": "مشاركة"
+  },
+  "list": {
+    "title": "الدول حسب المشاركة",
+    "description": "انقر على دولة لعرض ملفها",
+    "country": "الدولة",
+    "region": "المنطقة",
+    "engagements": "المشاركات",
+    "recent": "حديثة",
+    "upcoming": "قادمة",
+    "intensity": "الكثافة",
+    "loading": "جارٍ تحميل الدول...",
+    "noData": "لم يتم العثور على دول"
+  },
+  "intensity": {
+    "none": "لا نشاط",
+    "low": "نشاط منخفض",
+    "medium": "نشاط متوسط",
+    "high": "نشاط عالي",
+    "very_high": "نشاط عالي جداً"
+  },
+  "regionLabels": {
+    "africa": "أفريقيا",
+    "americas": "الأمريكتان",
+    "asia": "آسيا",
+    "europe": "أوروبا",
+    "oceania": "أوقيانوسيا"
+  },
+  "viewMode": {
+    "relationships": "العلاقات",
+    "engagements": "المشاركات",
+    "combined": "عرض مدمج",
+    "regional": "المجموعات الإقليمية"
+  },
+  "error": {
+    "loadFailed": "فشل تحميل بيانات الخريطة"
+  },
+  "close": "إغلاق"
+}

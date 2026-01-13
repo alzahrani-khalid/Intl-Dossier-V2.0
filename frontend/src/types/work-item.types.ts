@@ -271,6 +271,66 @@ export type WorkItemRealtimeEvent =
   | { type: 'DELETE'; payload: { id: string } }
 
 // ============================================
+// Swimlane Types
+// ============================================
+
+export const SWIMLANE_MODES = ['none', 'assignee', 'priority'] as const
+export type SwimlaneMode = (typeof SWIMLANE_MODES)[number]
+
+/**
+ * Swimlane definition
+ */
+export interface Swimlane {
+  id: string
+  title: string
+  titleAr?: string
+  items: WorkItem[]
+  collapsed?: boolean
+}
+
+/**
+ * WIP (Work In Progress) limits per column
+ */
+export interface WipLimits {
+  [columnKey: string]: number
+}
+
+/**
+ * Default WIP limits
+ */
+export const DEFAULT_WIP_LIMITS: WipLimits = {
+  in_progress: 5,
+  review: 3,
+}
+
+// ============================================
+// Bulk Operations Types
+// ============================================
+
+/**
+ * Bulk action types
+ */
+export type BulkActionType = 'move' | 'assign' | 'delete' | 'updatePriority'
+
+/**
+ * Bulk operation payload
+ */
+export interface BulkOperationPayload {
+  itemIds: string[]
+  action: BulkActionType
+  targetValue?: string // column key, assignee id, priority, etc.
+}
+
+/**
+ * Selected items state
+ */
+export interface SelectionState {
+  selectedIds: Set<string>
+  isSelecting: boolean
+  lastSelectedId: string | null
+}
+
+// ============================================
 // Component Props Types
 // ============================================
 
@@ -286,6 +346,11 @@ export interface UnifiedKanbanBoardProps {
   showModeSwitch?: boolean
   onItemClick?: (item: WorkItem) => void
   className?: string
+  // Enhanced features
+  swimlaneMode?: SwimlaneMode
+  wipLimits?: WipLimits
+  enableBulkOperations?: boolean
+  enableWipWarnings?: boolean
 }
 
 /**

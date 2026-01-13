@@ -1,0 +1,118 @@
+{
+  "levels": {
+    "public": "Public",
+    "internal": "Internal",
+    "confidential": "Confidential",
+    "secret": "Secret"
+  },
+  "descriptions": {
+    "public": "No access restrictions. Can be viewed by anyone.",
+    "internal": "For internal use only. Requires basic clearance (Level 1).",
+    "confidential": "Sensitive information. Requires analyst clearance or higher (Level 2).",
+    "secret": "Highly sensitive. Restricted to administrators and managers (Level 3)."
+  },
+  "shortDescriptions": {
+    "public": "No restrictions",
+    "internal": "Basic clearance",
+    "confidential": "Analyst clearance",
+    "secret": "Admin clearance"
+  },
+  "clearanceLevels": {
+    "0": "None",
+    "1": "Basic",
+    "2": "Standard",
+    "3": "High",
+    "4": "Top Secret"
+  },
+  "selector": {
+    "label": "Classification Level",
+    "placeholder": "Select classification",
+    "hint": "Select the appropriate classification level for this document"
+  },
+  "changeDialog": {
+    "title": "Change Classification",
+    "description": "Update the classification level for this document",
+    "currentClassification": "Current classification",
+    "newClassification": "New Classification",
+    "reason": "Reason for Change",
+    "reasonPlaceholder": "Explain why this classification change is needed...",
+    "reasonHint": "Minimum 10 characters required",
+    "reasonRequired": "Please provide a reason for this change",
+    "reasonTooShort": "Reason must be at least 10 characters",
+    "approvalRequired": "Approval Required",
+    "approvalDescription": "Upgrading classification requires administrator approval. Your request will be submitted for review.",
+    "submitForApproval": "Submit for Approval",
+    "applyChange": "Apply Change",
+    "success": "Classification changed successfully",
+    "pendingApproval": "Classification change submitted for approval"
+  },
+  "accessDenied": {
+    "title": "Access Denied",
+    "subtitle": "Insufficient clearance level",
+    "requiredClearance": "Required Clearance",
+    "yourClearance": "Your Clearance",
+    "description": "You do not have the required clearance level to access this document. Contact your administrator if you believe you should have access.",
+    "requestAccess": "Request Access"
+  },
+  "redacted": {
+    "accessRestricted": "Access Restricted",
+    "fieldName": "Field",
+    "requiresClearance": "Requires {{level}} clearance or higher"
+  },
+  "documentCard": {
+    "classification": "Classification",
+    "changeClassification": "Change Classification",
+    "accessRestricted": "Download restricted",
+    "handlingInstructions": "Handling Instructions",
+    "declassificationDate": "Declassification Date"
+  },
+  "accessLog": {
+    "title": "Access Log",
+    "description": "View document access history",
+    "noLogs": "No access logs found",
+    "columns": {
+      "user": "User",
+      "accessType": "Access Type",
+      "clearance": "Clearance",
+      "granted": "Granted",
+      "time": "Time",
+      "redactedFields": "Redacted Fields"
+    },
+    "accessTypes": {
+      "view": "View",
+      "download": "Download",
+      "preview": "Preview",
+      "metadata": "Metadata",
+      "denied": "Denied"
+    },
+    "granted": {
+      "true": "Yes",
+      "false": "No"
+    }
+  },
+  "pendingApprovals": {
+    "title": "Pending Classification Changes",
+    "description": "Review and approve classification change requests",
+    "noPending": "No pending approval requests",
+    "columns": {
+      "document": "Document",
+      "from": "From",
+      "to": "To",
+      "requestedBy": "Requested By",
+      "requestedAt": "Requested At",
+      "reason": "Reason",
+      "actions": "Actions"
+    },
+    "approve": "Approve",
+    "reject": "Reject",
+    "approveSuccess": "Classification change approved",
+    "rejectSuccess": "Classification change rejected"
+  },
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "retry": "Retry"
+  }
+}

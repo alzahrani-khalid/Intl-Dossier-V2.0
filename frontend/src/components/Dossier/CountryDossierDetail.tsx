@@ -31,7 +31,20 @@ import { RelationshipGraph } from '@/components/dossiers/RelationshipGraph'
 import { DossierPositionsTab } from '@/components/positions/DossierPositionsTab'
 import { DossierMoUsTab } from '@/components/dossiers/DossierMoUsTab'
 import { KeyContactsPanel } from '@/components/KeyContactsPanel'
+import { CommentList } from '@/components/comments'
+import { MultiLanguageContentEditor } from '@/components/multilingual'
 import type { CountryDossier } from '@/lib/dossier-type-guards'
+import type {
+  TranslatableEntityType,
+  MultiLangFieldConfig,
+} from '@/types/multilingual-content.types'
+
+// Field configuration for multi-language content editing
+const COUNTRY_MULTILANG_FIELDS: MultiLangFieldConfig[] = [
+  { fieldName: 'name', labelKey: 'dossierFields.name', type: 'input', required: true },
+  { fieldName: 'description', labelKey: 'dossierFields.description', type: 'textarea', rows: 4 },
+  { fieldName: 'capital', labelKey: 'fields.capital', type: 'input' },
+]
 
 interface CountryDossierDetailProps {
   dossier: CountryDossier
@@ -45,6 +58,8 @@ type CountryTabType =
   | 'positions'
   | 'mous'
   | 'contacts'
+  | 'comments'
+  | 'languages'
 
 export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDetailProps) {
   const { t, i18n } = useTranslation('dossier')
@@ -86,6 +101,14 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
     {
       id: 'contacts',
       label: t('tabs.contacts', 'Contacts'),
+    },
+    {
+      id: 'comments',
+      label: t('tabs.comments', 'Comments'),
+    },
+    {
+      id: 'languages',
+      label: t('tabs.languages', 'Languages'),
     },
   ]
 
@@ -206,6 +229,32 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
           {activeTab === 'contacts' && (
             <div id="contacts-panel" role="tabpanel" aria-labelledby="contacts-tab">
               <KeyContactsPanel dossierId={dossier.id} />
+            </div>
+          )}
+
+          {/* Comments Tab */}
+          {activeTab === 'comments' && (
+            <div id="comments-panel" role="tabpanel" aria-labelledby="comments-tab">
+              <CommentList
+                entityType="country"
+                entityId={dossier.id}
+                showReplies={true}
+                maxDepth={3}
+                defaultVisibility="public"
+                title={null}
+              />
+            </div>
+          )}
+
+          {/* Languages Tab - Multi-language content editing */}
+          {activeTab === 'languages' && (
+            <div id="languages-panel" role="tabpanel" aria-labelledby="languages-tab">
+              <MultiLanguageContentEditor
+                entityType={'country' as TranslatableEntityType}
+                entityId={dossier.id}
+                fields={COUNTRY_MULTILANG_FIELDS}
+                defaultLanguage="ar"
+              />
             </div>
           )}
         </div>

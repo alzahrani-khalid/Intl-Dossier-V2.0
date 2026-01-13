@@ -1,0 +1,155 @@
+{
+  "title": "Deliverables",
+  "subtitle": "Track and manage MoU deliverables",
+  "pageTitle": "MoU Deliverables",
+  "actions": {
+    "create": "Add Deliverable",
+    "edit": "Edit",
+    "save": "Save",
+    "saving": "Saving...",
+    "update": "Update",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "viewDetails": "View Details",
+    "updateStatus": "Update Status",
+    "markInProgress": "Mark In Progress",
+    "markCompleted": "Mark Completed",
+    "menu": "Actions"
+  },
+  "status": {
+    "pending": "Pending",
+    "not_started": "Not Started",
+    "in_progress": "In Progress",
+    "at_risk": "At Risk",
+    "delayed": "Delayed",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "updated": "Status updated successfully"
+  },
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+  "form": {
+    "titleEn": "Title (English)",
+    "titleEnPlaceholder": "Enter deliverable title in English",
+    "titleAr": "Title (Arabic)",
+    "titleArPlaceholder": "أدخل عنوان المخرج بالعربية",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "descriptionPlaceholder": "Enter description",
+    "dueDate": "Due Date",
+    "selectDate": "Select date",
+    "priority": "Priority",
+    "selectPriority": "Select priority",
+    "status": "Status",
+    "selectStatus": "Select status",
+    "responsiblePartyType": "Responsible Party",
+    "selectResponsibleType": "Select responsible type",
+    "internal": "Internal (Staff)",
+    "external": "External (Partner)",
+    "responsibleUser": "Responsible User",
+    "responsibleUserPlaceholder": "Enter user ID",
+    "contactName": "Contact Name",
+    "contactNamePlaceholder": "Enter contact name",
+    "contactEmail": "Contact Email",
+    "contactEmailPlaceholder": "Enter contact email",
+    "notes": "Notes",
+    "notesPlaceholder": "Enter any additional notes"
+  },
+  "filters": {
+    "title": "Filter Deliverables",
+    "status": "Status",
+    "priority": "Priority",
+    "dateRange": "Date Range",
+    "dueDateFrom": "From Date",
+    "dueDateTo": "To Date",
+    "overdueOnly": "Overdue Only",
+    "assignedUser": "Assigned User",
+    "selectDate": "Select date",
+    "from": "From",
+    "to": "To",
+    "clear": "Clear",
+    "clearAll": "Clear All",
+    "apply": "Apply",
+    "removeFilter": "Remove {{filter}} filter"
+  },
+  "bulkActions": {
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "selected": "{{count}} selected",
+    "selectStatus": "Select status",
+    "apply": "Apply",
+    "cancel": "Cancel"
+  },
+  "milestones": {
+    "title": "Milestones",
+    "count": "{{completed}}/{{total}} complete",
+    "empty": "No milestones defined",
+    "created": "Milestone created successfully",
+    "createFailed": "Failed to create milestone",
+    "updated": "Milestone updated successfully",
+    "updateFailed": "Failed to update milestone",
+    "deleted": "Milestone deleted successfully",
+    "deleteFailed": "Failed to delete milestone"
+  },
+  "history": {
+    "title": "History",
+    "empty": "No status changes recorded",
+    "statusChanged": "Status changed from {{from}} to {{to}}",
+    "statusSet": "Status set to {{status}}"
+  },
+  "documents": {
+    "title": "Documents",
+    "empty": "No documents attached"
+  },
+  "list": {
+    "empty": "No deliverables found",
+    "emptyDescription": "Create your first deliverable to start tracking MoU progress.",
+    "emptyFiltered": "No deliverables match your filters",
+    "emptyFilteredDescription": "Try adjusting your filters to see more results.",
+    "loadMore": "Load More",
+    "endOfList": "End of list",
+    "loading": "Loading deliverables..."
+  },
+  "pagination": {
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {{current}} of {{total}}"
+  },
+  "progress": "Progress",
+  "healthScore": "Health",
+  "dueDate": "Due Date",
+  "responsible": "Responsible",
+  "created": "Created",
+  "completed": "Completed",
+  "notes": "Notes",
+  "completionNotes": "Completion Notes",
+  "unassigned": "Unassigned",
+  "unknown": "Unknown",
+  "daysOverdue": "{{days}} days overdue",
+  "daysLeft": "{{days}} days left",
+  "confirmDelete": "Are you sure you want to delete this deliverable? This action cannot be undone.",
+  "validation": {
+    "titleRequired": "Title is required",
+    "titleMaxLength": "Title must be less than 200 characters",
+    "dueDateRequired": "Due date is required"
+  },
+  "errors": {
+    "loadFailed": "Failed to load deliverables",
+    "createFailed": "Failed to create deliverable",
+    "updateFailed": "Failed to update deliverable",
+    "deleteFailed": "Failed to delete deliverable",
+    "statusUpdateFailed": "Failed to update status",
+    "bulkUpdateFailed": "Failed to update deliverables"
+  },
+  "success": {
+    "created": "Deliverable created successfully",
+    "updated": "Deliverable updated successfully",
+    "deleted": "Deliverable deleted successfully",
+    "statusUpdated": "Status updated successfully",
+    "bulkUpdated": "{{count}} deliverables updated"
+  }
+}

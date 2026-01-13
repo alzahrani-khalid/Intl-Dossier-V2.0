@@ -1,0 +1,175 @@
+{
+  "title": "التحرير التعاوني",
+  "description": "تحرير المستندات التعاوني في الوقت الفعلي",
+
+  "status": {
+    "connected": "متصل",
+    "disconnected": "غير متصل",
+    "connecting": "جارٍ الاتصال...",
+    "editing": "يحرر",
+    "idle": "خامل",
+    "locked": "مقفل"
+  },
+
+  "editors": {
+    "count": "{{count}} محررين",
+    "count_one": "محرر واحد",
+    "singleEditing": "{{name}} يحرر الآن",
+    "multipleEditing": "{{count}} أشخاص يحررون"
+  },
+
+  "toolbar": {
+    "save": "حفظ",
+    "saving": "جارٍ الحفظ...",
+    "pendingItems": "معلق",
+    "settings": "الإعدادات"
+  },
+
+  "panel": {
+    "title": "لوحة المراجعة"
+  },
+
+  "tabs": {
+    "suggestions": "الاقتراحات",
+    "changes": "التغييرات",
+    "comments": "التعليقات"
+  },
+
+  "suggestions": {
+    "title": "الاقتراحات",
+    "pendingCount": "{{count}} اقتراحات معلقة",
+    "pendingCount_one": "اقتراح واحد معلق",
+    "noPending": "لا توجد اقتراحات معلقة",
+    "empty": "لا توجد اقتراحات حتى الآن",
+    "accept": "قبول",
+    "reject": "رفض",
+    "addComment": "إضافة تعليق",
+    "resolvedBy": "تمت المعالجة بواسطة {{name}}",
+    "filter": {
+      "all": "الكل",
+      "pending": "معلق",
+      "accepted": "مقبول",
+      "rejected": "مرفوض"
+    },
+    "status": {
+      "pending": "معلق",
+      "accepted": "مقبول",
+      "rejected": "مرفوض",
+      "resolved": "تمت المعالجة"
+    },
+    "changeType": {
+      "insertion": "إضافة",
+      "deletion": "حذف",
+      "replacement": "استبدال",
+      "formatting": "تنسيق"
+    }
+  },
+
+  "trackChanges": {
+    "title": "تتبع التغييرات",
+    "pendingCount": "{{count}} تغييرات معلقة",
+    "pendingCount_one": "تغيير واحد معلق",
+    "allResolved": "تمت معالجة جميع التغييرات",
+    "empty": "لا توجد تغييرات متتبعة",
+    "accept": "قبول",
+    "reject": "رفض",
+    "acceptAll": "قبول الكل",
+    "rejectAll": "رفض الكل",
+    "bulkActions": "إجراءات",
+    "accepted": "مقبول",
+    "rejected": "مرفوض",
+    "pendingReview": "قيد المراجعة",
+    "original": "الأصلي",
+    "new": "الجديد",
+    "by": "بواسطة {{name}}",
+    "changeType": {
+      "insertion": "إضافة",
+      "deletion": "حذف",
+      "replacement": "استبدال",
+      "formatting": "تنسيق"
+    }
+  },
+
+  "comments": {
+    "title": "التعليقات",
+    "thread": "سلسلة التعليقات",
+    "openCount": "{{count}} تعليقات مفتوحة",
+    "openCount_one": "تعليق واحد مفتوح",
+    "empty": "لا توجد تعليقات حتى الآن",
+    "resolve": "حل",
+    "reopen": "إعادة فتح",
+    "reply": "رد",
+    "addReply": "إضافة رد",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "edited": "معدل",
+    "replyPlaceholder": "اكتب رداً...",
+    "replyCount": "{{count}} ردود",
+    "replyCount_one": "رد واحد",
+    "status": {
+      "open": "مفتوح",
+      "resolved": "تم الحل",
+      "dismissed": "تم التجاهل"
+    }
+  },
+
+  "collaborators": {
+    "title": "المتعاونون",
+    "add": "إضافة متعاون",
+    "remove": "إزالة",
+    "permissions": "الصلاحيات",
+    "canEdit": "يمكنه التحرير",
+    "canSuggest": "يمكنه الاقتراح",
+    "canComment": "يمكنه التعليق",
+    "canResolve": "يمكنه الحل",
+    "canManage": "يمكنه الإدارة"
+  },
+
+  "settings": {
+    "title": "إعدادات التعاون",
+    "description": "تكوين كيفية عمل التعاون لهذا المستند",
+    "trackChanges": "تتبع التغييرات",
+    "trackChangesDescription": "تسجيل جميع التغييرات مع معلومات الكاتب",
+    "suggestions": "وضع الاقتراحات",
+    "suggestionsDescription": "السماح للمتعاونين باقتراح تغييرات بدلاً من التحرير المباشر",
+    "documentLock": "قفل المستند",
+    "documentLockDescription": "منع جميع عمليات التحرير أثناء القفل",
+    "lockDocument": "قفل المستند",
+    "unlockDocument": "فتح القفل"
+  },
+
+  "editor": {
+    "placeholder": "ابدأ الكتابة أو الصق المحتوى هنا...",
+    "selectText": "حدد نصاً لإضافة تعليق أو اقتراح"
+  },
+
+  "notifications": {
+    "suggestionCreated": "اقتراح جديد من {{name}}",
+    "suggestionAccepted": "تم قبول اقتراحك",
+    "suggestionRejected": "تم رفض اقتراحك",
+    "changeAccepted": "تم قبول تغييرك",
+    "changeRejected": "تم رفض تغييرك",
+    "commentAdded": "{{name}} علق على نصك",
+    "commentResolved": "تم حل التعليق",
+    "editorJoined": "{{name}} انضم للتحرير",
+    "editorLeft": "{{name}} غادر التحرير",
+    "documentLocked": "تم قفل المستند بواسطة {{name}}",
+    "documentUnlocked": "تم فتح قفل المستند"
+  },
+
+  "errors": {
+    "connectionFailed": "فشل الاتصال بالتحرير التعاوني",
+    "saveFailed": "فشل حفظ التغييرات",
+    "suggestionFailed": "فشل إنشاء الاقتراح",
+    "resolveFailed": "فشلت المعالجة",
+    "commentFailed": "فشل إضافة التعليق"
+  },
+
+  "common": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "loading": "جارٍ التحميل...",
+    "retry": "إعادة المحاولة"
+  }
+}

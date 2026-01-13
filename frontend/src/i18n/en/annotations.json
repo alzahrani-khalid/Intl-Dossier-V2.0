@@ -1,0 +1,106 @@
+{
+  "title": "Annotations",
+  "readOnly": "Read Only",
+
+  "tools": {
+    "pen": "Pen",
+    "highlighter": "Highlighter",
+    "marker": "Marker",
+    "pencil": "Pencil",
+    "eraser": "Eraser",
+    "select": "Select",
+    "pan": "Pan"
+  },
+
+  "annotationType": {
+    "handwritten": "Handwritten",
+    "highlight": "Highlight",
+    "text_note": "Text Note",
+    "shape": "Shape",
+    "stamp": "Stamp",
+    "signature": "Signature"
+  },
+
+  "stamps": {
+    "approved": "Approved",
+    "rejected": "Rejected",
+    "confidential": "Confidential",
+    "draft": "Draft",
+    "final": "Final",
+    "review": "Review",
+    "urgent": "Urgent",
+    "custom": "Custom"
+  },
+
+  "colorPicker": {
+    "title": "Select Color",
+    "black": "Black",
+    "red": "Red",
+    "blue": "Blue",
+    "green": "Green",
+    "orange": "Orange",
+    "purple": "Purple",
+    "yellow": "Yellow"
+  },
+
+  "strokeWidth": {
+    "title": "Stroke Width",
+    "thin": "Thin",
+    "medium": "Medium",
+    "thick": "Thick"
+  },
+
+  "buttons": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "undo": "Undo",
+    "redo": "Redo",
+    "clearAll": "Clear All",
+    "delete": "Delete",
+    "addAnnotation": "Add Annotation"
+  },
+
+  "actions": {
+    "saving": "Saving annotations...",
+    "saved": "Annotations saved",
+    "syncing": "Syncing annotations...",
+    "synced": "Annotations synced"
+  },
+
+  "empty": {
+    "noAnnotations": "No annotations",
+    "addFirst": "Add annotations to mark up this document."
+  },
+
+  "errors": {
+    "saveFailed": "Failed to save annotations",
+    "loadFailed": "Failed to load annotations",
+    "syncFailed": "Failed to sync annotations",
+    "deleteFailed": "Failed to delete annotation"
+  },
+
+  "confirmation": {
+    "clearAll": {
+      "title": "Clear All Annotations",
+      "description": "Are you sure you want to remove all annotations from this page? This action cannot be undone."
+    },
+    "delete": {
+      "title": "Delete Annotation",
+      "description": "Are you sure you want to delete this annotation?"
+    }
+  },
+
+  "signature": {
+    "title": "Add Signature",
+    "signerNameLabel": "Your Name",
+    "signerNamePlaceholder": "Enter your full name",
+    "drawHere": "Draw your signature here",
+    "clear": "Clear",
+    "sign": "Sign"
+  },
+
+  "sync": {
+    "pendingCount": "{{count}} pending",
+    "syncNow": "Sync Now"
+  }
+}
