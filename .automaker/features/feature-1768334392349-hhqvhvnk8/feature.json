@@ -1,0 +1,17 @@
+{
+  "category": "ui",
+  "description": "Define compliance rules for engagements, commitments, and relationships (e.g., cooling-off periods, disclosure requirements, conflict checks). Automatically flag potential violations and require sign-offs before proceeding with flagged activities.\n\n**Rationale:** Government affairs and lobbying operate under strict regulations. Automated compliance checking prevents costly violations by catching issues before they occur, protecting the organization from legal and reputational risks.",
+  "title": "Compliance Check Engine with Rule Configuration",
+  "status": "verified",
+  "id": "feature-1768334392349-hhqvhvnk8",
+  "descriptionHistory": [
+    {
+      "description": "Define compliance rules for engagements, commitments, and relationships (e.g., cooling-off periods, disclosure requirements, conflict checks). Automatically flag potential violations and require sign-offs before proceeding with flagged activities.\n\n**Rationale:** Government affairs and lobbying operate under strict regulations. Automated compliance checking prevents costly violations by catching issues before they occur, protecting the organization from legal and reputational risks.",
+      "timestamp": "2026-01-13T19:59:52.350Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-14T07:16:33.980Z",
+  "updatedAt": "2026-01-14T07:32:12.059Z"
+}

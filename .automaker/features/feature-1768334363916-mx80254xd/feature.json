@@ -1,0 +1,17 @@
+{
+  "category": "ui",
+  "description": "Allow users to save complex search queries and filter combinations with custom names. Enable sharing of saved searches across teams and setting up automatic alerts when new items match criteria. Include predefined smart filters for common scenarios.\n\n**Rationale:** Users frequently perform the same searches repeatedly. While persistent filter preferences exist, saved searches go further by capturing complex multi-criteria queries and making them one-click accessible, dramatically improving workflow efficiency.",
+  "title": "Saved Search and Smart Filters",
+  "status": "verified",
+  "id": "feature-1768334363916-mx80254xd",
+  "descriptionHistory": [
+    {
+      "description": "Allow users to save complex search queries and filter combinations with custom names. Enable sharing of saved searches across teams and setting up automatic alerts when new items match criteria. Include predefined smart filters for common scenarios.\n\n**Rationale:** Users frequently perform the same searches repeatedly. While persistent filter preferences exist, saved searches go further by capturing complex multi-criteria queries and making them one-click accessible, dramatically improving workflow efficiency.",
+      "timestamp": "2026-01-13T19:59:23.916Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-13T20:00:01.540Z",
+  "updatedAt": "2026-01-13T20:16:34.033Z"
+}

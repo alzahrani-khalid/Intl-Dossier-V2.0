@@ -1,0 +1,59 @@
+{
+  "progress": {
+    "ariaLabel": "Form completion progress: {{percentage}}% complete",
+    "percentage": "{{value}}% complete",
+    "fieldsCompleted": "{{completed}}/{{total}} fields",
+    "minuteRemaining": "~1 minute remaining",
+    "minutesRemaining": "~{{minutes}} minutes remaining",
+    "complete": "Complete",
+    "step": "Step {{current}} of {{total}}",
+    "steps": "Form steps"
+  },
+  "banner": {
+    "title": "Continue where you left off?",
+    "savedTime": "Saved {{time}}",
+    "progress": "{{percentage}}% completed",
+    "stepInfo": "Step {{current}} of {{total}}",
+    "restore": "Continue",
+    "restoring": "Restoring...",
+    "discard": "Start Fresh",
+    "dismiss": "Dismiss",
+    "recently": "recently"
+  },
+  "indicator": {
+    "saving": "Saving...",
+    "saved": "Saved",
+    "savedTime": "Saved {{time}}",
+    "unsaved": "Not saved",
+    "error": "Save failed",
+    "errorDetail": "Failed to save. Please try again.",
+    "unavailable": "Auto-save unavailable",
+    "recently": "recently"
+  },
+  "notifications": {
+    "draftSaved": "Your progress has been saved",
+    "draftRestored": "Draft restored successfully",
+    "draftCleared": "Draft discarded",
+    "saveFailed": "Failed to save progress"
+  },
+  "dialogs": {
+    "unsavedChanges": {
+      "title": "Unsaved Changes",
+      "description": "You have unsaved changes that will be lost if you leave. Would you like to save your progress?",
+      "save": "Save & Leave",
+      "discard": "Leave Without Saving",
+      "cancel": "Stay"
+    },
+    "discardDraft": {
+      "title": "Discard Draft?",
+      "description": "This will permanently delete your saved progress. This action cannot be undone.",
+      "confirm": "Discard Draft",
+      "cancel": "Keep Draft"
+    }
+  },
+  "accessibility": {
+    "progressBar": "Form completion progress",
+    "savedStatus": "Form auto-save status",
+    "draftAvailable": "A saved draft is available for this form"
+  }
+}

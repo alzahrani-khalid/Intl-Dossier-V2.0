@@ -1,0 +1,124 @@
+{
+  "title": "تأثير أصحاب المصلحة",
+  "description": "تحليل التأثير وتحديد الموصلات الرئيسية للتخطيط الاستراتيجي",
+
+  "loading_network": "جارٍ تحميل الشبكة...",
+  "no_network_data": "لا توجد بيانات شبكة متاحة",
+  "no_network_hint": "اختر صاحب مصلحة لعرض شبكة تأثيره",
+  "no_data": "اختر صاحب مصلحة لعرض المقاييس",
+  "no_report": "لا توجد بيانات تقرير متاحة",
+  "no_results": "لم يتم العثور على أصحاب مصلحة",
+  "no_reports": "لم يتم إنشاء تقارير بعد",
+  "no_influencers": "لم يتم تحديد مؤثرين",
+  "no_connectors": "لم يتم تحديد موصلات جسرية",
+
+  "network": "الشبكة",
+  "stakeholders": "أصحاب المصلحة",
+  "reports": "التقارير",
+  "partners": "شركاء",
+  "groups": "مجموعات",
+
+  "influence_network": "شبكة التأثير",
+  "click_node": "انقر على العقد لاستكشاف العلاقات",
+  "select_stakeholder": "اختر صاحب مصلحة لعرض شبكته",
+
+  "network_position": "موقع الشبكة",
+  "engagement": "التفاعل",
+  "relationships": "العلاقات",
+  "raw_metrics": "المقاييس الخام",
+
+  "direct_connections": "اتصالات مباشرة",
+  "two_hop": "وصول خطوتين",
+  "total_engagements": "إجمالي التفاعلات",
+  "unique_partners": "شركاء فريدين",
+
+  "calculated_at": "تم الحساب",
+
+  "top_influencers": "أهم المؤثرين",
+  "top_influencers_desc": "أصحاب المصلحة ذوو أعلى درجات التأثير",
+  "key_connectors": "الموصلات الرئيسية",
+  "key_connectors_desc": "أصحاب المصلحة الجسريون الذين يربطون مجموعات مختلفة",
+  "groups_connected": "مجموعات متصلة",
+
+  "key_influencers": "المؤثرون الرئيسيون",
+  "total_stakeholders": "إجمالي أصحاب المصلحة",
+  "total_relationships": "العلاقات",
+  "avg_influence": "متوسط الدرجة",
+
+  "network_statistics": "إحصائيات الشبكة",
+  "key_findings": "النتائج الرئيسية",
+  "recommendations": "التوصيات",
+  "analysis_period": "فترة التحليل",
+
+  "legend": "وسيلة الإيضاح",
+  "nodes": "العقد",
+  "edges": "الاتصالات",
+  "avg_connections": "متوسط الاتصالات",
+  "density": "الكثافة",
+
+  "recalculate": "إعادة الحساب",
+  "new_report": "تقرير جديد",
+  "create_report": "إنشاء تقرير تأثير",
+  "create_report_desc": "إنشاء تقرير تحليل استراتيجي",
+  "generate": "إنشاء التقرير",
+  "cancel": "إلغاء",
+  "print": "طباعة",
+  "export": "تصدير",
+
+  "title_en": "العنوان (إنجليزي)",
+  "title_ar": "العنوان (عربي)",
+  "report_type": "نوع التقرير",
+  "description_en": "الوصف (إنجليزي)",
+  "description_ar": "الوصف (عربي)",
+
+  "search_stakeholders": "البحث عن أصحاب المصلحة...",
+  "filter_type": "النوع",
+  "all_types": "جميع الأنواع",
+  "persons": "الأشخاص",
+  "organizations": "المنظمات",
+  "countries": "الدول",
+
+  "stakeholder_details": "تفاصيل صاحب المصلحة",
+  "metrics_desc": "مقاييس التأثير وموقع الشبكة",
+
+  "report": {
+    "created": "تم إنشاء التقرير \"{{title}}\" بنجاح"
+  },
+
+  "influence_tier": {
+    "key_influencer": "مؤثر رئيسي",
+    "high_influence": "تأثير عالي",
+    "moderate_influence": "تأثير متوسط",
+    "low_influence": "تأثير منخفض",
+    "peripheral": "هامشي"
+  },
+
+  "stakeholder_role": {
+    "hub": "محور",
+    "bridge": "جسر",
+    "gatekeeper": "حارس بوابة",
+    "peripheral": "هامشي",
+    "isolate": "معزول"
+  },
+
+  "report_type": {
+    "full_network_analysis": "تحليل الشبكة الكامل",
+    "stakeholder_profile": "ملف صاحب المصلحة",
+    "cluster_analysis": "تحليل المجموعات",
+    "strategic_planning": "التخطيط الاستراتيجي",
+    "comparison_report": "تقرير المقارنة",
+    "trend_analysis": "تحليل الاتجاهات"
+  },
+
+  "metrics": {
+    "degree_centrality": "الاتصالات",
+    "betweenness_centrality": "موقع الجسر",
+    "closeness_centrality": "الوصول للشبكة",
+    "eigenvector_centrality": "التأثير المرتبط",
+    "engagement_frequency": "تكرار التفاعل",
+    "engagement_reach": "نطاق التفاعل",
+    "avg_relationship_health": "صحة العلاقة",
+    "strong_relationships": "علاقات قوية",
+    "weak_relationships": "علاقات ضعيفة"
+  }
+}

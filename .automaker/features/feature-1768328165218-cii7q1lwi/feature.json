@@ -1,0 +1,17 @@
+{
+  "category": "refactor",
+  "description": "Create dedicated anti-corruption layers (ACL) that translate between external systems (email, calendar, AI services) and internal domain models. These layers prevent external API changes from rippling through the codebase.\n\n**Rationale:** With integrations for email, calendars, AI services, and webhooks, protecting the core domain from external model changes is crucial. ACLs isolate integration complexity, make external services easily replaceable, and simplify testing by providing clear seams for mocking.",
+  "title": "Establish Anti-Corruption Layers for External Integrations",
+  "status": "verified",
+  "id": "feature-1768328165218-cii7q1lwi",
+  "descriptionHistory": [
+    {
+      "description": "Create dedicated anti-corruption layers (ACL) that translate between external systems (email, calendar, AI services) and internal domain models. These layers prevent external API changes from rippling through the codebase.\n\n**Rationale:** With integrations for email, calendars, AI services, and webhooks, protecting the core domain from external model changes is crucial. ACLs isolate integration complexity, make external services easily replaceable, and simplify testing by providing clear seams for mocking.",
+      "timestamp": "2026-01-13T18:16:05.218Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-13T19:30:10.883Z",
+  "updatedAt": "2026-01-13T19:50:13.023Z"
+}

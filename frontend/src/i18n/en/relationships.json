@@ -136,5 +136,137 @@
       "focusedNode": "Focused on {{name}}",
       "gestureActive": "Gesture active"
     }
+  },
+  "guidance": {
+    "searchTypes": "Search relationship types...",
+    "noTypesFound": "No matching relationship types found",
+    "recommended": "Recommended",
+    "recommendedSection": "Recommended for this combination",
+    "symmetric": "Two-way",
+    "categories": {
+      "membership": {
+        "label": "Membership",
+        "description": "Types that describe membership, participation, or observer status in organizations and forums"
+      },
+      "hierarchy": {
+        "label": "Hierarchy",
+        "description": "Types that describe parent-child or organizational hierarchy relationships"
+      },
+      "cooperation": {
+        "label": "Cooperation",
+        "description": "Types that describe bilateral relations, partnerships, and cooperative agreements"
+      },
+      "participation": {
+        "label": "Participation",
+        "description": "Types that describe involvement in events, engagements, and discussions"
+      },
+      "temporal": {
+        "label": "Temporal",
+        "description": "Types that describe succession and historical transitions between entities"
+      },
+      "association": {
+        "label": "Association",
+        "description": "General relationship types for connections that don't fit other categories"
+      }
+    },
+    "types": {
+      "member_of": {
+        "description": "Entity A is a formal member of organization or forum B. Use for official membership status.",
+        "example": "Saudi Arabia is a member of G20",
+        "tip": "Use for formal membership. For temporary event participation, use 'Participant in' instead."
+      },
+      "participant_in": {
+        "description": "Entity A participates in event or engagement B. Use for temporary or event-based involvement.",
+        "example": "Ministry of Finance participates in the Annual Summit",
+        "tip": "Use for events and meetings. For permanent membership, use 'Member of' instead."
+      },
+      "observer_of": {
+        "description": "Entity A has observer status in organization or forum B without full membership.",
+        "example": "Palestine is an observer of the United Nations",
+        "tip": "Use when the entity doesn't have voting rights or full membership status."
+      },
+      "affiliate_of": {
+        "description": "Entity A is affiliated with organization B but operates independently.",
+        "example": "Research Institute is an affiliate of the University",
+        "tip": "Use for loose associations. For ownership, use 'Subsidiary of' instead."
+      },
+      "parent_of": {
+        "description": "Organization A is the parent or controlling entity of organization B.",
+        "example": "Holding Company is parent of Subsidiary Corp",
+        "tip": "Direction matters: Parent → Child. Use from the parent organization's perspective."
+      },
+      "subsidiary_of": {
+        "description": "Organization A is a subsidiary, branch, or controlled entity of organization B.",
+        "example": "Regional Office is subsidiary of Global HQ",
+        "tip": "Direction matters: Child → Parent. Use from the subsidiary's perspective."
+      },
+      "represents": {
+        "description": "Person or organization A officially represents entity B in some capacity.",
+        "example": "Ambassador represents Saudi Arabia",
+        "tip": "Use for official representation roles like ambassadors or delegates."
+      },
+      "cooperates_with": {
+        "description": "Entities A and B have a cooperation agreement or work together on shared goals.",
+        "example": "Ministry A cooperates with Ministry B on joint projects",
+        "tip": "This is a two-way relationship. Use for ongoing cooperation, not one-time events."
+      },
+      "bilateral_relation": {
+        "description": "Formal diplomatic or economic relationship between two countries.",
+        "example": "Saudi Arabia has bilateral relations with UAE",
+        "tip": "Best suited for country-to-country diplomatic relationships."
+      },
+      "partnership": {
+        "description": "Strategic partnership or alliance between entities.",
+        "example": "Organization A has a strategic partnership with Organization B",
+        "tip": "Use for formal partnerships. For informal cooperation, use 'Cooperates with'."
+      },
+      "participates_in": {
+        "description": "Entity actively takes part in another entity's activities or events.",
+        "example": "Country participates in the working group's initiatives",
+        "tip": "Use for active participation. For observation only, use 'Observer of'."
+      },
+      "involves": {
+        "description": "Engagement or event A involves entity B. Use from the event's perspective.",
+        "example": "The Summit involves multiple countries",
+        "tip": "Use from the engagement's perspective to list involved parties."
+      },
+      "discusses": {
+        "description": "Engagement or working group A discusses topic B.",
+        "example": "The Committee discusses climate policy",
+        "tip": "Use to link engagements with their discussion topics."
+      },
+      "hosted_by": {
+        "description": "Event or forum A is hosted by country or organization B.",
+        "example": "Annual Conference is hosted by Saudi Arabia",
+        "tip": "Use for physical hosting. For financial support, use 'Sponsored by'."
+      },
+      "sponsored_by": {
+        "description": "Event or initiative A receives financial or official sponsorship from B.",
+        "example": "The initiative is sponsored by the World Bank",
+        "tip": "Use for financial backing. For physical hosting, use 'Hosted by'."
+      },
+      "successor_of": {
+        "description": "Entity A succeeded or replaced entity B (historical transition).",
+        "example": "New Ministry is successor of former Department",
+        "tip": "Direction: New Entity → Old Entity. The newer entity is the source."
+      },
+      "predecessor_of": {
+        "description": "Entity A preceded or was replaced by entity B (historical transition).",
+        "example": "Former Department is predecessor of new Ministry",
+        "tip": "Direction: Old Entity → New Entity. The older entity is the source."
+      },
+      "related_to": {
+        "description": "General relationship between A and B that doesn't fit specific categories.",
+        "example": "Topic A is related to Topic B",
+        "tip": "Use as a last resort when no other type fits. Consider if a more specific type applies."
+      }
+    },
+    "validation": {
+      "unknownType": "Unknown relationship type selected",
+      "invalidSourceType": "This relationship type is not typically used from this entity type",
+      "invalidTargetType": "This relationship type is not typically used with this target entity type",
+      "suggestAlternative": "Consider using a different relationship type",
+      "tryInstead": "Try instead"
+    }
   }
 }

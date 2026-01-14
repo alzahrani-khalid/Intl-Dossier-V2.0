@@ -1,0 +1,206 @@
+{
+  "greetings": {
+    "morning": "صباح الخير",
+    "afternoon": "مساء الخير",
+    "evening": "مساء الخير"
+  },
+  "roleDashboard": {
+    "generic": {
+      "subtitle": "مساحة عملك المخصصة مع وصول سريع لأهم مهامك ومعلوماتك."
+    },
+    "admin": {
+      "title": "إدارة النظام",
+      "subtitle": "مراقبة صحة النظام وإدارة المستخدمين والإشراف على عمليات المنصة.",
+      "welcome": "إدارة عمليات النظام ووصول المستخدمين"
+    },
+    "analyst": {
+      "title": "البحث والتحليل",
+      "subtitle": "الوصول إلى الملفات المسندة إليك ومهام البحث والموجزات الاستخباراتية.",
+      "welcome": "انغمس في أعمال البحث والتحليل الخاصة بك"
+    },
+    "manager": {
+      "title": "إدارة الفريق",
+      "subtitle": "مراقبة عبء عمل الفريق ومراجعة الموافقات المعلقة وتتبع التصعيدات.",
+      "welcome": "الإشراف على تقدم فريقك وأولوياته"
+    },
+    "executive": {
+      "title": "النظرة الاستراتيجية",
+      "subtitle": "رؤى عالية المستوى حول الشراكات والمهمات والأداء المؤسسي.",
+      "welcome": "الوصول إلى الرؤى الاستراتيجية والقرارات الرئيسية"
+    },
+    "lobbyist": {
+      "title": "مركز التواصل",
+      "subtitle": "إدارة المشاركات القادمة والمتابعات وأنشطة العلاقات.",
+      "welcome": "تابع أنشطة التواصل الخاصة بك"
+    },
+    "intakeOfficer": {
+      "title": "طلبات الخدمة",
+      "subtitle": "معالجة الطلبات الواردة وتتبع اتفاقيات مستوى الخدمة وإدارة قائمة الاستقبال.",
+      "welcome": "معالجة طلبات الخدمة بكفاءة"
+    },
+    "editor": {
+      "title": "إدارة المحتوى",
+      "subtitle": "إنشاء وتحرير الملفات والمستندات والمحتوى عبر المنصة.",
+      "welcome": "إدارة المحتوى والمستندات الخاصة بك"
+    },
+    "viewer": {
+      "title": "الوصول للمعلومات",
+      "subtitle": "تصفح وعرض الملفات والمستندات والتقارير.",
+      "welcome": "استكشاف المعلومات المتاحة"
+    },
+    "staff": {
+      "title": "مساحة العمل",
+      "subtitle": "الوصول إلى مهامك وتكليفاتك وعناصر العمل اليومية.",
+      "welcome": "ابدأ بمهامك اليومية"
+    }
+  },
+  "quickActions": {
+    "title": "إجراءات سريعة",
+    "createDossier": "إنشاء ملف",
+    "createTask": "إنشاء مهمة",
+    "newRequest": "طلب جديد",
+    "scheduleMeeting": "جدولة اجتماع",
+    "newBrief": "موجز جديد",
+    "search": "بحث",
+    "calendar": "التقويم",
+    "reports": "التقارير",
+    "myWork": "أعمالي",
+    "teamWorkload": "أعباء الفريق",
+    "approvals": "الموافقات",
+    "intelligence": "الاستخبارات",
+    "settings": "الإعدادات",
+    "users": "المستخدمون",
+    "intakeQueue": "قائمة الاستقبال"
+  },
+  "pendingActions": {
+    "title": "الإجراءات المعلقة",
+    "allClear": "كل شيء منجز!",
+    "noPendingActions": "ليس لديك إجراءات معلقة في الوقت الحالي.",
+    "overdue": "متأخر",
+    "total": "إجمالي",
+    "viewAll": "عرض الكل ({{count}} المزيد)"
+  },
+  "workload": {
+    "title": "ملخص عبء العمل",
+    "overdue": "متأخر",
+    "dueToday": "مستحق اليوم",
+    "dueThisWeek": "مستحق هذا الأسبوع",
+    "totalPending": "إجمالي المعلق",
+    "capacityUsed": "السعة المستخدمة",
+    "byPriority": "حسب الأولوية",
+    "bySource": "حسب المصدر",
+    "sources": {
+      "tasks": "المهام",
+      "commitments": "الالتزامات",
+      "intake": "الاستقبال",
+      "reviews": "المراجعات"
+    }
+  },
+  "priority": {
+    "urgent": "عاجل",
+    "high": "عالي",
+    "medium": "متوسط",
+    "low": "منخفض"
+  },
+  "kpis": {
+    "totalDossiers": "إجمالي الملفات",
+    "activeUsers": "المستخدمون النشطون",
+    "systemHealth": "صحة النظام",
+    "pendingApprovals": "الموافقات المعلقة",
+    "assignedDossiers": "الملفات المسندة",
+    "briefsInProgress": "الموجزات قيد التنفيذ",
+    "completedThisWeek": "المنجز هذا الأسبوع",
+    "researchQueue": "قائمة البحث",
+    "teamTasks": "مهام الفريق",
+    "overdueItems": "العناصر المتأخرة",
+    "teamUtilization": "استخدام الفريق",
+    "pendingReviews": "المراجعات المعلقة",
+    "activePartners": "الشركاء النشطون",
+    "mouInWorkflow": "مذكرات التفاهم في سير العمل",
+    "upcomingMissions": "المهمات القادمة",
+    "overallCompliance": "الامتثال العام",
+    "upcomingMeetings": "الاجتماعات القادمة",
+    "pendingFollowUps": "المتابعات المعلقة",
+    "activeRelationships": "العلاقات النشطة",
+    "engagementRate": "معدل المشاركة",
+    "pendingIntake": "الاستقبال المعلق",
+    "processedToday": "المعالج اليوم",
+    "slaCompliance": "الامتثال لاتفاقية الخدمة",
+    "avgResponseTime": "متوسط وقت الاستجابة",
+    "myTasks": "مهامي",
+    "dossiersInProgress": "الملفات قيد التنفيذ",
+    "researchEfficiency": "كفاءة البحث",
+    "teamPendingTasks": "مهام الفريق المعلقة",
+    "teamSlaCompliance": "امتثال الفريق لاتفاقية الخدمة",
+    "backlogSize": "حجم التراكم"
+  },
+  "shortcuts": {
+    "title": "الوصول السريع",
+    "description": "الميزات المستخدمة بشكل متكرر لدورك",
+    "userManagement": "إدارة المستخدمين",
+    "systemSettings": "إعدادات النظام",
+    "auditLogs": "سجلات التدقيق",
+    "pendingApprovals": "الموافقات المعلقة",
+    "myDossiers": "ملفاتي",
+    "researchQueue": "قائمة البحث",
+    "intelligence": "الاستخبارات",
+    "calendar": "التقويم",
+    "teamWorkload": "أعباء الفريق",
+    "pendingReviews": "المراجعات المعلقة",
+    "reports": "التقارير",
+    "escalations": "التصعيدات",
+    "strategicOverview": "النظرة الاستراتيجية",
+    "upcomingMissions": "المهمات القادمة",
+    "intelligenceBriefs": "الموجزات الاستخباراتية",
+    "partnerHealth": "صحة الشركاء",
+    "upcomingEngagements": "المشاركات القادمة",
+    "followUps": "المتابعات",
+    "contacts": "جهات الاتصال",
+    "recommendations": "التوصيات",
+    "intakeQueue": "قائمة الاستقبال",
+    "processing": "قيد المعالجة",
+    "slaTracker": "متتبع اتفاقية الخدمة",
+    "completed": "المكتمل"
+  },
+  "upcomingEvents": {
+    "title": "الأحداث القادمة"
+  },
+  "sections": {
+    "quickActions": "إجراءات سريعة",
+    "keyMetrics": "المقاييس الرئيسية",
+    "systemHealth": "صحة النظام",
+    "recentActivity": "النشاط الأخير",
+    "pendingApprovals": "الموافقات المعلقة",
+    "myAssignments": "تكليفاتي",
+    "researchQueue": "قائمة البحث",
+    "recentBriefs": "الموجزات الأخيرة",
+    "teamWorkload": "أعباء الفريق",
+    "pendingReviews": "المراجعات المعلقة",
+    "escalations": "التصعيدات",
+    "strategicOverview": "النظرة الاستراتيجية",
+    "upcomingMissions": "المهمات القادمة",
+    "intelligenceHighlights": "أبرز الاستخبارات",
+    "highPriorityAlerts": "تنبيهات عالية الأولوية",
+    "upcomingEngagements": "المشاركات القادمة",
+    "pendingFollowUps": "المتابعات المعلقة",
+    "relationshipHealth": "صحة العلاقات",
+    "intakeQueue": "قائمة الاستقبال",
+    "currentlyProcessing": "قيد المعالجة حالياً",
+    "slaTracker": "متتبع اتفاقية الخدمة",
+    "myWork": "أعمالي"
+  },
+  "actions": {
+    "reviewDossier": "مراجعة الملف",
+    "approveCommitment": "الموافقة على الالتزام",
+    "followUpMeeting": "متابعة الاجتماع"
+  },
+  "common": {
+    "viewAll": "عرض الكل"
+  },
+  "error": {
+    "title": "فشل تحميل لوحة المعلومات",
+    "retry": "حاول مرة أخرى"
+  },
+  "overdue": "متأخر",
+  "dueOn": "مستحق"
+}

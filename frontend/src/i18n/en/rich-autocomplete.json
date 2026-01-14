@@ -1,0 +1,113 @@
+{
+  "placeholder": "Search and select an entity...",
+  "searchPlaceholder": "Type to search entities...",
+  "clear": "Clear selection",
+  "searching": "Searching...",
+  "minSearchHint": "Type at least {{count}} characters to search",
+  "noResults": "No entities found",
+  "noResultsHint": "Try a different search term or adjust filters",
+  "resultsCount": "{{count}} results found",
+  "resultsCount_one": "{{count}} result found",
+  "resultsCount_other": "{{count}} results found",
+  "selectHint": "Click an entity to select it",
+  "showMore": "Show more",
+  "showLess": "Show less",
+  "filterByType": "Filter by type",
+  "allTypes": "All types",
+
+  "entityTypes": {
+    "dossier": "Dossier",
+    "organization": "Organization",
+    "country": "Country",
+    "forum": "Forum",
+    "engagement": "Engagement",
+    "position": "Position",
+    "mou": "MOU",
+    "commitment": "Commitment",
+    "assignment": "Assignment",
+    "intelligence_signal": "Signal",
+    "working_group": "Working Group",
+    "topic": "Topic"
+  },
+
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived",
+    "draft": "Draft"
+  },
+
+  "preview": {
+    "keyDetails": "Key Details",
+    "recentActivity": "Recent Activity",
+    "lastUpdated": "Last updated",
+    "matchScore": "Match score",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "daysAgo": "{{count}} days ago",
+    "weeksAgo": "{{count}}w ago",
+    "monthsAgo": "{{count}}mo ago",
+    "yearsAgo": "{{count}}y ago"
+  },
+
+  "details": {
+    "type": "Type",
+    "sensitivity": "Sensitivity",
+    "region": "Region",
+    "isoCode": "ISO Code",
+    "members": "Members",
+    "date": "Date",
+    "location": "Location",
+    "person": "Person",
+    "since": "Since",
+    "signed": "Signed",
+    "expires": "Expires",
+    "deadline": "Deadline",
+    "priority": "Priority",
+    "chair": "Chair",
+    "category": "Category",
+    "country": "Country"
+  },
+
+  "sensitivity": {
+    "low": "Public",
+    "medium": "Internal",
+    "high": "Confidential"
+  },
+
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+
+  "dossierTypes": {
+    "country": "Country Dossier",
+    "organization": "Organization Dossier",
+    "forum": "Forum Dossier",
+    "theme": "Theme Dossier",
+    "person": "Person Dossier"
+  },
+
+  "activity": {
+    "engagement": "New engagement",
+    "document": "Document added",
+    "update": "Information updated",
+    "relationship": "Relationship changed"
+  },
+
+  "disambiguation": {
+    "multipleSimilar": "Multiple similar entities found",
+    "reviewDetails": "Review the details below to select the correct one",
+    "showDifferences": "Highlight differences"
+  },
+
+  "accessibility": {
+    "searchInput": "Search for entities",
+    "entityList": "Entity search results",
+    "entityOption": "{{name}}, {{type}}, {{status}}",
+    "selectedEntity": "Selected: {{name}}",
+    "clearSelection": "Clear selected entity"
+  }
+}

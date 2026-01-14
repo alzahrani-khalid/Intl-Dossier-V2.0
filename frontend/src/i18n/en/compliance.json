@@ -1,0 +1,304 @@
+{
+  "title": "Compliance",
+  "subtitle": "Manage compliance rules and violations",
+  "description": "Define and enforce compliance rules for engagements, commitments, and relationships",
+
+  "tabs": {
+    "rules": "Rules",
+    "violations": "Violations",
+    "exemptions": "Exemptions",
+    "templates": "Templates"
+  },
+
+  "rules": {
+    "title": "Compliance Rules",
+    "subtitle": "Define rules to ensure regulatory compliance",
+    "createRule": "Create Rule",
+    "editRule": "Edit Rule",
+    "deleteRule": "Deactivate Rule",
+    "viewRule": "View Rule Details",
+    "noRules": "No compliance rules configured",
+    "noRulesDescription": "Create your first compliance rule to start monitoring activities",
+    "searchPlaceholder": "Search rules by name or code...",
+    "filterByType": "Filter by Type",
+    "filterBySeverity": "Filter by Severity",
+    "filterByEntity": "Filter by Entity Type",
+    "activeRules": "Active Rules",
+    "inactiveRules": "Inactive Rules",
+    "allRules": "All Rules"
+  },
+
+  "ruleForm": {
+    "ruleCode": "Rule Code",
+    "ruleCodePlaceholder": "e.g., COOL_OFF_30",
+    "ruleCodeHelper": "Unique identifier for this rule",
+    "nameEn": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "ruleType": "Rule Type",
+    "severity": "Severity Level",
+    "entityTypes": "Applies to Entity Types",
+    "conditions": "Rule Conditions",
+    "conditionsHelper": "Configure the specific parameters for this rule",
+    "notificationTemplateEn": "Notification Template (English)",
+    "notificationTemplateAr": "Notification Template (Arabic)",
+    "remediationEn": "Remediation Instructions (English)",
+    "remediationAr": "Remediation Instructions (Arabic)",
+    "requiresSignoff": "Requires Sign-off",
+    "signoffRoles": "Sign-off Roles",
+    "signoffDeadline": "Sign-off Deadline (Hours)",
+    "autoEscalate": "Auto-escalate After (Hours)",
+    "effectiveFrom": "Effective From",
+    "effectiveTo": "Effective Until",
+    "appliesToRegions": "Applies to Regions",
+    "appliesToCategories": "Applies to Categories",
+    "externalReference": "External Reference",
+    "regulatorySource": "Regulatory Source"
+  },
+
+  "ruleTypes": {
+    "cooling_off_period": "Cooling-Off Period",
+    "disclosure_requirement": "Disclosure Requirement",
+    "conflict_check": "Conflict Check",
+    "approval_threshold": "Approval Threshold",
+    "frequency_limit": "Frequency Limit",
+    "relationship_restriction": "Relationship Restriction",
+    "documentation_requirement": "Documentation Requirement",
+    "gift_limit": "Gift Limit",
+    "recusal_requirement": "Recusal Requirement",
+    "reporting_requirement": "Reporting Requirement"
+  },
+
+  "severity": {
+    "info": "Information",
+    "warning": "Warning",
+    "critical": "Critical",
+    "blocking": "Blocking"
+  },
+
+  "entityTypes": {
+    "engagement": "Engagement",
+    "commitment": "Commitment",
+    "relationship": "Relationship",
+    "person": "Person",
+    "organization": "Organization",
+    "country": "Country",
+    "all": "All Entities"
+  },
+
+  "violations": {
+    "title": "Compliance Violations",
+    "subtitle": "Review and resolve flagged compliance issues",
+    "noViolations": "No violations found",
+    "noViolationsDescription": "All activities are currently in compliance",
+    "pendingViolations": "Pending Violations",
+    "acknowledgedViolations": "Acknowledged",
+    "resolvedViolations": "Resolved",
+    "allViolations": "All Violations",
+    "viewDetails": "View Details",
+    "acknowledge": "Acknowledge",
+    "signOff": "Sign Off",
+    "requestInfo": "Request Info",
+    "escalate": "Escalate",
+    "waive": "Waive",
+    "violationId": "Violation ID",
+    "detectedAt": "Detected At",
+    "detectedBy": "Detected By",
+    "entity": "Entity",
+    "relatedEntity": "Related Entity",
+    "status": "Status",
+    "requiresSignoff": "Requires Sign-off",
+    "signoffDeadline": "Sign-off Deadline",
+    "daysRemaining": "{{count}} day remaining",
+    "daysRemaining_plural": "{{count}} days remaining",
+    "overdue": "Overdue"
+  },
+
+  "violationStatus": {
+    "pending": "Pending",
+    "acknowledged": "Acknowledged",
+    "signed_off": "Signed Off",
+    "waived": "Waived",
+    "resolved": "Resolved",
+    "escalated": "Escalated",
+    "expired": "Expired"
+  },
+
+  "signoff": {
+    "title": "Sign Off on Violation",
+    "subtitle": "Review and approve or reject the flagged activity",
+    "action": "Action",
+    "justification": "Justification",
+    "justificationPlaceholder": "Provide reasoning for your decision...",
+    "justificationRequired": "Justification is required",
+    "conditions": "Conditions",
+    "conditionsPlaceholder": "Add any conditions (one per line)",
+    "waiverValidUntil": "Waiver Valid Until",
+    "waiverScope": "Waiver Scope",
+    "waiverScopeSingle": "This violation only",
+    "waiverScopeOngoing": "Ongoing (until date)",
+    "confirm": "Confirm Sign-off",
+    "cancel": "Cancel",
+    "history": "Sign-off History",
+    "signedBy": "Signed By",
+    "signedAt": "Signed At",
+    "signerRole": "Role"
+  },
+
+  "signoffActions": {
+    "approve": "Approve",
+    "reject": "Reject",
+    "request_info": "Request Information",
+    "escalate": "Escalate",
+    "waive": "Waive"
+  },
+
+  "exemptions": {
+    "title": "Compliance Exemptions",
+    "subtitle": "Manage exemptions from compliance rules",
+    "createExemption": "Create Exemption",
+    "editExemption": "Edit Exemption",
+    "revokeExemption": "Revoke Exemption",
+    "noExemptions": "No exemptions configured",
+    "noExemptionsDescription": "Exemptions allow specific entities to bypass certain rules",
+    "rule": "Rule",
+    "entity": "Entity/User",
+    "reason": "Reason",
+    "grantedBy": "Granted By",
+    "grantedAt": "Granted At",
+    "validFrom": "Valid From",
+    "validUntil": "Valid Until",
+    "active": "Active",
+    "revoked": "Revoked",
+    "expired": "Expired"
+  },
+
+  "templates": {
+    "title": "Rule Templates",
+    "subtitle": "Pre-defined compliance rule templates",
+    "useTemplate": "Use Template",
+    "category": "Category",
+    "regulatoryFramework": "Regulatory Framework",
+    "noTemplates": "No templates available",
+    "createFromTemplate": "Create Rule from Template"
+  },
+
+  "summary": {
+    "title": "Compliance Summary",
+    "totalViolations": "Total Violations",
+    "pendingViolations": "Pending",
+    "criticalViolations": "Critical",
+    "blockingViolations": "Blocking",
+    "requiresSignoff": "Requires Sign-off",
+    "complianceScore": "Compliance Score",
+    "lastCheck": "Last Compliance Check",
+    "recentViolations": "Recent Violations"
+  },
+
+  "check": {
+    "title": "Compliance Check",
+    "running": "Running compliance check...",
+    "passed": "Compliance check passed",
+    "failed": "Compliance issues detected",
+    "blocked": "Activity blocked due to compliance violations",
+    "rulesChecked": "{{count}} rule checked",
+    "rulesChecked_plural": "{{count}} rules checked",
+    "violationsFound": "{{count}} violation found",
+    "violationsFound_plural": "{{count}} violations found",
+    "blockingFound": "{{count}} blocking violation",
+    "blockingFound_plural": "{{count}} blocking violations",
+    "requiresSignoffBefore": "Sign-off required before proceeding",
+    "viewViolations": "View Violations"
+  },
+
+  "alerts": {
+    "newViolation": "New Compliance Violation",
+    "violationResolved": "Violation Resolved",
+    "signoffRequired": "Sign-off Required",
+    "signoffApproved": "Sign-off Approved",
+    "signoffRejected": "Sign-off Rejected",
+    "exemptionExpiring": "Exemption Expiring Soon",
+    "blockingViolation": "Blocking Violation Detected"
+  },
+
+  "conditions": {
+    "coolingOff": {
+      "days": "Cooling-Off Period (Days)",
+      "appliesTo": "Applies to Events"
+    },
+    "disclosure": {
+      "fields": "Required Disclosure Fields",
+      "threshold": "Value Threshold",
+      "currency": "Currency",
+      "checkYears": "Check Previous Years"
+    },
+    "conflict": {
+      "checkRelationships": "Check Relationships",
+      "checkFamily": "Check Family Members",
+      "degreesOfSeparation": "Degrees of Separation"
+    },
+    "approval": {
+      "amount": "Amount Threshold",
+      "currency": "Currency",
+      "approvalLevels": "Required Approval Levels"
+    },
+    "frequency": {
+      "maxInteractions": "Maximum Interactions",
+      "periodDays": "Period (Days)"
+    },
+    "gift": {
+      "maxValue": "Maximum Value",
+      "currency": "Currency",
+      "period": "Period",
+      "cumulativeAnnual": "Annual Cumulative Limit"
+    },
+    "reporting": {
+      "reportWithinDays": "Report Within (Days)",
+      "coveredOfficials": "Covered Officials"
+    },
+    "recusal": {
+      "recusalPeriodYears": "Recusal Period (Years)",
+      "scope": "Recusal Scope"
+    }
+  },
+
+  "messages": {
+    "ruleCreated": "Compliance rule created successfully",
+    "ruleUpdated": "Compliance rule updated successfully",
+    "ruleDeactivated": "Compliance rule deactivated",
+    "violationAcknowledged": "Violation acknowledged",
+    "signoffSuccess": "Sign-off recorded successfully",
+    "signoffFailed": "Failed to record sign-off",
+    "exemptionCreated": "Exemption created successfully",
+    "exemptionRevoked": "Exemption revoked",
+    "checkComplete": "Compliance check complete",
+    "error": "An error occurred. Please try again."
+  },
+
+  "validation": {
+    "ruleCodeRequired": "Rule code is required",
+    "ruleCodeUnique": "Rule code must be unique",
+    "nameRequired": "Name is required",
+    "ruleTypeRequired": "Rule type is required",
+    "conditionsRequired": "Rule conditions are required",
+    "justificationRequired": "Justification is required",
+    "reasonRequired": "Reason is required",
+    "invalidDates": "End date must be after start date"
+  },
+
+  "confirmations": {
+    "deactivateRule": "Are you sure you want to deactivate this rule? This will not affect existing violations.",
+    "revokeExemption": "Are you sure you want to revoke this exemption? The rule will apply again immediately.",
+    "approveViolation": "Are you sure you want to approve this flagged activity?",
+    "waiveViolation": "Are you sure you want to waive this violation?"
+  },
+
+  "accessibility": {
+    "complianceIndicator": "Compliance status indicator",
+    "violationSeverity": "Violation severity: {{severity}}",
+    "signoffRequired": "Sign-off required for this violation",
+    "expandDetails": "Expand violation details",
+    "collapseDetails": "Collapse violation details"
+  }
+}

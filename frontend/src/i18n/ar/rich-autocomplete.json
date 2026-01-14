@@ -1,0 +1,116 @@
+{
+  "placeholder": "ابحث واختر كيانًا...",
+  "searchPlaceholder": "اكتب للبحث عن الكيانات...",
+  "clear": "مسح الاختيار",
+  "searching": "جارٍ البحث...",
+  "minSearchHint": "اكتب {{count}} أحرف على الأقل للبحث",
+  "noResults": "لم يتم العثور على كيانات",
+  "noResultsHint": "جرب مصطلح بحث مختلف أو عدل الفلاتر",
+  "resultsCount": "تم العثور على {{count}} نتيجة",
+  "resultsCount_one": "تم العثور على نتيجة واحدة",
+  "resultsCount_two": "تم العثور على نتيجتين",
+  "resultsCount_few": "تم العثور على {{count}} نتائج",
+  "resultsCount_many": "تم العثور على {{count}} نتيجة",
+  "resultsCount_other": "تم العثور على {{count}} نتيجة",
+  "selectHint": "انقر على كيان لاختياره",
+  "showMore": "عرض المزيد",
+  "showLess": "عرض أقل",
+  "filterByType": "تصفية حسب النوع",
+  "allTypes": "جميع الأنواع",
+
+  "entityTypes": {
+    "dossier": "ملف",
+    "organization": "منظمة",
+    "country": "دولة",
+    "forum": "منتدى",
+    "engagement": "مشاركة",
+    "position": "منصب",
+    "mou": "مذكرة تفاهم",
+    "commitment": "التزام",
+    "assignment": "مهمة",
+    "intelligence_signal": "إشارة",
+    "working_group": "مجموعة عمل",
+    "topic": "موضوع"
+  },
+
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف",
+    "draft": "مسودة"
+  },
+
+  "preview": {
+    "keyDetails": "التفاصيل الرئيسية",
+    "recentActivity": "النشاط الأخير",
+    "lastUpdated": "آخر تحديث",
+    "matchScore": "نسبة التطابق",
+    "today": "اليوم",
+    "yesterday": "أمس",
+    "daysAgo": "منذ {{count}} أيام",
+    "weeksAgo": "منذ {{count}} أسابيع",
+    "monthsAgo": "منذ {{count}} أشهر",
+    "yearsAgo": "منذ {{count}} سنوات"
+  },
+
+  "details": {
+    "type": "النوع",
+    "sensitivity": "الحساسية",
+    "region": "المنطقة",
+    "isoCode": "رمز ISO",
+    "members": "الأعضاء",
+    "date": "التاريخ",
+    "location": "الموقع",
+    "person": "الشخص",
+    "since": "منذ",
+    "signed": "التوقيع",
+    "expires": "انتهاء الصلاحية",
+    "deadline": "الموعد النهائي",
+    "priority": "الأولوية",
+    "chair": "الرئيس",
+    "category": "الفئة",
+    "country": "الدولة"
+  },
+
+  "sensitivity": {
+    "low": "عام",
+    "medium": "داخلي",
+    "high": "سري"
+  },
+
+  "priority": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "urgent": "عاجل"
+  },
+
+  "dossierTypes": {
+    "country": "ملف دولة",
+    "organization": "ملف منظمة",
+    "forum": "ملف منتدى",
+    "theme": "ملف موضوع",
+    "person": "ملف شخص"
+  },
+
+  "activity": {
+    "engagement": "مشاركة جديدة",
+    "document": "تمت إضافة مستند",
+    "update": "تم تحديث المعلومات",
+    "relationship": "تغيرت العلاقة"
+  },
+
+  "disambiguation": {
+    "multipleSimilar": "تم العثور على كيانات متشابهة متعددة",
+    "reviewDetails": "راجع التفاصيل أدناه لاختيار الكيان الصحيح",
+    "showDifferences": "إظهار الاختلافات"
+  },
+
+  "accessibility": {
+    "searchInput": "البحث عن الكيانات",
+    "entityList": "نتائج البحث عن الكيانات",
+    "entityOption": "{{name}}، {{type}}، {{status}}",
+    "selectedEntity": "المحدد: {{name}}",
+    "clearSelection": "مسح الكيان المحدد"
+  }
+}

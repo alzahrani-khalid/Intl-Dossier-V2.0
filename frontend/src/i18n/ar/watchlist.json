@@ -1,0 +1,134 @@
+{
+  "title": "قائمة المراقبة",
+  "subtitle": "مراقبة الكيانات وتلقي الإشعارات",
+  "unknown": "كيان غير معروف",
+
+  "entityTypes": {
+    "person": "شخص",
+    "engagement": "ارتباط",
+    "commitment": "التزام",
+    "dossier": "ملف",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "position": "موقف",
+    "mou": "مذكرة تفاهم",
+    "workingGroup": "مجموعة عمل"
+  },
+
+  "priority": {
+    "low": "منخفضة",
+    "medium": "متوسطة",
+    "high": "عالية",
+    "urgent": "عاجلة"
+  },
+
+  "actions": {
+    "watch": "مراقبة",
+    "unwatch": "إلغاء المراقبة",
+    "watching": "تتم المراقبة",
+    "addToWatchlist": "إضافة للمراقبة",
+    "removeFromWatchlist": "إزالة من المراقبة",
+    "update": "تحديث",
+    "settings": "الإعدادات",
+    "viewEntity": "عرض الكيان",
+    "pauseNotifications": "إيقاف الإشعارات مؤقتاً",
+    "resumeNotifications": "استئناف الإشعارات",
+    "remove": "إزالة",
+    "bulkAdd": "إضافة متعددة",
+    "bulkRemove": "إزالة المحدد",
+    "applyTemplate": "تطبيق القالب"
+  },
+
+  "settings": {
+    "title": "إعدادات المراقبة",
+    "customLabel": "تسمية مخصصة",
+    "customLabelPlaceholder": "أدخل تسمية مخصصة للتعريف السريع",
+    "priority": "الأولوية",
+    "notes": "ملاحظات",
+    "notesPlaceholder": "أضف ملاحظات حول سبب مراقبتك لهذا الكيان...",
+    "notifications": "إعدادات الإشعارات",
+    "notifyModification": "إشعار عند التعديلات",
+    "notifyRelationship": "إشعار عند تغيير العلاقات",
+    "notifyDeadline": "إشعار عند اقتراب الموعد النهائي",
+    "notifyStatus": "إشعار عند تغيير الحالة",
+    "notifyComment": "إشعار عند التعليقات الجديدة",
+    "notifyDocument": "إشعار عند إرفاق المستندات",
+    "deadlineReminders": "أيام التذكير بالموعد النهائي",
+    "deadlineRemindersDescription": "إرسال تذكيرات قبل الموعد النهائي بهذا العدد من الأيام"
+  },
+
+  "filters": {
+    "entityType": "نوع الكيان",
+    "allTypes": "جميع الأنواع",
+    "priority": "الأولوية",
+    "allPriorities": "جميع الأولويات",
+    "activeOnly": "النشطة فقط",
+    "showAll": "عرض الكل"
+  },
+
+  "search": {
+    "placeholder": "البحث في قائمة المراقبة..."
+  },
+
+  "empty": {
+    "title": "قائمة المراقبة فارغة",
+    "description": "ابدأ بمراقبة الكيانات لتلقي إشعارات عند تعديلها أو تغيير علاقاتها أو اقتراب مواعيدها النهائية.",
+    "addFirst": "أضف أول كيان للمراقبة"
+  },
+
+  "templates": {
+    "title": "قوالب المراقبة",
+    "description": "تطبيق قوالب المراقبة المحددة مسبقاً بناءً على دورك",
+    "systemTemplate": "قالب النظام",
+    "customTemplate": "قالب مخصص",
+    "applied": "مُطبق",
+    "notApplied": "غير مُطبق",
+    "applyTemplate": "تطبيق القالب",
+    "autoSync": "المزامنة التلقائية مع تحديثات القالب",
+    "entitiesCount": "{{count}} كيان"
+  },
+
+  "bulk": {
+    "title": "العمليات المجمعة",
+    "selectEntities": "حدد الكيانات لإضافتها لقائمة المراقبة",
+    "selectedCount": "{{count}} محدد",
+    "addAll": "إضافة الكل",
+    "removeAll": "إزالة الكل",
+    "maxReached": "تم الوصول للحد الأقصى للتحديد ({{max}})",
+    "success": "تم تحديث {{count}} عنصر بنجاح"
+  },
+
+  "recentEvents": "{{count}} حدث حديث",
+  "recentEvents_plural": "{{count}} أحداث حديثة",
+  "loadMore": "تحميل المزيد",
+
+  "notifications": {
+    "added": "تمت الإضافة لقائمة المراقبة",
+    "removed": "تمت الإزالة من قائمة المراقبة",
+    "updated": "تم تحديث عنصر المراقبة",
+    "bulkAdded": "تمت إضافة {{count}} عنصر لقائمة المراقبة",
+    "bulkRemoved": "تمت إزالة {{count}} عنصر من قائمة المراقبة",
+    "templateApplied": "تم تطبيق القالب بنجاح"
+  },
+
+  "errors": {
+    "fetchFailed": "فشل تحميل قائمة المراقبة",
+    "addFailed": "فشل الإضافة لقائمة المراقبة",
+    "removeFailed": "فشل الإزالة من قائمة المراقبة",
+    "updateFailed": "فشل تحديث عنصر المراقبة",
+    "templateFailed": "فشل تطبيق القالب"
+  },
+
+  "eventTypes": {
+    "entity_modified": "تم تعديل الكيان",
+    "relationship_added": "تمت إضافة علاقة",
+    "relationship_removed": "تمت إزالة علاقة",
+    "deadline_approaching": "اقتراب الموعد النهائي",
+    "deadline_passed": "انتهى الموعد النهائي",
+    "status_changed": "تم تغيير الحالة",
+    "assignment_changed": "تم تغيير التكليف",
+    "comment_added": "تم إضافة تعليق",
+    "document_attached": "تم إرفاق مستند",
+    "custom": "حدث مخصص"
+  }
+}

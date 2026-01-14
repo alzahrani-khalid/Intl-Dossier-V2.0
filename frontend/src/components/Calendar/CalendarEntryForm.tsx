@@ -42,7 +42,12 @@ import {
   CommandItem,
 } from '@/components/ui/command'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { ConflictResolutionPanel, ReschedulingSuggestions } from './ConflictResolution'
+import {
+  ConflictResolutionPanel,
+  ReschedulingSuggestions,
+  SchedulingConflictComparison,
+} from './ConflictResolution'
+import type { ParticipantConflictInfo } from './ConflictResolution'
 import { RecurrencePatternEditor } from './RecurrencePatternEditor'
 import type { ConflictCheckRequest } from '@/types/calendar-conflict.types'
 import type { CreateRecurrenceRuleInput } from '@/types/recurrence.types'
@@ -123,7 +128,9 @@ export function CalendarEntryForm({
   const [participantPopoverOpen, setParticipantPopoverOpen] = useState(false)
   const [showConflicts, setShowConflicts] = useState(true)
   const [showSuggestions, setShowSuggestions] = useState(false)
+  const [showSideBySideComparison, setShowSideBySideComparison] = useState(true)
   const [recurrencePattern, setRecurrencePattern] = useState<CreateRecurrenceRuleInput | null>(null)
+  const [proceedWithConflict, setProceedWithConflict] = useState(false)
 
   const createEvent = useCreateCalendarEvent()
   const updateEvent = useUpdateCalendarEvent()
@@ -187,6 +194,57 @@ export function CalendarEntryForm({
       setShowSuggestions(true)
     },
     [entryId, startDatetime, endDatetime, participants, generateSuggestions],
+  )
+
+  // Build participant conflict info from conflict data
+  const participantConflicts = useMemo<ParticipantConflictInfo[]>(() => {
+    if (!conflictData || !participants.length) return []
+
+    // Collect all affected participant IDs from conflicts
+    const affectedParticipantIds = new Set<string>()
+    conflictData.conflicts.forEach((conflict) => {
+      conflict.affected_participant_ids?.forEach((id) => affectedParticipantIds.add(id))
+    })
+
+    // Map participants to conflict info
+    return participants.map((p) => ({
+      participant_id: p.participant_id,
+      participant_name: p.participant_name,
+      is_conflicting: affectedParticipantIds.has(p.participant_id),
+      conflicting_event_title: conflictData.conflicts.find((c) =>
+        c.affected_participant_ids?.includes(p.participant_id),
+      )?.conflicting_event?.title_en,
+      availability_status: affectedParticipantIds.has(p.participant_id)
+        ? ('busy' as const)
+        : ('available' as const),
+    }))
+  }, [conflictData, participants])
+
+  // Handle proceed anyway - allows creating event despite conflicts
+  const handleProceedAnyway = useCallback(() => {
+    setProceedWithConflict(true)
+    setShowSideBySideComparison(false)
+    setShowConflicts(false)
+  }, [])
+
+  // Handle reschedule - show suggestions
+  const handleReschedule = useCallback(() => {
+    handleGenerateSuggestions()
+    setShowSideBySideComparison(false)
+  }, [])
+
+  // Handle adjust duration - update end datetime
+  const handleAdjustDuration = useCallback(
+    (newDurationMinutes: number) => {
+      if (!startDatetime) return
+      const startDate = new Date(startDatetime)
+      const newEndDate = new Date(startDate.getTime() + newDurationMinutes * 60000)
+      const localEnd = new Date(newEndDate.getTime() - newEndDate.getTimezoneOffset() * 60000)
+        .toISOString()
+        .slice(0, 16)
+      setEndDatetime(localEnd)
+    },
+    [startDatetime],
   )
 
   // Apply a suggestion to the form
@@ -634,16 +692,59 @@ export function CalendarEntryForm({
           </div>
         )}
 
-        {/* Conflict Detection Panel */}
-        {showConflicts && (conflictData || isCheckingConflicts) && (
-          <ConflictResolutionPanel
-            conflicts={conflictData || null}
-            isLoading={isCheckingConflicts}
-            onGenerateSuggestions={handleGenerateSuggestions}
-            onDismiss={() => setShowConflicts(false)}
-            showWarnings={true}
-            className="mt-4"
-          />
+        {/* Side-by-Side Conflict Comparison Panel (Primary) */}
+        {showSideBySideComparison &&
+          !proceedWithConflict &&
+          conflictData?.has_conflicts &&
+          !isCheckingConflicts && (
+            <SchedulingConflictComparison
+              conflicts={conflictData}
+              newEvent={{
+                title_en: titleEn,
+                title_ar: titleAr,
+                start_datetime: startDatetime
+                  ? new Date(startDatetime).toISOString()
+                  : new Date().toISOString(),
+                end_datetime: endDatetime ? new Date(endDatetime).toISOString() : undefined,
+                location: location,
+                participants: participants,
+              }}
+              participantConflicts={participantConflicts}
+              onProceedAnyway={handleProceedAnyway}
+              onReschedule={handleReschedule}
+              onAdjustDuration={handleAdjustDuration}
+              onGenerateSuggestions={handleGenerateSuggestions}
+              onDismiss={() => {
+                setShowSideBySideComparison(false)
+                setShowConflicts(true)
+              }}
+              className="mt-4"
+            />
+          )}
+
+        {/* Conflict Detection Panel (Secondary/Fallback) */}
+        {showConflicts &&
+          !showSideBySideComparison &&
+          !proceedWithConflict &&
+          (conflictData || isCheckingConflicts) && (
+            <ConflictResolutionPanel
+              conflicts={conflictData || null}
+              isLoading={isCheckingConflicts}
+              onGenerateSuggestions={handleGenerateSuggestions}
+              onDismiss={() => setShowConflicts(false)}
+              showWarnings={true}
+              className="mt-4"
+            />
+          )}
+
+        {/* Loading indicator for conflict check */}
+        {isCheckingConflicts && !conflictData && (
+          <div className="mt-4 p-4 border rounded-lg bg-muted/30">
+            <div className="flex items-center gap-2 animate-pulse">
+              <div className="h-5 w-5 bg-muted rounded-full" />
+              <div className="h-4 w-32 bg-muted rounded" />
+            </div>
+          </div>
         )}
 
         {/* Rescheduling Suggestions Panel */}
@@ -658,19 +759,46 @@ export function CalendarEntryForm({
           />
         )}
 
-        {/* Conflict Warning Badge - shown when conflicts exist but panel is dismissed */}
-        {!showConflicts && conflictData?.has_conflicts && (
-          <Button
-            type="button"
-            variant="outline"
-            className="w-full justify-start border-warning/50 bg-warning/10 hover:bg-warning/20"
-            onClick={() => setShowConflicts(true)}
-          >
-            <AlertTriangle className="h-4 w-4 text-warning me-2" />
-            <span className="text-sm">
-              {t('calendar.conflicts.hasConflicts', { count: conflictData.total_conflicts })}
-            </span>
-          </Button>
+        {/* Conflict Warning Badge - shown when conflicts exist but all panels are dismissed */}
+        {!showConflicts &&
+          !showSideBySideComparison &&
+          !proceedWithConflict &&
+          conflictData?.has_conflicts && (
+            <Button
+              type="button"
+              variant="outline"
+              className="w-full justify-start border-warning/50 bg-warning/10 hover:bg-warning/20"
+              onClick={() => setShowSideBySideComparison(true)}
+            >
+              <AlertTriangle className="h-4 w-4 text-warning me-2" />
+              <span className="text-sm">
+                {t('calendar.conflicts.hasConflicts', { count: conflictData.total_conflicts })}
+              </span>
+            </Button>
+          )}
+
+        {/* Proceed with conflict notice */}
+        {proceedWithConflict && conflictData?.has_conflicts && (
+          <div className="mt-4 p-3 border border-warning/50 bg-warning/10 rounded-lg">
+            <div className="flex items-center gap-2">
+              <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
+              <span className="text-sm text-warning">
+                {t('calendar.conflicts.hasConflicts', { count: conflictData.total_conflicts })}
+              </span>
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="ms-auto text-xs"
+                onClick={() => {
+                  setProceedWithConflict(false)
+                  setShowSideBySideComparison(true)
+                }}
+              >
+                {t('conflicts.resolve')}
+              </Button>
+            </div>
+          </div>
         )}
 
         {/* Action Buttons */}

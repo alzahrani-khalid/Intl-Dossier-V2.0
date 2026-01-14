@@ -55,6 +55,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { useEngagement, useArchiveEngagement } from '@/hooks/useEngagements'
+import { useEngagementNavigation } from '@/hooks/useEntityNavigation'
 import { EngagementBriefsSection } from '@/components/engagements/EngagementBriefsSection'
 import { InteractiveTimeline } from '@/components/timeline'
 import type {
@@ -92,6 +93,9 @@ export function EngagementDetailPage() {
   // Fetch engagement data
   const { data: engagementData, isLoading, isError, error } = useEngagement(engagementId)
   const archiveEngagement = useArchiveEngagement()
+
+  // Track this engagement in navigation history
+  useEngagementNavigation(engagementId, engagementData?.engagement, { skip: isLoading })
 
   // Toggle section expansion
   const toggleSection = (section: string) => {

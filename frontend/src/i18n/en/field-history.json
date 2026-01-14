@@ -1,0 +1,122 @@
+{
+  "title": "Field History",
+  "description": "Track individual field changes with rollback capability",
+
+  "viewMode": {
+    "timeline": "Timeline",
+    "grouped": "By Field"
+  },
+
+  "filters": {
+    "category": "Category",
+    "allCategories": "All Categories",
+    "clearField": "Clear filter: {{field}}",
+    "dateRange": "Date Range",
+    "changedBy": "Changed By"
+  },
+
+  "entry": {
+    "oldValue": "Previous Value",
+    "newValue": "New Value",
+    "unknownUser": "Unknown User",
+    "rollback": "Rollback",
+    "rolledBackAt": "Rolled back {{date}}",
+    "rollbackOf": "This is a rollback of a previous change"
+  },
+
+  "grouped": {
+    "changes": "changes",
+    "currentValue": "Current value",
+    "viewHistory": "View full history"
+  },
+
+  "rollback": {
+    "title": "Confirm Rollback",
+    "description": "Are you sure you want to rollback this field to its previous value? This action will be recorded in the history.",
+    "field": "Field",
+    "currentValue": "Current Value",
+    "restoreTo": "Restore To",
+    "confirm": "Rollback",
+    "cancel": "Cancel",
+    "rolling": "Rolling back...",
+    "success": "Field successfully rolled back",
+    "error": "Failed to rollback field"
+  },
+
+  "pagination": {
+    "showing": "Showing {{start}}-{{end}} of {{total}}",
+    "prev": "Previous",
+    "next": "Next"
+  },
+
+  "empty": {
+    "noHistory": "No change history found for this entity",
+    "noChanges": "No changes recorded yet"
+  },
+
+  "error": {
+    "loading": "Failed to load field history",
+    "rollback": "Failed to rollback change"
+  },
+
+  "changeType": {
+    "create": "Created",
+    "update": "Updated",
+    "delete": "Deleted",
+    "rollback": "Rolled Back"
+  },
+
+  "fieldCategory": {
+    "base": "Core Fields",
+    "extension": "Extended Fields",
+    "metadata": "Metadata",
+    "relationship": "Relationships"
+  },
+
+  "entityType": {
+    "person": "Person",
+    "engagement": "Engagement",
+    "commitment": "Commitment",
+    "organization": "Organization",
+    "country": "Country",
+    "forum": "Forum",
+    "mou": "MoU",
+    "position": "Position",
+    "dossier": "Dossier",
+    "task": "Task",
+    "intake_ticket": "Intake Ticket",
+    "working_group": "Working Group",
+    "theme": "Theme"
+  },
+
+  "commonFields": {
+    "name_en": "Name (English)",
+    "name_ar": "Name (Arabic)",
+    "description_en": "Description (English)",
+    "description_ar": "Description (Arabic)",
+    "status": "Status",
+    "priority": "Priority",
+    "type": "Type",
+    "email": "Email",
+    "phone": "Phone",
+    "title": "Title",
+    "nationality": "Nationality",
+    "organization_id": "Organization",
+    "country_id": "Country",
+    "assignee_id": "Assignee",
+    "owner_id": "Owner",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "deadline": "Deadline",
+    "notes": "Notes",
+    "tags": "Tags"
+  },
+
+  "accessibility": {
+    "timeline": "Field history timeline",
+    "entryCard": "Field change entry",
+    "rollbackButton": "Rollback this change",
+    "expandEntry": "Expand entry details",
+    "collapseEntry": "Collapse entry details"
+  }
+}

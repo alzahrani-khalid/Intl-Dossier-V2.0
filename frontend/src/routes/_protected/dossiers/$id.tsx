@@ -11,6 +11,7 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDossier } from '../../../hooks/useDossier'
+import { useDossierNavigation } from '../../../hooks/useEntityNavigation'
 import { useArchiveDossier } from '../../../hooks/useArchiveDossier'
 import { DossierHeader } from '../../../components/DossierHeader'
 import { DossierStats } from '../../../components/DossierStats'
@@ -75,6 +76,9 @@ function DossierDetailPage() {
 
   // Mutations (updateMutation unused until edit functionality is added)
   const archiveMutation = useArchiveDossier(id)
+
+  // Track this dossier in navigation history
+  useDossierNavigation(id, dossier, { skip: isLoading })
 
   // Handlers
   const handleEdit = () => {

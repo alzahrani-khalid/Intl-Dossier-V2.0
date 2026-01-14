@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "Show a persistent breadcrumb trail with the last 5-10 entities viewed, allowing quick navigation back to recently accessed records without losing context or using browser back button.\n\n**Rationale:** Users frequently jump between related entities and lose their place. Browser back button may not preserve filters or scroll position. Losing context disrupts workflow and forces repetitive navigation.",
+  "title": "Breadcrumb Trail with Recent Entity History",
+  "status": "verified",
+  "id": "feature-1768382896490-podkvovbt",
+  "descriptionHistory": [
+    {
+      "description": "Show a persistent breadcrumb trail with the last 5-10 entities viewed, allowing quick navigation back to recently accessed records without losing context or using browser back button.\n\n**Rationale:** Users frequently jump between related entities and lose their place. Browser back button may not preserve filters or scroll position. Losing context disrupts workflow and forces repetitive navigation.",
+      "timestamp": "2026-01-14T09:28:16.490Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-14T11:57:36.815Z",
+  "updatedAt": "2026-01-14T12:10:20.018Z"
+}

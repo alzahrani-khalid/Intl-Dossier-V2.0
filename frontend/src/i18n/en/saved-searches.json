@@ -1,0 +1,171 @@
+{
+  "title": "Saved Searches",
+  "searchPlaceholder": "Search saved searches...",
+  "createNew": "Save New Search",
+  "useCount": "Used {{count}} times",
+  "useCount_one": "Used {{count}} time",
+  "resultCount": "{{count}} results",
+  "execute": "Run Search",
+
+  "tabs": {
+    "all": "All",
+    "pinned": "Pinned",
+    "smart": "Smart Filters"
+  },
+
+  "empty": {
+    "all": "No saved searches yet. Save your first search to get started.",
+    "pinned": "No pinned searches. Pin your frequently used searches for quick access.",
+    "smart": "No smart filters available."
+  },
+
+  "actions": {
+    "pin": "Pin to Top",
+    "unpin": "Unpin",
+    "edit": "Edit",
+    "share": "Share",
+    "configureAlert": "Configure Alert",
+    "delete": "Delete"
+  },
+
+  "deleteDialog": {
+    "title": "Delete Saved Search",
+    "description": "Are you sure you want to delete this saved search? This action cannot be undone. Any shares and alerts associated with this search will also be removed.",
+    "cancel": "Cancel",
+    "confirm": "Delete",
+    "deleting": "Deleting..."
+  },
+
+  "dialog": {
+    "createTitle": "Save Search",
+    "editTitle": "Edit Saved Search",
+    "nameEn": "Name (English)",
+    "nameEnPlaceholder": "My search query...",
+    "nameAr": "Name (Arabic)",
+    "nameArPlaceholder": "استعلام البحث الخاص بي...",
+    "descriptionEn": "Description (English)",
+    "descriptionEnPlaceholder": "Optional description...",
+    "descriptionAr": "Description (Arabic)",
+    "descriptionArPlaceholder": "وصف اختياري...",
+    "icon": "Icon",
+    "color": "Color",
+    "category": "Category",
+    "pinToTop": "Pin to Top",
+    "pinToTopDescription": "Pinned searches appear at the top for quick access",
+    "searchPreview": "Preview",
+    "untitled": "Untitled Search",
+    "queryPrefix": "Query",
+    "entityTypes": "Searching in",
+    "cancel": "Cancel",
+    "save": "Save Changes",
+    "create": "Save Search",
+    "saving": "Saving..."
+  },
+
+  "share": {
+    "title": "Share Saved Search",
+    "addNew": "Add New Share",
+    "shareWith": "Share With",
+    "userId": "User Email or ID",
+    "userIdPlaceholder": "Enter user email or ID...",
+    "permission": "Permission Level",
+    "message": "Message (Optional)",
+    "messagePlaceholder": "Add a message for the recipient...",
+    "shareButton": "Share",
+    "sharing": "Sharing...",
+    "currentShares": "Current Shares",
+    "noShares": "This search hasn't been shared with anyone yet.",
+    "close": "Close"
+  },
+
+  "alert": {
+    "title": "Configure Search Alert",
+    "description": "Get notified when new items match this search criteria.",
+    "active": "Active",
+    "paused": "Paused",
+    "alertCount": "{{count}} alerts sent",
+    "alertCount_one": "{{count}} alert sent",
+    "enabled": "Enable Alerts",
+    "enabledDescription": "Receive notifications when search results change",
+    "frequency": "Check Frequency",
+    "triggerOn": "Alert When",
+    "threshold": "Result Threshold",
+    "thresholdPlaceholder": "e.g., 10",
+    "thresholdDescription": "Alert when results exceed this number",
+    "notifyVia": "Notification Channels",
+    "notifyInApp": "In-App Notifications",
+    "notifyInAppDescription": "Show alerts in the notification center",
+    "notifyEmail": "Email Notifications",
+    "notifyEmailDescription": "Send alerts to your email",
+    "notifyPush": "Push Notifications",
+    "notifyPushDescription": "Send push notifications to mobile",
+    "noChannelWarning": "Select at least one notification channel to receive alerts.",
+    "cancel": "Cancel",
+    "create": "Create Alert",
+    "update": "Update Alert",
+    "delete": "Delete Alert",
+    "saving": "Saving...",
+    "deleting": "Deleting..."
+  },
+
+  "categories": {
+    "personal": "Personal",
+    "team": "Team",
+    "organization": "Organization",
+    "smart": "Smart Filter",
+    "recent": "Recent"
+  },
+
+  "permissions": {
+    "view": "View Only",
+    "edit": "Can Edit",
+    "admin": "Full Access"
+  },
+
+  "frequencies": {
+    "realtime": "Real-time",
+    "hourly": "Hourly",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly"
+  },
+
+  "triggers": {
+    "new_results": "New Results",
+    "result_changes": "Result Changes",
+    "threshold_reached": "Threshold Reached"
+  },
+
+  "smartFilters": {
+    "myActiveTasks": "My Active Tasks",
+    "myActiveTasksDesc": "Work items assigned to you that are in progress",
+    "pendingApprovals": "Pending Approvals",
+    "pendingApprovalsDesc": "Items waiting for your approval",
+    "recentlyModified": "Recently Modified",
+    "recentlyModifiedDesc": "Items modified in the last 24 hours",
+    "upcomingDeadlines": "Upcoming Deadlines",
+    "upcomingDeadlinesDesc": "Items with deadlines in the next 7 days",
+    "unreadDocuments": "Unread Documents",
+    "unreadDocumentsDesc": "Documents you haven't viewed yet",
+    "middleEastRegion": "Middle East Region",
+    "middleEastRegionDesc": "Items related to Middle East countries",
+    "unAgencies": "UN Agencies",
+    "unAgenciesDesc": "Items related to United Nations organizations",
+    "bilateralRelations": "Bilateral Relations",
+    "bilateralRelationsDesc": "Bilateral engagement dossiers"
+  },
+
+  "toast": {
+    "created": "Search saved successfully",
+    "updated": "Search updated successfully",
+    "deleted": "Search deleted successfully",
+    "shared": "Search shared successfully",
+    "shareRemoved": "Share removed successfully",
+    "alertCreated": "Alert configured successfully",
+    "alertUpdated": "Alert updated successfully",
+    "alertDeleted": "Alert removed successfully",
+    "pinned": "Search pinned",
+    "unpinned": "Search unpinned",
+    "error": "An error occurred. Please try again."
+  }
+}

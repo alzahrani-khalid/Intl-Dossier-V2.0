@@ -1,0 +1,263 @@
+{
+  "title": "صندوق السيناريوهات",
+  "subtitle": "نمذجة النتائج المحتملة ومقارنة استراتيجيات المشاركة",
+  "description": "إنشاء سيناريوهات تجريبية لاستكشاف تحليلات ماذا لو دون التأثير على بيانات الإنتاج",
+
+  "tabs": {
+    "scenarios": "سيناريوهاتي",
+    "comparisons": "المقارنات",
+    "templates": "القوالب"
+  },
+
+  "scenario": {
+    "title": "السيناريو",
+    "create": "إنشاء سيناريو",
+    "edit": "تعديل السيناريو",
+    "delete": "حذف السيناريو",
+    "clone": "نسخ السيناريو",
+    "view": "عرض السيناريو",
+    "share": "مشاركة السيناريو",
+    "archive": "أرشفة السيناريو",
+    "activate": "تفعيل السيناريو",
+    "complete": "وضع علامة مكتمل",
+
+    "fields": {
+      "title": "العنوان",
+      "title_en": "العنوان (الإنجليزية)",
+      "title_ar": "العنوان (العربية)",
+      "description": "الوصف",
+      "description_en": "الوصف (الإنجليزية)",
+      "description_ar": "الوصف (العربية)",
+      "type": "نوع السيناريو",
+      "status": "الحالة",
+      "base_date": "تاريخ الأساس",
+      "projection_period": "فترة التوقع",
+      "projection_period_days": "فترة التوقع (أيام)",
+      "tags": "العلامات"
+    },
+
+    "types": {
+      "stakeholder_engagement": "مشاركة أصحاب المصلحة",
+      "policy_change": "تغيير السياسة",
+      "relationship_impact": "تأثير العلاقة",
+      "resource_allocation": "تخصيص الموارد",
+      "strategic_planning": "التخطيط الاستراتيجي"
+    },
+
+    "statuses": {
+      "draft": "مسودة",
+      "active": "نشط",
+      "completed": "مكتمل",
+      "archived": "مؤرشف"
+    },
+
+    "messages": {
+      "created": "تم إنشاء السيناريو بنجاح",
+      "updated": "تم تحديث السيناريو بنجاح",
+      "deleted": "تم حذف السيناريو بنجاح",
+      "cloned": "تم نسخ السيناريو بنجاح",
+      "archived": "تم أرشفة السيناريو بنجاح",
+      "activated": "تم تفعيل السيناريو بنجاح",
+      "completed": "تم وضع علامة مكتمل على السيناريو"
+    },
+
+    "confirmDelete": "هل أنت متأكد من رغبتك في حذف هذا السيناريو؟ لا يمكن التراجع عن هذا الإجراء.",
+    "noScenarios": "لا توجد سيناريوهات بعد",
+    "noScenariosDesc": "أنشئ سيناريوك الأول لبدء نمذجة النتائج المحتملة"
+  },
+
+  "variable": {
+    "title": "المتغير",
+    "variables": "المتغيرات",
+    "add": "إضافة متغير",
+    "edit": "تعديل المتغير",
+    "delete": "حذف المتغير",
+    "whatIf": "ماذا لو",
+
+    "fields": {
+      "name": "اسم المتغير",
+      "name_en": "الاسم (الإنجليزية)",
+      "name_ar": "الاسم (العربية)",
+      "change_type": "نوع التغيير",
+      "target_entity": "الكيان المستهدف",
+      "target_entity_type": "نوع الكيان",
+      "target_entity_id": "معرف الكيان",
+      "original_value": "القيمة الأصلية",
+      "modified_value": "القيمة المعدلة"
+    },
+
+    "changeTypes": {
+      "relationship_health": "صحة العلاقة",
+      "stakeholder_influence": "تأثير صاحب المصلحة",
+      "engagement_frequency": "تكرار المشاركة",
+      "resource_level": "مستوى الموارد",
+      "policy_status": "حالة السياسة",
+      "custom_metric": "مقياس مخصص"
+    },
+
+    "entityTypes": {
+      "dossier": "ملف",
+      "relationship": "علاقة",
+      "commitment": "التزام",
+      "engagement": "مشاركة"
+    },
+
+    "messages": {
+      "added": "تمت إضافة المتغير بنجاح",
+      "updated": "تم تحديث المتغير بنجاح",
+      "deleted": "تم حذف المتغير بنجاح"
+    },
+
+    "noVariables": "لم يتم تحديد متغيرات",
+    "noVariablesDesc": "أضف متغيرات لتحديد تغييرات ماذا لو لهذا السيناريو"
+  },
+
+  "outcome": {
+    "title": "النتيجة",
+    "outcomes": "النتائج",
+    "add": "إضافة نتيجة",
+    "edit": "تعديل النتيجة",
+    "delete": "حذف النتيجة",
+    "predictedOutcomes": "النتائج المتوقعة",
+
+    "fields": {
+      "title": "عنوان النتيجة",
+      "title_en": "العنوان (الإنجليزية)",
+      "title_ar": "العنوان (العربية)",
+      "description": "الوصف",
+      "description_en": "الوصف (الإنجليزية)",
+      "description_ar": "الوصف (العربية)",
+      "impact_level": "مستوى التأثير",
+      "probability": "الاحتمالية",
+      "probability_score": "درجة الاحتمالية",
+      "affected_entity": "الكيان المتأثر",
+      "projected_metrics": "المقاييس المتوقعة",
+      "is_positive": "نتيجة إيجابية"
+    },
+
+    "impactLevels": {
+      "minimal": "الحد الأدنى",
+      "low": "منخفض",
+      "moderate": "متوسط",
+      "high": "عالي",
+      "critical": "حرج"
+    },
+
+    "messages": {
+      "added": "تمت إضافة النتيجة بنجاح",
+      "updated": "تم تحديث النتيجة بنجاح",
+      "deleted": "تم حذف النتيجة بنجاح"
+    },
+
+    "noOutcomes": "لم يتم تحديد نتائج",
+    "noOutcomesDesc": "أضف نتائج متوقعة لتحليل النتائج المحتملة",
+    "positive": "إيجابي",
+    "negative": "سلبي"
+  },
+
+  "comparison": {
+    "title": "المقارنة",
+    "comparisons": "المقارنات",
+    "create": "إنشاء مقارنة",
+    "view": "عرض المقارنة",
+    "delete": "حذف المقارنة",
+    "sideBySide": "مقارنة جنبًا إلى جنب",
+    "selectScenarios": "اختر السيناريوهات للمقارنة",
+
+    "fields": {
+      "title": "عنوان المقارنة",
+      "title_en": "العنوان (الإنجليزية)",
+      "title_ar": "العنوان (العربية)",
+      "description": "الوصف",
+      "scenarios": "السيناريوهات",
+      "metrics": "مقاييس المقارنة"
+    },
+
+    "messages": {
+      "created": "تم إنشاء المقارنة بنجاح",
+      "deleted": "تم حذف المقارنة بنجاح"
+    },
+
+    "noComparisons": "لا توجد مقارنات بعد",
+    "noComparisonsDesc": "أنشئ مقارنة لتحليل عدة سيناريوهات جنبًا إلى جنب",
+    "minScenarios": "اختر سيناريوهين على الأقل للمقارنة"
+  },
+
+  "collaborator": {
+    "title": "المتعاون",
+    "collaborators": "المتعاونون",
+    "add": "إضافة متعاون",
+    "remove": "إزالة المتعاون",
+
+    "roles": {
+      "owner": "المالك",
+      "editor": "المحرر",
+      "viewer": "المشاهد"
+    },
+
+    "messages": {
+      "added": "تمت إضافة المتعاون بنجاح",
+      "removed": "تمت إزالة المتعاون بنجاح"
+    }
+  },
+
+  "snapshot": {
+    "title": "اللقطة",
+    "snapshots": "اللقطات",
+    "create": "إنشاء لقطة",
+    "restore": "استعادة اللقطة",
+    "version": "الإصدار"
+  },
+
+  "analysis": {
+    "title": "التحليل",
+    "summary": "الملخص",
+    "metrics": "المقاييس",
+    "projections": "التوقعات",
+    "recommendations": "التوصيات",
+
+    "stats": {
+      "totalVariables": "إجمالي المتغيرات",
+      "totalOutcomes": "إجمالي النتائج",
+      "positiveOutcomes": "النتائج الإيجابية",
+      "negativeOutcomes": "النتائج السلبية",
+      "avgProbability": "متوسط الاحتمالية",
+      "projectionDays": "أيام التوقع"
+    }
+  },
+
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "create": "إنشاء",
+    "update": "تحديث",
+    "delete": "حذف",
+    "compare": "مقارنة",
+    "export": "تصدير",
+    "import": "استيراد",
+    "run": "تشغيل التحليل",
+    "reset": "إعادة تعيين"
+  },
+
+  "filters": {
+    "status": "تصفية حسب الحالة",
+    "type": "تصفية حسب النوع",
+    "search": "البحث في السيناريوهات...",
+    "all": "الكل"
+  },
+
+  "empty": {
+    "title": "ابدأ التخطيط",
+    "description": "أنشئ سيناريوك الأول لنمذجة النتائج المحتملة لاستراتيجيات المشاركة أو تغييرات السياسات",
+    "action": "إنشاء أول سيناريو"
+  },
+
+  "errors": {
+    "loadFailed": "فشل تحميل السيناريوهات",
+    "saveFailed": "فشل حفظ السيناريو",
+    "deleteFailed": "فشل حذف السيناريو",
+    "notFound": "السيناريو غير موجود",
+    "unauthorized": "ليس لديك إذن للوصول إلى هذا السيناريو"
+  }
+}

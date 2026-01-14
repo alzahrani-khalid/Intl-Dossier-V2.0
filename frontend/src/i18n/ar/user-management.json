@@ -196,7 +196,8 @@
     "filterByType": "تصفية حسب النوع",
     "showAll": "عرض الكل",
     "resultsPerPage": "النتائج في الصفحة",
-    "showing": "عرض {{from}}-{{to}} من {{total}} مستخدم"
+    "showing": "عرض {{from}}-{{to}} من {{total}} مستخدم",
+    "actionsColumn": "الإجراءات"
   },
 
   "userDetail": {

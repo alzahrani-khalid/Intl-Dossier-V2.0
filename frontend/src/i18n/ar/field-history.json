@@ -1,0 +1,122 @@
+{
+  "title": "سجل تغييرات الحقول",
+  "description": "تتبع التغييرات الفردية للحقول مع إمكانية الاستعادة",
+
+  "viewMode": {
+    "timeline": "الخط الزمني",
+    "grouped": "حسب الحقل"
+  },
+
+  "filters": {
+    "category": "الفئة",
+    "allCategories": "جميع الفئات",
+    "clearField": "إزالة الفلتر: {{field}}",
+    "dateRange": "النطاق الزمني",
+    "changedBy": "تم التغيير بواسطة"
+  },
+
+  "entry": {
+    "oldValue": "القيمة السابقة",
+    "newValue": "القيمة الجديدة",
+    "unknownUser": "مستخدم غير معروف",
+    "rollback": "استعادة",
+    "rolledBackAt": "تمت الاستعادة {{date}}",
+    "rollbackOf": "هذه استعادة لتغيير سابق"
+  },
+
+  "grouped": {
+    "changes": "تغييرات",
+    "currentValue": "القيمة الحالية",
+    "viewHistory": "عرض السجل الكامل"
+  },
+
+  "rollback": {
+    "title": "تأكيد الاستعادة",
+    "description": "هل أنت متأكد من استعادة هذا الحقل إلى قيمته السابقة؟ سيتم تسجيل هذا الإجراء في السجل.",
+    "field": "الحقل",
+    "currentValue": "القيمة الحالية",
+    "restoreTo": "الاستعادة إلى",
+    "confirm": "استعادة",
+    "cancel": "إلغاء",
+    "rolling": "جارٍ الاستعادة...",
+    "success": "تمت استعادة الحقل بنجاح",
+    "error": "فشل في استعادة الحقل"
+  },
+
+  "pagination": {
+    "showing": "عرض {{start}}-{{end}} من {{total}}",
+    "prev": "السابق",
+    "next": "التالي"
+  },
+
+  "empty": {
+    "noHistory": "لا يوجد سجل تغييرات لهذا الكيان",
+    "noChanges": "لم يتم تسجيل أي تغييرات بعد"
+  },
+
+  "error": {
+    "loading": "فشل في تحميل سجل الحقول",
+    "rollback": "فشل في استعادة التغيير"
+  },
+
+  "changeType": {
+    "create": "تم الإنشاء",
+    "update": "تم التحديث",
+    "delete": "تم الحذف",
+    "rollback": "تم الاستعادة"
+  },
+
+  "fieldCategory": {
+    "base": "الحقول الأساسية",
+    "extension": "الحقول الموسعة",
+    "metadata": "البيانات الوصفية",
+    "relationship": "العلاقات"
+  },
+
+  "entityType": {
+    "person": "شخص",
+    "engagement": "ارتباط",
+    "commitment": "التزام",
+    "organization": "منظمة",
+    "country": "دولة",
+    "forum": "منتدى",
+    "mou": "مذكرة تفاهم",
+    "position": "موقف",
+    "dossier": "ملف",
+    "task": "مهمة",
+    "intake_ticket": "تذكرة استقبال",
+    "working_group": "مجموعة عمل",
+    "theme": "موضوع"
+  },
+
+  "commonFields": {
+    "name_en": "الاسم (إنجليزي)",
+    "name_ar": "الاسم (عربي)",
+    "description_en": "الوصف (إنجليزي)",
+    "description_ar": "الوصف (عربي)",
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "type": "النوع",
+    "email": "البريد الإلكتروني",
+    "phone": "الهاتف",
+    "title": "المسمى",
+    "nationality": "الجنسية",
+    "organization_id": "المنظمة",
+    "country_id": "الدولة",
+    "assignee_id": "المسؤول",
+    "owner_id": "المالك",
+    "start_date": "تاريخ البدء",
+    "end_date": "تاريخ الانتهاء",
+    "deadline": "الموعد النهائي",
+    "notes": "ملاحظات",
+    "tags": "العلامات"
+  },
+
+  "accessibility": {
+    "timeline": "الخط الزمني لتاريخ الحقول",
+    "entryCard": "بطاقة تغيير الحقل",
+    "rollbackButton": "استعادة هذا التغيير",
+    "expandEntry": "توسيع تفاصيل المدخل",
+    "collapseEntry": "طي تفاصيل المدخل"
+  }
+}

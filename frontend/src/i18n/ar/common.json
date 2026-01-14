@@ -1045,5 +1045,25 @@
     "collapsed": "تم طي الرأس",
     "expanded": "تم توسيع الرأس",
     "contextTitle": "القسم الحالي"
+  },
+  "breadcrumbTrail": {
+    "recent": "الأخيرة",
+    "remove": "إزالة من السجل",
+    "clearAll": "مسح الكل",
+    "more": "المزيد",
+    "scrollLeft": "التمرير لليسار",
+    "scrollRight": "التمرير لليمين",
+    "empty": "لا توجد كيانات تمت مشاهدتها مؤخراً"
+  },
+  "entityTypes": {
+    "dossier": "ملف",
+    "country": "دولة",
+    "organization": "منظمة",
+    "person": "شخص",
+    "engagement": "ارتباط",
+    "position": "موقف",
+    "forum": "منتدى",
+    "working_group": "مجموعة عمل",
+    "topic": "موضوع"
   }
 }

@@ -2,9 +2,11 @@ import { useRef, type ReactNode } from 'react'
 import { Toaster } from 'react-hot-toast'
 import { ProCollapsibleSidebarWrapper } from './ProCollapsibleSidebar'
 import { CollapsingHeader, CollapsingHeaderSpacer } from './CollapsingHeader'
+import { EntityBreadcrumbTrail } from './EntityBreadcrumbTrail'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { ContextAwareFAB } from '@/components/ui/context-aware-fab'
 import { useContextAwareFAB } from '@/hooks/useContextAwareFAB'
+import { useEntityHistoryStore } from '@/store/entityHistoryStore'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -12,9 +14,16 @@ interface MainLayoutProps {
   useCollapsingHeader?: boolean
   /** Whether to show the context-aware FAB (default: true on mobile) */
   showFAB?: boolean
+  /** Whether to show the entity breadcrumb trail (default: true) */
+  showBreadcrumbTrail?: boolean
 }
 
-export function MainLayout({ children, useCollapsingHeader, showFAB }: MainLayoutProps) {
+export function MainLayout({
+  children,
+  useCollapsingHeader,
+  showFAB,
+  showBreadcrumbTrail = true,
+}: MainLayoutProps) {
   const isMobile = useIsMobile()
   const mainRef = useRef<HTMLElement>(null)
 
@@ -26,6 +35,10 @@ export function MainLayout({ children, useCollapsingHeader, showFAB }: MainLayou
 
   // Show FAB on mobile by default, or use explicit prop
   const displayFAB = (showFAB ?? isMobile) && shouldShowFAB
+
+  // Entity breadcrumb trail - only show if enabled and has history
+  const { history } = useEntityHistoryStore()
+  const displayBreadcrumbTrail = showBreadcrumbTrail && history.length > 0
 
   return (
     <>
@@ -47,6 +60,15 @@ export function MainLayout({ children, useCollapsingHeader, showFAB }: MainLayou
           >
             {/* Header spacer when collapsing header is active */}
             {showCollapsingHeader && <CollapsingHeaderSpacer />}
+
+            {/* Entity breadcrumb trail - shows recently viewed entities */}
+            {displayBreadcrumbTrail && (
+              <EntityBreadcrumbTrail
+                maxDisplay={isMobile ? 3 : 5}
+                compact={isMobile}
+                className="sticky top-16 z-30 -mx-4 md:-mx-6 lg:-mx-8"
+              />
+            )}
 
             {/* Content padding when no collapsing header (desktop) */}
             {!showCollapsingHeader && <div className="h-6 md:h-6 lg:h-8" />}

@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "When users encounter permission-denied errors, explain specifically what permission is needed, why they don't have it, and provide a button to request access from the appropriate person.\n\n**Rationale:** Generic 'Access Denied' messages leave users stuck without recourse. They don't know who to contact or what to request. This creates help desk tickets and workflow bottlenecks for time-sensitive tasks.",
+  "title": "Permission Denial Explanations with Request Access",
+  "status": "verified",
+  "id": "feature-1768382898128-n539yc1ft",
+  "descriptionHistory": [
+    {
+      "description": "When users encounter permission-denied errors, explain specifically what permission is needed, why they don't have it, and provide a button to request access from the appropriate person.\n\n**Rationale:** Generic 'Access Denied' messages leave users stuck without recourse. They don't know who to contact or what to request. This creates help desk tickets and workflow bottlenecks for time-sensitive tasks.",
+      "timestamp": "2026-01-14T09:28:18.128Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-14T12:29:47.771Z",
+  "updatedAt": "2026-01-14T12:44:09.782Z"
+}

@@ -140,6 +140,8 @@
   "preview": {
     "title": "Review Items",
     "description": "Review and modify the items to {{action}}:",
+    "affectedEntities": "Review affected entities before proceeding",
+    "reviewBeforeConfirm": "Review and uncheck any items you want to exclude from this action:",
     "includedCount": "{{count}} included",
     "excludedCount": "{{count}} excluded",
     "includeAll": "Include all",
@@ -155,7 +157,11 @@
     "selectItems": "Select items to include",
     "deselectItems": "Deselect items to exclude",
     "itemsToProcess": "{{count}} item(s) will be processed",
-    "excludedFromAction": "{{count}} item(s) will be excluded from this action"
+    "excludedFromAction": "{{count}} item(s) will be excluded from this action",
+    "entityDetails": "Entity Details",
+    "clickToExclude": "Click on any item to exclude it from this action",
+    "allItemsSelected": "All {{count}} items are selected for this action",
+    "someItemsExcluded": "{{excluded}} of {{total}} items excluded"
   },
 
   "entityTypes": {

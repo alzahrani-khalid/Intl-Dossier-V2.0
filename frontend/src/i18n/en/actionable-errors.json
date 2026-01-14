@@ -1,0 +1,136 @@
+{
+  "summary": {
+    "title": "Please fix {{count}} error before continuing",
+    "title_one": "Please fix 1 error before continuing",
+    "title_other": "Please fix {{count}} errors before continuing",
+    "description": "Click on each error to fix it or use the quick fix buttons"
+  },
+  "fixAll": "Fix all ({{count}})",
+  "fixAll.short": "Fix all",
+  "showMore": "Show {{count}} more error(s)",
+  "showLess": "Show less",
+  "allFixed": "All errors have been fixed!",
+  "fix": "Fix",
+  "dismiss": "Dismiss",
+
+  "warnings": {
+    "count": "{{count}} warning(s) detected",
+    "count_one": "1 warning detected",
+    "count_other": "{{count}} warnings detected"
+  },
+
+  "actions": {
+    "focusField": "Go to field",
+    "fillRequired": "Fill this field",
+    "addCharacters": "Add more text",
+    "trimText": "Trim to limit",
+    "removeSpaces": "Remove spaces",
+    "addAtSymbol": "Add @ symbol",
+    "addAtSymbol.tooltip": "Email requires @ symbol between name and domain",
+    "addHttps": "Add https://",
+    "enterDigits": "Enter phone digits",
+    "applyFix": "Apply fix",
+    "retry": "Try again",
+    "contactSupport": "Contact support",
+    "copySuggestion": "Copy suggestion",
+    "learnMore": "Learn more"
+  },
+
+  "fields": {
+    "email": "Email",
+    "password": "Password",
+    "name": "Name",
+    "title": "Title",
+    "description": "Description",
+    "phone": "Phone",
+    "url": "URL",
+    "date": "Date",
+    "message": "Message",
+    "firstName": "First name",
+    "lastName": "Last name",
+    "company": "Company",
+    "website": "Website",
+    "address": "Address",
+    "city": "City",
+    "country": "Country",
+    "zipCode": "Zip code"
+  },
+
+  "api": {
+    "fieldError": "Field validation error",
+    "status": {
+      "400": "Invalid request",
+      "401": "Authentication required",
+      "403": "Access denied",
+      "404": "Resource not found",
+      "408": "Request timeout",
+      "409": "Conflict with existing data",
+      "422": "Validation failed",
+      "429": "Too many requests",
+      "500": "Server error",
+      "502": "Bad gateway",
+      "503": "Service unavailable",
+      "504": "Gateway timeout"
+    }
+  },
+
+  "contextual": {
+    "email": {
+      "missingAt": {
+        "title": "Email is missing @ symbol",
+        "message": "Add @ followed by your email provider (e.g., @gmail.com)"
+      },
+      "missingDomain": {
+        "title": "Email domain is incomplete",
+        "message": "Add a domain extension after @ (e.g., .com, .org)"
+      },
+      "hasSpaces": {
+        "title": "Email contains spaces",
+        "message": "Email addresses cannot contain spaces"
+      },
+      "invalidPosition": {
+        "title": "Invalid @ position",
+        "message": "The @ symbol should be between your name and domain"
+      }
+    },
+    "url": {
+      "missingProtocol": {
+        "title": "URL needs https://",
+        "message": "Add https:// at the start of the URL"
+      },
+      "missingDomain": {
+        "title": "URL is incomplete",
+        "message": "Add a valid domain (e.g., example.com)"
+      }
+    },
+    "phone": {
+      "noDigits": {
+        "title": "No phone number entered",
+        "message": "Enter your phone number using digits"
+      },
+      "tooShort": {
+        "title": "Phone number too short",
+        "message": "Enter your complete phone number with area code"
+      }
+    },
+    "required": {
+      "title": "This field is required",
+      "message": "Please enter a value to continue"
+    },
+    "minLength": {
+      "title": "Text is too short",
+      "message": "Add {{remaining}} more character(s)"
+    },
+    "maxLength": {
+      "title": "Text is too long",
+      "message": "Remove {{excess}} character(s) or use the trim button"
+    }
+  },
+
+  "toast": {
+    "errorFixed": "Error fixed!",
+    "allErrorsFixed": "All errors have been fixed",
+    "valueCopied": "Value copied to clipboard",
+    "actionFailed": "Action failed. Please try again."
+  }
+}

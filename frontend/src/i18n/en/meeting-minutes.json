@@ -1,0 +1,251 @@
+{
+  "title": "Meeting Minutes",
+  "subtitle": "Capture and manage meeting notes, decisions, and action items",
+  "createNew": "New Meeting Minutes",
+  "editMinutes": "Edit Minutes",
+  "viewMinutes": "View Minutes",
+
+  "status": {
+    "draft": "Draft",
+    "in_progress": "In Progress",
+    "review": "Under Review",
+    "approved": "Approved",
+    "archived": "Archived"
+  },
+
+  "fields": {
+    "title": "Title",
+    "titlePlaceholder": "Enter meeting title",
+    "date": "Meeting Date",
+    "endDate": "End Date",
+    "location": "Location",
+    "locationPlaceholder": "Enter meeting location",
+    "isVirtual": "Virtual Meeting",
+    "meetingUrl": "Meeting URL",
+    "meetingUrlPlaceholder": "Enter video conference link",
+    "summary": "Summary",
+    "summaryPlaceholder": "Enter meeting summary",
+    "linkedEvent": "Linked Event",
+    "linkedEngagement": "Linked Engagement",
+    "linkedDossier": "Linked Dossier"
+  },
+
+  "agenda": {
+    "title": "Agenda",
+    "addItem": "Add Agenda Item",
+    "itemTitle": "Topic",
+    "itemDescription": "Description",
+    "presenter": "Presenter",
+    "duration": "Duration (min)",
+    "status": {
+      "pending": "Pending",
+      "discussed": "Discussed",
+      "skipped": "Skipped"
+    },
+    "noItems": "No agenda items added yet",
+    "reorder": "Drag to reorder"
+  },
+
+  "discussion": {
+    "title": "Discussion Points",
+    "addPoint": "Add Discussion Point",
+    "topic": "Topic",
+    "speaker": "Speaker",
+    "notes": "Notes",
+    "noPoints": "No discussion points recorded"
+  },
+
+  "decisions": {
+    "title": "Decisions",
+    "addDecision": "Add Decision",
+    "decisionTitle": "Decision",
+    "description": "Description",
+    "type": "Type",
+    "types": {
+      "resolution": "Resolution",
+      "action": "Action",
+      "deferral": "Deferral",
+      "approval": "Approval",
+      "rejection": "Rejection"
+    },
+    "voting": {
+      "title": "Voting Results",
+      "for": "For",
+      "against": "Against",
+      "abstentions": "Abstentions",
+      "passed": "Passed",
+      "failed": "Failed"
+    },
+    "noDecisions": "No decisions recorded"
+  },
+
+  "attendees": {
+    "title": "Attendees",
+    "addAttendee": "Add Attendee",
+    "name": "Name",
+    "email": "Email",
+    "organization": "Organization",
+    "role": "Role",
+    "roles": {
+      "chair": "Chair",
+      "co_chair": "Co-Chair",
+      "secretary": "Secretary",
+      "presenter": "Presenter",
+      "attendee": "Attendee",
+      "observer": "Observer",
+      "guest": "Guest"
+    },
+    "attendance": "Attendance",
+    "attendanceStatus": {
+      "present": "Present",
+      "absent": "Absent",
+      "excused": "Excused",
+      "late": "Late",
+      "left_early": "Left Early",
+      "remote": "Remote"
+    },
+    "type": {
+      "user": "System User",
+      "person_dossier": "Person Dossier",
+      "external_contact": "External Contact",
+      "organization": "Organization"
+    },
+    "noAttendees": "No attendees added yet",
+    "selectUser": "Select User",
+    "selectPerson": "Select Person",
+    "selectOrganization": "Select Organization",
+    "enterManually": "Enter Manually",
+    "presentCount": "{{count}} present",
+    "totalCount": "{{count}} total"
+  },
+
+  "actionItems": {
+    "title": "Action Items",
+    "addItem": "Add Action Item",
+    "itemTitle": "Action Item",
+    "description": "Description",
+    "assignee": "Assignee",
+    "assigneePlaceholder": "Select or enter assignee",
+    "dueDate": "Due Date",
+    "priority": "Priority",
+    "priorities": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent"
+    },
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "deferred": "Deferred"
+    },
+    "noItems": "No action items recorded",
+    "convertToCommitment": "Convert to Commitment",
+    "convertToTask": "Convert to Task",
+    "linkedCommitment": "Linked to Commitment",
+    "linkedTask": "Linked to Task",
+    "aiExtracted": "AI Extracted",
+    "aiConfidence": "AI Confidence: {{confidence}}%",
+    "extractFromNotes": "Extract from Notes",
+    "extractFromTranscript": "Extract from Transcript"
+  },
+
+  "voiceMemos": {
+    "title": "Voice Memos",
+    "record": "Record Voice Memo",
+    "stopRecording": "Stop Recording",
+    "transcribe": "Transcribe",
+    "transcribing": "Transcribing...",
+    "transcriptionComplete": "Transcription Complete",
+    "noMemos": "No voice memos attached",
+    "attachMemo": "Attach Voice Memo",
+    "duration": "Duration: {{duration}}"
+  },
+
+  "ai": {
+    "title": "AI Features",
+    "generateSummary": "Generate AI Summary",
+    "generatingSummary": "Generating summary...",
+    "summaryGenerated": "Summary generated successfully",
+    "extractActionItems": "Extract Action Items",
+    "extracting": "Extracting action items...",
+    "extractionComplete": "Extracted {{count}} action items",
+    "noActionItemsFound": "No action items found in the text",
+    "confidence": "Confidence",
+    "model": "Model",
+    "generatedAt": "Generated at"
+  },
+
+  "actions": {
+    "save": "Save",
+    "saveDraft": "Save as Draft",
+    "submitForReview": "Submit for Review",
+    "approve": "Approve",
+    "archive": "Archive",
+    "delete": "Delete",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "view": "View",
+    "download": "Download PDF",
+    "print": "Print",
+    "share": "Share",
+    "duplicate": "Duplicate"
+  },
+
+  "filters": {
+    "title": "Filters",
+    "search": "Search minutes...",
+    "status": "Status",
+    "dateRange": "Date Range",
+    "fromDate": "From",
+    "toDate": "To",
+    "createdBy": "Created By",
+    "dossier": "Dossier",
+    "engagement": "Engagement",
+    "clearFilters": "Clear Filters"
+  },
+
+  "list": {
+    "noMinutes": "No meeting minutes found",
+    "noMinutesDescription": "Create your first meeting minutes to get started",
+    "loadMore": "Load More",
+    "showing": "Showing {{count}} of {{total}} minutes"
+  },
+
+  "messages": {
+    "createSuccess": "Meeting minutes created successfully",
+    "updateSuccess": "Meeting minutes updated successfully",
+    "deleteSuccess": "Meeting minutes deleted successfully",
+    "approveSuccess": "Meeting minutes approved successfully",
+    "attendeeAdded": "Attendee added successfully",
+    "attendeeRemoved": "Attendee removed successfully",
+    "actionItemAdded": "Action item added successfully",
+    "actionItemUpdated": "Action item updated successfully",
+    "actionItemRemoved": "Action item removed successfully",
+    "convertedToCommitment": "Action item converted to commitment",
+    "error": "An error occurred. Please try again."
+  },
+
+  "validation": {
+    "titleRequired": "Title is required",
+    "dateRequired": "Meeting date is required",
+    "sourceRequired": "Please link this to an event, engagement, or dossier",
+    "invalidUrl": "Please enter a valid URL"
+  },
+
+  "stats": {
+    "attendees": "Attendees",
+    "present": "Present",
+    "actionItems": "Action Items",
+    "completed": "Completed",
+    "voiceMemos": "Voice Memos"
+  },
+
+  "empty": {
+    "title": "No Meeting Minutes Yet",
+    "description": "Start capturing meeting minutes to track decisions and action items.",
+    "cta": "Create Meeting Minutes"
+  }
+}

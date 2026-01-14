@@ -4,15 +4,18 @@
  *
  * Dialog for creating and editing dossier relationships.
  * Mobile-first design with RTL support.
+ *
+ * Enhanced with:
+ * - Guided relationship type selection (feature: relationship-type-guidance)
+ * - Rich entity autocomplete with previews (feature: rich-entity-autocomplete)
  */
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { Link2, Loader2, Search, X } from 'lucide-react'
-import { useQuery } from '@tanstack/react-query'
+import { Link2, Loader2 } from 'lucide-react'
 
 import {
   Dialog,
@@ -42,19 +45,10 @@ import {
   SelectValue,
 } from '@/components/ui/select'
 import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from '@/components/ui/command'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Badge } from '@/components/ui/badge'
-import { supabase } from '@/lib/supabase'
+  RichEntityAutocomplete,
+  type EntityWithPreview,
+} from '@/components/Forms/RichEntityAutocomplete'
 import {
-  RELATIONSHIP_TYPES,
-  RELATIONSHIP_TYPE_LABELS,
   RELATIONSHIP_STATUS_LABELS,
   DOSSIER_TYPE_LABELS,
   type DossierRelationshipType,
@@ -62,20 +56,14 @@ import {
   type DossierRelationshipWithDossiers,
   type RelationshipCreate,
   type RelationshipUpdate,
+  type DossierType,
 } from '@/types/relationship.types'
 import { useCreateRelationship, useUpdateRelationship } from '@/hooks/useRelationships'
+import { RelationshipTypeSelector } from '@/components/relationship-guidance/RelationshipTypeSelector'
 
 // ============================================================================
 // Types
 // ============================================================================
-
-interface DossierOption {
-  id: string
-  type: string
-  name_en: string
-  name_ar: string
-  status: string
-}
 
 interface RelationshipFormDialogProps {
   open: boolean
@@ -116,38 +104,16 @@ export function RelationshipFormDialog({
   relationship,
   mode,
 }: RelationshipFormDialogProps) {
-  const { t, i18n } = useTranslation(['relationships', 'contextual-help'])
+  const { t, i18n } = useTranslation(['relationships', 'contextual-help', 'rich-autocomplete'])
   const isRTL = i18n.language === 'ar'
 
-  const [dossierSearchOpen, setDossierSearchOpen] = useState(false)
-  const [dossierSearch, setDossierSearch] = useState('')
-  const [selectedDossier, setSelectedDossier] = useState<DossierOption | null>(null)
+  // Selected entity for rich autocomplete
+  const [selectedEntity, setSelectedEntity] = useState<EntityWithPreview | null>(null)
 
   const createMutation = useCreateRelationship()
   const updateMutation = useUpdateRelationship()
 
   const isLoading = createMutation.isPending || updateMutation.isPending
-
-  // Search for dossiers
-  const { data: dossierOptions, isLoading: isSearching } = useQuery({
-    queryKey: ['dossiers', 'search', dossierSearch],
-    queryFn: async () => {
-      if (!dossierSearch || dossierSearch.length < 2) return []
-
-      const { data, error } = await supabase
-        .from('dossiers')
-        .select('id, type, name_en, name_ar, status')
-        .neq('id', dossierId) // Exclude current dossier
-        .neq('status', 'archived')
-        .or(`name_en.ilike.%${dossierSearch}%,name_ar.ilike.%${dossierSearch}%`)
-        .limit(10)
-
-      if (error) throw error
-      return data as DossierOption[]
-    },
-    enabled: dossierSearch.length >= 2,
-    staleTime: 30_000,
-  })
 
   // Form setup
   const form = useForm<RelationshipFormValues>({
@@ -163,10 +129,34 @@ export function RelationshipFormDialog({
     },
   })
 
-  // Set selected dossier when editing
+  // Set selected entity when editing
   useEffect(() => {
     if (mode === 'edit' && relationship?.target_dossier) {
-      setSelectedDossier(relationship.target_dossier)
+      // Convert to EntityWithPreview format
+      const entity: EntityWithPreview = {
+        entity_id: relationship.target_dossier.id,
+        entity_type: 'dossier',
+        name_en: relationship.target_dossier.name_en,
+        name_ar: relationship.target_dossier.name_ar,
+        status: relationship.target_dossier.status as EntityWithPreview['status'],
+        key_details: [
+          {
+            label_en: 'Type',
+            label_ar: 'النوع',
+            value_en:
+              DOSSIER_TYPE_LABELS[
+                relationship.target_dossier.type as keyof typeof DOSSIER_TYPE_LABELS
+              ]?.en || relationship.target_dossier.type,
+            value_ar:
+              DOSSIER_TYPE_LABELS[
+                relationship.target_dossier.type as keyof typeof DOSSIER_TYPE_LABELS
+              ]?.ar || relationship.target_dossier.type,
+          },
+        ],
+        combined_score: 1,
+        last_updated: new Date().toISOString(),
+      }
+      setSelectedEntity(entity)
     }
   }, [mode, relationship])
 
@@ -204,24 +194,39 @@ export function RelationshipFormDialog({
             : undefined,
         }
 
-        await updateMutation.mutateAsync({ id: relationship.id, updates: updateData })
+        await updateMutation.mutateAsync({ id: relationship.id, request: updateData })
       }
 
       onOpenChange(false)
       form.reset()
-      setSelectedDossier(null)
+      setSelectedEntity(null)
     } catch {
       // Error handled by mutation
     }
   }
 
-  // Handle dossier selection
-  const handleSelectDossier = (dossier: DossierOption) => {
-    setSelectedDossier(dossier)
-    form.setValue('target_dossier_id', dossier.id)
-    setDossierSearchOpen(false)
-    setDossierSearch('')
+  // Handle entity selection from rich autocomplete
+  const handleEntitySelect = (entity: EntityWithPreview | null) => {
+    setSelectedEntity(entity)
+    form.setValue('target_dossier_id', entity?.entity_id || '')
   }
+
+  // Get selected dossier type for relationship type selector
+  const selectedDossierType = useMemo(() => {
+    if (!selectedEntity) return undefined
+    // For dossiers, extract type from key_details
+    const typeDetail = selectedEntity.key_details.find(
+      (d) => d.label_en === 'Type' || d.label_en === 'Dossier Type',
+    )
+    if (typeDetail) {
+      // Map back from display value to type key
+      const typeEntry = Object.entries(DOSSIER_TYPE_LABELS).find(
+        ([, labels]) => labels.en === typeDetail.value_en || labels.ar === typeDetail.value_ar,
+      )
+      if (typeEntry) return typeEntry[0] as DossierType
+    }
+    return undefined
+  }, [selectedEntity])
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
@@ -243,12 +248,12 @@ export function RelationshipFormDialog({
 
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
-            {/* Target Dossier Selection (only for create) */}
+            {/* Target Dossier Selection with Rich Autocomplete (only for create) */}
             {mode === 'create' && (
               <FormField
                 control={form.control}
                 name="target_dossier_id"
-                render={({ field }) => (
+                render={({ fieldState }) => (
                   <FormItem className="flex flex-col">
                     <FieldLabelWithHelp
                       label={t('relationships:form.targetDossier')}
@@ -267,86 +272,32 @@ export function RelationshipFormDialog({
                         mode: 'both',
                       }}
                     />
-                    <Popover open={dossierSearchOpen} onOpenChange={setDossierSearchOpen}>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            className={`w-full justify-between min-h-11 ${
-                              !field.value ? 'text-muted-foreground' : ''
-                            }`}
-                          >
-                            {selectedDossier ? (
-                              <div className="flex items-center gap-2">
-                                <Badge variant="outline" className="text-xs">
-                                  {DOSSIER_TYPE_LABELS[
-                                    selectedDossier.type as keyof typeof DOSSIER_TYPE_LABELS
-                                  ]?.[isRTL ? 'ar' : 'en'] || selectedDossier.type}
-                                </Badge>
-                                <span className="truncate">
-                                  {isRTL ? selectedDossier.name_ar : selectedDossier.name_en}
-                                </span>
-                              </div>
-                            ) : (
-                              <span>{t('form.selectDossier')}</span>
-                            )}
-                            <Search className="h-4 w-4 shrink-0 opacity-50 ms-2" />
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-full p-0" align="start">
-                        <Command shouldFilter={false}>
-                          <CommandInput
-                            placeholder={t('form.searchDossiers')}
-                            value={dossierSearch}
-                            onValueChange={setDossierSearch}
-                          />
-                          <CommandList>
-                            {isSearching ? (
-                              <div className="flex items-center justify-center py-6">
-                                <Loader2 className="h-4 w-4 animate-spin" />
-                              </div>
-                            ) : dossierSearch.length < 2 ? (
-                              <CommandEmpty>{t('form.searchMinChars')}</CommandEmpty>
-                            ) : !dossierOptions?.length ? (
-                              <CommandEmpty>{t('form.noResults')}</CommandEmpty>
-                            ) : (
-                              <CommandGroup>
-                                {dossierOptions.map((dossier) => (
-                                  <CommandItem
-                                    key={dossier.id}
-                                    value={dossier.id}
-                                    onSelect={() => handleSelectDossier(dossier)}
-                                    className="flex items-center gap-2"
-                                  >
-                                    <Badge variant="outline" className="text-xs">
-                                      {DOSSIER_TYPE_LABELS[
-                                        dossier.type as keyof typeof DOSSIER_TYPE_LABELS
-                                      ]?.[isRTL ? 'ar' : 'en'] || dossier.type}
-                                    </Badge>
-                                    <span className="truncate">
-                                      {isRTL ? dossier.name_ar : dossier.name_en}
-                                    </span>
-                                  </CommandItem>
-                                ))}
-                              </CommandGroup>
-                            )}
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                    <FormControl>
+                      <RichEntityAutocomplete
+                        value={selectedEntity}
+                        onChange={handleEntitySelect}
+                        placeholder={t('form.selectDossier')}
+                        searchPlaceholder={t('form.searchDossiers')}
+                        entityTypes={['dossier']}
+                        excludeIds={[dossierId]}
+                        disabled={isLoading}
+                        error={fieldState.error?.message}
+                        helpText={t('rich-autocomplete:disambiguation.reviewDetails')}
+                        showTypeFilter={false}
+                        variant="default"
+                      />
+                    </FormControl>
                     <FormMessage />
                   </FormItem>
                 )}
               />
             )}
 
-            {/* Relationship Type */}
+            {/* Relationship Type - Enhanced with Guided Selection */}
             <FormField
               control={form.control}
               name="relationship_type"
-              render={({ field }) => (
+              render={({ field, fieldState }) => (
                 <FormItem>
                   <FieldLabelWithHelp
                     label={t('relationships:form.relationshipType')}
@@ -358,20 +309,24 @@ export function RelationshipFormDialog({
                       mode: 'both',
                     }}
                   />
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger className="min-h-11">
-                        <SelectValue placeholder={t('form.selectType')} />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {RELATIONSHIP_TYPES.map((type) => (
-                        <SelectItem key={type} value={type}>
-                          {RELATIONSHIP_TYPE_LABELS[type][isRTL ? 'ar' : 'en']}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <RelationshipTypeSelector
+                      value={field.value as DossierRelationshipType | ''}
+                      onChange={(value) => field.onChange(value)}
+                      sourceDossierType={dossierType as DossierType}
+                      sourceDossierName={dossierName}
+                      targetDossierType={selectedDossierType}
+                      targetDossierName={
+                        selectedEntity
+                          ? isRTL
+                            ? selectedEntity.name_ar
+                            : selectedEntity.name_en
+                          : undefined
+                      }
+                      disabled={isLoading}
+                      error={fieldState.error?.message}
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
