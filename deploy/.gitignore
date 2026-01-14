@@ -1,0 +1,21 @@
+# Environment files (contain secrets)
+.env
+*.env.local
+
+# SSL certificates
+nginx/ssl/*.pem
+nginx/ssl/*.key
+nginx/ssl/*.crt
+
+# Certbot data
+certbot/
+
+# Docker volumes (if mounted locally)
+data/
+
+# Logs
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db
