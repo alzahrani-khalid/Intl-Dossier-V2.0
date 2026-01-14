@@ -117,8 +117,17 @@ const excludePatterns = [
   'src/realtime/WebSocketServer.ts',
   // AI/ML packages that use ONNX Runtime (incompatible with Alpine Linux)
   'src/ai/',
+  'src/api/ai.ts',
+  'src/api/ai/',
   'src/api/voice.ts',
+  'src/api/search.ts',
+  'src/api/intelligence-reports.router.ts',
   'src/services/embeddings.service.ts',
+  'src/services/semantic-search.service.ts',
+  'src/services/vector.service.ts',
+  'src/services/search.service.ts',
+  'src/adapters/',
+  'src/workers/',
 ];
 
 const srcDir = 'src';

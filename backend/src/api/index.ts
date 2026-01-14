@@ -6,7 +6,8 @@ import eventsRouter from './events'
 // AI router disabled in production due to ONNX Runtime incompatibility with Alpine Linux
 // import aiRouter from './ai'
 import documentsRouter from './documents'
-import searchRouter from './search'
+// Search router disabled due to AI/ONNX dependencies
+// import searchRouter from './search'
 import relationshipsRouter from './relationships'
 import organizationsRouter from './organizations'
 import contactsRouter from './contacts'
@@ -55,8 +56,8 @@ apiRouter.get('/health', (_req, res) => {
 // Public auth routes (no auth required)
 apiRouter.use('/auth', authRouter)
 
-// Public search route (optional auth for personalization)
-apiRouter.use('/search', searchRouter)
+// Public search route disabled due to AI/ONNX dependencies
+// apiRouter.use('/search', searchRouter)
 
 // AI routes disabled in production due to ONNX Runtime incompatibility
 // apiRouter.use('/ai', aiRouter)
