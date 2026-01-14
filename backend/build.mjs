@@ -1,6 +1,6 @@
 import * as esbuild from 'esbuild';
-import { readdirSync, statSync, readFileSync, writeFileSync } from 'fs';
-import { join, relative } from 'path';
+import { readdirSync, statSync, readFileSync, writeFileSync, existsSync } from 'fs';
+import { join, relative, dirname } from 'path';
 
 // Collect all TypeScript files recursively, excluding test files and Deno edge functions
 function getAllTsFiles(dir, files = []) {
@@ -21,7 +21,6 @@ function getAllTsFiles(dir, files = []) {
       !item.endsWith('.spec.ts') &&
       !item.endsWith('.d.ts')
     ) {
-      // Check if file contains Deno imports (skip edge functions)
       files.push(fullPath);
     }
   }
@@ -47,29 +46,63 @@ function getAllJsFiles(dir, files = []) {
   return files;
 }
 
+// Resolve the correct path for an import
+function resolveImportPath(importPath, currentFilePath) {
+  const currentDir = dirname(currentFilePath);
+
+  // Convert dist path back to what it would be (remove leading dist/)
+  const relativeDist = currentDir.replace(/^dist\/?/, '');
+
+  // Calculate the full path the import is pointing to
+  let fullImportPath;
+  if (importPath.startsWith('./')) {
+    fullImportPath = join('dist', relativeDist, importPath.slice(2));
+  } else if (importPath.startsWith('../')) {
+    fullImportPath = join('dist', relativeDist, importPath);
+  } else {
+    return importPath; // Not a relative import
+  }
+
+  // Check if it's a directory with index.js
+  if (existsSync(fullImportPath) && statSync(fullImportPath).isDirectory()) {
+    if (existsSync(join(fullImportPath, 'index.js'))) {
+      return importPath + '/index.js';
+    }
+  }
+
+  // Check if adding .js makes it a valid file
+  if (existsSync(fullImportPath + '.js')) {
+    return importPath + '.js';
+  }
+
+  // Fallback: just add .js
+  return importPath + '.js';
+}
+
 // Add .js extension to relative imports
 function addJsExtensions(filePath) {
   let content = readFileSync(filePath, 'utf8');
 
   // Match import/export statements with relative paths that don't have extensions
-  // Handles: import x from './path', import { x } from './path', export * from './path', etc.
   const importRegex = /(from\s+['"])(\.\.?\/[^'"]+?)(['"])/g;
   const dynamicImportRegex = /(import\s*\(\s*['"])(\.\.?\/[^'"]+?)(['"]\s*\))/g;
 
   content = content.replace(importRegex, (match, prefix, path, suffix) => {
-    // Don't add .js if it already has an extension
+    // Don't modify if it already has an extension
     if (path.match(/\.(js|json|mjs|cjs|node)$/)) {
       return match;
     }
-    return `${prefix}${path}.js${suffix}`;
+    const resolvedPath = resolveImportPath(path, filePath);
+    return `${prefix}${resolvedPath}${suffix}`;
   });
 
   content = content.replace(dynamicImportRegex, (match, prefix, path, suffix) => {
-    // Don't add .js if it already has an extension
+    // Don't modify if it already has an extension
     if (path.match(/\.(js|json|mjs|cjs|node)$/)) {
       return match;
     }
-    return `${prefix}${path}.js${suffix}`;
+    const resolvedPath = resolveImportPath(path, filePath);
+    return `${prefix}${resolvedPath}${suffix}`;
   });
 
   writeFileSync(filePath, content);
