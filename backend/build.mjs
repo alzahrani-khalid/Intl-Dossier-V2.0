@@ -114,11 +114,7 @@ const excludePatterns = [
   'src/api/pdf-generation/',
   'src/utils/session-invalidator.ts',
   'src/graphql/',
-  'src/jobs/index.ts',
-  'src/middleware/rateLimiter.ts',
-  'src/middleware/rate-limit.middleware.ts',
   'src/realtime/WebSocketServer.ts',
-  'src/services/IntelligenceSourceService.ts',
 ];
 
 const srcDir = 'src';
