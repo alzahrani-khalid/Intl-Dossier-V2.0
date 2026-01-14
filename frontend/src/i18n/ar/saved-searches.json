@@ -1,0 +1,171 @@
+{
+  "title": "عمليات البحث المحفوظة",
+  "searchPlaceholder": "البحث في عمليات البحث المحفوظة...",
+  "createNew": "حفظ بحث جديد",
+  "useCount": "استخدم {{count}} مرة",
+  "useCount_one": "استخدم مرة واحدة",
+  "resultCount": "{{count}} نتيجة",
+  "execute": "تشغيل البحث",
+
+  "tabs": {
+    "all": "الكل",
+    "pinned": "المثبتة",
+    "smart": "الفلاتر الذكية"
+  },
+
+  "empty": {
+    "all": "لا توجد عمليات بحث محفوظة بعد. احفظ أول بحث للبدء.",
+    "pinned": "لا توجد عمليات بحث مثبتة. ثبّت عمليات البحث المستخدمة بشكل متكرر للوصول السريع.",
+    "smart": "لا تتوفر فلاتر ذكية."
+  },
+
+  "actions": {
+    "pin": "تثبيت في الأعلى",
+    "unpin": "إلغاء التثبيت",
+    "edit": "تعديل",
+    "share": "مشاركة",
+    "configureAlert": "إعداد التنبيه",
+    "delete": "حذف"
+  },
+
+  "deleteDialog": {
+    "title": "حذف البحث المحفوظ",
+    "description": "هل أنت متأكد من حذف هذا البحث المحفوظ؟ لا يمكن التراجع عن هذا الإجراء. سيتم أيضاً إزالة جميع المشاركات والتنبيهات المرتبطة بهذا البحث.",
+    "cancel": "إلغاء",
+    "confirm": "حذف",
+    "deleting": "جاري الحذف..."
+  },
+
+  "dialog": {
+    "createTitle": "حفظ البحث",
+    "editTitle": "تعديل البحث المحفوظ",
+    "nameEn": "الاسم (إنجليزي)",
+    "nameEnPlaceholder": "استعلام البحث...",
+    "nameAr": "الاسم (عربي)",
+    "nameArPlaceholder": "استعلام البحث الخاص بي...",
+    "descriptionEn": "الوصف (إنجليزي)",
+    "descriptionEnPlaceholder": "وصف اختياري...",
+    "descriptionAr": "الوصف (عربي)",
+    "descriptionArPlaceholder": "وصف اختياري...",
+    "icon": "الأيقونة",
+    "color": "اللون",
+    "category": "الفئة",
+    "pinToTop": "تثبيت في الأعلى",
+    "pinToTopDescription": "تظهر عمليات البحث المثبتة في الأعلى للوصول السريع",
+    "searchPreview": "معاينة",
+    "untitled": "بحث بدون عنوان",
+    "queryPrefix": "الاستعلام",
+    "entityTypes": "البحث في",
+    "cancel": "إلغاء",
+    "save": "حفظ التغييرات",
+    "create": "حفظ البحث",
+    "saving": "جاري الحفظ..."
+  },
+
+  "share": {
+    "title": "مشاركة البحث المحفوظ",
+    "addNew": "إضافة مشاركة جديدة",
+    "shareWith": "مشاركة مع",
+    "userId": "البريد الإلكتروني أو معرف المستخدم",
+    "userIdPlaceholder": "أدخل البريد الإلكتروني أو المعرف...",
+    "permission": "مستوى الإذن",
+    "message": "رسالة (اختياري)",
+    "messagePlaceholder": "أضف رسالة للمستلم...",
+    "shareButton": "مشاركة",
+    "sharing": "جاري المشاركة...",
+    "currentShares": "المشاركات الحالية",
+    "noShares": "لم تتم مشاركة هذا البحث مع أي شخص بعد.",
+    "close": "إغلاق"
+  },
+
+  "alert": {
+    "title": "إعداد تنبيه البحث",
+    "description": "احصل على إشعارات عندما تتطابق عناصر جديدة مع معايير البحث هذه.",
+    "active": "نشط",
+    "paused": "متوقف",
+    "alertCount": "تم إرسال {{count}} تنبيه",
+    "alertCount_one": "تم إرسال تنبيه واحد",
+    "enabled": "تفعيل التنبيهات",
+    "enabledDescription": "استلم إشعارات عند تغير نتائج البحث",
+    "frequency": "معدل الفحص",
+    "triggerOn": "التنبيه عند",
+    "threshold": "حد النتائج",
+    "thresholdPlaceholder": "مثال: 10",
+    "thresholdDescription": "تنبيه عندما تتجاوز النتائج هذا العدد",
+    "notifyVia": "قنوات الإشعارات",
+    "notifyInApp": "إشعارات داخل التطبيق",
+    "notifyInAppDescription": "عرض التنبيهات في مركز الإشعارات",
+    "notifyEmail": "إشعارات البريد الإلكتروني",
+    "notifyEmailDescription": "إرسال التنبيهات إلى بريدك الإلكتروني",
+    "notifyPush": "إشعارات الدفع",
+    "notifyPushDescription": "إرسال إشعارات دفع للهاتف المحمول",
+    "noChannelWarning": "حدد قناة إشعارات واحدة على الأقل لاستلام التنبيهات.",
+    "cancel": "إلغاء",
+    "create": "إنشاء التنبيه",
+    "update": "تحديث التنبيه",
+    "delete": "حذف التنبيه",
+    "saving": "جاري الحفظ...",
+    "deleting": "جاري الحذف..."
+  },
+
+  "categories": {
+    "personal": "شخصي",
+    "team": "فريق",
+    "organization": "منظمة",
+    "smart": "فلتر ذكي",
+    "recent": "حديث"
+  },
+
+  "permissions": {
+    "view": "عرض فقط",
+    "edit": "يمكنه التعديل",
+    "admin": "وصول كامل"
+  },
+
+  "frequencies": {
+    "realtime": "فوري",
+    "hourly": "كل ساعة",
+    "daily": "يومي",
+    "weekly": "أسبوعي",
+    "monthly": "شهري"
+  },
+
+  "triggers": {
+    "new_results": "نتائج جديدة",
+    "result_changes": "تغيير النتائج",
+    "threshold_reached": "الوصول للحد"
+  },
+
+  "smartFilters": {
+    "myActiveTasks": "مهامي النشطة",
+    "myActiveTasksDesc": "عناصر العمل المخصصة لك والتي قيد التنفيذ",
+    "pendingApprovals": "في انتظار الموافقة",
+    "pendingApprovalsDesc": "العناصر التي تنتظر موافقتك",
+    "recentlyModified": "المعدلة مؤخراً",
+    "recentlyModifiedDesc": "العناصر المعدلة في آخر 24 ساعة",
+    "upcomingDeadlines": "المواعيد النهائية القادمة",
+    "upcomingDeadlinesDesc": "العناصر ذات المواعيد النهائية في الأيام السبعة القادمة",
+    "unreadDocuments": "المستندات غير المقروءة",
+    "unreadDocumentsDesc": "المستندات التي لم تطلع عليها بعد",
+    "middleEastRegion": "منطقة الشرق الأوسط",
+    "middleEastRegionDesc": "العناصر المتعلقة بدول الشرق الأوسط",
+    "unAgencies": "وكالات الأمم المتحدة",
+    "unAgenciesDesc": "العناصر المتعلقة بمنظمات الأمم المتحدة",
+    "bilateralRelations": "العلاقات الثنائية",
+    "bilateralRelationsDesc": "ملفات المشاركة الثنائية"
+  },
+
+  "toast": {
+    "created": "تم حفظ البحث بنجاح",
+    "updated": "تم تحديث البحث بنجاح",
+    "deleted": "تم حذف البحث بنجاح",
+    "shared": "تمت مشاركة البحث بنجاح",
+    "shareRemoved": "تمت إزالة المشاركة بنجاح",
+    "alertCreated": "تم إعداد التنبيه بنجاح",
+    "alertUpdated": "تم تحديث التنبيه بنجاح",
+    "alertDeleted": "تمت إزالة التنبيه بنجاح",
+    "pinned": "تم تثبيت البحث",
+    "unpinned": "تم إلغاء تثبيت البحث",
+    "error": "حدث خطأ. يرجى المحاولة مرة أخرى."
+  }
+}

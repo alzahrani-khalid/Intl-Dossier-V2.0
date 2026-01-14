@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "When linking entities in forms, provide rich auto-complete with entity previews (key details, status, recent activity) to ensure users select the correct record from similar options.\n\n**Rationale:** Many entities have similar names (multiple John Smiths, similarly-named events). Selecting the wrong entity creates incorrect associations that are hard to detect and fix later, corrupting relationship integrity.",
+  "title": "Entity Reference Auto-Complete with Previews",
+  "status": "verified",
+  "id": "feature-1768382895514-k6e2b6drv",
+  "descriptionHistory": [
+    {
+      "description": "When linking entities in forms, provide rich auto-complete with entity previews (key details, status, recent activity) to ensure users select the correct record from similar options.\n\n**Rationale:** Many entities have similar names (multiple John Smiths, similarly-named events). Selecting the wrong entity creates incorrect associations that are hard to detect and fix later, corrupting relationship integrity.",
+      "timestamp": "2026-01-14T09:28:15.514Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-14T11:57:35.729Z",
+  "updatedAt": "2026-01-14T12:16:34.921Z"
+}

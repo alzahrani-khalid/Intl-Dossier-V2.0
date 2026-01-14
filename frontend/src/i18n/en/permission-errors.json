@@ -1,0 +1,165 @@
+{
+  "title": "Access Denied",
+  "subtitle": "You don't have permission to perform this action",
+
+  "reasons": {
+    "insufficient_role": "Your current role ({{role}}) does not include this permission",
+    "resource_restricted": "This resource has restricted access",
+    "delegation_expired": "Your delegated access to this resource has expired",
+    "delegation_revoked": "Your delegated access to this resource has been revoked",
+    "not_assigned": "You are not assigned to this resource",
+    "resource_locked": "This resource is currently locked for editing",
+    "workflow_state": "This resource is in a workflow state that prevents this action",
+    "time_restricted": "Access to this resource is time-restricted",
+    "quota_exceeded": "You have exceeded your access quota",
+    "pending_approval": "Your access request is pending approval"
+  },
+
+  "permissions": {
+    "read": "view",
+    "write": "edit",
+    "delete": "delete",
+    "approve": "approve",
+    "publish": "publish",
+    "assign": "assign users to",
+    "manage": "manage",
+    "admin": "administer"
+  },
+
+  "resources": {
+    "dossier": "dossier",
+    "country": "country profile",
+    "organization": "organization",
+    "mou": "MOU",
+    "event": "event",
+    "forum": "forum",
+    "brief": "brief",
+    "document": "document",
+    "report": "report",
+    "engagement": "engagement",
+    "commitment": "commitment",
+    "position": "position",
+    "person": "person",
+    "calendar": "calendar entry",
+    "user": "user",
+    "system": "system settings"
+  },
+
+  "roles": {
+    "admin": "Administrator",
+    "manager": "Manager",
+    "staff": "Staff",
+    "viewer": "Viewer"
+  },
+
+  "message": {
+    "generic": "You need {{permission}} permission to {{action}} this {{resource}}",
+    "withName": "You need {{permission}} permission to {{action}} \"{{resourceName}}\"",
+    "roleRequired": "This action requires {{requiredRole}} role or higher",
+    "currentRole": "Your current role: {{currentRole}}"
+  },
+
+  "accessGranters": {
+    "title": "Who can help",
+    "subtitle": "The following people can grant you access:",
+    "primaryContact": "Primary contact",
+    "noGrantersAvailable": "No specific contacts available. Please contact your system administrator."
+  },
+
+  "requestAccess": {
+    "title": "Request Access",
+    "button": "Request Access",
+    "requestFrom": "Request from {{name}}",
+    "form": {
+      "title": "Request Access to {{resource}}",
+      "subtitle": "Submit a request to {{granterName}} for {{permission}} access",
+      "reason": "Reason for request",
+      "reasonPlaceholder": "Explain why you need access to this resource...",
+      "reasonHelp": "Provide a clear justification to help the reviewer understand your need",
+      "urgency": "Urgency",
+      "urgencyOptions": {
+        "low": "Low - No rush",
+        "medium": "Medium - Within a few days",
+        "high": "High - Within 24 hours",
+        "critical": "Critical - Immediate need"
+      },
+      "duration": "Requested duration",
+      "durationOptions": {
+        "permanent": "Permanent access",
+        "7": "7 days",
+        "14": "14 days",
+        "30": "30 days",
+        "90": "90 days"
+      },
+      "durationHelp": "For temporary access, select how long you need it"
+    },
+    "submit": "Submit Request",
+    "cancel": "Cancel",
+    "submitting": "Submitting...",
+    "success": {
+      "title": "Request Submitted",
+      "message": "Your access request has been sent to {{name}}. You'll be notified when they respond.",
+      "requestId": "Request ID: {{id}}"
+    },
+    "error": {
+      "title": "Request Failed",
+      "message": "Failed to submit your access request. Please try again.",
+      "duplicate": "You already have a pending request for this resource",
+      "rateLimited": "Too many requests. Please wait before trying again."
+    }
+  },
+
+  "actions": {
+    "requestAccess": "Request Access",
+    "viewPermissions": "View My Permissions",
+    "requestDelegation": "Request Temporary Access",
+    "contactAdmin": "Contact Administrator",
+    "viewAlternatives": "View Similar Resources",
+    "escalate": "Escalate Request",
+    "copyRequestLink": "Copy Request Link",
+    "dismiss": "Dismiss",
+    "goBack": "Go Back",
+    "tryDifferentAction": "Try a Different Action"
+  },
+
+  "inline": {
+    "accessDenied": "Access denied",
+    "needPermission": "You need {{permission}} permission",
+    "requestAccess": "Request access from {{name}}",
+    "pendingRequest": "Access request pending",
+    "contactForHelp": "Contact {{name}} for help"
+  },
+
+  "toast": {
+    "accessDenied": "Access denied: {{action}}",
+    "requestSent": "Access request sent to {{name}}",
+    "requestFailed": "Failed to send access request",
+    "linkCopied": "Request link copied to clipboard"
+  },
+
+  "empty": {
+    "noAccess": "You don't have access to any resources of this type",
+    "suggestRequest": "Request access from your manager or administrator"
+  },
+
+  "badge": {
+    "restricted": "Restricted",
+    "noAccess": "No Access",
+    "pendingRequest": "Pending Request",
+    "requestAccess": "Request Access"
+  },
+
+  "dialog": {
+    "close": "Close",
+    "understand": "I Understand",
+    "whatCanIDo": "What can I do?",
+    "whyCantI": "Why can't I access this?"
+  },
+
+  "urgencyBadge": {
+    "low": "Low Priority",
+    "medium": "Medium Priority",
+    "high": "High Priority",
+    "critical": "Critical"
+  }
+}

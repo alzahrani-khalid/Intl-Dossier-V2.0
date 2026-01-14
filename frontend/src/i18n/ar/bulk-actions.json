@@ -140,6 +140,8 @@
   "preview": {
     "title": "مراجعة العناصر",
     "description": "راجع وعدّل العناصر لـ {{action}}:",
+    "affectedEntities": "راجع الكيانات المتأثرة قبل المتابعة",
+    "reviewBeforeConfirm": "راجع وألغِ تحديد أي عناصر تريد استبعادها من هذا الإجراء:",
     "includedCount": "{{count}} مضمّن",
     "excludedCount": "{{count}} مستبعد",
     "includeAll": "تضمين الكل",
@@ -155,7 +157,11 @@
     "selectItems": "حدد العناصر للتضمين",
     "deselectItems": "ألغِ تحديد العناصر للاستبعاد",
     "itemsToProcess": "سيتم معالجة {{count}} عنصر",
-    "excludedFromAction": "سيتم استبعاد {{count}} عنصر من هذا الإجراء"
+    "excludedFromAction": "سيتم استبعاد {{count}} عنصر من هذا الإجراء",
+    "entityDetails": "تفاصيل الكيان",
+    "clickToExclude": "انقر على أي عنصر لاستبعاده من هذا الإجراء",
+    "allItemsSelected": "جميع العناصر الـ {{count}} محددة لهذا الإجراء",
+    "someItemsExcluded": "{{excluded}} من {{total}} عنصر مستبعد"
   },
 
   "entityTypes": {

@@ -1,0 +1,304 @@
+{
+  "title": "الامتثال",
+  "subtitle": "إدارة قواعد الامتثال والمخالفات",
+  "description": "تحديد وإنفاذ قواعد الامتثال للمشاركات والالتزامات والعلاقات",
+
+  "tabs": {
+    "rules": "القواعد",
+    "violations": "المخالفات",
+    "exemptions": "الإعفاءات",
+    "templates": "القوالب"
+  },
+
+  "rules": {
+    "title": "قواعد الامتثال",
+    "subtitle": "تحديد القواعد لضمان الامتثال التنظيمي",
+    "createRule": "إنشاء قاعدة",
+    "editRule": "تعديل القاعدة",
+    "deleteRule": "إلغاء تنشيط القاعدة",
+    "viewRule": "عرض تفاصيل القاعدة",
+    "noRules": "لا توجد قواعد امتثال مُهيأة",
+    "noRulesDescription": "أنشئ أول قاعدة امتثال لبدء مراقبة الأنشطة",
+    "searchPlaceholder": "البحث في القواعد بالاسم أو الرمز...",
+    "filterByType": "تصفية حسب النوع",
+    "filterBySeverity": "تصفية حسب الخطورة",
+    "filterByEntity": "تصفية حسب نوع الكيان",
+    "activeRules": "القواعد النشطة",
+    "inactiveRules": "القواعد غير النشطة",
+    "allRules": "جميع القواعد"
+  },
+
+  "ruleForm": {
+    "ruleCode": "رمز القاعدة",
+    "ruleCodePlaceholder": "مثال: COOL_OFF_30",
+    "ruleCodeHelper": "معرّف فريد لهذه القاعدة",
+    "nameEn": "الاسم (بالإنجليزية)",
+    "nameAr": "الاسم (بالعربية)",
+    "descriptionEn": "الوصف (بالإنجليزية)",
+    "descriptionAr": "الوصف (بالعربية)",
+    "ruleType": "نوع القاعدة",
+    "severity": "مستوى الخطورة",
+    "entityTypes": "تنطبق على أنواع الكيانات",
+    "conditions": "شروط القاعدة",
+    "conditionsHelper": "تهيئة المعايير المحددة لهذه القاعدة",
+    "notificationTemplateEn": "قالب الإشعار (بالإنجليزية)",
+    "notificationTemplateAr": "قالب الإشعار (بالعربية)",
+    "remediationEn": "تعليمات المعالجة (بالإنجليزية)",
+    "remediationAr": "تعليمات المعالجة (بالعربية)",
+    "requiresSignoff": "يتطلب التوقيع",
+    "signoffRoles": "أدوار التوقيع",
+    "signoffDeadline": "الموعد النهائي للتوقيع (ساعات)",
+    "autoEscalate": "التصعيد التلقائي بعد (ساعات)",
+    "effectiveFrom": "ساري من",
+    "effectiveTo": "ساري حتى",
+    "appliesToRegions": "تنطبق على المناطق",
+    "appliesToCategories": "تنطبق على الفئات",
+    "externalReference": "المرجع الخارجي",
+    "regulatorySource": "المصدر التنظيمي"
+  },
+
+  "ruleTypes": {
+    "cooling_off_period": "فترة الانتظار",
+    "disclosure_requirement": "متطلب الإفصاح",
+    "conflict_check": "فحص التضارب",
+    "approval_threshold": "حد الموافقة",
+    "frequency_limit": "حد التكرار",
+    "relationship_restriction": "قيود العلاقة",
+    "documentation_requirement": "متطلب التوثيق",
+    "gift_limit": "حد الهدايا",
+    "recusal_requirement": "متطلب التنحي",
+    "reporting_requirement": "متطلب الإبلاغ"
+  },
+
+  "severity": {
+    "info": "معلومات",
+    "warning": "تحذير",
+    "critical": "حرج",
+    "blocking": "حاجب"
+  },
+
+  "entityTypes": {
+    "engagement": "مشاركة",
+    "commitment": "التزام",
+    "relationship": "علاقة",
+    "person": "شخص",
+    "organization": "منظمة",
+    "country": "دولة",
+    "all": "جميع الكيانات"
+  },
+
+  "violations": {
+    "title": "مخالفات الامتثال",
+    "subtitle": "مراجعة وحل مشكلات الامتثال المُبلغ عنها",
+    "noViolations": "لم يتم العثور على مخالفات",
+    "noViolationsDescription": "جميع الأنشطة متوافقة حاليًا",
+    "pendingViolations": "المخالفات المعلقة",
+    "acknowledgedViolations": "تم الإقرار",
+    "resolvedViolations": "تم الحل",
+    "allViolations": "جميع المخالفات",
+    "viewDetails": "عرض التفاصيل",
+    "acknowledge": "إقرار",
+    "signOff": "توقيع",
+    "requestInfo": "طلب معلومات",
+    "escalate": "تصعيد",
+    "waive": "تنازل",
+    "violationId": "رقم المخالفة",
+    "detectedAt": "تم الكشف في",
+    "detectedBy": "تم الكشف بواسطة",
+    "entity": "الكيان",
+    "relatedEntity": "الكيان ذو الصلة",
+    "status": "الحالة",
+    "requiresSignoff": "يتطلب التوقيع",
+    "signoffDeadline": "الموعد النهائي للتوقيع",
+    "daysRemaining": "يوم واحد متبقي",
+    "daysRemaining_plural": "{{count}} أيام متبقية",
+    "overdue": "متأخر"
+  },
+
+  "violationStatus": {
+    "pending": "قيد الانتظار",
+    "acknowledged": "تم الإقرار",
+    "signed_off": "تمت الموافقة",
+    "waived": "تم التنازل",
+    "resolved": "تم الحل",
+    "escalated": "تم التصعيد",
+    "expired": "منتهية الصلاحية"
+  },
+
+  "signoff": {
+    "title": "التوقيع على المخالفة",
+    "subtitle": "مراجعة والموافقة أو رفض النشاط المُبلغ عنه",
+    "action": "الإجراء",
+    "justification": "التبرير",
+    "justificationPlaceholder": "قدم سبب قرارك...",
+    "justificationRequired": "التبرير مطلوب",
+    "conditions": "الشروط",
+    "conditionsPlaceholder": "أضف أي شروط (واحد لكل سطر)",
+    "waiverValidUntil": "التنازل ساري حتى",
+    "waiverScope": "نطاق التنازل",
+    "waiverScopeSingle": "هذه المخالفة فقط",
+    "waiverScopeOngoing": "مستمر (حتى التاريخ)",
+    "confirm": "تأكيد التوقيع",
+    "cancel": "إلغاء",
+    "history": "سجل التوقيعات",
+    "signedBy": "وُقّع بواسطة",
+    "signedAt": "وُقّع في",
+    "signerRole": "الدور"
+  },
+
+  "signoffActions": {
+    "approve": "موافقة",
+    "reject": "رفض",
+    "request_info": "طلب معلومات",
+    "escalate": "تصعيد",
+    "waive": "تنازل"
+  },
+
+  "exemptions": {
+    "title": "إعفاءات الامتثال",
+    "subtitle": "إدارة الإعفاءات من قواعد الامتثال",
+    "createExemption": "إنشاء إعفاء",
+    "editExemption": "تعديل الإعفاء",
+    "revokeExemption": "إلغاء الإعفاء",
+    "noExemptions": "لا توجد إعفاءات مُهيأة",
+    "noExemptionsDescription": "تسمح الإعفاءات لكيانات معينة بتجاوز قواعد محددة",
+    "rule": "القاعدة",
+    "entity": "الكيان/المستخدم",
+    "reason": "السبب",
+    "grantedBy": "منحه",
+    "grantedAt": "منح في",
+    "validFrom": "ساري من",
+    "validUntil": "ساري حتى",
+    "active": "نشط",
+    "revoked": "ملغي",
+    "expired": "منتهي الصلاحية"
+  },
+
+  "templates": {
+    "title": "قوالب القواعد",
+    "subtitle": "قوالب قواعد امتثال مُعدة مسبقًا",
+    "useTemplate": "استخدام القالب",
+    "category": "الفئة",
+    "regulatoryFramework": "الإطار التنظيمي",
+    "noTemplates": "لا توجد قوالب متاحة",
+    "createFromTemplate": "إنشاء قاعدة من القالب"
+  },
+
+  "summary": {
+    "title": "ملخص الامتثال",
+    "totalViolations": "إجمالي المخالفات",
+    "pendingViolations": "معلقة",
+    "criticalViolations": "حرجة",
+    "blockingViolations": "حاجبة",
+    "requiresSignoff": "تتطلب التوقيع",
+    "complianceScore": "درجة الامتثال",
+    "lastCheck": "آخر فحص امتثال",
+    "recentViolations": "المخالفات الأخيرة"
+  },
+
+  "check": {
+    "title": "فحص الامتثال",
+    "running": "جارٍ تشغيل فحص الامتثال...",
+    "passed": "اجتاز فحص الامتثال",
+    "failed": "تم اكتشاف مشكلات امتثال",
+    "blocked": "تم حظر النشاط بسبب مخالفات الامتثال",
+    "rulesChecked": "تم فحص قاعدة واحدة",
+    "rulesChecked_plural": "تم فحص {{count}} قواعد",
+    "violationsFound": "تم العثور على مخالفة واحدة",
+    "violationsFound_plural": "تم العثور على {{count}} مخالفات",
+    "blockingFound": "مخالفة حاجبة واحدة",
+    "blockingFound_plural": "{{count}} مخالفات حاجبة",
+    "requiresSignoffBefore": "التوقيع مطلوب قبل المتابعة",
+    "viewViolations": "عرض المخالفات"
+  },
+
+  "alerts": {
+    "newViolation": "مخالفة امتثال جديدة",
+    "violationResolved": "تم حل المخالفة",
+    "signoffRequired": "التوقيع مطلوب",
+    "signoffApproved": "تمت الموافقة على التوقيع",
+    "signoffRejected": "تم رفض التوقيع",
+    "exemptionExpiring": "الإعفاء على وشك الانتهاء",
+    "blockingViolation": "تم اكتشاف مخالفة حاجبة"
+  },
+
+  "conditions": {
+    "coolingOff": {
+      "days": "فترة الانتظار (أيام)",
+      "appliesTo": "تنطبق على الأحداث"
+    },
+    "disclosure": {
+      "fields": "حقول الإفصاح المطلوبة",
+      "threshold": "حد القيمة",
+      "currency": "العملة",
+      "checkYears": "فحص السنوات السابقة"
+    },
+    "conflict": {
+      "checkRelationships": "فحص العلاقات",
+      "checkFamily": "فحص أفراد العائلة",
+      "degreesOfSeparation": "درجات الفصل"
+    },
+    "approval": {
+      "amount": "حد المبلغ",
+      "currency": "العملة",
+      "approvalLevels": "مستويات الموافقة المطلوبة"
+    },
+    "frequency": {
+      "maxInteractions": "الحد الأقصى للتفاعلات",
+      "periodDays": "الفترة (أيام)"
+    },
+    "gift": {
+      "maxValue": "الحد الأقصى للقيمة",
+      "currency": "العملة",
+      "period": "الفترة",
+      "cumulativeAnnual": "الحد السنوي التراكمي"
+    },
+    "reporting": {
+      "reportWithinDays": "الإبلاغ خلال (أيام)",
+      "coveredOfficials": "المسؤولون المشمولون"
+    },
+    "recusal": {
+      "recusalPeriodYears": "فترة التنحي (سنوات)",
+      "scope": "نطاق التنحي"
+    }
+  },
+
+  "messages": {
+    "ruleCreated": "تم إنشاء قاعدة الامتثال بنجاح",
+    "ruleUpdated": "تم تحديث قاعدة الامتثال بنجاح",
+    "ruleDeactivated": "تم إلغاء تنشيط قاعدة الامتثال",
+    "violationAcknowledged": "تم الإقرار بالمخالفة",
+    "signoffSuccess": "تم تسجيل التوقيع بنجاح",
+    "signoffFailed": "فشل تسجيل التوقيع",
+    "exemptionCreated": "تم إنشاء الإعفاء بنجاح",
+    "exemptionRevoked": "تم إلغاء الإعفاء",
+    "checkComplete": "اكتمل فحص الامتثال",
+    "error": "حدث خطأ. يرجى المحاولة مرة أخرى."
+  },
+
+  "validation": {
+    "ruleCodeRequired": "رمز القاعدة مطلوب",
+    "ruleCodeUnique": "يجب أن يكون رمز القاعدة فريدًا",
+    "nameRequired": "الاسم مطلوب",
+    "ruleTypeRequired": "نوع القاعدة مطلوب",
+    "conditionsRequired": "شروط القاعدة مطلوبة",
+    "justificationRequired": "التبرير مطلوب",
+    "reasonRequired": "السبب مطلوب",
+    "invalidDates": "يجب أن يكون تاريخ الانتهاء بعد تاريخ البدء"
+  },
+
+  "confirmations": {
+    "deactivateRule": "هل أنت متأكد من إلغاء تنشيط هذه القاعدة؟ لن يؤثر هذا على المخالفات الحالية.",
+    "revokeExemption": "هل أنت متأكد من إلغاء هذا الإعفاء؟ ستُطبق القاعدة مرة أخرى فورًا.",
+    "approveViolation": "هل أنت متأكد من الموافقة على هذا النشاط المُبلغ عنه؟",
+    "waiveViolation": "هل أنت متأكد من التنازل عن هذه المخالفة؟"
+  },
+
+  "accessibility": {
+    "complianceIndicator": "مؤشر حالة الامتثال",
+    "violationSeverity": "خطورة المخالفة: {{severity}}",
+    "signoffRequired": "التوقيع مطلوب لهذه المخالفة",
+    "expandDetails": "توسيع تفاصيل المخالفة",
+    "collapseDetails": "طي تفاصيل المخالفة"
+  }
+}

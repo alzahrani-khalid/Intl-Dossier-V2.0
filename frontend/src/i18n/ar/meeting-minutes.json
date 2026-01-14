@@ -1,0 +1,251 @@
+{
+  "title": "محاضر الاجتماعات",
+  "subtitle": "توثيق وإدارة ملاحظات الاجتماعات والقرارات وبنود العمل",
+  "createNew": "محضر اجتماع جديد",
+  "editMinutes": "تعديل المحضر",
+  "viewMinutes": "عرض المحضر",
+
+  "status": {
+    "draft": "مسودة",
+    "in_progress": "قيد التنفيذ",
+    "review": "قيد المراجعة",
+    "approved": "معتمد",
+    "archived": "مؤرشف"
+  },
+
+  "fields": {
+    "title": "العنوان",
+    "titlePlaceholder": "أدخل عنوان الاجتماع",
+    "date": "تاريخ الاجتماع",
+    "endDate": "تاريخ الانتهاء",
+    "location": "الموقع",
+    "locationPlaceholder": "أدخل موقع الاجتماع",
+    "isVirtual": "اجتماع افتراضي",
+    "meetingUrl": "رابط الاجتماع",
+    "meetingUrlPlaceholder": "أدخل رابط مؤتمر الفيديو",
+    "summary": "الملخص",
+    "summaryPlaceholder": "أدخل ملخص الاجتماع",
+    "linkedEvent": "الفعالية المرتبطة",
+    "linkedEngagement": "التواصل المرتبط",
+    "linkedDossier": "الملف المرتبط"
+  },
+
+  "agenda": {
+    "title": "جدول الأعمال",
+    "addItem": "إضافة بند",
+    "itemTitle": "الموضوع",
+    "itemDescription": "الوصف",
+    "presenter": "المقدم",
+    "duration": "المدة (دقيقة)",
+    "status": {
+      "pending": "قيد الانتظار",
+      "discussed": "تمت مناقشته",
+      "skipped": "تم تجاوزه"
+    },
+    "noItems": "لم تتم إضافة بنود جدول الأعمال بعد",
+    "reorder": "اسحب لإعادة الترتيب"
+  },
+
+  "discussion": {
+    "title": "نقاط النقاش",
+    "addPoint": "إضافة نقطة نقاش",
+    "topic": "الموضوع",
+    "speaker": "المتحدث",
+    "notes": "الملاحظات",
+    "noPoints": "لم يتم تسجيل نقاط نقاش"
+  },
+
+  "decisions": {
+    "title": "القرارات",
+    "addDecision": "إضافة قرار",
+    "decisionTitle": "القرار",
+    "description": "الوصف",
+    "type": "النوع",
+    "types": {
+      "resolution": "قرار",
+      "action": "إجراء",
+      "deferral": "تأجيل",
+      "approval": "موافقة",
+      "rejection": "رفض"
+    },
+    "voting": {
+      "title": "نتائج التصويت",
+      "for": "موافق",
+      "against": "معارض",
+      "abstentions": "ممتنع",
+      "passed": "تم القبول",
+      "failed": "لم يتم القبول"
+    },
+    "noDecisions": "لم يتم تسجيل قرارات"
+  },
+
+  "attendees": {
+    "title": "الحضور",
+    "addAttendee": "إضافة حاضر",
+    "name": "الاسم",
+    "email": "البريد الإلكتروني",
+    "organization": "المنظمة",
+    "role": "الدور",
+    "roles": {
+      "chair": "الرئيس",
+      "co_chair": "نائب الرئيس",
+      "secretary": "السكرتير",
+      "presenter": "المقدم",
+      "attendee": "حاضر",
+      "observer": "مراقب",
+      "guest": "ضيف"
+    },
+    "attendance": "الحضور",
+    "attendanceStatus": {
+      "present": "حاضر",
+      "absent": "غائب",
+      "excused": "معتذر",
+      "late": "متأخر",
+      "left_early": "غادر مبكراً",
+      "remote": "عن بُعد"
+    },
+    "type": {
+      "user": "مستخدم النظام",
+      "person_dossier": "ملف شخص",
+      "external_contact": "جهة اتصال خارجية",
+      "organization": "منظمة"
+    },
+    "noAttendees": "لم تتم إضافة حاضرين بعد",
+    "selectUser": "اختر مستخدم",
+    "selectPerson": "اختر شخص",
+    "selectOrganization": "اختر منظمة",
+    "enterManually": "إدخال يدوي",
+    "presentCount": "{{count}} حاضر",
+    "totalCount": "{{count}} إجمالي"
+  },
+
+  "actionItems": {
+    "title": "بنود العمل",
+    "addItem": "إضافة بند عمل",
+    "itemTitle": "بند العمل",
+    "description": "الوصف",
+    "assignee": "المسؤول",
+    "assigneePlaceholder": "اختر أو أدخل المسؤول",
+    "dueDate": "تاريخ الاستحقاق",
+    "priority": "الأولوية",
+    "priorities": {
+      "low": "منخفضة",
+      "medium": "متوسطة",
+      "high": "عالية",
+      "urgent": "عاجلة"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "in_progress": "قيد التنفيذ",
+      "completed": "مكتمل",
+      "cancelled": "ملغى",
+      "deferred": "مؤجل"
+    },
+    "noItems": "لم يتم تسجيل بنود عمل",
+    "convertToCommitment": "تحويل إلى التزام",
+    "convertToTask": "تحويل إلى مهمة",
+    "linkedCommitment": "مرتبط بالتزام",
+    "linkedTask": "مرتبط بمهمة",
+    "aiExtracted": "مستخرج بالذكاء الاصطناعي",
+    "aiConfidence": "ثقة الذكاء الاصطناعي: {{confidence}}%",
+    "extractFromNotes": "استخراج من الملاحظات",
+    "extractFromTranscript": "استخراج من النص المكتوب"
+  },
+
+  "voiceMemos": {
+    "title": "المذكرات الصوتية",
+    "record": "تسجيل مذكرة صوتية",
+    "stopRecording": "إيقاف التسجيل",
+    "transcribe": "تحويل إلى نص",
+    "transcribing": "جاري التحويل...",
+    "transcriptionComplete": "اكتمل التحويل",
+    "noMemos": "لا توجد مذكرات صوتية مرفقة",
+    "attachMemo": "إرفاق مذكرة صوتية",
+    "duration": "المدة: {{duration}}"
+  },
+
+  "ai": {
+    "title": "ميزات الذكاء الاصطناعي",
+    "generateSummary": "إنشاء ملخص آلي",
+    "generatingSummary": "جاري إنشاء الملخص...",
+    "summaryGenerated": "تم إنشاء الملخص بنجاح",
+    "extractActionItems": "استخراج بنود العمل",
+    "extracting": "جاري استخراج بنود العمل...",
+    "extractionComplete": "تم استخراج {{count}} بند عمل",
+    "noActionItemsFound": "لم يتم العثور على بنود عمل في النص",
+    "confidence": "الثقة",
+    "model": "النموذج",
+    "generatedAt": "تم الإنشاء في"
+  },
+
+  "actions": {
+    "save": "حفظ",
+    "saveDraft": "حفظ كمسودة",
+    "submitForReview": "إرسال للمراجعة",
+    "approve": "اعتماد",
+    "archive": "أرشفة",
+    "delete": "حذف",
+    "cancel": "إلغاء",
+    "edit": "تعديل",
+    "view": "عرض",
+    "download": "تحميل PDF",
+    "print": "طباعة",
+    "share": "مشاركة",
+    "duplicate": "نسخ"
+  },
+
+  "filters": {
+    "title": "التصفية",
+    "search": "البحث في المحاضر...",
+    "status": "الحالة",
+    "dateRange": "نطاق التاريخ",
+    "fromDate": "من",
+    "toDate": "إلى",
+    "createdBy": "أنشئ بواسطة",
+    "dossier": "الملف",
+    "engagement": "التواصل",
+    "clearFilters": "مسح الفلاتر"
+  },
+
+  "list": {
+    "noMinutes": "لم يتم العثور على محاضر اجتماعات",
+    "noMinutesDescription": "أنشئ محضر اجتماعك الأول للبدء",
+    "loadMore": "تحميل المزيد",
+    "showing": "عرض {{count}} من {{total}} محضر"
+  },
+
+  "messages": {
+    "createSuccess": "تم إنشاء محضر الاجتماع بنجاح",
+    "updateSuccess": "تم تحديث محضر الاجتماع بنجاح",
+    "deleteSuccess": "تم حذف محضر الاجتماع بنجاح",
+    "approveSuccess": "تم اعتماد محضر الاجتماع بنجاح",
+    "attendeeAdded": "تمت إضافة الحاضر بنجاح",
+    "attendeeRemoved": "تمت إزالة الحاضر بنجاح",
+    "actionItemAdded": "تمت إضافة بند العمل بنجاح",
+    "actionItemUpdated": "تم تحديث بند العمل بنجاح",
+    "actionItemRemoved": "تمت إزالة بند العمل بنجاح",
+    "convertedToCommitment": "تم تحويل بند العمل إلى التزام",
+    "error": "حدث خطأ. يرجى المحاولة مرة أخرى."
+  },
+
+  "validation": {
+    "titleRequired": "العنوان مطلوب",
+    "dateRequired": "تاريخ الاجتماع مطلوب",
+    "sourceRequired": "يرجى ربط هذا بفعالية أو تواصل أو ملف",
+    "invalidUrl": "يرجى إدخال رابط صالح"
+  },
+
+  "stats": {
+    "attendees": "الحضور",
+    "present": "حاضر",
+    "actionItems": "بنود العمل",
+    "completed": "مكتمل",
+    "voiceMemos": "المذكرات الصوتية"
+  },
+
+  "empty": {
+    "title": "لا توجد محاضر اجتماعات بعد",
+    "description": "ابدأ بتوثيق محاضر الاجتماعات لتتبع القرارات وبنود العمل.",
+    "cta": "إنشاء محضر اجتماع"
+  }
+}

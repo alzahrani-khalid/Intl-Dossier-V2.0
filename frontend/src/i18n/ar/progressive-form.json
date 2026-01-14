@@ -1,0 +1,84 @@
+{
+  "importance": {
+    "required": "مطلوب",
+    "recommended": "موصى به",
+    "optional": "اختياري"
+  },
+  "status": {
+    "empty": "غير مملوء",
+    "partial": "مملوء جزئياً",
+    "complete": "مكتمل",
+    "error": "يحتوي على أخطاء"
+  },
+  "progress": {
+    "readyToSubmit": "جاهز للإرسال",
+    "hasErrors": "حقل واحد يحتوي على أخطاء",
+    "hasErrors_other": "{{count}} حقول تحتوي على أخطاء",
+    "missingRequired": "حقل مطلوب واحد مفقود",
+    "missingRequired_other": "{{count}} حقول مطلوبة مفقودة",
+    "inProgress": "قيد التقدم",
+    "fieldsCompleted": "تم إكمال {{completed}} من {{total}} حقل",
+    "requiredStatus": "{{completed}}/{{total}} مطلوب",
+    "viewDetails": "عرض التفاصيل",
+    "emptyRequiredWarning": "حقل مطلوب واحد فارغ",
+    "emptyRequiredWarning_other": "{{count}} حقول مطلوبة فارغة",
+    "errorsWarning": "حقل واحد يحتوي على أخطاء التحقق",
+    "errorsWarning_other": "{{count}} حقول تحتوي على أخطاء التحقق"
+  },
+  "completion": {
+    "percentage": "مكتمل {{percentage}}%"
+  },
+  "group": {
+    "fieldCount": "{{completed}} من {{total}} حقل",
+    "collapse": "طي القسم",
+    "expand": "توسيع القسم"
+  },
+  "toggle": {
+    "showOptional": "إظهار الحقول الاختيارية",
+    "hideOptional": "إخفاء الحقول الاختيارية",
+    "optionalFieldsCount": "حقل اختياري واحد",
+    "optionalFieldsCount_other": "{{count}} حقول اختيارية"
+  },
+  "validation": {
+    "requiredField": "هذا الحقل مطلوب",
+    "completeRequired": "يرجى إكمال جميع الحقول المطلوبة قبل الإرسال"
+  },
+  "demo": {
+    "title": "عرض النموذج التدريجي",
+    "description": "يعرض هذا العرض التوضيحي النماذج التدريجية مع التمييز الواضح بين الحقول المطلوبة والاختيارية، وتجميع الحقول، وتتبع الإكمال.",
+    "basicInfo": "المعلومات الأساسية",
+    "basicInfoDescription": "المعلومات الأساسية المطلوبة للنموذج",
+    "contactInfo": "معلومات الاتصال",
+    "contactInfoDescription": "كيف يمكننا التواصل معك",
+    "additionalDetails": "تفاصيل إضافية",
+    "additionalDetailsDescription": "معلومات اختيارية لتوفير مزيد من السياق",
+    "preferences": "التفضيلات",
+    "preferencesDescription": "تخصيص تجربتك",
+    "fields": {
+      "firstName": "الاسم الأول",
+      "firstNameHelp": "اسمك الأول القانوني كما يظهر في الوثائق الرسمية",
+      "lastName": "اسم العائلة",
+      "lastNameHelp": "اسم عائلتك القانوني",
+      "email": "البريد الإلكتروني",
+      "emailHelp": "سنستخدم هذا لإرسال التحديثات المهمة إليك",
+      "phone": "رقم الهاتف",
+      "phoneHelp": "أضف رمز البلد للأرقام الدولية",
+      "organization": "المنظمة",
+      "organizationHelp": "جهة العمل الحالية أو المنظمة التابع لها",
+      "jobTitle": "المسمى الوظيفي",
+      "jobTitleHelp": "منصبك أو دورك الحالي",
+      "department": "القسم",
+      "departmentHelp": "القسم الذي تعمل فيه",
+      "bio": "السيرة الذاتية",
+      "bioHelp": "وصف موجز عن نفسك (بحد أقصى 500 حرف)",
+      "website": "الموقع الإلكتروني",
+      "websiteHelp": "رابط موقعك الشخصي أو المهني",
+      "newsletter": "الاشتراك في النشرة الإخبارية",
+      "newsletterHelp": "تلقي تحديثات حول الميزات والإعلانات الجديدة",
+      "notifications": "تفعيل الإشعارات",
+      "notificationsHelp": "الحصول على إشعارات حول الأحداث المهمة"
+    },
+    "submit": "إرسال النموذج",
+    "reset": "إعادة تعيين النموذج"
+  }
+}

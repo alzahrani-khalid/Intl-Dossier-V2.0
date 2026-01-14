@@ -160,7 +160,41 @@ import enFab from './en/fab.json'
 import arFab from './ar/fab.json'
 import enSmartInput from './en/smart-input.json'
 import arSmartInput from './ar/smart-input.json'
-// Force reload - updated 2026-01-12 - v73 - Added smart-input namespace
+import enFieldHistory from './en/field-history.json'
+import arFieldHistory from './ar/field-history.json'
+import enWatchlist from './en/watchlist.json'
+import arWatchlist from './ar/watchlist.json'
+import enSavedSearches from './en/saved-searches.json'
+import arSavedSearches from './ar/saved-searches.json'
+import enEntityTemplates from './en/entity-templates.json'
+import arEntityTemplates from './ar/entity-templates.json'
+import enDuplicateDetection from './en/duplicate-detection.json'
+import arDuplicateDetection from './ar/duplicate-detection.json'
+import enRoleDashboard from './en/role-dashboard.json'
+import arRoleDashboard from './ar/role-dashboard.json'
+import enMeetingMinutes from './en/meeting-minutes.json'
+import arMeetingMinutes from './ar/meeting-minutes.json'
+import enCompliance from './en/compliance.json'
+import arCompliance from './ar/compliance.json'
+import enStakeholderInfluence from './en/stakeholder-influence.json'
+import arStakeholderInfluence from './ar/stakeholder-influence.json'
+import enScenarioSandbox from './en/scenario-sandbox.json'
+import arScenarioSandbox from './ar/scenario-sandbox.json'
+import enFormAutoSave from './en/form-auto-save.json'
+import arFormAutoSave from './ar/form-auto-save.json'
+import enUserManagement from './en/user-management.json'
+import arUserManagement from './ar/user-management.json'
+import enActionableErrors from './en/actionable-errors.json'
+import arActionableErrors from './ar/actionable-errors.json'
+import enRichAutocomplete from './en/rich-autocomplete.json'
+import arRichAutocomplete from './ar/rich-autocomplete.json'
+import enProgressiveForm from './en/progressive-form.json'
+import arProgressiveForm from './ar/progressive-form.json'
+import enPermissionErrors from './en/permission-errors.json'
+import arPermissionErrors from './ar/permission-errors.json'
+import enActiveFilters from './en/active-filters.json'
+import arActiveFilters from './ar/active-filters.json'
+// Force reload - updated 2026-01-14 - v90 - Added active-filters namespace
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -246,6 +280,23 @@ const resources = {
     'bottom-sheet': enBottomSheet,
     fab: enFab,
     'smart-input': enSmartInput,
+    'field-history': enFieldHistory,
+    watchlist: enWatchlist,
+    'saved-searches': enSavedSearches,
+    'entity-templates': enEntityTemplates,
+    'duplicate-detection': enDuplicateDetection,
+    'role-dashboard': enRoleDashboard,
+    'meeting-minutes': enMeetingMinutes,
+    compliance: enCompliance,
+    'stakeholder-influence': enStakeholderInfluence,
+    'scenario-sandbox': enScenarioSandbox,
+    'form-auto-save': enFormAutoSave,
+    'user-management': enUserManagement,
+    'actionable-errors': enActionableErrors,
+    'rich-autocomplete': enRichAutocomplete,
+    'progressive-form': enProgressiveForm,
+    'permission-errors': enPermissionErrors,
+    'active-filters': enActiveFilters,
   },
   ar: {
     translation: arCommon,
@@ -327,6 +378,23 @@ const resources = {
     'bottom-sheet': arBottomSheet,
     fab: arFab,
     'smart-input': arSmartInput,
+    'field-history': arFieldHistory,
+    watchlist: arWatchlist,
+    'saved-searches': arSavedSearches,
+    'entity-templates': arEntityTemplates,
+    'duplicate-detection': arDuplicateDetection,
+    'role-dashboard': arRoleDashboard,
+    'meeting-minutes': arMeetingMinutes,
+    compliance: arCompliance,
+    'stakeholder-influence': arStakeholderInfluence,
+    'scenario-sandbox': arScenarioSandbox,
+    'form-auto-save': arFormAutoSave,
+    'user-management': arUserManagement,
+    'actionable-errors': arActionableErrors,
+    'rich-autocomplete': arRichAutocomplete,
+    'progressive-form': arProgressiveForm,
+    'permission-errors': arPermissionErrors,
+    'active-filters': arActiveFilters,
   },
 }
 

@@ -2,7 +2,7 @@ import { useState, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
   BulkActionsToolbar,
-  BulkActionConfirmDialog,
+  BulkActionPreviewDialog,
   BulkActionProgressIndicator,
   SelectableDataTable,
   UndoToast,
@@ -83,12 +83,12 @@ export function BulkActionsDemo() {
     selectRange,
     clearSelection,
     actionState,
-    executeAction,
+    executeActionWithItems,
     resetActionState,
-    pendingConfirmation,
-    requestConfirmation,
-    confirmAction,
-    cancelConfirmation,
+    previewState,
+    requestPreview,
+    confirmPreview,
+    cancelPreview,
     executeUndo,
     clearUndoData,
   } = useBulkActions<DemoItem>({
@@ -169,26 +169,22 @@ export function BulkActionsDemo() {
     [t],
   )
 
-  // Handle action click
+  // Handle action click - always show preview dialog for user to review affected items
   const handleActionClick = useCallback(
     (action: BulkActionDefinition<DemoItem>) => {
       const selectedItems = data.filter((item) => selection.selectedIds.has(item.id))
-
-      if (action.requiresConfirmation) {
-        requestConfirmation(action, selectedItems)
-      } else {
-        executeAction(action)
-      }
+      // Always show preview dialog so users can review and exclude items before executing
+      requestPreview(action, selectedItems)
     },
-    [data, selection.selectedIds, requestConfirmation, executeAction],
+    [data, selection.selectedIds, requestPreview],
   )
 
-  // Handle confirmation
-  const handleConfirm = useCallback(
-    (params?: BulkActionParams) => {
-      confirmAction(params)
+  // Handle preview confirmation with included items
+  const handlePreviewConfirm = useCallback(
+    (includedItems: DemoItem[], params?: BulkActionParams) => {
+      confirmPreview(includedItems, params)
     },
-    [confirmAction],
+    [confirmPreview],
   )
 
   // Handle undo toast actions
@@ -253,15 +249,16 @@ export function BulkActionsDemo() {
         />
       </div>
 
-      {/* Confirmation Dialog */}
-      <BulkActionConfirmDialog
-        open={!!pendingConfirmation}
-        action={pendingConfirmation?.action || null}
-        itemCount={pendingConfirmation?.itemCount || 0}
+      {/* Preview Dialog - Shows affected entities with key details */}
+      <BulkActionPreviewDialog
+        open={previewState.open}
+        action={previewState.action}
+        items={previewState.items}
         entityType="entity"
-        onConfirm={handleConfirm}
-        onCancel={cancelConfirmation}
+        onConfirm={handlePreviewConfirm}
+        onCancel={cancelPreview}
         isProcessing={actionState.status === 'processing'}
+        undoTtl={DEFAULT_UNDO_TTL}
       />
 
       {/* Undo Toast */}

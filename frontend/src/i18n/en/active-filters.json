@@ -1,0 +1,25 @@
+{
+  "activeFilters": "{{count}} active filter",
+  "activeFilters_plural": "{{count}} active filters",
+  "clearAll": "Clear all",
+  "expand": "Show filters",
+  "collapse": "Hide filters",
+  "hiddenResults": "{{count}} results hidden by filters ({{total}} total)",
+  "hiddenCount": "{{count}} hidden",
+  "from": "From",
+  "to": "To",
+  "noActiveFilters": "No active filters",
+  "filterApplied": "Filter applied",
+  "filterRemoved": "Filter removed",
+  "allFiltersCleared": "All filters cleared",
+  "showingFiltered": "Showing {{count}} of {{total}} results",
+  "resultsHiddenWarning": "Some results may be hidden due to active filters",
+  "filterCategories": {
+    "status": "Status",
+    "type": "Type",
+    "priority": "Priority",
+    "date": "Date",
+    "owner": "Owner",
+    "search": "Search"
+  }
+}

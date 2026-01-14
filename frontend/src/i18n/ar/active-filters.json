@@ -1,0 +1,25 @@
+{
+  "activeFilters": "{{count}} فلتر نشط",
+  "activeFilters_plural": "{{count}} فلاتر نشطة",
+  "clearAll": "مسح الكل",
+  "expand": "إظهار الفلاتر",
+  "collapse": "إخفاء الفلاتر",
+  "hiddenResults": "{{count}} نتيجة مخفية بواسطة الفلاتر ({{total}} إجمالي)",
+  "hiddenCount": "{{count}} مخفي",
+  "from": "من",
+  "to": "إلى",
+  "noActiveFilters": "لا توجد فلاتر نشطة",
+  "filterApplied": "تم تطبيق الفلتر",
+  "filterRemoved": "تم إزالة الفلتر",
+  "allFiltersCleared": "تم مسح جميع الفلاتر",
+  "showingFiltered": "عرض {{count}} من {{total}} نتيجة",
+  "resultsHiddenWarning": "قد تكون بعض النتائج مخفية بسبب الفلاتر النشطة",
+  "filterCategories": {
+    "status": "الحالة",
+    "type": "النوع",
+    "priority": "الأولوية",
+    "date": "التاريخ",
+    "owner": "المالك",
+    "search": "البحث"
+  }
+}

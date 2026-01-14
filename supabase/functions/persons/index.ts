@@ -481,6 +481,48 @@ serve(async (req) => {
           role_type: 'owner',
         });
 
+        // Emit PersonCreated event for event sourcing
+        const correlationId = crypto.randomUUID();
+        await supabase
+          .rpc('append_event', {
+            p_event_type: 'PersonCreated',
+            p_event_category: 'lifecycle',
+            p_aggregate_type: 'person',
+            p_aggregate_id: dossier.id,
+            p_payload: {
+              name_en: body.name_en.trim(),
+              name_ar: body.name_ar.trim(),
+              description_en: body.description_en,
+              description_ar: body.description_ar,
+              title_en: body.title_en,
+              title_ar: body.title_ar,
+              organization_id: body.organization_id,
+              nationality_country_id: body.nationality_country_id,
+              email: body.email,
+              phone: body.phone,
+              biography_en: body.biography_en,
+              biography_ar: body.biography_ar,
+              photo_url: body.photo_url,
+              linkedin_url: body.linkedin_url,
+              twitter_url: body.twitter_url,
+              expertise_areas: body.expertise_areas || [],
+              languages: body.languages || [],
+              importance_level: body.importance_level || 1,
+              sensitivity_level: body.sensitivity_level || 1,
+              tags: body.tags || [],
+            },
+            p_changes: null,
+            p_metadata: { source: 'persons-edge-function' },
+            p_correlation_id: correlationId,
+            p_causation_id: null,
+            p_idempotency_key: `person-create-${dossier.id}`,
+            p_event_version: 1,
+          })
+          .catch((err: Error) => {
+            // Log but don't fail the request if event sourcing fails
+            console.error('Failed to emit PersonCreated event:', err.message);
+          });
+
         return new Response(
           JSON.stringify({
             ...dossier,
@@ -575,6 +617,37 @@ serve(async (req) => {
         const { data } = await supabase.rpc('get_person_full', {
           p_person_id: personId,
         });
+
+        // Emit PersonUpdated event for event sourcing
+        const allUpdates = { ...dossierUpdates, ...personUpdates };
+        delete allUpdates.updated_by;
+        delete allUpdates.updated_at;
+
+        if (Object.keys(allUpdates).length > 0) {
+          // Build changes object for tracking what changed
+          const changes: Record<string, { old: unknown; new: unknown }> = {};
+          for (const [key, value] of Object.entries(allUpdates)) {
+            changes[key] = { old: null, new: value }; // Old values would need previous state
+          }
+
+          await supabase
+            .rpc('append_event', {
+              p_event_type: 'PersonUpdated',
+              p_event_category: 'update',
+              p_aggregate_type: 'person',
+              p_aggregate_id: personId,
+              p_payload: allUpdates,
+              p_changes: changes,
+              p_metadata: { source: 'persons-edge-function' },
+              p_correlation_id: crypto.randomUUID(),
+              p_causation_id: null,
+              p_idempotency_key: null,
+              p_event_version: 1,
+            })
+            .catch((err: Error) => {
+              console.error('Failed to emit PersonUpdated event:', err.message);
+            });
+        }
 
         return new Response(JSON.stringify(data), {
           status: 200,
@@ -673,6 +746,25 @@ serve(async (req) => {
         if (error) {
           return errorResponse('DELETE_ERROR', error.message, 'خطأ في الأرشفة', 500, error);
         }
+
+        // Emit PersonArchived event for event sourcing
+        await supabase
+          .rpc('append_event', {
+            p_event_type: 'PersonArchived',
+            p_event_category: 'lifecycle',
+            p_aggregate_type: 'person',
+            p_aggregate_id: personId,
+            p_payload: { archived: true, archived_at: new Date().toISOString() },
+            p_changes: { status: { old: 'active', new: 'archived' } },
+            p_metadata: { source: 'persons-edge-function' },
+            p_correlation_id: crypto.randomUUID(),
+            p_causation_id: null,
+            p_idempotency_key: `person-archive-${personId}-${Date.now()}`,
+            p_event_version: 1,
+          })
+          .catch((err: Error) => {
+            console.error('Failed to emit PersonArchived event:', err.message);
+          });
 
         return new Response(JSON.stringify({ success: true }), {
           status: 200,

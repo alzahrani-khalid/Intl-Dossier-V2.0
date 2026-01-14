@@ -1,0 +1,124 @@
+{
+  "title": "Stakeholder Influence",
+  "description": "Analyze influence and identify key connectors for strategic planning",
+
+  "loading_network": "Loading network...",
+  "no_network_data": "No network data available",
+  "no_network_hint": "Select a stakeholder to view their influence network",
+  "no_data": "Select a stakeholder to view metrics",
+  "no_report": "No report data available",
+  "no_results": "No stakeholders found",
+  "no_reports": "No reports generated yet",
+  "no_influencers": "No influencers identified",
+  "no_connectors": "No bridge stakeholders identified",
+
+  "network": "Network",
+  "stakeholders": "Stakeholders",
+  "reports": "Reports",
+  "partners": "partners",
+  "groups": "groups",
+
+  "influence_network": "Influence Network",
+  "click_node": "Click nodes to explore relationships",
+  "select_stakeholder": "Select a stakeholder to visualize their network",
+
+  "network_position": "Network Position",
+  "engagement": "Engagement",
+  "relationships": "Relationships",
+  "raw_metrics": "Raw Metrics",
+
+  "direct_connections": "Direct Connections",
+  "two_hop": "2-Hop Reach",
+  "total_engagements": "Total Engagements",
+  "unique_partners": "Unique Partners",
+
+  "calculated_at": "Calculated",
+
+  "top_influencers": "Top Influencers",
+  "top_influencers_desc": "Stakeholders with highest influence scores",
+  "key_connectors": "Key Connectors",
+  "key_connectors_desc": "Bridge stakeholders connecting different groups",
+  "groups_connected": "groups connected",
+
+  "key_influencers": "Key Influencers",
+  "total_stakeholders": "Total Stakeholders",
+  "total_relationships": "Relationships",
+  "avg_influence": "Avg Score",
+
+  "network_statistics": "Network Statistics",
+  "key_findings": "Key Findings",
+  "recommendations": "Recommendations",
+  "analysis_period": "Analysis Period",
+
+  "legend": "Legend",
+  "nodes": "Nodes",
+  "edges": "Connections",
+  "avg_connections": "Avg Conn",
+  "density": "Density",
+
+  "recalculate": "Recalculate",
+  "new_report": "New Report",
+  "create_report": "Create Influence Report",
+  "create_report_desc": "Generate a strategic analysis report",
+  "generate": "Generate Report",
+  "cancel": "Cancel",
+  "print": "Print",
+  "export": "Export",
+
+  "title_en": "Title (English)",
+  "title_ar": "Title (Arabic)",
+  "report_type": "Report Type",
+  "description_en": "Description (EN)",
+  "description_ar": "Description (AR)",
+
+  "search_stakeholders": "Search stakeholders...",
+  "filter_type": "Type",
+  "all_types": "All Types",
+  "persons": "Persons",
+  "organizations": "Organizations",
+  "countries": "Countries",
+
+  "stakeholder_details": "Stakeholder Details",
+  "metrics_desc": "Influence metrics and network position",
+
+  "report": {
+    "created": "Report \"{{title}}\" created successfully"
+  },
+
+  "influence_tier": {
+    "key_influencer": "Key Influencer",
+    "high_influence": "High Influence",
+    "moderate_influence": "Moderate Influence",
+    "low_influence": "Low Influence",
+    "peripheral": "Peripheral"
+  },
+
+  "stakeholder_role": {
+    "hub": "Hub",
+    "bridge": "Bridge",
+    "gatekeeper": "Gatekeeper",
+    "peripheral": "Peripheral",
+    "isolate": "Isolate"
+  },
+
+  "report_type": {
+    "full_network_analysis": "Full Network Analysis",
+    "stakeholder_profile": "Stakeholder Profile",
+    "cluster_analysis": "Cluster Analysis",
+    "strategic_planning": "Strategic Planning",
+    "comparison_report": "Comparison Report",
+    "trend_analysis": "Trend Analysis"
+  },
+
+  "metrics": {
+    "degree_centrality": "Connections",
+    "betweenness_centrality": "Bridge Position",
+    "closeness_centrality": "Network Reach",
+    "eigenvector_centrality": "Connected Influence",
+    "engagement_frequency": "Engagement Frequency",
+    "engagement_reach": "Engagement Reach",
+    "avg_relationship_health": "Relationship Health",
+    "strong_relationships": "Strong Relations",
+    "weak_relationships": "Weak Relations"
+  }
+}

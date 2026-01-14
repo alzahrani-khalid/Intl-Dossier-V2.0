@@ -1,0 +1,206 @@
+{
+  "greetings": {
+    "morning": "Good morning",
+    "afternoon": "Good afternoon",
+    "evening": "Good evening"
+  },
+  "roleDashboard": {
+    "generic": {
+      "subtitle": "Your personalized workspace with quick access to your most important tasks and information."
+    },
+    "admin": {
+      "title": "System Administration",
+      "subtitle": "Monitor system health, manage users, and oversee platform operations.",
+      "welcome": "Manage system operations and user access"
+    },
+    "analyst": {
+      "title": "Research & Analysis",
+      "subtitle": "Access your assigned dossiers, research tasks, and intelligence briefs.",
+      "welcome": "Dive into your research and analysis work"
+    },
+    "manager": {
+      "title": "Team Management",
+      "subtitle": "Monitor team workload, review pending approvals, and track escalations.",
+      "welcome": "Oversee your team's progress and priorities"
+    },
+    "executive": {
+      "title": "Strategic Overview",
+      "subtitle": "High-level insights on partnerships, missions, and organizational performance.",
+      "welcome": "Access strategic insights and key decisions"
+    },
+    "lobbyist": {
+      "title": "Engagement Hub",
+      "subtitle": "Manage upcoming engagements, follow-ups, and relationship activities.",
+      "welcome": "Stay on top of your engagement activities"
+    },
+    "intakeOfficer": {
+      "title": "Service Requests",
+      "subtitle": "Process incoming requests, track SLAs, and manage the intake queue.",
+      "welcome": "Handle service requests efficiently"
+    },
+    "editor": {
+      "title": "Content Management",
+      "subtitle": "Create and edit dossiers, documents, and content across the platform.",
+      "welcome": "Manage your content and documents"
+    },
+    "viewer": {
+      "title": "Information Access",
+      "subtitle": "Browse and view dossiers, documents, and reports.",
+      "welcome": "Explore available information"
+    },
+    "staff": {
+      "title": "My Workspace",
+      "subtitle": "Access your tasks, assignments, and daily work items.",
+      "welcome": "Get started with your daily tasks"
+    }
+  },
+  "quickActions": {
+    "title": "Quick Actions",
+    "createDossier": "Create Dossier",
+    "createTask": "Create Task",
+    "newRequest": "New Request",
+    "scheduleMeeting": "Schedule Meeting",
+    "newBrief": "New Brief",
+    "search": "Search",
+    "calendar": "Calendar",
+    "reports": "Reports",
+    "myWork": "My Work",
+    "teamWorkload": "Team Workload",
+    "approvals": "Approvals",
+    "intelligence": "Intelligence",
+    "settings": "Settings",
+    "users": "Users",
+    "intakeQueue": "Intake Queue"
+  },
+  "pendingActions": {
+    "title": "Pending Actions",
+    "allClear": "All caught up!",
+    "noPendingActions": "You have no pending actions at this time.",
+    "overdue": "overdue",
+    "total": "total",
+    "viewAll": "View all ({{count}} more)"
+  },
+  "workload": {
+    "title": "Workload Summary",
+    "overdue": "Overdue",
+    "dueToday": "Due Today",
+    "dueThisWeek": "Due This Week",
+    "totalPending": "Total Pending",
+    "capacityUsed": "Capacity Used",
+    "byPriority": "By Priority",
+    "bySource": "By Source",
+    "sources": {
+      "tasks": "Tasks",
+      "commitments": "Commitments",
+      "intake": "Intake",
+      "reviews": "Reviews"
+    }
+  },
+  "priority": {
+    "urgent": "Urgent",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "kpis": {
+    "totalDossiers": "Total Dossiers",
+    "activeUsers": "Active Users",
+    "systemHealth": "System Health",
+    "pendingApprovals": "Pending Approvals",
+    "assignedDossiers": "Assigned Dossiers",
+    "briefsInProgress": "Briefs In Progress",
+    "completedThisWeek": "Completed This Week",
+    "researchQueue": "Research Queue",
+    "teamTasks": "Team Tasks",
+    "overdueItems": "Overdue Items",
+    "teamUtilization": "Team Utilization",
+    "pendingReviews": "Pending Reviews",
+    "activePartners": "Active Partners",
+    "mouInWorkflow": "MoUs In Workflow",
+    "upcomingMissions": "Upcoming Missions",
+    "overallCompliance": "Overall Compliance",
+    "upcomingMeetings": "Upcoming Meetings",
+    "pendingFollowUps": "Pending Follow-ups",
+    "activeRelationships": "Active Relationships",
+    "engagementRate": "Engagement Rate",
+    "pendingIntake": "Pending Intake",
+    "processedToday": "Processed Today",
+    "slaCompliance": "SLA Compliance",
+    "avgResponseTime": "Avg Response Time",
+    "myTasks": "My Tasks",
+    "dossiersInProgress": "Dossiers In Progress",
+    "researchEfficiency": "Research Efficiency",
+    "teamPendingTasks": "Team Pending Tasks",
+    "teamSlaCompliance": "Team SLA Compliance",
+    "backlogSize": "Backlog Size"
+  },
+  "shortcuts": {
+    "title": "Quick Access",
+    "description": "Frequently used features for your role",
+    "userManagement": "User Management",
+    "systemSettings": "System Settings",
+    "auditLogs": "Audit Logs",
+    "pendingApprovals": "Pending Approvals",
+    "myDossiers": "My Dossiers",
+    "researchQueue": "Research Queue",
+    "intelligence": "Intelligence",
+    "calendar": "Calendar",
+    "teamWorkload": "Team Workload",
+    "pendingReviews": "Pending Reviews",
+    "reports": "Reports",
+    "escalations": "Escalations",
+    "strategicOverview": "Strategic Overview",
+    "upcomingMissions": "Upcoming Missions",
+    "intelligenceBriefs": "Intelligence Briefs",
+    "partnerHealth": "Partner Health",
+    "upcomingEngagements": "Upcoming Engagements",
+    "followUps": "Follow-ups",
+    "contacts": "Contacts",
+    "recommendations": "Recommendations",
+    "intakeQueue": "Intake Queue",
+    "processing": "Processing",
+    "slaTracker": "SLA Tracker",
+    "completed": "Completed"
+  },
+  "upcomingEvents": {
+    "title": "Upcoming Events"
+  },
+  "sections": {
+    "quickActions": "Quick Actions",
+    "keyMetrics": "Key Metrics",
+    "systemHealth": "System Health",
+    "recentActivity": "Recent Activity",
+    "pendingApprovals": "Pending Approvals",
+    "myAssignments": "My Assignments",
+    "researchQueue": "Research Queue",
+    "recentBriefs": "Recent Briefs",
+    "teamWorkload": "Team Workload",
+    "pendingReviews": "Pending Reviews",
+    "escalations": "Escalations",
+    "strategicOverview": "Strategic Overview",
+    "upcomingMissions": "Upcoming Missions",
+    "intelligenceHighlights": "Intelligence Highlights",
+    "highPriorityAlerts": "High Priority Alerts",
+    "upcomingEngagements": "Upcoming Engagements",
+    "pendingFollowUps": "Pending Follow-ups",
+    "relationshipHealth": "Relationship Health",
+    "intakeQueue": "Intake Queue",
+    "currentlyProcessing": "Currently Processing",
+    "slaTracker": "SLA Tracker",
+    "myWork": "My Work"
+  },
+  "actions": {
+    "reviewDossier": "Review Dossier",
+    "approveCommitment": "Approve Commitment",
+    "followUpMeeting": "Follow Up on Meeting"
+  },
+  "common": {
+    "viewAll": "View All"
+  },
+  "error": {
+    "title": "Failed to load dashboard",
+    "retry": "Try Again"
+  },
+  "overdue": "Overdue",
+  "dueOn": "Due"
+}

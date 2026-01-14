@@ -1,0 +1,108 @@
+{
+  "title": {
+    "selectTemplate": "اختر قالبًا",
+    "createTemplate": "إنشاء قالب",
+    "editTemplate": "تعديل القالب",
+    "manageTemplates": "إدارة القوالب"
+  },
+  "subtitle": {
+    "selectTemplate": "اختر قالبًا لملء الحقول الشائعة بسرعة",
+    "createTemplate": "أنشئ قالبًا قابلًا لإعادة الاستخدام لإنشاء الكيانات بسرعة"
+  },
+  "section": {
+    "favorites": "المفضلة",
+    "recent": "المستخدمة مؤخرًا",
+    "all": "جميع القوالب",
+    "system": "قوالب النظام",
+    "personal": "قوالبي",
+    "team": "قوالب الفريق"
+  },
+  "entityType": {
+    "dossier": "ملف",
+    "engagement": "مشاركة",
+    "commitment": "التزام",
+    "task": "مهمة",
+    "intake": "طلب وارد",
+    "position": "موقف",
+    "contact": "جهة اتصال",
+    "calendarEvent": "حدث التقويم"
+  },
+  "action": {
+    "shortcuts": "الاختصارات",
+    "skip": "تخطي",
+    "createFromScratch": "إنشاء من البداية",
+    "favorite": "إضافة إلى المفضلة",
+    "unfavorite": "إزالة من المفضلة",
+    "use": "استخدم القالب",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "duplicate": "نسخ",
+    "save": "حفظ القالب",
+    "cancel": "إلغاء"
+  },
+  "badge": {
+    "system": "نظام",
+    "personal": "شخصي",
+    "team": "فريق",
+    "new": "جديد",
+    "popular": "شائع"
+  },
+  "placeholder": {
+    "search": "البحث في القوالب...",
+    "name": "اسم القالب",
+    "description": "وصف القالب (اختياري)"
+  },
+  "quickEntry": {
+    "title": "الإدخال السريع",
+    "placeholder": "اكتب للبحث في القوالب...",
+    "loading": "جاري تحميل القوالب...",
+    "noResults": "لم يتم العثور على قوالب"
+  },
+  "shortcut": {
+    "navigate": "التنقل",
+    "select": "اختيار",
+    "search": "بحث",
+    "cancel": "إلغاء",
+    "close": "إغلاق",
+    "switchType": "تغيير النوع"
+  },
+  "empty": {
+    "noResults": "لا توجد قوالب تطابق بحثك",
+    "noTemplates": "لا توجد قوالب متاحة لهذا النوع من الكيانات"
+  },
+  "error": {
+    "loadFailed": "فشل في تحميل القوالب",
+    "createFailed": "فشل في إنشاء القالب",
+    "updateFailed": "فشل في تحديث القالب",
+    "deleteFailed": "فشل في حذف القالب"
+  },
+  "toast": {
+    "created": "تم إنشاء القالب بنجاح",
+    "updated": "تم تحديث القالب بنجاح",
+    "deleted": "تم حذف القالب بنجاح",
+    "favoriteAdded": "تمت الإضافة إلى المفضلة",
+    "favoriteRemoved": "تمت الإزالة من المفضلة"
+  },
+  "form": {
+    "nameEn": "الاسم (بالإنجليزية)",
+    "nameAr": "الاسم (بالعربية)",
+    "descriptionEn": "الوصف (بالإنجليزية)",
+    "descriptionAr": "الوصف (بالعربية)",
+    "entityType": "نوع الكيان",
+    "scope": "الظهور",
+    "icon": "الأيقونة",
+    "color": "اللون",
+    "keyboardShortcut": "اختصار لوحة المفاتيح",
+    "tags": "العلامات",
+    "defaultValues": "القيم الافتراضية"
+  },
+  "scope": {
+    "personal": "أنا فقط",
+    "team": "فريقي",
+    "system": "الجميع (نظام)"
+  },
+  "help": {
+    "keyboardShortcut": "اضغط Alt + حرف لتطبيق هذا القالب بسرعة",
+    "defaultValues": "سيتم ملء هذه القيم مسبقًا عند استخدام هذا القالب"
+  }
+}

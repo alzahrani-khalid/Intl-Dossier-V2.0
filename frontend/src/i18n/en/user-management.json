@@ -196,7 +196,8 @@
     "filterByType": "Filter by Type",
     "showAll": "Show All",
     "resultsPerPage": "Results per page",
-    "showing": "Showing {{from}}-{{to}} of {{total}} users"
+    "showing": "Showing {{from}}-{{to}} of {{total}} users",
+    "actionsColumn": "Actions"
   },
 
   "userDetail": {

@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "Transform generic error messages into actionable guidance with specific fix buttons. For validation errors, highlight exact fields and provide one-click corrections where possible.\n\n**Rationale:** Generic error messages leave users stuck without knowing how to proceed. Users waste time guessing solutions or abandon tasks entirely. Specific guidance reduces support burden and improves task completion.",
+  "title": "Guided Error Recovery with Specific Fix Actions",
+  "status": "verified",
+  "id": "feature-1768382895976-ar7rjf718",
+  "descriptionHistory": [
+    {
+      "description": "Transform generic error messages into actionable guidance with specific fix buttons. For validation errors, highlight exact fields and provide one-click corrections where possible.\n\n**Rationale:** Generic error messages leave users stuck without knowing how to proceed. Users waste time guessing solutions or abandon tasks entirely. Specific guidance reduces support burden and improves task completion.",
+      "timestamp": "2026-01-14T09:28:15.976Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-14T11:57:36.232Z",
+  "updatedAt": "2026-01-14T12:26:47.692Z"
+}

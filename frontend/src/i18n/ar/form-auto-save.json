@@ -1,0 +1,59 @@
+{
+  "progress": {
+    "ariaLabel": "تقدم إكمال النموذج: {{percentage}}% مكتمل",
+    "percentage": "{{value}}% مكتمل",
+    "fieldsCompleted": "{{completed}}/{{total}} حقول",
+    "minuteRemaining": "~دقيقة واحدة متبقية",
+    "minutesRemaining": "~{{minutes}} دقائق متبقية",
+    "complete": "مكتمل",
+    "step": "الخطوة {{current}} من {{total}}",
+    "steps": "خطوات النموذج"
+  },
+  "banner": {
+    "title": "متابعة من حيث توقفت؟",
+    "savedTime": "تم الحفظ {{time}}",
+    "progress": "{{percentage}}% مكتمل",
+    "stepInfo": "الخطوة {{current}} من {{total}}",
+    "restore": "متابعة",
+    "restoring": "جارٍ الاستعادة...",
+    "discard": "البدء من جديد",
+    "dismiss": "تجاهل",
+    "recently": "مؤخراً"
+  },
+  "indicator": {
+    "saving": "جارٍ الحفظ...",
+    "saved": "تم الحفظ",
+    "savedTime": "تم الحفظ {{time}}",
+    "unsaved": "غير محفوظ",
+    "error": "فشل الحفظ",
+    "errorDetail": "فشل في الحفظ. يرجى المحاولة مرة أخرى.",
+    "unavailable": "الحفظ التلقائي غير متاح",
+    "recently": "مؤخراً"
+  },
+  "notifications": {
+    "draftSaved": "تم حفظ تقدمك",
+    "draftRestored": "تم استعادة المسودة بنجاح",
+    "draftCleared": "تم تجاهل المسودة",
+    "saveFailed": "فشل في حفظ التقدم"
+  },
+  "dialogs": {
+    "unsavedChanges": {
+      "title": "تغييرات غير محفوظة",
+      "description": "لديك تغييرات غير محفوظة ستفقد إذا غادرت. هل تريد حفظ تقدمك؟",
+      "save": "حفظ والمغادرة",
+      "discard": "المغادرة بدون حفظ",
+      "cancel": "البقاء"
+    },
+    "discardDraft": {
+      "title": "تجاهل المسودة؟",
+      "description": "سيؤدي هذا إلى حذف تقدمك المحفوظ بشكل دائم. لا يمكن التراجع عن هذا الإجراء.",
+      "confirm": "تجاهل المسودة",
+      "cancel": "الاحتفاظ بالمسودة"
+    }
+  },
+  "accessibility": {
+    "progressBar": "شريط تقدم إكمال النموذج",
+    "savedStatus": "حالة الحفظ التلقائي للنموذج",
+    "draftAvailable": "تتوفر مسودة محفوظة لهذا النموذج"
+  }
+}

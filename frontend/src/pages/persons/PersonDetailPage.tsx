@@ -52,6 +52,7 @@ import {
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
 import { usePerson, useArchivePerson } from '@/hooks/usePersons'
+import { usePersonNavigation } from '@/hooks/useEntityNavigation'
 import type {
   ImportanceLevel,
   PersonRole,
@@ -80,6 +81,9 @@ export function PersonDetailPage() {
   // Fetch person data
   const { data: personData, isLoading, isError, error } = usePerson(personId)
   const archivePerson = useArchivePerson()
+
+  // Track this person in navigation history
+  usePersonNavigation(personId, personData?.person, { skip: isLoading })
 
   // Toggle section expansion
   const toggleSection = (section: string) => {

@@ -46,6 +46,8 @@ export interface PreviewItem extends BulkSelectableItem {
   title?: string
   label?: string
   status?: string
+  priority?: string
+  assignee?: string
   [key: string]: unknown
 }
 
@@ -526,20 +528,68 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                         {renderItem ? (
                           renderItem(item)
                         ) : (
-                          <div className="flex items-center gap-2">
+                          <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
                             <span
                               className={cn(
-                                'text-sm truncate',
+                                'text-sm font-medium truncate flex-1',
                                 isExcluded && 'line-through text-muted-foreground',
                               )}
                             >
                               {getItemDisplayName(item)}
                             </span>
-                            {item.status && (
-                              <Badge variant="outline" className="text-xs shrink-0">
-                                {t(`status.${item.status}`, { defaultValue: item.status })}
-                              </Badge>
-                            )}
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              {item.status && (
+                                <Badge
+                                  variant="secondary"
+                                  className={cn(
+                                    'text-xs shrink-0',
+                                    item.status === 'completed' &&
+                                      'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200',
+                                    item.status === 'in_progress' &&
+                                      'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200',
+                                    item.status === 'pending' &&
+                                      'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200',
+                                    item.status === 'cancelled' &&
+                                      'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-200',
+                                    item.status === 'draft' &&
+                                      'bg-slate-100 text-slate-800 dark:bg-slate-900 dark:text-slate-200',
+                                    item.status === 'review' &&
+                                      'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200',
+                                    item.status === 'approved' &&
+                                      'bg-emerald-100 text-emerald-800 dark:bg-emerald-900 dark:text-emerald-200',
+                                    item.status === 'rejected' &&
+                                      'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200',
+                                    item.status === 'archived' &&
+                                      'bg-neutral-100 text-neutral-800 dark:bg-neutral-900 dark:text-neutral-200',
+                                  )}
+                                >
+                                  {t(`status.${item.status}`, { defaultValue: item.status })}
+                                </Badge>
+                              )}
+                              {item.priority && (
+                                <Badge
+                                  variant="outline"
+                                  className={cn(
+                                    'text-xs shrink-0',
+                                    item.priority === 'urgent' &&
+                                      'border-red-500 text-red-600 dark:border-red-400 dark:text-red-400',
+                                    item.priority === 'high' &&
+                                      'border-orange-500 text-orange-600 dark:border-orange-400 dark:text-orange-400',
+                                    item.priority === 'medium' &&
+                                      'border-yellow-500 text-yellow-600 dark:border-yellow-400 dark:text-yellow-400',
+                                    item.priority === 'low' &&
+                                      'border-green-500 text-green-600 dark:border-green-400 dark:text-green-400',
+                                  )}
+                                >
+                                  {t(`priority.${item.priority}`, { defaultValue: item.priority })}
+                                </Badge>
+                              )}
+                              {item.assignee && (
+                                <span className="text-xs text-muted-foreground truncate max-w-[100px] hidden sm:inline">
+                                  {item.assignee}
+                                </span>
+                              )}
+                            </div>
                           </div>
                         )}
                       </div>

@@ -29,6 +29,7 @@ import {
 import { SavedViewsManager } from '@/components/view-preferences/SavedViewsManager'
 import { SampleDataBanner, SampleDataEmptyState } from '@/components/sample-data'
 import { SearchEmptyState } from '@/components/empty-states'
+import { ActiveFiltersBar, type FilterChipConfig } from '@/components/active-filters'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import {
@@ -245,6 +246,92 @@ export function DossierListPage() {
 
   // Prefetch intelligence data on hover (T100 - Performance optimization)
   const prefetchIntelligence = usePrefetchIntelligence()
+
+  // Calculate total dossiers for hidden results indicator
+  const totalDossiersUnfiltered = useMemo(() => {
+    if (!counts) return undefined
+    return Object.values(counts).reduce((sum, val) => sum + val.total, 0)
+  }, [counts])
+
+  // Build filter chips for ActiveFiltersBar
+  const activeFilterChips = useMemo<FilterChipConfig[]>(() => {
+    const chips: FilterChipConfig[] = []
+
+    // Type filter
+    if (filters.type) {
+      chips.push({
+        key: 'type',
+        label: t('list.filterByType'),
+        value: t(`type.${filters.type}`),
+        category: t('active-filters:filterCategories.type', 'Type'),
+        variant: 'info',
+      })
+    }
+
+    // Status filters (array)
+    const statusArray = Array.isArray(filters.status)
+      ? filters.status
+      : filters.status
+        ? [filters.status]
+        : []
+
+    statusArray.forEach((status) => {
+      chips.push({
+        key: 'status',
+        label: t('list.filterByStatus'),
+        value: t(`status.${status}`),
+        category: t('active-filters:filterCategories.status', 'Status'),
+        arrayValue: status,
+        variant: status === 'archived' ? 'warning' : 'default',
+      })
+    })
+
+    // Search filter
+    if (filters.search && filters.search.trim()) {
+      chips.push({
+        key: 'search',
+        label: t('list.search'),
+        value: `"${filters.search}"`,
+        category: t('active-filters:filterCategories.search', 'Search'),
+        variant: 'default',
+      })
+    }
+
+    return chips
+  }, [filters.type, filters.status, filters.search, t])
+
+  // Handle removing a filter from the chips bar
+  const handleRemoveFilter = useCallback((key: string, arrayValue?: string) => {
+    setFilters((prev) => {
+      const newFilters = { ...prev, page: 1 }
+
+      if (key === 'type') {
+        newFilters.type = undefined
+      } else if (key === 'status' && arrayValue) {
+        const currentStatuses = Array.isArray(prev.status)
+          ? prev.status
+          : prev.status
+            ? [prev.status]
+            : []
+        const newStatuses = currentStatuses.filter((s) => s !== arrayValue)
+        newFilters.status = newStatuses.length > 0 ? newStatuses : undefined
+      } else if (key === 'search') {
+        newFilters.search = undefined
+        setSearchInput('')
+      }
+
+      return newFilters
+    })
+  }, [])
+
+  // Handle clearing all filters
+  const handleClearAllFilters = useCallback(() => {
+    setFilters({ ...DEFAULT_FILTERS, page: 1 })
+    setSearchInput('')
+  }, [])
+
+  // State for filter bar collapsed (mobile)
+  const [filtersCollapsed, setFiltersCollapsed] = useState(false)
 
   const handleFilterChange = (key: keyof DossierFilters, value: unknown) => {
     setFilters((prev) => ({
@@ -653,6 +740,20 @@ export function DossierListPage() {
           </div>
         </div>
       </div>
+
+      {/* Active Filters Bar - Shows all active filters with remove buttons */}
+      <ActiveFiltersBar
+        filters={activeFilterChips}
+        onRemoveFilter={handleRemoveFilter}
+        onClearAll={handleClearAllFilters}
+        totalResults={data?.total}
+        unfilteredTotal={totalDossiersUnfiltered}
+        showHiddenResultsWarning={true}
+        sticky={false}
+        className="mb-4"
+        collapsed={filtersCollapsed}
+        onToggleCollapsed={() => setFiltersCollapsed((prev) => !prev)}
+      />
 
       {/* Sync Status Bar */}
       <SyncStatusBar

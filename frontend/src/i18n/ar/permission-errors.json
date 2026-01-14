@@ -1,0 +1,165 @@
+{
+  "title": "تم رفض الوصول",
+  "subtitle": "ليس لديك صلاحية لتنفيذ هذا الإجراء",
+
+  "reasons": {
+    "insufficient_role": "دورك الحالي ({{role}}) لا يتضمن هذه الصلاحية",
+    "resource_restricted": "هذا المورد له صلاحيات وصول محدودة",
+    "delegation_expired": "انتهت صلاحية وصولك المفوض لهذا المورد",
+    "delegation_revoked": "تم إلغاء صلاحية وصولك المفوض لهذا المورد",
+    "not_assigned": "لم يتم تعيينك لهذا المورد",
+    "resource_locked": "هذا المورد مقفل حالياً للتحرير",
+    "workflow_state": "هذا المورد في حالة سير عمل تمنع هذا الإجراء",
+    "time_restricted": "الوصول لهذا المورد مقيد بوقت محدد",
+    "quota_exceeded": "لقد تجاوزت حصة الوصول الخاصة بك",
+    "pending_approval": "طلب الوصول الخاص بك في انتظار الموافقة"
+  },
+
+  "permissions": {
+    "read": "عرض",
+    "write": "تحرير",
+    "delete": "حذف",
+    "approve": "الموافقة على",
+    "publish": "نشر",
+    "assign": "تعيين مستخدمين إلى",
+    "manage": "إدارة",
+    "admin": "إدارة النظام"
+  },
+
+  "resources": {
+    "dossier": "الملف",
+    "country": "ملف الدولة",
+    "organization": "المنظمة",
+    "mou": "مذكرة التفاهم",
+    "event": "الفعالية",
+    "forum": "المنتدى",
+    "brief": "الموجز",
+    "document": "الوثيقة",
+    "report": "التقرير",
+    "engagement": "التفاعل",
+    "commitment": "الالتزام",
+    "position": "المنصب",
+    "person": "الشخص",
+    "calendar": "إدخال التقويم",
+    "user": "المستخدم",
+    "system": "إعدادات النظام"
+  },
+
+  "roles": {
+    "admin": "مدير النظام",
+    "manager": "مدير",
+    "staff": "موظف",
+    "viewer": "مشاهد"
+  },
+
+  "message": {
+    "generic": "تحتاج صلاحية {{permission}} لـ{{action}} هذا {{resource}}",
+    "withName": "تحتاج صلاحية {{permission}} لـ{{action}} \"{{resourceName}}\"",
+    "roleRequired": "هذا الإجراء يتطلب دور {{requiredRole}} أو أعلى",
+    "currentRole": "دورك الحالي: {{currentRole}}"
+  },
+
+  "accessGranters": {
+    "title": "من يمكنه المساعدة",
+    "subtitle": "يمكن للأشخاص التالية أسماؤهم منحك الوصول:",
+    "primaryContact": "جهة الاتصال الرئيسية",
+    "noGrantersAvailable": "لا توجد جهات اتصال محددة. يرجى التواصل مع مدير النظام."
+  },
+
+  "requestAccess": {
+    "title": "طلب الوصول",
+    "button": "طلب الوصول",
+    "requestFrom": "طلب من {{name}}",
+    "form": {
+      "title": "طلب الوصول إلى {{resource}}",
+      "subtitle": "إرسال طلب إلى {{granterName}} للحصول على صلاحية {{permission}}",
+      "reason": "سبب الطلب",
+      "reasonPlaceholder": "اشرح سبب حاجتك للوصول إلى هذا المورد...",
+      "reasonHelp": "قدم مبرراً واضحاً لمساعدة المراجع على فهم حاجتك",
+      "urgency": "الأهمية",
+      "urgencyOptions": {
+        "low": "منخفضة - لا استعجال",
+        "medium": "متوسطة - خلال أيام قليلة",
+        "high": "عالية - خلال 24 ساعة",
+        "critical": "حرجة - حاجة فورية"
+      },
+      "duration": "المدة المطلوبة",
+      "durationOptions": {
+        "permanent": "وصول دائم",
+        "7": "7 أيام",
+        "14": "14 يوماً",
+        "30": "30 يوماً",
+        "90": "90 يوماً"
+      },
+      "durationHelp": "للوصول المؤقت، حدد المدة التي تحتاجها"
+    },
+    "submit": "إرسال الطلب",
+    "cancel": "إلغاء",
+    "submitting": "جاري الإرسال...",
+    "success": {
+      "title": "تم إرسال الطلب",
+      "message": "تم إرسال طلب الوصول الخاص بك إلى {{name}}. سيتم إشعارك عند الرد.",
+      "requestId": "رقم الطلب: {{id}}"
+    },
+    "error": {
+      "title": "فشل الطلب",
+      "message": "فشل إرسال طلب الوصول. يرجى المحاولة مرة أخرى.",
+      "duplicate": "لديك طلب معلق بالفعل لهذا المورد",
+      "rateLimited": "طلبات كثيرة جداً. يرجى الانتظار قبل المحاولة مرة أخرى."
+    }
+  },
+
+  "actions": {
+    "requestAccess": "طلب الوصول",
+    "viewPermissions": "عرض صلاحياتي",
+    "requestDelegation": "طلب وصول مؤقت",
+    "contactAdmin": "التواصل مع المدير",
+    "viewAlternatives": "عرض موارد مشابهة",
+    "escalate": "تصعيد الطلب",
+    "copyRequestLink": "نسخ رابط الطلب",
+    "dismiss": "إغلاق",
+    "goBack": "رجوع",
+    "tryDifferentAction": "جرب إجراءً مختلفاً"
+  },
+
+  "inline": {
+    "accessDenied": "تم رفض الوصول",
+    "needPermission": "تحتاج صلاحية {{permission}}",
+    "requestAccess": "طلب الوصول من {{name}}",
+    "pendingRequest": "طلب الوصول معلق",
+    "contactForHelp": "تواصل مع {{name}} للمساعدة"
+  },
+
+  "toast": {
+    "accessDenied": "تم رفض الوصول: {{action}}",
+    "requestSent": "تم إرسال طلب الوصول إلى {{name}}",
+    "requestFailed": "فشل إرسال طلب الوصول",
+    "linkCopied": "تم نسخ رابط الطلب"
+  },
+
+  "empty": {
+    "noAccess": "ليس لديك وصول لأي موارد من هذا النوع",
+    "suggestRequest": "اطلب الوصول من مديرك أو مدير النظام"
+  },
+
+  "badge": {
+    "restricted": "مقيد",
+    "noAccess": "لا يوجد وصول",
+    "pendingRequest": "طلب معلق",
+    "requestAccess": "طلب الوصول"
+  },
+
+  "dialog": {
+    "close": "إغلاق",
+    "understand": "فهمت",
+    "whatCanIDo": "ماذا يمكنني أن أفعل؟",
+    "whyCantI": "لماذا لا يمكنني الوصول لهذا؟"
+  },
+
+  "urgencyBadge": {
+    "low": "أولوية منخفضة",
+    "medium": "أولوية متوسطة",
+    "high": "أولوية عالية",
+    "critical": "حرج"
+  }
+}

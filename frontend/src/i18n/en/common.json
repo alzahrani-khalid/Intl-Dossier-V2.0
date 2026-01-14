@@ -1045,5 +1045,25 @@
     "collapsed": "Header collapsed",
     "expanded": "Header expanded",
     "contextTitle": "Current section"
+  },
+  "breadcrumbTrail": {
+    "recent": "Recent",
+    "remove": "Remove from history",
+    "clearAll": "Clear all",
+    "more": "more",
+    "scrollLeft": "Scroll left",
+    "scrollRight": "Scroll right",
+    "empty": "No recently viewed entities"
+  },
+  "entityTypes": {
+    "dossier": "Dossier",
+    "country": "Country",
+    "organization": "Organization",
+    "person": "Person",
+    "engagement": "Engagement",
+    "position": "Position",
+    "forum": "Forum",
+    "working_group": "Working Group",
+    "topic": "Topic"
   }
 }

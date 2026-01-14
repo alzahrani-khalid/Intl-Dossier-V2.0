@@ -1,0 +1,17 @@
+{
+  "category": "refactor",
+  "description": "Design an extensible plugin system where new entity types (beyond persons, engagements, forums, etc.) can be added without modifying core code. Include hooks for validation, relationships, permissions, and UI rendering.\n\n**Rationale:** The system manages many entity types with similar patterns. A plugin architecture reduces code duplication, makes adding new entity types trivial, improves testability through isolation, and allows customer-specific entity types without forking the codebase.",
+  "title": "Build a Plugin Architecture for Entity Types",
+  "status": "verified",
+  "id": "feature-1768328164322-yxvjtcnq3",
+  "descriptionHistory": [
+    {
+      "description": "Design an extensible plugin system where new entity types (beyond persons, engagements, forums, etc.) can be added without modifying core code. Include hooks for validation, relationships, permissions, and UI rendering.\n\n**Rationale:** The system manages many entity types with similar patterns. A plugin architecture reduces code duplication, makes adding new entity types trivial, improves testability through isolation, and allows customer-specific entity types without forking the codebase.",
+      "timestamp": "2026-01-13T18:16:04.323Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-13T18:39:19.845Z",
+  "updatedAt": "2026-01-13T19:08:10.285Z"
+}

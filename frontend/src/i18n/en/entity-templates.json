@@ -1,0 +1,108 @@
+{
+  "title": {
+    "selectTemplate": "Select a Template",
+    "createTemplate": "Create Template",
+    "editTemplate": "Edit Template",
+    "manageTemplates": "Manage Templates"
+  },
+  "subtitle": {
+    "selectTemplate": "Choose a template to quickly pre-fill common fields",
+    "createTemplate": "Create a reusable template for quick entity creation"
+  },
+  "section": {
+    "favorites": "Favorites",
+    "recent": "Recently Used",
+    "all": "All Templates",
+    "system": "System Templates",
+    "personal": "My Templates",
+    "team": "Team Templates"
+  },
+  "entityType": {
+    "dossier": "Dossier",
+    "engagement": "Engagement",
+    "commitment": "Commitment",
+    "task": "Task",
+    "intake": "Intake",
+    "position": "Position",
+    "contact": "Contact",
+    "calendarEvent": "Calendar Event"
+  },
+  "action": {
+    "shortcuts": "Shortcuts",
+    "skip": "Skip",
+    "createFromScratch": "Create from scratch",
+    "favorite": "Add to favorites",
+    "unfavorite": "Remove from favorites",
+    "use": "Use Template",
+    "edit": "Edit",
+    "delete": "Delete",
+    "duplicate": "Duplicate",
+    "save": "Save Template",
+    "cancel": "Cancel"
+  },
+  "badge": {
+    "system": "System",
+    "personal": "Personal",
+    "team": "Team",
+    "new": "New",
+    "popular": "Popular"
+  },
+  "placeholder": {
+    "search": "Search templates...",
+    "name": "Template name",
+    "description": "Template description (optional)"
+  },
+  "quickEntry": {
+    "title": "Quick Entry",
+    "placeholder": "Type to search templates...",
+    "loading": "Loading templates...",
+    "noResults": "No templates found"
+  },
+  "shortcut": {
+    "navigate": "Navigate",
+    "select": "Select",
+    "search": "Search",
+    "cancel": "Cancel",
+    "close": "Close",
+    "switchType": "Switch type"
+  },
+  "empty": {
+    "noResults": "No templates match your search",
+    "noTemplates": "No templates available for this entity type"
+  },
+  "error": {
+    "loadFailed": "Failed to load templates",
+    "createFailed": "Failed to create template",
+    "updateFailed": "Failed to update template",
+    "deleteFailed": "Failed to delete template"
+  },
+  "toast": {
+    "created": "Template created successfully",
+    "updated": "Template updated successfully",
+    "deleted": "Template deleted successfully",
+    "favoriteAdded": "Added to favorites",
+    "favoriteRemoved": "Removed from favorites"
+  },
+  "form": {
+    "nameEn": "Name (English)",
+    "nameAr": "Name (Arabic)",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "entityType": "Entity Type",
+    "scope": "Visibility",
+    "icon": "Icon",
+    "color": "Color",
+    "keyboardShortcut": "Keyboard Shortcut",
+    "tags": "Tags",
+    "defaultValues": "Default Values"
+  },
+  "scope": {
+    "personal": "Only me",
+    "team": "My team",
+    "system": "Everyone (system)"
+  },
+  "help": {
+    "keyboardShortcut": "Press Alt + letter to quickly apply this template",
+    "defaultValues": "These values will be pre-filled when using this template"
+  }
+}

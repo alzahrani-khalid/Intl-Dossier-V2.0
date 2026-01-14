@@ -1,0 +1,134 @@
+{
+  "title": "Watchlist",
+  "subtitle": "Monitor entities and receive notifications",
+  "unknown": "Unknown Entity",
+
+  "entityTypes": {
+    "person": "Person",
+    "engagement": "Engagement",
+    "commitment": "Commitment",
+    "dossier": "Dossier",
+    "organization": "Organization",
+    "forum": "Forum",
+    "position": "Position",
+    "mou": "MOU",
+    "workingGroup": "Working Group"
+  },
+
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+
+  "actions": {
+    "watch": "Watch",
+    "unwatch": "Unwatch",
+    "watching": "Watching",
+    "addToWatchlist": "Add to Watchlist",
+    "removeFromWatchlist": "Remove from Watchlist",
+    "update": "Update",
+    "settings": "Settings",
+    "viewEntity": "View Entity",
+    "pauseNotifications": "Pause Notifications",
+    "resumeNotifications": "Resume Notifications",
+    "remove": "Remove",
+    "bulkAdd": "Add Multiple",
+    "bulkRemove": "Remove Selected",
+    "applyTemplate": "Apply Template"
+  },
+
+  "settings": {
+    "title": "Watch Settings",
+    "customLabel": "Custom Label",
+    "customLabelPlaceholder": "Enter a custom label for quick identification",
+    "priority": "Priority",
+    "notes": "Notes",
+    "notesPlaceholder": "Add notes about why you're watching this entity...",
+    "notifications": "Notification Settings",
+    "notifyModification": "Notify on modifications",
+    "notifyRelationship": "Notify on relationship changes",
+    "notifyDeadline": "Notify on deadline approaching",
+    "notifyStatus": "Notify on status changes",
+    "notifyComment": "Notify on new comments",
+    "notifyDocument": "Notify on document attachments",
+    "deadlineReminders": "Deadline Reminder Days",
+    "deadlineRemindersDescription": "Send reminders this many days before deadline"
+  },
+
+  "filters": {
+    "entityType": "Entity Type",
+    "allTypes": "All Types",
+    "priority": "Priority",
+    "allPriorities": "All Priorities",
+    "activeOnly": "Active Only",
+    "showAll": "Show All"
+  },
+
+  "search": {
+    "placeholder": "Search watchlist..."
+  },
+
+  "empty": {
+    "title": "Your Watchlist is Empty",
+    "description": "Start watching entities to receive notifications when they are modified, relationships change, or deadlines approach.",
+    "addFirst": "Add your first watched entity"
+  },
+
+  "templates": {
+    "title": "Watchlist Templates",
+    "description": "Apply predefined watchlist templates based on your role",
+    "systemTemplate": "System Template",
+    "customTemplate": "Custom Template",
+    "applied": "Applied",
+    "notApplied": "Not Applied",
+    "applyTemplate": "Apply Template",
+    "autoSync": "Auto-sync with template updates",
+    "entitiesCount": "{{count}} entities"
+  },
+
+  "bulk": {
+    "title": "Bulk Operations",
+    "selectEntities": "Select entities to add to watchlist",
+    "selectedCount": "{{count}} selected",
+    "addAll": "Add All",
+    "removeAll": "Remove All",
+    "maxReached": "Maximum selection limit reached ({{max}})",
+    "success": "Successfully updated {{count}} items"
+  },
+
+  "recentEvents": "{{count}} recent event",
+  "recentEvents_plural": "{{count}} recent events",
+  "loadMore": "Load More",
+
+  "notifications": {
+    "added": "Added to watchlist",
+    "removed": "Removed from watchlist",
+    "updated": "Watchlist item updated",
+    "bulkAdded": "Added {{count}} items to watchlist",
+    "bulkRemoved": "Removed {{count}} items from watchlist",
+    "templateApplied": "Template applied successfully"
+  },
+
+  "errors": {
+    "fetchFailed": "Failed to load watchlist",
+    "addFailed": "Failed to add to watchlist",
+    "removeFailed": "Failed to remove from watchlist",
+    "updateFailed": "Failed to update watchlist item",
+    "templateFailed": "Failed to apply template"
+  },
+
+  "eventTypes": {
+    "entity_modified": "Entity Modified",
+    "relationship_added": "Relationship Added",
+    "relationship_removed": "Relationship Removed",
+    "deadline_approaching": "Deadline Approaching",
+    "deadline_passed": "Deadline Passed",
+    "status_changed": "Status Changed",
+    "assignment_changed": "Assignment Changed",
+    "comment_added": "Comment Added",
+    "document_attached": "Document Attached",
+    "custom": "Custom Event"
+  }
+}

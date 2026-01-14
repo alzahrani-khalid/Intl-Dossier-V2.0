@@ -1,0 +1,84 @@
+{
+  "importance": {
+    "required": "Required",
+    "recommended": "Recommended",
+    "optional": "Optional"
+  },
+  "status": {
+    "empty": "Not filled",
+    "partial": "Partially filled",
+    "complete": "Complete",
+    "error": "Has errors"
+  },
+  "progress": {
+    "readyToSubmit": "Ready to submit",
+    "hasErrors": "{{count}} field has errors",
+    "hasErrors_other": "{{count}} fields have errors",
+    "missingRequired": "{{count}} required field missing",
+    "missingRequired_other": "{{count}} required fields missing",
+    "inProgress": "In progress",
+    "fieldsCompleted": "{{completed}} of {{total}} fields completed",
+    "requiredStatus": "{{completed}}/{{total}} required",
+    "viewDetails": "View breakdown",
+    "emptyRequiredWarning": "{{count}} required field is empty",
+    "emptyRequiredWarning_other": "{{count}} required fields are empty",
+    "errorsWarning": "{{count}} field has validation errors",
+    "errorsWarning_other": "{{count}} fields have validation errors"
+  },
+  "completion": {
+    "percentage": "{{percentage}}% complete"
+  },
+  "group": {
+    "fieldCount": "{{completed}} of {{total}} fields",
+    "collapse": "Collapse section",
+    "expand": "Expand section"
+  },
+  "toggle": {
+    "showOptional": "Show optional fields",
+    "hideOptional": "Hide optional fields",
+    "optionalFieldsCount": "{{count}} optional field",
+    "optionalFieldsCount_other": "{{count}} optional fields"
+  },
+  "validation": {
+    "requiredField": "This field is required",
+    "completeRequired": "Please complete all required fields before submitting"
+  },
+  "demo": {
+    "title": "Progressive Form Demo",
+    "description": "This demo showcases progressive disclosure forms with clear required/optional field distinction, field grouping, and completion tracking.",
+    "basicInfo": "Basic Information",
+    "basicInfoDescription": "Essential information required for the form",
+    "contactInfo": "Contact Information",
+    "contactInfoDescription": "How we can reach you",
+    "additionalDetails": "Additional Details",
+    "additionalDetailsDescription": "Optional information to provide more context",
+    "preferences": "Preferences",
+    "preferencesDescription": "Customize your experience",
+    "fields": {
+      "firstName": "First Name",
+      "firstNameHelp": "Your legal first name as it appears on official documents",
+      "lastName": "Last Name",
+      "lastNameHelp": "Your legal family name",
+      "email": "Email Address",
+      "emailHelp": "We'll use this to send you important updates",
+      "phone": "Phone Number",
+      "phoneHelp": "Include country code for international numbers",
+      "organization": "Organization",
+      "organizationHelp": "Your current employer or affiliated organization",
+      "jobTitle": "Job Title",
+      "jobTitleHelp": "Your current position or role",
+      "department": "Department",
+      "departmentHelp": "The department you work in",
+      "bio": "Bio",
+      "bioHelp": "A brief description about yourself (max 500 characters)",
+      "website": "Website",
+      "websiteHelp": "Your personal or professional website URL",
+      "newsletter": "Subscribe to newsletter",
+      "newsletterHelp": "Receive updates about new features and announcements",
+      "notifications": "Enable notifications",
+      "notificationsHelp": "Get notified about important events"
+    },
+    "submit": "Submit Form",
+    "reset": "Reset Form"
+  }
+}
