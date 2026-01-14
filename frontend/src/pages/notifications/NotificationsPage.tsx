@@ -11,8 +11,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
-import { NotificationList } from '@/components/notifications/NotificationList'
-import { NotificationBadge } from '@/components/notifications/NotificationBadge'
+import { NotificationList } from '@/components/Notifications/NotificationList'
+import { NotificationBadge } from '@/components/Notifications/NotificationBadge'
 import { NotificationPreviewTimeline } from '@/components/empty-states/NotificationPreviewTimeline'
 import {
   useNotificationCenter,
