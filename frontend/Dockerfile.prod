@@ -39,6 +39,9 @@ ENV VITE_SUPABASE_ANON_KEY=$VITE_SUPABASE_ANON_KEY
 ENV VITE_API_URL=$VITE_API_URL
 ENV VITE_ANYTHINGLLM_URL=$VITE_ANYTHINGLLM_URL
 
+# Increase Node.js memory limit for large builds
+ENV NODE_OPTIONS="--max-old-space-size=3072"
+
 # Build the application
 RUN pnpm build
 
