@@ -9,7 +9,7 @@ import { useCollapsingHeader } from '@/hooks/useCollapsingHeader'
 import { useOptionalKeyboardShortcutContext } from '@/components/KeyboardShortcuts'
 import { ThemeSelector } from '@/components/theme-selector/theme-selector'
 import { LanguageToggle } from '@/components/LanguageToggle'
-import { NotificationPanel } from '@/components/notifications'
+import { NotificationPanel } from '@/components/Notifications'
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,

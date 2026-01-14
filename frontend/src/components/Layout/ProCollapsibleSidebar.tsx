@@ -10,7 +10,7 @@ import { useWorkQueueCounts } from '@/hooks/useWorkQueueCounts'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { LanguageToggle } from '@/components/LanguageToggle'
 import { ThemeSelector } from '@/components/theme-selector/theme-selector'
-import { NotificationPanel } from '@/components/notifications'
+import { NotificationPanel } from '@/components/Notifications'
 import {
   Sheet,
   SheetContent,
