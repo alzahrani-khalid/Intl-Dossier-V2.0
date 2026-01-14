@@ -64,16 +64,6 @@ try {
     sourcemap: true,
     // Preserve directory structure
     outbase: 'src',
-    // Don't fail on external modules
-    external: [
-      'ws',
-      'graphql',
-      'bull',
-      '@bull-board/*',
-      'rss-parser',
-      'rate-limit-redis',
-      '@upstash/redis',
-    ],
     // Ignore type errors
     logLevel: 'warning',
   });
