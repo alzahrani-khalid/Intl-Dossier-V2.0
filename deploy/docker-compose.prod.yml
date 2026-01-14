@@ -1,0 +1,175 @@
+# ===========================================
+# PRODUCTION DOCKER COMPOSE
+# DigitalOcean Droplet Deployment
+# ===========================================
+
+services:
+  # ===========================================
+  # REVERSE PROXY - Nginx with SSL
+  # ===========================================
+  nginx:
+    image: nginx:alpine
+    container_name: intl-dossier-nginx
+    restart: unless-stopped
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./nginx/ssl:/etc/nginx/ssl:ro
+      - ./certbot/www:/var/www/certbot:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'nginx', '-t']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # FRONTEND - React/Vite
+  # ===========================================
+  frontend:
+    build:
+      context: ../frontend
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_SUPABASE_URL: ${VITE_SUPABASE_URL}
+        VITE_SUPABASE_ANON_KEY: ${VITE_SUPABASE_ANON_KEY}
+        VITE_API_URL: ${VITE_API_URL}
+        VITE_ANYTHINGLLM_URL: ${VITE_ANYTHINGLLM_URL}
+    container_name: intl-dossier-frontend
+    restart: unless-stopped
+    expose:
+      - '80'
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:80/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # BACKEND - Express API
+  # ===========================================
+  backend:
+    build:
+      context: ../backend
+      dockerfile: Dockerfile.prod
+    container_name: intl-dossier-backend
+    restart: unless-stopped
+    expose:
+      - '4000'
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      # Supabase
+      SUPABASE_URL: ${SUPABASE_URL}
+      SUPABASE_ANON_KEY: ${SUPABASE_ANON_KEY}
+      SUPABASE_SERVICE_ROLE_KEY: ${SUPABASE_SERVICE_ROLE_KEY}
+      # Redis
+      REDIS_URL: redis://redis:6379
+      # AnythingLLM
+      ANYTHINGLLM_URL: http://anythingllm:3001
+      ANYTHINGLLM_API_KEY: ${ANYTHINGLLM_API_KEY}
+      # JWT
+      JWT_SECRET: ${JWT_SECRET}
+      # Other
+      FRONTEND_URL: ${FRONTEND_URL}
+    depends_on:
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:4000/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # REDIS - Caching Layer
+  # ===========================================
+  redis:
+    image: redis:7-alpine
+    container_name: intl-dossier-redis
+    restart: unless-stopped
+    expose:
+      - '6379'
+    volumes:
+      - redis_data:/data
+    command: >
+      redis-server
+      --maxmemory 256mb
+      --maxmemory-policy allkeys-lru
+      --save 60 1000
+      --appendonly yes
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # ANYTHINGLLM - AI Service
+  # ===========================================
+  anythingllm:
+    image: mintplexlabs/anythingllm:latest
+    container_name: intl-dossier-anythingllm
+    restart: unless-stopped
+    expose:
+      - '3001'
+    volumes:
+      - anythingllm_data:/app/server/storage
+    environment:
+      STORAGE_DIR: /app/server/storage
+      SERVER_PORT: 3001
+      # Optional: Configure LLM provider
+      LLM_PROVIDER: ${LLM_PROVIDER:-openai}
+      OPENAI_API_KEY: ${OPENAI_API_KEY}
+    healthcheck:
+      test: ['CMD', 'curl', '-f', 'http://localhost:3001/api/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    networks:
+      - intl-dossier
+
+  # ===========================================
+  # CERTBOT - SSL Certificate Manager
+  # ===========================================
+  certbot:
+    image: certbot/certbot
+    container_name: intl-dossier-certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
+    networks:
+      - intl-dossier
+
+# ===========================================
+# VOLUMES
+# ===========================================
+volumes:
+  redis_data:
+  anythingllm_data:
+
+# ===========================================
+# NETWORKS
+# ===========================================
+networks:
+  intl-dossier:
+    name: intl-dossier-prod
+    driver: bridge
