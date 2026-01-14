@@ -3,7 +3,8 @@ import authRouter from './auth'
 import countriesRouter from './countries'
 import mouRouter from './mous'
 import eventsRouter from './events'
-import aiRouter from './ai'
+// AI router disabled in production due to ONNX Runtime incompatibility with Alpine Linux
+// import aiRouter from './ai'
 import documentsRouter from './documents'
 import searchRouter from './search'
 import relationshipsRouter from './relationships'
@@ -16,7 +17,8 @@ import intelligenceRouter from './intelligence'
 import positionsRouter from './positions'
 import permissionsRouter from './permissions'
 import signaturesRouter from './signatures'
-import voiceRouter from './voice'
+// Voice router disabled in production due to ONNX Runtime incompatibility with Alpine Linux
+// import voiceRouter from './voice'
 import afterActionRouter from './after-action'
 import intakeEntityLinksRouter from './intake-entity-links'
 import entitySearchRouter from './entity-search'
@@ -56,8 +58,8 @@ apiRouter.use('/auth', authRouter)
 // Public search route (optional auth for personalization)
 apiRouter.use('/search', searchRouter)
 
-// AI routes (handle their own Supabase auth)
-apiRouter.use('/ai', aiRouter)
+// AI routes disabled in production due to ONNX Runtime incompatibility
+// apiRouter.use('/ai', aiRouter)
 
 // Protected routes (require authentication)
 apiRouter.use(authenticateToken)
@@ -77,7 +79,8 @@ apiRouter.use('/intelligence', intelligenceRouter)
 apiRouter.use('/positions', positionsRouter)
 apiRouter.use('/permissions', permissionsRouter)
 apiRouter.use('/signatures', signaturesRouter)
-apiRouter.use('/voice', voiceRouter)
+// Voice routes disabled in production due to ONNX Runtime incompatibility
+// apiRouter.use('/voice', voiceRouter)
 apiRouter.use('/after-action', afterActionRouter)
 
 // Intake Entity Linking routes
