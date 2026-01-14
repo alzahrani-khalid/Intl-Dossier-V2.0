@@ -30,8 +30,8 @@ COPY . .
 # Build TypeScript
 RUN pnpm build
 
-# Remove devDependencies after build
-RUN pnpm prune --prod
+# Remove devDependencies after build (CI=true for non-TTY environments)
+RUN CI=true pnpm prune --prod
 
 # Stage 2: Production image
 FROM node:20-alpine AS production
