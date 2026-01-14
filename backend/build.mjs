@@ -108,13 +108,17 @@ function addJsExtensions(filePath) {
   writeFileSync(filePath, content);
 }
 
-// Files to exclude (Deno edge functions and problematic files)
+// Files to exclude (Deno edge functions, AI/ML packages that need ONNX, and other problematic files)
 const excludePatterns = [
   'src/api/ai-extraction/',
   'src/api/pdf-generation/',
   'src/utils/session-invalidator.ts',
   'src/graphql/',
   'src/realtime/WebSocketServer.ts',
+  // AI/ML packages that use ONNX Runtime (incompatible with Alpine Linux)
+  'src/ai/',
+  'src/api/voice.ts',
+  'src/services/embeddings.service.ts',
 ];
 
 const srcDir = 'src';
