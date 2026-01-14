@@ -58,9 +58,19 @@ export default defineConfig({
     rollupOptions: {
       output: {
         // T132: Enhanced manual chunking for better lazy loading
+        // Using a function that properly handles dependencies
         manualChunks: (id) => {
-          // Core React libraries
-          if (id.includes('node_modules/react') || id.includes('node_modules/react-dom')) {
+          // Skip non-node_modules
+          if (!id.includes('node_modules')) {
+            return undefined
+          }
+
+          // Core React libraries - must be in same chunk to avoid circular deps
+          if (
+            id.includes('node_modules/react/') ||
+            id.includes('node_modules/react-dom/') ||
+            id.includes('node_modules/scheduler/')
+          ) {
             return 'react-vendor'
           }
 
@@ -82,14 +92,21 @@ export default defineConfig({
             return 'ui-vendor'
           }
 
-          // Chart/visualization libraries (React Flow for graph viz)
+          // Chart/visualization libraries - d3 doesn't depend on React, can be separate
+          // BUT reactflow and recharts DO depend on React, so let Rollup handle them
+          if (id.includes('node_modules/d3')) {
+            return 'd3-vendor'
+          }
+
+          // Let reactflow, @xyflow, and recharts be handled automatically
+          // to preserve proper React dependency resolution
           if (
             id.includes('node_modules/reactflow') ||
             id.includes('node_modules/@xyflow') ||
-            id.includes('node_modules/d3') ||
             id.includes('node_modules/recharts')
           ) {
-            return 'visualization-vendor'
+            // Return undefined to let Rollup handle these naturally
+            return undefined
           }
 
           // Form libraries
@@ -107,10 +124,18 @@ export default defineConfig({
             return 'supabase-vendor'
           }
 
-          // Other large node_modules
-          if (id.includes('node_modules')) {
+          // Other large node_modules - but be careful not to catch everything
+          // Only group truly independent libraries
+          if (
+            id.includes('node_modules/lodash') ||
+            id.includes('node_modules/clsx') ||
+            id.includes('node_modules/class-variance-authority')
+          ) {
             return 'vendor-misc'
           }
+
+          // Let Rollup handle the rest automatically
+          return undefined
         },
         // T132: Optimize chunk file names for better caching
         chunkFileNames: 'assets/[name]-[hash].js',
