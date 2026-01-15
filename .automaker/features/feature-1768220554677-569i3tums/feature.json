@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "Display related entities (linked dossiers, related persons, connected organizations) as horizontally-scrolling card carousels instead of vertical lists. Include snap-to-card behavior and position indicators showing carousel progress.\n\n**Rationale:** Horizontal carousels preserve vertical scroll momentum and allow quick browsing of related content without leaving context. They're familiar from consumer apps and work well for showcasing 3-8 related items compactly.",
   "title": "Horizontal Scrolling Card Carousels for Related Entities",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768220554677-569i3tums",
   "branchName": "main",
   "startedAt": "2026-01-12T20:14:45.515Z",
-  "updatedAt": "2026-01-12T20:24:56.753Z"
+  "updatedAt": "2026-01-12T20:24:56.753Z",
+  "descriptionHistory": []
 }

@@ -194,7 +194,23 @@ import enPermissionErrors from './en/permission-errors.json'
 import arPermissionErrors from './ar/permission-errors.json'
 import enActiveFilters from './en/active-filters.json'
 import arActiveFilters from './ar/active-filters.json'
-// Force reload - updated 2026-01-14 - v90 - Added active-filters namespace
+import enEmailDigest from './en/email-digest.json'
+import arEmailDigest from './ar/email-digest.json'
+import enCommitmentDeliverables from './en/commitment-deliverables.json'
+import arCommitmentDeliverables from './ar/commitment-deliverables.json'
+import enFieldPermissions from './en/field-permissions.json'
+import arFieldPermissions from './ar/field-permissions.json'
+import enIntegrations from './en/integrations.json'
+import arIntegrations from './ar/integrations.json'
+import enAgenda from './en/agenda.json'
+import arAgenda from './ar/agenda.json'
+import enStakeholderInteractions from './en/stakeholder-interactions.json'
+import arStakeholderInteractions from './ar/stakeholder-interactions.json'
+import enEntityDependencies from './en/entity-dependencies.json'
+import arEntityDependencies from './ar/entity-dependencies.json'
+import enScheduledReports from './en/scheduled-reports.json'
+import arScheduledReports from './ar/scheduled-reports.json'
+// Force reload - updated 2026-01-16 - v98 - Added scheduled-reports namespace
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -297,6 +313,14 @@ const resources = {
     'progressive-form': enProgressiveForm,
     'permission-errors': enPermissionErrors,
     'active-filters': enActiveFilters,
+    'email-digest': enEmailDigest,
+    'commitment-deliverables': enCommitmentDeliverables,
+    'field-permissions': enFieldPermissions,
+    integrations: enIntegrations,
+    agenda: enAgenda,
+    'stakeholder-interactions': enStakeholderInteractions,
+    'entity-dependencies': enEntityDependencies,
+    'scheduled-reports': enScheduledReports,
   },
   ar: {
     translation: arCommon,
@@ -395,6 +419,14 @@ const resources = {
     'progressive-form': arProgressiveForm,
     'permission-errors': arPermissionErrors,
     'active-filters': arActiveFilters,
+    'email-digest': arEmailDigest,
+    'commitment-deliverables': arCommitmentDeliverables,
+    'field-permissions': arFieldPermissions,
+    integrations: arIntegrations,
+    agenda: arAgenda,
+    'stakeholder-interactions': arStakeholderInteractions,
+    'entity-dependencies': arEntityDependencies,
+    'scheduled-reports': arScheduledReports,
   },
 }
 

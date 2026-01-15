@@ -1,0 +1,123 @@
+{
+  "title": {
+    "default": "تحليل التبعيات",
+    "withName": "تبعيات {{name}}"
+  },
+  "tabs": {
+    "graph": "الرسم البياني",
+    "assessments": "التقييمات",
+    "details": "التفاصيل"
+  },
+  "stats": {
+    "total": "إجمالي التبعيات",
+    "direct": "مباشر",
+    "transitive": "غير مباشر",
+    "depth": "أقصى عمق"
+  },
+  "legend": {
+    "source": "الكيان المصدر",
+    "direct": "تبعية مباشرة",
+    "transitive": "تبعية غير مباشرة"
+  },
+  "widget": {
+    "dependencies": "التبعيات",
+    "pendingReviews": "المراجعات المعلقة",
+    "criticalImpacts": "التأثيرات الحرجة",
+    "recentAssessments": "التقييمات الأخيرة"
+  },
+  "list": {
+    "title": "تقييمات التأثير",
+    "description": "عرض وإدارة تقييمات التأثير لهذا الكيان",
+    "noAssessments": "لا توجد تقييمات تأثير بعد",
+    "affectedCount": "{{count}} كيانات متأثرة"
+  },
+  "assessment": {
+    "title": "تقرير تقييم التأثير",
+    "recommendations": "التوصيات",
+    "affectedEntities": "الكيانات المتأثرة",
+    "reviewNotes": "ملاحظات المراجعة",
+    "selectPrompt": "اختر تقييماً من القائمة لعرض التفاصيل"
+  },
+  "summary": {
+    "totalAffected": "الإجمالي المتأثر",
+    "actionRequired": "إجراء مطلوب",
+    "assessedAt": "تاريخ التقييم"
+  },
+  "create": {
+    "title": "إنشاء تقييم التأثير",
+    "description": "تحليل تأثير التغييرات على هذا الكيان",
+    "changeType": "نوع التغيير",
+    "button": "تشغيل التقييم",
+    "loading": "جاري التحليل..."
+  },
+  "dialog": {
+    "createTitle": "تقييم تأثير جديد",
+    "createDescription": "تحليل كيفية تأثير التغييرات على {{name}} على الكيانات ذات الصلة",
+    "changeType": "نوع التغيير",
+    "acknowledgeTitle": "الإقرار بالتقييم",
+    "acknowledgeDescription": "تأكيد مراجعتك لتقييم التأثير هذا",
+    "notes": "ملاحظات المراجعة (اختياري)",
+    "notesPlaceholder": "أضف أي ملاحظات حول مراجعتك..."
+  },
+  "actions": {
+    "refresh": "تحديث",
+    "retry": "إعادة المحاولة",
+    "newAssessment": "تقييم جديد",
+    "acknowledge": "إقرار",
+    "markReviewed": "تعيين كمراجع",
+    "markActioned": "تعيين كمنفذ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "create": "إنشاء تقييم",
+    "creating": "جاري الإنشاء...",
+    "saving": "جاري الحفظ..."
+  },
+  "errors": {
+    "loadFailed": "فشل تحميل البيانات. يرجى المحاولة مرة أخرى."
+  },
+  "empty": {
+    "noDependencies": "لم يتم العثور على تبعيات لهذا الكيان"
+  },
+  "severity": {
+    "critical": "حرج",
+    "high": "عالي",
+    "medium": "متوسط",
+    "low": "منخفض",
+    "none": "لا يوجد"
+  },
+  "category": {
+    "stakeholder": "أصحاب المصلحة",
+    "commitment": "الالتزام",
+    "working_group": "مجموعة العمل",
+    "relationship": "العلاقة",
+    "document": "المستند",
+    "event": "الفعالية",
+    "policy": "السياسة",
+    "operational": "التشغيلي"
+  },
+  "dependencyType": {
+    "direct": "مباشر",
+    "transitive": "غير مباشر",
+    "commitment": "التزام",
+    "working_group": "مجموعة عمل",
+    "document": "مستند",
+    "position": "منصب",
+    "event": "فعالية"
+  },
+  "changeType": {
+    "create": "إنشاء",
+    "update": "تحديث",
+    "delete": "حذف",
+    "archive": "أرشفة",
+    "relationship_add": "إضافة علاقة",
+    "relationship_remove": "إزالة علاقة",
+    "status_change": "تغيير الحالة",
+    "ownership_change": "تغيير الملكية"
+  },
+  "status": {
+    "pending": "قيد الانتظار",
+    "reviewed": "تمت المراجعة",
+    "acknowledged": "تم الإقرار",
+    "actioned": "تم التنفيذ"
+  }
+}

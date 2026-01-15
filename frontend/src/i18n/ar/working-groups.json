@@ -319,5 +319,75 @@
     "loadFailed": "فشل في تحميل مجموعات العمل",
     "notFound": "مجموعة العمل غير موجودة",
     "unauthorized": "ليس لديك صلاحية لتنفيذ هذا الإجراء"
+  },
+
+  "memberSuggestions": {
+    "title": "اقتراحات الأعضاء الذكية",
+    "description": "وجدنا {{count}} عضو محتمل لـ {{name}}",
+    "findingMembers": "جاري البحث عن أعضاء محتملين...",
+    "failedToLoad": "فشل في تحميل الاقتراحات",
+    "noSuggestions": "لا توجد اقتراحات متاحة",
+    "noSuggestionsDesc": "لم نتمكن من العثور على أعضاء محتملين بناءً على البيانات المتاحة. يمكنك إضافة أعضاء يدويًا.",
+    "suggestions": "اقتراحات",
+    "highlyRecommended": "موصى به بشدة",
+    "selected": "محدد",
+    "selectAll": "تحديد الكل",
+    "deselectAll": "إلغاء التحديد",
+    "skipForNow": "تخطي في الوقت الحالي",
+    "assignRoles": "تعيين الأدوار",
+    "review": "مراجعة",
+    "back": "العودة",
+    "adding": "جاري الإضافة...",
+    "addMembers": "إضافة {{count}} أعضاء",
+    "noMembersYet": "لا يوجد أعضاء بعد",
+    "membersWillAppear": "سيظهر أعضاء المنظمات هنا بمجرد إضافتهم.",
+    "showSmartSuggestions": "عرض الاقتراحات الذكية",
+
+    "assignRolesTitle": "تعيين الأدوار",
+    "assignRolesDescription": "تعيين أدوار لـ {{count}} أعضاء في {{name}}",
+    "role": "الدور",
+    "notesOptional": "ملاحظات (اختياري)",
+    "addNotes": "أضف ملاحظات...",
+
+    "reviewTitle": "مراجعة الأعضاء",
+    "reviewDescription": "إضافة {{count}} أعضاء إلى {{name}}",
+    "organizations": "منظمات",
+    "people": "أشخاص",
+
+    "tabs": {
+      "all": "الكل",
+      "organizations": "منظمات",
+      "persons": "أشخاص"
+    },
+
+    "suggestionTypes": {
+      "parent_forum_member": "عضو منتدى",
+      "related_engagement": "مشاركة ذات صلة",
+      "past_collaboration": "تعاون سابق",
+      "lead_org_affiliate": "المنظمة الرائدة",
+      "topic_expertise": "خبير في الموضوع",
+      "country_representation": "ممثل دولة",
+      "organizational_mandate": "تطابق التفويض",
+      "role_seniority": "دور رفيع"
+    },
+
+    "confidence": {
+      "high": "موصى به بشدة",
+      "medium": "موصى به",
+      "low": "مقترح"
+    },
+
+    "entityTypes": {
+      "organization": "منظمة",
+      "person": "شخص"
+    },
+
+    "dismiss": "رفض هذا الاقتراح",
+
+    "messages": {
+      "membersAdded": "تم إضافة {{count}} أعضاء بنجاح",
+      "membersAddedPartial": "تم إضافة {{success}} أعضاء، فشلت {{failed}}",
+      "suggestionDismissed": "تم رفض الاقتراح"
+    }
   }
 }

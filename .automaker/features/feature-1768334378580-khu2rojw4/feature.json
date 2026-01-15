@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Design role-specific landing pages that surface the most relevant entities, pending actions, and shortcuts for each user type. Include contextual quick actions based on current workload and typical workflows for roles like lobbyist, analyst, or executive.\n\n**Rationale:** Different users have vastly different needs - a lobbyist needs quick access to upcoming engagements while an executive wants summary dashboards. Personalized homepages reduce navigation time and cognitive load for focused productivity.",
   "title": "Role-Based Homepage with Contextual Quick Actions",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768334378580-khu2rojw4",
   "descriptionHistory": [
     {

@@ -7,48 +7,50 @@
  * Mobile-first design with RTL support.
  */
 
-import { useTranslation } from 'react-i18next';
-import { useSessionStorage } from '@/hooks/useSessionStorage';
-import { CollapsibleSection } from '@/components/Dossier/CollapsibleSection';
-import { ProfessionalProfile } from '@/components/Dossier/sections/ProfessionalProfile';
-import { PositionsHeld } from '@/components/Dossier/sections/PositionsHeld';
-import { OrganizationAffiliations } from '@/components/Dossier/sections/OrganizationAffiliations';
-import { InteractionHistory } from '@/components/Dossier/sections/InteractionHistory';
-import { PersonTimeline } from '@/components/timeline/PersonTimeline';
-import type { PersonDossier } from '@/lib/dossier-type-guards';
+import { useState, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
+import { CollapsibleSection } from '@/components/Dossier/CollapsibleSection'
+import { ProfessionalProfile } from '@/components/Dossier/sections/ProfessionalProfile'
+import { PositionsHeld } from '@/components/Dossier/sections/PositionsHeld'
+import { OrganizationAffiliations } from '@/components/Dossier/sections/OrganizationAffiliations'
+import { InteractionHistory } from '@/components/Dossier/sections/InteractionHistory'
+import { PersonTimeline } from '@/components/timeline/PersonTimeline'
+import { StakeholderInteractionTimeline } from '@/components/stakeholder-timeline'
+import type { PersonDossier } from '@/lib/dossier-type-guards'
 
 interface PersonDossierDetailProps {
-  dossier: PersonDossier;
+  dossier: PersonDossier
+}
+
+interface SectionStates {
+  profile: boolean
+  positions: boolean
+  affiliations: boolean
+  interactions: boolean
+  stakeholderTimeline: boolean
+  timeline: boolean
 }
 
 export function PersonDossierDetail({ dossier }: PersonDossierDetailProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
-  const [profileOpen, setProfileOpen] = useSessionStorage(
-    `person-${dossier.id}-profile-open`,
-    true
-  );
+  // Section collapse states - all expanded by default
+  const [sections, setSections] = useState<SectionStates>({
+    profile: true,
+    positions: true,
+    affiliations: true,
+    interactions: true,
+    stakeholderTimeline: true,
+    timeline: true,
+  })
 
-  const [positionsOpen, setPositionsOpen] = useSessionStorage(
-    `person-${dossier.id}-positions-open`,
-    true
-  );
-
-  const [affiliationsOpen, setAffiliationsOpen] = useSessionStorage(
-    `person-${dossier.id}-affiliations-open`,
-    true
-  );
-
-  const [interactionsOpen, setInteractionsOpen] = useSessionStorage(
-    `person-${dossier.id}-interactions-open`,
-    true
-  );
-
-  const [timelineOpen, setTimelineOpen] = useSessionStorage(
-    `person-${dossier.id}-timeline-open`,
-    true
-  );
+  const toggleSection = useCallback((sectionKey: keyof SectionStates) => {
+    setSections((prev) => ({
+      ...prev,
+      [sectionKey]: !prev[sectionKey],
+    }))
+  }, [])
 
   return (
     <div
@@ -58,10 +60,11 @@ export function PersonDossierDetail({ dossier }: PersonDossierDetailProps) {
       {/* Left Column: Profile */}
       <div className="space-y-4 sm:space-y-6">
         <CollapsibleSection
+          id="person-profile"
           title={t('sections.person.professionalProfile')}
           description={t('sections.person.professionalProfileDescription')}
-          isOpen={profileOpen}
-          onToggle={setProfileOpen}
+          isExpanded={sections.profile}
+          onToggle={() => toggleSection('profile')}
         >
           <ProfessionalProfile dossier={dossier} />
         </CollapsibleSection>
@@ -70,42 +73,59 @@ export function PersonDossierDetail({ dossier }: PersonDossierDetailProps) {
       {/* Right Column: Positions, Affiliations, Interactions */}
       <div className="space-y-4 sm:space-y-6">
         <CollapsibleSection
+          id="person-positions"
           title={t('sections.person.positionsHeld')}
           description={t('sections.person.positionsHeldDescription')}
-          isOpen={positionsOpen}
-          onToggle={setPositionsOpen}
+          isExpanded={sections.positions}
+          onToggle={() => toggleSection('positions')}
         >
           <PositionsHeld dossierId={dossier.id} />
         </CollapsibleSection>
 
         <CollapsibleSection
+          id="person-affiliations"
           title={t('sections.person.organizationAffiliations')}
           description={t('sections.person.organizationAffiliationsDescription')}
-          isOpen={affiliationsOpen}
-          onToggle={setAffiliationsOpen}
+          isExpanded={sections.affiliations}
+          onToggle={() => toggleSection('affiliations')}
         >
           <OrganizationAffiliations dossierId={dossier.id} />
         </CollapsibleSection>
 
         <CollapsibleSection
+          id="person-interactions"
           title={t('sections.person.interactionHistory')}
           description={t('sections.person.interactionHistoryDescription')}
-          isOpen={interactionsOpen}
-          onToggle={setInteractionsOpen}
+          isExpanded={sections.interactions}
+          onToggle={() => toggleSection('interactions')}
         >
           <InteractionHistory dossierId={dossier.id} />
         </CollapsibleSection>
 
+        {/* Stakeholder Interaction Timeline - Unified Timeline with Annotations */}
+        <CollapsibleSection
+          id="person-stakeholder-timeline"
+          title={t('sections.stakeholderTimeline.title', { defaultValue: 'Interaction Timeline' })}
+          description={t('sections.stakeholderTimeline.description', {
+            defaultValue: 'All interactions aggregated chronologically',
+          })}
+          isExpanded={sections.stakeholderTimeline}
+          onToggle={() => toggleSection('stakeholderTimeline')}
+        >
+          <StakeholderInteractionTimeline stakeholderId={dossier.id} stakeholderType="person" />
+        </CollapsibleSection>
+
         {/* Timeline Section - Unified Timeline with Multi-Source Events */}
         <CollapsibleSection
+          id="person-timeline"
           title={t('timeline.title')}
           description={t('sections.shared.timelineDescription')}
-          isOpen={timelineOpen}
-          onToggle={setTimelineOpen}
+          isExpanded={sections.timeline}
+          onToggle={() => toggleSection('timeline')}
         >
           <PersonTimeline dossierId={dossier.id} />
         </CollapsibleSection>
       </div>
     </div>
-  );
+  )
 }

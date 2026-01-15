@@ -1,0 +1,103 @@
+{
+  "title": "Bot Integrations",
+  "description": "Connect Slack and Microsoft Teams to receive notifications and use slash commands directly in your team channels.",
+
+  "connect": {
+    "title": "Connect New Platform",
+    "description": "Add a new bot integration to your account.",
+    "button": "Connect",
+    "notConfigured": "Not Configured",
+    "comingSoon": "Coming Soon"
+  },
+
+  "platforms": {
+    "slack": "Slack",
+    "slackDesc": "Get notifications and use /dossier commands",
+    "teams": "Microsoft Teams",
+    "teamsDesc": "Get notifications and use bot commands"
+  },
+
+  "connected": {
+    "title": "Connected Accounts",
+    "description": "Manage your connected bot accounts and preferences.",
+    "empty": "No bot accounts connected yet. Connect a platform above to get started.",
+    "verified": "Verified",
+    "pending": "Pending Verification",
+    "linkedAs": "Linked as @{{name}}",
+    "unlink": "Unlink"
+  },
+
+  "verification": {
+    "verifying": "Verifying your account...",
+    "success": "Account verified successfully!",
+    "error": "Failed to verify account. Please try again."
+  },
+
+  "oauth": {
+    "success": {
+      "slack": "Slack workspace connected successfully!"
+    },
+    "error": {
+      "missing_config": "Slack integration is not configured.",
+      "oauth_failed": "Failed to connect to Slack. Please try again.",
+      "server_error": "An error occurred. Please try again later."
+    }
+  },
+
+  "preferences": {
+    "title": "Notification Preferences",
+    "dmNotifications": "Direct Message Notifications",
+    "dmNotificationsDesc": "Receive notifications as direct messages",
+    "dailyBriefing": "Daily Briefing",
+    "dailyBriefingDesc": "Get a daily summary of your work items",
+    "saved": "Preferences saved successfully",
+    "error": "Failed to save preferences"
+  },
+
+  "unlink": {
+    "confirmTitle": "Unlink Account",
+    "confirmDesc": "Are you sure you want to unlink this account? You will stop receiving notifications and won't be able to use bot commands until you reconnect.",
+    "success": "Account unlinked successfully",
+    "error": "Failed to unlink account"
+  },
+
+  "features": {
+    "title": "What You Can Do",
+    "notifications": {
+      "title": "Real-time Notifications",
+      "desc": "Get instant alerts for assignments, deadlines, and mentions in your team channels."
+    },
+    "briefing": {
+      "title": "Daily Briefings",
+      "desc": "Start your day with a personalized summary of tasks, deadlines, and calendar events."
+    }
+  },
+
+  "commands": {
+    "title": "Available Commands",
+    "slack": {
+      "search": "/dossier search [query] - Search for entities",
+      "briefing": "/dossier briefing - Get your daily briefing",
+      "status": "/dossier status - Check your pending work",
+      "link": "/dossier link - Link your Slack account",
+      "subscribe": "/dossier subscribe - Subscribe channel to notifications",
+      "unsubscribe": "/dossier unsubscribe - Unsubscribe from notifications",
+      "help": "/dossier help - Show available commands"
+    },
+    "teams": {
+      "search": "search [query] - Search for entities",
+      "briefing": "briefing - Get your daily briefing",
+      "status": "status - Check your pending work",
+      "link": "link - Link your Teams account",
+      "subscribe": "subscribe - Subscribe channel to notifications",
+      "unsubscribe": "unsubscribe - Unsubscribe from notifications",
+      "help": "help - Show available commands"
+    }
+  },
+
+  "common": {
+    "cancel": "Cancel",
+    "save": "Save",
+    "loading": "Loading..."
+  }
+}

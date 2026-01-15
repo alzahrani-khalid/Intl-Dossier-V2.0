@@ -2,7 +2,7 @@
   "category": "enhancement",
   "description": "Before executing bulk actions (delete, status change, tag assignment), show a preview of affected entities with key details and allow users to exclude specific items before confirming.\n\n**Rationale:** Bulk operations are powerful but risky. Users may accidentally include wrong entities in selections. Irreversible bulk changes without preview create anxiety and can cause significant data damage requiring manual cleanup.",
   "title": "Batch Operation Preview Before Execution",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768382897004-lmdfuiv4h",
   "descriptionHistory": [
     {

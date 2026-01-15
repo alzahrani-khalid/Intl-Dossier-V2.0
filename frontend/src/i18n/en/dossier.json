@@ -410,6 +410,10 @@
       "overview": "Overview",
       "overviewDescription": "Summary and key information"
     },
+    "stakeholderTimeline": {
+      "title": "Interaction Timeline",
+      "description": "All interactions aggregated chronologically with annotations"
+    },
     "collapsible": {
       "expand": "Expand section",
       "collapse": "Collapse section",

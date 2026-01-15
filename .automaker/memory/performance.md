@@ -5,9 +5,9 @@ relevantTo: [performance]
 importance: 0.7
 relatedFiles: []
 usageStats:
-  loaded: 0
-  referenced: 0
-  successfulFeatures: 0
+  loaded: 1
+  referenced: 1
+  successfulFeatures: 1
 ---
 
 # performance
@@ -49,3 +49,9 @@ usageStats:
 - **Problem solved:** Visual feedback for filter state changes (chips appearing/disappearing) without blocking interaction
 - **Why this works:** JavaScript animation library allows coordinated animations across multiple chips with proper sequencing. CSS transitions alone don't handle dynamic list changes smoothly when items are added/removed from DOM
 - **Trade-offs:** Easier: built-in layout animations, easing curves, coordinated timing. Harder: adds library dependency; slightly larger JS bundle
+
+#### [Gotcha] Edge function generates personalized digest content on-demand for each user rather than pre-computing and storing digests (2026-01-15)
+
+- **Situation:** Notifications-digest edge function reads user preferences and queries activity data every time to generate email content
+- **Root cause:** Avoids stale digest storage; preferences can change without invalidating cached digests; simpler data model with no digest archive table needed
+- **How to avoid:** Higher computational cost per email send; more database queries at send time; but simpler schema and no cache invalidation concerns

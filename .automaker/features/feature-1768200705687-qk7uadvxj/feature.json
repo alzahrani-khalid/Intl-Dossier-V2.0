@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "Embed short (30-90 second) video tutorials directly in empty states showing real-world use cases. For example, show a diplomat creating a country dossier or a policy analyst linking briefs to engagements. Include transcript for accessibility.\n\n**Rationale:** Video content is more engaging than text for many users and can demonstrate complex workflows more effectively. Embedding videos directly in empty states catches users at their moment of need.",
   "title": "Empty State Video Tutorials",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768200705687-qk7uadvxj",
   "branchName": "main",
   "startedAt": "2026-01-12T11:13:24.233Z",
-  "updatedAt": "2026-01-12T11:29:30.776Z"
+  "updatedAt": "2026-01-12T11:29:30.776Z",
+  "descriptionHistory": []
 }

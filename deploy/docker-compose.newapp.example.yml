@@ -1,0 +1,92 @@
+# ===========================================
+# EXAMPLE: Add Another App to Same Droplet
+# ===========================================
+# Usage:
+#   1. Copy this file to your new app's directory
+#   2. Rename to docker-compose.prod.yml
+#   3. Customize service names, ports, and build contexts
+#   4. Deploy with: docker compose -f docker-compose.prod.yml up -d
+#
+# Access: http://YOUR_DROPLET_IP:8080
+# ===========================================
+
+services:
+  # ===========================================
+  # NGINX - Reverse Proxy for New App
+  # ===========================================
+  nginx:
+    image: nginx:alpine
+    container_name: newapp-nginx
+    restart: unless-stopped
+    ports:
+      # Use a different port than Intl-Dossier (which uses 80/443)
+      - '8080:80'
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      frontend:
+        condition: service_healthy
+      backend:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'nginx', '-t']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+    networks:
+      - newapp-network
+
+  # ===========================================
+  # FRONTEND - React/Vite (customize as needed)
+  # ===========================================
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_URL: ${VITE_API_URL:-http://localhost:8080/api}
+    container_name: newapp-frontend
+    restart: unless-stopped
+    expose:
+      - '80'
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://127.0.0.1:80/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - newapp-network
+
+  # ===========================================
+  # BACKEND - Express/Node API (customize as needed)
+  # ===========================================
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile.prod
+    container_name: newapp-backend
+    restart: unless-stopped
+    expose:
+      - '4000'
+    environment:
+      NODE_ENV: production
+      PORT: 4000
+      # Add your environment variables here
+      DATABASE_URL: ${DATABASE_URL}
+    healthcheck:
+      test: ['CMD', 'wget', '--no-verbose', '--tries=1', '--spider', 'http://localhost:4000/health']
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 15s
+    networks:
+      - newapp-network
+
+# ===========================================
+# NETWORKS - Isolated from Intl-Dossier
+# ===========================================
+networks:
+  newapp-network:
+    name: newapp-prod
+    driver: bridge

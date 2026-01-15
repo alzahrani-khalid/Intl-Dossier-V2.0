@@ -1,0 +1,83 @@
+{
+  "title": "Email Digest Settings",
+  "description": "Configure daily or weekly email summaries of activity on entities you follow, upcoming deadlines, and personalized updates.",
+
+  "schedule": {
+    "title": "Digest Schedule",
+    "description": "Choose when to receive your digest emails.",
+    "dailyDigest": "Daily Digest",
+    "dailyDigestDescription": "Receive a daily summary every morning with yesterday's activity.",
+    "weeklyDigest": "Weekly Digest",
+    "weeklyDigestDescription": "Receive a comprehensive weekly summary of all activity.",
+    "deliveryTime": "Delivery Time",
+    "deliveryDay": "Delivery Day"
+  },
+
+  "content": {
+    "title": "Digest Content",
+    "description": "Select what information to include in your digest emails.",
+    "watchlist": "Watched Entities",
+    "watchlistDescription": "Activity updates from entities you're following.",
+    "deadlines": "Upcoming Deadlines",
+    "deadlinesDescription": "Tasks, commitments, and tickets approaching their due dates.",
+    "unresolvedTickets": "Unresolved Tickets",
+    "unresolvedTicketsDescription": "Open intake tickets that require attention.",
+    "assignments": "Pending Assignments",
+    "assignmentsDescription": "Tasks and work items assigned to you.",
+    "commitments": "Active Commitments",
+    "commitmentsDescription": "Commitments from engagements you're tracking.",
+    "mentions": "Recent Mentions",
+    "mentionsDescription": "Comments and notes where you were @mentioned.",
+    "calendar": "Calendar Events",
+    "calendarDescription": "Upcoming meetings, events, and engagements."
+  },
+
+  "watchlist": {
+    "title": "Your Watchlist",
+    "description": "Entities you're following will appear in your digest.",
+    "noEntities": "No Watched Entities",
+    "noEntitiesDescription": "Add entities to your watchlist to receive activity updates.",
+    "addEntities": "Add to Watchlist",
+    "totalWatched": "Total Watched Entities",
+    "manageWatchlist": "Manage Watchlist →",
+    "types": {
+      "person": "People",
+      "engagement": "Engagements",
+      "commitment": "Commitments",
+      "dossier": "Dossiers",
+      "organization": "Organizations",
+      "forum": "Forums",
+      "position": "Positions",
+      "mou": "MOUs",
+      "working_group": "Working Groups"
+    }
+  },
+
+  "advanced": {
+    "title": "Advanced Settings",
+    "description": "Fine-tune your digest preferences.",
+    "lookaheadDays": "Deadline Lookahead",
+    "lookaheadDaysDescription": "How many days ahead to show upcoming deadlines.",
+    "maxItems": "Max Items per Section",
+    "maxItemsDescription": "Maximum number of items to show in each digest section.",
+    "days": "days",
+    "items": "items"
+  },
+
+  "days": {
+    "sunday": "Sunday",
+    "monday": "Monday",
+    "tuesday": "Tuesday",
+    "wednesday": "Wednesday",
+    "thursday": "Thursday",
+    "friday": "Friday",
+    "saturday": "Saturday"
+  },
+
+  "saveChanges": "Save Changes",
+  "saving": "Saving...",
+  "saved": "Settings Saved",
+  "savedDescription": "Your email digest preferences have been updated.",
+  "error": "Error",
+  "errorDescription": "Failed to save settings. Please try again."
+}

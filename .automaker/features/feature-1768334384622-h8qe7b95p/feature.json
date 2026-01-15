@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Provide a structured interface for capturing meeting minutes linked to events and engagements. Automatically extract action items, assign them as tasks/tickets, and track completion. Support voice-to-text and AI summarization of notes.\n\n**Rationale:** Meetings generate commitments and action items that must be tracked. Currently missing is a bridge between events and the resulting deliverables/tickets. This ensures nothing falls through the cracks after engagements with stakeholders.",
   "title": "Meeting Minutes and Action Item Extraction",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768334384622-h8qe7b95p",
   "descriptionHistory": [
     {

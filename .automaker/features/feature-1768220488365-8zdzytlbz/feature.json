@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "For entities with no timeline events, show a milestone planning tool where users can project future events (planned engagements, policy deadlines, relationship reviews) and set reminders, creating forward-looking timeline content.\n\n**Rationale:** Empty timelines feel like missed opportunities for planning. By framing the empty state as a planning canvas rather than an absence of history, users immediately see value in proactive timeline population.",
   "title": "Entity Timeline Empty State with Milestone Planner",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768220488365-8zdzytlbz",
   "branchName": "main",
   "startedAt": "2026-01-12T17:57:59.584Z",
-  "updatedAt": "2026-01-12T19:01:33.589Z"
+  "updatedAt": "2026-01-12T19:01:33.589Z",
+  "descriptionHistory": []
 }

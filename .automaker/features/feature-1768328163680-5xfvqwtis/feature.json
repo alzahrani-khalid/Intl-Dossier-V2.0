@@ -2,7 +2,7 @@
   "category": "refactor",
   "description": "Refactor the codebase to separate core business logic from external dependencies using ports (interfaces) and adapters (implementations). Isolate database, API, and external service dependencies behind well-defined boundaries.\n\n**Rationale:** This architecture makes the system highly testable by allowing easy mocking of external dependencies, enables swapping implementations without touching business logic, and improves maintainability by enforcing clear separation of concerns across the growing feature set.",
   "title": "Introduce Hexagonal Architecture (Ports & Adapters)",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768328163680-5xfvqwtis",
   "descriptionHistory": [
     {

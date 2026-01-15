@@ -273,3 +273,119 @@ usageStats:
 - **Situation:** Playwright tests check for 'Clear all|مسح الكل' button visibility but these strings need to match actual translated output from i18n system
 - **Root cause:** Decoupling test strings from component translations prevents sync issues when translations change. Regex matching handles both languages without test code changes
 - **How to avoid:** Easier: tests work across language variants without duplication. Harder: regex patterns must be maintained as translations evolve; unclear which language should be tested in CI
+
+#### [Pattern] Implemented schedule configuration as separate toggle switches (daily/weekly) rather than radio button group or select dropdown (2026-01-15)
+
+- **Problem solved:** Digest scheduling needs to support daily at time OR weekly on day+time with mutual exclusivity
+- **Why this works:** Allows independent time/day pickers to show/hide based on selection; more explicit control flow than radio buttons; matches shadcn patterns used elsewhere
+- **Trade-offs:** User must interact with 2 controls instead of 1 (daily/weekly toggle THEN time picker); clearer intent about when each config applies
+
+#### [Pattern] Entity-type-driven template suggestions mapped contextually (country → country_profile/policy_brief/engagement_report; organization → engagement_report/mou_summary) (2026-01-15)
+
+- **Problem solved:** Empty state needs to reduce friction by suggesting relevant documents users should attach based on entity being documented
+- **Why this works:** Different entity types have different document needs. Country dossiers need policy briefs and engagement reports; organizations need MOUs. Pre-filtering by entity type prevents cognitive load and increases conversion from empty state to populated documents.
+- **Trade-offs:** Requires maintaining entity-to-template mapping in frontend. Adding new entity types requires code change rather than config. Tradeoff: better UX vs slightly more coupling.
+
+#### [Gotcha] Playwright test file detection requires defensive .catch(() => false) chains because isVisible() rejects when element doesn't exist, not just returns false (2026-01-15)
+
+- **Situation:** Building E2E test for empty state feature with optional UI elements (templates may not be configured in test environment)
+- **Root cause:** Playwright's isVisible() throws rejection if element DOM doesn't exist. Wrapping in .catch() prevents test failure when optional features aren't present, allowing graceful degradation. Alternative of querySelector would lose semantic visibility checks.
+- **How to avoid:** Promise-based error handling is concise but masks real errors. Could miss regressions where features break. Requires explicit intent through .catch() pattern.
+
+#### [Pattern] Framer Motion used for drag-drop zone border animation to signal interactivity without explicit 'drop files here' text (mobile-first, RTL-compatible design) (2026-01-15)
+
+- **Problem solved:** Empty state needs to be immediately recognizable as an upload zone across diverse user base including RTL languages and mobile users
+- **Why this works:** Animated borders are language-agnostic visual signals that transcend UI patterns. Motion draws attention and conveys interactivity better than static borders. Avoids text in component (which requires localization) for core interaction hint.
+- **Trade-offs:** Animation adds 3KB+ dependency weight and increases cognitive load during movement. But benefits from being instant, universal communication without translation.
+
+#### [Gotcha] Two-step workflow (Select → Review & Create) instead of single 'Create All' button (2026-01-15)
+
+- **Situation:** Initial design attempt: single button to create all suggestions at once
+- **Root cause:** Users need confirmation step because AI suggestions are probabilistic - they might include incorrect connections. Review step prevents false relationships from being created permanently
+- **How to avoid:** One extra click per workflow but critical for preventing bad data. Modal confirmation adds 2 interactions but gives certainty
+
+#### [Pattern] Confidence badges (Very Likely, Likely, Possible) mapped to suggestion types instead of score percentages (2026-01-15)
+
+- **Problem solved:** Displaying AI confidence to users so they understand relationship probability
+- **Why this works:** Categorical badges are more intuitive for non-technical users than percentages. Reduces decision fatigue - users see 'Likely' not '0.67'. Easier to localize (single word vs number format)
+- **Trade-offs:** Less granular but more usable. Requires backend to categorize scores into buckets, not expose them raw
+
+#### [Pattern] Three-step wizard (Welcome → Templates → QuickCreate) implemented as controlled component with `currentStep` state, each step returning `null` to hide form and show step content. Single `onCreateClick` handler manages transition to form step. (2026-01-15)
+
+- **Problem solved:** Needed to guide user from empty calendar through template selection before opening full event form, without breaking existing CalendarEntryForm integration
+- **Why this works:** Avoids managing separate visibility states for wizard vs form. Step progression is explicit - each step is mutually exclusive. Form opens when wizard role is complete.
+- **Trade-offs:** Controlled step state adds complexity vs simple toggle, but enables progressive disclosure. Users can't go back to wizard once form opens (by design - clicking back closes form entirely).
+
+#### [Pattern] Multi-step wizard pattern for member addition: Selection → Role Assignment → Review → Confirmation, with 'Back' navigation between steps (2026-01-15)
+
+- **Problem solved:** Users need to select multiple members, assign differentiated roles, and confirm changes before committing
+- **Why this works:** Reduces cognitive load by breaking complex data entry into focused steps. Review step prevents accidental bulk operations. Back button allows correction without losing progress
+- **Trade-offs:** More clicks required, but prevents user errors. Review step adds UX friction but critical for high-stakes operations (changing team composition)
+
+### Suggestion cards include contextual metadata (organization affiliation, role context) in notes field, not as visual badges (2026-01-15)
+
+- **Context:** Need to explain why each suggestion was generated without cluttering the UI with badges
+- **Why:** Notes field (e.g., 'Works at lead organization United Nations') provides explanation for the suggestion in human-readable form. Pre-filled notes reduce user typing during role assignment. Single text field is more flexible than rigid badge system
+- **Rejected:** Visual badges or tags (would require predefined categories and make notes less useful as explanation)
+- **Trade-offs:** Notes are less scannable than badges, but work across different relationship types (org affiliation, shared projects, etc.) without schema changes
+- **Breaking if changed:** If notes pre-filling is removed, users lose context for why each member was suggested and must manually type explanations
+
+### Placed DeliverablesTimeline component between 'Dossier Links' and 'Evidence' sections within CommitmentDetailDrawer, and only showed for non-cancelled commitments (2026-01-15)
+
+- **Context:** Adding new timeline feature to existing drawer without disrupting current information hierarchy
+- **Why:** Positioning between dossier links (context/related items) and evidence (outcomes) places deliverables in logical flow: what's needed → how it breaks down (deliverables) → what results. Hiding for cancelled commitments avoids cluttering completed/inactive records. This respects information architecture without requiring UI restructuring
+- **Rejected:** Showing deliverables in a separate tab or collapsible panel. Would add interaction cost and duplicate drawer open/close patterns
+- **Trade-offs:** Easier: Uses existing drawer scroll behavior. Harder: Makes drawer longer and requires scroll management for mobile
+- **Breaking if changed:** Removing deliverables section changes the information completeness of commitment details; users lose visibility into milestone breakdown
+
+#### [Pattern] Settings page uses RTL-aware responsive layout with bilingual card components showing platform status (Not Configured/Coming Soon) (2026-01-15)
+
+- **Problem solved:** Arab users expect RTL layout while supporting English; need to represent multi-platform onboarding state in discoverable way
+- **Why this works:** Card-based layout with clear status indicators reduces cognitive load; RTL support signals cultural awareness and proper localization beyond translation
+- **Trade-offs:** Card layout takes more vertical space but provides better visual hierarchy; RTL styling requires careful margin/padding handling but worth effort for 50% of user base
+
+### Radix Select component requires non-empty string values; use semantic value like 'all' instead of empty string (2026-01-15)
+
+- **Context:** Filter component in permissions UI needed to represent 'show all' state but Radix Select doesn't accept empty string as a value
+- **Why:** Radix Select's controlled component pattern requires a defined string value. Using 'all' as the value is semantically clearer than trying to force an empty string, and allows the onChange handler to explicitly check for this sentinel value.
+- **Rejected:** Using empty string value - component rejects it. Using null/undefined - breaks TypeScript contract and Select's value binding.
+- **Trade-offs:** Requires handler logic to convert 'all' back to undefined for API calls. Makes code more explicit but adds a conversion layer.
+- **Breaking if changed:** If forced to use empty string, Select component will silently fail to set the value, leaving UI in inconsistent state
+
+#### [Pattern] Create/edit permission dialogs share same form component with mode detection rather than separate forms (2026-01-15)
+
+- **Problem solved:** Admin UI needs ability to create new permissions and edit existing ones with mostly identical form structure
+- **Why this works:** Single form component reduces code duplication and ensures consistency between create/edit UX. Mode prop triggers different API calls and pre-fills values on edit.
+- **Trade-offs:** Form component becomes slightly more complex with conditional logic. But maintenance is easier with single source of truth.
+
+#### [Gotcha] AgendaBuilder component needs to manage both planning mode (editing items before meeting) and execution mode (live timing) with different UIs and behaviors (2026-01-15)
+
+- **Situation:** Single component must handle item creation/editing, drag-to-reorder, and real-time status/timing tracking
+- **Root cause:** Separating would duplicate agenda state management; need unified source of truth for items across modes
+- **How to avoid:** Single component is more complex but keeps state management centralized; mode transitions tested more thoroughly
+
+#### [Gotcha] AgendaItemCard must handle both edit mode (form shown) and view mode (display only) in same component space, requiring careful focus/blur management (2026-01-15)
+
+- **Situation:** Editing an agenda item inline without opening modal; need smooth transition between states without losing user data
+- **Root cause:** Better UX than modal for quick edits; keeps context visible; matches typical agenda editing UX
+- **How to avoid:** Component code more complex with state toggling, but UX flow faster; focus management needed for accessibility
+
+### Infinite scroll with React Query's infinite queries instead of traditional pagination (2026-01-15)
+
+- **Context:** Stakeholder timeline can have hundreds of interactions; traditional page-by-page nav is poor UX
+- **Why:** Infinite queries with cursor pagination enable: (1) seamless scroll experience, (2) efficient caching of loaded pages, (3) automatic refetch on component remount without losing scroll position, (4) natural composition with filter/sort changes (clear cache, restart from cursor=null)
+- **Rejected:** Traditional pagination requires UI state for current page, loses scroll context on navigation. Offset pagination with page numbers doesn't work well with cursor-based backend API.
+- **Trade-offs:** User can't jump to specific page (page numbers meaningless with cursor). Network requests happen in background, slight delay in showing new items. Scroll position restoration needs careful handling.
+- **Breaking if changed:** Changing from infinite to traditional pagination requires rewriting query hooks and UI. Cursor-based API is required; switching to offset pagination breaks infinite scroll UX.
+
+#### [Pattern] DependencyGraphViewer uses React Flow with radial/hierarchical layout instead of force-directed or planar layout (2026-01-15)
+
+- **Problem solved:** Need to visualize entity dependencies as DAG with clear source→target relationships
+- **Why this works:** Radial layout makes dependency chains immediately visible, hierarchical arrangement prevents edge crossing, better for tree-like dependency structures common in entity relationships
+- **Trade-offs:** Easier: users understand source/target at a glance, handles large graphs without overlap. Harder: less flexibility for complex cross-dependencies, layout changes if new relationships added
+
+#### [Pattern] Separate dialog components for form operations (ScheduleFormDialog) vs read-only history (ExecutionHistoryDialog) rather than mode-based single component (2026-01-15)
+
+- **Problem solved:** Need to create/edit schedules and view execution history in different UI contexts with different data requirements
+- **Why this works:** Separation of concerns; form component manages validation/submission, history component is read-only; easier to test and maintain
+- **Trade-offs:** More components to manage but clearer responsibilities; slightly more code but less conditional complexity

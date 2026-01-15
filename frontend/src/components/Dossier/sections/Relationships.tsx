@@ -66,6 +66,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { RelationshipFormDialog } from '../RelationshipFormDialog'
 import { RelationshipWizard } from '../RelationshipWizard'
+import { AIRelationshipSuggestions } from '@/components/relationships/AIRelationshipSuggestions'
 import { GraphExportDialog } from '@/components/graph-export'
 import { useDeleteRelationship } from '@/hooks/useRelationships'
 import {
@@ -404,11 +405,23 @@ export function Relationships({
     )
   }
 
-  // Empty state with interactive wizard
+  // Empty state with interactive wizard or AI suggestions (for persons)
   if (!relationships || relationships.length === 0) {
+    // For person dossiers, show AI-powered suggestions
+    const showAISuggestions = dossierType === 'person' && editable
+
     return (
       <div className={`py-4 sm:py-6 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
-        {editable ? (
+        {showAISuggestions ? (
+          <AIRelationshipSuggestions
+            personId={dossierId}
+            personName={dossierName}
+            onClose={() => {}}
+            onRelationshipsCreated={() => {
+              queryClient.invalidateQueries({ queryKey: ['relationships', dossierId] })
+            }}
+          />
+        ) : editable ? (
           <RelationshipWizard
             dossierId={dossierId}
             dossierName={dossierName}

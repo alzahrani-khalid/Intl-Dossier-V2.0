@@ -410,6 +410,10 @@
       "overview": "نظرة عامة",
       "overviewDescription": "ملخص والمعلومات الرئيسية"
     },
+    "stakeholderTimeline": {
+      "title": "الجدول الزمني للتفاعلات",
+      "description": "جميع التفاعلات مجمعة بترتيب زمني مع الملاحظات"
+    },
     "collapsible": {
       "expand": "توسيع القسم",
       "collapse": "طي القسم",

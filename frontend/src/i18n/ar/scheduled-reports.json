@@ -1,0 +1,165 @@
+{
+  "title": "التقارير المجدولة",
+  "description": "جدولة إنشاء وتوزيع التقارير تلقائياً",
+  "createNew": "إنشاء جدول",
+  "editSchedule": "تعديل الجدول",
+  "noSchedules": "لا توجد تقارير مجدولة",
+  "noSchedulesDescription": "أنشئ جدولاً لإنشاء وتوزيع التقارير تلقائياً",
+
+  "form": {
+    "name": "اسم الجدول",
+    "namePlaceholder": "مثال: تقرير الحالة الأسبوعي",
+    "nameAr": "الاسم بالعربية",
+    "nameArPlaceholder": "مثال: تقرير الحالة الأسبوعي",
+    "description": "الوصف",
+    "descriptionPlaceholder": "وصف اختياري لهذا الجدول",
+    "selectReport": "اختر التقرير",
+    "selectReportPlaceholder": "اختر تقريراً للجدولة",
+    "frequency": "التكرار",
+    "time": "الوقت",
+    "timezone": "المنطقة الزمنية",
+    "dayOfWeek": "يوم الأسبوع",
+    "dayOfMonth": "يوم الشهر",
+    "format": "صيغة التصدير",
+    "language": "اللغة",
+    "isActive": "مفعّل",
+    "isShared": "مشاركة مع الفريق"
+  },
+
+  "frequency": {
+    "daily": "يومي",
+    "weekly": "أسبوعي",
+    "monthly": "شهري"
+  },
+
+  "days": {
+    "0": "الأحد",
+    "1": "الإثنين",
+    "2": "الثلاثاء",
+    "3": "الأربعاء",
+    "4": "الخميس",
+    "5": "الجمعة",
+    "6": "السبت"
+  },
+
+  "format": {
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV",
+    "json": "JSON"
+  },
+
+  "language": {
+    "en": "الإنجليزية",
+    "ar": "العربية",
+    "both": "كلاهما"
+  },
+
+  "recipients": {
+    "title": "المستلمون",
+    "description": "أضف مستخدمين أو عناوين بريد إلكتروني خارجية لاستلام هذا التقرير",
+    "addRecipient": "إضافة مستلم",
+    "addUser": "إضافة مستخدم",
+    "addExternal": "إضافة بريد خارجي",
+    "email": "البريد الإلكتروني",
+    "emailPlaceholder": "email@example.com",
+    "name": "اسم المستلم",
+    "namePlaceholder": "الاسم الكامل",
+    "deliveryChannels": "قنوات التسليم",
+    "preferredFormat": "الصيغة المفضلة",
+    "preferredLanguage": "اللغة المفضلة",
+    "noRecipients": "لم يتم إضافة مستلمين",
+    "noRecipientsDescription": "أضف مستلماً واحداً على الأقل لاستلام هذا التقرير"
+  },
+
+  "channels": {
+    "email": "البريد الإلكتروني",
+    "in_app": "إشعار داخلي",
+    "slack": "سلاك",
+    "teams": "مايكروسوفت تيمز"
+  },
+
+  "conditions": {
+    "title": "شروط التسليم",
+    "description": "حدد الشروط للتحكم في وقت تسليم التقرير",
+    "addCondition": "إضافة شرط",
+    "fieldPath": "مسار الحقل",
+    "fieldPathPlaceholder": "مثال: metrics.total_count",
+    "operator": "العامل",
+    "value": "القيمة",
+    "valuePlaceholder": "قيمة المقارنة",
+    "isRequired": "مطلوب",
+    "failMessage": "رسالة الفشل",
+    "noConditions": "لم يتم تحديد شروط",
+    "noConditionsDescription": "سيتم تسليم التقرير دائماً"
+  },
+
+  "operators": {
+    "equals": "يساوي",
+    "not_equals": "لا يساوي",
+    "greater_than": "أكبر من",
+    "less_than": "أصغر من",
+    "contains": "يحتوي على",
+    "not_contains": "لا يحتوي على",
+    "is_empty": "فارغ",
+    "is_not_empty": "غير فارغ"
+  },
+
+  "status": {
+    "active": "نشط",
+    "paused": "متوقف",
+    "completed": "مكتمل",
+    "failed": "فشل",
+    "pending": "قيد الانتظار"
+  },
+
+  "schedule": {
+    "nextRun": "التشغيل التالي",
+    "lastRun": "آخر تشغيل",
+    "consecutiveFailures": "الفشل المتتالي",
+    "pausedAt": "توقف في",
+    "pauseReason": "سبب التوقف"
+  },
+
+  "actions": {
+    "save": "حفظ الجدول",
+    "cancel": "إلغاء",
+    "delete": "حذف الجدول",
+    "duplicate": "تكرار",
+    "pause": "إيقاف",
+    "resume": "استئناف",
+    "runNow": "تشغيل الآن",
+    "viewHistory": "عرض السجل"
+  },
+
+  "history": {
+    "title": "سجل التنفيذ",
+    "executedAt": "تم التنفيذ في",
+    "status": "الحالة",
+    "recipients": "المستلمون",
+    "successful": "ناجح",
+    "failed": "فاشل",
+    "skipped": "تم تخطيه",
+    "duration": "المدة",
+    "noHistory": "لا يوجد سجل تنفيذ"
+  },
+
+  "messages": {
+    "createSuccess": "تم إنشاء الجدول بنجاح",
+    "updateSuccess": "تم تحديث الجدول بنجاح",
+    "deleteSuccess": "تم حذف الجدول بنجاح",
+    "deleteConfirm": "هل أنت متأكد من حذف هذا الجدول؟",
+    "runNowSuccess": "تم بدء إنشاء التقرير",
+    "pauseSuccess": "تم إيقاف الجدول",
+    "resumeSuccess": "تم استئناف الجدول",
+    "error": "حدث خطأ"
+  },
+
+  "validation": {
+    "nameRequired": "اسم الجدول مطلوب",
+    "reportRequired": "يرجى اختيار تقرير",
+    "timeRequired": "الوقت مطلوب",
+    "recipientRequired": "مطلوب مستلم واحد على الأقل",
+    "invalidEmail": "يرجى إدخال بريد إلكتروني صالح"
+  }
+}

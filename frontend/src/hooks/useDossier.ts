@@ -555,15 +555,15 @@ export function useUnlinkDocument() {
  * working with specific dossier types (country, organization, person, etc.).
  */
 
-import type {
-  Dossier,
-  DossierType as TypeGuardDossierType,
-  CountryDossier,
-  OrganizationDossier,
-  PersonDossier,
-  EngagementDossier,
-  ForumDossier,
-  WorkingGroupDossier,
+import {
+  type Dossier,
+  type DossierType as TypeGuardDossierType,
+  type CountryDossier,
+  type OrganizationDossier,
+  type PersonDossier,
+  type EngagementDossier,
+  type ForumDossier,
+  type WorkingGroupDossier,
   getTypeGuard,
   validateDossierType,
 } from '@/lib/dossier-type-guards'

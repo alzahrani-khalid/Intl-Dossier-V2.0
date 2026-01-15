@@ -2,7 +2,7 @@
   "category": "enhancement",
   "description": "When linking entities in forms, provide rich auto-complete with entity previews (key details, status, recent activity) to ensure users select the correct record from similar options.\n\n**Rationale:** Many entities have similar names (multiple John Smiths, similarly-named events). Selecting the wrong entity creates incorrect associations that are hard to detect and fix later, corrupting relationship integrity.",
   "title": "Entity Reference Auto-Complete with Previews",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768382895514-k6e2b6drv",
   "descriptionHistory": [
     {

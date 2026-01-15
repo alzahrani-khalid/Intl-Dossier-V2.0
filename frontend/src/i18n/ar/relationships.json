@@ -268,5 +268,45 @@
       "suggestAlternative": "فكر في استخدام نوع علاقة مختلف",
       "tryInstead": "جرب بدلاً من ذلك"
     }
+  },
+  "suggestions": {
+    "title": "اقتراحات مدعومة بالذكاء الاصطناعي",
+    "subtitle": "وجدنا {{count}} اتصال محتمل لـ {{name}}",
+    "loading": "جاري البحث عن اتصالات محتملة...",
+    "noSuggestions": "لا توجد اقتراحات متاحة",
+    "noSuggestionsDescription": "لم نتمكن من العثور على اتصالات محتملة بناءً على البيانات المتاحة. يمكنك إضافة علاقات يدويًا.",
+    "selected": "محدد",
+    "selectAll": "تحديد الكل",
+    "deselectAll": "إلغاء التحديد",
+    "reviewAndCreate": "مراجعة وإنشاء",
+    "skipForNow": "تخطي الآن",
+    "back": "رجوع",
+    "creating": "جاري الإنشاء...",
+    "createCount": "إنشاء {{count}} علاقات",
+    "reviewTitle": "مراجعة العلاقات",
+    "reviewSubtitle": "إنشاء {{count}} علاقات لـ {{name}}",
+    "relationshipType": "نوع العلاقة",
+    "notes": "ملاحظات (اختياري)",
+    "notesPlaceholder": "أضف سياق إضافي...",
+    "dismissSuggestion": "رفض هذا الاقتراح",
+    "dismissed": "تم رفض الاقتراح",
+    "suggestionTypes": {
+      "co_event_attendance": "التقى في فعاليات",
+      "same_organization": "نفس المنظمة",
+      "shared_role_period": "أدوار متداخلة",
+      "organizational_hierarchy": "التسلسل التنظيمي",
+      "shared_affiliation": "انتساب مشترك",
+      "mutual_connection": "اتصالات مشتركة",
+      "expertise_match": "خبرات متشابهة"
+    },
+    "confidence": {
+      "high": "مرجح جدا",
+      "medium": "مرجح",
+      "low": "محتمل"
+    },
+    "summary": {
+      "suggestions": "اقتراحات",
+      "highConfidence": "ثقة عالية"
+    }
   }
 }

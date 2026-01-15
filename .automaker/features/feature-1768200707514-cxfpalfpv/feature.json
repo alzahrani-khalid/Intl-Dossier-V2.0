@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "When sections are empty, detect and suggest importing relevant data from connected systems (email signatures for contacts, calendar for events, existing documents for briefs). Show preview before import with mapping options.\n\n**Rationale:** Manual data entry is a major barrier to adoption. Smart import suggestions leverage existing data sources to quickly populate the system, reducing initial setup friction and demonstrating immediate value.",
   "title": "Smart Import Suggestions from External Sources",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768200707514-cxfpalfpv",
   "branchName": "main",
   "startedAt": "2026-01-12T11:13:24.390Z",
-  "updatedAt": "2026-01-12T11:29:02.347Z"
+  "updatedAt": "2026-01-12T11:29:02.347Z",
+  "descriptionHistory": []
 }

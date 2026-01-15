@@ -2,7 +2,7 @@
   "category": "enhancement",
   "description": "When scheduling conflicts occur, present a clear side-by-side view of conflicting events with options to reschedule, adjust duration, or proceed anyway. Show participant availability conflicts prominently.\n\n**Rationale:** Users currently may not realize they're creating scheduling conflicts until after submission. Discovering conflicts post-creation forces tedious rework and can cause missed meetings or double-bookings.",
   "title": "Conflict Resolution Interface for Overlapping Events",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768382895081-fi0206h5h",
   "descriptionHistory": [
     {

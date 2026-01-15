@@ -319,5 +319,75 @@
     "loadFailed": "Failed to load working groups",
     "notFound": "Working group not found",
     "unauthorized": "You don't have permission to perform this action"
+  },
+
+  "memberSuggestions": {
+    "title": "Smart Member Suggestions",
+    "description": "Found {{count}} potential members for {{name}}",
+    "findingMembers": "Finding potential members...",
+    "failedToLoad": "Failed to load suggestions",
+    "noSuggestions": "No Suggestions Available",
+    "noSuggestionsDesc": "We couldn't find potential members based on available data. You can add members manually.",
+    "suggestions": "suggestions",
+    "highlyRecommended": "highly recommended",
+    "selected": "selected",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "skipForNow": "Skip for now",
+    "assignRoles": "Assign Roles",
+    "review": "Review",
+    "back": "Back",
+    "adding": "Adding...",
+    "addMembers": "Add {{count}} Members",
+    "noMembersYet": "No Members Yet",
+    "membersWillAppear": "Member organizations will appear here once added.",
+    "showSmartSuggestions": "Show Smart Suggestions",
+
+    "assignRolesTitle": "Assign Roles",
+    "assignRolesDescription": "Assign roles for {{count}} members in {{name}}",
+    "role": "Role",
+    "notesOptional": "Notes (optional)",
+    "addNotes": "Add notes...",
+
+    "reviewTitle": "Review Members",
+    "reviewDescription": "Adding {{count}} members to {{name}}",
+    "organizations": "organizations",
+    "people": "people",
+
+    "tabs": {
+      "all": "All",
+      "organizations": "Orgs",
+      "persons": "People"
+    },
+
+    "suggestionTypes": {
+      "parent_forum_member": "Forum Member",
+      "related_engagement": "Related Engagement",
+      "past_collaboration": "Past Collaboration",
+      "lead_org_affiliate": "Lead Organization",
+      "topic_expertise": "Topic Expert",
+      "country_representation": "Country Rep",
+      "organizational_mandate": "Mandate Match",
+      "role_seniority": "Senior Role"
+    },
+
+    "confidence": {
+      "high": "Highly Recommended",
+      "medium": "Recommended",
+      "low": "Suggested"
+    },
+
+    "entityTypes": {
+      "organization": "Organization",
+      "person": "Person"
+    },
+
+    "dismiss": "Dismiss this suggestion",
+
+    "messages": {
+      "membersAdded": "Successfully added {{count}} members",
+      "membersAddedPartial": "Added {{success}} members, {{failed}} failed",
+      "suggestionDismissed": "Suggestion dismissed"
+    }
   }
 }

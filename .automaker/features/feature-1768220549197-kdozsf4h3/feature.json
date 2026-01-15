@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "Implement swipe gestures on entity cards (dossiers, policy briefs, persons) for quick actions. Swipe right to favorite/pin, swipe left to archive or delete, long-press for contextual menu. Include haptic feedback for each gesture to provide tactile confirmation.\n\n**Rationale:** Mobile users expect touch-first interactions. Gesture-based actions reduce the need for small tap targets and multi-step navigation, making common operations 60-80% faster on mobile devices.",
   "title": "Gesture-Based Navigation for Entity Cards",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768220549197-kdozsf4h3",
   "branchName": "main",
   "startedAt": "2026-01-12T18:25:38.548Z",
-  "updatedAt": "2026-01-12T19:07:04.685Z"
+  "updatedAt": "2026-01-12T19:07:04.685Z",
+  "descriptionHistory": []
 }

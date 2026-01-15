@@ -268,5 +268,45 @@
       "suggestAlternative": "Consider using a different relationship type",
       "tryInstead": "Try instead"
     }
+  },
+  "suggestions": {
+    "title": "AI-Powered Suggestions",
+    "subtitle": "Found {{count}} potential connections for {{name}}",
+    "loading": "Finding potential connections...",
+    "noSuggestions": "No Suggestions Available",
+    "noSuggestionsDescription": "We couldn't find potential connections based on available data. You can add relationships manually.",
+    "selected": "selected",
+    "selectAll": "Select All",
+    "deselectAll": "Deselect All",
+    "reviewAndCreate": "Review & Create",
+    "skipForNow": "Skip for now",
+    "back": "Back",
+    "creating": "Creating...",
+    "createCount": "Create {{count}} Relationships",
+    "reviewTitle": "Review Relationships",
+    "reviewSubtitle": "Creating {{count}} relationships for {{name}}",
+    "relationshipType": "Relationship Type",
+    "notes": "Notes (optional)",
+    "notesPlaceholder": "Add additional context...",
+    "dismissSuggestion": "Dismiss this suggestion",
+    "dismissed": "Suggestion dismissed",
+    "suggestionTypes": {
+      "co_event_attendance": "Met at Events",
+      "same_organization": "Same Organization",
+      "shared_role_period": "Overlapping Roles",
+      "organizational_hierarchy": "Organizational Hierarchy",
+      "shared_affiliation": "Shared Affiliation",
+      "mutual_connection": "Mutual Connections",
+      "expertise_match": "Similar Expertise"
+    },
+    "confidence": {
+      "high": "Very Likely",
+      "medium": "Likely",
+      "low": "Possible"
+    },
+    "summary": {
+      "suggestions": "suggestions",
+      "highConfidence": "high confidence"
+    }
   }
 }
