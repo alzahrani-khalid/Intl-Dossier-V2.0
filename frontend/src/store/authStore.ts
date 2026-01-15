@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 
 // Re-export supabase for backward compatibility
@@ -24,6 +25,7 @@ export interface AuthState {
   logout: () => Promise<void>
   checkAuth: () => Promise<void>
   clearError: () => void
+  handleAuthStateChange: (event: AuthChangeEvent, session: Session | null) => void
 }
 
 export const useAuthStore = create<AuthState>()(
@@ -103,7 +105,9 @@ export const useAuthStore = create<AuthState>()(
       checkAuth: async () => {
         set({ isLoading: true })
         try {
-          const { data: { session } } = await supabase.auth.getSession()
+          const {
+            data: { session },
+          } = await supabase.auth.getSession()
 
           if (session?.user) {
             set({
@@ -134,10 +138,41 @@ export const useAuthStore = create<AuthState>()(
       },
 
       clearError: () => set({ error: null }),
+
+      handleAuthStateChange: (event: AuthChangeEvent, session: Session | null) => {
+        // Handle auth state changes from Supabase (token refresh, sign out, etc.)
+        if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          set({
+            user: null,
+            isAuthenticated: false,
+            isLoading: false,
+            error: null,
+          })
+        } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
+          if (session?.user) {
+            set({
+              user: {
+                id: session.user.id,
+                email: session.user.email || '',
+                name: session.user.user_metadata?.name,
+                role: session.user.user_metadata?.role,
+                avatar: session.user.user_metadata?.avatar_url,
+              },
+              isAuthenticated: true,
+              isLoading: false,
+            })
+          }
+        }
+      },
     }),
     {
       name: 'auth-storage',
       partialize: (state) => ({ user: state.user, isAuthenticated: state.isAuthenticated }),
-    }
-  )
+    },
+  ),
 )
+
+// Set up auth state change listener
+supabase.auth.onAuthStateChange((event, session) => {
+  useAuthStore.getState().handleAuthStateChange(event, session)
+})
