@@ -51,30 +51,59 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
         />
       </div>
 
-      {/* Collaboration Type */}
+      {/* Collaboration Type (Multi-select) */}
       <div>
         <label className="mb-2 block text-sm font-medium text-gray-700">
           {t('typeSpecific.engagement.collaborationType.label')}
+          <span className="ms-1 text-xs font-normal text-gray-500">
+            (
+            {t('typeSpecific.engagement.collaborationType.selectMultiple', 'Select all that apply')}
+            )
+          </span>
         </label>
-        <select
-          value={value.collaborationType || ''}
-          onChange={(e) => handleFieldChange('collaborationType', e.target.value)}
-          className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-        >
-          <option value="">Select type...</option>
-          <option value="technical">
-            {t('typeSpecific.engagement.collaborationType.options.technical')}
-          </option>
-          <option value="data_sharing">
-            {t('typeSpecific.engagement.collaborationType.options.data_sharing')}
-          </option>
-          <option value="capacity_building">
-            {t('typeSpecific.engagement.collaborationType.options.capacity_building')}
-          </option>
-          <option value="other">
-            {t('typeSpecific.engagement.collaborationType.options.other')}
-          </option>
-        </select>
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          {[
+            {
+              value: 'technical',
+              label: t('typeSpecific.engagement.collaborationType.options.technical'),
+            },
+            {
+              value: 'data_sharing',
+              label: t('typeSpecific.engagement.collaborationType.options.data_sharing'),
+            },
+            {
+              value: 'capacity_building',
+              label: t('typeSpecific.engagement.collaborationType.options.capacity_building'),
+            },
+            { value: 'other', label: t('typeSpecific.engagement.collaborationType.options.other') },
+          ].map((option) => {
+            const selectedTypes = value.collaborationTypes || []
+            const isChecked = selectedTypes.includes(option.value)
+            return (
+              <label
+                key={option.value}
+                className={`flex min-h-11 cursor-pointer items-center gap-3 rounded-md border px-3 py-2 transition-colors ${
+                  isChecked
+                    ? 'border-blue-500 bg-blue-50'
+                    : 'border-gray-300 bg-white hover:border-gray-400'
+                }`}
+              >
+                <input
+                  type="checkbox"
+                  checked={isChecked}
+                  onChange={(e) => {
+                    const newTypes = e.target.checked
+                      ? [...selectedTypes, option.value]
+                      : selectedTypes.filter((t: string) => t !== option.value)
+                    handleFieldChange('collaborationTypes', newTypes)
+                  }}
+                  className="size-4 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+                />
+                <span className="text-sm text-gray-700">{option.label}</span>
+              </label>
+            )
+          })}
+        </div>
       </div>
 
       {/* Expected Duration */}

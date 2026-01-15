@@ -1,256 +1,257 @@
 {
   "title": "تقديم طلب دعم",
-    "subtitle": "إنشاء تذكرة دعم جديدة لطلبك",
-    "form": {
-      "requestType": {
-        "label": "نوع الطلب",
-        "placeholder": "اختر نوع الطلب",
+  "subtitle": "إنشاء تذكرة دعم جديدة لطلبك",
+  "form": {
+    "requestType": {
+      "label": "نوع الطلب",
+      "placeholder": "اختر نوع الطلب",
+      "options": {
+        "engagement": "دعم المشاركة",
+        "position": "تطوير المنصب",
+        "mou_action": "بنود المذكرة/الإجراءات",
+        "foresight": "طلب الاستشراف"
+      },
+      "required": "الرجاء اختيار نوع الطلب"
+    },
+    "title": {
+      "label": "العنوان",
+      "placeholder": "ملخص موجز لطلبك",
+      "required": "العنوان مطلوب",
+      "minLength": "يجب أن يكون العنوان 3 أحرف على الأقل",
+      "maxLength": "يجب ألا يتجاوز العنوان 200 حرف"
+    },
+    "titleAr": {
+      "label": "العنوان (بالعربية)",
+      "placeholder": "الموضوع بالعربي"
+    },
+    "description": {
+      "label": "الوصف",
+      "placeholder": "قدم معلومات مفصلة عن طلبك",
+      "required": "الوصف مطلوب",
+      "minLength": "يجب أن يكون الوصف 10 أحرف على الأقل",
+      "maxLength": "يجب ألا يتجاوز الوصف 5000 حرف"
+    },
+    "descriptionAr": {
+      "label": "الوصف (بالعربية)",
+      "placeholder": "قدم معلومات مفصلة عن طلبك"
+    },
+    "urgency": {
+      "label": "مستوى الأولوية",
+      "placeholder": "اختر مستوى الأولوية",
+      "options": {
+        "low": "منخفض - يمكن الانتظار بضعة أيام",
+        "medium": "متوسط - خلال هذا الأسبوع",
+        "high": "عالي - اليوم أو غداً",
+        "critical": "حرج - يحتاج إجراء عاجل"
+      },
+      "required": "الرجاء اختيار مستوى الأولوية"
+    },
+    "dossier": {
+      "label": "ربط بالملف",
+      "placeholder": "البحث عن ملف موجود",
+      "linkExisting": "ربط بملف موجود",
+      "proposeNew": "اقتراح ملف جديد",
+      "search": "البحث عن الملفات...",
+      "noResults": "لم يتم العثور على ملفات"
+    },
+    "attachments": {
+      "label": "المرفقات",
+      "description": "تحميل المستندات ذات الصلة (حد أقصى 25 ميجابايت لكل ملف، 100 ميجابايت إجمالي)",
+      "dropzone": "اسحب وأفلت الملفات هنا، أو انقر للتصفح",
+      "maxSize": "الحد الأقصى لحجم الملف: 25 ميجابايت",
+      "maxTotal": "الحد الأقصى للحجم الإجمالي: 100 ميجابايت",
+      "supportedFormats": "الصيغ المدعومة: PDF، DOCX، XLSX، PNG، JPG"
+    }
+  },
+  "slaPreview": {
+    "title": "أوقات الاستجابة المتوقعة",
+    "acknowledgment": "الإقرار خلال",
+    "resolution": "هدف الحل",
+    "minutes": "دقائق",
+    "hours": "ساعات",
+    "businessHours": "ساعات العمل فقط"
+  },
+  "actions": {
+    "submit": "تقديم الطلب",
+    "cancel": "إلغاء",
+    "saveDraft": "حفظ كمسودة",
+    "reset": "إعادة تعيين النموذج",
+    "fillMock": "تعبئة بيانات وهمية"
+  },
+  "validation": {
+    "requiredField": "هذا الحقل مطلوب",
+    "invalidFormat": "صيغة غير صحيحة",
+    "fileTooLarge": "الملف يتجاوز الحد الأقصى للحجم",
+    "totalSizeExceeded": "حجم الملف الإجمالي يتجاوز 100 ميجابايت",
+    "unsupportedFileType": "نوع ملف غير مدعوم"
+  },
+  "success": {
+    "title": "تم تقديم الطلب بنجاح",
+    "message": "رقم التذكرة الخاصة بك هو {{ticketNumber}}",
+    "viewTicket": "عرض التذكرة",
+    "createAnother": "إنشاء طلب آخر"
+  },
+  "error": {
+    "title": "فشل التقديم",
+    "message": "تعذر تقديم طلبك. الرجاء المحاولة مرة أخرى.",
+    "retry": "إعادة المحاولة",
+    "contactSupport": "الاتصال بالدعم"
+  },
+  "sla": {
+    "acknowledgment": "الإقرار",
+    "resolution": "الحل",
+    "paused": "(متوقف)",
+    "target": "الهدف",
+    "breached_by_hours": "متجاوز بـ {{hours}}س {{minutes}}د",
+    "breached_by_minutes": "متجاوز بـ {{minutes}}د",
+    "time_remaining_hours": "{{hours}}س {{minutes}}د متبقية",
+    "time_remaining_minutes": "{{minutes}}د متبقية"
+  },
+  "typeSpecific": {
+    "engagement": {
+      "partnerName": {
+        "label": "المنظمة الشريكة",
+        "placeholder": "أدخل اسم المنظمة الشريكة"
+      },
+      "collaborationType": {
+        "label": "نوع التعاون",
+        "selectMultiple": "اختر كل ما ينطبق",
         "options": {
-          "engagement": "دعم المشاركة",
-          "position": "تطوير المنصب",
-          "mou_action": "بنود المذكرة/الإجراءات",
-          "foresight": "طلب الاستشراف"
-        },
-        "required": "الرجاء اختيار نوع الطلب"
+          "technical": "التعاون الفني",
+          "data_sharing": "مشاركة البيانات",
+          "capacity_building": "بناء القدرات",
+          "other": "أخرى"
+        }
       },
-      "title": {
-        "label": "العنوان",
-        "placeholder": "ملخص موجز لطلبك",
-        "required": "العنوان مطلوب",
-        "minLength": "يجب أن يكون العنوان 3 أحرف على الأقل",
-        "maxLength": "يجب ألا يتجاوز العنوان 200 حرف"
-      },
-      "titleAr": {
-        "label": "العنوان (بالعربية)",
-        "placeholder": "الموضوع بالعربي"
-      },
-      "description": {
-        "label": "الوصف",
-        "placeholder": "قدم معلومات مفصلة عن طلبك",
-        "required": "الوصف مطلوب",
-        "minLength": "يجب أن يكون الوصف 10 أحرف على الأقل",
-        "maxLength": "يجب ألا يتجاوز الوصف 5000 حرف"
-      },
-      "descriptionAr": {
-        "label": "الوصف (بالعربية)",
-        "placeholder": "قدم معلومات مفصلة عن طلبك"
-      },
-      "urgency": {
-        "label": "مستوى الأولوية",
-        "placeholder": "اختر مستوى الأولوية",
-        "options": {
-          "low": "منخفض - يمكن الانتظار بضعة أيام",
-          "medium": "متوسط - خلال هذا الأسبوع",
-          "high": "عالي - اليوم أو غداً",
-          "critical": "حرج - يحتاج إجراء عاجل"
-        },
-        "required": "الرجاء اختيار مستوى الأولوية"
-      },
-      "dossier": {
-        "label": "ربط بالملف",
-        "placeholder": "البحث عن ملف موجود",
-        "linkExisting": "ربط بملف موجود",
-        "proposeNew": "اقتراح ملف جديد",
-        "search": "البحث عن الملفات...",
-        "noResults": "لم يتم العثور على ملفات"
-      },
-      "attachments": {
-        "label": "المرفقات",
-        "description": "تحميل المستندات ذات الصلة (حد أقصى 25 ميجابايت لكل ملف، 100 ميجابايت إجمالي)",
-        "dropzone": "اسحب وأفلت الملفات هنا، أو انقر للتصفح",
-        "maxSize": "الحد الأقصى لحجم الملف: 25 ميجابايت",
-        "maxTotal": "الحد الأقصى للحجم الإجمالي: 100 ميجابايت",
-        "supportedFormats": "الصيغ المدعومة: PDF، DOCX، XLSX، PNG، JPG"
+      "expectedDuration": {
+        "label": "المدة المتوقعة",
+        "placeholder": "مثلاً: 6 أشهر، سنة واحدة"
       }
     },
-    "slaPreview": {
-      "title": "أوقات الاستجابة المتوقعة",
-      "acknowledgment": "الإقرار خلال",
-      "resolution": "هدف الحل",
-      "minutes": "دقائق",
-      "hours": "ساعات",
-      "businessHours": "ساعات العمل فقط"
-    },
-    "actions": {
-      "submit": "تقديم الطلب",
-      "cancel": "إلغاء",
-      "saveDraft": "حفظ كمسودة",
-      "reset": "إعادة تعيين النموذج",
-      "fillMock": "تعبئة بيانات وهمية"
-    },
-    "validation": {
-      "requiredField": "هذا الحقل مطلوب",
-      "invalidFormat": "صيغة غير صحيحة",
-      "fileTooLarge": "الملف يتجاوز الحد الأقصى للحجم",
-      "totalSizeExceeded": "حجم الملف الإجمالي يتجاوز 100 ميجابايت",
-      "unsupportedFileType": "نوع ملف غير مدعوم"
-    },
-    "success": {
-      "title": "تم تقديم الطلب بنجاح",
-      "message": "رقم التذكرة الخاصة بك هو {{ticketNumber}}",
-      "viewTicket": "عرض التذكرة",
-      "createAnother": "إنشاء طلب آخر"
-    },
-    "error": {
-      "title": "فشل التقديم",
-      "message": "تعذر تقديم طلبك. الرجاء المحاولة مرة أخرى.",
-      "retry": "إعادة المحاولة",
-      "contactSupport": "الاتصال بالدعم"
-    },
-    "sla": {
-      "acknowledgment": "الإقرار",
-      "resolution": "الحل",
-      "paused": "(متوقف)",
-      "target": "الهدف",
-      "breached_by_hours": "متجاوز بـ {{hours}}س {{minutes}}د",
-      "breached_by_minutes": "متجاوز بـ {{minutes}}د",
-      "time_remaining_hours": "{{hours}}س {{minutes}}د متبقية",
-      "time_remaining_minutes": "{{minutes}}د متبقية"
-    },
-    "typeSpecific": {
-      "engagement": {
-        "partnerName": {
-          "label": "المنظمة الشريكة",
-          "placeholder": "أدخل اسم المنظمة الشريكة"
-        },
-        "collaborationType": {
-          "label": "نوع التعاون",
-          "options": {
-            "technical": "التعاون الفني",
-            "data_sharing": "مشاركة البيانات",
-            "capacity_building": "بناء القدرات",
-            "other": "أخرى"
-          }
-        },
-        "expectedDuration": {
-          "label": "المدة المتوقعة",
-          "placeholder": "مثلاً: 6 أشهر، سنة واحدة"
-        }
+    "position": {
+      "positionTitle": {
+        "label": "المسمى الوظيفي",
+        "placeholder": "أدخل المسمى الوظيفي"
       },
-      "position": {
-        "positionTitle": {
-          "label": "المسمى الوظيفي",
-          "placeholder": "أدخل المسمى الوظيفي"
-        },
-        "department": {
-          "label": "القسم",
-          "placeholder": "اختر القسم"
-        },
-        "requiredSkills": {
-          "label": "المهارات المطلوبة",
-          "placeholder": "قائمة المهارات الرئيسية (مفصولة بفواصل)"
-        }
+      "department": {
+        "label": "القسم",
+        "placeholder": "اختر القسم"
       },
-      "mou_action": {
-        "mouReference": {
-          "label": "مرجع المذكرة",
-          "placeholder": "أدخل رقم مرجع المذكرة"
-        },
-        "actionType": {
-          "label": "نوع الإجراء",
-          "options": {
-            "review": "مراجعة",
-            "amendment": "تعديل",
-            "renewal": "تجديد",
-            "termination": "إنهاء"
-          }
-        },
-        "deadline": {
-          "label": "الموعد النهائي",
-          "placeholder": "اختر تاريخ الموعد النهائي"
-        }
-      },
-      "foresight": {
-        "topic": {
-          "label": "الموضوع",
-          "placeholder": "أدخل موضوع الاستشراف"
-        },
-        "timeHorizon": {
-          "label": "الأفق الزمني",
-          "options": {
-            "short": "قصير الأجل (1-3 سنوات)",
-            "medium": "متوسط الأجل (3-5 سنوات)",
-            "long": "طويل الأجل (5+ سنوات)"
-          }
-        },
-        "stakeholders": {
-          "label": "أصحاب المصلحة الرئيسيون",
-          "placeholder": "قائمة أصحاب المصلحة الرئيسيين (مفصولة بفواصل)"
-        }
+      "requiredSkills": {
+        "label": "المهارات المطلوبة",
+        "placeholder": "قائمة المهارات الرئيسية (مفصولة بفواصل)"
       }
     },
-    "queue": {
-      "title": "قائمة الانتظار",
-      "subtitle": "إدارة وفرز طلبات الدعم الواردة",
-      "createTicket": "إنشاء تذكرة جديدة",
-      "filters": {
-        "status": "الحالة",
-        "requestType": "نوع الطلب",
-        "urgency": "الأولوية",
-        "search": "البحث",
-        "searchPlaceholder": "البحث في التذاكر...",
-        "all": "الكل",
-        "clear": "مسح جميع الفلاتر"
+    "mou_action": {
+      "mouReference": {
+        "label": "مرجع المذكرة",
+        "placeholder": "أدخل رقم مرجع المذكرة"
       },
-      "status": {
-        "submitted": "تم الإرسال",
-        "triaged": "تم الفرز",
-        "assigned": "تم التعيين",
-        "in_progress": "قيد التنفيذ",
-        "converted": "تم التحويل",
-        "closed": "مغلق",
-        "merged": "تم الدمج"
+      "actionType": {
+        "label": "نوع الإجراء",
+        "options": {
+          "review": "مراجعة",
+          "amendment": "تعديل",
+          "renewal": "تجديد",
+          "termination": "إنهاء"
+        }
       },
-      "urgency": {
-        "low": "منخفض",
-        "medium": "متوسط",
-        "high": "عالي",
-        "critical": "حرج"
-      },
-      "priority": {
-        "low": "منخفض",
-        "medium": "متوسط",
-        "high": "عالي",
-        "urgent": "عاجل"
-      },
-      "table": {
-        "ticketNumber": "رقم التذكرة",
-        "title": "العنوان",
-        "type": "النوع",
-        "priority": "الأولوية",
-        "status": "الحالة",
-        "sla": "اتفاقية مستوى الخدمة",
-        "created": "تاريخ الإنشاء"
-      },
-      "pagination": {
-        "showing": "عرض",
-        "of": "من",
-        "tickets": "تذكرة",
-        "page": "الصفحة",
-        "previous": "السابق",
-        "next": "التالي"
-      },
-      "noTickets": "لا توجد تذاكر",
-      "error": "فشل تحميل التذاكر. يرجى المحاولة مرة أخرى."
+      "deadline": {
+        "label": "الموعد النهائي",
+        "placeholder": "اختر تاريخ الموعد النهائي"
+      }
     },
-    "stepup": {
-      "title": "التحقق الأمني مطلوب",
-      "subtitle": "إعادة المصادقة للمتابعة",
-      "close": "إغلاق",
-      "default_reason": "تتطلب هذه العملية إعادة المصادقة لأغراض أمنية: {{operation}}",
-      "totp_label": "أدخل رمز التحقق المكون من 6 أرقام",
-      "totp_placeholder": "000000",
-      "verify": "تحقق",
-      "verifying": "جاري التحقق...",
-      "cancel": "إلغاء",
-      "help_text": "افتح تطبيق المصادقة للحصول على الرمز",
-      "attempts_remaining": "متبقي {{count}} محاولة",
-      "attempts_remaining_plural": "متبقي {{count}} محاولة",
-      "errors": {
-        "invalid_format": "يرجى إدخال رمز صالح مكون من 6 أرقام",
-        "verification_failed": "رمز التحقق غير صالح. يرجى المحاولة مرة أخرى.",
-        "max_attempts": "تم الوصول إلى الحد الأقصى من المحاولات. يرجى الانتظار قبل المحاولة مرة أخرى.",
-        "network_error": "خطأ في الشبكة. يرجى التحقق من اتصالك والمحاولة مرة أخرى."
+    "foresight": {
+      "topic": {
+        "label": "الموضوع",
+        "placeholder": "أدخل موضوع الاستشراف"
+      },
+      "timeHorizon": {
+        "label": "الأفق الزمني",
+        "options": {
+          "short": "قصير الأجل (1-3 سنوات)",
+          "medium": "متوسط الأجل (3-5 سنوات)",
+          "long": "طويل الأجل (5+ سنوات)"
+        }
+      },
+      "stakeholders": {
+        "label": "أصحاب المصلحة الرئيسيون",
+        "placeholder": "قائمة أصحاب المصلحة الرئيسيين (مفصولة بفواصل)"
       }
     }
+  },
+  "queue": {
+    "title": "قائمة الانتظار",
+    "subtitle": "إدارة وفرز طلبات الدعم الواردة",
+    "createTicket": "إنشاء تذكرة جديدة",
+    "filters": {
+      "status": "الحالة",
+      "requestType": "نوع الطلب",
+      "urgency": "الأولوية",
+      "search": "البحث",
+      "searchPlaceholder": "البحث في التذاكر...",
+      "all": "الكل",
+      "clear": "مسح جميع الفلاتر"
+    },
+    "status": {
+      "submitted": "تم الإرسال",
+      "triaged": "تم الفرز",
+      "assigned": "تم التعيين",
+      "in_progress": "قيد التنفيذ",
+      "converted": "تم التحويل",
+      "closed": "مغلق",
+      "merged": "تم الدمج"
+    },
+    "urgency": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "critical": "حرج"
+    },
+    "priority": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "urgent": "عاجل"
+    },
+    "table": {
+      "ticketNumber": "رقم التذكرة",
+      "title": "العنوان",
+      "type": "النوع",
+      "priority": "الأولوية",
+      "status": "الحالة",
+      "sla": "اتفاقية مستوى الخدمة",
+      "created": "تاريخ الإنشاء"
+    },
+    "pagination": {
+      "showing": "عرض",
+      "of": "من",
+      "tickets": "تذكرة",
+      "page": "الصفحة",
+      "previous": "السابق",
+      "next": "التالي"
+    },
+    "noTickets": "لا توجد تذاكر",
+    "error": "فشل تحميل التذاكر. يرجى المحاولة مرة أخرى."
+  },
+  "stepup": {
+    "title": "التحقق الأمني مطلوب",
+    "subtitle": "إعادة المصادقة للمتابعة",
+    "close": "إغلاق",
+    "default_reason": "تتطلب هذه العملية إعادة المصادقة لأغراض أمنية: {{operation}}",
+    "totp_label": "أدخل رمز التحقق المكون من 6 أرقام",
+    "totp_placeholder": "000000",
+    "verify": "تحقق",
+    "verifying": "جاري التحقق...",
+    "cancel": "إلغاء",
+    "help_text": "افتح تطبيق المصادقة للحصول على الرمز",
+    "attempts_remaining": "متبقي {{count}} محاولة",
+    "attempts_remaining_plural": "متبقي {{count}} محاولة",
+    "errors": {
+      "invalid_format": "يرجى إدخال رمز صالح مكون من 6 أرقام",
+      "verification_failed": "رمز التحقق غير صالح. يرجى المحاولة مرة أخرى.",
+      "max_attempts": "تم الوصول إلى الحد الأقصى من المحاولات. يرجى الانتظار قبل المحاولة مرة أخرى.",
+      "network_error": "خطأ في الشبكة. يرجى التحقق من اتصالك والمحاولة مرة أخرى."
+    }
+  }
 }
