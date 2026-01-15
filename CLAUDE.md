@@ -401,6 +401,20 @@ t('columns.todo'); // Workflow stage for display
 - Edge Functions: Deploy via Supabase CLI or MCP
 - Realtime: Enable via Supabase dashboard or MCP
 
+### DigitalOcean Droplet (Production)
+
+- **IP Address**: 138.197.195.242
+- **SSH Access**: `ssh root@138.197.195.242` (key pre-configured)
+- **App Directory**: `/opt/intl-dossier/`
+- **Port**: 80 (HTTP), 443 (HTTPS - not yet configured)
+- **Full Instructions**: See `deploy/DROPLET_INSTRUCTIONS.md`
+
+**Quick Deploy:**
+
+```bash
+git push && ssh root@138.197.195.242 "cd /opt/intl-dossier && git pull && cd deploy && docker compose -f docker-compose.prod.yml build frontend && docker compose -f docker-compose.prod.yml up -d frontend"
+```
+
 ### Test Credentials for Browser/Chrome MCP
 
 When testing the application using browser automation tools (Chrome MCP, Playwright, etc.), use these credentials:
