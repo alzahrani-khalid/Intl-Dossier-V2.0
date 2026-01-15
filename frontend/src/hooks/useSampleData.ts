@@ -7,8 +7,8 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { toast } from 'sonner'
 
-import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/auth.context'
+import { getAccessToken } from '@/lib/auth-utils'
 import type {
   SampleDataTemplate,
   SampleDataStatus,
@@ -23,17 +23,6 @@ export const sampleDataKeys = {
   all: ['sample-data'] as const,
   templates: () => [...sampleDataKeys.all, 'templates'] as const,
   status: () => [...sampleDataKeys.all, 'status'] as const,
-}
-
-// Helper to get access token
-async function getAccessToken(): Promise<string> {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession()
-  if (!session?.access_token) {
-    throw new Error('Not authenticated')
-  }
-  return session.access_token
 }
 
 // API functions
