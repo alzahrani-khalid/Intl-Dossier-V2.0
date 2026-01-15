@@ -1,0 +1,159 @@
+{
+  "title": "تخطيطات بطاقة المعاينة",
+  "description": "تكوين كيفية عرض بطاقات معاينة الكيانات في معاينات التحويم ونتائج البحث والمراجع المضمنة.",
+  "pageTitle": "إدارة تخطيطات المعاينة",
+  "pageDescription": "تحديد تخطيطات بطاقة معاينة مخصصة لكل نوع كيان",
+
+  "entityTypes": {
+    "dossier": "ملف",
+    "organization": "منظمة",
+    "country": "دولة",
+    "forum": "منتدى",
+    "position": "منصب",
+    "mou": "مذكرة تفاهم",
+    "engagement": "مشاركة",
+    "commitment": "التزام",
+    "assignment": "مهمة",
+    "intelligence_signal": "إشارة",
+    "working_group": "مجموعة عمل",
+    "topic": "موضوع"
+  },
+
+  "contexts": {
+    "hover": "معاينة التحويم",
+    "search_result": "نتيجة البحث",
+    "embedded": "مضمن",
+    "compact": "مضغوط",
+    "expanded": "موسع"
+  },
+
+  "fieldTypes": {
+    "text": "نص",
+    "date": "تاريخ",
+    "status": "الحالة",
+    "badge": "شارة",
+    "tags": "وسوم",
+    "avatar": "صورة",
+    "relationship": "علاقة",
+    "activity": "نشاط",
+    "metric": "مقياس",
+    "priority": "أولوية",
+    "custom": "مخصص"
+  },
+
+  "layoutConfig": {
+    "title": "إعدادات التخطيط",
+    "showAvatar": "إظهار الصورة",
+    "showAvatarDesc": "عرض الصورة أو الصورة الرمزية إذا كانت متوفرة",
+    "showStatus": "إظهار الحالة",
+    "showStatusDesc": "عرض شارة الحالة (نشط، غير نشط، إلخ.)",
+    "showEntityType": "إظهار نوع الكيان",
+    "showEntityTypeDesc": "عرض شارة نوع الكيان",
+    "showLastUpdated": "إظهار آخر تحديث",
+    "showLastUpdatedDesc": "عرض متى تم تحديث الكيان آخر مرة",
+    "maxKeyDetails": "الحد الأقصى للتفاصيل الرئيسية",
+    "maxKeyDetailsDesc": "الحد الأقصى لعدد التفاصيل الرئيسية المعروضة",
+    "maxTags": "الحد الأقصى للوسوم",
+    "maxTagsDesc": "الحد الأقصى لعدد الوسوم المعروضة",
+    "showRecentActivity": "إظهار النشاط الأخير",
+    "showRecentActivityDesc": "عرض ملخص النشاط الأخير",
+    "showMatchScore": "إظهار درجة المطابقة",
+    "showMatchScoreDesc": "عرض مؤشر ملاءمة البحث"
+  },
+
+  "fields": {
+    "title": "حقول المعاينة",
+    "addField": "إضافة حقل",
+    "editField": "تحرير الحقل",
+    "deleteField": "حذف الحقل",
+    "fieldKey": "مفتاح الحقل",
+    "fieldKeyDesc": "معرف فريد لهذا الحقل",
+    "fieldType": "نوع الحقل",
+    "labelEn": "التسمية (إنجليزي)",
+    "labelAr": "التسمية (عربي)",
+    "sourceConfig": "تكوين المصدر",
+    "sourceColumn": "عمود قاعدة البيانات",
+    "sourcePath": "المسار المتداخل",
+    "sourceComputed": "حقل محسوب",
+    "displayConfig": "تكوين العرض",
+    "displayFormat": "التنسيق",
+    "displayHighlightOverdue": "تمييز المتأخر",
+    "displayMaxLength": "الحد الأقصى للطول",
+    "displayTruncate": "اقتطاع",
+    "displayUppercase": "أحرف كبيرة",
+    "displaySuffix": "لاحقة",
+    "displayPrefix": "سابقة",
+    "displayColorMap": "تعيين الألوان",
+    "displayMaxItems": "الحد الأقصى للعناصر",
+    "sortOrder": "ترتيب الفرز",
+    "isVisible": "مرئي",
+    "isRequired": "مطلوب",
+    "isRequiredDesc": "لا يمكن إخفاء الحقول المطلوبة من قبل المستخدمين",
+    "noFields": "لم يتم تكوين حقول",
+    "noFieldsDesc": "أضف حقولاً لتخصيص بطاقة المعاينة"
+  },
+
+  "layouts": {
+    "title": "التخطيطات",
+    "createLayout": "إنشاء تخطيط",
+    "editLayout": "تحرير التخطيط",
+    "deleteLayout": "حذف التخطيط",
+    "setDefault": "تعيين كافتراضي",
+    "isDefault": "افتراضي",
+    "nameEn": "الاسم (إنجليزي)",
+    "nameAr": "الاسم (عربي)",
+    "descriptionEn": "الوصف (إنجليزي)",
+    "descriptionAr": "الوصف (عربي)",
+    "context": "السياق",
+    "fieldCount": "{{count}} حقول",
+    "noLayouts": "لم يتم العثور على تخطيطات",
+    "noLayoutsDesc": "أنشئ تخطيطًا لتخصيص بطاقات المعاينة لهذا النوع من الكيانات"
+  },
+
+  "actions": {
+    "save": "حفظ التغييرات",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "reset": "إعادة تعيين",
+    "duplicate": "تكرار",
+    "preview": "معاينة",
+    "moveUp": "نقل لأعلى",
+    "moveDown": "نقل لأسفل",
+    "reorderFields": "إعادة ترتيب الحقول"
+  },
+
+  "messages": {
+    "layoutCreated": "تم إنشاء التخطيط بنجاح",
+    "layoutUpdated": "تم تحديث التخطيط بنجاح",
+    "layoutDeleted": "تم حذف التخطيط بنجاح",
+    "layoutSetDefault": "تم تعيين التخطيط كافتراضي",
+    "fieldAdded": "تمت إضافة الحقل بنجاح",
+    "fieldUpdated": "تم تحديث الحقل بنجاح",
+    "fieldDeleted": "تم حذف الحقل بنجاح",
+    "fieldsReordered": "تم إعادة ترتيب الحقول بنجاح",
+    "unsavedChanges": "لديك تغييرات غير محفوظة",
+    "unsavedChangesDesc": "احفظ التغييرات قبل المغادرة",
+    "confirmDelete": "هل أنت متأكد أنك تريد حذف هذا؟",
+    "confirmDeleteLayout": "هل أنت متأكد أنك تريد حذف هذا التخطيط؟",
+    "confirmDeleteField": "هل أنت متأكد أنك تريد حذف هذا الحقل؟"
+  },
+
+  "errors": {
+    "loadFailed": "فشل تحميل التخطيطات",
+    "saveFailed": "فشل حفظ التغييرات",
+    "deleteFailed": "فشل الحذف",
+    "fieldKeyExists": "يوجد حقل بهذا المفتاح بالفعل",
+    "requiredField": "هذا الحقل مطلوب"
+  },
+
+  "tabs": {
+    "settings": "الإعدادات",
+    "fields": "الحقول",
+    "preview": "معاينة"
+  },
+
+  "selectEntity": "اختر نوع الكيان",
+  "selectEntityDesc": "اختر نوع كيان لإدارة تخطيطات المعاينة الخاصة به",
+  "selectContext": "اختر السياق",
+  "selectContextDesc": "اختر السياق لهذا التخطيط"
+}

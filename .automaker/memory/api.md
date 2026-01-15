@@ -5,9 +5,9 @@ relevantTo: [api]
 importance: 0.7
 relatedFiles: []
 usageStats:
-  loaded: 2
-  referenced: 2
-  successfulFeatures: 2
+  loaded: 4
+  referenced: 4
+  successfulFeatures: 4
 ---
 
 # api
@@ -143,3 +143,69 @@ usageStats:
 - **Rejected:** Next.js API route: adds latency, requires separate auth layer, creates separate codebase location for business logic, more infrastructure to maintain
 - **Trade-offs:** Easier: Supabase-native RLS and client integration, lower latency. Harder: less ecosystem tooling, harder to test locally, stuck with TypeScript only
 - **Breaking if changed:** Moving back to Next.js API routes loses direct RLS enforcement - must re-implement row-level access control in application code
+
+### Created separate RPC functions for different operations (get_preview_layout, get_entity_layouts, set_default_layout) instead of single parameterized function (2026-01-15)
+
+- **Context:** Preview layout admin needed list view, detail view, and mutation operations with different return schemas and business logic
+- **Why:** Separate functions allow each to return optimized result shapes (entity_layouts returns field count aggregation, get_preview_layout returns nested fields). PostgreSQL function overloading via parameters adds complexity. Explicit operations improve clarity of intent in client code
+- **Rejected:** Single parameterized function with mode parameter: Harder to reason about return schema; adds conditional logic in SQL
+- **Trade-offs:** Easier: Client-side clarity, optimized result shapes per operation. Harder: More functions to maintain, potential duplication in business logic
+- **Breaking if changed:** Consolidating to single function requires union of all return columns and client-side filtering to determine which columns are relevant
+
+### Create bulk relationship endpoint (`create_bulk_relationships`) instead of looping single relationship creates on frontend (2026-01-15)
+
+- **Context:** Users selecting multiple suggested relationships to create simultaneously
+- **Why:** Single transaction ensures atomicity - all relationships create or none do. Network efficient (one round trip), database efficient (single transaction), prevents partial states
+- **Rejected:** Loop of individual create calls would risk inconsistent state if one fails mid-loop, require n round trips, and create audit trail complexity
+- **Trade-offs:** Slightly more complex RPC function but massive UX improvement - users see all relationships created together or clear error message
+- **Breaking if changed:** Removing bulk endpoint forces either frontend loops (breaking atomicity) or complex error recovery logic
+
+### Bulk member addition via single RPC call (`add_bulk_wg_members`) rather than individual endpoints per member (2026-01-15)
+
+- **Context:** Role assignment wizard collects multiple members before submission, requiring batch insertion with transactional consistency
+- **Why:** Single RPC call ensures all members are added atomically (all succeed or all fail), reduces network round-trips, and maintains referential integrity within working group member records
+- **Rejected:** Individual POST endpoints for each member (would require client-side transaction handling and increase failure points)
+- **Trade-offs:** Simpler error handling (single call success/failure), but makes partial updates impossible and harder to identify which member caused an error in a batch
+- **Breaking if changed:** If converted to individual endpoints, would need client-side rollback logic if any member fails, and users could see partially-added teams
+
+### Supabase Edge Function checks JWT in Authorization header rather than relying solely on RLS (2026-01-15)
+
+- **Context:** API endpoint needed to expose permission checking to frontend while maintaining security
+- **Why:** JWT verification in Edge Function provides application-level security gate. RLS policies provide database-level gate. Defense in depth - if one fails, other catches it. JWT also provides user context needed to check 'SELF' scope permissions.
+- **Rejected:** Relying only on RLS policies - loses ability to return user-friendly error messages. Relying only on JWT - loses database-level enforcement if application logic is compromised.
+- **Trade-offs:** Adds JWT parsing overhead. Requires maintaining two security layers. But makes system harder to exploit.
+- **Breaking if changed:** If JWT check is removed, unauthenticated requests could call Edge Function and RLS might not block everything (depends on auth.uid() being null)
+
+#### [Pattern] Edge Function uses transaction-like patterns with RETURNING clauses to ensure consistency across multiple table updates (2026-01-15)
+
+- **Problem solved:** Operations like start_meeting or complete_item affect multiple tables (agenda, items, snapshots, timestamps)
+- **Why this works:** Prevents partial updates if one step fails; ensures parent-child consistency; single round-trip reduces latency
+- **Trade-offs:** Edge Function code is more complex, but guarantees atomicity; database constraints catch bugs vs relying on client coordination
+
+### Edge Function exposes both single-item mutations (complete_item, skip_item, update_item) and batch operations (reorder_items) (2026-01-15)
+
+- **Context:** Items need individual status updates frequently but reordering multiple items is a single gesture
+- **Why:** Single mutations are simple and fast for typical case (one item completes); batch reorder prevents N separate writes during drag-and-drop
+- **Rejected:** All as batch operations would add latency for common single-item updates
+- **Trade-offs:** More function signatures but each optimized for its use case; batch operation prevents cascade of individual updates
+- **Breaking if changed:** Client code assumes can call complete_item without full items array; batch operations expect specific format
+
+#### [Pattern] Cursor-based pagination with type-specific ordering in Edge Function (2026-01-15)
+
+- **Problem solved:** Timeline events have different creation timestamps (interactions vs annotations) making offset pagination incorrect for unified views
+- **Why this works:** Cursor pagination using `created_at` + `id` composite cursor survives data mutations between requests (unlike offset pagination). Type information in cursor distinguishes between interaction and annotation records for proper ordering.
+- **Trade-offs:** More complex cursor encoding/decoding logic but stable pagination across mutations. Clients must handle opaque cursor strings (can't derive page numbers).
+
+#### [Gotcha] Edge Function endpoints use entity-type agnostic :entityId parameter despite multiple entity types existing (2026-01-15)
+
+- **Situation:** Implementation supports countries, organizations, relationships but API doesn't distinguish type in URL path
+- **Root cause:** Allows compute_entity_dependencies() function to work across entity types uniformly. Foreign key constraints enforce referential integrity. Type discovery happens at query time.
+- **How to avoid:** Easier: single endpoint, extensible to new entity types, unified API. Harder: requires database to resolve which table the ID belongs to, less explicit API contract
+
+### Scheduled reports processing via Supabase Edge Function with discrete trigger polling rather than real-time webhooks (2026-01-15)
+
+- **Context:** Need to generate and distribute reports on schedules without maintaining persistent connections or external orchestration
+- **Why:** Edge Functions are serverless and stateless; polling-based checks (via database timestamps) avoid managing webhook delivery state and retry logic
+- **Rejected:** Real-time subscriptions (would require persistent connections), external job queues (added infrastructure), native Supabase cron (limited scheduling options)
+- **Trade-offs:** Simpler deployment but requires consistent polling intervals; eventual consistency instead of immediate execution; polling overhead vs webhook reliability
+- **Breaking if changed:** Switching to webhook model would require persistent callback infrastructure and delivery guarantees outside current architecture

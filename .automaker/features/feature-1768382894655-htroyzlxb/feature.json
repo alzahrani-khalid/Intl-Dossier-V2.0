@@ -2,7 +2,7 @@
   "category": "enhancement",
   "description": "When creating relationships between entities, guide users through selecting the correct relationship type with visual examples and plain-language descriptions. Prevent incorrect relationship types before they're created.\n\n**Rationale:** Complex domain models with many entity types and relationship possibilities confuse users. Wrong relationships corrupt data integrity and require cleanup. Proactive guidance reduces errors at the source.",
   "title": "Relationship Creation Disambiguation Wizard",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768382894655-htroyzlxb",
   "descriptionHistory": [
     {

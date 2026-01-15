@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Visualize stakeholder influence based on relationship strength, engagement frequency, and network position. Identify key connectors, decision-makers, and clusters. Generate influence reports for strategic planning of advocacy efforts.\n\n**Rationale:** Beyond basic relationship tracking, understanding who influences whom and identifying network effects helps prioritize engagement strategy. This analytical layer turns relationship data into actionable intelligence for government affairs and lobbying.",
   "title": "Stakeholder Influence and Network Analysis",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768334388613-vwdeez8sc",
   "descriptionHistory": [
     {

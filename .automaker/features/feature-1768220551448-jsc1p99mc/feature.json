@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "Replace full-screen modals with bottom sheet components that slide up from the bottom for forms and detail views. Support drag-to-dismiss gestures, partial expansion states, and automatic keyboard avoidance. Include a visual handle indicator at the top.\n\n**Rationale:** Bottom sheets are more thumb-friendly on large mobile screens and feel more native. They allow users to see context behind the sheet and provide intuitive dismiss patterns without hunting for close buttons.",
   "title": "Adaptive Bottom Sheet Modals for Forms",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768220551448-jsc1p99mc",
   "branchName": "main",
   "startedAt": "2026-01-12T19:02:31.731Z",
-  "updatedAt": "2026-01-12T19:17:55.226Z"
+  "updatedAt": "2026-01-12T19:17:55.226Z",
+  "descriptionHistory": []
 }

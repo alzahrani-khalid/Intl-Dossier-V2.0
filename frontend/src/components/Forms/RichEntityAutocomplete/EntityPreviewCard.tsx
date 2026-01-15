@@ -5,6 +5,7 @@
  * Displays rich entity preview for disambiguation in autocomplete.
  * Shows key details, status, and recent activity.
  * Mobile-first design with RTL support.
+ * Supports custom layout configurations via layoutConfig prop.
  */
 
 import { forwardRef, memo } from 'react'
@@ -31,6 +32,7 @@ import {
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import type { EntityWithPreview } from './useEntityPreviewSearch'
+import type { PreviewLayoutConfig } from '@/types/preview-layout.types'
 
 // Entity type - matching the backend types
 type EntityType =
@@ -60,6 +62,8 @@ export interface EntityPreviewCardProps {
   compact?: boolean
   onClick?: () => void
   className?: string
+  /** Custom layout configuration from admin settings */
+  layoutConfig?: PreviewLayoutConfig | null
 }
 
 // =============================================================================
@@ -188,11 +192,24 @@ export const EntityPreviewCard = memo(
         compact = false,
         onClick,
         className,
+        layoutConfig,
       },
       ref,
     ) => {
       const { i18n } = useTranslation(['rich-autocomplete', 'common'])
       const isRTL = i18n.language === 'ar'
+
+      // Apply layout config overrides if provided
+      const config = {
+        showAvatar: layoutConfig?.showAvatar ?? true,
+        showStatus: layoutConfig?.showStatus ?? true,
+        showEntityType: layoutConfig?.showEntityType ?? true,
+        showLastUpdated: layoutConfig?.showLastUpdated ?? true,
+        maxKeyDetails: layoutConfig?.maxKeyDetails ?? (compact ? 2 : 3),
+        maxTags: layoutConfig?.maxTags ?? 3,
+        showRecentActivity: layoutConfig?.showRecentActivity ?? showRecentActivity,
+        showMatchScore: layoutConfig?.showMatchScore ?? false,
+      }
 
       const EntityIcon = ENTITY_TYPE_ICONS[entity.entity_type] || FileText
       const statusConfig = STATUS_CONFIG[entity.status]
@@ -200,6 +217,9 @@ export const EntityPreviewCard = memo(
 
       const displayName = isRTL ? entity.name_ar : entity.name_en
       const subtitle = isRTL ? entity.subtitle_ar : entity.subtitle_en
+
+      // Determine if we should show avatar section
+      const shouldShowAvatar = config.showAvatar || entity.photo_url
 
       return (
         <motion.div
@@ -227,31 +247,33 @@ export const EntityPreviewCard = memo(
           aria-selected={isSelected}
         >
           {/* Left Section: Icon/Avatar */}
-          <div className="flex-shrink-0 me-3">
-            {entity.photo_url ? (
-              <Avatar className={cn(compact ? 'h-10 w-10' : 'h-12 w-12 sm:h-14 sm:w-14')}>
-                <AvatarImage src={entity.photo_url} alt={displayName} />
-                <AvatarFallback className="bg-primary/10 text-primary">
-                  {getInitials(displayName)}
-                </AvatarFallback>
-              </Avatar>
-            ) : (
-              <div
-                className={cn(
-                  'flex items-center justify-center rounded-lg',
-                  'bg-muted',
-                  compact ? 'h-10 w-10' : 'h-12 w-12 sm:h-14 sm:w-14',
-                )}
-              >
-                <EntityIcon
+          {shouldShowAvatar && (
+            <div className="flex-shrink-0 me-3">
+              {entity.photo_url ? (
+                <Avatar className={cn(compact ? 'h-10 w-10' : 'h-12 w-12 sm:h-14 sm:w-14')}>
+                  <AvatarImage src={entity.photo_url} alt={displayName} />
+                  <AvatarFallback className="bg-primary/10 text-primary">
+                    {getInitials(displayName)}
+                  </AvatarFallback>
+                </Avatar>
+              ) : (
+                <div
                   className={cn(
-                    'text-muted-foreground',
-                    compact ? 'h-5 w-5' : 'h-6 w-6 sm:h-7 sm:w-7',
+                    'flex items-center justify-center rounded-lg',
+                    'bg-muted',
+                    compact ? 'h-10 w-10' : 'h-12 w-12 sm:h-14 sm:w-14',
                   )}
-                />
-              </div>
-            )}
-          </div>
+                >
+                  <EntityIcon
+                    className={cn(
+                      'text-muted-foreground',
+                      compact ? 'h-5 w-5' : 'h-6 w-6 sm:h-7 sm:w-7',
+                    )}
+                  />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Middle Section: Content */}
           <div className="flex-1 min-w-0">
@@ -275,18 +297,20 @@ export const EntityPreviewCard = memo(
               </div>
 
               {/* Entity Type Badge */}
-              <Badge
-                variant="outline"
-                className={cn('flex-shrink-0 text-xs', compact && 'hidden sm:inline-flex')}
-              >
-                {getEntityTypeLabel(entity.entity_type, isRTL)}
-              </Badge>
+              {config.showEntityType && (
+                <Badge
+                  variant="outline"
+                  className={cn('flex-shrink-0 text-xs', compact && 'hidden sm:inline-flex')}
+                >
+                  {getEntityTypeLabel(entity.entity_type, isRTL)}
+                </Badge>
+              )}
             </div>
 
             {/* Key Details */}
-            {showKeyDetails && entity.key_details.length > 0 && (
+            {showKeyDetails && entity.key_details.length > 0 && config.maxKeyDetails > 0 && (
               <div className={cn('flex flex-wrap gap-x-3 gap-y-1', compact ? 'mt-1' : 'mt-2')}>
-                {entity.key_details.slice(0, compact ? 2 : 3).map((detail, idx) => (
+                {entity.key_details.slice(0, config.maxKeyDetails).map((detail, idx) => (
                   <div key={idx} className="flex items-center gap-1 text-xs text-muted-foreground">
                     <span className="font-medium">
                       {isRTL ? detail.label_ar : detail.label_en}:
@@ -300,7 +324,7 @@ export const EntityPreviewCard = memo(
             )}
 
             {/* Recent Activity */}
-            {showRecentActivity && entity.recent_activity && !compact && (
+            {config.showRecentActivity && entity.recent_activity && !compact && (
               <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
                 <Activity className="h-3 w-3 flex-shrink-0" />
                 <span className="truncate">
@@ -315,16 +339,16 @@ export const EntityPreviewCard = memo(
             )}
 
             {/* Tags */}
-            {entity.tags && entity.tags.length > 0 && !compact && (
+            {entity.tags && entity.tags.length > 0 && !compact && config.maxTags > 0 && (
               <div className="flex flex-wrap gap-1 mt-2">
-                {entity.tags.slice(0, 3).map((tag) => (
+                {entity.tags.slice(0, config.maxTags).map((tag) => (
                   <Badge key={tag} variant="secondary" className="text-xs px-1.5 py-0">
                     {tag}
                   </Badge>
                 ))}
-                {entity.tags.length > 3 && (
+                {entity.tags.length > config.maxTags && (
                   <Badge variant="secondary" className="text-xs px-1.5 py-0">
-                    +{entity.tags.length - 3}
+                    +{entity.tags.length - config.maxTags}
                   </Badge>
                 )}
               </div>
@@ -334,22 +358,24 @@ export const EntityPreviewCard = memo(
           {/* Right Section: Status & Score */}
           <div className="flex flex-col items-end justify-between ms-2 flex-shrink-0">
             {/* Status Badge */}
-            <Badge
-              variant="secondary"
-              className={cn(
-                'flex items-center gap-1 text-xs',
-                statusConfig.bgColor,
-                statusConfig.color,
-              )}
-            >
-              <StatusIcon className="h-3 w-3" />
-              <span className={compact ? 'hidden sm:inline' : ''}>
-                {getStatusLabel(entity.status, isRTL)}
-              </span>
-            </Badge>
+            {config.showStatus && (
+              <Badge
+                variant="secondary"
+                className={cn(
+                  'flex items-center gap-1 text-xs',
+                  statusConfig.bgColor,
+                  statusConfig.color,
+                )}
+              >
+                <StatusIcon className="h-3 w-3" />
+                <span className={compact ? 'hidden sm:inline' : ''}>
+                  {getStatusLabel(entity.status, isRTL)}
+                </span>
+              </Badge>
+            )}
 
             {/* Last Updated */}
-            {!compact && (
+            {config.showLastUpdated && !compact && (
               <div className="flex items-center gap-1 text-xs text-muted-foreground mt-auto">
                 <Clock className="h-3 w-3" />
                 <span>{getRelativeTime(entity.last_updated, isRTL)}</span>
@@ -357,7 +383,7 @@ export const EntityPreviewCard = memo(
             )}
 
             {/* Match Score Indicator */}
-            {entity.combined_score > 0.8 && (
+            {config.showMatchScore && entity.combined_score > 0.8 && (
               <div
                 className={cn(
                   'mt-1 h-1.5 w-8 rounded-full',

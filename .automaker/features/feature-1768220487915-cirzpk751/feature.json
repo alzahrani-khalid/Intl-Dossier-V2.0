@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "Display an interactive timeline showing 'what you'll see here' with example notifications (mentions, assignments, document changes) and let users configure notification preferences before receiving any real ones.\n\n**Rationale:** Users need to understand notification types and volume before they're overwhelmed. Proactive preference-setting prevents notification fatigue while the preview educates on collaboration features.",
   "title": "Real-time Notifications Empty State with Collaboration Preview",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768220487915-cirzpk751",
   "branchName": "main",
   "startedAt": "2026-01-12T17:48:38.787Z",
-  "updatedAt": "2026-01-12T17:58:28.190Z"
+  "updatedAt": "2026-01-12T17:58:28.190Z",
+  "descriptionHistory": []
 }

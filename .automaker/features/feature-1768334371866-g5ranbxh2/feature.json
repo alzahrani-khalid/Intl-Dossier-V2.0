@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Create templates for frequently-created entity types that pre-fill common fields and relationships. Support context-aware suggestions that pull data from related entities. Enable keyboard-driven quick entry mode for power users.\n\n**Rationale:** While template library exists for documents, entity creation templates streamline data entry for routine tasks like logging standard engagements or creating similar commitments. Reduces errors and saves time for repetitive workflows.",
   "title": "Quick Entry Templates with Auto-Population",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768334371866-g5ranbxh2",
   "descriptionHistory": [
     {

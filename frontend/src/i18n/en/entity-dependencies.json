@@ -1,0 +1,123 @@
+{
+  "title": {
+    "default": "Dependency Analysis",
+    "withName": "Dependencies for {{name}}"
+  },
+  "tabs": {
+    "graph": "Graph",
+    "assessments": "Assessments",
+    "details": "Details"
+  },
+  "stats": {
+    "total": "Total Dependencies",
+    "direct": "Direct",
+    "transitive": "Transitive",
+    "depth": "Max Depth"
+  },
+  "legend": {
+    "source": "Source Entity",
+    "direct": "Direct Dependency",
+    "transitive": "Transitive Dependency"
+  },
+  "widget": {
+    "dependencies": "Dependencies",
+    "pendingReviews": "Pending Reviews",
+    "criticalImpacts": "Critical Impacts",
+    "recentAssessments": "Recent Assessments"
+  },
+  "list": {
+    "title": "Impact Assessments",
+    "description": "View and manage impact assessments for this entity",
+    "noAssessments": "No impact assessments yet",
+    "affectedCount": "{{count}} entities affected"
+  },
+  "assessment": {
+    "title": "Impact Assessment Report",
+    "recommendations": "Recommendations",
+    "affectedEntities": "Affected Entities",
+    "reviewNotes": "Review Notes",
+    "selectPrompt": "Select an assessment from the list to view details"
+  },
+  "summary": {
+    "totalAffected": "Total Affected",
+    "actionRequired": "Action Required",
+    "assessedAt": "Assessed At"
+  },
+  "create": {
+    "title": "Create Impact Assessment",
+    "description": "Analyze the impact of changes to this entity",
+    "changeType": "Change Type",
+    "button": "Run Assessment",
+    "loading": "Analyzing..."
+  },
+  "dialog": {
+    "createTitle": "New Impact Assessment",
+    "createDescription": "Analyze how changes to {{name}} will affect related entities",
+    "changeType": "Type of Change",
+    "acknowledgeTitle": "Acknowledge Assessment",
+    "acknowledgeDescription": "Confirm that you have reviewed this impact assessment",
+    "notes": "Review Notes (optional)",
+    "notesPlaceholder": "Add any notes about your review..."
+  },
+  "actions": {
+    "refresh": "Refresh",
+    "retry": "Retry",
+    "newAssessment": "New Assessment",
+    "acknowledge": "Acknowledge",
+    "markReviewed": "Mark as Reviewed",
+    "markActioned": "Mark as Actioned",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "create": "Create Assessment",
+    "creating": "Creating...",
+    "saving": "Saving..."
+  },
+  "errors": {
+    "loadFailed": "Failed to load data. Please try again."
+  },
+  "empty": {
+    "noDependencies": "No dependencies found for this entity"
+  },
+  "severity": {
+    "critical": "Critical",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low",
+    "none": "None"
+  },
+  "category": {
+    "stakeholder": "Stakeholder",
+    "commitment": "Commitment",
+    "working_group": "Working Group",
+    "relationship": "Relationship",
+    "document": "Document",
+    "event": "Event",
+    "policy": "Policy",
+    "operational": "Operational"
+  },
+  "dependencyType": {
+    "direct": "Direct",
+    "transitive": "Transitive",
+    "commitment": "Commitment",
+    "working_group": "Working Group",
+    "document": "Document",
+    "position": "Position",
+    "event": "Event"
+  },
+  "changeType": {
+    "create": "Create",
+    "update": "Update",
+    "delete": "Delete",
+    "archive": "Archive",
+    "relationship_add": "Add Relationship",
+    "relationship_remove": "Remove Relationship",
+    "status_change": "Status Change",
+    "ownership_change": "Ownership Change"
+  },
+  "status": {
+    "pending": "Pending",
+    "reviewed": "Reviewed",
+    "acknowledged": "Acknowledged",
+    "actioned": "Actioned"
+  }
+}

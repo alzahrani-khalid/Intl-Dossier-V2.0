@@ -1,0 +1,210 @@
+{
+  "title": "صلاحيات الحقول",
+  "description": "إدارة التحكم في الوصول الدقيق لحقول الكيانات",
+
+  "tabs": {
+    "permissions": "الصلاحيات",
+    "definitions": "تعريفات الحقول",
+    "audit": "سجل التدقيق"
+  },
+
+  "permissions": {
+    "title": "قواعد الصلاحيات",
+    "description": "تكوين من يمكنه عرض وتعديل حقول معينة",
+    "empty": "لم يتم تكوين قواعد صلاحيات",
+    "empty_description": "قم بإنشاء قواعد صلاحيات للتحكم في الوصول على مستوى الحقل",
+
+    "create": "إنشاء صلاحية",
+    "edit": "تعديل الصلاحية",
+    "delete": "حذف الصلاحية",
+    "delete_confirm": "هل أنت متأكد أنك تريد حذف قاعدة الصلاحية هذه؟",
+
+    "fields": {
+      "scope_type": "نوع النطاق",
+      "scope_value": "قيمة النطاق",
+      "entity_type": "نوع الكيان",
+      "entity_id": "كيان محدد",
+      "field_name": "الحقل",
+      "can_view": "يمكن العرض",
+      "can_edit": "يمكن التعديل",
+      "priority": "الأولوية",
+      "conditions": "الشروط",
+      "inherits_from_parent": "الوراثة من الأصل",
+      "parent_entity_type": "نوع الكيان الأصل",
+      "parent_entity_id": "الكيان الأصل",
+      "inheritance_depth": "عمق الوراثة",
+      "description_en": "الوصف (إنجليزي)",
+      "description_ar": "الوصف (عربي)",
+      "is_active": "نشط",
+      "expires_at": "تنتهي في"
+    },
+
+    "placeholders": {
+      "scope_value": "أدخل اسم الدور أو معرف المستخدم أو معرف الفريق",
+      "entity_id": "اتركه فارغًا لجميع الكيانات من هذا النوع",
+      "field_name": "حدد الحقل أو استخدم * لجميع الحقول",
+      "conditions": "شروط JSON اختيارية"
+    },
+
+    "help": {
+      "scope_type": "على من تنطبق هذه الصلاحية",
+      "priority": "القواعد ذات الأولوية الأعلى تتجاوز القواعد ذات الأولوية الأقل",
+      "inheritance": "عند التمكين، سيتم توريث هذه الصلاحية من الكيانات الأصل",
+      "all_fields": "استخدم * للتطبيق على جميع الحقول"
+    }
+  },
+
+  "definitions": {
+    "title": "تعريفات الحقول",
+    "description": "عرض وإدارة بيانات الحقول الوصفية لكل نوع كيان",
+    "empty": "لم يتم العثور على تعريفات حقول",
+
+    "create": "تعريف حقل",
+    "edit": "تعديل التعريف",
+
+    "fields": {
+      "field_name": "اسم الحقل",
+      "field_label_en": "التسمية (إنجليزي)",
+      "field_label_ar": "التسمية (عربي)",
+      "field_description_en": "الوصف (إنجليزي)",
+      "field_description_ar": "الوصف (عربي)",
+      "field_category": "الفئة",
+      "data_type": "نوع البيانات",
+      "is_sensitive": "حساس",
+      "sensitivity_level": "مستوى الحساسية",
+      "display_order": "ترتيب العرض",
+      "is_system_field": "حقل نظام",
+      "is_readonly": "للقراءة فقط",
+      "default_visible": "مرئي افتراضيًا",
+      "default_editable": "قابل للتعديل افتراضيًا"
+    },
+
+    "categories": {
+      "base": "الحقول الأساسية",
+      "extension": "حقول الامتداد",
+      "metadata": "البيانات الوصفية",
+      "relationship": "العلاقات",
+      "sensitive": "حساس"
+    },
+
+    "sensitivity": {
+      "low": "منخفض",
+      "medium": "متوسط",
+      "high": "عالي",
+      "critical": "حرج"
+    },
+
+    "data_types": {
+      "text": "نص",
+      "number": "رقم",
+      "boolean": "منطقي",
+      "date": "تاريخ",
+      "datetime": "تاريخ ووقت",
+      "json": "JSON",
+      "array": "مصفوفة",
+      "uuid": "UUID",
+      "enum": "تعداد"
+    }
+  },
+
+  "audit": {
+    "title": "سجل التدقيق",
+    "description": "عرض سجل تغييرات الصلاحيات",
+    "empty": "لم يتم العثور على سجلات تدقيق",
+
+    "actions": {
+      "create": "تم الإنشاء",
+      "update": "تم التحديث",
+      "delete": "تم الحذف",
+      "activate": "تم التفعيل",
+      "deactivate": "تم التعطيل",
+      "expire": "انتهت الصلاحية"
+    },
+
+    "fields": {
+      "action": "الإجراء",
+      "permission_id": "الصلاحية",
+      "old_values": "القيم السابقة",
+      "new_values": "القيم الجديدة",
+      "performed_by": "تم بواسطة",
+      "created_at": "التاريخ والوقت",
+      "reason": "السبب"
+    }
+  },
+
+  "scope_types": {
+    "role": "الدور",
+    "user": "المستخدم",
+    "team": "الفريق"
+  },
+
+  "scope_descriptions": {
+    "role": "تطبيق على جميع المستخدمين بهذا الدور",
+    "user": "تطبيق على مستخدم محدد",
+    "team": "تطبيق على جميع أعضاء الفريق"
+  },
+
+  "entity_types": {
+    "dossier": "الملف",
+    "country": "الدولة",
+    "organization": "المنظمة",
+    "person": "الشخص",
+    "engagement": "المشاركة",
+    "commitment": "الالتزام",
+    "mou": "مذكرة التفاهم",
+    "position": "الموقف",
+    "forum": "المنتدى",
+    "event": "الفعالية",
+    "task": "المهمة",
+    "intake_ticket": "تذكرة الاستلام",
+    "working_group": "مجموعة العمل",
+    "theme": "الموضوع",
+    "brief": "الموجز",
+    "intelligence_report": "تقرير استخباراتي",
+    "data_library_item": "عنصر مكتبة البيانات"
+  },
+
+  "roles": {
+    "super_admin": "المسؤول الفائق",
+    "admin": "المسؤول",
+    "manager": "المدير",
+    "analyst": "المحلل",
+    "viewer": "المشاهد"
+  },
+
+  "messages": {
+    "created": "تم إنشاء قاعدة الصلاحية بنجاح",
+    "updated": "تم تحديث قاعدة الصلاحية بنجاح",
+    "deleted": "تم حذف قاعدة الصلاحية بنجاح",
+    "activated": "تم تفعيل قاعدة الصلاحية",
+    "deactivated": "تم تعطيل قاعدة الصلاحية",
+    "error_create": "فشل في إنشاء قاعدة الصلاحية",
+    "error_update": "فشل في تحديث قاعدة الصلاحية",
+    "error_delete": "فشل في حذف قاعدة الصلاحية",
+    "error_load": "فشل في تحميل الصلاحيات"
+  },
+
+  "filters": {
+    "entity_type": "تصفية حسب نوع الكيان",
+    "scope_type": "تصفية حسب النطاق",
+    "active_only": "النشطة فقط",
+    "all_statuses": "جميع الحالات"
+  },
+
+  "actions": {
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "refresh": "تحديث",
+    "export": "تصدير",
+    "import": "استيراد"
+  },
+
+  "info": {
+    "inheritance_title": "وراثة الصلاحيات",
+    "inheritance_description": "يمكن توريث الصلاحيات من الكيانات الأصل عبر علاقات الكيانات. عند تمكين الوراثة، تتلقى الكيانات الفرعية تلقائيًا الصلاحيات من أصولها.",
+    "priority_title": "حل الأولوية",
+    "priority_description": "عندما تنطبق صلاحيات متعددة على حقل، تأخذ الصلاحية ذات الأولوية الأعلى الأسبقية. الصلاحيات الخاصة بالمستخدم تتجاوز الصلاحيات القائمة على الأدوار.",
+    "sensitive_fields_title": "الحقول الحساسة",
+    "sensitive_fields_description": "الحقول المميزة كحساسة تحتوي على معلومات شخصية أو سرية ولها ضوابط وصول افتراضية أكثر صرامة."
+  }
+}

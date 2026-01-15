@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "Display contextually relevant suggestions in empty states based on current date, upcoming events, or organizational calendar (e.g., 'Prepare briefs for upcoming UN General Assembly', 'Review annual bilateral commitments').\n\n**Rationale:** Generic empty states feel static and irrelevant. Time-aware prompts demonstrate system intelligence and help users proactively prepare for upcoming needs, increasing perceived value.",
   "title": "Seasonal and Event-Based Empty State Prompts",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768200709435-501ulzfv5",
   "branchName": "main",
   "startedAt": "2026-01-12T11:29:33.303Z",
-  "updatedAt": "2026-01-12T11:42:30.682Z"
+  "updatedAt": "2026-01-12T11:42:30.682Z",
+  "descriptionHistory": []
 }

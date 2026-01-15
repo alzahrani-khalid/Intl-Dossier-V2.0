@@ -2,7 +2,7 @@
   "category": "enhancement",
   "description": "Show all active filters prominently in a persistent chip bar with individual remove buttons and a clear-all option. Indicate when filters are hiding results the user might expect to see.\n\n**Rationale:** Users forget active filters and become confused when expected entities don't appear in lists. They search repeatedly or assume data is missing. Hidden filter state is a common source of 'the system is broken' complaints.",
   "title": "Complex Filter State Visibility and Reset",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768382898596-5gavw0m3k",
   "descriptionHistory": [
     {

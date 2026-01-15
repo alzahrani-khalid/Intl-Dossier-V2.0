@@ -5,9 +5,9 @@ relevantTo: [internationalization]
 importance: 0.7
 relatedFiles: []
 usageStats:
-  loaded: 0
-  referenced: 0
-  successfulFeatures: 0
+  loaded: 1
+  referenced: 1
+  successfulFeatures: 1
 ---
 
 # internationalization
@@ -37,3 +37,9 @@ usageStats:
 - **Problem solved:** Entities have both English and Arabic names; breadcrumb should show what was used when viewing that entity
 - **Why this works:** Consistency - if user was viewing in Arabic, seeing entity in English in breadcrumb is confusing. Storing language with entity allows correct display even if user switches languages. Labels still follow UI language for consistency
 - **Trade-offs:** Easier: Accurate representation of what user viewed. Harder: Must store language_code with each history item, more complex data shape
+
+#### [Pattern] i18n translations for both UI labels and data model enums (frequencies, timezones, conditions) (2026-01-15)
+
+- **Problem solved:** Users in different languages need to see frequency options (Daily/Weekly) and timezone names in their language
+- **Why this works:** Frequency and timezone strings appear in UI and must be localized; storing enum keys in database, translating at display time
+- **Trade-offs:** Cleaner data (language-agnostic) but requires translation keys for all enum values; if enum values change, translations must be updated

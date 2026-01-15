@@ -5,9 +5,9 @@ relevantTo: [security]
 importance: 0.7
 relatedFiles: []
 usageStats:
-  loaded: 1
-  referenced: 1
-  successfulFeatures: 1
+  loaded: 3
+  referenced: 3
+  successfulFeatures: 3
 ---
 
 # security
@@ -65,3 +65,51 @@ usageStats:
 - **Situation:** User A requests permission from User B. Query needs: can see own requests OR can see requests where granted_to includes their role. Initial attempt only checked granted_to.
 - **Root cause:** Without OR condition, users can't see what permissions they have access to - only what they directly granted. The granted_to is populated on approval, so users need visibility of the chain that led to their access.
 - **How to avoid:** Easier: explicit access control shows full permission chain. Harder: more complex RLS policy with OR and JOIN, harder to audit all access paths
+
+### Used SECURITY DEFINER RLS-bypassing functions for preview layout queries but still enforced admin-only access through RLS policies on base tables (2026-01-15)
+
+- **Context:** Preview layout data needs to be fetched by any authenticated user (to render previews) but modified only by admins, with organization-aware filtering
+- **Why:** SECURITY DEFINER allows users to query layouts without giving them table SELECT permissions, while RLS policies on entity_preview_layouts prevent non-admin modifications. The function enforces organization context through JWT metadata, not requiring explicit organization_id parameter from client
+- **Rejected:** No SECURITY DEFINER: Requires giving users SELECT on base tables. Client-enforced org filtering: Bypasses security by checking org in client code
+- **Trade-offs:** Easier: Fine-grained control; org context enforced server-side. Harder: Function-level security is less visible than table-level RLS
+- **Breaking if changed:** Removing SECURITY DEFINER would require giving all authenticated users SELECT permissions on entity_preview_layouts, losing admin-only modification enforcement
+
+#### [Pattern] Rejection tracking for suggestions (rejected at RPC level) instead of filtering on frontend (2026-01-15)
+
+- **Problem solved:** Preventing same suggestion from being shown repeatedly to users
+- **Why this works:** Frontend-only rejection is easily bypassed (clear cache, reload). RPC-level tracking is source of truth - ensures system never re-suggests rejected connections
+- **Trade-offs:** Requires database table (`suggestion_rejections`) and extra query cost but provides reliable behavior across sessions
+
+#### [Gotcha] Test credentials hardcoded in Playwright test (email: kazahrani@stats.gov.sa, password: itisme) exposed in repository (2026-01-15)
+
+- **Situation:** E2E tests need valid login for integration verification but used real account credentials in source code
+- **Root cause:** Pragmatic shortcut during development to make tests runnable without additional test user setup infrastructure
+- **How to avoid:** Hardcoded credentials make tests faster to write/debug but create security vulnerability if code is in shared/public repository
+
+#### [Pattern] Soft delete pattern for field permissions using is_revoked flag instead of hard delete (2026-01-15)
+
+- **Problem solved:** Admins may revoke permissions but audit trail needs to show what permissions existed and when they were revoked
+- **Why this works:** Hard delete destroys historical record. Soft delete with is_revoked + revoked_at timestamp preserves audit trail while making permission 'inactive'. RLS policies filter out revoked permissions in normal queries.
+- **Trade-offs:** Requires logic to filter revoked records in queries. Adds is_revoked field to schema. But enables compliance audit trails.
+
+### agenda_participants with RSVP status determines view access to agenda, not just role in meeting (2026-01-15)
+
+- **Context:** Need to prevent unauthorized users from seeing meeting details even if they know the meeting ID
+- **Why:** Explicit participant list is source of truth; RSVP creates audit trail of who was invited vs attended
+- **Rejected:** Making agendas world-readable and filtering UI would fail if user guesses ID; public meetings should be explicit
+- **Trade-offs:** Extra lookup required per user per agenda, but prevents data leaks; RSVP status adds operational value
+- **Breaking if changed:** Queries must JOIN agenda_participants; shared agendas require participants added first not after meeting starts
+
+#### [Gotcha] RLS policies rely on implicit organization context through person-org relationship (2026-01-15)
+
+- **Situation:** Edge Function doesn't explicitly validate organization membership; RLS enforces it at database level
+- **Root cause:** RLS policies handle access control automatically without explicit checks in function code, reducing attack surface from forgotten authorization checks in business logic
+- **How to avoid:** Security is implicit and hard to audit (policy logic buried in PostgreSQL). Mistakes in RLS setup silently grant/deny access. Easier to make errors when modifying policies without understanding full person-org relationship chains.
+
+### Schedule execution history stored in database with user_id tracking rather than audit logs only (2026-01-15)
+
+- **Context:** Need to display execution results to users and provide debugging capability without exposing system internals
+- **Why:** Execution history is user-facing data (schedules they own); storing as first-class data enables RLS protection and efficient queries
+- **Rejected:** Audit logs (system-focused, not user-facing), in-memory execution tracking (no persistence)
+- **Trade-offs:** Database overhead for storing all executions but enables per-schedule history queries and RLS security
+- **Breaking if changed:** Removing execution history storage would eliminate user visibility into whether their scheduled reports ran

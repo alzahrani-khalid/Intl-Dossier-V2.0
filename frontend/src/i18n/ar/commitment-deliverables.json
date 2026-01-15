@@ -1,0 +1,111 @@
+{
+  "title": "المخرجات",
+  "subtitle": "تتبع المراحل والتقدم",
+  "emptyState": {
+    "title": "قسّم هذا إلى مراحل",
+    "description": "الالتزامات بدون مراحل واضحة يصعب تتبعها. قسّم هذا الالتزام إلى مخرجات ملموسة لضمان عدم فقدان أي شيء.",
+    "hint": "استخدم القوالب لإعداد جدول زمني منظم بسرعة، أو أضف مراحل مخصصة واحدة تلو الأخرى.",
+    "cta": "أضف المرحلة الأولى",
+    "selectTemplate": "أو اختر قالبًا للبدء"
+  },
+  "templates": {
+    "title": "قوالب سريعة",
+    "standardDelivery": "التسليم القياسي",
+    "standardDeliveryDesc": "مراحل المراجعة والمسودة والتسليم",
+    "meetingFocused": "الاجتماعات والمشاركة",
+    "meetingFocusedDesc": "اجتماعات أصحاب المصلحة وإجراءات المتابعة",
+    "documentHeavy": "مكثف الوثائق",
+    "documentHeavyDesc": "سير عمل التوثيق المكثف",
+    "quickTask": "مهمة سريعة",
+    "quickTaskDesc": "مراجعة وتسليم بسيط"
+  },
+  "types": {
+    "milestone": "مرحلة",
+    "document": "وثيقة",
+    "meeting": "اجتماع",
+    "review": "مراجعة",
+    "follow_up": "متابعة",
+    "report": "تقرير",
+    "custom": "مخصص"
+  },
+  "typeDescriptions": {
+    "milestone": "نقطة تفتيش تقدم عامة",
+    "document": "إعداد أو تقديم وثيقة",
+    "meeting": "اجتماع أو استشارة",
+    "review": "نقطة مراجعة أو موافقة",
+    "follow_up": "بند إجراء متابعة",
+    "report": "تقديم تقرير أو مخرج",
+    "custom": "نوع مرحلة مخصص"
+  },
+  "status": {
+    "not_started": "لم يبدأ",
+    "in_progress": "قيد التنفيذ",
+    "completed": "مكتمل",
+    "blocked": "معلق",
+    "cancelled": "ملغى"
+  },
+  "form": {
+    "addDeliverable": "إضافة مرحلة",
+    "editDeliverable": "تعديل المرحلة",
+    "titleEn": "العنوان (إنجليزي)",
+    "titleAr": "العنوان (عربي)",
+    "titleEnPlaceholder": "أدخل عنوان المرحلة",
+    "titleArPlaceholder": "أدخل عنوان المرحلة بالعربية",
+    "descriptionEn": "الوصف (إنجليزي)",
+    "descriptionAr": "الوصف (عربي)",
+    "descriptionPlaceholder": "صف المرحلة",
+    "type": "النوع",
+    "selectType": "اختر النوع",
+    "dueDate": "تاريخ الاستحقاق",
+    "weight": "الوزن",
+    "weightDescription": "وزن أعلى = تأثير أكبر على التقدم الإجمالي (1-10)",
+    "notes": "ملاحظات",
+    "notesPlaceholder": "ملاحظات إضافية",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "delete": "حذف",
+    "confirmDelete": "هل أنت متأكد من حذف هذه المرحلة؟"
+  },
+  "actions": {
+    "edit": "تعديل",
+    "delete": "حذف",
+    "markComplete": "وضع علامة مكتمل",
+    "markInProgress": "بدء التنفيذ",
+    "viewDetails": "عرض التفاصيل",
+    "reorder": "إعادة الترتيب"
+  },
+  "stats": {
+    "total": "الإجمالي",
+    "completed": "مكتمل",
+    "inProgress": "قيد التنفيذ",
+    "notStarted": "لم يبدأ",
+    "blocked": "معلق",
+    "overdue": "متأخر",
+    "progress": "التقدم"
+  },
+  "timeline": {
+    "title": "الجدول الزمني",
+    "empty": "لا توجد مراحل بعد",
+    "dueIn": "مستحق خلال {{days}} أيام",
+    "dueToday": "مستحق اليوم",
+    "overdue": "متأخر {{days}} أيام",
+    "completed": "مكتمل {{date}}"
+  },
+  "progress": {
+    "title": "التقدم الإجمالي",
+    "noDeliverables": "لم يتم تحديد مراحل",
+    "allComplete": "جميع المراحل مكتملة!"
+  },
+  "messages": {
+    "createSuccess": "تم إنشاء المرحلة بنجاح",
+    "updateSuccess": "تم تحديث المرحلة بنجاح",
+    "deleteSuccess": "تم حذف المرحلة بنجاح",
+    "bulkCreateSuccess": "تم إنشاء {{count}} مراحل من القالب",
+    "createError": "فشل في إنشاء المرحلة",
+    "updateError": "فشل في تحديث المرحلة",
+    "deleteError": "فشل في حذف المرحلة",
+    "statusUpdated": "تم تحديث الحالة",
+    "statusUpdateError": "فشل في تحديث الحالة",
+    "reorderError": "فشل في إعادة ترتيب المراحل"
+  }
+}

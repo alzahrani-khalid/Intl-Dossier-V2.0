@@ -11,19 +11,14 @@
  * - Mobile-first, RTL-compatible, 44x44px touch targets
  */
 
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { useNavigate } from '@tanstack/react-router';
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate } from '@tanstack/react-router'
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
+import { Button } from '@/components/ui/button'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Calendar,
   Edit,
@@ -35,34 +30,23 @@ import {
   Download,
   Upload,
   Loader2,
-} from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { useCommitment } from '@/hooks/useCommitments';
-import { useDossier } from '@/hooks/useDossier';
-import { getEvidenceUrl } from '@/services/commitments.service';
-import {
-  type Commitment,
-  PRIORITY_COLORS,
-  STATUS_COLORS,
-} from '@/types/commitment.types';
-import {
-  isCommitmentOverdue,
-  getDaysUntilDue,
-} from '@/services/commitments.service';
-import { StatusDropdown } from './StatusDropdown';
-import { StatusTimeline } from './StatusTimeline';
-import { CommitmentForm } from './CommitmentForm';
-import { EvidenceUpload } from './EvidenceUpload';
+} from 'lucide-react'
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { useCommitment } from '@/hooks/useCommitments'
+import { useDossier } from '@/hooks/useDossier'
+import { getEvidenceUrl } from '@/services/commitments.service'
+import { type Commitment, PRIORITY_COLORS, STATUS_COLORS } from '@/types/commitment.types'
+import { isCommitmentOverdue, getDaysUntilDue } from '@/services/commitments.service'
+import { StatusDropdown } from './StatusDropdown'
+import { StatusTimeline } from './StatusTimeline'
+import { CommitmentForm } from './CommitmentForm'
+import { EvidenceUpload } from './EvidenceUpload'
+import { DeliverablesTimeline } from './deliverables'
 
 export interface CommitmentDetailDrawerProps {
-  commitmentId: string | null;
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
+  commitmentId: string | null
+  open: boolean
+  onOpenChange: (open: boolean) => void
 }
 
 export function CommitmentDetailDrawer({
@@ -70,47 +54,46 @@ export function CommitmentDetailDrawer({
   open,
   onOpenChange,
 }: CommitmentDetailDrawerProps) {
-  const { t, i18n } = useTranslation('commitments');
-  const navigate = useNavigate();
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('commitments')
+  const navigate = useNavigate()
+  const isRTL = i18n.language === 'ar'
 
   // State
-  const [isEditing, setIsEditing] = useState(false);
-  const [showUploadDialog, setShowUploadDialog] = useState(false);
-  const [isDownloading, setIsDownloading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false)
+  const [showUploadDialog, setShowUploadDialog] = useState(false)
+  const [isDownloading, setIsDownloading] = useState(false)
 
   // Fetch commitment details
-  const { data: commitment, isLoading, isError } = useCommitment(
-    commitmentId ?? '',
-    { enabled: !!commitmentId && open }
-  );
+  const {
+    data: commitment,
+    isLoading,
+    isError,
+  } = useCommitment(commitmentId ?? '', { enabled: !!commitmentId && open })
 
   // Fetch dossier details for displaying name
-  const { data: dossier } = useDossier(
-    commitment?.dossier_id ?? '',
-    undefined,
-    { enabled: !!commitment?.dossier_id }
-  );
+  const { data: dossier } = useDossier(commitment?.dossier_id ?? '', undefined, {
+    enabled: !!commitment?.dossier_id,
+  })
 
   // Get dossier display name based on language
   const dossierDisplayName = dossier
     ? isRTL
       ? dossier.name_ar || dossier.name_en
       : dossier.name_en
-    : commitment?.dossier_id;
+    : commitment?.dossier_id
 
   // Reset edit mode when drawer closes
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
-      setIsEditing(false);
+      setIsEditing(false)
     }
-    onOpenChange(newOpen);
-  };
+    onOpenChange(newOpen)
+  }
 
   // T059: Navigate to dossier (using type-specific routes)
   const handleNavigateToDossier = () => {
     if (commitment?.dossier_id && dossier?.type) {
-      onOpenChange(false);
+      onOpenChange(false)
       // Map dossier type to route segment (pluralize for route)
       const typeToRoute: Record<string, string> = {
         country: 'countries',
@@ -119,56 +102,54 @@ export function CommitmentDetailDrawer({
         engagement: 'engagements',
         forum: 'forums',
         working_group: 'working_groups',
-      };
-      const routeSegment = typeToRoute[dossier.type] || 'countries';
+      }
+      const routeSegment = typeToRoute[dossier.type] || 'countries'
       navigate({
         to: `/dossiers/${routeSegment}/$id`,
         params: { id: commitment.dossier_id },
-      });
+      })
     }
-  };
+  }
 
   // Handle evidence download
   const handleDownloadEvidence = async () => {
-    if (!commitment?.proof_url) return;
+    if (!commitment?.proof_url) return
 
-    setIsDownloading(true);
+    setIsDownloading(true)
     try {
-      const { signedUrl } = await getEvidenceUrl(commitment.proof_url);
-      window.open(signedUrl, '_blank');
+      const { signedUrl } = await getEvidenceUrl(commitment.proof_url)
+      window.open(signedUrl, '_blank')
     } catch (error) {
-      console.error('Failed to get evidence URL:', error);
+      console.error('Failed to get evidence URL:', error)
     } finally {
-      setIsDownloading(false);
+      setIsDownloading(false)
     }
-  };
+  }
 
   // Format dates
   const formatDate = (dateStr: string | null | undefined) => {
-    if (!dateStr) return '-';
+    if (!dateStr) return '-'
     return new Date(dateStr).toLocaleDateString(i18n.language, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
-    });
-  };
+    })
+  }
 
   const formatDateTime = (dateStr: string | null | undefined) => {
-    if (!dateStr) return '-';
+    if (!dateStr) return '-'
     return new Date(dateStr).toLocaleString(i18n.language, {
       year: 'numeric',
       month: 'short',
       day: 'numeric',
       hour: '2-digit',
       minute: '2-digit',
-    });
-  };
+    })
+  }
 
   // Calculate overdue status
-  const overdue = commitment
-    ? isCommitmentOverdue(commitment.due_date, commitment.status)
-    : false;
-  const daysUntilDue = commitment ? getDaysUntilDue(commitment.due_date) : 0;
+  const overdue = commitment ? isCommitmentOverdue(commitment.due_date, commitment.status) : false
+  const daysUntilDue = commitment ? getDaysUntilDue(commitment.due_date) : 0
 
   return (
     <>
@@ -208,9 +189,7 @@ export function CommitmentDetailDrawer({
               {isEditing ? (
                 <>
                   <SheetHeader>
-                    <SheetTitle className="text-start">
-                      {t('actions.edit')}
-                    </SheetTitle>
+                    <SheetTitle className="text-start">{t('actions.edit')}</SheetTitle>
                   </SheetHeader>
                   <div className="mt-6">
                     <CommitmentForm
@@ -229,18 +208,17 @@ export function CommitmentDetailDrawer({
                       <SheetTitle className="text-start text-lg flex-1">
                         {commitment.title || t('card.noTitle')}
                       </SheetTitle>
-                      {commitment.status !== 'cancelled' &&
-                        commitment.status !== 'completed' && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => setIsEditing(true)}
-                            className="min-h-11 shrink-0"
-                          >
-                            <Edit className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                            {t('actions.edit')}
-                          </Button>
-                        )}
+                      {commitment.status !== 'cancelled' && commitment.status !== 'completed' && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => setIsEditing(true)}
+                          className="min-h-11 shrink-0"
+                        >
+                          <Edit className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                          {t('actions.edit')}
+                        </Button>
+                      )}
                     </div>
 
                     {/* Status */}
@@ -273,9 +251,7 @@ export function CommitmentDetailDrawer({
                         </p>
                         <div
                           className={`flex items-center gap-1.5 text-sm ${
-                            overdue
-                              ? 'text-red-600 dark:text-red-400 font-medium'
-                              : ''
+                            overdue ? 'text-red-600 dark:text-red-400 font-medium' : ''
                           }`}
                         >
                           {overdue ? (
@@ -285,7 +261,8 @@ export function CommitmentDetailDrawer({
                           )}
                           <span>
                             {formatDate(commitment.due_date)}
-                            {overdue && ` (${Math.abs(daysUntilDue)} ${t('card.overdueDays', { days: '' }).trim()})`}
+                            {overdue &&
+                              ` (${Math.abs(daysUntilDue)} ${t('card.overdueDays', { days: '' }).trim()})`}
                           </span>
                         </div>
                       </div>
@@ -319,9 +296,7 @@ export function CommitmentDetailDrawer({
                         <p className="text-xs text-muted-foreground text-start">
                           {t('form.trackingMode')}
                         </p>
-                        <span className="text-sm">
-                          {t(`form.${commitment.tracking_mode}`)}
-                        </span>
+                        <span className="text-sm">{t(`form.${commitment.tracking_mode}`)}</span>
                       </div>
                     </div>
 
@@ -340,12 +315,22 @@ export function CommitmentDetailDrawer({
                             className="min-h-11 w-full justify-start"
                           >
                             <FileText className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                            <span className="truncate flex-1 text-start">
-                              {dossierDisplayName}
-                            </span>
+                            <span className="truncate flex-1 text-start">{dossierDisplayName}</span>
                             <ExternalLink className="size-4 shrink-0" />
                           </Button>
                         </div>
+                        <Separator />
+                      </>
+                    )}
+
+                    {/* Deliverables Timeline - Interactive milestone tracking */}
+                    {commitment.status !== 'cancelled' && (
+                      <>
+                        <DeliverablesTimeline
+                          commitmentId={commitment.id}
+                          commitmentDueDate={commitment.due_date}
+                          isCompact
+                        />
                         <Separator />
                       </>
                     )}
@@ -379,7 +364,9 @@ export function CommitmentDetailDrawer({
                             className="min-h-11"
                           >
                             {isDownloading ? (
-                              <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                              <Loader2
+                                className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`}
+                              />
                             ) : (
                               <Download className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                             )}
@@ -468,9 +455,7 @@ export function CommitmentDetailDrawer({
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             <DialogHeader>
-              <DialogTitle className="text-start">
-                {t('evidence.title')}
-              </DialogTitle>
+              <DialogTitle className="text-start">{t('evidence.title')}</DialogTitle>
             </DialogHeader>
             <p className="text-sm text-muted-foreground text-start mb-4">
               {t('evidence.description')}
@@ -484,5 +469,5 @@ export function CommitmentDetailDrawer({
         </Dialog>
       )}
     </>
-  );
+  )
 }

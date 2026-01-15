@@ -1,0 +1,111 @@
+{
+  "title": "Deliverables",
+  "subtitle": "Track milestones and progress",
+  "emptyState": {
+    "title": "Break This Down Into Milestones",
+    "description": "Commitments without clear milestones are harder to track. Break this commitment into concrete deliverables to ensure nothing falls through the cracks.",
+    "hint": "Use templates to quickly set up a structured timeline, or add custom milestones one by one.",
+    "cta": "Add First Milestone",
+    "selectTemplate": "Or choose a template to get started"
+  },
+  "templates": {
+    "title": "Quick Templates",
+    "standardDelivery": "Standard Delivery",
+    "standardDeliveryDesc": "Review, draft, and submission milestones",
+    "meetingFocused": "Meeting & Engagement",
+    "meetingFocusedDesc": "Stakeholder meetings and follow-up actions",
+    "documentHeavy": "Document-Heavy",
+    "documentHeavyDesc": "Extensive documentation workflow",
+    "quickTask": "Quick Task",
+    "quickTaskDesc": "Simple review and submission"
+  },
+  "types": {
+    "milestone": "Milestone",
+    "document": "Document",
+    "meeting": "Meeting",
+    "review": "Review",
+    "follow_up": "Follow-up",
+    "report": "Report",
+    "custom": "Custom"
+  },
+  "typeDescriptions": {
+    "milestone": "General progress checkpoint",
+    "document": "Document preparation or submission",
+    "meeting": "Meeting or consultation",
+    "review": "Review or approval checkpoint",
+    "follow_up": "Follow-up action item",
+    "report": "Report or deliverable submission",
+    "custom": "Custom milestone type"
+  },
+  "status": {
+    "not_started": "Not Started",
+    "in_progress": "In Progress",
+    "completed": "Completed",
+    "blocked": "Blocked",
+    "cancelled": "Cancelled"
+  },
+  "form": {
+    "addDeliverable": "Add Milestone",
+    "editDeliverable": "Edit Milestone",
+    "titleEn": "Title (English)",
+    "titleAr": "Title (Arabic)",
+    "titleEnPlaceholder": "Enter milestone title",
+    "titleArPlaceholder": "Enter milestone title in Arabic",
+    "descriptionEn": "Description (English)",
+    "descriptionAr": "Description (Arabic)",
+    "descriptionPlaceholder": "Describe the milestone",
+    "type": "Type",
+    "selectType": "Select type",
+    "dueDate": "Due Date",
+    "weight": "Weight",
+    "weightDescription": "Higher weight = more impact on overall progress (1-10)",
+    "notes": "Notes",
+    "notesPlaceholder": "Additional notes",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "confirmDelete": "Are you sure you want to delete this milestone?"
+  },
+  "actions": {
+    "edit": "Edit",
+    "delete": "Delete",
+    "markComplete": "Mark Complete",
+    "markInProgress": "Start Progress",
+    "viewDetails": "View Details",
+    "reorder": "Reorder"
+  },
+  "stats": {
+    "total": "Total",
+    "completed": "Completed",
+    "inProgress": "In Progress",
+    "notStarted": "Not Started",
+    "blocked": "Blocked",
+    "overdue": "Overdue",
+    "progress": "Progress"
+  },
+  "timeline": {
+    "title": "Timeline",
+    "empty": "No milestones yet",
+    "dueIn": "Due in {{days}} days",
+    "dueToday": "Due today",
+    "overdue": "{{days}} days overdue",
+    "completed": "Completed {{date}}"
+  },
+  "progress": {
+    "title": "Overall Progress",
+    "noDeliverables": "No milestones defined",
+    "allComplete": "All milestones complete!"
+  },
+  "messages": {
+    "createSuccess": "Milestone created successfully",
+    "updateSuccess": "Milestone updated successfully",
+    "deleteSuccess": "Milestone deleted successfully",
+    "bulkCreateSuccess": "{{count}} milestones created from template",
+    "createError": "Failed to create milestone",
+    "updateError": "Failed to update milestone",
+    "deleteError": "Failed to delete milestone",
+    "statusUpdated": "Status updated",
+    "statusUpdateError": "Failed to update status",
+    "reorderError": "Failed to reorder milestones"
+  }
+}

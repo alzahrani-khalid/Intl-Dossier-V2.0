@@ -88,7 +88,10 @@ import { Route as ProtectedTasksEscalationsRouteImport } from './routes/_protect
 import { Route as ProtectedTasksIdRouteImport } from './routes/_protected/tasks/$id'
 import { Route as ProtectedSettingsWebhooksRouteImport } from './routes/_protected/settings/webhooks'
 import { Route as ProtectedSettingsNotificationsRouteImport } from './routes/_protected/settings/notifications'
+import { Route as ProtectedSettingsIntegrationsRouteImport } from './routes/_protected/settings/integrations'
+import { Route as ProtectedSettingsEmailDigestRouteImport } from './routes/_protected/settings/email-digest'
 import { Route as ProtectedSettingsCalendarSyncRouteImport } from './routes/_protected/settings/calendar-sync'
+import { Route as ProtectedReportsScheduledRouteImport } from './routes/_protected/reports/scheduled'
 import { Route as ProtectedReportsReportIdRouteImport } from './routes/_protected/reports/$reportId'
 import { Route as ProtectedRelationshipsGraphRouteImport } from './routes/_protected/relationships/graph'
 import { Route as ProtectedPositionsPositionIdRouteImport } from './routes/_protected/positions/$positionId'
@@ -111,6 +114,8 @@ import { Route as ProtectedContactsContactIdRouteImport } from './routes/_protec
 import { Route as ProtectedCalendarNewRouteImport } from './routes/_protected/calendar/new'
 import { Route as ProtectedAfterActionsAfterActionIdRouteImport } from './routes/_protected/after-actions/$afterActionId'
 import { Route as ProtectedAdminSystemRouteImport } from './routes/_protected/admin/system'
+import { Route as ProtectedAdminPreviewLayoutsRouteImport } from './routes/_protected/admin/preview-layouts'
+import { Route as ProtectedAdminFieldPermissionsRouteImport } from './routes/_protected/admin/field-permissions'
 import { Route as ProtectedAdminDataRetentionRouteImport } from './routes/_protected/admin/data-retention'
 import { Route as ProtectedAdminApprovalsRouteImport } from './routes/_protected/admin/approvals'
 import { Route as ProtectedAdminAiUsageRouteImport } from './routes/_protected/admin/ai-usage'
@@ -530,10 +535,25 @@ const ProtectedSettingsNotificationsRoute = ProtectedSettingsNotificationsRouteI
   path: '/notifications',
   getParentRoute: () => ProtectedSettingsRoute,
 } as any)
+const ProtectedSettingsIntegrationsRoute = ProtectedSettingsIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => ProtectedSettingsRoute,
+} as any)
+const ProtectedSettingsEmailDigestRoute = ProtectedSettingsEmailDigestRouteImport.update({
+  id: '/email-digest',
+  path: '/email-digest',
+  getParentRoute: () => ProtectedSettingsRoute,
+} as any)
 const ProtectedSettingsCalendarSyncRoute = ProtectedSettingsCalendarSyncRouteImport.update({
   id: '/calendar-sync',
   path: '/calendar-sync',
   getParentRoute: () => ProtectedSettingsRoute,
+} as any)
+const ProtectedReportsScheduledRoute = ProtectedReportsScheduledRouteImport.update({
+  id: '/scheduled',
+  path: '/scheduled',
+  getParentRoute: () => ProtectedReportsRoute,
 } as any)
 const ProtectedReportsReportIdRoute = ProtectedReportsReportIdRouteImport.update({
   id: '/$reportId',
@@ -644,6 +664,16 @@ const ProtectedAfterActionsAfterActionIdRoute =
 const ProtectedAdminSystemRoute = ProtectedAdminSystemRouteImport.update({
   id: '/admin/system',
   path: '/admin/system',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAdminPreviewLayoutsRoute = ProtectedAdminPreviewLayoutsRouteImport.update({
+  id: '/admin/preview-layouts',
+  path: '/admin/preview-layouts',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedAdminFieldPermissionsRoute = ProtectedAdminFieldPermissionsRouteImport.update({
+  id: '/admin/field-permissions',
+  path: '/admin/field-permissions',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedAdminDataRetentionRoute = ProtectedAdminDataRetentionRouteImport.update({
@@ -838,6 +868,8 @@ export interface FileRoutesByFullPath {
   '/admin/ai-usage': typeof ProtectedAdminAiUsageRoute
   '/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/admin/data-retention': typeof ProtectedAdminDataRetentionRoute
+  '/admin/field-permissions': typeof ProtectedAdminFieldPermissionsRoute
+  '/admin/preview-layouts': typeof ProtectedAdminPreviewLayoutsRoute
   '/admin/system': typeof ProtectedAdminSystemRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   '/calendar/new': typeof ProtectedCalendarNewRoute
@@ -860,7 +892,10 @@ export interface FileRoutesByFullPath {
   '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
   '/relationships/graph': typeof ProtectedRelationshipsGraphRoute
   '/reports/$reportId': typeof ProtectedReportsReportIdRoute
+  '/reports/scheduled': typeof ProtectedReportsScheduledRoute
   '/settings/calendar-sync': typeof ProtectedSettingsCalendarSyncRoute
+  '/settings/email-digest': typeof ProtectedSettingsEmailDigestRoute
+  '/settings/integrations': typeof ProtectedSettingsIntegrationsRoute
   '/settings/notifications': typeof ProtectedSettingsNotificationsRoute
   '/settings/webhooks': typeof ProtectedSettingsWebhooksRoute
   '/tasks/$id': typeof ProtectedTasksIdRoute
@@ -959,6 +994,8 @@ export interface FileRoutesByTo {
   '/admin/ai-usage': typeof ProtectedAdminAiUsageRoute
   '/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/admin/data-retention': typeof ProtectedAdminDataRetentionRoute
+  '/admin/field-permissions': typeof ProtectedAdminFieldPermissionsRoute
+  '/admin/preview-layouts': typeof ProtectedAdminPreviewLayoutsRoute
   '/admin/system': typeof ProtectedAdminSystemRoute
   '/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   '/calendar/new': typeof ProtectedCalendarNewRoute
@@ -981,7 +1018,10 @@ export interface FileRoutesByTo {
   '/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
   '/relationships/graph': typeof ProtectedRelationshipsGraphRoute
   '/reports/$reportId': typeof ProtectedReportsReportIdRoute
+  '/reports/scheduled': typeof ProtectedReportsScheduledRoute
   '/settings/calendar-sync': typeof ProtectedSettingsCalendarSyncRoute
+  '/settings/email-digest': typeof ProtectedSettingsEmailDigestRoute
+  '/settings/integrations': typeof ProtectedSettingsIntegrationsRoute
   '/settings/notifications': typeof ProtectedSettingsNotificationsRoute
   '/settings/webhooks': typeof ProtectedSettingsWebhooksRoute
   '/tasks/$id': typeof ProtectedTasksIdRoute
@@ -1088,6 +1128,8 @@ export interface FileRoutesById {
   '/_protected/admin/ai-usage': typeof ProtectedAdminAiUsageRoute
   '/_protected/admin/approvals': typeof ProtectedAdminApprovalsRoute
   '/_protected/admin/data-retention': typeof ProtectedAdminDataRetentionRoute
+  '/_protected/admin/field-permissions': typeof ProtectedAdminFieldPermissionsRoute
+  '/_protected/admin/preview-layouts': typeof ProtectedAdminPreviewLayoutsRoute
   '/_protected/admin/system': typeof ProtectedAdminSystemRoute
   '/_protected/after-actions/$afterActionId': typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   '/_protected/calendar/new': typeof ProtectedCalendarNewRoute
@@ -1110,7 +1152,10 @@ export interface FileRoutesById {
   '/_protected/positions/$positionId': typeof ProtectedPositionsPositionIdRoute
   '/_protected/relationships/graph': typeof ProtectedRelationshipsGraphRoute
   '/_protected/reports/$reportId': typeof ProtectedReportsReportIdRoute
+  '/_protected/reports/scheduled': typeof ProtectedReportsScheduledRoute
   '/_protected/settings/calendar-sync': typeof ProtectedSettingsCalendarSyncRoute
+  '/_protected/settings/email-digest': typeof ProtectedSettingsEmailDigestRoute
+  '/_protected/settings/integrations': typeof ProtectedSettingsIntegrationsRoute
   '/_protected/settings/notifications': typeof ProtectedSettingsNotificationsRoute
   '/_protected/settings/webhooks': typeof ProtectedSettingsWebhooksRoute
   '/_protected/tasks/$id': typeof ProtectedTasksIdRoute
@@ -1217,6 +1262,8 @@ export interface FileRouteTypes {
     | '/admin/ai-usage'
     | '/admin/approvals'
     | '/admin/data-retention'
+    | '/admin/field-permissions'
+    | '/admin/preview-layouts'
     | '/admin/system'
     | '/after-actions/$afterActionId'
     | '/calendar/new'
@@ -1239,7 +1286,10 @@ export interface FileRouteTypes {
     | '/positions/$positionId'
     | '/relationships/graph'
     | '/reports/$reportId'
+    | '/reports/scheduled'
     | '/settings/calendar-sync'
+    | '/settings/email-digest'
+    | '/settings/integrations'
     | '/settings/notifications'
     | '/settings/webhooks'
     | '/tasks/$id'
@@ -1338,6 +1388,8 @@ export interface FileRouteTypes {
     | '/admin/ai-usage'
     | '/admin/approvals'
     | '/admin/data-retention'
+    | '/admin/field-permissions'
+    | '/admin/preview-layouts'
     | '/admin/system'
     | '/after-actions/$afterActionId'
     | '/calendar/new'
@@ -1360,7 +1412,10 @@ export interface FileRouteTypes {
     | '/positions/$positionId'
     | '/relationships/graph'
     | '/reports/$reportId'
+    | '/reports/scheduled'
     | '/settings/calendar-sync'
+    | '/settings/email-digest'
+    | '/settings/integrations'
     | '/settings/notifications'
     | '/settings/webhooks'
     | '/tasks/$id'
@@ -1466,6 +1521,8 @@ export interface FileRouteTypes {
     | '/_protected/admin/ai-usage'
     | '/_protected/admin/approvals'
     | '/_protected/admin/data-retention'
+    | '/_protected/admin/field-permissions'
+    | '/_protected/admin/preview-layouts'
     | '/_protected/admin/system'
     | '/_protected/after-actions/$afterActionId'
     | '/_protected/calendar/new'
@@ -1488,7 +1545,10 @@ export interface FileRouteTypes {
     | '/_protected/positions/$positionId'
     | '/_protected/relationships/graph'
     | '/_protected/reports/$reportId'
+    | '/_protected/reports/scheduled'
     | '/_protected/settings/calendar-sync'
+    | '/_protected/settings/email-digest'
+    | '/_protected/settings/integrations'
     | '/_protected/settings/notifications'
     | '/_protected/settings/webhooks'
     | '/_protected/tasks/$id'
@@ -2090,12 +2150,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedSettingsNotificationsRouteImport
       parentRoute: typeof ProtectedSettingsRoute
     }
+    '/_protected/settings/integrations': {
+      id: '/_protected/settings/integrations'
+      path: '/integrations'
+      fullPath: '/settings/integrations'
+      preLoaderRoute: typeof ProtectedSettingsIntegrationsRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
+    }
+    '/_protected/settings/email-digest': {
+      id: '/_protected/settings/email-digest'
+      path: '/email-digest'
+      fullPath: '/settings/email-digest'
+      preLoaderRoute: typeof ProtectedSettingsEmailDigestRouteImport
+      parentRoute: typeof ProtectedSettingsRoute
+    }
     '/_protected/settings/calendar-sync': {
       id: '/_protected/settings/calendar-sync'
       path: '/calendar-sync'
       fullPath: '/settings/calendar-sync'
       preLoaderRoute: typeof ProtectedSettingsCalendarSyncRouteImport
       parentRoute: typeof ProtectedSettingsRoute
+    }
+    '/_protected/reports/scheduled': {
+      id: '/_protected/reports/scheduled'
+      path: '/scheduled'
+      fullPath: '/reports/scheduled'
+      preLoaderRoute: typeof ProtectedReportsScheduledRouteImport
+      parentRoute: typeof ProtectedReportsRoute
     }
     '/_protected/reports/$reportId': {
       id: '/_protected/reports/$reportId'
@@ -2249,6 +2330,20 @@ declare module '@tanstack/react-router' {
       path: '/admin/system'
       fullPath: '/admin/system'
       preLoaderRoute: typeof ProtectedAdminSystemRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/preview-layouts': {
+      id: '/_protected/admin/preview-layouts'
+      path: '/admin/preview-layouts'
+      fullPath: '/admin/preview-layouts'
+      preLoaderRoute: typeof ProtectedAdminPreviewLayoutsRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/admin/field-permissions': {
+      id: '/_protected/admin/field-permissions'
+      path: '/admin/field-permissions'
+      fullPath: '/admin/field-permissions'
+      preLoaderRoute: typeof ProtectedAdminFieldPermissionsRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/admin/data-retention': {
@@ -2565,11 +2660,13 @@ const ProtectedPositionsRouteWithChildren = ProtectedPositionsRoute._addFileChil
 
 interface ProtectedReportsRouteChildren {
   ProtectedReportsReportIdRoute: typeof ProtectedReportsReportIdRoute
+  ProtectedReportsScheduledRoute: typeof ProtectedReportsScheduledRoute
   ProtectedReportsIndexRoute: typeof ProtectedReportsIndexRoute
 }
 
 const ProtectedReportsRouteChildren: ProtectedReportsRouteChildren = {
   ProtectedReportsReportIdRoute: ProtectedReportsReportIdRoute,
+  ProtectedReportsScheduledRoute: ProtectedReportsScheduledRoute,
   ProtectedReportsIndexRoute: ProtectedReportsIndexRoute,
 }
 
@@ -2579,6 +2676,8 @@ const ProtectedReportsRouteWithChildren = ProtectedReportsRoute._addFileChildren
 
 interface ProtectedSettingsRouteChildren {
   ProtectedSettingsCalendarSyncRoute: typeof ProtectedSettingsCalendarSyncRoute
+  ProtectedSettingsEmailDigestRoute: typeof ProtectedSettingsEmailDigestRoute
+  ProtectedSettingsIntegrationsRoute: typeof ProtectedSettingsIntegrationsRoute
   ProtectedSettingsNotificationsRoute: typeof ProtectedSettingsNotificationsRoute
   ProtectedSettingsWebhooksRoute: typeof ProtectedSettingsWebhooksRoute
   ProtectedSettingsCalendarCallbackRoute: typeof ProtectedSettingsCalendarCallbackRoute
@@ -2586,6 +2685,8 @@ interface ProtectedSettingsRouteChildren {
 
 const ProtectedSettingsRouteChildren: ProtectedSettingsRouteChildren = {
   ProtectedSettingsCalendarSyncRoute: ProtectedSettingsCalendarSyncRoute,
+  ProtectedSettingsEmailDigestRoute: ProtectedSettingsEmailDigestRoute,
+  ProtectedSettingsIntegrationsRoute: ProtectedSettingsIntegrationsRoute,
   ProtectedSettingsNotificationsRoute: ProtectedSettingsNotificationsRoute,
   ProtectedSettingsWebhooksRoute: ProtectedSettingsWebhooksRoute,
   ProtectedSettingsCalendarCallbackRoute: ProtectedSettingsCalendarCallbackRoute,
@@ -2673,6 +2774,8 @@ interface ProtectedRouteChildren {
   ProtectedAdminAiUsageRoute: typeof ProtectedAdminAiUsageRoute
   ProtectedAdminApprovalsRoute: typeof ProtectedAdminApprovalsRoute
   ProtectedAdminDataRetentionRoute: typeof ProtectedAdminDataRetentionRoute
+  ProtectedAdminFieldPermissionsRoute: typeof ProtectedAdminFieldPermissionsRoute
+  ProtectedAdminPreviewLayoutsRoute: typeof ProtectedAdminPreviewLayoutsRoute
   ProtectedAdminSystemRoute: typeof ProtectedAdminSystemRoute
   ProtectedAfterActionsAfterActionIdRoute: typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
   ProtectedDossiersIdRoute: typeof ProtectedDossiersIdRoute
@@ -2766,6 +2869,8 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminAiUsageRoute: ProtectedAdminAiUsageRoute,
   ProtectedAdminApprovalsRoute: ProtectedAdminApprovalsRoute,
   ProtectedAdminDataRetentionRoute: ProtectedAdminDataRetentionRoute,
+  ProtectedAdminFieldPermissionsRoute: ProtectedAdminFieldPermissionsRoute,
+  ProtectedAdminPreviewLayoutsRoute: ProtectedAdminPreviewLayoutsRoute,
   ProtectedAdminSystemRoute: ProtectedAdminSystemRoute,
   ProtectedAfterActionsAfterActionIdRoute: ProtectedAfterActionsAfterActionIdRouteWithChildren,
   ProtectedDossiersIdRoute: ProtectedDossiersIdRoute,

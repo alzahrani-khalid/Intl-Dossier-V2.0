@@ -2,7 +2,7 @@
   "category": "refactor",
   "description": "Organize the codebase into distinct bounded contexts (e.g., EngagementContext, DocumentContext, RelationshipContext) with explicit context maps defining how they interact. Each context has its own models, repositories, and services.\n\n**Rationale:** As the system grows with numerous entities and features, bounded contexts prevent model contamination, reduce coupling, enable independent scaling and deployment of contexts, and allow teams to work autonomously on different business domains.",
   "title": "Adopt Domain-Driven Design Bounded Contexts",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768328163938-jsemhvzgf",
   "descriptionHistory": [
     {

@@ -2,7 +2,7 @@
   "category": "enhancement",
   "description": "When users encounter permission-denied errors, explain specifically what permission is needed, why they don't have it, and provide a button to request access from the appropriate person.\n\n**Rationale:** Generic 'Access Denied' messages leave users stuck without recourse. They don't know who to contact or what to request. This creates help desk tickets and workflow bottlenecks for time-sensitive tasks.",
   "title": "Permission Denial Explanations with Request Access",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768382898128-n539yc1ft",
   "descriptionHistory": [
     {

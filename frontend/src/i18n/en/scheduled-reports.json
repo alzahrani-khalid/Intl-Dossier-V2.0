@@ -1,0 +1,165 @@
+{
+  "title": "Scheduled Reports",
+  "description": "Schedule automatic report generation and distribution",
+  "createNew": "Create Schedule",
+  "editSchedule": "Edit Schedule",
+  "noSchedules": "No scheduled reports yet",
+  "noSchedulesDescription": "Create a schedule to automatically generate and distribute reports",
+
+  "form": {
+    "name": "Schedule Name",
+    "namePlaceholder": "e.g., Weekly Status Report",
+    "nameAr": "Arabic Name",
+    "nameArPlaceholder": "مثال: تقرير الحالة الأسبوعي",
+    "description": "Description",
+    "descriptionPlaceholder": "Optional description for this schedule",
+    "selectReport": "Select Report",
+    "selectReportPlaceholder": "Choose a report to schedule",
+    "frequency": "Frequency",
+    "time": "Time",
+    "timezone": "Timezone",
+    "dayOfWeek": "Day of Week",
+    "dayOfMonth": "Day of Month",
+    "format": "Export Format",
+    "language": "Language",
+    "isActive": "Active",
+    "isShared": "Shared with Team"
+  },
+
+  "frequency": {
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "monthly": "Monthly"
+  },
+
+  "days": {
+    "0": "Sunday",
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday"
+  },
+
+  "format": {
+    "pdf": "PDF",
+    "excel": "Excel",
+    "csv": "CSV",
+    "json": "JSON"
+  },
+
+  "language": {
+    "en": "English",
+    "ar": "Arabic",
+    "both": "Both"
+  },
+
+  "recipients": {
+    "title": "Recipients",
+    "description": "Add users or external email addresses to receive this report",
+    "addRecipient": "Add Recipient",
+    "addUser": "Add User",
+    "addExternal": "Add External Email",
+    "email": "Email Address",
+    "emailPlaceholder": "email@example.com",
+    "name": "Recipient Name",
+    "namePlaceholder": "John Doe",
+    "deliveryChannels": "Delivery Channels",
+    "preferredFormat": "Preferred Format",
+    "preferredLanguage": "Preferred Language",
+    "noRecipients": "No recipients added",
+    "noRecipientsDescription": "Add at least one recipient to receive this report"
+  },
+
+  "channels": {
+    "email": "Email",
+    "in_app": "In-App Notification",
+    "slack": "Slack",
+    "teams": "Microsoft Teams"
+  },
+
+  "conditions": {
+    "title": "Delivery Conditions",
+    "description": "Set conditions to control when the report is delivered",
+    "addCondition": "Add Condition",
+    "fieldPath": "Field Path",
+    "fieldPathPlaceholder": "e.g., metrics.total_count",
+    "operator": "Operator",
+    "value": "Value",
+    "valuePlaceholder": "Comparison value",
+    "isRequired": "Required",
+    "failMessage": "Failure Message",
+    "noConditions": "No conditions set",
+    "noConditionsDescription": "Report will always be delivered"
+  },
+
+  "operators": {
+    "equals": "Equals",
+    "not_equals": "Not Equals",
+    "greater_than": "Greater Than",
+    "less_than": "Less Than",
+    "contains": "Contains",
+    "not_contains": "Does Not Contain",
+    "is_empty": "Is Empty",
+    "is_not_empty": "Is Not Empty"
+  },
+
+  "status": {
+    "active": "Active",
+    "paused": "Paused",
+    "completed": "Completed",
+    "failed": "Failed",
+    "pending": "Pending"
+  },
+
+  "schedule": {
+    "nextRun": "Next Run",
+    "lastRun": "Last Run",
+    "consecutiveFailures": "Consecutive Failures",
+    "pausedAt": "Paused At",
+    "pauseReason": "Pause Reason"
+  },
+
+  "actions": {
+    "save": "Save Schedule",
+    "cancel": "Cancel",
+    "delete": "Delete Schedule",
+    "duplicate": "Duplicate",
+    "pause": "Pause",
+    "resume": "Resume",
+    "runNow": "Run Now",
+    "viewHistory": "View History"
+  },
+
+  "history": {
+    "title": "Execution History",
+    "executedAt": "Executed At",
+    "status": "Status",
+    "recipients": "Recipients",
+    "successful": "Successful",
+    "failed": "Failed",
+    "skipped": "Skipped",
+    "duration": "Duration",
+    "noHistory": "No execution history"
+  },
+
+  "messages": {
+    "createSuccess": "Schedule created successfully",
+    "updateSuccess": "Schedule updated successfully",
+    "deleteSuccess": "Schedule deleted successfully",
+    "deleteConfirm": "Are you sure you want to delete this schedule?",
+    "runNowSuccess": "Report generation triggered",
+    "pauseSuccess": "Schedule paused",
+    "resumeSuccess": "Schedule resumed",
+    "error": "An error occurred"
+  },
+
+  "validation": {
+    "nameRequired": "Schedule name is required",
+    "reportRequired": "Please select a report",
+    "timeRequired": "Time is required",
+    "recipientRequired": "At least one recipient is required",
+    "invalidEmail": "Please enter a valid email address"
+  }
+}

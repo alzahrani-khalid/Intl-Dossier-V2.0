@@ -5,9 +5,9 @@ relevantTo: [architecture]
 importance: 0.7
 relatedFiles: []
 usageStats:
-  loaded: 2
-  referenced: 2
-  successfulFeatures: 2
+  loaded: 4
+  referenced: 4
+  successfulFeatures: 4
 ---
 
 # architecture
@@ -715,3 +715,171 @@ usageStats:
 - **Rejected:** Sticky/floating bar - adds implementation complexity and can occlude results on small screens; collapsible bar hidden by default - reduces discoverability of active filters
 - **Trade-offs:** Easier: simple DOM positioning, better mobile experience. Harder: takes permanent vertical space; may require scrolling on small screens with many active filters
 - **Breaking if changed:** If positioned as sticky/floating without proper z-index management, overlaps results; if removed from DOM, users lose visibility of why results changed
+
+### Placed digest configuration in dedicated /settings/email-digest route instead of in general settings page with tab structure (2026-01-15)
+
+- **Context:** Email digest feature is complex enough to warrant its own page but needs to be discoverable from settings
+- **Why:** Avoids cluttering main settings page; allows feature to grow (scheduled tests, digest preview, analytics) without architectural constraints
+- **Rejected:** Tab-based approach in main settings would be simpler initially but limits future expansion; nested route structure allows independent maintenance
+- **Trade-offs:** Additional navigation required; clearer separation of concerns; easier to lazy-load digest component; harder to provide unified settings UX if preferences scattered across routes
+- **Breaking if changed:** If consolidating back to main settings page, need to restructure route hierarchy and adjust settings navigation UI
+
+### File size validation done client-side with visual indicators (25MB per file, 100MB total, 10 files max) displayed in empty state component (2026-01-15)
+
+- **Context:** Need to communicate upload constraints to users before they attempt drag-drop operation
+- **Why:** Client-side limits shown upfront prevent user frustration of selecting files only to get rejected. Framer Motion animations and color-coding make constraints visible without blocking content. Server will still validate, but client provides fast feedback.
+- **Rejected:** Silent validation on drop (show error after attempt) would require users to discover constraints through failure. Server-only validation shifts validation load and creates poor UX.
+- **Trade-offs:** Client-side limits are easier to see but can become stale if server limits change. Requires duplication of validation logic. Easier UX vs maintainability burden.
+- **Breaking if changed:** Removing displayed limits means users discover constraints only through upload failure. Changing limit values requires updates in two places (client display + server validation) or users see incorrect information.
+
+### DocumentEmptyState is a pure presentation component (receives entity type, returns selected file + template callback) with no internal state management (2026-01-15)
+
+- **Context:** Empty state is ephemeral - disappears once documents exist. Component needs to coordinate with parent EntityDocumentsTab
+- **Why:** Stateless design makes component predictable and testable. Parent (EntityDocumentsTab) owns documents list and manages showing/hiding empty state. Single source of truth for 'does entity have documents' prevents sync bugs.
+- **Rejected:** Component managing its own 'documents' state would duplicate document list logic. Component knowing about upload progress would tightly couple to uploader implementation.
+- **Trade-offs:** Parent component becomes slightly more complex (managing visibility logic). Component more flexible and reusable but requires careful prop threading.
+- **Breaking if changed:** If empty state manages upload state internally, parent can't coordinate with uploader or refresh documents after upload. Adding pagination or filtering becomes impossible without state restructuring.
+
+#### [Pattern] Stored complete field configuration (label_en, label_ar, source_config, display_config, visibility_rules) in preview_layout_fields and returned as nested JSONB array instead of separate queries (2026-01-15)
+
+- **Problem solved:** Admin UI and entity preview card both need full field configuration details to render correctly
+- **Why this works:** Aggregating fields into single JSONB array via jsonb_agg avoids N+1 queries and returns exactly the shape needed by frontend (nested structure). Reduces round-trips and simplifies client-side assembly
+- **Trade-offs:** Easier: Single query, optimized shape, no client-side joining. Harder: JSONB aggregation syntax is complex; changes to field schema require SQL updates
+
+#### [Pattern] Check if person has existing relationships before showing AI suggestions feature (2026-01-15)
+
+- **Problem solved:** Empty state for stakeholder networks - showing suggestions when person has zero relationships
+- **Why this works:** AI suggestions are meant to bootstrap networks for isolated people. If relationships exist, showing suggestions clutters UI and wastes compute. Serves as feature gate
+- **Trade-offs:** Requires additional DB query (`get_person_relationship_count`) but prevents unnecessary feature display. Cleaner UX for populated networks
+
+### Implement suggestion logic in Supabase RPC functions rather than Edge Functions or frontend JavaScript (2026-01-15)
+
+- **Context:** Generating multiple suggestion types from complex SQL queries across person, event, organization tables
+- **Why:** RPC functions execute server-side with direct database access - no network latency. Complex joins (event attendees, org hierarchy) execute efficiently. Reduces payload sent to frontend
+- **Rejected:** Edge Functions add extra hop and require duplicating query logic. Frontend JavaScript would load all related data then filter - massive payload and performance issue
+- **Trade-offs:** RPC is less flexible than JavaScript but database-level performance is critical for this feature. Easier to optimize queries later
+- **Breaking if changed:** Moving logic to frontend would require sending person's entire network graph to client, making even small networks slow
+
+### Implemented role-based template recommendation via `suggestedFor` array on templates, filtering with `.filter(t => t.suggestedFor?.includes(userRole))` rather than pre-computing per-role template sets. (2026-01-15)
+
+- **Context:** CalendarEmptyWizard needed to show different recommended templates based on user role (admin/manager/analyst/officer/viewer) while maintaining single source of truth
+- **Why:** Adding new roles only requires updating one template's `suggestedFor` array, not creating new data structures per role. Scales better than role-keyed maps. Allows templates to be relevant to multiple roles.
+- **Rejected:** Role-indexed template map: `{admin: [Meeting, Deadline], manager: [Meeting, Deadline, Training]}` - brittle when roles change, requires updating every template definition
+- **Trade-offs:** Filter at render time (tiny perf cost) vs pre-computed role maps. Query-based approach is more maintainable and flexible for cross-cutting role changes.
+- **Breaking if changed:** If `suggestedFor` array becomes required on all templates, existing templates without it would show to no roles. Must be defensive with `.filter(t => t.suggestedFor?.includes(...))`
+
+### Template defaults (duration, reminder, eventType) stored directly on template object rather than in separate config or computed from template ID. Example: `{id: 'deadline', eventType: 'deadline', duration: 1440, reminder: true}` (2026-01-15)
+
+- **Context:** CalendarEntryForm needs pre-filled values when opening from template. Could source defaults from template ID lookup or embed in template object.
+- **Why:** Embedding defaults on template object keeps all template metadata colocated. No separate lookup table needed. Form can destructure template properties directly: `const {eventType, duration, reminder} = selectedTemplate`
+- **Rejected:** Separate defaultsMap keyed by templateId - would split template definition across two files, harder to maintain, would require JOIN logic when rendering template
+- **Trade-offs:** More data duplication in template definitions vs single source. Template object is larger but self-contained - better for reuse in different contexts.
+- **Breaking if changed:** If template shape changes (remove `eventType`), form pre-fill breaks silently. Need runtime validation or TypeScript to catch at compile time.
+
+#### [Gotcha] CalendarEmptyWizard must return `null` (not empty div) when not showing to prevent layout shift. Returning `<div/>` when hidden causes parent to reserve space for invisible wizard, breaking calendar grid centering. (2026-01-15)
+
+- **Situation:** Initial integration showed wizard displaced calendar grid even when `showWizard=false` because component returned wrapper div
+- **Root cause:** Calendar uses flexbox centering for empty state. Any child component, even invisible, affects flex calculations. Returning `null` removes component from DOM entirely.
+- **How to avoid:** Returning null means re-mount on visibility toggle (animation state reset) vs keeping mounted but hidden. Chose remount for cleaner layout.
+
+#### [Gotcha] UI state divergence: Members were successfully added to database but UI showed 'No Members Yet' until page refresh (2026-01-15)
+
+- **Situation:** After completing the role assignment wizard and clicking 'Add 2 Members', the button submitted but the member list didn't update
+- **Root cause:** The root cause appears to be missing cache invalidation or refetch trigger after the RPC call completed. The frontend likely fetched members once on mount but didn't re-fetch after the bulk add operation
+- **How to avoid:** Page refresh is a workaround but poor UX. Proper fix would use React Query/SWR invalidation or real-time subscriptions. The manual refresh verified backend worked correctly
+
+#### [Pattern] Empty state with smart suggestions: Rather than showing blank 'Add Members' form, system auto-generates suggestions from related data (lead org affiliates), decreasing user friction (2026-01-15)
+
+- **Problem solved:** Working group creation often leaves members empty; users don't know who to add
+- **Why this works:** Reduces activation friction by providing contextual suggestions based on existing relationships (lead organization). Users can accept suggestions with one click instead of searching for members. Transforms empty state from blocker to opportunity
+- **Trade-offs:** Requires relationship traversal in database (slightly more complex schema), but dramatically improves user experience. Suggestions filter themselves out as users add members
+
+### Created separate template types (templates, templateSets) with helper functions (generateDeliverablesFromTemplateSet) rather than storing templates in database (2026-01-15)
+
+- **Context:** Supporting quick-add templates for common deliverable patterns without managing them in database
+- **Why:** Templates are application logic defaults that should ship with the app version, not be runtime configuration. Hardcoding in TypeScript allows type safety, enables bundling optimization, and templates can be versioned with code. Database storage would require additional migrations and query overhead for every new deliverable creation
+- **Rejected:** Storing templates in database as default records. Would add table complexity and require API endpoint for retrieving templates separately from user data
+- **Trade-offs:** Easier: No database overhead, type-safe, can be imported anywhere. Harder: Changing templates requires code deployment; can't customize per-user or tenant
+- **Breaking if changed:** Removing templates would break the quick-add UI feature and require users to manually fill all deliverable fields
+
+#### [Pattern] Used TanStack Query hooks (useQuery, useMutation) with optimistic updates and cache invalidation for commitment deliverables state management (2026-01-15)
+
+- **Problem solved:** Managing fetching, caching, and syncing of deliverable data across components without Redux or context API
+- **Why this works:** TanStack Query handles stale data, automatic refetching, and cache invalidation automatically. Optimistic updates provide immediate UI feedback. This pattern avoids prop drilling and duplicate state management. Built-in handling of loading/error states reduces boilerplate
+- **Trade-offs:** Easier: Less boilerplate, built-in sync mechanisms. Harder: Requires learning TanStack Query API and cache key strategy
+
+### Implemented RLS (Row Level Security) policies at database level for commitment_deliverables table rather than relying on application-level authorization checks (2026-01-15)
+
+- **Context:** Securing deliverable data so users can only access deliverables for commitments they have access to
+- **Why:** Database-level RLS is the security boundary - if application layer is bypassed (direct API calls, database access), RLS still protects. It's enforced regardless of code path. Application-level checks can be forgotten or circumvented; database policies cannot. This follows principle of defense in depth
+- **Rejected:** Only checking authorization in API middleware or React components. Application bugs could leak data; direct database queries would bypass checks
+- **Trade-offs:** Easier: Guaranteed security. Harder: RLS policies are complex to test and debug; requires understanding of Supabase RLS syntax
+- **Breaking if changed:** Removing RLS would immediately expose users to seeing each other's private deliverables; not fixable by application code alone
+
+#### [Pattern] Implemented multi-platform bot integration with platform-specific Edge Functions (slack-bot, teams-bot) plus shared dispatcher service (2026-01-15)
+
+- **Problem solved:** Need to support both Slack and Teams with different protocols/message formats while maintaining consistent notification delivery
+- **Why this works:** Platform-specific handlers isolate protocol complexity (Slack events, Teams Adaptive Cards) from business logic, while dispatcher centralizes notification queuing and delivery retry logic
+- **Trade-offs:** More files/functions but cleaner separation of concerns; adds coordination complexity between services but easier to scale/deprecate platforms
+
+### Implemented i18n translations at both backend (bot messages) and frontend (settings page) levels (2026-01-15)
+
+- **Context:** Bots send messages to Slack/Teams and settings UI needs localization; single source of translation vs. split responsibility
+- **Why:** Backend translations ensure bot messages honor user workspace language preferences (e.g., Arabic Slack workspace gets Arabic briefings); frontend translations handle UI only. This keeps message generation close to content logic
+- **Rejected:** Centralizing all translations in one service would require cross-service calls and language context threading through Edge Functions
+- **Trade-offs:** Split translations require maintaining parity between files and managing language fallbacks in two places, but provides better isolation and independent scaling
+- **Breaking if changed:** Removing frontend translations breaks UI; removing backend translations breaks bot message localization; inconsistency between them causes user confusion
+
+#### [Pattern] Helper SQL functions (can_view_field, can_edit_field) encapsulate permission logic at database layer (2026-01-15)
+
+- **Problem solved:** Permission checking needs to work consistently across API endpoints, RLS policies, and audit triggers without duplicating logic
+- **Why this works:** Centralizing permission logic in SQL functions ensures single source of truth. Prevents authorization bugs from inconsistent implementations across the stack. RLS policies and Edge Functions both call same function.
+- **Trade-offs:** Requires strong SQL knowledge. Makes debugging harder (logic is in database). But ensures security can't be bypassed by calling API differently.
+
+#### [Pattern] Query keys structured hierarchically (agenda, agendas, agenda_items, etc.) enabling selective cache invalidation and prefetching (2026-01-15)
+
+- **Problem solved:** Multiple UI components query different subsets of agenda data (list, details, items, participants, documents)
+- **Why this works:** TanStack Query cache invalidation matches semantic boundaries - updating one item invalidates only item queries not whole agenda; enables prefetch on navigation
+- **Trade-offs:** More keys to maintain but finer-grained cache control; easier to debug which queries are stale
+
+### Unified view pattern for multi-source timeline aggregation (2026-01-15)
+
+- **Context:** Stakeholder interactions come from multiple tables (direct interactions, annotations, external communications) requiring unified timeline display
+- **Why:** A database view (`stakeholder_timeline_unified`) aggregates heterogeneous data sources into a single queryable interface, avoiding N+1 queries and complex application-level joins. Pagination and filtering happen at database level where indexes work efficiently.
+- **Rejected:** Fetching from multiple tables separately and merging in application code would require: (1) multiple queries per request, (2) manual cursor tracking across datasets, (3) client-side sorting/filtering losing database index benefits
+- **Trade-offs:** View is read-only (updates require triggers or stored procedures). Adds database schema complexity but eliminates runtime query complexity and improves query performance.
+- **Breaking if changed:** Removing the view requires rewriting the Edge Function to handle multi-table joins, losing pagination efficiency and cursor-based navigation across heterogeneous data
+
+#### [Pattern] Separation of timeline queries (list/stats) as distinct Edge Function endpoints (2026-01-15)
+
+- **Problem solved:** Both timeline event listing and engagement statistics needed; different query patterns and caching strategies
+- **Why this works:** Separate endpoints allow: (1) independent caching strategies (stats less frequently updated), (2) different pagination requirements (list needs pagination, stats doesn't), (3) avoiding inefficient joined queries that compute both simultaneously
+- **Trade-offs:** Two API calls instead of one, slight latency increase. Stats endpoint is simpler, less likely to timeout on large datasets.
+
+### Event type enum with direction/sentiment attributes instead of separate filter fields (2026-01-15)
+
+- **Context:** Timeline events can be filtered by: type (call/email/note), direction (inbound/outbound), sentiment (positive/negative/neutral)
+- **Why:** Modeling event_type as enum with associated direction/sentiment attributes in views allows: (1) enforcing valid combinations (inbound email is valid, outbound meeting is questionable), (2) single column index supporting all filter combinations, (3) database-level validation of event semantics
+- **Rejected:** Separate type/direction/sentiment columns would allow invalid combinations and require multiple indexes or inefficient multi-column indexes
+- **Trade-offs:** Fixed set of event types (requires migration to add types). Filtering UI must respect valid combinations. More semantic correctness but less flexible.
+- **Breaking if changed:** Adding new event types requires schema migration. Removing event types breaks filters referencing old types. Queries assuming all combinations are valid will have logic errors.
+
+#### [Pattern] Separated impact assessment as async job via dependency_rules table rather than real-time computation (2026-01-15)
+
+- **Problem solved:** Impact changes can cascade through many entities, blocking requests would timeout
+- **Why this works:** Allows configurable impact rules and thresholds without code changes. Impact assessments are persisted for audit trail. Rules can be toggled on/off or modified without redeployment.
+- **Trade-offs:** Easier: dynamic rule management, audit trail, non-blocking. Harder: eventual consistency, requires async job scheduler, stale assessment risk
+
+### Implemented dependency rules as configurable records in dependency_rules table rather than hardcoded heuristics (2026-01-15)
+
+- **Context:** Impact propagation logic varies by entity type and relationship type; needs to change without code deployment
+- **Why:** Rules engine allows non-technical users to adjust impact thresholds/logic. Avoids redeployment cycles. Enables A/B testing different impact models.
+- **Rejected:** Hardcoded impact logic in Edge Function, AI-driven heuristics
+- **Trade-offs:** Easier: flexibility, no redeploy cycles, auditable changes. Harder: rules need UI to manage, complex rule evaluation, rule conflicts possible
+- **Breaking if changed:** Removing rules table would require rebuilding impact logic as code, lose changeability without deployment, impact assessment becomes brittle
+
+#### [Pattern] Multi-channel distribution (email, in-app, Slack, Teams) abstracted through conditional evaluation engine (2026-01-15)
+
+- **Problem solved:** Reports need delivery to multiple destinations with different payload formats and conditional logic
+- **Why this works:** Decouples channel logic from report generation; conditions are evaluated once, applied to all channels; enables easy channel addition
+- **Trade-offs:** Centralized condition engine is simpler but requires each channel adapter to handle its own payload transformation

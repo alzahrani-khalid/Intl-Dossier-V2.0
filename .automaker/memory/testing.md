@@ -185,3 +185,83 @@ usageStats:
 - **Problem solved:** Testing dynamic filter UI with real interaction flows (click card → filters appear → click remove → filters disappear)
 - **Why this works:** Integration testing with actual user flows catches interaction bugs that unit tests miss. Sequential flow (apply filter → verify visible → remove → verify removed) validates complete lifecycle
 - **Trade-offs:** Easier: catches real bugs in user workflows. Harder: tests are slower; harder to debug individual failures; requires proper waitForLoadState and timeout management
+
+#### [Gotcha] shadcn Switch component doesn't expose standard [role="switch"] or checkbox attributes reliably - uses button[data-state] instead (2026-01-15)
+
+- **Situation:** E2E test for content toggles initially failed expecting >=2 toggles but found only 1 when querying [role="switch"] and input[type="checkbox"]
+- **Root cause:** shadcn UI components abstract the underlying HTML semantics; Switch is built on Radix primitives that use custom data attributes for state
+- **How to avoid:** More resilient selectors with button[data-state] but requires knowledge of component internals; less maintainable if shadcn changes implementation
+
+#### [Gotcha] Playwright setInputFiles() simulates file selection but doesn't trigger native drag-drop events; tests check 'uploader triggered' not 'drop handled' (2026-01-15)
+
+- **Situation:** Testing drag-drop feature but actual drag-drop events (dragover, drop) require different simulation approach than file input
+- **Root cause:** setInputFiles() is simpler and more reliable for file selection testing, but doesn't test actual drag-drop behavior (enter/over/leave animations, drop zone activation). Tests verify the UI responds to file change, not the drag-drop mechanics.
+- **How to avoid:** Easier test implementation vs incomplete coverage of drag-drop interaction. Don't actually test the drag event flow users experience.
+
+#### [Gotcha] E2E tests check for page loads and absence of critical JavaScript errors rather than direct API testing (2026-01-15)
+
+- **Situation:** Tests attempt to verify AI suggestions endpoint functionality
+- **Root cause:** Supabase RPC requires auth tokens that Playwright can't easily pass through API directly. Component loads = API works in practice. Console error filtering prevents false failures from unrelated errors (favicon, ResizeObserver)
+- **How to avoid:** E2E tests are less granular than unit tests but verify real end-to-end flow. Trade precision for confidence in actual implementation
+
+#### [Gotcha] i18n translations not loaded in Playwright test environment causes selector failures. Initial test failed because it expected translated text ('Create Event') but got i18n keys ('calendar.form.create_event'). Test environment doesn't hydrate translations the same way production does. (2026-01-15)
+
+- **Situation:** 4th Playwright test failed - form opened successfully with template applied, but assertion failed because text selectors couldn't find localized strings
+- **Root cause:** Test runs against dev server with potentially different i18n initialization path than browser. Had to pivot from text-based selectors to structural element detection (input fields, comboboxes).
+- **How to avoid:** Text selectors are human-readable for test maintenance, but structural selectors are more resilient to i18n loading timing. Chose resilience over readability.
+
+#### [Pattern] End-to-end verification flow: Database check → UI navigation → Feature interaction → Database verification → Page refresh verification, rather than isolated unit tests (2026-01-15)
+
+- **Problem solved:** Feature involves RPC functions, frontend UI, real-time state changes, and database mutations across multiple systems
+- **Why this works:** Comprehensive e2e testing caught the UI refresh issue that unit tests wouldn't reveal. Database verification confirmed backend worked despite UI showing stale state. Multiple verification layers build confidence in cross-system integration
+- **Trade-offs:** E2E tests are slower and more brittle, but necessary for features spanning multiple systems. Database checks add extra validation step but prevent false negatives
+
+#### [Gotcha] Playwright strict mode failed when clicking 'Key Speech Points' because both the title and description contained that text, causing element selector ambiguity (2026-01-15)
+
+- **Situation:** Initial test used simple text locator 'text=Key Speech Points' which matched 2 elements in the DOM
+- **Root cause:** Playwright strict mode enforces unambiguous selectors to catch flaky tests. The data itself was duplicated (commitment title appeared in both heading and card description). Root cause: DOM contained redundant text without semantic differentiation
+- **How to avoid:** Fixed by using getByRole('heading') to target semantic HTML structure. Easier: Forces better HTML semantics and more stable tests. Harder: Requires understanding accessibility roles
+
+#### [Pattern] Used page.waitForURL(/id=/i) and URL parameter extraction for verifying deep linking, extracting commitment ID from query string before navigating away and back (2026-01-15)
+
+- **Problem solved:** Needed to test that deep linking works: clicking item updates URL, navigating away, then returning via URL opens correct drawer
+- **Why this works:** This pattern verifies bidirectional routing: UI → URL → UI state restoration. Tests URL format, parameter encoding, and page.goto() state reconstruction. The separate navigate-away step ensures the drawer opening is driven by URL routing logic, not stale state
+- **Trade-offs:** Easier: Tests full routing cycle. Harder: More complex test setup with multiple navigation steps and timeout management
+
+#### [Gotcha] Playwright baseURL configuration mismatch: dev server runs on 5173 but playwright.config.ts specifies 5175 (2026-01-15)
+
+- **Situation:** E2E tests failed because hardcoded URLs didn't match actual dev server port, requiring runtime discovery
+- **Root cause:** Playwright config port and actual dev server port diverged, creating brittleness in test environment setup
+- **How to avoid:** Using baseURL parameter makes tests portable across dev/staging/prod but requires proper config inheritance in test setup
+
+### Used MCP Playwright browser tools instead of npx playwright CLI for verification (2026-01-15)
+
+- **Context:** Initial Playwright test execution failed due to path issues and configuration conflicts
+- **Why:** MCP tools provide direct browser interaction already in runtime context with existing authenticated session, avoiding test harness complexity
+- **Rejected:** Traditional playwright test runner would require separate test config, server startup orchestration, and re-authentication
+- **Trade-offs:** Browser tools give immediate feedback but lack the structured test reporting and CI/CD integration that CLI provides
+- **Breaking if changed:** Switching back to CLI tests requires rebuilding test fixtures, authentication setup, and URL configuration management
+
+#### [Gotcha] Playwright tab panel selectors must use data-state attribute, not generic tabpanel role (2026-01-15)
+
+- **Situation:** Initial tests used generic [role='tabpanel'] selector which matched all tab panels including inactive ones, causing ambiguous selector errors
+- **Root cause:** When multiple tab panels exist in DOM (even if hidden), generic role selectors match all of them. The data-state='active' attribute distinguishes the currently visible panel from hidden ones. Radix Tabs specifically sets this attribute.
+- **How to avoid:** Requires knowledge of Radix implementation details (data-state attribute). More specific selector is more resilient.
+
+#### [Gotcha] Frontend build succeeded but changes not reflected in deployed server without git commit (2026-01-15)
+
+- **Situation:** Local TypeScript compilation passed, but changes weren't pushed because they weren't committed to git
+- **Root cause:** Deployment process (`git pull && docker build`) requires committed changes. Build success only validates syntax, not that changes reach production. This is a deployment pipeline issue, not a code issue.
+- **How to avoid:** Stricter workflow (must commit before deploy) prevents accidental deployment of incomplete work. Adds friction to rapid iteration. Forces explicit git history.
+
+#### [Gotcha] Test file moved to e2e folder but verification attempted via Playwright MCP which was unavailable (2026-01-15)
+
+- **Situation:** Integration test for feature deployment needed to verify Edge Function, database, frontend work together
+- **Root cause:** Moving to e2e folder follows testing best practices (unit/integration/e2e separation). Playwright MCP unavailability exposed test infrastructure coupling.
+- **How to avoid:** Easier: proper test categorization. Harder: requires working browser infrastructure, longer test execution
+
+#### [Gotcha] Playwright strict mode fails when selectors match multiple elements, even if only one is visible/interactive (2026-01-15)
+
+- **Situation:** Tests using getByRole('button', {name}) or getByLabel() matched both primary buttons and empty-state fallback buttons
+- **Root cause:** Playwright strict mode prevents ambiguous selectors to ensure tests are resilient; it doesn't just pick the first visible match
+- **How to avoid:** Added specificity via .first() or role filtering (h1 vs heading); tests are now more explicit but slightly more brittle to DOM changes

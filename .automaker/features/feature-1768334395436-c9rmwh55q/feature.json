@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Create sandbox scenarios to model potential outcomes of engagement strategies or policy changes. Compare different approaches side-by-side, simulate relationship impacts, and forecast resource needs without affecting production data.\n\n**Rationale:** Strategic planning requires testing hypotheses before committing resources. This tool helps users explore 'what if we engage this stakeholder' or 'what if this policy passes' scenarios, enabling data-driven decision-making in complex environments.",
   "title": "Scenario Planning and What-If Analysis",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768334395436-c9rmwh55q",
   "descriptionHistory": [
     {

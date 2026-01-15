@@ -1,0 +1,166 @@
+{
+  "title": "الجدول الزمني للتفاعلات",
+  "subtitle": "جميع التفاعلات مع هذا الطرف المعني بترتيب زمني",
+  "add_interaction": "إضافة تفاعل",
+  "search_placeholder": "البحث في التفاعلات...",
+  "filters": "الفلاتر",
+  "loading_more": "جاري تحميل المزيد...",
+  "load_more": "تحميل المزيد",
+  "end_of_timeline": "نهاية الجدول الزمني",
+  "minutes": "د",
+  "impact": "التأثير",
+  "participants": "المشاركون",
+  "more": "المزيد",
+  "join_virtual": "الانضمام للاجتماع",
+  "outcome": "النتيجة",
+  "show_less": "عرض أقل",
+  "show_more": "عرض المزيد",
+  "annotate": "إضافة ملاحظة",
+  "view_details": "عرض التفاصيل",
+
+  "types": {
+    "email": "بريد إلكتروني",
+    "meeting": "اجتماع",
+    "phone_call": "مكالمة هاتفية",
+    "document_exchange": "تبادل مستندات",
+    "comment": "تعليق",
+    "message": "رسالة",
+    "visit": "زيارة",
+    "conference": "مؤتمر",
+    "workshop": "ورشة عمل",
+    "negotiation": "مفاوضات",
+    "other": "أخرى",
+    "calendar": "حدث تقويم",
+    "interaction": "تفاعل",
+    "document": "مستند"
+  },
+
+  "sentiment": {
+    "positive": "إيجابي",
+    "neutral": "محايد",
+    "negative": "سلبي",
+    "mixed": "مختلط"
+  },
+
+  "direction": {
+    "inbound": "وارد",
+    "outbound": "صادر",
+    "bidirectional": "ثنائي الاتجاه"
+  },
+
+  "priority": {
+    "low": "منخفضة",
+    "medium": "متوسطة",
+    "high": "عالية",
+    "urgent": "عاجلة"
+  },
+
+  "stats": {
+    "title": "نظرة عامة على التفاعل",
+    "description": "ملخص جميع التفاعلات مع الطرف المعني",
+    "total_interactions": "إجمالي التفاعلات",
+    "key_moments": "اللحظات الرئيسية",
+    "most_common": "الأكثر شيوعاً",
+    "last_interaction": "آخر تفاعل"
+  },
+
+  "filters": {
+    "event_types": "أنواع التفاعلات",
+    "sentiment": "المشاعر",
+    "all_sentiments": "جميع المشاعر",
+    "direction": "الاتجاه",
+    "all_directions": "جميع الاتجاهات",
+    "date_range": "النطاق الزمني",
+    "last_7_days": "آخر 7 أيام",
+    "last_30_days": "آخر 30 يوم",
+    "last_90_days": "آخر 90 يوم",
+    "last_year": "السنة الماضية",
+    "all_time": "كل الوقت",
+    "custom_range": "نطاق مخصص",
+    "from_date": "من",
+    "to_date": "إلى",
+    "apply_custom_range": "تطبيق النطاق",
+    "reset_filters": "إعادة تعيين الفلاتر"
+  },
+
+  "empty": {
+    "title": "لا توجد تفاعلات",
+    "description": "لم يتم تسجيل أي تفاعلات لهذا الطرف المعني بعد. أضف أول تفاعل لبدء بناء الجدول الزمني."
+  },
+
+  "error": {
+    "title": "خطأ",
+    "description": "فشل تحميل التفاعلات. يرجى المحاولة مرة أخرى."
+  },
+
+  "dialog": {
+    "create_title": "تسجيل تفاعل جديد",
+    "create_description": "تسجيل تفاعل جديد مع هذا الطرف المعني",
+    "interaction_type": "نوع التفاعل",
+    "title_en": "العنوان (إنجليزي)",
+    "title_ar": "العنوان (عربي)",
+    "title_en_placeholder": "أدخل عنوان التفاعل...",
+    "title_ar_placeholder": "أدخل عنوان التفاعل...",
+    "summary_en": "الملخص (إنجليزي)",
+    "summary_ar": "الملخص (عربي)",
+    "summary_en_placeholder": "ملخص موجز للتفاعل...",
+    "summary_ar_placeholder": "ملخص موجز للتفاعل...",
+    "date": "التاريخ",
+    "time": "الوقت",
+    "duration": "المدة (دقيقة)",
+    "duration_placeholder": "مثال: 30",
+    "is_virtual": "اجتماع افتراضي",
+    "virtual_link": "رابط الاجتماع",
+    "virtual_link_placeholder": "https://...",
+    "location_en": "الموقع (إنجليزي)",
+    "location_ar": "الموقع (عربي)",
+    "location_en_placeholder": "مثال: قاعة الاجتماعات أ",
+    "location_ar_placeholder": "مثال: قاعة الاجتماعات أ",
+    "direction": "الاتجاه",
+    "sentiment": "المشاعر",
+    "priority": "الأولوية",
+    "requires_followup": "يتطلب متابعة",
+    "followup_date": "تاريخ المتابعة",
+    "outcome_en": "النتيجة (إنجليزي)",
+    "outcome_ar": "النتيجة (عربي)",
+    "outcome_en_placeholder": "وصف نتيجة هذا التفاعل...",
+    "outcome_ar_placeholder": "وصف نتيجة هذا التفاعل...",
+    "impact_score": "درجة التأثير",
+    "impact_score_hint": "1 = تأثير ضئيل، 5 = تأثير كبير",
+    "create_interaction": "تسجيل التفاعل"
+  },
+
+  "annotation": {
+    "create_title": "إضافة ملاحظة",
+    "create_description": "تحديد هذه اللحظة في الجدول الزمني للعلاقة",
+    "annotating": "إضافة ملاحظة على الحدث:",
+    "type": "نوع الملاحظة",
+    "content_en": "المحتوى (إنجليزي)",
+    "content_ar": "المحتوى (عربي)",
+    "content_en_placeholder": "أضف ملاحظتك...",
+    "content_ar_placeholder": "أضف ملاحظتك...",
+    "color": "اللون",
+    "visibility": "الرؤية",
+    "is_key_moment": "تحديد كلحظة رئيسية",
+    "is_key_moment_hint": "إبراز هذه كنقطة مهمة في العلاقة",
+    "is_turning_point": "تحديد كنقطة تحول",
+    "is_turning_point_hint": "تحديد هذه كتغيير حاسم في اتجاه العلاقة",
+    "importance_score": "درجة الأهمية",
+    "importance_score_hint": "1 = أهمية منخفضة، 5 = أهمية حرجة",
+    "add_annotation": "إضافة الملاحظة"
+  },
+
+  "common": {
+    "cancel": "إلغاء",
+    "saving": "جاري الحفظ..."
+  },
+
+  "interaction_created": "تم تسجيل التفاعل بنجاح",
+  "interaction_create_error": "فشل تسجيل التفاعل",
+  "annotation_created": "تمت إضافة الملاحظة بنجاح",
+  "annotation_create_error": "فشل إضافة الملاحظة",
+  "annotation_updated": "تم تحديث الملاحظة بنجاح",
+  "annotation_update_error": "فشل تحديث الملاحظة",
+  "annotation_deleted": "تم حذف الملاحظة",
+  "annotation_delete_error": "فشل حذف الملاحظة"
+}

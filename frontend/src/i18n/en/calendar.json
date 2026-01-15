@@ -328,5 +328,60 @@
     "changes": "Changes",
     "changedFrom": "Changed from",
     "changedTo": "to"
-  }
+  },
+  "wizard": {
+    "welcome": {
+      "title": "Your Calendar is Empty",
+      "description": "Get started by creating your first event. Use a template for quick setup or start from scratch.",
+      "useTemplate": "Use a Template",
+      "useTemplateDesc": "Quick setup with smart defaults",
+      "createBlank": "Create from Scratch",
+      "createBlankDesc": "Full customization options",
+      "recommended": "Recommended for you",
+      "dismiss": "I'll add events later"
+    },
+    "back": "Back",
+    "recommended": "Recommended",
+    "minutes": "min",
+    "allDay": "All day",
+    "templates": {
+      "title": "Choose a Template",
+      "description": "Select a template to get started quickly with pre-configured settings",
+      "stakeholderMeeting": {
+        "title": "Stakeholder Meeting",
+        "description": "Coordinate with key stakeholders, partners, or team members. Includes standard meeting duration and reminder."
+      },
+      "deadlineReminder": {
+        "title": "Deadline / Due Date",
+        "description": "Track important deadlines, submission dates, or deliverables. All-day event with advance reminder."
+      },
+      "forumEvent": {
+        "title": "Forum / Conference",
+        "description": "International forums, conferences, or multi-day events. Extended duration with day-before reminder."
+      },
+      "trainingSession": {
+        "title": "Training Session",
+        "description": "Workshops, training sessions, or capacity building activities. Standard 2-hour duration."
+      },
+      "reviewMeeting": {
+        "title": "Review Meeting",
+        "description": "Progress reviews, assessments, or evaluation sessions. 90-minute duration with advance reminder."
+      },
+      "bilateralMeeting": {
+        "title": "Bilateral Meeting",
+        "description": "One-on-one diplomatic or official meetings. Short duration with standard reminder."
+      }
+    },
+    "quickCreate": {
+      "defaults": "Template Settings",
+      "type": "Type",
+      "duration": "Duration",
+      "tip": "Pro Tip",
+      "tipDesc": "You can customize all details after creating the event. The template just gives you a head start!",
+      "chooseAnother": "Choose Another",
+      "createEvent": "Create Event"
+    }
+  },
+  "more": "more",
+  "upcoming_events": "Upcoming Events"
 }

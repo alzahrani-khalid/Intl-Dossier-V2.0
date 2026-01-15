@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "Automatically show optimized mobile keyboards based on field type: numeric keypad for phone numbers, email keyboard for emails, date picker wheels for dates, and searchable dropdowns for large select lists. Include input masks for formatted fields.\n\n**Rationale:** Wrong keyboard types frustrate mobile users and slow data entry by 40%. Smart input methods reduce cognitive load, minimize errors, and leverage native mobile patterns that users already understand.",
   "title": "Adaptive Input Methods for Field Types",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768220555438-b5gb01tct",
   "branchName": "main",
   "startedAt": "2026-01-12T20:21:45.538Z",
-  "updatedAt": "2026-01-12T20:34:05.973Z"
+  "updatedAt": "2026-01-12T20:34:05.973Z",
+  "descriptionHistory": []
 }

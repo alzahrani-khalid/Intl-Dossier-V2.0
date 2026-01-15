@@ -1,6 +1,9 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { ReportsPage } from '@/pages/reports/ReportsPage'
+import { createFileRoute, Outlet } from '@tanstack/react-router'
 
 export const Route = createFileRoute('/_protected/reports')({
- component: ReportsPage
+  component: ReportsLayout,
 })
+
+function ReportsLayout() {
+  return <Outlet />
+}

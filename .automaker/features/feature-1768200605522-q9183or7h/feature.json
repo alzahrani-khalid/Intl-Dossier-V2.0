@@ -2,9 +2,10 @@
   "category": "enhancement",
   "description": "Clearly indicate when mobile app is offline with a persistent status banner. Queue user actions with visual feedback, show what data is stale, and provide clear messaging when actions require connectivity.\n\n**Rationale:** Users attempting actions while offline without feedback become confused and frustrated, not knowing if their actions succeeded. Clear offline states prevent repeated failed attempts and data loss anxiety.",
   "title": "Graceful Degradation for Offline Mobile Usage",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768200605522-q9183or7h",
   "branchName": "main",
   "startedAt": "2026-01-12T08:35:44.263Z",
-  "updatedAt": "2026-01-12T08:46:30.770Z"
+  "updatedAt": "2026-01-12T08:46:30.770Z",
+  "descriptionHistory": []
 }

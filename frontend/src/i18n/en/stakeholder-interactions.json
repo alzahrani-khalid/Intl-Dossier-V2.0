@@ -1,0 +1,166 @@
+{
+  "title": "Interaction Timeline",
+  "subtitle": "All interactions with this stakeholder in chronological order",
+  "add_interaction": "Add Interaction",
+  "search_placeholder": "Search interactions...",
+  "filters": "Filters",
+  "loading_more": "Loading more...",
+  "load_more": "Load More",
+  "end_of_timeline": "End of timeline",
+  "minutes": "min",
+  "impact": "Impact",
+  "participants": "Participants",
+  "more": "more",
+  "join_virtual": "Join Meeting",
+  "outcome": "Outcome",
+  "show_less": "Show Less",
+  "show_more": "Show More",
+  "annotate": "Annotate",
+  "view_details": "View Details",
+
+  "types": {
+    "email": "Email",
+    "meeting": "Meeting",
+    "phone_call": "Phone Call",
+    "document_exchange": "Document Exchange",
+    "comment": "Comment",
+    "message": "Message",
+    "visit": "Visit",
+    "conference": "Conference",
+    "workshop": "Workshop",
+    "negotiation": "Negotiation",
+    "other": "Other",
+    "calendar": "Calendar Event",
+    "interaction": "Interaction",
+    "document": "Document"
+  },
+
+  "sentiment": {
+    "positive": "Positive",
+    "neutral": "Neutral",
+    "negative": "Negative",
+    "mixed": "Mixed"
+  },
+
+  "direction": {
+    "inbound": "Inbound",
+    "outbound": "Outbound",
+    "bidirectional": "Two-way"
+  },
+
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+
+  "stats": {
+    "title": "Engagement Overview",
+    "description": "Summary of all stakeholder interactions",
+    "total_interactions": "Total Interactions",
+    "key_moments": "Key Moments",
+    "most_common": "Most Common",
+    "last_interaction": "Last Interaction"
+  },
+
+  "filters": {
+    "event_types": "Interaction Types",
+    "sentiment": "Sentiment",
+    "all_sentiments": "All Sentiments",
+    "direction": "Direction",
+    "all_directions": "All Directions",
+    "date_range": "Date Range",
+    "last_7_days": "Last 7 Days",
+    "last_30_days": "Last 30 Days",
+    "last_90_days": "Last 90 Days",
+    "last_year": "Last Year",
+    "all_time": "All Time",
+    "custom_range": "Custom Range",
+    "from_date": "From",
+    "to_date": "To",
+    "apply_custom_range": "Apply Range",
+    "reset_filters": "Reset Filters"
+  },
+
+  "empty": {
+    "title": "No Interactions",
+    "description": "No interactions have been recorded for this stakeholder yet. Add your first interaction to start building the timeline."
+  },
+
+  "error": {
+    "title": "Error",
+    "description": "Failed to load interactions. Please try again."
+  },
+
+  "dialog": {
+    "create_title": "Log New Interaction",
+    "create_description": "Record a new interaction with this stakeholder",
+    "interaction_type": "Interaction Type",
+    "title_en": "Title (English)",
+    "title_ar": "Title (Arabic)",
+    "title_en_placeholder": "Enter interaction title...",
+    "title_ar_placeholder": "أدخل عنوان التفاعل...",
+    "summary_en": "Summary (English)",
+    "summary_ar": "Summary (Arabic)",
+    "summary_en_placeholder": "Brief summary of the interaction...",
+    "summary_ar_placeholder": "ملخص موجز للتفاعل...",
+    "date": "Date",
+    "time": "Time",
+    "duration": "Duration (min)",
+    "duration_placeholder": "e.g., 30",
+    "is_virtual": "Virtual Meeting",
+    "virtual_link": "Meeting Link",
+    "virtual_link_placeholder": "https://...",
+    "location_en": "Location (English)",
+    "location_ar": "Location (Arabic)",
+    "location_en_placeholder": "e.g., Conference Room A",
+    "location_ar_placeholder": "مثال: قاعة الاجتماعات أ",
+    "direction": "Direction",
+    "sentiment": "Sentiment",
+    "priority": "Priority",
+    "requires_followup": "Requires Follow-up",
+    "followup_date": "Follow-up Date",
+    "outcome_en": "Outcome (English)",
+    "outcome_ar": "Outcome (Arabic)",
+    "outcome_en_placeholder": "Describe the outcome of this interaction...",
+    "outcome_ar_placeholder": "وصف نتيجة هذا التفاعل...",
+    "impact_score": "Impact Score",
+    "impact_score_hint": "1 = Minimal impact, 5 = Major impact",
+    "create_interaction": "Log Interaction"
+  },
+
+  "annotation": {
+    "create_title": "Add Annotation",
+    "create_description": "Mark this moment in the relationship timeline",
+    "annotating": "Annotating event:",
+    "type": "Annotation Type",
+    "content_en": "Content (English)",
+    "content_ar": "Content (Arabic)",
+    "content_en_placeholder": "Add your annotation...",
+    "content_ar_placeholder": "أضف تعليقك...",
+    "color": "Color",
+    "visibility": "Visibility",
+    "is_key_moment": "Mark as Key Moment",
+    "is_key_moment_hint": "Highlight this as a significant point in the relationship",
+    "is_turning_point": "Mark as Turning Point",
+    "is_turning_point_hint": "Mark this as a critical change in the relationship direction",
+    "importance_score": "Importance Score",
+    "importance_score_hint": "1 = Low importance, 5 = Critical importance",
+    "add_annotation": "Add Annotation"
+  },
+
+  "common": {
+    "cancel": "Cancel",
+    "saving": "Saving..."
+  },
+
+  "interaction_created": "Interaction logged successfully",
+  "interaction_create_error": "Failed to log interaction",
+  "annotation_created": "Annotation added successfully",
+  "annotation_create_error": "Failed to add annotation",
+  "annotation_updated": "Annotation updated successfully",
+  "annotation_update_error": "Failed to update annotation",
+  "annotation_deleted": "Annotation deleted",
+  "annotation_delete_error": "Failed to delete annotation"
+}
