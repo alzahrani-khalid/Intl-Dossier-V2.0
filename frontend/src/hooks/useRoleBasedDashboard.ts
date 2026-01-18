@@ -81,55 +81,12 @@ export function useRoleBasedDashboard(
    * Fetch pending actions for the current user
    */
   const fetchPendingActions = useCallback(async (): Promise<PendingAction[]> => {
-    // Mock data for demonstration - in production, this would call an API
-    const mockActions: PendingAction[] = [
-      {
-        id: 'pa-1',
-        type: 'task_assigned',
-        titleKey: 'roleDashboard.actions.reviewDossier',
-        description: 'Review UAE partnership dossier for Q1 submission',
-        entityType: 'dossier',
-        entityId: 'dossier-123',
-        priority: 'high',
-        dueDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString(),
-        isOverdue: false,
-        route: '/dossiers/dossier-123',
-      },
-      {
-        id: 'pa-2',
-        type: 'approval_needed',
-        titleKey: 'roleDashboard.actions.approveCommitment',
-        description: 'Approve commitment for GCC data exchange project',
-        entityType: 'commitment',
-        entityId: 'commit-456',
-        priority: 'medium',
-        dueDate: new Date(Date.now() + 5 * 24 * 60 * 60 * 1000).toISOString(),
-        isOverdue: false,
-        route: '/commitments/commit-456',
-      },
-      {
-        id: 'pa-3',
-        type: 'follow_up_required',
-        titleKey: 'roleDashboard.actions.followUpMeeting',
-        description: 'Follow up on action items from OECD meeting',
-        entityType: 'engagement',
-        entityId: 'eng-789',
-        priority: 'low',
-        dueDate: new Date(Date.now() - 1 * 24 * 60 * 60 * 1000).toISOString(),
-        isOverdue: true,
-        route: '/engagements/eng-789',
-      },
-    ]
-
-    // Filter based on role - managers see more, viewers see less
-    if (dashboardRole === 'viewer') {
-      return []
-    }
-    if (dashboardRole === 'analyst') {
-      return mockActions.filter((a) => a.type === 'task_assigned')
-    }
-    return mockActions
-  }, [dashboardRole])
+    // Real pending actions are fetched via the unified-work-list API
+    // This hook now returns an empty array as a placeholder
+    // The actual pending actions are displayed through the MyWorkDashboard component
+    // which uses useUnifiedWork hooks for real data
+    return []
+  }, [])
 
   /**
    * Fetch workload summary for the current user

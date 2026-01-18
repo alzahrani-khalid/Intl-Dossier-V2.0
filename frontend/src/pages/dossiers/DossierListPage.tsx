@@ -62,6 +62,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import type { DossierType, DossierStatus, DossierFilters } from '@/services/dossier-api'
+import { getDossierDetailPath } from '@/lib/dossier-routes'
 import type { ViewConfig, DossierViewConfig } from '@/types/view-preferences.types'
 import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 
@@ -398,34 +399,8 @@ export function DossierListPage() {
   }
 
   const handleViewDossier = (id: string, type?: DossierType) => {
-    // Route to type-specific detail page based on dossier type
-    switch (type) {
-      case 'country':
-        navigate({ to: '/dossiers/countries/$id', params: { id } })
-        break
-      case 'organization':
-        navigate({ to: '/dossiers/organizations/$id', params: { id } })
-        break
-      case 'person':
-        navigate({ to: '/dossiers/persons/$id', params: { id } })
-        break
-      case 'engagement':
-        navigate({ to: '/dossiers/engagements/$id', params: { id } })
-        break
-      case 'forum':
-        navigate({ to: '/dossiers/forums/$id', params: { id } })
-        break
-      case 'working_group':
-        navigate({ to: '/dossiers/working_groups/$id', params: { id } })
-        break
-      case 'topic':
-        navigate({ to: '/dossiers/topics/$id', params: { id } })
-        break
-      default:
-        // Fallback to countries route when type is unknown (should rarely happen)
-        console.warn(`Unknown dossier type: ${type}, defaulting to countries route`)
-        navigate({ to: '/dossiers/countries/$id', params: { id } })
-    }
+    // Route to type-specific detail page
+    navigate({ to: getDossierDetailPath(id, type) })
   }
 
   const handleEditDossier = (id: string) => {

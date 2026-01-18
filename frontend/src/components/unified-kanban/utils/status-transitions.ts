@@ -4,9 +4,35 @@
  *
  * Defines valid status transitions per source type.
  * Used to validate drag-and-drop operations before allowing them.
+ *
+ * IMPORTANT: Status values must match database enum definitions:
+ * - task_status: pending, in_progress, completed, cancelled
+ * - ticket_status: draft, submitted, triaged, assigned, in_progress, converted, closed, merged
+ * - commitment status: pending, in_progress, completed, cancelled, overdue
  */
 
-import type { WorkSource, WorkflowStage, WorkStatus } from '@/types/work-item.types'
+import type { WorkSource, WorkflowStage } from '@/types/work-item.types'
+
+// ============================================
+// Valid Status Constants (match DB enums)
+// ============================================
+
+/**
+ * Valid ticket_status enum values from database
+ * @see supabase/migrations/20250129001_create_intake_tickets_table.sql
+ */
+export const VALID_TICKET_STATUSES = [
+  'draft',
+  'submitted',
+  'triaged',
+  'assigned',
+  'in_progress',
+  'converted',
+  'closed',
+  'merged',
+] as const
+
+export type TicketStatus = (typeof VALID_TICKET_STATUSES)[number]
 
 // ============================================
 // Transition Rules
@@ -40,13 +66,33 @@ export const COMMITMENT_TRANSITIONS: Record<string, string[]> = {
 
 /**
  * Valid status transitions for Intake Tickets
- * Intake uses: pending, in_progress, resolved, closed
+ * FIXED: Uses actual ticket_status enum values from database
+ *
+ * Ticket lifecycle: draft → submitted → triaged → assigned → in_progress → converted/closed
+ *
+ * Kanban column mapping:
+ * - 'todo' column: draft, submitted, triaged (pre-work states)
+ * - 'in_progress' column: assigned, in_progress (active work)
+ * - 'done' column: converted (successfully completed)
+ * - 'cancelled' column: closed, merged (terminal non-success)
+ *
+ * Note: Transitions are limited in kanban context - not all DB transitions
+ * are appropriate for drag-and-drop (e.g., cannot drag to 'draft' or 'triaged')
  */
 export const INTAKE_TRANSITIONS: Record<string, string[]> = {
-  pending: ['in_progress', 'resolved', 'closed'],
-  in_progress: ['pending', 'resolved', 'closed'],
-  resolved: ['closed', 'in_progress'],
-  closed: [], // Terminal state
+  // Pre-work states (todo column)
+  draft: ['closed'], // Can only close from draft
+  submitted: ['assigned', 'in_progress', 'closed'], // Triage then assign or close
+  triaged: ['assigned', 'in_progress', 'closed'], // Assign or close
+
+  // Active work states (in_progress column)
+  assigned: ['in_progress', 'converted', 'closed'], // Start work, complete, or close
+  in_progress: ['converted', 'closed'], // Complete or close
+
+  // Terminal states - cannot transition further
+  converted: [], // Successfully completed
+  closed: [], // Explicitly closed
+  merged: [], // Merged into another ticket
 }
 
 // ============================================
@@ -110,6 +156,8 @@ export function isTerminalStatus(source: WorkSource, status: string): boolean {
 /**
  * Map kanban column key to source-specific status
  * Used when dropping an item into a column
+ *
+ * IMPORTANT: Returns valid database enum values only
  */
 export function columnKeyToSourceStatus(source: WorkSource, columnKey: string): string {
   // For tasks, column keys map directly to workflow stages
@@ -133,19 +181,24 @@ export function columnKeyToSourceStatus(source: WorkSource, columnKey: string): 
     }
   }
 
-  // For intake, map column keys to intake statuses
+  // For intake, map column keys to valid ticket_status enum values
+  // FIXED: Uses actual DB enum values (not 'resolved' or 'pending')
   if (source === 'intake') {
     switch (columnKey) {
       case 'todo':
-        return 'pending'
+        // Default to 'submitted' for todo column
+        // Note: 'draft' and 'triaged' also map to todo, but we can't
+        // drag INTO those states (they're workflow-driven)
+        return 'submitted'
       case 'in_progress':
         return 'in_progress'
       case 'done':
-        return 'resolved'
+        // FIXED: 'converted' is the valid DB status, not 'resolved'
+        return 'converted'
       case 'cancelled':
         return 'closed'
       default:
-        return 'pending'
+        return 'submitted'
     }
   }
 
@@ -155,6 +208,12 @@ export function columnKeyToSourceStatus(source: WorkSource, columnKey: string): 
 /**
  * Map source-specific status to kanban column key
  * Used when determining which column an item belongs to
+ *
+ * For intake tickets, maps all ticket_status values to appropriate columns:
+ * - todo: draft, submitted, triaged (pre-work states)
+ * - in_progress: assigned, in_progress (active work)
+ * - done: converted (successfully completed)
+ * - cancelled: closed, merged (terminal non-success)
  */
 export function sourceStatusToColumnKey(
   source: WorkSource,
@@ -168,8 +227,37 @@ export function sourceStatusToColumnKey(
     return workflowStage
   }
 
+  // For intake tickets, use explicit mapping based on ticket_status enum
+  if (source === 'intake') {
+    switch (status) {
+      // Pre-work states -> todo column
+      case 'draft':
+      case 'submitted':
+      case 'triaged':
+        return 'todo'
+
+      // Active work states -> in_progress column
+      case 'assigned':
+      case 'in_progress':
+        return 'in_progress'
+
+      // Successfully completed -> done column
+      case 'converted':
+        return 'done'
+
+      // Terminal non-success states -> cancelled column
+      case 'closed':
+      case 'merged':
+        return 'cancelled'
+
+      default:
+        return 'todo'
+    }
+  }
+
+  // For commitments and other sources
   // Map completion statuses to 'done' column
-  if (['completed', 'resolved', 'done'].includes(status)) {
+  if (['completed', 'done'].includes(status)) {
     return 'done'
   }
 
@@ -225,6 +313,11 @@ export function canDropInColumn(
 /**
  * Get the appropriate status/stage values for updating an item
  * after it's dropped in a target column
+ *
+ * IMPORTANT: Returns only valid database enum values
+ * - For tasks: workflow_stage and derived status
+ * - For commitments: commitment status
+ * - For intake: ticket_status enum value
  */
 export function getUpdatePayload(
   source: WorkSource,
@@ -252,7 +345,34 @@ export function getUpdatePayload(
     return { status, workflow_stage: workflowStage }
   }
 
-  // Commitments and Intake only update status
+  if (source === 'intake') {
+    // FIXED: Map to valid ticket_status enum values
+    let status: TicketStatus
+
+    switch (targetColumnKey) {
+      case 'todo':
+        // Cannot really drag TO todo for intake - this shouldn't happen
+        // but if it does, keep as 'submitted' (neutral pre-work state)
+        status = 'submitted'
+        break
+      case 'in_progress':
+        status = 'in_progress'
+        break
+      case 'done':
+        // FIXED: Use 'converted' instead of 'resolved'
+        status = 'converted'
+        break
+      case 'cancelled':
+        status = 'closed'
+        break
+      default:
+        status = 'submitted'
+    }
+
+    return { status }
+  }
+
+  // Commitments use columnKeyToSourceStatus mapping
   const status = columnKeyToSourceStatus(source, targetColumnKey)
   return { status }
 }
@@ -276,14 +396,18 @@ export function getTransitionErrorMessage(
       invalid: `Cannot move from "${fromStatus}" to "${toStatus}"`,
       task_done: 'Completed tasks cannot be moved',
       commitment_complete: 'Completed commitments cannot be changed',
+      intake_converted: 'Converted tickets cannot be changed',
       intake_closed: 'Closed tickets cannot be reopened',
+      intake_merged: 'Merged tickets cannot be changed',
     },
     ar: {
       terminal: `لا يمكن نقل العناصر في حالة "${fromStatus}"`,
       invalid: `لا يمكن النقل من "${fromStatus}" إلى "${toStatus}"`,
       task_done: 'لا يمكن نقل المهام المكتملة',
       commitment_complete: 'لا يمكن تغيير الالتزامات المكتملة',
+      intake_converted: 'لا يمكن تغيير التذاكر المحولة',
       intake_closed: 'لا يمكن إعادة فتح التذاكر المغلقة',
+      intake_merged: 'لا يمكن تغيير التذاكر المدمجة',
     },
   }
 
@@ -292,9 +416,24 @@ export function getTransitionErrorMessage(
   if (isTerminalStatus(source, fromStatus)) {
     if (source === 'task' && fromStatus === 'done') return msg.task_done
     if (source === 'commitment' && fromStatus === 'completed') return msg.commitment_complete
-    if (source === 'intake' && fromStatus === 'closed') return msg.intake_closed
+    if (source === 'intake') {
+      if (fromStatus === 'converted') return msg.intake_converted
+      if (fromStatus === 'closed') return msg.intake_closed
+      if (fromStatus === 'merged') return msg.intake_merged
+    }
     return msg.terminal
   }
 
   return msg.invalid
+}
+
+// ============================================
+// Validation Helpers
+// ============================================
+
+/**
+ * Validates if a status is a valid ticket_status enum value
+ */
+export function isValidTicketStatus(status: string): status is TicketStatus {
+  return VALID_TICKET_STATUSES.includes(status as TicketStatus)
 }

@@ -28,6 +28,7 @@ import { toast } from '@/hooks/use-toast'
 import { cn } from '@/lib/utils'
 import type { Dossier } from '../types/dossier'
 import { getCountryCode } from '../lib/country-codes'
+import { getDossierDetailPath } from '../lib/dossier-routes'
 
 export interface DossierCardSwipeableProps {
   dossier: Dossier
@@ -86,8 +87,8 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
 
   // Navigation handlers
   const handleClick = useCallback(() => {
-    navigate({ to: `/dossiers/${dossier.id}` })
-  }, [navigate, dossier.id])
+    navigate({ to: getDossierDetailPath(dossier.id, dossier.type) })
+  }, [navigate, dossier.id, dossier.type])
 
   const handleKeyDown = useCallback(
     (e: React.KeyboardEvent) => {

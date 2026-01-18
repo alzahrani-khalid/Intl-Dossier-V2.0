@@ -6,6 +6,10 @@
  * - Fetch work items grouped by column
  * - Status update mutations with optimistic updates
  * - Real-time subscriptions
+ *
+ * IMPORTANT: Status values written to the database must match enum definitions:
+ * - ticket_status: draft, submitted, triaged, assigned, in_progress, converted, closed, merged
+ * - task_status: pending, in_progress, completed, cancelled
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -21,6 +25,34 @@ import type {
   WorkItemAssignee,
   KanbanData,
 } from '@/types/work-item.types'
+
+// ============================================
+// Status Validation Constants
+// ============================================
+
+/**
+ * Valid ticket_status enum values from database
+ * @see supabase/migrations/20250129001_create_intake_tickets_table.sql
+ */
+const VALID_TICKET_STATUSES = [
+  'draft',
+  'submitted',
+  'triaged',
+  'assigned',
+  'in_progress',
+  'converted',
+  'closed',
+  'merged',
+] as const
+
+type TicketStatus = (typeof VALID_TICKET_STATUSES)[number]
+
+/**
+ * Validates if a status is a valid ticket_status enum value
+ */
+function isValidTicketStatus(status: string): status is TicketStatus {
+  return VALID_TICKET_STATUSES.includes(status as TicketStatus)
+}
 
 // ============================================
 // Types
@@ -132,9 +164,6 @@ export function useUnifiedKanban(options: UseUnifiedKanbanOptions) {
     enabled = true,
   } = options
 
-  const queryClient = useQueryClient()
-  const { toast } = useToast()
-
   // Fetch kanban data
   const query = useQuery({
     queryKey: kanbanKeys.list(options),
@@ -195,6 +224,36 @@ interface StatusUpdateParams {
   newWorkflowStage?: string
 }
 
+/**
+ * Maps column key to valid database status for intake tickets
+ * Ensures we never write invalid statuses to the database
+ */
+function mapToValidIntakeStatus(columnKeyOrStatus: string): TicketStatus {
+  // If it's already a valid status, return it
+  if (isValidTicketStatus(columnKeyOrStatus)) {
+    return columnKeyOrStatus
+  }
+
+  // Map kanban column keys to valid ticket_status values
+  switch (columnKeyOrStatus) {
+    case 'todo':
+      return 'submitted'
+    case 'in_progress':
+      return 'in_progress'
+    case 'done':
+      // FIXED: Use 'converted' instead of 'resolved' (which doesn't exist)
+      return 'converted'
+    case 'cancelled':
+      return 'closed'
+    default:
+      // Fallback to a safe default
+      console.warn(
+        `[useUnifiedKanban] Unknown status/column key: ${columnKeyOrStatus}, defaulting to 'submitted'`,
+      )
+      return 'submitted'
+  }
+}
+
 export function useUnifiedKanbanStatusUpdate() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
@@ -234,10 +293,21 @@ export function useUnifiedKanbanStatusUpdate() {
       }
 
       if (source === 'intake') {
+        // FIXED: Validate and map status to valid ticket_status enum value
+        const validStatus = mapToValidIntakeStatus(newStatus)
+
+        // Extra validation - ensure we're not writing an invalid status
+        if (!isValidTicketStatus(validStatus)) {
+          throw new Error(
+            `Invalid intake ticket status: "${newStatus}" (mapped to "${validStatus}"). ` +
+              `Valid statuses are: ${VALID_TICKET_STATUSES.join(', ')}`,
+          )
+        }
+
         const { data, error } = await supabase
           .from('intake_tickets')
           .update({
-            status: newStatus,
+            status: validStatus,
             updated_at: new Date().toISOString(),
           })
           .eq('id', itemId)
@@ -267,11 +337,14 @@ export function useUnifiedKanbanStatusUpdate() {
 
         for (const columnKey of Object.keys(newColumns)) {
           const columnItems = newColumns[columnKey]
+          if (!columnItems) continue
+
           const itemIndex = columnItems.findIndex((i) => i.id === variables.itemId)
 
           if (itemIndex !== -1) {
             // Remove from current column
             const [item] = columnItems.splice(itemIndex, 1)
+            if (!item) continue
 
             // Update item status
             const updatedItem: WorkItem = {
@@ -306,7 +379,7 @@ export function useUnifiedKanbanStatusUpdate() {
       return { previousData }
     },
 
-    onError: (error, variables, context) => {
+    onError: (error, _variables, context) => {
       // Rollback on error
       if (context?.previousData) {
         context.previousData.forEach(([queryKey, data]) => {

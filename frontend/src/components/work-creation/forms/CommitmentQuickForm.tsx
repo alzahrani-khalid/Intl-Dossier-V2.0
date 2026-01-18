@@ -1,23 +1,26 @@
 /**
  * CommitmentQuickForm Component
  * Feature: 033-unified-work-creation-hub
+ * Updated for: 035-dossier-context (Smart Dossier Context Inheritance)
  *
  * Simplified commitment creation form for the work creation palette.
- * Includes context tracking for audit trail.
+ * Includes context tracking for audit trail and dossier linking.
+ * Now includes DossierSelector for US4 compliance.
  */
 
-import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { format } from 'date-fns';
-import { ar, enUS } from 'date-fns/locale';
-import { CalendarIcon, Loader2 } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from '@/components/ui/calendar';
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { format } from 'date-fns'
+import { ar, enUS } from 'date-fns/locale'
+import { CalendarIcon, Loader2 } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Form,
   FormControl,
@@ -25,47 +28,45 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@/components/ui/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { Badge } from '@/components/ui/badge';
-import { useCreateCommitment } from '@/hooks/useCommitments';
-import type { CreateCommitmentInput, Commitment } from '@/types/commitment.types';
-import type { CreationContext } from '../hooks/useCreationContext';
-import type { DossierOption } from '../DossierPicker';
+} from '@/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Badge } from '@/components/ui/badge'
+import { useCreateCommitment } from '@/hooks/useCommitments'
+import type { CreateCommitmentInput, Commitment } from '@/types/commitment.types'
+import type { CreationContext } from '../hooks/useCreationContext'
+import type { DossierOption } from '../DossierPicker'
+import { useCreateWorkItemDossierLinks } from '@/hooks/useCreateWorkItemDossierLinks'
+import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/Dossier'
+import type { InheritanceSource, ContextEntityType } from '@/types/dossier-context.types'
+import type { DossierType } from '@/types/relationship.types'
 
 // Validation schema
 const commitmentQuickFormSchema = z.object({
-  title: z
-    .string()
-    .min(1, 'validation.titleRequired')
-    .max(200, 'validation.titleMaxLength'),
+  title: z.string().min(1, 'validation.titleRequired').max(200, 'validation.titleMaxLength'),
   description: z.string().min(1, 'validation.descriptionRequired'),
   due_date: z.date({
     required_error: 'validation.dueDateRequired',
   }),
   priority: z.enum(['low', 'medium', 'high', 'critical'] as const),
   owner_type: z.enum(['internal', 'external'] as const),
-});
+})
 
-type CommitmentQuickFormValues = z.infer<typeof commitmentQuickFormSchema>;
+type CommitmentQuickFormValues = z.infer<typeof commitmentQuickFormSchema>
 
 export interface CommitmentQuickFormProps {
-  dossierId: string;
-  creationContext: CreationContext;
-  selectedDossier?: DossierOption;
-  onSuccess?: (commitment: Commitment) => void;
-  onCancel?: () => void;
+  /** Dossier ID for linking (optional - can be selected via DossierSelector) */
+  dossierId?: string
+  creationContext: CreationContext
+  selectedDossier?: DossierOption
+  onSuccess?: (commitment: Commitment) => void
+  onCancel?: () => void
 }
 
 export function CommitmentQuickForm({
@@ -75,11 +76,44 @@ export function CommitmentQuickForm({
   onSuccess,
   onCancel,
 }: CommitmentQuickFormProps) {
-  const { t, i18n } = useTranslation(['work-creation', 'commitments']);
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation(['work-creation', 'commitments', 'dossier-context'])
+  const isRTL = i18n.language === 'ar'
 
-  const createMutation = useCreateCommitment();
-  const isPending = createMutation.isPending;
+  // State for user-selected dossier when no context is available (US4)
+  const [userSelectedDossiers, setUserSelectedDossiers] = useState<SelectedDossier[]>([])
+  const [dossierError, setDossierError] = useState<string>('')
+
+  // Determine if we have a dossier from any source
+  const hasDossierContext = !!(selectedDossier || dossierId || creationContext.dossierId)
+
+  // Get the effective dossier ID (from props, context, or user selection)
+  const getEffectiveDossierId = () => {
+    if (dossierId) return dossierId
+    if (creationContext.dossierId) return creationContext.dossierId
+    const firstDossier = userSelectedDossiers[0]
+    if (firstDossier) return firstDossier.id
+    return undefined
+  }
+
+  // Handle dossier selection change
+  const handleDossierChange = (_: string[], dossiers: SelectedDossier[]) => {
+    setUserSelectedDossiers(dossiers)
+    if (dossiers.length > 0) {
+      setDossierError('')
+    }
+  }
+
+  const createMutation = useCreateCommitment()
+
+  // Hook for creating dossier links after commitment creation
+  const createDossierLinksMutation = useCreateWorkItemDossierLinks({
+    onError: (error) => {
+      // Log but don't fail the whole operation - commitment was created successfully
+      console.warn('Failed to create dossier links:', error)
+    },
+  })
+
+  const isPending = createMutation.isPending || createDossierLinksMutation.isPending
 
   const form = useForm<CommitmentQuickFormValues>({
     resolver: zodResolver(commitmentQuickFormSchema),
@@ -90,18 +124,24 @@ export function CommitmentQuickForm({
       priority: 'medium',
       owner_type: 'internal',
     },
-  });
+  })
 
   const onSubmit = (values: CommitmentQuickFormValues) => {
-    // dossier_id is required - should be guaranteed by parent flow
-    if (!dossierId) {
-      return;
+    // Validate dossier is selected (US4 requirement)
+    const effectiveDossierId = getEffectiveDossierId()
+    if (!effectiveDossierId) {
+      setDossierError(t('dossier-context:validation.dossier_required'))
+      return
     }
+
+    // Format due_date as ISO date string (YYYY-MM-DD)
+    const dueDateStr = values.due_date.toISOString().split('T')[0] as string
+
     const input: CreateCommitmentInput = {
-      dossier_id: dossierId,
+      dossier_id: effectiveDossierId,
       title: values.title,
       description: values.description,
-      due_date: values.due_date.toISOString().split('T')[0],
+      due_date: dueDateStr,
       priority: values.priority,
       owner_type: values.owner_type,
       // Note: tracking_mode is determined by service based on owner_type (database constraint)
@@ -111,21 +151,52 @@ export function CommitmentQuickForm({
       created_from_entity: creationContext.createdFromEntity
         ? JSON.stringify(creationContext.createdFromEntity)
         : undefined,
-    };
+    }
 
     createMutation.mutate(input, {
-      onSuccess: (data) => {
-        form.reset();
-        onSuccess?.(data);
-      },
-    });
-  };
+      onSuccess: async (data) => {
+        // Create dossier links if we have dossier context
+        const finalDossierId = getEffectiveDossierId()
+        if (finalDossierId && data?.id) {
+          // Determine inheritance source based on creation context
+          let inheritanceSource: InheritanceSource = 'direct'
+          let inheritedFromType: ContextEntityType | undefined
+          let inheritedFromId: string | undefined
 
-  const dossierDisplayName = selectedDossier
-    ? isRTL
-      ? selectedDossier.name_ar || selectedDossier.name_en
-      : selectedDossier.name_en
-    : dossierId;
+          if (creationContext.engagementId) {
+            inheritanceSource = 'engagement'
+            inheritedFromType = 'engagement'
+            inheritedFromId = creationContext.engagementId
+          } else if (creationContext.afterActionId) {
+            inheritanceSource = 'after_action'
+            inheritedFromType = 'after_action'
+            inheritedFromId = creationContext.afterActionId
+          } else if (creationContext.positionId) {
+            inheritanceSource = 'position'
+            inheritedFromType = 'position'
+            inheritedFromId = creationContext.positionId
+          }
+
+          try {
+            await createDossierLinksMutation.mutateAsync({
+              work_item_type: 'commitment',
+              work_item_id: data.id,
+              dossier_ids: [finalDossierId],
+              inheritance_source: inheritanceSource,
+              inherited_from_type: inheritedFromType,
+              inherited_from_id: inheritedFromId,
+              is_primary: true,
+            })
+          } catch {
+            // Error already handled in hook - continue with success
+          }
+        }
+
+        form.reset()
+        onSuccess?.(data)
+      },
+    })
+  }
 
   return (
     <Form {...form}>
@@ -134,13 +205,58 @@ export function CommitmentQuickForm({
         className="space-y-4"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        {/* Dossier context display */}
+        {/* T042/US4: Dossier context display or selector */}
+        {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (
           <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
-            <span className="text-muted-foreground">
-              {t('form.linkedTo', 'Linked to')}:
-            </span>
-            <Badge variant="outline">{dossierDisplayName}</Badge>
+            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <DossierContextBadge
+              dossierId={selectedDossier.id}
+              dossierType={(selectedDossier.type as any) ?? 'country'}
+              nameEn={selectedDossier.name_en}
+              nameAr={selectedDossier.name_ar}
+              inheritanceSource="direct"
+              isPrimary
+              size="sm"
+              clickable={false}
+              showInheritance={false}
+            />
+          </div>
+        )}
+        {/* Fallback for dossierId-only case (no full dossier info) */}
+        {!selectedDossier && dossierId && (
+          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <Badge variant="outline">{dossierId}</Badge>
+          </div>
+        )}
+        {/* US4: Show DossierSelector when no dossier context is available */}
+        {!hasDossierContext && (
+          <DossierSelector
+            value={userSelectedDossiers.map((d) => d.id)}
+            onChange={handleDossierChange}
+            required
+            multiple={false}
+            label={t('dossier-context:selector.title')}
+            hint={t('form.dossierHint', 'Select the dossier this commitment relates to')}
+            error={dossierError}
+          />
+        )}
+        {/* Show badge for user-selected dossier */}
+        {!hasDossierContext && userSelectedDossiers.length > 0 && userSelectedDossiers[0] && (
+          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <DossierContextBadge
+              dossierId={userSelectedDossiers[0].id}
+              dossierType={(userSelectedDossiers[0].type as DossierType) ?? 'country'}
+              nameEn={userSelectedDossiers[0].name_en}
+              nameAr={userSelectedDossiers[0].name_ar ?? ''}
+              inheritanceSource="direct"
+              isPrimary
+              size="sm"
+              clickable={false}
+              showInheritance={false}
+            />
           </div>
         )}
 
@@ -150,9 +266,7 @@ export function CommitmentQuickForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('commitments:form.title')} *
-              </FormLabel>
+              <FormLabel className="text-start block">{t('commitments:form.title')} *</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -201,9 +315,7 @@ export function CommitmentQuickForm({
             name="due_date"
             render={({ field }) => (
               <FormItem className="flex flex-col">
-                <FormLabel className="text-start">
-                  {t('commitments:form.dueDate')} *
-                </FormLabel>
+                <FormLabel className="text-start">{t('commitments:form.dueDate')} *</FormLabel>
                 <Popover>
                   <PopoverTrigger asChild>
                     <FormControl>
@@ -211,7 +323,7 @@ export function CommitmentQuickForm({
                         variant="outline"
                         className={cn(
                           'min-h-11 w-full justify-start text-start font-normal',
-                          !field.value && 'text-muted-foreground'
+                          !field.value && 'text-muted-foreground',
                         )}
                       >
                         <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -230,9 +342,7 @@ export function CommitmentQuickForm({
                       mode="single"
                       selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) =>
-                        date < new Date(new Date().setHours(0, 0, 0, 0))
-                      }
+                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                       initialFocus
                       locale={isRTL ? ar : enUS}
                     />
@@ -252,9 +362,7 @@ export function CommitmentQuickForm({
             name="priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start block">
-                  {t('commitments:form.priority')}
-                </FormLabel>
+                <FormLabel className="text-start block">{t('commitments:form.priority')}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger className="min-h-11">
@@ -280,9 +388,7 @@ export function CommitmentQuickForm({
           name="owner_type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('commitments:form.ownerType')}
-              </FormLabel>
+              <FormLabel className="text-start block">{t('commitments:form.ownerType')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="min-h-11">
@@ -310,11 +416,7 @@ export function CommitmentQuickForm({
           >
             {t('actions.cancel', 'Cancel')}
           </Button>
-          <Button
-            type="submit"
-            disabled={isPending}
-            className="min-h-11 w-full sm:flex-1"
-          >
+          <Button type="submit" disabled={isPending} className="min-h-11 w-full sm:flex-1">
             {isPending ? (
               <>
                 <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -327,7 +429,7 @@ export function CommitmentQuickForm({
         </div>
       </form>
     </Form>
-  );
+  )
 }
 
-export default CommitmentQuickForm;
+export default CommitmentQuickForm

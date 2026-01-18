@@ -1,0 +1,661 @@
+openapi: 3.0.3
+info:
+  title: Dossier Context API
+  description: |
+    API for smart dossier context inheritance.
+    Enables automatic dossier context resolution from entity relationships
+    and provides activity timeline aggregation.
+  version: 1.0.0
+  contact:
+    name: Intl-Dossier Development Team
+
+servers:
+  - url: https://{project_ref}.supabase.co/functions/v1
+    description: Supabase Edge Functions
+    variables:
+      project_ref:
+        default: zkrcjzdemdmwhearhfgg
+        description: Supabase project reference
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: Context Resolution
+    description: Resolve dossier context from entity relationships
+  - name: Work Item Links
+    description: Manage work item to dossier links
+  - name: Activity Timeline
+    description: Fetch aggregated dossier activity timeline
+
+paths:
+  /resolve-dossier-context:
+    post:
+      tags:
+        - Context Resolution
+      summary: Resolve dossier context from entity
+      description: |
+        Resolves dossier context by following relationship chains:
+        - dossier → direct
+        - engagement → dossier (direct)
+        - after_action → engagement → dossier (via_engagement)
+        - position → dossier (via_position)
+
+        Target response time: <100ms
+      operationId: resolveDossierContext
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DossierContextRequest'
+            examples:
+              fromEngagement:
+                summary: Resolve from engagement
+                value:
+                  entity_type: engagement
+                  entity_id: '123e4567-e89b-12d3-a456-426614174000'
+              fromAfterAction:
+                summary: Resolve from after-action record
+                value:
+                  entity_type: after_action
+                  entity_id: '123e4567-e89b-12d3-a456-426614174001'
+      responses:
+        '200':
+          description: Successfully resolved dossier context
+          headers:
+            X-Response-Time:
+              schema:
+                type: string
+              description: Response time in milliseconds
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DossierContextResponse'
+              example:
+                dossiers:
+                  - dossier_id: '550e8400-e29b-41d4-a716-446655440000'
+                    dossier_name_en: 'Kingdom of Saudi Arabia'
+                    dossier_name_ar: 'المملكة العربية السعودية'
+                    dossier_type: 'country'
+                    dossier_status: 'active'
+                    inheritance_source: 'engagement'
+                    resolution_path:
+                      - '123e4567-e89b-12d3-a456-426614174000'
+                      - '550e8400-e29b-41d4-a716-446655440000'
+                resolved_from: 'engagement'
+                query_time_ms: 23
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalError'
+
+  /work-item-dossiers:
+    post:
+      tags:
+        - Work Item Links
+      summary: Create work item dossier link
+      description: |
+        Links a work item (task, commitment, intake) to one or more dossiers.
+        Automatically captures inheritance metadata if resolved from context.
+      operationId: createWorkItemDossierLink
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateWorkItemDossierLinkRequest'
+            examples:
+              directLink:
+                summary: Direct link from dossier page
+                value:
+                  work_item_type: 'task'
+                  work_item_id: '123e4567-e89b-12d3-a456-426614174002'
+                  dossier_ids:
+                    - '550e8400-e29b-41d4-a716-446655440000'
+                  inheritance_source: 'direct'
+                  is_primary: true
+              inheritedLink:
+                summary: Inherited from engagement
+                value:
+                  work_item_type: 'commitment'
+                  work_item_id: '123e4567-e89b-12d3-a456-426614174003'
+                  dossier_ids:
+                    - '550e8400-e29b-41d4-a716-446655440000'
+                  inheritance_source: 'engagement'
+                  inherited_from_type: 'engagement'
+                  inherited_from_id: '123e4567-e89b-12d3-a456-426614174000'
+                  is_primary: true
+      responses:
+        '201':
+          description: Successfully created dossier link(s)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WorkItemDossierLink'
+                  created_count:
+                    type: integer
+                    description: Number of links created
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '409':
+          description: Duplicate link already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    get:
+      tags:
+        - Work Item Links
+      summary: List work item dossier links
+      description: Fetch dossier links for a specific work item
+      operationId: listWorkItemDossierLinks
+      parameters:
+        - name: work_item_type
+          in: query
+          required: true
+          schema:
+            $ref: '#/components/schemas/WorkItemType'
+        - name: work_item_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of dossier links
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  links:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/WorkItemDossierLink'
+                  primary_dossier:
+                    $ref: '#/components/schemas/DossierReference'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+
+  /work-item-dossiers/{link_id}:
+    delete:
+      tags:
+        - Work Item Links
+      summary: Remove work item dossier link
+      description: Soft-delete a dossier link (sets deleted_at)
+      operationId: deleteWorkItemDossierLink
+      parameters:
+        - name: link_id
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '204':
+          description: Successfully deleted link
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /dossier-activity-timeline:
+    get:
+      tags:
+        - Activity Timeline
+      summary: Fetch dossier activity timeline
+      description: |
+        Returns paginated list of all activities linked to a dossier.
+        Supports filtering by work item type and inheritance source.
+        Uses cursor-based pagination for performance.
+
+        Target response time: <2s for up to 500 activities
+      operationId: getDossierActivityTimeline
+      parameters:
+        - name: dossier_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+          description: Dossier ID to fetch activities for
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          description: Number of activities to return
+        - name: cursor
+          in: query
+          schema:
+            type: string
+            format: date-time
+          description: Cursor for pagination (activity_timestamp)
+        - name: work_item_type
+          in: query
+          schema:
+            $ref: '#/components/schemas/WorkItemType'
+          description: Filter by work item type
+        - name: inheritance_source
+          in: query
+          schema:
+            $ref: '#/components/schemas/InheritanceSource'
+          description: Filter by inheritance source
+      responses:
+        '200':
+          description: Paginated activity timeline
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DossierTimelineResponse'
+              example:
+                activities:
+                  - link_id: '123e4567-e89b-12d3-a456-426614174004'
+                    work_item_id: '123e4567-e89b-12d3-a456-426614174002'
+                    work_item_type: 'task'
+                    dossier_id: '550e8400-e29b-41d4-a716-446655440000'
+                    inheritance_source: 'direct'
+                    activity_timestamp: '2025-01-16T10:30:00Z'
+                    activity_title: 'Review bilateral agreement'
+                    status: 'in_progress'
+                    priority: 'high'
+                    assignee_id: 'user-123'
+                    icon_type: 'checklist'
+                    inheritance_label: null
+                next_cursor: '2025-01-15T08:00:00Z'
+                total_count: 127
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/PermissionDenied'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: Supabase JWT token
+
+  schemas:
+    WorkItemType:
+      type: string
+      enum:
+        - task
+        - commitment
+        - intake
+      description: Type of work item
+
+    InheritanceSource:
+      type: string
+      enum:
+        - direct
+        - engagement
+        - after_action
+        - position
+        - mou
+      description: How the dossier link was established
+
+    ContextEntityType:
+      type: string
+      enum:
+        - dossier
+        - engagement
+        - after_action
+        - position
+      description: Entity type that can resolve to dossier context
+
+    DossierReference:
+      type: object
+      required:
+        - id
+        - name_en
+        - name_ar
+        - type
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        name_en:
+          type: string
+          description: English dossier name
+        name_ar:
+          type: string
+          description: Arabic dossier name
+        type:
+          type: string
+          enum:
+            - country
+            - organization
+            - forum
+            - theme
+        status:
+          type: string
+          enum:
+            - active
+            - inactive
+            - archived
+
+    DossierContextRequest:
+      type: object
+      required:
+        - entity_type
+        - entity_id
+      properties:
+        entity_type:
+          $ref: '#/components/schemas/ContextEntityType'
+        entity_id:
+          type: string
+          format: uuid
+          description: ID of the entity to resolve context from
+
+    ResolvedDossierContext:
+      type: object
+      required:
+        - dossier_id
+        - dossier_name_en
+        - dossier_name_ar
+        - dossier_type
+        - dossier_status
+        - inheritance_source
+        - resolution_path
+      properties:
+        dossier_id:
+          type: string
+          format: uuid
+        dossier_name_en:
+          type: string
+        dossier_name_ar:
+          type: string
+        dossier_type:
+          type: string
+        dossier_status:
+          type: string
+        inheritance_source:
+          $ref: '#/components/schemas/InheritanceSource'
+        resolution_path:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: Array of entity IDs in resolution chain
+
+    DossierContextResponse:
+      type: object
+      required:
+        - dossiers
+        - resolved_from
+        - query_time_ms
+      properties:
+        dossiers:
+          type: array
+          items:
+            $ref: '#/components/schemas/ResolvedDossierContext'
+        resolved_from:
+          $ref: '#/components/schemas/ContextEntityType'
+        query_time_ms:
+          type: number
+          description: Query execution time in milliseconds
+
+    InheritancePathStep:
+      type: object
+      required:
+        - type
+        - id
+        - name_en
+        - name_ar
+      properties:
+        type:
+          $ref: '#/components/schemas/ContextEntityType'
+        id:
+          type: string
+          format: uuid
+        name_en:
+          type: string
+        name_ar:
+          type: string
+
+    WorkItemDossierLink:
+      type: object
+      required:
+        - id
+        - work_item_type
+        - work_item_id
+        - dossier_id
+        - inheritance_source
+        - is_primary
+        - created_at
+      properties:
+        id:
+          type: string
+          format: uuid
+        work_item_type:
+          $ref: '#/components/schemas/WorkItemType'
+        work_item_id:
+          type: string
+          format: uuid
+        dossier_id:
+          type: string
+          format: uuid
+        inheritance_source:
+          $ref: '#/components/schemas/InheritanceSource'
+        inherited_from_type:
+          $ref: '#/components/schemas/ContextEntityType'
+        inherited_from_id:
+          type: string
+          format: uuid
+        inheritance_path:
+          type: array
+          items:
+            $ref: '#/components/schemas/InheritancePathStep'
+        display_order:
+          type: integer
+          default: 0
+        is_primary:
+          type: boolean
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    CreateWorkItemDossierLinkRequest:
+      type: object
+      required:
+        - work_item_type
+        - work_item_id
+        - dossier_ids
+        - inheritance_source
+      properties:
+        work_item_type:
+          $ref: '#/components/schemas/WorkItemType'
+        work_item_id:
+          type: string
+          format: uuid
+        dossier_ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: One or more dossier IDs to link
+        inheritance_source:
+          $ref: '#/components/schemas/InheritanceSource'
+        inherited_from_type:
+          $ref: '#/components/schemas/ContextEntityType'
+        inherited_from_id:
+          type: string
+          format: uuid
+        is_primary:
+          type: boolean
+          default: true
+          description: Mark first dossier as primary
+
+    DossierActivity:
+      type: object
+      required:
+        - link_id
+        - work_item_id
+        - work_item_type
+        - dossier_id
+        - inheritance_source
+        - activity_timestamp
+        - activity_title
+        - status
+        - icon_type
+      properties:
+        link_id:
+          type: string
+          format: uuid
+        work_item_id:
+          type: string
+          format: uuid
+        work_item_type:
+          $ref: '#/components/schemas/WorkItemType'
+        dossier_id:
+          type: string
+          format: uuid
+        inheritance_source:
+          $ref: '#/components/schemas/InheritanceSource'
+        inheritance_path:
+          type: array
+          items:
+            $ref: '#/components/schemas/InheritancePathStep'
+        activity_timestamp:
+          type: string
+          format: date-time
+        activity_title:
+          type: string
+        status:
+          type: string
+        priority:
+          type: string
+        assignee_id:
+          type: string
+          format: uuid
+          nullable: true
+        icon_type:
+          type: string
+          enum:
+            - checklist
+            - handshake
+            - inbox
+        inheritance_label:
+          type: string
+          nullable: true
+          description: Display label like "via Engagement"
+
+    DossierTimelineResponse:
+      type: object
+      required:
+        - activities
+        - next_cursor
+        - total_count
+      properties:
+        activities:
+          type: array
+          items:
+            $ref: '#/components/schemas/DossierActivity'
+        next_cursor:
+          type: string
+          format: date-time
+          nullable: true
+          description: Cursor for next page, null if no more results
+        total_count:
+          type: integer
+          description: Total number of activities for this dossier
+
+    ErrorResponse:
+      type: object
+      required:
+        - error
+        - code
+      properties:
+        error:
+          type: string
+          description: Human-readable error message
+        code:
+          type: string
+          description: Machine-readable error code
+        details:
+          type: string
+          description: Additional error details (dev only)
+
+  responses:
+    BadRequest:
+      description: Invalid request parameters
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: 'Missing required parameter: entity_type'
+            code: 'INVALID_REQUEST'
+
+    Unauthorized:
+      description: Missing or invalid authentication
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: 'Missing authorization header'
+            code: 'UNAUTHORIZED'
+
+    PermissionDenied:
+      description: User lacks permission to access resource
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: 'Access denied to dossier'
+            code: 'PERMISSION_DENIED'
+
+    NotFound:
+      description: Resource not found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: 'Entity not found'
+            code: 'NOT_FOUND'
+
+    InternalError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/ErrorResponse'
+          example:
+            error: 'An unexpected error occurred'
+            code: 'INTERNAL_ERROR'

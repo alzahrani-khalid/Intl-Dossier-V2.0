@@ -43,6 +43,12 @@
         "high": "عالي",
         "critical": "حرج"
       }
+    },
+    "dossier": {
+      "label": "الملف المتعلق",
+      "hint": "اختر الملف المتعلق بهذا الطلب",
+      "linkedTo": "مرتبط بـ",
+      "required": "الملف مطلوب لجميع الطلبات"
     }
   },
   "queue": {
@@ -75,6 +81,28 @@
     "hours": "ساعات",
     "businessHours": "ساعات العمل فقط"
   },
+  "sla": {
+    "acknowledgment": "الإقرار",
+    "resolution": "الحل",
+    "paused": "(متوقف)",
+    "target": "الهدف",
+    "time_remaining_hours": "متبقي {{hours}} ساعة {{minutes}} دقيقة",
+    "time_remaining_minutes": "متبقي {{minutes}} دقيقة",
+    "breached_by_hours": "متأخر بـ {{hours}} ساعة {{minutes}} دقيقة",
+    "breached_by_minutes": "متأخر بـ {{minutes}} دقيقة",
+    "pause": "إيقاف المؤقت",
+    "resume": "استئناف المؤقت",
+    "pauseReason": "سبب الإيقاف",
+    "pauseReasonPlaceholder": "أدخل سبب إيقاف المؤقت...",
+    "pauseReasonRequired": "يرجى تقديم سبب لإيقاف المؤقت",
+    "pauseSuccess": "تم إيقاف مؤقت اتفاقية الخدمة بنجاح",
+    "resumeSuccess": "تم استئناف مؤقت اتفاقية الخدمة بنجاح",
+    "pauseError": "فشل إيقاف مؤقت اتفاقية الخدمة",
+    "resumeError": "فشل استئناف مؤقت اتفاقية الخدمة",
+    "totalPaused": "إجمالي وقت الإيقاف",
+    "pauseHistory": "سجل الإيقاف",
+    "noPauseHistory": "لا يوجد سجل إيقاف"
+  },
   "success": {
     "title": "تم تقديم الطلب بنجاح",
     "message": "تم إنشاء طلبك {{ticketNumber}}",
@@ -102,8 +130,17 @@
     "attachments": "المرفقات",
     "convert": "تحويل إلى قطعة أثرية",
     "close": "إغلاق التذكرة",
-    "convertPrompt": "أدخل النوع المستهدف (ملف/مشاركة/موقف):",
-    "closePrompt": "أدخل الحل:",
+    "convertTitle": "تحويل التذكرة",
+    "convertDescription": "اختر نوع الكيان لتحويل هذه التذكرة إليه",
+    "selectType": "اختر النوع...",
+    "convertOptions": {
+      "dossier": "ملف",
+      "engagement": "مشاركة",
+      "position": "موقف"
+    },
+    "closeTitle": "إغلاق التذكرة",
+    "closeDescription": "قدم ملخصاً للحل لإغلاق هذه التذكرة",
+    "resolutionPlaceholder": "أدخل ملخص الحل...",
     "historyPlaceholder": "سيتم عرض سجل التدقيق هنا",
     "tabs": {
       "details": "التفاصيل",

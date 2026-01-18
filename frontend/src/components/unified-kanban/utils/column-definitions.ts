@@ -187,7 +187,30 @@ export function canSourceAppearInColumn(
 // ============================================
 
 /**
+ * Valid ticket_status enum values from database
+ * @see supabase/migrations/20250129001_create_intake_tickets_table.sql
+ */
+const VALID_TICKET_STATUSES = [
+  'draft',
+  'submitted',
+  'triaged',
+  'assigned',
+  'in_progress',
+  'converted',
+  'closed',
+  'merged',
+] as const
+
+type TicketStatus = (typeof VALID_TICKET_STATUSES)[number]
+
+/**
  * Map source-specific status to unified column key
+ *
+ * For intake tickets, maps ticket_status enum to kanban columns:
+ * - todo: draft, submitted, triaged (pre-work states)
+ * - in_progress: assigned, in_progress (active work)
+ * - done: converted (successfully completed)
+ * - cancelled: closed, merged (terminal non-success)
  */
 export function mapStatusToColumnKey(
   source: WorkSource,
@@ -201,7 +224,35 @@ export function mapStatusToColumnKey(
     return workflowStage
   }
 
-  // Map commitment/intake statuses to column keys
+  // For intake tickets, use explicit mapping based on ticket_status enum
+  if (source === 'intake') {
+    switch (status) {
+      // Pre-work states -> todo column
+      case 'draft':
+      case 'submitted':
+      case 'triaged':
+        return 'todo'
+
+      // Active work states -> in_progress column
+      case 'assigned':
+      case 'in_progress':
+        return 'in_progress'
+
+      // Successfully completed -> done column
+      case 'converted':
+        return 'done'
+
+      // Terminal non-success states -> cancelled column
+      case 'closed':
+      case 'merged':
+        return 'cancelled'
+
+      default:
+        return 'todo'
+    }
+  }
+
+  // For commitments and other sources
   switch (status) {
     case 'pending':
     case 'todo':
@@ -209,8 +260,6 @@ export function mapStatusToColumnKey(
     case 'in_progress':
       return 'in_progress'
     case 'completed':
-    case 'resolved':
-    case 'closed':
     case 'done':
       return 'done'
     case 'cancelled':
@@ -224,6 +273,8 @@ export function mapStatusToColumnKey(
 
 /**
  * Map column key back to source-specific status
+ *
+ * IMPORTANT: Returns only valid database enum values
  */
 export function mapColumnKeyToStatus(
   source: WorkSource,
@@ -259,19 +310,30 @@ export function mapColumnKeyToStatus(
   }
 
   if (source === 'intake') {
-    // Intake: pending, in_progress, resolved, closed
+    // FIXED: Use valid ticket_status enum values
+    // Enum: draft, submitted, triaged, assigned, in_progress, converted, closed, merged
+    let status: TicketStatus
+
     switch (columnKey) {
       case 'todo':
-        return { status: 'pending' }
+        // Default to 'submitted' - neutral pre-work state
+        status = 'submitted'
+        break
       case 'in_progress':
-        return { status: 'in_progress' }
+        status = 'in_progress'
+        break
       case 'done':
-        return { status: 'resolved' }
+        // FIXED: 'converted' is the valid status, not 'resolved'
+        status = 'converted'
+        break
       case 'cancelled':
-        return { status: 'closed' }
+        status = 'closed'
+        break
       default:
-        return { status: 'pending' }
+        status = 'submitted'
     }
+
+    return { status }
   }
 
   return { status: columnKey }

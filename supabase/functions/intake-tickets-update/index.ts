@@ -1,54 +1,93 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2.39.0";
-import { corsHeaders } from "../_shared/cors.ts";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
+import { corsHeaders } from '../_shared/cors.ts';
 
+/**
+ * Update Ticket Request Interface
+ *
+ * Supports two ID extraction methods for backwards compatibility:
+ * 1. ID in request body (preferred - `{ id: "uuid", ...fields }`)
+ * 2. ID in URL path (`/intake-tickets-update/{uuid}`)
+ */
 interface UpdateTicketRequest {
+  id?: string; // Ticket ID (preferred method - in body)
   title?: string;
   title_ar?: string;
   description?: string;
   description_ar?: string;
-  urgency?: "low" | "medium" | "high" | "critical";
+  urgency?: 'low' | 'medium' | 'high' | 'critical';
   type_specific_fields?: Record<string, any>;
+}
+
+/**
+ * UUID validation regex
+ */
+const UUID_REGEX = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i;
+
+/**
+ * Validates if a string is a valid UUID
+ */
+function isValidUUID(str: string): boolean {
+  return UUID_REGEX.test(str);
 }
 
 serve(async (req) => {
   // Handle CORS
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     // Get auth token
-    const authHeader = req.headers.get("Authorization");
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
       return new Response(
-        JSON.stringify({ error: "Unauthorized", message: "Missing authorization header" }),
+        JSON.stringify({ error: 'Unauthorized', message: 'Missing authorization header' }),
         {
           status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
-    // Extract ticket ID from URL
-    const url = new URL(req.url);
-    const pathParts = url.pathname.split("/");
-    const ticketId = pathParts[pathParts.length - 1];
+    // Parse request body first (needed for ID extraction)
+    const body: UpdateTicketRequest = await req.json();
 
-    if (!ticketId || ticketId === "intake-tickets-update") {
+    // Extract ticket ID - support both URL path and body
+    // Priority: 1) Body ID, 2) URL path ID
+    const url = new URL(req.url);
+    const pathParts = url.pathname.split('/');
+    const pathId = pathParts[pathParts.length - 1];
+
+    // Determine ticket ID from body or path
+    let ticketId: string | undefined;
+
+    if (body.id && isValidUUID(body.id)) {
+      // Preferred: ID from request body
+      ticketId = body.id;
+    } else if (pathId && pathId !== 'intake-tickets-update' && isValidUUID(pathId)) {
+      // Fallback: ID from URL path (for backwards compatibility)
+      ticketId = pathId;
+    }
+
+    if (!ticketId) {
       return new Response(
-        JSON.stringify({ error: "Bad Request", message: "Ticket ID is required" }),
+        JSON.stringify({
+          error: 'Bad Request',
+          message: "Ticket ID is required. Provide 'id' in request body or as URL path parameter.",
+          hint: "Use { id: 'uuid', ...updates } in body or /intake-tickets-update/{uuid}",
+        }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
     // Create Supabase client with user context
     const supabaseClient = createClient(
-      Deno.env.get("SUPABASE_URL") ?? "",
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "",
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
       {
         global: {
           headers: { Authorization: authHeader },
@@ -64,27 +103,25 @@ serve(async (req) => {
 
     if (userError || !user) {
       return new Response(
-        JSON.stringify({ error: "Unauthorized", message: "Invalid user session" }),
+        JSON.stringify({ error: 'Unauthorized', message: 'Invalid user session' }),
         {
           status: 401,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
-    // Parse request body
-    const body: UpdateTicketRequest = await req.json();
-
+    // Body already parsed above for ID extraction
     // Validate field lengths if provided
     if (body.title && body.title.length > 200) {
       return new Response(
         JSON.stringify({
-          error: "Bad Request",
-          message: "Title must not exceed 200 characters",
+          error: 'Bad Request',
+          message: 'Title must not exceed 200 characters',
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -92,12 +129,12 @@ serve(async (req) => {
     if (body.title_ar && body.title_ar.length > 200) {
       return new Response(
         JSON.stringify({
-          error: "Bad Request",
-          message: "Arabic title must not exceed 200 characters",
+          error: 'Bad Request',
+          message: 'Arabic title must not exceed 200 characters',
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -105,12 +142,12 @@ serve(async (req) => {
     if (body.description && body.description.length > 5000) {
       return new Response(
         JSON.stringify({
-          error: "Bad Request",
-          message: "Description must not exceed 5000 characters",
+          error: 'Bad Request',
+          message: 'Description must not exceed 5000 characters',
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -118,31 +155,28 @@ serve(async (req) => {
     if (body.description_ar && body.description_ar.length > 5000) {
       return new Response(
         JSON.stringify({
-          error: "Bad Request",
-          message: "Arabic description must not exceed 5000 characters",
+          error: 'Bad Request',
+          message: 'Arabic description must not exceed 5000 characters',
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
 
     // Fetch existing ticket for audit purposes
     const { data: existingTicket, error: fetchError } = await supabaseClient
-      .from("intake_tickets")
-      .select("*")
-      .eq("id", ticketId)
+      .from('intake_tickets')
+      .select('*')
+      .eq('id', ticketId)
       .single();
 
     if (fetchError || !existingTicket) {
-      return new Response(
-        JSON.stringify({ error: "Not Found", message: "Ticket not found" }),
-        {
-          status: 404,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'Not Found', message: 'Ticket not found' }), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     // Check if user can update the ticket
@@ -150,18 +184,18 @@ serve(async (req) => {
     const canUpdate =
       existingTicket.created_by === user.id ||
       existingTicket.assigned_to === user.id ||
-      user.role === "supervisor" ||
-      user.role === "admin";
+      user.role === 'supervisor' ||
+      user.role === 'admin';
 
     if (!canUpdate) {
       return new Response(
         JSON.stringify({
-          error: "Forbidden",
+          error: 'Forbidden',
           message: "You don't have permission to update this ticket",
         }),
         {
           status: 403,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -179,15 +213,15 @@ serve(async (req) => {
     if (body.description_ar !== undefined) updateData.description_ar = body.description_ar;
     if (body.urgency !== undefined) {
       updateData.urgency = body.urgency;
-      
+
       // Recalculate priority based on new urgency
-      let priority: "low" | "medium" | "high" | "urgent" = "medium";
-      if (body.urgency === "critical") {
-        priority = "urgent";
-      } else if (body.urgency === "high") {
-        priority = "high";
-      } else if (body.urgency === "low") {
-        priority = "low";
+      let priority: 'low' | 'medium' | 'high' | 'urgent' = 'medium';
+      if (body.urgency === 'critical') {
+        priority = 'urgent';
+      } else if (body.urgency === 'high') {
+        priority = 'high';
+      } else if (body.urgency === 'low') {
+        priority = 'low';
       }
       updateData.priority = priority;
     }
@@ -197,23 +231,23 @@ serve(async (req) => {
 
     // Update the ticket
     const { data: updatedTicket, error: updateError } = await supabaseClient
-      .from("intake_tickets")
+      .from('intake_tickets')
       .update(updateData)
-      .eq("id", ticketId)
+      .eq('id', ticketId)
       .select()
       .single();
 
     if (updateError) {
-      console.error("Error updating ticket:", updateError);
+      console.error('Error updating ticket:', updateError);
       return new Response(
         JSON.stringify({
-          error: "Internal Server Error",
-          message: "Failed to update ticket",
+          error: 'Internal Server Error',
+          message: 'Failed to update ticket',
           details: updateError,
         }),
         {
           status: 500,
-          headers: { ...corsHeaders, "Content-Type": "application/json" },
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -221,9 +255,9 @@ serve(async (req) => {
     // Create audit log entry
     const changedFields: Record<string, any> = {};
     const oldValues: Record<string, any> = {};
-    
+
     Object.keys(updateData).forEach((key) => {
-      if (key !== "updated_by" && key !== "updated_at") {
+      if (key !== 'updated_by' && key !== 'updated_at') {
         if (existingTicket[key] !== updateData[key]) {
           oldValues[key] = existingTicket[key];
           changedFields[key] = updateData[key];
@@ -231,24 +265,25 @@ serve(async (req) => {
       }
     });
 
-    const { error: auditError } = await supabaseClient.from("audit_logs").insert({
-      entity_type: "intake_ticket",
+    const { error: auditError } = await supabaseClient.from('audit_logs').insert({
+      entity_type: 'intake_ticket',
       entity_id: ticketId,
-      action: "update",
+      action: 'update',
       old_values: oldValues,
       new_values: changedFields,
       user_id: user.id,
-      user_role: user.role || "user",
-      ip_address: req.headers.get("X-Forwarded-For") || req.headers.get("CF-Connecting-IP"),
-      user_agent: req.headers.get("User-Agent"),
-      required_mfa: existingTicket.sensitivity === "confidential" || existingTicket.sensitivity === "secret",
+      user_role: user.role || 'user',
+      ip_address: req.headers.get('X-Forwarded-For') || req.headers.get('CF-Connecting-IP'),
+      user_agent: req.headers.get('User-Agent'),
+      required_mfa:
+        existingTicket.sensitivity === 'confidential' || existingTicket.sensitivity === 'secret',
       mfa_verified: false, // Would be true if MFA was verified
       correlation_id: crypto.randomUUID(),
       session_id: user.id,
     });
 
     if (auditError) {
-      console.error("Error creating audit log:", auditError);
+      console.error('Error creating audit log:', auditError);
     }
 
     // Calculate SLA status for response
@@ -258,9 +293,9 @@ serve(async (req) => {
 
     const slaTargets = {
       acknowledgment:
-        updatedTicket.priority === "urgent" ? 30 : updatedTicket.priority === "high" ? 60 : 240,
+        updatedTicket.priority === 'urgent' ? 30 : updatedTicket.priority === 'high' ? 60 : 240,
       resolution:
-        updatedTicket.priority === "urgent" ? 480 : updatedTicket.priority === "high" ? 960 : 2880,
+        updatedTicket.priority === 'urgent' ? 480 : updatedTicket.priority === 'high' ? 960 : 2880,
     };
 
     const slaStatus = {
@@ -279,10 +314,8 @@ serve(async (req) => {
         remaining_minutes: Math.max(0, slaTargets.resolution - elapsedMinutes),
         is_breached:
           elapsedMinutes > slaTargets.resolution &&
-          !["converted", "closed", "merged"].includes(updatedTicket.status),
-        target_time: new Date(
-          createdAt.getTime() + slaTargets.resolution * 60000
-        ).toISOString(),
+          !['converted', 'closed', 'merged'].includes(updatedTicket.status),
+        target_time: new Date(createdAt.getTime() + slaTargets.resolution * 60000).toISOString(),
       },
     };
 
@@ -304,19 +337,19 @@ serve(async (req) => {
 
     return new Response(JSON.stringify(response), {
       status: 200,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Unexpected error:", error);
+    console.error('Unexpected error:', error);
     return new Response(
       JSON.stringify({
-        error: "Internal Server Error",
-        message: "An unexpected error occurred",
+        error: 'Internal Server Error',
+        message: 'An unexpected error occurred',
         correlation_id: crypto.randomUUID(),
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   }

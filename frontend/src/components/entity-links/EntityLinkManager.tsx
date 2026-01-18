@@ -14,6 +14,7 @@ import { Plus, Trash, Link as LinkIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { cn } from '@/lib/utils'
+import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { EntitySearchDialog } from './EntitySearchDialog'
 import { LinkList } from './LinkList'
 import { AISuggestionPanel } from './AISuggestionPanel'
@@ -178,10 +179,12 @@ export function EntityLinkManager({
   }
 
   // Handle entity link click (navigate to entity)
-  const handleLinkClick = (entityType: string, entityId: string) => {
+  // Note: For dossiers, we need the dossier type which isn't available here,
+  // so we navigate to the generic search path and let the server redirect
+  const handleLinkClick = (entityType: string, entityId: string, dossierType?: string) => {
     switch (entityType) {
       case 'dossier':
-        navigate({ to: '/dossiers/$id', params: { id: entityId } })
+        navigate({ to: getDossierDetailPath(entityId, dossierType || 'country') })
         break
       case 'position':
         navigate({ to: '/positions/$id', params: { id: entityId } })

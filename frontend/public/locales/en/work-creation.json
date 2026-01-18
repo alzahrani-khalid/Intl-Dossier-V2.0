@@ -10,7 +10,8 @@
     "createIntake": "New Intake Request",
     "intakeDescription": "Submit a new request through the intake system",
     "selectDossier": "Select Dossier",
-    "dossierRequired": "Commitments must be linked to a dossier. Please select one:"
+    "dossierRequired": "Commitments must be linked to a dossier. Please select one:",
+    "dossierRequiredGeneric": "All work items must be linked to a dossier. Please select one:"
   },
   "form": {
     "selectDossier": "Select a dossier",
@@ -41,7 +42,8 @@
     "taskCreated": "Task created successfully",
     "taskError": "Failed to create task",
     "intakeCreated": "Intake request created successfully",
-    "intakeError": "Failed to create intake request"
+    "intakeError": "Failed to create intake request",
+    "dossierHint": "Select the dossier this work item relates to"
   },
   "priority": {
     "low": "Low",

@@ -1,0 +1,169 @@
+{
+  "title": "سياق الملف",
+  "description": "إدارة ارتباطات الملفات لعناصر العمل",
+
+  "badge": {
+    "linked_to": "مرتبط بـ {{dossierName}}",
+    "linked_dossiers": "مرتبط بـ:",
+    "via_engagement": "عبر المشاركة",
+    "via_after_action": "عبر سجل المتابعة",
+    "via_position": "عبر المنصب",
+    "via_mou": "عبر مذكرة التفاهم",
+    "direct": "ربط مباشر",
+    "primary": "رئيسي"
+  },
+
+  "selector": {
+    "title": "اختر الملف",
+    "placeholder": "البحث في الملفات...",
+    "no_results": "لم يتم العثور على ملفات",
+    "loading": "جارٍ تحميل الملفات...",
+    "select_at_least_one": "اختر ملفاً واحداً على الأقل",
+    "selected_count": "تم اختيار ملف {{count}}",
+    "selected_count_plural": "تم اختيار {{count}} ملفات",
+    "clear_selection": "مسح الاختيار",
+    "search_hint": "اكتب للبحث بالاسم",
+    "filter_by_type": "تصفية حسب النوع",
+    "all_types": "جميع الأنواع"
+  },
+
+  "type": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "theme": "موضوع"
+  },
+
+  "timeline": {
+    "title": "الجدول الزمني للأنشطة",
+    "empty": "لا توجد أنشطة لهذا الملف",
+    "loading": "جارٍ تحميل الأنشطة...",
+    "loadMore": "تحميل المزيد",
+    "showing_count": "عرض {{count}} من {{total}} نشاط",
+    "filter": "تصفية",
+    "filter_by_type": "تصفية حسب النوع",
+    "filter_by_source": "تصفية حسب المصدر",
+    "all_types": "جميع الأنواع",
+    "all_sources": "جميع المصادر",
+    "refresh": "تحديث",
+    "clearFilters": "مسح الفلاتر",
+    "overdueOnly": "المتأخرة فقط",
+    "endOfList": "نهاية الأنشطة",
+    "error": "فشل في تحميل الأنشطة",
+    "retry": "حاول مرة أخرى",
+    "noTitle": "بدون عنوان",
+    "overdue": "متأخر",
+    "inheritedVia": "عبر",
+    "minutesAgo": "{{count}} دقيقة",
+    "hoursAgo": "{{count}} ساعة",
+    "daysAgo": "{{count}} يوم",
+    "type": {
+      "task": "مهمة",
+      "commitment": "التزام",
+      "intake": "طلب"
+    },
+    "status": {
+      "pending": "قيد الانتظار",
+      "in_progress": "قيد التنفيذ",
+      "todo": "للعمل",
+      "review": "للمراجعة",
+      "completed": "مكتمل",
+      "done": "منجز",
+      "cancelled": "ملغي",
+      "open": "مفتوح",
+      "closed": "مغلق"
+    },
+    "priority": {
+      "low": "منخفضة",
+      "medium": "متوسطة",
+      "high": "عالية",
+      "urgent": "عاجلة",
+      "critical": "حرجة"
+    },
+    "inheritanceSource": {
+      "direct": "مباشر",
+      "engagement": "المشاركة",
+      "after_action": "سجل المتابعة",
+      "position": "المنصب",
+      "mou": "مذكرة التفاهم"
+    }
+  },
+
+  "activity": {
+    "task": "مهمة",
+    "commitment": "التزام",
+    "intake": "طلب استقبال",
+    "created_at": "أُنشئ في {{date}}",
+    "updated_at": "تم التحديث {{date}}",
+    "view_details": "عرض التفاصيل"
+  },
+
+  "inheritance": {
+    "direct": "مرتبط مباشرة",
+    "engagement": "موروث من المشاركة",
+    "after_action": "موروث من سجل المتابعة",
+    "position": "موروث من المنصب",
+    "mou": "موروث من مذكرة التفاهم",
+    "path": "مسار الوراثة"
+  },
+
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف"
+  },
+
+  "validation": {
+    "dossier_required": "مطلوب ملف واحد على الأقل",
+    "dossier_access_denied": "ليس لديك صلاحية الوصول لهذا الملف",
+    "primary_dossier_required": "يجب اختيار ملف رئيسي",
+    "duplicate_link": "هذا الملف مرتبط بالفعل",
+    "invalid_inheritance": "تكوين وراثة غير صالح"
+  },
+
+  "errors": {
+    "resolve_failed": "فشل في حل سياق الملف",
+    "create_link_failed": "فشل في ربط الملف",
+    "delete_link_failed": "فشل في إزالة ارتباط الملف",
+    "load_timeline_failed": "فشل في تحميل الجدول الزمني للأنشطة",
+    "search_failed": "فشل في البحث عن الملفات",
+    "permission_denied": "ليس لديك صلاحية الوصول لهذا الملف"
+  },
+
+  "actions": {
+    "add_dossier": "إضافة ملف",
+    "remove_dossier": "إزالة الملف",
+    "set_primary": "تعيين كرئيسي",
+    "view_dossier": "عرض الملف",
+    "edit_links": "تعديل ارتباطات الملف"
+  },
+
+  "context": {
+    "auto_resolved": "تم حل سياق الملف تلقائياً",
+    "manual_selection_required": "الرجاء اختيار ملف",
+    "inherited_from": "موروث من {{source}}",
+    "no_context": "لا يتوفر سياق ملف"
+  },
+
+  "hints": {
+    "inheritance": "ترث عناصر العمل سياق الملف من الكيان الأصلي",
+    "multiple_dossiers": "يمكنك ربط عنصر العمل بعدة ملفات",
+    "primary_dossier": "يتم عرض الملف الرئيسي بشكل بارز في القوائم"
+  },
+
+  "error": {
+    "timeline_title": "خطأ في الجدول الزمني للأنشطة",
+    "timeline_description": "تعذر تحميل الجدول الزمني للأنشطة. يرجى المحاولة مرة أخرى.",
+    "selector_title": "خطأ في محدد الملفات",
+    "selector_description": "تعذر تحميل محدد الملفات. يرجى المحاولة مرة أخرى.",
+    "badge_title": "خطأ في شارة الملف",
+    "badge_description": "تعذر عرض معلومات الملف.",
+    "context_title": "خطأ في سياق الملف",
+    "context_description": "تعذر حل سياق الملف. يرجى اختيار ملف يدوياً.",
+    "general_title": "حدث خطأ ما",
+    "general_description": "حدث خطأ غير متوقع. يرجى تحديث الصفحة.",
+    "technical_details": "التفاصيل التقنية",
+    "try_again": "حاول مرة أخرى",
+    "refresh_page": "تحديث الصفحة"
+  }
+}

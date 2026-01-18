@@ -151,6 +151,16 @@ export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
   // Get metric label
   const metricLabel = t(`metrics.${metric}`, metric)
 
+  // Format value based on metric type - must be called before any conditional returns
+  const formattedValue = useMemo(() => {
+    if (!data) return ''
+    const { value } = data
+    if (metric === 'response-rate' || metric === 'sla-compliance') {
+      return `${value.toFixed(1)}%`
+    }
+    return value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')
+  }, [data, metric, isRTL])
+
   // Loading skeleton
   if (isLoading || !data) {
     return (
@@ -163,14 +173,6 @@ export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
   }
 
   const { value, trend, trendPercentage, sparklineData, target, targetProgress } = data
-
-  // Format value based on metric type
-  const formattedValue = useMemo(() => {
-    if (metric === 'response-rate' || metric === 'sla-compliance') {
-      return `${value.toFixed(1)}%`
-    }
-    return value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')
-  }, [value, metric, isRTL])
 
   // Sparkline color based on trend
   const sparklineColor =

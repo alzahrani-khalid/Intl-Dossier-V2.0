@@ -1,23 +1,26 @@
 /**
  * TaskQuickForm Component
  * Feature: 033-unified-work-creation-hub
+ * Updated for: 035-dossier-context (Smart Dossier Context Inheritance)
  *
  * Simplified task creation form for the work creation palette.
- * Includes context tracking for audit trail.
+ * Includes context tracking for audit trail and dossier linking.
+ * Now includes DossierSelector for US4 compliance.
  */
 
-import { useTranslation } from 'react-i18next';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { format } from 'date-fns';
-import { ar, enUS } from 'date-fns/locale';
-import { CalendarIcon, Loader2, User } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { Calendar } from '@/components/ui/calendar';
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { format } from 'date-fns'
+import { ar, enUS } from 'date-fns/locale'
+import { CalendarIcon, Loader2, User } from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Textarea } from '@/components/ui/textarea'
+import { Calendar } from '@/components/ui/calendar'
 import {
   Form,
   FormControl,
@@ -26,54 +29,82 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form';
+} from '@/components/ui/form'
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover';
-import { tasksAPI, type CreateTaskRequest } from '@/services/tasks-api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
-import type { CreationContext } from '../hooks/useCreationContext';
+} from '@/components/ui/select'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Badge } from '@/components/ui/badge'
+import { tasksAPI, type CreateTaskRequest } from '@/services/tasks-api'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { toast } from 'sonner'
+import type { CreationContext } from '../hooks/useCreationContext'
+import { useCreateWorkItemDossierLinks } from '@/hooks/useCreateWorkItemDossierLinks'
+import { DossierContextBadge, DossierSelector, type SelectedDossier } from '@/components/Dossier'
+import type { InheritanceSource, ContextEntityType } from '@/types/dossier-context.types'
+import type { DossierType } from '@/types/relationship.types'
 
 // Validation schema
 const taskQuickFormSchema = z.object({
-  title: z
-    .string()
-    .min(1, 'validation.titleRequired')
-    .max(200, 'validation.titleMaxLength'),
+  title: z.string().min(1, 'validation.titleRequired').max(200, 'validation.titleMaxLength'),
   description: z.string().optional(),
   assignee_id: z.string().min(1, 'validation.assigneeRequired'),
   priority: z.enum(['low', 'medium', 'high', 'urgent'] as const),
   sla_deadline: z.date().optional().nullable(),
-});
+})
 
-type TaskQuickFormValues = z.infer<typeof taskQuickFormSchema>;
+type TaskQuickFormValues = z.infer<typeof taskQuickFormSchema>
 
 export interface TaskQuickFormProps {
-  creationContext: CreationContext;
-  engagementId?: string;
-  onSuccess?: (task: any) => void;
-  onCancel?: () => void;
+  /** Dossier ID for linking (required when creating from generic pages) */
+  dossierId?: string
+  creationContext: CreationContext
+  /** Pre-selected dossier info for display */
+  selectedDossier?: { id: string; name_en: string; name_ar: string; type: string }
+  engagementId?: string
+  onSuccess?: (task: any) => void
+  onCancel?: () => void
 }
 
 export function TaskQuickForm({
+  dossierId,
   creationContext,
+  selectedDossier,
   engagementId,
   onSuccess,
   onCancel,
 }: TaskQuickFormProps) {
-  const { t, i18n } = useTranslation('work-creation');
-  const isRTL = i18n.language === 'ar';
-  const queryClient = useQueryClient();
+  const { t, i18n } = useTranslation(['work-creation', 'dossier-context'])
+  const isRTL = i18n.language === 'ar'
+  const queryClient = useQueryClient()
+
+  // State for user-selected dossier when no context is available (US4)
+  const [userSelectedDossiers, setUserSelectedDossiers] = useState<SelectedDossier[]>([])
+  const [dossierError, setDossierError] = useState<string>('')
+
+  // Determine if we have a dossier from any source
+  const hasDossierContext = !!(selectedDossier || dossierId || creationContext.dossierId)
+
+  // Get the effective dossier ID (from props, context, or user selection)
+  const getEffectiveDossierId = () => {
+    if (dossierId) return dossierId
+    if (creationContext.dossierId) return creationContext.dossierId
+    const firstDossier = userSelectedDossiers[0]
+    if (firstDossier) return firstDossier.id
+    return undefined
+  }
+
+  // Handle dossier selection change
+  const handleDossierChange = (_: string[], dossiers: SelectedDossier[]) => {
+    setUserSelectedDossiers(dossiers)
+    if (dossiers.length > 0) {
+      setDossierError('')
+    }
+  }
 
   const form = useForm<TaskQuickFormValues>({
     resolver: zodResolver(taskQuickFormSchema),
@@ -84,26 +115,80 @@ export function TaskQuickForm({
       priority: 'medium',
       sla_deadline: null,
     },
-  });
+  })
+
+  // Hook for creating dossier links after task creation
+  const createDossierLinksMutation = useCreateWorkItemDossierLinks({
+    onError: (error) => {
+      // Log but don't fail the whole operation - task was created successfully
+      console.warn('Failed to create dossier links:', error)
+    },
+  })
 
   const createTaskMutation = useMutation({
     mutationFn: (request: CreateTaskRequest) => tasksAPI.createTask(request),
-    onSuccess: (data) => {
+    onSuccess: async (data) => {
       // Invalidate task queries
-      queryClient.invalidateQueries({ queryKey: ['tasks'] });
-      queryClient.invalidateQueries({ queryKey: ['unified-work'] });
-      toast.success(t('form.taskCreated', 'Task created successfully'));
-      form.reset();
-      onSuccess?.(data);
+      queryClient.invalidateQueries({ queryKey: ['tasks'] })
+      queryClient.invalidateQueries({ queryKey: ['unified-work'] })
+
+      // Create dossier links if we have dossier context
+      // Use explicit dossierId prop first, then fall back to context or user selection
+      const finalDossierId = getEffectiveDossierId()
+      if (finalDossierId && data?.id) {
+        // Determine inheritance source based on creation context
+        let inheritanceSource: InheritanceSource = 'direct'
+        let inheritedFromType: ContextEntityType | undefined
+        let inheritedFromId: string | undefined
+
+        if (creationContext.engagementId) {
+          inheritanceSource = 'engagement'
+          inheritedFromType = 'engagement'
+          inheritedFromId = creationContext.engagementId
+        } else if (creationContext.afterActionId) {
+          inheritanceSource = 'after_action'
+          inheritedFromType = 'after_action'
+          inheritedFromId = creationContext.afterActionId
+        } else if (creationContext.positionId) {
+          inheritanceSource = 'position'
+          inheritedFromType = 'position'
+          inheritedFromId = creationContext.positionId
+        }
+
+        try {
+          await createDossierLinksMutation.mutateAsync({
+            work_item_type: 'task',
+            work_item_id: data.id,
+            dossier_ids: [finalDossierId],
+            inheritance_source: inheritanceSource,
+            inherited_from_type: inheritedFromType,
+            inherited_from_id: inheritedFromId,
+            is_primary: true,
+          })
+        } catch {
+          // Error already handled in hook - continue with success
+        }
+      }
+
+      toast.success(t('form.taskCreated', 'Task created successfully'))
+      form.reset()
+      onSuccess?.(data)
     },
     onError: (error: any) => {
-      toast.error(error.message || t('form.taskError', 'Failed to create task'));
+      toast.error(error.message || t('form.taskError', 'Failed to create task'))
     },
-  });
+  })
 
-  const isPending = createTaskMutation.isPending;
+  const isPending = createTaskMutation.isPending || createDossierLinksMutation.isPending
 
   const onSubmit = (values: TaskQuickFormValues) => {
+    // Validate dossier is selected (US4 requirement)
+    const effectiveDossierId = getEffectiveDossierId()
+    if (!effectiveDossierId) {
+      setDossierError(t('dossier-context:validation.dossier_required'))
+      return
+    }
+
     const request: CreateTaskRequest = {
       title: values.title,
       description: values.description,
@@ -112,16 +197,16 @@ export function TaskQuickForm({
       engagement_id: engagementId ?? creationContext.engagementId,
       sla_deadline: values.sla_deadline?.toISOString(),
       workflow_stage: 'todo',
-      // Context tracking via source JSONB
+      // Context tracking via source JSONB (legacy - for backwards compatibility)
       source: {
         created_from_route: creationContext.route,
         created_from_entity: creationContext.createdFromEntity,
-        dossier_ids: creationContext.dossierId ? [creationContext.dossierId] : undefined,
+        dossier_ids: [effectiveDossierId],
       },
-    };
+    }
 
-    createTaskMutation.mutate(request);
-  };
+    createTaskMutation.mutate(request)
+  }
 
   return (
     <Form {...form}>
@@ -130,6 +215,61 @@ export function TaskQuickForm({
         className="space-y-4"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
+        {/* T042/US4: Dossier context display or selector */}
+        {/* Show badge when dossier is provided from props or context */}
+        {selectedDossier && (
+          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <DossierContextBadge
+              dossierId={selectedDossier.id}
+              dossierType={(selectedDossier.type as any) ?? 'country'}
+              nameEn={selectedDossier.name_en}
+              nameAr={selectedDossier.name_ar}
+              inheritanceSource="direct"
+              isPrimary
+              size="sm"
+              clickable={false}
+              showInheritance={false}
+            />
+          </div>
+        )}
+        {/* Fallback for dossierId-only case (no full dossier info) */}
+        {!selectedDossier && dossierId && (
+          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <Badge variant="outline">{dossierId}</Badge>
+          </div>
+        )}
+        {/* US4: Show DossierSelector when no dossier context is available */}
+        {!hasDossierContext && (
+          <DossierSelector
+            value={userSelectedDossiers.map((d) => d.id)}
+            onChange={handleDossierChange}
+            required
+            multiple={false}
+            label={t('dossier-context:selector.title')}
+            hint={t('form.dossierHint', 'Select the dossier this task relates to')}
+            error={dossierError}
+          />
+        )}
+        {/* Show badge for user-selected dossier */}
+        {!hasDossierContext && userSelectedDossiers.length > 0 && userSelectedDossiers[0] && (
+          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+            <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
+            <DossierContextBadge
+              dossierId={userSelectedDossiers[0].id}
+              dossierType={(userSelectedDossiers[0].type as DossierType) ?? 'country'}
+              nameEn={userSelectedDossiers[0].name_en}
+              nameAr={userSelectedDossiers[0].name_ar ?? ''}
+              inheritanceSource="direct"
+              isPrimary
+              size="sm"
+              clickable={false}
+              showInheritance={false}
+            />
+          </div>
+        )}
+
         {/* Title */}
         <FormField
           control={form.control}
@@ -164,7 +304,10 @@ export function TaskQuickForm({
               <FormControl>
                 <Textarea
                   {...field}
-                  placeholder={t('form.taskDescriptionPlaceholder', 'Enter task details (optional)')}
+                  placeholder={t(
+                    'form.taskDescriptionPlaceholder',
+                    'Enter task details (optional)',
+                  )}
                   className="min-h-20 resize-none"
                 />
               </FormControl>
@@ -179,12 +322,15 @@ export function TaskQuickForm({
           name="assignee_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
-                {t('form.assignee', 'Assignee')} *
-              </FormLabel>
+              <FormLabel className="text-start block">{t('form.assignee', 'Assignee')} *</FormLabel>
               <FormControl>
                 <div className="relative">
-                  <User className={cn('absolute top-3 size-4 text-muted-foreground', isRTL ? 'end-3' : 'start-3')} />
+                  <User
+                    className={cn(
+                      'absolute top-3 size-4 text-muted-foreground',
+                      isRTL ? 'end-3' : 'start-3',
+                    )}
+                  />
                   <Input
                     {...field}
                     placeholder={t('form.assigneePlaceholder', 'Enter user ID')}
@@ -208,9 +354,7 @@ export function TaskQuickForm({
             name="priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start block">
-                  {t('form.priority', 'Priority')}
-                </FormLabel>
+                <FormLabel className="text-start block">{t('form.priority', 'Priority')}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger className="min-h-11">
@@ -245,7 +389,7 @@ export function TaskQuickForm({
                         variant="outline"
                         className={cn(
                           'min-h-11 w-full justify-start text-start font-normal',
-                          !field.value && 'text-muted-foreground'
+                          !field.value && 'text-muted-foreground',
                         )}
                       >
                         <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -264,9 +408,7 @@ export function TaskQuickForm({
                       mode="single"
                       selected={field.value ?? undefined}
                       onSelect={field.onChange}
-                      disabled={(date) =>
-                        date < new Date(new Date().setHours(0, 0, 0, 0))
-                      }
+                      disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
                       initialFocus
                       locale={isRTL ? ar : enUS}
                     />
@@ -289,11 +431,7 @@ export function TaskQuickForm({
           >
             {t('actions.cancel', 'Cancel')}
           </Button>
-          <Button
-            type="submit"
-            disabled={isPending}
-            className="min-h-11 w-full sm:flex-1"
-          >
+          <Button type="submit" disabled={isPending} className="min-h-11 w-full sm:flex-1">
             {isPending ? (
               <>
                 <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -306,7 +444,7 @@ export function TaskQuickForm({
         </div>
       </form>
     </Form>
-  );
+  )
 }
 
-export default TaskQuickForm;
+export default TaskQuickForm

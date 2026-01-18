@@ -2,6 +2,16 @@
   "title": "الدوسيهات",
   "untitled": "دوسيه بدون عنوان",
   "id": "المعرف",
+  "tabs": {
+    "activity": "النشاط",
+    "timeline": "الجدول الزمني",
+    "relationships": "العلاقات",
+    "positions": "المناصب",
+    "mous": "مذكرات التفاهم",
+    "contacts": "جهات الاتصال",
+    "comments": "التعليقات",
+    "languages": "اللغات"
+  },
   "type": {
     "country": "دولة",
     "organization": "منظمة",

@@ -118,7 +118,8 @@ When creating or viewing work items, users see clear visual indicators showing w
 - What happens when an engagement's dossier is changed after commitments are created? **Behavior**: Existing commitments retain their original dossier link; new commitments inherit the updated dossier.
 - What happens when a user creates a task from a page where the engagement has no dossier? **Behavior**: Show the dossier selector since context cannot be resolved.
 - What happens when creating multiple work items in quick succession? **Behavior**: Each inherits the same context without requiring re-selection.
-- How does the system handle multiple dossiers when an entity could belong to several? **Behavior**: Support multiple dossier selection with visual badges for each.
+- How does the system handle multiple dossiers when an entity could belong to several? **Behavior**: Automatically inherit ALL dossiers from the chain; display visual badges for each linked dossier.
+- What happens when the user lacks permission to view inherited dossier(s)? **Behavior**: Filter to only permitted dossiers; if all are filtered out, show the dossier selector for manual selection.
 
 ## Requirements _(mandatory)_
 
@@ -134,13 +135,17 @@ When creating or viewing work items, users see clear visual indicators showing w
 - **FR-008**: System MUST include all linked activities in the dossier activity timeline
 - **FR-009**: System MUST display dossier activity timeline in chronological order
 - **FR-010**: System MUST support bilingual dossier names (English and Arabic) in badges and selectors
+- **FR-011**: System MUST filter inherited dossiers to only those the user has permission to access; if all inherited dossiers are filtered out, display the dossier selector
+- **FR-012**: System MUST sync dossier context state with URL parameters to support deep-linking and shareable URLs
 
 ### Key Entities
 
 - **CreationContext**: Represents the context when creating work items - includes route, entity type, entity ID, and resolved dossier information
+- **DossierContextProvider**: React Context provider that manages dossier state and syncs with URL parameters for deep-linking; provides `useDossierContext()` hook
 - **DossierContextBadge**: Visual component displaying linked dossier with type icon, name, and optional inheritance source
 - **DossierSelector**: Selection component for choosing dossiers when no context exists - supports single and multiple selection modes
 - **DossierActivityTimeline**: Aggregated view of all activities (tasks, commitments, intakes, engagements) linked to a dossier
+- **WorkItemDossierLink**: Junction table storing dossier links with metadata (dossier_id, work_item_id, work_item_type, inheritance_source, created_at)
 
 ## Success Criteria _(mandatory)_
 
@@ -149,7 +154,7 @@ When creating or viewing work items, users see clear visual indicators showing w
 - **SC-001**: Users can create work items from dossier/engagement/after-action pages without any manual dossier selection (100% automatic inheritance)
 - **SC-002**: All work items created in the system have at least one dossier link (zero orphaned work items)
 - **SC-003**: Users can view all activities related to a dossier from a single activity timeline
-- **SC-004**: Dossier context resolution completes instantly (users don't wait for context to load)
+- **SC-004**: Dossier context resolution completes in under 100ms (imperceptible to users)
 - **SC-005**: 100% of work items display their dossier context with visual badges showing inheritance source
 - **SC-006**: Reduce dossier selection steps by 80% for users working within dossier context (from always selecting to only selecting when orphaned)
 - **SC-007**: Dossier activity timeline displays activities within 2 seconds of page load for dossiers with up to 500 related activities
@@ -167,3 +172,13 @@ When creating or viewing work items, users see clear visual indicators showing w
 - Changing dossier links after work item creation
 - Bulk dossier assignment operations
 - Custom inheritance rules beyond the standard relationship chains
+
+## Clarifications
+
+### Session 2025-01-16
+
+- Q: When the inheritance chain leads to multiple dossiers, what happens? → A: Inherit ALL dossiers from the chain automatically (link to all)
+- Q: Should the system verify user permission to inherited dossiers? → A: Filter to only permitted dossiers; show selector if all are filtered out
+- Q: How should frontend resolve and pass dossier context? → A: React Context with URL sync (context stores state, URL reflects it for deep-linking)
+- Q: What is the measurable latency target for context resolution? → A: Under 100ms (imperceptible delay)
+- Q: How should dossier links be stored in the database? → A: Junction table with metadata (work_item_dossiers with source, created_at)

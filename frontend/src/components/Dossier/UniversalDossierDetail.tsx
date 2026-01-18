@@ -28,6 +28,7 @@ import {
   Link as LinkIcon,
   MessageSquare,
   Languages,
+  ListTodo,
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
@@ -36,6 +37,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { useDossier, useDocumentLinks } from '@/hooks/useDossier'
 import { useRelationshipsForDossier } from '@/hooks/useRelationships'
 import { RelationshipGraph } from '@/components/dossiers/RelationshipGraph'
+import { DossierActivityTimeline } from '@/components/Dossier/DossierActivityTimeline'
 import { CommentList } from '@/components/comments'
 import { MultiLanguageContentEditor } from '@/components/multilingual'
 import { ExpirationBadge, ExpirationInlineDisplay } from '@/components/content-expiration'
@@ -500,6 +502,10 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
             <LinkIcon className="size-4" />
             {t('dossier.tabs.relationships', 'Relationships')}
           </TabsTrigger>
+          <TabsTrigger value="activity" className="gap-2">
+            <ListTodo className="size-4" />
+            {t('dossier.tabs.activity', 'Activity')}
+          </TabsTrigger>
           <TabsTrigger value="documents" className="gap-2">
             <FileText className="size-4" />
             {t('dossier.tabs.documents', 'Documents')}
@@ -542,6 +548,10 @@ export function UniversalDossierDetail({ dossierId }: UniversalDossierDetailProp
               )}
             </CardContent>
           </Card>
+        </TabsContent>
+
+        <TabsContent value="activity" className="mt-4">
+          <DossierActivityTimeline dossierId={dossierId} />
         </TabsContent>
 
         <TabsContent value="documents" className="mt-4">

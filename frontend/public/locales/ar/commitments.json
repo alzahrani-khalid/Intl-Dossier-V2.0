@@ -77,7 +77,15 @@
     "evidenceSubmittedAt": "تاريخ تقديم الدليل",
     "noEvidence": "لم يتم رفع أي دليل",
     "statusHistory": "سجل الحالة",
-    "noHistory": "لا توجد تغييرات مسجلة"
+    "noHistory": "لا توجد تغييرات مسجلة",
+    "inheritedFrom": "موروث من",
+    "inheritanceSource": {
+      "direct": "ربط مباشر",
+      "engagement": "المشاركة",
+      "after_action": "سجل ما بعد الفعالية",
+      "position": "المنصب",
+      "mou": "مذكرة التفاهم"
+    }
   },
   "evidence": {
     "title": "رفع الدليل",

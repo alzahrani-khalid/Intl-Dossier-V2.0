@@ -1,16 +1,18 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import { IntakeFormData, RequestType, Urgency } from '../types/intake'
+import { IntakeFormData } from '../types/intake'
 import { TypeSpecificFields } from './TypeSpecificFields'
 import { AttachmentUploader } from './AttachmentUploader'
 import { useCreateTicket, useGetSLAPreview } from '../hooks/useIntakeApi'
+import { DossierSelector, DossierContextBadge, type SelectedDossier } from './Dossier'
+import type { DossierType } from '@/types/relationship.types'
 
-// Validation schema
-const createIntakeSchema = (t: any) =>
+// Validation schema - dossierId is now required per US4
+const createIntakeSchema = (t: any, tDossier: any) =>
   z.object({
     requestType: z.enum(['engagement', 'position', 'mou_action', 'foresight'], {
       required_error: t('form.requestType.required'),
@@ -25,7 +27,8 @@ const createIntakeSchema = (t: any) =>
     urgency: z.enum(['low', 'medium', 'high', 'critical'], {
       required_error: t('form.urgency.required'),
     }),
-    dossierId: z.string().uuid().optional(),
+    // US4: dossierId is now required
+    dossierId: z.string().uuid({ message: tDossier('validation.dossier_required') }),
     typeSpecificFields: z.record(z.any()).optional(),
     attachmentIds: z.array(z.string().uuid()).optional(),
   })
@@ -38,10 +41,11 @@ interface IntakeFormProps {
 
 export const IntakeForm: React.FC<IntakeFormProps> = ({
   initialData,
-  mode = 'create',
+  mode: _mode = 'create',
   onSuccess,
 }) => {
   const { t, i18n } = useTranslation('intake')
+  const { t: tDossier } = useTranslation('dossier-context')
   const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'
 
@@ -52,6 +56,22 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     ticketNumber: string
   } | null>(null)
 
+  // State for dossier selection (US4 requirement)
+  const [selectedDossiers, setSelectedDossiers] = useState<SelectedDossier[]>([])
+  const [dossierError, setDossierError] = useState<string>('')
+
+  // Handle dossier selection change
+  const handleDossierChange = (_: string[], dossiers: SelectedDossier[]) => {
+    setSelectedDossiers(dossiers)
+    const firstDossier = dossiers[0]
+    if (firstDossier) {
+      setValue('dossierId', firstDossier.id)
+      setDossierError('')
+    } else {
+      setValue('dossierId', '' as unknown as string)
+    }
+  }
+
   // Form setup
   const {
     register,
@@ -61,7 +81,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
     formState: { errors, isSubmitting },
     reset,
   } = useForm<IntakeFormData>({
-    resolver: zodResolver(createIntakeSchema(t)),
+    resolver: zodResolver(createIntakeSchema(t, tDossier)),
     defaultValues: initialData || {
       requestType: 'engagement',
       urgency: 'medium',
@@ -143,6 +163,8 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
                   setCreatedTicket(null)
                   reset()
                   setAttachmentIds([])
+                  setSelectedDossiers([])
+                  setDossierError('')
                 }}
                 className="rounded-md border border-gray-300 bg-white px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
               >
@@ -273,6 +295,36 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
             )}
           </div>
 
+          {/* US4: Dossier Selection (Required) */}
+          <div>
+            <DossierSelector
+              value={selectedDossiers.map((d) => d.id)}
+              onChange={handleDossierChange}
+              required
+              multiple={false}
+              label={tDossier('selector.title')}
+              hint={t('form.dossier.hint', 'Select the dossier this request relates to')}
+              error={dossierError || (errors.dossierId?.message as string)}
+            />
+            {/* Show selected dossier badge */}
+            {selectedDossiers.length > 0 && selectedDossiers[0] && (
+              <div className="mt-2 flex items-center gap-2 p-2 rounded-md bg-gray-50 text-sm">
+                <span className="text-gray-500">{t('form.dossier.linkedTo', 'Linked to')}:</span>
+                <DossierContextBadge
+                  dossierId={selectedDossiers[0].id}
+                  dossierType={(selectedDossiers[0].type as DossierType) ?? 'country'}
+                  nameEn={selectedDossiers[0].name_en}
+                  nameAr={selectedDossiers[0].name_ar ?? ''}
+                  inheritanceSource="direct"
+                  isPrimary
+                  size="sm"
+                  clickable={false}
+                  showInheritance={false}
+                />
+              </div>
+            )}
+          </div>
+
           {/* Type-Specific Fields */}
           {requestType && (
             <TypeSpecificFields
@@ -327,7 +379,11 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
             </button>
             <button
               type="button"
-              onClick={() => reset()}
+              onClick={() => {
+                reset()
+                setSelectedDossiers([])
+                setDossierError('')
+              }}
               className="rounded-md border border-gray-300 px-4 py-2 text-gray-700 transition-colors hover:bg-gray-50"
             >
               {t('actions.reset')}
