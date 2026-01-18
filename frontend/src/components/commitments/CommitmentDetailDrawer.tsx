@@ -1,11 +1,12 @@
 /**
- * CommitmentDetailDrawer Component v1.1
+ * CommitmentDetailDrawer Component v1.2
  * Feature: 031-commitments-management
+ * Updated for: 035-dossier-context (Smart Dossier Context Inheritance)
  * Tasks: T055, T058, T059, T060
  *
  * Displays detailed commitment information in a side drawer:
  * - Full commitment details with status timeline (T058)
- * - Dossier link navigation (T059)
+ * - Dossier link navigation with inheritance info (T059, T025)
  * - Edit mode toggle with CommitmentForm (T060)
  * - Evidence display and upload
  * - Mobile-first, RTL-compatible, 44x44px touch targets
@@ -34,6 +35,7 @@ import {
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useCommitment } from '@/hooks/useCommitments'
 import { useDossier } from '@/hooks/useDossier'
+import { useWorkItemDossierLinks } from '@/hooks/useWorkItemDossierLinks'
 import { getEvidenceUrl } from '@/services/commitments.service'
 import { type Commitment, PRIORITY_COLORS, STATUS_COLORS } from '@/types/commitment.types'
 import { isCommitmentOverdue, getDaysUntilDue } from '@/services/commitments.service'
@@ -42,6 +44,7 @@ import { StatusTimeline } from './StatusTimeline'
 import { CommitmentForm } from './CommitmentForm'
 import { EvidenceUpload } from './EvidenceUpload'
 import { DeliverablesTimeline } from './deliverables'
+import { DossierContextBadge } from '@/components/Dossier'
 
 export interface CommitmentDetailDrawerProps {
   commitmentId: string | null
@@ -73,6 +76,11 @@ export function CommitmentDetailDrawer({
   // Fetch dossier details for displaying name
   const { data: dossier } = useDossier(commitment?.dossier_id ?? '', undefined, {
     enabled: !!commitment?.dossier_id,
+  })
+
+  // Fetch dossier links to show inheritance info (T025)
+  const { links: dossierLinks } = useWorkItemDossierLinks('commitment', commitmentId ?? '', {
+    enabled: !!commitmentId && open,
   })
 
   // Get dossier display name based on language
@@ -302,22 +310,43 @@ export function CommitmentDetailDrawer({
 
                     <Separator />
 
-                    {/* T059: Dossier Link */}
+                    {/* T059, T025, T041: Dossier Link with Inheritance Info using DossierContextBadge */}
                     {commitment.dossier_id && (
                       <>
                         <div className="space-y-2">
                           <p className="text-xs text-muted-foreground text-start">
                             {t('detail.dossier')}
                           </p>
-                          <Button
-                            variant="outline"
-                            onClick={handleNavigateToDossier}
-                            className="min-h-11 w-full justify-start"
-                          >
-                            <FileText className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                            <span className="truncate flex-1 text-start">{dossierDisplayName}</span>
-                            <ExternalLink className="size-4 shrink-0" />
-                          </Button>
+                          {/* Use DossierContextBadge for consistent visual */}
+                          {dossierLinks.length > 0 ? (
+                            <div className="flex flex-wrap gap-2">
+                              {dossierLinks.map((link) => (
+                                <DossierContextBadge
+                                  key={link.id}
+                                  dossierId={link.dossier_id}
+                                  dossierType={(link.dossier?.type as any) ?? 'country'}
+                                  nameEn={link.dossier?.name_en ?? dossierDisplayName ?? ''}
+                                  nameAr={link.dossier?.name_ar}
+                                  inheritanceSource={link.inheritance_source}
+                                  isPrimary={link.is_primary}
+                                  size="default"
+                                />
+                              ))}
+                            </div>
+                          ) : (
+                            /* Fallback to button if no links loaded yet */
+                            <Button
+                              variant="outline"
+                              onClick={handleNavigateToDossier}
+                              className="min-h-11 w-full justify-start"
+                            >
+                              <FileText className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                              <span className="truncate flex-1 text-start">
+                                {dossierDisplayName}
+                              </span>
+                              <ExternalLink className="size-4 shrink-0" />
+                            </Button>
+                          )}
                         </div>
                         <Separator />
                       </>

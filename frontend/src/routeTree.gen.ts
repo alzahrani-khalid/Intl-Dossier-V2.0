@@ -28,7 +28,6 @@ import { Route as ProtectedSearchRouteImport } from './routes/_protected/search'
 import { Route as ProtectedScenarioSandboxRouteImport } from './routes/_protected/scenario-sandbox'
 import { Route as ProtectedResponsiveDemoRouteImport } from './routes/_protected/responsive-demo'
 import { Route as ProtectedReportsRouteImport } from './routes/_protected/reports'
-import { Route as ProtectedPrototypeDossierRouteImport } from './routes/_protected/prototype-dossier'
 import { Route as ProtectedProgressiveFormDemoRouteImport } from './routes/_protected/progressive-form-demo'
 import { Route as ProtectedPositionsRouteImport } from './routes/_protected/positions'
 import { Route as ProtectedPluginDemoRouteImport } from './routes/_protected/plugin-demo'
@@ -107,7 +106,6 @@ import { Route as ProtectedIntakeNewRouteImport } from './routes/_protected/inta
 import { Route as ProtectedHelpCommitmentsRouteImport } from './routes/_protected/help/commitments'
 import { Route as ProtectedEngagementsEngagementIdRouteImport } from './routes/_protected/engagements/$engagementId'
 import { Route as ProtectedDossiersCreateRouteImport } from './routes/_protected/dossiers/create'
-import { Route as ProtectedDossiersIdRouteImport } from './routes/_protected/dossiers/$id'
 import { Route as ProtectedContactsNotesSearchRouteImport } from './routes/_protected/contacts/notes-search'
 import { Route as ProtectedContactsCreateRouteImport } from './routes/_protected/contacts/create'
 import { Route as ProtectedContactsContactIdRouteImport } from './routes/_protected/contacts/$contactId'
@@ -170,11 +168,12 @@ const ProtectedWorkingGroupsRoute = ProtectedWorkingGroupsRouteImport.update({
   path: '/working-groups',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedWorkflowAutomationRoute = ProtectedWorkflowAutomationRouteImport.update({
-  id: '/workflow-automation',
-  path: '/workflow-automation',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedWorkflowAutomationRoute =
+  ProtectedWorkflowAutomationRouteImport.update({
+    id: '/workflow-automation',
+    path: '/workflow-automation',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedWordAssistantRoute = ProtectedWordAssistantRouteImport.update({
   id: '/word-assistant',
   path: '/word-assistant',
@@ -200,11 +199,12 @@ const ProtectedTagsRoute = ProtectedTagsRouteImport.update({
   path: '/tags',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedStakeholderInfluenceRoute = ProtectedStakeholderInfluenceRouteImport.update({
-  id: '/stakeholder-influence',
-  path: '/stakeholder-influence',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedStakeholderInfluenceRoute =
+  ProtectedStakeholderInfluenceRouteImport.update({
+    id: '/stakeholder-influence',
+    path: '/stakeholder-influence',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedSlaMonitoringRoute = ProtectedSlaMonitoringRouteImport.update({
   id: '/sla-monitoring',
   path: '/sla-monitoring',
@@ -220,11 +220,12 @@ const ProtectedSearchRoute = ProtectedSearchRouteImport.update({
   path: '/search',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedScenarioSandboxRoute = ProtectedScenarioSandboxRouteImport.update({
-  id: '/scenario-sandbox',
-  path: '/scenario-sandbox',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedScenarioSandboxRoute =
+  ProtectedScenarioSandboxRouteImport.update({
+    id: '/scenario-sandbox',
+    path: '/scenario-sandbox',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedResponsiveDemoRoute = ProtectedResponsiveDemoRouteImport.update({
   id: '/responsive-demo',
   path: '/responsive-demo',
@@ -235,16 +236,12 @@ const ProtectedReportsRoute = ProtectedReportsRouteImport.update({
   path: '/reports',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedPrototypeDossierRoute = ProtectedPrototypeDossierRouteImport.update({
-  id: '/prototype-dossier',
-  path: '/prototype-dossier',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedProgressiveFormDemoRoute = ProtectedProgressiveFormDemoRouteImport.update({
-  id: '/progressive-form-demo',
-  path: '/progressive-form-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedProgressiveFormDemoRoute =
+  ProtectedProgressiveFormDemoRouteImport.update({
+    id: '/progressive-form-demo',
+    path: '/progressive-form-demo',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedPositionsRoute = ProtectedPositionsRouteImport.update({
   id: '/positions',
   path: '/positions',
@@ -290,11 +287,12 @@ const ProtectedModernNavDemoRoute = ProtectedModernNavDemoRouteImport.update({
   path: '/modern-nav-demo',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedMeetingMinutesDemoRoute = ProtectedMeetingMinutesDemoRouteImport.update({
-  id: '/meeting-minutes-demo',
-  path: '/meeting-minutes-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedMeetingMinutesDemoRoute =
+  ProtectedMeetingMinutesDemoRouteImport.update({
+    id: '/meeting-minutes-demo',
+    path: '/meeting-minutes-demo',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedKanbanRoute = ProtectedKanbanRouteImport.update({
   id: '/kanban',
   path: '/kanban',
@@ -310,26 +308,29 @@ const ProtectedIntakeRoute = ProtectedIntakeRouteImport.update({
   path: '/intake',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedGeographicVisualizationRoute = ProtectedGeographicVisualizationRouteImport.update({
-  id: '/geographic-visualization',
-  path: '/geographic-visualization',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedGeographicVisualizationRoute =
+  ProtectedGeographicVisualizationRouteImport.update({
+    id: '/geographic-visualization',
+    path: '/geographic-visualization',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedForumsRoute = ProtectedForumsRouteImport.update({
   id: '/forums',
   path: '/forums',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedFormAutoSaveDemoRoute = ProtectedFormAutoSaveDemoRouteImport.update({
-  id: '/form-auto-save-demo',
-  path: '/form-auto-save-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedFieldHistoryDemoRoute = ProtectedFieldHistoryDemoRouteImport.update({
-  id: '/field-history-demo',
-  path: '/field-history-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedFormAutoSaveDemoRoute =
+  ProtectedFormAutoSaveDemoRouteImport.update({
+    id: '/form-auto-save-demo',
+    path: '/form-auto-save-demo',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedFieldHistoryDemoRoute =
+  ProtectedFieldHistoryDemoRouteImport.update({
+    id: '/field-history-demo',
+    path: '/field-history-demo',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedExportImportRoute = ProtectedExportImportRouteImport.update({
   id: '/export-import',
   path: '/export-import',
@@ -345,21 +346,23 @@ const ProtectedEventsRoute = ProtectedEventsRouteImport.update({
   path: '/events',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedEntityTemplatesDemoRoute = ProtectedEntityTemplatesDemoRouteImport.update({
-  id: '/entity-templates-demo',
-  path: '/entity-templates-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedEntityTemplatesDemoRoute =
+  ProtectedEntityTemplatesDemoRouteImport.update({
+    id: '/entity-templates-demo',
+    path: '/entity-templates-demo',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedEngagementsRoute = ProtectedEngagementsRouteImport.update({
   id: '/engagements',
   path: '/engagements',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedDuplicateDetectionDemoRoute = ProtectedDuplicateDetectionDemoRouteImport.update({
-  id: '/duplicate-detection-demo',
-  path: '/duplicate-detection-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedDuplicateDetectionDemoRoute =
+  ProtectedDuplicateDetectionDemoRouteImport.update({
+    id: '/duplicate-detection-demo',
+    path: '/duplicate-detection-demo',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedDelegationsRoute = ProtectedDelegationsRouteImport.update({
   id: '/delegations',
   path: '/delegations',
@@ -375,11 +378,12 @@ const ProtectedDashboardRoute = ProtectedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedCustomDashboardRoute = ProtectedCustomDashboardRouteImport.update({
-  id: '/custom-dashboard',
-  path: '/custom-dashboard',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedCustomDashboardRoute =
+  ProtectedCustomDashboardRouteImport.update({
+    id: '/custom-dashboard',
+    path: '/custom-dashboard',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedCountriesRoute = ProtectedCountriesRouteImport.update({
   id: '/countries',
   path: '/countries',
@@ -410,11 +414,12 @@ const ProtectedCalendarRoute = ProtectedCalendarRouteImport.update({
   path: '/calendar',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedBulkActionsDemoRoute = ProtectedBulkActionsDemoRouteImport.update({
-  id: '/bulk-actions-demo',
-  path: '/bulk-actions-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedBulkActionsDemoRoute =
+  ProtectedBulkActionsDemoRouteImport.update({
+    id: '/bulk-actions-demo',
+    path: '/bulk-actions-demo',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedBriefsRoute = ProtectedBriefsRouteImport.update({
   id: '/briefs',
   path: '/briefs',
@@ -425,11 +430,12 @@ const ProtectedBriefingBooksRoute = ProtectedBriefingBooksRouteImport.update({
   path: '/briefing-books',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedAvailabilityPollingRoute = ProtectedAvailabilityPollingRouteImport.update({
-  id: '/availability-polling',
-  path: '/availability-polling',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedAvailabilityPollingRoute =
+  ProtectedAvailabilityPollingRouteImport.update({
+    id: '/availability-polling',
+    path: '/availability-polling',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedAuditLogsRoute = ProtectedAuditLogsRouteImport.update({
   id: '/audit-logs',
   path: '/audit-logs',
@@ -445,11 +451,12 @@ const ProtectedAdvancedSearchRoute = ProtectedAdvancedSearchRouteImport.update({
   path: '/advanced-search',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedActionableErrorsDemoRoute = ProtectedActionableErrorsDemoRouteImport.update({
-  id: '/actionable-errors-demo',
-  path: '/actionable-errors-demo',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedActionableErrorsDemoRoute =
+  ProtectedActionableErrorsDemoRouteImport.update({
+    id: '/actionable-errors-demo',
+    path: '/actionable-errors-demo',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedAccessibilityRoute = ProtectedAccessibilityRouteImport.update({
   id: '/accessibility',
   path: '/accessibility',
@@ -490,11 +497,12 @@ const ProtectedHelpIndexRoute = ProtectedHelpIndexRouteImport.update({
   path: '/help/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedEngagementsIndexRoute = ProtectedEngagementsIndexRouteImport.update({
-  id: '/',
-  path: '/',
-  getParentRoute: () => ProtectedEngagementsRoute,
-} as any)
+const ProtectedEngagementsIndexRoute =
+  ProtectedEngagementsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => ProtectedEngagementsRoute,
+  } as any)
 const ProtectedDossiersIndexRoute = ProtectedDossiersIndexRouteImport.update({
   id: '/dossiers/',
   path: '/dossiers/',
@@ -505,71 +513,82 @@ const ProtectedApprovalsIndexRoute = ProtectedApprovalsIndexRouteImport.update({
   path: '/approvals/',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedAfterActionsIndexRoute = ProtectedAfterActionsIndexRouteImport.update({
-  id: '/after-actions/',
-  path: '/after-actions/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedAfterActionsIndexRoute =
+  ProtectedAfterActionsIndexRouteImport.update({
+    id: '/after-actions/',
+    path: '/after-actions/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedTasksQueueRoute = ProtectedTasksQueueRouteImport.update({
   id: '/tasks/queue',
   path: '/tasks/queue',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedTasksEscalationsRoute = ProtectedTasksEscalationsRouteImport.update({
-  id: '/tasks/escalations',
-  path: '/tasks/escalations',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedTasksEscalationsRoute =
+  ProtectedTasksEscalationsRouteImport.update({
+    id: '/tasks/escalations',
+    path: '/tasks/escalations',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedTasksIdRoute = ProtectedTasksIdRouteImport.update({
   id: '/tasks/$id',
   path: '/tasks/$id',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedSettingsWebhooksRoute = ProtectedSettingsWebhooksRouteImport.update({
-  id: '/webhooks',
-  path: '/webhooks',
-  getParentRoute: () => ProtectedSettingsRoute,
-} as any)
-const ProtectedSettingsNotificationsRoute = ProtectedSettingsNotificationsRouteImport.update({
-  id: '/notifications',
-  path: '/notifications',
-  getParentRoute: () => ProtectedSettingsRoute,
-} as any)
-const ProtectedSettingsIntegrationsRoute = ProtectedSettingsIntegrationsRouteImport.update({
-  id: '/integrations',
-  path: '/integrations',
-  getParentRoute: () => ProtectedSettingsRoute,
-} as any)
-const ProtectedSettingsEmailDigestRoute = ProtectedSettingsEmailDigestRouteImport.update({
-  id: '/email-digest',
-  path: '/email-digest',
-  getParentRoute: () => ProtectedSettingsRoute,
-} as any)
-const ProtectedSettingsCalendarSyncRoute = ProtectedSettingsCalendarSyncRouteImport.update({
-  id: '/calendar-sync',
-  path: '/calendar-sync',
-  getParentRoute: () => ProtectedSettingsRoute,
-} as any)
-const ProtectedReportsScheduledRoute = ProtectedReportsScheduledRouteImport.update({
-  id: '/scheduled',
-  path: '/scheduled',
-  getParentRoute: () => ProtectedReportsRoute,
-} as any)
-const ProtectedReportsReportIdRoute = ProtectedReportsReportIdRouteImport.update({
-  id: '/$reportId',
-  path: '/$reportId',
-  getParentRoute: () => ProtectedReportsRoute,
-} as any)
-const ProtectedRelationshipsGraphRoute = ProtectedRelationshipsGraphRouteImport.update({
-  id: '/relationships/graph',
-  path: '/relationships/graph',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedPositionsPositionIdRoute = ProtectedPositionsPositionIdRouteImport.update({
-  id: '/$positionId',
-  path: '/$positionId',
-  getParentRoute: () => ProtectedPositionsRoute,
-} as any)
+const ProtectedSettingsWebhooksRoute =
+  ProtectedSettingsWebhooksRouteImport.update({
+    id: '/webhooks',
+    path: '/webhooks',
+    getParentRoute: () => ProtectedSettingsRoute,
+  } as any)
+const ProtectedSettingsNotificationsRoute =
+  ProtectedSettingsNotificationsRouteImport.update({
+    id: '/notifications',
+    path: '/notifications',
+    getParentRoute: () => ProtectedSettingsRoute,
+  } as any)
+const ProtectedSettingsIntegrationsRoute =
+  ProtectedSettingsIntegrationsRouteImport.update({
+    id: '/integrations',
+    path: '/integrations',
+    getParentRoute: () => ProtectedSettingsRoute,
+  } as any)
+const ProtectedSettingsEmailDigestRoute =
+  ProtectedSettingsEmailDigestRouteImport.update({
+    id: '/email-digest',
+    path: '/email-digest',
+    getParentRoute: () => ProtectedSettingsRoute,
+  } as any)
+const ProtectedSettingsCalendarSyncRoute =
+  ProtectedSettingsCalendarSyncRouteImport.update({
+    id: '/calendar-sync',
+    path: '/calendar-sync',
+    getParentRoute: () => ProtectedSettingsRoute,
+  } as any)
+const ProtectedReportsScheduledRoute =
+  ProtectedReportsScheduledRouteImport.update({
+    id: '/scheduled',
+    path: '/scheduled',
+    getParentRoute: () => ProtectedReportsRoute,
+  } as any)
+const ProtectedReportsReportIdRoute =
+  ProtectedReportsReportIdRouteImport.update({
+    id: '/$reportId',
+    path: '/$reportId',
+    getParentRoute: () => ProtectedReportsRoute,
+  } as any)
+const ProtectedRelationshipsGraphRoute =
+  ProtectedRelationshipsGraphRouteImport.update({
+    id: '/relationships/graph',
+    path: '/relationships/graph',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedPositionsPositionIdRoute =
+  ProtectedPositionsPositionIdRouteImport.update({
+    id: '/$positionId',
+    path: '/$positionId',
+    getParentRoute: () => ProtectedPositionsRoute,
+  } as any)
 const ProtectedPositionsIdRoute = ProtectedPositionsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
@@ -580,11 +599,12 @@ const ProtectedPersonsCreateRoute = ProtectedPersonsCreateRouteImport.update({
   path: '/create',
   getParentRoute: () => ProtectedPersonsRoute,
 } as any)
-const ProtectedPersonsPersonIdRoute = ProtectedPersonsPersonIdRouteImport.update({
-  id: '/$personId',
-  path: '/$personId',
-  getParentRoute: () => ProtectedPersonsRoute,
-} as any)
+const ProtectedPersonsPersonIdRoute =
+  ProtectedPersonsPersonIdRouteImport.update({
+    id: '/$personId',
+    path: '/$personId',
+    getParentRoute: () => ProtectedPersonsRoute,
+  } as any)
 const ProtectedMyWorkWaitingRoute = ProtectedMyWorkWaitingRouteImport.update({
   id: '/waiting',
   path: '/waiting',
@@ -600,11 +620,12 @@ const ProtectedMyWorkBoardRoute = ProtectedMyWorkBoardRouteImport.update({
   path: '/board',
   getParentRoute: () => ProtectedMyWorkRoute,
 } as any)
-const ProtectedMyWorkAssignmentsRoute = ProtectedMyWorkAssignmentsRouteImport.update({
-  id: '/assignments',
-  path: '/assignments',
-  getParentRoute: () => ProtectedMyWorkRoute,
-} as any)
+const ProtectedMyWorkAssignmentsRoute =
+  ProtectedMyWorkAssignmentsRouteImport.update({
+    id: '/assignments',
+    path: '/assignments',
+    getParentRoute: () => ProtectedMyWorkRoute,
+  } as any)
 const ProtectedIntakeQueueRoute = ProtectedIntakeQueueRouteImport.update({
   id: '/queue',
   path: '/queue',
@@ -615,41 +636,40 @@ const ProtectedIntakeNewRoute = ProtectedIntakeNewRouteImport.update({
   path: '/new',
   getParentRoute: () => ProtectedIntakeRoute,
 } as any)
-const ProtectedHelpCommitmentsRoute = ProtectedHelpCommitmentsRouteImport.update({
-  id: '/help/commitments',
-  path: '/help/commitments',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedEngagementsEngagementIdRoute = ProtectedEngagementsEngagementIdRouteImport.update({
-  id: '/$engagementId',
-  path: '/$engagementId',
-  getParentRoute: () => ProtectedEngagementsRoute,
-} as any)
+const ProtectedHelpCommitmentsRoute =
+  ProtectedHelpCommitmentsRouteImport.update({
+    id: '/help/commitments',
+    path: '/help/commitments',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedEngagementsEngagementIdRoute =
+  ProtectedEngagementsEngagementIdRouteImport.update({
+    id: '/$engagementId',
+    path: '/$engagementId',
+    getParentRoute: () => ProtectedEngagementsRoute,
+  } as any)
 const ProtectedDossiersCreateRoute = ProtectedDossiersCreateRouteImport.update({
   id: '/dossiers/create',
   path: '/dossiers/create',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedDossiersIdRoute = ProtectedDossiersIdRouteImport.update({
-  id: '/dossiers/$id',
-  path: '/dossiers/$id',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedContactsNotesSearchRoute = ProtectedContactsNotesSearchRouteImport.update({
-  id: '/notes-search',
-  path: '/notes-search',
-  getParentRoute: () => ProtectedContactsRoute,
-} as any)
+const ProtectedContactsNotesSearchRoute =
+  ProtectedContactsNotesSearchRouteImport.update({
+    id: '/notes-search',
+    path: '/notes-search',
+    getParentRoute: () => ProtectedContactsRoute,
+  } as any)
 const ProtectedContactsCreateRoute = ProtectedContactsCreateRouteImport.update({
   id: '/create',
   path: '/create',
   getParentRoute: () => ProtectedContactsRoute,
 } as any)
-const ProtectedContactsContactIdRoute = ProtectedContactsContactIdRouteImport.update({
-  id: '/$contactId',
-  path: '/$contactId',
-  getParentRoute: () => ProtectedContactsRoute,
-} as any)
+const ProtectedContactsContactIdRoute =
+  ProtectedContactsContactIdRouteImport.update({
+    id: '/$contactId',
+    path: '/$contactId',
+    getParentRoute: () => ProtectedContactsRoute,
+  } as any)
 const ProtectedCalendarNewRoute = ProtectedCalendarNewRouteImport.update({
   id: '/new',
   path: '/new',
@@ -666,21 +686,24 @@ const ProtectedAdminSystemRoute = ProtectedAdminSystemRouteImport.update({
   path: '/admin/system',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedAdminPreviewLayoutsRoute = ProtectedAdminPreviewLayoutsRouteImport.update({
-  id: '/admin/preview-layouts',
-  path: '/admin/preview-layouts',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedAdminFieldPermissionsRoute = ProtectedAdminFieldPermissionsRouteImport.update({
-  id: '/admin/field-permissions',
-  path: '/admin/field-permissions',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedAdminDataRetentionRoute = ProtectedAdminDataRetentionRouteImport.update({
-  id: '/admin/data-retention',
-  path: '/admin/data-retention',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedAdminPreviewLayoutsRoute =
+  ProtectedAdminPreviewLayoutsRouteImport.update({
+    id: '/admin/preview-layouts',
+    path: '/admin/preview-layouts',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAdminFieldPermissionsRoute =
+  ProtectedAdminFieldPermissionsRouteImport.update({
+    id: '/admin/field-permissions',
+    path: '/admin/field-permissions',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedAdminDataRetentionRoute =
+  ProtectedAdminDataRetentionRouteImport.update({
+    id: '/admin/data-retention',
+    path: '/admin/data-retention',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedAdminApprovalsRoute = ProtectedAdminApprovalsRouteImport.update({
   id: '/admin/approvals',
   path: '/admin/approvals',
@@ -691,109 +714,126 @@ const ProtectedAdminAiUsageRoute = ProtectedAdminAiUsageRouteImport.update({
   path: '/admin/ai-usage',
   getParentRoute: () => ProtectedRoute,
 } as any)
-const ProtectedAdminAiSettingsRoute = ProtectedAdminAiSettingsRouteImport.update({
-  id: '/admin/ai-settings',
-  path: '/admin/ai-settings',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedAdminAiSettingsRoute =
+  ProtectedAdminAiSettingsRouteImport.update({
+    id: '/admin/ai-settings',
+    path: '/admin/ai-settings',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedDossiersWorking_groupsIndexRoute =
   ProtectedDossiersWorking_groupsIndexRouteImport.update({
     id: '/dossiers/working_groups/',
     path: '/dossiers/working_groups/',
     getParentRoute: () => ProtectedRoute,
   } as any)
-const ProtectedDossiersTopicsIndexRoute = ProtectedDossiersTopicsIndexRouteImport.update({
-  id: '/dossiers/topics/',
-  path: '/dossiers/topics/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedDossiersPersonsIndexRoute = ProtectedDossiersPersonsIndexRouteImport.update({
-  id: '/dossiers/persons/',
-  path: '/dossiers/persons/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedDossiersTopicsIndexRoute =
+  ProtectedDossiersTopicsIndexRouteImport.update({
+    id: '/dossiers/topics/',
+    path: '/dossiers/topics/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersPersonsIndexRoute =
+  ProtectedDossiersPersonsIndexRouteImport.update({
+    id: '/dossiers/persons/',
+    path: '/dossiers/persons/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedDossiersOrganizationsIndexRoute =
   ProtectedDossiersOrganizationsIndexRouteImport.update({
     id: '/dossiers/organizations/',
     path: '/dossiers/organizations/',
     getParentRoute: () => ProtectedRoute,
   } as any)
-const ProtectedDossiersForumsIndexRoute = ProtectedDossiersForumsIndexRouteImport.update({
-  id: '/dossiers/forums/',
-  path: '/dossiers/forums/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedDossiersEngagementsIndexRoute = ProtectedDossiersEngagementsIndexRouteImport.update({
-  id: '/dossiers/engagements/',
-  path: '/dossiers/engagements/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedDossiersCountriesIndexRoute = ProtectedDossiersCountriesIndexRouteImport.update({
-  id: '/dossiers/countries/',
-  path: '/dossiers/countries/',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedSettingsCalendarCallbackRoute = ProtectedSettingsCalendarCallbackRouteImport.update({
-  id: '/calendar/callback',
-  path: '/calendar/callback',
-  getParentRoute: () => ProtectedSettingsRoute,
-} as any)
-const ProtectedPositionsIdVersionsRoute = ProtectedPositionsIdVersionsRouteImport.update({
-  id: '/versions',
-  path: '/versions',
-  getParentRoute: () => ProtectedPositionsIdRoute,
-} as any)
-const ProtectedPositionsIdApprovalsRoute = ProtectedPositionsIdApprovalsRouteImport.update({
-  id: '/approvals',
-  path: '/approvals',
-  getParentRoute: () => ProtectedPositionsIdRoute,
-} as any)
-const ProtectedIntakeTicketsIdRoute = ProtectedIntakeTicketsIdRouteImport.update({
-  id: '/tickets/$id',
-  path: '/tickets/$id',
-  getParentRoute: () => ProtectedIntakeRoute,
-} as any)
+const ProtectedDossiersForumsIndexRoute =
+  ProtectedDossiersForumsIndexRouteImport.update({
+    id: '/dossiers/forums/',
+    path: '/dossiers/forums/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersEngagementsIndexRoute =
+  ProtectedDossiersEngagementsIndexRouteImport.update({
+    id: '/dossiers/engagements/',
+    path: '/dossiers/engagements/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersCountriesIndexRoute =
+  ProtectedDossiersCountriesIndexRouteImport.update({
+    id: '/dossiers/countries/',
+    path: '/dossiers/countries/',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedSettingsCalendarCallbackRoute =
+  ProtectedSettingsCalendarCallbackRouteImport.update({
+    id: '/calendar/callback',
+    path: '/calendar/callback',
+    getParentRoute: () => ProtectedSettingsRoute,
+  } as any)
+const ProtectedPositionsIdVersionsRoute =
+  ProtectedPositionsIdVersionsRouteImport.update({
+    id: '/versions',
+    path: '/versions',
+    getParentRoute: () => ProtectedPositionsIdRoute,
+  } as any)
+const ProtectedPositionsIdApprovalsRoute =
+  ProtectedPositionsIdApprovalsRouteImport.update({
+    id: '/approvals',
+    path: '/approvals',
+    getParentRoute: () => ProtectedPositionsIdRoute,
+  } as any)
+const ProtectedIntakeTicketsIdRoute =
+  ProtectedIntakeTicketsIdRouteImport.update({
+    id: '/tickets/$id',
+    path: '/tickets/$id',
+    getParentRoute: () => ProtectedIntakeRoute,
+  } as any)
 const ProtectedEngagementsEngagementIdAfterActionRoute =
   ProtectedEngagementsEngagementIdAfterActionRouteImport.update({
     id: '/after-action',
     path: '/after-action',
     getParentRoute: () => ProtectedEngagementsEngagementIdRoute,
   } as any)
-const ProtectedDossiersWorking_groupsIdRoute = ProtectedDossiersWorking_groupsIdRouteImport.update({
-  id: '/dossiers/working_groups/$id',
-  path: '/dossiers/working_groups/$id',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedDossiersTopicsIdRoute = ProtectedDossiersTopicsIdRouteImport.update({
-  id: '/dossiers/topics/$id',
-  path: '/dossiers/topics/$id',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedDossiersPersonsIdRoute = ProtectedDossiersPersonsIdRouteImport.update({
-  id: '/dossiers/persons/$id',
-  path: '/dossiers/persons/$id',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedDossiersOrganizationsIdRoute = ProtectedDossiersOrganizationsIdRouteImport.update({
-  id: '/dossiers/organizations/$id',
-  path: '/dossiers/organizations/$id',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedDossiersForumsIdRoute = ProtectedDossiersForumsIdRouteImport.update({
-  id: '/dossiers/forums/$id',
-  path: '/dossiers/forums/$id',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedDossiersEngagementsIdRoute = ProtectedDossiersEngagementsIdRouteImport.update({
-  id: '/dossiers/engagements/$id',
-  path: '/dossiers/engagements/$id',
-  getParentRoute: () => ProtectedRoute,
-} as any)
-const ProtectedDossiersCountriesIdRoute = ProtectedDossiersCountriesIdRouteImport.update({
-  id: '/dossiers/countries/$id',
-  path: '/dossiers/countries/$id',
-  getParentRoute: () => ProtectedRoute,
-} as any)
+const ProtectedDossiersWorking_groupsIdRoute =
+  ProtectedDossiersWorking_groupsIdRouteImport.update({
+    id: '/dossiers/working_groups/$id',
+    path: '/dossiers/working_groups/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersTopicsIdRoute =
+  ProtectedDossiersTopicsIdRouteImport.update({
+    id: '/dossiers/topics/$id',
+    path: '/dossiers/topics/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersPersonsIdRoute =
+  ProtectedDossiersPersonsIdRouteImport.update({
+    id: '/dossiers/persons/$id',
+    path: '/dossiers/persons/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersOrganizationsIdRoute =
+  ProtectedDossiersOrganizationsIdRouteImport.update({
+    id: '/dossiers/organizations/$id',
+    path: '/dossiers/organizations/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersForumsIdRoute =
+  ProtectedDossiersForumsIdRouteImport.update({
+    id: '/dossiers/forums/$id',
+    path: '/dossiers/forums/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersEngagementsIdRoute =
+  ProtectedDossiersEngagementsIdRouteImport.update({
+    id: '/dossiers/engagements/$id',
+    path: '/dossiers/engagements/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
+const ProtectedDossiersCountriesIdRoute =
+  ProtectedDossiersCountriesIdRouteImport.update({
+    id: '/dossiers/countries/$id',
+    path: '/dossiers/countries/$id',
+    getParentRoute: () => ProtectedRoute,
+  } as any)
 const ProtectedAfterActionsAfterActionIdVersionsRoute =
   ProtectedAfterActionsAfterActionIdVersionsRouteImport.update({
     id: '/versions',
@@ -849,7 +889,6 @@ export interface FileRoutesByFullPath {
   '/plugin-demo': typeof ProtectedPluginDemoRoute
   '/positions': typeof ProtectedPositionsRouteWithChildren
   '/progressive-form-demo': typeof ProtectedProgressiveFormDemoRoute
-  '/prototype-dossier': typeof ProtectedPrototypeDossierRoute
   '/reports': typeof ProtectedReportsRouteWithChildren
   '/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/scenario-sandbox': typeof ProtectedScenarioSandboxRoute
@@ -876,7 +915,6 @@ export interface FileRoutesByFullPath {
   '/contacts/$contactId': typeof ProtectedContactsContactIdRoute
   '/contacts/create': typeof ProtectedContactsCreateRoute
   '/contacts/notes-search': typeof ProtectedContactsNotesSearchRoute
-  '/dossiers/$id': typeof ProtectedDossiersIdRoute
   '/dossiers/create': typeof ProtectedDossiersCreateRoute
   '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
   '/help/commitments': typeof ProtectedHelpCommitmentsRoute
@@ -976,7 +1014,6 @@ export interface FileRoutesByTo {
   '/organizations': typeof ProtectedOrganizationsRoute
   '/plugin-demo': typeof ProtectedPluginDemoRoute
   '/progressive-form-demo': typeof ProtectedProgressiveFormDemoRoute
-  '/prototype-dossier': typeof ProtectedPrototypeDossierRoute
   '/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/scenario-sandbox': typeof ProtectedScenarioSandboxRoute
   '/search': typeof ProtectedSearchRoute
@@ -1002,7 +1039,6 @@ export interface FileRoutesByTo {
   '/contacts/$contactId': typeof ProtectedContactsContactIdRoute
   '/contacts/create': typeof ProtectedContactsCreateRoute
   '/contacts/notes-search': typeof ProtectedContactsNotesSearchRoute
-  '/dossiers/$id': typeof ProtectedDossiersIdRoute
   '/dossiers/create': typeof ProtectedDossiersCreateRoute
   '/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
   '/help/commitments': typeof ProtectedHelpCommitmentsRoute
@@ -1109,7 +1145,6 @@ export interface FileRoutesById {
   '/_protected/plugin-demo': typeof ProtectedPluginDemoRoute
   '/_protected/positions': typeof ProtectedPositionsRouteWithChildren
   '/_protected/progressive-form-demo': typeof ProtectedProgressiveFormDemoRoute
-  '/_protected/prototype-dossier': typeof ProtectedPrototypeDossierRoute
   '/_protected/reports': typeof ProtectedReportsRouteWithChildren
   '/_protected/responsive-demo': typeof ProtectedResponsiveDemoRoute
   '/_protected/scenario-sandbox': typeof ProtectedScenarioSandboxRoute
@@ -1136,7 +1171,6 @@ export interface FileRoutesById {
   '/_protected/contacts/$contactId': typeof ProtectedContactsContactIdRoute
   '/_protected/contacts/create': typeof ProtectedContactsCreateRoute
   '/_protected/contacts/notes-search': typeof ProtectedContactsNotesSearchRoute
-  '/_protected/dossiers/$id': typeof ProtectedDossiersIdRoute
   '/_protected/dossiers/create': typeof ProtectedDossiersCreateRoute
   '/_protected/engagements/$engagementId': typeof ProtectedEngagementsEngagementIdRouteWithChildren
   '/_protected/help/commitments': typeof ProtectedHelpCommitmentsRoute
@@ -1243,7 +1277,6 @@ export interface FileRouteTypes {
     | '/plugin-demo'
     | '/positions'
     | '/progressive-form-demo'
-    | '/prototype-dossier'
     | '/reports'
     | '/responsive-demo'
     | '/scenario-sandbox'
@@ -1270,7 +1303,6 @@ export interface FileRouteTypes {
     | '/contacts/$contactId'
     | '/contacts/create'
     | '/contacts/notes-search'
-    | '/dossiers/$id'
     | '/dossiers/create'
     | '/engagements/$engagementId'
     | '/help/commitments'
@@ -1370,7 +1402,6 @@ export interface FileRouteTypes {
     | '/organizations'
     | '/plugin-demo'
     | '/progressive-form-demo'
-    | '/prototype-dossier'
     | '/responsive-demo'
     | '/scenario-sandbox'
     | '/search'
@@ -1396,7 +1427,6 @@ export interface FileRouteTypes {
     | '/contacts/$contactId'
     | '/contacts/create'
     | '/contacts/notes-search'
-    | '/dossiers/$id'
     | '/dossiers/create'
     | '/engagements/$engagementId'
     | '/help/commitments'
@@ -1502,7 +1532,6 @@ export interface FileRouteTypes {
     | '/_protected/plugin-demo'
     | '/_protected/positions'
     | '/_protected/progressive-form-demo'
-    | '/_protected/prototype-dossier'
     | '/_protected/reports'
     | '/_protected/responsive-demo'
     | '/_protected/scenario-sandbox'
@@ -1529,7 +1558,6 @@ export interface FileRouteTypes {
     | '/_protected/contacts/$contactId'
     | '/_protected/contacts/create'
     | '/_protected/contacts/notes-search'
-    | '/_protected/dossiers/$id'
     | '/_protected/dossiers/create'
     | '/_protected/engagements/$engagementId'
     | '/_protected/help/commitments'
@@ -1728,13 +1756,6 @@ declare module '@tanstack/react-router' {
       path: '/reports'
       fullPath: '/reports'
       preLoaderRoute: typeof ProtectedReportsRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
-    '/_protected/prototype-dossier': {
-      id: '/_protected/prototype-dossier'
-      path: '/prototype-dossier'
-      fullPath: '/prototype-dossier'
-      preLoaderRoute: typeof ProtectedPrototypeDossierRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/progressive-form-demo': {
@@ -2283,13 +2304,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ProtectedDossiersCreateRouteImport
       parentRoute: typeof ProtectedRoute
     }
-    '/_protected/dossiers/$id': {
-      id: '/_protected/dossiers/$id'
-      path: '/dossiers/$id'
-      fullPath: '/dossiers/$id'
-      preLoaderRoute: typeof ProtectedDossiersIdRouteImport
-      parentRoute: typeof ProtectedRoute
-    }
     '/_protected/contacts/notes-search': {
       id: '/_protected/contacts/notes-search'
       path: '/notes-search'
@@ -2525,9 +2539,8 @@ const ProtectedCalendarRouteChildren: ProtectedCalendarRouteChildren = {
   ProtectedCalendarNewRoute: ProtectedCalendarNewRoute,
 }
 
-const ProtectedCalendarRouteWithChildren = ProtectedCalendarRoute._addFileChildren(
-  ProtectedCalendarRouteChildren,
-)
+const ProtectedCalendarRouteWithChildren =
+  ProtectedCalendarRoute._addFileChildren(ProtectedCalendarRouteChildren)
 
 interface ProtectedContactsRouteChildren {
   ProtectedContactsContactIdRoute: typeof ProtectedContactsContactIdRoute
@@ -2541,9 +2554,8 @@ const ProtectedContactsRouteChildren: ProtectedContactsRouteChildren = {
   ProtectedContactsNotesSearchRoute: ProtectedContactsNotesSearchRoute,
 }
 
-const ProtectedContactsRouteWithChildren = ProtectedContactsRoute._addFileChildren(
-  ProtectedContactsRouteChildren,
-)
+const ProtectedContactsRouteWithChildren =
+  ProtectedContactsRoute._addFileChildren(ProtectedContactsRouteChildren)
 
 interface ProtectedEngagementsEngagementIdRouteChildren {
   ProtectedEngagementsEngagementIdAfterActionRoute: typeof ProtectedEngagementsEngagementIdAfterActionRoute
@@ -2566,13 +2578,13 @@ interface ProtectedEngagementsRouteChildren {
 }
 
 const ProtectedEngagementsRouteChildren: ProtectedEngagementsRouteChildren = {
-  ProtectedEngagementsEngagementIdRoute: ProtectedEngagementsEngagementIdRouteWithChildren,
+  ProtectedEngagementsEngagementIdRoute:
+    ProtectedEngagementsEngagementIdRouteWithChildren,
   ProtectedEngagementsIndexRoute: ProtectedEngagementsIndexRoute,
 }
 
-const ProtectedEngagementsRouteWithChildren = ProtectedEngagementsRoute._addFileChildren(
-  ProtectedEngagementsRouteChildren,
-)
+const ProtectedEngagementsRouteWithChildren =
+  ProtectedEngagementsRoute._addFileChildren(ProtectedEngagementsRouteChildren)
 
 interface ProtectedIntakeRouteChildren {
   ProtectedIntakeNewRoute: typeof ProtectedIntakeNewRoute
@@ -2624,9 +2636,8 @@ const ProtectedPersonsRouteChildren: ProtectedPersonsRouteChildren = {
   ProtectedPersonsIndexRoute: ProtectedPersonsIndexRoute,
 }
 
-const ProtectedPersonsRouteWithChildren = ProtectedPersonsRoute._addFileChildren(
-  ProtectedPersonsRouteChildren,
-)
+const ProtectedPersonsRouteWithChildren =
+  ProtectedPersonsRoute._addFileChildren(ProtectedPersonsRouteChildren)
 
 interface ProtectedPositionsIdRouteChildren {
   ProtectedPositionsIdApprovalsRoute: typeof ProtectedPositionsIdApprovalsRoute
@@ -2638,9 +2649,8 @@ const ProtectedPositionsIdRouteChildren: ProtectedPositionsIdRouteChildren = {
   ProtectedPositionsIdVersionsRoute: ProtectedPositionsIdVersionsRoute,
 }
 
-const ProtectedPositionsIdRouteWithChildren = ProtectedPositionsIdRoute._addFileChildren(
-  ProtectedPositionsIdRouteChildren,
-)
+const ProtectedPositionsIdRouteWithChildren =
+  ProtectedPositionsIdRoute._addFileChildren(ProtectedPositionsIdRouteChildren)
 
 interface ProtectedPositionsRouteChildren {
   ProtectedPositionsIdRoute: typeof ProtectedPositionsIdRouteWithChildren
@@ -2654,9 +2664,8 @@ const ProtectedPositionsRouteChildren: ProtectedPositionsRouteChildren = {
   ProtectedPositionsIndexRoute: ProtectedPositionsIndexRoute,
 }
 
-const ProtectedPositionsRouteWithChildren = ProtectedPositionsRoute._addFileChildren(
-  ProtectedPositionsRouteChildren,
-)
+const ProtectedPositionsRouteWithChildren =
+  ProtectedPositionsRoute._addFileChildren(ProtectedPositionsRouteChildren)
 
 interface ProtectedReportsRouteChildren {
   ProtectedReportsReportIdRoute: typeof ProtectedReportsReportIdRoute
@@ -2670,9 +2679,8 @@ const ProtectedReportsRouteChildren: ProtectedReportsRouteChildren = {
   ProtectedReportsIndexRoute: ProtectedReportsIndexRoute,
 }
 
-const ProtectedReportsRouteWithChildren = ProtectedReportsRoute._addFileChildren(
-  ProtectedReportsRouteChildren,
-)
+const ProtectedReportsRouteWithChildren =
+  ProtectedReportsRoute._addFileChildren(ProtectedReportsRouteChildren)
 
 interface ProtectedSettingsRouteChildren {
   ProtectedSettingsCalendarSyncRoute: typeof ProtectedSettingsCalendarSyncRoute
@@ -2689,12 +2697,12 @@ const ProtectedSettingsRouteChildren: ProtectedSettingsRouteChildren = {
   ProtectedSettingsIntegrationsRoute: ProtectedSettingsIntegrationsRoute,
   ProtectedSettingsNotificationsRoute: ProtectedSettingsNotificationsRoute,
   ProtectedSettingsWebhooksRoute: ProtectedSettingsWebhooksRoute,
-  ProtectedSettingsCalendarCallbackRoute: ProtectedSettingsCalendarCallbackRoute,
+  ProtectedSettingsCalendarCallbackRoute:
+    ProtectedSettingsCalendarCallbackRoute,
 }
 
-const ProtectedSettingsRouteWithChildren = ProtectedSettingsRoute._addFileChildren(
-  ProtectedSettingsRouteChildren,
-)
+const ProtectedSettingsRouteWithChildren =
+  ProtectedSettingsRoute._addFileChildren(ProtectedSettingsRouteChildren)
 
 interface ProtectedAfterActionsAfterActionIdRouteChildren {
   ProtectedAfterActionsAfterActionIdVersionsRoute: typeof ProtectedAfterActionsAfterActionIdVersionsRoute
@@ -2755,7 +2763,6 @@ interface ProtectedRouteChildren {
   ProtectedPluginDemoRoute: typeof ProtectedPluginDemoRoute
   ProtectedPositionsRoute: typeof ProtectedPositionsRouteWithChildren
   ProtectedProgressiveFormDemoRoute: typeof ProtectedProgressiveFormDemoRoute
-  ProtectedPrototypeDossierRoute: typeof ProtectedPrototypeDossierRoute
   ProtectedReportsRoute: typeof ProtectedReportsRouteWithChildren
   ProtectedResponsiveDemoRoute: typeof ProtectedResponsiveDemoRoute
   ProtectedScenarioSandboxRoute: typeof ProtectedScenarioSandboxRoute
@@ -2778,7 +2785,6 @@ interface ProtectedRouteChildren {
   ProtectedAdminPreviewLayoutsRoute: typeof ProtectedAdminPreviewLayoutsRoute
   ProtectedAdminSystemRoute: typeof ProtectedAdminSystemRoute
   ProtectedAfterActionsAfterActionIdRoute: typeof ProtectedAfterActionsAfterActionIdRouteWithChildren
-  ProtectedDossiersIdRoute: typeof ProtectedDossiersIdRoute
   ProtectedDossiersCreateRoute: typeof ProtectedDossiersCreateRoute
   ProtectedHelpCommitmentsRoute: typeof ProtectedHelpCommitmentsRoute
   ProtectedRelationshipsGraphRoute: typeof ProtectedRelationshipsGraphRoute
@@ -2850,7 +2856,6 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedPluginDemoRoute: ProtectedPluginDemoRoute,
   ProtectedPositionsRoute: ProtectedPositionsRouteWithChildren,
   ProtectedProgressiveFormDemoRoute: ProtectedProgressiveFormDemoRoute,
-  ProtectedPrototypeDossierRoute: ProtectedPrototypeDossierRoute,
   ProtectedReportsRoute: ProtectedReportsRouteWithChildren,
   ProtectedResponsiveDemoRoute: ProtectedResponsiveDemoRoute,
   ProtectedScenarioSandboxRoute: ProtectedScenarioSandboxRoute,
@@ -2872,8 +2877,8 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAdminFieldPermissionsRoute: ProtectedAdminFieldPermissionsRoute,
   ProtectedAdminPreviewLayoutsRoute: ProtectedAdminPreviewLayoutsRoute,
   ProtectedAdminSystemRoute: ProtectedAdminSystemRoute,
-  ProtectedAfterActionsAfterActionIdRoute: ProtectedAfterActionsAfterActionIdRouteWithChildren,
-  ProtectedDossiersIdRoute: ProtectedDossiersIdRoute,
+  ProtectedAfterActionsAfterActionIdRoute:
+    ProtectedAfterActionsAfterActionIdRouteWithChildren,
   ProtectedDossiersCreateRoute: ProtectedDossiersCreateRoute,
   ProtectedHelpCommitmentsRoute: ProtectedHelpCommitmentsRoute,
   ProtectedRelationshipsGraphRoute: ProtectedRelationshipsGraphRoute,
@@ -2891,17 +2896,23 @@ const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedDossiersOrganizationsIdRoute: ProtectedDossiersOrganizationsIdRoute,
   ProtectedDossiersPersonsIdRoute: ProtectedDossiersPersonsIdRoute,
   ProtectedDossiersTopicsIdRoute: ProtectedDossiersTopicsIdRoute,
-  ProtectedDossiersWorking_groupsIdRoute: ProtectedDossiersWorking_groupsIdRoute,
+  ProtectedDossiersWorking_groupsIdRoute:
+    ProtectedDossiersWorking_groupsIdRoute,
   ProtectedDossiersCountriesIndexRoute: ProtectedDossiersCountriesIndexRoute,
-  ProtectedDossiersEngagementsIndexRoute: ProtectedDossiersEngagementsIndexRoute,
+  ProtectedDossiersEngagementsIndexRoute:
+    ProtectedDossiersEngagementsIndexRoute,
   ProtectedDossiersForumsIndexRoute: ProtectedDossiersForumsIndexRoute,
-  ProtectedDossiersOrganizationsIndexRoute: ProtectedDossiersOrganizationsIndexRoute,
+  ProtectedDossiersOrganizationsIndexRoute:
+    ProtectedDossiersOrganizationsIndexRoute,
   ProtectedDossiersPersonsIndexRoute: ProtectedDossiersPersonsIndexRoute,
   ProtectedDossiersTopicsIndexRoute: ProtectedDossiersTopicsIndexRoute,
-  ProtectedDossiersWorking_groupsIndexRoute: ProtectedDossiersWorking_groupsIndexRoute,
+  ProtectedDossiersWorking_groupsIndexRoute:
+    ProtectedDossiersWorking_groupsIndexRoute,
 }
 
-const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(ProtectedRouteChildren)
+const ProtectedRouteWithChildren = ProtectedRoute._addFileChildren(
+  ProtectedRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,

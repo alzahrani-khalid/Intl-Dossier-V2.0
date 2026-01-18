@@ -16,10 +16,10 @@ serve(async (req) => {
   try {
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     const url = new URL(req.url);
@@ -27,10 +27,10 @@ serve(async (req) => {
     const linkType = url.searchParams.get('link_type');
 
     if (!positionId) {
-      return new Response(
-        JSON.stringify({ error: 'Missing positionId parameter' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Missing positionId parameter' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     const supabaseClient = createClient(
@@ -40,31 +40,36 @@ serve(async (req) => {
     );
 
     // Get current user
-    const { data: { user }, error: userError } = await supabaseClient.auth.getUser();
+    const {
+      data: { user },
+      error: userError,
+    } = await supabaseClient.auth.getUser();
     if (userError || !user) {
-      return new Response(
-        JSON.stringify({ error: 'Unauthorized' }),
-        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     // Build query
     let query = supabaseClient
       .from('position_dossier_links')
-      .select(`
+      .select(
+        `
         *,
         dossier:dossiers!dossier_id(
           id,
           name_en,
           name_ar,
-          reference_type,
+          type,
           status,
-          summary_en,
-          summary_ar
+          description_en,
+          description_ar
         )
-      `)
+      `
+      )
       .eq('position_id', positionId)
-      .order('added_at', { ascending: false });
+      .order('created_at', { ascending: false });
 
     // Filter by link_type if provided
     if (linkType) {
@@ -84,12 +89,11 @@ serve(async (req) => {
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
-
   } catch (error) {
     console.error('Error in positions-dossiers-get:', error);
-    return new Response(
-      JSON.stringify({ error: error.message }),
-      { status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ error: error.message }), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 });

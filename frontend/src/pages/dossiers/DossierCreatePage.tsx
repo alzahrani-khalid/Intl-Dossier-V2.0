@@ -32,6 +32,7 @@ import { DossierTemplateGallery } from '@/components/Dossier/DossierTemplateGall
 import { TemplatePreviewDialog } from '@/components/Dossier/TemplatePreviewDialog'
 import { AIPolicyBriefWizard } from '@/components/Dossier/AIPolicyBriefWizard'
 import { cn } from '@/lib/utils'
+import { getDossierDetailPath } from '@/lib/dossier-routes'
 import type { DossierTemplate, TemplateSection } from '@/types/dossier-template.types'
 import type { DossierType } from '@/services/dossier-api'
 import type { GeneratedOutline } from '@/hooks/useAIPolicyBriefOutline'
@@ -64,8 +65,8 @@ export function DossierCreatePage() {
     }
   }
 
-  const handleSuccess = (dossierId: string) => {
-    navigate({ to: `/dossiers/${dossierId}` })
+  const handleSuccess = (dossierId: string, dossierType?: DossierType) => {
+    navigate({ to: getDossierDetailPath(dossierId, dossierType) })
   }
 
   // Handle template selection - show preview

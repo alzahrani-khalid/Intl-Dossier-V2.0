@@ -15,8 +15,9 @@
  * - Cursor-based pagination
  */
 
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+import { getDossierDetailPath } from '../_shared/dossier-routes.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -58,23 +59,14 @@ Deno.serve(async (req: Request) => {
 
     // Parse request body
     const body: RequestBody = await req.json();
-    const {
-      dossier_id,
-      dossier_type,
-      filters = {},
-      cursor,
-      limit = 20,
-    } = body;
+    const { dossier_id, dossier_type, filters = {}, cursor, limit = 20 } = body;
 
     // Validate required fields
     if (!dossier_id || !dossier_type) {
-      return new Response(
-        JSON.stringify({ error: 'dossier_id and dossier_type are required' }),
-        {
-          status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-        }
-      );
+      return new Response(JSON.stringify({ error: 'dossier_id and dossier_type are required' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     // Initialize timeline events array
@@ -94,15 +86,17 @@ Deno.serve(async (req: Request) => {
       Topic: ['calendar', 'intelligence'],
     };
 
-    const eventTypes = filters.event_types && filters.event_types.length > 0
-      ? filters.event_types
-      : (defaultEventTypes[dossier_type] || ['calendar']);
+    const eventTypes =
+      filters.event_types && filters.event_types.length > 0
+        ? filters.event_types
+        : defaultEventTypes[dossier_type] || ['calendar'];
 
     // 1. Fetch Calendar Events
     if (eventTypes.includes('calendar')) {
       let query = supabaseClient
         .from('calendar_entries')
-        .select(`
+        .select(
+          `
           id,
           entry_type,
           title_en,
@@ -120,7 +114,8 @@ Deno.serve(async (req: Request) => {
           created_at,
           updated_at,
           created_by
-        `)
+        `
+        )
         .eq('dossier_id', dossier_id)
         .order('event_date', { ascending: false })
         .limit(limit);
@@ -195,7 +190,8 @@ Deno.serve(async (req: Request) => {
     if (eventTypes.includes('interaction')) {
       let query = supabaseClient
         .from('dossier_interactions')
-        .select(`
+        .select(
+          `
           id,
           interaction_type,
           interaction_date,
@@ -203,7 +199,8 @@ Deno.serve(async (req: Request) => {
           created_at,
           updated_at,
           created_by
-        `)
+        `
+        )
         .eq('dossier_id', dossier_id)
         .order('interaction_date', { ascending: false })
         .limit(limit);
@@ -239,7 +236,7 @@ Deno.serve(async (req: Request) => {
               icon: 'Users',
               color: 'purple',
               interaction_type: interaction.interaction_type,
-              navigation_url: `/dossiers/${dossier_id}?tab=interactions`,
+              navigation_url: `${getDossierDetailPath(dossier_id, dossier_type)}?tab=interactions`,
             },
             created_at: interaction.created_at,
             updated_at: interaction.updated_at,
@@ -253,7 +250,8 @@ Deno.serve(async (req: Request) => {
     if (dossier_type === 'Country' && eventTypes.includes('intelligence')) {
       let query = supabaseClient
         .from('intelligence_reports')
-        .select(`
+        .select(
+          `
           id,
           intelligence_type,
           confidence_score,
@@ -263,7 +261,8 @@ Deno.serve(async (req: Request) => {
           content_ar,
           created_at,
           last_refreshed_at
-        `)
+        `
+        )
         .eq('entity_id', dossier_id)
         .eq('entity_type', 'country')
         .order('created_at', { ascending: false })
@@ -282,8 +281,11 @@ Deno.serve(async (req: Request) => {
           ...reports.map((report) => {
             // Map confidence_score (0-100 integer) to priority
             const priority =
-              report.confidence_score >= 80 ? 'high' :
-              report.confidence_score >= 50 ? 'medium' : 'low';
+              report.confidence_score >= 80
+                ? 'high'
+                : report.confidence_score >= 50
+                  ? 'medium'
+                  : 'low';
 
             return {
               id: `intelligence-${report.id}`,
@@ -301,7 +303,7 @@ Deno.serve(async (req: Request) => {
                 color: priority === 'high' ? 'red' : 'orange',
                 confidence_score: report.confidence_score,
                 intelligence_type: report.intelligence_type,
-                navigation_url: `/dossiers/${dossier_id}?tab=intelligence`,
+                navigation_url: `${getDossierDetailPath(dossier_id, dossier_type)}?tab=intelligence`,
               },
               created_at: report.created_at,
               updated_at: report.last_refreshed_at,
@@ -315,7 +317,8 @@ Deno.serve(async (req: Request) => {
     if (eventTypes.includes('mou')) {
       let query = supabaseClient
         .from('mous')
-        .select(`
+        .select(
+          `
           id,
           title,
           title_ar,
@@ -323,7 +326,8 @@ Deno.serve(async (req: Request) => {
           lifecycle_state,
           created_at,
           updated_at
-        `)
+        `
+        )
         .or(`country_id.eq.${dossier_id},organization_id.eq.${dossier_id}`)
         .order('effective_date', { ascending: false })
         .limit(limit);
@@ -371,20 +375,19 @@ Deno.serve(async (req: Request) => {
     let filteredEvents = timelineEvents;
     if (filters.search_query) {
       const query = filters.search_query.toLowerCase();
-      filteredEvents = timelineEvents.filter((event) =>
-        event.title_en?.toLowerCase().includes(query) ||
-        event.title_ar?.toLowerCase().includes(query) ||
-        event.description_en?.toLowerCase().includes(query) ||
-        event.description_ar?.toLowerCase().includes(query)
+      filteredEvents = timelineEvents.filter(
+        (event) =>
+          event.title_en?.toLowerCase().includes(query) ||
+          event.title_ar?.toLowerCase().includes(query) ||
+          event.description_en?.toLowerCase().includes(query) ||
+          event.description_ar?.toLowerCase().includes(query)
       );
     }
 
     // Paginate results
     const paginatedEvents = filteredEvents.slice(0, limit);
     const hasMore = filteredEvents.length > limit;
-    const nextCursor = hasMore
-      ? paginatedEvents[paginatedEvents.length - 1].event_date
-      : undefined;
+    const nextCursor = hasMore ? paginatedEvents[paginatedEvents.length - 1].event_date : undefined;
 
     // Return response
     return new Response(

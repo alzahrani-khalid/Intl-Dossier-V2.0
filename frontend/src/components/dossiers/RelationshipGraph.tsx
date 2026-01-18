@@ -18,6 +18,7 @@ import 'reactflow/dist/style.css'
 
 import { useRelationshipsForDossier } from '@/hooks/useRelationships'
 import { useTouchGraphControls } from '@/hooks/useTouchGraphControls'
+import { getDossierDetailPath } from '@/lib/dossier-routes'
 import { Card } from '@/components/ui/card'
 import {
   Select,
@@ -224,7 +225,9 @@ export function RelationshipGraph({
   const onNodeClick = useCallback(
     (event: React.MouseEvent, node: Node) => {
       if (node.id !== dossierId) {
-        navigate({ to: `/dossiers/${node.id}` })
+        // Get the dossier type from node data
+        const nodeType = node.data?.referenceType || 'country'
+        navigate({ to: getDossierDetailPath(node.id, nodeType) })
       }
     },
     [dossierId, navigate],
@@ -253,7 +256,10 @@ export function RelationshipGraph({
     onNodeExpand: (nodeId) => {
       // Navigate to dossier on double-tap
       if (nodeId !== dossierId) {
-        navigate({ to: `/dossiers/${nodeId}` })
+        // Find the node to get its type
+        const targetNode = nodes.find((n) => n.id === nodeId)
+        const nodeType = targetNode?.data?.referenceType || 'country'
+        navigate({ to: getDossierDetailPath(nodeId, nodeType) })
       }
     },
     minZoom: 0.1,

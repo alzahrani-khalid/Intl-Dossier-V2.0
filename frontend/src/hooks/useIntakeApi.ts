@@ -459,28 +459,190 @@ export const useDeleteAttachment = () => {
 }
 
 /**
- * Get SLA Preview
+ * SLA Configuration type
  */
-export const useGetSLAPreview = (urgency: string) => {
+export interface SLAConfiguration {
+  id: string
+  name: string
+  name_ar: string | null
+  acknowledgment_target_minutes: number
+  triage_target_minutes: number
+  assignment_target_minutes: number
+  resolution_target_minutes: number
+  business_hours_only: boolean
+  business_hours_start: string
+  business_hours_end: string
+  business_days: number[]
+  warning_threshold_percent: number
+  critical_threshold_percent: number
+  allow_pause: boolean
+  max_pause_count: number | null
+  max_total_pause_minutes: number | null
+}
+
+/**
+ * Get SLA Preview - Database-driven SLA configuration
+ */
+export const useGetSLAPreview = (urgency: string, requestType?: string, sensitivity?: string) => {
   return useQuery({
-    queryKey: ['sla-preview', urgency],
+    queryKey: ['sla-preview', urgency, requestType, sensitivity],
     queryFn: async (): Promise<{
       acknowledgmentMinutes: number
+      triageMinutes: number
+      assignmentMinutes: number
+      resolutionMinutes: number
       resolutionHours: number
       businessHoursOnly: boolean
+      config: SLAConfiguration | null
     }> => {
-      // This would typically come from an API endpoint
-      // For now, return default values based on urgency
-      const slaMap = {
-        critical: { acknowledgmentMinutes: 15, resolutionHours: 4, businessHoursOnly: false },
-        high: { acknowledgmentMinutes: 30, resolutionHours: 8, businessHoursOnly: true },
-        medium: { acknowledgmentMinutes: 60, resolutionHours: 24, businessHoursOnly: true },
-        low: { acknowledgmentMinutes: 120, resolutionHours: 72, businessHoursOnly: true },
+      // Fetch from database using the find_sla_configuration function
+      const { data, error } = await supabase.rpc('find_sla_configuration', {
+        p_request_type: requestType || null,
+        p_urgency: urgency,
+        p_sensitivity: sensitivity || null,
+      })
+
+      if (error || !data) {
+        // Fallback to hardcoded defaults if database query fails
+        console.warn('SLA config lookup failed, using fallback:', error)
+        const slaMap = {
+          critical: {
+            acknowledgmentMinutes: 15,
+            triageMinutes: 30,
+            assignmentMinutes: 60,
+            resolutionMinutes: 240,
+            resolutionHours: 4,
+            businessHoursOnly: false,
+            config: null,
+          },
+          high: {
+            acknowledgmentMinutes: 30,
+            triageMinutes: 60,
+            assignmentMinutes: 120,
+            resolutionMinutes: 480,
+            resolutionHours: 8,
+            businessHoursOnly: true,
+            config: null,
+          },
+          medium: {
+            acknowledgmentMinutes: 60,
+            triageMinutes: 120,
+            assignmentMinutes: 240,
+            resolutionMinutes: 1440,
+            resolutionHours: 24,
+            businessHoursOnly: true,
+            config: null,
+          },
+          low: {
+            acknowledgmentMinutes: 120,
+            triageMinutes: 240,
+            assignmentMinutes: 480,
+            resolutionMinutes: 2880,
+            resolutionHours: 48,
+            businessHoursOnly: true,
+            config: null,
+          },
+        }
+        return slaMap[urgency as keyof typeof slaMap] || slaMap.medium
       }
 
-      return slaMap[urgency as keyof typeof slaMap] || slaMap.medium
+      const config = data as SLAConfiguration
+      return {
+        acknowledgmentMinutes: config.acknowledgment_target_minutes,
+        triageMinutes: config.triage_target_minutes,
+        assignmentMinutes: config.assignment_target_minutes,
+        resolutionMinutes: config.resolution_target_minutes,
+        resolutionHours: Math.round(config.resolution_target_minutes / 60),
+        businessHoursOnly: config.business_hours_only,
+        config,
+      }
     },
     enabled: !!urgency,
+    staleTime: 5 * 60 * 1000, // Cache for 5 minutes
+  })
+}
+
+/**
+ * Pause SLA for a ticket
+ */
+export const usePauseSLA = (ticketId: string) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      slaType,
+      reason,
+    }: {
+      slaType: 'acknowledgment' | 'triage' | 'assignment' | 'resolution'
+      reason?: string
+    }): Promise<boolean> => {
+      const { data, error } = await supabase.rpc('pause_ticket_sla', {
+        p_ticket_id: ticketId,
+        p_sla_type: slaType,
+        p_reason: reason || null,
+      })
+
+      if (error) {
+        throw new Error(error.message || 'Failed to pause SLA')
+      }
+
+      return data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) })
+    },
+  })
+}
+
+/**
+ * Resume SLA for a ticket
+ */
+export const useResumeSLA = (ticketId: string) => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: async ({
+      slaType,
+    }: {
+      slaType: 'acknowledgment' | 'triage' | 'assignment' | 'resolution'
+    }): Promise<boolean> => {
+      const { data, error } = await supabase.rpc('resume_ticket_sla', {
+        p_ticket_id: ticketId,
+        p_sla_type: slaType,
+      })
+
+      if (error) {
+        throw new Error(error.message || 'Failed to resume SLA')
+      }
+
+      return data
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: intakeKeys.ticket(ticketId) })
+    },
+  })
+}
+
+/**
+ * Get SLA pause history for a ticket
+ */
+export const useSLAPauseHistory = (ticketId: string) => {
+  return useQuery({
+    queryKey: ['sla-pause-history', ticketId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('sla_pause_history')
+        .select('*')
+        .eq('ticket_id', ticketId)
+        .order('created_at', { ascending: false })
+
+      if (error) {
+        throw new Error(error.message || 'Failed to fetch SLA pause history')
+      }
+
+      return data
+    },
+    enabled: !!ticketId,
   })
 }
 

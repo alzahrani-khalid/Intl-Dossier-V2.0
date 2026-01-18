@@ -9,6 +9,7 @@ import { toast } from 'sonner'
 
 import { useAuth } from '@/contexts/auth.context'
 import { getAccessToken } from '@/lib/auth-utils'
+import { supabase } from '@/lib/supabase'
 import type {
   SampleDataTemplate,
   SampleDataStatus,
@@ -25,40 +26,85 @@ export const sampleDataKeys = {
   status: () => [...sampleDataKeys.all, 'status'] as const,
 }
 
+/**
+ * Check if we have a valid session before making a request.
+ * This prevents unnecessary 401 errors in the console.
+ */
+async function hasValidSession(): Promise<boolean> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+  return !!session?.access_token
+}
+
 // API functions
 async function fetchTemplates(): Promise<SampleDataTemplate[]> {
-  const accessToken = await getAccessToken()
-  const response = await fetch(`${SUPABASE_URL}/functions/v1/sample-data?action=list-templates`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  })
-
-  if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error?.message_en || 'Failed to fetch templates')
+  // Check session first to avoid 401 console errors
+  if (!(await hasValidSession())) {
+    return []
   }
 
-  const data = await response.json()
-  return data.templates
+  try {
+    const accessToken = await getAccessToken()
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/sample-data?action=list-templates`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      // Handle 401 silently - user may not be fully authenticated yet
+      if (response.status === 401) {
+        return []
+      }
+      const error = await response.json()
+      throw new Error(error.error?.message_en || 'Failed to fetch templates')
+    }
+
+    const data = await response.json()
+    return data.templates
+  } catch (error) {
+    // Handle auth errors silently - return empty array
+    if (error instanceof Error && error.message === 'Not authenticated') {
+      return []
+    }
+    throw error
+  }
 }
 
 async function fetchStatus(): Promise<SampleDataStatus> {
-  const accessToken = await getAccessToken()
-  const response = await fetch(`${SUPABASE_URL}/functions/v1/sample-data?action=status`, {
-    headers: {
-      Authorization: `Bearer ${accessToken}`,
-      'Content-Type': 'application/json',
-    },
-  })
-
-  if (!response.ok) {
-    const error = await response.json()
-    throw new Error(error.error?.message_en || 'Failed to fetch status')
+  // Check session first to avoid 401 console errors
+  if (!(await hasValidSession())) {
+    return { has_sample_data: false, instances: [] }
   }
 
-  return response.json()
+  try {
+    const accessToken = await getAccessToken()
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/sample-data?action=status`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+        'Content-Type': 'application/json',
+      },
+    })
+
+    if (!response.ok) {
+      // Handle 401 silently - user may not be fully authenticated yet
+      if (response.status === 401) {
+        return { has_sample_data: false, instances: [] }
+      }
+      const error = await response.json()
+      throw new Error(error.error?.message_en || 'Failed to fetch status')
+    }
+
+    return response.json()
+  } catch (error) {
+    // Handle auth errors silently - return default status
+    if (error instanceof Error && error.message === 'Not authenticated') {
+      return { has_sample_data: false, instances: [] }
+    }
+    throw error
+  }
 }
 
 async function populateSampleData(templateSlug: string): Promise<PopulateSampleDataResponse> {

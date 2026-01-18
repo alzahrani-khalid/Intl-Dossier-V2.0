@@ -1,0 +1,169 @@
+{
+  "title": "Dossier Context",
+  "description": "Manage dossier associations for work items",
+
+  "badge": {
+    "linked_to": "Linked to {{dossierName}}",
+    "linked_dossiers": "Linked to:",
+    "via_engagement": "via Engagement",
+    "via_after_action": "via After-Action",
+    "via_position": "via Position",
+    "via_mou": "via MOU",
+    "direct": "Direct link",
+    "primary": "Primary"
+  },
+
+  "selector": {
+    "title": "Select Dossier",
+    "placeholder": "Search dossiers...",
+    "no_results": "No dossiers found",
+    "loading": "Loading dossiers...",
+    "select_at_least_one": "Select at least one dossier",
+    "selected_count": "{{count}} dossier selected",
+    "selected_count_plural": "{{count}} dossiers selected",
+    "clear_selection": "Clear selection",
+    "search_hint": "Type to search by name",
+    "filter_by_type": "Filter by type",
+    "all_types": "All types"
+  },
+
+  "type": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "theme": "Theme"
+  },
+
+  "timeline": {
+    "title": "Activity Timeline",
+    "empty": "No activities found for this dossier",
+    "loading": "Loading activities...",
+    "loadMore": "Load More",
+    "showing_count": "Showing {{count}} of {{total}} activities",
+    "filter": "Filter",
+    "filter_by_type": "Filter by type",
+    "filter_by_source": "Filter by source",
+    "all_types": "All types",
+    "all_sources": "All sources",
+    "refresh": "Refresh",
+    "clearFilters": "Clear filters",
+    "overdueOnly": "Overdue Only",
+    "endOfList": "End of activities",
+    "error": "Failed to load activities",
+    "retry": "Try Again",
+    "noTitle": "Untitled",
+    "overdue": "Overdue",
+    "inheritedVia": "via",
+    "minutesAgo": "{{count}} min ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago",
+    "type": {
+      "task": "Task",
+      "commitment": "Commitment",
+      "intake": "Intake"
+    },
+    "status": {
+      "pending": "Pending",
+      "in_progress": "In Progress",
+      "todo": "To Do",
+      "review": "Review",
+      "completed": "Completed",
+      "done": "Done",
+      "cancelled": "Cancelled",
+      "open": "Open",
+      "closed": "Closed"
+    },
+    "priority": {
+      "low": "Low",
+      "medium": "Medium",
+      "high": "High",
+      "urgent": "Urgent",
+      "critical": "Critical"
+    },
+    "inheritanceSource": {
+      "direct": "Direct",
+      "engagement": "Engagement",
+      "after_action": "After-Action",
+      "position": "Position",
+      "mou": "MOU"
+    }
+  },
+
+  "activity": {
+    "task": "Task",
+    "commitment": "Commitment",
+    "intake": "Intake Request",
+    "created_at": "Created {{date}}",
+    "updated_at": "Updated {{date}}",
+    "view_details": "View details"
+  },
+
+  "inheritance": {
+    "direct": "Directly linked",
+    "engagement": "Inherited from Engagement",
+    "after_action": "Inherited from After-Action Record",
+    "position": "Inherited from Position",
+    "mou": "Inherited from MOU",
+    "path": "Inheritance path"
+  },
+
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived"
+  },
+
+  "validation": {
+    "dossier_required": "At least one dossier is required",
+    "dossier_access_denied": "You don't have access to this dossier",
+    "primary_dossier_required": "A primary dossier must be selected",
+    "duplicate_link": "This dossier is already linked",
+    "invalid_inheritance": "Invalid inheritance configuration"
+  },
+
+  "errors": {
+    "resolve_failed": "Failed to resolve dossier context",
+    "create_link_failed": "Failed to link dossier",
+    "delete_link_failed": "Failed to remove dossier link",
+    "load_timeline_failed": "Failed to load activity timeline",
+    "search_failed": "Failed to search dossiers",
+    "permission_denied": "You don't have permission to access this dossier"
+  },
+
+  "actions": {
+    "add_dossier": "Add Dossier",
+    "remove_dossier": "Remove Dossier",
+    "set_primary": "Set as Primary",
+    "view_dossier": "View Dossier",
+    "edit_links": "Edit Dossier Links"
+  },
+
+  "context": {
+    "auto_resolved": "Dossier context automatically resolved",
+    "manual_selection_required": "Please select a dossier",
+    "inherited_from": "Inherited from {{source}}",
+    "no_context": "No dossier context available"
+  },
+
+  "hints": {
+    "inheritance": "Work items inherit dossier context from their parent entity",
+    "multiple_dossiers": "You can link a work item to multiple dossiers",
+    "primary_dossier": "The primary dossier is displayed prominently in lists"
+  },
+
+  "error": {
+    "timeline_title": "Activity Timeline Error",
+    "timeline_description": "Unable to load the activity timeline. Please try refreshing.",
+    "selector_title": "Dossier Selector Error",
+    "selector_description": "Unable to load the dossier selector. Please try again.",
+    "badge_title": "Dossier Badge Error",
+    "badge_description": "Unable to display dossier information.",
+    "context_title": "Dossier Context Error",
+    "context_description": "Unable to resolve dossier context. Please select a dossier manually.",
+    "general_title": "Something went wrong",
+    "general_description": "An unexpected error occurred. Please try refreshing the page.",
+    "technical_details": "Technical details",
+    "try_again": "Try Again",
+    "refresh_page": "Refresh Page"
+  }
+}

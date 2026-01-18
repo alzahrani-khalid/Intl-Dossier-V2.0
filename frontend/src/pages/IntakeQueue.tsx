@@ -1,23 +1,29 @@
 /**
  * Intake Queue Page (FR-033)
  *
- * Work-Queue-First: Priority page for new incoming requests
+ * Unified Work Queue for incoming requests.
+ *
  * Features:
- * - List of pending tickets awaiting triage
+ * - List of tickets awaiting triage (default) or all statuses via filter
  * - AI triage suggestions
  * - Quick classification actions
  * - Batch operations
  * - SLA countdown indicators
+ * - Status filters
+ * - Pull-to-refresh
  *
  * Mobile-first responsive design with RTL support
+ *
+ * This page consolidates the previous /intake/queue and /my-work/intake
+ * into a single, unified experience.
  */
 
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate } from '@tanstack/react-router'
 import { supabase } from '../lib/supabase'
-import { Inbox, Clock, AlertCircle, CheckCircle2, Plus } from 'lucide-react'
+import { Inbox, Clock, AlertCircle, CheckCircle2, Plus, X, ListFilter } from 'lucide-react'
 import { Button } from '../components/ui/button'
 import { Badge } from '../components/ui/badge'
 import { Card } from '../components/ui/card'
@@ -28,11 +34,48 @@ import {
   DialogTitle,
   DialogDescription,
 } from '../components/ui/dialog'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuCheckboxItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '../components/ui/dropdown-menu'
 import { TriagePanel } from '../components/TriagePanel'
 import { IntakeRoleEmptyState } from '../components/empty-states'
 import { usePullToRefresh } from '../hooks/usePullToRefresh'
 import { useLastSyncInfo } from '../hooks/useLastSyncInfo'
 import { PullToRefreshIndicator, SyncStatusBar } from '../components/ui/pull-to-refresh-indicator'
+
+/**
+ * Valid ticket_status enum values from database
+ * @see supabase/migrations/20250129001_create_intake_tickets_table.sql
+ */
+const VALID_TICKET_STATUSES = [
+  'draft',
+  'submitted',
+  'triaged',
+  'assigned',
+  'in_progress',
+  'converted',
+  'closed',
+  'merged',
+] as const
+
+type TicketStatus = (typeof VALID_TICKET_STATUSES)[number]
+
+/**
+ * Status categories for filtering
+ */
+const STATUS_CATEGORIES: Record<string, readonly TicketStatus[]> = {
+  pending: ['submitted', 'triaged'],
+  active: ['assigned', 'in_progress'],
+  completed: ['converted', 'closed', 'merged'],
+  all: VALID_TICKET_STATUSES,
+}
+
+type StatusCategoryKey = 'pending' | 'active' | 'completed' | 'all'
 
 interface Ticket {
   id: string
@@ -42,16 +85,26 @@ interface Ticket {
   description: string
   description_ar: string
   source: string
+  request_type: string
   priority: 'low' | 'medium' | 'high' | 'urgent'
-  status: string
+  status: TicketStatus
+  urgency: string
   created_at: string
   submitted_at: string | null
   triaged_at: string | null
+  assigned_to: string | null
+  assigned_unit: string | null
   ai_suggestion?: {
     classification: string
     confidence: number
     dossier_id?: string
   }
+}
+
+interface QueueFilters {
+  statusCategory: StatusCategoryKey
+  priority?: string
+  requestType?: string
 }
 
 export function IntakeQueuePage() {
@@ -63,26 +116,58 @@ export function IntakeQueuePage() {
   const [classifyDialogOpen, setClassifyDialogOpen] = useState(false)
   const [selectedTicketForClassify, setSelectedTicketForClassify] = useState<string | null>(null)
 
-  // Fetch pending tickets awaiting triage
+  // Filters state - default to 'pending' (submitted, triaged) for triage workflow
+  const [filters, setFilters] = useState<QueueFilters>({
+    statusCategory: 'pending',
+  })
+
+  // Fetch tickets based on filters
   const {
-    data: tickets,
+    data: tickets = [],
     isLoading,
     refetch,
-  } = useQuery<Ticket[]>({
-    queryKey: ['intake-queue'],
-    queryFn: async () => {
-      const { data, error } = await supabase
+  } = useQuery<Ticket[], Error>({
+    queryKey: ['intake-queue', filters],
+    queryFn: async (): Promise<Ticket[]> => {
+      let query = supabase
         .from('intake_tickets')
         .select('*')
-        .eq('status', 'submitted')
-        .is('triaged_at', null)
         .order('created_at', { ascending: true })
 
+      // Apply status filter based on category
+      const statusesToInclude = STATUS_CATEGORIES[filters.statusCategory]
+      if (statusesToInclude && statusesToInclude.length < VALID_TICKET_STATUSES.length) {
+        query = query.in('status', [...statusesToInclude])
+      }
+
+      // Apply additional filters
+      if (filters.priority) {
+        query = query.eq('priority', filters.priority)
+      }
+      if (filters.requestType) {
+        query = query.eq('request_type', filters.requestType)
+      }
+
+      const { data, error } = await query
+
       if (error) throw error
-      return data || []
+      return (data as Ticket[]) || []
     },
     staleTime: 1 * 60 * 1000,
   })
+
+  // Derive filter summary for display
+  const activeFilterCount = useMemo(() => {
+    let count = 0
+    if (filters.statusCategory !== 'pending') count++
+    if (filters.priority) count++
+    if (filters.requestType) count++
+    return count
+  }, [filters])
+
+  const clearFilters = () => {
+    setFilters({ statusCategory: 'pending' })
+  }
 
   // Sync info tracking for pull-to-refresh
   const { lastSyncTime, itemsSynced, updateSyncInfo } = useLastSyncInfo('intake-queue')
@@ -111,6 +196,29 @@ export function IntakeQueuePage() {
         return 'secondary'
       default:
         return 'outline'
+    }
+  }
+
+  const getStatusVariant = (status: TicketStatus) => {
+    switch (status) {
+      case 'submitted':
+        return 'secondary' as const
+      case 'triaged':
+        return 'secondary' as const
+      case 'assigned':
+        return 'default' as const
+      case 'in_progress':
+        return 'default' as const
+      case 'converted':
+        return 'outline' as const
+      case 'closed':
+        return 'outline' as const
+      case 'merged':
+        return 'outline' as const
+      case 'draft':
+        return 'outline' as const
+      default:
+        return 'outline' as const
     }
   }
 
@@ -186,15 +294,97 @@ export function IntakeQueuePage() {
                 <span className="hidden sm:inline">{t('intake.createNew', 'New Request')}</span>
                 <span className="sm:hidden">+</span>
               </Button>
-              <Button variant="outline" size="sm" className="min-h-9">
-                {t('common.filter', 'Filter')}
-              </Button>
+
+              {/* Status Category Filter Dropdown */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm" className="min-h-9 gap-2">
+                    <ListFilter className="size-4" />
+                    <span className="hidden sm:inline">
+                      {filters.statusCategory === 'pending'
+                        ? t('intake.filters.pendingTriage', 'Pending Triage')
+                        : filters.statusCategory === 'active'
+                          ? t('intake.filters.active', 'Active')
+                          : filters.statusCategory === 'completed'
+                            ? t('intake.filters.completed', 'Completed')
+                            : t('intake.filters.all', 'All')}
+                    </span>
+                    {activeFilterCount > 0 && (
+                      <Badge variant="secondary" className="size-5 justify-center p-0 text-xs">
+                        {activeFilterCount}
+                      </Badge>
+                    )}
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-56">
+                  <DropdownMenuLabel>
+                    {t('intake.filters.statusCategory', 'Status')}
+                  </DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuCheckboxItem
+                    checked={filters.statusCategory === 'pending'}
+                    onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'pending' }))}
+                  >
+                    {t('intake.filters.pendingTriage', 'Pending Triage')}
+                    <Badge variant="outline" className="ms-auto">
+                      submitted, triaged
+                    </Badge>
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={filters.statusCategory === 'active'}
+                    onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'active' }))}
+                  >
+                    {t('intake.filters.active', 'Active')}
+                    <Badge variant="outline" className="ms-auto">
+                      assigned, in_progress
+                    </Badge>
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={filters.statusCategory === 'completed'}
+                    onCheckedChange={() =>
+                      setFilters((f) => ({ ...f, statusCategory: 'completed' }))
+                    }
+                  >
+                    {t('intake.filters.completed', 'Completed')}
+                    <Badge variant="outline" className="ms-auto">
+                      converted, closed
+                    </Badge>
+                  </DropdownMenuCheckboxItem>
+                  <DropdownMenuCheckboxItem
+                    checked={filters.statusCategory === 'all'}
+                    onCheckedChange={() => setFilters((f) => ({ ...f, statusCategory: 'all' }))}
+                  >
+                    {t('intake.filters.all', 'All Tickets')}
+                  </DropdownMenuCheckboxItem>
+
+                  {activeFilterCount > 0 && (
+                    <>
+                      <DropdownMenuSeparator />
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-start gap-2 text-muted-foreground"
+                        onClick={clearFilters}
+                      >
+                        <X className="size-4" />
+                        {t('intake.filters.clear', 'Clear filters')}
+                      </Button>
+                    </>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               {selectedTickets.length > 0 && (
                 <Button
                   variant="secondary"
                   size="sm"
                   className="min-h-9"
-                  onClick={() => handleOpenClassifyDialog(selectedTickets[0])}
+                  onClick={() => {
+                    const firstTicket = selectedTickets[0]
+                    if (firstTicket) {
+                      handleOpenClassifyDialog(firstTicket)
+                    }
+                  }}
                 >
                   {t('intake.classifySelected', 'Classify')} ({selectedTickets.length})
                 </Button>
@@ -245,8 +435,11 @@ export function IntakeQueuePage() {
                 // Stay on current page - this IS the review queue
                 // Could show a toast or no-op
               }}
-              onViewAssignments={() => navigate({ to: '/my-work' })}
-              onBrowseTickets={() => navigate({ to: '/intake/tickets' })}
+              onViewAssignments={() => navigate({ to: '/my-work/assignments' })}
+              onBrowseTickets={() => {
+                // Browse tickets - stay on current page but show all statuses
+                setFilters({ statusCategory: 'all' })
+              }}
               testId="intake-queue-empty-state"
             />
           </Card>
@@ -296,6 +489,9 @@ export function IntakeQueuePage() {
                           </h3>
                           <Badge variant={getPriorityColor(ticket.priority)}>
                             {ticket.priority}
+                          </Badge>
+                          <Badge variant={getStatusVariant(ticket.status)} className="text-xs">
+                            {t(`intake.status.${ticket.status}`, ticket.status)}
                           </Badge>
                           <Badge variant="outline" className="text-xs">
                             {ticket.ticket_number}

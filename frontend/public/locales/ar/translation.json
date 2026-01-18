@@ -118,7 +118,19 @@
     "lightMode": "الوضع الفاتح",
     "darkMode": "الوضع الداكن",
     "mainNav": "التنقل الرئيسي",
-    "primary": "التنقل الأساسي"
+    "primary": "التنقل الأساسي",
+    "sections": {
+      "workflows": "سير العمل",
+      "content": "المحتوى",
+      "tools": "الأدوات",
+      "admin": "الإدارة",
+      "documents": "المستندات",
+      "more": "المزيد"
+    },
+    "quickCreate": "إنشاء سريع",
+    "delegations": "التفويضات",
+    "assignments": "التكليفات",
+    "search": "بحث"
   },
   "dashboard": {
     "title": "نظرة عامة على العمليات",

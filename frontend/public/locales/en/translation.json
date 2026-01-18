@@ -118,7 +118,19 @@
     "lightMode": "Light Mode",
     "darkMode": "Dark Mode",
     "mainNav": "Main navigation",
-    "primary": "Primary navigation"
+    "primary": "Primary navigation",
+    "sections": {
+      "workflows": "Workflows",
+      "content": "Content",
+      "tools": "Tools",
+      "admin": "Admin",
+      "documents": "Documents",
+      "more": "More"
+    },
+    "quickCreate": "Quick Create",
+    "delegations": "Delegations",
+    "assignments": "Assignments",
+    "search": "Search"
   },
   "dashboard": {
     "title": "Operations overview",

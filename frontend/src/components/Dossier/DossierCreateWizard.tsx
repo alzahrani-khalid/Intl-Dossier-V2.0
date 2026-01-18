@@ -69,6 +69,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
+import { getDossierDetailPath } from '@/lib/dossier-routes'
 
 import { useCreateDossier } from '@/hooks/useDossier'
 import type { DossierType, CreateDossierRequest } from '@/services/dossier-api'
@@ -164,7 +165,7 @@ const typeIcons: Partial<Record<DossierType, typeof Globe>> = {
 import type { TemplateSection } from '@/types/dossier-template.types'
 
 interface DossierCreateWizardProps {
-  onSuccess?: (dossierId: string) => void
+  onSuccess?: (dossierId: string, dossierType?: DossierType) => void
   onCancel?: () => void
   className?: string
   /** Initial dossier type (when using a template) */
@@ -318,9 +319,9 @@ export function DossierCreateWizard({
       toast.success(t('dossier:create.success'))
 
       if (onSuccess) {
-        onSuccess(newDossier.id)
+        onSuccess(newDossier.id, newDossier.type)
       } else {
-        navigate({ to: `/dossiers/${newDossier.id}` })
+        navigate({ to: getDossierDetailPath(newDossier.id, newDossier.type) })
       }
     } catch (error: any) {
       toast.error(error?.message || t('dossier:create.error'))

@@ -1,22 +1,20 @@
 /**
  * WorkCreationPalette Component
  * Feature: 033-unified-work-creation-hub
+ * Updated for: 035-dossier-context (Smart Dossier Context Inheritance)
  *
  * Main command palette for creating work items.
  * Supports commitments, tasks, and intake tickets with
  * progressive context capture.
+ *
+ * US4 (T036/T037): All work items require dossier context.
+ * When created from generic pages without context, shows DossierPicker.
  */
 
-import { useState, useCallback, useEffect } from 'react';
-import { useTranslation } from 'react-i18next';
-import {
-  CheckSquare,
-  ClipboardList,
-  Inbox,
-  ChevronRight,
-  ArrowLeft,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
+import { useState, useCallback, useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+import { CheckSquare, ClipboardList, Inbox, ChevronRight, ArrowLeft } from 'lucide-react'
+import { cn } from '@/lib/utils'
 import {
   CommandDialog,
   Command,
@@ -25,33 +23,33 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from '@/components/ui/command';
-import { Button } from '@/components/ui/button';
-import { useCreationContext, type CreationContext } from './hooks/useCreationContext';
-import { DossierPicker, type DossierOption } from './DossierPicker';
-import { CommitmentQuickForm } from './forms/CommitmentQuickForm';
-import { TaskQuickForm } from './forms/TaskQuickForm';
-import { IntakeQuickForm } from './forms/IntakeQuickForm';
+} from '@/components/ui/command'
+import { Button } from '@/components/ui/button'
+import { useCreationContext, type CreationContext } from './hooks/useCreationContext'
+import { DossierPicker, type DossierOption } from './DossierPicker'
+import { CommitmentQuickForm } from './forms/CommitmentQuickForm'
+import { TaskQuickForm } from './forms/TaskQuickForm'
+import { IntakeQuickForm } from './forms/IntakeQuickForm'
 
-export type WorkItemType = 'commitment' | 'task' | 'intake';
+export type WorkItemType = 'commitment' | 'task' | 'intake'
 
-type PaletteStep = 'type-select' | 'context-select' | 'form';
+type PaletteStep = 'type-select' | 'context-select' | 'form'
 
 export interface WorkCreationPaletteProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-  defaultType?: WorkItemType;
+  open: boolean
+  onOpenChange: (open: boolean) => void
+  defaultType?: WorkItemType
   /** Override automatic context detection */
-  contextOverride?: Partial<CreationContext>;
-  onSuccess?: (type: WorkItemType, item: any) => void;
+  contextOverride?: Partial<CreationContext>
+  onSuccess?: (type: WorkItemType, item: any) => void
 }
 
 interface WorkTypeOption {
-  type: WorkItemType;
-  icon: typeof CheckSquare;
-  labelKey: string;
-  descriptionKey: string;
-  requiresDossier: boolean;
+  type: WorkItemType
+  icon: typeof CheckSquare
+  labelKey: string
+  descriptionKey: string
+  requiresDossier: boolean
 }
 
 const WORK_TYPE_OPTIONS: WorkTypeOption[] = [
@@ -60,23 +58,23 @@ const WORK_TYPE_OPTIONS: WorkTypeOption[] = [
     icon: CheckSquare,
     labelKey: 'palette.createCommitment',
     descriptionKey: 'palette.commitmentDescription',
-    requiresDossier: true,
+    requiresDossier: true, // Always requires dossier
   },
   {
     type: 'task',
     icon: ClipboardList,
     labelKey: 'palette.createTask',
     descriptionKey: 'palette.taskDescription',
-    requiresDossier: false,
+    requiresDossier: true, // US4: Tasks now require dossier context
   },
   {
     type: 'intake',
     icon: Inbox,
     labelKey: 'palette.createIntake',
     descriptionKey: 'palette.intakeDescription',
-    requiresDossier: false,
+    requiresDossier: true, // US4: Intakes now require dossier context
   },
-];
+]
 
 export function WorkCreationPalette({
   open,
@@ -85,116 +83,116 @@ export function WorkCreationPalette({
   contextOverride,
   onSuccess,
 }: WorkCreationPaletteProps) {
-  const { t, i18n } = useTranslation('work-creation');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('work-creation')
+  const isRTL = i18n.language === 'ar'
 
   // Auto-capture context from route
-  const autoContext = useCreationContext();
+  const autoContext = useCreationContext()
   const context: CreationContext = {
     ...autoContext,
     ...contextOverride,
-  };
+  }
 
   // State
-  const [step, setStep] = useState<PaletteStep>('type-select');
-  const [selectedType, setSelectedType] = useState<WorkItemType | null>(defaultType ?? null);
-  const [selectedDossier, setSelectedDossier] = useState<DossierOption | undefined>();
-  const [searchQuery, setSearchQuery] = useState('');
+  const [step, setStep] = useState<PaletteStep>('type-select')
+  const [selectedType, setSelectedType] = useState<WorkItemType | null>(defaultType ?? null)
+  const [selectedDossier, setSelectedDossier] = useState<DossierOption | undefined>()
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Reset state when dialog closes
   useEffect(() => {
     if (!open) {
       // Delay reset to allow close animation
       const timeout = setTimeout(() => {
-        setStep('type-select');
-        setSelectedType(defaultType ?? null);
-        setSelectedDossier(undefined);
-        setSearchQuery('');
-      }, 200);
-      return () => clearTimeout(timeout);
+        setStep('type-select')
+        setSelectedType(defaultType ?? null)
+        setSelectedDossier(undefined)
+        setSearchQuery('')
+      }, 200)
+      return () => clearTimeout(timeout)
     }
-    return undefined;
-  }, [open, defaultType]);
+    return undefined
+  }, [open, defaultType])
 
   // Auto-advance if context is available
   useEffect(() => {
     if (open && defaultType) {
-      const option = WORK_TYPE_OPTIONS.find((o) => o.type === defaultType);
+      const option = WORK_TYPE_OPTIONS.find((o) => o.type === defaultType)
       if (option) {
         if (option.requiresDossier && !context.dossierId) {
-          setStep('context-select');
+          setStep('context-select')
         } else {
-          setStep('form');
+          setStep('form')
         }
       }
     }
-  }, [open, defaultType, context.dossierId]);
+  }, [open, defaultType, context.dossierId])
 
   const handleTypeSelect = useCallback(
     (type: WorkItemType) => {
-      setSelectedType(type);
-      const option = WORK_TYPE_OPTIONS.find((o) => o.type === type);
+      setSelectedType(type)
+      const option = WORK_TYPE_OPTIONS.find((o) => o.type === type)
 
       if (option?.requiresDossier && !context.dossierId) {
         // Need to select dossier first
-        setStep('context-select');
+        setStep('context-select')
       } else {
         // Can proceed directly to form
-        setStep('form');
+        setStep('form')
       }
     },
-    [context.dossierId]
-  );
+    [context.dossierId],
+  )
 
   const handleDossierSelect = useCallback((dossierId: string | null, dossier?: DossierOption) => {
     if (dossierId && dossier) {
-      setSelectedDossier(dossier);
+      setSelectedDossier(dossier)
     }
-  }, []);
+  }, [])
 
   const handleDossierContinue = useCallback(() => {
     if (selectedDossier) {
-      setStep('form');
+      setStep('form')
     }
-  }, [selectedDossier]);
+  }, [selectedDossier])
 
   const handleBack = useCallback(() => {
     if (step === 'form') {
-      const option = WORK_TYPE_OPTIONS.find((o) => o.type === selectedType);
+      const option = WORK_TYPE_OPTIONS.find((o) => o.type === selectedType)
       if (option?.requiresDossier && !context.dossierId) {
-        setStep('context-select');
+        setStep('context-select')
       } else {
-        setStep('type-select');
+        setStep('type-select')
       }
     } else if (step === 'context-select') {
-      setStep('type-select');
-      setSelectedType(null);
+      setStep('type-select')
+      setSelectedType(null)
     }
-  }, [step, selectedType, context.dossierId]);
+  }, [step, selectedType, context.dossierId])
 
   const handleSuccess = useCallback(
     (item: any) => {
-      onSuccess?.(selectedType!, item);
-      onOpenChange(false);
+      onSuccess?.(selectedType!, item)
+      onOpenChange(false)
     },
-    [selectedType, onSuccess, onOpenChange]
-  );
+    [selectedType, onSuccess, onOpenChange],
+  )
 
   const handleCancel = useCallback(() => {
-    onOpenChange(false);
-  }, [onOpenChange]);
+    onOpenChange(false)
+  }, [onOpenChange])
 
   // Determine final dossier ID
-  const finalDossierId = selectedDossier?.id ?? context.dossierId;
+  const finalDossierId = selectedDossier?.id ?? context.dossierId
 
   // Filter work types by search
   const filteredTypes = WORK_TYPE_OPTIONS.filter((option) => {
-    if (!searchQuery) return true;
-    const label = t(option.labelKey).toLowerCase();
-    const desc = t(option.descriptionKey).toLowerCase();
-    const query = searchQuery.toLowerCase();
-    return label.includes(query) || desc.includes(query) || option.type.includes(query);
-  });
+    if (!searchQuery) return true
+    const label = t(option.labelKey).toLowerCase()
+    const desc = t(option.descriptionKey).toLowerCase()
+    const query = searchQuery.toLowerCase()
+    return label.includes(query) || desc.includes(query) || option.type.includes(query)
+  })
 
   return (
     <CommandDialog
@@ -219,7 +217,8 @@ export function WorkCreationPalette({
             <span className="text-sm font-medium">
               {step === 'context-select'
                 ? t('palette.selectDossier', 'Select Dossier')
-                : selectedType && t(WORK_TYPE_OPTIONS.find((o) => o.type === selectedType)!.labelKey)}
+                : selectedType &&
+                  t(WORK_TYPE_OPTIONS.find((o) => o.type === selectedType)!.labelKey)}
             </span>
           </div>
         )}
@@ -236,7 +235,7 @@ export function WorkCreationPalette({
               <CommandEmpty>{t('palette.noResults', 'No results found')}</CommandEmpty>
               <CommandGroup heading={t('palette.workTypes', 'Work Item Types')}>
                 {filteredTypes.map((option) => {
-                  const Icon = option.icon;
+                  const Icon = option.icon
                   return (
                     <CommandItem
                       key={option.type}
@@ -248,31 +247,27 @@ export function WorkCreationPalette({
                         <Icon className="size-5" />
                       </div>
                       <div className="flex-1 space-y-1">
-                        <p className="text-sm font-medium leading-none">
-                          {t(option.labelKey)}
-                        </p>
-                        <p className="text-xs text-muted-foreground">
-                          {t(option.descriptionKey)}
-                        </p>
+                        <p className="text-sm font-medium leading-none">{t(option.labelKey)}</p>
+                        <p className="text-xs text-muted-foreground">{t(option.descriptionKey)}</p>
                       </div>
                       <ChevronRight
                         className={cn('size-4 text-muted-foreground', isRTL && 'rotate-180')}
                       />
                     </CommandItem>
-                  );
+                  )
                 })}
               </CommandGroup>
             </CommandList>
           </Command>
         )}
 
-        {/* Step: Context Selection (Dossier Picker) */}
+        {/* Step: Context Selection (Dossier Picker) - US4 T036/T037 */}
         {step === 'context-select' && (
           <div className="p-4 space-y-4">
             <p className="text-sm text-muted-foreground">
               {t(
-                'palette.dossierRequired',
-                'Commitments must be linked to a dossier. Please select one:'
+                'palette.dossierRequiredGeneric',
+                'All work items must be linked to a dossier. Please select one:',
               )}
             </p>
             <DossierPicker
@@ -280,6 +275,15 @@ export function WorkCreationPalette({
               onChange={handleDossierSelect}
               selectedDossier={selectedDossier}
             />
+            {/* Validation message - T037 */}
+            {!selectedDossier && (
+              <p className="text-xs text-muted-foreground">
+                {t(
+                  'dossier-context:validation.dossier_required',
+                  'At least one dossier is required',
+                )}
+              </p>
+            )}
             <div className="flex gap-3 pt-2">
               <Button
                 type="button"
@@ -313,9 +317,11 @@ export function WorkCreationPalette({
                 onCancel={handleCancel}
               />
             )}
-            {selectedType === 'task' && (
+            {selectedType === 'task' && finalDossierId && (
               <TaskQuickForm
+                dossierId={finalDossierId}
                 creationContext={context}
+                selectedDossier={selectedDossier}
                 onSuccess={handleSuccess}
                 onCancel={handleCancel}
               />
@@ -324,6 +330,7 @@ export function WorkCreationPalette({
               <IntakeQuickForm
                 dossierId={finalDossierId}
                 creationContext={context}
+                selectedDossier={selectedDossier}
                 onSuccess={handleSuccess}
                 onCancel={handleCancel}
               />
@@ -332,7 +339,7 @@ export function WorkCreationPalette({
         )}
       </div>
     </CommandDialog>
-  );
+  )
 }
 
-export default WorkCreationPalette;
+export default WorkCreationPalette

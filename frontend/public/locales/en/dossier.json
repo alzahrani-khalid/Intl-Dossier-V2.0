@@ -2,6 +2,16 @@
   "title": "Dossiers",
   "untitled": "Untitled Dossier",
   "id": "ID",
+  "tabs": {
+    "activity": "Activity",
+    "timeline": "Timeline",
+    "relationships": "Relationships",
+    "positions": "Positions",
+    "mous": "MoUs",
+    "contacts": "Contacts",
+    "comments": "Comments",
+    "languages": "Languages"
+  },
   "type": {
     "country": "Country",
     "organization": "Organization",

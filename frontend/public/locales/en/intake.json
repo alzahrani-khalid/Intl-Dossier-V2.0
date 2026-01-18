@@ -43,6 +43,12 @@
         "high": "High",
         "critical": "Critical"
       }
+    },
+    "dossier": {
+      "label": "Related Dossier",
+      "hint": "Select the dossier this request relates to",
+      "linkedTo": "Linked to",
+      "required": "A dossier is required for all requests"
     }
   },
   "queue": {
@@ -75,6 +81,28 @@
     "hours": "hours",
     "businessHours": "Business hours only"
   },
+  "sla": {
+    "acknowledgment": "Acknowledgment",
+    "resolution": "Resolution",
+    "paused": "(Paused)",
+    "target": "Target",
+    "time_remaining_hours": "{{hours}}h {{minutes}}m remaining",
+    "time_remaining_minutes": "{{minutes}}m remaining",
+    "breached_by_hours": "Overdue by {{hours}}h {{minutes}}m",
+    "breached_by_minutes": "Overdue by {{minutes}}m",
+    "pause": "Pause SLA",
+    "resume": "Resume SLA",
+    "pauseReason": "Pause Reason",
+    "pauseReasonPlaceholder": "Enter reason for pausing SLA...",
+    "pauseReasonRequired": "Please provide a reason for pausing the SLA",
+    "pauseSuccess": "SLA timer paused successfully",
+    "resumeSuccess": "SLA timer resumed successfully",
+    "pauseError": "Failed to pause SLA timer",
+    "resumeError": "Failed to resume SLA timer",
+    "totalPaused": "Total paused time",
+    "pauseHistory": "Pause History",
+    "noPauseHistory": "No pause history"
+  },
   "success": {
     "title": "Request Submitted Successfully",
     "message": "Your request {{ticketNumber}} has been created",
@@ -102,8 +130,17 @@
     "attachments": "Attachments",
     "convert": "Convert to Artifact",
     "close": "Close Ticket",
-    "convertPrompt": "Enter target type (dossier/engagement/position):",
-    "closePrompt": "Enter resolution:",
+    "convertTitle": "Convert Ticket",
+    "convertDescription": "Select the artifact type to convert this ticket into",
+    "selectType": "Select type...",
+    "convertOptions": {
+      "dossier": "Dossier",
+      "engagement": "Engagement",
+      "position": "Position"
+    },
+    "closeTitle": "Close Ticket",
+    "closeDescription": "Provide a resolution summary for closing this ticket",
+    "resolutionPlaceholder": "Enter resolution summary...",
     "historyPlaceholder": "Audit history will be displayed here",
     "tabs": {
       "details": "Details",

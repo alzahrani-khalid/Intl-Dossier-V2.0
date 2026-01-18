@@ -1,8 +1,10 @@
 /**
  * Country Dossier Detail Component (Feature 028 + 029 - Tab-Based Interface)
+ * Updated for: 035-dossier-context (Smart Dossier Context Inheritance)
  *
  * Tab-based country dossier layout with dedicated tabs for:
  * - Intelligence (with refresh button)
+ * - Activity (work items linked to dossier) - NEW
  * - Timeline
  * - Relationships
  * - Positions
@@ -27,6 +29,7 @@ const IntelligenceTabContent = lazy(() =>
   })),
 )
 import { CountryTimeline } from '@/components/timeline/CountryTimeline'
+import { DossierActivityTimeline } from '@/components/Dossier/DossierActivityTimeline'
 import { RelationshipGraph } from '@/components/dossiers/RelationshipGraph'
 import { DossierPositionsTab } from '@/components/positions/DossierPositionsTab'
 import { DossierMoUsTab } from '@/components/dossiers/DossierMoUsTab'
@@ -53,6 +56,7 @@ interface CountryDossierDetailProps {
 
 type CountryTabType =
   | 'intelligence'
+  | 'activity'
   | 'timeline'
   | 'relationships'
   | 'positions'
@@ -81,6 +85,10 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
     {
       id: 'intelligence',
       label: t('intelligence.title', 'Intelligence Reports'),
+    },
+    {
+      id: 'activity',
+      label: t('tabs.activity', 'Activity'),
     },
     {
       id: 'timeline',
@@ -194,6 +202,13 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
                   <IntelligenceTabContent dossierId={dossier.id} dossier={dossier} />
                 </Suspense>
               </QueryErrorBoundary>
+            </div>
+          )}
+
+          {/* Activity Tab - Work Items Linked to Dossier */}
+          {activeTab === 'activity' && (
+            <div id="activity-panel" role="tabpanel" aria-labelledby="activity-tab">
+              <DossierActivityTimeline dossierId={dossier.id} />
             </div>
           )}
 

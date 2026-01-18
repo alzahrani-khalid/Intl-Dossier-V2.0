@@ -6,7 +6,7 @@
  */
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
-import { useQuery, useQueryClient } from '@tanstack/react-query'
+import { useQueries, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
 import type {
@@ -364,41 +364,36 @@ function generateMockNotifications(): NotificationData[] {
 }
 
 // ============================================================================
-// Widget Data Fetching Hook
+// Widget Data Fetching Function (for use with useQueries)
 // ============================================================================
 
-function useWidgetData(widget: WidgetConfig) {
-  return useQuery({
-    queryKey: widgetDashboardKeys.widgetData(widget.id as string),
-    queryFn: async () => {
-      // Simulate API delay
-      await new Promise((resolve) => setTimeout(resolve, 500))
+function fetchWidgetData(widget: WidgetConfig) {
+  return async () => {
+    // Simulate API delay
+    await new Promise((resolve) => setTimeout(resolve, 500))
 
-      // Return mock data based on widget type
-      switch (widget.type) {
-        case 'kpi-card': {
-          const settings = widget.settings as { metric: string }
-          return generateMockKpiData(settings.metric)
-        }
-        case 'chart': {
-          const settings = widget.settings as { dataSource: string }
-          return generateMockChartData(settings.dataSource)
-        }
-        case 'upcoming-events':
-          return generateMockEvents()
-        case 'task-list':
-          return generateMockTasks()
-        case 'notifications':
-          return generateMockNotifications()
-        case 'quick-actions':
-          return null // Quick actions don't need data
-        default:
-          return null
+    // Return mock data based on widget type
+    switch (widget.type) {
+      case 'kpi-card': {
+        const settings = widget.settings as { metric: string }
+        return generateMockKpiData(settings.metric)
       }
-    },
-    refetchInterval: widget.refreshInterval || false,
-    staleTime: 30000, // 30 seconds
-  })
+      case 'chart': {
+        const settings = widget.settings as { dataSource: string }
+        return generateMockChartData(settings.dataSource)
+      }
+      case 'upcoming-events':
+        return generateMockEvents()
+      case 'task-list':
+        return generateMockTasks()
+      case 'notifications':
+        return generateMockNotifications()
+      case 'quick-actions':
+        return null // Quick actions don't need data
+      default:
+        return null
+    }
+  }
 }
 
 // ============================================================================
@@ -465,25 +460,29 @@ export function useWidgetDashboard(options: UseWidgetDashboardOptions = {}) {
   }, [widgets, autoSave, isInitialized])
 
   // ============================================================================
-  // Widget Data
+  // Widget Data - Using useQueries for dynamic number of queries
   // ============================================================================
 
-  // Fetch data for all widgets
-  const widgetDataQueries = widgets.map((widget) => ({
-    widget,
-    ...useWidgetData(widget),
-  }))
+  // Create query options for all widgets
+  const widgetQueries = useQueries({
+    queries: widgets.map((widget) => ({
+      queryKey: widgetDashboardKeys.widgetData(widget.id as string),
+      queryFn: fetchWidgetData(widget),
+      refetchInterval: widget.refreshInterval || false,
+      staleTime: 30000, // 30 seconds
+    })),
+  })
 
   // Aggregate widget data into a single object
   const widgetData = useMemo(() => {
-    return widgetDataQueries.reduce(
-      (acc, { widget, data }) => {
-        acc[widget.id as string] = data
+    return widgets.reduce(
+      (acc, widget, index) => {
+        acc[widget.id as string] = widgetQueries[index]?.data
         return acc
       },
       {} as Record<string, unknown>,
     )
-  }, [widgetDataQueries])
+  }, [widgets, widgetQueries])
 
   // ============================================================================
   // Actions

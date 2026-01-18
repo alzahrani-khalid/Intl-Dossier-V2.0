@@ -10,7 +10,8 @@
     "createIntake": "طلب استقبال جديد",
     "intakeDescription": "تقديم طلب جديد عبر نظام الاستقبال",
     "selectDossier": "اختر الملف",
-    "dossierRequired": "يجب ربط الالتزامات بملف. يرجى اختيار واحد:"
+    "dossierRequired": "يجب ربط الالتزامات بملف. يرجى اختيار واحد:",
+    "dossierRequiredGeneric": "يجب ربط جميع عناصر العمل بملف. يرجى اختيار واحد:"
   },
   "form": {
     "selectDossier": "اختر ملفًا",
@@ -41,7 +42,8 @@
     "taskCreated": "تم إنشاء المهمة بنجاح",
     "taskError": "فشل إنشاء المهمة",
     "intakeCreated": "تم إنشاء طلب الاستقبال بنجاح",
-    "intakeError": "فشل إنشاء طلب الاستقبال"
+    "intakeError": "فشل إنشاء طلب الاستقبال",
+    "dossierHint": "اختر الملف المتعلق بعنصر العمل هذا"
   },
   "priority": {
     "low": "منخفضة",

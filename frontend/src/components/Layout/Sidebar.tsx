@@ -105,7 +105,7 @@ export function Sidebar() {
       id: 'intake',
       label: t('navigation.intake'),
       icon: Inbox,
-      path: '/intake/queue',
+      path: '/my-work/intake',
     },
     {
       id: 'approvals',
@@ -372,7 +372,7 @@ export function Sidebar() {
 
         <button className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-2 rounded-lg text-sm font-medium mb-6">
           <Plus className="h-4 w-4" />
-          Quick Create
+          {t('navigation.quickCreate')}
         </button>
       </div>
 
@@ -385,7 +385,7 @@ export function Sidebar() {
         {/* Workflows Section */}
         <div className="mb-6">
           <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            Workflows
+            {t('navigation.sections.workflows')}
           </h3>
           <ul className="space-y-1">{workflowItems.map((item) => renderNavItem(item))}</ul>
         </div>
@@ -393,7 +393,7 @@ export function Sidebar() {
         {/* Content Section */}
         <div className="mb-6">
           <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            Content
+            {t('navigation.sections.content')}
           </h3>
           <ul className="space-y-1">{contentItems.map((item) => renderNavItem(item))}</ul>
         </div>
@@ -401,7 +401,7 @@ export function Sidebar() {
         {/* Tools & Reports Section */}
         <div className="mb-6">
           <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            Tools
+            {t('navigation.sections.tools')}
           </h3>
           <ul className="space-y-1">{toolItems.map((item) => renderNavItem(item))}</ul>
         </div>
@@ -410,7 +410,7 @@ export function Sidebar() {
         {isAdmin && (
           <div className="mb-6">
             <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-              Admin
+              {t('navigation.sections.admin')}
             </h3>
             <ul className="space-y-1">{adminItems.map((item) => renderNavItem(item))}</ul>
           </div>
@@ -419,12 +419,12 @@ export function Sidebar() {
         {/* Documents Section */}
         <div className="mb-6">
           <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
-            Documents
+            {t('navigation.sections.documents')}
           </h3>
           <ul className="space-y-1">{documentItems.map((item) => renderNavItem(item))}</ul>
           <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50 w-full transition-colors mt-1">
             <Plus className="h-4 w-4" />
-            <span>More</span>
+            <span>{t('navigation.sections.more')}</span>
           </button>
         </div>
       </nav>

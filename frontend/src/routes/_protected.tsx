@@ -3,6 +3,7 @@ import { MainLayout } from '../components/Layout/MainLayout'
 import { useAuthStore, supabase } from '../store/authStore'
 import { ChatDock } from '@/components/ai/ChatDock'
 import { ChatProvider } from '@/contexts/ChatContext'
+import { getDossierDetailPath } from '@/lib/dossier-routes'
 
 export const Route = createFileRoute('/_protected')({
   beforeLoad: async () => {
@@ -26,10 +27,11 @@ function ProtectedLayout() {
   const navigate = useNavigate()
 
   // Handle citation clicks from chat to navigate to entities
-  const handleCitationClick = (type: string, id: string) => {
+  // Note: dossierType is optional - if not provided, defaults to 'countries'
+  const handleCitationClick = (type: string, id: string, dossierType?: string) => {
     switch (type) {
       case 'dossier':
-        navigate({ to: '/dossiers/$id', params: { id } })
+        navigate({ to: getDossierDetailPath(id, dossierType) })
         break
       case 'commitment':
         navigate({ to: '/commitments', search: { id } })

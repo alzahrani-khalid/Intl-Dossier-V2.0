@@ -77,7 +77,15 @@
     "evidenceSubmittedAt": "Evidence Submitted",
     "noEvidence": "No evidence uploaded",
     "statusHistory": "Status History",
-    "noHistory": "No status changes recorded"
+    "noHistory": "No status changes recorded",
+    "inheritedFrom": "Inherited from",
+    "inheritanceSource": {
+      "direct": "Direct link",
+      "engagement": "Engagement",
+      "after_action": "After-Action Record",
+      "position": "Position",
+      "mou": "MOU"
+    }
   },
   "evidence": {
     "title": "Upload Evidence",
