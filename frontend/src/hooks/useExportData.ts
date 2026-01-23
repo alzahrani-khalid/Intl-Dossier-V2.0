@@ -345,6 +345,78 @@ const ENTITY_TEMPLATES: Record<
       },
     ],
   },
+  audit_log: {
+    columns: [
+      {
+        field: 'timestamp',
+        header: 'Timestamp *',
+        headerAr: 'الوقت *',
+        required: true,
+        example: '2025-01-24T10:30:00Z',
+      },
+      {
+        field: 'table_name',
+        header: 'Table Name *',
+        headerAr: 'اسم الجدول *',
+        required: true,
+        example: 'users',
+      },
+      {
+        field: 'operation',
+        header: 'Operation *',
+        headerAr: 'العملية *',
+        required: true,
+        example: 'INSERT',
+      },
+      {
+        field: 'row_id',
+        header: 'Row ID *',
+        headerAr: 'معرف الصف *',
+        required: true,
+        example: 'abc123-def456',
+      },
+      {
+        field: 'user_email',
+        header: 'User Email',
+        headerAr: 'البريد الإلكتروني للمستخدم',
+        required: false,
+        example: 'user@example.com',
+      },
+      {
+        field: 'user_role',
+        header: 'User Role',
+        headerAr: 'دور المستخدم',
+        required: false,
+        example: 'admin',
+      },
+      {
+        field: 'ip_address',
+        header: 'IP Address',
+        headerAr: 'عنوان IP',
+        required: false,
+        example: '192.168.1.1',
+      },
+      {
+        field: 'changed_fields',
+        header: 'Changed Fields',
+        headerAr: 'الحقول المتغيرة',
+        required: false,
+        example: 'name; email; status',
+      },
+      {
+        field: 'session_id',
+        header: 'Session ID',
+        headerAr: 'معرف الجلسة',
+        required: false,
+      },
+      {
+        field: 'request_id',
+        header: 'Request ID',
+        headerAr: 'معرف الطلب',
+        required: false,
+      },
+    ],
+  },
 }
 
 export function useExportData(options: UseExportDataOptions = {}): UseExportDataReturn {
