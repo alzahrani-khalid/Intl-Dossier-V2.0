@@ -32,6 +32,7 @@ import {
   Sparkles,
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { sanitizeHighlightedText } from '@/lib/sanitize'
 
 // Match reason types
 export type MatchField =
@@ -228,10 +229,11 @@ export function SearchResultCard({
   const highlightText = (text: string, query?: string) => {
     if (!query || !text) return text
     const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
-    return text.replace(
+    const highlighted = text.replace(
       regex,
       '<mark class="bg-yellow-200 dark:bg-yellow-800 rounded px-0.5">$1</mark>',
     )
+    return sanitizeHighlightedText(highlighted)
   }
 
   const title = isRTL ? result.title_ar : result.title_en
@@ -345,7 +347,7 @@ export function SearchResultCard({
             <div
               className="mb-2 line-clamp-2 text-sm text-gray-700 dark:text-gray-300"
               dangerouslySetInnerHTML={{
-                __html: snippet,
+                __html: sanitizeHighlightedText(snippet),
               }}
             />
           )}
