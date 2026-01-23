@@ -50,7 +50,7 @@ export class TaskContributorsService {
     // Check if contributor already exists (including soft-deleted)
     const { data: existing } = await this.supabase
       .from('task_contributors')
-      .select('*')
+      .select('id, task_id, user_id, role, added_at, removed_at, removed_by')
       .eq('task_id', input.task_id)
       .eq('user_id', input.user_id)
       .maybeSingle();
@@ -126,7 +126,7 @@ export class TaskContributorsService {
   async getTaskContributors(taskId: string): Promise<TaskContributor[]> {
     const { data, error } = await this.supabase
       .from('task_contributors')
-      .select('*')
+      .select('id, task_id, user_id, role, added_at, removed_at, removed_by')
       .eq('task_id', taskId)
       .is('removed_at', null)
       .order('added_at', { ascending: false });
@@ -144,7 +144,7 @@ export class TaskContributorsService {
   async getContributorTasks(userId: string): Promise<TaskContributor[]> {
     const { data, error } = await this.supabase
       .from('task_contributors')
-      .select('*')
+      .select('id, task_id, user_id, role, added_at, removed_at, removed_by')
       .eq('user_id', userId)
       .is('removed_at', null)
       .order('added_at', { ascending: false });
@@ -177,7 +177,7 @@ export class TaskContributorsService {
   async getContributorHistory(taskId: string): Promise<TaskContributor[]> {
     const { data, error } = await this.supabase
       .from('task_contributors')
-      .select('*')
+      .select('id, task_id, user_id, role, added_at, removed_at, removed_by')
       .eq('task_id', taskId)
       .order('added_at', { ascending: false });
 

@@ -36,7 +36,7 @@ export class SearchService {
   private async loadSearchFilters(): Promise<void> {
     const { data, error } = await this.supabase
       .from('search_filters')
-      .select('*');
+      .select('id, name, name_ar, report_type, supported_formats, template_content, template_content_ar, include_metrics, include_trends, include_audit_trail, created_at, updated_at');
     
     if (error) {
       console.error('Failed to load search filters:', error);
@@ -120,7 +120,7 @@ export class SearchService {
   private async searchWithKeywords(options: SearchOptions): Promise<IntelligenceReport[]> {
     let query = this.supabase
       .from('intelligence_reports')
-      .select('*');
+      .select('id, name, name_ar, report_type, supported_formats, template_content, template_content_ar, include_metrics, include_trends, include_audit_trail, created_at, updated_at');
     
     if (options.query) {
       query = query.or(`title.ilike.%${options.query}%,content.ilike.%${options.query}%,title_ar.ilike.%${options.query}%,content_ar.ilike.%${options.query}%`);
@@ -148,7 +148,7 @@ export class SearchService {
     
     const queryPromise = this.supabase
       .from('intelligence_reports')
-      .select('*')
+      .select('id, name, name_ar, report_type, supported_formats, template_content, template_content_ar, include_metrics, include_trends, include_audit_trail, created_at, updated_at')
       .match(filterQuery);
     
     const { result, timedOut } = await SearchFilterModel.executeWithTimeout(
@@ -353,7 +353,7 @@ export class SearchService {
   async getUserFilters(userId: string): Promise<SearchFilter[]> {
     const { data, error } = await this.supabase
       .from('search_filters')
-      .select('*')
+      .select('id, name, name_ar, report_type, supported_formats, template_content, template_content_ar, include_metrics, include_trends, include_audit_trail, created_at, updated_at')
       .eq('user_id', userId);
     
     if (error) {

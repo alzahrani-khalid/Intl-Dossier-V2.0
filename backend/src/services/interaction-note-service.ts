@@ -130,7 +130,7 @@ export class InteractionNoteService {
   ): Promise<InteractionNote[]> {
     let query = this.supabase
       .from('cd_interaction_notes')
-      .select('*')
+      .select('id, contact_id, date, type, details, attachments, attendees, created_at, updated_at')
       .eq('contact_id', contactId)
       .order('date', { ascending: false });
 
@@ -180,7 +180,7 @@ export class InteractionNoteService {
   }): Promise<InteractionNote[]> {
     let queryBuilder = this.supabase
       .from('cd_interaction_notes')
-      .select('*');
+      .select('id, contact_id, date, type, details, attachments, attendees, created_at, updated_at');
 
     // Full-text search on details field
     if (searchParams.query && searchParams.query.trim().length > 0) {

@@ -228,7 +228,7 @@ export class SignatureService {
   async getSignatureRequest(requestId: string): Promise<SignatureRequest> {
     const { data, error } = await this.supabase
       .from('signature_requests')
-      .select('*')
+      .select('id, mou_id, document_id, provider, status, signatories, workflow, expires_at, envelope_id, completed_at, audit_trail, created_at, updated_at')
       .eq('id', requestId)
       .single();
 
@@ -242,7 +242,7 @@ export class SignatureService {
   async getSignatureRequestsByMoU(mouId: string): Promise<SignatureRequest[]> {
     const { data, error } = await this.supabase
       .from('signature_requests')
-      .select('*')
+      .select('id, mou_id, document_id, provider, status, signatories, workflow, expires_at, envelope_id, completed_at, audit_trail, created_at, updated_at')
       .eq('mou_id', mouId)
       .order('created_at', { ascending: false });
 

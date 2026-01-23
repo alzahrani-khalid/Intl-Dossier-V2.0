@@ -110,7 +110,7 @@ export async function getAuditLogs(
   try {
     const { data: logs, error } = await supabaseAdmin
       .from('link_audit_logs')
-      .select('*')
+      .select('id, link_id, intake_id, entity_type, entity_id, action, performed_by, details, timestamp')
       .eq('link_id', linkId)
       .order('timestamp', { ascending: false })
       .limit(limit);
@@ -141,7 +141,7 @@ export async function getIntakeAuditLogs(
   try {
     const { data: logs, error } = await supabaseAdmin
       .from('link_audit_logs')
-      .select('*')
+      .select('id, link_id, intake_id, entity_type, entity_id, action, performed_by, details, timestamp')
       .eq('intake_id', intakeId)
       .order('timestamp', { ascending: false })
       .limit(limit);
@@ -176,7 +176,7 @@ export async function getUserAuditLogs(
   try {
     let query = supabaseAdmin
       .from('link_audit_logs')
-      .select('*')
+      .select('id, link_id, intake_id, entity_type, entity_id, action, performed_by, details, timestamp')
       .eq('performed_by', userId)
       .order('timestamp', { ascending: false })
       .limit(limit);
@@ -221,7 +221,7 @@ export async function getAuditLogsByAction(
   try {
     let query = supabaseAdmin
       .from('link_audit_logs')
-      .select('*')
+      .select('id, link_id, intake_id, entity_type, entity_id, action, performed_by, details, timestamp')
       .eq('action', action)
       .order('timestamp', { ascending: false })
       .limit(limit);

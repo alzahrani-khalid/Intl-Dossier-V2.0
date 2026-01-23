@@ -33,7 +33,7 @@ export class OrganizationHierarchyService {
     // Fetch all organizations
     let query = this.supabase
       .from('organizations')
-      .select('*')
+      .select('id, name_en, name_ar, parent_organization_id, status, created_at, updated_at')
       .order('name_en');
 
     if (!includeInactive) {
@@ -97,7 +97,7 @@ export class OrganizationHierarchyService {
     while (currentId) {
       const { data, error } = await this.supabase
         .from('organizations')
-        .select('*')
+        .select('id, name_en, name_ar, parent_organization_id, status, created_at, updated_at')
         .eq('id', currentId)
         .single();
 
@@ -120,7 +120,7 @@ export class OrganizationHierarchyService {
     if (!recursive) {
       const { data, error } = await this.supabase
         .from('organizations')
-        .select('*')
+        .select('id, name_en, name_ar, parent_organization_id, status, created_at, updated_at')
         .eq('parent_organization_id', parentId)
         .order('name_en');
 
@@ -155,7 +155,7 @@ export class OrganizationHierarchyService {
     // Then get all siblings (including self)
     const { data, error } = await this.supabase
       .from('organizations')
-      .select('*')
+      .select('id, name_en, name_ar, parent_organization_id, status, created_at, updated_at')
       .eq('parent_organization_id', org.parent_organization_id || 'null')
       .order('name_en');
 
@@ -212,7 +212,7 @@ export class OrganizationHierarchyService {
   async getRootOrganizations(): Promise<Organization[]> {
     const { data, error } = await this.supabase
       .from('organizations')
-      .select('*')
+      .select('id, name_en, name_ar, parent_organization_id, status, created_at, updated_at')
       .is('parent_organization_id', null)
       .eq('status', 'active')
       .order('name_en');
@@ -286,7 +286,7 @@ export class OrganizationHierarchyService {
     
     let query = this.supabase
       .from('organizations')
-      .select('*')
+      .select('id, name_en, name_ar, parent_organization_id, status, created_at, updated_at')
       .ilike(column, `%${searchTerm}%`);
 
     if (parentId) {
@@ -322,7 +322,7 @@ export class OrganizationHierarchyService {
   private async getAllOrganizations(): Promise<Organization[]> {
     const { data, error } = await this.supabase
       .from('organizations')
-      .select('*');
+      .select('id, name_en, name_ar, parent_organization_id, status, created_at, updated_at');
 
     if (error) {
       throw new Error(`Failed to fetch all organizations: ${error.message}`);

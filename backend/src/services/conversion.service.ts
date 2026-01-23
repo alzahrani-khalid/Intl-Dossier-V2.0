@@ -97,7 +97,7 @@ export class ConversionService {
   private async validateTicket(ticketId: string) {
     const { data: ticket, error } = await supabase
       .from('intake_tickets')
-      .select('*')
+      .select('id, status, sensitivity, converted_to_id, created_at, updated_at')
       .eq('id', ticketId)
       .single();
 

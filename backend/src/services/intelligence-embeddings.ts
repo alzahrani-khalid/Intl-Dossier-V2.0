@@ -111,7 +111,7 @@ export class IntelligenceEmbeddingService {
     // Fetch the report
     const { data: report, error } = await this.supabase
       .from('intelligence_reports')
-      .select('*')
+      .select('id, title, title_ar, content, content_ar, confidence_score, classification, created_at, updated_at, vector_embedding, key_findings')
       .eq('id', reportId)
       .single();
 
@@ -164,7 +164,7 @@ export class IntelligenceEmbeddingService {
     // Build the base query
     let baseQuery = this.supabase
       .from('intelligence_reports')
-      .select('*');
+      .select('id, title, title_ar, content, content_ar, confidence_score, classification, created_at, updated_at, vector_embedding, key_findings');
 
     // Apply filters
     if (filters.confidence_level?.length) {
@@ -225,7 +225,7 @@ export class IntelligenceEmbeddingService {
     // Get the source report
     const { data: sourceReport, error } = await this.supabase
       .from('intelligence_reports')
-      .select('*')
+      .select('id, title, title_ar, content, content_ar, confidence_score, classification, created_at, updated_at, vector_embedding, key_findings')
       .eq('id', reportId)
       .single();
 
@@ -238,7 +238,7 @@ export class IntelligenceEmbeddingService {
     // Get all other reports
     const { data: allReports } = await this.supabase
       .from('intelligence_reports')
-      .select('*')
+      .select('id, title, title_ar, content, content_ar, confidence_score, classification, created_at, updated_at, vector_embedding, key_findings')
       .neq('id', reportId)
       .not('vector_embedding', 'is', null);
 
@@ -263,7 +263,7 @@ export class IntelligenceEmbeddingService {
     // Fetch all reports with embeddings
     const { data: reports } = await this.supabase
       .from('intelligence_reports')
-      .select('*')
+      .select('id, title, title_ar, content, content_ar, confidence_score, classification, created_at, updated_at, vector_embedding, key_findings')
       .not('vector_embedding', 'is', null);
 
     if (!reports || reports.length < minClusterSize) {
@@ -334,7 +334,7 @@ export class IntelligenceEmbeddingService {
     // Fetch reports within time window
     const { data: reports } = await this.supabase
       .from('intelligence_reports')
-      .select('*')
+      .select('id, title, title_ar, content, content_ar, confidence_score, classification, created_at, updated_at, vector_embedding, key_findings')
       .gte('created_at', timeWindow.start.toISOString())
       .lte('created_at', timeWindow.end.toISOString());
 

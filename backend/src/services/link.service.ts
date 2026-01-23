@@ -218,7 +218,7 @@ export async function getEntityLinks(
   try {
     let query = supabaseAdmin
       .from('intake_entity_links')
-      .select('*')
+      .select('id, intake_id, entity_type, entity_id, link_type, source, confidence, notes, link_order, suggested_by, linked_by, deleted_at, deleted_by, _version, created_at, updated_at')
       .eq('intake_id', intakeId)
       .order('link_order', { ascending: true });
 
@@ -271,7 +271,7 @@ export async function updateEntityLink(
     // Step 1: Get current link with version check
     const { data: currentLink, error: fetchError } = await supabaseAdmin
       .from('intake_entity_links')
-      .select('*')
+      .select('id, intake_id, entity_type, entity_id, link_type, source, confidence, notes, link_order, suggested_by, linked_by, deleted_at, deleted_by, _version, created_at, updated_at')
       .eq('id', linkId)
       .is('deleted_at', null)
       .single();

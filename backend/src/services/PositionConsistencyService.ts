@@ -24,7 +24,7 @@ export class PositionConsistencyService {
     // Get all active positions for the thematic area
     const { data: positions, error } = await this.supabase
       .from('positions')
-      .select('*')
+      .select('id, thematic_area_id, classification_level, organization_id, status, expiry_date, created_at, updated_at')
       .eq('thematic_area_id', thematicAreaId)
       .eq('status', 'approved')
       .or('expiry_date.is.null,expiry_date.gt.now()');
@@ -62,7 +62,7 @@ export class PositionConsistencyService {
   ): Promise<PositionConsistency> {
     const { data: consistency, error: fetchError } = await this.supabase
       .from('position_consistency')
-      .select('*')
+      .select('id, thematic_area_id, classification_level, organization_id, status, expiry_date, created_at, updated_at')
       .eq('id', consistencyId)
       .single();
 
@@ -114,7 +114,7 @@ export class PositionConsistencyService {
   ): Promise<PositionConsistency[]> {
     const { data, error } = await this.supabase
       .from('position_consistency')
-      .select('*')
+      .select('id, thematic_area_id, classification_level, organization_id, status, expiry_date, created_at, updated_at')
       .eq('thematic_area_id', thematicAreaId)
       .order('calculated_at', { ascending: false })
       .limit(limit);
@@ -129,7 +129,7 @@ export class PositionConsistencyService {
   async getUnresolvedConflicts(): Promise<PositionConsistency[]> {
     const { data, error } = await this.supabase
       .from('position_consistency')
-      .select('*')
+      .select('id, thematic_area_id, classification_level, organization_id, status, expiry_date, created_at, updated_at')
       .neq('reconciliation_status', 'resolved')
       .gt('jsonb_array_length(conflicts)', 0)
       .order('consistency_score', { ascending: true });
@@ -144,7 +144,7 @@ export class PositionConsistencyService {
   async getCriticalInconsistencies(): Promise<PositionConsistency[]> {
     const { data, error } = await this.supabase
       .from('position_consistency')
-      .select('*')
+      .select('id, thematic_area_id, classification_level, organization_id, status, expiry_date, created_at, updated_at')
       .lt('consistency_score', 40) // Critical threshold
       .neq('reconciliation_status', 'resolved')
       .order('consistency_score', { ascending: true });

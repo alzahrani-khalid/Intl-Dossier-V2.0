@@ -153,7 +153,7 @@ export async function findBestAssignee(workItem: WorkItem): Promise<StaffProfile
 async function findBestAssigneeFallback(workItem: WorkItem): Promise<StaffProfile | null> {
   const { data: eligibleStaff, error } = await supabase
     .from('staff_profiles')
-    .select('*')
+    .select('user_id, skills, availability_status, current_assignment_count, individual_wip_limit, unit_id, created_at, updated_at')
     .contains('skills', workItem.requiredSkills)
     .eq('availability_status', 'available')
     .lt('current_assignment_count', supabase.raw('individual_wip_limit'))

@@ -134,7 +134,7 @@ export class ContactRelationshipService {
     // Get outgoing relationships (where contact is from_contact_id)
     const { data: outgoing, error: outgoingError } = await this.supabase
       .from('cd_contact_relationships')
-      .select('*')
+      .select('id, from_contact_id, to_contact_id, relationship_type, start_date, end_date, notes, created_at, updated_at')
       .eq('from_contact_id', contactId)
       .order('created_at', { ascending: false });
 
@@ -143,7 +143,7 @@ export class ContactRelationshipService {
     // Get incoming relationships (where contact is to_contact_id)
     const { data: incoming, error: incomingError } = await this.supabase
       .from('cd_contact_relationships')
-      .select('*')
+      .select('id, from_contact_id, to_contact_id, relationship_type, start_date, end_date, notes, created_at, updated_at')
       .eq('to_contact_id', contactId)
       .order('created_at', { ascending: false });
 
@@ -169,7 +169,7 @@ export class ContactRelationshipService {
   } = {}): Promise<ContactRelationship[]> {
     let queryBuilder = this.supabase
       .from('cd_contact_relationships')
-      .select('*');
+      .select('id, from_contact_id, to_contact_id, relationship_type, start_date, end_date, notes, created_at, updated_at');
 
     // Filter by relationship type
     if (query.relationship_type) {

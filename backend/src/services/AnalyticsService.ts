@@ -36,7 +36,7 @@ export class AnalyticsService {
   async calculateROI(mouId: string) {
     const mou = await supabaseAdmin
       .from('mous')
-      .select('*')
+      .select('id, status, deliverables, financial_implications')
       .eq('id', mouId)
       .single();
 

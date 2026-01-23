@@ -60,7 +60,7 @@ export class ExportService {
   async exportData(entityType: string, entityId: string, format: 'pdf' | 'excel' | 'json') {
     const { data, error } = await supabaseAdmin
       .from(entityType)
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', entityId)
       .single();
 

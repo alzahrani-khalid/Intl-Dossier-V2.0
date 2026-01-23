@@ -141,7 +141,7 @@ export class CalendarService {
 
     let query = this.supabase
       .from('calendar_events')
-      .select('*')
+      .select('id, dossier_id, event_type, title_en, title_ar, description_en, description_ar, start_datetime, end_datetime, timezone, location_en, location_ar, is_virtual, virtual_link, room_en, room_ar, status, created_at, updated_at')
       .eq('dossier_id', dossierId)
       .order('start_datetime', { ascending: true });
 
@@ -293,7 +293,7 @@ export class CalendarService {
 
     let query = this.supabase
       .from('event_participants')
-      .select('*')
+      .select('id, event_id, participant_type, participant_id, role, attendance_status, notes, created_at, updated_at')
       .eq('event_id', eventId);
 
     if (role) {

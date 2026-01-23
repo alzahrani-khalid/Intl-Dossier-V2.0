@@ -82,7 +82,7 @@ export class ContactServiceEnhanced {
     // Fetch from database
     const { data, error } = await this.supabase
       .from('cd_contacts')
-      .select('*')
+      .select('id, full_name, organization_id, position, email_addresses, phone_numbers, tags, notes, is_archived, created_at, updated_at')
       .eq('id', id)
       .eq('is_archived', false)
       .single();
@@ -239,7 +239,7 @@ export class ContactServiceEnhanced {
     // Fetch most recently updated contacts as a proxy for frequency
     const { data, error } = await this.supabase
       .from('cd_contacts')
-      .select('*')
+      .select('id, full_name, organization_id, position, email_addresses, phone_numbers, tags, notes, is_archived, created_at, updated_at')
       .eq('is_archived', false)
       .order('updated_at', { ascending: false })
       .limit(limit);

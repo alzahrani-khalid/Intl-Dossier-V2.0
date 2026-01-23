@@ -35,7 +35,7 @@ export class ReportingService {
   private async loadTemplates(): Promise<void> {
     const { data, error } = await this.supabase
       .from('report_templates')
-      .select('*');
+      .select('id, name, name_ar, report_type, supported_formats, template_content, template_content_ar, include_metrics, include_trends, include_audit_trail, created_at, updated_at');
     
     if (error) {
       console.error('Failed to load report templates:', error);
@@ -110,7 +110,7 @@ export class ReportingService {
   private async fetchReportData(filters?: ReportGenerationOptions['filters']): Promise<any[]> {
     let query = this.supabase
       .from('intelligence_reports')
-      .select('*');
+      .select('id, name, name_ar, report_type, supported_formats, template_content, template_content_ar, include_metrics, include_trends, include_audit_trail, created_at, updated_at');
     
     if (filters?.date_range) {
       query = query
@@ -389,7 +389,7 @@ export class ReportingService {
   async getTemplates(reportType?: ReportTemplate['report_type']): Promise<ReportTemplate[]> {
     let query = this.supabase
       .from('report_templates')
-      .select('*');
+      .select('id, name, name_ar, report_type, supported_formats, template_content, template_content_ar, include_metrics, include_trends, include_audit_trail, created_at, updated_at');
     
     if (reportType) {
       query = query.eq('report_type', reportType);

@@ -77,7 +77,7 @@ export class SLAService {
   private async getSLAPolicy(priority: string): Promise<any> {
     const { data, error } = await supabase
       .from('sla_policies')
-      .select('*')
+      .select('id, priority, acknowledgment_target, resolution_target, business_hours_only, timezone, is_active')
       .eq('priority', priority)
       .eq('is_active', true)
       .single();
@@ -329,7 +329,7 @@ export class SLAService {
     try {
       const { data, error } = await supabase
         .from('sla_events')
-        .select('*')
+        .select('id, ticket_id, policy_id, event_type, event_timestamp, elapsed_minutes, remaining_minutes, reason')
         .eq('ticket_id', ticketId)
         .order('event_timestamp', { ascending: true });
 

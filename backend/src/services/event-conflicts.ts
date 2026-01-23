@@ -129,11 +129,11 @@ export class EventConflictService {
 
   private async checkVenueConflicts(request: ConflictCheckRequest): Promise<EventConflict[]> {
     const conflicts: EventConflict[] = [];
-    
+
     // Query overlapping events at the same venue
     let query = this.supabase
       .from('events')
-      .select('*')
+      .select('id, title_en, title_ar, start_datetime, end_datetime, venue_en, venue_ar, organizer_id, status, created_at, updated_at')
       .lte('start_datetime', request.end_datetime)
       .gte('end_datetime', request.start_datetime)
       .neq('status', 'cancelled');
@@ -187,7 +187,7 @@ export class EventConflictService {
     // Get all events in the time range
     let query = this.supabase
       .from('events')
-      .select('*')
+      .select('id, title_en, title_ar, start_datetime, end_datetime, venue_en, venue_ar, organizer_id, status, created_at, updated_at')
       .lte('start_datetime', request.end_datetime)
       .gte('end_datetime', request.start_datetime)
       .neq('status', 'cancelled');
@@ -246,7 +246,7 @@ export class EventConflictService {
     // Check if organizer has other events at the same time
     let query = this.supabase
       .from('events')
-      .select('*')
+      .select('id, title_en, title_ar, start_datetime, end_datetime, venue_en, venue_ar, organizer_id, status, created_at, updated_at')
       .eq('organizer_id', request.organizer_id)
       .lte('start_datetime', request.end_datetime)
       .gte('end_datetime', request.start_datetime)

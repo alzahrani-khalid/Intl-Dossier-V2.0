@@ -74,7 +74,7 @@ export async function processQueue(unitId: string, freedSkills: string[]): Promi
   // Order by priority DESC, created_at ASC (FIFO within priority)
   const { data: queuedItems, error } = await supabase
     .from('assignment_queue')
-    .select('*')
+    .select('id, user_id, language, theme, notifications_enabled, created_at, updated_at')
     .contains('required_skills', freedSkills) // Skills overlap
     .or(`target_unit_id.eq.${unitId},target_unit_id.is.null`) // Unit match or any unit
     .order('priority', { ascending: false })

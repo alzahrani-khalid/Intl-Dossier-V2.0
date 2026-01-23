@@ -263,7 +263,7 @@ export class TaskCreationService {
     try {
       const { data, error } = await this.supabase
         .from('tasks')
-        .select('*')
+        .select('id, title, description, assignee_id, created_by, status, priority, workflow_stage, type, source, sla_deadline, created_at, updated_at')
         .eq('related_after_action_id', afterActionId)
         .order('created_at', { ascending: false })
 

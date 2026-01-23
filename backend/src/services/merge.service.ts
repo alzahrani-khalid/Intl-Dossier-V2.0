@@ -194,7 +194,7 @@ export class MergeService {
     try {
       const { data, error } = await supabase
         .from('audit_logs')
-        .select('*')
+        .select('id, status, sensitivity, converted_to_id, created_at, updated_at')
         .eq('entity_type', 'intake_ticket')
         .eq('entity_id', ticketId)
         .in('action', ['merge_primary', 'merge_secondary'])

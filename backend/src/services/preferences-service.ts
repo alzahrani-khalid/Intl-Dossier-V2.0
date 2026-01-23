@@ -41,7 +41,7 @@ export class PreferencesService {
     try {
       const { data, error } = await this.supabase
         .from(USER_PREFERENCES_TABLE)
-        .select('*')
+        .select('id, user_id, language, theme, notifications_enabled, created_at, updated_at')
         .eq('user_id', userId)
         .single();
 
@@ -166,7 +166,7 @@ export class PreferencesService {
     try {
       const { data, error } = await this.supabase
         .from(USER_PREFERENCES_TABLE)
-        .select('*')
+        .select('id, user_id, language, theme, notifications_enabled, created_at, updated_at')
         .in('user_id', userIds);
 
       if (error) throw error;

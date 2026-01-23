@@ -533,7 +533,7 @@ export class SignatureOrchestrator {
       // Get all active signature sessions
       const { data: sessions, error } = await this.supabase
         .from('signature_sessions')
-        .select('*')
+        .select('id, signature_request_id, provider, status, participants, created_at, expires_at, metadata')
         .in('status', ['sent', 'viewed', 'signed']);
 
       if (error) {

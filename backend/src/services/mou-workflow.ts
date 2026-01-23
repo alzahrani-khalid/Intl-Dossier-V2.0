@@ -197,7 +197,7 @@ export class MoUWorkflowService {
     // Fetch MoU
     const { data: mou, error: mouError } = await this.supabase
       .from('mous')
-      .select('*')
+      .select('id, title_en, title_ar, primary_party_id, secondary_party_id, status, signing_date, effective_date, expiry_date, document_url, document_version, created_at, updated_at')
       .eq('id', request.mouId)
       .single();
 
@@ -349,7 +349,7 @@ export class MoUWorkflowService {
   async getWorkflowHistory(mouId: string): Promise<any[]> {
     const { data, error } = await this.supabase
       .from('audit_log')
-      .select('*')
+      .select('id, title_en, title_ar, primary_party_id, secondary_party_id, status, signing_date, effective_date, expiry_date, document_url, document_version, created_at, updated_at')
       .eq('table_name', 'mous')
       .eq('row_id', mouId)
       .order('timestamp', { ascending: false });
@@ -367,7 +367,7 @@ export class MoUWorkflowService {
 
     const { data, error } = await this.supabase
       .from('mous')
-      .select('*')
+      .select('id, title_en, title_ar, primary_party_id, secondary_party_id, status, signing_date, effective_date, expiry_date, document_url, document_version, created_at, updated_at')
       .eq('workflow_state', 'active')
       .lte('expiry_date', futureDate.toISOString())
       .gte('expiry_date', new Date().toISOString())
@@ -416,7 +416,7 @@ export class MoUWorkflowService {
   async autoRenewMous(): Promise<number> {
     const { data, error } = await this.supabase
       .from('mous')
-      .select('*')
+      .select('id, title_en, title_ar, primary_party_id, secondary_party_id, status, signing_date, effective_date, expiry_date, document_url, document_version, created_at, updated_at')
       .eq('workflow_state', 'active')
       .eq('auto_renewal', true)
       .not('renewal_period_months', 'is', null);

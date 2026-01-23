@@ -143,7 +143,7 @@ export class PermissionDelegationService {
   async getDelegationsGranted(userId: string): Promise<PermissionDelegation[]> {
     const { data, error } = await this.supabase
       .from('permission_delegations')
-      .select('*')
+      .select('id, grantor_id, grantee_id, resource_type, resource_id, permissions, reason, valid_from, valid_until, revoked, revoked_at, revoked_by, created_at, updated_at')
       .eq('grantor_id', userId)
       .eq('revoked', false)
       .order('created_at', { ascending: false });
@@ -160,7 +160,7 @@ export class PermissionDelegationService {
 
     const { data, error } = await this.supabase
       .from('permission_delegations')
-      .select('*')
+      .select('id, grantor_id, grantee_id, resource_type, resource_id, permissions, reason, valid_from, valid_until, revoked, revoked_at, revoked_by, created_at, updated_at')
       .eq('grantee_id', userId)
       .eq('revoked', false)
       .lte('valid_from', now)
@@ -214,7 +214,7 @@ export class PermissionDelegationService {
 
     const { data, error } = await this.supabase
       .from('permission_delegations')
-      .select('*')
+      .select('id, grantor_id, grantee_id, resource_type, resource_id, permissions, reason, valid_from, valid_until, revoked, revoked_at, revoked_by, created_at, updated_at')
       .eq('revoked', false)
       .lte('valid_until', futureDate.toISOString())
       .gte('valid_until', new Date().toISOString())

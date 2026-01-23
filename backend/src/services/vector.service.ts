@@ -148,7 +148,7 @@ export class VectorService {
     filter: Record<string, any>,
     limit: number,
   ): Promise<VectorSearchResult[]> {
-    let query = this.supabase.from('intelligence_reports').select('*')
+    let query = this.supabase.from('intelligence_reports').select('id, title, title_ar, content, content_ar, confidence_score, classification, review_status, created_at, updated_at')
 
     Object.entries(filter).forEach(([key, value]) => {
       if (key === 'text_query' && typeof value === 'string') {

@@ -89,7 +89,7 @@ export class ReportGeneratorService {
     // Check database
     const { data, error } = await this.supabase
       .from('report_jobs')
-      .select('*')
+      .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
       .eq('id', jobId)
       .single();
 
@@ -268,7 +268,7 @@ export class ReportGeneratorService {
     // Fetch country data
     const { data: country } = await this.supabase
       .from('countries')
-      .select('*')
+      .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
       .eq('id', countryId)
       .single();
 
@@ -288,7 +288,7 @@ export class ReportGeneratorService {
       
       const { data: organizations } = await this.supabase
         .from('organizations')
-        .select('*')
+        .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
         .eq('country_id', countryId);
 
       report.sections.push({
@@ -307,7 +307,7 @@ export class ReportGeneratorService {
       
       const { data: events } = await this.supabase
         .from('events')
-        .select('*')
+        .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
         .eq('country_id', countryId)
         .order('start_datetime', { ascending: false });
 
@@ -335,7 +335,7 @@ export class ReportGeneratorService {
         const ids = orgIds.map(o => o.id);
         const { data: mous } = await this.supabase
           .from('mous')
-          .select('*')
+          .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
           .or(`primary_party_id.in.(${ids.join(',')}),secondary_party_id.in.(${ids.join(',')})`);
 
         report.sections.push({
@@ -357,7 +357,7 @@ export class ReportGeneratorService {
 
     const { data: organization } = await this.supabase
       .from('organizations')
-      .select('*')
+      .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
       .eq('id', organizationId)
       .single();
 
@@ -374,7 +374,7 @@ export class ReportGeneratorService {
     // Get MoUs
     const { data: mous } = await this.supabase
       .from('mous')
-      .select('*')
+      .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
       .or(`primary_party_id.eq.${organizationId},secondary_party_id.eq.${organizationId}`);
 
     report.metrics.totalMous = mous?.length || 0;
@@ -383,7 +383,7 @@ export class ReportGeneratorService {
     // Get events
     const { data: events } = await this.supabase
       .from('events')
-      .select('*')
+      .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
       .eq('organizer_id', organizationId);
 
     report.metrics.totalEvents = events?.length || 0;
@@ -435,7 +435,7 @@ export class ReportGeneratorService {
 
     let query = this.supabase
       .from('events')
-      .select('*')
+      .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
       .gte('start_datetime', startDate)
       .lte('end_datetime', endDate)
       .order('start_datetime');
@@ -477,7 +477,7 @@ export class ReportGeneratorService {
 
     let query = this.supabase
       .from('intelligence_reports')
-      .select('*')
+      .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
       .eq('status', 'published')
       .order('created_at', { ascending: false });
 
@@ -521,7 +521,7 @@ export class ReportGeneratorService {
     // Get user activity from audit log
     const { data: activities } = await this.supabase
       .from('audit_log')
-      .select('*')
+      .select('id, request, status, progress, started_at, completed_at, error, result_url, retry_count, max_retries, created_at')
       .eq('user_id', userId)
       .gte('timestamp', dateRange.start)
       .lte('timestamp', dateRange.end)

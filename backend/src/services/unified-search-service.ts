@@ -311,7 +311,7 @@ export class UnifiedSearchService {
 
     let query = this.supabase
       .from('dossiers')
-      .select('*')
+      .select('id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, created_at, updated_at')
       .neq('status', 'deleted')
       .limit(limit);
 

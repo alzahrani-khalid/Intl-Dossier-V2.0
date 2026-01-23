@@ -87,7 +87,7 @@ export class ContactService {
   async getById(id: string): Promise<Contact | null> {
     const { data, error } = await this.supabase
       .from('cd_contacts')
-      .select('*')
+      .select('id, full_name, organization_id, position, email_addresses, phone_numbers, tags, notes, is_archived, created_at, updated_at')
       .eq('id', id)
       .eq('is_archived', false)
       .single();
@@ -209,7 +209,7 @@ export class ContactService {
   }): Promise<Contact[] | { organization_id: string | null; contacts: Contact[] }[]> {
     let queryBuilder = this.supabase
       .from('cd_contacts')
-      .select('*')
+      .select('id, full_name, organization_id, position, email_addresses, phone_numbers, tags, notes, is_archived, created_at, updated_at')
       .eq('is_archived', false);
 
     // Full-text search on full_name using tsvector index
@@ -286,7 +286,7 @@ export class ContactService {
   }): Promise<Contact[]> {
     let queryBuilder = this.supabase
       .from('cd_contacts')
-      .select('*')
+      .select('id, full_name, organization_id, position, email_addresses, phone_numbers, tags, notes, is_archived, created_at, updated_at')
       .eq('is_archived', false);
 
     // Full-text search on full_name
@@ -504,7 +504,7 @@ export class ContactService {
   async getDocumentSourceById(id: string): Promise<DocumentSource | null> {
     const { data, error } = await this.supabase
       .from('cd_document_sources')
-      .select('*')
+      .select('id, contact_id, document_type, document_url, extracted_data, confidence_score, created_at, updated_at')
       .eq('id', id)
       .single();
 

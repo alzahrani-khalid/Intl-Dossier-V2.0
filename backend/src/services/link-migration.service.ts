@@ -97,7 +97,7 @@ export async function migrateIntakeLinksToPosition(
     // Step 2: Retrieve all active links from source intake
     const { data: intakeLinks, error: linksError } = await supabaseAdmin
       .from('intake_entity_links')
-      .select('*')
+      .select('id, intake_id, entity_type, entity_id, link_type, source, confidence, notes, link_order, suggested_by, linked_by, deleted_at, deleted_by, _version, created_at, updated_at')
       .eq('intake_id', sourceIntakeId)
       .is('deleted_at', null)
       .order('link_order', { ascending: true });

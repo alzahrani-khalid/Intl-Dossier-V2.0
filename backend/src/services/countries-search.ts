@@ -181,7 +181,7 @@ export class CountrySearchService {
   async getCountriesWithStats(): Promise<Array<any>> {
     const { data: countries, error: countriesError } = await this.supabase
       .from('countries')
-      .select('*')
+      .select('id, name_en, name_ar, iso_code_2, iso_code_3, region, sub_region, status, population, area_sq_km, created_at, updated_at')
       .eq('status', 'active');
 
     if (countriesError) {
@@ -238,7 +238,7 @@ export class CountrySearchService {
     
     const { data, error } = await this.supabase
       .from('countries')
-      .select('*')
+      .select('id, name_en, name_ar, iso_code_2, iso_code_3, region, sub_region, status, population, area_sq_km, created_at, updated_at')
       .or(
         `iso_code_2.in.(${upperCodes.join(',')}),iso_code_3.in.(${upperCodes.join(',')})`
       );

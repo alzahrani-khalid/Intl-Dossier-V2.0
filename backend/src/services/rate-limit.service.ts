@@ -32,7 +32,7 @@ export class RateLimitService {
   private async loadPolicies(): Promise<void> {
     const { data, error } = await this.supabase
       .from('rate_limit_policies')
-      .select('*')
+      .select('id, name, applies_to, endpoint_type, requests_per_minute, burst_capacity, retry_after_seconds, enabled, created_at, updated_at')
       .eq('enabled', true);
     
     if (error) {
@@ -253,7 +253,7 @@ export class RateLimitService {
   ): Promise<RateLimitPolicy[]> {
     let query = this.supabase
       .from('rate_limit_policies')
-      .select('*');
+      .select('id, name, applies_to, endpoint_type, requests_per_minute, burst_capacity, retry_after_seconds, enabled, created_at, updated_at');
     
     if (appliesTo) {
       query = query.eq('applies_to', appliesTo);

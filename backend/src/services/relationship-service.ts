@@ -162,7 +162,7 @@ export class RelationshipService {
 
     let query = this.supabase
       .from('dossier_relationships')
-      .select('*')
+      .select('id, source_dossier_id, target_dossier_id, relationship_type, relationship_metadata, notes_en, notes_ar, effective_from, effective_to, status, created_at, updated_at')
       .or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`)
       .eq('status', status);
 
