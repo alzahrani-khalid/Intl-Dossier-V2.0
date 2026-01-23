@@ -14,6 +14,7 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, Link } from '@tanstack/react-router'
+import { VariableSizeGrid } from 'react-window'
 import { useDossiers, useDossierCounts } from '@/hooks/useDossier'
 import { usePrefetchIntelligence } from '@/hooks/useIntelligence'
 import { useViewPreferences } from '@/hooks/useViewPreferences'
@@ -169,6 +170,72 @@ export function DossierListPage() {
 
   // Track status filter popover state
   const [statusFilterOpen, setStatusFilterOpen] = useState(false)
+
+  // Ref for VariableSizeGrid to manage dynamic item sizes
+  const gridRef = useRef<VariableSizeGrid>(null)
+
+  // Calculate grid dimensions based on viewport (responsive columns)
+  const [gridDimensions, setGridDimensions] = useState({
+    width: 1200,
+    height: 800,
+    columnCount: 3,
+    columnWidth: 400,
+  })
+
+  // Update grid dimensions on viewport changes
+  useEffect(() => {
+    const updateDimensions = () => {
+      const width = window.innerWidth
+      let columnCount = 3 // lg: 3 columns
+      let columnWidth = 400
+
+      // Responsive breakpoints matching grid-cols-1 sm:grid-cols-2 lg:grid-cols-3
+      if (width < 640) {
+        columnCount = 1 // mobile: 1 column
+        columnWidth = Math.min(width - 32, 600) // 32px for px-4 padding
+      } else if (width < 1024) {
+        columnCount = 2 // tablet: 2 columns
+        columnWidth = (width - 48) / 2 - 24 // 48px for px-6, 24px for gap
+      } else {
+        columnCount = 3 // desktop: 3 columns
+        const containerWidth = Math.min(width - 64, 1536) // max-width with px-8
+        columnWidth = containerWidth / 3 - 28 // 28px for gap-7
+      }
+
+      // Calculate height (viewport height minus header/footer space)
+      const height = Math.max(600, window.innerHeight - 400)
+
+      setGridDimensions({ width, height, columnCount, columnWidth })
+    }
+
+    updateDimensions()
+    window.addEventListener('resize', updateDimensions)
+    return () => window.removeEventListener('resize', updateDimensions)
+  }, [])
+
+  // Column width getter for VariableSizeGrid
+  const getColumnWidth = useCallback(
+    () => gridDimensions.columnWidth,
+    [gridDimensions.columnWidth],
+  )
+
+  // Row height getter for VariableSizeGrid (estimated card height)
+  const getRowHeight = useCallback(() => {
+    // Estimated height for ExpandableDossierCard
+    // Base card height ~280px (collapsed) + gap (28px)
+    return 308
+  }, [])
+
+  // Reset grid cache when data or dimensions change
+  useEffect(() => {
+    if (gridRef.current) {
+      gridRef.current.resetAfterIndices({
+        columnIndex: 0,
+        rowIndex: 0,
+        shouldForceUpdate: true,
+      })
+    }
+  }, [data?.data.length, gridDimensions.columnCount, activeCardId])
 
   // Initialize filters from saved preferences
   useEffect(() => {
@@ -855,19 +922,59 @@ export function DossierListPage() {
                 </div>
               )
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 mb-10">
-                {data.data.map((dossier) => (
-                  <ExpandableDossierCard
-                    key={dossier.id}
-                    dossier={dossier}
-                    isActive={activeCardId === dossier.id}
-                    onActivate={() => setActiveCardId(dossier.id)}
-                    onDeactivate={() => setActiveCardId(null)}
-                    onView={handleViewDossier}
-                    onEdit={handleEditDossier}
-                    onMouseEnter={() => prefetchIntelligence(dossier.id)}
-                  />
-                ))}
+              <div className="mb-10">
+                <VariableSizeGrid
+                  ref={gridRef}
+                  columnCount={gridDimensions.columnCount}
+                  columnWidth={getColumnWidth}
+                  height={gridDimensions.height}
+                  rowCount={Math.ceil(data.data.length / gridDimensions.columnCount)}
+                  rowHeight={getRowHeight}
+                  width={gridDimensions.width}
+                  overscanRowCount={2}
+                  className="overscroll-contain"
+                  style={{
+                    margin: '0 auto',
+                    maxWidth: '1536px',
+                  }}
+                >
+                  {({ columnIndex, rowIndex, style }) => {
+                    const dataIndex = rowIndex * gridDimensions.columnCount + columnIndex
+
+                    // Return empty cell if index exceeds data length
+                    if (dataIndex >= data.data.length) {
+                      return <div style={style} />
+                    }
+
+                    const dossier = data.data[dataIndex]
+
+                    return (
+                      <div
+                        key={dossier.id}
+                        style={{
+                          ...style,
+                          // Add padding for gaps (responsive)
+                          padding:
+                            gridDimensions.columnCount === 1
+                              ? '10px'
+                              : gridDimensions.columnCount === 2
+                                ? '12px'
+                                : '14px',
+                        }}
+                      >
+                        <ExpandableDossierCard
+                          dossier={dossier}
+                          isActive={activeCardId === dossier.id}
+                          onActivate={() => setActiveCardId(dossier.id)}
+                          onDeactivate={() => setActiveCardId(null)}
+                          onView={handleViewDossier}
+                          onEdit={handleEditDossier}
+                          onMouseEnter={() => prefetchIntelligence(dossier.id)}
+                        />
+                      </div>
+                    )
+                  }}
+                </VariableSizeGrid>
               </div>
             )}
 
