@@ -106,7 +106,7 @@ export function useWorkingGroups(
       // Get total count for pagination
       let countQuery = supabase
         .from('dossiers')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('type', 'working_group')
         .neq('archived', true)
 
@@ -540,7 +540,9 @@ export function useWorkingGroupDeliverables(workingGroupId: string | undefined) 
 
       const { data, error } = await supabase
         .from('working_group_deliverables')
-        .select('*')
+        .select(
+          'id, working_group_id, title_en, title_ar, description_en, description_ar, status, priority, planned_start_date, planned_end_date, actual_start_date, actual_end_date, due_date, assigned_to_member_id, assigned_to_org_id, progress_percentage, milestones, deliverable_type, document_url, related_commitment_id, notes, created_at, updated_at, created_by, updated_by',
+        )
         .eq('working_group_id', workingGroupId)
         .order('due_date', { ascending: true, nullsFirst: false })
         .order('priority', { ascending: false })
@@ -682,7 +684,9 @@ export function useWorkingGroupMeetings(workingGroupId: string | undefined) {
 
       const { data, error } = await supabase
         .from('working_group_meetings')
-        .select('*')
+        .select(
+          'id, working_group_id, title_en, title_ar, description_en, description_ar, meeting_date, end_date, location_en, location_ar, is_virtual, meeting_url, status, agenda_url, minutes_url, expected_attendees, actual_attendees, attendance_record, decisions, action_items, notes, created_at, updated_at, created_by, updated_by',
+        )
         .eq('working_group_id', workingGroupId)
         .order('meeting_date', { ascending: false })
 
@@ -789,7 +793,11 @@ export function useWorkingGroupStats() {
   return useQuery({
     queryKey: workingGroupKeys.stats(),
     queryFn: async () => {
-      const { data, error } = await supabase.from('working_group_stats').select('*')
+      const { data, error } = await supabase
+        .from('working_group_stats')
+        .select(
+          'id, name_en, name_ar, dossier_status, wg_status, wg_type, established_date, parent_forum_id, active_member_count, org_member_count, person_member_count, total_deliverables, completed_deliverables, in_progress_deliverables, total_meetings, completed_meetings, next_meeting_date, total_decisions, created_at, updated_at',
+        )
 
       if (error) throw new Error(error.message)
 

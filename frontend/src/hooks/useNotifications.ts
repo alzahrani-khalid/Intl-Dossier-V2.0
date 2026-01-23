@@ -36,7 +36,7 @@ export function useNotifications(unreadOnly: boolean = false) {
 
       let notificationsQuery = supabase
         .from('notifications')
-        .select('*')
+        .select('id, user_id, type, title, message, data, read, read_at, priority, action_url, expires_at, created_at, updated_at')
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
 

@@ -632,9 +632,11 @@ export const useSLAPauseHistory = (ticketId: string) => {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('sla_pause_history')
-        .select('*')
+        .select(
+          'id, ticket_id, sla_type, paused_at, resumed_at, pause_reason, paused_by, resumed_by',
+        )
         .eq('ticket_id', ticketId)
-        .order('created_at', { ascending: false })
+        .order('paused_at', { ascending: false })
 
       if (error) {
         throw new Error(error.message || 'Failed to fetch SLA pause history')

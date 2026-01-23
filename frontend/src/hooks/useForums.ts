@@ -32,7 +32,10 @@ export function useForums(filters: ForumFilters = {}) {
       // Query base dossier table with forum type
       let query = supabase
         .from('dossiers')
-        .select('*', { count: 'exact' })
+        .select(
+          'id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by',
+          { count: 'exact' },
+        )
         .eq('type', 'forum')
         .neq('status', 'deleted')
 
@@ -62,7 +65,12 @@ export function useForums(filters: ForumFilters = {}) {
       let extensions: Record<string, ForumExtension> = {}
 
       if (forumIds.length > 0) {
-        const { data: forumExts } = await supabase.from('forums').select('*').in('id', forumIds)
+        const { data: forumExts } = await supabase
+          .from('forums')
+          .select(
+            'id, number_of_sessions, keynote_speakers, sponsors, registration_fee, currency, agenda_url, live_stream_url',
+          )
+          .in('id', forumIds)
 
         if (forumExts) {
           extensions = forumExts.reduce(
@@ -108,7 +116,9 @@ export function useForum(id: string | undefined) {
       // Get base dossier
       const { data: dossier, error: dossierError } = await supabase
         .from('dossiers')
-        .select('*')
+        .select(
+          'id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by',
+        )
         .eq('id', id)
         .eq('type', 'forum')
         .single()
@@ -120,7 +130,13 @@ export function useForum(id: string | undefined) {
       if (!dossier) return null
 
       // Get forum extension data
-      const { data: forumExt } = await supabase.from('forums').select('*').eq('id', id).single()
+      const { data: forumExt } = await supabase
+        .from('forums')
+        .select(
+          'id, number_of_sessions, keynote_speakers, sponsors, registration_fee, currency, agenda_url, live_stream_url',
+        )
+        .eq('id', id)
+        .single()
 
       return {
         ...dossier,
@@ -293,7 +309,9 @@ export function useUpdateForum() {
         // Fetch existing extension
         const { data: existingExt } = await supabase
           .from('forums')
-          .select('*')
+          .select(
+            'id, number_of_sessions, keynote_speakers, sponsors, registration_fee, currency, agenda_url, live_stream_url',
+          )
           .eq('id', id)
           .single()
         forumExt = existingExt
