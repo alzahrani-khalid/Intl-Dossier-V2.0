@@ -1,13 +1,40 @@
 /**
- * Persons Hook
- * Feature: persons-entity-management
+ * Person Hooks
+ * @module hooks/usePersons
+ * @feature persons-entity-management
  *
- * Comprehensive TanStack Query hooks for person entity management:
- * - List persons with search/filters
- * - Get single person with full profile
- * - Create/update/archive persons
- * - Manage roles, affiliations, relationships
- * - Get relationship network for visualization
+ * Comprehensive TanStack Query hooks for person entity CRUD operations.
+ *
+ * @description
+ * This module provides a complete set of hooks for managing person entities:
+ * - Query hooks for listing persons with search/filters and fetching full profiles
+ * - Mutation hooks for create, update, and archive operations
+ * - Hooks for managing roles, affiliations, and relationships
+ * - Network visualization data for relationship graphs
+ * - Automatic caching, invalidation, and toast notifications
+ *
+ * Persons represent individual people tracked in the system (VIPs, officials, contacts).
+ * Each person can have multiple roles, organizational affiliations, and relationships.
+ *
+ * @example
+ * // Search for persons
+ * const { data } = usePersons({ search: 'Smith', limit: 20 });
+ *
+ * @example
+ * // Fetch full profile
+ * const { data } = usePerson('person-uuid');
+ * console.log(data?.roles); // Array of person roles
+ * console.log(data?.affiliations); // Array of organizations
+ *
+ * @example
+ * // Create a new person
+ * const { mutate } = useCreatePerson();
+ * mutate({
+ *   name_en: 'John Smith',
+ *   name_ar: 'جون سميث',
+ *   importance_level: 3,
+ *   nationality_id: 'country-uuid',
+ * });
  */
 
 import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query'
@@ -38,6 +65,21 @@ const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
 // Query Keys
 // ============================================================================
 
+/**
+ * Query Keys Factory for person-related queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Includes keys for person lists, details, networks, roles, affiliations, and relationships.
+ *
+ * @example
+ * // Invalidate all person queries
+ * queryClient.invalidateQueries({ queryKey: personKeys.all });
+ *
+ * @example
+ * // Invalidate only person lists
+ * queryClient.invalidateQueries({ queryKey: personKeys.lists() });
+ */
 export const personKeys = {
   all: ['persons'] as const,
   lists: () => [...personKeys.all, 'list'] as const,
@@ -70,6 +112,27 @@ const getAuthHeaders = async () => {
 
 /**
  * Hook to list persons with search and filters
+ *
+ * @description
+ * Fetches a paginated list of persons with optional filtering by search term,
+ * organization, nationality, importance level, and pagination. Data is cached for 30 seconds.
+ *
+ * @param params - Optional search and filter parameters
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with PersonListResponse
+ *
+ * @example
+ * // Fetch all persons
+ * const { data } = usePersons();
+ *
+ * @example
+ * // Search with filters
+ * const { data } = usePersons({
+ *   search: 'Smith',
+ *   organization_id: 'org-uuid',
+ *   importance_level: 3,
+ *   limit: 20,
+ * });
  */
 export function usePersons(
   params?: PersonSearchParams,
@@ -110,6 +173,24 @@ export function usePersons(
 
 /**
  * Hook to get a single person with full profile
+ *
+ * @description
+ * Fetches complete person profile including roles, affiliations, and relationships.
+ * Data is cached for 60 seconds.
+ *
+ * @param id - UUID of the person to fetch
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with PersonFullProfile
+ *
+ * @example
+ * const { data, isLoading } = usePerson('person-uuid');
+ *
+ * if (data) {
+ *   console.log(data.name_en);
+ *   console.log(data.roles); // Array of person roles
+ *   console.log(data.affiliations); // Array of organizations
+ *   console.log(data.relationships); // Array of person-to-person relationships
+ * }
  */
 export function usePerson(
   id: string,
@@ -141,6 +222,30 @@ export function usePerson(
 
 /**
  * Hook to get person's relationship network for visualization
+ *
+ * @description
+ * Fetches person's relationship network up to N degrees of separation.
+ * Returns nodes and edges for graph visualization (e.g., React Flow).
+ * Data is cached for 60 seconds.
+ *
+ * @param id - UUID of the person (center of the network)
+ * @param depth - Degrees of separation to traverse (default 1, max 3)
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with PersonNetwork
+ *
+ * @example
+ * // Fetch direct connections only
+ * const { data } = usePersonNetwork('person-uuid');
+ *
+ * @example
+ * // Fetch 2 degrees of separation
+ * const { data } = usePersonNetwork('person-uuid', 2);
+ *
+ * // Use for React Flow
+ * const nodes = data?.nodes.map(n => ({
+ *   id: n.id,
+ *   data: { label: n.name },
+ * }));
  */
 export function usePersonNetwork(
   id: string,
@@ -174,6 +279,23 @@ export function usePersonNetwork(
 
 /**
  * Hook to create a new person
+ *
+ * @description
+ * Creates a new person entity with automatic cache invalidation and toast notifications.
+ * On success, invalidates list queries and pre-populates the detail cache.
+ *
+ * @returns TanStack Mutation result with mutate function accepting PersonCreate
+ *
+ * @example
+ * const { mutate, isLoading } = useCreatePerson();
+ *
+ * mutate({
+ *   name_en: 'John Smith',
+ *   name_ar: 'جون سميث',
+ *   importance_level: 3,
+ *   nationality_id: 'country-uuid',
+ *   notes: 'Minister of Foreign Affairs',
+ * });
  */
 export function useCreatePerson() {
   const queryClient = useQueryClient()

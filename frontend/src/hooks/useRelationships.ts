@@ -1,9 +1,38 @@
 /**
  * Relationship Hooks
- * Part of: 026-unified-dossier-architecture implementation
+ * @module hooks/useRelationships
+ * @feature 026-unified-dossier-architecture
+ * @feature 029-dynamic-country-intelligence
  *
- * TanStack Query hooks for relationship operations with automatic caching,
- * invalidation, and graph traversal support.
+ * TanStack Query hooks for dossier relationship CRUD operations with automatic caching,
+ * cache invalidation, optimistic updates, and graph traversal support.
+ *
+ * @description
+ * This module provides a comprehensive set of React hooks for managing dossier relationships:
+ * - Query hooks for fetching single relationships, lists, and type-specific collections
+ * - Mutation hooks for create, update, and delete operations with optimistic updates
+ * - Relationship filtering by type, dossier, and custom criteria
+ * - Bidirectional relationship queries (source ↔ target)
+ * - Graph traversal for multi-degree network visualization
+ * - Prefetch and cache invalidation utilities
+ *
+ * @example
+ * // Fetch a single relationship
+ * const { data, isLoading } = useRelationship('relationship-uuid');
+ *
+ * @example
+ * // Fetch all relationships for a dossier
+ * const { data } = useRelationshipsForDossier('dossier-uuid');
+ *
+ * @example
+ * // Create a new relationship
+ * const { mutate } = useCreateRelationship();
+ * mutate({
+ *   source_dossier_id: 'country-uuid',
+ *   target_dossier_id: 'org-uuid',
+ *   relationship_type: 'bilateral_relation',
+ *   relationship_strength: 'primary'
+ * });
  */
 
 import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query'
@@ -28,7 +57,23 @@ import { toast } from 'sonner'
 import { useTranslation } from 'react-i18next'
 
 /**
- * Query Keys Factory
+ * Query Keys Factory for relationship-related queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation for relationships.
+ *
+ * @example
+ * // Invalidate all relationship queries
+ * queryClient.invalidateQueries({ queryKey: relationshipKeys.all });
+ *
+ * @example
+ * // Invalidate only list queries
+ * queryClient.invalidateQueries({ queryKey: relationshipKeys.lists() });
+ *
+ * @example
+ * // Invalidate specific relationship detail
+ * queryClient.invalidateQueries({ queryKey: relationshipKeys.detail('uuid') });
  */
 export const relationshipKeys = {
   all: ['relationships'] as const,
@@ -44,6 +89,25 @@ export const relationshipKeys = {
 
 /**
  * Hook to fetch a single relationship by ID
+ *
+ * @description
+ * Fetches a complete relationship with populated source and target dossiers.
+ * The query is automatically cached and can be invalidated using relationshipKeys.detail(id).
+ *
+ * @param id - The unique identifier (UUID) of the relationship to fetch
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with data typed as RelationshipWithDossiers
+ *
+ * @example
+ * // Basic usage
+ * const { data, isLoading, error } = useRelationship('relationship-uuid');
+ *
+ * @example
+ * // With options
+ * const { data } = useRelationship('uuid', {
+ *   staleTime: 60000,
+ *   enabled: !!relationshipId,
+ * });
  */
 export function useRelationship(
   id: string,
@@ -61,6 +125,27 @@ export function useRelationship(
 
 /**
  * Hook to fetch list of relationships with filters
+ *
+ * @description
+ * Fetches a paginated list of relationships with optional filtering by type, dossier,
+ * and other criteria. Results are cached based on filter parameters.
+ *
+ * @param filters - Optional filters to apply (type, source_dossier_id, target_dossier_id, etc.)
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with paginated relationship list
+ *
+ * @example
+ * // Fetch all relationships
+ * const { data } = useRelationships();
+ *
+ * @example
+ * // Fetch with filters
+ * const { data } = useRelationships({
+ *   relationship_type: 'bilateral_relation',
+ *   relationship_strength: 'primary',
+ *   page: 1,
+ *   page_size: 20,
+ * });
  */
 export function useRelationships(
   filters?: RelationshipFilters,
@@ -78,6 +163,24 @@ export function useRelationships(
 
 /**
  * Hook to fetch all relationships for a dossier (bidirectional)
+ *
+ * @description
+ * Fetches all relationships where the dossier is either source or target.
+ * Useful for displaying the complete relationship network of a dossier.
+ *
+ * @param dossierId - The dossier UUID to find relationships for
+ * @param page - Page number for pagination (1-indexed, defaults to 1)
+ * @param page_size - Number of items per page (defaults to 20)
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with paginated relationship list
+ *
+ * @example
+ * // Fetch all relationships for a country
+ * const { data } = useRelationshipsForDossier('country-uuid');
+ *
+ * @example
+ * // With pagination
+ * const { data } = useRelationshipsForDossier('dossier-uuid', 2, 10);
  */
 export function useRelationshipsForDossier(
   dossierId: string,
@@ -96,7 +199,26 @@ export function useRelationshipsForDossier(
 }
 
 /**
- * Hook to fetch relationships by type
+ * Hook to fetch relationships by type for a specific dossier
+ *
+ * @description
+ * Fetches relationships filtered by a specific type (e.g., bilateral_relation, membership).
+ * Useful for type-specific relationship displays.
+ *
+ * @param dossierId - The dossier UUID to find relationships for
+ * @param relationshipType - The relationship type to filter by
+ * @param page - Page number for pagination (1-indexed, defaults to 1)
+ * @param page_size - Number of items per page (defaults to 20)
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with filtered relationship list
+ *
+ * @example
+ * // Fetch bilateral relations for a country
+ * const { data } = useRelationshipsByType('country-uuid', 'bilateral_relation');
+ *
+ * @example
+ * // With pagination
+ * const { data } = useRelationshipsByType('uuid', 'membership', 1, 10);
  */
 export function useRelationshipsByType(
   dossierId: string,
@@ -117,6 +239,23 @@ export function useRelationshipsByType(
 
 /**
  * Hook to create a new relationship
+ *
+ * @description
+ * Creates a new dossier relationship with automatic cache invalidation and toast notifications.
+ * On success, invalidates list queries for both dossiers and pre-populates the detail cache.
+ *
+ * @returns TanStack Mutation result with mutate function accepting CreateRelationshipRequest
+ *
+ * @example
+ * const { mutate, isLoading } = useCreateRelationship();
+ *
+ * mutate({
+ *   source_dossier_id: 'country-uuid',
+ *   target_dossier_id: 'org-uuid',
+ *   relationship_type: 'bilateral_relation',
+ *   relationship_strength: 'primary',
+ *   established_date: '2024-01-01',
+ * });
  */
 export function useCreateRelationship() {
   const queryClient = useQueryClient()
@@ -149,6 +288,23 @@ export function useCreateRelationship() {
 
 /**
  * Hook to update a relationship
+ *
+ * @description
+ * Updates an existing relationship with optimistic updates and automatic rollback on error.
+ * On success, updates the cache with server response and invalidates related queries.
+ *
+ * @returns TanStack Mutation result with mutate function accepting { id, request }
+ *
+ * @example
+ * const { mutate, isLoading } = useUpdateRelationship();
+ *
+ * mutate({
+ *   id: 'relationship-uuid',
+ *   request: {
+ *     relationship_strength: 'secondary',
+ *     notes: 'Updated notes',
+ *   },
+ * });
  */
 export function useUpdateRelationship() {
   const queryClient = useQueryClient()
@@ -205,6 +361,25 @@ export function useUpdateRelationship() {
 
 /**
  * Hook to delete a relationship
+ *
+ * @description
+ * Deletes a relationship with optimistic cache removal and automatic rollback on error.
+ * On success, removes the relationship from cache and invalidates related queries.
+ *
+ * @returns TanStack Mutation result with mutate function accepting relationship ID string
+ *
+ * @example
+ * const { mutate, isLoading } = useDeleteRelationship();
+ *
+ * mutate('relationship-uuid');
+ *
+ * @example
+ * // With confirmation
+ * const handleDelete = () => {
+ *   if (confirm('Delete this relationship?')) {
+ *     mutate(relationshipId);
+ *   }
+ * };
  */
 export function useDeleteRelationship() {
   const queryClient = useQueryClient()
@@ -255,7 +430,20 @@ export function useDeleteRelationship() {
 }
 
 /**
- * Hook to prefetch relationships for a dossier (useful for hover effects, navigation hints)
+ * Hook to prefetch relationships for a dossier
+ *
+ * @description
+ * Returns a function to prefetch relationships for performance optimization.
+ * Useful for hover effects, navigation hints, or preloading data before navigation.
+ *
+ * @returns Function accepting dossierId to prefetch relationships
+ *
+ * @example
+ * const prefetch = usePrefetchRelationshipsForDossier();
+ *
+ * <div onMouseEnter={() => prefetch('dossier-uuid')}>
+ *   View Relationships
+ * </div>
  */
 export function usePrefetchRelationshipsForDossier() {
   const queryClient = useQueryClient()
@@ -269,7 +457,21 @@ export function usePrefetchRelationshipsForDossier() {
 }
 
 /**
- * Hook to invalidate relationship queries (useful after bulk operations)
+ * Hook to invalidate relationship queries
+ *
+ * @description
+ * Returns a function to invalidate all relationship queries.
+ * Useful after bulk operations or external changes that affect relationships.
+ *
+ * @returns Function to invalidate all relationship queries
+ *
+ * @example
+ * const invalidateRelationships = useInvalidateRelationships();
+ *
+ * const handleBulkImport = async () => {
+ *   await importRelationships(data);
+ *   invalidateRelationships(); // Refresh all relationship data
+ * };
  */
 export function useInvalidateRelationships() {
   const queryClient = useQueryClient()
@@ -280,8 +482,15 @@ export function useInvalidateRelationships() {
 }
 
 /**
- * T084: Hook to fetch graph data with degree expansion
- * Fetches relationship graph from starting dossier up to N degrees of separation
+ * Graph node representing a dossier in the relationship network
+ *
+ * @property id - Unique identifier (UUID) of the dossier
+ * @property type - Dossier type (country, organization, person, etc.)
+ * @property name_en - English name of the dossier
+ * @property name_ar - Arabic name of the dossier
+ * @property status - Dossier status (active, inactive, archived)
+ * @property degree - Degrees of separation from the starting dossier
+ * @property path - Array of dossier IDs showing the path from start to this node
  */
 export interface GraphNode {
   id: string
@@ -293,12 +502,30 @@ export interface GraphNode {
   path: string[]
 }
 
+/**
+ * Graph edge representing a relationship between two dossiers
+ *
+ * @property source_id - UUID of the source dossier
+ * @property target_id - UUID of the target dossier
+ * @property relationship_type - Type of relationship connecting the dossiers
+ */
 export interface GraphEdge {
   source_id: string
   target_id: string
   relationship_type: string
 }
 
+/**
+ * Complete graph data structure for network visualization
+ *
+ * @property start_dossier_id - UUID of the starting dossier
+ * @property start_dossier - Full dossier object of the starting point
+ * @property max_degrees - Maximum degrees of separation traversed
+ * @property relationship_type_filter - Applied relationship type filter (if any)
+ * @property nodes - Array of all dossier nodes in the graph
+ * @property edges - Array of all relationship edges in the graph
+ * @property stats - Performance and metadata statistics
+ */
 export interface GraphData {
   start_dossier_id: string
   start_dossier: {
@@ -321,6 +548,16 @@ export interface GraphData {
   }
 }
 
+/**
+ * Query Keys Factory for graph traversal queries
+ *
+ * @description
+ * Provides query keys for graph data caching and invalidation.
+ *
+ * @example
+ * // Invalidate all graph queries
+ * queryClient.invalidateQueries({ queryKey: graphKeys.all });
+ */
 export const graphKeys = {
   all: ['graph'] as const,
   traversal: (startDossierId: string, maxDegrees: number, relationshipType?: string) =>
@@ -329,6 +566,16 @@ export const graphKeys = {
 
 /**
  * Fetch graph traversal data from Edge Function
+ *
+ * @description
+ * Internal function to fetch relationship graph data via the graph-traversal Edge Function.
+ * Includes authentication and error handling.
+ *
+ * @param startDossierId - Starting dossier UUID
+ * @param maxDegrees - Maximum degrees of separation (default 2, max 5)
+ * @param relationshipType - Optional filter by relationship type
+ * @returns Promise resolving to GraphData
+ * @throws RelationshipAPIError on authentication or fetch failures
  */
 async function fetchGraphData(
   startDossierId: string,
@@ -383,17 +630,35 @@ async function fetchGraphData(
 }
 
 /**
- * Hook to fetch graph data with degree expansion
- * Fetches relationship graph from starting dossier up to N degrees of separation
+ * Hook to fetch graph data with degree expansion (T084)
+ *
+ * @description
+ * Fetches relationship graph from a starting dossier up to N degrees of separation.
+ * Returns nodes, edges, and statistics for network visualization (e.g., React Flow).
+ * Data is cached for 5 minutes to optimize performance.
  *
  * @param startDossierId - Starting dossier UUID
  * @param maxDegrees - Maximum degrees of separation (default 2, max 5)
  * @param relationshipType - Optional filter by relationship type
- * @param options - TanStack Query options
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with GraphData containing nodes, edges, and stats
  *
  * @example
- * const { data, isLoading, error } = useGraphData('dossier-uuid', 3, 'bilateral_relation');
- * // data contains nodes, edges, and stats for visualization
+ * // Basic usage - 2 degrees of separation
+ * const { data, isLoading } = useGraphData('country-uuid');
+ *
+ * @example
+ * // 3 degrees with type filter
+ * const { data } = useGraphData('dossier-uuid', 3, 'bilateral_relation');
+ *
+ * @example
+ * // Use data for React Flow visualization
+ * const { data } = useGraphData(dossierId, 2);
+ * const reactFlowNodes = data?.nodes.map(n => ({
+ *   id: n.id,
+ *   data: { label: n.name_en },
+ *   position: calculatePosition(n),
+ * }));
  */
 export function useGraphData(
   startDossierId: string,
@@ -416,7 +681,30 @@ export function useGraphData(
 }
 
 /**
- * Hook to prefetch graph data (useful for hover effects, navigation hints)
+ * Hook to prefetch graph data for performance optimization
+ *
+ * @description
+ * Returns a function to prefetch graph data before it's actually needed.
+ * Useful for hover effects, navigation hints, or preloading before navigation.
+ *
+ * @returns Function accepting (startDossierId, maxDegrees?, relationshipType?) to prefetch
+ *
+ * @example
+ * const prefetchGraph = usePrefetchGraphData();
+ *
+ * <div onMouseEnter={() => prefetchGraph('dossier-uuid', 2)}>
+ *   View Network Graph
+ * </div>
+ *
+ * @example
+ * // Prefetch before navigation
+ * const navigate = useNavigate();
+ * const prefetchGraph = usePrefetchGraphData();
+ *
+ * const handleClick = (dossierId) => {
+ *   prefetchGraph(dossierId, 3);
+ *   navigate(`/dossiers/${dossierId}/network`);
+ * };
  */
 export function usePrefetchGraphData() {
   const queryClient = useQueryClient()

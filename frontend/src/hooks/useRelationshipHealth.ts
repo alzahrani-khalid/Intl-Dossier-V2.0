@@ -1,14 +1,37 @@
 /**
- * Relationship Health Hook
- * Feature: relationship-health-scoring
+ * Relationship Health Hooks
+ * @module hooks/useRelationshipHealth
+ * @feature relationship-health-scoring
  *
- * TanStack Query hooks for fetching and managing relationship health data:
- * - useRelationshipHealthList: List all relationship health scores
- * - useRelationshipHealth: Get health score for specific relationship
- * - useRelationshipHealthHistory: Get historical scores for trend analysis
- * - useRelationshipHealthAlerts: Get alerts for a relationship
- * - useCalculateHealthScore: Trigger health score calculation
- * - useUpdateAlert: Update alert (mark read/dismissed)
+ * TanStack Query hooks for fetching and managing relationship health scores and alerts.
+ *
+ * @description
+ * This module provides comprehensive hooks for relationship health monitoring:
+ * - Query hooks for health scores, history, and alerts
+ * - Mutation hooks for triggering calculations and managing alerts
+ * - Utility hooks for statistics and filtered views
+ * - Automatic caching and real-time updates
+ *
+ * Health scoring includes metrics for:
+ * - Engagement frequency and recency
+ * - Document activity and collaboration
+ * - Commitment fulfillment
+ * - Overall trend analysis (improving/declining/stable)
+ *
+ * @example
+ * // Fetch health score for a relationship
+ * const { data } = useRelationshipHealth('relationship-uuid');
+ * console.log(data?.overall_score); // 0-100
+ * console.log(data?.health_level); // 'excellent' | 'good' | 'fair' | 'poor' | 'critical'
+ *
+ * @example
+ * // Get historical trend data
+ * const { data } = useRelationshipHealthHistory('relationship-uuid', 30);
+ *
+ * @example
+ * // Trigger health score calculation
+ * const { mutate } = useCalculateHealthScore();
+ * mutate('relationship-uuid');
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -28,6 +51,21 @@ import type {
 // Query Keys Factory
 // ============================================================================
 
+/**
+ * Query Keys Factory for relationship health queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation.
+ *
+ * @example
+ * // Invalidate all health queries
+ * queryClient.invalidateQueries({ queryKey: relationshipHealthKeys.all });
+ *
+ * @example
+ * // Invalidate specific relationship's health data
+ * queryClient.invalidateQueries({ queryKey: relationshipHealthKeys.detail('uuid') });
+ */
 export const relationshipHealthKeys = {
   all: ['relationship-health'] as const,
   lists: () => [...relationshipHealthKeys.all, 'list'] as const,
@@ -43,6 +81,16 @@ export const relationshipHealthKeys = {
 // API Functions
 // ============================================================================
 
+/**
+ * Fetch list of relationship health scores
+ *
+ * @description
+ * Internal API function to fetch paginated list of health scores with filtering.
+ *
+ * @param params - Query parameters for filtering and sorting
+ * @returns Promise resolving to HealthScoreListResponse
+ * @throws Error on authentication or fetch failures
+ */
 async function fetchHealthScoreList(
   params: HealthScoreListParams,
 ): Promise<HealthScoreListResponse> {
@@ -79,6 +127,13 @@ async function fetchHealthScoreList(
   return response.json() as Promise<HealthScoreListResponse>
 }
 
+/**
+ * Fetch health score for a specific relationship
+ *
+ * @param relationshipId - UUID of the relationship
+ * @returns Promise resolving to RelationshipHealthScore
+ * @throws Error on authentication or fetch failures
+ */
 async function fetchHealthScore(relationshipId: string): Promise<RelationshipHealthScore> {
   const { data: sessionData } = await supabase.auth.getSession()
   if (!sessionData.session) {
@@ -104,6 +159,15 @@ async function fetchHealthScore(relationshipId: string): Promise<RelationshipHea
   return response.json()
 }
 
+/**
+ * Fetch health score history for trend analysis
+ *
+ * @param relationshipId - UUID of the relationship
+ * @param limit - Number of historical records to fetch (default 30)
+ * @param offset - Pagination offset (default 0)
+ * @returns Promise resolving to HealthHistoryListResponse
+ * @throws Error on authentication or fetch failures
+ */
 async function fetchHealthHistory(
   relationshipId: string,
   limit = 30,
@@ -133,6 +197,14 @@ async function fetchHealthHistory(
   return response.json()
 }
 
+/**
+ * Fetch alerts for a relationship
+ *
+ * @param relationshipId - UUID of the relationship
+ * @param params - Optional parameters to include read/dismissed alerts
+ * @returns Promise resolving to AlertListResponse
+ * @throws Error on authentication or fetch failures
+ */
 async function fetchAlerts(
   relationshipId: string,
   params?: AlertListParams,
@@ -165,6 +237,13 @@ async function fetchAlerts(
   return response.json()
 }
 
+/**
+ * Trigger health score calculation
+ *
+ * @param relationshipId - Optional UUID of specific relationship (omit for bulk calculation)
+ * @returns Promise resolving to RelationshipHealthScore or CalculationResultResponse
+ * @throws Error on authentication or calculation failures
+ */
 async function calculateHealthScore(
   relationshipId?: string,
 ): Promise<RelationshipHealthScore | CalculationResultResponse> {
@@ -193,6 +272,14 @@ async function calculateHealthScore(
   return response.json()
 }
 
+/**
+ * Update an alert (mark as read or dismissed)
+ *
+ * @param alertId - UUID of the alert
+ * @param updates - Fields to update (is_read and/or is_dismissed)
+ * @returns Promise resolving to updated RelationshipHealthAlert
+ * @throws Error on authentication or update failures
+ */
 async function updateAlert(
   alertId: string,
   updates: { is_read?: boolean; is_dismissed?: boolean },
@@ -228,6 +315,25 @@ async function updateAlert(
 
 /**
  * Hook to fetch list of relationship health scores
+ *
+ * @description
+ * Fetches a paginated list of relationship health scores with optional filtering
+ * by trend, score range, and sorting. Data is cached for 5 minutes.
+ *
+ * @param params - Query parameters for filtering and sorting
+ * @returns TanStack Query result with HealthScoreListResponse
+ *
+ * @example
+ * // Fetch all health scores
+ * const { data } = useRelationshipHealthList();
+ *
+ * @example
+ * // Fetch declining relationships only
+ * const { data } = useRelationshipHealthList({
+ *   trend: 'declining',
+ *   sort_by: 'overall_health_score',
+ *   sort_order: 'asc',
+ * });
  */
 export function useRelationshipHealthList(params: HealthScoreListParams = {}) {
   return useQuery({
@@ -239,6 +345,22 @@ export function useRelationshipHealthList(params: HealthScoreListParams = {}) {
 
 /**
  * Hook to fetch health score for a specific relationship
+ *
+ * @description
+ * Fetches the current health score and metrics for a single relationship.
+ * Includes overall score, health level, trend, and component scores.
+ *
+ * @param relationshipId - UUID of the relationship (undefined disables query)
+ * @returns TanStack Query result with RelationshipHealthScore
+ *
+ * @example
+ * const { data, isLoading } = useRelationshipHealth('relationship-uuid');
+ *
+ * if (data) {
+ *   console.log(`Score: ${data.overall_score}/100`);
+ *   console.log(`Level: ${data.health_level}`); // 'excellent', 'good', etc.
+ *   console.log(`Trend: ${data.trend}`); // 'improving', 'declining', 'stable'
+ * }
  */
 export function useRelationshipHealth(relationshipId: string | undefined) {
   return useQuery({
@@ -251,6 +373,27 @@ export function useRelationshipHealth(relationshipId: string | undefined) {
 
 /**
  * Hook to fetch health score history for trend analysis
+ *
+ * @description
+ * Fetches historical health scores for a relationship to analyze trends over time.
+ * Useful for charts and timeline visualizations. Data is cached for 10 minutes.
+ *
+ * @param relationshipId - UUID of the relationship (undefined disables query)
+ * @param limit - Number of historical records to fetch (default 30)
+ * @param offset - Pagination offset (default 0)
+ * @returns TanStack Query result with HealthHistoryListResponse
+ *
+ * @example
+ * // Fetch last 30 days of history
+ * const { data } = useRelationshipHealthHistory('relationship-uuid', 30);
+ *
+ * @example
+ * // Use for trend chart
+ * const { data } = useRelationshipHealthHistory(relationshipId);
+ * const chartData = data?.data.map(h => ({
+ *   date: h.calculated_at,
+ *   score: h.overall_score,
+ * }));
  */
 export function useRelationshipHealthHistory(
   relationshipId: string | undefined,
@@ -267,6 +410,25 @@ export function useRelationshipHealthHistory(
 
 /**
  * Hook to fetch alerts for a relationship
+ *
+ * @description
+ * Fetches alerts generated by health score changes (e.g., score drops, declining trends).
+ * By default, only shows unread and non-dismissed alerts. Data is cached for 2 minutes.
+ *
+ * @param relationshipId - UUID of the relationship (undefined disables query)
+ * @param params - Optional parameters to include read/dismissed alerts
+ * @returns TanStack Query result with AlertListResponse
+ *
+ * @example
+ * // Fetch active alerts only
+ * const { data } = useRelationshipHealthAlerts('relationship-uuid');
+ *
+ * @example
+ * // Include all alerts (read and dismissed)
+ * const { data } = useRelationshipHealthAlerts('uuid', {
+ *   include_read: true,
+ *   include_dismissed: true,
+ * });
  */
 export function useRelationshipHealthAlerts(
   relationshipId: string | undefined,
@@ -286,6 +448,22 @@ export function useRelationshipHealthAlerts(
 
 /**
  * Hook to trigger health score calculation
+ *
+ * @description
+ * Triggers recalculation of health score for a specific relationship or all relationships.
+ * On success, invalidates relevant queries to refetch updated scores.
+ *
+ * @returns TanStack Mutation result with mutate function accepting optional relationshipId
+ *
+ * @example
+ * // Calculate for specific relationship
+ * const { mutate, isLoading } = useCalculateHealthScore();
+ * mutate('relationship-uuid');
+ *
+ * @example
+ * // Bulk calculation for all relationships
+ * const { mutate } = useCalculateHealthScore();
+ * mutate(); // No ID = calculate all
  */
 export function useCalculateHealthScore() {
   const queryClient = useQueryClient()
@@ -316,6 +494,20 @@ export function useCalculateHealthScore() {
 
 /**
  * Hook to update an alert (mark as read/dismissed)
+ *
+ * @description
+ * Updates alert status (read or dismissed). On success, invalidates the alerts query
+ * for the related relationship to refetch updated data.
+ *
+ * @returns TanStack Mutation result with mutate function accepting { alertId, updates }
+ *
+ * @example
+ * const { mutate } = useUpdateAlert();
+ *
+ * mutate({
+ *   alertId: 'alert-uuid',
+ *   updates: { is_read: true },
+ * });
  */
 export function useUpdateAlert() {
   const queryClient = useQueryClient()
@@ -339,6 +531,15 @@ export function useUpdateAlert() {
 
 /**
  * Hook to mark alert as read
+ *
+ * @description
+ * Convenience hook that wraps useUpdateAlert to specifically mark alerts as read.
+ *
+ * @returns Mutation object with simplified mutate function accepting only alertId
+ *
+ * @example
+ * const { mutate: markRead } = useMarkAlertRead();
+ * markRead('alert-uuid');
  */
 export function useMarkAlertRead() {
   const updateAlertMutation = useUpdateAlert()
@@ -354,6 +555,15 @@ export function useMarkAlertRead() {
 
 /**
  * Hook to dismiss alert
+ *
+ * @description
+ * Convenience hook that wraps useUpdateAlert to specifically dismiss alerts.
+ *
+ * @returns Mutation object with simplified mutate function accepting only alertId
+ *
+ * @example
+ * const { mutate: dismiss } = useDismissAlert();
+ * dismiss('alert-uuid');
  */
 export function useDismissAlert() {
   const updateAlertMutation = useUpdateAlert()
@@ -373,6 +583,22 @@ export function useDismissAlert() {
 
 /**
  * Hook to get summary statistics for all relationships
+ *
+ * @description
+ * Calculates aggregate statistics from relationship health scores including counts
+ * by health level, trend distribution, and average score.
+ *
+ * @returns Object with { stats, isLoading, error }
+ *
+ * @example
+ * const { stats, isLoading } = useRelationshipHealthStats();
+ *
+ * if (stats) {
+ *   console.log(`Total: ${stats.total}`);
+ *   console.log(`Critical: ${stats.critical}`);
+ *   console.log(`Declining: ${stats.declining}`);
+ *   console.log(`Average: ${stats.averageScore}`);
+ * }
  */
 export function useRelationshipHealthStats() {
   const { data, isLoading, error } = useRelationshipHealthList({ limit: 100 })
@@ -405,6 +631,16 @@ export function useRelationshipHealthStats() {
 
 /**
  * Hook to get relationships that need attention (critical or poor health)
+ *
+ * @description
+ * Fetches relationships with health scores below 40 (critical or poor health level).
+ * Sorted by score ascending (worst first).
+ *
+ * @returns TanStack Query result with filtered HealthScoreListResponse
+ *
+ * @example
+ * const { data } = useRelationshipsNeedingAttention();
+ * const criticalRelationships = data?.data; // Sorted worst-first
  */
 export function useRelationshipsNeedingAttention() {
   return useRelationshipHealthList({
@@ -416,6 +652,15 @@ export function useRelationshipsNeedingAttention() {
 
 /**
  * Hook to get improving relationships
+ *
+ * @description
+ * Fetches relationships with an 'improving' trend. Sorted by score descending (best first).
+ *
+ * @returns TanStack Query result with filtered HealthScoreListResponse
+ *
+ * @example
+ * const { data } = useImprovingRelationships();
+ * const improvingList = data?.data; // Sorted best-first
  */
 export function useImprovingRelationships() {
   return useRelationshipHealthList({
@@ -427,6 +672,15 @@ export function useImprovingRelationships() {
 
 /**
  * Hook to get declining relationships
+ *
+ * @description
+ * Fetches relationships with a 'declining' trend. Sorted by score ascending (worst first).
+ *
+ * @returns TanStack Query result with filtered HealthScoreListResponse
+ *
+ * @example
+ * const { data } = useDecliningRelationships();
+ * const decliningList = data?.data; // Sorted worst-first
  */
 export function useDecliningRelationships() {
   return useRelationshipHealthList({
