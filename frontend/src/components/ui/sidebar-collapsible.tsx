@@ -2,7 +2,7 @@ import { cn } from '@/lib/utils'
 import { Link, type LinkProps } from '@tanstack/react-router'
 import React, { useState, createContext, useContext } from 'react'
 import { AnimatePresence, motion } from 'motion/react'
-import { IconArrowNarrowLeft, IconMenu2, IconX } from '@tabler/icons-react'
+import { ArrowLeft, Menu, X } from 'lucide-react'
 
 interface Links {
   label: string
@@ -89,7 +89,7 @@ export const DesktopSidebar = ({
           open ? 'rotate-0' : 'rotate-180',
         )}
       >
-        <IconArrowNarrowLeft className="text-black dark:text-white" />
+        <ArrowLeft className="text-black dark:text-white" />
       </button>
       {children as React.ReactNode}
     </motion.div>
@@ -110,7 +110,7 @@ export const MobileSidebar = ({
       {...props}
     >
       <div className="z-20 flex w-full justify-end">
-        <IconMenu2
+        <Menu
           className="text-neutral-800 dark:text-neutral-200"
           onClick={() => setOpen(!open)}
         />
@@ -131,7 +131,7 @@ export const MobileSidebar = ({
               className="absolute end-10 top-10 z-50 text-neutral-800 dark:text-neutral-200"
               onClick={() => setOpen(!open)}
             >
-              <IconX />
+              <X />
             </div>
             {children as React.ReactNode}
           </motion.div>
