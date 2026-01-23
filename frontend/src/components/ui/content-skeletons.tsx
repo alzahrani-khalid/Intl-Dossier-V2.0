@@ -37,7 +37,13 @@ export function WorkItemSkeleton({ className }: BaseSkeletonProps) {
   const isRTL = i18n.language === 'ar'
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card
+      role="status"
+      aria-busy="true"
+      aria-label="Loading work item"
+      className={cn('overflow-hidden', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <CardContent className="p-4">
         <div className="flex items-start gap-3">
           {/* Status/Type icon */}
@@ -70,7 +76,13 @@ export function WorkItemListSkeleton({ count = 5, className }: BaseSkeletonProps
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading work items"
+      className={cn('space-y-3', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {Array.from({ length: count }).map((_, i) => (
         <WorkItemSkeleton key={i} />
       ))}
@@ -86,7 +98,13 @@ export function PersonCardSkeleton({ className }: BaseSkeletonProps) {
   const isRTL = i18n.language === 'ar'
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card
+      role="status"
+      aria-busy="true"
+      aria-label="Loading person card"
+      className={cn('overflow-hidden', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <CardContent className="p-4">
         <div className="flex items-center gap-3">
           {/* Avatar */}
@@ -113,7 +131,12 @@ export function TableRowSkeleton({
   className,
 }: BaseSkeletonProps & { columns?: number }) {
   return (
-    <div className={cn('flex items-center gap-4 py-3 border-b last:border-b-0', className)}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading table row"
+      className={cn('flex items-center gap-4 py-3 border-b last:border-b-0', className)}
+    >
       {/* Checkbox */}
       <Skeleton className="h-4 w-4 rounded shrink-0" />
       {/* Columns */}
@@ -140,7 +163,13 @@ export function TableSkeleton({
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className={cn('rounded-lg border overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading table data"
+      className={cn('rounded-lg border overflow-hidden', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       {showHeader && (
         <div className="flex items-center gap-4 px-4 py-3 bg-muted/50 border-b">
@@ -172,7 +201,13 @@ export function MetricCardSkeleton({ className }: BaseSkeletonProps) {
   const isRTL = i18n.language === 'ar'
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card
+      role="status"
+      aria-busy="true"
+      aria-label="Loading metric"
+      className={cn('overflow-hidden', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <CardContent className="p-4 sm:p-6">
         <div className="flex items-start justify-between mb-3">
           <Skeleton className="h-4 w-24" />
@@ -209,7 +244,13 @@ export function MetricsGridSkeleton({
     }[columns] || 'grid-cols-1 sm:grid-cols-2 lg:grid-cols-4'
 
   return (
-    <div className={cn('grid gap-4', gridCols, className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading metrics"
+      className={cn('grid gap-4', gridCols, className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {Array.from({ length: count }).map((_, i) => (
         <MetricCardSkeleton key={i} />
       ))}
@@ -228,7 +269,13 @@ export function ChartSkeleton({
   const isRTL = i18n.language === 'ar'
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card
+      role="status"
+      aria-busy="true"
+      aria-label="Loading chart"
+      className={cn('overflow-hidden', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <Skeleton className="h-5 w-32" />
@@ -270,7 +317,13 @@ export function TimelineItemSkeleton({ className }: BaseSkeletonProps) {
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className={cn('flex gap-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading timeline item"
+      className={cn('flex gap-4', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Timeline line + dot */}
       <div className="flex flex-col items-center">
         <Skeleton className="h-3 w-3 rounded-full shrink-0" />
@@ -297,7 +350,13 @@ export function TimelineSkeleton({ count = 5, className }: BaseSkeletonProps) {
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading timeline"
+      className={cn('', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {Array.from({ length: count }).map((_, i) => (
         <TimelineItemSkeleton key={i} />
       ))}
@@ -314,7 +373,12 @@ export function TimelineSkeleton({ count = 5, className }: BaseSkeletonProps) {
  */
 export function FormFieldSkeleton({ className }: BaseSkeletonProps) {
   return (
-    <div className={cn('space-y-2', className)}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading form field"
+      className={cn('space-y-2', className)}
+    >
       <Skeleton className="h-4 w-24" />
       <Skeleton className="h-10 w-full rounded-md" />
     </div>
@@ -341,7 +405,13 @@ export function FormSkeleton({
     }[columns] || 'grid-cols-1'
 
   return (
-    <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading form"
+      className={cn('space-y-6', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <div className={cn('grid gap-4', gridCols)}>
         {Array.from({ length: fields }).map((_, i) => (
           <FormFieldSkeleton key={i} />
@@ -369,7 +439,13 @@ export function DetailHeaderSkeleton({ className }: BaseSkeletonProps) {
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading page header"
+      className={cn('space-y-4', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Breadcrumb */}
       <div className="flex items-center gap-2">
         <Skeleton className="h-4 w-16" />
@@ -405,7 +481,13 @@ export function TabbedContentSkeleton({
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading tabbed content"
+      className={cn('space-y-6', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Tab list */}
       <div className="flex items-center gap-1 border-b pb-1 overflow-x-auto">
         {Array.from({ length: tabs }).map((_, i) => (
@@ -437,7 +519,12 @@ export function TabbedContentSkeleton({
  */
 export function KanbanCardSkeleton({ className }: BaseSkeletonProps) {
   return (
-    <div className={cn('p-3 rounded-lg border bg-card space-y-2', className)}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading kanban card"
+      className={cn('p-3 rounded-lg border bg-card space-y-2', className)}
+    >
       <Skeleton className="h-4 w-3/4" />
       <Skeleton className="h-3 w-1/2" />
       <div className="flex items-center gap-2 pt-1">
@@ -456,7 +543,12 @@ export function KanbanColumnSkeleton({
   className,
 }: BaseSkeletonProps & { cards?: number }) {
   return (
-    <div className={cn('w-72 shrink-0 rounded-lg bg-muted/50 p-3 space-y-3', className)}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading kanban column"
+      className={cn('w-72 shrink-0 rounded-lg bg-muted/50 p-3 space-y-3', className)}
+    >
       {/* Column header */}
       <div className="flex items-center justify-between">
         <Skeleton className="h-5 w-24" />
@@ -484,7 +576,13 @@ export function KanbanBoardSkeleton({
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className={cn('flex gap-4 overflow-x-auto pb-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading kanban board"
+      className={cn('flex gap-4 overflow-x-auto pb-4', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {Array.from({ length: columns }).map((_, i) => (
         <KanbanColumnSkeleton key={i} cards={cardsPerColumn} />
       ))}
@@ -504,7 +602,13 @@ export function CalendarSkeleton({ className }: BaseSkeletonProps) {
   const isRTL = i18n.language === 'ar'
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card
+      role="status"
+      aria-busy="true"
+      aria-label="Loading calendar"
+      className={cn('overflow-hidden', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <Skeleton className="h-6 w-32" />
@@ -547,7 +651,13 @@ export function NetworkGraphSkeleton({
   const isRTL = i18n.language === 'ar'
 
   return (
-    <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card
+      role="status"
+      aria-busy="true"
+      aria-label="Loading network graph"
+      className={cn('overflow-hidden', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <Skeleton className="h-5 w-36" />
