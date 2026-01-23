@@ -24,6 +24,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/component
 import { ScrollArea } from '@/components/ui/scroll-area'
 import { Separator } from '@/components/ui/separator'
 import { supabase } from '@/lib/supabase'
+import { sanitizeHtml } from '@/lib/sanitize'
 
 interface EmailMessage {
   id: string
@@ -290,7 +291,7 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
                                 {message.body_html ? (
                                   <div
                                     className="prose prose-sm max-w-none dark:prose-invert"
-                                    dangerouslySetInnerHTML={{ __html: message.body_html }}
+                                    dangerouslySetInnerHTML={{ __html: sanitizeHtml(message.body_html) }}
                                   />
                                 ) : (
                                   <pre className="whitespace-pre-wrap font-sans">
