@@ -26,6 +26,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 // Plugin system imports
 import { pluginRegistry } from '@/lib/plugin-system/registry/plugin-registry'
 import { projectPlugin } from '@/lib/plugin-system/plugins/project-plugin'
+import { mouPlugin } from '@/lib/plugin-system/plugins/mou-plugin'
 import type { EntityPlugin, ExtensionFieldDefinition } from '@/lib/plugin-system/types/plugin.types'
 
 // Route definition
@@ -63,9 +64,13 @@ function PluginDemoPage() {
         await pluginRegistry.initialize()
       }
 
-      // Register example plugin if not already registered
+      // Register example plugins if not already registered
       if (!pluginRegistry.isRegistered('project')) {
         await pluginRegistry.register(projectPlugin)
+      }
+
+      if (!pluginRegistry.isRegistered('mou')) {
+        await pluginRegistry.register(mouPlugin)
       }
 
       // Update state
