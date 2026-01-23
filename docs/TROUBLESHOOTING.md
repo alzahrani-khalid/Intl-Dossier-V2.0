@@ -194,39 +194,721 @@ pnpm db:reset
 psql $DATABASE_URL -c "SELECT * FROM _prisma_migrations ORDER BY finished_at DESC LIMIT 5;"
 ```
 
-### RLS Policy Issues (403 Forbidden)
+### Supabase RLS 403 Errors (Row-Level Security)
+
+Row-Level Security (RLS) is Supabase's primary authorization mechanism. 403 errors indicate permission denied, often due to RLS policies blocking access. This section provides comprehensive troubleshooting for all RLS-related issues.
+
+#### Understanding 403 Permission Denied
+
+**HTTP Status:** `403 Forbidden`
+
+**Common Error Messages:**
+- `new row violates row-level security policy`
+- `permission denied for table <table_name>`
+- `PERMISSION_DENIED` error code in API responses
+- Data queries return empty results despite data existing
+
+**Error Structure:**
+
+The application uses structured permission errors (see `frontend/src/types/permission-error.types.ts`):
+
+```typescript
+interface PermissionDeniedError {
+  status: 403
+  code: 'PERMISSION_DENIED'
+  requiredPermission: 'read' | 'write' | 'delete' | 'approve' | 'publish' | 'assign' | 'manage' | 'admin'
+  resourceType: 'dossier' | 'country' | 'organization' | 'mou' | 'event' | 'forum' | etc.
+  resourceId?: string
+  currentRole: 'admin' | 'manager' | 'staff' | 'viewer'
+  requiredRole?: 'admin' | 'manager' | 'staff' | 'viewer'
+  reason: PermissionDeniedReason
+  accessGranters: AccessGranter[]
+  suggestedActions: PermissionAction[]
+}
+```
+
+#### Symptoms & Root Causes
+
+##### 1. Insufficient Role (`insufficient_role`)
 
 **Symptoms:**
-- `new row violates row-level security policy`
-- 403 errors on data mutations
-- Data not visible despite existing
+- User has lower role than required (e.g., `viewer` trying to edit)
+- Frontend displays "Permission Denied" dialog
+- 403 on INSERT/UPDATE/DELETE operations
 
-**Root Causes:**
-- Missing RLS policy
-- Incorrect `auth.uid()` usage
-- Policy not matching current user context
+**Root Cause:**
+RLS policy requires higher role than user's current role
+
+**Debugging:**
+
+```bash
+# 1. Check user's current role
+psql $DATABASE_URL -c "
+SELECT id, email, role
+FROM auth.users
+WHERE id = 'user-uuid';
+"
+
+# 2. Check RLS policy role requirements
+psql $DATABASE_URL -c "
+SELECT policyname, cmd, qual, with_check
+FROM pg_policies
+WHERE tablename = 'dossiers'
+  AND (qual::text LIKE '%role%' OR with_check::text LIKE '%role%');
+"
+
+# 3. Verify role in JWT claims
+# In browser console:
+supabase.auth.getUser().then(({ data }) => {
+  console.log('User role:', data.user?.user_metadata?.role)
+})
+```
 
 **Solution:**
 
-```bash
-# 1. Verify user is authenticated
-# In browser console:
-supabase.auth.getUser().then(console.log)
+```sql
+-- Option 1: Adjust policy to allow user's role
+CREATE POLICY "staff_can_read_dossiers"
+ON dossiers FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM auth.users
+    WHERE id = auth.uid()
+    AND user_metadata->>'role' IN ('staff', 'manager', 'admin')
+  )
+);
 
-# 2. Check RLS policies for table
+-- Option 2: Upgrade user's role (admin only)
+UPDATE auth.users
+SET raw_user_meta_data = jsonb_set(
+  raw_user_meta_data,
+  '{role}',
+  '"manager"'
+)
+WHERE id = 'user-uuid';
+```
+
+##### 2. Resource Restricted (`resource_restricted`)
+
+**Symptoms:**
+- User can access some resources but not others
+- 403 on specific dossiers/documents
+- "Access denied to this resource" message
+
+**Root Cause:**
+Resource has specific access restrictions (e.g., only assigned users can view)
+
+**Debugging:**
+
+```bash
+# Check resource assignments
 psql $DATABASE_URL -c "
-SELECT schemaname, tablename, policyname, permissive, roles, cmd, qual, with_check
-FROM pg_policies
-WHERE tablename = 'your_table_name';
+SELECT d.id, d.title, da.user_id, u.email
+FROM dossiers d
+LEFT JOIN dossier_assignments da ON d.id = da.dossier_id
+WHERE d.id = 'resource-uuid';
 "
 
-# 3. Test query as service role (bypasses RLS)
-# In Supabase dashboard, run query with service_role key
+# Check if RLS policy requires assignment
+psql $DATABASE_URL -c "
+SELECT policyname, qual::text
+FROM pg_policies
+WHERE tablename = 'dossiers'
+  AND qual::text LIKE '%assignment%';
+"
+```
 
-# 4. Common fixes:
-# - Add SELECT policy: CREATE POLICY "Users can view own data" ON table_name FOR SELECT USING (auth.uid() = user_id);
-# - Add INSERT policy: CREATE POLICY "Users can insert own data" ON table_name FOR INSERT WITH CHECK (auth.uid() = user_id);
-# - Check user_id column exists and matches auth.uid()
+**Solution:**
+
+```sql
+-- Assign user to resource
+INSERT INTO dossier_assignments (dossier_id, user_id, role)
+VALUES ('dossier-uuid', 'user-uuid', 'editor')
+ON CONFLICT (dossier_id, user_id) DO UPDATE
+SET role = EXCLUDED.role;
+
+-- Or create policy that checks assignments
+CREATE POLICY "users_view_assigned_dossiers"
+ON dossiers FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM dossier_assignments
+    WHERE dossier_id = dossiers.id
+    AND user_id = auth.uid()
+  )
+);
+```
+
+##### 3. Not Assigned (`not_assigned`)
+
+**Symptoms:**
+- User not in resource's assignment list
+- Can't see resource in listings
+- 403 when accessing resource directly
+
+**Root Cause:**
+Policy requires explicit assignment, user not assigned
+
+**Debugging:**
+
+```typescript
+// Check assignments via API
+const { data: assignments } = await supabase
+  .from('dossier_assignments')
+  .select('*')
+  .eq('user_id', userId)
+  .eq('dossier_id', dossierId)
+
+console.log('User assignments:', assignments)
+
+// Test with service role (bypasses RLS)
+const { data: resource } = await supabase
+  .from('dossiers')
+  .select('*')
+  .eq('id', dossierId)
+  .limit(1)
+  .single()
+
+console.log('Resource exists:', !!resource)
+```
+
+**Solution:**
+
+See `resource_restricted` solution above for assignment management.
+
+##### 4. Delegation Expired/Revoked (`delegation_expired`, `delegation_revoked`)
+
+**Symptoms:**
+- User previously had access, now denied
+- "Your access has expired" message
+- Temporary permissions no longer valid
+
+**Root Cause:**
+Time-limited delegation expired or was manually revoked
+
+**Debugging:**
+
+```sql
+-- Check delegations
+SELECT
+  id,
+  delegator_id,
+  delegatee_id,
+  resource_type,
+  resource_id,
+  permissions,
+  expires_at,
+  revoked_at,
+  CASE
+    WHEN revoked_at IS NOT NULL THEN 'revoked'
+    WHEN expires_at < NOW() THEN 'expired'
+    ELSE 'active'
+  END as status
+FROM permission_delegations
+WHERE delegatee_id = 'user-uuid'
+  AND resource_id = 'resource-uuid';
+```
+
+**Solution:**
+
+```sql
+-- Request new delegation (application-specific)
+-- User must request access via frontend access request system
+
+-- Or extend delegation (manager/admin only)
+UPDATE permission_delegations
+SET expires_at = NOW() + INTERVAL '7 days'
+WHERE id = 'delegation-uuid'
+  AND revoked_at IS NULL;
+```
+
+##### 5. Resource Locked (`resource_locked`)
+
+**Symptoms:**
+- Read access works, write access denied
+- "Resource is locked for editing" message
+- 403 only on UPDATE/DELETE
+
+**Root Cause:**
+Resource locked by another user or workflow
+
+**Debugging:**
+
+```sql
+-- Check resource lock status
+SELECT
+  id,
+  locked_at,
+  locked_by_user_id,
+  lock_reason,
+  u.email as locked_by
+FROM dossiers d
+LEFT JOIN auth.users u ON d.locked_by_user_id = u.id
+WHERE d.id = 'resource-uuid';
+```
+
+**Solution:**
+
+```sql
+-- Release lock (if you own it or are admin)
+UPDATE dossiers
+SET locked_at = NULL,
+    locked_by_user_id = NULL,
+    lock_reason = NULL
+WHERE id = 'resource-uuid'
+  AND (locked_by_user_id = auth.uid() OR is_admin());
+
+-- Or wait for lock to expire (implementation-specific)
+```
+
+##### 6. Workflow State (`workflow_state`)
+
+**Symptoms:**
+- Action allowed in some states, denied in others
+- "Cannot edit published dossier" message
+- 403 when trying to modify completed work
+
+**Root Cause:**
+RLS policy enforces workflow state transitions
+
+**Debugging:**
+
+```sql
+-- Check resource workflow state
+SELECT id, status, workflow_state, published_at
+FROM dossiers
+WHERE id = 'resource-uuid';
+
+-- Check RLS policy for state restrictions
+SELECT policyname, cmd, with_check::text
+FROM pg_policies
+WHERE tablename = 'dossiers'
+  AND with_check::text LIKE '%status%';
+```
+
+**Solution:**
+
+```sql
+-- Update workflow state (if permitted)
+UPDATE dossiers
+SET status = 'draft'
+WHERE id = 'resource-uuid'
+  AND status = 'published'
+  AND (
+    -- Only managers can unpublish
+    EXISTS (
+      SELECT 1 FROM auth.users
+      WHERE id = auth.uid()
+      AND user_metadata->>'role' IN ('manager', 'admin')
+    )
+  );
+```
+
+#### Common RLS Debugging Procedures
+
+##### Procedure 1: Verify Authentication
+
+```bash
+# 1. Check user is authenticated
+# Browser console:
+const { data: { user }, error } = await supabase.auth.getUser()
+console.log('Authenticated user:', user)
+console.log('Auth error:', error)
+
+# 2. Check JWT token validity
+const { data: { session } } = await supabase.auth.getSession()
+console.log('Session:', session)
+console.log('Access token expires:', new Date(session?.expires_at * 1000))
+
+# 3. Verify user exists in database
+psql $DATABASE_URL -c "
+SELECT id, email, created_at, last_sign_in_at
+FROM auth.users
+WHERE id = 'user-uuid';
+"
+```
+
+##### Procedure 2: Inspect RLS Policies
+
+```sql
+-- List all policies for a table
+SELECT
+  schemaname,
+  tablename,
+  policyname,
+  permissive,
+  roles,
+  cmd, -- SELECT, INSERT, UPDATE, DELETE
+  qual::text as using_expression,
+  with_check::text as with_check_expression
+FROM pg_policies
+WHERE tablename = 'your_table_name'
+ORDER BY cmd, policyname;
+
+-- Check if RLS is enabled
+SELECT
+  schemaname,
+  tablename,
+  rowsecurity as rls_enabled
+FROM pg_tables
+WHERE tablename = 'your_table_name';
+```
+
+##### Procedure 3: Test Query Visibility
+
+```typescript
+// Test with authenticated user (RLS enforced)
+const { data: userView, error: userError } = await supabase
+  .from('dossiers')
+  .select('id, title')
+  .eq('id', resourceId)
+
+console.log('User view:', userView) // May be empty
+console.log('User error:', userError)
+
+// Test with service role (RLS bypassed)
+// Create service role client
+import { createClient } from '@supabase/supabase-js'
+
+const supabaseService = createClient(
+  SUPABASE_URL,
+  SUPABASE_SERVICE_ROLE_KEY // Keep secret!
+)
+
+const { data: serviceView } = await supabaseService
+  .from('dossiers')
+  .select('id, title')
+  .eq('id', resourceId)
+
+console.log('Service role view:', serviceView) // Should see all data
+
+// If service role sees data but user doesn't -> RLS policy issue
+```
+
+##### Procedure 4: Enable Query Logging
+
+```sql
+-- Enable RLS violation logging (PostgreSQL)
+ALTER SYSTEM SET log_statement = 'all';
+ALTER SYSTEM SET log_error_verbosity = 'verbose';
+SELECT pg_reload_conf();
+
+-- Check logs for RLS violations
+-- In Supabase dashboard: Database > Logs
+-- Filter by: "violates row-level security"
+```
+
+##### Procedure 5: Test Policy Conditions
+
+```sql
+-- Test policy condition directly
+-- Replace auth.uid() with actual user ID
+SELECT
+  *,
+  -- Test USING clause
+  (auth.uid() = user_id) as passes_using,
+  -- Test WITH CHECK clause
+  (auth.uid() = user_id AND status = 'draft') as passes_with_check
+FROM dossiers
+WHERE id = 'resource-uuid';
+
+-- Impersonate user for testing (PostgreSQL)
+SET LOCAL role authenticated;
+SET LOCAL request.jwt.claim.sub = 'user-uuid';
+
+SELECT * FROM dossiers WHERE id = 'resource-uuid';
+
+-- Reset
+RESET role;
+```
+
+#### Common RLS Policy Patterns
+
+##### Pattern 1: User Owns Resource
+
+```sql
+-- Users can only access their own data
+CREATE POLICY "users_own_data"
+ON table_name FOR ALL
+USING (user_id = auth.uid())
+WITH CHECK (user_id = auth.uid());
+```
+
+##### Pattern 2: Role-Based Access
+
+```sql
+-- Different permissions by role
+CREATE POLICY "role_based_access"
+ON table_name FOR ALL
+USING (
+  CASE (SELECT raw_user_meta_data->>'role' FROM auth.users WHERE id = auth.uid())
+    WHEN 'admin' THEN true
+    WHEN 'manager' THEN department_id IN (SELECT department_id FROM user_departments WHERE user_id = auth.uid())
+    WHEN 'staff' THEN user_id = auth.uid()
+    ELSE false
+  END
+);
+```
+
+##### Pattern 3: Assignment-Based Access
+
+```sql
+-- Users must be explicitly assigned
+CREATE POLICY "assignment_based_access"
+ON dossiers FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM dossier_assignments
+    WHERE dossier_id = dossiers.id
+    AND user_id = auth.uid()
+  )
+);
+```
+
+##### Pattern 4: Time-Restricted Access
+
+```sql
+-- Access expires after certain date
+CREATE POLICY "time_restricted_access"
+ON resources FOR SELECT
+USING (
+  EXISTS (
+    SELECT 1 FROM user_access
+    WHERE resource_id = resources.id
+    AND user_id = auth.uid()
+    AND (expires_at IS NULL OR expires_at > NOW())
+    AND (revoked_at IS NULL)
+  )
+);
+```
+
+##### Pattern 5: Public + Protected Resources
+
+```sql
+-- Some resources public, others require auth
+CREATE POLICY "public_or_assigned"
+ON dossiers FOR SELECT
+USING (
+  is_public = true
+  OR
+  EXISTS (
+    SELECT 1 FROM dossier_assignments
+    WHERE dossier_id = dossiers.id
+    AND user_id = auth.uid()
+  )
+);
+```
+
+#### Frontend Error Handling Integration
+
+When 403 errors occur, the frontend displays structured error messages:
+
+```typescript
+// Hook usage example
+import { usePermissionError } from '@/hooks/usePermissionError'
+
+function DossierView({ dossierId }) {
+  const { error, hasError, requestAccess, clearError } = usePermissionError()
+
+  // Fetch dossier (may throw 403)
+  const { data, error: queryError } = useQuery({
+    queryKey: ['dossiers', dossierId],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('dossiers')
+        .select('*')
+        .eq('id', dossierId)
+        .single()
+
+      if (error?.code === 'PGRST301') {
+        // RLS violation - set permission error
+        setError({
+          error: {
+            code: 'PERMISSION_DENIED',
+            message: 'You do not have permission to view this dossier',
+            details: {
+              required_permission: 'read',
+              resource_type: 'dossier',
+              resource_id: dossierId,
+              current_role: 'viewer',
+              reason: 'not_assigned'
+            }
+          }
+        })
+        throw error
+      }
+
+      return data
+    }
+  })
+
+  if (hasError) {
+    return (
+      <PermissionDeniedDialog
+        open={hasError}
+        onClose={clearError}
+        error={error}
+        onRequestAccess={async (granter, reason) => {
+          await requestAccess({
+            granterId: granter.userId,
+            resourceType: 'dossier',
+            resourceId: dossierId,
+            requestedPermission: 'read',
+            reason,
+            urgency: 'medium'
+          })
+        }}
+      />
+    )
+  }
+
+  return <div>{/* Render dossier */}</div>
+}
+```
+
+#### Quick Fixes Checklist
+
+When encountering 403 errors, check in this order:
+
+1. ✅ **User authenticated?** → Check `supabase.auth.getUser()`
+2. ✅ **RLS enabled?** → Check `pg_tables.rowsecurity`
+3. ✅ **Policies exist?** → Check `pg_policies` for table
+4. ✅ **User has role?** → Check `auth.users.user_metadata.role`
+5. ✅ **User assigned?** → Check assignment tables
+6. ✅ **Resource locked?** → Check lock status
+7. ✅ **Workflow allows?** → Check resource status/state
+8. ✅ **Policy syntax correct?** → Test with service role
+9. ✅ **auth.uid() returns value?** → Test in policy condition
+10. ✅ **JWT claims populated?** → Check session metadata
+
+#### Advanced Debugging
+
+```sql
+-- Create helper function to debug RLS
+CREATE OR REPLACE FUNCTION debug_rls_access(
+  p_table_name text,
+  p_resource_id uuid,
+  p_user_id uuid DEFAULT auth.uid()
+)
+RETURNS jsonb
+LANGUAGE plpgsql
+SECURITY DEFINER
+AS $$
+DECLARE
+  v_result jsonb;
+BEGIN
+  SELECT jsonb_build_object(
+    'user_id', p_user_id,
+    'user_role', (SELECT raw_user_meta_data->>'role' FROM auth.users WHERE id = p_user_id),
+    'rls_enabled', (SELECT rowsecurity FROM pg_tables WHERE tablename = p_table_name),
+    'policies', (
+      SELECT jsonb_agg(jsonb_build_object(
+        'name', policyname,
+        'command', cmd,
+        'using', qual::text,
+        'with_check', with_check::text
+      ))
+      FROM pg_policies
+      WHERE tablename = p_table_name
+    ),
+    'assignments', (
+      SELECT jsonb_agg(jsonb_build_object(
+        'user_id', user_id,
+        'role', role,
+        'created_at', created_at
+      ))
+      FROM dossier_assignments
+      WHERE dossier_id = p_resource_id
+    )
+  ) INTO v_result;
+
+  RETURN v_result;
+END;
+$$;
+
+-- Usage
+SELECT debug_rls_access('dossiers', 'resource-uuid'::uuid);
+```
+
+#### Common Mistakes & Anti-Patterns
+
+❌ **Mistake 1: Missing WITH CHECK clause**
+
+```sql
+-- Bad: No WITH CHECK, allows any INSERT
+CREATE POLICY "users_select_own" ON table FOR SELECT
+USING (user_id = auth.uid());
+
+-- Good: WITH CHECK prevents invalid inserts
+CREATE POLICY "users_select_own" ON table FOR SELECT
+USING (user_id = auth.uid());
+
+CREATE POLICY "users_insert_own" ON table FOR INSERT
+WITH CHECK (user_id = auth.uid());
+```
+
+❌ **Mistake 2: Using wrong auth function**
+
+```sql
+-- Bad: current_user is PostgreSQL role, not Supabase user
+USING (user_id = current_user)
+
+-- Good: auth.uid() returns Supabase user ID
+USING (user_id = auth.uid())
+```
+
+❌ **Mistake 3: Not handling NULL user_id**
+
+```sql
+-- Bad: Fails when user not authenticated
+USING (user_id = auth.uid())
+
+-- Good: Explicit NULL check
+USING (user_id = auth.uid() AND auth.uid() IS NOT NULL)
+```
+
+❌ **Mistake 4: Overly complex policies**
+
+```sql
+-- Bad: Hard to debug, slow performance
+CREATE POLICY "complex" ON table
+USING (
+  EXISTS (SELECT 1 FROM t1 WHERE ...) OR
+  EXISTS (SELECT 1 FROM t2 WHERE ...) OR
+  (status = 'public' AND created_at > NOW() - INTERVAL '30 days')
+  -- ... 20 more conditions
+);
+
+-- Good: Split into multiple policies
+CREATE POLICY "public_recent" ON table
+USING (status = 'public' AND created_at > NOW() - INTERVAL '30 days');
+
+CREATE POLICY "user_assigned" ON table
+USING (EXISTS (SELECT 1 FROM assignments WHERE ...));
+```
+
+#### Performance Optimization
+
+```sql
+-- Add indexes for policy conditions
+CREATE INDEX idx_dossiers_user_id ON dossiers(user_id) WHERE user_id IS NOT NULL;
+CREATE INDEX idx_assignments_user_dossier ON dossier_assignments(user_id, dossier_id);
+
+-- Use covering indexes for complex policies
+CREATE INDEX idx_dossiers_access ON dossiers(id, user_id, status, is_public)
+WHERE status IN ('draft', 'published');
+
+-- Monitor slow policies
+SELECT
+  schemaname,
+  tablename,
+  policyname,
+  pg_stat_user_tables.seq_scan,
+  pg_stat_user_tables.idx_scan
+FROM pg_policies
+JOIN pg_stat_user_tables USING (schemaname, tablename)
+WHERE schemaname = 'public'
+ORDER BY seq_scan DESC;
 ```
 
 ### Slow Queries
