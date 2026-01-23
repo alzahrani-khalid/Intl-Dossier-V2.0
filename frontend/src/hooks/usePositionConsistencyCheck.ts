@@ -215,8 +215,7 @@ export const useLatestConsistencyCheck = (positionId: string | undefined) => {
       if (!positionId) return null
 
       const { data, error } = await supabase
-        .from('position_consistency_checks')
-        .select('*')
+        .from('position_consistency_checks').select('id, position_id, analyzed_at, analyzed_by, analysis_type, overall_score, risk_level, conflicts, similar_positions, recommendations, gaps_identified, review_status, reviewed_by, reviewed_at, review_notes, requires_human_review, auto_approved, ai_service_available, processing_time_ms')
         .eq('position_id', positionId)
         .order('analyzed_at', { ascending: false })
         .limit(1)
@@ -248,8 +247,7 @@ export const useConsistencyCheckHistory = (positionId: string | undefined, limit
       if (!positionId) return []
 
       const { data, error } = await supabase
-        .from('position_consistency_checks')
-        .select('*')
+        .from('position_consistency_checks').select('id, position_id, analyzed_at, analyzed_by, analysis_type, overall_score, risk_level, conflicts, similar_positions, recommendations, gaps_identified, review_status, reviewed_by, reviewed_at, review_notes, requires_human_review, auto_approved, ai_service_available, processing_time_ms')
         .eq('position_id', positionId)
         .order('analyzed_at', { ascending: false })
         .limit(limit)

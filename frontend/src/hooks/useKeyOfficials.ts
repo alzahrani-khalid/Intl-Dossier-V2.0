@@ -135,7 +135,9 @@ export function useKeyOfficials({ countryId, enabled = true }: UseKeyOfficialsOp
       // Fetch person dossiers by IDs
       const { data: persons, error: personError } = await supabase
         .from('dossiers')
-        .select('*')
+        .select(
+          'id, name_en, name_ar, title_en, title_ar, description_en, description_ar, status, photo_url, created_at, updated_at',
+        )
         .in('id', personIds)
         .eq('dossier_type', 'person')
         .order('updated_at', { ascending: false })

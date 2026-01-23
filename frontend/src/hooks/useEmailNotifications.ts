@@ -115,8 +115,7 @@ export function useEmailPreferences() {
       if (!user) throw new Error('Not authenticated')
 
       const { data, error } = await supabase
-        .from('email_notification_preferences')
-        .select('*')
+        .from('email_notification_preferences').select('id, user_id, email_notifications_enabled, preferred_language, ticket_created, ticket_updated, ticket_assigned, ticket_resolved, ticket_closed, comment_added, comment_mention, status_change, priority_change, sla_warning, sla_breach, daily_digest_enabled, daily_digest_time, weekly_digest_enabled, weekly_digest_day, quiet_hours_enabled, quiet_hours_start, quiet_hours_end, quiet_hours_timezone, channel_preferences, created_at, updated_at')
         .eq('user_id', user.id)
         .single()
 
@@ -218,8 +217,7 @@ export function useEmailTemplates() {
     queryKey: ['emailTemplates'],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('email_templates')
-        .select('*')
+        .from('email_templates').select('id, template_type, name, description, subject_en, body_html_en, body_text_en, subject_ar, body_html_ar, body_text_ar, available_variables, is_active, created_at, updated_at')
         .eq('is_active', true)
         .order('name')
 

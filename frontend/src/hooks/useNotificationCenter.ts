@@ -109,8 +109,7 @@ export function useNotifications(filters: NotificationFilters = {}) {
         if (!user) throw new Error('Not authenticated')
 
         let query = supabase
-          .from('notifications')
-          .select('*')
+          .from('notifications').select('id, user_id, type, title, message, category, data, read, read_at, priority, action_url, source_type, source_id, push_sent, email_sent, digest_included, created_at, expires_at, updated_at')
           .eq('user_id', user.id)
           .or('expires_at.is.null,expires_at.gt.now()')
           .order('created_at', { ascending: false })
@@ -282,7 +281,9 @@ export function useCategoryPreferences() {
 
       const { data, error } = await supabase
         .from('notification_category_preferences')
-        .select('*')
+        .select(
+          'id, user_id, category, email_enabled, push_enabled, in_app_enabled, sms_enabled, sound_enabled, priority_override, custom_sound',
+        )
         .eq('user_id', user.id)
 
       if (error && error.code !== 'PGRST116') throw error
@@ -346,7 +347,9 @@ export function usePushDevices() {
 
       const { data, error } = await supabase
         .from('push_device_tokens')
-        .select('*')
+        .select(
+          'id, user_id, device_token, platform, device_name, provider, is_active, last_used_at, created_at',
+        )
         .eq('user_id', user.id)
         .eq('is_active', true)
         .order('last_used_at', { ascending: false, nullsFirst: false })

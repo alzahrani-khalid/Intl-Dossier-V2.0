@@ -75,7 +75,11 @@ export function useWorkItemSpecification(filters: WorkItemFilters = {}) {
     queryKey: workItemSpecKeys.byFilters(filters),
     queryFn: async () => {
       // Build the base query
-      let queryBuilder = supabase.from('unified_work_items').select('*')
+      let queryBuilder = supabase
+        .from('unified_work_items')
+        .select(
+          'id, source, tracking_type, status, priority, title, description, assignee_id, deadline, dossier_ids, dossier_types, created_at, updated_at',
+        )
 
       // Apply the specification to the query
       queryBuilder = applySpecification(queryBuilder, specification)
@@ -251,7 +255,11 @@ function useWorkItemSpecificationWithSpec(specification: Specification<WorkItem>
   const query = useQuery({
     queryKey: workItemSpecKeys.filtered(specification),
     queryFn: async () => {
-      let queryBuilder = supabase.from('unified_work_items').select('*')
+      let queryBuilder = supabase
+        .from('unified_work_items')
+        .select(
+          'id, source, tracking_type, status, priority, title, description, assignee_id, deadline, dossier_ids, dossier_types, created_at, updated_at',
+        )
       queryBuilder = applySpecification(queryBuilder, specification)
       queryBuilder = applyQueryOptions(queryBuilder, {
         orderBy: 'deadline',

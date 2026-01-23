@@ -200,8 +200,7 @@ export function useMouNotificationPreferences() {
 
       // Fallback to direct query
       const { data, error } = await supabase
-        .from('mou_notification_preferences')
-        .select('*')
+        .from('mou_notification_preferences').select('id, user_id, mou_notifications_enabled, deliverable_due_soon_enabled, deliverable_due_soon_days, deliverable_overdue_enabled, deliverable_completed_enabled, milestone_completed_enabled, expiration_warning_enabled, expiration_warning_days, mou_expired_enabled, renewal_initiated_enabled, renewal_approved_enabled, renewal_completed_enabled, workflow_state_change_enabled, health_score_drop_enabled, health_score_drop_threshold, assignment_change_enabled, email_enabled, push_enabled, in_app_enabled, batch_notifications, batch_frequency, batch_delivery_time, batch_delivery_day, quiet_hours_enabled, quiet_hours_start, quiet_hours_end, created_at, updated_at')
         .eq('user_id', user.id)
         .single()
 

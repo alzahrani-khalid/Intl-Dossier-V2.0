@@ -142,8 +142,7 @@ export function useScheduledReports() {
       // Note: We don't join with custom_reports here due to RLS infinite recursion
       // The report name can be fetched separately if needed
       const { data, error } = await supabase
-        .from('report_schedules')
-        .select('*')
+        .from('report_schedules').select('id, report_id, name, name_ar, description, description_ar, frequency, time, timezone, day_of_week, day_of_month, export_format, language, recipients, is_active, is_shared, next_run_at, last_run_at, last_run_status, consecutive_failures, max_consecutive_failures, paused_at, pause_reason, created_by, created_at, updated_at')
         .order('created_at', { ascending: false })
 
       if (error) throw error
@@ -160,8 +159,7 @@ export function useScheduledReport(id: string) {
     queryFn: async () => {
       // Note: We don't join with custom_reports here due to RLS infinite recursion
       const { data, error } = await supabase
-        .from('report_schedules')
-        .select('*')
+        .from('report_schedules').select('id, report_id, name, name_ar, description, description_ar, frequency, time, timezone, day_of_week, day_of_month, export_format, language, recipients, is_active, is_shared, next_run_at, last_run_at, last_run_status, consecutive_failures, max_consecutive_failures, paused_at, pause_reason, created_by, created_at, updated_at')
         .eq('id', id)
         .single()
 
@@ -202,7 +200,9 @@ export function useScheduleConditions(scheduleId: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('report_delivery_conditions')
-        .select('*')
+        .select(
+          'id, schedule_id, field_path, operator, value, is_required, fail_message, fail_message_ar, evaluation_order, is_active, created_at, updated_at',
+        )
         .eq('schedule_id', scheduleId)
         .order('evaluation_order', { ascending: true })
 
@@ -220,7 +220,9 @@ export function useScheduleExecutions(scheduleId: string) {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('report_executions')
-        .select('*')
+        .select(
+          'id, report_id, schedule_id, status, total_recipients, successful_deliveries, failed_deliveries, skipped_deliveries, conditions_met, conditions_result, error_message, trigger_type, executed_by, created_at, completed_at',
+        )
         .eq('schedule_id', scheduleId)
         .order('created_at', { ascending: false })
         .limit(50)

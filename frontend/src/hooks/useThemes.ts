@@ -127,7 +127,7 @@ export function useThemes(filters: ThemeFilters = {}) {
       let extensions: Record<string, ThemeExtension> = {}
 
       if (themeIds.length > 0) {
-        let extQuery = supabase.from('themes').select('*').in('id', themeIds)
+        let extQuery = supabase.from('themes').select('id, category_code, hierarchy_level, parent_theme_id, icon, color, is_standard, sort_order').in('id', themeIds)
 
         // Apply parent filter if specified
         if (parent_theme_id !== undefined) {
@@ -191,8 +191,7 @@ export function useTheme(id: string | undefined) {
 
       // Get base dossier
       const { data: dossier, error: dossierError } = await supabase
-        .from('dossiers')
-        .select('*')
+        .from('dossiers').select('id, type, name_en, name_ar, description_en, description_ar, status, created_at, updated_at')
         .eq('id', id)
         .eq('type', 'theme')
         .single()
@@ -206,13 +205,15 @@ export function useTheme(id: string | undefined) {
       // Get theme extension data from the view for context
       const { data: themeDetails } = await supabase
         .from('theme_details')
-        .select('*')
+        .select(
+          'id, parent_theme_id, category_code, hierarchy_level, icon, color, attributes, sort_order, is_standard, external_url, parent_name_en, parent_name_ar, parent_category_code, children_count',
+        )
         .eq('id', id)
         .single()
 
       if (!themeDetails) {
         // Fallback to just the extension table
-        const { data: themeExt } = await supabase.from('themes').select('*').eq('id', id).single()
+        const { data: themeExt } = await supabase.from('themes').select('id, category_code, hierarchy_level, parent_theme_id, icon, color, is_standard, sort_order').eq('id', id).single()
 
         return {
           ...dossier,
@@ -281,8 +282,7 @@ export function useRootThemes() {
     queryFn: async () => {
       // Get themes with no parent
       const { data: themeExts, error: extError } = await supabase
-        .from('themes')
-        .select('*')
+        .from('themes').select('id, category_code, hierarchy_level, parent_theme_id, icon, color, is_standard, sort_order')
         .is('parent_theme_id', null)
         .order('sort_order')
         .order('category_code')
@@ -298,8 +298,7 @@ export function useRootThemes() {
       // Get corresponding dossiers
       const themeIds = themeExts.map((t) => t.id)
       const { data: dossiers, error: dossierError } = await supabase
-        .from('dossiers')
-        .select('*')
+        .from('dossiers').select('id, type, name_en, name_ar, description_en, description_ar, status, created_at, updated_at')
         .in('id', themeIds)
         .eq('type', 'theme')
         .neq('status', 'archived')
@@ -334,7 +333,7 @@ export function useChildThemes(parentId: string | null) {
   return useQuery<Theme[], Error>({
     queryKey: [THEMES_QUERY_KEY, 'children', parentId],
     queryFn: async () => {
-      let extQuery = supabase.from('themes').select('*').order('sort_order').order('category_code')
+      let extQuery = supabase.from('themes').select('id, category_code, hierarchy_level, parent_theme_id, icon, color, is_standard, sort_order').order('sort_order').order('category_code')
 
       if (parentId === null) {
         extQuery = extQuery.is('parent_theme_id', null)
@@ -355,8 +354,7 @@ export function useChildThemes(parentId: string | null) {
       // Get corresponding dossiers
       const themeIds = themeExts.map((t) => t.id)
       const { data: dossiers, error: dossierError } = await supabase
-        .from('dossiers')
-        .select('*')
+        .from('dossiers').select('id, type, name_en, name_ar, description_en, description_ar, status, created_at, updated_at')
         .in('id', themeIds)
         .eq('type', 'theme')
         .neq('status', 'archived')
@@ -592,8 +590,7 @@ export function useUpdateTheme() {
       } else {
         // Fetch existing extension
         const { data: existingExt } = await supabase
-          .from('themes')
-          .select('*')
+          .from('themes').select('id, category_code, hierarchy_level, parent_theme_id, icon, color, is_standard, sort_order')
           .eq('id', id)
           .single()
         themeExt = existingExt

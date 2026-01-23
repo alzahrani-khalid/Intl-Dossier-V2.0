@@ -232,7 +232,9 @@ export function useDuplicateSettings() {
     queryFn: async (): Promise<DuplicateDetectionSettings[]> => {
       const { data, error } = await supabase
         .from('duplicate_detection_settings')
-        .select('*')
+        .select(
+          'id, entity_type, similarity_threshold, auto_merge_threshold, enabled_detection_methods, is_active, created_at, updated_at',
+        )
         .order('entity_type')
 
       if (error) throw new Error(error.message)

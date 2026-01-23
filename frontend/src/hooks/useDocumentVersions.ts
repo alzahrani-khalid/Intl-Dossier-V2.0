@@ -309,8 +309,7 @@ export function useDocumentVersion(documentId: string, versionNumber: number) {
     queryKey: ['document-version', documentId, versionNumber],
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('document_versions')
-        .select('*')
+        .from('document_versions').select('id, document_id, version_number, file_path, file_name, mime_type, size_bytes, hash, version_notes, created_by, created_at')
         .eq('document_id', documentId)
         .eq('version_number', versionNumber)
         .single()

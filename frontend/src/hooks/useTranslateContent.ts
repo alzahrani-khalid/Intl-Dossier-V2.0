@@ -399,7 +399,9 @@ export function useTranslationPreferences() {
 
       const { data, error: fetchError } = await supabase
         .from('translation_preferences')
-        .select('*')
+        .select(
+          'id, user_id, auto_translate, preferred_source_language, preferred_target_language, glossary_enabled, created_at, updated_at',
+        )
         .eq('user_id', user.id)
         .single()
 
@@ -485,8 +487,7 @@ export function useTranslationGlossary(
       const column = sourceLanguage === 'en' ? 'term_en' : 'term_ar'
 
       const { data, error: fetchError } = await supabase
-        .from('translation_glossary')
-        .select('*')
+        .from('translation_glossary').select('id, term_en, term_ar, category, context, approved_by, created_at, updated_at')
         .ilike(column, `%${searchText}%`)
         .order('priority', { ascending: false })
         .limit(10)

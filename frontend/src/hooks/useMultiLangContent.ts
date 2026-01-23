@@ -38,8 +38,7 @@ export function useSupportedLanguages() {
     queryKey: multiLangContentKeys.languages(),
     queryFn: async () => {
       const { data, error } = await supabase
-        .from('supported_languages')
-        .select('*')
+        .from('supported_languages').select('code, name_en, name_native, is_rtl, is_enabled, display_order, flag_emoji')
         .eq('is_enabled', true)
         .order('display_order')
 
@@ -98,8 +97,7 @@ export function useMultiLangContent({
 
       // Get language settings
       const { data: settings, error: settingsError } = await supabase
-        .from('entity_language_settings')
-        .select('*')
+        .from('entity_language_settings').select('id, entity_type, entity_id, primary_language, enabled_languages, auto_translate, created_at, updated_at')
         .eq('entity_type', entityType)
         .eq('entity_id', entityId)
         .maybeSingle()

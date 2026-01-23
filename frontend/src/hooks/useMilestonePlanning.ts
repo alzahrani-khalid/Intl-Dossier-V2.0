@@ -109,9 +109,11 @@ export function useMilestonePlanning({
   } = useQuery({
     queryKey,
     queryFn: async (): Promise<PlannedMilestone[]> => {
-      const { data, error } = await supabase
+      const { data, error} = await supabase
         .from('planned_milestones')
-        .select('*')
+        .select(
+          'id, dossier_id, dossier_type, milestone_type, title_en, title_ar, description_en, description_ar, target_date, target_time, end_date, status, priority, assigned_to, dependencies, reminders, completion_notes, completed_at, completed_by, converted_to_event, converted_at, created_at, updated_at',
+        )
         .eq('dossier_id', dossierId)
         .order('target_date', { ascending: true })
 
@@ -266,7 +268,9 @@ export function useMilestonePlanning({
       // Get the milestone first
       const { data: milestone, error: fetchError } = await supabase
         .from('planned_milestones')
-        .select('*')
+        .select(
+          'id, dossier_id, dossier_type, milestone_type, title_en, title_ar, description_en, description_ar, target_date, target_time, end_date, status, priority, assigned_to, dependencies, reminders, completion_notes, completed_at, completed_by, converted_to_event, converted_at, created_at, updated_at',
+        )
         .eq('id', milestoneId)
         .single()
 

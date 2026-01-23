@@ -405,7 +405,9 @@ export function useComplianceExemptions(
     queryFn: async () => {
       let query = supabase
         .from('compliance_exemptions')
-        .select('*')
+        .select(
+          'id, rule_id, entity_type, entity_id, exemption_reason, granted_by, granted_at, expires_at, is_active, created_at, updated_at',
+        )
         .order('granted_at', { ascending: false })
 
       if (params.rule_id) {
@@ -512,8 +514,7 @@ export function useBlockingViolations(
       if (!entityId) return []
 
       const { data, error } = await supabase
-        .from('compliance_violations')
-        .select('*')
+        .from('compliance_violations').select('id, rule_id, entity_type, entity_id, dossier_id, severity, status, detected_at, resolved_at, resolution_notes, created_at, updated_at')
         .eq('entity_type', entityType)
         .eq('entity_id', entityId)
         .eq('severity', 'blocking')

@@ -74,7 +74,7 @@ async function fetchQueueItems(options: {
 
   let query = supabase
     .from('embedding_update_queue')
-    .select('*')
+    .select('id, entity_type, entity_id, priority, created_at, retry_count, error_message')
     .is('processed_at', null)
     .order('priority', { ascending: true })
     .order('created_at', { ascending: true })
@@ -149,7 +149,7 @@ export function useIsEntityInEmbeddingQueue(
     queryFn: async () => {
       const { data, error } = await supabase
         .from('embedding_update_queue')
-        .select('*')
+        .select('id, entity_type, entity_id, priority, created_at, retry_count, error_message')
         .eq('entity_type', entityType)
         .eq('entity_id', entityId)
         .is('processed_at', null)

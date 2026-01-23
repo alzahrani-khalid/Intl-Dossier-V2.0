@@ -43,7 +43,9 @@ export function useBilateralAgreements({
     queryFn: async (): Promise<BilateralAgreement[]> => {
       const { data, error } = await supabase
         .from('mous')
-        .select('*')
+        .select(
+          'id, reference_number, title, title_ar, type, mou_category, lifecycle_state, effective_date, expiry_date, description, dates, parties, country_id, organization_id',
+        )
         .eq('country_id', countryId)
         .eq('is_deleted', false)
         .order('effective_date', { ascending: false, nullsFirst: false });

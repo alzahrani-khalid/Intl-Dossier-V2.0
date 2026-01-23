@@ -494,7 +494,9 @@ async function buildLocalDocumentPreview(
 ): Promise<ImportPreviewResponse> {
   const { data: documents, error } = await supabase
     .from('documents')
-    .select('*')
+    .select(
+      'id, file_name, file_path, mime_type, size_bytes, entity_type, entity_id, uploaded_by, uploaded_at, created_at, updated_at',
+    )
     .neq('entity_id', request.entityId)
     .limit(request.limit || 50)
     .order('uploaded_at', { ascending: false })

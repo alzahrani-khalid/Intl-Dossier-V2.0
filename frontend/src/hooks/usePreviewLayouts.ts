@@ -83,8 +83,7 @@ async function fetchEntityLayouts(
  */
 async function fetchLayoutWithFields(layoutId: string): Promise<PreviewLayout | null> {
   const { data: layout, error: layoutError } = await supabase
-    .from('entity_preview_layouts')
-    .select('*')
+    .from('entity_preview_layouts').select('id, entity_type, context, name_en, name_ar, description_en, description_ar, is_default, layout_config, created_at, updated_at')
     .eq('id', layoutId)
     .single()
 
@@ -97,7 +96,9 @@ async function fetchLayoutWithFields(layoutId: string): Promise<PreviewLayout | 
 
   const { data: fields, error: fieldsError } = await supabase
     .from('preview_layout_fields')
-    .select('*')
+    .select(
+      'id, layout_id, field_name, field_type, label_en, label_ar, is_visible, is_required, sort_order, width, formatting, created_at, updated_at',
+    )
     .eq('layout_id', layoutId)
     .order('sort_order')
 
