@@ -41,7 +41,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { useAuthStore } from '@/store/authStore';
+import { useAuthStore, type AuthUser } from '@/store/authStore';
 import { navigationCategories, type NavigationCategory, type NavigationItem } from '@/components/modern-nav/navigationData';
 import { cn } from '@/lib/utils';
 
@@ -121,7 +121,7 @@ export function MainLayoutAceternity({ children }: MainLayoutAceternityProps) {
  * Mobile-first, RTL-ready sidebar with navigation categories
  */
 interface AppSidebarProps {
-  user: any;
+  user: AuthUser | null;
   onLogout: () => void;
   navigationCategories: NavigationCategory[];
 }

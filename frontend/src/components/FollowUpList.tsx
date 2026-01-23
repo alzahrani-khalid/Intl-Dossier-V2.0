@@ -47,7 +47,7 @@ export function FollowUpList({ followUpActions, onChange, readOnly = false }: Fo
  onChange(followUpActions.filter((_, i) => i !== index));
  };
 
- const updateFollowUp = (index: number, field: keyof FollowUpAction, value: any) => {
+ const updateFollowUp = (index: number, field: keyof FollowUpAction, value: string | Date | boolean | undefined) => {
  const updated = [...followUpActions];
  updated[index] = { ...updated[index], [field]: value };
  onChange(updated);

@@ -7,7 +7,7 @@ import { Label } from './ui/label'
 import { Progress } from './ui/progress'
 import { Badge } from './ui/badge'
 import { Loader2, FileText, AlertCircle, CheckCircle, Clock } from 'lucide-react'
-import type { Brief, BriefTemplate } from '../types/dossier'
+import type { Brief, BriefTemplate, BriefContent } from '../types/dossier'
 
 interface BriefGeneratorProps {
   dossierId: string
@@ -17,7 +17,7 @@ interface BriefGeneratorProps {
   error?: string | null
   fallbackTemplate?: BriefTemplate | null
   onGenerate: (dateRangeStart?: string, dateRangeEnd?: string) => void
-  onSubmitManual?: (content: { en: any; ar: any }) => void
+  onSubmitManual?: (content: { en: BriefContent; ar: BriefContent }) => void
 }
 
 type GenerationState = 'idle' | 'generating' | 'success' | 'error' | 'fallback' | 'timeout'

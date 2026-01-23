@@ -24,11 +24,12 @@ import { History, Eye, Loader2, AlertCircle } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import * as diff from 'deep-diff';
+import type { JsonObject, JsonValue } from '@/types/common.types';
 
 interface Version {
  id: string;
  version_number: number;
- content: Record<string, any>;
+ content: JsonObject;
  change_summary?: string;
  changed_by: {
  id: string;
@@ -50,10 +51,10 @@ type DiffKind = 'N' | 'D' | 'E' | 'A';
 interface DiffItem {
  kind: DiffKind;
  path: (string | number)[];
- lhs?: any;
- rhs?: any;
+ lhs?: JsonValue;
+ rhs?: JsonValue;
  index?: number;
- item?: any;
+ item?: JsonValue;
 }
 
 export function VersionHistoryViewer({
@@ -109,7 +110,7 @@ export function VersionHistoryViewer({
  return (diff.diff(version1.content, version2.content) || []) as DiffItem[];
  };
 
- const renderDiffValue = (value: any): string => {
+ const renderDiffValue = (value: JsonValue | undefined): string => {
  if (value === null || value === undefined) return 'null';
  if (typeof value === 'object') return JSON.stringify(value, null, 2);
  return String(value);
