@@ -35,7 +35,169 @@ import type {
   DossierDocumentType,
 } from '@/types/dossier-overview.types'
 import type { DossierType } from '@/services/dossier-api'
+import type { DatabaseRow, JsonValue } from '@/types/common.types'
 import { fetchUnifiedDossierActivities } from './unified-dossier-activity.service'
+
+// =============================================================================
+// Database Row Types
+// =============================================================================
+
+interface DossierRelationshipRow extends DatabaseRow {
+  id: string
+  relationship_type: string
+  effective_from: string | null
+  effective_to: string | null
+  notes_en: string | null
+  notes_ar: string | null
+  created_at: string
+  target_dossier?: DossierBasicRow
+  source_dossier?: DossierBasicRow
+}
+
+interface DossierBasicRow extends DatabaseRow {
+  id: string
+  name_en: string
+  name_ar: string | null
+  type: string
+  status: string
+}
+
+interface PositionLinkRow extends DatabaseRow {
+  position: PositionRow | null
+}
+
+interface PositionRow extends DatabaseRow {
+  id: string
+  title_en: string | null
+  title_ar: string | null
+  status: string
+  classification?: string | null
+  created_at: string
+  updated_at: string
+}
+
+interface MouRow extends DatabaseRow {
+  id: string
+  title: string
+  status: string
+  created_at: string
+  updated_at: string
+}
+
+interface BriefRow extends DatabaseRow {
+  id: string
+  content_en: JsonValue | null
+  content_ar: JsonValue | null
+  generated_by: string | null
+  generated_at: string
+  is_template: boolean
+}
+
+interface AttachmentRow extends DatabaseRow {
+  id: string
+  file_name: string
+  file_path: string
+  mime_type: string
+  size_bytes: number
+  classification: string | null
+  uploaded_at: string
+}
+
+interface WorkItemLinkRow extends DatabaseRow {
+  work_item_type: string
+  work_item_id: string
+  inheritance_source: string
+}
+
+interface TaskRow extends DatabaseRow {
+  id: string
+  title_en: string | null
+  title: string | null
+  title_ar: string | null
+  description_en: string | null
+  description: string | null
+  description_ar: string | null
+  status: string
+  priority: string | null
+  deadline: string | null
+  assignee_id: string | null
+  assignee?: {
+    full_name: string
+  }
+  created_at: string
+  updated_at: string
+}
+
+interface CommitmentRow extends DatabaseRow {
+  id: string
+  title_en: string | null
+  title: string | null
+  title_ar: string | null
+  description_en: string | null
+  description: string | null
+  description_ar: string | null
+  status: string
+  priority: string | null
+  deadline: string | null
+  responsible_user_id: string | null
+  created_at: string
+  updated_at: string
+}
+
+interface IntakeRow extends DatabaseRow {
+  id: string
+  subject: string | null
+  title_en: string | null
+  title_ar: string | null
+  description: string | null
+  description_ar: string | null
+  status: string
+  priority: string | null
+  sla_deadline: string | null
+  assigned_to_id: string | null
+  assigned_to?: {
+    full_name: string
+  }
+  created_at: string
+  updated_at: string
+}
+
+interface CalendarEventRow extends DatabaseRow {
+  id: string
+  title_en: string | null
+  title: string | null
+  title_ar: string | null
+  event_type: string | null
+  start_datetime: string
+  end_datetime: string | null
+  is_all_day: boolean | null
+  location_en: string | null
+  location: string | null
+  location_ar: string | null
+  is_virtual: boolean | null
+  meeting_link: string | null
+  description_en: string | null
+  description: string | null
+  description_ar: string | null
+  created_at: string
+}
+
+interface KeyContactRow extends DatabaseRow {
+  id: string
+  name: string
+  name_ar: string | null
+  role: string | null
+  title_en: string | null
+  title_ar: string | null
+  organization: string | null
+  organization_ar: string | null
+  email: string | null
+  phone: string | null
+  photo_url: string | null
+  last_interaction_date: string | null
+  notes: string | null
+  linked_person_dossier_id: string | null
+}
 
 // =============================================================================
 // API Error
@@ -154,7 +316,7 @@ async function fetchRelatedDossiers(dossierId: string): Promise<RelatedDossiersS
   const allRelated: RelatedDossier[] = []
 
   // Process outgoing
-  ;(outgoing || []).forEach((rel: any) => {
+  ;(outgoing || []).forEach((rel: DossierRelationshipRow) => {
     if (rel.target_dossier) {
       allRelated.push({
         id: rel.target_dossier.id,
@@ -175,7 +337,7 @@ async function fetchRelatedDossiers(dossierId: string): Promise<RelatedDossiersS
   })
 
   // Process incoming
-  ;(incoming || []).forEach((rel: any) => {
+  ;(incoming || []).forEach((rel: DossierRelationshipRow) => {
     if (rel.source_dossier) {
       allRelated.push({
         id: rel.source_dossier.id,
@@ -253,8 +415,8 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
 
   // Extract positions from links
   const positions = (positionLinks || [])
-    .map((link: any) => link.position)
-    .filter((p: any) => p !== null)
+    .map((link: PositionLinkRow) => link.position)
+    .filter((p: PositionRow | null): p is PositionRow => p !== null)
 
   // Fetch MOUs where this dossier is a signatory
   const { data: mous1 } = await supabase
@@ -271,8 +433,8 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
 
   // Combine MOUs (avoid duplicates)
   const mouIds = new Set<string>()
-  const mous: any[] = []
-  ;[...(mous1 || []), ...(mous2 || [])].forEach((m: any) => {
+  const mous: MouRow[] = []
+  ;[...(mous1 || []), ...(mous2 || [])].forEach((m: MouRow) => {
     if (!mouIds.has(m.id)) {
       mouIds.add(m.id)
       mous.push(m)
@@ -287,9 +449,9 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
 
   // Note: Generic documents/attachments table doesn't exist in expected format
   // Attachments are linked to after_action_records, not directly to dossiers
-  const attachments: any[] = []
+  const attachments: AttachmentRow[] = []
 
-  const positionDocs: DossierDocument[] = (positions || []).map((p: any) => ({
+  const positionDocs: DossierDocument[] = (positions || []).map((p: PositionRow) => ({
     id: p.id,
     title_en: p.title_en || 'Untitled Position',
     title_ar: p.title_ar,
@@ -305,7 +467,7 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     created_by_name: null,
   }))
 
-  const mouDocs: DossierDocument[] = (mous || []).map((m: any) => ({
+  const mouDocs: DossierDocument[] = (mous || []).map((m: MouRow) => ({
     id: m.id,
     title_en: m.title || 'Untitled MOU',
     title_ar: m.title, // MOU table uses single 'title' column
@@ -321,23 +483,32 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     created_by_name: null,
   }))
 
-  const briefDocs: DossierDocument[] = (briefs || []).map((b: any) => ({
-    id: b.id,
-    title_en: b.content_en?.summary?.substring(0, 50) || 'Brief',
-    title_ar: b.content_ar?.summary?.substring(0, 50) || null,
-    document_type: 'brief' as DossierDocumentType,
-    file_name: null,
-    file_path: null,
-    mime_type: null,
-    size_bytes: null,
-    status: b.is_template ? 'template' : 'active',
-    classification: null,
-    created_at: b.generated_at,
-    updated_at: b.generated_at,
-    created_by_name: null,
-  }))
+  const briefDocs: DossierDocument[] = (briefs || []).map((b: BriefRow) => {
+    const contentEn = b.content_en && typeof b.content_en === 'object' && 'summary' in b.content_en
+      ? String(b.content_en.summary).substring(0, 50)
+      : 'Brief'
+    const contentAr = b.content_ar && typeof b.content_ar === 'object' && 'summary' in b.content_ar
+      ? String(b.content_ar.summary).substring(0, 50)
+      : null
 
-  const attachmentDocs: DossierDocument[] = (attachments || []).map((a: any) => ({
+    return {
+      id: b.id,
+      title_en: contentEn,
+      title_ar: contentAr,
+      document_type: 'brief' as DossierDocumentType,
+      file_name: null,
+      file_path: null,
+      mime_type: null,
+      size_bytes: null,
+      status: b.is_template ? 'template' : 'active',
+      classification: null,
+      created_at: b.generated_at,
+      updated_at: b.generated_at,
+      created_by_name: null,
+    }
+  })
+
+  const attachmentDocs: DossierDocument[] = (attachments || []).map((a: AttachmentRow) => ({
     id: a.id,
     title_en: a.file_name,
     title_ar: null,
@@ -379,7 +550,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
   const intakeIds: string[] = []
   const linkMap: Record<string, string> = {}
 
-  ;(links || []).forEach((link: any) => {
+  ;(links || []).forEach((link: WorkItemLinkRow) => {
     linkMap[link.work_item_id] = link.inheritance_source
     if (link.work_item_type === 'task') taskIds.push(link.work_item_id)
     else if (link.work_item_type === 'commitment') commitmentIds.push(link.work_item_id)
@@ -397,7 +568,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       .in('id', taskIds)
       .limit(limit)
 
-    ;(tasks || []).forEach((t: any) => {
+    ;(tasks || []).forEach((t: TaskRow) => {
       const isOverdue =
         t.deadline &&
         new Date(t.deadline) < now &&
@@ -430,7 +601,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       .in('id', commitmentIds)
       .limit(limit)
 
-    ;(commitments || []).forEach((c: any) => {
+    ;(commitments || []).forEach((c: CommitmentRow) => {
       const isOverdue =
         c.deadline &&
         new Date(c.deadline) < now &&
@@ -463,7 +634,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       .in('id', intakeIds)
       .limit(limit)
 
-    ;(intakes || []).forEach((i: any) => {
+    ;(intakes || []).forEach((i: IntakeRow) => {
       const isOverdue =
         i.sla_deadline &&
         new Date(i.sla_deadline) < now &&
@@ -538,7 +709,7 @@ async function fetchCalendarEvents(
   const todayEnd = new Date(todayStart)
   todayEnd.setDate(todayEnd.getDate() + 1)
 
-  const allEvents: DossierCalendarEvent[] = (events || []).map((e: any) => ({
+  const allEvents: DossierCalendarEvent[] = (events || []).map((e: CalendarEventRow) => ({
     id: e.id,
     title_en: e.title_en || e.title,
     title_ar: e.title_ar,
@@ -577,7 +748,7 @@ async function fetchKeyContacts(dossierId: string): Promise<KeyContactsSection> 
     .eq('dossier_id', dossierId)
     .order('name', { ascending: true })
 
-  const allContacts: DossierKeyContact[] = (contacts || []).map((c: any) => ({
+  const allContacts: DossierKeyContact[] = (contacts || []).map((c: KeyContactRow) => ({
     id: c.id,
     name: c.name,
     name_ar: c.name_ar,
@@ -695,8 +866,27 @@ export async function fetchDossierOverview(
         ? fetchRelatedDossiers(dossier_id)
         : Promise.resolve({
             total_count: 0,
-            by_relationship_type: {} as any,
-            by_dossier_type: {} as any,
+            by_relationship_type: {
+              parent: [],
+              child: [],
+              bilateral: [],
+              member_of: [],
+              has_member: [],
+              partner: [],
+              related_to: [],
+              predecessor: [],
+              successor: [],
+            } as Record<DossierRelationshipType, RelatedDossier[]>,
+            by_dossier_type: {
+              country: [],
+              organization: [],
+              forum: [],
+              engagement: [],
+              topic: [],
+              working_group: [],
+              person: [],
+              elected_official: [],
+            } as Record<DossierType, RelatedDossier[]>,
           }),
       include_sections.includes('documents')
         ? fetchDocuments(dossier_id)
