@@ -38,7 +38,7 @@ export const useCreateRelationship = createMutation<
   },
   transformBody: (input) => {
     // Exclude parent_dossier_id from body since it's in query params
-    const { parent_dossier_id, ...body } = input;
+    const { parent_dossier_id: _parent_dossier_id, ...body } = input;
     return body;
   },
 });

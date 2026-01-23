@@ -28,5 +28,5 @@ export const useUpdateCalendarEvent = createMutation<UpdateCalendarEventInput, u
   invalidation: {
     queryKeys: [['calendar-events']],
   },
-  transformBody: ({ entryId, ...updates }) => updates,
+  transformBody: ({ entryId: _entryId, ...updates }) => updates,
 });

@@ -88,7 +88,7 @@ export function useUpdateWorkflowStage() {
             if (!old) return old;
 
             // Find and move assignment to new column
-            let assignmentToMove: any = null;
+            let assignmentToMove: typeof old.columns.todo.assignments[0] | null = null;
             const newColumns = { ...old.columns };
 
             // Find assignment in all columns

@@ -79,7 +79,7 @@ export const useCreateWorkItemDossierLinks = createMutation<
     endpoint: 'work-item-dossiers',
   },
   invalidation: {
-    queryKeys: (variables, data) => {
+    queryKeys: (variables, _data) => {
       // Build array of query keys to invalidate
       const keys = [
         // Invalidate the specific work item's dossier links
