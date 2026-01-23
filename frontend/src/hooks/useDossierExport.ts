@@ -1,9 +1,63 @@
 /**
  * useDossierExport Hook
- * Feature: dossier-export-pack
+ * @module hooks/useDossierExport
+ * @feature dossier-export-pack
  *
- * React hook for managing dossier export operations.
- * Handles export state, progress tracking, and file download.
+ * React hook for managing dossier export operations with progress tracking,
+ * multiple format support, and automatic file download.
+ *
+ * @description
+ * This hook provides a stateful interface for exporting dossiers to various
+ * formats (PDF, DOCX, HTML) with real-time progress tracking and callbacks.
+ *
+ * Features:
+ * - Multi-format export (PDF, DOCX, HTML)
+ * - Real-time progress tracking through 5 stages
+ * - Configurable section inclusion
+ * - Automatic file download on completion
+ * - Error handling with bilingual messages
+ * - Lifecycle callbacks (onStart, onProgress, onSuccess, onError)
+ * - Quick export helper for default settings
+ *
+ * Export stages:
+ * 1. preparing (10%) - Initializing export
+ * 2. fetching (25%) - Fetching dossier data
+ * 3. generating (50%) - Generating document
+ * 4. uploading (80%) - Finalizing export
+ * 5. ready (100%) - Export complete, file downloaded
+ *
+ * @example
+ * // Basic usage with progress tracking
+ * const {
+ *   exportDossier,
+ *   isExporting,
+ *   progress,
+ *   error,
+ * } = useDossierExport({
+ *   onProgress: (p) => console.log(`${p.progress}%: ${p.message_en}`),
+ *   onSuccess: () => toast.success('Export complete!'),
+ * });
+ *
+ * // Trigger export
+ * await exportDossier(dossierId, {
+ *   format: 'pdf',
+ *   sections: ['overview', 'timeline', 'documents'],
+ * });
+ *
+ * @example
+ * // Quick export with defaults
+ * const { quickExport } = useDossierExport();
+ * await quickExport(dossierId, 'pdf');
+ *
+ * @example
+ * // With full config
+ * const { exportDossier } = useDossierExport();
+ * await exportDossier(dossierId, {
+ *   format: 'docx',
+ *   language: 'ar',
+ *   include_toc: true,
+ *   sections: ['overview', 'timeline', 'positions', 'documents'],
+ * });
  */
 
 import { useState, useCallback } from 'react'
@@ -22,7 +76,32 @@ import {
 } from '@/services/dossier-export.service'
 
 /**
- * Hook for managing dossier export operations
+ * Hook for managing dossier export operations with progress tracking
+ *
+ * @description
+ * Manages the full lifecycle of a dossier export operation including state
+ * management, progress tracking, and file download. Returns functions to
+ * trigger exports and state for UI updates.
+ *
+ * @param options - Hook configuration options
+ * @param options.onStart - Callback fired when export starts
+ * @param options.onProgress - Callback fired on progress updates
+ * @param options.onSuccess - Callback fired on successful export
+ * @param options.onError - Callback fired on export error
+ * @returns Export functions and current state
+ *
+ * @example
+ * // With progress display
+ * const { exportDossier, progress, isExporting } = useDossierExport({
+ *   onProgress: (p) => setProgressPercent(p.progress),
+ * });
+ *
+ * return (
+ *   <div>
+ *     {isExporting && <ProgressBar value={progress?.progress} />}
+ *     <Button onClick={() => exportDossier(id)}>Export</Button>
+ *   </div>
+ * );
  */
 export function useDossierExport(options: UseDossierExportOptions = {}): UseDossierExportReturn {
   const { onStart, onProgress, onSuccess, onError } = options
@@ -32,7 +111,10 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
   const [progress, setProgress] = useState<DossierExportProgress | null>(null)
   const [error, setError] = useState<Error | null>(null)
 
-  // Update progress helper
+  /**
+   * Update progress helper
+   * @internal
+   */
   const updateProgress = useCallback(
     (partialProgress: Partial<DossierExportProgress>) => {
       setProgress((prev) => {
@@ -50,7 +132,19 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
     [onProgress],
   )
 
-  // Main export function
+  /**
+   * Main export function with progress tracking
+   *
+   * @description
+   * Exports a dossier with the specified configuration. Tracks progress through
+   * 5 stages and automatically downloads the file on completion. Supports both
+   * download URL and base64 content fallback.
+   *
+   * @param dossierId - UUID of the dossier to export
+   * @param config - Optional export configuration (merged with defaults)
+   * @returns Promise resolving to the export response
+   * @throws Error if export fails at any stage
+   */
   const exportDossier = useCallback(
     async (
       dossierId: string,
@@ -165,7 +259,21 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
     [onStart, onSuccess, onError, updateProgress],
   )
 
-  // Quick export with default settings
+  /**
+   * Quick export with default settings
+   *
+   * @description
+   * Convenience function for exporting with default configuration. Only requires
+   * dossier ID and format. All other settings use system defaults.
+   *
+   * @param dossierId - UUID of the dossier to export
+   * @param format - Export format (default: 'pdf')
+   * @returns Promise resolving to the export response
+   *
+   * @example
+   * const { quickExport } = useDossierExport();
+   * await quickExport(dossierId, 'pdf');
+   */
   const quickExport = useCallback(
     async (
       dossierId: string,
@@ -176,7 +284,13 @@ export function useDossierExport(options: UseDossierExportOptions = {}): UseDoss
     [exportDossier],
   )
 
-  // Reset state
+  /**
+   * Reset export state
+   *
+   * @description
+   * Clears all export state including progress, errors, and loading flags.
+   * Useful for resetting after an export completes or fails.
+   */
   const reset = useCallback(() => {
     setIsExporting(false)
     setProgress(null)

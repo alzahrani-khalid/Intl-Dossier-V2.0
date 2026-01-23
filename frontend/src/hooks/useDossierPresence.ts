@@ -1,12 +1,65 @@
 /**
  * useDossierPresence Hook
- * Feature: realtime-collaboration-indicators
+ * @module hooks/useDossierPresence
+ * @feature realtime-collaboration-indicators
  *
- * Enhanced presence tracking for dossier pages with:
- * - Active viewers tracking
- * - Editing status (viewing vs editing)
- * - Typing indicators
- * - Section-level editing locks
+ * Real-time presence tracking for collaborative dossier editing with active
+ * viewer tracking, editing status, section-level locks, and automatic idle detection.
+ *
+ * @description
+ * This hook provides comprehensive presence tracking for dossier pages using
+ * Supabase Realtime channels. It enables:
+ *
+ * - Active viewer tracking with real-time updates
+ * - User status indicators (viewing, editing, idle)
+ * - Section-level editing locks to prevent conflicts
+ * - Automatic idle detection after inactivity
+ * - Deterministic user color assignment
+ * - Activity tracking through mouse, keyboard, and scroll events
+ *
+ * Features:
+ * - Automatic idle timeout (default: 30 seconds)
+ * - Section-specific editing indicators
+ * - Viewer count excluding current user
+ * - Editor filtering for collaborative workflows
+ * - Optional debug logging
+ * - Automatic cleanup on unmount
+ *
+ * @example
+ * // Basic usage
+ * const {
+ *   viewers,
+ *   editors,
+ *   viewerCount,
+ *   isConnected,
+ *   setStatus,
+ * } = useDossierPresence(dossierId);
+ *
+ * @example
+ * // With section editing
+ * const {
+ *   sectionLocks,
+ *   setEditingSection,
+ * } = useDossierPresence(dossierId, {
+ *   editingSection: 'overview',
+ *   idleTimeout: 60000, // 1 minute
+ * });
+ *
+ * @example
+ * // Display active viewers
+ * const { viewers } = useDossierPresence(dossierId);
+ * return (
+ *   <div>
+ *     {viewers.map(viewer => (
+ *       <Avatar
+ *         key={viewer.user_id}
+ *         name={viewer.name}
+ *         color={viewer.color}
+ *         status={viewer.status}
+ *       />
+ *     ))}
+ *   </div>
+ * );
  */
 
 import { useEffect, useState, useCallback, useRef } from 'react'
@@ -14,19 +67,39 @@ import { supabase } from '@/lib/supabase'
 import { useAuth } from '@/contexts/auth.context'
 import type { RealtimeChannel } from '@supabase/supabase-js'
 
+/**
+ * User presence status
+ * - viewing: Actively viewing the dossier
+ * - editing: Currently editing content
+ * - idle: Inactive for idleTimeout duration
+ */
 export type PresenceStatus = 'viewing' | 'editing' | 'idle'
 
+/**
+ * Presence information for a user viewing/editing a dossier
+ */
 export interface DossierPresenceUser {
+  /** UUID of the user */
   user_id: string
+  /** Display name of the user */
   name: string
+  /** Email address of the user */
   email: string
+  /** Avatar URL (optional) */
   avatar?: string
+  /** Current presence status */
   status: PresenceStatus
+  /** Section ID being edited (if editing) */
   editing_section?: string
+  /** ISO timestamp of last activity */
   last_activity: string
+  /** Deterministic color assigned to user */
   color: string
 }
 
+/**
+ * Complete presence state for a dossier
+ */
 export interface DossierPresenceState {
   /** All users currently viewing/editing this dossier */
   viewers: DossierPresenceUser[]
@@ -42,6 +115,9 @@ export interface DossierPresenceState {
   viewerCount: number
 }
 
+/**
+ * Options for configuring presence tracking behavior
+ */
 export interface UseDossierPresenceOptions {
   /** Auto-set status to idle after inactivity (ms). Default: 30000 (30s) */
   idleTimeout?: number
@@ -51,7 +127,10 @@ export interface UseDossierPresenceOptions {
   debug?: boolean
 }
 
-// Predefined colors for user avatars (high contrast, accessible)
+/**
+ * Predefined colors for user avatars (high contrast, WCAG AA accessible)
+ * @internal
+ */
 const USER_COLORS = [
   '#2563eb', // Blue
   '#dc2626', // Red
@@ -63,6 +142,17 @@ const USER_COLORS = [
   '#4f46e5', // Indigo
 ]
 
+/**
+ * Get a deterministic color for a user based on their ID
+ *
+ * @description
+ * Uses a simple hash function to assign consistent colors to users.
+ * The same user will always get the same color across sessions.
+ *
+ * @param userId - UUID of the user
+ * @returns Hex color code
+ * @internal
+ */
 function getUserColor(userId: string): string {
   // Deterministic color based on user ID
   const hash = userId.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
@@ -71,6 +161,52 @@ function getUserColor(userId: string): string {
   return color !== undefined ? color : '#2563eb'
 }
 
+/**
+ * Hook for real-time presence tracking on dossier pages
+ *
+ * @description
+ * Establishes a Supabase Realtime channel for the dossier and tracks presence
+ * of all connected users. Automatically broadcasts presence updates and listens
+ * for changes from other users. Implements idle detection through activity monitoring.
+ *
+ * Presence lifecycle:
+ * 1. Channel subscription on mount
+ * 2. Broadcast initial presence
+ * 3. Listen for presence sync, join, leave events
+ * 4. Track user activity (mouse, keyboard, scroll)
+ * 5. Automatic idle timeout
+ * 6. Cleanup and unsubscribe on unmount
+ *
+ * @param dossierId - UUID of the dossier to track presence for
+ * @param options - Configuration options for presence tracking
+ * @param options.idleTimeout - Milliseconds before marking user as idle (default: 30000)
+ * @param options.editingSection - Current section being edited
+ * @param options.debug - Enable debug console logging
+ * @returns Presence state and control functions
+ *
+ * @example
+ * // Basic presence tracking
+ * const { viewers, viewerCount, isConnected } = useDossierPresence(dossierId);
+ *
+ * @example
+ * // With section editing
+ * const { sectionLocks, setEditingSection } = useDossierPresence(dossierId, {
+ *   editingSection: currentSection,
+ * });
+ *
+ * // Check if section is locked
+ * const isLocked = sectionLocks.has('overview');
+ *
+ * @example
+ * // Manual status control
+ * const { setStatus, touch } = useDossierPresence(dossierId);
+ *
+ * // Set editing status
+ * setStatus('editing');
+ *
+ * // Manually refresh activity
+ * touch();
+ */
 export function useDossierPresence(
   dossierId: string | undefined,
   options: UseDossierPresenceOptions = {},
@@ -379,6 +515,35 @@ export function useDossierPresence(
 
 /**
  * Check if a section is locked by another user
+ *
+ * @description
+ * Utility function to determine if a section is currently being edited by
+ * another user. Returns lock status and the user holding the lock.
+ *
+ * Note: If the current user holds the lock, it returns locked: false since
+ * the user can edit their own locked sections.
+ *
+ * @param sectionId - ID of the section to check
+ * @param sectionLocks - Map of section IDs to editing users
+ * @param currentUserId - UUID of the current user
+ * @returns Lock status and optional lock holder information
+ *
+ * @example
+ * // Check if section is locked
+ * const { locked, lockedBy } = isSectionLocked(
+ *   'overview',
+ *   sectionLocks,
+ *   currentUserId
+ * );
+ *
+ * if (locked) {
+ *   console.log(`Locked by ${lockedBy?.name}`);
+ * }
+ *
+ * @example
+ * // Disable editing for locked sections
+ * const { locked } = isSectionLocked(section.id, sectionLocks, userId);
+ * return <Editor disabled={locked} />;
  */
 export function isSectionLocked(
   sectionId: string,
