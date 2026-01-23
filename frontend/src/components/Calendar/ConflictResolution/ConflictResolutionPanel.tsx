@@ -7,6 +7,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
+import type { TFunction } from 'i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import {
   AlertTriangle,
@@ -203,7 +204,7 @@ interface ConflictItemProps {
   onResolve?: (conflictId: string) => void
   onGenerateSuggestions?: (conflictId?: string) => void
   isRTL: boolean
-  t: (key: string, options?: any) => string
+  t: TFunction
 }
 
 function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: ConflictItemProps) {

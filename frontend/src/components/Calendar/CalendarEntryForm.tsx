@@ -49,8 +49,9 @@ import {
 } from './ConflictResolution'
 import type { ParticipantConflictInfo } from './ConflictResolution'
 import { RecurrencePatternEditor } from './RecurrencePatternEditor'
-import type { ConflictCheckRequest } from '@/types/calendar-conflict.types'
+import type { ConflictCheckRequest, ReschedulingSuggestion } from '@/types/calendar-conflict.types'
 import type { CreateRecurrenceRuleInput } from '@/types/recurrence.types'
+import type { PersonExtension } from '@/types/person.types'
 
 interface CalendarEntryFormProps {
   entryId?: string
@@ -248,7 +249,7 @@ export function CalendarEntryForm({
   )
 
   // Apply a suggestion to the form
-  const handleAcceptSuggestion = useCallback((suggestion: any) => {
+  const handleAcceptSuggestion = useCallback((suggestion: ReschedulingSuggestion) => {
     if (suggestion.suggested_start) {
       // Convert ISO to datetime-local format
       const startDate = new Date(suggestion.suggested_start)
@@ -260,10 +261,10 @@ export function CalendarEntryForm({
 
     if (suggestion.suggested_end) {
       const endDate = new Date(suggestion.suggested_end)
-      const localEnd = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000)
+      const localStart = new Date(endDate.getTime() - endDate.getTimezoneOffset() * 60000)
         .toISOString()
         .slice(0, 16)
-      setEndDatetime(localEnd)
+      setEndDatetime(localStart)
     }
 
     if (suggestion.alternative_venue_en) {
@@ -282,7 +283,7 @@ export function CalendarEntryForm({
     }
 
     const eventData = {
-      entry_type: entryType as any,
+      entry_type: entryType,
       title_en: titleEn || undefined,
       title_ar: titleAr || undefined,
       description_en: descriptionEn || undefined,
@@ -558,6 +559,7 @@ export function CalendarEntryForm({
                     {personDossiers.map((person) => {
                       const displayName = isRTL ? person.name_ar : person.name_en
                       const isSelected = participants.some((p) => p.participant_id === person.id)
+                      const personExtension = person.extension as PersonExtension | undefined
 
                       return (
                         <CommandItem
@@ -571,7 +573,7 @@ export function CalendarEntryForm({
                                   participant_type: 'person_dossier',
                                   participant_id: person.id,
                                   participant_name: displayName || person.id,
-                                  participant_photo: (person.extension as any)?.photo_url,
+                                  participant_photo: personExtension?.photo_url,
                                 },
                               ])
                             }
@@ -580,10 +582,10 @@ export function CalendarEntryForm({
                           disabled={isSelected}
                         >
                           <div className="flex items-center gap-2 flex-1">
-                            {(person.extension as any)?.photo_url ? (
+                            {personExtension?.photo_url ? (
                               <Avatar className="h-6 w-6">
                                 <AvatarImage
-                                  src={(person.extension as any).photo_url}
+                                  src={personExtension.photo_url}
                                   alt={displayName || ''}
                                 />
                                 <AvatarFallback className="text-xs">
@@ -597,9 +599,9 @@ export function CalendarEntryForm({
                             )}
                             <div className="flex flex-col">
                               <span className="text-sm">{displayName}</span>
-                              {(person.extension as any)?.title && (
+                              {personExtension?.title_en && (
                                 <span className="text-xs text-muted-foreground">
-                                  {(person.extension as any).title}
+                                  {isRTL ? personExtension.title_ar || personExtension.title_en : personExtension.title_en}
                                 </span>
                               )}
                             </div>
