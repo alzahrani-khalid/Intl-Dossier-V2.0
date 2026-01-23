@@ -1,9 +1,8 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useLocation, useNavigate } from '@tanstack/react-router'
-import { LogOut, User, Menu } from 'lucide-react'
+import { LogOut, User, Menu, ArrowLeft } from 'lucide-react'
 import { motion, AnimatePresence } from 'motion/react'
-import { IconArrowNarrowLeft } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 import { useAuth } from '@/contexts/auth.context'
 import { useWorkQueueCounts } from '@/hooks/useWorkQueueCounts'
@@ -231,7 +230,7 @@ export function ProCollapsibleSidebar({
                 : t('sidebar.expand', 'Expand sidebar')
             }
           >
-            <IconArrowNarrowLeft className="h-5 w-5 sm:h-4 sm:w-4 text-sidebar-foreground/80 hover:text-sidebar-foreground" />
+            <ArrowLeft className="h-5 w-5 sm:h-4 sm:w-4 text-sidebar-foreground/80 hover:text-sidebar-foreground" />
           </button>
         )}
 
