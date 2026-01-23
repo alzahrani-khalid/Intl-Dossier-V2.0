@@ -95,6 +95,14 @@ export interface MutationConfig<TInput, TResponse> {
 
 /**
  * Build complete URL with query parameters
+ *
+ * Constructs the full URL for the mutation request by combining the base
+ * Supabase Edge Function URL with the endpoint path and optional query parameters.
+ *
+ * @template TInput - Type of the mutation input data
+ * @param config - URL configuration containing endpoint and optional query params
+ * @param input - The mutation input data (used for dynamic URL building)
+ * @returns Complete URL string ready for fetch request
  */
 function buildCompleteUrl<TInput>(
   config: MutationUrlConfig<TInput>,
@@ -131,6 +139,15 @@ function buildCompleteUrl<TInput>(
 
 /**
  * Build request headers with authentication
+ *
+ * Retrieves the current user session from Supabase and constructs request headers
+ * with the authentication token. Throws an error if the user is not authenticated.
+ *
+ * @template TInput - Type of the mutation input data
+ * @param config - Mutation configuration containing optional custom headers
+ * @param input - The mutation input data (used for dynamic header building)
+ * @returns Promise resolving to headers object with Authorization and Content-Type
+ * @throws {Error} If user is not authenticated (no active session)
  */
 async function buildHeaders<TInput>(
   config: MutationConfig<TInput, unknown>,
@@ -166,6 +183,17 @@ async function buildHeaders<TInput>(
 
 /**
  * Execute mutation request
+ *
+ * Orchestrates the complete mutation flow: builds URL, authenticates, transforms
+ * request body, executes fetch, and handles errors. This is the core function
+ * that performs the actual HTTP request to the Edge Function.
+ *
+ * @template TInput - Type of the mutation input data
+ * @template TResponse - Type of the expected response data
+ * @param config - Complete mutation configuration (method, URL, headers, etc.)
+ * @param input - The mutation input data to send in the request
+ * @returns Promise resolving to the response data from the server
+ * @throws {Error} If authentication fails, network error occurs, or server returns error response
  */
 async function executeMutation<TInput, TResponse>(
   config: MutationConfig<TInput, TResponse>,
@@ -206,6 +234,17 @@ async function executeMutation<TInput, TResponse>(
 
 /**
  * Get query keys to invalidate
+ *
+ * Resolves the query keys that should be invalidated after a successful mutation.
+ * Handles both static query key arrays and dynamic functions that compute keys
+ * based on mutation variables and response data.
+ *
+ * @template TInput - Type of the mutation input data
+ * @template TResponse - Type of the mutation response data
+ * @param config - Invalidation configuration with query keys
+ * @param variables - The mutation input variables that were used
+ * @param response - The response data returned from the mutation
+ * @returns Array of query keys to invalidate in TanStack Query cache
  */
 function getInvalidationKeys<TInput, TResponse>(
   config: InvalidationConfig<TInput, TResponse>,
@@ -221,11 +260,20 @@ function getInvalidationKeys<TInput, TResponse>(
 /**
  * Create a mutation hook using the factory pattern
  *
- * @param config - Mutation configuration
- * @param options - Optional TanStack Query mutation options
- * @returns TanStack Query mutation hook
+ * This is the primary factory function that generates type-safe TanStack Query
+ * mutation hooks with standardized behavior. It handles authentication, request
+ * execution, error handling, and automatic cache invalidation.
+ *
+ * The returned hook function can be used in React components and accepts optional
+ * TanStack Query mutation options for customization (onSuccess, onError, etc.).
+ *
+ * @template TInput - Type of the mutation input data
+ * @template TResponse - Type of the expected response data (defaults to unknown)
+ * @param config - Complete mutation configuration (method, URL, invalidation)
+ * @returns A React hook that returns a TanStack Query mutation result
  *
  * @example
+ * Basic POST mutation for creating a relationship:
  * ```ts
  * const useCreateRelationship = createMutation<CreateRelationshipInput, Relationship>({
  *   method: 'POST',
@@ -235,6 +283,28 @@ function getInvalidationKeys<TInput, TResponse>(
  *   },
  *   invalidation: {
  *     queryKeys: (variables) => [['relationships', variables.parentId]]
+ *   }
+ * });
+ *
+ * // Usage in component:
+ * const { mutate, isPending } = useCreateRelationship();
+ * mutate({ parentId: '123', childId: '456', type: 'bilateral' });
+ * ```
+ *
+ * @example
+ * DELETE mutation with dynamic URL and invalidation:
+ * ```ts
+ * const useDeleteDocument = createMutation<{ id: string }, void>({
+ *   method: 'DELETE',
+ *   url: {
+ *     endpoint: 'documents-delete',
+ *     queryParams: (input) => ({ id: input.id })
+ *   },
+ *   invalidation: {
+ *     queryKeys: (variables, response) => [
+ *       ['documents'],
+ *       ['documents', variables.id]
+ *     ]
  *   }
  * });
  * ```
@@ -281,11 +351,50 @@ export function createMutation<TInput, TResponse = unknown>(
 }
 
 /**
- * Helper function to create simple CRUD mutations with common patterns
+ * Helper functions to create simple CRUD mutations with common patterns
+ *
+ * Provides convenience methods for the most common mutation scenarios (create,
+ * delete, update) with sensible defaults, reducing boilerplate in hook files.
+ *
+ * @example
+ * ```ts
+ * // Create a simple POST mutation
+ * export const useCreateCountry = mutationHelpers.create<
+ *   { name: string; code: string },
+ *   Country
+ * >('countries-create', [['countries']]);
+ *
+ * // Create a DELETE mutation with dynamic params
+ * export const useDeleteCountry = mutationHelpers.delete<
+ *   { id: string },
+ *   void
+ * >(
+ *   'countries-delete',
+ *   (input) => ({ id: input.id }),
+ *   (vars) => [['countries'], ['countries', vars.id]]
+ * );
+ * ```
  */
 export const mutationHelpers = {
   /**
    * Create a POST mutation for creating resources
+   *
+   * Generates a mutation hook that sends POST requests with the input data
+   * as JSON body. Ideal for creating new resources on the server.
+   *
+   * @template TInput - Type of the creation input data
+   * @template TResponse - Type of the created resource response (defaults to unknown)
+   * @param endpoint - Edge Function endpoint name (e.g., 'dossiers-create')
+   * @param invalidateKeys - Array of query keys to invalidate on success
+   * @returns A mutation hook function for creating resources
+   *
+   * @example
+   * ```ts
+   * export const useCreateDossier = mutationHelpers.create<
+   *   CreateDossierInput,
+   *   Dossier
+   * >('dossiers-create', [['dossiers'], ['dossiers', 'list']]);
+   * ```
    */
   create: <TInput, TResponse = unknown>(
     endpoint: string,
@@ -299,6 +408,28 @@ export const mutationHelpers = {
 
   /**
    * Create a DELETE mutation for deleting resources
+   *
+   * Generates a mutation hook that sends DELETE requests with query parameters.
+   * Typically used for resource deletion where the ID is passed in URL params.
+   *
+   * @template TInput - Type of the deletion input (usually contains ID)
+   * @template TResponse - Type of the deletion response (defaults to unknown)
+   * @param endpoint - Edge Function endpoint name (e.g., 'dossiers-delete')
+   * @param buildQueryParams - Function to extract query params from input
+   * @param invalidateKeys - Function to determine which query keys to invalidate
+   * @returns A mutation hook function for deleting resources
+   *
+   * @example
+   * ```ts
+   * export const useDeleteRelationship = mutationHelpers.delete<
+   *   { parentId: string; childId: string },
+   *   void
+   * >(
+   *   'relationships-delete',
+   *   (input) => ({ parent_id: input.parentId, child_id: input.childId }),
+   *   (vars) => [['relationships', vars.parentId]]
+   * );
+   * ```
    */
   delete: <TInput, TResponse = unknown>(
     endpoint: string,
@@ -313,6 +444,23 @@ export const mutationHelpers = {
 
   /**
    * Create a PATCH mutation for updating resources
+   *
+   * Generates a mutation hook that sends PATCH requests with the input data
+   * as JSON body. Used for partial updates to existing resources.
+   *
+   * @template TInput - Type of the update input data
+   * @template TResponse - Type of the updated resource response (defaults to unknown)
+   * @param endpoint - Edge Function endpoint name (e.g., 'dossiers-update')
+   * @param invalidateKeys - Array of query keys to invalidate on success
+   * @returns A mutation hook function for updating resources
+   *
+   * @example
+   * ```ts
+   * export const useUpdateDocument = mutationHelpers.update<
+   *   { id: string; title: string; content: string },
+   *   Document
+   * >('documents-update', [['documents'], ['documents', 'detail']]);
+   * ```
    */
   update: <TInput, TResponse = unknown>(
     endpoint: string,
