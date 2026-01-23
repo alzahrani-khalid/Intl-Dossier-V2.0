@@ -50,7 +50,31 @@ export async function getCommitments(
 ): Promise<CommitmentsListResponse> {
   let query = supabase
     .from('aa_commitments')
-    .select('*', { count: 'exact' });
+    .select(`
+      id,
+      dossier_id,
+      after_action_id,
+      title,
+      description,
+      due_date,
+      status,
+      priority,
+      owner_type,
+      owner_user_id,
+      owner_contact_id,
+      tracking_mode,
+      proof_required,
+      proof_url,
+      evidence_submitted_at,
+      completed_at,
+      completion_notes,
+      ai_confidence,
+      status_changed_at,
+      created_by,
+      updated_by,
+      created_at,
+      updated_at
+    `, { count: 'exact' });
 
   // Apply entity filters
   if (filters?.dossierId) {
@@ -146,7 +170,31 @@ export async function getCommitments(
 export async function getCommitment(commitmentId: string): Promise<Commitment> {
   const { data, error } = await supabase
     .from('aa_commitments')
-    .select('*')
+    .select(`
+      id,
+      dossier_id,
+      after_action_id,
+      title,
+      description,
+      due_date,
+      status,
+      priority,
+      owner_type,
+      owner_user_id,
+      owner_contact_id,
+      tracking_mode,
+      proof_required,
+      proof_url,
+      evidence_submitted_at,
+      completed_at,
+      completion_notes,
+      ai_confidence,
+      status_changed_at,
+      created_by,
+      updated_by,
+      created_at,
+      updated_at
+    `)
     .eq('id', commitmentId)
     .single();
 
@@ -205,7 +253,31 @@ export async function createCommitment(input: CreateCommitmentInput): Promise<Co
       created_by: user.id,
       updated_by: user.id,
     })
-    .select()
+    .select(`
+      id,
+      dossier_id,
+      after_action_id,
+      title,
+      description,
+      due_date,
+      status,
+      priority,
+      owner_type,
+      owner_user_id,
+      owner_contact_id,
+      tracking_mode,
+      proof_required,
+      proof_url,
+      evidence_submitted_at,
+      completed_at,
+      completion_notes,
+      ai_confidence,
+      status_changed_at,
+      created_by,
+      updated_by,
+      created_at,
+      updated_at
+    `)
     .single();
 
   if (error) {
@@ -240,7 +312,31 @@ export async function updateCommitment(
       updated_at: new Date().toISOString(),
     })
     .eq('id', commitmentId)
-    .select()
+    .select(`
+      id,
+      dossier_id,
+      after_action_id,
+      title,
+      description,
+      due_date,
+      status,
+      priority,
+      owner_type,
+      owner_user_id,
+      owner_contact_id,
+      tracking_mode,
+      proof_required,
+      proof_url,
+      evidence_submitted_at,
+      completed_at,
+      completion_notes,
+      ai_confidence,
+      status_changed_at,
+      created_by,
+      updated_by,
+      created_at,
+      updated_at
+    `)
     .single();
 
   if (error) {
@@ -285,7 +381,31 @@ export async function updateCommitmentStatus(
     .from('aa_commitments')
     .update(updateData)
     .eq('id', input.id)
-    .select()
+    .select(`
+      id,
+      dossier_id,
+      after_action_id,
+      title,
+      description,
+      due_date,
+      status,
+      priority,
+      owner_type,
+      owner_user_id,
+      owner_contact_id,
+      tracking_mode,
+      proof_required,
+      proof_url,
+      evidence_submitted_at,
+      completed_at,
+      completion_notes,
+      ai_confidence,
+      status_changed_at,
+      created_by,
+      updated_by,
+      created_at,
+      updated_at
+    `)
     .single();
 
   if (error) {
@@ -324,7 +444,15 @@ export async function getCommitmentStatusHistory(
 ): Promise<CommitmentStatusHistory[]> {
   const { data, error } = await supabase
     .from('commitment_status_history')
-    .select('*')
+    .select(`
+      id,
+      commitment_id,
+      old_status,
+      new_status,
+      changed_by,
+      changed_at,
+      notes
+    `)
     .eq('commitment_id', commitmentId)
     .order('changed_at', { ascending: false });
 
