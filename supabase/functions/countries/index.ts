@@ -42,7 +42,9 @@ serve(async (req: Request) => {
         if (id) {
           const { data, error } = await supabaseClient
             .from('countries')
-            .select('*')
+            .select(
+              'id, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion, population, area_sq_km, flag_url'
+            )
             .eq('id', id)
             .single();
 
@@ -69,7 +71,10 @@ serve(async (req: Request) => {
 
           let query = supabaseClient
             .from('countries')
-            .select('*', { count: 'exact' });
+            .select(
+              'id, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion, population, area_sq_km, flag_url',
+              { count: 'exact' }
+            );
 
           if (search) {
             query = query.or(`name_en.ilike.%${search}%,name_ar.ilike.%${search}%`);

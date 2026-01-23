@@ -134,7 +134,9 @@ serve(async (req) => {
     // Fetch dossier (RLS automatically applies)
     const { data: dossier, error: dossierError } = await supabaseClient
       .from('dossiers')
-      .select('*')
+      .select(
+        'id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by'
+      )
       .eq('id', dossierId)
       .single();
 
@@ -191,9 +193,22 @@ serve(async (req) => {
 
       const extensionTable = extensionTableMap[dossierType];
       if (extensionTable) {
+        // Define column selections for each extension table type
+        const extensionSelects: Record<string, string> = {
+          countries: 'id, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion, population, area_sq_km, flag_url',
+          organizations: 'id, org_code, org_type, headquarters_country_id, parent_org_id, website, email, phone, address_en, address_ar, logo_url, established_date',
+          forums: 'id, number_of_sessions, keynote_speakers, sponsors, registration_fee, currency, agenda_url, live_stream_url',
+          engagements: 'id, engagement_type, engagement_category, location_en, location_ar',
+          topics: 'id, theme_category, parent_theme_id',
+          working_groups: 'id, mandate_en, mandate_ar, lead_org_id, wg_status, established_date, disbandment_date',
+          persons: 'id, title_en, title_ar, organization_id, nationality_country_id, email, phone, biography_en, biography_ar, photo_url',
+          elected_officials: 'id',
+        };
+
+        const selectColumns = extensionSelects[extensionTable] || 'id';
         const { data: extension, error: extensionError } = await supabaseClient
           .from(extensionTable)
-          .select('*')
+          .select(selectColumns)
           .eq('id', dossierId)
           .maybeSingle();
 
@@ -296,7 +311,9 @@ serve(async (req) => {
     if (includeContacts) {
       const { data: contacts, error: contactsError } = await supabaseClient
         .from('key_contacts')
-        .select('*')
+        .select(
+          'id, dossier_id, name_en, name_ar, position, organization, email, phone, last_interaction_date, notes, created_at, updated_at'
+        )
         .eq('dossier_id', dossierId)
         .order('last_interaction_date', { ascending: false, nullsFirst: false });
 

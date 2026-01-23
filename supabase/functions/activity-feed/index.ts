@@ -162,7 +162,10 @@ async function handleGetActivities(
   // Build query
   let query = supabase
     .from('activity_stream')
-    .select('*', { count: 'exact' })
+    .select(
+      'id, action_type, entity_type, entity_id, entity_name_en, entity_name_ar, actor_id, actor_name, actor_email, actor_avatar_url, description_en, description_ar, related_entity_type, related_entity_id, related_entity_name_en, related_entity_name_ar, target_user_id, target_user_name, metadata, is_public, visibility_scope, created_at',
+      { count: 'exact' }
+    )
     .order('created_at', { ascending: false })
     .limit(pagination.limit! + 1); // Fetch one extra for cursor
 
@@ -301,7 +304,9 @@ async function handleGetFollowing(
 
   let query = supabase
     .from('entity_follows')
-    .select('*')
+    .select(
+      'id, user_id, entity_type, entity_id, entity_name_en, entity_name_ar, notify_on_update, notify_on_comment, notify_on_status_change, notify_on_mention, follow_reason, created_at'
+    )
     .eq('user_id', userId)
     .order('created_at', { ascending: false });
 
@@ -403,7 +408,9 @@ async function handleUnfollowEntity(
 async function handleGetPreferences(supabase: ReturnType<typeof createClient>, userId: string) {
   const { data, error } = await supabase
     .from('activity_feed_preferences')
-    .select('*')
+    .select(
+      'id, user_id, default_entity_types, default_action_types, items_per_page, show_own_activities, compact_view, email_digest_frequency, push_notifications_enabled, created_at, updated_at'
+    )
     .eq('user_id', userId)
     .single();
 

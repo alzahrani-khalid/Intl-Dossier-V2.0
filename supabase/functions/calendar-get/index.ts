@@ -46,7 +46,9 @@ serve(async (req) => {
     // Build query for calendar_entries
     let query = supabaseClient
       .from('calendar_entries')
-      .select('*')
+      .select(
+        'id, event_date, entry_type, linked_item_type, linked_item_id, title, description, location, participants, created_at, updated_at, created_by, metadata'
+      )
       .order('event_date', { ascending: true });
 
     // Date range filter (using event_date instead of start_datetime/end_datetime)
