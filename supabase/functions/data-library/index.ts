@@ -263,7 +263,7 @@ serve(async (req: Request) => {
           const { data, error } = await supabaseClient
             .from('data_library_items')
             .insert(libraryItem)
-            .select()
+            .select('id, file_url, file_type, file_size_bytes, mime_type, uploaded_by, is_public, title, description, category, tags, metadata, created_at, updated_at')
             .single();
 
           if (error) {
@@ -320,7 +320,7 @@ serve(async (req: Request) => {
           .from('data_library_items')
           .update(updateData)
           .eq('id', id)
-          .select()
+          .select('id, file_url, file_type, file_size_bytes, mime_type, uploaded_by, is_public, title, description, category, tags, metadata, created_at, updated_at')
           .single();
 
         if (error) throw error;

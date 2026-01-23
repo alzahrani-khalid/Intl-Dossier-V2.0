@@ -154,7 +154,7 @@ serve(async (req) => {
             tags: data.tags || [],
             metadata: data.metadata || {},
           })
-          .select()
+          .select('id, type, name_en, name_ar, description_en, description_ar, summary_en, summary_ar, status, sensitivity_level, tags, metadata, version, created_at, updated_at, created_by, updated_by')
           .single();
 
         if (dossierError) {

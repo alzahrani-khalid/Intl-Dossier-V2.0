@@ -173,7 +173,7 @@ serve(async (req) => {
       .from("intake_tickets")
       .update(updateData)
       .eq("id", ticketId)
-      .select()
+      .select('id, ticket_number, request_type, title, title_ar, description, description_ar, type_specific_fields, sensitivity, urgency, priority, dossier_id, parent_ticket_id, converted_to_type, converted_to_id, assigned_to, assigned_unit, status, resolution, resolution_ar, created_at, created_by, updated_at, updated_by, submitted_at, triaged_at, assigned_at, resolved_at, closed_at, source, client_metadata')
       .single();
 
     if (updateError) {

@@ -75,7 +75,7 @@ serve(async (req) => {
         metadata,
         uploaded_by: user.id,
       })
-      .select()
+      .select('id, owner_type, owner_id, document_type, title_en, title_ar, storage_path, file_size, mime_type, metadata, uploaded_by, created_at, updated_at')
       .single();
 
     if (insertError) {

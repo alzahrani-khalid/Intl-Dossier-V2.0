@@ -594,7 +594,7 @@ serve(async (req: Request) => {
               acknowledged_by: user.id,
             })
             .eq('id', body.alert_id)
-            .select()
+            .select('id, mou_id, alert_type, alert_date, alert_status, acknowledged_at, acknowledged_by, dismissed_at, created_at, updated_at')
             .single();
 
           if (error) throw error;
@@ -665,7 +665,7 @@ serve(async (req: Request) => {
               updated_at: new Date().toISOString(),
             })
             .eq('id', alertId)
-            .select()
+            .select('id, mou_id, alert_type, alert_date, alert_status, acknowledged_at, acknowledged_by, dismissed_at, created_at, updated_at')
             .single();
 
           if (error) throw error;

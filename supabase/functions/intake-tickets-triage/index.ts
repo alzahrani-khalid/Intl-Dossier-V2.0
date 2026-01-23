@@ -666,7 +666,7 @@ serve(async (req) => {
       const { data: decision, error: decisionError } = await supabaseAdmin
         .from('triage_decisions')
         .insert(triageDecision)
-        .select()
+        .select('id, ticket_id, suggested_type, suggested_sensitivity, suggested_urgency, suggested_assignee, suggested_unit, final_type, final_sensitivity, final_urgency, final_assignee, final_unit, model_name, model_version, confidence_score, override_reason, override_reason_ar, created_by, accepted_at, accepted_by, created_at, updated_at')
         .single();
 
       if (decisionError) {

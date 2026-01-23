@@ -47,7 +47,7 @@ serve(async (req: Request) => {
         status: newStatus,
       })
       .eq('id', position_id)
-      .select()
+      .select('id, title_en, title_ar, key_messages_en, key_messages_ar, status, current_stage, topic, version, created_at, updated_at')
       .single();
 
     return new Response(JSON.stringify(updated), { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
