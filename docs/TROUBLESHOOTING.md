@@ -1222,6 +1222,635 @@ const queryClient = new QueryClient({
 })
 ```
 
+### Understanding TanStack Query Cache Configuration
+
+TanStack Query v5 uses two critical timing configurations that control cache behavior. Misunderstanding these leads to stale data and unexpected refetching.
+
+#### staleTime vs gcTime (formerly cacheTime)
+
+**staleTime** - How long data is considered "fresh" (default: `0`)
+- While fresh, queries will NOT refetch in the background
+- After staleTime expires, data becomes "stale" and will refetch on next access
+- Set higher for data that changes infrequently
+
+**gcTime** (Garbage Collection Time, formerly `cacheTime`) - How long unused data stays in cache (default: `5 minutes`)
+- After query becomes inactive (no observers), starts gcTime countdown
+- When gcTime expires, cache entry is garbage collected
+- Set higher to preserve cache across navigation
+
+**Common Configuration Patterns:**
+
+```typescript
+// Pattern 1: Frequently changing data (real-time updates)
+const { data } = useQuery({
+  queryKey: ['dossiers', 'active'],
+  queryFn: fetchActiveDossiers,
+  staleTime: 0, // Always refetch on mount/focus
+  gcTime: 5 * 60 * 1000, // Keep in cache for 5 minutes
+})
+
+// Pattern 2: Rarely changing reference data
+const { data } = useQuery({
+  queryKey: ['countries'],
+  queryFn: fetchCountries,
+  staleTime: 10 * 60 * 1000, // Fresh for 10 minutes
+  gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+})
+
+// Pattern 3: Static configuration data
+const { data } = useQuery({
+  queryKey: ['app-config'],
+  queryFn: fetchConfig,
+  staleTime: Infinity, // Never goes stale
+  gcTime: Infinity, // Never garbage collected
+})
+
+// Pattern 4: User-specific data (balance freshness & performance)
+const { data } = useQuery({
+  queryKey: ['user', userId],
+  queryFn: () => fetchUser(userId),
+  staleTime: 2 * 60 * 1000, // Fresh for 2 minutes
+  gcTime: 10 * 60 * 1000, // Cache for 10 minutes
+})
+```
+
+### Cache Invalidation & Synchronization Issues
+
+#### Problem: Data Not Updating After Mutations
+
+**Symptoms:**
+- Create/update succeeds but list doesn't show changes
+- Detail view shows old data after edit
+- Stale data visible across tabs
+
+**Root Cause Analysis:**
+
+```typescript
+// 1. Check if invalidation is called
+const mutation = useMutation({
+  mutationFn: updateDossier,
+  onSuccess: () => {
+    // ❌ Missing - no cache invalidation!
+    console.log('Update succeeded')
+  }
+})
+
+// 2. Check invalidation scope
+const mutation = useMutation({
+  mutationFn: updateDossier,
+  onSuccess: () => {
+    // ❌ Too narrow - only invalidates specific dossier
+    queryClient.invalidateQueries({ queryKey: ['dossiers', id] })
+    // ✅ Should also invalidate list queries
+  }
+})
+```
+
+**Comprehensive Solution:**
+
+```typescript
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+
+const queryClient = useQueryClient()
+
+const mutation = useMutation({
+  mutationFn: async (data) => {
+    const { data: result, error } = await supabase
+      .from('dossiers')
+      .update(data)
+      .eq('id', dossierId)
+      .select()
+      .single()
+
+    if (error) throw error
+    return result
+  },
+  onSuccess: (updatedDossier) => {
+    // Strategy 1: Invalidate all related queries
+    queryClient.invalidateQueries({
+      queryKey: ['dossiers'] // Invalidates ALL dossier queries
+    })
+
+    // Strategy 2: Surgical invalidation (faster, more precise)
+    queryClient.invalidateQueries({
+      queryKey: ['dossiers', updatedDossier.id] // Detail view
+    })
+    queryClient.invalidateQueries({
+      queryKey: ['dossiers', 'list'] // List views
+    })
+    queryClient.invalidateQueries({
+      queryKey: ['dossiers', 'stats'] // Statistics
+    })
+
+    // Strategy 3: Immediate cache update (optimistic UI)
+    queryClient.setQueryData(
+      ['dossiers', updatedDossier.id],
+      updatedDossier
+    )
+  },
+  onError: (error) => {
+    console.error('Mutation failed:', error)
+    // Don't invalidate on error - keeps optimistic update
+  }
+})
+```
+
+#### Advanced Invalidation Patterns
+
+```typescript
+// Pattern 1: Exact match invalidation
+queryClient.invalidateQueries({
+  queryKey: ['dossiers', 'list'],
+  exact: true // Only ['dossiers', 'list'], not ['dossiers', 'list', { filter: '...' }]
+})
+
+// Pattern 2: Predicate-based invalidation
+queryClient.invalidateQueries({
+  predicate: (query) =>
+    query.queryKey[0] === 'dossiers' &&
+    query.queryKey[1] !== 'stats' // Invalidate all except stats
+})
+
+// Pattern 3: Type-based invalidation (with filters)
+queryClient.invalidateQueries({
+  queryKey: ['dossiers'],
+  type: 'active' // Only invalidate active queries (with observers)
+})
+
+// Pattern 4: Refetch control
+queryClient.invalidateQueries({
+  queryKey: ['dossiers'],
+  refetchType: 'active' // Only refetch queries with active observers
+})
+```
+
+### Cache Persistence & Cross-Tab Synchronization
+
+#### Problem: Cache Not Persisting Across Sessions
+
+**Symptoms:**
+- Data refetches on every page reload
+- No offline capability
+- Poor performance on navigation
+
+**Solution: Enable Cache Persistence**
+
+```typescript
+// Install persistence plugin
+// pnpm add @tanstack/react-query-persist-client
+
+import { QueryClient } from '@tanstack/react-query'
+import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
+import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+
+// Create persister
+const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+  // Optionally encrypt/compress
+  serialize: (data) => JSON.stringify(data),
+  deserialize: (data) => JSON.parse(data),
+})
+
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: 1000 * 60 * 60 * 24, // 24 hours (required for persistence)
+    },
+  },
+})
+
+function App() {
+  return (
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{
+        persister,
+        maxAge: 1000 * 60 * 60 * 24, // 24 hours
+        dehydrateOptions: {
+          // Only persist specific queries
+          shouldDehydrateQuery: (query) => {
+            const queryKey = query.queryKey[0]
+            // Persist reference data, not user-specific data
+            return ['countries', 'organizations', 'app-config'].includes(queryKey as string)
+          }
+        }
+      }}
+    >
+      <RouterProvider />
+    </PersistQueryClientProvider>
+  )
+}
+```
+
+#### Problem: Stale Data Across Browser Tabs
+
+**Symptoms:**
+- User edits data in Tab A, Tab B shows old data
+- Concurrent edits cause conflicts
+
+**Solution: Broadcast Channel API Integration**
+
+```typescript
+// Create shared hook for cross-tab synchronization
+import { useQueryClient } from '@tanstack/react-query'
+import { useEffect } from 'react'
+
+function useCrossTabSync() {
+  const queryClient = useQueryClient()
+
+  useEffect(() => {
+    // Create broadcast channel
+    const channel = new BroadcastChannel('tanstack-query-sync')
+
+    // Listen for invalidation messages from other tabs
+    channel.onmessage = (event) => {
+      const { type, queryKey } = event.data
+
+      if (type === 'invalidate') {
+        queryClient.invalidateQueries({ queryKey })
+      }
+
+      if (type === 'update') {
+        queryClient.setQueryData(queryKey, event.data.data)
+      }
+    }
+
+    // Broadcast invalidations from this tab
+    const unsubscribe = queryClient.getQueryCache().subscribe((event) => {
+      if (event.type === 'updated' && event.action.type === 'success') {
+        channel.postMessage({
+          type: 'invalidate',
+          queryKey: event.query.queryKey
+        })
+      }
+    })
+
+    return () => {
+      channel.close()
+      unsubscribe()
+    }
+  }, [queryClient])
+}
+
+// Usage in App component
+function App() {
+  useCrossTabSync()
+  return <RouterProvider />
+}
+```
+
+### Optimistic Updates & Rollback Issues
+
+#### Problem: UI Flickers After Optimistic Update
+
+**Symptoms:**
+- UI shows new data, then reverts to old data
+- Double rendering after mutation
+- Data inconsistency
+
+**Root Cause:** Improper optimistic update implementation
+
+**Comprehensive Optimistic Update Pattern:**
+
+```typescript
+const mutation = useMutation({
+  mutationFn: async (updatedDossier: Partial<Dossier>) => {
+    const { data, error } = await supabase
+      .from('dossiers')
+      .update(updatedDossier)
+      .eq('id', dossierId)
+      .select()
+      .single()
+
+    if (error) throw error
+    return data
+  },
+
+  // STEP 1: Before mutation starts
+  onMutate: async (updatedDossier) => {
+    // Cancel outgoing refetches (prevent overwriting optimistic update)
+    await queryClient.cancelQueries({ queryKey: ['dossiers', dossierId] })
+
+    // Snapshot previous value for rollback
+    const previousDossier = queryClient.getQueryData<Dossier>(['dossiers', dossierId])
+
+    // Optimistically update cache
+    queryClient.setQueryData<Dossier>(
+      ['dossiers', dossierId],
+      (old) => ({ ...old, ...updatedDossier })
+    )
+
+    // Return context for rollback
+    return { previousDossier }
+  },
+
+  // STEP 2: If mutation fails
+  onError: (error, updatedDossier, context) => {
+    // Rollback to snapshot
+    if (context?.previousDossier) {
+      queryClient.setQueryData(
+        ['dossiers', dossierId],
+        context.previousDossier
+      )
+    }
+
+    // Show error notification
+    toast.error('Failed to update dossier')
+  },
+
+  // STEP 3: After mutation (success or error)
+  onSettled: () => {
+    // Refetch to ensure server state
+    queryClient.invalidateQueries({ queryKey: ['dossiers', dossierId] })
+    queryClient.invalidateQueries({ queryKey: ['dossiers', 'list'] })
+  }
+})
+```
+
+#### Advanced: List Optimistic Updates
+
+```typescript
+// Optimistically add item to list
+const createMutation = useMutation({
+  mutationFn: createDossier,
+  onMutate: async (newDossier) => {
+    await queryClient.cancelQueries({ queryKey: ['dossiers', 'list'] })
+
+    const previousList = queryClient.getQueryData<Dossier[]>(['dossiers', 'list'])
+
+    queryClient.setQueryData<Dossier[]>(
+      ['dossiers', 'list'],
+      (old) => [...(old || []), {
+        ...newDossier,
+        id: `temp-${Date.now()}`, // Temporary ID
+        created_at: new Date().toISOString()
+      }]
+    )
+
+    return { previousList }
+  },
+  onSuccess: (createdDossier, variables, context) => {
+    // Replace temporary item with real data
+    queryClient.setQueryData<Dossier[]>(
+      ['dossiers', 'list'],
+      (old) => old?.map(item =>
+        item.id.startsWith('temp-') ? createdDossier : item
+      )
+    )
+  },
+  onError: (error, variables, context) => {
+    if (context?.previousList) {
+      queryClient.setQueryData(['dossiers', 'list'], context.previousList)
+    }
+  }
+})
+```
+
+### Debugging Cache Issues
+
+#### Enable TanStack Query DevTools
+
+```tsx
+// frontend/src/main.tsx
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+function App() {
+  return (
+    <>
+      <RouterProvider />
+      {/* DevTools only in development */}
+      {import.meta.env.DEV && (
+        <ReactQueryDevtools
+          initialIsOpen={false}
+          position="bottom-right"
+        />
+      )}
+    </>
+  )
+}
+```
+
+**DevTools Features:**
+- 🔍 Inspect all queries and their states
+- ⏱️ View staleTime/gcTime timers
+- 🔄 Manually refetch queries
+- 🗑️ Clear cache entries
+- 📊 Monitor query lifecycle
+
+#### Logging Query Cache State
+
+```typescript
+// Add to browser console for debugging
+window.queryClient = queryClient
+
+// Inspect all queries
+queryClient.getQueryCache().getAll().forEach(query => {
+  console.log({
+    queryKey: query.queryKey,
+    state: query.state.status,
+    dataUpdatedAt: new Date(query.state.dataUpdatedAt),
+    isStale: query.isStale(),
+    observers: query.getObserversCount()
+  })
+})
+
+// Find specific query
+const query = queryClient.getQueryCache().find({ queryKey: ['dossiers', id] })
+console.log('Query state:', query?.state)
+
+// Monitor cache changes
+queryClient.getQueryCache().subscribe((event) => {
+  console.log('Cache event:', event.type, event.query.queryKey)
+})
+```
+
+#### Common Cache Debugging Commands
+
+```typescript
+// Check if data exists in cache
+const cachedData = queryClient.getQueryData(['dossiers', id])
+console.log('Cached data:', cachedData)
+
+// Check query state
+const queryState = queryClient.getQueryState(['dossiers', id])
+console.log('Query state:', {
+  status: queryState?.status,
+  fetchStatus: queryState?.fetchStatus,
+  dataUpdatedAt: new Date(queryState?.dataUpdatedAt || 0)
+})
+
+// Manually set cache data (testing)
+queryClient.setQueryData(['dossiers', id], mockDossier)
+
+// Clear specific query
+queryClient.removeQueries({ queryKey: ['dossiers', id] })
+
+// Clear all cache
+queryClient.clear()
+
+// Reset to initial state
+queryClient.resetQueries({ queryKey: ['dossiers'] })
+```
+
+### Common Cache Anti-Patterns
+
+#### ❌ Anti-Pattern 1: Unstable Query Keys
+
+```typescript
+// Bad: New object reference every render
+const { data } = useQuery({
+  queryKey: ['dossiers', { filter: filters }], // filters is object
+  queryFn: fetchDossiers
+})
+
+// Good: Serialize object or use primitives
+const { data } = useQuery({
+  queryKey: ['dossiers', JSON.stringify(filters)],
+  queryFn: fetchDossiers
+})
+
+// Better: Extract primitive values
+const { data } = useQuery({
+  queryKey: ['dossiers', filters.status, filters.type],
+  queryFn: fetchDossiers
+})
+```
+
+#### ❌ Anti-Pattern 2: Missing Invalidation
+
+```typescript
+// Bad: No invalidation after mutation
+const mutation = useMutation({
+  mutationFn: updateDossier,
+  // Missing onSuccess!
+})
+
+// Good: Always invalidate related queries
+const mutation = useMutation({
+  mutationFn: updateDossier,
+  onSuccess: () => {
+    queryClient.invalidateQueries({ queryKey: ['dossiers'] })
+  }
+})
+```
+
+#### ❌ Anti-Pattern 3: Over-Invalidation
+
+```typescript
+// Bad: Invalidates entire cache on every mutation
+const mutation = useMutation({
+  mutationFn: updateDossier,
+  onSuccess: () => {
+    queryClient.invalidateQueries() // No queryKey = all queries!
+  }
+})
+
+// Good: Surgical invalidation
+const mutation = useMutation({
+  mutationFn: updateDossier,
+  onSuccess: (data) => {
+    queryClient.invalidateQueries({ queryKey: ['dossiers', data.id] })
+    queryClient.invalidateQueries({ queryKey: ['dossiers', 'list'] })
+  }
+})
+```
+
+#### ❌ Anti-Pattern 4: Incorrect staleTime Configuration
+
+```typescript
+// Bad: staleTime too low for static data
+const { data } = useQuery({
+  queryKey: ['countries'],
+  queryFn: fetchCountries,
+  staleTime: 0 // Refetches constantly!
+})
+
+// Good: Match staleTime to data change frequency
+const { data } = useQuery({
+  queryKey: ['countries'],
+  queryFn: fetchCountries,
+  staleTime: 60 * 60 * 1000 // 1 hour for reference data
+})
+```
+
+#### ❌ Anti-Pattern 5: Forgetting to Cancel Queries
+
+```typescript
+// Bad: Race condition in optimistic updates
+const mutation = useMutation({
+  onMutate: async (newData) => {
+    // Missing cancelQueries!
+    queryClient.setQueryData(['dossiers', id], newData)
+  }
+})
+
+// Good: Always cancel before optimistic update
+const mutation = useMutation({
+  onMutate: async (newData) => {
+    await queryClient.cancelQueries({ queryKey: ['dossiers', id] })
+    const previous = queryClient.getQueryData(['dossiers', id])
+    queryClient.setQueryData(['dossiers', id], newData)
+    return { previous }
+  }
+})
+```
+
+### Performance Optimization
+
+#### Reduce Unnecessary Refetches
+
+```typescript
+// Global configuration for production
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 5 * 60 * 1000, // 5 minutes default
+      gcTime: 10 * 60 * 1000, // 10 minutes cache
+      refetchOnWindowFocus: false, // Disable in production
+      refetchOnReconnect: true,
+      retry: 1, // Reduce retry attempts
+    },
+  },
+})
+```
+
+#### Implement Query Prefetching
+
+```typescript
+// Prefetch on hover for better UX
+function DossierList({ dossiers }) {
+  const queryClient = useQueryClient()
+
+  const prefetchDossier = (id: string) => {
+    queryClient.prefetchQuery({
+      queryKey: ['dossiers', id],
+      queryFn: () => fetchDossier(id),
+      staleTime: 60 * 1000 // Fresh for 1 minute
+    })
+  }
+
+  return dossiers.map(dossier => (
+    <Link
+      to={`/dossiers/${dossier.id}`}
+      onMouseEnter={() => prefetchDossier(dossier.id)}
+    >
+      {dossier.title}
+    </Link>
+  ))
+}
+```
+
+#### Selective Query Enabling
+
+```typescript
+// Only fetch when needed
+const { data } = useQuery({
+  queryKey: ['dossiers', id],
+  queryFn: () => fetchDossier(id),
+  enabled: !!id && isOpen, // Only fetch if ID exists and modal is open
+})
+```
+
 ## Real-time Subscription Issues
 
 ### Subscription Not Receiving Updates
