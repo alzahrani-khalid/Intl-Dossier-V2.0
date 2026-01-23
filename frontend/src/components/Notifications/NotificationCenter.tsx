@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { Bell, X, AlertCircle, Info, CheckCircle, XCircle, Clock } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { toast, Toaster } from 'react-hot-toast'
+import { FixedSizeList } from 'react-window'
 import { realtimeManager } from '../../lib/realtime'
 import { useAuthStore } from '../../store/authStore'
 import { cn } from '../../lib/utils'
@@ -300,51 +301,63 @@ export function NotificationCenter({
             </div>
 
             {/* Notifications List */}
-            <div className="max-h-96 overflow-y-auto">
+            <div className="max-h-96">
               {notifications.length === 0 ? (
                 <div className="px-4 py-8 text-center text-gray-500">No notifications</div>
               ) : (
-                notifications.map((notification) => (
-                  <div
-                    key={notification.id}
-                    className={cn(
-                      'px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors',
-                      !notification.read && 'bg-blue-50',
-                    )}
-                    onClick={() => autoMarkAsRead && markAsRead(notification.id)}
-                  >
-                    <div className="flex items-start">
-                      <div className="flex-shrink-0">{getNotificationIcon(notification.type)}</div>
-                      <div className="ms-3 flex-1">
-                        <p className="text-sm font-medium text-gray-900">{notification.title}</p>
-                        <p className="mt-1 text-sm text-gray-600">{notification.message}</p>
-                        <div className="mt-2 flex items-center justify-between">
-                          <span className="text-xs text-gray-500">
-                            <Clock className="inline h-3 w-3 me-1" />
-                            {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
-                          </span>
-                          {notification.actionUrl && (
-                            <a
-                              href={notification.actionUrl}
-                              className="text-xs text-blue-600 hover:text-blue-800 font-medium"
-                            >
-                              {notification.actionLabel || 'View'}
-                            </a>
-                          )}
+                <FixedSizeList
+                  height={384}
+                  itemCount={notifications.length}
+                  itemSize={80}
+                  width="100%"
+                  overscanCount={2}
+                >
+                  {({ index, style }) => {
+                    const notification = notifications[index]
+                    return (
+                      <div
+                        key={notification.id}
+                        style={style}
+                        className={cn(
+                          'px-4 py-3 border-b border-gray-100 hover:bg-gray-50 transition-colors cursor-pointer',
+                          !notification.read && 'bg-blue-50',
+                        )}
+                        onClick={() => autoMarkAsRead && markAsRead(notification.id)}
+                      >
+                        <div className="flex items-start">
+                          <div className="flex-shrink-0">{getNotificationIcon(notification.type)}</div>
+                          <div className="ms-3 flex-1">
+                            <p className="text-sm font-medium text-gray-900">{notification.title}</p>
+                            <p className="mt-1 text-sm text-gray-600">{notification.message}</p>
+                            <div className="mt-2 flex items-center justify-between">
+                              <span className="text-xs text-gray-500">
+                                <Clock className="inline h-3 w-3 me-1" />
+                                {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
+                              </span>
+                              {notification.actionUrl && (
+                                <a
+                                  href={notification.actionUrl}
+                                  className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                                >
+                                  {notification.actionLabel || 'View'}
+                                </a>
+                              )}
+                            </div>
+                          </div>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              deleteNotification(notification.id)
+                            }}
+                            className="ms-2 text-gray-400 hover:text-gray-600"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
                         </div>
                       </div>
-                      <button
-                        onClick={(e) => {
-                          e.stopPropagation()
-                          deleteNotification(notification.id)
-                        }}
-                        className="ms-2 text-gray-400 hover:text-gray-600"
-                      >
-                        <X className="h-4 w-4" />
-                      </button>
-                    </div>
-                  </div>
-                ))
+                    )
+                  }}
+                </FixedSizeList>
               )}
             </div>
           </div>
