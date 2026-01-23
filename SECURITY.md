@@ -75,6 +75,76 @@ If a secret is accidentally exposed:
 - **Anon Key**: Frontend/mobile, respects RLS policies
 - Never use service role keys in frontend or mobile apps
 
+## Secrets Scanning
+
+### Automated Scanning with Gitleaks
+
+This project uses [gitleaks](https://github.com/gitleaks/gitleaks) to automatically detect hardcoded secrets, API keys, and credentials in the codebase.
+
+### Running Secrets Scans
+
+**Scan entire repository history:**
+```bash
+pnpm scan-secrets
+```
+
+**Scan uncommitted changes only:**
+```bash
+pnpm scan-secrets:staged
+```
+
+**Pre-commit hook (automatic):**
+- Gitleaks runs automatically before each commit via Husky pre-commit hook
+- Commits are blocked if secrets are detected
+- Fix the issue before committing
+
+### What Gets Detected
+
+Gitleaks scans for:
+- API keys (Supabase, AWS, Google, etc.)
+- Authentication tokens and passwords
+- Private keys and certificates
+- Database connection strings with credentials
+- OAuth tokens and secrets
+- Generic secrets patterns (base64 encoded strings, hex keys)
+
+### If Secrets Are Detected
+
+1. **DO NOT commit the file** - The pre-commit hook will block you
+2. **Remove the secret immediately:**
+   ```bash
+   # Move to environment variable
+   # Replace hardcoded value with process.env.VARIABLE_NAME
+   ```
+3. **Verify the fix:**
+   ```bash
+   pnpm scan-secrets:staged
+   ```
+4. **If already committed, follow Key Rotation procedure** (see above)
+
+### CI/CD Integration
+
+- Secrets scanning runs on every pull request via GitHub Actions
+- PRs with detected secrets cannot be merged
+- Regular scans run on the main branch to catch any bypassed checks
+
+### Configuration
+
+Gitleaks configuration is in `.gitleaks.toml`:
+- Custom rules for project-specific patterns
+- Allowlist for false positives (e.g., test fixtures, examples)
+- To add exceptions, update `.gitleaks.toml` and document why
+
+### Best Practices
+
+1. **Run scans locally** before pushing:
+   ```bash
+   pnpm scan-secrets
+   ```
+2. **Never disable the pre-commit hook** - it's your safety net
+3. **Review scan results carefully** - false positives are rare but possible
+4. **Rotate any detected secrets** - even if not yet committed or pushed
+
 ## Additional Security Practices
 
 1. Enable 2FA on GitHub accounts
