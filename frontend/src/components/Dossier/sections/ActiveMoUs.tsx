@@ -11,6 +11,12 @@ import { useTranslation } from 'react-i18next';
 import { FileText, Calendar } from 'lucide-react';
 import type { OrganizationDossier } from '@/lib/dossier-type-guards';
 
+interface MoUItem {
+  id: string;
+  title: string;
+  expiry_date: string;
+}
+
 interface ActiveMoUsProps {
   dossier: OrganizationDossier;
 }
@@ -20,7 +26,7 @@ export function ActiveMoUs({ dossier }: ActiveMoUsProps) {
   const isRTL = i18n.language === 'ar';
 
   // Placeholder - will fetch from mous table in future
-  const mous: any[] = [];
+  const mous: MoUItem[] = [];
 
   if (mous.length === 0) {
     return (

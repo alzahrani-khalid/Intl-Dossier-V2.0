@@ -28,7 +28,7 @@ import ReactFlow, {
   NodeTypes,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force';
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide, type SimulationNodeDatum } from 'd3-force';
 import { supabase } from '@/lib/supabase-client';
 import { Badge } from '@/components/ui/badge';
 
@@ -218,8 +218,18 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
     });
 
     // Apply d3-force layout (memoized calculation)
-    const simulation = forceSimulation(nodesData as any)
-      .force('link', forceLink(edgesData).id((d: any) => d.id).distance(150))
+    // Create simulation nodes with x, y properties for d3-force
+    interface SimulationNode extends SimulationNodeDatum {
+      id: string;
+    }
+    const simulationNodes: SimulationNode[] = nodesData.map((node) => ({
+      id: node.id,
+      x: node.position.x,
+      y: node.position.y,
+    }));
+
+    const simulation = forceSimulation(simulationNodes)
+      .force('link', forceLink(edgesData).id((d) => (d as SimulationNode).id).distance(150))
       .force('charge', forceManyBody().strength(-300))
       .force('center', forceCenter(400, 300))
       .force('collide', forceCollide(80))
@@ -227,6 +237,12 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
 
     // Run simulation synchronously
     for (let i = 0; i < 300; ++i) simulation.tick();
+
+    // Copy positions back from simulation to nodesData
+    simulationNodes.forEach((simNode, index) => {
+      nodesData[index].position.x = simNode.x ?? 0;
+      nodesData[index].position.y = simNode.y ?? 0;
+    });
 
     // Apply RTL position mirroring if needed
     if (isRTL) {

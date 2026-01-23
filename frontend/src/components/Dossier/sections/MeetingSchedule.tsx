@@ -12,6 +12,12 @@ import { useTranslation } from 'react-i18next';
 import { CalendarDays, Clock } from 'lucide-react';
 import type { ForumDossier, WorkingGroupDossier } from '@/lib/dossier-type-guards';
 
+interface MeetingItem {
+  id: string;
+  title: string;
+  date: string;
+}
+
 interface MeetingScheduleProps {
   dossier: ForumDossier | WorkingGroupDossier;
   isWorkingGroup?: boolean;
@@ -29,7 +35,7 @@ export function MeetingSchedule({
     dossier.type === 'forum' ? dossier.extension.next_meeting_date : undefined;
 
   // Placeholder - will fetch from calendar_entries table in future
-  const meetings: any[] = [];
+  const meetings: MeetingItem[] = [];
 
   return (
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>

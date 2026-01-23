@@ -11,6 +11,7 @@
  */
 
 import { useTranslation } from 'react-i18next';
+import type { TFunction } from 'i18next';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -162,7 +163,7 @@ function getInitials(name: string): string {
 /**
  * Format date to relative time
  */
-function formatRelativeTime(date: string, t: any): string {
+function formatRelativeTime(date: string, t: TFunction): string {
   const now = new Date();
   const then = new Date(date);
   const diffMs = now.getTime() - then.getTime();
@@ -225,9 +226,9 @@ export function DossierAceternityCard({
         <div className="flex flex-col gap-3 sm:gap-4 z-10">
           {/* Avatar or Icon with name */}
           <div className="flex items-center gap-3 sm:gap-4">
-            {dossier.type === 'person' && (dossier.extension as any)?.photo_url ? (
+            {dossier.type === 'person' && dossier.extension && 'photo_url' in dossier.extension && dossier.extension.photo_url ? (
               <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-white/30 shadow-lg">
-                <AvatarImage src={(dossier.extension as any).photo_url} alt={displayName || ''} />
+                <AvatarImage src={dossier.extension.photo_url} alt={displayName || ''} />
                 <AvatarFallback className="bg-white/20 text-white text-sm sm:text-base font-bold backdrop-blur-sm">
                   {displayName ? getInitials(displayName) : 'VIP'}
                 </AvatarFallback>

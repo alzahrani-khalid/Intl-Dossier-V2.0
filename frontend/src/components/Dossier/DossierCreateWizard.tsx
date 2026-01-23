@@ -26,6 +26,8 @@ import { useNavigate } from '@tanstack/react-router'
 import { useForm, FormProvider } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
+import type { ErrorLike } from '@/types/common.types'
+import { getErrorMessage } from '@/types/common.types'
 import {
   Globe,
   Building2,
@@ -323,8 +325,8 @@ export function DossierCreateWizard({
       } else {
         navigate({ to: getDossierDetailPath(newDossier.id, newDossier.type) })
       }
-    } catch (error: any) {
-      toast.error(error?.message || t('dossier:create.error'))
+    } catch (error: ErrorLike) {
+      toast.error(getErrorMessage(error) || t('dossier:create.error'))
     }
   }
 
@@ -508,7 +510,7 @@ export function DossierCreateWizard({
                     <Select
                       onValueChange={(value) => {
                         field.onChange(value)
-                        updateDraft({ status: value as any })
+                        updateDraft({ status: value as 'active' | 'inactive' | 'archived' | 'deleted' })
                       }}
                       defaultValue={field.value}
                     >

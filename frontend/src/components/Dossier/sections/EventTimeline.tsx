@@ -16,6 +16,13 @@ import { MilestonePlannerEmptyState } from '@/components/milestone-planning'
 import { useMilestonePlanning } from '@/hooks/useMilestonePlanning'
 import type { PlannedMilestone } from '@/types/milestone-planning.types'
 
+interface EventItem {
+  id: string;
+  title: string;
+  date: string;
+  type: string;
+}
+
 interface EventTimelineProps {
   dossierId: string
   dossierType?: PlannedMilestone['dossier_type']
@@ -65,7 +72,7 @@ export function EventTimeline({ dossierId, dossierType = 'Engagement' }: EventTi
   // TODO: Fetch calendar entries from calendar_entries table
   // WHERE entity_type = 'engagement' AND entity_id = dossierId
   // For now, we rely on the milestone planning tool for empty state
-  const events: any[] = []
+  const events: EventItem[] = []
 
   // If we have actual timeline events, render them
   // For now, always show the milestone planner which handles both

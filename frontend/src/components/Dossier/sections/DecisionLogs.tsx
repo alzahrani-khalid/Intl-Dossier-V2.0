@@ -11,6 +11,13 @@ import { useTranslation } from 'react-i18next';
 import { FileText, Calendar } from 'lucide-react';
 import type { ForumDossier, WorkingGroupDossier } from '@/lib/dossier-type-guards';
 
+interface DecisionItem {
+  id: string;
+  title: string;
+  description: string;
+  date: string;
+}
+
 interface DecisionLogsProps {
   dossier: ForumDossier | WorkingGroupDossier;
   isWorkingGroup?: boolean;
@@ -24,7 +31,7 @@ export function DecisionLogs({
   const isRTL = i18n.language === 'ar';
 
   // Placeholder - will fetch from engagement dossiers linked to forum in future
-  const decisions: any[] = [];
+  const decisions: DecisionItem[] = [];
 
   if (decisions.length === 0) {
     return (
