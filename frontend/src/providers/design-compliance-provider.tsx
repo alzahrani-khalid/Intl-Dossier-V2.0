@@ -1,9 +1,9 @@
 import React, { createContext, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import type { ValidationResult, ValidationRule } from '../types/validation'
 import type { PerformanceMetric } from '../types/performance'
-import { useResponsive } from '../hooks/use-responsive'
-import { useTheme } from '../hooks/use-theme'
-import { useLanguage } from '../hooks/use-language'
+import { useResponsive } from '../hooks/useResponsive'
+import { useTheme } from '../hooks/useTheme'
+import { useLanguage } from '../hooks/useLanguage'
 
 interface ValidationInput {
  componentName: string

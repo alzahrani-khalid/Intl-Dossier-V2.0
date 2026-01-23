@@ -1,8 +1,6 @@
 import { createFileRoute, Link } from '@tanstack/react-router'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
-import { useAfterAction } from '@/hooks/useAfterAction'
-import { usePublishAfterAction } from '@/hooks/usePublishAfterAction'
-import { useRequestEdit } from '@/hooks/useEditWorkflow'
+import { useAfterActionDetail, usePublishAfterAction, useRequestEdit } from '@/hooks/useAfterAction'
 import { useTranslation } from 'react-i18next'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -38,7 +36,7 @@ function AfterActionDetailPage() {
   const locale = isRTL ? ar : enUS
   const { user } = useAuth()
 
-  const { data: afterAction, isLoading, error } = useAfterAction(afterActionId)
+  const { data: afterAction, isLoading, error } = useAfterActionDetail(afterActionId)
   const publishMutation = usePublishAfterAction()
   const requestEditMutation = useRequestEdit()
 

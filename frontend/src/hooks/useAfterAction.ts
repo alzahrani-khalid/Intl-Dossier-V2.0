@@ -279,6 +279,20 @@ export function useAutoSave(id: string, debounceMs = 30000) {
 }
 
 /**
+ * Hook: Get version history for an after-action
+ * TODO: This is a stub implementation. Needs proper version history API integration.
+ */
+export function useAfterActionVersions(id: string) {
+  // Stub implementation returning empty array
+  // This hook existed in the old file but is not yet implemented in the new structure
+  return useQuery({
+    queryKey: [...afterActionKeys.detail(id), 'versions'],
+    queryFn: async () => [],
+    enabled: false, // Disabled until proper API is implemented
+  });
+}
+
+/**
  * Export all hooks
  */
 export default {
@@ -291,4 +305,5 @@ export default {
   useApproveEdit,
   useDeleteAfterAction,
   useAutoSave,
+  useAfterActionVersions,
 };

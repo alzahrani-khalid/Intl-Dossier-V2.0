@@ -164,4 +164,4 @@ export function ValidationSummary({ componentNames, className }: ValidationSumma
   )
 }
 
-import { useComponentCompliance } from '../../hooks/use-compliance'
+import { useComponentCompliance } from '../../hooks/useCompliance'

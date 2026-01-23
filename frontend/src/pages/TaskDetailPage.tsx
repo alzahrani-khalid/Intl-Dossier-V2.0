@@ -10,7 +10,7 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from '@tanstack/react-router'
-import { useTask } from '../hooks/use-tasks'
+import { useTask } from '../hooks/useTasks'
 import { TaskDetail } from '../components/tasks/TaskDetail'
 import { Alert, AlertDescription } from '../components/ui/alert'
 import { Button } from '../components/ui/button'

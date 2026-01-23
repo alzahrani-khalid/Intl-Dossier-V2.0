@@ -17,8 +17,8 @@ import {
   type AddMultipleContributorsRequest,
 } from '@/services/contributors-api';
 import type { Database } from '../../../backend/src/types/database.types';
-import { useToast } from './use-toast';
-import { tasksKeys } from './use-tasks';
+import { useToast } from './useToast';
+import { tasksKeys } from './useTasks';
 
 type TaskContributor = Database['public']['Tables']['task_contributors']['Row'];
 
