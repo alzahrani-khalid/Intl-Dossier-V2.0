@@ -50,7 +50,7 @@ serve(async (req) => {
     // Retrieve version history ordered by version_number descending (newest first)
     const { data: versions, error } = await supabaseClient
       .from('after_action_versions')
-      .select('*')
+      .select('id, after_action_id, version_number, snapshot, changed_by, changed_at, change_summary')
       .eq('after_action_id', afterActionId)
       .order('version_number', { ascending: false });
 

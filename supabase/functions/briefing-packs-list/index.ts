@@ -60,7 +60,7 @@ serve(async (req) => {
     // Build query
     let query = supabaseClient
       .from('briefing_packs')
-      .select('*')
+      .select('id, engagement_id, language, format, file_url, file_size, page_count, status, generated_at, generated_by, created_at, updated_at')
       .eq('engagement_id', engagementId)
       .order('generated_at', { ascending: false });
 

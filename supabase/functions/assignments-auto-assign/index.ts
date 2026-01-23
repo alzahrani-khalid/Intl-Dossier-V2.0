@@ -74,7 +74,7 @@ serve(async (req) => {
     // Find best assignee using weighted scoring
     const { data: eligibleStaff, error: staffError } = await supabaseClient
       .from('staff_profiles')
-      .select('*')
+      .select('user_id, unit_id, skills, availability_status, current_assignment_count, individual_wip_limit')
       .contains('skills', body.required_skills)
       .eq('availability_status', 'available')
       .lt('current_assignment_count', supabaseClient.raw('individual_wip_limit'));
@@ -108,7 +108,7 @@ serve(async (req) => {
       // Get queue position
       const { count } = await supabaseClient
         .from('assignment_queue')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .or(
           `priority.gt.${body.priority},` +
           `and(priority.eq.${body.priority},created_at.lt.${queueEntry.created_at})`

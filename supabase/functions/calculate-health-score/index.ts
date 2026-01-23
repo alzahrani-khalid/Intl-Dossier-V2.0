@@ -154,7 +154,7 @@ serve(async (req) => {
     if (!forceRecalculation) {
       const { data: existingScore, error: existingScoreError } = await supabaseClient
         .from("health_scores")
-        .select("*")
+        .select("id, dossier_id, overall_score, engagement_frequency, commitment_fulfillment, recency_score, calculated_at, created_at, updated_at")
         .eq("dossier_id", dossierId)
         .maybeSingle();
 
@@ -210,12 +210,12 @@ serve(async (req) => {
     const fetchPromise = Promise.all([
       supabaseClient
         .from("dossier_engagement_stats")
-        .select("*")
+        .select("dossier_id, total_engagements_365d, engagement_frequency_score, latest_engagement_date, created_at, updated_at")
         .eq("dossier_id", dossierId)
         .maybeSingle(),
       supabaseClient
         .from("dossier_commitment_stats")
-        .select("*")
+        .select("dossier_id, total_commitments, fulfillment_rate, overdue_count, created_at, updated_at")
         .eq("dossier_id", dossierId)
         .maybeSingle(),
     ]);

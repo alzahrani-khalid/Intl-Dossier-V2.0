@@ -193,7 +193,13 @@ async function handleListAuditLogs(supabase: any, filters: AuditLogFilters): Pro
 
 // Handler for getting single audit log
 async function handleGetAuditLog(supabase: any, logId: string): Promise<Response> {
-  const { data, error } = await supabase.from('audit_log').select('*').eq('id', logId).single();
+  const { data, error } = await supabase
+    .from('audit_log')
+    .select(
+      'id, table_name, operation, row_id, old_data, new_data, changed_fields, user_id, user_email, user_role, ip_address, user_agent, timestamp, session_id, request_id'
+    )
+    .eq('id', logId)
+    .single();
 
   if (error) {
     if (error.code === 'PGRST116') {

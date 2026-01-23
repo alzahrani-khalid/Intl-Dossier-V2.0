@@ -340,7 +340,7 @@ async function handleOAuth(req: Request, supabase: any, userId: string, route: R
   // Find pending connection with matching state
   const { data: connection, error: findError } = await supabase
     .from('external_calendar_connections')
-    .select('*')
+    .select('id, user_id, provider, sync_status, sync_cursor, sync_direction, conflict_strategy, auto_sync_interval_minutes, sync_past_days, sync_future_days')
     .eq('user_id', userId)
     .eq('provider', provider)
     .eq('sync_status', 'pending')
@@ -510,7 +510,7 @@ async function handleCalendars(req: Request, supabase: any, userId: string, rout
   if (method === 'GET' && route.id) {
     const { data, error } = await supabase
       .from('external_calendars')
-      .select('*')
+      .select('id, connection_id, external_calendar_id, name, description, color, timezone, is_primary, is_owner, access_role, sync_enabled, import_events, export_events, created_at, updated_at')
       .eq('connection_id', route.id)
       .order('is_primary', { ascending: false });
 
@@ -578,7 +578,7 @@ async function handleSync(req: Request, supabase: any, userId: string) {
   // Get connection
   const { data: connection, error: connError } = await supabase
     .from('external_calendar_connections')
-    .select('*')
+    .select('id, user_id, provider, access_token, refresh_token, token_expires_at, sync_direction, sync_past_days, sync_future_days, created_at')
     .eq('id', connection_id)
     .eq('user_id', userId)
     .single();
@@ -625,7 +625,7 @@ async function handleSync(req: Request, supabase: any, userId: string) {
   // Get calendars to sync
   let calendarsQuery = supabase
     .from('external_calendars')
-    .select('*')
+    .select('id, connection_id, external_calendar_id, name, sync_enabled, import_events, export_events')
     .eq('connection_id', connection_id)
     .eq('sync_enabled', true);
 
@@ -1321,7 +1321,7 @@ async function handleIcal(req: Request, supabase: any, userId: string, route: Ro
   if (method === 'GET' && !route.id) {
     const { data, error } = await supabase
       .from('ical_feed_subscriptions')
-      .select('*')
+      .select('id, user_id, feed_url, feed_name, description, color, sync_enabled, refresh_interval_minutes, last_refresh_at, last_refresh_error, content_hash, event_count, created_at, updated_at')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
@@ -1420,7 +1420,7 @@ async function handleIcal(req: Request, supabase: any, userId: string, route: Ro
   if (method === 'POST' && route.id && route.subAction === 'refresh') {
     const { data: subscription, error: subError } = await supabase
       .from('ical_feed_subscriptions')
-      .select('*')
+      .select('id, feed_url, user_id')
       .eq('id', route.id)
       .eq('user_id', userId)
       .single();

@@ -121,7 +121,27 @@ async function listPolls(ctx: RequestContext): Promise<Response> {
   // Build query
   let query = supabase.from('availability_polls').select(
     `
-      *,
+      id,
+      created_by,
+      meeting_title_en,
+      meeting_title_ar,
+      description_en,
+      description_ar,
+      deadline,
+      voting_rule,
+      min_participants_required,
+      meeting_duration_minutes,
+      location_en,
+      location_ar,
+      is_virtual,
+      virtual_link,
+      organizer_notes,
+      dossier_id,
+      status,
+      selected_slot_id,
+      scheduled_event_id,
+      created_at,
+      updated_at,
       slots:poll_slots(count),
       participants:poll_participants(count)
     `,
@@ -184,7 +204,27 @@ async function getPollDetails(ctx: RequestContext, pollId: string): Promise<Resp
     .from('availability_polls')
     .select(
       `
-      *,
+      id,
+      created_by,
+      meeting_title_en,
+      meeting_title_ar,
+      description_en,
+      description_ar,
+      deadline,
+      voting_rule,
+      min_participants_required,
+      meeting_duration_minutes,
+      location_en,
+      location_ar,
+      is_virtual,
+      virtual_link,
+      organizer_notes,
+      dossier_id,
+      status,
+      selected_slot_id,
+      scheduled_event_id,
+      created_at,
+      updated_at,
       creator:auth.users!created_by(id, email, raw_user_meta_data)
     `
     )
@@ -201,7 +241,7 @@ async function getPollDetails(ctx: RequestContext, pollId: string): Promise<Resp
   // Get slots
   const { data: slots, error: slotsError } = await supabase
     .from('poll_slots')
-    .select('*')
+    .select('id, poll_id, slot_start, slot_end, timezone, venue_suggestion_en, venue_suggestion_ar, organizer_preference_score, position, created_at')
     .eq('poll_id', pollId)
     .order('position', { ascending: true });
 
@@ -210,7 +250,7 @@ async function getPollDetails(ctx: RequestContext, pollId: string): Promise<Resp
   // Get participants
   const { data: participants, error: participantsError } = await supabase
     .from('poll_participants')
-    .select('*')
+    .select('id, poll_id, participant_type, participant_id, display_name_en, display_name_ar, email, is_required, created_at')
     .eq('poll_id', pollId);
 
   if (participantsError) throw participantsError;
@@ -218,7 +258,7 @@ async function getPollDetails(ctx: RequestContext, pollId: string): Promise<Resp
   // Get my responses
   const { data: myResponses, error: responsesError } = await supabase
     .from('poll_responses')
-    .select('*')
+    .select('id, poll_id, slot_id, participant_id, respondent_user_id, response, notes, created_at, updated_at')
     .eq('poll_id', pollId)
     .eq('respondent_user_id', userId);
 
@@ -562,7 +602,7 @@ async function autoSchedule(ctx: RequestContext, pollId: string, req: Request): 
   // Get poll
   const { data: poll, error: pollError } = await supabase
     .from('availability_polls')
-    .select('*')
+    .select('id, created_by, meeting_title_en, meeting_title_ar, description_en, description_ar, deadline, voting_rule, min_participants_required, meeting_duration_minutes, location_en, location_ar, is_virtual, virtual_link, organizer_notes, dossier_id, status, selected_slot_id, scheduled_event_id, created_at, updated_at')
     .eq('id', pollId)
     .single();
 
@@ -587,7 +627,7 @@ async function autoSchedule(ctx: RequestContext, pollId: string, req: Request): 
 
   const { data: slot, error: slotError } = await supabase
     .from('poll_slots')
-    .select('*')
+    .select('id, poll_id, slot_start, slot_end, timezone, venue_suggestion_en, venue_suggestion_ar, organizer_preference_score, position, created_at')
     .eq('id', slotId)
     .single();
 
@@ -598,7 +638,7 @@ async function autoSchedule(ctx: RequestContext, pollId: string, req: Request): 
   // Get participants
   const { data: participants } = await supabase
     .from('poll_participants')
-    .select('*')
+    .select('id, poll_id, participant_type, participant_id, display_name_en, display_name_ar, email, is_required, created_at')
     .eq('poll_id', pollId);
 
   // Create dossier if needed

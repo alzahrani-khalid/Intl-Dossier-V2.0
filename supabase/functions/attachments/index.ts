@@ -67,7 +67,7 @@ serve(async (req) => {
       // Check attachment count (max 10)
       const { count } = await supabaseClient
         .from('aa_attachments')
-        .select('*', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('after_action_id', afterActionId);
 
       if (count && count >= 10) {
@@ -182,7 +182,7 @@ serve(async (req) => {
       // Get attachments
       const { data: attachments, error } = await supabaseClient
         .from('aa_attachments')
-        .select('*')
+        .select('id, after_action_id, file_name, storage_path, file_size, mime_type, scan_status, uploaded_by, uploaded_at, virus_scan_result')
         .eq('after_action_id', afterActionId)
         .order('uploaded_at', { ascending: false });
 
@@ -227,7 +227,7 @@ serve(async (req) => {
       // Get attachment (check ownership)
       const { data: attachment, error: fetchError } = await supabaseClient
         .from('aa_attachments')
-        .select('*')
+        .select('id, after_action_id, storage_path, uploaded_by')
         .eq('id', attachmentId)
         .single();
 

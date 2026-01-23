@@ -65,7 +65,7 @@ serve(async (req) => {
     // Verify user is an observer
     const { data: observer, error: observerError } = await supabaseClient
       .from("assignment_observers")
-      .select("*")
+      .select("id, assignment_id, user_id, role, added_at")
       .eq("assignment_id", assignment_id)
       .eq("user_id", user.id)
       .single();
@@ -80,7 +80,7 @@ serve(async (req) => {
     // Fetch current assignment
     const { data: assignment } = await supabaseClient
       .from("assignments")
-      .select("*")
+      .select("id, assignee_id, status, work_item_type, work_item_id, priority, sla_deadline, updated_at")
       .eq("id", assignment_id)
       .single();
 
