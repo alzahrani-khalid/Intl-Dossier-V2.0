@@ -32,6 +32,16 @@ export interface KanbanBoardData {
   }
 }
 
+type AssignmentRow = Database['public']['Tables']['assignments']['Row'];
+
+interface AssignmentWithAssignee extends Pick<AssignmentRow, 'id' | 'title' | 'workflow_stage' | 'priority' | 'overall_sla_deadline' | 'current_stage_sla_deadline' | 'created_at'> {
+  assignee: {
+    id: string;
+    full_name: string;
+    avatar_url: string | null;
+  } | null;
+}
+
 export class KanbanService {
   constructor(private supabase: SupabaseClient<Database>) {}
 
@@ -72,7 +82,7 @@ export class KanbanService {
       cancelled: [],
     }
 
-    assignments?.forEach((assignment: any) => {
+    assignments?.forEach((assignment: AssignmentWithAssignee) => {
       const card: AssignmentCard = {
         id: assignment.id,
         title: assignment.title,

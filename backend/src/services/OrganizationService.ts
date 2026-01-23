@@ -3,6 +3,7 @@ import { cacheHelpers } from '../config/redis'
 import { logInfo, logError } from '../utils/logger'
 import { Cacheable, CacheInvalidate, CachePut } from '../decorators/cache.decorators'
 import { CACHE_TTL, CACHE_TAGS } from '../config/cache-ttl.config'
+import { Json } from '../types/database.types'
 
 interface Organization {
   id: string
@@ -26,7 +27,7 @@ interface Organization {
   objectives?: string[]
   working_areas?: string[]
   parent_organization_id?: string
-  metadata?: Record<string, any>
+  metadata?: Record<string, Json>
   is_active: boolean
   created_at: Date
   updated_at: Date
@@ -86,7 +87,7 @@ export class OrganizationService {
       const cacheKey = `${this.cachePrefix}list:${JSON.stringify(params)}`
       const cached = await cacheHelpers.get(cacheKey)
       if (cached) {
-        return cached as any
+        return cached as { data: Organization[]; total: number; page: number; pages: number }
       }
 
       // Build query
@@ -284,7 +285,7 @@ export class OrganizationService {
       const cacheKey = `${this.cachePrefix}hierarchy:${id}`
       const cached = await cacheHelpers.get(cacheKey)
       if (cached) {
-        return cached as any
+        return cached as { organization: Organization; parent?: Organization; children: Organization[] }
       }
 
       // Get organization
@@ -329,12 +330,12 @@ export class OrganizationService {
   /**
    * Get organization members (countries)
    */
-  async getOrganizationMembers(id: string): Promise<any[]> {
+  async getOrganizationMembers(id: string): Promise<Array<{ id: string; code: string; name_en: string; name_ar: string; flag_url: string | null }>> {
     try {
       const cacheKey = `${this.cachePrefix}members:${id}`
       const cached = await cacheHelpers.get(cacheKey)
       if (cached) {
-        return cached as any[]
+        return cached as Array<{ id: string; code: string; name_en: string; name_ar: string; flag_url: string | null }>
       }
 
       // Get organization
@@ -551,19 +552,19 @@ export class OrganizationService {
   }
 
   // Missing methods for API endpoints
-  async findAll(filters?: any) {
-    return this.searchOrganizations(filters || {})
+  async findAll(filters?: OrganizationSearchParams) {
+    return this.getOrganizations(filters || {})
   }
 
   async findById(id: string) {
     return this.getOrganizationById(id)
   }
 
-  async create(organization: any) {
+  async create(organization: Partial<Organization>) {
     return this.createOrganization(organization)
   }
 
-  async update(id: string, updates: any) {
+  async update(id: string, updates: Partial<Organization>) {
     return this.updateOrganization(id, updates)
   }
 

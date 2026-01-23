@@ -1,9 +1,12 @@
 import { createClient } from '@supabase/supabase-js';
 import logger from '../utils/logger';
+import { Database } from '../types/database.types';
 
 const supabaseUrl = process.env.SUPABASE_URL!;
 const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const supabase = createClient<Database>(supabaseUrl, supabaseServiceKey);
+
+type SLAPolicyRow = Database['public']['Tables']['sla_policies']['Row'];
 
 interface SLAStatus {
   acknowledgment: {
@@ -74,7 +77,7 @@ export class SLAService {
   /**
    * Get SLA policy for a given priority
    */
-  private async getSLAPolicy(priority: string): Promise<any> {
+  private async getSLAPolicy(priority: string): Promise<SLAPolicyRow> {
     const { data, error } = await supabase
       .from('sla_policies')
       .select('*')
@@ -316,7 +319,7 @@ export class SLAService {
   /**
    * Schedule breach check (using database triggers)
    */
-  private async scheduleBreachCheck(ticketId: string, policy: any): Promise<void> {
+  private async scheduleBreachCheck(ticketId: string, policy: SLAPolicyRow): Promise<void> {
     // This would typically be handled by a database trigger or scheduled job
     // For now, we rely on the real-time status calculation
     logger.debug('Breach check scheduled', { ticketId, policy: policy.id });

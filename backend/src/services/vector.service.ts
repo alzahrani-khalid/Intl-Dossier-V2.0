@@ -1,4 +1,4 @@
-import { createClient } from '@supabase/supabase-js'
+import { createClient, SupabaseClient } from '@supabase/supabase-js'
 import {
   VectorEmbedding,
   VectorEmbeddingInput,
@@ -7,12 +7,13 @@ import {
 import { IntelligenceReport } from '../models/intelligence-report.model'
 import { embeddingsService } from '../ai/embeddings-service.js'
 import { aiConfig } from '../ai/config.js'
+import { Database } from '../types/database.types'
 
 interface VectorSearchOptions {
   query_embedding: number[]
   similarity_threshold?: number
   limit?: number
-  filter?: Record<string, any>
+  filter?: Record<string, unknown>
 }
 
 interface VectorSearchResult {
@@ -21,8 +22,18 @@ interface VectorSearchResult {
   report: IntelligenceReport
 }
 
+interface AnythingLLMEmbeddingResponse {
+  data: Array<{ embedding: number[] }>
+}
+
+interface VectorSearchRPCResult {
+  report_id: string
+  similarity: number
+  report: IntelligenceReport
+}
+
 export class VectorService {
-  private supabase: any
+  private supabase: SupabaseClient<Database>
   private anythingLLMAvailable: boolean = true
   private fallbackMode: 'keyword' | 'cached' | null = null
   private useBGEM3: boolean = true
@@ -101,7 +112,7 @@ export class VectorService {
         throw new Error(`AnythingLLM API error: ${response.statusText}`)
       }
 
-      const data = (await response.json()) as any
+      const data = (await response.json()) as AnythingLLMEmbeddingResponse
       return data.data[0].embedding
     } catch (error) {
       console.error('Failed to generate embedding:', error)
@@ -137,7 +148,7 @@ export class VectorService {
       return this.fallbackSearch(filter, limit)
     }
 
-    return data.map((item: any) => ({
+    return data.map((item: VectorSearchRPCResult) => ({
       report_id: item.report_id,
       similarity: item.similarity,
       report: item.report,
@@ -145,7 +156,7 @@ export class VectorService {
   }
 
   private async fallbackSearch(
-    filter: Record<string, any>,
+    filter: Record<string, unknown>,
     limit: number,
   ): Promise<VectorSearchResult[]> {
     let query = this.supabase.from('intelligence_reports').select('*')

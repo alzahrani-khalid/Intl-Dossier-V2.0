@@ -45,6 +45,24 @@ export interface ClusterAnalysis {
   summary: string;
 }
 
+interface TrendAnalysis {
+  term: string;
+  frequency: number;
+  growth: number;
+  relatedReports: string[];
+}
+
+interface KeyFinding {
+  text: string;
+  [key: string]: unknown;
+}
+
+interface RelevantSection {
+  title: string;
+  content: string;
+  matchScore: number;
+}
+
 export class IntelligenceEmbeddingService {
   private supabase: ReturnType<typeof createClient<Database>>;
   private anythingLLMUrl: string;
@@ -360,7 +378,7 @@ export class IntelligenceEmbeddingService {
       (timeWindow.start.getTime() + timeWindow.end.getTime()) / 2
     );
 
-    const trends: any[] = [];
+    const trends: TrendAnalysis[] = [];
 
     for (const [term, reportIds] of termFrequencies) {
       if (reportIds.size < minFrequency) continue;
@@ -400,7 +418,7 @@ export class IntelligenceEmbeddingService {
     return { en, ar };
   }
 
-  private async indexKeyFindings(reportId: string, findings: any[]): Promise<void> {
+  private async indexKeyFindings(reportId: string, findings: KeyFinding[]): Promise<void> {
     // Store each key finding as a separate searchable entity
     // This would typically go to a separate table for fine-grained search
     for (const finding of findings) {
@@ -486,7 +504,7 @@ export class IntelligenceEmbeddingService {
     report: IntelligenceReport,
     query: string,
     language: 'en' | 'ar'
-  ): any[] {
+  ): RelevantSection[] {
     const sections = [];
     const queryTerms = query.toLowerCase().split(/\s+/);
 

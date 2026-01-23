@@ -1,8 +1,19 @@
 import { supabaseAdmin } from '../config/supabase';
 import { logInfo, logError } from '../utils/logger';
+import { Database } from '../types/database.types';
+
+type CountryRow = Database['public']['Tables']['countries']['Row'];
+type CountryInsert = Database['public']['Tables']['countries']['Insert'];
+type CountryUpdate = Database['public']['Tables']['countries']['Update'];
+
+interface PaginationFilters {
+  page?: number;
+  limit?: number;
+  search?: string;
+}
 
 export class CountryService {
-  async getCountries(filters?: any) {
+  async getCountries(filters?: PaginationFilters) {
     try {
       const page = filters?.page || 1;
       const limit = filters?.limit || 50;
@@ -44,7 +55,7 @@ export class CountryService {
     }
   }
 
-  async createCountry(countryData: any) {
+  async createCountry(countryData: CountryInsert) {
     try {
       const { data, error } = await supabaseAdmin
         .from('countries')
@@ -60,7 +71,7 @@ export class CountryService {
     }
   }
 
-  async updateCountry(id: string, updates: any) {
+  async updateCountry(id: string, updates: CountryUpdate) {
     try {
       const { data, error } = await supabaseAdmin
         .from('countries')
@@ -93,7 +104,7 @@ export class CountryService {
   }
 
   // Methods for API compatibility
-  async findAll(filters?: any) {
+  async findAll(filters?: PaginationFilters) {
     return this.getCountries(filters);
   }
 
@@ -101,11 +112,11 @@ export class CountryService {
     return this.getCountryById(id);
   }
 
-  async create(country: any) {
+  async create(country: CountryInsert) {
     return this.createCountry(country);
   }
 
-  async update(id: string, updates: any) {
+  async update(id: string, updates: CountryUpdate) {
     return this.updateCountry(id, updates);
   }
 

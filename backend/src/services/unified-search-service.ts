@@ -192,7 +192,7 @@ export class UnifiedSearchService {
    * @param query - Search query
    * @returns Rank score (0-100)
    */
-  private calculateRank(dossier: any, query: string): number {
+  private calculateRank(dossier: SearchResult, query: string): number {
     const lowerQuery = query.toLowerCase();
     const nameEn = (dossier.name_en || '').toLowerCase();
     const nameAr = (dossier.name_ar || '').toLowerCase();
@@ -236,7 +236,7 @@ export class UnifiedSearchService {
    * @param query - Search query
    * @returns Snippet string with context around match
    */
-  private generateSnippet(dossier: any, query: string): string {
+  private generateSnippet(dossier: SearchResult, query: string): string {
     const lowerQuery = query.toLowerCase();
 
     // Check name fields first

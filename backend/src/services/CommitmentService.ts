@@ -1,9 +1,20 @@
 import { supabaseAdmin } from '../config/supabase';
 import { cacheHelpers } from '../config/redis';
 import { logInfo, logError } from '../utils/logger';
+import { Database } from '../types/database.types';
+
+type CommitmentInsert = Database['public']['Tables']['commitments']['Insert'];
+type CommitmentUpdate = Database['public']['Tables']['commitments']['Update'];
+
+interface PaginationFilters {
+  page?: number;
+  limit?: number;
+  status?: string;
+  search?: string;
+}
 
 export class CommitmentService {
-  async trackCommitment(commitmentData: any, userId: string) {
+  async trackCommitment(commitmentData: CommitmentInsert, userId: string) {
     try {
       const { data, error } = await supabaseAdmin
         .from('commitments')
@@ -81,7 +92,7 @@ export class CommitmentService {
   }
 
   // Missing methods for API endpoints
-  async findAll(filters?: any) {
+  async findAll(filters?: PaginationFilters) {
     const { data, error } = await supabaseAdmin
       .from('commitments')
       .select('*')
@@ -91,7 +102,7 @@ export class CommitmentService {
     return data || [];
   }
 
-  async create(commitment: any) {
+  async create(commitment: CommitmentInsert & { created_by: string }) {
     return this.trackCommitment(commitment, commitment.created_by);
   }
 

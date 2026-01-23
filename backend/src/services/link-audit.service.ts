@@ -5,6 +5,7 @@
 
 import { supabaseAdmin } from '../config/supabase';
 import type { LinkAuditLog } from '../types/intake-entity-links.types';
+import { Json } from '../types/database.types';
 
 /**
  * Audit action types
@@ -28,8 +29,8 @@ export async function createAuditLog(
   linkId: string,
   action: AuditAction,
   userId: string,
-  oldValues?: any,
-  newValues?: any,
+  oldValues?: Json,
+  newValues?: Json,
   ipAddress?: string,
   userAgent?: string
 ): Promise<void> {
@@ -48,7 +49,7 @@ export async function createAuditLog(
     }
 
     // Build details object based on action
-    const details: Record<string, any> = {};
+    const details: Record<string, Json> = {};
 
     if (action === 'updated' && oldValues && newValues) {
       details.old_values = oldValues;
@@ -260,8 +261,8 @@ export async function createBatchAuditLogs(
     linkId: string;
     action: AuditAction;
     userId: string;
-    oldValues?: any;
-    newValues?: any;
+    oldValues?: Json;
+    newValues?: Json;
     ipAddress?: string;
     userAgent?: string;
   }>
@@ -291,7 +292,7 @@ export async function createBatchAuditLogs(
       }
 
       // Build details object
-      const details: Record<string, any> = {};
+      const details: Record<string, Json> = {};
 
       if (log.action === 'updated' && log.oldValues && log.newValues) {
         details.old_values = log.oldValues;

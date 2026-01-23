@@ -92,7 +92,7 @@ export class DocumentParser {
 
         // Concatenate text items with proper spacing
         const pageText = content.items
-          .map((item: any) => item.str)
+          .map((item: { str: string }) => item.str)
           .join(' ');
 
         fullText += pageText + '\n\n';
@@ -122,7 +122,7 @@ export class DocumentParser {
    */
   async parseWord(filePath: string | Buffer): Promise<ParseResult> {
     try {
-      let options: any = {};
+      let options: { path?: string; buffer?: Buffer } = {};
 
       // Configure mammoth options based on input type
       if (typeof filePath === 'string') {
@@ -146,7 +146,7 @@ export class DocumentParser {
 
       // Calculate confidence based on conversion quality
       let confidence = 85; // Base confidence for Word docs
-      if (result.messages && result.messages.some((msg: any) => msg.type === 'error')) {
+      if (result.messages && result.messages.some((msg: { type: string }) => msg.type === 'error')) {
         confidence -= 20;
       } else if (result.messages && result.messages.length > 0) {
         confidence -= 10;
