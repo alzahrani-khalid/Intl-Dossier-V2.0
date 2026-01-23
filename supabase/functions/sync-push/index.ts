@@ -146,7 +146,7 @@ async function resolveTimestampConflict(
       .from(entity._entity_type)
       .update(updateData)
       .eq('id', entity.id)
-      .select()
+      .select('*')
       .single()
 
     if (error) {
@@ -216,7 +216,7 @@ async function processEntityPush(
         .from(entity._entity_type)
         .update(entityData)
         .eq('id', entity.id)
-        .select()
+        .select('*')
         .single()
     } else {
       // Insert new entity
@@ -229,7 +229,7 @@ async function processEntityPush(
       result = await supabase
         .from(entity._entity_type)
         .insert(entityData)
-        .select()
+        .select('*')
         .single()
     }
 

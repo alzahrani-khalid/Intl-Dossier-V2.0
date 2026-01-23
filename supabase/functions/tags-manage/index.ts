@@ -217,7 +217,7 @@ serve(async (req) => {
         const { data, error } = await supabaseClient
           .from('cd_tags')
           .insert(tags)
-          .select();
+          .select('id, name, category, color, description, is_system, usage_count, created_at, updated_at, created_by');
 
         if (error) {
           if (error.code === '23505') {
@@ -237,7 +237,7 @@ serve(async (req) => {
         const { data, error } = await supabaseClient
           .from('cd_tags')
           .insert(body)
-          .select()
+          .select('id, name, category, color, description, is_system, usage_count, created_at, updated_at, created_by')
           .single();
 
         if (error) {

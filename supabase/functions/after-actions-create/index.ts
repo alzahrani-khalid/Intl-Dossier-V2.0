@@ -126,7 +126,7 @@ serve(async (req) => {
         created_by: user.user.id,
         version: 1
       })
-      .select()
+      .select('id, engagement_id, dossier_id, publication_status, is_confidential, attendees, notes, created_by, version, created_at, updated_at')
       .single();
 
     if (afterActionError) {
@@ -189,7 +189,7 @@ serve(async (req) => {
                 email: commitment.owner_contact_email,
                 source: 'after_action'
               })
-              .select()
+              .select('id, dossier_id, name, email, source, created_at, updated_at')
               .single();
 
             if (contactError) {
