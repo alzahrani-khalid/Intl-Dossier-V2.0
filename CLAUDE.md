@@ -502,10 +502,18 @@ git push && ssh root@138.197.195.242 "cd /opt/intl-dossier && git pull && cd dep
 
 ### Test Credentials for Browser/Chrome MCP
 
-When testing the application using browser automation tools (Chrome MCP, Playwright, etc.), use these credentials:
+When testing the application using browser automation tools (Chrome MCP, Playwright, etc.), use test credentials from environment variables:
 
-- **Email**: kazahrani@stats.gov.sa
-- **Password**: itisme
+- **Email**: Set `TEST_USER_EMAIL` in your `.env.local` file
+- **Password**: Set `TEST_USER_PASSWORD` in your `.env.local` file
+
+**Example `.env.local`:**
+```bash
+TEST_USER_EMAIL=your-test-email@example.com
+TEST_USER_PASSWORD=your-secure-password
+```
+
+**⚠️ IMPORTANT**: Never commit `.env.local` to version control. Test credentials should be managed securely and rotated regularly.
 
 ## Browser Automation
 
