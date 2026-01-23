@@ -165,12 +165,16 @@ class RealtimeManager {
 
     if (config.onPresenceJoin) {
       channel.on('presence', { event: 'join' }, ({ newPresences }) => {
-        // Convert array to RealtimePresenceState format
+        // Presence state conversion: Transform array of presence objects into
+        // RealtimePresenceState format (Map<presence_ref, Array<presence>>)
+        // This allows tracking multiple sessions per user via unique presence_ref keys
         const presenceState: RealtimePresenceState = {}
         newPresences.forEach((presence: any) => {
+          // Initialize array for this presence_ref if it doesn't exist yet
           if (!presenceState[presence.presence_ref]) {
             presenceState[presence.presence_ref] = []
           }
+          // Group all presence data under the same presence_ref (one per tab/device)
           presenceState[presence.presence_ref]?.push(presence)
         })
         config.onPresenceJoin!(presenceState)
@@ -179,12 +183,15 @@ class RealtimeManager {
 
     if (config.onPresenceLeave) {
       channel.on('presence', { event: 'leave' }, ({ leftPresences }) => {
-        // Convert array to RealtimePresenceState format
+        // Presence state conversion: Transform array of leaving presence objects
+        // into RealtimePresenceState format for consistent handling with join events
         const presenceState: RealtimePresenceState = {}
         leftPresences.forEach((presence: any) => {
+          // Initialize array for this presence_ref if it doesn't exist yet
           if (!presenceState[presence.presence_ref]) {
             presenceState[presence.presence_ref] = []
           }
+          // Group all leaving presence data under the same presence_ref
           presenceState[presence.presence_ref]?.push(presence)
         })
         config.onPresenceLeave!(presenceState)
@@ -193,15 +200,23 @@ class RealtimeManager {
 
     // Setup broadcast handler with message deduplication
     if (config.onBroadcast) {
+      // Message deduplication: Track processed messages to prevent duplicate callbacks
+      // when the same message is received multiple times due to network issues
       const processedMessages = new Set<string>()
       channel.on('broadcast', { event: '*' }, ({ event, payload }) => {
+        // Generate unique message ID from event name, payload content, and timestamp
+        // This ensures we can identify duplicate messages while allowing repeated
+        // identical payloads if they arrive at different times
         const messageId = `${event}-${JSON.stringify(payload)}-${Date.now()}`
         if (!processedMessages.has(messageId)) {
+          // First time seeing this message - process it and track it
           processedMessages.add(messageId)
           config.onBroadcast!(event, payload)
-          // Clean up old message IDs after 5 seconds
+          // Clean up old message IDs after 5 seconds to prevent memory leaks
+          // 5s window is sufficient to catch duplicates from network retries
           setTimeout(() => processedMessages.delete(messageId), 5000)
         }
+        // If message already exists in Set, silently ignore to prevent duplicate processing
       })
     }
 
@@ -241,16 +256,29 @@ class RealtimeManager {
   private handleChannelError(channelName: string, config: RealtimeConfig) {
     const attempts = this.reconnectAttempts.get(channelName) || 0
     if (attempts < this.maxReconnectAttempts) {
-      const delay = this.baseReconnectDelay * Math.pow(2, attempts) // Exponential backoff
+      // Exponential backoff calculation: Each retry doubles the delay
+      // Example delays with baseReconnectDelay=1000ms:
+      //   Attempt 0: 1000ms * 2^0 = 1s
+      //   Attempt 1: 1000ms * 2^1 = 2s
+      //   Attempt 2: 1000ms * 2^2 = 4s
+      //   Attempt 3: 1000ms * 2^3 = 8s
+      //   Attempt 4: 1000ms * 2^4 = 16s
+      // This progressive backoff reduces server load and gives time for issues to resolve
+      const delay = this.baseReconnectDelay * Math.pow(2, attempts)
 
       const timeout = setTimeout(() => {
+        // Increment attempt counter before reconnection
         this.reconnectAttempts.set(channelName, attempts + 1)
+        // Clean up old channel before resubscribing
         this.unsubscribe(channelName)
+        // Attempt reconnection with original config
         this.subscribe(config)
       }, delay)
 
+      // Store timeout reference so we can cancel it if channel is manually unsubscribed
       this.reconnectTimeouts.set(channelName, timeout)
     }
+    // If max attempts reached, give up and stop retrying (no error thrown to avoid noise)
   }
 
   /**
@@ -370,15 +398,22 @@ class RealtimeManager {
   private flushMessageQueue(channelName: string, channel: RealtimeChannel) {
     const queue = this.messageQueue.get(channelName)
     if (queue && queue.length > 0) {
+      // Queue flushing: Send all queued messages in order (FIFO)
+      // Messages are queued when broadcast() is called while offline
       queue.forEach(({ event, payload }) => {
+        // Send each message immediately without awaiting - let them queue in the channel
+        // This preserves message order while avoiding blocking the reconnection flow
         channel.send({
           type: 'broadcast',
           event,
           payload,
         })
       })
+      // Clear the queue after flushing by replacing with empty array
+      // We don't delete the key to maintain the channel's queue slot
       this.messageQueue.set(channelName, [])
     }
+    // If queue is empty or doesn't exist, no action needed
   }
 
   /**
