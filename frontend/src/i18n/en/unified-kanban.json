@@ -135,6 +135,18 @@
     "itemCount": "{{count}} item",
     "itemCount_plural": "{{count}} items",
     "boardNavigation": "Use arrow keys to navigate between columns",
-    "itemSelected": "{{title}} selected, press Space to pick up"
+    "itemSelected": "{{title}} selected, press Space to pick up",
+    "kanbanBoard": "Kanban board with keyboard shortcuts. Press J to move down, K to move up, Enter to open card, 1-4 to change status",
+    "swimlaneToggle": "{{name}}, {{count}} items. Click to toggle",
+    "card": "{{title}}, {{priority}} priority, in {{status}}",
+    "wipLimit": "Work in progress: {{current}} of {{limit}} items, {{percentage}} percent used",
+    "cancelBulkSelection": "Cancel bulk selection",
+    "enableBulkSelection": "Enable bulk selection",
+    "selectAllCards": "Select all cards",
+    "bulkMoveTo": "Move {{count}} selected items to another column",
+    "bulkAssign": "Assign {{count}} selected items to a user",
+    "bulkChangePriority": "Change priority for {{count}} selected items",
+    "clearSelection": "Clear selection of {{count}} items",
+    "swimlaneSelector": "Select swimlane grouping mode"
   }
 }

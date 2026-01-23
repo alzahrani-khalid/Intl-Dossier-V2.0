@@ -135,6 +135,18 @@
     "itemCount": "{{count}} عنصر",
     "itemCount_plural": "{{count}} عناصر",
     "boardNavigation": "استخدم مفاتيح الأسهم للتنقل بين الأعمدة",
-    "itemSelected": "تم تحديد {{title}}، اضغط مسافة للالتقاط"
+    "itemSelected": "تم تحديد {{title}}، اضغط مسافة للالتقاط",
+    "kanbanBoard": "لوحة كانبان مع اختصارات لوحة المفاتيح. اضغط J للتحرك للأسفل، K للتحرك للأعلى، Enter لفتح البطاقة، 1-4 لتغيير الحالة",
+    "swimlaneToggle": "{{name}}، {{count}} عنصر. انقر للتبديل",
+    "card": "{{title}}، أولوية {{priority}}، في {{status}}",
+    "wipLimit": "العمل الجاري: {{current}} من {{limit}} عنصر، {{percentage}} بالمائة مستخدمة",
+    "cancelBulkSelection": "إلغاء التحديد الجماعي",
+    "enableBulkSelection": "تفعيل التحديد الجماعي",
+    "selectAllCards": "تحديد جميع البطاقات",
+    "bulkMoveTo": "نقل {{count}} عنصر محدد إلى عمود آخر",
+    "bulkAssign": "إسناد {{count}} عنصر محدد لمستخدم",
+    "bulkChangePriority": "تغيير الأولوية لـ {{count}} عنصر محدد",
+    "clearSelection": "مسح تحديد {{count}} عنصر",
+    "swimlaneSelector": "اختيار وضع تجميع المسارات"
   }
 }

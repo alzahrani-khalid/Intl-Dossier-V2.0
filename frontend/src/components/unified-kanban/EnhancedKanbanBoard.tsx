@@ -459,7 +459,15 @@ export function EnhancedKanbanBoard({
     const progressColor = getWipProgressColor(warningLevel)
 
     return (
-      <div className="flex items-center gap-2">
+      <div
+        className="flex items-center gap-2"
+        role="status"
+        aria-label={t('accessibility.wipLimit', {
+          current: wipStatus.current,
+          limit: wipStatus.limit,
+          percentage: Math.round(wipStatus.percentage),
+        })}
+      >
         <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden min-w-[40px]">
           <div
             className={cn('h-full transition-all', progressColor)}
@@ -492,6 +500,12 @@ export function EnhancedKanbanBoard({
           size="sm"
           onClick={bulkOps.toggleSelectMode}
           className="gap-2"
+          aria-label={
+            bulkOps.selectionState.isSelecting
+              ? t('accessibility.cancelBulkSelection')
+              : t('accessibility.enableBulkSelection')
+          }
+          aria-pressed={bulkOps.selectionState.isSelecting}
         >
           {bulkOps.selectionState.isSelecting ? (
             <>
@@ -508,7 +522,12 @@ export function EnhancedKanbanBoard({
 
         {bulkOps.selectionState.isSelecting && (
           <>
-            <Button variant="ghost" size="sm" onClick={bulkOps.selectAll}>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={bulkOps.selectAll}
+              aria-label={t('accessibility.selectAllCards')}
+            >
               {t('bulkActions.selectAll')}
             </Button>
 
@@ -520,7 +539,13 @@ export function EnhancedKanbanBoard({
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                      aria-label={t('accessibility.bulkMoveTo', { count: bulkOps.selectedCount })}
+                      aria-haspopup="menu"
+                    >
                       <Move className="h-4 w-4" />
                       {t('bulkActions.moveTo')}
                     </Button>
@@ -537,7 +562,13 @@ export function EnhancedKanbanBoard({
                 {availableAssignees.length > 0 && (
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
-                      <Button variant="outline" size="sm" className="gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        className="gap-2"
+                        aria-label={t('accessibility.bulkAssign', { count: bulkOps.selectedCount })}
+                        aria-haspopup="menu"
+                      >
                         <UserPlus className="h-4 w-4" />
                         {t('bulkActions.assign')}
                       </Button>
@@ -561,7 +592,15 @@ export function EnhancedKanbanBoard({
 
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="gap-2">
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                      aria-label={t('accessibility.bulkChangePriority', {
+                        count: bulkOps.selectedCount,
+                      })}
+                      aria-haspopup="menu"
+                    >
                       <Signal className="h-4 w-4" />
                       {t('bulkActions.priority')}
                     </Button>
@@ -583,6 +622,7 @@ export function EnhancedKanbanBoard({
                   size="sm"
                   onClick={bulkOps.clearSelection}
                   className="ms-auto"
+                  aria-label={t('accessibility.clearSelection', { count: bulkOps.selectedCount })}
                 >
                   {t('bulkActions.clearSelection')}
                 </Button>
@@ -597,9 +637,9 @@ export function EnhancedKanbanBoard({
   // Render swimlane selector
   const renderSwimlaneSelector = () => (
     <div className="flex items-center gap-2 ms-4">
-      <Users className="h-4 w-4 text-muted-foreground" />
+      <Users className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
       <Select value={swimlaneMode} onValueChange={(v) => handleSwimlaneChange(v as SwimlaneMode)}>
-        <SelectTrigger className="h-8 w-[140px]">
+        <SelectTrigger className="h-8 w-[140px]" aria-label={t('accessibility.swimlaneSelector')}>
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -634,6 +674,11 @@ export function EnhancedKanbanBoard({
             'hover:bg-muted/50 transition-colors',
             'text-start',
           )}
+          aria-expanded={!isCollapsed}
+          aria-label={t('accessibility.swimlaneToggle', {
+            name: isRTL && swimlane.titleAr ? swimlane.titleAr : swimlane.title,
+            count: swimlaneItems.length,
+          })}
         >
           <div className="flex items-center gap-2">
             {isCollapsed ? (
@@ -675,7 +720,11 @@ export function EnhancedKanbanBoard({
                     </div>
                     <div className="space-y-2 min-h-[100px]">
                       {columnItems.length === 0 ? (
-                        <div className="text-xs text-muted-foreground text-center py-4">
+                        <div
+                          className="text-xs text-muted-foreground text-center py-4"
+                          role="status"
+                          aria-live="polite"
+                        >
                           {t('empty.noItemsInColumn')}
                         </div>
                       ) : (
@@ -689,6 +738,15 @@ export function EnhancedKanbanBoard({
                               bulkOps.isSelected(item.id) && 'ring-2 ring-primary',
                               isFocusedCard(item) && 'ring-2 ring-blue-500 ring-offset-2',
                             )}
+                            role="button"
+                            tabIndex={isFocusedCard(item) ? 0 : -1}
+                            aria-label={t('accessibility.card', {
+                              title: item.title,
+                              priority: item.priority,
+                              status: isRTL && columnDef?.titleAr ? columnDef.titleAr : columnDef?.title,
+                            })}
+                            aria-current={isFocusedCard(item) ? 'true' : undefined}
+                            aria-selected={bulkOps.isSelected(item.id) ? 'true' : undefined}
                           >
                             {bulkOps.selectionState.isSelecting && (
                               <Checkbox checked={bulkOps.isSelected(item.id)} className="mb-2" />
@@ -724,7 +782,13 @@ export function EnhancedKanbanBoard({
   }
 
   return (
-    <div className={cn('flex flex-col h-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      className={cn('flex flex-col h-full', className)}
+      dir={isRTL ? 'rtl' : 'ltr'}
+      role="region"
+      aria-label={t('accessibility.kanbanBoard')}
+      aria-keyshortcuts="j k Enter 1 2 3 4"
+    >
       {/* Header */}
       <UnifiedKanbanHeader
         columnMode={columnMode}
@@ -803,10 +867,12 @@ export function EnhancedKanbanBoard({
                     {renderWipIndicator(columnKey, columnItems.length)}
 
                     {columnItems.length === 0 ? (
-                      <KanbanEmpty
-                        message={t('empty.noItemsInColumn')}
-                        subMessage={t('empty.dragHere')}
-                      />
+                      <div role="status" aria-live="polite">
+                        <KanbanEmpty
+                          message={t('empty.noItemsInColumn')}
+                          subMessage={t('empty.dragHere')}
+                        />
+                      </div>
                     ) : (
                       columnItems.map((item) => (
                         <KanbanCard
@@ -818,6 +884,13 @@ export function EnhancedKanbanBoard({
                             bulkOps.isSelected(item.id) && 'ring-2 ring-primary',
                             isFocusedCard(item) && 'ring-2 ring-blue-500 ring-offset-2',
                           )}
+                          aria-label={t('accessibility.card', {
+                            title: item.title,
+                            priority: item.priority,
+                            status: isRTL && columnDef?.titleAr ? columnDef.titleAr : columnDef?.title,
+                          })}
+                          aria-current={isFocusedCard(item) ? 'true' : undefined}
+                          aria-selected={bulkOps.isSelected(item.id) ? 'true' : undefined}
                         >
                           {bulkOps.selectionState.isSelecting && (
                             <div className="mb-2">
@@ -841,7 +914,11 @@ export function EnhancedKanbanBoard({
 
       {/* Empty state */}
       {!isLoading && filteredItems.length === 0 && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
+        <div
+          className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none"
+          role="status"
+          aria-live="polite"
+        >
           <div className="text-center p-8">
             <p className="text-lg font-medium text-muted-foreground mb-2">{t('empty.noItems')}</p>
             <p className="text-sm text-muted-foreground">{t('empty.noItemsDescription')}</p>
