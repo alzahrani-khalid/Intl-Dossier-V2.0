@@ -7,7 +7,7 @@
 | Setting          | Value                    |
 | ---------------- | ------------------------ |
 | Admin User       | `admin`                  |
-| Admin Password   | `itisme123`              |
+| Admin Password   | Set via environment variable `ANYTHINGLLM_ADMIN_PASSWORD` |
 | LLM Provider     | OpenAI                   |
 | LLM Model        | `gpt-4o`                 |
 | Embedding Engine | OpenAI                   |
@@ -19,7 +19,7 @@
 **Generate API Key for Backend:**
 
 1. Open http://localhost:3001
-2. Login with `admin` / `itisme123`
+2. Login with `admin` / `${ANYTHINGLLM_ADMIN_PASSWORD}` (from your environment variables)
 3. Go to **Settings (gear icon) > Developer**
 4. Click **Generate New API Key**
 5. Copy the key and update `backend/.env`:

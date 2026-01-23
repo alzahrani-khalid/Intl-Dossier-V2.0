@@ -489,9 +489,9 @@ appId: com.stats.intldossier
 ---
 - launchApp
 - tapOn: "Login"
-- inputText: "kazahrani@stats.gov.sa"
+- inputText: "${TEST_USER_EMAIL}"
 - tapOn: "Password"
-- inputText: "itisme"
+- inputText: "${TEST_USER_PASSWORD}"
 - tapOn: "Sign In"
 - assertVisible: "Home"
 - assertVisible: "Dossiers"
@@ -692,8 +692,8 @@ The app includes seed data for testing:
 - **1 intake ticket**: Pending approval
 
 **Login Credentials** (Staging):
-- Email: `kazahrani@stats.gov.sa`
-- Password: `itisme`
+- Email: `${TEST_USER_EMAIL}`
+- Password: `${TEST_USER_PASSWORD}`
 
 ### 2. Implement Features
 

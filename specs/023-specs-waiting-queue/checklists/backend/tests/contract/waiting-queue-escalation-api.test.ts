@@ -26,8 +26,8 @@ describe('Escalation API Contract Tests', () => {
 
     // Sign in test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: '${TEST_USER_EMAIL}',
+      password: process.env.TEST_USER_PASSWORD || 'itisme',
     });
 
     if (authError || !authData.user) {

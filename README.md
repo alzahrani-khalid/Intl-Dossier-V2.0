@@ -346,12 +346,14 @@ See [mobile/README.md](./mobile/README.md) for detailed mobile deployment guide.
 
 ## Testing Credentials
 
-For development and testing:
+For development and testing, set environment variables in your `.env.local` file:
 
+```env
+TEST_USER_EMAIL=your-test-email@example.com
+TEST_USER_PASSWORD=your-secure-password
 ```
-Email: kazahrani@stats.gov.sa
-Password: itisme
-```
+
+**⚠️ IMPORTANT**: Never commit `.env.local` to version control. Test credentials should be managed securely and rotated regularly.
 
 ## Environment Configuration
 

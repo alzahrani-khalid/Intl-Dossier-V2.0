@@ -95,7 +95,7 @@ npx expo start
 ### 5. Verify Setup
 
 Open browser to `http://localhost:5173` (frontend) and verify:
-- You can log in with test credentials (kazahrani@stats.gov.sa / itisme)
+- You can log in with test credentials (${TEST_USER_EMAIL} / ${TEST_USER_PASSWORD})
 - Navigate to a dossier
 - See "Log After-Action" button on engagement detail page
 

@@ -783,7 +783,7 @@ None identified in implemented features.
 - [shadcn/ui Components](https://ui.shadcn.com)
 
 ### Test Credentials (Staging)
-- **Admin**: kazahrani@stats.gov.sa / itisme
+- **Admin**: ${TEST_USER_EMAIL} / ${TEST_USER_PASSWORD}
 - **Project ID**: zkrcjzdemdmwhearhfgg
 - **Database**: PostgreSQL 17.6.1.008 (eu-west-2)
 

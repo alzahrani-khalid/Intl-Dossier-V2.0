@@ -322,7 +322,7 @@ All 15 success criteria from spec.md have been addressed:
 ### For QA Team
 - **Test Plan**: See `VALIDATION_REPORT.md` for detailed test cases
 - **Focus Areas**: Keyboard navigation, color contrast, background refresh
-- **Test Credentials**: kazahrani@stats.gov.sa / itisme
+- **Test Credentials**: ${TEST_USER_EMAIL} / ${TEST_USER_PASSWORD}
 - **Environment**: Staging (zkrcjzdemdmwhearhfgg)
 
 ### For DevOps Team

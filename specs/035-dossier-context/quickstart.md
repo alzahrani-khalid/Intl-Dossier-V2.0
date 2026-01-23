@@ -296,8 +296,8 @@ curl -X GET \
 
 For browser/E2E testing:
 
-- **Email**: kazahrani@stats.gov.sa
-- **Password**: itisme
+- **Email**: ${TEST_USER_EMAIL}
+- **Password**: ${TEST_USER_PASSWORD}
 
 ---
 

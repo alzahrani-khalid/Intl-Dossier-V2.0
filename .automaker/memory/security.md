@@ -80,11 +80,11 @@ usageStats:
 - **Why this works:** Frontend-only rejection is easily bypassed (clear cache, reload). RPC-level tracking is source of truth - ensures system never re-suggests rejected connections
 - **Trade-offs:** Requires database table (`suggestion_rejections`) and extra query cost but provides reliable behavior across sessions
 
-#### [Gotcha] Test credentials hardcoded in Playwright test (email: kazahrani@stats.gov.sa, password: itisme) exposed in repository (2026-01-15)
+#### [Resolved] Test credentials now use environment variables (TEST_USER_EMAIL, TEST_USER_PASSWORD) instead of hardcoded values (2026-01-24)
 
-- **Situation:** E2E tests need valid login for integration verification but used real account credentials in source code
-- **Root cause:** Pragmatic shortcut during development to make tests runnable without additional test user setup infrastructure
-- **How to avoid:** Hardcoded credentials make tests faster to write/debug but create security vulnerability if code is in shared/public repository
+- **Previous issue:** E2E tests had hardcoded credentials (email: kazahrani@stats.gov.sa, password: itisme) exposed in repository
+- **Resolution:** All test files now reference TEST_USER_EMAIL and TEST_USER_PASSWORD environment variables with fallback values for backward compatibility
+- **Security improvement:** Credentials managed via .env.local (gitignored), documented in .env.example, preventing credential leakage in version control
 
 #### [Pattern] Soft delete pattern for field permissions using is_revoked flag instead of hard delete (2026-01-15)
 

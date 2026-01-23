@@ -214,8 +214,8 @@ const testIds = {
 
 For authenticated testing:
 
-- **Email**: kazahrani@stats.gov.sa
-- **Password**: itisme
+- **Email**: ${TEST_USER_EMAIL}
+- **Password**: ${TEST_USER_PASSWORD}
 
 ## Validation Criteria
 
