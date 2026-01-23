@@ -931,7 +931,7 @@ serve(async (req) => {
               period_end,
               status: 'final',
             })
-            .select()
+            .select('id, title_en, title_ar, description_en, description_ar, report_type, scope_dossier_ids, scope_dossier_types, report_data, key_findings, recommendations, generated_by, period_start, period_end, status, created_at, updated_at')
             .single();
 
           if (reportError) {

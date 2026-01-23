@@ -103,7 +103,7 @@ serve(async (req) => {
         failed_items: 0,
         status: 'running',
       })
-      .select()
+      .select('id, operation_type, user_id, total_items, processed_items, successful_items, failed_items, status, error_details, started_at, completed_at, created_at, updated_at')
       .single();
 
     if (progressError || !progressRecord) {

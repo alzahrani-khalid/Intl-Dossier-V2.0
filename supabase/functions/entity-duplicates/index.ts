@@ -547,7 +547,7 @@ serve(async (req) => {
             .from('duplicate_detection_settings')
             .update(updates)
             .eq('entity_type', entityIdOrType)
-            .select()
+            .select('id, entity_type, similarity_threshold, matching_fields, auto_merge_enabled, requires_approval, created_at, updated_at')
             .single();
 
           if (error) {

@@ -436,7 +436,7 @@ serve(async (req) => {
             linked_by: user.id,
             _version: 1,
           })
-          .select()
+          .select('id, intake_id, entity_type, entity_id, link_type, source, confidence, notes, link_order, linked_by, _version, created_at, updated_at')
           .single();
 
         if (createError) {

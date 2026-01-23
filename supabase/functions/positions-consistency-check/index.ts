@@ -481,7 +481,7 @@ serve(async (req: Request) => {
         reviewed_by: autoApproved ? user.id : null,
         reviewed_at: autoApproved ? new Date().toISOString() : null,
       })
-      .select()
+      .select('id, position_id, analyzed_by, analysis_type, overall_score, risk_level, ai_service_available, conflicts, recommendations, similar_positions, gaps_identified, requires_human_review, auto_approved, ai_interaction_id, processing_time_ms, review_status, reviewed_by, reviewed_at, created_at, updated_at')
       .single();
 
     if (insertError) {
