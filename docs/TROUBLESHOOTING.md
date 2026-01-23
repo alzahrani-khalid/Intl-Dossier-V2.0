@@ -3539,6 +3539,428 @@ environment:
 
 ## Debugging Tools & Techniques
 
+### Browser DevTools
+
+Modern browsers provide powerful built-in debugging tools essential for troubleshooting React applications. This section covers Chrome/Edge DevTools (similar tools exist in Firefox and Safari).
+
+#### Opening DevTools
+
+| Method | Shortcut |
+|--------|----------|
+| Right-click > Inspect | N/A |
+| Keyboard (Windows/Linux) | `F12` or `Ctrl + Shift + I` |
+| Keyboard (Mac) | `Cmd + Option + I` |
+| Menu | Chrome Menu > More Tools > Developer Tools |
+
+#### Console Tab
+
+The Console is your primary debugging interface for JavaScript execution and logging.
+
+**Essential Commands:**
+
+```javascript
+// Log variables and objects
+console.log('Debug value:', variable)
+console.table(arrayOfObjects)  // Display arrays as tables
+console.dir(domElement)        // Show DOM properties
+
+// Grouping logs
+console.group('User Actions')
+console.log('Action 1')
+console.log('Action 2')
+console.groupEnd()
+
+// Timing operations
+console.time('API Call')
+await fetchData()
+console.timeEnd('API Call')
+
+// Conditional logging
+console.assert(value > 0, 'Value must be positive')
+
+// Clear console
+console.clear()
+```
+
+**Application-Specific Debugging:**
+
+```javascript
+// Debug TanStack Query cache
+window.queryClient.getQueryCache().getAll()
+
+// Check Supabase auth state
+await supabase.auth.getSession()
+
+// Test i18n language switching
+i18n.changeLanguage('ar')
+
+// Inspect React component
+$r  // Selected component in React DevTools
+```
+
+#### Network Tab
+
+Monitor all network requests, essential for debugging API calls and real-time subscriptions.
+
+**Key Features:**
+
+| Feature | Use Case |
+|---------|----------|
+| Filter by type | `Fetch/XHR`, `WS` (WebSockets), `Doc`, `CSS`, `JS` |
+| Search requests | Find specific API endpoints |
+| Request details | Headers, Payload, Preview, Response, Timing |
+| Throttling | Simulate slow connections (3G, 4G) |
+| Disable cache | Force fresh requests |
+| HAR export | Save network log for analysis |
+
+**Common Workflows:**
+
+```bash
+# Debug failed API requests
+1. Filter by "Fetch/XHR"
+2. Look for red status codes (4xx, 5xx)
+3. Click request > Preview tab to see error response
+4. Headers tab to verify Authorization header
+
+# Monitor Supabase real-time
+1. Filter by "WS" (WebSockets)
+2. Click WebSocket connection
+3. Messages tab shows subscription events
+4. Look for "postgres_changes" payloads
+
+# Check request timing
+1. Click request > Timing tab
+2. Identify bottlenecks:
+   - DNS Lookup
+   - Initial Connection
+   - SSL/TLS
+   - Waiting (TTFB)
+   - Content Download
+
+# Export network activity
+1. Right-click in Network tab
+2. Save all as HAR with content
+3. Analyze in external tools or share with team
+```
+
+#### Elements/Inspector Tab
+
+Inspect and modify DOM structure and CSS in real-time.
+
+**Key Features:**
+
+```bash
+# Inspect element
+1. Click element picker icon (or Ctrl+Shift+C / Cmd+Shift+C)
+2. Hover over page elements
+3. Click to inspect
+
+# Edit HTML
+1. Right-click element > Edit as HTML
+2. Make changes
+3. Press Ctrl+Enter to apply
+
+# Modify CSS
+1. Select element
+2. Styles panel shows applied styles
+3. Edit values or add new properties
+4. Changes apply immediately
+
+# Debug layout issues
+1. Computed tab shows final computed styles
+2. Box model visualization
+3. Hover over padding/margin/border to highlight
+
+# Find elements
+Ctrl+F / Cmd+F in Elements tab
+- Search by selector: div.container
+- Search by text content
+- Search by XPath
+```
+
+**RTL Debugging:**
+
+```javascript
+// Check RTL direction
+$0.dir  // 'rtl' or 'ltr' for selected element
+
+// Verify logical properties
+getComputedStyle($0).marginInlineStart  // Should use 'ms-*' classes
+getComputedStyle($0).paddingInlineEnd   // Should use 'pe-*' classes
+
+// Test RTL layout
+document.dir = 'rtl'  // Force RTL for testing
+```
+
+#### Sources/Debugger Tab
+
+Debug JavaScript with breakpoints and step-through execution.
+
+**Setting Breakpoints:**
+
+```bash
+# Line breakpoints
+1. Open source file
+2. Click line number to set breakpoint
+3. Breakpoint appears as blue marker
+
+# Conditional breakpoints
+1. Right-click line number
+2. Add conditional breakpoint
+3. Enter condition: userId === '123'
+
+# Logpoints (non-breaking)
+1. Right-click line number
+2. Add logpoint
+3. Enter expression to log
+
+# Event listener breakpoints
+1. Event Listener Breakpoints panel
+2. Expand categories (Mouse, Keyboard, etc.)
+3. Check events to break on
+```
+
+**Debugging Workflow:**
+
+```bash
+# When breakpoint hits
+1. Scope panel shows variable values
+2. Call Stack shows execution path
+3. Step controls:
+   - Resume (F8) - Continue execution
+   - Step Over (F10) - Execute current line
+   - Step Into (F11) - Enter function call
+   - Step Out (Shift+F11) - Exit current function
+
+# Watch expressions
+1. Watch panel > Click +
+2. Add expression to monitor
+3. Updates on each step
+
+# Edit and continue
+1. Pause execution
+2. Edit code in source
+3. Save (Ctrl+S / Cmd+S)
+4. Resume - changes apply immediately
+```
+
+**React-Specific Debugging:**
+
+```javascript
+// Add breakpoint in React component
+function UserProfile({ userId }) {
+  debugger;  // Execution pauses here
+  const user = useQuery(...)
+
+  // Or use conditional debugger
+  if (userId === '123') debugger;
+
+  return <div>...</div>
+}
+```
+
+#### Performance Tab
+
+Profile runtime performance and identify bottlenecks.
+
+**Recording Performance:**
+
+```bash
+# Record profile
+1. Click Record button (or Ctrl+E / Cmd+E)
+2. Interact with application
+3. Click Stop
+4. Analyze results
+
+# Key metrics
+- FPS (frames per second) - aim for 60 FPS
+- CPU usage - identify expensive operations
+- Network activity - concurrent requests
+- Screenshots - visual timeline of page changes
+```
+
+**Analyzing Results:**
+
+```bash
+# Flame chart
+- Shows function call stack over time
+- Wider bars = more time spent
+- Click bar to see function details
+
+# Bottom-Up / Call Tree
+- Aggregates time by function
+- Identifies hotspots
+
+# React component rendering
+- Install React DevTools Profiler
+- See component render times
+- Identify unnecessary re-renders
+```
+
+#### Application Tab
+
+Inspect storage, caches, and application state.
+
+**Storage Types:**
+
+| Type | Use Case | Location |
+|------|----------|----------|
+| Local Storage | Persistent user preferences | Application > Local Storage |
+| Session Storage | Temporary session data | Application > Session Storage |
+| Cookies | Auth tokens, session IDs | Application > Cookies |
+| IndexedDB | Large structured data | Application > IndexedDB |
+| Cache Storage | Service Worker caches | Application > Cache Storage |
+
+**Common Tasks:**
+
+```bash
+# View stored auth tokens
+1. Application > Local Storage
+2. Look for 'supabase.auth.token'
+3. Verify expiry time
+
+# Clear storage
+1. Application > Storage
+2. Click "Clear site data"
+3. Select storage types to clear
+
+# Inspect Supabase session
+localStorage.getItem('sb-<project-ref>-auth-token')
+
+# Debug i18n language setting
+localStorage.getItem('i18nextLng')  // Current language
+
+# Check TanStack Query cache persistence
+localStorage.getItem('REACT_QUERY_OFFLINE_CACHE')
+```
+
+#### Lighthouse Audits
+
+Automated testing for performance, accessibility, SEO, and best practices.
+
+```bash
+# Run audit
+1. Open DevTools
+2. Lighthouse tab
+3. Select categories to audit
+4. Click "Generate report"
+
+# Key metrics
+- Performance Score (0-100)
+- First Contentful Paint (FCP)
+- Largest Contentful Paint (LCP)
+- Time to Interactive (TTI)
+- Cumulative Layout Shift (CLS)
+
+# Accessibility checks
+- ARIA attributes
+- Color contrast
+- Keyboard navigation
+- Screen reader compatibility
+```
+
+#### Mobile Device Simulation
+
+Test responsive design and mobile-specific issues.
+
+```bash
+# Enable device toolbar
+1. Click device icon (or Ctrl+Shift+M / Cmd+Shift+M)
+2. Select device preset or custom dimensions
+3. Test touch events and screen sizes
+
+# Device settings
+- Dimensions: Width x Height
+- Device pixel ratio (DPR)
+- User agent string
+- Network throttling
+
+# Responsive breakpoints testing
+Base (320px+) → sm (640px+) → md (768px+) → lg (1024px+)
+```
+
+**Touch Event Testing:**
+
+```bash
+# Simulate touch
+1. Enable device toolbar
+2. Click and drag to simulate swipe
+3. Check touch target sizes (min 44x44px)
+
+# Test RTL on mobile
+1. Device toolbar > More options
+2. Add device with RTL locale
+3. Or manually set: document.dir = 'rtl'
+```
+
+#### Remote Debugging (Mobile Devices)
+
+Debug web apps running on physical mobile devices.
+
+**Android (Chrome):**
+
+```bash
+# Setup
+1. Enable USB debugging on Android device
+2. Connect via USB
+3. Chrome DevTools > More tools > Remote devices
+4. Select device and inspect WebView/Chrome tab
+
+# Wireless debugging (Android 11+)
+1. Settings > Developer options > Wireless debugging
+2. Pair device via QR code or pairing code
+3. chrome://inspect#devices
+```
+
+**iOS (Safari):**
+
+```bash
+# Setup
+1. Enable Web Inspector on iOS device
+   Settings > Safari > Advanced > Web Inspector
+2. Connect via USB
+3. Mac Safari > Develop > [Device name] > [Page]
+
+# Requirements
+- Mac with Safari
+- iOS device with Safari
+- USB connection or same Wi-Fi network
+```
+
+#### DevTools Best Practices
+
+```bash
+# Performance tips
+1. Use Performance monitor for real-time metrics
+   - Ctrl+Shift+P > Show Performance Monitor
+   - Track CPU, memory, FPS
+
+2. Enable paint flashing
+   - Settings > More tools > Rendering
+   - Check "Paint flashing"
+   - See what re-paints on interactions
+
+3. Check layout shifts
+   - Rendering > Layout Shift Regions
+   - Identify CLS issues
+
+# Debugging tips
+1. Preserve log across page loads
+   - Network/Console settings > Preserve log
+
+2. Disable cache during development
+   - Network settings > Disable cache
+
+3. Blackbox third-party scripts
+   - Sources > right-click file > Blackbox script
+   - Skip library code when debugging
+
+4. Use workspace for persistent edits
+   - Sources > Filesystem > Add folder
+   - Edit files directly in DevTools
+   - Changes save to disk
+```
+
 ### React Developer Tools
 
 ```bash
