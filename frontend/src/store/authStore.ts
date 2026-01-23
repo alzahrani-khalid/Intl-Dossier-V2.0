@@ -53,7 +53,7 @@ export const useAuthStore = create<AuthState>()(
             // Fetch user profile from database
             const { data: profile } = await supabase
               .from('users')
-              .select('*')
+              .select('id, full_name, username, role, avatar_url')
               .eq('id', data.user.id)
               .single()
 
