@@ -80,6 +80,30 @@ vi.mock('react-i18next', () => ({
   Trans: ({ children }: any) => children,
 }));
 
+// Mock react-window components for testing
+// react-window uses refs and DOM measurements which don't work in JSDOM
+vi.mock('react-window', () => ({
+  FixedSizeList: ({ children, itemCount, itemSize, height, width }: any) => (
+    <div data-testid="virtualized-list" style={{ height, width }}>
+      {Array.from({ length: itemCount }, (_, index) => children({ index, style: {} }))}
+    </div>
+  ),
+  VariableSizeList: ({ children, itemCount, height, width }: any) => (
+    <div data-testid="virtualized-list" style={{ height, width }}>
+      {Array.from({ length: itemCount }, (_, index) => children({ index, style: {} }))}
+    </div>
+  ),
+  VariableSizeGrid: ({ children, columnCount, rowCount, height, width }: any) => (
+    <div data-testid="virtualized-grid" style={{ height, width }}>
+      {Array.from({ length: rowCount }, (_, rowIndex) =>
+        Array.from({ length: columnCount }, (_, columnIndex) =>
+          children({ rowIndex, columnIndex, style: {} })
+        )
+      )}
+    </div>
+  ),
+}));
+
 // Start server before all tests
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));
 
