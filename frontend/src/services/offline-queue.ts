@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
+import type { JsonValue } from '@/types/common.types'
 
 // Types for offline queue
 export interface QueuedAction {
@@ -7,7 +8,7 @@ export interface QueuedAction {
   type: 'api' | 'upload' | 'sync'
   method: 'GET' | 'POST' | 'PUT' | 'DELETE' | 'PATCH'
   url: string
-  data?: any
+  data?: JsonValue
   headers?: Record<string, string>
   timestamp: number
   retryCount: number
