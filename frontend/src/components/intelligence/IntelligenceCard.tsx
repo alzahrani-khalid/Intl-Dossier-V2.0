@@ -59,7 +59,7 @@ export function IntelligenceCard({
 
   return (
     <Card
-      className="p-4 sm:p-6 hover:shadow-lg transition-shadow duration-200"
+      className="p-4 transition-shadow duration-200 hover:shadow-lg sm:p-6"
       dir={isRTL ? 'rtl' : 'ltr'}
       role="article"
       aria-label={t('intelligence.cardLabel', {
@@ -68,16 +68,16 @@ export function IntelligenceCard({
       })}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4 mb-4">
+      <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex items-start gap-3">
-          <div className="rounded-lg bg-primary/10 p-2 sm:p-3 shrink-0">
-            <Icon className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+          <div className="shrink-0 rounded-lg bg-primary/10 p-2 sm:p-3">
+            <Icon className="size-5 text-primary sm:size-6" />
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-base sm:text-lg font-semibold text-foreground line-clamp-2">
+          <div className="min-w-0 flex-1">
+            <h3 className="line-clamp-2 text-base font-semibold text-foreground sm:text-lg">
               {title}
             </h3>
-            <div className="flex flex-wrap items-center gap-2 mt-2">
+            <div className="mt-2 flex flex-wrap items-center gap-2">
               <Badge
                 variant="outline"
                 className="text-xs"
@@ -88,18 +88,18 @@ export function IntelligenceCard({
               {isStale && (
                 <Badge
                   variant="secondary"
-                  className="text-xs bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 flex items-center gap-1"
+                  className="flex items-center gap-1 bg-yellow-100 text-xs text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
                 >
-                  <AlertTriangle className="h-3 w-3" />
+                  <AlertTriangle className="size-3" />
                   {t('intelligence.stale', 'Stale')}
                 </Badge>
               )}
               {intelligence.refresh_status === 'fresh' && !isStale && (
                 <Badge
                   variant="secondary"
-                  className="text-xs bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 flex items-center gap-1"
+                  className="flex items-center gap-1 bg-green-100 text-xs text-green-800 dark:bg-green-900 dark:text-green-200"
                 >
-                  <CheckCircle className="h-3 w-3" />
+                  <CheckCircle className="size-3" />
                   {t('intelligence.fresh', 'Fresh')}
                 </Badge>
               )}
@@ -110,15 +110,15 @@ export function IntelligenceCard({
 
       {/* Content */}
       <div className="mb-4">
-        <p className="text-sm sm:text-base text-muted-foreground leading-relaxed whitespace-pre-wrap">
+        <p className="whitespace-pre-wrap text-sm leading-relaxed text-muted-foreground sm:text-base">
           {content}
         </p>
       </div>
 
       {/* Footer */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pt-4 border-t border-border">
-        <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-          <Clock className="h-4 w-4" />
+      <div className="flex flex-col gap-3 border-t border-border pt-4 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
+          <Clock className="size-4" />
           <span>
             {t('intelligence.last_updated', 'Updated')} {lastUpdated}
           </span>
@@ -126,7 +126,7 @@ export function IntelligenceCard({
 
         {/* Data Sources Count */}
         {intelligence.data_sources_metadata && intelligence.data_sources_metadata.length > 0 && (
-          <div className="text-xs sm:text-sm text-muted-foreground">
+          <div className="text-xs text-muted-foreground sm:text-sm">
             {t('intelligence.sources_count', {
               count: intelligence.data_sources_metadata.length,
               defaultValue: `{{count}} sources`,

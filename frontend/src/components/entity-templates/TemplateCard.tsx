@@ -112,7 +112,7 @@ export function TemplateCard({
               getColorClass(template),
             )}
           >
-            <IconComponent className="h-4 w-4 sm:h-5 sm:w-5" />
+            <IconComponent className="size-4 sm:size-5" />
           </div>
           <div className="min-w-0 flex-1">
             <h4 className="truncate text-sm font-medium sm:text-base">{name}</h4>
@@ -176,7 +176,7 @@ export function TemplateCard({
             isRTL ? '-start-1' : '-end-1',
           )}
         >
-          <Clock className="inline-block h-3 w-3" />
+          <Clock className="inline-block size-3" />
         </div>
       )}
     </div>

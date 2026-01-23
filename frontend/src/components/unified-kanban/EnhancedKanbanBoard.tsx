@@ -311,7 +311,7 @@ export function EnhancedKanbanBoard({
   const renderOverlay = useCallback((activeItem: WorkItem | null) => {
     if (!activeItem) return null
     return (
-      <div className="rounded-lg border bg-card p-3 shadow-lg cursor-grabbing min-w-[280px]">
+      <div className="min-w-[280px] cursor-grabbing rounded-lg border bg-card p-3 shadow-lg">
         <UnifiedKanbanCardContent item={activeItem} />
       </div>
     )
@@ -330,7 +330,7 @@ export function EnhancedKanbanBoard({
 
     return (
       <div className="flex items-center gap-2">
-        <div className="flex-1 h-1.5 bg-muted rounded-full overflow-hidden min-w-[40px]">
+        <div className="h-1.5 min-w-[40px] flex-1 overflow-hidden rounded-full bg-muted">
           <div
             className={cn('h-full transition-all', progressColor)}
             style={{ width: `${wipStatus.percentage}%` }}
@@ -340,7 +340,7 @@ export function EnhancedKanbanBoard({
           {wipStatus.current}/{wipStatus.limit}
         </Badge>
         {(warningLevel === 'at_limit' || warningLevel === 'over_limit') && (
-          <AlertTriangle className="h-3.5 w-3.5 text-amber-500" />
+          <AlertTriangle className="size-3.5 text-amber-500" />
         )}
       </div>
     )
@@ -365,12 +365,12 @@ export function EnhancedKanbanBoard({
         >
           {bulkOps.selectionState.isSelecting ? (
             <>
-              <X className="h-4 w-4" />
+              <X className="size-4" />
               {t('bulkActions.cancel')}
             </>
           ) : (
             <>
-              <CheckSquare className="h-4 w-4" />
+              <CheckSquare className="size-4" />
               {t('bulkActions.select')}
             </>
           )}
@@ -391,7 +391,7 @@ export function EnhancedKanbanBoard({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
-                      <Move className="h-4 w-4" />
+                      <Move className="size-4" />
                       {t('bulkActions.moveTo')}
                     </Button>
                   </DropdownMenuTrigger>
@@ -408,7 +408,7 @@ export function EnhancedKanbanBoard({
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild>
                       <Button variant="outline" size="sm" className="gap-2">
-                        <UserPlus className="h-4 w-4" />
+                        <UserPlus className="size-4" />
                         {t('bulkActions.assign')}
                       </Button>
                     </DropdownMenuTrigger>
@@ -432,7 +432,7 @@ export function EnhancedKanbanBoard({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="outline" size="sm" className="gap-2">
-                      <Signal className="h-4 w-4" />
+                      <Signal className="size-4" />
                       {t('bulkActions.priority')}
                     </Button>
                   </DropdownMenuTrigger>
@@ -466,8 +466,8 @@ export function EnhancedKanbanBoard({
 
   // Render swimlane selector
   const renderSwimlaneSelector = () => (
-    <div className="flex items-center gap-2 ms-4">
-      <Users className="h-4 w-4 text-muted-foreground" />
+    <div className="ms-4 flex items-center gap-2">
+      <Users className="size-4 text-muted-foreground" />
       <Select value={swimlaneMode} onValueChange={(v) => handleSwimlaneChange(v as SwimlaneMode)}>
         <SelectTrigger className="h-8 w-[140px]">
           <SelectValue />
@@ -522,8 +522,8 @@ export function EnhancedKanbanBoard({
 
         {/* Swimlane content */}
         {!isCollapsed && (
-          <div className="px-2 pb-2 overflow-x-auto">
-            <div className="flex gap-4 min-w-max">
+          <div className="overflow-x-auto px-2 pb-2">
+            <div className="flex min-w-max gap-4">
               {columnOrder.map((columnKey) => {
                 const columnDef = columnDefinitions.find((c) => c.key === columnKey)
                 const columnItems = swimlaneItems.filter(
@@ -533,9 +533,9 @@ export function EnhancedKanbanBoard({
                 return (
                   <div
                     key={columnKey}
-                    className="w-[280px] min-w-[280px] bg-card rounded-lg border p-2"
+                    className="w-[280px] min-w-[280px] rounded-lg border bg-card p-2"
                   >
-                    <div className="flex items-center justify-between mb-2 px-2">
+                    <div className="mb-2 flex items-center justify-between px-2">
                       <span className="text-xs font-medium text-muted-foreground">
                         {isRTL && columnDef?.titleAr ? columnDef.titleAr : columnDef?.title}
                       </span>
@@ -543,9 +543,9 @@ export function EnhancedKanbanBoard({
                         {columnItems.length}
                       </Badge>
                     </div>
-                    <div className="space-y-2 min-h-[100px]">
+                    <div className="min-h-[100px] space-y-2">
                       {columnItems.length === 0 ? (
-                        <div className="text-xs text-muted-foreground text-center py-4">
+                        <div className="py-4 text-center text-xs text-muted-foreground">
                           {t('empty.noItemsInColumn')}
                         </div>
                       ) : (
@@ -580,9 +580,9 @@ export function EnhancedKanbanBoard({
   // Error state
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 text-center">
-        <p className="text-lg text-muted-foreground mb-4">{t('errors.loadFailed')}</p>
-        <p className="text-sm text-muted-foreground mb-4">{t('errors.loadFailedDescription')}</p>
+      <div className="flex h-96 flex-col items-center justify-center text-center">
+        <p className="mb-4 text-lg text-muted-foreground">{t('errors.loadFailed')}</p>
+        <p className="mb-4 text-sm text-muted-foreground">{t('errors.loadFailedDescription')}</p>
         {onRefresh && (
           <button onClick={onRefresh} className="text-primary hover:underline">
             {t('actions.retry')}
@@ -610,7 +610,7 @@ export function EnhancedKanbanBoard({
       />
 
       {/* Swimlane selector */}
-      <div className="flex items-center px-4 py-2 border-b">{renderSwimlaneSelector()}</div>
+      <div className="flex items-center border-b px-4 py-2">{renderSwimlaneSelector()}</div>
 
       {/* Bulk action bar */}
       {renderBulkActionBar()}
@@ -624,13 +624,13 @@ export function EnhancedKanbanBoard({
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="flex flex-col rounded-lg border bg-muted/30 w-full sm:w-[300px] sm:min-w-[300px] h-[500px]"
+                className="flex h-[500px] w-full flex-col rounded-lg border bg-muted/30 sm:w-[300px] sm:min-w-[300px]"
               >
-                <div className="flex items-center justify-between p-3 border-b bg-muted/50">
-                  <div className="h-5 w-20 bg-muted rounded animate-pulse" />
-                  <div className="h-5 w-6 bg-muted rounded-full animate-pulse" />
+                <div className="flex items-center justify-between border-b bg-muted/50 p-3">
+                  <div className="h-5 w-20 animate-pulse rounded bg-muted" />
+                  <div className="h-5 w-6 animate-pulse rounded-full bg-muted" />
                 </div>
-                <div className="flex-1 p-2 space-y-2">
+                <div className="flex-1 space-y-2 p-2">
                   <UnifiedKanbanCardSkeleton />
                   <UnifiedKanbanCardSkeleton />
                   <UnifiedKanbanCardSkeleton />
@@ -709,9 +709,9 @@ export function EnhancedKanbanBoard({
 
       {/* Empty state */}
       {!isLoading && filteredItems.length === 0 && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <div className="text-center p-8">
-            <p className="text-lg font-medium text-muted-foreground mb-2">{t('empty.noItems')}</p>
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+          <div className="p-8 text-center">
+            <p className="mb-2 text-lg font-medium text-muted-foreground">{t('empty.noItems')}</p>
             <p className="text-sm text-muted-foreground">{t('empty.noItemsDescription')}</p>
           </div>
         </div>

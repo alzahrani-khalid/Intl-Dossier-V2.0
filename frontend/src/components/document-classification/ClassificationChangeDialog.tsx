@@ -113,8 +113,8 @@ export function ClassificationChangeDialog({
           <div className="space-y-4 py-4">
             {/* Document info */}
             <div className="rounded-lg border bg-muted/50 p-3">
-              <p className="font-medium text-sm">{document.file_name}</p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="text-sm font-medium">{document.file_name}</p>
+              <p className="mt-1 text-xs text-muted-foreground">
                 {t('changeDialog.currentClassification', 'Current classification')}:
               </p>
               <div className="mt-2">
@@ -139,7 +139,7 @@ export function ClassificationChangeDialog({
                   showTooltip={false}
                 />
                 <ArrowRight
-                  className={`h-4 w-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
+                  className={`size-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
                 />
                 <ClassificationBadge
                   classification={newClassification}
@@ -155,7 +155,7 @@ export function ClassificationChangeDialog({
                 variant="destructive"
                 className="border-amber-500 bg-amber-50 dark:bg-amber-950"
               >
-                <AlertTriangle className="h-4 w-4 text-amber-600" />
+                <AlertTriangle className="size-4 text-amber-600" />
                 <AlertTitle className="text-amber-700 dark:text-amber-300">
                   {t('changeDialog.approvalRequired', 'Approval Required')}
                 </AlertTitle>
@@ -199,9 +199,9 @@ export function ClassificationChangeDialog({
           </div>
         )}
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
-            <X className="h-4 w-4 me-2" />
+            <X className="me-2 size-4" />
             {t('common.cancel', 'Cancel')}
           </Button>
           <Button
@@ -210,9 +210,9 @@ export function ClassificationChangeDialog({
             className={needsApproval ? 'bg-amber-600 hover:bg-amber-700' : ''}
           >
             {isLoading ? (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-background border-t-transparent me-2" />
+              <div className="me-2 size-4 animate-spin rounded-full border-2 border-background border-t-transparent" />
             ) : (
-              <Check className="h-4 w-4 me-2" />
+              <Check className="me-2 size-4" />
             )}
             {needsApproval
               ? t('changeDialog.submitForApproval', 'Submit for Approval')

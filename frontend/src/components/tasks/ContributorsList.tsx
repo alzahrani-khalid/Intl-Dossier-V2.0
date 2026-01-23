@@ -45,7 +45,7 @@ export function ContributorsList({
  if (activeContributors.length === 0) {
  return (
  <div
- className="text-sm text-muted-foreground text-start"
+ className="text-start text-sm text-muted-foreground"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  {t('tasks.noContributors', 'No contributors yet')}
@@ -71,7 +71,7 @@ export function ContributorsList({
  {/* Role badge */}
  <Badge
  variant="secondary"
- className="text-xs sm:text-sm capitalize px-2 py-1"
+ className="px-2 py-1 text-xs capitalize sm:text-sm"
  >
  {t(`tasks.contributorRole.${contributor.role}`, contributor.role)}
  </Badge>
@@ -81,7 +81,7 @@ export function ContributorsList({
  <Button
  variant="ghost"
  size="icon"
- className="size-8 ms-auto"
+ className="ms-auto size-8"
  onClick={() => onRemove(contributor.id)}
  aria-label={t('tasks.removeContributor', 'Remove contributor')}
  >
@@ -92,7 +92,7 @@ export function ContributorsList({
  {/* Notes tooltip (if exists) */}
  {contributor.notes && (
  <span
- className="text-xs text-muted-foreground italic truncate max-w-[120px] sm:max-w-[200px]"
+ className="max-w-[120px] truncate text-xs italic text-muted-foreground sm:max-w-[200px]"
  title={contributor.notes}
  >
  {contributor.notes}
@@ -103,7 +103,7 @@ export function ContributorsList({
 
  {/* Overflow indicator */}
  {overflowCount > 0 && (
- <div className="flex items-center justify-center size-8 sm:size-10 rounded-full border bg-muted text-xs sm:text-sm font-medium">
+ <div className="flex size-8 items-center justify-center rounded-full border bg-muted text-xs font-medium sm:size-10 sm:text-sm">
  +{overflowCount}
  </div>
  )}
@@ -152,7 +152,7 @@ export function ContributorsAvatarGroup({
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  {displayedContributors.map((contributor) => (
- <Avatar key={contributor.id} className="size-8 sm:size-10 border-2 border-background">
+ <Avatar key={contributor.id} className="size-8 border-2 border-background sm:size-10">
  <AvatarImage src={`/avatars/${contributor.user_id}.png`} />
  <AvatarFallback className="text-xs">
  {getInitials(contributor.user_id)}
@@ -161,7 +161,7 @@ export function ContributorsAvatarGroup({
  ))}
 
  {overflowCount > 0 && (
- <div className="flex items-center justify-center size-8 sm:size-10 rounded-full border-2 border-background bg-muted text-xs font-medium">
+ <div className="flex size-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium sm:size-10">
  +{overflowCount}
  </div>
  )}

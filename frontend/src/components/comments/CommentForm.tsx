@@ -44,10 +44,10 @@ interface CommentFormProps {
 
 const VISIBILITY_OPTIONS: { value: CommentVisibility; icon: React.ReactNode; labelKey: string }[] =
   [
-    { value: 'public', icon: <Eye className="h-4 w-4" />, labelKey: 'visibility.public' },
-    { value: 'internal', icon: <Users className="h-4 w-4" />, labelKey: 'visibility.internal' },
-    { value: 'team', icon: <Users className="h-4 w-4" />, labelKey: 'visibility.team' },
-    { value: 'private', icon: <Lock className="h-4 w-4" />, labelKey: 'visibility.private' },
+    { value: 'public', icon: <Eye className="size-4" />, labelKey: 'visibility.public' },
+    { value: 'internal', icon: <Users className="size-4" />, labelKey: 'visibility.internal' },
+    { value: 'team', icon: <Users className="size-4" />, labelKey: 'visibility.team' },
+    { value: 'private', icon: <Lock className="size-4" />, labelKey: 'visibility.private' },
   ]
 
 export function CommentForm({
@@ -166,7 +166,7 @@ export function CommentForm({
       />
 
       {/* Actions row */}
-      <div className="flex items-center justify-between gap-2 flex-wrap">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         {/* Visibility selector */}
         <div className="flex items-center gap-2">
           <Select value={visibility} onValueChange={(v) => setVisibility(v as CommentVisibility)}>
@@ -190,7 +190,7 @@ export function CommentForm({
 
           {/* Keyboard hint */}
           {!compact && (
-            <span className="text-xs text-muted-foreground hidden sm:inline">
+            <span className="hidden text-xs text-muted-foreground sm:inline">
               {t('form.keyboardHint', 'Ctrl+Enter to submit')}
             </span>
           )}

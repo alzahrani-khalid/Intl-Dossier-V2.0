@@ -110,13 +110,13 @@ export function SLAComplianceTable({
                         </TableCell>
                         <TableCell className="text-center">
                           <span className="flex items-center justify-center gap-1 text-green-600">
-                            <CheckCircle className="h-4 w-4" />
+                            <CheckCircle className="size-4" />
                             {row.met_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                           </span>
                         </TableCell>
                         <TableCell className="text-center">
                           <span className="flex items-center justify-center gap-1 text-red-600">
-                            <XCircle className="h-4 w-4" />
+                            <XCircle className="size-4" />
                             {row.breached_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                           </span>
                         </TableCell>
@@ -132,7 +132,7 @@ export function SLAComplianceTable({
                 </Table>
               </div>
             ) : (
-              <div className="h-32 flex items-center justify-center text-muted-foreground">
+              <div className="flex h-32 items-center justify-center text-muted-foreground">
                 {t('tables.noDataByType')}
               </div>
             )}
@@ -147,7 +147,7 @@ export function SLAComplianceTable({
                       <TableHead className="text-start">{t('tables.assignee')}</TableHead>
                       <TableHead className="text-center">{t('tables.total')}</TableHead>
                       <TableHead className="text-center">{t('tables.compliance')}</TableHead>
-                      <TableHead className="text-center min-w-[120px]">
+                      <TableHead className="min-w-[120px] text-center">
                         {t('tables.progress')}
                       </TableHead>
                       <TableHead className="text-center">{t('tables.atRisk')}</TableHead>
@@ -159,9 +159,9 @@ export function SLAComplianceTable({
                       <TableRow key={row.assignee_id}>
                         <TableCell>
                           <div className="flex items-center gap-2">
-                            <Avatar className="h-8 w-8">
+                            <Avatar className="size-8">
                               <AvatarFallback>
-                                <User className="h-4 w-4" />
+                                <User className="size-4" />
                               </AvatarFallback>
                             </Avatar>
                             <div>
@@ -182,7 +182,7 @@ export function SLAComplianceTable({
                         <TableCell className="text-center">
                           <div className="flex items-center gap-2">
                             <Progress value={row.compliance_rate} className="h-2 flex-1" />
-                            <span className="text-xs text-muted-foreground w-12">
+                            <span className="w-12 text-xs text-muted-foreground">
                               {row.met_count}/{row.total_items}
                             </span>
                           </div>
@@ -190,7 +190,7 @@ export function SLAComplianceTable({
                         <TableCell className="text-center">
                           {row.currently_at_risk > 0 ? (
                             <span className="flex items-center justify-center gap-1 text-yellow-600">
-                              <AlertTriangle className="h-4 w-4" />
+                              <AlertTriangle className="size-4" />
                               {row.currently_at_risk}
                             </span>
                           ) : (
@@ -206,7 +206,7 @@ export function SLAComplianceTable({
                 </Table>
               </div>
             ) : (
-              <div className="h-32 flex items-center justify-center text-muted-foreground">
+              <div className="flex h-32 items-center justify-center text-muted-foreground">
                 {t('tables.noDataByAssignee')}
               </div>
             )}

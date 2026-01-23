@@ -121,45 +121,45 @@ export function CommitmentDeliverablesEmptyState({
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col items-center justify-center py-6 sm:py-8 text-center px-4"
+        className="flex flex-col items-center justify-center px-4 py-6 text-center sm:py-8"
       >
         {/* Hero Icon */}
         <div className="relative mb-4 sm:mb-6">
-          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-            <Target className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+          <div className="flex size-16 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 sm:size-20">
+            <Target className="size-8 text-primary sm:size-10" />
           </div>
-          <div className="absolute -bottom-1 -end-1 h-7 w-7 sm:h-8 sm:w-8 rounded-full bg-primary flex items-center justify-center">
-            <Plus className="h-4 w-4 text-primary-foreground" />
+          <div className="absolute -bottom-1 -end-1 flex size-7 items-center justify-center rounded-full bg-primary sm:size-8">
+            <Plus className="size-4 text-primary-foreground" />
           </div>
         </div>
 
         {/* Title and Description */}
-        <h3 className="text-base sm:text-lg md:text-xl font-semibold text-foreground mb-2">
+        <h3 className="mb-2 text-base font-semibold text-foreground sm:text-lg md:text-xl">
           {t('emptyState.title')}
         </h3>
-        <p className="text-sm text-muted-foreground max-w-md mb-4">{t('emptyState.description')}</p>
+        <p className="mb-4 max-w-md text-sm text-muted-foreground">{t('emptyState.description')}</p>
 
         {/* Hint */}
-        <div className="flex items-start gap-2 bg-muted/50 rounded-lg p-3 max-w-md mb-6">
-          <Lightbulb className="h-4 w-4 sm:h-5 sm:w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-          <p className="text-xs sm:text-sm text-muted-foreground text-start">
+        <div className="mb-6 flex max-w-md items-start gap-2 rounded-lg bg-muted/50 p-3">
+          <Lightbulb className="mt-0.5 size-4 shrink-0 text-amber-500 sm:size-5" />
+          <p className="text-start text-xs text-muted-foreground sm:text-sm">
             {t('emptyState.hint')}
           </p>
         </div>
 
         {/* Quick Add Buttons */}
         <div className="w-full max-w-md">
-          <p className="text-xs sm:text-sm font-medium text-muted-foreground mb-3">
+          <p className="mb-3 text-xs font-medium text-muted-foreground sm:text-sm">
             {t('emptyState.selectTemplate')}
           </p>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
             {quickAddTypes.map((type) => {
               const Icon = TYPE_ICONS[type]
               return (
                 <Button
                   key={type}
                   variant="outline"
-                  className="flex flex-col items-center gap-1.5 h-auto py-3 px-2 hover:border-primary/50 transition-colors min-h-11"
+                  className="flex h-auto min-h-11 flex-col items-center gap-1.5 px-2 py-3 transition-colors hover:border-primary/50"
                   onClick={() => handleOpenDialog(type)}
                 >
                   <div
@@ -168,9 +168,9 @@ export function CommitmentDeliverablesEmptyState({
                       TYPE_COLORS[type],
                     )}
                   >
-                    <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                    <Icon className="size-4 sm:size-5" />
                   </div>
-                  <span className="text-xs text-center line-clamp-1">{t(`types.${type}`)}</span>
+                  <span className="line-clamp-1 text-center text-xs">{t(`types.${type}`)}</span>
                 </Button>
               )
             })}
@@ -187,11 +187,11 @@ export function CommitmentDeliverablesEmptyState({
       {/* Template Sets Section */}
       <div className="space-y-3">
         <div className="flex items-center gap-2 px-1">
-          <LayoutTemplate className="h-4 w-4 text-muted-foreground" />
+          <LayoutTemplate className="size-4 text-muted-foreground" />
           <p className="text-sm font-medium text-muted-foreground">{t('templates.title')}</p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {TEMPLATE_SETS.map((templateSet) => {
             const templates = templateSet.templates
               .map((id) => DELIVERABLE_TEMPLATES.find((t) => t.id === id))
@@ -208,11 +208,11 @@ export function CommitmentDeliverablesEmptyState({
               >
                 <CardContent className="p-3 sm:p-4">
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <h4 className="text-sm font-medium text-foreground mb-1 text-start">
+                    <div className="min-w-0 flex-1">
+                      <h4 className="mb-1 text-start text-sm font-medium text-foreground">
                         {isRTL ? templateSet.name_ar : templateSet.name_en}
                       </h4>
-                      <p className="text-xs text-muted-foreground text-start line-clamp-2">
+                      <p className="line-clamp-2 text-start text-xs text-muted-foreground">
                         {isRTL ? templateSet.description_ar : templateSet.description_en}
                       </p>
                     </div>
@@ -229,12 +229,12 @@ export function CommitmentDeliverablesEmptyState({
                             )}
                             style={{ zIndex: templates.length - idx }}
                           >
-                            <Icon className="h-3 w-3" />
+                            <Icon className="size-3" />
                           </div>
                         )
                       })}
                       {templates.length > 3 && (
-                        <div className="h-6 w-6 rounded-full bg-muted flex items-center justify-center border-2 border-background text-xs font-medium">
+                        <div className="flex size-6 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium">
                           +{templates.length - 3}
                         </div>
                       )}

@@ -50,8 +50,8 @@ export function ContactList({
  // Loading state
  if (isLoading) {
  return (
- <div className="flex flex-col items-center justify-center py-12 gap-4">
- <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+ <div className="flex flex-col items-center justify-center gap-4 py-12">
+ <Loader2 className="size-8 animate-spin text-muted-foreground" />
  <p className="text-sm text-muted-foreground">{t('contactDirectory.list.loading_contacts')}</p>
  </div>
  );
@@ -60,11 +60,11 @@ export function ContactList({
  // Empty state
  if (isEmpty || contacts.length === 0) {
  return (
- <div className="flex flex-col items-center justify-center py-12 gap-4">
+ <div className="flex flex-col items-center justify-center gap-4 py-12">
  <div className="rounded-full bg-muted p-4">
- <Users className="h-8 w-8 text-muted-foreground" />
+ <Users className="size-8 text-muted-foreground" />
  </div>
- <div className="text-center space-y-1">
+ <div className="space-y-1 text-center">
  <p className="font-medium">{emptyMessage || t('contactDirectory.list.no_contacts_found')}</p>
  <p className="text-sm text-muted-foreground">{t('contactDirectory.list.try_different_filters')}</p>
  </div>
@@ -99,7 +99,7 @@ export function ContactList({
  height: `${virtualRow.size}px`,
  transform: `translateY(${virtualRow.start}px)`,
  }}
- className="px-4 sm:px-6 lg:px-8 pb-4"
+ className="px-4 pb-4 sm:px-6 lg:px-8"
  >
  <ContactCard
  contact={contact}
@@ -132,8 +132,8 @@ export function ContactListGrid({
  // Loading state
  if (isLoading) {
  return (
- <div className="flex flex-col items-center justify-center py-12 gap-4">
- <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+ <div className="flex flex-col items-center justify-center gap-4 py-12">
+ <Loader2 className="size-8 animate-spin text-muted-foreground" />
  <p className="text-sm text-muted-foreground">{t('contactDirectory.list.loading_contacts')}</p>
  </div>
  );
@@ -142,11 +142,11 @@ export function ContactListGrid({
  // Empty state
  if (isEmpty || contacts.length === 0) {
  return (
- <div className="flex flex-col items-center justify-center py-12 gap-4">
+ <div className="flex flex-col items-center justify-center gap-4 py-12">
  <div className="rounded-full bg-muted p-4">
- <Users className="h-8 w-8 text-muted-foreground" />
+ <Users className="size-8 text-muted-foreground" />
  </div>
- <div className="text-center space-y-1">
+ <div className="space-y-1 text-center">
  <p className="font-medium">{emptyMessage || t('contactDirectory.list.no_contacts_found')}</p>
  <p className="text-sm text-muted-foreground">{t('contactDirectory.list.try_different_filters')}</p>
  </div>
@@ -156,7 +156,7 @@ export function ContactListGrid({
 
  return (
  <div
- className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 ${className}`}
+ className={`grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 ${className}`}
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  {contacts.map((contact) => (
@@ -218,8 +218,8 @@ export function ContactListGrouped({
  // Loading state
  if (isLoading) {
  return (
- <div className="flex flex-col items-center justify-center py-12 gap-4">
- <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+ <div className="flex flex-col items-center justify-center gap-4 py-12">
+ <Loader2 className="size-8 animate-spin text-muted-foreground" />
  <p className="text-sm text-muted-foreground">{t('contactDirectory.list.loading_contacts')}</p>
  </div>
  );
@@ -228,11 +228,11 @@ export function ContactListGrouped({
  // Empty state
  if (isEmpty || contacts.length === 0) {
  return (
- <div className="flex flex-col items-center justify-center py-12 gap-4">
+ <div className="flex flex-col items-center justify-center gap-4 py-12">
  <div className="rounded-full bg-muted p-4">
- <Users className="h-8 w-8 text-muted-foreground" />
+ <Users className="size-8 text-muted-foreground" />
  </div>
- <div className="text-center space-y-1">
+ <div className="space-y-1 text-center">
  <p className="font-medium">{emptyMessage || t('contactDirectory.list.no_contacts_found')}</p>
  <p className="text-sm text-muted-foreground">{t('contactDirectory.list.try_different_filters')}</p>
  </div>
@@ -247,7 +247,7 @@ export function ContactListGrouped({
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-3">
  <div className="flex items-center gap-2">
- <Building2 className="h-5 w-5 text-muted-foreground" />
+ <Building2 className="size-5 text-muted-foreground" />
  <h3 className="text-lg font-semibold">{group.name}</h3>
  </div>
  <Badge variant="secondary" className="text-xs">
@@ -255,15 +255,15 @@ export function ContactListGrouped({
  </Badge>
  </div>
  <CollapsibleTrigger asChild>
- <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
- <ChevronDown className="h-4 w-4 transition-transform duration-200" />
+ <Button variant="ghost" size="sm" className="size-9 p-0">
+ <ChevronDown className="size-4 transition-transform duration-200" />
  <span className="sr-only">Toggle</span>
  </Button>
  </CollapsibleTrigger>
  </div>
 
  <CollapsibleContent className="space-y-4">
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+ <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
  {group.contacts.map((contact) => (
  <ContactCard
  key={contact.id}

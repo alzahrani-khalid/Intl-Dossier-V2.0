@@ -143,7 +143,7 @@ export function SLAPolicyForm({
           <div className="space-y-4">
             <h3 className="text-lg font-medium">{t('policies.basicInfo')}</h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name">{t('policies.name')} *</Label>
                 <Input
@@ -164,7 +164,7 @@ export function SLAPolicyForm({
               </div>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="description">{t('policies.description')}</Label>
                 <Textarea
@@ -194,7 +194,7 @@ export function SLAPolicyForm({
               {t('policies.matchingCriteriaDescription')}
             </p>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div className="space-y-2">
                 <Label>{t('policies.requestType')}</Label>
                 <Select
@@ -273,7 +273,7 @@ export function SLAPolicyForm({
           <div className="space-y-4">
             <h3 className="text-lg font-medium">{t('policies.slaTargets')}</h3>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               <div className="space-y-2">
                 <Label htmlFor="acknowledgment_target">
                   {t('policies.acknowledgmentTarget')} ({t('policies.minutes')}) *
@@ -363,9 +363,9 @@ export function SLAPolicyForm({
                   {escalationLevels.map((level, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-4 p-3 border rounded-lg bg-muted/50"
+                      className="flex items-center gap-4 rounded-lg border bg-muted/50 p-3"
                     >
-                      <div className="flex-1 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-3">
                         <div className="space-y-1">
                           <Label className="text-xs">{t('policies.escalationLevel')}</Label>
                           <Input
@@ -419,7 +419,7 @@ export function SLAPolicyForm({
                         size="icon"
                         onClick={() => handleRemoveEscalationLevel(index)}
                       >
-                        <Trash2 className="h-4 w-4 text-red-500" />
+                        <Trash2 className="size-4 text-red-500" />
                       </Button>
                     </div>
                   ))}

@@ -105,7 +105,7 @@ export const IntelligenceInsight = memo(function IntelligenceInsight({
 
   return (
     <Card
-      className="p-3 sm:p-4 bg-muted/30 border-muted hover:border-primary/50 transition-all duration-200"
+      className="border-muted bg-muted/30 p-3 transition-all duration-200 hover:border-primary/50 sm:p-4"
       dir={isRTL ? 'rtl' : 'ltr'}
       role="complementary"
       aria-label={t('intelligence.inlineWidgetLabel', {
@@ -114,15 +114,15 @@ export const IntelligenceInsight = memo(function IntelligenceInsight({
       })}
     >
       {/* Header */}
-      <div className="flex items-start justify-between gap-2 mb-3">
-        <div className="flex items-start gap-2 flex-1 min-w-0">
-          <div className="rounded-md bg-primary/10 p-1.5 shrink-0">
-            <Icon className="h-4 w-4 text-primary" />
+      <div className="mb-3 flex items-start justify-between gap-2">
+        <div className="flex min-w-0 flex-1 items-start gap-2">
+          <div className="shrink-0 rounded-md bg-primary/10 p-1.5">
+            <Icon className="size-4 text-primary" />
           </div>
-          <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-semibold text-foreground line-clamp-2">{title}</h4>
-            <div className="flex flex-wrap items-center gap-1.5 mt-1.5">
-              <Badge variant="outline" className="text-xs py-0 px-1.5">
+          <div className="min-w-0 flex-1">
+            <h4 className="line-clamp-2 text-sm font-semibold text-foreground">{title}</h4>
+            <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+              <Badge variant="outline" className="px-1.5 py-0 text-xs">
                 {t(
                   `intelligence.types.${intelligence.intelligence_type}`,
                   intelligence.intelligence_type,
@@ -135,18 +135,18 @@ export const IntelligenceInsight = memo(function IntelligenceInsight({
               {isStale && (
                 <Badge
                   variant="secondary"
-                  className="text-xs py-0 px-1.5 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 flex items-center gap-1"
+                  className="flex items-center gap-1 bg-yellow-100 px-1.5 py-0 text-xs text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
                 >
-                  <AlertTriangle className="h-2.5 w-2.5" />
+                  <AlertTriangle className="size-2.5" />
                   {t('intelligence.stale', 'Stale')}
                 </Badge>
               )}
               {intelligence.refresh_status === 'fresh' && !isStale && (
                 <Badge
                   variant="secondary"
-                  className="text-xs py-0 px-1.5 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200 flex items-center gap-1"
+                  className="flex items-center gap-1 bg-green-100 px-1.5 py-0 text-xs text-green-800 dark:bg-green-900 dark:text-green-200"
                 >
-                  <CheckCircle className="h-2.5 w-2.5" />
+                  <CheckCircle className="size-2.5" />
                   {t('intelligence.fresh', 'Fresh')}
                 </Badge>
               )}
@@ -161,25 +161,25 @@ export const IntelligenceInsight = memo(function IntelligenceInsight({
             size="sm"
             onClick={onRefresh}
             disabled={isRefreshing}
-            className="h-8 w-8 p-0 shrink-0"
+            className="size-8 shrink-0 p-0"
             aria-label={t('intelligence.refresh', 'Refresh intelligence')}
           >
-            <RefreshCw className={`h-3.5 w-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`size-3.5 ${isRefreshing ? 'animate-spin' : ''}`} />
           </Button>
         )}
       </div>
 
       {/* Content */}
       <div className="mb-3">
-        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+        <p className="text-xs leading-relaxed text-muted-foreground sm:text-sm">
           {truncatedContent}
         </p>
       </div>
 
       {/* Footer */}
-      <div className="flex flex-col gap-2 pt-2 border-t border-border/50">
+      <div className="flex flex-col gap-2 border-t border-border/50 pt-2">
         <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-          <Clock className="h-3 w-3" />
+          <Clock className="size-3" />
           <span>
             {t('intelligence.updated', 'Updated')} {lastUpdated}
           </span>
@@ -189,11 +189,11 @@ export const IntelligenceInsight = memo(function IntelligenceInsight({
         <Link
           to={`/dossiers/${dossierType}/${dossierId}`}
           search={{ tab: 'intelligence' }}
-          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline group"
+          className="group inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline"
         >
           <span>{t('intelligence.view_full_report', 'View Full Report')}</span>
           <ExternalLink
-            className={`h-3 w-3 transition-transform group-hover:translate-x-0.5 group-hover:-translate-y-0.5 ${isRTL ? 'rotate-180' : ''}`}
+            className={`size-3 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5 ${isRTL ? 'rotate-180' : ''}`}
           />
         </Link>
       </div>

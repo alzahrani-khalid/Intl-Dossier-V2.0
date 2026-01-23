@@ -185,11 +185,11 @@ export function DossierForm({
 
  {/* Base Fields Section */}
  <div className="space-y-4">
- <h3 className="text-base sm:text-lg font-semibold text-start">
+ <h3 className="text-start text-base font-semibold sm:text-lg">
  {t('form.basicInformation')}
  </h3>
 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
  {/* English Name */}
  <FormField
  control={form.control}
@@ -230,7 +230,7 @@ export function DossierForm({
  />
  </div>
 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
  {/* English Description */}
  <FormField
  control={form.control}
@@ -273,7 +273,7 @@ export function DossierForm({
  />
  </div>
 
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+ <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
  {/* Status */}
  <FormField
  control={form.control}
@@ -335,14 +335,14 @@ export function DossierForm({
  {/* Type-Specific Extension Fields */}
  {dossierType && (
  <div className="space-y-4">
- <h3 className="text-base sm:text-lg font-semibold text-start">
+ <h3 className="text-start text-base font-semibold sm:text-lg">
  {t(`form.${dossierType}Fields`)}
  </h3>
 
  {/* Person-specific fields */}
  {dossierType === 'person' && (
  <div className="space-y-4">
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
  {/* Title English */}
  <FormField
  control={form.control}
@@ -405,7 +405,7 @@ export function DossierForm({
  )}
  />
 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
  {/* Biography English */}
  <FormField
  control={form.control}
@@ -452,7 +452,7 @@ export function DossierForm({
 
  {/* Placeholder for other types - to be implemented if needed */}
  {dossierType !== 'person' && (
- <p className="text-sm text-muted-foreground text-start">
+ <p className="text-start text-sm text-muted-foreground">
  {t('form.typeSpecificFieldsPlaceholder', { type: t(`type.${dossierType}`) })}
  </p>
  )}
@@ -460,7 +460,7 @@ export function DossierForm({
  )}
 
  {/* Form Actions */}
- <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-4 sm:justify-end pt-4 sm:pt-6">
+ <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row sm:justify-end sm:gap-4 sm:pt-6">
  {onCancel && (
  <Button
  type="button"

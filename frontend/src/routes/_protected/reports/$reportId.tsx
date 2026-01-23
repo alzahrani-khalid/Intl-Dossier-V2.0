@@ -19,7 +19,7 @@ function ReportDetailPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 h-[calc(100vh-4rem)]"
+      className="container mx-auto h-[calc(100vh-4rem)] p-4 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <ReportBuilder initialReportId={reportId} />

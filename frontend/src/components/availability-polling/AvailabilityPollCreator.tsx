@@ -329,7 +329,7 @@ export function AvailabilityPollCreator({
       <div className="space-y-4">
         <div className="flex items-center justify-between">
           <Label className="flex items-center gap-2">
-            <Video className="h-4 w-4" />
+            <Video className="size-4" />
             {t('form.isVirtual')}
           </Label>
           <Switch
@@ -382,7 +382,7 @@ export function AvailabilityPollCreator({
             </p>
           </div>
           <Button type="button" variant="outline" size="sm" onClick={handleAddSlot}>
-            <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('slots.addSlot')}
           </Button>
         </div>
@@ -391,10 +391,10 @@ export function AvailabilityPollCreator({
           {slots.map((slot, index) => (
             <Card key={slot.id} className="p-3">
               <div className="flex items-start gap-3">
-                <div className="flex-1 grid grid-cols-1 gap-3 sm:grid-cols-4">
+                <div className="grid flex-1 grid-cols-1 gap-3 sm:grid-cols-4">
                   <div>
                     <Label className="text-xs">{t('slots.startTime')}</Label>
-                    <div className="flex gap-2 mt-1">
+                    <div className="mt-1 flex gap-2">
                       <Input
                         type="date"
                         {...register(`slots.${index}.date` as const)}
@@ -407,7 +407,7 @@ export function AvailabilityPollCreator({
                     <Input
                       type="time"
                       {...register(`slots.${index}.startTime` as const)}
-                      className="text-sm mt-1"
+                      className="mt-1 text-sm"
                     />
                   </div>
                   <div>
@@ -415,12 +415,12 @@ export function AvailabilityPollCreator({
                     <Input
                       type="time"
                       {...register(`slots.${index}.endTime` as const)}
-                      className="text-sm mt-1"
+                      className="mt-1 text-sm"
                     />
                   </div>
                   <div>
                     <Label className="text-xs">{t('slots.preference')}</Label>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="mt-1 flex items-center gap-2">
                       <Slider
                         defaultValue={[0.5]}
                         max={1}
@@ -428,7 +428,7 @@ export function AvailabilityPollCreator({
                         className="flex-1"
                         onValueChange={(value) => setValue(`slots.${index}.preference`, value[0])}
                       />
-                      <span className="text-xs w-8">
+                      <span className="w-8 text-xs">
                         {Math.round((watch(`slots.${index}.preference`) || 0.5) * 100)}%
                       </span>
                     </div>
@@ -438,11 +438,11 @@ export function AvailabilityPollCreator({
                   type="button"
                   variant="ghost"
                   size="icon"
-                  className="text-destructive h-8 w-8"
+                  className="size-8 text-destructive"
                   onClick={() => removeSlot(index)}
                   disabled={slots.length <= 1}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="size-4" />
                 </Button>
               </div>
             </Card>
@@ -463,7 +463,7 @@ export function AvailabilityPollCreator({
         />
       </div>
 
-      <div className="flex justify-end gap-2 pt-4 border-t">
+      <div className="flex justify-end gap-2 border-t pt-4">
         {onCancel && (
           <Button type="button" variant="outline" onClick={onCancel}>
             {t('actions.cancel')}

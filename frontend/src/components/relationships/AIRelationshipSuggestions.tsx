@@ -202,7 +202,7 @@ export function AIRelationshipSuggestions({
     return (
       <Card className={cn('border-2 border-dashed border-primary/30', className)}>
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+          <Loader2 className="mb-4 size-8 animate-spin text-primary" />
           <p className="text-sm text-muted-foreground">
             {isRTL ? 'جاري البحث عن اتصالات محتملة...' : 'Finding potential connections...'}
           </p>
@@ -216,7 +216,7 @@ export function AIRelationshipSuggestions({
     return (
       <Card className={cn('border-2 border-dashed border-destructive/30', className)}>
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <X className="h-8 w-8 text-destructive mb-4" />
+          <X className="mb-4 size-8 text-destructive" />
           <p className="text-sm text-muted-foreground">
             {isRTL ? 'فشل في تحميل الاقتراحات' : 'Failed to load suggestions'}
           </p>
@@ -230,13 +230,13 @@ export function AIRelationshipSuggestions({
     return (
       <Card className={cn('border-2 border-dashed border-muted', className)}>
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-            <Network className="h-8 w-8 text-muted-foreground" />
+          <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-muted">
+            <Network className="size-8 text-muted-foreground" />
           </div>
-          <h3 className="text-base font-semibold mb-2">
+          <h3 className="mb-2 text-base font-semibold">
             {isRTL ? 'لا توجد اقتراحات متاحة' : 'No Suggestions Available'}
           </h3>
-          <p className="text-sm text-muted-foreground max-w-md">
+          <p className="max-w-md text-sm text-muted-foreground">
             {isRTL
               ? 'لم نتمكن من العثور على اتصالات محتملة بناءً على البيانات المتاحة. يمكنك إضافة علاقات يدويًا.'
               : "We couldn't find potential connections based on available data. You can add relationships manually."}
@@ -332,8 +332,8 @@ function SelectionStep({
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <Sparkles className="h-6 w-6 text-primary" />
+            <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+              <Sparkles className="size-6 text-primary" />
             </div>
             <div>
               <CardTitle className="text-lg sm:text-xl">
@@ -347,21 +347,21 @@ function SelectionStep({
             </div>
           </div>
           {onClose && (
-            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
-              <X className="h-4 w-4" />
+            <Button variant="ghost" size="sm" onClick={onClose} className="size-8 p-0">
+              <X className="size-4" />
             </Button>
           )}
         </div>
 
         {/* Summary badges */}
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div className="mt-4 flex flex-wrap gap-2">
           <Badge variant="secondary">
-            <Users className="h-3 w-3 me-1" />
+            <Users className="me-1 size-3" />
             {summary.total_suggestions} {isRTL ? 'اقتراحات' : 'suggestions'}
           </Badge>
           {summary.high_confidence_count > 0 && (
             <Badge variant="default">
-              <CheckCircle2 className="h-3 w-3 me-1" />
+              <CheckCircle2 className="me-1 size-3" />
               {summary.high_confidence_count} {isRTL ? 'مرجحة جدا' : 'high confidence'}
             </Badge>
           )}
@@ -370,7 +370,7 @@ function SelectionStep({
 
       <CardContent className="space-y-4">
         {/* Select all / deselect all */}
-        <div className="flex items-center justify-between pb-2 border-b">
+        <div className="flex items-center justify-between border-b pb-2">
           <span className="text-sm text-muted-foreground">
             {selectedSuggestions.size} {isRTL ? 'محدد' : 'selected'}
           </span>
@@ -385,7 +385,7 @@ function SelectionStep({
         </div>
 
         {/* Suggestions list */}
-        <div className="space-y-3 max-h-[400px] overflow-y-auto pe-2">
+        <div className="max-h-[400px] space-y-3 overflow-y-auto pe-2">
           {suggestions.map((suggestion, index) => (
             <SuggestionCard
               key={suggestion.suggested_person_id}
@@ -401,7 +401,7 @@ function SelectionStep({
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse justify-between gap-3 border-t pt-4 sm:flex-row">
           {onClose && (
             <Button variant="ghost" onClick={onClose} className="min-h-11">
               {isRTL ? 'تخطي في الوقت الحالي' : 'Skip for now'}
@@ -410,9 +410,9 @@ function SelectionStep({
           <Button onClick={onNext} disabled={selectedSuggestions.size === 0} className="min-h-11">
             {isRTL ? 'مراجعة وإنشاء' : 'Review & Create'}
             {isRTL ? (
-              <ChevronLeft className="h-4 w-4 ms-2" />
+              <ChevronLeft className="ms-2 size-4" />
             ) : (
-              <ChevronRight className="h-4 w-4 ms-2" />
+              <ChevronRight className="ms-2 size-4" />
             )}
           </Button>
         </div>
@@ -462,24 +462,24 @@ function SuggestionCard({
         <Checkbox checked={isSelected} onCheckedChange={onSelect} className="mt-1" />
 
         {/* Avatar */}
-        <Avatar className="h-10 w-10 flex-shrink-0">
+        <Avatar className="size-10 shrink-0">
           {suggestion.suggested_person_photo_url ? (
             <AvatarImage src={suggestion.suggested_person_photo_url} />
           ) : null}
           <AvatarFallback>
-            <UserCircle className="h-6 w-6" />
+            <UserCircle className="size-6" />
           </AvatarFallback>
         </Avatar>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h4 className="text-sm font-semibold line-clamp-1">
+              <h4 className="line-clamp-1 text-sm font-semibold">
                 {isRTL ? suggestion.suggested_person_name_ar : suggestion.suggested_person_name_en}
               </h4>
               {suggestion.suggested_person_title_en && (
-                <p className="text-xs text-muted-foreground line-clamp-1">
+                <p className="line-clamp-1 text-xs text-muted-foreground">
                   {suggestion.suggested_person_title_en}
                 </p>
               )}
@@ -492,14 +492,14 @@ function SuggestionCard({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                    className="size-8 p-0 text-muted-foreground hover:text-destructive"
                     onClick={(e) => {
                       e.stopPropagation()
                       onReject()
                     }}
                     disabled={isRejecting}
                   >
-                    <X className="h-4 w-4" />
+                    <X className="size-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -510,9 +510,9 @@ function SuggestionCard({
           </div>
 
           {/* Badges */}
-          <div className="flex flex-wrap items-center gap-2 mt-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <Badge variant="outline" className="text-xs">
-              <SuggestionIcon className="h-3 w-3 me-1" />
+              <SuggestionIcon className="me-1 size-3" />
               {isRTL ? typeLabel.ar : typeLabel.en}
             </Badge>
             <Badge
@@ -530,7 +530,7 @@ function SuggestionCard({
           </div>
 
           {/* Context */}
-          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+          <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
             {isRTL ? suggestion.context_notes_ar : suggestion.context_notes_en}
           </p>
         </div>
@@ -567,8 +567,8 @@ function ReviewStep({
     <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Check className="h-6 w-6 text-primary" />
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+            <Check className="size-6 text-primary" />
           </div>
           <div>
             <CardTitle className="text-lg sm:text-xl">
@@ -585,7 +585,7 @@ function ReviewStep({
 
       <CardContent className="space-y-4">
         {/* Relationship cards */}
-        <div className="space-y-4 max-h-[400px] overflow-y-auto pe-2">
+        <div className="max-h-[400px] space-y-4 overflow-y-auto pe-2">
           {items.map((item, index) => (
             <ReviewCard
               key={item.suggestion.suggested_person_id}
@@ -599,24 +599,24 @@ function ReviewStep({
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse justify-between gap-3 border-t pt-4 sm:flex-row">
           <Button variant="outline" onClick={onBack} className="min-h-11">
             {isRTL ? (
-              <ChevronRight className="h-4 w-4 me-2" />
+              <ChevronRight className="me-2 size-4" />
             ) : (
-              <ChevronLeft className="h-4 w-4 me-2" />
+              <ChevronLeft className="me-2 size-4" />
             )}
             {isRTL ? 'العودة' : 'Back'}
           </Button>
           <Button onClick={onCreate} disabled={isCreating} className="min-h-11">
             {isCreating ? (
               <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
                 {isRTL ? 'جاري الإنشاء...' : 'Creating...'}
               </>
             ) : (
               <>
-                <Check className="h-4 w-4 me-2" />
+                <Check className="me-2 size-4" />
                 {isRTL ? `إنشاء ${items.length} علاقات` : `Create ${items.length} Relationships`}
               </>
             )}
@@ -650,15 +650,15 @@ function ReviewCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ delay: index * 0.05 }}
-      className="p-4 rounded-lg border bg-card"
+      className="rounded-lg border bg-card p-4"
     >
-      <div className="flex items-start gap-3 mb-4">
-        <Avatar className="h-10 w-10 flex-shrink-0">
+      <div className="mb-4 flex items-start gap-3">
+        <Avatar className="size-10 shrink-0">
           {item.suggestion.suggested_person_photo_url ? (
             <AvatarImage src={item.suggestion.suggested_person_photo_url} />
           ) : null}
           <AvatarFallback>
-            <UserCircle className="h-6 w-6" />
+            <UserCircle className="size-6" />
           </AvatarFallback>
         </Avatar>
         <div>
@@ -678,7 +678,7 @@ function ReviewCard({
       <div className="space-y-3">
         {/* Relationship type selector */}
         <div>
-          <label className="text-xs font-medium text-muted-foreground mb-1 block">
+          <label className="mb-1 block text-xs font-medium text-muted-foreground">
             {isRTL ? 'نوع العلاقة' : 'Relationship Type'}
           </label>
           <Select value={item.relationshipType} onValueChange={onUpdateType}>
@@ -697,7 +697,7 @@ function ReviewCard({
 
         {/* Notes */}
         <div>
-          <label className="text-xs font-medium text-muted-foreground mb-1 block">
+          <label className="mb-1 block text-xs font-medium text-muted-foreground">
             {isRTL ? 'ملاحظات (اختياري)' : 'Notes (optional)'}
           </label>
           <Textarea

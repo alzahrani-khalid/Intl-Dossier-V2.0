@@ -95,7 +95,7 @@ function FilterChip({ filter, onRemove }: { filter: FilterChipConfig; onRemove: 
           variantStyles[filter.variant || 'default'],
         )}
       >
-        {filter.icon && <span className="flex-shrink-0">{filter.icon}</span>}
+        {filter.icon && <span className="shrink-0">{filter.icon}</span>}
         <span className="flex items-center gap-1">
           {filter.category && <span className="font-medium opacity-70">{filter.category}:</span>}
           <span className="font-medium">{filter.value}</span>
@@ -212,15 +212,15 @@ export function ActiveFiltersBar({
         <div className="flex items-center justify-between gap-2 px-3 py-2 sm:px-4 sm:py-2.5">
           <div className="flex items-center gap-2">
             <Filter className={cn('size-4 text-muted-foreground', isRTL ? 'ms-1' : 'me-1')} />
-            <span className="text-xs sm:text-sm font-medium text-muted-foreground">
+            <span className="text-xs font-medium text-muted-foreground sm:text-sm">
               {t('activeFilters', { count: filters.length })}
             </span>
             {hasHiddenResults && (
               <Badge
                 variant="outline"
-                className="text-xs px-1.5 py-0.5 text-amber-600 border-amber-300"
+                className="border-amber-300 px-1.5 py-0.5 text-xs text-amber-600"
               >
-                <EyeOff className="size-3 me-1" />
+                <EyeOff className="me-1 size-3" />
                 {t('hiddenCount', { count: (unfilteredTotal || 0) - (totalResults || 0) })}
               </Badge>
             )}
@@ -234,7 +234,7 @@ export function ActiveFiltersBar({
                 variant="ghost"
                 size="sm"
                 onClick={onToggleCollapsed}
-                className="sm:hidden min-h-9 min-w-9 p-0"
+                className="min-h-9 min-w-9 p-0 sm:hidden"
                 aria-label={collapsed ? t('expand') : t('collapse')}
               >
                 {collapsed ? <Eye className="size-4" /> : <EyeOff className="size-4" />}

@@ -164,8 +164,8 @@ function SuggestionItem({ suggestion, size, variant, isRTL }: SuggestionItemProp
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
           <span className={cn('text-foreground truncate', sizes.title)}>{title}</span>
           {badgeText && (
             <Badge
@@ -184,7 +184,7 @@ function SuggestionItem({ suggestion, size, variant, isRTL }: SuggestionItemProp
               sizes.description,
             )}
           >
-            <Clock className="w-3 h-3" />
+            <Clock className="size-3" />
             <span>
               {suggestion.days_until_event === 0
                 ? isRTL
@@ -204,10 +204,10 @@ function SuggestionItem({ suggestion, size, variant, isRTL }: SuggestionItemProp
 
       {/* Action */}
       {suggestion.action_route && variant !== 'compact' && (
-        <div className="flex-shrink-0">
+        <div className="shrink-0">
           <Button variant="ghost" size="sm" className={cn('min-h-9 min-w-9', sizes.button)} asChild>
             <Link to={suggestion.action_route} search={suggestion.action_params}>
-              <span className="hidden sm:inline me-1">{actionLabel}</span>
+              <span className="me-1 hidden sm:inline">{actionLabel}</span>
               <ChevronRight className={cn('w-4 h-4', isRTL && 'rotate-180')} />
             </Link>
           </Button>
@@ -218,7 +218,7 @@ function SuggestionItem({ suggestion, size, variant, isRTL }: SuggestionItemProp
 
   if (variant === 'card') {
     return (
-      <Card className="overflow-hidden hover:shadow-md transition-shadow">
+      <Card className="overflow-hidden transition-shadow hover:shadow-md">
         <CardContent className={cn('flex items-start gap-3', sizes.card)}>{content}</CardContent>
       </Card>
     )
@@ -229,7 +229,7 @@ function SuggestionItem({ suggestion, size, variant, isRTL }: SuggestionItemProp
       <Link
         to={suggestion.action_route}
         search={suggestion.action_params}
-        className="flex items-center gap-2 p-2 rounded-lg hover:bg-muted/50 transition-colors"
+        className="flex items-center gap-2 rounded-lg p-2 transition-colors hover:bg-muted/50"
       >
         <Icon className={cn(sizes.icon, 'text-muted-foreground')} />
         <span className={cn('text-foreground truncate flex-1', sizes.title)}>{title}</span>
@@ -379,7 +379,7 @@ export function ContextualSuggestions({
     <div className={cn('rounded-lg', className)} dir={isRTL ? 'rtl' : 'ltr'} data-testid={testId}>
       {/* Title */}
       {showTitle && (
-        <div className="flex items-center gap-2 mb-3 sm:mb-4">
+        <div className="mb-3 flex items-center gap-2 sm:mb-4">
           <Sparkles className={cn(sizes.icon, 'text-primary')} />
           <h3 className={cn('text-foreground', sizes.title)}>{t('title')}</h3>
           {hasUrgent && (
@@ -416,14 +416,14 @@ export function ContextualSuggestions({
           )}
         >
           <span className="flex items-center gap-1">
-            <CalendarDays className="w-3 h-3" />
+            <CalendarDays className="size-3" />
             {isRTL
               ? `${data.metadata.upcoming_events_count} فعالية قادمة`
               : `${data.metadata.upcoming_events_count} upcoming events`}
           </span>
           {data.metadata.overdue_commitments_count > 0 && (
             <span className="flex items-center gap-1 text-destructive">
-              <AlertCircle className="w-3 h-3" />
+              <AlertCircle className="size-3" />
               {isRTL
                 ? `${data.metadata.overdue_commitments_count} التزام متأخر`
                 : `${data.metadata.overdue_commitments_count} overdue`}

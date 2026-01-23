@@ -126,7 +126,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
  className
  )}
  >
- {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
+ {children ?? <p className="m-0 text-sm font-medium">{name}</p>}
  </Card>
  </div>
  {activeCardId === id && (
@@ -138,7 +138,7 @@ export const KanbanCard = <T extends KanbanItemProps = KanbanItemProps>({
  className
  )}
  >
- {children ?? <p className="m-0 font-medium text-sm">{name}</p>}
+ {children ?? <p className="m-0 text-sm font-medium">{name}</p>}
  </Card>
  </t.In>
  )}

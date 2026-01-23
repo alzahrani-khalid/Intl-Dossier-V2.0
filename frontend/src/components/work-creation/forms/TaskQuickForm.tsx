@@ -218,7 +218,7 @@ export function TaskQuickForm({
         {/* T042/US4: Dossier context display or selector */}
         {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (
-          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+          <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2 text-sm">
             <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
             <DossierContextBadge
               dossierId={selectedDossier.id}
@@ -235,7 +235,7 @@ export function TaskQuickForm({
         )}
         {/* Fallback for dossierId-only case (no full dossier info) */}
         {!selectedDossier && dossierId && (
-          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+          <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2 text-sm">
             <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
             <Badge variant="outline">{dossierId}</Badge>
           </div>
@@ -254,7 +254,7 @@ export function TaskQuickForm({
         )}
         {/* Show badge for user-selected dossier */}
         {!hasDossierContext && userSelectedDossiers.length > 0 && userSelectedDossiers[0] && (
-          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+          <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2 text-sm">
             <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
             <DossierContextBadge
               dossierId={userSelectedDossiers[0].id}
@@ -276,7 +276,7 @@ export function TaskQuickForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('form.taskTitle', 'Task Title')} *
               </FormLabel>
               <FormControl>
@@ -298,7 +298,7 @@ export function TaskQuickForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('form.taskDescription', 'Description')}
               </FormLabel>
               <FormControl>
@@ -322,7 +322,7 @@ export function TaskQuickForm({
           name="assignee_id"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">{t('form.assignee', 'Assignee')} *</FormLabel>
+              <FormLabel className="block text-start">{t('form.assignee', 'Assignee')} *</FormLabel>
               <FormControl>
                 <div className="relative">
                   <User
@@ -347,14 +347,14 @@ export function TaskQuickForm({
         />
 
         {/* Priority and SLA Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Priority */}
           <FormField
             control={form.control}
             name="priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start block">{t('form.priority', 'Priority')}</FormLabel>
+                <FormLabel className="block text-start">{t('form.priority', 'Priority')}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger className="min-h-11">
@@ -421,7 +421,7 @@ export function TaskQuickForm({
         </div>
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row">
           <Button
             type="button"
             variant="outline"

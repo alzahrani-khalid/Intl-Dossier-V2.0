@@ -49,18 +49,18 @@ export function ChecklistTemplateSelector({
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[80vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-h-[80vh] max-w-2xl overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
+            <FileText className="size-5" />
             {t('checklist.selectTemplate')}
           </DialogTitle>
           <DialogDescription>{t('checklist.selectTemplateDescription')}</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-4 mt-4">
+        <div className="mt-4 space-y-4">
           {templates.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="py-8 text-center text-muted-foreground">
               {t('checklist.noTemplates')}
             </div>
           ) : (
@@ -71,13 +71,13 @@ export function ChecklistTemplateSelector({
                 : items.map((item) => item.text_en)
 
               return (
-                <Card key={template.id} className="hover:border-primary transition-colors">
+                <Card key={template.id} className="transition-colors hover:border-primary">
                   <CardContent className="pt-6">
                     <div className="space-y-3">
                       {/* Template Header */}
                       <div className="flex items-start justify-between">
-                        <div className="space-y-1 flex-1">
-                          <h3 className="font-semibold text-lg">{getTemplateName(template)}</h3>
+                        <div className="flex-1 space-y-1">
+                          <h3 className="text-lg font-semibold">{getTemplateName(template)}</h3>
                           {getTemplateDescription(template) && (
                             <p className="text-sm text-muted-foreground">
                               {getTemplateDescription(template)}
@@ -102,15 +102,15 @@ export function ChecklistTemplateSelector({
                         )}
 
                       {/* Preview Items */}
-                      <div className="space-y-1 ps-4 border-l-2 border-muted">
+                      <div className="space-y-1 border-l-2 border-muted ps-4">
                         {itemText.slice(0, 5).map((item, index) => (
                           <div key={index} className="flex items-start gap-2 text-sm">
-                            <CheckCircle2 className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                            <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                             <span className="text-muted-foreground">{item}</span>
                           </div>
                         ))}
                         {items.length > 5 && (
-                          <div className="text-xs text-muted-foreground ps-6">
+                          <div className="ps-6 text-xs text-muted-foreground">
                             {t('checklist.andMore', { count: items.length - 5 })}
                           </div>
                         )}

@@ -143,8 +143,8 @@ export function AuditLogTable({
     return (
       <div className={cn('space-y-2', className)}>
         {Array.from({ length: 10 }).map((_, i) => (
-          <div key={i} className="flex items-center gap-4 p-4 border rounded-lg">
-            <Skeleton className="h-8 w-8 rounded-full" />
+          <div key={i} className="flex items-center gap-4 rounded-lg border p-4">
+            <Skeleton className="size-8 rounded-full" />
             <div className="flex-1 space-y-2">
               <Skeleton className="h-4 w-1/4" />
               <Skeleton className="h-3 w-1/2" />
@@ -159,9 +159,9 @@ export function AuditLogTable({
   if (logs.length === 0) {
     return (
       <div className={cn('text-center py-12', className)}>
-        <Clock className="h-12 w-12 text-muted-foreground/50 mx-auto mb-4" />
-        <h3 className="text-lg font-medium mb-2">{t('empty.title')}</h3>
-        <p className="text-muted-foreground text-sm">{t('empty.description')}</p>
+        <Clock className="mx-auto mb-4 size-12 text-muted-foreground/50" />
+        <h3 className="mb-2 text-lg font-medium">{t('empty.title')}</h3>
+        <p className="text-sm text-muted-foreground">{t('empty.description')}</p>
       </div>
     )
   }
@@ -183,7 +183,7 @@ export function AuditLogTable({
             <TableHead className="w-[200px]">
               <SortableHeader column="user_email">{t('columns.user')}</SortableHeader>
             </TableHead>
-            <TableHead className="hidden lg:table-cell w-[120px]">
+            <TableHead className="hidden w-[120px] lg:table-cell">
               {t('columns.ip_address')}
             </TableHead>
             <TableHead>{t('columns.changes')}</TableHead>
@@ -228,7 +228,7 @@ export function AuditLogTable({
                   {/* Operation */}
                   <TableCell>
                     <Badge className={cn('gap-1', config.bgColor, config.color, 'border-0')}>
-                      <Icon className="h-3 w-3" />
+                      <Icon className="size-3" />
                       {t(`operations.${log.operation}`)}
                     </Badge>
                   </TableCell>
@@ -236,8 +236,8 @@ export function AuditLogTable({
                   {/* User */}
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm truncate max-w-[150px]">
+                      <User className="size-4 text-muted-foreground" />
+                      <span className="max-w-[150px] truncate text-sm">
                         {log.user_email || 'System'}
                       </span>
                     </div>
@@ -246,8 +246,8 @@ export function AuditLogTable({
                   {/* IP Address */}
                   <TableCell className="hidden lg:table-cell">
                     {log.ip_address && (
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground font-mono">
-                        <Globe className="h-3 w-3" />
+                      <div className="flex items-center gap-1 font-mono text-xs text-muted-foreground">
+                        <Globe className="size-3" />
                         {log.ip_address}
                       </div>
                     )}
@@ -259,13 +259,13 @@ export function AuditLogTable({
                       <span className="text-sm text-muted-foreground">
                         {log.diff_summary || log.changed_fields?.slice(0, 3).join(', ')}
                         {(log.changed_fields?.length || 0) > 3 && (
-                          <span className="text-xs ms-1">
+                          <span className="ms-1 text-xs">
                             +{(log.changed_fields?.length || 0) - 3}
                           </span>
                         )}
                       </span>
                     ) : (
-                      <span className="text-sm text-muted-foreground italic">
+                      <span className="text-sm italic text-muted-foreground">
                         {t('detail.no_changes')}
                       </span>
                     )}
@@ -277,13 +277,13 @@ export function AuditLogTable({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0"
+                        className="size-8 p-0"
                         onClick={(e) => toggleExpand(log.id, e)}
                       >
                         {isExpanded ? (
-                          <ChevronUp className="h-4 w-4" />
+                          <ChevronUp className="size-4" />
                         ) : (
-                          <ChevronDown className="h-4 w-4" />
+                          <ChevronDown className="size-4" />
                         )}
                       </Button>
                     )}
@@ -296,7 +296,7 @@ export function AuditLogTable({
                     <TableCell colSpan={7} className="bg-muted/20 p-4">
                       <div className="space-y-3">
                         <div className="flex items-center justify-between">
-                          <h4 className="font-medium text-sm">{t('detail.changed_fields')}</h4>
+                          <h4 className="text-sm font-medium">{t('detail.changed_fields')}</h4>
                           {onLogClick && (
                             <Button
                               variant="outline"
@@ -306,7 +306,7 @@ export function AuditLogTable({
                                 onLogClick(log)
                               }}
                             >
-                              <ExternalLink className="h-4 w-4 me-2" />
+                              <ExternalLink className="me-2 size-4" />
                               {t('detail.view_related')}
                             </Button>
                           )}
@@ -318,33 +318,33 @@ export function AuditLogTable({
                             const newValue = log.new_data?.[field]
 
                             return (
-                              <div key={field} className="rounded-md bg-background p-3 border">
-                                <div className="font-medium text-xs text-muted-foreground mb-2">
+                              <div key={field} className="rounded-md border bg-background p-3">
+                                <div className="mb-2 text-xs font-medium text-muted-foreground">
                                   {field}
                                 </div>
                                 {log.operation === 'INSERT' ? (
-                                  <div className="bg-green-50 dark:bg-green-900/20 rounded px-2 py-1 text-sm text-green-800 dark:text-green-200 break-all">
+                                  <div className="break-all rounded bg-green-50 px-2 py-1 text-sm text-green-800 dark:bg-green-900/20 dark:text-green-200">
                                     {JSON.stringify(newValue)}
                                   </div>
                                 ) : log.operation === 'DELETE' ? (
-                                  <div className="bg-red-50 dark:bg-red-900/20 rounded px-2 py-1 text-sm text-red-800 dark:text-red-200 break-all">
+                                  <div className="break-all rounded bg-red-50 px-2 py-1 text-sm text-red-800 dark:bg-red-900/20 dark:text-red-200">
                                     {JSON.stringify(oldValue)}
                                   </div>
                                 ) : (
                                   <div className="space-y-1">
                                     <div className="flex items-start gap-2">
-                                      <span className="text-xs text-muted-foreground min-w-[40px]">
+                                      <span className="min-w-[40px] text-xs text-muted-foreground">
                                         {t('detail.old_value')}:
                                       </span>
-                                      <span className="bg-red-50 dark:bg-red-900/20 rounded px-1.5 py-0.5 text-xs text-red-800 dark:text-red-200 break-all">
+                                      <span className="break-all rounded bg-red-50 px-1.5 py-0.5 text-xs text-red-800 dark:bg-red-900/20 dark:text-red-200">
                                         {JSON.stringify(oldValue)}
                                       </span>
                                     </div>
                                     <div className="flex items-start gap-2">
-                                      <span className="text-xs text-muted-foreground min-w-[40px]">
+                                      <span className="min-w-[40px] text-xs text-muted-foreground">
                                         {t('detail.new_value')}:
                                       </span>
-                                      <span className="bg-green-50 dark:bg-green-900/20 rounded px-1.5 py-0.5 text-xs text-green-800 dark:text-green-200 break-all">
+                                      <span className="break-all rounded bg-green-50 px-1.5 py-0.5 text-xs text-green-800 dark:bg-green-900/20 dark:text-green-200">
                                         {JSON.stringify(newValue)}
                                       </span>
                                     </div>
@@ -356,7 +356,7 @@ export function AuditLogTable({
                         </div>
 
                         {/* Additional metadata */}
-                        <div className="flex flex-wrap gap-4 text-xs text-muted-foreground pt-2 border-t">
+                        <div className="flex flex-wrap gap-4 border-t pt-2 text-xs text-muted-foreground">
                           {log.session_id && (
                             <span>
                               {t('detail.session_id')}: {log.session_id.slice(0, 8)}...

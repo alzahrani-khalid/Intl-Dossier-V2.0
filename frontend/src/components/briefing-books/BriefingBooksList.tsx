@@ -122,7 +122,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
   if (isLoading) {
     return (
       <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <Skeleton className="h-8 w-48" />
           <Skeleton className="h-10 w-32" />
         </div>
@@ -138,10 +138,10 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
     return (
       <Card className="border-destructive" dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="flex flex-col items-center justify-center py-8 text-center">
-          <XCircle className="h-12 w-12 text-destructive mb-4" />
-          <p className="text-destructive font-medium">{t('errors.loadFailed')}</p>
+          <XCircle className="mb-4 size-12 text-destructive" />
+          <p className="font-medium text-destructive">{t('errors.loadFailed')}</p>
           <Button variant="outline" onClick={() => refresh()} className="mt-4">
-            <RefreshCw className="h-4 w-4 me-2" />
+            <RefreshCw className="me-2 size-4" />
             {t('actions.retry') || 'Retry'}
           </Button>
         </CardContent>
@@ -154,12 +154,12 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
     return (
       <Card dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-          <FileText className="h-16 w-16 text-muted-foreground mb-4" />
-          <h3 className="text-lg font-semibold mb-2">{t('list.empty')}</h3>
-          <p className="text-muted-foreground mb-6 max-w-md">{t('list.emptyDescription')}</p>
+          <FileText className="mb-4 size-16 text-muted-foreground" />
+          <h3 className="mb-2 text-lg font-semibold">{t('list.empty')}</h3>
+          <p className="mb-6 max-w-md text-muted-foreground">{t('list.emptyDescription')}</p>
           {onCreateNew && (
-            <Button onClick={onCreateNew} className="min-h-[44px]">
-              <Plus className="h-4 w-4 me-2" />
+            <Button onClick={onCreateNew} className="min-h-touch-sm">
+              <Plus className="me-2 size-4" />
               {t('list.createFirst')}
             </Button>
           )}
@@ -171,9 +171,9 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
   return (
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with filters */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <h2 className="text-xl font-semibold">{t('list.title')}</h2>
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex w-full items-center gap-2 sm:w-auto">
           <Select
             value={statusFilter}
             onValueChange={(v) => setStatusFilter(v as BriefingBookStatus | 'all')}
@@ -189,8 +189,8 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
             </SelectContent>
           </Select>
           {onCreateNew && (
-            <Button onClick={onCreateNew} className="min-h-[44px] shrink-0">
-              <Plus className="h-4 w-4 me-2" />
+            <Button onClick={onCreateNew} className="min-h-touch-sm shrink-0">
+              <Plus className="me-2 size-4" />
               <span className="hidden sm:inline">{t('newBriefingBook')}</span>
             </Button>
           )}
@@ -205,27 +205,27 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
           const statusBgColor = statusConfig[book.status].bgColor
 
           return (
-            <Card key={book.id} className="hover:shadow-md transition-shadow">
+            <Card key={book.id} className="transition-shadow hover:shadow-md">
               <CardContent className="p-4">
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col gap-4 sm:flex-row">
                   {/* Icon */}
                   <div
                     className={`
-                      shrink-0 w-12 h-12 rounded-lg flex items-center justify-center
+                      flex size-12 shrink-0 items-center justify-center rounded-lg
                       ${statusBgColor}
                     `}
                   >
                     <StatusIcon
-                      className={`h-6 w-6 ${statusColor} ${
+                      className={`size-6 ${statusColor} ${
                         book.status === 'generating' ? 'animate-spin' : ''
                       }`}
                     />
                   </div>
 
                   {/* Content */}
-                  <div className="flex-1 min-w-0">
-                    <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
-                      <h3 className="font-semibold truncate">
+                  <div className="min-w-0 flex-1">
+                    <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-center">
+                      <h3 className="truncate font-semibold">
                         {isRTL ? book.config.title_ar : book.config.title_en}
                       </h3>
                       <Badge
@@ -246,7 +246,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
                     </div>
 
                     {/* Entity badges */}
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <div className="mt-2 flex flex-wrap gap-1">
                       {book.config.entities.slice(0, 3).map((entity) => (
                         <Badge key={entity.id} variant="outline" className="text-xs">
                           {isRTL ? entity.name_ar : entity.name_en}
@@ -261,22 +261,22 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
                   </div>
 
                   {/* Actions */}
-                  <div className="flex items-center gap-2 shrink-0">
+                  <div className="flex shrink-0 items-center gap-2">
                     {book.status === 'ready' && book.fileUrl && (
                       <Button
                         variant="default"
                         size="sm"
                         onClick={() => handleDownload(book)}
-                        className="min-h-[44px] sm:min-h-[36px]"
+                        className="min-h-touch-sm sm:min-h-[36px]"
                       >
-                        <Download className="h-4 w-4 me-2" />
+                        <Download className="me-2 size-4" />
                         {t('list.actions.download')}
                       </Button>
                     )}
 
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="min-h-[44px] min-w-[44px]">
+                        <Button variant="ghost" size="icon" className="min-h-touch-sm min-w-touch-sm">
                           <span className="sr-only">Actions</span>
                           <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -288,7 +288,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
                             strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
-                            className="h-4 w-4"
+                            className="size-4"
                           >
                             <circle cx="12" cy="12" r="1" />
                             <circle cx="12" cy="5" r="1" />
@@ -299,21 +299,21 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
                       <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                         {book.status === 'ready' && book.fileUrl && (
                           <DropdownMenuItem onClick={() => handleDownload(book)}>
-                            <Download className="h-4 w-4 me-2" />
+                            <Download className="me-2 size-4" />
                             {t('list.actions.download')}
                           </DropdownMenuItem>
                         )}
                         <DropdownMenuItem>
-                          <Eye className="h-4 w-4 me-2" />
+                          <Eye className="me-2 size-4" />
                           {t('list.actions.view')}
                         </DropdownMenuItem>
                         <DropdownMenuItem>
-                          <Copy className="h-4 w-4 me-2" />
+                          <Copy className="me-2 size-4" />
                           {t('list.actions.duplicate')}
                         </DropdownMenuItem>
                         {(book.status === 'failed' || book.status === 'expired') && (
                           <DropdownMenuItem>
-                            <RefreshCw className="h-4 w-4 me-2" />
+                            <RefreshCw className="me-2 size-4" />
                             {t('list.actions.regenerate')}
                           </DropdownMenuItem>
                         )}
@@ -322,7 +322,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
                           className="text-destructive focus:text-destructive"
                           onClick={() => setDeleteDialogId(book.id)}
                         >
-                          <Trash2 className="h-4 w-4 me-2" />
+                          <Trash2 className="me-2 size-4" />
                           {t('list.actions.delete')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -332,7 +332,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
 
                 {/* Error message for failed books */}
                 {book.status === 'failed' && book.errorMessage && (
-                  <div className="mt-3 p-3 bg-red-50 rounded-lg text-sm text-red-600">
+                  <div className="mt-3 rounded-lg bg-red-50 p-3 text-sm text-red-600">
                     {book.errorMessage}
                   </div>
                 )}
@@ -344,7 +344,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
 
       {/* Empty filtered state */}
       {filteredBooks.length === 0 && briefingBooks.length > 0 && (
-        <div className="text-center py-8 text-muted-foreground">
+        <div className="py-8 text-center text-muted-foreground">
           <p>No briefing books match the selected filter.</p>
           <Button variant="link" onClick={() => setStatusFilter('all')}>
             {t('list.filters.all')}
@@ -359,7 +359,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
             <AlertDialogTitle>{t('confirmDelete.title')}</AlertDialogTitle>
             <AlertDialogDescription>{t('confirmDelete.message')}</AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2">
+          <AlertDialogFooter className="flex-col-reverse gap-2 sm:flex-row">
             <AlertDialogCancel disabled={isDeleting}>{t('confirmDelete.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
@@ -368,7 +368,7 @@ export function BriefingBooksList({ onCreateNew }: BriefingBooksListProps) {
             >
               {isDeleting ? (
                 <>
-                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                  <Loader2 className="me-2 size-4 animate-spin" />
                   Deleting...
                 </>
               ) : (

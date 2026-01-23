@@ -53,7 +53,7 @@ export function CompleteDialog({
       <DialogContent dir={isRTL ? 'rtl' : 'ltr'} className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-600" />
+            <CheckCircle2 className="size-5 text-green-600" />
             {t('complete.title')}
           </DialogTitle>
           <DialogDescription>{t('complete.description')}</DialogDescription>
@@ -79,21 +79,21 @@ export function CompleteDialog({
 
           {/* Optimistic Lock Warning */}
           {hasOptimisticLockWarning && (
-            <div className="flex gap-2 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950 text-yellow-900 dark:text-yellow-100 text-sm">
-              <AlertCircle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+            <div className="flex gap-2 rounded-lg bg-yellow-50 p-3 text-sm text-yellow-900 dark:bg-yellow-950 dark:text-yellow-100">
+              <AlertCircle className="mt-0.5 size-5 shrink-0" />
               <div>
                 <p className="font-medium">{t('complete.lockWarningTitle')}</p>
-                <p className="text-xs mt-1">{t('complete.lockWarningDescription')}</p>
+                <p className="mt-1 text-xs">{t('complete.lockWarningDescription')}</p>
               </div>
             </div>
           )}
 
           {/* Success Info */}
-          <div className="flex gap-2 p-3 rounded-lg bg-green-50 dark:bg-green-950 text-green-900 dark:text-green-100 text-sm">
-            <CheckCircle2 className="h-5 w-5 flex-shrink-0 mt-0.5" />
+          <div className="flex gap-2 rounded-lg bg-green-50 p-3 text-sm text-green-900 dark:bg-green-950 dark:text-green-100">
+            <CheckCircle2 className="mt-0.5 size-5 shrink-0" />
             <div>
               <p className="font-medium">{t('complete.successTitle')}</p>
-              <ul className="text-xs mt-1 space-y-1 list-disc list-inside">
+              <ul className="mt-1 list-inside list-disc space-y-1 text-xs">
                 <li>{t('complete.successSLA')}</li>
                 <li>{t('complete.successTimeline')}</li>
                 <li>{t('complete.successNotification')}</li>

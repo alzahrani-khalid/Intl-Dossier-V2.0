@@ -207,9 +207,9 @@ export function ExpirationSettings({
     <div className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Current Status Display */}
       {status && (
-        <div className="flex items-center justify-between gap-4 mb-4">
+        <div className="mb-4 flex items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <Clock className="h-4 w-4 text-muted-foreground" />
+            <Clock className="size-4 text-muted-foreground" />
             <span className="text-sm font-medium">{t('title')}:</span>
             <ExpirationBadge
               status={status.freshness_status}
@@ -230,7 +230,7 @@ export function ExpirationSettings({
       <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
         <DialogTrigger asChild>
           <Button variant="outline" size="sm" className="gap-2">
-            <Settings2 className="h-4 w-4" />
+            <Settings2 className="size-4" />
             {status ? t('actions.extendExpiration') : t('actions.setExpiration')}
           </Button>
         </DialogTrigger>
@@ -238,7 +238,7 @@ export function ExpirationSettings({
         <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Calendar className="h-5 w-5" />
+              <Calendar className="size-5" />
               {t('settings.title')}
             </DialogTitle>
             <DialogDescription>
@@ -249,21 +249,21 @@ export function ExpirationSettings({
           <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
             <TabsList className="grid w-full grid-cols-3">
               <TabsTrigger value="set" className="gap-1">
-                <Plus className="h-3.5 w-3.5" />
+                <Plus className="size-3.5" />
                 {t('actions.setExpiration')}
               </TabsTrigger>
               <TabsTrigger value="extend" className="gap-1" disabled={!status}>
-                <RefreshCw className="h-3.5 w-3.5" />
+                <RefreshCw className="size-3.5" />
                 {t('actions.extendExpiration')}
               </TabsTrigger>
               <TabsTrigger value="review" className="gap-1" disabled={!status}>
-                <History className="h-3.5 w-3.5" />
+                <History className="size-3.5" />
                 {t('actions.markReviewed')}
               </TabsTrigger>
             </TabsList>
 
             {/* Set Expiration Tab */}
-            <TabsContent value="set" className="space-y-4 mt-4">
+            <TabsContent value="set" className="mt-4 space-y-4">
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
                   <Label className="min-w-20">{t('settings.expirationRule')}</Label>
@@ -337,14 +337,14 @@ export function ExpirationSettings({
                   }
                   className="w-full"
                 >
-                  {isSettingExpiration && <RefreshCw className="h-4 w-4 animate-spin me-2" />}
+                  {isSettingExpiration && <RefreshCw className="me-2 size-4 animate-spin" />}
                   {t('actions.setExpiration')}
                 </Button>
               </div>
             </TabsContent>
 
             {/* Extend Expiration Tab */}
-            <TabsContent value="extend" className="space-y-4 mt-4">
+            <TabsContent value="extend" className="mt-4 space-y-4">
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>{t('extend.extensionPeriod')}</Label>
@@ -388,14 +388,14 @@ export function ExpirationSettings({
                   disabled={isExtending || extensionDays <= 0}
                   className="w-full"
                 >
-                  {isExtending && <RefreshCw className="h-4 w-4 animate-spin me-2" />}
+                  {isExtending && <RefreshCw className="me-2 size-4 animate-spin" />}
                   {t('extend.confirm')}
                 </Button>
               </div>
             </TabsContent>
 
             {/* Review Tab */}
-            <TabsContent value="review" className="space-y-4 mt-4">
+            <TabsContent value="review" className="mt-4 space-y-4">
               <div className="space-y-4">
                 <div className="space-y-2">
                   <Label>{t('review.notes')}</Label>
@@ -409,7 +409,7 @@ export function ExpirationSettings({
 
                 <div className="flex gap-2">
                   <Button onClick={handleMarkReviewed} disabled={isMarking} className="flex-1">
-                    {isMarking && <RefreshCw className="h-4 w-4 animate-spin me-2" />}
+                    {isMarking && <RefreshCw className="me-2 size-4 animate-spin" />}
                     {t('review.confirm')}
                   </Button>
                   <Button
@@ -418,7 +418,7 @@ export function ExpirationSettings({
                     disabled={isRequesting}
                     className="flex-1"
                   >
-                    {isRequesting && <RefreshCw className="h-4 w-4 animate-spin me-2" />}
+                    {isRequesting && <RefreshCw className="me-2 size-4 animate-spin" />}
                     {t('actions.requestReview')}
                   </Button>
                 </div>

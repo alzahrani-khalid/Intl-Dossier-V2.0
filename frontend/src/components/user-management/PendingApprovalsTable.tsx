@@ -101,8 +101,8 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  accessorKey: 'user_email',
  header: t('user_management.user', 'User'),
  cell: ({ row }) => (
- <div className="flex items-center gap-2 min-w-[150px] sm:min-w-0">
- <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+ <div className="flex min-w-[150px] items-center gap-2 sm:min-w-0">
+ <User className="size-4 shrink-0 text-muted-foreground" />
  <span className="truncate">{row.original.user_email}</span>
  </div>
  ),
@@ -113,9 +113,9 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  cell: ({ row }) => (
  <Badge
  variant={row.original.requested_role === 'admin' ? 'destructive' : 'secondary'}
- className="capitalize min-w-fit"
+ className="min-w-fit capitalize"
  >
- <Shield className="h-3 w-3 me-1" />
+ <Shield className="me-1 size-3" />
  {row.original.requested_role}
  </Badge>
  ),
@@ -124,7 +124,7 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  accessorKey: 'requester_email',
  header: t('user_management.requester', 'Requester'),
  cell: ({ row }) => (
- <span className="text-sm text-muted-foreground truncate block max-w-[150px] sm:max-w-none">
+ <span className="block max-w-[150px] truncate text-sm text-muted-foreground sm:max-w-none">
  {row.original.requester_email}
  </span>
  ),
@@ -145,13 +145,13 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
 
  const icon =
  status === 'pending' ? (
- <Clock className="h-3 w-3 me-1" />
+ <Clock className="me-1 size-3" />
  ) : status === 'first_approved' ? (
- <CheckCircle className="h-3 w-3 me-1" />
+ <CheckCircle className="me-1 size-3" />
  ) : status === 'approved' ? (
- <CheckCircle className="h-3 w-3 me-1" />
+ <CheckCircle className="me-1 size-3" />
  ) : (
- <XCircle className="h-3 w-3 me-1" />
+ <XCircle className="me-1 size-3" />
  );
 
  return (
@@ -166,7 +166,7 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  accessorKey: 'first_approver_email',
  header: t('user_management.first_approver', 'First Approver'),
  cell: ({ row }) => (
- <span className="text-sm text-muted-foreground truncate block max-w-[150px] sm:max-w-none">
+ <span className="block max-w-[150px] truncate text-sm text-muted-foreground sm:max-w-none">
  {row.original.first_approver_email || '-'}
  </span>
  ),
@@ -175,7 +175,7 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  accessorKey: 'created_at',
  header: t('user_management.requested', 'Requested'),
  cell: ({ row }) => (
- <span className="text-sm text-muted-foreground whitespace-nowrap">
+ <span className="whitespace-nowrap text-sm text-muted-foreground">
  {formatDistanceToNow(new Date(row.original.created_at), { addSuffix: true })}
  </span>
  ),
@@ -195,18 +195,18 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  size="sm"
  variant="default"
  onClick={() => handleApprove(approval)}
- className="h-9 sm:h-8 px-3 sm:px-4 text-xs sm:text-sm min-w-[44px] sm:min-w-0"
+ className="h-9 min-w-touch-sm px-3 text-xs sm:h-8 sm:min-w-0 sm:px-4 sm:text-sm"
  >
- <CheckCircle className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
+ <CheckCircle className={`size-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
  {t('common.approve', 'Approve')}
  </Button>
  <Button
  size="sm"
  variant="destructive"
  onClick={() => handleReject(approval)}
- className="h-9 sm:h-8 px-3 sm:px-4 text-xs sm:text-sm min-w-[44px] sm:min-w-0"
+ className="h-9 min-w-touch-sm px-3 text-xs sm:h-8 sm:min-w-0 sm:px-4 sm:text-sm"
  >
- <XCircle className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
+ <XCircle className={`size-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
  {t('common.reject', 'Reject')}
  </Button>
  </div>
@@ -220,7 +220,7 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  if (isLoading) {
  return (
  <div className="flex items-center justify-center py-8 text-muted-foreground">
- <Clock className={`h-5 w-5 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Clock className={`size-5 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('common.loading', 'Loading...')}
  </div>
  );
@@ -228,7 +228,7 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
 
  if (!data?.approvals.length) {
  return (
- <div className="text-center py-8 text-muted-foreground">
+ <div className="py-8 text-center text-muted-foreground">
  {t('user_management.no_pending_approvals', 'No pending approvals')}
  </div>
  );
@@ -250,10 +250,10 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  <DialogContent className="w-[95vw] max-w-md px-4 sm:px-6" dir={isRTL ? 'rtl' : 'ltr'}>
  <DialogHeader>
  <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
- <CheckCircle className="h-5 w-5 text-green-600" />
+ <CheckCircle className="size-5 text-green-600" />
  {t('user_management.confirm_approval', 'Confirm Approval')}
  </DialogTitle>
- <DialogDescription className="text-sm sm:text-base text-start">
+ <DialogDescription className="text-start text-sm sm:text-base">
  {selectedApproval?.status === 'pending'
  ? t(
  'user_management.first_approval_message',
@@ -267,7 +267,7 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  </DialogHeader>
 
  <div className="space-y-3 py-4">
- <div className="rounded-lg bg-muted p-3 sm:p-4 space-y-2">
+ <div className="space-y-2 rounded-lg bg-muted p-3 sm:p-4">
  <div className="flex items-center justify-between text-sm">
  <span className="text-muted-foreground">{t('user_management.user', 'User')}:</span>
  <span className="font-medium">{selectedApproval?.user_email}</span>
@@ -281,13 +281,13 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  </div>
  </div>
 
- <DialogFooter className="flex-col sm:flex-row gap-3 sm:gap-2">
+ <DialogFooter className="flex-col gap-3 sm:flex-row sm:gap-2">
  <Button
  type="button"
  variant="outline"
  onClick={() => setIsApprovalDialogOpen(false)}
  disabled={isProcessing}
- className="h-11 sm:h-10 px-6 text-base sm:text-sm w-full sm:w-auto order-2 sm:order-1"
+ className="order-2 h-11 w-full px-6 text-base sm:order-1 sm:h-10 sm:w-auto sm:text-sm"
  >
  {t('common.cancel', 'Cancel')}
  </Button>
@@ -295,7 +295,7 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  type="button"
  onClick={confirmApproval}
  disabled={isProcessing}
- className="h-11 sm:h-10 px-6 text-base sm:text-sm w-full sm:w-auto order-1 sm:order-2"
+ className="order-1 h-11 w-full px-6 text-base sm:order-2 sm:h-10 sm:w-auto sm:text-sm"
  >
  {isProcessing
  ? t('user_management.approving', 'Approving...')
@@ -310,10 +310,10 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  <DialogContent className="w-[95vw] max-w-md px-4 sm:px-6" dir={isRTL ? 'rtl' : 'ltr'}>
  <DialogHeader>
  <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
- <XCircle className="h-5 w-5 text-destructive" />
+ <XCircle className="size-5 text-destructive" />
  {t('user_management.reject_request', 'Reject Request')}
  </DialogTitle>
- <DialogDescription className="text-sm sm:text-base text-start">
+ <DialogDescription className="text-start text-sm sm:text-base">
  {t(
  'user_management.reject_description',
  'Please provide a reason for rejecting this role change request'
@@ -325,7 +325,7 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  <div className="space-y-2">
  <Label htmlFor="rejection_reason" className="text-sm sm:text-base">
  {t('user_management.rejection_reason', 'Rejection Reason')}
- <span className="text-destructive ms-1">*</span>
+ <span className="ms-1 text-destructive">*</span>
  </Label>
  <Textarea
  id="rejection_reason"
@@ -335,19 +335,19 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  'user_management.rejection_reason_placeholder',
  'Explain why this request is being rejected'
  )}
- className="min-h-24 px-4 py-3 text-base sm:text-sm resize-none"
+ className="min-h-24 resize-none px-4 py-3 text-base sm:text-sm"
  disabled={isProcessing}
  />
  </div>
  </div>
 
- <DialogFooter className="flex-col sm:flex-row gap-3 sm:gap-2">
+ <DialogFooter className="flex-col gap-3 sm:flex-row sm:gap-2">
  <Button
  type="button"
  variant="outline"
  onClick={() => setIsRejectionDialogOpen(false)}
  disabled={isProcessing}
- className="h-11 sm:h-10 px-6 text-base sm:text-sm w-full sm:w-auto order-2 sm:order-1"
+ className="order-2 h-11 w-full px-6 text-base sm:order-1 sm:h-10 sm:w-auto sm:text-sm"
  >
  {t('common.cancel', 'Cancel')}
  </Button>
@@ -356,7 +356,7 @@ export function PendingApprovalsTable({ status }: PendingApprovalsTableProps) {
  variant="destructive"
  onClick={confirmRejection}
  disabled={isProcessing || !rejectionReason.trim()}
- className="h-11 sm:h-10 px-6 text-base sm:text-sm w-full sm:w-auto order-1 sm:order-2"
+ className="order-1 h-11 w-full px-6 text-base sm:order-2 sm:h-10 sm:w-auto sm:text-sm"
  >
  {isProcessing
  ? t('user_management.rejecting', 'Rejecting...')

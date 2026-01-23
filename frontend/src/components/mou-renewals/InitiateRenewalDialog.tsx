@@ -140,7 +140,7 @@ export function InitiateRenewalDialog({
       <DialogContent className={cn('max-w-lg', isRTL && 'text-end')} dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <RefreshCw className="h-5 w-5" />
+            <RefreshCw className="size-5" />
             {t('dialogs.initiateRenewal.title')}
           </DialogTitle>
           <DialogDescription>{t('dialogs.initiateRenewal.description')}</DialogDescription>
@@ -151,7 +151,7 @@ export function InitiateRenewalDialog({
           <p className="text-sm font-medium">{mouTitle}</p>
           <p className="text-xs text-muted-foreground">{mou.reference_number}</p>
           <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
-            <CalendarIcon className="h-3 w-3" />
+            <CalendarIcon className="size-3" />
             <span>
               {t('currentExpiry')}: {format(currentExpiry, 'PP', { locale: dateLocale })}
             </span>

@@ -184,7 +184,7 @@ export function RenewalAlertCard({
             {/* Acknowledged info */}
             {alert.alert_status === 'acknowledged' && alert.acknowledged_at && (
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Check className="h-3 w-3" />
+                <Check className="size-3" />
                 <span>
                   {t('acknowledgedAt', {
                     date: format(new Date(alert.acknowledged_at), 'PP p', {

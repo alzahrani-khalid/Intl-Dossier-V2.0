@@ -259,7 +259,7 @@ export function AgendaItemForm({ agendaId, item, onClose }: AgendaItemFormProps)
               {/* Duration */}
               <div className="space-y-3">
                 <Label className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
+                  <Clock className="size-4" />
                   {t('duration')}: {formatDuration(watchedDuration)}
                 </Label>
 

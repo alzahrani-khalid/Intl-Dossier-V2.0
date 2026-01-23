@@ -76,19 +76,19 @@ const InlineLock = memo(function InlineLock({
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             {showAvatar ? (
-              <Avatar className="h-5 w-5 border border-amber-500/50">
+              <Avatar className="size-5 border border-amber-500/50">
                 <AvatarImage src={lockedBy.avatar} alt={lockedBy.name} />
                 <AvatarFallback
                   style={{ backgroundColor: lockedBy.color }}
-                  className="text-white text-[10px]"
+                  className="text-[10px] text-white"
                 >
                   {getInitials(lockedBy.name)}
                 </AvatarFallback>
               </Avatar>
             ) : (
-              <Lock className="h-4 w-4" />
+              <Lock className="size-4" />
             )}
-            <Pencil className="h-3 w-3 animate-pulse" />
+            <Pencil className="size-3 animate-pulse" />
           </div>
         </TooltipTrigger>
         <TooltipContent side={isRTL ? 'right' : 'left'} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -127,20 +127,20 @@ const BannerLock = memo(function BannerLock({
     >
       <div className="flex items-center gap-2">
         {showAvatar && (
-          <Avatar className="h-8 w-8 border-2" style={{ borderColor: lockedBy.color }}>
+          <Avatar className="size-8 border-2" style={{ borderColor: lockedBy.color }}>
             <AvatarImage src={lockedBy.avatar} alt={lockedBy.name} />
             <AvatarFallback
               style={{ backgroundColor: lockedBy.color }}
-              className="text-white text-sm"
+              className="text-sm text-white"
             >
               {getInitials(lockedBy.name)}
             </AvatarFallback>
           </Avatar>
         )}
-        <Lock className="h-5 w-5 text-amber-600 dark:text-amber-500" />
+        <Lock className="size-5 text-amber-600 dark:text-amber-500" />
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <p className="text-sm font-medium">{t('sectionLockedTitle', { name: lockedBy.name })}</p>
         <p className="text-xs text-amber-600 dark:text-amber-400">
           {sectionName
@@ -149,7 +149,7 @@ const BannerLock = memo(function BannerLock({
         </p>
       </div>
 
-      <Pencil className="h-4 w-4 animate-pulse text-amber-600 dark:text-amber-500" />
+      <Pencil className="size-4 animate-pulse text-amber-600 dark:text-amber-500" />
     </div>
   )
 })
@@ -182,20 +182,20 @@ const BadgeLock = memo(function BadgeLock({
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             {showAvatar ? (
-              <Avatar className="h-4 w-4">
+              <Avatar className="size-4">
                 <AvatarImage src={lockedBy.avatar} alt={lockedBy.name} />
                 <AvatarFallback
                   style={{ backgroundColor: lockedBy.color }}
-                  className="text-white text-[8px]"
+                  className="text-[8px] text-white"
                 >
                   {getInitials(lockedBy.name)}
                 </AvatarFallback>
               </Avatar>
             ) : (
-              <Lock className="h-3 w-3" />
+              <Lock className="size-3" />
             )}
-            <span className="truncate max-w-[80px]">{lockedBy.name}</span>
-            <Pencil className="h-3 w-3 animate-pulse" />
+            <span className="max-w-[80px] truncate">{lockedBy.name}</span>
+            <Pencil className="size-3 animate-pulse" />
           </Badge>
         </TooltipTrigger>
         <TooltipContent side={isRTL ? 'right' : 'left'} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -268,14 +268,14 @@ export function EditingLockIndicator({
         <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-amber-500" />
+              <AlertTriangle className="size-5 text-amber-500" />
               {t('forceEditWarningTitle')}
             </AlertDialogTitle>
             <AlertDialogDescription>
               {t('forceEditWarningDescription', { name: lockedBy.name })}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2">
+          <AlertDialogFooter className="flex-col-reverse gap-2 sm:flex-row">
             <AlertDialogCancel>{t('cancel', { ns: 'common' })}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleForceEditConfirm}

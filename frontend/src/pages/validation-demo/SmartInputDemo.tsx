@@ -70,16 +70,16 @@ export function SmartInputDemo() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <div className="max-w-2xl mx-auto space-y-6">
+      <div className="mx-auto max-w-2xl space-y-6">
         {/* Header */}
-        <div className="text-center space-y-2">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start sm:text-center">
+        <div className="space-y-2 text-center">
+          <h1 className="text-start text-2xl font-bold sm:text-center sm:text-3xl md:text-4xl">
             {isRTL ? 'عرض الإدخال الذكي' : 'Smart Input Demo'}
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground text-start sm:text-center">
+          <p className="text-start text-sm text-muted-foreground sm:text-center sm:text-base">
             {isRTL
               ? 'لوحات مفاتيح محسّنة للجوال مع إخفاء الإدخال'
               : 'Optimized mobile keyboards with input masking'}
@@ -252,7 +252,7 @@ export function SmartInputDemo() {
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <pre className="text-xs overflow-auto p-2 bg-background rounded" dir="ltr">
+            <pre className="overflow-auto rounded bg-background p-2 text-xs" dir="ltr">
               {JSON.stringify(
                 {
                   email,

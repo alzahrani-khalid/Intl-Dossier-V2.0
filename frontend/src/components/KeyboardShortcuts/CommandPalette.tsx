@@ -769,7 +769,7 @@ export function CommandPalette({ className }: CommandPaletteProps) {
                       <span className="flex-1">{suggestion.label}</span>
                       <Badge
                         variant="secondary"
-                        className="shrink-0 text-xs bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+                        className="shrink-0 bg-amber-100 text-xs text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
                       >
                         {t('contextSuggestions.suggested', 'Suggested')}
                       </Badge>

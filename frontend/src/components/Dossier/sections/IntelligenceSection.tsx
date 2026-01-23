@@ -42,7 +42,7 @@ export function IntelligenceSection({ entityId, intelligenceType }: Intelligence
   if (isError) {
     return (
       <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
-        <AlertCircle className="h-4 w-4 me-2" />
+        <AlertCircle className="me-2 size-4" />
         <AlertDescription>
           {error instanceof Error
             ? error.message

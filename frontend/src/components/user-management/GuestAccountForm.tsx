@@ -140,7 +140,7 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
  className=""
  />
  {errors.email && (
- <p className="text-sm text-destructive text-start">{errors.email.message}</p>
+ <p className="text-start text-sm text-destructive">{errors.email.message}</p>
  )}
  </div>
 
@@ -162,7 +162,7 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
  className=""
  />
  {errors.full_name && (
- <p className="text-sm text-destructive text-start">{errors.full_name.message}</p>
+ <p className="text-start text-sm text-destructive">{errors.full_name.message}</p>
  )}
  </div>
 
@@ -184,7 +184,7 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
  className=""
  />
  {errors.username && (
- <p className="text-sm text-destructive text-start">{errors.username.message}</p>
+ <p className="text-start text-sm text-destructive">{errors.username.message}</p>
  )}
  </div>
 
@@ -203,7 +203,7 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
  !expirationDate && 'text-muted-foreground'
  )}
  >
- <CalendarIcon className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {expirationDate ? (
  format(expirationDate, 'PPP')
  ) : (
@@ -227,7 +227,7 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
  </PopoverContent>
  </Popover>
  {!expirationDate && (
- <p className="text-xs text-muted-foreground text-start">
+ <p className="text-start text-xs text-muted-foreground">
  {t('user_management.guest_expiration_required')}
  </p>
  )}
@@ -238,13 +238,13 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
  <Label className="text-start">
  {t('user_management.allowed_resources')} *
  </Label>
- <p className="text-xs text-muted-foreground text-start">
+ <p className="text-start text-xs text-muted-foreground">
  {t('user_management.select_resources_description')}
  </p>
 
  {/* Selected Resources Display */}
  {selectedResources.length > 0 && (
- <div className="flex flex-wrap gap-2 p-3 border rounded-md bg-muted/50">
+ <div className="flex flex-wrap gap-2 rounded-md border bg-muted/50 p-3">
  {selectedResources.map((resourceId) => {
  const resource = availableResources.find((r) => r.id === resourceId);
  if (!resource) return null;
@@ -253,15 +253,15 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
  <Badge
  key={resourceId}
  variant="secondary"
- className="gap-1 ps-3 pe-2"
+ className="gap-1 pe-2 ps-3"
  >
  <span>{resource.name}</span>
  <button
  type="button"
  onClick={() => handleRemoveResource(resourceId)}
- className="hover:bg-muted rounded-sm p-0.5"
+ className="rounded-sm p-0.5 hover:bg-muted"
  >
- <X className="h-3 w-3" />
+ <X className="size-3" />
  </button>
  </Badge>
  );
@@ -270,10 +270,10 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
  )}
 
  {/* Resource Checkboxes */}
- <div className="border rounded-md p-4 max-h-64 overflow-y-auto space-y-3">
+ <div className="max-h-64 space-y-3 overflow-y-auto rounded-md border p-4">
  {availableResources.length === 0 ? (
  <Alert>
- <AlertCircle className="h-4 w-4" />
+ <AlertCircle className="size-4" />
  <AlertDescription>
  {t('user_management.no_resources_available')}
  </AlertDescription>
@@ -303,7 +303,7 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
  </div>
 
  {selectedResources.length === 0 && (
- <p className="text-sm text-destructive text-start">
+ <p className="text-start text-sm text-destructive">
  {t('user_management.select_at_least_one_resource')}
  </p>
  )}
@@ -311,7 +311,7 @@ export function GuestAccountForm({ availableResources = [], onSuccess }: GuestAc
 
  {/* Info Alert */}
  <Alert>
- <AlertCircle className="h-4 w-4" />
+ <AlertCircle className="size-4" />
  <AlertDescription className="text-start">
  {t('user_management.guest_account_info')}
  </AlertDescription>

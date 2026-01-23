@@ -118,11 +118,11 @@ export function WorldMapVisualization({
   if (error) {
     return (
       <Card className={className}>
-        <CardContent className="flex items-center justify-center h-64">
+        <CardContent className="flex h-64 items-center justify-center">
           <div className="text-center text-muted-foreground">
-            <Globe className="h-12 w-12 mx-auto mb-4 opacity-50" />
+            <Globe className="mx-auto mb-4 size-12 opacity-50" />
             <p>{t('error.loadFailed', 'Failed to load map data')}</p>
-            <p className="text-sm mt-2">{error.message}</p>
+            <p className="mt-2 text-sm">{error.message}</p>
           </div>
         </CardContent>
       </Card>
@@ -133,28 +133,28 @@ export function WorldMapVisualization({
     <div className={`space-y-4 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Summary Cards */}
       {showSummaryCards && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4">
           <SummaryCard
-            icon={<Globe className="h-4 w-4" />}
+            icon={<Globe className="size-4" />}
             label={t('summary.totalCountries', 'Countries')}
             value={summary?.totalCountries || 0}
             subValue={`${summary?.countriesWithEngagements || 0} ${t('summary.active', 'active')}`}
             isLoading={isLoading}
           />
           <SummaryCard
-            icon={<Activity className="h-4 w-4" />}
+            icon={<Activity className="size-4" />}
             label={t('summary.engagements', 'Engagements')}
             value={summary?.totalEngagements || 0}
             isLoading={isLoading}
           />
           <SummaryCard
-            icon={<TrendingUp className="h-4 w-4" />}
+            icon={<TrendingUp className="size-4" />}
             label={t('summary.relationships', 'Relationships')}
             value={connections.length}
             isLoading={isLoading}
           />
           <SummaryCard
-            icon={<MapPin className="h-4 w-4" />}
+            icon={<MapPin className="size-4" />}
             label={t('summary.regions', 'Regions')}
             value={summary?.regionBreakdown?.length || 0}
             isLoading={isLoading}
@@ -168,7 +168,7 @@ export function WorldMapVisualization({
           {isLoading ? (
             <div className="absolute inset-0 flex items-center justify-center bg-muted/50">
               <div className="text-center">
-                <Skeleton className="h-8 w-8 rounded-full mx-auto mb-2" />
+                <Skeleton className="mx-auto mb-2 size-8 rounded-full" />
                 <Skeleton className="h-4 w-24" />
               </div>
             </div>
@@ -186,18 +186,18 @@ export function WorldMapVisualization({
 
           {/* Legend */}
           {showLegend && !isLoading && (
-            <div className="absolute bottom-2 start-2 sm:bottom-4 sm:start-4 bg-background/90 backdrop-blur-sm rounded-lg p-2 sm:p-3 border shadow-sm">
-              <p className="text-xs font-medium mb-2">
+            <div className="absolute bottom-2 start-2 rounded-lg border bg-background/90 p-2 shadow-sm backdrop-blur-sm sm:bottom-4 sm:start-4 sm:p-3">
+              <p className="mb-2 text-xs font-medium">
                 {t('legend.intensity', 'Engagement Intensity')}
               </p>
               <div className="flex flex-wrap gap-1 sm:gap-2">
                 {(['low', 'medium', 'high', 'very_high'] as EngagementIntensity[]).map((level) => (
                   <div key={level} className="flex items-center gap-1">
                     <div
-                      className="w-3 h-3 rounded-full"
+                      className="size-3 rounded-full"
                       style={{ backgroundColor: INTENSITY_COLORS[level] }}
                     />
-                    <span className="text-[10px] sm:text-xs text-muted-foreground">
+                    <span className="text-[10px] text-muted-foreground sm:text-xs">
                       {isRTL ? INTENSITY_LABELS[level].ar : INTENSITY_LABELS[level].en}
                     </span>
                   </div>
@@ -208,10 +208,10 @@ export function WorldMapVisualization({
 
           {/* Selected Country Info */}
           {selectedCountry && (
-            <div className="absolute top-2 end-2 sm:top-4 sm:end-4 bg-background/95 backdrop-blur-sm rounded-lg p-3 sm:p-4 border shadow-lg max-w-xs">
+            <div className="absolute end-2 top-2 max-w-xs rounded-lg border bg-background/95 p-3 shadow-lg backdrop-blur-sm sm:end-4 sm:top-4 sm:p-4">
               <div className="flex items-start justify-between gap-2">
                 <div>
-                  <h4 className="font-semibold text-sm sm:text-base">
+                  <h4 className="text-sm font-semibold sm:text-base">
                     {isRTL ? selectedCountry.name_ar : selectedCountry.name_en}
                   </h4>
                   <p className="text-xs text-muted-foreground">{selectedCountry.iso_code_2}</p>
@@ -242,8 +242,8 @@ export function WorldMapVisualization({
                   <span className="font-medium">{selectedCountry.upcomingEngagements}</span>
                 </div>
                 {selectedCountry.lastEngagementDate && (
-                  <div className="flex items-center gap-1 text-xs text-muted-foreground pt-2 border-t">
-                    <Calendar className="h-3 w-3" />
+                  <div className="flex items-center gap-1 border-t pt-2 text-xs text-muted-foreground">
+                    <Calendar className="size-3" />
                     <span>
                       {t('country.lastEngagement', 'Last')}:{' '}
                       {new Date(selectedCountry.lastEngagementDate).toLocaleDateString(
@@ -255,7 +255,7 @@ export function WorldMapVisualization({
               </div>
               <button
                 onClick={() => setSelectedCountry(null)}
-                className="absolute top-2 end-2 text-muted-foreground hover:text-foreground"
+                className="absolute end-2 top-2 text-muted-foreground hover:text-foreground"
                 aria-label={t('close', 'Close')}
               >
                 <span className="sr-only">{t('close', 'Close')}</span>
@@ -269,26 +269,26 @@ export function WorldMapVisualization({
       {/* Regional Breakdown */}
       {showSummaryCards && summary?.regionBreakdown && (
         <Card>
-          <CardHeader className="py-3 px-4">
+          <CardHeader className="px-4 py-3">
             <CardTitle className="text-sm font-medium">
               {t('regions.title', 'Regional Breakdown')}
             </CardTitle>
           </CardHeader>
           <CardContent className="px-4 pb-4">
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 md:grid-cols-5">
               {summary.regionBreakdown.map((region) => (
                 <div
                   key={region.region}
-                  className="flex items-center gap-2 p-2 rounded-lg border bg-muted/30"
+                  className="flex items-center gap-2 rounded-lg border bg-muted/30 p-2"
                 >
                   <div
-                    className="w-3 h-3 rounded-full shrink-0"
+                    className="size-3 shrink-0 rounded-full"
                     style={{
                       backgroundColor: REGION_COLORS[region.region as keyof typeof REGION_COLORS],
                     }}
                   />
                   <div className="min-w-0">
-                    <p className="text-xs font-medium truncate">
+                    <p className="truncate text-xs font-medium">
                       {isRTL
                         ? REGION_LABELS[region.region as keyof typeof REGION_LABELS]?.ar
                         : REGION_LABELS[region.region as keyof typeof REGION_LABELS]?.en}
@@ -323,18 +323,18 @@ function SummaryCard({ icon, label, value, subValue, isLoading }: SummaryCardPro
       <CardContent className="p-3 sm:p-4">
         {isLoading ? (
           <div className="space-y-2">
-            <Skeleton className="h-4 w-4" />
+            <Skeleton className="size-4" />
             <Skeleton className="h-6 w-12" />
             <Skeleton className="h-3 w-20" />
           </div>
         ) : (
           <>
-            <div className="flex items-center gap-2 text-muted-foreground mb-1">
+            <div className="mb-1 flex items-center gap-2 text-muted-foreground">
               {icon}
               <span className="text-xs">{label}</span>
             </div>
-            <p className="text-lg sm:text-2xl font-bold">{value}</p>
-            {subValue && <p className="text-[10px] sm:text-xs text-muted-foreground">{subValue}</p>}
+            <p className="text-lg font-bold sm:text-2xl">{value}</p>
+            {subValue && <p className="text-[10px] text-muted-foreground sm:text-xs">{subValue}</p>}
           </>
         )}
       </CardContent>

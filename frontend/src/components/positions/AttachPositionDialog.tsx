@@ -143,7 +143,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
       <DialogTrigger asChild>
         {trigger || (
           <Button>
-            <Link2 className="me-2 h-4 w-4" />
+            <Link2 className="me-2 size-4" />
             {t('positions.attach.dialogTrigger')}
           </Button>
         )}
@@ -161,7 +161,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
             {/* Search */}
             <div className="relative">
               <Search
-                className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-3 h-4 w-4 text-muted-foreground`}
+                className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-3 size-4 text-muted-foreground`}
               />
               <Input
                 type="search"
@@ -202,7 +202,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
               {isLoading ? (
                 <div className="flex items-center justify-center py-12">
                   <div className="flex flex-col items-center gap-2">
-                    <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+                    <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
                     <p className="text-sm text-muted-foreground">{t('positions.loading')}</p>
                   </div>
                 </div>
@@ -262,7 +262,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                             title: getPositionTitle(position),
                           })}
                         >
-                          <Eye className="h-4 w-4" />
+                          <Eye className="size-4" />
                         </Button>
                       </div>
                     )
@@ -282,7 +282,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                     {t('positions.attach.previewTitle')}
                   </h3>
                   <Button variant="ghost" size="sm" onClick={() => setPreviewPosition(null)}>
-                    <X className="h-4 w-4" />
+                    <X className="size-4" />
                   </Button>
                 </div>
 
@@ -342,12 +342,12 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
                   >
                     {selectedIds.includes(previewPosition.id) ? (
                       <>
-                        <Check className="me-2 h-4 w-4" />
+                        <Check className="me-2 size-4" />
                         {t('positions.attach.selected')}
                       </>
                     ) : (
                       <>
-                        <Link2 className="me-2 h-4 w-4" />
+                        <Link2 className="me-2 size-4" />
                         {t('positions.attach.selectThis')}
                       </>
                     )}
@@ -357,7 +357,7 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
             ) : (
               <div className="flex h-full items-center justify-center p-8 text-center">
                 <div className="space-y-2">
-                  <Eye className="mx-auto h-12 w-12 text-muted-foreground" />
+                  <Eye className="mx-auto size-12 text-muted-foreground" />
                   <p className="text-sm text-muted-foreground">
                     {t('positions.attach.previewEmpty')}
                   </p>
@@ -374,12 +374,12 @@ export const AttachPositionDialog: React.FC<AttachPositionDialogProps> = ({
           <Button onClick={handleAttach} disabled={selectedIds.length === 0 || isAttaching}>
             {isAttaching ? (
               <>
-                <div className="me-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                <div className="me-2 size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                 {t('positions.attach.attaching')}
               </>
             ) : (
               <>
-                <Link2 className="me-2 h-4 w-4" />
+                <Link2 className="me-2 size-4" />
                 {t('positions.attach.attachSelected', { count: selectedIds.length })}
               </>
             )}

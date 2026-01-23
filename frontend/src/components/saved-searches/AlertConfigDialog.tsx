@@ -150,7 +150,7 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
       <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Bell className="h-5 w-5" />
+            <Bell className="size-5" />
             {t('alert.title')}
           </DialogTitle>
           <DialogDescription>{t('alert.description')}</DialogDescription>
@@ -158,10 +158,10 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
 
         <div className="flex flex-col gap-4 py-4">
           {/* Search info */}
-          <div className="rounded-lg border bg-gray-50 dark:bg-gray-900 p-3">
+          <div className="rounded-lg border bg-gray-50 p-3 dark:bg-gray-900">
             <p className="text-sm font-medium">{isRTL ? search.name_ar : search.name_en}</p>
             {existingAlert && (
-              <div className="flex items-center gap-2 mt-2">
+              <div className="mt-2 flex items-center gap-2">
                 <Badge variant={existingAlert.is_enabled ? 'default' : 'secondary'}>
                   {existingAlert.is_enabled ? t('alert.active') : t('alert.paused')}
                 </Badge>
@@ -178,9 +178,9 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               {isEnabled ? (
-                <Bell className="h-5 w-5 text-green-500" />
+                <Bell className="size-5 text-green-500" />
               ) : (
-                <BellOff className="h-5 w-5 text-gray-400" />
+                <BellOff className="size-5 text-gray-400" />
               )}
               <div>
                 <Label htmlFor="alert-enabled">{t('alert.enabled')}</Label>
@@ -199,7 +199,7 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
               {/* Frequency */}
               <div className="flex flex-col gap-2">
                 <Label className="flex items-center gap-2">
-                  <Clock className="h-4 w-4" />
+                  <Clock className="size-4" />
                   {t('alert.frequency')}
                 </Label>
                 <Select value={frequency} onValueChange={(v) => setFrequency(v as AlertFrequency)}>
@@ -224,7 +224,7 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
               {/* Trigger condition */}
               <div className="flex flex-col gap-2">
                 <Label className="flex items-center gap-2">
-                  <TrendingUp className="h-4 w-4" />
+                  <TrendingUp className="size-4" />
                   {t('alert.triggerOn')}
                 </Label>
                 <Select value={triggerOn} onValueChange={(v) => setTriggerOn(v as AlertTrigger)}>
@@ -250,7 +250,7 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
               {triggerOn === 'threshold_reached' && (
                 <div className="flex flex-col gap-2">
                   <Label className="flex items-center gap-2">
-                    <Hash className="h-4 w-4" />
+                    <Hash className="size-4" />
                     {t('alert.threshold')}
                   </Label>
                   <Input
@@ -273,7 +273,7 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
                 {/* In-app */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <MonitorSmartphone className="h-5 w-5 text-gray-500" />
+                    <MonitorSmartphone className="size-5 text-gray-500" />
                     <div>
                       <Label htmlFor="notify-app">{t('alert.notifyInApp')}</Label>
                       <p className="text-xs text-gray-500">{t('alert.notifyInAppDescription')}</p>
@@ -285,7 +285,7 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
                 {/* Email */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Mail className="h-5 w-5 text-gray-500" />
+                    <Mail className="size-5 text-gray-500" />
                     <div>
                       <Label htmlFor="notify-email">{t('alert.notifyEmail')}</Label>
                       <p className="text-xs text-gray-500">{t('alert.notifyEmailDescription')}</p>
@@ -301,7 +301,7 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
                 {/* Push */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Smartphone className="h-5 w-5 text-gray-500" />
+                    <Smartphone className="size-5 text-gray-500" />
                     <div>
                       <Label htmlFor="notify-push">{t('alert.notifyPush')}</Label>
                       <p className="text-xs text-gray-500">{t('alert.notifyPushDescription')}</p>
@@ -312,8 +312,8 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
 
                 {/* Warning if no channel selected */}
                 {!hasNotificationChannel && (
-                  <div className="flex items-center gap-2 p-2 rounded-lg bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-300">
-                    <AlertTriangle className="h-4 w-4 shrink-0" />
+                  <div className="flex items-center gap-2 rounded-lg bg-amber-50 p-2 text-amber-700 dark:bg-amber-950 dark:text-amber-300">
+                    <AlertTriangle className="size-4 shrink-0" />
                     <p className="text-xs">{t('alert.noChannelWarning')}</p>
                   </div>
                 )}
@@ -322,7 +322,7 @@ export function AlertConfigDialog({ open, onOpenChange, search }: AlertConfigDia
           )}
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           {existingAlert && (
             <Button
               variant="destructive"

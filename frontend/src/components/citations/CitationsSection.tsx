@@ -129,20 +129,20 @@ const CitationCard = memo(
     const statusColor = getCitationStatusColor(citation.status)
 
     return (
-      <Card className="hover:shadow-md transition-shadow">
+      <Card className="transition-shadow hover:shadow-md">
         <CardContent className="p-4 sm:p-5">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex-1 space-y-2">
               {/* Direction and type badges */}
-              <div className="flex items-center gap-2 flex-wrap">
+              <div className="flex flex-wrap items-center gap-2">
                 <Badge
                   variant={direction === 'outgoing' ? 'default' : 'secondary'}
-                  className="text-xs flex items-center gap-1"
+                  className="flex items-center gap-1 text-xs"
                 >
                   {direction === 'outgoing' ? (
-                    <ArrowUpRight className={`h-3 w-3 ${isRTL ? 'rotate-180' : ''}`} />
+                    <ArrowUpRight className={`size-3 ${isRTL ? 'rotate-180' : ''}`} />
                   ) : (
-                    <ArrowDownLeft className={`h-3 w-3 ${isRTL ? 'rotate-180' : ''}`} />
+                    <ArrowDownLeft className={`size-3 ${isRTL ? 'rotate-180' : ''}`} />
                   )}
                   {direction === 'outgoing'
                     ? t('direction.outgoing', 'Cites')
@@ -155,8 +155,8 @@ const CitationCard = memo(
                   <Badge className={`text-xs ${statusColor}`}>{statusLabel}</Badge>
                 )}
                 {isExternal && (
-                  <Badge variant="outline" className="text-xs flex items-center gap-1">
-                    <ExternalLink className="h-3 w-3" />
+                  <Badge variant="outline" className="flex items-center gap-1 text-xs">
+                    <ExternalLink className="size-3" />
                     {t('badges.external', 'External')}
                   </Badge>
                 )}
@@ -164,7 +164,7 @@ const CitationCard = memo(
 
               {/* Title/Name */}
               <div>
-                <h4 className="text-sm sm:text-base font-semibold text-foreground">
+                <h4 className="text-sm font-semibold text-foreground sm:text-base">
                   {citation.external_title ||
                     citation.related_entity_name ||
                     citation.related_entity_id?.slice(0, 8) ||
@@ -175,7 +175,7 @@ const CitationCard = memo(
                     href={citation.external_url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-xs text-primary hover:underline truncate block max-w-full"
+                    className="block max-w-full truncate text-xs text-primary hover:underline"
                   >
                     {citation.external_url}
                   </a>
@@ -184,21 +184,21 @@ const CitationCard = memo(
 
               {/* Context excerpt */}
               {citation.citation_context && (
-                <p className="text-xs text-muted-foreground line-clamp-2">
+                <p className="line-clamp-2 text-xs text-muted-foreground">
                   "{citation.citation_context}"
                 </p>
               )}
 
               {/* Metadata row */}
-              <div className="flex items-center gap-3 text-xs text-muted-foreground flex-wrap">
+              <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
                 {citation.relevance_score !== undefined && citation.relevance_score !== null && (
                   <span className="flex items-center gap-1">
-                    <CheckCircle className="h-3 w-3" />
+                    <CheckCircle className="size-3" />
                     {t('relevance', 'Relevance')}: {Math.round(citation.relevance_score * 100)}%
                   </span>
                 )}
                 <span className="flex items-center gap-1">
-                  <Clock className="h-3 w-3" />
+                  <Clock className="size-3" />
                   {formatDate(citation.created_at, locale)}
                 </span>
               </div>
@@ -209,7 +209,7 @@ const CitationCard = memo(
               {citation.external_url && (
                 <Button variant="outline" size="sm" asChild className="min-h-9">
                   <a href={citation.external_url} target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-4 w-4 me-2" />
+                    <ExternalLink className="me-2 size-4" />
                     {t('actions.open', 'Open')}
                   </a>
                 </Button>
@@ -222,7 +222,7 @@ const CitationCard = memo(
                   onClick={() => onView(citation)}
                   className="min-h-9"
                 >
-                  <Eye className="h-4 w-4 me-2" />
+                  <Eye className="me-2 size-4" />
                   {t('actions.view', 'View')}
                 </Button>
               )}
@@ -230,15 +230,15 @@ const CitationCard = memo(
               {editable && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
-                      <MoreHorizontal className="h-4 w-4" />
+                    <Button variant="ghost" size="sm" className="size-9 p-0">
+                      <MoreHorizontal className="size-4" />
                       <span className="sr-only">{t('actions.more', 'More')}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                     {onEdit && (
                       <DropdownMenuItem onClick={() => onEdit(citation)}>
-                        <Edit className="h-4 w-4 me-2" />
+                        <Edit className="me-2 size-4" />
                         {t('actions.edit', 'Edit')}
                       </DropdownMenuItem>
                     )}
@@ -247,7 +247,7 @@ const CitationCard = memo(
                         onClick={() => onDelete(citation.citation_id)}
                         className="text-destructive focus:text-destructive"
                       >
-                        <Trash2 className="h-4 w-4 me-2" />
+                        <Trash2 className="me-2 size-4" />
                         {t('actions.delete', 'Delete')}
                       </DropdownMenuItem>
                     )}
@@ -297,8 +297,8 @@ function CitationsList({
       {/* Outgoing citations (what this entity cites) */}
       {outgoing.length > 0 && (
         <div>
-          <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
-            <ArrowUpRight className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+          <h4 className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <ArrowUpRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
             {t('sections.outgoing', 'References')} ({outgoing.length})
           </h4>
           <div className="grid grid-cols-1 gap-3">
@@ -322,8 +322,8 @@ function CitationsList({
       {/* Incoming citations (what cites this entity) */}
       {incoming.length > 0 && (
         <div>
-          <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
-            <ArrowDownLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+          <h4 className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+            <ArrowDownLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
             {t('sections.incoming', 'Cited By')} ({incoming.length})
           </h4>
           <div className="grid grid-cols-1 gap-3">
@@ -418,7 +418,7 @@ export function CitationsSection({
   if (isLoading) {
     return (
       <div className={`space-y-4 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="flex justify-between items-center">
+        <div className="flex items-center justify-between">
           <Skeleton className="h-8 w-32" />
           <Skeleton className="h-9 w-24" />
         </div>
@@ -431,20 +431,20 @@ export function CitationsSection({
   if (!citations || citations.length === 0) {
     return (
       <div
-        className={`flex flex-col items-center justify-center py-8 sm:py-12 text-center ${className}`}
+        className={`flex flex-col items-center justify-center py-8 text-center sm:py-12 ${className}`}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
-          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
-            <Link2 className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+          <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+            <Link2 className="size-8 text-primary sm:size-10" />
           </div>
         </div>
 
-        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
+        <h3 className="mb-2 text-base font-semibold text-foreground sm:text-lg">
           {t('empty.title', 'No Citations')}
         </h3>
 
-        <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 px-4">
+        <p className="mb-6 max-w-md px-4 text-sm text-muted-foreground sm:text-base">
           {t(
             'empty.description',
             'Track references to other dossiers, documents, and external sources.',
@@ -453,7 +453,7 @@ export function CitationsSection({
 
         {editable && (
           <Button variant="outline" size="sm" onClick={handleAddCitation}>
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('actions.addCitation', 'Add Citation')}
           </Button>
         )}
@@ -475,8 +475,8 @@ export function CitationsSection({
   return (
     <div className={className} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with stats and actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <div className="flex items-center gap-3 flex-wrap">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center gap-3">
           <Badge variant="secondary" className="text-xs">
             {t('stats.outgoing', '{{count}} References', { count: stats.outgoing })}
           </Badge>
@@ -484,8 +484,8 @@ export function CitationsSection({
             {t('stats.incoming', '{{count}} Cited By', { count: stats.incoming })}
           </Badge>
           {stats.external > 0 && (
-            <Badge variant="outline" className="text-xs flex items-center gap-1">
-              <ExternalLink className="h-3 w-3" />
+            <Badge variant="outline" className="flex items-center gap-1 text-xs">
+              <ExternalLink className="size-3" />
               {stats.external} {t('stats.external', 'External')}
             </Badge>
           )}
@@ -493,7 +493,7 @@ export function CitationsSection({
 
         {editable && (
           <Button variant="outline" size="sm" onClick={handleAddCitation}>
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('actions.addCitation', 'Add Citation')}
           </Button>
         )}
@@ -504,11 +504,11 @@ export function CitationsSection({
         <Tabs value={viewMode} onValueChange={(v) => setViewMode(v as 'list' | 'graph')}>
           <TabsList className="mb-4">
             <TabsTrigger value="list" className="flex items-center gap-2">
-              <List className="h-4 w-4" />
+              <List className="size-4" />
               {t('views.list', 'List')}
             </TabsTrigger>
             <TabsTrigger value="graph" className="flex items-center gap-2">
-              <Network className="h-4 w-4" />
+              <Network className="size-4" />
               {t('views.graph', 'Graph')}
             </TabsTrigger>
           </TabsList>
@@ -572,7 +572,7 @@ export function CitationsSection({
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
+          <AlertDialogFooter className="flex flex-col-reverse gap-2 sm:flex-row">
             <AlertDialogCancel>{t('actions.cancel', 'Cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteConfirm}

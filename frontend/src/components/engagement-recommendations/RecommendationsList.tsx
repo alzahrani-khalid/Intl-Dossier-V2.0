@@ -75,7 +75,7 @@ function RecommendationSkeleton() {
   return (
     <div className="rounded-lg border bg-card p-4">
       <div className="flex items-start gap-3">
-        <Skeleton className="h-10 w-10 rounded-lg" />
+        <Skeleton className="size-10 rounded-lg" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-3/4" />
           <Skeleton className="h-3 w-1/2" />
@@ -107,10 +107,10 @@ function EmptyState({ message }: { message: string }) {
   return (
     <div className="flex flex-col items-center justify-center py-12 text-center">
       <div className="rounded-full bg-muted p-4">
-        <Inbox className="h-8 w-8 text-muted-foreground" />
+        <Inbox className="size-8 text-muted-foreground" />
       </div>
       <h3 className="mt-4 text-lg font-semibold">{t('noRecommendations')}</h3>
-      <p className="mt-1 text-sm text-muted-foreground max-w-sm">
+      <p className="mt-1 max-w-sm text-sm text-muted-foreground">
         {message || t('noRecommendationsDescription')}
       </p>
     </div>
@@ -202,10 +202,10 @@ export function RecommendationsList({
       {(showFilters || showGenerateButton) && (
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-amber-500" />
+            <Sparkles className="size-5 text-amber-500" />
             <h2 className="text-lg font-semibold">{t('title')}</h2>
             {isFetching && !isLoading && (
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              <Loader2 className="size-4 animate-spin text-muted-foreground" />
             )}
           </div>
 
@@ -223,14 +223,14 @@ export function RecommendationsList({
                         selectedTypes.length > 0 && 'border-primary',
                       )}
                     >
-                      <Filter className="h-4 w-4" />
+                      <Filter className="size-4" />
                       <span className="hidden sm:inline">{t('filterByType')}</span>
                       {selectedTypes.length > 0 && (
                         <span className="rounded-full bg-primary px-1.5 text-xs text-primary-foreground">
                           {selectedTypes.length}
                         </span>
                       )}
-                      <ChevronDown className="h-3.5 w-3.5" />
+                      <ChevronDown className="size-3.5" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-56">
@@ -268,7 +268,7 @@ export function RecommendationsList({
                           {selectedUrgencies.length}
                         </span>
                       )}
-                      <ChevronDown className="h-3.5 w-3.5" />
+                      <ChevronDown className="size-3.5" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -308,9 +308,9 @@ export function RecommendationsList({
                 className="min-h-9 gap-1.5"
               >
                 {generateMutation.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                 ) : (
-                  <Sparkles className="h-4 w-4" />
+                  <Sparkles className="size-4" />
                 )}
                 <span className="hidden sm:inline">{t('generate')}</span>
               </Button>

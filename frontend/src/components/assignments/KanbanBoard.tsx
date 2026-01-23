@@ -86,11 +86,11 @@ export function KanbanBoard({ engagementId }: KanbanBoardProps) {
  : ['todo', 'in_progress', 'review', 'done', 'cancelled'];
 
  if (isLoading) {
- return <div className="flex items-center justify-center h-96">{t('kanban.loading')}</div>;
+ return <div className="flex h-96 items-center justify-center">{t('kanban.loading')}</div>;
  }
 
  if (!columns) {
- return <div className="flex items-center justify-center h-96">{t('kanban.error_loading')}</div>;
+ return <div className="flex h-96 items-center justify-center">{t('kanban.error_loading')}</div>;
  }
 
  // Get active assignment for drag overlay
@@ -103,10 +103,10 @@ export function KanbanBoard({ engagementId }: KanbanBoardProps) {
  }
 
  return (
- <div className="flex flex-col gap-4 h-full" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="flex h-full flex-col gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
  {/* Sort dropdown */}
  <div className="flex items-center gap-4 px-4 sm:px-6">
- <label htmlFor="sort-select" className="text-sm sm:text-base font-medium">
+ <label htmlFor="sort-select" className="text-sm font-medium sm:text-base">
  {t('kanban.sort_by')}
  </label>
  <Select value={sortBy} onValueChange={(value) => setSortBy(value as SortOption)}>
@@ -128,7 +128,7 @@ export function KanbanBoard({ engagementId }: KanbanBoardProps) {
  onDragStart={handleDragStart}
  onDragEnd={handleDragEnd}
  >
- <div className="flex flex-col sm:flex-row gap-4 overflow-x-auto px-4 sm:px-6 pb-4">
+ <div className="flex flex-col gap-4 overflow-x-auto px-4 pb-4 sm:flex-row sm:px-6">
  {stageOrder.map((stage) => (
  <KanbanColumn
  key={stage}

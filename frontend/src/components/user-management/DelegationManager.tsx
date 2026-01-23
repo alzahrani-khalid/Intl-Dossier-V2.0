@@ -156,16 +156,16 @@ export function DelegationManager({
 
  return (
  <div
- className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+ className="container mx-auto p-4 sm:p-6 lg:px-8"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  {/* Header */}
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+ <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
  <div>
- <h2 className="text-2xl sm:text-3xl font-bold text-start">
+ <h2 className="text-start text-2xl font-bold sm:text-3xl">
  {t('delegation.title')}
  </h2>
- <p className="text-sm sm:text-base text-muted-foreground text-start mt-1">
+ <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
  {t('delegation.description')}
  </p>
  </div>
@@ -174,11 +174,11 @@ export function DelegationManager({
  <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
  <DialogTrigger asChild>
  <Button className=" gap-2">
- <Plus className="h-4 w-4" />
+ <Plus className="size-4" />
  <span className="hidden sm:inline">{t('delegation.create')}</span>
  </Button>
  </DialogTrigger>
- <DialogContent className="max-w-lg sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+ <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto sm:max-w-2xl">
  <DialogHeader>
  <DialogTitle className="text-start text-xl sm:text-2xl">
  {t('delegation.createTitle')}
@@ -196,7 +196,7 @@ export function DelegationManager({
  name="granteeId"
  render={({ field }) => (
  <FormItem>
- <FormLabel className="text-start block">
+ <FormLabel className="block text-start">
  {t('delegation.grantee')}
  </FormLabel>
  <Select onValueChange={field.onChange} value={field.value}>
@@ -229,14 +229,14 @@ export function DelegationManager({
  name="permissions"
  render={({ field }) => (
  <FormItem>
- <FormLabel className="text-start block">
+ <FormLabel className="block text-start">
  {t('delegation.permissions')}
  </FormLabel>
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+ <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
  {availablePermissions.map((permission) => (
  <label
  key={permission}
- className="flex items-center gap-2 p-2 border rounded-md cursor-pointer hover:bg-accent "
+ className="flex cursor-pointer items-center gap-2 rounded-md border p-2 hover:bg-accent "
  >
  <input
  type="checkbox"
@@ -249,7 +249,7 @@ export function DelegationManager({
  : field.value?.filter((v) => v !== value);
  field.onChange(newValue);
  }}
- className="h-4 w-4"
+ className="size-4"
  />
  <span className="text-sm">{permission}</span>
  </label>
@@ -269,7 +269,7 @@ export function DelegationManager({
  name="reason"
  render={({ field }) => (
  <FormItem>
- <FormLabel className="text-start block">
+ <FormLabel className="block text-start">
  {t('delegation.reason')}
  </FormLabel>
  <FormControl>
@@ -293,7 +293,7 @@ export function DelegationManager({
  name="expiresAt"
  render={({ field }) => (
  <FormItem>
- <FormLabel className="text-start block">
+ <FormLabel className="block text-start">
  {t('delegation.expiresAt')}
  </FormLabel>
  <FormControl>
@@ -314,14 +314,14 @@ export function DelegationManager({
  {/* Validation Error */}
  {validationError && (
  <Alert variant="destructive">
- <AlertTriangle className="h-4 w-4" />
- <AlertDescription className="text-start ms-2">
+ <AlertTriangle className="size-4" />
+ <AlertDescription className="ms-2 text-start">
  {validationError}
  </AlertDescription>
  </Alert>
  )}
 
- <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
+ <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row">
  <Button
  type="button"
  variant="outline"
@@ -348,9 +348,9 @@ export function DelegationManager({
 
  {/* Delegation Tabs */}
  <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
- <TabsList className="grid w-full grid-cols-2 mb-4">
+ <TabsList className="mb-4 grid w-full grid-cols-2">
  <TabsTrigger value="granted" className=" gap-2">
- <UserCheck className="h-4 w-4" />
+ <UserCheck className="size-4" />
  <span>{t('delegation.granted')}</span>
  {grantedDelegations && (
  <Badge variant="secondary" className="ms-2">
@@ -359,7 +359,7 @@ export function DelegationManager({
  )}
  </TabsTrigger>
  <TabsTrigger value="received" className=" gap-2">
- <UserX className="h-4 w-4" />
+ <UserX className="size-4" />
  <span>{t('delegation.received')}</span>
  {receivedDelegations && (
  <Badge variant="secondary" className="ms-2">
@@ -371,16 +371,16 @@ export function DelegationManager({
 
  {/* Granted Delegations */}
  <TabsContent value="granted" className="mt-0">
- <div className="border rounded-lg overflow-hidden">
+ <div className="overflow-hidden rounded-lg border">
  <div className="overflow-x-auto">
  <Table>
  <TableHeader>
  <TableRow>
  <TableHead className="text-start">{t('delegation.grantee')}</TableHead>
- <TableHead className="text-start hidden sm:table-cell">
+ <TableHead className="hidden text-start sm:table-cell">
  {t('delegation.permissions')}
  </TableHead>
- <TableHead className="text-start hidden md:table-cell">
+ <TableHead className="hidden text-start md:table-cell">
  {t('delegation.expiresAt')}
  </TableHead>
  <TableHead className="text-start">{t('delegation.status')}</TableHead>
@@ -390,13 +390,13 @@ export function DelegationManager({
  <TableBody>
  {myDelegations.isLoading ? (
  <TableRow>
- <TableCell colSpan={5} className="text-center py-8">
+ <TableCell colSpan={5} className="py-8 text-center">
  {t('common.loading')}
  </TableCell>
  </TableRow>
  ) : grantedDelegations?.length === 0 ? (
  <TableRow>
- <TableCell colSpan={5} className="text-center py-8">
+ <TableCell colSpan={5} className="py-8 text-center">
  {t('delegation.noGranted')}
  </TableCell>
  </TableRow>
@@ -433,7 +433,7 @@ export function DelegationManager({
  </TableCell>
  <TableCell className="hidden md:table-cell">
  <div className="flex items-center gap-2">
- <Clock className="h-4 w-4 text-muted-foreground" />
+ <Clock className="size-4 text-muted-foreground" />
  <span className="text-sm">
  {format(new Date(delegation.expires_at), 'PPp')}
  </span>
@@ -445,14 +445,14 @@ export function DelegationManager({
  variant={isExpiringSoon ? 'destructive' : 'default'}
  className="gap-1"
  >
- <CheckCircle className="h-3 w-3" />
+ <CheckCircle className="size-3" />
  {isExpiringSoon
  ? t('delegation.expiringSoon', { days: daysUntilExpiry })
  : t('delegation.active')}
  </Badge>
  ) : (
  <Badge variant="secondary" className="gap-1">
- <XCircle className="h-3 w-3" />
+ <XCircle className="size-3" />
  {t(`delegation.status.${delegation.status}`)}
  </Badge>
  )}
@@ -482,16 +482,16 @@ export function DelegationManager({
 
  {/* Received Delegations */}
  <TabsContent value="received" className="mt-0">
- <div className="border rounded-lg overflow-hidden">
+ <div className="overflow-hidden rounded-lg border">
  <div className="overflow-x-auto">
  <Table>
  <TableHeader>
  <TableRow>
  <TableHead className="text-start">{t('delegation.grantor')}</TableHead>
- <TableHead className="text-start hidden sm:table-cell">
+ <TableHead className="hidden text-start sm:table-cell">
  {t('delegation.permissions')}
  </TableHead>
- <TableHead className="text-start hidden md:table-cell">
+ <TableHead className="hidden text-start md:table-cell">
  {t('delegation.expiresAt')}
  </TableHead>
  <TableHead className="text-start">{t('delegation.status')}</TableHead>
@@ -500,13 +500,13 @@ export function DelegationManager({
  <TableBody>
  {myDelegations.isLoading ? (
  <TableRow>
- <TableCell colSpan={4} className="text-center py-8">
+ <TableCell colSpan={4} className="py-8 text-center">
  {t('common.loading')}
  </TableCell>
  </TableRow>
  ) : receivedDelegations?.length === 0 ? (
  <TableRow>
- <TableCell colSpan={4} className="text-center py-8">
+ <TableCell colSpan={4} className="py-8 text-center">
  {t('delegation.noReceived')}
  </TableCell>
  </TableRow>
@@ -528,7 +528,7 @@ export function DelegationManager({
  </span>
  </div>
  <ArrowRight
- className={`h-4 w-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
+ className={`size-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
  />
  </div>
  </TableCell>
@@ -548,7 +548,7 @@ export function DelegationManager({
  </TableCell>
  <TableCell className="hidden md:table-cell">
  <div className="flex items-center gap-2">
- <Clock className="h-4 w-4 text-muted-foreground" />
+ <Clock className="size-4 text-muted-foreground" />
  <span className="text-sm">
  {format(new Date(delegation.expires_at), 'PPp')}
  </span>
@@ -560,14 +560,14 @@ export function DelegationManager({
  variant={isExpiringSoon ? 'destructive' : 'default'}
  className="gap-1"
  >
- <CheckCircle className="h-3 w-3" />
+ <CheckCircle className="size-3" />
  {isExpiringSoon
  ? t('delegation.expiringSoon', { days: daysUntilExpiry })
  : t('delegation.active')}
  </Badge>
  ) : (
  <Badge variant="secondary" className="gap-1">
- <XCircle className="h-3 w-3" />
+ <XCircle className="size-3" />
  {t(`delegation.status.${delegation.status}`)}
  </Badge>
  )}

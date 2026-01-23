@@ -208,7 +208,7 @@ export function CommitmentQuickForm({
         {/* T042/US4: Dossier context display or selector */}
         {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (
-          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+          <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2 text-sm">
             <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
             <DossierContextBadge
               dossierId={selectedDossier.id}
@@ -225,7 +225,7 @@ export function CommitmentQuickForm({
         )}
         {/* Fallback for dossierId-only case (no full dossier info) */}
         {!selectedDossier && dossierId && (
-          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+          <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2 text-sm">
             <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
             <Badge variant="outline">{dossierId}</Badge>
           </div>
@@ -244,7 +244,7 @@ export function CommitmentQuickForm({
         )}
         {/* Show badge for user-selected dossier */}
         {!hasDossierContext && userSelectedDossiers.length > 0 && userSelectedDossiers[0] && (
-          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+          <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2 text-sm">
             <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
             <DossierContextBadge
               dossierId={userSelectedDossiers[0].id}
@@ -266,7 +266,7 @@ export function CommitmentQuickForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">{t('commitments:form.title')} *</FormLabel>
+              <FormLabel className="block text-start">{t('commitments:form.title')} *</FormLabel>
               <FormControl>
                 <Input
                   {...field}
@@ -289,7 +289,7 @@ export function CommitmentQuickForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('commitments:form.description')} *
               </FormLabel>
               <FormControl>
@@ -308,7 +308,7 @@ export function CommitmentQuickForm({
         />
 
         {/* Due Date and Priority Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Due Date */}
           <FormField
             control={form.control}
@@ -362,7 +362,7 @@ export function CommitmentQuickForm({
             name="priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start block">{t('commitments:form.priority')}</FormLabel>
+                <FormLabel className="block text-start">{t('commitments:form.priority')}</FormLabel>
                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <FormControl>
                     <SelectTrigger className="min-h-11">
@@ -388,7 +388,7 @@ export function CommitmentQuickForm({
           name="owner_type"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">{t('commitments:form.ownerType')}</FormLabel>
+              <FormLabel className="block text-start">{t('commitments:form.ownerType')}</FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
                 <FormControl>
                   <SelectTrigger className="min-h-11">
@@ -406,7 +406,7 @@ export function CommitmentQuickForm({
         />
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row">
           <Button
             type="button"
             variant="outline"

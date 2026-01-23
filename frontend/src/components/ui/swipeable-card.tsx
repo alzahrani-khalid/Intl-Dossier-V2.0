@@ -100,11 +100,11 @@ export interface SwipeableCardProps {
 
 // Default action icons
 const DEFAULT_ICONS: Record<SwipeAction, React.ReactNode> = {
-  favorite: <Star className="h-5 w-5" />,
-  pin: <Pin className="h-5 w-5" />,
-  archive: <Archive className="h-5 w-5" />,
-  delete: <Trash2 className="h-5 w-5" />,
-  custom: <MoreVertical className="h-5 w-5" />,
+  favorite: <Star className="size-5" />,
+  pin: <Pin className="size-5" />,
+  archive: <Archive className="size-5" />,
+  delete: <Trash2 className="size-5" />,
+  custom: <MoreVertical className="size-5" />,
 }
 
 // Default action colors

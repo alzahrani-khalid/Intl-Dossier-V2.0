@@ -90,7 +90,7 @@ export function CommentList({
       // Add mention (as span since user profile route not yet implemented)
       const username = match[1]
       parts.push(
-        <span key={`mention-${match.index}`} className="text-primary font-medium">
+        <span key={`mention-${match.index}`} className="font-medium text-primary">
           @{username}
         </span>,
       )
@@ -114,7 +114,7 @@ export function CommentList({
 
   if (comments.length === 0) {
     return (
-      <div dir={isRTL ? 'rtl' : 'ltr'} className="text-center py-8 text-muted-foreground">
+      <div dir={isRTL ? 'rtl' : 'ltr'} className="py-8 text-center text-muted-foreground">
         {t('comments.empty')}
       </div>
     )
@@ -124,8 +124,8 @@ export function CommentList({
     <ScrollArea ref={scrollRef} className="h-[500px] pe-4" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="space-y-4">
         {comments.map((comment) => (
-          <div key={comment.id} className="flex gap-3 p-3 rounded-lg border bg-card">
-            <Avatar className="h-8 w-8">
+          <div key={comment.id} className="flex gap-3 rounded-lg border bg-card p-3">
+            <Avatar className="size-8">
               <AvatarImage src={comment.user_avatar} alt={comment.user_name || 'User'} />
               <AvatarFallback>
                 {comment.user_name
@@ -148,7 +148,7 @@ export function CommentList({
               </div>
 
               {/* Comment Text with @mentions */}
-              <p className="text-sm leading-relaxed whitespace-pre-wrap">
+              <p className="whitespace-pre-wrap text-sm leading-relaxed">
                 {renderCommentText(comment.text)}
               </p>
 
@@ -159,10 +159,10 @@ export function CommentList({
                     <button
                       key={index}
                       onClick={() => handleReactionClick(comment.id, reaction.emoji)}
-                      className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs border transition-colors ${
+                      className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-xs transition-colors ${
                         reaction.userReacted
-                          ? 'bg-primary/10 border-primary text-primary'
-                          : 'bg-muted hover:bg-muted/80 border-border'
+                          ? 'border-primary bg-primary/10 text-primary'
+                          : 'border-border bg-muted hover:bg-muted/80'
                       }`}
                     >
                       <span>{reaction.emoji}</span>
@@ -179,7 +179,7 @@ export function CommentList({
         {hasNextPage && (
           <div ref={loadMoreRef} className="flex justify-center py-4">
             {isFetchingNextPage ? (
-              <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+              <Loader2 className="size-6 animate-spin text-muted-foreground" />
             ) : (
               <span className="text-sm text-muted-foreground">{t('comments.loadMore')}</span>
             )}

@@ -165,9 +165,9 @@ export function TranslateButton({
                   <span className="ms-1.5 text-xs font-medium">
                     {translationInfo.from.toUpperCase()}
                     {isRTL ? (
-                      <ArrowLeft className="inline h-3 w-3 mx-0.5" />
+                      <ArrowLeft className="mx-0.5 inline size-3" />
                     ) : (
-                      <ArrowRight className="inline h-3 w-3 mx-0.5" />
+                      <ArrowRight className="mx-0.5 inline size-3" />
                     )}
                     {translationInfo.to.toUpperCase()}
                   </span>

@@ -282,7 +282,7 @@ export function NotificationPreviewTimeline({
         )}
       >
         {/* Example badge */}
-        <Badge variant="secondary" className="absolute top-2 end-2 text-xs">
+        <Badge variant="secondary" className="absolute end-2 top-2 text-xs">
           {t('preview.exampleBadge')}
         </Badge>
 
@@ -293,16 +293,16 @@ export function NotificationPreviewTimeline({
             categoryColors[notification.type],
           )}
         >
-          <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+          <Icon className="size-4 sm:size-5" />
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0 pe-16">
-          <p className="text-sm font-medium truncate">{t(notification.titleKey)}</p>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-2">
+        <div className="min-w-0 flex-1 pe-16">
+          <p className="truncate text-sm font-medium">{t(notification.titleKey)}</p>
+          <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
             {t(notification.messageKey)}
           </p>
-          <div className="flex items-center gap-2 mt-2">
+          <div className="mt-2 flex items-center gap-2">
             <span className="text-xs text-muted-foreground">
               {notification.timeAgo} {t('preview.ago')}
             </span>
@@ -312,7 +312,7 @@ export function NotificationPreviewTimeline({
               </Badge>
             )}
             {notification.priority === 'high' && (
-              <Badge variant="outline" className="text-xs border-orange-500 text-orange-600">
+              <Badge variant="outline" className="border-orange-500 text-xs text-orange-600">
                 {t('priority.high')}
               </Badge>
             )}
@@ -326,12 +326,12 @@ export function NotificationPreviewTimeline({
   const renderTimelinePreview = () => (
     <div className="space-y-6">
       {/* Header */}
-      <div className="text-center space-y-2">
+      <div className="space-y-2 text-center">
         <div className="flex items-center justify-center gap-2">
-          <Sparkles className="h-6 w-6 text-primary" />
-          <h2 className="text-xl sm:text-2xl font-bold">{t('preview.title')}</h2>
+          <Sparkles className="size-6 text-primary" />
+          <h2 className="text-xl font-bold sm:text-2xl">{t('preview.title')}</h2>
         </div>
-        <p className="text-muted-foreground text-sm sm:text-base max-w-md mx-auto">
+        <p className="mx-auto max-w-md text-sm text-muted-foreground sm:text-base">
           {t('preview.description')}
         </p>
       </div>
@@ -346,12 +346,12 @@ export function NotificationPreviewTimeline({
         >
           {isAnimating ? (
             <>
-              <Pause className="h-4 w-4" />
+              <Pause className="size-4" />
               {t('preview.pauseAnimation')}
             </>
           ) : (
             <>
-              <Play className="h-4 w-4" />
+              <Play className="size-4" />
               {t('preview.playAnimation')}
             </>
           )}
@@ -374,7 +374,7 @@ export function NotificationPreviewTimeline({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
             {CATEGORIES.map((category) => {
               const Icon = categoryIcons[category]
               return (
@@ -385,9 +385,9 @@ export function NotificationPreviewTimeline({
                       categoryColors[category],
                     )}
                   >
-                    <Icon className="h-4 w-4" />
+                    <Icon className="size-4" />
                   </div>
-                  <span className="text-xs sm:text-sm truncate">{t(`categories.${category}`)}</span>
+                  <span className="truncate text-xs sm:text-sm">{t(`categories.${category}`)}</span>
                 </div>
               )
             })}
@@ -396,9 +396,9 @@ export function NotificationPreviewTimeline({
       </Card>
 
       {/* Actions */}
-      <div className="flex flex-col sm:flex-row gap-3 justify-center">
+      <div className="flex flex-col justify-center gap-3 sm:flex-row">
         <Button onClick={() => setCurrentStep(1)} className="min-h-11 gap-2">
-          <Settings className="h-4 w-4" />
+          <Settings className="size-4" />
           {t('preview.configurePreferences')}
           <ChevronIcon className={cn('h-4 w-4', isRTL && 'rotate-180')} />
         </Button>
@@ -415,9 +415,9 @@ export function NotificationPreviewTimeline({
   const renderPreferencesSetup = () => (
     <div className="space-y-6">
       {/* Header */}
-      <div className="text-center space-y-2">
-        <h2 className="text-xl sm:text-2xl font-bold">{t('preview.preferencesTitle')}</h2>
-        <p className="text-muted-foreground text-sm sm:text-base max-w-md mx-auto">
+      <div className="space-y-2 text-center">
+        <h2 className="text-xl font-bold sm:text-2xl">{t('preview.preferencesTitle')}</h2>
+        <p className="mx-auto max-w-md text-sm text-muted-foreground sm:text-base">
           {t('preview.preferencesDescription')}
         </p>
       </div>
@@ -425,29 +425,29 @@ export function NotificationPreviewTimeline({
       {/* Progress indicator */}
       <div className="flex items-center justify-center gap-4">
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
-            <Check className="h-4 w-4" />
+          <div className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
+            <Check className="size-4" />
           </div>
-          <span className="text-sm text-muted-foreground hidden sm:inline">
+          <span className="hidden text-sm text-muted-foreground sm:inline">
             {t('preview.step1')}
           </span>
         </div>
         <div className="h-px w-8 bg-primary" />
         <div className="flex items-center gap-2">
-          <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-sm font-medium">
+          <div className="flex size-8 items-center justify-center rounded-full bg-primary text-sm font-medium text-primary-foreground">
             2
           </div>
-          <span className="text-sm font-medium hidden sm:inline">{t('preview.step2')}</span>
+          <span className="hidden text-sm font-medium sm:inline">{t('preview.step2')}</span>
         </div>
       </div>
 
       {/* Preferences Card */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div>
               <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-                <Bell className="h-5 w-5" />
+                <Bell className="size-5" />
                 {t('preview.channelSettings')}
               </CardTitle>
               <CardDescription className="text-sm">
@@ -466,22 +466,22 @@ export function NotificationPreviewTimeline({
         </CardHeader>
         <CardContent>
           {/* Table header - hidden on mobile */}
-          <div className="hidden sm:grid grid-cols-6 gap-4 mb-4 text-sm font-medium text-muted-foreground">
+          <div className="mb-4 hidden grid-cols-6 gap-4 text-sm font-medium text-muted-foreground sm:grid">
             <div className="col-span-2">{t('preferences.channels')}</div>
             <div className="text-center">
-              <Mail className="h-4 w-4 mx-auto" />
+              <Mail className="mx-auto size-4" />
               <span className="text-xs">{t('preferences.email')}</span>
             </div>
             <div className="text-center">
-              <Smartphone className="h-4 w-4 mx-auto" />
+              <Smartphone className="mx-auto size-4" />
               <span className="text-xs">{t('preferences.push')}</span>
             </div>
             <div className="text-center">
-              <Monitor className="h-4 w-4 mx-auto" />
+              <Monitor className="mx-auto size-4" />
               <span className="text-xs">{t('preferences.inApp')}</span>
             </div>
             <div className="text-center">
-              <Volume2 className="h-4 w-4 mx-auto" />
+              <Volume2 className="mx-auto size-4" />
               <span className="text-xs">{t('preferences.sound')}</span>
             </div>
           </div>
@@ -494,9 +494,9 @@ export function NotificationPreviewTimeline({
               const pref = preferences[category]
               const Icon = categoryIcons[category]
               return (
-                <div key={category} className="border rounded-lg p-3 sm:p-0 sm:border-0">
+                <div key={category} className="rounded-lg border p-3 sm:border-0 sm:p-0">
                   {/* Mobile layout */}
-                  <div className="sm:hidden space-y-3">
+                  <div className="space-y-3 sm:hidden">
                     <div className="flex items-center gap-2">
                       <div
                         className={cn(
@@ -504,13 +504,13 @@ export function NotificationPreviewTimeline({
                           categoryColors[category],
                         )}
                       >
-                        <Icon className="h-4 w-4" />
+                        <Icon className="size-4" />
                       </div>
                       <Label className="font-medium">{t(`categories.${category}`)}</Label>
                     </div>
                     <div className="grid grid-cols-4 gap-3">
                       <div className="flex flex-col items-center gap-1">
-                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <Mail className="size-4 text-muted-foreground" />
                         <Switch
                           checked={pref.email_enabled}
                           onCheckedChange={(v) =>
@@ -519,7 +519,7 @@ export function NotificationPreviewTimeline({
                         />
                       </div>
                       <div className="flex flex-col items-center gap-1">
-                        <Smartphone className="h-4 w-4 text-muted-foreground" />
+                        <Smartphone className="size-4 text-muted-foreground" />
                         <Switch
                           checked={pref.push_enabled}
                           onCheckedChange={(v) =>
@@ -528,7 +528,7 @@ export function NotificationPreviewTimeline({
                         />
                       </div>
                       <div className="flex flex-col items-center gap-1">
-                        <Monitor className="h-4 w-4 text-muted-foreground" />
+                        <Monitor className="size-4 text-muted-foreground" />
                         <Switch
                           checked={pref.in_app_enabled}
                           onCheckedChange={(v) =>
@@ -537,7 +537,7 @@ export function NotificationPreviewTimeline({
                         />
                       </div>
                       <div className="flex flex-col items-center gap-1">
-                        <Volume2 className="h-4 w-4 text-muted-foreground" />
+                        <Volume2 className="size-4 text-muted-foreground" />
                         <Switch
                           checked={pref.sound_enabled}
                           onCheckedChange={(v) =>
@@ -549,7 +549,7 @@ export function NotificationPreviewTimeline({
                   </div>
 
                   {/* Desktop layout */}
-                  <div className="hidden sm:grid grid-cols-6 gap-4 items-center py-2">
+                  <div className="hidden grid-cols-6 items-center gap-4 py-2 sm:grid">
                     <div className="col-span-2 flex items-center gap-2">
                       <div
                         className={cn(
@@ -557,7 +557,7 @@ export function NotificationPreviewTimeline({
                           categoryColors[category],
                         )}
                       >
-                        <Icon className="h-4 w-4" />
+                        <Icon className="size-4" />
                       </div>
                       <Label className="font-medium">{t(`categories.${category}`)}</Label>
                     </div>
@@ -600,9 +600,9 @@ export function NotificationPreviewTimeline({
       </Card>
 
       {/* Tip card */}
-      <Card className="bg-primary/5 border-primary/20">
+      <Card className="border-primary/20 bg-primary/5">
         <CardContent className="flex items-start gap-3 pt-4">
-          <Sparkles className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+          <Sparkles className="mt-0.5 size-5 shrink-0 text-primary" />
           <div>
             <p className="text-sm font-medium">{t('preview.tip')}</p>
             <p className="text-sm text-muted-foreground">{t('preview.tipDescription')}</p>
@@ -611,13 +611,13 @@ export function NotificationPreviewTimeline({
       </Card>
 
       {/* Actions */}
-      <div className="flex flex-col-reverse sm:flex-row gap-3 justify-between">
+      <div className="flex flex-col-reverse justify-between gap-3 sm:flex-row">
         <Button variant="outline" onClick={() => setCurrentStep(0)} className="min-h-11 gap-2">
           <BackChevronIcon className={cn('h-4 w-4', isRTL && 'rotate-180')} />
           {t('preview.backToPreview')}
         </Button>
         <Button onClick={handleComplete} className="min-h-11 gap-2">
-          <Check className="h-4 w-4" />
+          <Check className="size-4" />
           {t('preview.saveAndContinue')}
         </Button>
       </div>

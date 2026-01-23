@@ -47,12 +47,12 @@ interface OrgNode {
 // Custom node component for organizations (memoized for performance)
 const OrganizationNode = memo(
   ({ data }: { data: { label: string; orgCode: string; orgType: string; headCount?: number } }) => (
-    <div className="bg-card border-2 border-primary rounded-lg px-3 py-2 sm:px-4 sm:py-3 shadow-md min-w-[120px] sm:min-w-[160px] hover:shadow-lg transition-shadow">
+    <div className="min-w-[120px] rounded-lg border-2 border-primary bg-card px-3 py-2 shadow-md transition-shadow hover:shadow-lg sm:min-w-[160px] sm:px-4 sm:py-3">
       <div className="flex flex-col items-center gap-1">
         <Badge variant="outline" className="text-xs">
           {data.orgCode}
         </Badge>
-        <div className="text-sm sm:text-base font-semibold text-foreground text-center">
+        <div className="text-center text-sm font-semibold text-foreground sm:text-base">
           {data.label}
         </div>
         <div className="text-xs text-muted-foreground">{data.orgType}</div>
@@ -227,8 +227,8 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
     return (
       <div className="flex items-center justify-center py-12 sm:py-16" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="text-center">
-          <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
-          <p className="text-sm sm:text-base text-muted-foreground">{t('common.loading')}</p>
+          <div className="mx-auto mb-4 size-12 animate-spin rounded-full border-4 border-primary border-t-transparent sm:size-16" />
+          <p className="text-sm text-muted-foreground sm:text-base">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -238,16 +238,16 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
   if (!hierarchyOrgs || hierarchyOrgs.length === 0) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
-          <Network className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
+        <div className="mb-4 rounded-full bg-muted p-4 sm:p-6">
+          <Network className="size-8 text-muted-foreground sm:size-10" />
         </div>
-        <h3 className="text-sm sm:text-base font-medium text-muted-foreground mb-2">
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground sm:text-base">
           No Organizational Hierarchy
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
+        <p className="max-w-md text-xs text-muted-foreground sm:text-sm">
           This organization does not have a parent organization defined.
         </p>
       </div>
@@ -257,7 +257,7 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
   // Hierarchy chart view
   return (
     <div
-      className="w-full h-[500px] sm:h-[600px] lg:h-[700px] border rounded-lg overflow-hidden"
+      className="h-[500px] w-full overflow-hidden rounded-lg border sm:h-[600px] lg:h-[700px]"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <ReactFlow

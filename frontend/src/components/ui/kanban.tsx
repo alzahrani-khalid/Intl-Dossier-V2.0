@@ -316,12 +316,12 @@ export const KanbanColumn = <TData extends { id: UniqueIdentifier }>({
       )}
     >
       <div className={cn('flex items-center justify-between px-4 py-3 border-b', headerClassName)}>
-        <h3 className="text-sm sm:text-base font-semibold">{isRTL && titleAr ? titleAr : title}</h3>
-        <span className="text-xs sm:text-sm text-muted-foreground px-2 py-1 rounded-md bg-muted">
+        <h3 className="text-sm font-semibold sm:text-base">{isRTL && titleAr ? titleAr : title}</h3>
+        <span className="rounded-md bg-muted px-2 py-1 text-xs text-muted-foreground sm:text-sm">
           {items.length}
         </span>
       </div>
-      <div className="flex-1 overflow-y-auto p-2 sm:p-3 space-y-2">
+      <div className="flex-1 space-y-2 overflow-y-auto p-2 sm:p-3">
         <SortableContext
           items={items.map((item) => item.id)}
           strategy={verticalListSortingStrategy}
@@ -421,7 +421,7 @@ export const KanbanEmpty = forwardRef<HTMLDivElement, KanbanEmptyProps>(
         )}
       >
         <p>{message}</p>
-        {subMessage && <p className="text-xs mt-1">{subMessage}</p>}
+        {subMessage && <p className="mt-1 text-xs">{subMessage}</p>}
       </div>
     )
   },

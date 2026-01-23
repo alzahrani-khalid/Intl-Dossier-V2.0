@@ -61,17 +61,17 @@ function formatFileSize(bytes: number): string {
 function getFileTypeIcon(fileType: PreviewableFileType) {
   switch (fileType) {
     case 'pdf':
-      return <FileText className="h-5 w-5 text-red-500" />
+      return <FileText className="size-5 text-red-500" />
     case 'image':
-      return <ImageIcon className="h-5 w-5 text-blue-500" />
+      return <ImageIcon className="size-5 text-blue-500" />
     case 'excel':
-      return <FileSpreadsheet className="h-5 w-5 text-green-500" />
+      return <FileSpreadsheet className="size-5 text-green-500" />
     case 'word':
-      return <FileText className="h-5 w-5 text-blue-600" />
+      return <FileText className="size-5 text-blue-600" />
     case 'text':
-      return <FileText className="h-5 w-5 text-gray-500" />
+      return <FileText className="size-5 text-gray-500" />
     default:
-      return <File className="h-5 w-5 text-gray-400" />
+      return <File className="size-5 text-gray-400" />
   }
 }
 
@@ -91,18 +91,18 @@ const TextPreview = memo(function TextPreview({
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className="flex flex-col h-full bg-gray-50 dark:bg-gray-900" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex h-full flex-col bg-gray-50 dark:bg-gray-900" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Toolbar */}
-      <div className="flex items-center justify-end gap-2 p-2 sm:p-3 bg-white dark:bg-gray-800 border-b">
+      <div className="flex items-center justify-end gap-2 border-b bg-white p-2 dark:bg-gray-800 sm:p-3">
         {onDownload && (
           <Button variant="ghost" size="sm" onClick={onDownload}>
-            <Download className="h-4 w-4 me-2" />
+            <Download className="me-2 size-4" />
             {t('actions.download', 'Download')}
           </Button>
         )}
         {onClose && (
           <Button variant="ghost" size="sm" onClick={onClose}>
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         )}
       </div>
@@ -134,17 +134,17 @@ const UnsupportedPreview = memo(function UnsupportedPreview({
 
   return (
     <div
-      className="flex flex-col items-center justify-center h-full p-6 text-center"
+      className="flex h-full flex-col items-center justify-center p-6 text-center"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="mb-6">
-        <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center mb-4 mx-auto">
-          <AlertCircle className="h-10 w-10 sm:h-12 sm:w-12 text-gray-400" />
+        <div className="mx-auto mb-4 flex size-20 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 sm:size-24">
+          <AlertCircle className="size-10 text-gray-400 sm:size-12" />
         </div>
-        <h3 className="text-lg sm:text-xl font-semibold text-gray-900 dark:text-gray-100 mb-2">
+        <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-gray-100 sm:text-xl">
           {t('unsupported.title', 'Preview Not Available')}
         </h3>
-        <p className="text-sm sm:text-base text-gray-500 dark:text-gray-400 max-w-md">
+        <p className="max-w-md text-sm text-gray-500 dark:text-gray-400 sm:text-base">
           {t(
             'unsupported.description',
             'This file type cannot be previewed in the browser. You can download it to view locally.',
@@ -152,10 +152,10 @@ const UnsupportedPreview = memo(function UnsupportedPreview({
         </p>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         {onDownload && (
           <Button onClick={onDownload} className="min-w-[160px]">
-            <Download className="h-4 w-4 me-2" />
+            <Download className="me-2 size-4" />
             {t('actions.download', 'Download')}
           </Button>
         )}
@@ -279,28 +279,28 @@ export const DocumentPreviewModal = memo(function DocumentPreviewModal({
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Header */}
-        <DialogHeader className="px-3 py-2 sm:px-4 sm:py-3 border-b flex-shrink-0">
+        <DialogHeader className="shrink-0 border-b px-3 py-2 sm:px-4 sm:py-3">
           <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
               {getFileTypeIcon(detectedFileType)}
-              <DialogTitle className="text-sm sm:text-base truncate">
+              <DialogTitle className="truncate text-sm sm:text-base">
                 {document.file_name}
               </DialogTitle>
-              <Badge variant="outline" className="hidden sm:inline-flex text-xs">
+              <Badge variant="outline" className="hidden text-xs sm:inline-flex">
                 {formatFileSize(document.size_bytes)}
               </Badge>
             </div>
 
-            <div className="flex items-center gap-1 sm:gap-2 flex-shrink-0">
+            <div className="flex shrink-0 items-center gap-1 sm:gap-2">
               {previewUrl && (
                 <Button
                   variant="ghost"
                   size="sm"
                   onClick={() => window.open(previewUrl, '_blank')}
-                  className="h-8 w-8 p-0"
+                  className="size-8 p-0"
                   title={t('actions.openInNewTab', 'Open in new tab')}
                 >
-                  <ExternalLink className="h-4 w-4" />
+                  <ExternalLink className="size-4" />
                 </Button>
               )}
               {allowDownload && (
@@ -308,33 +308,33 @@ export const DocumentPreviewModal = memo(function DocumentPreviewModal({
                   variant="ghost"
                   size="sm"
                   onClick={handleDownload}
-                  className="h-8 w-8 p-0"
+                  className="size-8 p-0"
                   title={t('actions.download', 'Download')}
                 >
-                  <Download className="h-4 w-4" />
+                  <Download className="size-4" />
                 </Button>
               )}
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleClose}
-                className="h-8 w-8 p-0"
+                className="size-8 p-0"
                 title={t('actions.close', 'Close')}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             </div>
           </div>
         </DialogHeader>
 
         {/* Content */}
-        <div className="flex-1 overflow-hidden relative">
+        <div className="relative flex-1 overflow-hidden">
           {/* Loading state */}
           {status === 'loading' && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
               <div className="text-center">
-                <Skeleton className="h-16 w-16 rounded-full mx-auto mb-4" />
-                <Skeleton className="h-4 w-32 mx-auto" />
+                <Skeleton className="mx-auto mb-4 size-16 rounded-full" />
+                <Skeleton className="mx-auto h-4 w-32" />
               </div>
             </div>
           )}
@@ -342,13 +342,13 @@ export const DocumentPreviewModal = memo(function DocumentPreviewModal({
           {/* Error state */}
           {status === 'error' && (
             <div className="absolute inset-0 flex items-center justify-center bg-gray-50 dark:bg-gray-900">
-              <div className="text-center p-4">
-                <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
+              <div className="p-4 text-center">
+                <AlertCircle className="mx-auto mb-4 size-12 text-destructive" />
                 <p className="text-destructive">
                   {error || t('errors.loadFailed', 'Failed to load preview')}
                 </p>
                 <Button variant="outline" className="mt-4" onClick={handleDownload}>
-                  <Download className="h-4 w-4 me-2" />
+                  <Download className="me-2 size-4" />
                   {t('actions.downloadInstead', 'Download instead')}
                 </Button>
               </div>
@@ -357,7 +357,7 @@ export const DocumentPreviewModal = memo(function DocumentPreviewModal({
 
           {/* Preview content */}
           {status === 'ready' && showPreviewable && (
-            <div className="h-full relative">
+            <div className="relative h-full">
               {/* PDF Preview */}
               {detectedFileType === 'pdf' && (
                 <PDFPreview
@@ -418,7 +418,7 @@ export const DocumentPreviewModal = memo(function DocumentPreviewModal({
 
         {/* Footer with page info for PDFs */}
         {detectedFileType === 'pdf' && totalPages > 0 && (
-          <div className="px-3 py-2 sm:px-4 border-t text-center text-xs sm:text-sm text-muted-foreground">
+          <div className="border-t px-3 py-2 text-center text-xs text-muted-foreground sm:px-4 sm:text-sm">
             {t('pdf.pageInfo', 'Page {{current}} of {{total}}', {
               current: currentPage,
               total: totalPages,

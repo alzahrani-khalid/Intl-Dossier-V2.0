@@ -191,7 +191,7 @@ export function InteractionNoteForm({
  return (
  <Dialog open={open} onOpenChange={onOpenChange}>
  <DialogContent
- className="max-w-2xl max-h-[90vh] overflow-y-auto px-4 sm:px-6"
+ className="max-h-[90vh] max-w-2xl overflow-y-auto px-4 sm:px-6"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <DialogHeader>
@@ -315,7 +315,7 @@ export function InteractionNoteForm({
  {/* Attendees Field */}
  <div className="space-y-2">
  <FormLabel className="flex items-center gap-2">
- <Users className="w-4 h-4" />
+ <Users className="size-4" />
  {t('contactDirectory.interactions.form.attendees')}
  </FormLabel>
  <Input
@@ -326,17 +326,17 @@ export function InteractionNoteForm({
  className="text-sm"
  />
  {attendeeSearch && contactsData && contactsData.contacts.length > 0 && (
- <div className="border rounded-md max-h-40 overflow-y-auto">
+ <div className="max-h-40 overflow-y-auto rounded-md border">
  {contactsData.contacts.map((contact) => (
  <button
  key={contact.id}
  type="button"
  onClick={() => addAttendee(contact.id)}
- className="w-full px-3 py-2 text-sm text-start hover:bg-accent transition-colors"
+ className="w-full px-3 py-2 text-start text-sm transition-colors hover:bg-accent"
  >
  {contact.full_name}
  {contact.organization && (
- <span className="text-xs text-muted-foreground ms-2">
+ <span className="ms-2 text-xs text-muted-foreground">
  ({contact.organization.name})
  </span>
  )}
@@ -356,7 +356,7 @@ export function InteractionNoteForm({
  onClick={() => removeAttendee(attendeeId)}
  className="ms-1 hover:text-destructive"
  >
- <X className="w-3 h-3" />
+ <X className="size-3" />
  </button>
  </Badge>
  );
@@ -371,7 +371,7 @@ export function InteractionNoteForm({
  {/* File Upload */}
  <div className="space-y-2">
  <FormLabel>{t('contactDirectory.interactions.form.attachments')}</FormLabel>
- <div className="flex flex-col sm:flex-row gap-2">
+ <div className="flex flex-col gap-2 sm:flex-row">
  <Input
  type="file"
  id="file-upload"
@@ -395,15 +395,15 @@ export function InteractionNoteForm({
  {selectedFiles.map((file, index) => (
  <div
  key={index}
- className="flex items-center justify-between p-2 border rounded-md text-sm"
+ className="flex items-center justify-between rounded-md border p-2 text-sm"
  >
- <span className="truncate flex-1">{file.name}</span>
+ <span className="flex-1 truncate">{file.name}</span>
  <button
  type="button"
  onClick={() => removeFile(index)}
  className="ms-2 text-muted-foreground hover:text-destructive"
  >
- <X className="w-4 h-4" />
+ <X className="size-4" />
  </button>
  </div>
  ))}
@@ -414,7 +414,7 @@ export function InteractionNoteForm({
  </FormDescription>
  </div>
 
- <DialogFooter className="flex-col sm:flex-row gap-2">
+ <DialogFooter className="flex-col gap-2 sm:flex-row">
  <Button
  type="button"
  variant="outline"
@@ -424,8 +424,8 @@ export function InteractionNoteForm({
  >
  {t('contactDirectory.interactions.form.cancel')}
  </Button>
- <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto gap-2">
- {isSubmitting && <Loader2 className="w-4 h-4 animate-spin" />}
+ <Button type="submit" disabled={isSubmitting} className="w-full gap-2 sm:w-auto">
+ {isSubmitting && <Loader2 className="size-4 animate-spin" />}
  {note
  ? t('contactDirectory.interactions.form.save_changes')
  : t('contactDirectory.interactions.form.create_note')}

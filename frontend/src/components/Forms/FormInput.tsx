@@ -34,7 +34,7 @@ export function FormInput({
  >
  {label}
  {required && (
- <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+ <span className="ms-1 text-red-500" aria-label={t('validation.required')}>
  *
  </span>
  )}
@@ -56,10 +56,10 @@ export function FormInput({
  ${icon ? (isRTL ? 'pe-12' : 'ps-12') : ''}
  border ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
  rounded-lg
- focus:ring-2 focus:ring-primary-500 focus:border-transparent
- dark:bg-gray-700 dark:text-white
- disabled:opacity-50 disabled:cursor-not-allowed
- transition-colors
+ transition-colors focus:border-transparent focus:ring-2
+ focus:ring-primary-500 disabled:cursor-not-allowed
+ disabled:opacity-50 dark:bg-gray-700
+ dark:text-white
  `}
  aria-invalid={!!error}
  aria-describedby={

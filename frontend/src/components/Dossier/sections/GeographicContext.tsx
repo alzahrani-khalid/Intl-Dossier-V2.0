@@ -43,11 +43,11 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
   if (!extension) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <Globe2 className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mb-4" />
-        <p className="text-sm sm:text-base text-muted-foreground">
+        <Globe2 className="mb-4 size-12 text-muted-foreground sm:size-16" />
+        <p className="text-sm text-muted-foreground sm:text-base">
           {t('section.geographicContextEmpty')}
         </p>
       </div>
@@ -128,11 +128,11 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
   if (!hasData) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <Globe2 className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mb-4" />
-        <p className="text-sm sm:text-base text-muted-foreground">
+        <Globe2 className="mb-4 size-12 text-muted-foreground sm:size-16" />
+        <p className="text-sm text-muted-foreground sm:text-base">
           {t('section.geographicContextEmpty')}
         </p>
       </div>
@@ -182,7 +182,7 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Geographic Context Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
         {fields.map((field, index) => {
           const Icon = field.icon;
           const value = formatValue(field);
@@ -191,17 +191,17 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
           return (
             <div
               key={index}
-              className="flex items-start gap-3 p-3 sm:p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+              className="flex items-start gap-3 rounded-lg border bg-card p-3 transition-colors hover:bg-accent/50 sm:p-4"
             >
-              <div className="flex-shrink-0 mt-0.5">
-                <Icon className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <div className="mt-0.5 shrink-0">
+                <Icon className="size-4 text-primary sm:size-5" />
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">
+              <div className="min-w-0 flex-1">
+                <p className="mb-1 text-xs font-medium text-muted-foreground sm:text-sm">
                   {field.label}
                 </p>
                 {hasValue ? (
-                  <p className="text-sm sm:text-base font-semibold text-foreground break-words">
+                  <p className="break-words text-sm font-semibold text-foreground sm:text-base">
                     {value}
                   </p>
                 ) : (
@@ -217,7 +217,7 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
 
       {/* Economic Intelligence Widget (Feature 029 - User Story 4 - T058) */}
       <div className="w-full">
-        <h3 className="text-sm sm:text-base font-semibold text-foreground mb-3">
+        <h3 className="mb-3 text-sm font-semibold text-foreground sm:text-base">
           {t('intelligence.economic_insights', 'Economic Insights')}
         </h3>
         {isLoadingEconomic ? (
@@ -231,9 +231,9 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
             dossierId={dossier.id}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center py-8 border border-dashed rounded-lg bg-muted/30">
-            <DollarSign className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground text-center">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 py-8">
+            <DollarSign className="mb-2 size-8 text-muted-foreground" />
+            <p className="text-center text-sm text-muted-foreground">
               {economicError
                 ? t('intelligence.error_loading', 'Error loading intelligence')
                 : t('intelligence.no_economic_data', 'No economic intelligence available')}
@@ -244,7 +244,7 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
 
       {/* Security Intelligence Widget (Feature 029 - User Story 4 - T060) */}
       <div className="w-full">
-        <h3 className="text-sm sm:text-base font-semibold text-foreground mb-3">
+        <h3 className="mb-3 text-sm font-semibold text-foreground sm:text-base">
           {t('intelligence.security_assessment', 'Security Assessment')}
         </h3>
         {isLoadingSecurity ? (
@@ -258,9 +258,9 @@ export function GeographicContext({ dossier }: GeographicContextProps) {
             dossierId={dossier.id}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center py-8 border border-dashed rounded-lg bg-muted/30">
-            <Shield className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground text-center">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 py-8">
+            <Shield className="mb-2 size-8 text-muted-foreground" />
+            <p className="text-center text-sm text-muted-foreground">
               {securityError
                 ? t('intelligence.error_loading', 'Error loading intelligence')
                 : t('intelligence.no_security_data', 'No security intelligence available')}

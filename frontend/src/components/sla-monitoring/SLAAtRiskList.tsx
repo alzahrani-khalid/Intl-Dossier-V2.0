@@ -91,7 +91,7 @@ export function SLAAtRiskList({
       <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-4">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-yellow-500" />
+            <AlertTriangle className="size-5 text-yellow-500" />
             {t('atRisk.title')}
           </CardTitle>
           <CardDescription>{t('atRisk.description')}</CardDescription>
@@ -121,10 +121,10 @@ export function SLAAtRiskList({
                     )}
                     onClick={() => onItemClick?.(item)}
                   >
-                    <div className="flex items-start justify-between gap-4 mb-3">
-                      <div className="flex-1 min-w-0">
-                        <h4 className="font-medium truncate">{item.title}</h4>
-                        <div className="flex items-center gap-2 mt-1 flex-wrap">
+                    <div className="mb-3 flex items-start justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <h4 className="truncate font-medium">{item.title}</h4>
+                        <div className="mt-1 flex flex-wrap items-center gap-2">
                           <Badge variant="outline" className={getPriorityColor(item.priority)}>
                             {t(`priority.${item.priority}`, item.priority)}
                           </Badge>
@@ -132,7 +132,7 @@ export function SLAAtRiskList({
                         </div>
                       </div>
                       <Button variant="ghost" size="icon" className="shrink-0">
-                        <ExternalLink className="h-4 w-4" />
+                        <ExternalLink className="size-4" />
                       </Button>
                     </div>
 
@@ -146,9 +146,9 @@ export function SLAAtRiskList({
                       <Progress value={item.progress_pct} className={cn('h-2', progressColor)} />
                     </div>
 
-                    <div className="flex items-center justify-between mt-3 text-sm">
+                    <div className="mt-3 flex items-center justify-between text-sm">
                       <div className="flex items-center gap-2 text-muted-foreground">
-                        <Clock className="h-4 w-4" />
+                        <Clock className="size-4" />
                         <span>
                           {isBreached
                             ? t('atRisk.breached')
@@ -157,7 +157,7 @@ export function SLAAtRiskList({
                       </div>
                       {item.assignee_name && (
                         <div className="flex items-center gap-1 text-muted-foreground">
-                          <User className="h-4 w-4" />
+                          <User className="size-4" />
                           <span>{item.assignee_name}</span>
                         </div>
                       )}
@@ -168,8 +168,8 @@ export function SLAAtRiskList({
             </div>
           </ScrollArea>
         ) : (
-          <div className="h-32 flex flex-col items-center justify-center text-muted-foreground">
-            <AlertTriangle className="h-8 w-8 mb-2 text-green-500" />
+          <div className="flex h-32 flex-col items-center justify-center text-muted-foreground">
+            <AlertTriangle className="mb-2 size-8 text-green-500" />
             <p>{t('atRisk.noItemsAtRisk')}</p>
           </div>
         )}

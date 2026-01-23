@@ -227,26 +227,26 @@ function MeetingMinutesDemo() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="mb-6">
-        <div className="flex items-center gap-3 mb-2">
-          <div className="p-2 rounded-lg bg-primary/10">
-            <FileText className="h-6 w-6 text-primary" />
+        <div className="mb-2 flex items-center gap-3">
+          <div className="rounded-lg bg-primary/10 p-2">
+            <FileText className="size-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-foreground">{t('title')}</h1>
+            <h1 className="text-2xl font-bold text-foreground sm:text-3xl">{t('title')}</h1>
             <p className="text-sm text-muted-foreground">{t('subtitle')}</p>
           </div>
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <Users className="h-8 w-8 text-blue-500" />
+              <Users className="size-8 text-blue-500" />
               <div>
                 <p className="text-2xl font-bold">{attendees.length}</p>
                 <p className="text-xs text-muted-foreground">{t('stats.attendees')}</p>
@@ -258,7 +258,7 @@ function MeetingMinutesDemo() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <CheckSquare className="h-8 w-8 text-green-500" />
+              <CheckSquare className="size-8 text-green-500" />
               <div>
                 <p className="text-2xl font-bold">{actionItems.length}</p>
                 <p className="text-xs text-muted-foreground">{t('stats.actionItems')}</p>
@@ -270,7 +270,7 @@ function MeetingMinutesDemo() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <Sparkles className="h-8 w-8 text-purple-500" />
+              <Sparkles className="size-8 text-purple-500" />
               <div>
                 <p className="text-2xl font-bold">
                   {actionItems.filter((i) => i.ai_extracted).length}
@@ -284,7 +284,7 @@ function MeetingMinutesDemo() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <Mic className="h-8 w-8 text-orange-500" />
+              <Mic className="size-8 text-orange-500" />
               <div>
                 <p className="text-2xl font-bold">0</p>
                 <p className="text-xs text-muted-foreground">{t('stats.voiceMemos')}</p>
@@ -296,7 +296,7 @@ function MeetingMinutesDemo() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="w-full sm:w-auto grid grid-cols-4 sm:inline-flex">
+        <TabsList className="grid w-full grid-cols-4 sm:inline-flex sm:w-auto">
           <TabsTrigger value="list" className="min-h-10">
             {t('title')}
           </TabsTrigger>
@@ -366,7 +366,7 @@ function MeetingMinutesDemo() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-purple-500" />
+                <Sparkles className="size-5 text-purple-500" />
                 {t('ai.title')}
               </CardTitle>
             </CardHeader>
@@ -388,7 +388,7 @@ Example:
 - Team should review the draft proposal"
                   className="min-h-[150px]"
                 />
-                <div className="flex flex-col sm:flex-row gap-2">
+                <div className="flex flex-col gap-2 sm:flex-row">
                   <Button
                     onClick={handleExtractActionItems}
                     disabled={!extractText.trim()}
@@ -405,9 +405,9 @@ Example:
               </div>
 
               {/* AI Info */}
-              <div className="p-4 bg-muted/50 rounded-lg">
-                <h4 className="font-medium text-foreground mb-2">How AI Extraction Works</h4>
-                <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside">
+              <div className="rounded-lg bg-muted/50 p-4">
+                <h4 className="mb-2 font-medium text-foreground">How AI Extraction Works</h4>
+                <ul className="list-inside list-disc space-y-1 text-sm text-muted-foreground">
                   <li>Paste meeting notes or voice transcript text</li>
                   <li>AI identifies action items, assignees, and deadlines</li>
                   <li>Review extracted items and convert to commitments/tasks</li>

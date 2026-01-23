@@ -87,7 +87,7 @@ export function SignalValidationPanel({ signalId, currentConfidence, onValidatio
  return (
  <Card className="w-full" dir={isRTL ? 'rtl' : 'ltr'}>
  <CardHeader className="pb-3">
- <CardTitle className="text-base sm:text-lg text-start">
+ <CardTitle className="text-start text-base sm:text-lg">
  {t('dossiers.intelligence.validation.title')}
  </CardTitle>
  <CardDescription className="text-start">
@@ -98,11 +98,11 @@ export function SignalValidationPanel({ signalId, currentConfidence, onValidatio
  <CardContent className="space-y-4">
  {/* Current Confidence Level */}
  <div className="space-y-2">
- <Label className="text-sm font-medium text-start block">
+ <Label className="block text-start text-sm font-medium">
  {t('dossiers.intelligence.validation.current_level')}
  </Label>
- <Badge className={`${confidenceConfig[currentConfidence].color} flex items-center gap-2 w-fit`}>
- <CurrentIcon className="h-4 w-4" />
+ <Badge className={`${confidenceConfig[currentConfidence].color} flex w-fit items-center gap-2`}>
+ <CurrentIcon className="size-4" />
  {t(`dossiers.intelligence.confidence.${currentConfidence}`)}
  </Badge>
  </div>
@@ -110,10 +110,10 @@ export function SignalValidationPanel({ signalId, currentConfidence, onValidatio
  {/* Upgrade Path */}
  {canUpgrade && (
  <div className="space-y-2">
- <Label className="text-sm font-medium text-start block">
+ <Label className="block text-start text-sm font-medium">
  {t('dossiers.intelligence.validation.upgrade_path')}
  </Label>
- <div className="flex items-center gap-2 flex-wrap">
+ <div className="flex flex-wrap items-center gap-2">
  {confidenceLevels.map((level, idx) => {
  const Icon = confidenceConfig[level].icon;
  const isCurrent = idx === currentIndex;
@@ -134,7 +134,7 @@ export function SignalValidationPanel({ signalId, currentConfidence, onValidatio
  : ''
  } flex items-center gap-1.5 text-xs sm:text-sm`}
  >
- <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
+ <Icon className="size-3 sm:size-4" />
  {t(`dossiers.intelligence.confidence.${level}`)}
  </Badge>
  {idx < confidenceLevels.length - 1 && (
@@ -149,9 +149,9 @@ export function SignalValidationPanel({ signalId, currentConfidence, onValidatio
 
  {/* Validation Form */}
  {canUpgrade && nextConfidence && (
- <div className="space-y-4 pt-4 border-t">
+ <div className="space-y-4 border-t pt-4">
  <div className="space-y-2">
- <Label htmlFor="validation-notes" className="text-sm font-medium text-start block">
+ <Label htmlFor="validation-notes" className="block text-start text-sm font-medium">
  {t('dossiers.intelligence.validation.notes_label')} *
  </Label>
  <Textarea
@@ -163,13 +163,13 @@ export function SignalValidationPanel({ signalId, currentConfidence, onValidatio
  dir={isRTL ? 'rtl' : 'ltr'}
  required
  />
- <p className="text-xs text-gray-500 text-start">
+ <p className="text-start text-xs text-gray-500">
  {t('dossiers.intelligence.validation.notes_hint')}
  </p>
  </div>
 
  <div className="space-y-2">
- <Label htmlFor="source-details" className="text-sm font-medium text-start block">
+ <Label htmlFor="source-details" className="block text-start text-sm font-medium">
  {t('dossiers.intelligence.validation.source_label')}
  </Label>
  <Textarea
@@ -196,7 +196,7 @@ export function SignalValidationPanel({ signalId, currentConfidence, onValidatio
  </span>
  ) : (
  <span className="flex items-center gap-2">
- {NextIcon && <NextIcon className="h-4 w-4" />}
+ {NextIcon && <NextIcon className="size-4" />}
  {t('dossiers.intelligence.validation.upgrade_button', {
  level: t(`dossiers.intelligence.confidence.${nextConfidence}`),
  })}
@@ -209,9 +209,9 @@ export function SignalValidationPanel({ signalId, currentConfidence, onValidatio
 
  {/* Already Confirmed */}
  {!canUpgrade && (
- <div className="flex items-center gap-2 p-4 bg-green-50 dark:bg-green-900/20 rounded-md">
- <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
- <p className="text-sm text-green-800 dark:text-green-200 text-start">
+ <div className="flex items-center gap-2 rounded-md bg-green-50 p-4 dark:bg-green-900/20">
+ <CheckCircle2 className="size-5 text-green-600 dark:text-green-400" />
+ <p className="text-start text-sm text-green-800 dark:text-green-200">
  {t('dossiers.intelligence.validation.already_confirmed')}
  </p>
  </div>

@@ -91,7 +91,7 @@ ${brief.recommendations || ''}
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-bold">{brief.title}</h1>
-          <div className="flex items-center gap-2 mt-2">
+          <div className="mt-2 flex items-center gap-2">
             <Badge className={statusColors[brief.status]}>
               {t(`status.${brief.status}`, brief.status)}
             </Badge>
@@ -102,15 +102,15 @@ ${brief.recommendations || ''}
         </div>
         <div className="flex items-center gap-2">
           <Button variant="outline" size="sm" onClick={handleCopy}>
-            <Copy className="h-4 w-4 me-1" />
+            <Copy className="me-1 size-4" />
             {t('copy', 'Copy')}
           </Button>
           <Button variant="outline" size="sm" onClick={handlePrint}>
-            <Printer className="h-4 w-4 me-1" />
+            <Printer className="me-1 size-4" />
             {t('print', 'Print')}
           </Button>
           <Button variant="outline" size="sm" onClick={handleExport}>
-            <Download className="h-4 w-4 me-1" />
+            <Download className="me-1 size-4" />
             {t('export', 'Export')}
           </Button>
         </div>
@@ -121,34 +121,34 @@ ${brief.recommendations || ''}
           {/* Executive Summary */}
           {brief.executiveSummary && (
             <Section
-              icon={<FileText className="h-5 w-5" />}
+              icon={<FileText className="size-5" />}
               title={t('sections.executiveSummary', 'Executive Summary')}
             >
-              <p className="text-muted-foreground whitespace-pre-wrap">{brief.executiveSummary}</p>
+              <p className="whitespace-pre-wrap text-muted-foreground">{brief.executiveSummary}</p>
             </Section>
           )}
 
           {/* Background */}
           {brief.background && (
             <Section
-              icon={<History className="h-5 w-5" />}
+              icon={<History className="size-5" />}
               title={t('sections.background', 'Background')}
             >
-              <p className="text-muted-foreground whitespace-pre-wrap">{brief.background}</p>
+              <p className="whitespace-pre-wrap text-muted-foreground">{brief.background}</p>
             </Section>
           )}
 
           {/* Key Participants */}
           {keyParticipants.length > 0 && (
             <Section
-              icon={<Users className="h-5 w-5" />}
+              icon={<Users className="size-5" />}
               title={t('sections.keyParticipants', 'Key Participants')}
             >
               <div className="space-y-3">
                 {keyParticipants.map((participant, index) => (
                   <div key={index} className="flex items-start gap-3">
-                    <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
-                      <Users className="h-4 w-4 text-primary" />
+                    <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary/10">
+                      <Users className="size-4 text-primary" />
                     </div>
                     <div>
                       <p className="font-medium">{participant.name}</p>
@@ -164,7 +164,7 @@ ${brief.recommendations || ''}
           {/* Relevant Positions */}
           {relevantPositions.length > 0 && (
             <Section
-              icon={<Target className="h-5 w-5" />}
+              icon={<Target className="size-5" />}
               title={t('sections.positions', 'Relevant Positions')}
             >
               <div className="space-y-3">
@@ -175,7 +175,7 @@ ${brief.recommendations || ''}
                         <div>
                           <p className="font-medium">{position.title}</p>
                           <p className="text-sm text-muted-foreground">{position.stance}</p>
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className="mt-1 text-xs text-muted-foreground">
                             {t('source', 'Source')}: {position.source}
                           </p>
                         </div>
@@ -185,7 +185,7 @@ ${brief.recommendations || ''}
                             size="sm"
                             onClick={() => onCitationClick('position', position.sourceId)}
                           >
-                            <ExternalLink className="h-4 w-4" />
+                            <ExternalLink className="size-4" />
                           </Button>
                         )}
                       </div>
@@ -199,7 +199,7 @@ ${brief.recommendations || ''}
           {/* Active Commitments */}
           {activeCommitments.length > 0 && (
             <Section
-              icon={<CheckCircle className="h-5 w-5" />}
+              icon={<CheckCircle className="size-5" />}
               title={t('sections.commitments', 'Active Commitments')}
             >
               <div className="space-y-3">
@@ -209,7 +209,7 @@ ${brief.recommendations || ''}
                       <div className="flex items-start justify-between">
                         <div>
                           <p className="text-sm">{commitment.description}</p>
-                          <div className="flex items-center gap-2 mt-2">
+                          <div className="mt-2 flex items-center gap-2">
                             <Badge variant="outline">{commitment.status}</Badge>
                             {commitment.deadline && (
                               <span className="text-xs text-muted-foreground">
@@ -224,7 +224,7 @@ ${brief.recommendations || ''}
                             size="sm"
                             onClick={() => onCitationClick('commitment', commitment.sourceId)}
                           >
-                            <ExternalLink className="h-4 w-4" />
+                            <ExternalLink className="size-4" />
                           </Button>
                         )}
                       </div>
@@ -238,23 +238,23 @@ ${brief.recommendations || ''}
           {/* Historical Context */}
           {brief.historicalContext && (
             <Section
-              icon={<History className="h-5 w-5" />}
+              icon={<History className="size-5" />}
               title={t('sections.historicalContext', 'Historical Context')}
             >
-              <p className="text-muted-foreground whitespace-pre-wrap">{brief.historicalContext}</p>
+              <p className="whitespace-pre-wrap text-muted-foreground">{brief.historicalContext}</p>
             </Section>
           )}
 
           {/* Talking Points */}
           {talkingPoints.length > 0 && (
             <Section
-              icon={<MessageSquare className="h-5 w-5" />}
+              icon={<MessageSquare className="size-5" />}
               title={t('sections.talkingPoints', 'Talking Points')}
             >
               <ul className="space-y-2">
                 {talkingPoints.map((point, index) => (
                   <li key={index} className="flex items-start gap-2">
-                    <span className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center shrink-0 text-xs font-medium">
+                    <span className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-xs font-medium">
                       {index + 1}
                     </span>
                     <span className="text-muted-foreground">{point}</span>
@@ -267,24 +267,24 @@ ${brief.recommendations || ''}
           {/* Recommendations */}
           {brief.recommendations && (
             <Section
-              icon={<Lightbulb className="h-5 w-5" />}
+              icon={<Lightbulb className="size-5" />}
               title={t('sections.recommendations', 'Recommendations')}
             >
-              <p className="text-muted-foreground whitespace-pre-wrap">{brief.recommendations}</p>
+              <p className="whitespace-pre-wrap text-muted-foreground">{brief.recommendations}</p>
             </Section>
           )}
 
           {/* Citations */}
           {citations.length > 0 && (
             <Section
-              icon={<ExternalLink className="h-5 w-5" />}
+              icon={<ExternalLink className="size-5" />}
               title={t('sections.citations', 'Sources & Citations')}
             >
               <div className="space-y-2">
                 {citations.map((citation, index) => (
                   <div
                     key={index}
-                    className="flex items-center justify-between p-2 rounded-md hover:bg-muted/50 cursor-pointer"
+                    className="flex cursor-pointer items-center justify-between rounded-md p-2 hover:bg-muted/50"
                     onClick={() => onCitationClick?.(citation.type, citation.id)}
                   >
                     <div className="flex items-center gap-2">
@@ -293,7 +293,7 @@ ${brief.recommendations || ''}
                       </Badge>
                       <span className="text-sm">{citation.title}</span>
                     </div>
-                    <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                    <ExternalLink className="size-4 text-muted-foreground" />
                   </div>
                 ))}
               </div>

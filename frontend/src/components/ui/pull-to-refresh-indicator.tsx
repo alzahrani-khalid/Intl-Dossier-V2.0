@@ -155,9 +155,9 @@ export function PullToRefreshIndicator({
           {/* Main indicator */}
           <div className="flex items-center gap-3">
             {/* Progress ring with icon */}
-            <div className="relative flex h-10 w-10 items-center justify-center">
+            <div className="relative flex size-10 items-center justify-center">
               {/* Background ring */}
-              <svg className="absolute h-10 w-10 -rotate-90" viewBox="0 0 40 40">
+              <svg className="absolute size-10 -rotate-90" viewBox="0 0 40 40">
                 <circle
                   cx="20"
                   cy="20"
@@ -202,7 +202,7 @@ export function PullToRefreshIndicator({
               {/* Last sync time */}
               {lastSyncTime && status !== 'refreshing' && (
                 <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                  <Clock className="h-3 w-3" />
+                  <Clock className="size-3" />
                   {formatLastSync(lastSyncTime)}
                 </span>
               )}
@@ -216,7 +216,7 @@ export function PullToRefreshIndicator({
               animate={{ opacity: 1, scale: 1 }}
               className="mt-2 flex items-center gap-1.5 rounded-full bg-amber-100 px-2.5 py-1 dark:bg-amber-900/30"
             >
-              <WifiOff className="h-3 w-3 text-amber-600 dark:text-amber-400" />
+              <WifiOff className="size-3 text-amber-600 dark:text-amber-400" />
               <span className="text-xs font-medium text-amber-700 dark:text-amber-300">
                 {t('pullToRefresh.offlineQueue', '{{count}} pending sync', {
                   count: offlineQueueCount,
@@ -290,7 +290,7 @@ export function SyncStatusBar({
     >
       {/* Left side - item count */}
       <div className="flex items-center gap-1.5">
-        <Package className="h-3 w-3" />
+        <Package className="size-3" />
         <span>
           {itemCount !== undefined
             ? t('pullToRefresh.itemCount', '{{count}} items', { count: itemCount })
@@ -303,7 +303,7 @@ export function SyncStatusBar({
         {/* Offline queue indicator */}
         {offlineQueueCount > 0 && (
           <div className="flex items-center gap-1 rounded-full bg-amber-100 px-2 py-0.5 dark:bg-amber-900/30">
-            <WifiOff className="h-3 w-3 text-amber-600 dark:text-amber-400" />
+            <WifiOff className="size-3 text-amber-600 dark:text-amber-400" />
             <span className="text-amber-700 dark:text-amber-300">{offlineQueueCount}</span>
           </div>
         )}
@@ -312,12 +312,12 @@ export function SyncStatusBar({
         <div className="flex items-center gap-1">
           {isSyncing ? (
             <>
-              <RefreshCw className="h-3 w-3 animate-spin" />
+              <RefreshCw className="size-3 animate-spin" />
               <span>{t('pullToRefresh.syncing', 'Syncing...')}</span>
             </>
           ) : (
             <>
-              <Clock className="h-3 w-3" />
+              <Clock className="size-3" />
               <span>{formatTime(lastSyncTime)}</span>
             </>
           )}

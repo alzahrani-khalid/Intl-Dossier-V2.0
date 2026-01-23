@@ -65,8 +65,8 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
       {Array.from({ length: count }).map((_, index) => (
         <div key={index} className="flex gap-4">
           <div className="flex flex-col items-center">
-            <Skeleton className="h-11 w-11 rounded-full" />
-            {index < count - 1 && <Skeleton className="h-20 w-0.5 mt-2" />}
+            <Skeleton className="size-11 rounded-full" />
+            {index < count - 1 && <Skeleton className="mt-2 h-20 w-0.5" />}
           </div>
           <div className="flex-1 space-y-3">
             <Skeleton className="h-6 w-3/4" />
@@ -85,12 +85,12 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
 function TimelineEmptyState({ message }: { message: string }) {
   const { t } = useTranslation('stakeholder-interactions')
   return (
-    <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
-      <div className="rounded-full bg-muted p-6 sm:p-8 mb-4 sm:mb-6">
-        <Calendar className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground" />
+    <div className="flex flex-col items-center justify-center py-12 text-center sm:py-16">
+      <div className="mb-4 rounded-full bg-muted p-6 sm:mb-6 sm:p-8">
+        <Calendar className="size-12 text-muted-foreground sm:size-16" />
       </div>
-      <h3 className="text-lg sm:text-xl font-semibold mb-2">{t('empty.title')}</h3>
-      <p className="text-sm sm:text-base text-muted-foreground max-w-md">
+      <h3 className="mb-2 text-lg font-semibold sm:text-xl">{t('empty.title')}</h3>
+      <p className="max-w-md text-sm text-muted-foreground sm:text-base">
         {message || t('empty.description')}
       </p>
     </div>
@@ -137,7 +137,7 @@ function StatsOverviewCard({
     return (
       <Card className={className}>
         <CardContent className="pt-6">
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
             {Array.from({ length: 4 }).map((_, i) => (
               <Skeleton key={i} className="h-16" />
             ))}
@@ -181,17 +181,17 @@ function StatsOverviewCard({
   return (
     <Card className={cn('mb-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-2">
-        <CardTitle className="text-lg text-start">{t('stats.title')}</CardTitle>
+        <CardTitle className="text-start text-lg">{t('stats.title')}</CardTitle>
         <CardDescription className="text-start">{t('stats.description')}</CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {statItems.map((item, index) => {
             const Icon = item.icon
             return (
               <div
                 key={index}
-                className="flex flex-col items-center sm:items-start gap-1 p-3 rounded-lg bg-muted/50"
+                className="flex flex-col items-center gap-1 rounded-lg bg-muted/50 p-3 sm:items-start"
               >
                 <div className="flex items-center gap-2">
                   <Icon className={cn('h-4 w-4', item.color)} />
@@ -311,15 +311,15 @@ export function StakeholderInteractionTimeline({
   return (
     <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with title and actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-start">
+          <h2 className="text-start text-xl font-bold sm:text-2xl">
             {t('title')}
             {stakeholderName && (
-              <span className="text-muted-foreground font-normal ms-2">- {stakeholderName}</span>
+              <span className="ms-2 font-normal text-muted-foreground">- {stakeholderName}</span>
             )}
           </h2>
-          <p className="text-sm text-muted-foreground text-start mt-1">{t('subtitle')}</p>
+          <p className="mt-1 text-start text-sm text-muted-foreground">{t('subtitle')}</p>
         </div>
         {allowNewInteractions && (
           <Button onClick={() => setIsInteractionDialogOpen(true)} className="min-h-11 sm:min-h-10">
@@ -334,7 +334,7 @@ export function StakeholderInteractionTimeline({
 
       {/* Search and filter bar */}
       {(showSearch || showFilters) && (
-        <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 mb-6">
+        <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:gap-4">
           {showSearch && (
             <div className="relative flex-1">
               <Search
@@ -360,7 +360,7 @@ export function StakeholderInteractionTimeline({
                     isRTL ? 'start-1' : 'end-1',
                   )}
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               )}
             </div>
@@ -370,10 +370,10 @@ export function StakeholderInteractionTimeline({
             <Button
               variant="outline"
               onClick={() => setShowFiltersPanel(!showFiltersPanel)}
-              className="min-h-11 sm:min-h-10 justify-between"
+              className="min-h-11 justify-between sm:min-h-10"
             >
               <div className="flex items-center gap-2">
-                <Filter className="h-4 w-4" />
+                <Filter className="size-4" />
                 <span>{t('filters')}</span>
                 {activeFiltersCount > 0 && (
                   <Badge variant="secondary" className="h-5 min-w-5 rounded-full px-1.5">
@@ -395,7 +395,7 @@ export function StakeholderInteractionTimeline({
             onClick={() => refetch()}
             className="min-h-11 min-w-11 sm:min-h-10 sm:min-w-10"
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="size-4" />
           </Button>
         </div>
       )}
@@ -455,7 +455,7 @@ export function StakeholderInteractionTimeline({
             <div className="flex justify-center py-6 sm:py-8">
               {isFetchingNextPage ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                   <span>{t('loading_more')}</span>
                 </div>
               ) : (

@@ -152,12 +152,12 @@ export function DossierTypeSelector({
                   'animate-in zoom-in duration-200',
                 )}
               >
-                <Check className="h-4 w-4" />
+                <Check className="size-4" />
               </div>
             )}
 
             {/* DossierTypeGuide for contextual help */}
-            <div className="absolute top-2 start-2" onClick={(e) => e.stopPropagation()}>
+            <div className="absolute start-2 top-2" onClick={(e) => e.stopPropagation()}>
               <DossierTypeGuide
                 type={option.type}
                 variant="popover"
@@ -174,13 +174,13 @@ export function DossierTypeSelector({
                       field: t(`dossier:type.${option.type}`),
                     })}
                   >
-                    <HelpCircle className="h-4 w-4" />
+                    <HelpCircle className="size-4" />
                   </button>
                 }
               />
             </div>
 
-            <CardHeader className="flex flex-col items-center gap-2 p-4 sm:p-6 pt-10">
+            <CardHeader className="flex flex-col items-center gap-2 p-4 pt-10 sm:p-6">
               {/* Icon */}
               <div
                 className={cn(
@@ -194,14 +194,14 @@ export function DossierTypeSelector({
               </div>
 
               {/* Type name */}
-              <CardTitle className="text-base sm:text-lg text-center">
+              <CardTitle className="text-center text-base sm:text-lg">
                 {t(`dossier:type.${option.type}`)}
               </CardTitle>
             </CardHeader>
 
             {/* Description */}
-            <CardContent className="px-4 sm:px-6 pb-4 sm:pb-6 pt-0">
-              <CardDescription className="text-xs sm:text-sm text-center line-clamp-3">
+            <CardContent className="px-4 pb-4 pt-0 sm:px-6 sm:pb-6">
+              <CardDescription className="line-clamp-3 text-center text-xs sm:text-sm">
                 {t(`dossier:${option.descriptionKey}`)}
               </CardDescription>
             </CardContent>
@@ -270,7 +270,7 @@ export function DossierTypeSelectorCompact({
             role="radio"
             aria-checked={isSelected}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="size-4" />
             <span className="hidden sm:inline">{t(`type.${option.type}`)}</span>
           </button>
         )

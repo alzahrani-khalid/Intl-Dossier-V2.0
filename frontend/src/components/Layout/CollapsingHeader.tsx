@@ -152,7 +152,7 @@ export function CollapsingHeader({
               className={cn('md:hidden min-h-10 min-w-10', 'hover:bg-accent transition-colors')}
               aria-label={t('sidebar.toggle', 'Toggle sidebar')}
             >
-              <Menu className="h-5 w-5" />
+              <Menu className="size-5" />
             </Button>
 
             {/* Search bar - hidden when collapsed, desktop only */}
@@ -171,9 +171,9 @@ export function CollapsingHeader({
               transition={{ duration: 0.2 }}
               aria-label={t('keyboard-shortcuts:quickActions.title', 'Quick Actions')}
             >
-              <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+              <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2" />
               <motion.span
-                className="flex-1 text-start text-sm whitespace-nowrap overflow-hidden"
+                className="flex-1 overflow-hidden whitespace-nowrap text-start text-sm"
                 animate={{
                   opacity: isCollapsed ? 0 : 1,
                   width: isCollapsed ? 0 : 'auto',
@@ -183,7 +183,7 @@ export function CollapsingHeader({
                 {t('search.searchPlaceholder')}
               </motion.span>
               {!isCollapsed && (
-                <kbd className="hidden lg:inline-flex items-center gap-0.5 rounded border bg-background px-1.5 py-0.5 font-mono text-[10px] font-medium">
+                <kbd className="hidden items-center gap-0.5 rounded border bg-background px-1.5 py-0.5 font-mono text-[10px] font-medium lg:inline-flex">
                   {cmdKey}K
                 </kbd>
               )}
@@ -194,10 +194,10 @@ export function CollapsingHeader({
               variant="ghost"
               size="icon"
               onClick={() => keyboardContext?.openCommandPalette()}
-              className="md:hidden min-h-10 min-w-10 hover:bg-accent transition-colors"
+              className="min-h-10 min-w-10 transition-colors hover:bg-accent md:hidden"
               aria-label={t('keyboard-shortcuts:quickActions.title', 'Quick Actions')}
             >
-              <Search className="h-5 w-5" />
+              <Search className="size-5" />
             </Button>
           </div>
 
@@ -205,14 +205,14 @@ export function CollapsingHeader({
           <AnimatePresence>
             {isCollapsed && (
               <motion.div
-                className="absolute inset-x-0 flex justify-center pointer-events-none"
+                className="pointer-events-none absolute inset-x-0 flex justify-center"
                 initial={{ opacity: 0, y: -10 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -10 }}
                 transition={{ duration: 0.15 }}
               >
                 <div className="flex items-center gap-2 px-4">
-                  <span className="text-sm font-medium text-foreground truncate max-w-[200px] sm:max-w-none">
+                  <span className="max-w-[200px] truncate text-sm font-medium text-foreground sm:max-w-none">
                     {contextualTitle}
                   </span>
                   {/* Scroll direction indicator */}
@@ -221,9 +221,9 @@ export function CollapsingHeader({
                     className="text-muted-foreground"
                   >
                     {scrollDirection === 'up' ? (
-                      <ChevronUp className="h-3 w-3" />
+                      <ChevronUp className="size-3" />
                     ) : (
-                      <ChevronDown className="h-3 w-3" />
+                      <ChevronDown className="size-3" />
                     )}
                   </motion.div>
                 </div>
@@ -262,12 +262,12 @@ export function CollapsingHeader({
                     isCollapsed && 'px-1.5',
                   )}
                 >
-                  <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground shrink-0">
-                    {user?.name ? user.name[0].toUpperCase() : <User className="h-4 w-4" />}
+                  <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                    {user?.name ? user.name[0].toUpperCase() : <User className="size-4" />}
                   </div>
                   {!isCollapsed && (
                     <motion.span
-                      className="hidden md:block text-sm font-medium max-w-[150px] truncate"
+                      className="hidden max-w-[150px] truncate text-sm font-medium md:block"
                       animate={{ opacity: isCollapsed ? 0 : 1 }}
                     >
                       {user?.name || user?.email}
@@ -288,11 +288,11 @@ export function CollapsingHeader({
                 </div>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="gap-2">
-                  <User className="h-4 w-4" />
+                  <User className="size-4" />
                   {t('navigation.profile')}
                 </DropdownMenuItem>
                 <DropdownMenuItem className="gap-2">
-                  <Settings className="h-4 w-4" />
+                  <Settings className="size-4" />
                   {t('navigation.settings')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -300,7 +300,7 @@ export function CollapsingHeader({
                   onClick={handleLogout}
                   className="gap-2 text-destructive focus:text-destructive"
                 >
-                  <LogOut className="h-4 w-4" />
+                  <LogOut className="size-4" />
                   {t('common.logout')}
                 </DropdownMenuItem>
               </DropdownMenuContent>

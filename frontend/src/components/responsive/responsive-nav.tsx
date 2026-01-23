@@ -59,7 +59,7 @@ export function ResponsiveNav({
  position === 'top' && 'sticky top-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-b',
  className
  )}>
- {logo && <div className="flex-shrink-0">{logo}</div>}
+ {logo && <div className="shrink-0">{logo}</div>}
  
  <div className="flex items-center gap-2">
  {highPriorityItems.slice(0, 2).map(item => (
@@ -71,9 +71,9 @@ export function ResponsiveNav({
  className="gap-2"
  >
  {item.icon}
- <span className="hidden xs:inline">{item.label}</span>
+ <span className="xs:inline hidden">{item.label}</span>
  {item.badge && (
- <span className="ms-1 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
+ <span className="ms-1 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
  {item.badge}
  </span>
  )}
@@ -83,7 +83,7 @@ export function ResponsiveNav({
  <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
  <SheetTrigger asChild>
  <Button variant="ghost" size="icon" aria-label="Menu">
- <Menu className="h-5 w-5" />
+ <Menu className="size-5" />
  </Button>
  </SheetTrigger>
  <SheetContent side={isRTL ? 'left' : 'right'} className="w-[280px]">
@@ -100,7 +100,7 @@ export function ResponsiveNav({
  ))}
  </nav>
  {actions && (
- <div className="mt-6 pt-6 border-t">
+ <div className="mt-6 border-t pt-6">
  {actions}
  </div>
  )}
@@ -117,7 +117,7 @@ export function ResponsiveNav({
  'border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60',
  className
  )}>
- {logo && <div className="flex-shrink-0">{logo}</div>}
+ {logo && <div className="shrink-0">{logo}</div>}
  
  <NavigationMenu>
  <NavigationMenuList>
@@ -136,7 +136,7 @@ export function ResponsiveNav({
  {item.icon && <span className="me-2">{item.icon}</span>}
  {item.label}
  {item.badge && (
- <span className="ms-2 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
+ <span className="ms-2 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
  {item.badge}
  </span>
  )}
@@ -183,7 +183,7 @@ function MobileNavItem({ item, depth = 0, onItemClick }: MobileNavItemProps) {
  {item.icon}
  <span>{item.label}</span>
  {item.badge && (
- <span className="px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
+ <span className="rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
  {item.badge}
  </span>
  )}

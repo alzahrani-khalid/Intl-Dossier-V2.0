@@ -72,15 +72,15 @@ export function UnifiedKanbanHeader({
       {/* Top row: Title and View Toggle */}
       <div className="flex items-center justify-between gap-4">
         <div className="flex items-center gap-3">
-          <h1 className="text-lg sm:text-xl font-semibold">{t('title')}</h1>
+          <h1 className="text-lg font-semibold sm:text-xl">{t('title')}</h1>
           {totalCount > 0 && (
             <Badge variant="secondary" className="text-xs">
               {totalCount} {t('accessibility.itemCount', { count: totalCount })}
             </Badge>
           )}
           {overdueCount > 0 && (
-            <Badge variant="destructive" className="text-xs flex items-center gap-1">
-              <AlertTriangle className="h-3 w-3" />
+            <Badge variant="destructive" className="flex items-center gap-1 text-xs">
+              <AlertTriangle className="size-3" />
               {overdueCount}
             </Badge>
           )}
@@ -94,7 +94,7 @@ export function UnifiedKanbanHeader({
               size="icon"
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="h-9 w-9"
+              className="size-9"
             >
               <RefreshCw className={cn('h-4 w-4', isRefreshing && 'animate-spin')} />
               <span className="sr-only">{t('actions.refresh')}</span>
@@ -107,21 +107,21 @@ export function UnifiedKanbanHeader({
               type="single"
               value={viewMode}
               onValueChange={(value) => value && onViewModeChange(value as 'list' | 'board')}
-              className="bg-muted rounded-md p-0.5"
+              className="rounded-md bg-muted p-0.5"
             >
               <ToggleGroupItem
                 value="list"
                 aria-label={t('viewModes.list')}
                 className="h-8 px-2.5 data-[state=on]:bg-background"
               >
-                <List className="h-4 w-4" />
+                <List className="size-4" />
               </ToggleGroupItem>
               <ToggleGroupItem
                 value="board"
                 aria-label={t('viewModes.board')}
                 className="h-8 px-2.5 data-[state=on]:bg-background"
               >
-                <LayoutGrid className="h-4 w-4" />
+                <LayoutGrid className="size-4" />
               </ToggleGroupItem>
             </ToggleGroup>
           )}
@@ -138,25 +138,25 @@ export function UnifiedKanbanHeader({
               value={columnMode}
               onValueChange={(value) => onColumnModeChange(value as KanbanColumnMode)}
             >
-              <SelectTrigger className="w-[140px] sm:w-[160px] h-9">
+              <SelectTrigger className="h-9 w-[140px] sm:w-[160px]">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="status">
                   <div className="flex items-center gap-2">
-                    <Columns3 className="h-4 w-4" />
+                    <Columns3 className="size-4" />
                     {t('columnModes.status')}
                   </div>
                 </SelectItem>
                 <SelectItem value="priority">
                   <div className="flex items-center gap-2">
-                    <Signal className="h-4 w-4" />
+                    <Signal className="size-4" />
                     {t('columnModes.priority')}
                   </div>
                 </SelectItem>
                 <SelectItem value="tracking_type">
                   <div className="flex items-center gap-2">
-                    <Filter className="h-4 w-4" />
+                    <Filter className="size-4" />
                     {t('columnModes.trackingType')}
                   </div>
                 </SelectItem>
@@ -167,8 +167,8 @@ export function UnifiedKanbanHeader({
 
         {/* Source filter chips */}
         {showFilters && onSourceFilterChange && (
-          <div className="flex items-center gap-2 ms-auto sm:ms-4">
-            <span className="text-sm text-muted-foreground hidden sm:inline">
+          <div className="ms-auto flex items-center gap-2 sm:ms-4">
+            <span className="hidden text-sm text-muted-foreground sm:inline">
               {t('filters.source')}:
             </span>
             <div className="flex gap-1">

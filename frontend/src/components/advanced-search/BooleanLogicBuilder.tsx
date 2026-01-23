@@ -123,7 +123,7 @@ export function BooleanLogicBuilder({
             value={condition.value as string}
             onValueChange={(value) => handleValueChange(index, value)}
           >
-            <SelectTrigger className="flex-1 min-h-10">
+            <SelectTrigger className="min-h-10 flex-1">
               <SelectValue placeholder={t('conditions.placeholder')} />
             </SelectTrigger>
             <SelectContent>
@@ -155,7 +155,7 @@ export function BooleanLogicBuilder({
               )
             }
             placeholder={t('conditions.placeholder')}
-            className="flex-1 min-h-10"
+            className="min-h-10 flex-1"
           />
         )
 
@@ -166,7 +166,7 @@ export function BooleanLogicBuilder({
             value={(condition.value as number) || ''}
             onChange={(e) => handleValueChange(index, e.target.value ? Number(e.target.value) : '')}
             placeholder={t('conditions.placeholder')}
-            className="flex-1 min-h-10"
+            className="min-h-10 flex-1"
           />
         )
 
@@ -176,7 +176,7 @@ export function BooleanLogicBuilder({
             type="date"
             value={(condition.value as string) || ''}
             onChange={(e) => handleValueChange(index, e.target.value)}
-            className="flex-1 min-h-10"
+            className="min-h-10 flex-1"
           />
         )
 
@@ -186,7 +186,7 @@ export function BooleanLogicBuilder({
             value={String(condition.value)}
             onValueChange={(value) => handleValueChange(index, value === 'true')}
           >
-            <SelectTrigger className="flex-1 min-h-10">
+            <SelectTrigger className="min-h-10 flex-1">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -203,7 +203,7 @@ export function BooleanLogicBuilder({
             value={(condition.value as string) || ''}
             onChange={(e) => handleValueChange(index, e.target.value)}
             placeholder={t('conditions.placeholder')}
-            className="flex-1 min-h-10"
+            className="min-h-10 flex-1"
           />
         )
     }
@@ -212,14 +212,14 @@ export function BooleanLogicBuilder({
   return (
     <div className={cn('flex flex-col gap-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with Logic Toggle */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300">
           {t('conditions.title')}
         </h3>
 
         <div className="flex items-center gap-2">
           {/* Logic Toggle */}
-          <div className="flex items-center gap-1 bg-gray-100 dark:bg-gray-800 rounded-lg p-1">
+          <div className="flex items-center gap-1 rounded-lg bg-gray-100 p-1 dark:bg-gray-800">
             <button
               type="button"
               onClick={() => onLogicChange('AND')}
@@ -248,7 +248,7 @@ export function BooleanLogicBuilder({
 
           {conditions.length > 0 && (
             <Button variant="ghost" size="sm" onClick={onClear}>
-              <Trash2 className="h-4 w-4 me-1" />
+              <Trash2 className="me-1 size-4" />
               {t('filters.clear')}
             </Button>
           )}
@@ -289,9 +289,9 @@ export function BooleanLogicBuilder({
                 aria-label={t('a11y.toggleNegate')}
               >
                 {condition.is_negated ? (
-                  <ToggleRight className="h-4 w-4" />
+                  <ToggleRight className="size-4" />
                 ) : (
-                  <ToggleLeft className="h-4 w-4" />
+                  <ToggleLeft className="size-4" />
                 )}
                 {t('logic.not')}
               </button>
@@ -301,7 +301,7 @@ export function BooleanLogicBuilder({
                 value={condition.field_name}
                 onValueChange={(value) => handleFieldChange(index, value)}
               >
-                <SelectTrigger className="w-full sm:w-40 min-h-10">
+                <SelectTrigger className="min-h-10 w-full sm:w-40">
                   <SelectValue placeholder={t('conditions.field')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -318,7 +318,7 @@ export function BooleanLogicBuilder({
                 value={condition.operator}
                 onValueChange={(value) => handleOperatorChange(index, value as FilterOperator)}
               >
-                <SelectTrigger className="w-full sm:w-40 min-h-10">
+                <SelectTrigger className="min-h-10 w-full sm:w-40">
                   <SelectValue placeholder={t('conditions.operator')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -338,10 +338,10 @@ export function BooleanLogicBuilder({
                 variant="ghost"
                 size="icon"
                 onClick={() => onConditionRemove(index)}
-                className="shrink-0 min-h-10 min-w-10"
+                className="min-h-10 min-w-10 shrink-0"
                 aria-label={t('a11y.removeCondition')}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             </div>
           )
@@ -354,15 +354,15 @@ export function BooleanLogicBuilder({
           className="min-h-11 border-dashed"
           disabled={availableFields.length === 0}
         >
-          <Plus className="h-4 w-4 me-2" />
+          <Plus className="me-2 size-4" />
           {t('conditions.add')}
         </Button>
       </div>
 
       {/* Active Filters Summary */}
       {conditions.length > 0 && (
-        <div className="flex flex-wrap gap-2 pt-2 border-t">
-          <span className="text-xs text-gray-500 dark:text-gray-400 self-center">
+        <div className="flex flex-wrap gap-2 border-t pt-2">
+          <span className="self-center text-xs text-gray-500 dark:text-gray-400">
             {t('filters.activeCount', { count: conditions.length })}:
           </span>
           {conditions.map((condition, index) => {

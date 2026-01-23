@@ -116,18 +116,18 @@ function ChangeMarker({
           {getDisplayText()}
           {showAuthorship && isPending && (
             <span
-              className="absolute -top-1 -end-1 h-2 w-2 rounded-full"
+              className="absolute -end-1 -top-1 size-2 rounded-full"
               style={{ backgroundColor: change.author?.color || '#888' }}
             />
           )}
         </span>
       </PopoverTrigger>
 
-      <PopoverContent side={isRTL ? 'left' : 'right'} align="start" className="w-64 sm:w-72 p-3">
+      <PopoverContent side={isRTL ? 'left' : 'right'} align="start" className="w-64 p-3 sm:w-72">
         <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
           {/* Author info */}
           <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
+            <Avatar className="size-6">
               <AvatarImage src={change.author?.avatarUrl} alt={change.author?.name} />
               <AvatarFallback className="text-xs">
                 {change.author?.name?.slice(0, 2).toUpperCase() ||
@@ -135,8 +135,8 @@ function ChangeMarker({
                   '??'}
               </AvatarFallback>
             </Avatar>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-medium truncate">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">
                 {change.author?.name || change.author?.email}
               </p>
               <p className="text-xs text-muted-foreground">
@@ -156,7 +156,7 @@ function ChangeMarker({
             {change.originalText && change.changeType !== 'insertion' && (
               <div className="text-sm">
                 <span className="text-muted-foreground">{t('trackChanges.original')}:</span>
-                <span className="ms-1 line-through text-red-600 dark:text-red-400">
+                <span className="ms-1 text-red-600 line-through dark:text-red-400">
                   {change.originalText}
                 </span>
               </div>
@@ -174,12 +174,12 @@ function ChangeMarker({
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
               {change.isAccepted ? (
                 <>
-                  <Check className="h-4 w-4 text-green-500" />
+                  <Check className="size-4 text-green-500" />
                   <span>{t('trackChanges.accepted')}</span>
                 </>
               ) : (
                 <>
-                  <X className="h-4 w-4 text-red-500" />
+                  <X className="size-4 text-red-500" />
                   <span>{t('trackChanges.rejected')}</span>
                 </>
               )}
@@ -202,7 +202,7 @@ function ChangeMarker({
                 }}
                 className="flex-1 gap-1"
               >
-                <Check className="h-4 w-4" />
+                <Check className="size-4" />
                 {t('trackChanges.accept')}
               </Button>
               <Button
@@ -214,7 +214,7 @@ function ChangeMarker({
                 }}
                 className="flex-1 gap-1"
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
                 {t('trackChanges.reject')}
               </Button>
             </div>
@@ -267,7 +267,7 @@ export function TrackChangesOverlay({
   return (
     <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Summary bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-3 bg-muted/50 rounded-lg">
+      <div className="flex flex-col gap-2 rounded-lg bg-muted/50 p-3 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <Badge variant={pendingCount > 0 ? 'default' : 'secondary'}>
             {pendingCount > 0
@@ -281,13 +281,13 @@ export function TrackChangesOverlay({
               {authorStats.slice(0, 3).map(({ author, count }) => (
                 <div
                   key={author.id}
-                  className="flex items-center gap-1 px-2 py-0.5 bg-background rounded-full text-xs"
+                  className="flex items-center gap-1 rounded-full bg-background px-2 py-0.5 text-xs"
                 >
                   <span
-                    className="h-2 w-2 rounded-full"
+                    className="size-2 rounded-full"
                     style={{ backgroundColor: author.color || '#888' }}
                   />
-                  <span className="truncate max-w-[60px]">
+                  <span className="max-w-[60px] truncate">
                     {author.name?.split(' ')[0] || author.email?.split('@')[0]}
                   </span>
                   <span className="text-muted-foreground">({count})</span>
@@ -305,20 +305,20 @@ export function TrackChangesOverlay({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-1">
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="size-4" />
                 <span className="hidden sm:inline">{t('trackChanges.bulkActions')}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
               {onAcceptAll && (
                 <DropdownMenuItem onClick={onAcceptAll} className="gap-2">
-                  <Check className="h-4 w-4 text-green-500" />
+                  <Check className="size-4 text-green-500" />
                   {t('trackChanges.acceptAll')}
                 </DropdownMenuItem>
               )}
               {onRejectAll && (
                 <DropdownMenuItem onClick={onRejectAll} className="gap-2 text-red-600">
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                   {t('trackChanges.rejectAll')}
                 </DropdownMenuItem>
               )}
@@ -342,11 +342,11 @@ export function TrackChangesOverlay({
             )}
           >
             {/* Author avatar */}
-            <Avatar className="h-8 w-8 flex-shrink-0">
+            <Avatar className="size-8 shrink-0">
               <AvatarImage src={change.author?.avatarUrl} alt={change.author?.name} />
               <AvatarFallback
                 style={{ backgroundColor: change.author?.color }}
-                className="text-white text-xs"
+                className="text-xs text-white"
               >
                 {change.author?.name?.slice(0, 2).toUpperCase() ||
                   change.author?.email?.slice(0, 2).toUpperCase()}
@@ -354,7 +354,7 @@ export function TrackChangesOverlay({
             </Avatar>
 
             {/* Change content */}
-            <div className="flex-1 min-w-0 space-y-1">
+            <div className="min-w-0 flex-1 space-y-1">
               <div className="flex flex-wrap items-center gap-2">
                 <span className="text-sm font-medium">
                   {change.author?.name || change.author?.email}
@@ -384,7 +384,7 @@ export function TrackChangesOverlay({
               {/* Change preview */}
               <div className="text-sm">
                 {change.originalText && change.changeType !== 'insertion' && (
-                  <span className="line-through text-red-600 dark:text-red-400 me-2">
+                  <span className="me-2 text-red-600 line-through dark:text-red-400">
                     {change.originalText}
                   </span>
                 )}
@@ -401,17 +401,17 @@ export function TrackChangesOverlay({
                   size="icon"
                   variant="ghost"
                   onClick={() => onAccept(change.id)}
-                  className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-100"
+                  className="size-8 text-green-600 hover:bg-green-100 hover:text-green-700"
                 >
-                  <Check className="h-4 w-4" />
+                  <Check className="size-4" />
                 </Button>
                 <Button
                   size="icon"
                   variant="ghost"
                   onClick={() => onReject(change.id)}
-                  className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-100"
+                  className="size-8 text-red-600 hover:bg-red-100 hover:text-red-700"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               </div>
             ) : (

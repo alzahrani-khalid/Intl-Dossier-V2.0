@@ -89,7 +89,7 @@ export function ReschedulingSuggestions({
       <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="p-6">
           <div className="flex flex-col items-center justify-center gap-3 py-8">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Loader2 className="size-8 animate-spin text-primary" />
             <p className="text-sm text-muted-foreground">{t('suggestions.generating')}</p>
           </div>
         </CardContent>
@@ -102,10 +102,10 @@ export function ReschedulingSuggestions({
       <Card className={cn('overflow-hidden', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="p-6">
           <div className="flex flex-col items-center justify-center gap-3 py-8 text-center">
-            <Calendar className="h-12 w-12 text-muted-foreground/50" />
+            <Calendar className="size-12 text-muted-foreground/50" />
             <div>
               <p className="text-sm font-medium">{t('suggestions.noSuggestions')}</p>
-              <p className="text-xs text-muted-foreground mt-1">
+              <p className="mt-1 text-xs text-muted-foreground">
                 {t('suggestions.noSuggestionsDesc')}
               </p>
             </div>
@@ -126,12 +126,12 @@ export function ReschedulingSuggestions({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-            <Sparkles className="h-5 w-5 text-primary" />
+            <Sparkles className="size-5 text-primary" />
             {t('suggestions.title')}
           </CardTitle>
           {onRefresh && (
-            <Button variant="ghost" size="icon" onClick={onRefresh} className="h-8 w-8">
-              <RefreshCw className="h-4 w-4" />
+            <Button variant="ghost" size="icon" onClick={onRefresh} className="size-8">
+              <RefreshCw className="size-4" />
             </Button>
           )}
         </div>
@@ -175,7 +175,7 @@ export function ReschedulingSuggestions({
                       )}
                     >
                       <CollapsibleTrigger asChild>
-                        <div className="flex items-start gap-3 cursor-pointer">
+                        <div className="flex cursor-pointer items-start gap-3">
                           {/* Rank badge */}
                           <div
                             className={cn(
@@ -189,15 +189,15 @@ export function ReschedulingSuggestions({
                           </div>
 
                           {/* Main content */}
-                          <div className="flex-1 min-w-0">
+                          <div className="min-w-0 flex-1">
                             {/* Date and time */}
-                            <div className="flex items-center gap-2 flex-wrap mb-1">
+                            <div className="mb-1 flex flex-wrap items-center gap-2">
                               <div className="flex items-center gap-1 text-sm font-medium">
-                                <Calendar className="h-4 w-4 text-muted-foreground" />
+                                <Calendar className="size-4 text-muted-foreground" />
                                 <span>{start.date}</span>
                               </div>
                               <div className="flex items-center gap-1 text-sm">
-                                <Clock className="h-4 w-4 text-muted-foreground" />
+                                <Clock className="size-4 text-muted-foreground" />
                                 <span>
                                   {start.time} - {end.time}
                                 </span>
@@ -205,7 +205,7 @@ export function ReschedulingSuggestions({
                             </div>
 
                             {/* Score indicator */}
-                            <div className="flex items-center gap-2 mt-2">
+                            <div className="mt-2 flex items-center gap-2">
                               <Badge
                                 variant="secondary"
                                 className={cn(
@@ -214,12 +214,12 @@ export function ReschedulingSuggestions({
                                   getScoreColor(overallScore),
                                 )}
                               >
-                                <TrendingUp className="h-3 w-3 me-1" />
+                                <TrendingUp className="me-1 size-3" />
                                 {Math.round(overallScore * 100)}% {t('suggestions.match')}
                               </Badge>
 
                               {index === 0 && (
-                                <Badge variant="default" className="text-xs bg-primary">
+                                <Badge variant="default" className="bg-primary text-xs">
                                   {t('suggestions.recommended')}
                                 </Badge>
                               )}
@@ -227,9 +227,9 @@ export function ReschedulingSuggestions({
                               {isAccepted && (
                                 <Badge
                                   variant="secondary"
-                                  className="text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                                  className="bg-green-100 text-xs text-green-700 dark:bg-green-900 dark:text-green-300"
                                 >
-                                  <CheckCircle2 className="h-3 w-3 me-1" />
+                                  <CheckCircle2 className="me-1 size-3" />
                                   {t('suggestions.accepted')}
                                 </Badge>
                               )}
@@ -239,9 +239,9 @@ export function ReschedulingSuggestions({
                           {/* Expand indicator */}
                           <div className="shrink-0">
                             {isExpanded ? (
-                              <ChevronUp className="h-5 w-5 text-muted-foreground" />
+                              <ChevronUp className="size-5 text-muted-foreground" />
                             ) : (
-                              <ChevronDown className="h-5 w-5 text-muted-foreground" />
+                              <ChevronDown className="size-5 text-muted-foreground" />
                             )}
                           </div>
                         </div>
@@ -286,7 +286,7 @@ export function ReschedulingSuggestions({
 
                           {/* Reason */}
                           {(suggestion.reason_en || suggestion.reason_ar) && (
-                            <div className="p-3 bg-muted/50 rounded-lg">
+                            <div className="rounded-lg bg-muted/50 p-3">
                               <p className="text-xs text-muted-foreground">
                                 {isRTL
                                   ? suggestion.reason_ar || suggestion.reason_en
@@ -298,7 +298,7 @@ export function ReschedulingSuggestions({
                           {/* Alternative venue */}
                           {(suggestion.alternative_venue_en || suggestion.alternative_venue_ar) && (
                             <div className="flex items-center gap-2 text-sm">
-                              <MapPin className="h-4 w-4 text-muted-foreground" />
+                              <MapPin className="size-4 text-muted-foreground" />
                               <span>
                                 {t('suggestions.alternativeVenue')}:{' '}
                                 <span className="font-medium">
@@ -347,12 +347,12 @@ function ScoreRow({ icon: Icon, label, score }: ScoreRowProps) {
 
   return (
     <div className="flex items-center gap-2">
-      <Icon className="h-3.5 w-3.5 text-muted-foreground shrink-0" />
-      <span className="text-xs text-muted-foreground flex-1 min-w-0 truncate">{label}</span>
+      <Icon className="size-3.5 shrink-0 text-muted-foreground" />
+      <span className="min-w-0 flex-1 truncate text-xs text-muted-foreground">{label}</span>
       <div className="w-24 shrink-0">
         <Progress value={percentage} className="h-1.5" />
       </div>
-      <span className="text-xs font-medium w-10 text-end">{percentage}%</span>
+      <span className="w-10 text-end text-xs font-medium">{percentage}%</span>
     </div>
   )
 }

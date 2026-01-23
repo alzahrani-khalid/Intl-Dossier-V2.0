@@ -488,7 +488,7 @@ export function ContextAwareFAB({
 
             {/* Long-press progress ring */}
             <motion.div
-              className="absolute inset-0 rounded-full border-2 border-primary pointer-events-none"
+              className="pointer-events-none absolute inset-0 rounded-full border-2 border-primary"
               style={{
                 opacity: ringOpacity,
                 scale: ringScale,

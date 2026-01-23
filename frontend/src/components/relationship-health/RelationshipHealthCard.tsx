@@ -116,7 +116,7 @@ function TrendIndicator({ trend }: { trend: HealthTrend }) {
   return (
     <div className={cn('flex items-center gap-1', getTrendColor(trend))}>
       <Icon className={cn('h-4 w-4', isRTL && trend !== 'stable' && 'rotate-180')} />
-      <span className="text-xs sm:text-sm font-medium">
+      <span className="text-xs font-medium sm:text-sm">
         {TREND_LABELS[trend][i18n.language === 'ar' ? 'ar' : 'en']}
       </span>
     </div>
@@ -147,7 +147,7 @@ function ComponentIcon({ component }: { component: keyof HealthScoreComponents }
   }
 
   const Icon = icons[component]
-  return <Icon className="h-4 w-4 text-muted-foreground" />
+  return <Icon className="size-4 text-muted-foreground" />
 }
 
 // ============================================================================
@@ -159,7 +159,7 @@ function RelationshipHealthCardSkeleton({ compact }: { compact?: boolean }) {
     return (
       <Card className="p-3 sm:p-4">
         <div className="flex items-center gap-3 sm:gap-4">
-          <Skeleton className="h-12 w-12 rounded-full" />
+          <Skeleton className="size-12 rounded-full" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-3/4" />
             <Skeleton className="h-3 w-1/2" />
@@ -173,7 +173,7 @@ function RelationshipHealthCardSkeleton({ compact }: { compact?: boolean }) {
     <Card>
       <CardHeader className="p-4 sm:p-6">
         <div className="flex items-start gap-4">
-          <Skeleton className="h-16 w-16 sm:h-20 sm:w-20 rounded-full" />
+          <Skeleton className="size-16 rounded-full sm:size-20" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-5 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
@@ -181,7 +181,7 @@ function RelationshipHealthCardSkeleton({ compact }: { compact?: boolean }) {
           </div>
         </div>
       </CardHeader>
-      <CardContent className="p-4 sm:p-6 pt-0">
+      <CardContent className="p-4 pt-0 sm:p-6">
         <div className="space-y-3">
           {[1, 2, 3, 4, 5].map((i) => (
             <div key={i} className="space-y-1">
@@ -231,15 +231,15 @@ export function RelationshipHealthCard({
       >
         <div className="flex items-center gap-3 sm:gap-4">
           <ScoreCircle score={health.overall_score} level={health.health_level} size="sm" />
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-medium text-sm sm:text-base truncate">{sourceName}</span>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="truncate text-sm font-medium sm:text-base">{sourceName}</span>
               <ChevronRight
                 className={cn('h-4 w-4 text-muted-foreground flex-shrink-0', isRTL && 'rotate-180')}
               />
-              <span className="font-medium text-sm sm:text-base truncate">{targetName}</span>
+              <span className="truncate text-sm font-medium sm:text-base">{targetName}</span>
             </div>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="mt-1 flex items-center gap-2">
               <Badge
                 variant="outline"
                 className={cn('text-xs', getHealthLevelColor(health.health_level))}
@@ -267,11 +267,11 @@ export function RelationshipHealthCard({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <CardHeader className="p-4 sm:p-6">
-        <div className="flex flex-col sm:flex-row items-start gap-4">
+        <div className="flex flex-col items-start gap-4 sm:flex-row">
           <ScoreCircle score={health.overall_score} level={health.health_level} size="md" />
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-base sm:text-lg mb-2">
-              <div className="flex items-center gap-2 flex-wrap">
+          <div className="min-w-0 flex-1">
+            <CardTitle className="mb-2 text-base sm:text-lg">
+              <div className="flex flex-wrap items-center gap-2">
                 <span className="truncate">{sourceName}</span>
                 <ChevronRight
                   className={cn(
@@ -282,7 +282,7 @@ export function RelationshipHealthCard({
                 <span className="truncate">{targetName}</span>
               </div>
             </CardTitle>
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex flex-wrap items-center gap-2">
               <Badge variant="outline" className={cn(getHealthLevelColor(health.health_level))}>
                 {HEALTH_LEVEL_LABELS[health.health_level][isRTL ? 'ar' : 'en']}
               </Badge>
@@ -299,8 +299,8 @@ export function RelationshipHealthCard({
 
             {/* Quick stats for summary view */}
             {'overdue_commitments' in health && health.overdue_commitments > 0 && (
-              <div className="flex items-center gap-1 mt-2 text-orange-600 dark:text-orange-400">
-                <AlertCircle className="h-4 w-4" />
+              <div className="mt-2 flex items-center gap-1 text-orange-600 dark:text-orange-400">
+                <AlertCircle className="size-4" />
                 <span className="text-xs sm:text-sm">
                   {t('alerts.overdueCommitments', { count: health.overdue_commitments })}
                 </span>
@@ -311,11 +311,11 @@ export function RelationshipHealthCard({
       </CardHeader>
 
       {showDetails && (
-        <CardContent className="p-4 sm:p-6 pt-0">
+        <CardContent className="p-4 pt-0 sm:p-6">
           <div className="space-y-4">
             {/* Component scores */}
             <div>
-              <h4 className="text-sm font-medium mb-3 text-start">{t('components.title')}</h4>
+              <h4 className="mb-3 text-start text-sm font-medium">{t('components.title')}</h4>
               <div className="space-y-3">
                 {(Object.entries(health.components) as [keyof HealthScoreComponents, number][]).map(
                   ([key, value]) => (
@@ -336,38 +336,38 @@ export function RelationshipHealthCard({
             {/* Detailed breakdown (only for full health score) */}
             {'breakdown' in health && (
               <div className="border-t pt-4">
-                <h4 className="text-sm font-medium mb-3 text-start">{t('breakdown.title')}</h4>
+                <h4 className="mb-3 text-start text-sm font-medium">{t('breakdown.title')}</h4>
                 <div className="grid grid-cols-2 gap-x-4 gap-y-2 text-sm">
-                  <div className="text-muted-foreground text-start">
+                  <div className="text-start text-muted-foreground">
                     {t('breakdown.engagements365d')}
                   </div>
-                  <div className="font-medium text-end">{health.breakdown.engagements_365d}</div>
+                  <div className="text-end font-medium">{health.breakdown.engagements_365d}</div>
 
-                  <div className="text-muted-foreground text-start">
+                  <div className="text-start text-muted-foreground">
                     {t('breakdown.engagements90d')}
                   </div>
-                  <div className="font-medium text-end">{health.breakdown.engagements_90d}</div>
+                  <div className="text-end font-medium">{health.breakdown.engagements_90d}</div>
 
-                  <div className="text-muted-foreground text-start">
+                  <div className="text-start text-muted-foreground">
                     {t('breakdown.daysSinceEngagement')}
                   </div>
-                  <div className="font-medium text-end">
+                  <div className="text-end font-medium">
                     {health.breakdown.days_since_engagement}
                   </div>
 
-                  <div className="text-muted-foreground text-start">
+                  <div className="text-start text-muted-foreground">
                     {t('breakdown.commitments')}
                   </div>
-                  <div className="font-medium text-end">
+                  <div className="text-end font-medium">
                     {health.breakdown.commitments_completed} / {health.breakdown.commitments_total}
                   </div>
 
                   {health.breakdown.commitments_overdue > 0 && (
                     <>
-                      <div className="text-orange-600 dark:text-orange-400 text-start">
+                      <div className="text-start text-orange-600 dark:text-orange-400">
                         {t('breakdown.overdue')}
                       </div>
-                      <div className="font-medium text-orange-600 dark:text-orange-400 text-end">
+                      <div className="text-end font-medium text-orange-600 dark:text-orange-400">
                         {health.breakdown.commitments_overdue}
                       </div>
                     </>

@@ -92,10 +92,10 @@ export function ForumParticipantsDialog({
 
  return (
  <Dialog open={open} onOpenChange={onOpenChange}>
- <DialogContent className="w-[95vw] sm:max-w-2xl max-h-[85vh] sm:max-h-[80vh] overflow-y-auto p-4 sm:p-6">
+ <DialogContent className="max-h-[85vh] w-[95vw] overflow-y-auto p-4 sm:max-h-[80vh] sm:max-w-2xl sm:p-6">
  <DialogHeader>
  <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
- <Users className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+ <Users className="size-4 shrink-0 sm:size-5" />
  <span className="truncate">{forumName}</span>
  <span className="hidden sm:inline">-</span>
  <span className="hidden sm:inline">{t('participants')}</span>
@@ -108,8 +108,8 @@ export function ForumParticipantsDialog({
  <div className="space-y-4 sm:space-y-6">
  {/* Countries Section */}
  <div>
- <h3 className="flex items-center gap-2 text-base sm:text-lg font-semibold mb-2 sm:mb-3">
- <Globe className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+ <h3 className="mb-2 flex items-center gap-2 text-base font-semibold sm:mb-3 sm:text-lg">
+ <Globe className="size-4 shrink-0 sm:size-5" />
  {t('countries')} ({countries.length})
  </h3>
 
@@ -124,18 +124,18 @@ export function ForumParticipantsDialog({
  {countries.map((participant) => (
  <div
  key={participant.entity_id}
- className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors gap-2 sm:gap-3"
+ className="flex flex-col justify-between gap-2 rounded-lg border p-3 transition-colors hover:bg-accent/50 sm:flex-row sm:items-center sm:gap-3"
  >
- <div className="flex items-center gap-2 sm:gap-3 min-w-0">
- <Globe className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+ <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+ <Globe className="size-4 shrink-0 text-muted-foreground" />
  <div className="min-w-0">
- <p className="font-medium text-sm sm:text-base truncate">{participant.participant_name}</p>
- <p className="text-xs sm:text-sm text-muted-foreground">
+ <p className="truncate text-sm font-medium sm:text-base">{participant.participant_name}</p>
+ <p className="text-xs text-muted-foreground sm:text-sm">
  {t(`participationType.${participant.participation_type}`)}
  </p>
  </div>
  </div>
- <div className="flex items-center gap-2 ms-6 sm:ms-0">
+ <div className="ms-6 flex items-center gap-2 sm:ms-0">
  <Badge variant="outline" className="text-xs">
  {participant.years_participated.length} {t('years')}
  </Badge>
@@ -144,7 +144,7 @@ export function ForumParticipantsDialog({
  ))}
  </div>
  ) : (
- <p className="text-xs sm:text-sm text-muted-foreground text-center py-3 sm:py-4">
+ <p className="py-3 text-center text-xs text-muted-foreground sm:py-4 sm:text-sm">
  {t('noCountries')}
  </p>
  )}
@@ -152,8 +152,8 @@ export function ForumParticipantsDialog({
 
  {/* Organizations Section */}
  <div>
- <h3 className="flex items-center gap-2 text-base sm:text-lg font-semibold mb-2 sm:mb-3">
- <Building2 className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
+ <h3 className="mb-2 flex items-center gap-2 text-base font-semibold sm:mb-3 sm:text-lg">
+ <Building2 className="size-4 shrink-0 sm:size-5" />
  {t('organizations')} ({organizations.length})
  </h3>
 
@@ -168,18 +168,18 @@ export function ForumParticipantsDialog({
  {organizations.map((participant) => (
  <div
  key={participant.entity_id}
- className="flex flex-col sm:flex-row sm:items-center justify-between p-3 border rounded-lg hover:bg-accent/50 transition-colors gap-2 sm:gap-3"
+ className="flex flex-col justify-between gap-2 rounded-lg border p-3 transition-colors hover:bg-accent/50 sm:flex-row sm:items-center sm:gap-3"
  >
- <div className="flex items-center gap-2 sm:gap-3 min-w-0">
- <Building2 className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+ <div className="flex min-w-0 items-center gap-2 sm:gap-3">
+ <Building2 className="size-4 shrink-0 text-muted-foreground" />
  <div className="min-w-0">
- <p className="font-medium text-sm sm:text-base truncate">{participant.participant_name}</p>
- <p className="text-xs sm:text-sm text-muted-foreground">
+ <p className="truncate text-sm font-medium sm:text-base">{participant.participant_name}</p>
+ <p className="text-xs text-muted-foreground sm:text-sm">
  {t(`participationType.${participant.participation_type}`)}
  </p>
  </div>
  </div>
- <div className="flex items-center gap-2 ms-6 sm:ms-0">
+ <div className="ms-6 flex items-center gap-2 sm:ms-0">
  <Badge variant="outline" className="text-xs">
  {participant.years_participated.length} {t('years')}
  </Badge>
@@ -188,7 +188,7 @@ export function ForumParticipantsDialog({
  ))}
  </div>
  ) : (
- <p className="text-xs sm:text-sm text-muted-foreground text-center py-3 sm:py-4">
+ <p className="py-3 text-center text-xs text-muted-foreground sm:py-4 sm:text-sm">
  {t('noOrganizations')}
  </p>
  )}

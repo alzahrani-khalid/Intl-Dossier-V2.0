@@ -56,7 +56,7 @@ function WelcomeSection({
   return (
     <section className="flex flex-col gap-2" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="flex items-center gap-2">
-        <Sparkles className="h-5 w-5 text-primary sm:h-6 sm:w-6" />
+        <Sparkles className="size-5 text-primary sm:size-6" />
         <h1 className="text-xl font-bold text-foreground sm:text-2xl md:text-3xl">
           {getGreeting()}, {userName}
         </h1>
@@ -118,13 +118,13 @@ function KpiGrid({ role, isRTL }: { role: DashboardRole; isRTL: boolean }) {
   }, [role, t])
 
   return (
-    <div className="grid gap-3 sm:gap-4 grid-cols-2 lg:grid-cols-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {kpis.map((kpi, index) => (
         <Card key={index} className="overflow-hidden">
           <CardContent className="p-3 sm:p-4">
-            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1">{kpi.label}</p>
+            <p className="line-clamp-1 text-xs text-muted-foreground sm:text-sm">{kpi.label}</p>
             <div className="mt-1 flex items-baseline gap-2">
-              <p className="text-xl sm:text-2xl font-bold text-foreground">{kpi.value}</p>
+              <p className="text-xl font-bold text-foreground sm:text-2xl">{kpi.value}</p>
               {kpi.change && (
                 <span
                   className={cn(
@@ -252,7 +252,7 @@ function ShortcutsSection({ role, isRTL }: { role: DashboardRole; isRTL: boolean
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-3">
           {shortcuts.map((shortcut, index) => {
             const Icon = shortcut.icon
             return (
@@ -265,17 +265,17 @@ function ShortcutsSection({ role, isRTL }: { role: DashboardRole; isRTL: boolean
                 }}
               >
                 <div className="relative">
-                  <Icon className="h-5 w-5 text-primary" />
+                  <Icon className="size-5 text-primary" />
                   {shortcut.count !== undefined && (
                     <Badge
                       variant="secondary"
-                      className="absolute -top-2 -end-2 h-4 min-w-4 px-1 text-[10px]"
+                      className="absolute -end-2 -top-2 h-4 min-w-4 px-1 text-[10px]"
                     >
                       {shortcut.count}
                     </Badge>
                   )}
                 </div>
-                <span className="text-[10px] sm:text-xs text-center line-clamp-1">
+                <span className="line-clamp-1 text-center text-[10px] sm:text-xs">
                   {shortcut.label}
                 </span>
               </Button>
@@ -297,7 +297,7 @@ function DashboardSkeleton() {
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-4 w-96" />
       </div>
-      <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
         {[1, 2, 3, 4].map((i) => (
           <Skeleton key={i} className="h-24" />
         ))}
@@ -339,10 +339,10 @@ export function RoleDashboard({ roleOverride, onLoad, onError, className }: Role
 
   if (error) {
     return (
-      <div className="w-full flex flex-col items-center justify-center py-12 text-center">
-        <AlertTriangle className="h-12 w-12 text-destructive mb-4" />
+      <div className="flex w-full flex-col items-center justify-center py-12 text-center">
+        <AlertTriangle className="mb-4 size-12 text-destructive" />
         <h2 className="text-lg font-semibold text-foreground">{t('error.title')}</h2>
-        <p className="text-sm text-muted-foreground mt-2">{error}</p>
+        <p className="mt-2 text-sm text-muted-foreground">{error}</p>
         <Button variant="outline" className="mt-4" onClick={() => window.location.reload()}>
           {t('error.retry')}
         </Button>
@@ -373,7 +373,7 @@ export function RoleDashboard({ roleOverride, onLoad, onError, className }: Role
       {/* Main Content Grid */}
       <div className="grid gap-6 lg:grid-cols-3">
         {/* Pending Actions - 2 columns on desktop */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           <PendingActionsWidget
             actions={pendingActions}
             maxItems={5}
@@ -405,9 +405,9 @@ export function RoleDashboard({ roleOverride, onLoad, onError, className }: Role
           {/* Upcoming Events Card */}
           {config?.features.showUpcomingEvents && (
             <Card>
-              <CardHeader className="pb-3 flex flex-row items-center justify-between">
-                <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-primary" />
+              <CardHeader className="flex flex-row items-center justify-between pb-3">
+                <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+                  <Calendar className="size-4 text-primary" />
                   {t('upcomingEvents.title')}
                 </CardTitle>
                 <Button
@@ -431,11 +431,11 @@ export function RoleDashboard({ roleOverride, onLoad, onError, className }: Role
                   ].map((event, index) => (
                     <div
                       key={index}
-                      className="flex items-center gap-3 p-2 rounded-md hover:bg-muted/50 cursor-pointer"
+                      className="flex cursor-pointer items-center gap-3 rounded-md p-2 hover:bg-muted/50"
                     >
-                      <div className="h-2 w-2 rounded-full bg-primary" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium text-foreground line-clamp-1">
+                      <div className="size-2 rounded-full bg-primary" />
+                      <div className="min-w-0 flex-1">
+                        <p className="line-clamp-1 text-sm font-medium text-foreground">
                           {event.title}
                         </p>
                         <p className="text-xs text-muted-foreground">{event.time}</p>

@@ -58,20 +58,20 @@ export function ProjectList({
  {
  id: 'dashboard',
  label: t('navigation.dashboard', 'Dashboard'),
- icon: <LayoutDashboard className="h-4 w-4" />,
+ icon: <LayoutDashboard className="size-4" />,
  count: 0,
  path: '/dashboard',
  },
  {
  id: 'library',
  label: t('navigation.library', 'Library'),
- icon: <Library className="h-4 w-4" />,
+ icon: <Library className="size-4" />,
  path: '/data-library',
  },
  {
  id: 'shared-projects',
  label: t('navigation.sharedProjects', 'Shared Projects'),
- icon: <Share2 className="h-4 w-4" />,
+ icon: <Share2 className="size-4" />,
  path: '/shared',
  },
  ];

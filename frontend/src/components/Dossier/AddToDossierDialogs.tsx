@@ -84,11 +84,11 @@ function DossierContextBadge({
   const { t } = useTranslation('dossier')
 
   return (
-    <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg mb-4">
-      <Info className="h-4 w-4 text-muted-foreground shrink-0" />
-      <div className="flex-1 min-w-0">
+    <div className="mb-4 flex items-center gap-2 rounded-lg bg-muted/50 p-3">
+      <Info className="size-4 shrink-0 text-muted-foreground" />
+      <div className="min-w-0 flex-1">
         <p className="text-xs text-muted-foreground">{t('addToDossier.contextBadge.linkedTo')}</p>
-        <p className="text-sm font-medium truncate">
+        <p className="truncate text-sm font-medium">
           {isRTL
             ? dossierContext.dossier_name_ar || dossierContext.dossier_name_en
             : dossierContext.dossier_name_en}
@@ -135,7 +135,7 @@ function IntakeDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Actio
       <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Inbox className="h-5 w-5" />
+            <Inbox className="size-5" />
             {t('addToDossier.dialog.intake.title')}
           </DialogTitle>
           <DialogDescription>
@@ -178,7 +178,7 @@ function IntakeDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Actio
               {t('action.cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting || !title} className="min-h-11">
-              {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+              {isSubmitting && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('form.create')}
             </Button>
           </DialogFooter>
@@ -217,7 +217,7 @@ function TaskDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: ActionD
       <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <CheckSquare className="h-5 w-5" />
+            <CheckSquare className="size-5" />
             {t('addToDossier.dialog.task.title')}
           </DialogTitle>
           <DialogDescription>
@@ -260,7 +260,7 @@ function TaskDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: ActionD
               {t('action.cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting || !title} className="min-h-11">
-              {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+              {isSubmitting && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('form.create')}
             </Button>
           </DialogFooter>
@@ -299,7 +299,7 @@ function CommitmentDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: A
       <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Handshake className="h-5 w-5" />
+            <Handshake className="size-5" />
             {t('addToDossier.dialog.commitment.title')}
           </DialogTitle>
           <DialogDescription>
@@ -342,7 +342,7 @@ function CommitmentDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: A
               {t('action.cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting || !title} className="min-h-11">
-              {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+              {isSubmitting && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('form.create')}
             </Button>
           </DialogFooter>
@@ -381,7 +381,7 @@ function PositionDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Act
       <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <MessageSquare className="h-5 w-5" />
+            <MessageSquare className="size-5" />
             {t('addToDossier.dialog.position.title')}
           </DialogTitle>
           <DialogDescription>
@@ -424,7 +424,7 @@ function PositionDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Act
               {t('action.cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting || !title} className="min-h-11">
-              {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+              {isSubmitting && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('form.create')}
             </Button>
           </DialogFooter>
@@ -463,7 +463,7 @@ function EventDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Action
       <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+            <Calendar className="size-5" />
             {t('addToDossier.dialog.event.title')}
           </DialogTitle>
           <DialogDescription>
@@ -507,7 +507,7 @@ function EventDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Action
               {t('action.cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting || !title || !date} className="min-h-11">
-              {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+              {isSubmitting && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('form.create')}
             </Button>
           </DialogFooter>
@@ -550,7 +550,7 @@ function RelationshipDialog({
       <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <GitBranch className="h-5 w-5" />
+            <GitBranch className="size-5" />
             {t('addToDossier.dialog.relationship.title')}
           </DialogTitle>
           <DialogDescription>
@@ -564,7 +564,7 @@ function RelationshipDialog({
           <DossierContextBadge dossierContext={dossierContext} isRTL={isRTL} />
 
           <div className="space-y-4">
-            <div className="p-4 border rounded-lg bg-muted/30 text-center">
+            <div className="rounded-lg border bg-muted/30 p-4 text-center">
               <p className="text-sm text-muted-foreground">
                 {/* TODO: Add dossier search/selector component */}
                 Dossier selector component will be added here
@@ -577,7 +577,7 @@ function RelationshipDialog({
               {t('action.cancel')}
             </Button>
             <Button type="submit" disabled={isSubmitting} className="min-h-11">
-              {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+              {isSubmitting && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('form.create')}
             </Button>
           </DialogFooter>
@@ -613,7 +613,7 @@ function BriefDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Action
       <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5" />
+            <FileText className="size-5" />
             {t('addToDossier.dialog.brief.title')}
           </DialogTitle>
           <DialogDescription>
@@ -626,7 +626,7 @@ function BriefDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Action
         <DossierContextBadge dossierContext={dossierContext} isRTL={isRTL} />
 
         <div className="space-y-4">
-          <div className="p-4 border rounded-lg bg-muted/30">
+          <div className="rounded-lg border bg-muted/30 p-4">
             <p className="text-sm text-muted-foreground">
               {t('addToDossier.actions.brief.description')}
             </p>
@@ -638,7 +638,7 @@ function BriefDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Action
             {t('action.cancel')}
           </Button>
           <Button onClick={handleGenerate} disabled={isGenerating} className="min-h-11">
-            {isGenerating && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+            {isGenerating && <Loader2 className="me-2 size-4 animate-spin" />}
             {t('addToDossier.actions.brief.label')}
           </Button>
         </DialogFooter>
@@ -684,7 +684,7 @@ function DocumentDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Act
       <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Upload className="h-5 w-5" />
+            <Upload className="size-5" />
             {t('addToDossier.dialog.document.title')}
           </DialogTitle>
           <DialogDescription>
@@ -715,7 +715,7 @@ function DocumentDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Act
               'cursor-pointer',
             )}
           >
-            <Upload className="h-8 w-8 text-muted-foreground" />
+            <Upload className="size-8 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">
               {selectedFile ? selectedFile.name : t('addToDossier.actions.document.description')}
             </p>
@@ -731,7 +731,7 @@ function DocumentDialog({ isOpen, onClose, dossier, dossierContext, isRTL }: Act
             disabled={isUploading || !selectedFile}
             className="min-h-11"
           >
-            {isUploading && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+            {isUploading && <Loader2 className="me-2 size-4 animate-spin" />}
             {t('addToDossier.actions.document.label')}
           </Button>
         </DialogFooter>

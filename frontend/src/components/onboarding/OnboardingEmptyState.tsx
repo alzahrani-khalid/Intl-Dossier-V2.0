@@ -170,23 +170,23 @@ export function OnboardingEmptyState({
       )}
 
       {/* Main empty state content */}
-      <div className="flex flex-col items-center justify-center text-center py-8 sm:py-12 px-4">
+      <div className="flex flex-col items-center justify-center px-4 py-8 text-center sm:py-12">
         {/* Icon */}
-        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-primary/10 flex items-center justify-center mb-4 sm:mb-6">
-          <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+        <div className="mb-4 flex size-16 items-center justify-center rounded-2xl bg-primary/10 sm:mb-6 sm:size-20">
+          <Icon className="size-8 text-primary sm:size-10" />
         </div>
 
         {/* Title and description */}
-        <h2 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2 sm:mb-3">
+        <h2 className="mb-2 text-lg font-semibold sm:mb-3 sm:text-xl md:text-2xl">
           {t(defaults.titleKey)}
         </h2>
-        <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 sm:mb-8">
+        <p className="mb-6 max-w-md text-sm text-muted-foreground sm:mb-8 sm:text-base">
           {t(defaults.descriptionKey)}
         </p>
 
         {/* Primary action */}
         {onCreate && (
-          <Button onClick={onCreate} size="lg" className="min-h-11 px-6 sm:px-8 mb-6">
+          <Button onClick={onCreate} size="lg" className="mb-6 min-h-11 px-6 sm:px-8">
             <Icon className={cn('w-4 h-4 sm:w-5 sm:h-5', isRTL ? 'ms-2' : 'me-2')} />
             {t(`empty-states:list.${entityType}.createFirst`, {
               defaultValue: t('empty-states:list.generic.createFirst'),
@@ -196,28 +196,28 @@ export function OnboardingEmptyState({
 
         {/* Onboarding section */}
         {shouldShowOnboarding && (
-          <Card className="w-full max-w-lg mt-4 sm:mt-6">
+          <Card className="mt-4 w-full max-w-lg sm:mt-6">
             <CardContent className="p-4 sm:p-6">
               {/* Header with toggle */}
               <button
                 onClick={() => setShowChecklistExpanded(!showChecklistExpanded)}
-                className="flex items-center justify-between w-full text-start"
+                className="flex w-full items-center justify-between text-start"
               >
                 <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                    <Rocket className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
+                  <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 sm:size-10">
+                    <Rocket className="size-4 text-primary sm:size-5" />
                   </div>
                   <div>
-                    <h3 className="text-sm sm:text-base font-semibold">{t('emptyState.title')}</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
+                    <h3 className="text-sm font-semibold sm:text-base">{t('emptyState.title')}</h3>
+                    <p className="text-xs text-muted-foreground sm:text-sm">
                       {completionPercentage}% {t('checklist.completed').toLowerCase()}
                     </p>
                   </div>
                 </div>
                 {showChecklistExpanded ? (
-                  <ChevronUp className="w-5 h-5 text-muted-foreground" />
+                  <ChevronUp className="size-5 text-muted-foreground" />
                 ) : (
-                  <ChevronDown className="w-5 h-5 text-muted-foreground" />
+                  <ChevronDown className="size-5 text-muted-foreground" />
                 )}
               </button>
 
@@ -231,7 +231,7 @@ export function OnboardingEmptyState({
                     transition={{ duration: 0.2 }}
                     className="overflow-hidden"
                   >
-                    <div className="pt-4 sm:pt-6 border-t mt-4">
+                    <div className="mt-4 border-t pt-4 sm:pt-6">
                       <OnboardingChecklist
                         variant={checklistVariant}
                         showProgress

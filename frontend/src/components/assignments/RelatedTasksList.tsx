@@ -73,12 +73,12 @@ export function RelatedTasksList({
       <Card dir={isRTL ? 'rtl' : 'ltr'}>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <List className="h-5 w-5" />
+            <List className="size-5" />
             {t('relatedTasks.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-4 text-muted-foreground text-sm">
+          <div className="py-4 text-center text-sm text-muted-foreground">
             {t('relatedTasks.empty')}
           </div>
         </CardContent>
@@ -90,7 +90,7 @@ export function RelatedTasksList({
     <Card dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <List className="h-5 w-5" />
+          <List className="size-5" />
           {t('relatedTasks.title')}
           <Badge variant="secondary">{siblingAssignments.length}</Badge>
         </CardTitle>
@@ -104,15 +104,15 @@ export function RelatedTasksList({
               params={{ id: assignment.id }}
               className="block"
             >
-              <div className="p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors">
+              <div className="rounded-lg border bg-card p-3 transition-colors hover:bg-accent/50">
                 <div className="space-y-2">
                   {/* Task Title and Status */}
                   <div className="flex items-start justify-between gap-2">
-                    <h4 className="text-sm font-medium line-clamp-1 flex-1">
+                    <h4 className="line-clamp-1 flex-1 text-sm font-medium">
                       {`${assignment.work_item_type} #${assignment.work_item_id}` ||
                         t('relatedTasks.untitledTask')}
                     </h4>
-                    <Badge variant={getStatusColor(assignment.status)} className="flex-shrink-0">
+                    <Badge variant={getStatusColor(assignment.status)} className="shrink-0">
                       {t(`status.${assignment.status}`)}
                     </Badge>
                   </div>
@@ -120,7 +120,7 @@ export function RelatedTasksList({
                   {/* Assignee and Workflow Stage */}
                   <div className="flex items-center gap-3 text-xs text-muted-foreground">
                     <span className="inline-flex items-center gap-1">
-                      <User className="h-3 w-3" />
+                      <User className="size-3" />
                       {assignment.assignee_name || t('relatedTasks.unassigned')}
                     </span>
 
@@ -135,7 +135,7 @@ export function RelatedTasksList({
 
                     {assignment.sla_remaining_hours !== undefined && (
                       <span className="inline-flex items-center gap-1">
-                        <Clock className="h-3 w-3" />
+                        <Clock className="size-3" />
                         {formatSLARemaining(assignment.sla_remaining_hours)}
                       </span>
                     )}

@@ -178,7 +178,7 @@ export function ContextualHelp({
           >
             <IconComponent className={iconSize} />
             <span className="text-sm">{title || 'Help'}</span>
-            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            {isExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
           </Button>
         </CollapsibleTrigger>
         <CollapsibleContent>
@@ -224,8 +224,8 @@ export function ContextualHelp({
           <div className="space-y-3">
             {title && (
               <div className="flex items-center gap-2">
-                <IconComponent className="h-4 w-4 text-primary" />
-                <h4 className="font-medium text-sm">{title}</h4>
+                <IconComponent className="size-4 text-primary" />
+                <h4 className="text-sm font-medium">{title}</h4>
               </div>
             )}
             <ExpandableHelpContent
@@ -274,10 +274,10 @@ function ExpandableHelpContent({
       {/* Format Requirements */}
       {formatRequirements && formatRequirements.length > 0 && (
         <div className="space-y-1">
-          <p className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             {t('formatRequirements', 'Format Requirements')}
           </p>
-          <ul className="list-disc list-inside space-y-1 text-muted-foreground">
+          <ul className="list-inside list-disc space-y-1 text-muted-foreground">
             {formatRequirements.map((req, index) => (
               <li key={index} className="text-sm">
                 {req}
@@ -290,15 +290,15 @@ function ExpandableHelpContent({
       {/* Examples */}
       {examples && examples.length > 0 && (
         <div className="space-y-2">
-          <p className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             {t('examples', 'Examples')}
           </p>
           <div className="space-y-2">
             {examples.map((example, index) => (
-              <div key={index} className="bg-background rounded px-2 py-1.5 border">
-                <code className="text-xs font-mono text-primary">{example.value}</code>
+              <div key={index} className="rounded border bg-background px-2 py-1.5">
+                <code className="font-mono text-xs text-primary">{example.value}</code>
                 {example.description && (
-                  <p className="text-xs text-muted-foreground mt-1">{example.description}</p>
+                  <p className="mt-1 text-xs text-muted-foreground">{example.description}</p>
                 )}
               </div>
             ))}
@@ -308,8 +308,8 @@ function ExpandableHelpContent({
 
       {/* Documentation Links */}
       {links && links.length > 0 && (
-        <div className="space-y-1 pt-2 border-t">
-          <p className="font-medium text-xs text-muted-foreground uppercase tracking-wider">
+        <div className="space-y-1 border-t pt-2">
+          <p className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             {t('learnMore', 'Learn More')}
           </p>
           <div className="space-y-1">
@@ -370,7 +370,7 @@ export function FieldLabelWithHelp({
       >
         {label}
         {required && (
-          <span className="text-destructive ms-0.5" aria-label={t('common:required', 'Required')}>
+          <span className="ms-0.5 text-destructive" aria-label={t('common:required', 'Required')}>
             *
           </span>
         )}
@@ -379,7 +379,7 @@ export function FieldLabelWithHelp({
         <ContextualHelp
           {...helpProps}
           size="sm"
-          className="opacity-60 hover:opacity-100 transition-opacity"
+          className="opacity-60 transition-opacity hover:opacity-100"
         />
       )}
     </div>

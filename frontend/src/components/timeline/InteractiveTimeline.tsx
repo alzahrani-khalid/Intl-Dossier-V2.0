@@ -295,8 +295,8 @@ export function InteractiveTimeline({
   return (
     <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        {title && <h2 className="text-xl sm:text-2xl font-semibold text-start">{title}</h2>}
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+        {title && <h2 className="text-start text-xl font-semibold sm:text-2xl">{title}</h2>}
 
         {/* View Mode Toggle */}
         <div className="flex items-center gap-2">
@@ -310,7 +310,7 @@ export function InteractiveTimeline({
                     onClick={() => dispatch({ type: 'TOGGLE_ANNOTATIONS' })}
                     className="min-h-10 min-w-10"
                   >
-                    <StickyNote className="h-4 w-4" />
+                    <StickyNote className="size-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -329,7 +329,7 @@ export function InteractiveTimeline({
                   onClick={() => refetch()}
                   className="min-h-10 min-w-10"
                 >
-                  <RefreshCw className="h-4 w-4" />
+                  <RefreshCw className="size-4" />
                 </Button>
               </TooltipTrigger>
               <TooltipContent>

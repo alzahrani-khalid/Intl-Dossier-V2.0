@@ -148,17 +148,17 @@ export function ShareSearchDialog({ open, onOpenChange, search }: ShareSearchDia
       <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Users className="h-5 w-5" />
+            <Users className="size-5" />
             {t('share.title')}
           </DialogTitle>
         </DialogHeader>
 
         <div className="flex flex-col gap-4 py-4">
           {/* Search being shared */}
-          <div className="rounded-lg border bg-gray-50 dark:bg-gray-900 p-3">
+          <div className="rounded-lg border bg-gray-50 p-3 dark:bg-gray-900">
             <p className="text-sm font-medium">{isRTL ? search.name_ar : search.name_en}</p>
             {(search.description_en || search.description_ar) && (
-              <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
                 {isRTL ? search.description_ar : search.description_en}
               </p>
             )}
@@ -177,7 +177,7 @@ export function ShareSearchDialog({ open, onOpenChange, search }: ShareSearchDia
                 <SelectTrigger>
                   <SelectValue>
                     <div className="flex items-center gap-2">
-                      <ShareTypeIcon className="h-4 w-4" />
+                      <ShareTypeIcon className="size-4" />
                       <span>
                         {isRTL ? shareTypeLabels[shareType].ar : shareTypeLabels[shareType].en}
                       </span>
@@ -190,7 +190,7 @@ export function ShareSearchDialog({ open, onOpenChange, search }: ShareSearchDia
                     return (
                       <SelectItem key={type} value={type}>
                         <div className="flex items-center gap-2">
-                          <Icon className="h-4 w-4" />
+                          <Icon className="size-4" />
                           <span>{isRTL ? shareTypeLabels[type].ar : shareTypeLabels[type].en}</span>
                         </div>
                       </SelectItem>
@@ -251,7 +251,7 @@ export function ShareSearchDialog({ open, onOpenChange, search }: ShareSearchDia
               disabled={shareMutation.isPending || (shareType === 'user' && !userId.trim())}
               className="w-full"
             >
-              <UserPlus className="h-4 w-4 me-2" />
+              <UserPlus className="me-2 size-4" />
               {shareMutation.isPending ? t('share.sharing') : t('share.shareButton')}
             </Button>
           </div>
@@ -266,7 +266,7 @@ export function ShareSearchDialog({ open, onOpenChange, search }: ShareSearchDia
               className="flex-1 text-xs"
             />
             <Button variant="outline" size="icon" onClick={handleCopyLink}>
-              {copied ? <Check className="h-4 w-4 text-green-500" /> : <Copy className="h-4 w-4" />}
+              {copied ? <Check className="size-4 text-green-500" /> : <Copy className="size-4" />}
             </Button>
           </div>
 
@@ -277,8 +277,8 @@ export function ShareSearchDialog({ open, onOpenChange, search }: ShareSearchDia
             <Label className="font-medium">{t('share.currentShares')}</Label>
 
             {shares.length === 0 ? (
-              <div className="flex items-center gap-2 text-sm text-gray-500 py-4">
-                <AlertCircle className="h-4 w-4" />
+              <div className="flex items-center gap-2 py-4 text-sm text-gray-500">
+                <AlertCircle className="size-4" />
                 {t('share.noShares')}
               </div>
             ) : (
@@ -287,13 +287,13 @@ export function ShareSearchDialog({ open, onOpenChange, search }: ShareSearchDia
                   {shares.map((share: SavedSearchShare) => {
                     const TypeIcon = shareTypeIcons[share.share_type]
                     return (
-                      <div key={share.id} className="flex items-center gap-3 p-2 rounded-lg border">
-                        <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800">
-                          <TypeIcon className="h-4 w-4" />
+                      <div key={share.id} className="flex items-center gap-3 rounded-lg border p-2">
+                        <div className="rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+                          <TypeIcon className="size-4" />
                         </div>
 
-                        <div className="flex-1 min-w-0">
-                          <p className="text-sm font-medium truncate">
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate text-sm font-medium">
                             {share.shared_with_user?.name ||
                               share.shared_with_team?.name ||
                               (isRTL
@@ -301,7 +301,7 @@ export function ShareSearchDialog({ open, onOpenChange, search }: ShareSearchDia
                                 : shareTypeLabels[share.share_type].en)}
                           </p>
                           {share.shared_with_user?.email && (
-                            <p className="text-xs text-gray-500 truncate">
+                            <p className="truncate text-xs text-gray-500">
                               {share.shared_with_user.email}
                             </p>
                           )}
@@ -316,7 +316,7 @@ export function ShareSearchDialog({ open, onOpenChange, search }: ShareSearchDia
                           onClick={() => handleDeleteShare(share.id)}
                           disabled={deleteShareMutation.isPending}
                         >
-                          <Trash2 className="h-4 w-4" />
+                          <Trash2 className="size-4" />
                         </Button>
                       </div>
                     )

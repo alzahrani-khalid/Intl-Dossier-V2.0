@@ -200,10 +200,10 @@ const WIZARD_STEPS: WizardStep[] = [
  */
 function AnimatedConnection({ isRTL }: { isRTL: boolean }) {
   return (
-    <div className="relative flex-1 h-12 flex items-center justify-center mx-2">
+    <div className="relative mx-2 flex h-12 flex-1 items-center justify-center">
       {/* Connection line */}
       <motion.div
-        className="absolute inset-y-5 start-0 end-0 h-0.5 bg-gradient-to-r from-primary/50 via-primary to-primary/50"
+        className="absolute inset-y-5 end-0 start-0 h-0.5 bg-gradient-to-r from-primary/50 via-primary to-primary/50"
         initial={{ scaleX: 0 }}
         animate={{ scaleX: 1 }}
         transition={{ duration: 0.5, delay: 0.2 }}
@@ -211,7 +211,7 @@ function AnimatedConnection({ isRTL }: { isRTL: boolean }) {
       />
       {/* Animated dot */}
       <motion.div
-        className="absolute w-2 h-2 bg-primary rounded-full"
+        className="absolute size-2 rounded-full bg-primary"
         initial={{ x: isRTL ? 50 : -50, opacity: 0 }}
         animate={{
           x: [isRTL ? 50 : -50, 0, isRTL ? -50 : 50],
@@ -230,7 +230,7 @@ function AnimatedConnection({ isRTL }: { isRTL: boolean }) {
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.5 }}
       >
-        {isRTL ? <ChevronLeft className="h-5 w-5" /> : <ChevronRight className="h-5 w-5" />}
+        {isRTL ? <ChevronLeft className="size-5" /> : <ChevronRight className="size-5" />}
       </motion.div>
     </div>
   )
@@ -265,9 +265,9 @@ function EntityNode({
       transition={{ duration: 0.3, delay }}
     >
       <div className={cn('p-2 rounded-full', colorClasses.split(' ')[0])}>
-        <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
+        <Icon className="size-5 sm:size-6" />
       </div>
-      <span className="text-xs sm:text-sm font-medium text-center line-clamp-2">{name}</span>
+      <span className="line-clamp-2 text-center text-xs font-medium sm:text-sm">{name}</span>
       <Badge variant="outline" className="text-xs capitalize">
         {type.replace('_', ' ')}
       </Badge>
@@ -307,7 +307,7 @@ function RelationshipExampleCard({
       whileTap={{ scale: 0.98 }}
     >
       {/* Visual representation */}
-      <div className="flex items-center justify-center gap-1 sm:gap-2 mb-4">
+      <div className="mb-4 flex items-center justify-center gap-1 sm:gap-2">
         <EntityNode
           type={example.sourceType}
           name={isRTL ? example.sourceNameAr : example.sourceNameEn}
@@ -323,26 +323,26 @@ function RelationshipExampleCard({
       </div>
 
       {/* Relationship label */}
-      <div className="flex items-center justify-center mb-3">
+      <div className="mb-3 flex items-center justify-center">
         <Badge variant="secondary" className="px-3 py-1">
-          <Link2 className="h-3 w-3 me-1" />
+          <Link2 className="me-1 size-3" />
           {relationshipLabel}
         </Badge>
       </div>
 
       {/* Description */}
-      <p className="text-sm text-muted-foreground text-center">
+      <p className="text-center text-sm text-muted-foreground">
         {isRTL ? example.descriptionAr : example.descriptionEn}
       </p>
 
       {/* Selection indicator */}
       {isSelected && (
         <motion.div
-          className="flex items-center justify-center mt-3 text-primary"
+          className="mt-3 flex items-center justify-center text-primary"
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
         >
-          <Check className="h-5 w-5 me-1" />
+          <Check className="me-1 size-5" />
           <span className="text-sm font-medium">{t('wizard.selected')}</span>
         </motion.div>
       )}
@@ -374,7 +374,7 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
   ]
 
   return (
-    <div className="relative w-full h-[200px] sm:h-[250px] bg-muted/30 rounded-xl border overflow-hidden">
+    <div className="relative h-[200px] w-full overflow-hidden rounded-xl border bg-muted/30 sm:h-[250px]">
       {/* Animated background grid */}
       <div
         className="absolute inset-0 opacity-20"
@@ -388,7 +388,7 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
       />
 
       {/* SVG for edges */}
-      <svg className="absolute inset-0 w-full h-full">
+      <svg className="absolute inset-0 size-full">
         {previewEdges.map((edge, idx) => {
           const fromNode = previewNodes.find((n) => n.id === edge.from)!
           const toNode = previewNodes.find((n) => n.id === edge.to)!
@@ -426,20 +426,20 @@ function NetworkPreview({ isRTL }: { isRTL: boolean }) {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.3, delay: 0.2 + idx * 0.1 }}
           >
-            <Icon className="h-4 w-4" />
-            <span className="text-[10px] font-medium whitespace-nowrap">{node.label}</span>
+            <Icon className="size-4" />
+            <span className="whitespace-nowrap text-[10px] font-medium">{node.label}</span>
           </motion.div>
         )
       })}
 
       {/* Label */}
       <motion.div
-        className="absolute bottom-3 start-3 flex items-center gap-2 px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-lg border"
+        className="absolute bottom-3 start-3 flex items-center gap-2 rounded-lg border bg-background/80 px-3 py-1.5 backdrop-blur-sm"
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
       >
-        <Network className="h-4 w-4 text-primary" />
+        <Network className="size-4 text-primary" />
         <span className="text-xs font-medium">{t('wizard.networkPreviewLabel')}</span>
       </motion.div>
     </div>
@@ -499,16 +499,16 @@ export function RelationshipWizard({
   return (
     <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
-        <CardHeader className="text-center pb-4">
+        <CardHeader className="pb-4 text-center">
           {/* Dismiss button */}
           {onDismiss && (
             <Button
               variant="ghost"
               size="sm"
-              className="absolute top-2 end-2 h-8 w-8 p-0"
+              className="absolute end-2 top-2 size-8 p-0"
               onClick={onDismiss}
             >
-              <X className="h-4 w-4" />
+              <X className="size-4" />
               <span className="sr-only">{t('wizard.dismiss')}</span>
             </Button>
           )}
@@ -519,18 +519,18 @@ export function RelationshipWizard({
             animate={{ rotate: [0, 10, -10, 0] }}
             transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
           >
-            <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
-              <Sparkles className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+            <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+              <Sparkles className="size-8 text-primary sm:size-10" />
             </div>
           </motion.div>
 
           <CardTitle className="text-lg sm:text-xl md:text-2xl">{t('wizard.title')}</CardTitle>
-          <CardDescription className="text-sm sm:text-base max-w-md mx-auto">
+          <CardDescription className="mx-auto max-w-md text-sm sm:text-base">
             {t('wizard.subtitle', { name: dossierName })}
           </CardDescription>
 
           {/* Progress indicator */}
-          <div className="flex items-center justify-center gap-2 mt-4">
+          <div className="mt-4 flex items-center justify-center gap-2">
             {WIZARD_STEPS.map((step, idx) => (
               <motion.div
                 key={step.id}
@@ -557,16 +557,16 @@ export function RelationshipWizard({
                 className="space-y-6"
               >
                 <div className="text-center">
-                  <h3 className="text-base sm:text-lg font-semibold mb-2">
+                  <h3 className="mb-2 text-base font-semibold sm:text-lg">
                     {t('wizard.steps.welcome.title')}
                   </h3>
-                  <p className="text-sm text-muted-foreground max-w-lg mx-auto">
+                  <p className="mx-auto max-w-lg text-sm text-muted-foreground">
                     {t('wizard.steps.welcome.description')}
                   </p>
                 </div>
 
                 {/* Benefits list */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-2xl mx-auto">
+                <div className="mx-auto grid max-w-2xl grid-cols-1 gap-4 sm:grid-cols-3">
                   {[
                     {
                       icon: Network,
@@ -586,15 +586,15 @@ export function RelationshipWizard({
                   ].map((benefit, idx) => (
                     <motion.div
                       key={idx}
-                      className="flex flex-col items-center text-center p-4 rounded-lg bg-muted/50"
+                      className="flex flex-col items-center rounded-lg bg-muted/50 p-4 text-center"
                       initial={{ opacity: 0, y: 20 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: idx * 0.1 }}
                     >
-                      <div className="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center mb-2">
-                        <benefit.icon className="h-5 w-5 text-primary" />
+                      <div className="mb-2 flex size-10 items-center justify-center rounded-full bg-primary/10">
+                        <benefit.icon className="size-5 text-primary" />
                       </div>
-                      <h4 className="text-sm font-medium mb-1">{t(benefit.titleKey)}</h4>
+                      <h4 className="mb-1 text-sm font-medium">{t(benefit.titleKey)}</h4>
                       <p className="text-xs text-muted-foreground">{t(benefit.descKey)}</p>
                     </motion.div>
                   ))}
@@ -606,7 +606,7 @@ export function RelationshipWizard({
                     {t('wizard.currentDossier')}:
                   </span>
                   <Badge variant="outline" className="px-3 py-1">
-                    <CurrentStepIcon className="h-4 w-4 me-1" />
+                    <CurrentStepIcon className="me-1 size-4" />
                     {dossierName}
                   </Badge>
                 </div>
@@ -622,16 +622,16 @@ export function RelationshipWizard({
                 exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
                 className="space-y-4"
               >
-                <div className="text-center mb-6">
-                  <h3 className="text-base sm:text-lg font-semibold mb-2">
+                <div className="mb-6 text-center">
+                  <h3 className="mb-2 text-base font-semibold sm:text-lg">
                     {t('wizard.steps.examples.title')}
                   </h3>
-                  <p className="text-sm text-muted-foreground max-w-lg mx-auto">
+                  <p className="mx-auto max-w-lg text-sm text-muted-foreground">
                     {t('wizard.steps.examples.description')}
                   </p>
                 </div>
 
-                <div className="grid grid-cols-1 gap-4 max-w-xl mx-auto">
+                <div className="mx-auto grid max-w-xl grid-cols-1 gap-4">
                   {displayExamples.map((example) => (
                     <RelationshipExampleCard
                       key={example.id}
@@ -654,11 +654,11 @@ export function RelationshipWizard({
                 exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
                 className="space-y-6"
               >
-                <div className="text-center mb-6">
-                  <h3 className="text-base sm:text-lg font-semibold mb-2">
+                <div className="mb-6 text-center">
+                  <h3 className="mb-2 text-base font-semibold sm:text-lg">
                     {t('wizard.steps.preview.title')}
                   </h3>
-                  <p className="text-sm text-muted-foreground max-w-lg mx-auto">
+                  <p className="mx-auto max-w-lg text-sm text-muted-foreground">
                     {t('wizard.steps.preview.description')}
                   </p>
                 </div>
@@ -666,12 +666,12 @@ export function RelationshipWizard({
                 <NetworkPreview isRTL={isRTL} />
 
                 {/* Call to action */}
-                <div className="text-center space-y-3 pt-4">
+                <div className="space-y-3 pt-4 text-center">
                   <div className="flex items-center justify-center gap-2 text-primary">
-                    <Play className="h-5 w-5" />
+                    <Play className="size-5" />
                     <span className="font-medium">{t('wizard.readyToStart')}</span>
                   </div>
-                  <p className="text-sm text-muted-foreground max-w-md mx-auto">
+                  <p className="mx-auto max-w-md text-sm text-muted-foreground">
                     {t('wizard.readyToStartDesc', { name: dossierName })}
                   </p>
                 </div>
@@ -680,8 +680,8 @@ export function RelationshipWizard({
           </AnimatePresence>
 
           {/* Navigation */}
-          <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t">
-            <div className="flex flex-col-reverse sm:flex-row gap-2">
+          <div className="flex flex-col-reverse justify-between gap-3 border-t pt-4 sm:flex-row">
+            <div className="flex flex-col-reverse gap-2 sm:flex-row">
               {onDismiss && (
                 <Button variant="ghost" onClick={onDismiss} className="min-h-11 w-full sm:w-auto">
                   {t('wizard.skipForNow')}
@@ -690,9 +690,9 @@ export function RelationshipWizard({
               {!isFirstStep && (
                 <Button variant="outline" onClick={goBack} className="min-h-11 w-full sm:w-auto">
                   {isRTL ? (
-                    <ArrowRight className="h-4 w-4 me-2" />
+                    <ArrowRight className="me-2 size-4" />
                   ) : (
-                    <ArrowLeft className="h-4 w-4 me-2" />
+                    <ArrowLeft className="me-2 size-4" />
                   )}
                   {t('wizard.back')}
                 </Button>
@@ -702,16 +702,16 @@ export function RelationshipWizard({
             <div>
               {isLastStep ? (
                 <Button onClick={handleComplete} className="min-h-11 w-full sm:w-auto">
-                  <Link2 className="h-4 w-4 me-2" />
+                  <Link2 className="me-2 size-4" />
                   {t('wizard.createFirstRelationship')}
                 </Button>
               ) : (
                 <Button onClick={goNext} className="min-h-11 w-full sm:w-auto">
                   {t('wizard.next')}
                   {isRTL ? (
-                    <ArrowLeft className="h-4 w-4 ms-2" />
+                    <ArrowLeft className="ms-2 size-4" />
                   ) : (
-                    <ArrowRight className="h-4 w-4 ms-2" />
+                    <ArrowRight className="ms-2 size-4" />
                   )}
                 </Button>
               )}

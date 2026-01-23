@@ -86,8 +86,8 @@ function GranterCard({ granter, isSelected, onSelect, isRTL }: GranterCardProps)
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="flex items-center gap-3">
-        <Avatar className="h-10 w-10 shrink-0">
-          <AvatarFallback className="bg-primary/10 text-primary text-sm">
+        <Avatar className="size-10 shrink-0">
+          <AvatarFallback className="bg-primary/10 text-sm text-primary">
             {granter.name
               .split(' ')
               .map((n) => n[0])
@@ -97,17 +97,17 @@ function GranterCard({ granter, isSelected, onSelect, isRTL }: GranterCardProps)
           </AvatarFallback>
         </Avatar>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="font-medium text-sm sm:text-base truncate">{granter.name}</span>
+            <span className="truncate text-sm font-medium sm:text-base">{granter.name}</span>
             {granter.isPrimary && (
-              <Badge variant="secondary" className="text-xs shrink-0">
+              <Badge variant="secondary" className="shrink-0 text-xs">
                 {t('accessGranters.primaryContact')}
               </Badge>
             )}
           </div>
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mt-0.5">
-            <Mail className="h-3 w-3 shrink-0" />
+          <div className="mt-0.5 flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
+            <Mail className="size-3 shrink-0" />
             <span className="truncate">{granter.email}</span>
           </div>
         </div>
@@ -172,13 +172,13 @@ function RequestForm({ granter, error, onSubmit, onCancel, isRTL }: RequestFormP
       <motion.div
         initial={{ opacity: 0, y: 10 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center py-6"
+        className="py-6 text-center"
       >
-        <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-green-100 dark:bg-green-900 mb-4">
-          <CheckCircle2 className="h-6 w-6 text-green-600 dark:text-green-400" />
+        <div className="mb-4 inline-flex size-12 items-center justify-center rounded-full bg-green-100 dark:bg-green-900">
+          <CheckCircle2 className="size-6 text-green-600 dark:text-green-400" />
         </div>
-        <h3 className="font-semibold text-lg mb-2">{t('requestAccess.success.title')}</h3>
-        <p className="text-muted-foreground text-sm">
+        <h3 className="mb-2 text-lg font-semibold">{t('requestAccess.success.title')}</h3>
+        <p className="text-sm text-muted-foreground">
           {t('requestAccess.success.message', { name: granter.name })}
         </p>
       </motion.div>
@@ -193,8 +193,8 @@ function RequestForm({ granter, error, onSubmit, onCancel, isRTL }: RequestFormP
       className="space-y-4"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-        <Avatar className="h-8 w-8">
+      <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
+        <Avatar className="size-8">
           <AvatarFallback className="text-xs">
             {granter.name
               .split(' ')
@@ -204,7 +204,7 @@ function RequestForm({ granter, error, onSubmit, onCancel, isRTL }: RequestFormP
               .slice(0, 2)}
           </AvatarFallback>
         </Avatar>
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <p className="text-sm font-medium">{granter.name}</p>
           <p className="text-xs text-muted-foreground">{granter.email}</p>
         </div>
@@ -281,7 +281,7 @@ function RequestForm({ granter, error, onSubmit, onCancel, isRTL }: RequestFormP
       </div>
 
       {/* Actions */}
-      <div className="flex flex-col-reverse sm:flex-row gap-2 pt-2">
+      <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row">
         <Button
           type="button"
           variant="outline"
@@ -298,13 +298,13 @@ function RequestForm({ granter, error, onSubmit, onCancel, isRTL }: RequestFormP
                 animate={{ rotate: 360 }}
                 transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
               >
-                <Clock className="h-4 w-4" />
+                <Clock className="size-4" />
               </motion.div>
               {t('requestAccess.submitting')}
             </>
           ) : (
             <>
-              <Send className="h-4 w-4" />
+              <Send className="size-4" />
               {t('requestAccess.submit')}
             </>
           )}
@@ -379,10 +379,10 @@ export function PermissionDeniedDialog({
       >
         <DialogHeader className="text-start">
           <div className="flex items-start gap-3">
-            <div className="shrink-0 flex items-center justify-center w-10 h-10 rounded-full bg-red-100 dark:bg-red-900/50">
-              <ShieldX className="h-5 w-5 text-red-600 dark:text-red-400" />
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-red-100 dark:bg-red-900/50">
+              <ShieldX className="size-5 text-red-600 dark:text-red-400" />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <DialogTitle className="text-lg font-semibold">{t('title')}</DialogTitle>
               <DialogDescription className="mt-1 text-sm">
                 {error.resourceName
@@ -428,16 +428,16 @@ export function PermissionDeniedDialog({
               className="space-y-4"
             >
               {/* Reason explanation */}
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-200 dark:border-amber-800">
-                <AlertTriangle className="h-5 w-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                <div className="flex-1 min-w-0">
+              <div className="flex items-start gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-950/30">
+                <AlertTriangle className="mt-0.5 size-5 shrink-0 text-amber-600 dark:text-amber-400" />
+                <div className="min-w-0 flex-1">
                   <p className="text-sm text-amber-800 dark:text-amber-200">
                     {t(`reasons.${error.reason}`, {
                       role: t(`roles.${error.currentRole}`),
                     })}
                   </p>
                   {error.requiredRole && (
-                    <p className="text-xs text-amber-700 dark:text-amber-300 mt-1">
+                    <p className="mt-1 text-xs text-amber-700 dark:text-amber-300">
                       {t('message.roleRequired', {
                         requiredRole: t(`roles.${error.requiredRole}`),
                       })}
@@ -448,7 +448,7 @@ export function PermissionDeniedDialog({
 
               {/* Current role badge */}
               <div className="flex items-center gap-2">
-                <User className="h-4 w-4 text-muted-foreground" />
+                <User className="size-4 text-muted-foreground" />
                 <span className="text-sm text-muted-foreground">
                   {t('message.currentRole', {
                     currentRole: t(`roles.${error.currentRole}`),
@@ -460,11 +460,11 @@ export function PermissionDeniedDialog({
 
               {/* Access granters */}
               <div className="space-y-3">
-                <h4 className="font-medium text-sm">{t('accessGranters.title')}</h4>
+                <h4 className="text-sm font-medium">{t('accessGranters.title')}</h4>
                 <p className="text-xs text-muted-foreground">{t('accessGranters.subtitle')}</p>
 
                 {error.accessGranters.length > 0 ? (
-                  <div className="space-y-2 max-h-[200px] overflow-y-auto">
+                  <div className="max-h-[200px] space-y-2 overflow-y-auto">
                     {error.accessGranters.map((granter) => (
                       <GranterCard
                         key={granter.userId}
@@ -476,7 +476,7 @@ export function PermissionDeniedDialog({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground italic">
+                  <p className="text-sm italic text-muted-foreground">
                     {t('accessGranters.noGrantersAvailable')}
                   </p>
                 )}
@@ -485,12 +485,12 @@ export function PermissionDeniedDialog({
               {/* Quick actions */}
               <div className="flex flex-wrap gap-2 pt-2">
                 <Button variant="outline" size="sm" onClick={copyRequestLink} className="gap-1.5">
-                  <Copy className="h-3.5 w-3.5" />
+                  <Copy className="size-3.5" />
                   {t('actions.copyRequestLink')}
                 </Button>
                 <Button variant="outline" size="sm" className="gap-1.5" asChild>
                   <a href="/settings/permissions" target="_blank" rel="noopener noreferrer">
-                    <ExternalLink className="h-3.5 w-3.5" />
+                    <ExternalLink className="size-3.5" />
                     {t('actions.viewPermissions')}
                   </a>
                 </Button>

@@ -71,14 +71,14 @@ function DocumentCard({ document, isRTL }: { document: DossierDocument; isRTL: b
   }
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="transition-shadow hover:shadow-md">
       <CardContent className="p-3 sm:p-4">
         <div className="flex items-start gap-3">
-          <div className="p-2 rounded-lg bg-muted shrink-0">
-            <Icon className="h-5 w-5 text-muted-foreground" />
+          <div className="shrink-0 rounded-lg bg-muted p-2">
+            <Icon className="size-5 text-muted-foreground" />
           </div>
-          <div className="flex-1 min-w-0">
-            <h4 className="text-sm font-semibold line-clamp-2 mb-1">
+          <div className="min-w-0 flex-1">
+            <h4 className="mb-1 line-clamp-2 text-sm font-semibold">
               {isRTL && document.title_ar ? document.title_ar : document.title_en}
             </h4>
             <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
@@ -89,14 +89,14 @@ function DocumentCard({ document, isRTL }: { document: DossierDocument; isRTL: b
                 {t(`documentStatus.${document.status}`, { defaultValue: document.status })}
               </Badge>
               {document.classification && (
-                <Badge variant="outline" className="text-xs flex items-center gap-1">
-                  <Shield className="h-3 w-3" />
+                <Badge variant="outline" className="flex items-center gap-1 text-xs">
+                  <Shield className="size-3" />
                   {document.classification}
                 </Badge>
               )}
             </div>
-            <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-              <Calendar className="h-3 w-3" />
+            <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+              <Calendar className="size-3" />
               {new Date(document.created_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
               {document.size_bytes && (
                 <>
@@ -106,14 +106,14 @@ function DocumentCard({ document, isRTL }: { document: DossierDocument; isRTL: b
               )}
             </div>
           </div>
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex shrink-0 items-center gap-1">
             {document.file_path && (
-              <Button variant="ghost" size="icon" className="h-8 w-8">
-                <Download className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="size-8">
+                <Download className="size-4" />
               </Button>
             )}
-            <Button variant="ghost" size="icon" className="h-8 w-8">
-              <Eye className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8">
+              <Eye className="size-4" />
             </Button>
           </div>
         </div>
@@ -129,9 +129,9 @@ function EmptyState({ type, isRTL }: { type?: DossierDocumentType | 'all'; isRTL
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="p-3 rounded-full bg-muted inline-block mb-3">
-        <FileStack className="h-6 w-6 text-muted-foreground" />
+    <div className="py-6 text-center sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="mb-3 inline-block rounded-full bg-muted p-3">
+        <FileStack className="size-6 text-muted-foreground" />
       </div>
       <p className="text-sm text-muted-foreground">
         {type && type !== 'all' ? t(`documents.empty.${type}`) : t('documents.empty.all')}
@@ -191,7 +191,7 @@ export function DocumentsSection({
         <CardContent className="p-6">
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-20 bg-muted animate-pulse rounded-lg" />
+              <div key={i} className="h-20 animate-pulse rounded-lg bg-muted" />
             ))}
           </div>
         </CardContent>
@@ -203,12 +203,12 @@ export function DocumentsSection({
     return (
       <Card className={className}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <FileStack className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <FileStack className="size-5" />
             {t('documents.title')}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 pt-0">
+        <CardContent className="p-4 pt-0 sm:p-6">
           <EmptyState type="all" isRTL={isRTL} />
         </CardContent>
       </Card>
@@ -218,33 +218,33 @@ export function DocumentsSection({
   return (
     <Card className={className}>
       <CardHeader className="pb-2 sm:pb-4">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <FileStack className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <FileStack className="size-5" />
           {t('documents.title')}
           <Badge variant="secondary">{data.total_count}</Badge>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-6 pt-0">
+      <CardContent className="p-4 pt-0 sm:p-6">
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="w-full justify-start overflow-x-auto flex-nowrap mb-4 h-auto p-1">
-            <TabsTrigger value="all" className="text-xs sm:text-sm shrink-0">
+          <TabsList className="mb-4 h-auto w-full flex-nowrap justify-start overflow-x-auto p-1">
+            <TabsTrigger value="all" className="shrink-0 text-xs sm:text-sm">
               {t('documents.tabs.all')} ({allDocuments.length})
             </TabsTrigger>
-            <TabsTrigger value="positions" className="text-xs sm:text-sm shrink-0">
-              <FileSignature className="h-4 w-4 me-1" />
+            <TabsTrigger value="positions" className="shrink-0 text-xs sm:text-sm">
+              <FileSignature className="me-1 size-4" />
               {t('documents.tabs.positions')} ({data.positions.length})
             </TabsTrigger>
-            <TabsTrigger value="mous" className="text-xs sm:text-sm shrink-0">
-              <ScrollText className="h-4 w-4 me-1" />
+            <TabsTrigger value="mous" className="shrink-0 text-xs sm:text-sm">
+              <ScrollText className="me-1 size-4" />
               {t('documents.tabs.mous')} ({data.mous.length})
             </TabsTrigger>
-            <TabsTrigger value="briefs" className="text-xs sm:text-sm shrink-0">
-              <FileText className="h-4 w-4 me-1" />
+            <TabsTrigger value="briefs" className="shrink-0 text-xs sm:text-sm">
+              <FileText className="me-1 size-4" />
               {t('documents.tabs.briefs')} ({data.briefs.length})
             </TabsTrigger>
-            <TabsTrigger value="attachments" className="text-xs sm:text-sm shrink-0">
-              <Paperclip className="h-4 w-4 me-1" />
+            <TabsTrigger value="attachments" className="shrink-0 text-xs sm:text-sm">
+              <Paperclip className="me-1 size-4" />
               {t('documents.tabs.attachments')} ({data.attachments.length})
             </TabsTrigger>
           </TabsList>

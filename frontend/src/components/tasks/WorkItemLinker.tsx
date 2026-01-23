@@ -106,7 +106,7 @@ export function WorkItemLinker({
  <Button
  variant="ghost"
  size="icon"
- className="h-5 w-5"
+ className="size-5"
  onClick={() => handleRemoveItem(item.id, item.type)}
  disabled={disabled}
  >
@@ -117,7 +117,7 @@ export function WorkItemLinker({
  ))}
 
  {selectedItems.length === 0 && (
- <p className="text-sm text-muted-foreground text-start">
+ <p className="text-start text-sm text-muted-foreground">
  {t('tasks.noLinkedItems')}
  </p>
  )}
@@ -220,7 +220,7 @@ export function WorkItemLinker({
  )}
 
  {searchQuery.length >= 2 && searchResults.length === 0 && (
- <p className="text-sm text-muted-foreground text-start">
+ <p className="text-start text-sm text-muted-foreground">
  {t('tasks.noResults')}
  </p>
  )}

@@ -90,7 +90,7 @@ function EntityBreadcrumbItem({ entry, isRTL, isActive, onRemove, t }: EntityBre
       animate={{ opacity: 1, scale: 1 }}
       exit={{ opacity: 0, scale: 0.9 }}
       transition={{ duration: 0.15 }}
-      className="relative flex-shrink-0 group"
+      className="group relative shrink-0"
     >
       <TooltipProvider delayDuration={300}>
         <Tooltip>
@@ -106,8 +106,8 @@ function EntityBreadcrumbItem({ entry, isRTL, isActive, onRemove, t }: EntityBre
                 isActive && 'ring-2 ring-primary font-medium',
               )}
             >
-              <Icon className="h-3.5 w-3.5 sm:h-4 sm:w-4 flex-shrink-0" />
-              <span className="hidden sm:inline max-w-[120px] truncate">{truncatedName}</span>
+              <Icon className="size-3.5 shrink-0 sm:size-4" />
+              <span className="hidden max-w-[120px] truncate sm:inline">{truncatedName}</span>
             </Link>
           </TooltipTrigger>
           <TooltipContent side="bottom" className="max-w-[200px]">
@@ -138,7 +138,7 @@ function EntityBreadcrumbItem({ entry, isRTL, isActive, onRemove, t }: EntityBre
         )}
         aria-label={t('breadcrumbTrail.remove', 'Remove from history')}
       >
-        <X className="h-3 w-3" />
+        <X className="size-3" />
       </button>
     </motion.div>
   )
@@ -208,7 +208,7 @@ export function EntityBreadcrumbTrail({
           'text-muted-foreground text-xs sm:text-sm',
         )}
       >
-        <History className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+        <History className="size-3.5 sm:size-4" />
         <span className="hidden md:inline">{t('breadcrumbTrail.recent', 'Recent')}</span>
       </div>
 
@@ -228,7 +228,7 @@ export function EntityBreadcrumbTrail({
             : t('breadcrumbTrail.scrollLeft', 'Scroll left')
         }
       >
-        {isRTL ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+        {isRTL ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
       </Button>
 
       {/* Scrollable Entity Trail */}
@@ -270,7 +270,7 @@ export function EntityBreadcrumbTrail({
             : t('breadcrumbTrail.scrollRight', 'Scroll right')
         }
       >
-        {isRTL ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+        {isRTL ? <ChevronLeft className="size-4" /> : <ChevronRight className="size-4" />}
       </Button>
 
       {/* More Menu (when overflow) */}
@@ -288,7 +288,7 @@ export function EntityBreadcrumbTrail({
               return (
                 <DropdownMenuItem key={entry.id} asChild>
                   <Link to={entry.route as any} className="flex items-center gap-2">
-                    <Icon className="h-4 w-4" />
+                    <Icon className="size-4" />
                     <span className="truncate">{displayName}</span>
                   </Link>
                 </DropdownMenuItem>
@@ -302,7 +302,7 @@ export function EntityBreadcrumbTrail({
               }}
               className="text-destructive focus:text-destructive"
             >
-              <Trash2 className="h-4 w-4 me-2" />
+              <Trash2 className="me-2 size-4" />
               {t('breadcrumbTrail.clearAll', 'Clear all')}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -317,10 +317,10 @@ export function EntityBreadcrumbTrail({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-6 w-6 sm:h-7 sm:w-7 flex-shrink-0 text-muted-foreground hover:text-destructive"
+                className="size-6 shrink-0 text-muted-foreground hover:text-destructive sm:size-7"
                 onClick={clearHistory}
               >
-                <Trash2 className="h-3.5 w-3.5" />
+                <Trash2 className="size-3.5" />
               </Button>
             </TooltipTrigger>
             <TooltipContent side="bottom">

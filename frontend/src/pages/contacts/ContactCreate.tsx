@@ -237,15 +237,15 @@ export function ContactCreate() {
   return (
     <>
       <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
           {/* Header */}
           <div className="mb-6">
             <Button variant="ghost" onClick={handleBack} className="mb-4">
-              <ArrowLeft className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+              <ArrowLeft className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
               {t('contactDirectory.buttons.back')}
             </Button>
 
-            <h1 className="text-2xl sm:text-3xl font-bold text-start">
+            <h1 className="text-start text-2xl font-bold sm:text-3xl">
               {t('contactDirectory.buttons.createContact')}
             </h1>
           </div>
@@ -256,17 +256,17 @@ export function ContactCreate() {
               value={activeTab}
               onValueChange={(value) => setActiveTab(value as 'manual' | 'scan' | 'document')}
             >
-              <TabsList className="grid w-full grid-cols-1 sm:grid-cols-3 mb-4">
+              <TabsList className="mb-4 grid w-full grid-cols-1 sm:grid-cols-3">
                 <TabsTrigger value="manual" className="gap-2">
-                  <FileText className="h-4 w-4" />
+                  <FileText className="size-4" />
                   {t('contactDirectory.tabs.manual_entry')}
                 </TabsTrigger>
                 <TabsTrigger value="scan" className="gap-2">
-                  <Scan className="h-4 w-4" />
+                  <Scan className="size-4" />
                   {t('contactDirectory.tabs.scan_card')}
                 </TabsTrigger>
                 <TabsTrigger value="document" className="gap-2">
-                  <Upload className="h-4 w-4" />
+                  <Upload className="size-4" />
                   {t('contactDirectory.documentExtraction.batch_import_tab')}
                 </TabsTrigger>
               </TabsList>
@@ -327,7 +327,7 @@ export function ContactCreate() {
         <DialogContent className="max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-start">
-              <AlertTriangle className="h-5 w-5 text-yellow-600" />
+              <AlertTriangle className="size-5 text-yellow-600" />
               {t('contactDirectory.duplicates.dialog_title')}
             </DialogTitle>
             <DialogDescription className="text-start">
@@ -335,15 +335,15 @@ export function ContactCreate() {
             </DialogDescription>
           </DialogHeader>
 
-          <div className="space-y-3 max-h-[400px] overflow-y-auto">
+          <div className="max-h-[400px] space-y-3 overflow-y-auto">
             {duplicates.map((dup) => (
               <Card key={dup.contact_id} className="p-4">
                 <div className="space-y-2">
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex-1">
-                      <h4 className="font-medium text-start">{dup.full_name}</h4>
+                      <h4 className="text-start font-medium">{dup.full_name}</h4>
                       {dup.organization_name && (
-                        <p className="text-sm text-muted-foreground text-start">
+                        <p className="text-start text-sm text-muted-foreground">
                           {dup.organization_name}
                         </p>
                       )}
@@ -356,7 +356,7 @@ export function ContactCreate() {
                     {dup.match_reasons.map((reason) => (
                       <span
                         key={reason}
-                        className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800"
+                        className="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800"
                       >
                         {t(`contactDirectory.duplicates.reasons.${reason}`)}
                       </span>
@@ -394,12 +394,12 @@ export function ContactCreate() {
       {/* Batch Import Duplicate Warning Dialog */}
       <Dialog open={showBatchDuplicateDialog} onOpenChange={setShowBatchDuplicateDialog}>
         <DialogContent
-          className="max-w-4xl max-h-[80vh] overflow-y-auto"
+          className="max-h-[80vh] max-w-4xl overflow-y-auto"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-start">
-              <AlertTriangle className="h-5 w-5 text-yellow-600" />
+              <AlertTriangle className="size-5 text-yellow-600" />
               {t('contactDirectory.duplicates.dialog_title')} ({batchDuplicates.size}{' '}
               {t('contactDirectory.documentExtraction.contacts_found')})
             </DialogTitle>
@@ -416,22 +416,22 @@ export function ContactCreate() {
               return (
                 <Card key={contactId} className="border-yellow-200">
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-base text-start">{contact.full_name}</CardTitle>
+                    <CardTitle className="text-start text-base">{contact.full_name}</CardTitle>
                     {contact.organization_id && (
-                      <p className="text-sm text-muted-foreground text-start">
+                      <p className="text-start text-sm text-muted-foreground">
                         {/* Organization name would need to be resolved */}
                       </p>
                     )}
                   </CardHeader>
                   <CardContent className="space-y-2">
                     {duplicates.map((dup) => (
-                      <Card key={dup.contact_id} className="p-3 bg-yellow-50">
+                      <Card key={dup.contact_id} className="bg-yellow-50 p-3">
                         <div className="space-y-2">
                           <div className="flex items-start justify-between gap-4">
                             <div className="flex-1">
-                              <h4 className="font-medium text-sm text-start">{dup.full_name}</h4>
+                              <h4 className="text-start text-sm font-medium">{dup.full_name}</h4>
                               {dup.organization_name && (
-                                <p className="text-xs text-muted-foreground text-start">
+                                <p className="text-start text-xs text-muted-foreground">
                                   {dup.organization_name}
                                 </p>
                               )}
@@ -444,7 +444,7 @@ export function ContactCreate() {
                             {dup.match_reasons.map((reason) => (
                               <span
                                 key={reason}
-                                className="px-2 py-1 text-xs rounded-full bg-yellow-100 text-yellow-800"
+                                className="rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800"
                               >
                                 {t(`contactDirectory.duplicates.reasons.${reason}`)}
                               </span>
@@ -482,7 +482,7 @@ export function ContactCreate() {
               {batchCreateMutation.isPending ? (
                 <>
                   <div
-                    className={`animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full ${isRTL ? 'ms-2' : 'me-2'}`}
+                    className={`size-4 animate-spin rounded-full border-2 border-current border-t-transparent ${isRTL ? 'ms-2' : 'me-2'}`}
                   />
                   {t('contactDirectory.documentExtraction.importing')}
                 </>

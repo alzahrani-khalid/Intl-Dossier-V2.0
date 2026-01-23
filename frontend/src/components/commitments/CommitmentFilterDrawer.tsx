@@ -136,24 +136,24 @@ export function CommitmentFilterDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side={isRTL ? 'left' : 'right'}
-        className="w-full sm:max-w-md overflow-y-auto"
+        className="w-full overflow-y-auto sm:max-w-md"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <SheetHeader>
           <SheetTitle className="text-start">{t('filters.title')}</SheetTitle>
         </SheetHeader>
 
-        <div className="py-6 space-y-6">
+        <div className="space-y-6 py-6">
           {/* Status Filter */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-start block">
+            <Label className="block text-start text-sm font-medium">
               {t('filters.status')}
             </Label>
             <div className="grid grid-cols-2 gap-2">
               {STATUS_OPTIONS.map((status) => (
                 <label
                   key={status}
-                  className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-accent min-h-11"
+                  className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border p-3 hover:bg-accent"
                 >
                   <Checkbox
                     checked={localFilters.status?.includes(status) || false}
@@ -167,14 +167,14 @@ export function CommitmentFilterDrawer({
 
           {/* Priority Filter */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-start block">
+            <Label className="block text-start text-sm font-medium">
               {t('filters.priority')}
             </Label>
             <div className="grid grid-cols-2 gap-2">
               {PRIORITY_OPTIONS.map((priority) => (
                 <label
                   key={priority}
-                  className="flex items-center gap-3 p-3 rounded-lg border cursor-pointer hover:bg-accent min-h-11"
+                  className="flex min-h-11 cursor-pointer items-center gap-3 rounded-lg border p-3 hover:bg-accent"
                 >
                   <Checkbox
                     checked={localFilters.priority?.includes(priority) || false}
@@ -188,7 +188,7 @@ export function CommitmentFilterDrawer({
 
           {/* Owner Type Filter */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-start block">
+            <Label className="block text-start text-sm font-medium">
               {t('filters.ownerType')}
             </Label>
             <div className="flex flex-wrap gap-2">
@@ -217,12 +217,12 @@ export function CommitmentFilterDrawer({
           </div>
 
           {/* Overdue Toggle - T042 */}
-          <div className="flex items-center justify-between p-4 rounded-lg border">
+          <div className="flex items-center justify-between rounded-lg border p-4">
             <div className="space-y-0.5">
-              <Label className="text-sm font-medium text-start block">
+              <Label className="block text-start text-sm font-medium">
                 {t('filters.overdue')}
               </Label>
-              <p className="text-xs text-muted-foreground text-start">
+              <p className="text-start text-xs text-muted-foreground">
                 {t('filters.overdueDescription')}
               </p>
             </div>
@@ -234,10 +234,10 @@ export function CommitmentFilterDrawer({
 
           {/* Date Range Filter - T042a */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium text-start block">
+            <Label className="block text-start text-sm font-medium">
               {t('filters.dueDate')}
             </Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               {/* From Date */}
               <div className="space-y-1.5">
                 <Label className="text-xs text-muted-foreground">
@@ -262,7 +262,7 @@ export function CommitmentFilterDrawer({
                       )}
                       {localFilters.dueDateFrom && (
                         <X
-                          className={`size-4 ${isRTL ? 'me-auto ms-2' : 'ms-auto me-2'} opacity-50 hover:opacity-100`}
+                          className={`size-4 ${isRTL ? 'me-auto ms-2' : 'me-2 ms-auto'} opacity-50 hover:opacity-100`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDateFromChange(undefined);
@@ -307,7 +307,7 @@ export function CommitmentFilterDrawer({
                       )}
                       {localFilters.dueDateTo && (
                         <X
-                          className={`size-4 ${isRTL ? 'me-auto ms-2' : 'ms-auto me-2'} opacity-50 hover:opacity-100`}
+                          className={`size-4 ${isRTL ? 'me-auto ms-2' : 'me-2 ms-auto'} opacity-50 hover:opacity-100`}
                           onClick={(e) => {
                             e.stopPropagation();
                             handleDateToChange(undefined);
@@ -336,7 +336,7 @@ export function CommitmentFilterDrawer({
           </div>
         </div>
 
-        <SheetFooter className="flex-col sm:flex-row gap-3 pt-4 border-t">
+        <SheetFooter className="flex-col gap-3 border-t pt-4 sm:flex-row">
           <Button
             type="button"
             variant="outline"

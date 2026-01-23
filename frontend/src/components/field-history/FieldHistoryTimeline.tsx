@@ -195,19 +195,19 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
           entry.rolled_back_at ? 'bg-gray-200' : config.bgColor,
         )}
       >
-        <Icon className="h-3 w-3" />
+        <Icon className="size-3" />
       </div>
 
       <Card className={cn('ms-2', entry.rolled_back_at && 'bg-muted/50')}>
         <Collapsible open={isExpanded} onOpenChange={onToggleExpand}>
           <CollapsibleTrigger asChild>
-            <CardHeader className="pb-2 cursor-pointer hover:bg-muted/30 transition-colors">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-                <div className="flex items-center gap-2 min-w-0 flex-1">
+            <CardHeader className="cursor-pointer pb-2 transition-colors hover:bg-muted/30">
+              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex min-w-0 flex-1 items-center gap-2">
                   <Badge variant="outline" className={cn('text-xs', config.bgColor, config.color)}>
                     {isRTL ? config.label_ar : config.label_en}
                   </Badge>
-                  <span className="font-medium text-sm truncate">{fieldLabel}</span>
+                  <span className="truncate text-sm font-medium">{fieldLabel}</span>
                   <Badge
                     variant="secondary"
                     className={cn('text-xs hidden sm:inline-flex', categoryConfig.color)}
@@ -222,7 +222,7 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
                     <Tooltip>
                       <TooltipTrigger asChild>
                         <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
+                          <Clock className="size-3" />
                           {getRelativeTime(entry.created_at, isRTL)}
                         </span>
                       </TooltipTrigger>
@@ -232,9 +232,9 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
                     </Tooltip>
                   </TooltipProvider>
                   {isExpanded ? (
-                    <ChevronUp className="h-4 w-4" />
+                    <ChevronUp className="size-4" />
                   ) : (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="size-4" />
                   )}
                 </div>
               </div>
@@ -246,37 +246,37 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
               <Separator className="mb-3" />
 
               {/* Value comparison */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-3">
+              <div className="mb-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                 {/* Old value */}
-                <div className="p-2 rounded-md bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800">
-                  <div className="text-xs text-red-600 dark:text-red-400 mb-1 flex items-center gap-1">
-                    <X className="h-3 w-3" />
+                <div className="rounded-md border border-red-200 bg-red-50 p-2 dark:border-red-800 dark:bg-red-950/20">
+                  <div className="mb-1 flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
+                    <X className="size-3" />
                     {t('entry.oldValue')}
                   </div>
-                  <div className="text-sm break-words font-mono">
+                  <div className="break-words font-mono text-sm">
                     {formatValue(entry.old_value, isRTL)}
                   </div>
                 </div>
 
                 {/* New value */}
-                <div className="p-2 rounded-md bg-green-50 dark:bg-green-950/20 border border-green-200 dark:border-green-800">
-                  <div className="text-xs text-green-600 dark:text-green-400 mb-1 flex items-center gap-1">
-                    <Check className="h-3 w-3" />
+                <div className="rounded-md border border-green-200 bg-green-50 p-2 dark:border-green-800 dark:bg-green-950/20">
+                  <div className="mb-1 flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                    <Check className="size-3" />
                     {t('entry.newValue')}
                   </div>
-                  <div className="text-sm break-words font-mono">
+                  <div className="break-words font-mono text-sm">
                     {formatValue(entry.new_value, isRTL)}
                   </div>
                 </div>
               </div>
 
               {/* User info */}
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-muted-foreground">
+              <div className="flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between">
                 <div className="flex items-center gap-1">
-                  <User className="h-3 w-3" />
+                  <User className="size-3" />
                   <span>{entry.changed_by.email || t('entry.unknownUser')}</span>
                   {entry.changed_by.role && (
-                    <Badge variant="outline" className="text-xs ms-1">
+                    <Badge variant="outline" className="ms-1 text-xs">
                       {entry.changed_by.role}
                     </Badge>
                   )}
@@ -285,7 +285,7 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
                 {/* Rollback status or button */}
                 {entry.rolled_back_at ? (
                   <div className="flex items-center gap-1 text-amber-600">
-                    <AlertCircle className="h-3 w-3" />
+                    <AlertCircle className="size-3" />
                     {t('entry.rolledBackAt', {
                       date: getRelativeTime(entry.rolled_back_at, isRTL),
                     })}
@@ -311,8 +311,8 @@ const FieldHistoryEntryCard = memo(function FieldHistoryEntryCard({
 
               {/* Rollback reference */}
               {entry.is_rollback && entry.rollback_of_id && (
-                <div className="mt-2 text-xs text-muted-foreground flex items-center gap-1">
-                  <RotateCcw className="h-3 w-3" />
+                <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+                  <RotateCcw className="size-3" />
                   {t('entry.rollbackOf')}
                 </div>
               )}
@@ -348,27 +348,27 @@ const GroupedFieldCard = memo(function GroupedFieldCard({
   const categoryConfig = FIELD_CATEGORY_CONFIG[field.field_category]
 
   return (
-    <Card className="cursor-pointer hover:bg-muted/30 transition-colors" onClick={onClick}>
+    <Card className="cursor-pointer transition-colors hover:bg-muted/30" onClick={onClick}>
       <CardContent className="p-3 sm:p-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-          <div className="flex items-center gap-2 min-w-0 flex-1">
-            <span className="font-medium text-sm truncate">{fieldLabel}</span>
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
+            <span className="truncate text-sm font-medium">{fieldLabel}</span>
             <Badge variant="secondary" className={cn('text-xs', categoryConfig.color)}>
               {isRTL ? categoryConfig.label_ar : categoryConfig.label_en}
             </Badge>
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
-              <History className="h-3 w-3" />
+              <History className="size-3" />
               {field.statistics.change_count} {t('grouped.changes')}
             </span>
-            <span className="hidden sm:flex items-center gap-1">
-              <Clock className="h-3 w-3" />
+            <span className="hidden items-center gap-1 sm:flex">
+              <Clock className="size-3" />
               {getRelativeTime(field.statistics.last_change_at, isRTL)}
             </span>
           </div>
         </div>
-        <div className="mt-2 text-xs text-muted-foreground truncate">
+        <div className="mt-2 truncate text-xs text-muted-foreground">
           {t('grouped.currentValue')}: {formatValue(field.current_value, isRTL)}
         </div>
       </CardContent>
@@ -424,19 +424,19 @@ const RollbackConfirmDialog = memo(function RollbackConfirmDialog({
             </div>
             <Separator />
             <div className="grid grid-cols-2 gap-3">
-              <div className="p-2 rounded-md bg-muted">
-                <div className="text-xs text-muted-foreground mb-1">
+              <div className="rounded-md bg-muted p-2">
+                <div className="mb-1 text-xs text-muted-foreground">
                   {t('rollback.currentValue')}
                 </div>
-                <div className="text-sm font-mono truncate">
+                <div className="truncate font-mono text-sm">
                   {formatValue(entry.new_value, isRTL)}
                 </div>
               </div>
-              <div className="p-2 rounded-md bg-green-50 dark:bg-green-950/20">
-                <div className="text-xs text-green-600 dark:text-green-400 mb-1">
+              <div className="rounded-md bg-green-50 p-2 dark:bg-green-950/20">
+                <div className="mb-1 text-xs text-green-600 dark:text-green-400">
                   {t('rollback.restoreTo')}
                 </div>
-                <div className="text-sm font-mono truncate">
+                <div className="truncate font-mono text-sm">
                   {formatValue(entry.old_value, isRTL)}
                 </div>
               </div>
@@ -451,7 +451,7 @@ const RollbackConfirmDialog = memo(function RollbackConfirmDialog({
           <Button onClick={onConfirm} disabled={isLoading}>
             {isLoading ? (
               <span className="flex items-center gap-2">
-                <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                 {t('rollback.rolling')}
               </span>
             ) : (
@@ -475,8 +475,8 @@ const TimelineSkeleton = memo(function TimelineSkeleton() {
   return (
     <div className="space-y-4">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="relative border-s-4 border-gray-200 ps-4 pb-4">
-          <div className="absolute -start-2.5 top-0 h-5 w-5 rounded-full bg-gray-200" />
+        <div key={i} className="relative border-s-4 border-gray-200 pb-4 ps-4">
+          <div className="absolute -start-2.5 top-0 size-5 rounded-full bg-gray-200" />
           <Card className="ms-2">
             <CardHeader className="pb-2">
               <div className="flex items-center justify-between gap-2">
@@ -585,9 +585,9 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
       {/* Header */}
       <Card>
         <CardHeader className="pb-2">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-              <History className="h-5 w-5" />
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <History className="size-5" />
               {t('title')} - {entityName}
             </CardTitle>
 
@@ -599,7 +599,7 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
                   size="sm"
                   onClick={() => setViewMode('timeline')}
                 >
-                  <History className="h-4 w-4 me-1" />
+                  <History className="me-1 size-4" />
                   <span className="hidden sm:inline">{t('viewMode.timeline')}</span>
                 </Button>
                 <Button
@@ -607,7 +607,7 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
                   size="sm"
                   onClick={() => setViewMode('grouped')}
                 >
-                  <Layers className="h-4 w-4 me-1" />
+                  <Layers className="me-1 size-4" />
                   <span className="hidden sm:inline">{t('viewMode.grouped')}</span>
                 </Button>
               </div>
@@ -618,14 +618,14 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
         {/* Filters */}
         {showFilters && viewMode === 'timeline' && (
           <CardContent className="pb-3">
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               {/* Category filter */}
               <Select
                 value={categoryFilter}
                 onValueChange={(v) => setCategoryFilter(v as FieldCategory | 'all')}
               >
                 <SelectTrigger className="w-full sm:w-[180px]">
-                  <Filter className="h-4 w-4 me-2" />
+                  <Filter className="me-2 size-4" />
                   <SelectValue placeholder={t('filters.category')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -646,7 +646,7 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
                   onClick={() => setSelectedFieldName(undefined)}
                   className="h-9"
                 >
-                  <X className="h-4 w-4 me-1" />
+                  <X className="me-1 size-4" />
                   {t('filters.clearField', { field: selectedFieldName })}
                 </Button>
               )}
@@ -667,13 +667,13 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
                 ))}
               </div>
             ) : groupedError ? (
-              <div className="text-center py-8 text-destructive">
-                <AlertCircle className="h-8 w-8 mx-auto mb-2" />
+              <div className="py-8 text-center text-destructive">
+                <AlertCircle className="mx-auto mb-2 size-8" />
                 <p>{t('error.loading')}</p>
               </div>
             ) : fields.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <History className="h-8 w-8 mx-auto mb-2 opacity-50" />
+              <div className="py-8 text-center text-muted-foreground">
+                <History className="mx-auto mb-2 size-8 opacity-50" />
                 <p>{t('empty.noHistory')}</p>
               </div>
             ) : (
@@ -694,13 +694,13 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
           isLoadingHistory ? (
             <TimelineSkeleton />
           ) : historyError ? (
-            <div className="text-center py-8 text-destructive">
-              <AlertCircle className="h-8 w-8 mx-auto mb-2" />
+            <div className="py-8 text-center text-destructive">
+              <AlertCircle className="mx-auto mb-2 size-8" />
               <p>{t('error.loading')}</p>
             </div>
           ) : filteredEntries.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              <History className="h-8 w-8 mx-auto mb-2 opacity-50" />
+            <div className="py-8 text-center text-muted-foreground">
+              <History className="mx-auto mb-2 size-8 opacity-50" />
               <p>{t('empty.noHistory')}</p>
             </div>
           ) : (
@@ -722,7 +722,7 @@ export const FieldHistoryTimeline = memo(function FieldHistoryTimeline({
 
               {/* Pagination */}
               {metadata && (metadata.has_more || metadata.offset > 0) && (
-                <div className="flex items-center justify-between mt-4 pt-4 border-t">
+                <div className="mt-4 flex items-center justify-between border-t pt-4">
                   <div className="text-sm text-muted-foreground">
                     {t('pagination.showing', {
                       start: metadata.offset + 1,

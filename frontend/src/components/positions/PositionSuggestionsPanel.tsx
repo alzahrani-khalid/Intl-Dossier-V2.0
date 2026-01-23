@@ -110,14 +110,14 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
  <Card className={className}>
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <Sparkles className="h-5 w-5" />
+ <Sparkles className="size-5" />
  {t('positions.suggestions.title')}
  </CardTitle>
  </CardHeader>
  <CardContent>
  <div className="flex items-center justify-center py-8">
  <div className="flex flex-col items-center gap-2">
- <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+ <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
  <p className="text-sm text-muted-foreground">{t('positions.suggestions.loading')}</p>
  </div>
  </div>
@@ -131,13 +131,13 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
  <Card className={className}>
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <Sparkles className="h-5 w-5" />
+ <Sparkles className="size-5" />
  {t('positions.suggestions.title')}
  </CardTitle>
  </CardHeader>
  <CardContent>
  <Alert variant="destructive">
- <AlertCircle className="h-4 w-4" />
+ <AlertCircle className="size-4" />
  <AlertDescription>{t('positions.suggestions.error')}</AlertDescription>
  </Alert>
  <Button variant="outline" onClick={() => refetch()} className="mt-4">
@@ -152,7 +152,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
  <Card className={className}>
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <Sparkles className="h-5 w-5" />
+ <Sparkles className="size-5" />
  {t('positions.suggestions.title')}
  </CardTitle>
  <CardDescription>
@@ -164,7 +164,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
  {/* Fallback Mode Indicator */}
  {isFallbackMode && (
  <Alert className="mb-4">
- <AlertCircle className="h-4 w-4" />
+ <AlertCircle className="size-4" />
  <AlertDescription>
  {t('positions.suggestions.fallbackMode')}
  </AlertDescription>
@@ -174,7 +174,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
  {/* Suggestions List */}
  {suggestions.length === 0 ? (
  <div className="flex flex-col items-center justify-center rounded-lg border border-dashed py-8">
- <Sparkles className="mb-2 h-8 w-8 text-muted-foreground" />
+ <Sparkles className="mb-2 size-8 text-muted-foreground" />
  <p className="text-center text-muted-foreground">
  {t('positions.suggestions.empty')}
  </p>
@@ -204,13 +204,13 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
  {getPositionTitle(suggestion.position)}
  </h4>
  <Badge variant={relevanceIndicator.variant} className="shrink-0">
- <Icon className={`me-1 h-3 w-3 ${relevanceIndicator.color}`} />
+ <Icon className={`me-1 size-3 ${relevanceIndicator.color}`} />
  {relevanceIndicator.label}
  </Badge>
  </div>
 
  {/* Content Preview */}
- <p className="text-sm text-muted-foreground line-clamp-2" dir={isRTL ? 'rtl' : 'ltr'}>
+ <p className="line-clamp-2 text-sm text-muted-foreground" dir={isRTL ? 'rtl' : 'ltr'}>
  {getPositionPreview(suggestion.position)}
  </p>
 
@@ -284,7 +284,7 @@ export const PositionSuggestionsPanel: React.FC<PositionSuggestionsPanelProps> =
  className="mt-4 w-full"
  disabled={isLoading}
  >
- <Sparkles className="me-2 h-4 w-4" />
+ <Sparkles className="me-2 size-4" />
  {t('positions.suggestions.refresh')}
  </Button>
  )}

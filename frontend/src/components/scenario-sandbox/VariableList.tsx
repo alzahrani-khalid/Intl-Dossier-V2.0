@@ -45,12 +45,12 @@ interface VariableListProps {
 }
 
 const changeTypeIcons: Record<VariableChangeType, React.ReactNode> = {
-  relationship_health: <Heart className="h-4 w-4" />,
-  stakeholder_influence: <Users className="h-4 w-4" />,
-  engagement_frequency: <MessageSquare className="h-4 w-4" />,
-  resource_level: <DollarSign className="h-4 w-4" />,
-  policy_status: <FileCheck className="h-4 w-4" />,
-  custom_metric: <Settings className="h-4 w-4" />,
+  relationship_health: <Heart className="size-4" />,
+  stakeholder_influence: <Users className="size-4" />,
+  engagement_frequency: <MessageSquare className="size-4" />,
+  resource_level: <DollarSign className="size-4" />,
+  policy_status: <FileCheck className="size-4" />,
+  custom_metric: <Settings className="size-4" />,
 }
 
 function formatValue(value: unknown): string {
@@ -80,16 +80,16 @@ export function VariableList({ variables, onAdd, onEdit, onDelete, isLoading }: 
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">{t('variable.variables')}</CardTitle>
             <Button size="sm" onClick={onAdd} disabled={isLoading}>
-              <Plus className="h-4 w-4 me-2" />
+              <Plus className="me-2 size-4" />
               {t('variable.add')}
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
-            <Settings className="h-12 w-12 mx-auto mb-4 opacity-40" />
+          <div className="py-8 text-center text-muted-foreground">
+            <Settings className="mx-auto mb-4 size-12 opacity-40" />
             <p className="font-medium">{t('variable.noVariables')}</p>
-            <p className="text-sm mt-1">{t('variable.noVariablesDesc')}</p>
+            <p className="mt-1 text-sm">{t('variable.noVariablesDesc')}</p>
           </div>
         </CardContent>
       </Card>
@@ -103,7 +103,7 @@ export function VariableList({ variables, onAdd, onEdit, onDelete, isLoading }: 
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">{t('variable.variables')}</CardTitle>
             <Button size="sm" onClick={onAdd} disabled={isLoading}>
-              <Plus className="h-4 w-4 me-2" />
+              <Plus className="me-2 size-4" />
               {t('variable.add')}
             </Button>
           </div>
@@ -116,50 +116,50 @@ export function VariableList({ variables, onAdd, onEdit, onDelete, isLoading }: 
             return (
               <div
                 key={variable.id}
-                className="group flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                className="group flex items-center gap-3 rounded-lg border bg-card p-3 transition-colors hover:bg-muted/50"
               >
-                <GripVertical className="h-4 w-4 text-muted-foreground/50 cursor-grab" />
+                <GripVertical className="size-4 cursor-grab text-muted-foreground/50" />
 
-                <div className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-primary shrink-0">
+                <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-primary/10 text-primary">
                   {changeTypeIcons[variable.change_type]}
                 </div>
 
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="font-medium truncate">{name}</span>
-                    <Badge variant="outline" className="text-xs shrink-0">
+                    <span className="truncate font-medium">{name}</span>
+                    <Badge variant="outline" className="shrink-0 text-xs">
                       {isRTL ? typeLabel.ar : typeLabel.en}
                     </Badge>
                   </div>
 
-                  <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                  <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
                     <span className="font-mono">{formatValue(variable.original_value)}</span>
-                    <ArrowRight className={`h-3 w-3 ${isRTL ? 'rotate-180' : ''}`} />
+                    <ArrowRight className={`size-3 ${isRTL ? 'rotate-180' : ''}`} />
                     <span className="font-mono font-medium text-foreground">
                       {formatValue(variable.modified_value)}
                     </span>
                   </div>
                 </div>
 
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                <div className="flex items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8"
+                    className="size-8"
                     onClick={() => onEdit(variable)}
                     disabled={isLoading}
                   >
-                    <Edit className="h-4 w-4" />
+                    <Edit className="size-4" />
                     <span className="sr-only">{t('variable.edit')}</span>
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive"
+                    className="size-8 text-destructive hover:text-destructive"
                     onClick={() => setDeleteId(variable.id)}
                     disabled={isLoading}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="size-4" />
                     <span className="sr-only">{t('variable.delete')}</span>
                   </Button>
                 </div>

@@ -216,7 +216,7 @@ export function AddDeliverableDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-h-[90vh] max-w-md overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="text-start">
             {isEditing ? t('form.editDeliverable') : t('form.addDeliverable')}
@@ -248,7 +248,7 @@ export function AddDeliverableDialog({
                             TYPE_COLORS[type],
                           )}
                         >
-                          <Icon className="h-3.5 w-3.5" />
+                          <Icon className="size-3.5" />
                         </div>
                         <span>{t(`types.${type}`)}</span>
                       </div>
@@ -327,7 +327,7 @@ export function AddDeliverableDialog({
               step={1}
               className="py-2"
             />
-            <p className="text-xs text-muted-foreground text-start">
+            <p className="text-start text-xs text-muted-foreground">
               {t('form.weightDescription')}
             </p>
           </div>

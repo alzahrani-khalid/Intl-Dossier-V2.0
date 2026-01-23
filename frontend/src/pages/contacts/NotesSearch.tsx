@@ -97,21 +97,21 @@ function SearchResultItem({ note, isRTL, locale, onNavigate }: SearchResultItemP
     note.details.length > 200 ? `${note.details.substring(0, 200)}...` : note.details
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="transition-shadow hover:shadow-md">
       <CardContent className="p-4">
         <div className="flex flex-col gap-3">
           {/* Header: Type, Date, Contact */}
           <div className="flex flex-wrap items-center gap-2">
-            <div className="flex items-center gap-2 flex-1 min-w-0">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
               <div
                 className={cn(
                   'flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center',
                   'bg-primary/10 text-primary',
                 )}
               >
-                <TypeIcon className="w-4 h-4" />
+                <TypeIcon className="size-4" />
               </div>
-              <div className="flex flex-col gap-1 min-w-0">
+              <div className="flex min-w-0 flex-col gap-1">
                 <Badge variant="secondary" className={cn('w-fit text-xs', getTypeColor(note.type))}>
                   {t(`contactDirectory.interactions.types.${note.type}`)}
                 </Badge>
@@ -133,9 +133,9 @@ function SearchResultItem({ note, isRTL, locale, onNavigate }: SearchResultItemP
           {/* Contact Info */}
           {note.contact && (
             <div className="flex flex-col gap-1">
-              <p className="font-medium text-sm text-start">{note.contact.full_name}</p>
+              <p className="text-start text-sm font-medium">{note.contact.full_name}</p>
               {note.contact.organization && (
-                <p className="text-xs text-muted-foreground text-start">
+                <p className="text-start text-xs text-muted-foreground">
                   {note.contact.organization.name}
                 </p>
               )}
@@ -145,14 +145,14 @@ function SearchResultItem({ note, isRTL, locale, onNavigate }: SearchResultItemP
           <Separator />
 
           {/* Details Preview */}
-          <p className="text-sm text-muted-foreground text-start whitespace-pre-wrap">
+          <p className="whitespace-pre-wrap text-start text-sm text-muted-foreground">
             {detailsPreview}
           </p>
 
           {/* Attachments indicator */}
           {note.attachments && note.attachments.length > 0 && (
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <FileText className="w-3 h-3" />
+              <FileText className="size-3" />
               <span>
                 {t('contactDirectory.interactions.attachments_count', {
                   count: note.attachments.length,
@@ -208,13 +208,13 @@ export function NotesSearch() {
 
   return (
     <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl sm:text-3xl font-bold mb-2 text-start">
+          <h1 className="mb-2 text-start text-2xl font-bold sm:text-3xl">
             {t('contactDirectory.interactions.search.title')}
           </h1>
-          <p className="text-sm text-muted-foreground text-start">
+          <p className="text-start text-sm text-muted-foreground">
             {t('contactDirectory.interactions.search.description')}
           </p>
         </div>
@@ -246,13 +246,13 @@ export function NotesSearch() {
                   onClick={() => setShowFilters(!showFilters)}
                   className={cn('h-11 w-11', hasActiveFilters && 'border-primary')}
                 >
-                  <Filter className="w-4 h-4" />
+                  <Filter className="size-4" />
                 </Button>
               </div>
 
               {/* Filters Panel */}
               {showFilters && (
-                <div className="space-y-4 pt-4 border-t">
+                <div className="space-y-4 border-t pt-4">
                   <div className="flex items-center justify-between">
                     <h3 className="text-sm font-medium">
                       {t('contactDirectory.interactions.search.filters')}
@@ -270,10 +270,10 @@ export function NotesSearch() {
                     )}
                   </div>
 
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                     {/* Type Filter */}
                     <div>
-                      <label className="text-xs font-medium mb-1.5 block text-start">
+                      <label className="mb-1.5 block text-start text-xs font-medium">
                         {t('contactDirectory.interactions.search.type_filter')}
                       </label>
                       <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -305,7 +305,7 @@ export function NotesSearch() {
 
                     {/* Date From */}
                     <div>
-                      <label className="text-xs font-medium mb-1.5 block text-start">
+                      <label className="mb-1.5 block text-start text-xs font-medium">
                         {t('contactDirectory.interactions.search.date_from')}
                       </label>
                       <Popover>
@@ -338,7 +338,7 @@ export function NotesSearch() {
 
                     {/* Date To */}
                     <div>
-                      <label className="text-xs font-medium mb-1.5 block text-start">
+                      <label className="mb-1.5 block text-start text-xs font-medium">
                         {t('contactDirectory.interactions.search.date_to')}
                       </label>
                       <Popover>
@@ -380,7 +380,7 @@ export function NotesSearch() {
         {isLoading ? (
           <div className="flex items-center justify-center py-12">
             <div className="flex flex-col items-center gap-2">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <Loader2 className="size-8 animate-spin text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
                 {t('contactDirectory.interactions.search.searching')}
               </p>
@@ -397,7 +397,7 @@ export function NotesSearch() {
         ) : data && data.notes.length > 0 ? (
           <>
             {/* Results Header */}
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <p className="text-sm text-muted-foreground">
                 {t('contactDirectory.interactions.search.results_count', {
                   count: data.total,
@@ -421,8 +421,8 @@ export function NotesSearch() {
         ) : searchQuery || hasActiveFilters ? (
           <Card>
             <CardContent className="p-12 text-center">
-              <FileText className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-              <h3 className="text-base font-medium mb-2">
+              <FileText className="mx-auto mb-4 size-12 text-muted-foreground/50" />
+              <h3 className="mb-2 text-base font-medium">
                 {t('contactDirectory.interactions.search.no_results_title')}
               </h3>
               <p className="text-sm text-muted-foreground">
@@ -433,8 +433,8 @@ export function NotesSearch() {
         ) : (
           <Card>
             <CardContent className="p-12 text-center">
-              <Search className="w-12 h-12 text-muted-foreground/50 mx-auto mb-4" />
-              <h3 className="text-base font-medium mb-2">
+              <Search className="mx-auto mb-4 size-12 text-muted-foreground/50" />
+              <h3 className="mb-2 text-base font-medium">
                 {t('contactDirectory.interactions.search.start_searching_title')}
               </h3>
               <p className="text-sm text-muted-foreground">

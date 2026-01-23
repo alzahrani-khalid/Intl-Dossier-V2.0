@@ -66,19 +66,19 @@ export function RegisterPage() {
   }
 
   return (
-    <div className="from-base-50 to-base-100 flex min-h-screen items-center justify-center bg-gradient-to-br p-4">
+    <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-base-50 to-base-100 p-4">
       <div className="w-full max-w-md">
-        <div className="dark:bg-base-800 rounded-2xl bg-white p-8 shadow-xl">
+        <div className="rounded-2xl bg-white p-8 shadow-xl dark:bg-base-800">
           <div className="mb-6 flex justify-center">
             <div className="flex size-16 items-center justify-center rounded-full bg-primary-100 dark:bg-primary-900">
               <Globe className="size-8 text-primary-600 dark:text-primary-400" />
             </div>
           </div>
 
-          <h1 className="font-display text-base-900 dark:text-base-50 mb-2 text-center text-2xl">
+          <h1 className="mb-2 text-center font-display text-2xl text-base-900 dark:text-base-50">
             Create Your Account
           </h1>
-          <p className="text-base-600 dark:text-base-400 font-text mb-6 text-center">
+          <p className="mb-6 text-center font-text text-base-600 dark:text-base-400">
             Join GASTAT International Dossier System
           </p>
 
@@ -86,7 +86,7 @@ export function RegisterPage() {
             <div>
               <label
                 htmlFor="name"
-                className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
+                className="mb-2 block font-text text-sm font-medium text-base-700 dark:text-base-300"
               >
                 Full Name{' '}
                 <span className="text-red-500" aria-label="required">
@@ -98,7 +98,7 @@ export function RegisterPage() {
                 id="name"
                 type="text"
                 placeholder="John Doe"
-                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-lg border border-base-300 px-4 py-2 font-text focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-base-600 dark:bg-base-800 dark:text-base-50"
                 disabled={isLoading}
                 aria-describedby={errors.name ? 'name-error' : undefined}
                 aria-invalid={errors.name ? 'true' : undefined}
@@ -106,7 +106,7 @@ export function RegisterPage() {
               {errors.name && (
                 <p
                   id="name-error"
-                  className="font-text mt-1 text-sm text-red-600 dark:text-red-400"
+                  className="mt-1 font-text text-sm text-red-600 dark:text-red-400"
                   role="alert"
                 >
                   {errors.name.message}
@@ -117,7 +117,7 @@ export function RegisterPage() {
             <div>
               <label
                 htmlFor="email"
-                className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
+                className="mb-2 block font-text text-sm font-medium text-base-700 dark:text-base-300"
               >
                 Email{' '}
                 <span className="text-red-500" aria-label="required">
@@ -129,7 +129,7 @@ export function RegisterPage() {
                 id="email"
                 type="email"
                 placeholder="user@gastat.sa"
-                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-lg border border-base-300 px-4 py-2 font-text focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-base-600 dark:bg-base-800 dark:text-base-50"
                 disabled={isLoading}
                 aria-describedby={errors.email ? 'email-error' : undefined}
                 aria-invalid={errors.email ? 'true' : undefined}
@@ -137,7 +137,7 @@ export function RegisterPage() {
               {errors.email && (
                 <p
                   id="email-error"
-                  className="font-text mt-1 text-sm text-red-600 dark:text-red-400"
+                  className="mt-1 font-text text-sm text-red-600 dark:text-red-400"
                   role="alert"
                 >
                   {errors.email.message}
@@ -148,7 +148,7 @@ export function RegisterPage() {
             <div>
               <label
                 htmlFor="password"
-                className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
+                className="mb-2 block font-text text-sm font-medium text-base-700 dark:text-base-300"
               >
                 Password{' '}
                 <span className="text-red-500" aria-label="required">
@@ -159,7 +159,7 @@ export function RegisterPage() {
                 {...register('password')}
                 id="password"
                 type="password"
-                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-lg border border-base-300 px-4 py-2 font-text focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-base-600 dark:bg-base-800 dark:text-base-50"
                 disabled={isLoading}
                 aria-describedby={errors.password ? 'password-error' : undefined}
                 aria-invalid={errors.password ? 'true' : undefined}
@@ -167,7 +167,7 @@ export function RegisterPage() {
               {errors.password && (
                 <p
                   id="password-error"
-                  className="font-text mt-1 text-sm text-red-600 dark:text-red-400"
+                  className="mt-1 font-text text-sm text-red-600 dark:text-red-400"
                   role="alert"
                 >
                   {errors.password.message}
@@ -178,7 +178,7 @@ export function RegisterPage() {
             <div>
               <label
                 htmlFor="confirmPassword"
-                className="text-base-700 dark:text-base-300 font-text mb-2 block text-sm font-medium"
+                className="mb-2 block font-text text-sm font-medium text-base-700 dark:text-base-300"
               >
                 Confirm Password{' '}
                 <span className="text-red-500" aria-label="required">
@@ -189,7 +189,7 @@ export function RegisterPage() {
                 {...register('confirmPassword')}
                 id="confirmPassword"
                 type="password"
-                className="border-base-300 dark:border-base-600 dark:bg-base-800 dark:text-base-50 font-text w-full rounded-lg border px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                className="w-full rounded-lg border border-base-300 px-4 py-2 font-text focus:outline-none focus:ring-2 focus:ring-primary-500 dark:border-base-600 dark:bg-base-800 dark:text-base-50"
                 disabled={isLoading}
                 aria-describedby={errors.confirmPassword ? 'confirmPassword-error' : undefined}
                 aria-invalid={errors.confirmPassword ? 'true' : undefined}
@@ -197,7 +197,7 @@ export function RegisterPage() {
               {errors.confirmPassword && (
                 <p
                   id="confirmPassword-error"
-                  className="font-text mt-1 text-sm text-red-600 dark:text-red-400"
+                  className="mt-1 font-text text-sm text-red-600 dark:text-red-400"
                   role="alert"
                 >
                   {errors.confirmPassword.message}
@@ -208,7 +208,7 @@ export function RegisterPage() {
             <button
               type="submit"
               disabled={isLoading}
-              className="font-text flex w-full items-center justify-center rounded-lg bg-primary-600 px-4 py-3 font-medium text-primary-50 transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
+              className="flex w-full items-center justify-center rounded-lg bg-primary-600 px-4 py-3 font-text font-medium text-primary-50 transition-colors hover:bg-primary-700 disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isLoading ? (
                 <>
@@ -220,7 +220,7 @@ export function RegisterPage() {
               )}
             </button>
 
-            <div className="text-base-600 dark:text-base-400 font-text text-center text-sm">
+            <div className="text-center font-text text-sm text-base-600 dark:text-base-400">
               Already have an account?{' '}
               <a
                 href="/login"
@@ -236,7 +236,7 @@ export function RegisterPage() {
           </form>
         </div>
 
-        <div className="text-base-600 dark:text-base-400 font-text mt-6 text-center text-sm">
+        <div className="mt-6 text-center font-text text-sm text-base-600 dark:text-base-400">
           © 2025 GASTAT - General Authority for Statistics
         </div>
       </div>

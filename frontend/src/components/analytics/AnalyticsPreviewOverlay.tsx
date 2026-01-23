@@ -114,8 +114,8 @@ export function AnalyticsPreviewOverlay({
         )}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <Sparkles className="h-4 w-4 text-blue-500" />
-        <AlertDescription className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <Sparkles className="size-4 text-blue-500" />
+        <AlertDescription className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <span className="text-sm text-blue-700 dark:text-blue-300">
             {t('preview.sampleDataActive')}
           </span>
@@ -125,7 +125,7 @@ export function AnalyticsPreviewOverlay({
             onClick={onHideSampleData}
             className="h-8 gap-1.5 border-blue-300 text-blue-700 hover:bg-blue-100 dark:border-blue-700 dark:text-blue-300 dark:hover:bg-blue-900/30"
           >
-            <EyeOff className="h-3.5 w-3.5" />
+            <EyeOff className="size-3.5" />
             {t('preview.hideSampleData')}
           </Button>
         </AlertDescription>
@@ -156,13 +156,13 @@ export function AnalyticsPreviewOverlay({
               <CardTitle className="text-base sm:text-lg">
                 {t(`preview.${chartType}.title`)}
               </CardTitle>
-              <CardDescription className="text-xs sm:text-sm mt-0.5">
+              <CardDescription className="mt-0.5 text-xs sm:text-sm">
                 {t(`preview.${chartType}.description`)}
               </CardDescription>
             </div>
           </div>
-          <Badge variant="secondary" className="hidden sm:flex gap-1">
-            <Lightbulb className="h-3 w-3" />
+          <Badge variant="secondary" className="hidden gap-1 sm:flex">
+            <Lightbulb className="size-3" />
             {t('preview.comingSoon')}
           </Badge>
         </div>
@@ -175,16 +175,16 @@ export function AnalyticsPreviewOverlay({
         </div>
 
         {/* Insights list */}
-        <div className="space-y-2 sm:space-y-3 mb-4 sm:mb-6">
-          <h4 className="text-xs sm:text-sm font-medium text-muted-foreground flex items-center gap-2">
-            <Lightbulb className="h-3.5 w-3.5" />
+        <div className="mb-4 space-y-2 sm:mb-6 sm:space-y-3">
+          <h4 className="flex items-center gap-2 text-xs font-medium text-muted-foreground sm:text-sm">
+            <Lightbulb className="size-3.5" />
             {t('preview.insightsYouWillGain')}
           </h4>
           <ul className="space-y-1.5 sm:space-y-2">
             {config.insights.map((insightKey, index) => (
               <li
                 key={index}
-                className="flex items-start gap-2 text-xs sm:text-sm text-muted-foreground"
+                className="flex items-start gap-2 text-xs text-muted-foreground sm:text-sm"
               >
                 <span
                   className={cn(
@@ -204,9 +204,9 @@ export function AnalyticsPreviewOverlay({
             variant="outline"
             size="default"
             onClick={onShowSampleData}
-            className="w-full sm:w-auto h-11 gap-2"
+            className="h-11 w-full gap-2 sm:w-auto"
           >
-            <Eye className="h-4 w-4" />
+            <Eye className="size-4" />
             {t('preview.showSampleData')}
           </Button>
         )}
@@ -234,7 +234,7 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
         return (
           <svg
             viewBox="0 0 200 80"
-            className="w-full h-24 sm:h-32"
+            className="h-24 w-full sm:h-32"
             style={{ transform: isRTL ? 'scaleX(-1)' : undefined }}
           >
             {/* Grid lines */}
@@ -287,7 +287,7 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
       case 'relationships':
         // Donut chart placeholder
         return (
-          <svg viewBox="0 0 100 100" className="w-24 h-24 sm:w-32 sm:h-32 mx-auto">
+          <svg viewBox="0 0 100 100" className="mx-auto size-24 sm:size-32">
             <circle
               cx="50"
               cy="50"
@@ -338,7 +338,7 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
       case 'commitments':
         // Stacked bar chart placeholder
         return (
-          <div className="flex items-end justify-center gap-2 sm:gap-3 h-24 sm:h-32 px-4">
+          <div className="flex h-24 items-end justify-center gap-2 px-4 sm:h-32 sm:gap-3">
             {[
               { height: '60%', colors: ['bg-emerald-400/50', 'bg-amber-400/50', 'bg-red-400/50'] },
               { height: '75%', colors: ['bg-emerald-400/50', 'bg-amber-400/50', 'bg-gray-400/50'] },
@@ -351,7 +351,7 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
             ].map((bar, i) => (
               <div
                 key={i}
-                className="flex-1 max-w-12 flex flex-col gap-0.5 rounded-t"
+                className="flex max-w-12 flex-1 flex-col gap-0.5 rounded-t"
                 style={{ height: bar.height }}
               >
                 {bar.colors.map((color, j) => (
@@ -365,12 +365,12 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
       case 'workload':
         // Horizontal bar chart placeholder
         return (
-          <div className="space-y-2 sm:space-y-3 px-4">
+          <div className="space-y-2 px-4 sm:space-y-3">
             {[90, 75, 60, 45, 30].map((width, i) => (
               <div key={i} className="flex items-center gap-2 sm:gap-3">
-                <div className="h-6 w-6 sm:h-8 sm:w-8 rounded-full bg-gray-200 dark:bg-gray-700 shrink-0" />
+                <div className="size-6 shrink-0 rounded-full bg-gray-200 dark:bg-gray-700 sm:size-8" />
                 <div
-                  className="h-3 sm:h-4 rounded bg-purple-400/50"
+                  className="h-3 rounded bg-purple-400/50 sm:h-4"
                   style={{ width: `${width}%` }}
                 />
               </div>
@@ -382,10 +382,10 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
       default:
         // Mixed placeholder
         return (
-          <div className="grid grid-cols-2 gap-2 sm:gap-4 px-4">
+          <div className="grid grid-cols-2 gap-2 px-4 sm:gap-4">
             {/* Mini line chart */}
-            <div className="h-16 sm:h-20 rounded-lg bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/20 dark:to-blue-800/10 flex items-center justify-center">
-              <svg viewBox="0 0 60 30" className="w-12 h-6">
+            <div className="flex h-16 items-center justify-center rounded-lg bg-gradient-to-br from-blue-100 to-blue-50 dark:from-blue-900/20 dark:to-blue-800/10 sm:h-20">
+              <svg viewBox="0 0 60 30" className="h-6 w-12">
                 <path
                   d="M 5 20 Q 15 25, 25 15 T 45 12 T 55 8"
                   fill="none"
@@ -396,11 +396,11 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
               </svg>
             </div>
             {/* Mini donut */}
-            <div className="h-16 sm:h-20 rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-800/10 flex items-center justify-center">
-              <div className="h-8 w-8 rounded-full border-4 border-emerald-400/50 border-t-emerald-200/30" />
+            <div className="flex h-16 items-center justify-center rounded-lg bg-gradient-to-br from-emerald-100 to-emerald-50 dark:from-emerald-900/20 dark:to-emerald-800/10 sm:h-20">
+              <div className="size-8 rounded-full border-4 border-emerald-400/50 border-t-emerald-200/30" />
             </div>
             {/* Mini bars */}
-            <div className="h-16 sm:h-20 rounded-lg bg-gradient-to-br from-amber-100 to-amber-50 dark:from-amber-900/20 dark:to-amber-800/10 flex items-end justify-center gap-1 pb-2">
+            <div className="flex h-16 items-end justify-center gap-1 rounded-lg bg-gradient-to-br from-amber-100 to-amber-50 pb-2 dark:from-amber-900/20 dark:to-amber-800/10 sm:h-20">
               {[40, 60, 35, 80, 55].map((h, i) => (
                 <div
                   key={i}
@@ -410,8 +410,8 @@ function PreviewChartPlaceholder({ chartType }: { chartType: PreviewChartType })
               ))}
             </div>
             {/* Mini metric */}
-            <div className="h-16 sm:h-20 rounded-lg bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/20 dark:to-purple-800/10 flex flex-col items-center justify-center">
-              <span className="text-lg sm:text-xl font-bold text-purple-600/50 dark:text-purple-400/50">
+            <div className="flex h-16 flex-col items-center justify-center rounded-lg bg-gradient-to-br from-purple-100 to-purple-50 dark:from-purple-900/20 dark:to-purple-800/10 sm:h-20">
+              <span className="text-lg font-bold text-purple-600/50 dark:text-purple-400/50 sm:text-xl">
                 85%
               </span>
               <span className="text-[10px] text-purple-500/50">Sample</span>

@@ -87,7 +87,7 @@ export function SidebarSearch({
               className={cn('h-10 w-10 shrink-0', 'hover:bg-sidebar-accent', className)}
               aria-label={t('search.openSearch', 'Open search')}
             >
-              <Search className="h-4 w-4" />
+              <Search className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side={isRTL ? 'left' : 'right'}>
@@ -150,10 +150,10 @@ export function SidebarSearch({
               variant="ghost"
               size="icon"
               onClick={handleClear}
-              className="h-5 w-5 p-0 hover:bg-transparent"
+              className="size-5 p-0 hover:bg-transparent"
               aria-label={t('search.clear', 'Clear search')}
             >
-              <X className="h-3.5 w-3.5 text-muted-foreground" />
+              <X className="size-3.5 text-muted-foreground" />
             </Button>
           )}
 
@@ -169,7 +169,7 @@ export function SidebarSearch({
               )}
               aria-label={t('search.openCommandPalette', 'Open command palette')}
             >
-              <CommandIcon className="h-3 w-3" />
+              <CommandIcon className="size-3" />
               <span className="font-mono">{isMac ? 'K' : 'K'}</span>
             </button>
           )}
@@ -178,7 +178,7 @@ export function SidebarSearch({
 
       {/* Search hint text */}
       {isFocused && (
-        <p className="text-[10px] text-muted-foreground mt-1 px-1">
+        <p className="mt-1 px-1 text-[10px] text-muted-foreground">
           {t('search.hint', 'Press Enter to search or')} {isMac ? '⌘K' : 'Ctrl+K'}{' '}
           {t('search.forCommands', 'for commands')}
         </p>

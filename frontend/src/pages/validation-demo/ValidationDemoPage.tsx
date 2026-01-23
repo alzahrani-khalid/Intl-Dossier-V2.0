@@ -88,15 +88,15 @@ export function ValidationDemoPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-12"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
+        <h1 className="mb-2 text-start text-2xl font-bold sm:text-3xl md:text-4xl">
           {isRTL ? 'عرض التحقق في الوقت الحقيقي' : 'Real-time Validation Demo'}
         </h1>
-        <p className="text-muted-foreground text-start">
+        <p className="text-start text-muted-foreground">
           {isRTL
             ? 'تجربة رسائل الخطأ السياقية مع اقتراحات الإصلاح'
             : 'Experience contextual error messages with recovery suggestions'}
@@ -108,7 +108,7 @@ export function ValidationDemoPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="flex flex-wrap gap-2 mb-8"
+        className="mb-8 flex flex-wrap gap-2"
       >
         <Badge variant="secondary">
           {isRTL ? 'التحقق في الوقت الحقيقي' : 'Real-time Validation'}
@@ -120,7 +120,7 @@ export function ValidationDemoPage() {
       </motion.div>
 
       <Tabs defaultValue="demo" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 max-w-lg">
+        <TabsList className="grid w-full max-w-lg grid-cols-3">
           <TabsTrigger value="demo">{isRTL ? 'العرض التوضيحي' : 'Demo Form'}</TabsTrigger>
           <TabsTrigger value="smart-input" data-testid="smart-input-tab">
             {isRTL ? 'الإدخال الذكي' : 'Smart Input'}
@@ -130,7 +130,7 @@ export function ValidationDemoPage() {
 
         {/* Demo Form Tab */}
         <TabsContent value="demo">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
             {/* Form Card */}
             <Card className="lg:col-span-2">
               <CardHeader>
@@ -155,7 +155,7 @@ export function ValidationDemoPage() {
                     name="fullName"
                     label={isRTL ? 'الاسم الكامل' : 'Full Name'}
                     required
-                    icon={<User className="h-5 w-5" />}
+                    icon={<User className="size-5" />}
                     helpText={
                       isRTL
                         ? 'أدخل اسمك الكامل كما يظهر في الوثائق الرسمية'
@@ -179,7 +179,7 @@ export function ValidationDemoPage() {
                     label={isRTL ? 'البريد الإلكتروني' : 'Email Address'}
                     type="email"
                     required
-                    icon={<Mail className="h-5 w-5" />}
+                    icon={<Mail className="size-5" />}
                     helpText={isRTL ? 'سنستخدم هذا للتواصل معك' : "We'll use this to contact you"}
                     validation={{
                       required: true,
@@ -196,7 +196,7 @@ export function ValidationDemoPage() {
                     name="phone"
                     label={isRTL ? 'رقم الهاتف' : 'Phone Number'}
                     type="tel"
-                    icon={<Phone className="h-5 w-5" />}
+                    icon={<Phone className="size-5" />}
                     helpText={
                       isRTL ? 'اختياري - للتواصل السريع' : 'Optional - for quick communication'
                     }
@@ -214,7 +214,7 @@ export function ValidationDemoPage() {
                     name="website"
                     label={isRTL ? 'الموقع الإلكتروني' : 'Website'}
                     type="url"
-                    icon={<Globe className="h-5 w-5" />}
+                    icon={<Globe className="size-5" />}
                     helpText={
                       isRTL
                         ? 'اختياري - موقعك الشخصي أو محفظتك'
@@ -235,7 +235,7 @@ export function ValidationDemoPage() {
                     label={isRTL ? 'كلمة المرور' : 'Password'}
                     type="password"
                     required
-                    icon={<Lock className="h-5 w-5" />}
+                    icon={<Lock className="size-5" />}
                     helpText={isRTL ? 'استخدم 8 أحرف على الأقل' : 'Use at least 8 characters'}
                     validation={{
                       required: true,
@@ -252,7 +252,7 @@ export function ValidationDemoPage() {
                     name="bio"
                     label={isRTL ? 'نبذة عنك' : 'Bio'}
                     type="textarea"
-                    icon={<FileText className="h-5 w-5" />}
+                    icon={<FileText className="size-5" />}
                     helpText={
                       isRTL ? 'اختياري - أخبرنا عن نفسك' : 'Optional - tell us about yourself'
                     }
@@ -268,7 +268,7 @@ export function ValidationDemoPage() {
 
                   {/* Actions */}
                   <div className={cn('flex gap-4 pt-4', isRTL ? 'flex-row-reverse' : 'flex-row')}>
-                    <Button type="submit" className="flex-1 sm:flex-none min-h-11">
+                    <Button type="submit" className="min-h-11 flex-1 sm:flex-none">
                       <Send className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                       {isRTL ? 'إرسال' : 'Submit'}
                     </Button>
@@ -295,18 +295,18 @@ export function ValidationDemoPage() {
               </CardHeader>
               <CardContent className="space-y-4">
                 <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-2 text-start">
+                  <h4 className="mb-2 text-start text-sm font-medium text-muted-foreground">
                     {isRTL ? 'القيم الحالية' : 'Current Values'}
                   </h4>
-                  <pre className="text-xs bg-muted p-3 rounded-lg overflow-auto max-h-48 text-start">
+                  <pre className="max-h-48 overflow-auto rounded-lg bg-muted p-3 text-start text-xs">
                     {JSON.stringify(formValues, null, 2)}
                   </pre>
                 </div>
                 <div>
-                  <h4 className="text-sm font-medium text-muted-foreground mb-2 text-start">
+                  <h4 className="mb-2 text-start text-sm font-medium text-muted-foreground">
                     {isRTL ? 'الأخطاء' : 'Validation Errors'}
                   </h4>
-                  <pre className="text-xs bg-muted p-3 rounded-lg overflow-auto max-h-48 text-start">
+                  <pre className="max-h-48 overflow-auto rounded-lg bg-muted p-3 text-start text-xs">
                     {Object.keys(validationErrors).length > 0
                       ? JSON.stringify(
                           Object.fromEntries(
@@ -332,7 +332,7 @@ export function ValidationDemoPage() {
 
         {/* Features Tab */}
         <TabsContent value="features">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {/* Feature Cards */}
             {[
               {
@@ -386,13 +386,13 @@ export function ValidationDemoPage() {
               >
                 <Card className="h-full">
                   <CardHeader>
-                    <CardTitle className="flex items-center gap-3 text-lg text-start">
+                    <CardTitle className="flex items-center gap-3 text-start text-lg">
                       <span className="text-2xl">{feature.icon}</span>
                       {feature.title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
-                    <p className="text-muted-foreground text-sm text-start">
+                    <p className="text-start text-sm text-muted-foreground">
                       {feature.description}
                     </p>
                   </CardContent>

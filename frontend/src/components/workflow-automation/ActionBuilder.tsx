@@ -106,7 +106,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
     if (!actionOption) return null
 
     return (
-      <div className="space-y-3 mt-4 pt-4 border-t">
+      <div className="mt-4 space-y-3 border-t pt-4">
         {actionOption.configFields.map((field) => (
           <div key={field.name} className="space-y-2">
             <Label htmlFor={`${action.id}-${field.name}`}>
@@ -232,8 +232,8 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
               <CardHeader className="pb-2">
                 <div className="flex items-center justify-between gap-4">
                   <div className="flex items-center gap-3">
-                    <div className="p-2 rounded-lg bg-primary/10 text-primary">
-                      <Icon className="h-4 w-4" />
+                    <div className="rounded-lg bg-primary/10 p-2 text-primary">
+                      <Icon className="size-4" />
                     </div>
                     <div>
                       <CardTitle className="text-sm font-medium">
@@ -251,18 +251,18 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                         variant="ghost"
                         size="icon"
                         onClick={() => moveAction(index, index - 1)}
-                        className="h-8 w-8"
+                        className="size-8"
                       >
-                        <GripVertical className="h-4 w-4 rotate-90" />
+                        <GripVertical className="size-4 rotate-90" />
                       </Button>
                     )}
                     <Button
                       variant="ghost"
                       size="icon"
                       onClick={() => removeAction(index)}
-                      className="h-8 w-8 text-destructive hover:text-destructive"
+                      className="size-8 text-destructive hover:text-destructive"
                     >
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="size-4" />
                     </Button>
                   </div>
                 </div>
@@ -283,7 +283,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
 
             return (
               <div key={category} className="space-y-2">
-                <h5 className="text-xs font-medium text-muted-foreground uppercase">
+                <h5 className="text-xs font-medium uppercase text-muted-foreground">
                   {t(`categories.${category}`)}
                 </h5>
                 <div className="flex flex-wrap gap-2">
@@ -297,7 +297,7 @@ export function ActionBuilder({ actions, onActionsChange }: ActionBuilderProps) 
                         onClick={() => addAction(actionType.value)}
                         className="flex items-center gap-1"
                       >
-                        <Icon className="h-3 w-3" />
+                        <Icon className="size-3" />
                         {isRTL ? actionType.label_ar : actionType.label_en}
                       </Button>
                     )

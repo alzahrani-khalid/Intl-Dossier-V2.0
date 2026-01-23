@@ -235,7 +235,7 @@ export function MouNotificationSettings({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Loader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
@@ -243,7 +243,7 @@ export function MouNotificationSettings({
   if (error) {
     return (
       <Alert variant="destructive" className="mx-4 sm:mx-0">
-        <AlertTriangle className="h-4 w-4" />
+        <AlertTriangle className="size-4" />
         <AlertDescription>{t('error.loadFailed')}</AlertDescription>
       </Alert>
     )
@@ -258,12 +258,12 @@ export function MouNotificationSettings({
       {/* Global Toggle */}
       <Card>
         <CardHeader className="pb-3 sm:pb-4">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             <div className="flex items-center gap-2 sm:gap-3">
               {globalEnabled ? (
-                <Bell className="h-5 w-5 text-primary" />
+                <Bell className="size-5 text-primary" />
               ) : (
-                <BellOff className="h-5 w-5 text-muted-foreground" />
+                <BellOff className="size-5 text-muted-foreground" />
               )}
               <div>
                 <CardTitle className="text-base sm:text-lg">{t('global.title')}</CardTitle>
@@ -293,7 +293,7 @@ export function MouNotificationSettings({
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 sm:h-5 sm:w-5 text-green-500" />
+                <CheckCircle2 className="size-4 text-green-500 sm:size-5" />
                 <CardTitle className="text-sm sm:text-base">{t('deliverables.title')}</CardTitle>
               </div>
               <CardDescription className="text-xs sm:text-sm">
@@ -324,7 +324,7 @@ export function MouNotificationSettings({
                             <Badge
                               key={option.value}
                               variant={field.value?.includes(option.value) ? 'default' : 'outline'}
-                              className="cursor-pointer min-h-8 px-3"
+                              className="min-h-8 cursor-pointer px-3"
                               onClick={() =>
                                 handleDaysToggle(
                                   'deliverable_due_soon_days',
@@ -387,7 +387,7 @@ export function MouNotificationSettings({
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
-                <RefreshCw className="h-4 w-4 sm:h-5 sm:w-5 text-blue-500" />
+                <RefreshCw className="size-4 text-blue-500 sm:size-5" />
                 <CardTitle className="text-sm sm:text-base">{t('renewal.title')}</CardTitle>
               </div>
               <CardDescription className="text-xs sm:text-sm">
@@ -418,7 +418,7 @@ export function MouNotificationSettings({
                             <Badge
                               key={option.value}
                               variant={field.value?.includes(option.value) ? 'default' : 'outline'}
-                              className="cursor-pointer min-h-8 px-3"
+                              className="min-h-8 cursor-pointer px-3"
                               onClick={() =>
                                 handleDaysToggle(
                                   'expiration_warning_days',
@@ -493,7 +493,7 @@ export function MouNotificationSettings({
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
-                <Workflow className="h-4 w-4 sm:h-5 sm:w-5 text-purple-500" />
+                <Workflow className="size-4 text-purple-500 sm:size-5" />
                 <CardTitle className="text-sm sm:text-base">{t('workflow.title')}</CardTitle>
               </div>
               <CardDescription className="text-xs sm:text-sm">
@@ -531,7 +531,7 @@ export function MouNotificationSettings({
               <div className="space-y-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Heart className="h-4 w-4 text-red-500" />
+                    <Heart className="size-4 text-red-500" />
                     <Label className="text-sm">{t('workflow.healthScoreDrop')}</Label>
                   </div>
                   <Controller
@@ -573,7 +573,7 @@ export function MouNotificationSettings({
           <Card>
             <CardHeader className="pb-3">
               <div className="flex items-center gap-2">
-                <Mail className="h-4 w-4 sm:h-5 sm:w-5 text-orange-500" />
+                <Mail className="size-4 text-orange-500 sm:size-5" />
                 <CardTitle className="text-sm sm:text-base">{t('channels.title')}</CardTitle>
               </div>
               <CardDescription className="text-xs sm:text-sm">
@@ -584,7 +584,7 @@ export function MouNotificationSettings({
               {/* Email */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Mail className="h-4 w-4" />
+                  <Mail className="size-4" />
                   <Label className="text-sm">{t('channels.email')}</Label>
                 </div>
                 <Controller
@@ -599,7 +599,7 @@ export function MouNotificationSettings({
               {/* Push */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Smartphone className="h-4 w-4" />
+                  <Smartphone className="size-4" />
                   <Label className="text-sm">{t('channels.push')}</Label>
                 </div>
                 <Controller
@@ -614,7 +614,7 @@ export function MouNotificationSettings({
               {/* In-App */}
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Bell className="h-4 w-4" />
+                  <Bell className="size-4" />
                   <Label className="text-sm">{t('channels.inApp')}</Label>
                 </div>
                 <Controller
@@ -633,7 +633,7 @@ export function MouNotificationSettings({
             <Card>
               <CardHeader className="pb-3">
                 <div className="flex items-center gap-2">
-                  <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-teal-500" />
+                  <Clock className="size-4 text-teal-500 sm:size-5" />
                   <CardTitle className="text-sm sm:text-base">{t('timing.title')}</CardTitle>
                 </div>
                 <CardDescription className="text-xs sm:text-sm">
@@ -806,15 +806,15 @@ export function MouNotificationSettings({
       )}
 
       {/* Save Button */}
-      <div className="sticky bottom-0 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 p-4 -mx-4 sm:mx-0 sm:p-0 border-t sm:border-0">
+      <div className="sticky bottom-0 -mx-4 border-t bg-background/95 p-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:mx-0 sm:border-0 sm:p-0">
         <Button
           type="submit"
-          className="w-full sm:w-auto min-h-11"
+          className="min-h-11 w-full sm:w-auto"
           disabled={!hasChanges || updatePreferences.isPending}
         >
           {updatePreferences.isPending ? (
             <>
-              <Loader2 className="h-4 w-4 me-2 animate-spin" />
+              <Loader2 className="me-2 size-4 animate-spin" />
               {t('actions.saving')}
             </>
           ) : (
@@ -826,7 +826,7 @@ export function MouNotificationSettings({
       {/* Success message */}
       {updatePreferences.isSuccess && !hasChanges && (
         <Alert className="border-green-500/50 bg-green-500/10">
-          <CheckCircle2 className="h-4 w-4 text-green-500" />
+          <CheckCircle2 className="size-4 text-green-500" />
           <AlertDescription className="text-green-700 dark:text-green-300">
             {t('success.saved')}
           </AlertDescription>

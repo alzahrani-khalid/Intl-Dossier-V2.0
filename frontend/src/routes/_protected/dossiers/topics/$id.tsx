@@ -30,11 +30,11 @@ function TopicDossierDetailRoute() {
   if (isLoading) {
     return (
       <div
-        className="flex flex-col items-center justify-center min-h-[50vh] space-y-4"
+        className="flex min-h-[50vh] flex-col items-center justify-center space-y-4"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="h-12 w-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
-        <p className="text-sm sm:text-base text-muted-foreground">
+        <div className="size-12 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <p className="text-sm text-muted-foreground sm:text-base">
           {t('detail.loading')}
         </p>
       </div>
@@ -45,11 +45,11 @@ function TopicDossierDetailRoute() {
   if (error) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+        className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertTitle>{t('detail.error')}</AlertTitle>
           <AlertDescription>
             {error instanceof Error ? error.message : t('detail.errorGeneric')}
@@ -58,7 +58,7 @@ function TopicDossierDetailRoute() {
         <div className="mt-4 sm:mt-6">
           <Link to="/dossiers">
             <Button variant="outline" className="gap-2">
-              <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+              <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
               {t('action.backToHub')}
             </Button>
           </Link>
@@ -71,11 +71,11 @@ function TopicDossierDetailRoute() {
   if (!dossier) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+        className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Alert>
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertTitle>{t('detail.notFound')}</AlertTitle>
           <AlertDescription>
             {t('detail.errorGeneric')}
@@ -84,7 +84,7 @@ function TopicDossierDetailRoute() {
         <div className="mt-4 sm:mt-6">
           <Link to="/dossiers">
             <Button variant="outline" className="gap-2">
-              <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+              <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
               {t('action.backToHub')}
             </Button>
           </Link>
@@ -100,25 +100,25 @@ function TopicDossierDetailRoute() {
 
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+        className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Alert>
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertTitle>{t('detail.wrongType')}</AlertTitle>
           <AlertDescription>
             {t('detail.wrongTypeDescription', { actualType, expectedType })}
           </AlertDescription>
         </Alert>
-        <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
+        <div className="mt-4 flex flex-col gap-3 sm:mt-6 sm:flex-row">
           <Link to={`/dossiers/${dossier.dossier_type}s/$id`} params={{ id: dossier.id }}>
-            <Button className="gap-2 w-full sm:w-auto">
+            <Button className="w-full gap-2 sm:w-auto">
               {t('action.viewCorrectType', { type: actualType })}
             </Button>
           </Link>
           <Link to="/dossiers/topics">
-            <Button variant="outline" className="gap-2 w-full sm:w-auto">
-              <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+            <Button variant="outline" className="w-full gap-2 sm:w-auto">
+              <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
               {t('action.backToList')}
             </Button>
           </Link>

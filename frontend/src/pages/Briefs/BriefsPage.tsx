@@ -238,8 +238,8 @@ export function BriefsPage() {
           <div className="flex flex-col gap-0.5">
             <span className="font-mono text-xs">{brief.reference_number}</span>
             {brief.isAiBrief && (
-              <span className="inline-flex items-center gap-0.5 w-fit px-1 py-0.5 rounded text-[10px] font-medium bg-purple-100 text-purple-700 dark:bg-purple-900 dark:text-purple-300">
-                <Sparkles className="h-2.5 w-2.5" />
+              <span className="inline-flex w-fit items-center gap-0.5 rounded bg-purple-100 px-1 py-0.5 text-[10px] font-medium text-purple-700 dark:bg-purple-900 dark:text-purple-300">
+                <Sparkles className="size-2.5" />
                 AI
               </span>
             )}
@@ -256,10 +256,10 @@ export function BriefsPage() {
         const brief = row.original
         return (
           <div className={cn('w-full min-w-0 overflow-hidden', isRTL ? 'text-end' : 'text-start')}>
-            <div className="font-medium text-sm whitespace-nowrap overflow-hidden text-ellipsis">
+            <div className="truncate text-sm font-medium">
               {isRTL ? brief.title_ar : brief.title_en}
             </div>
-            <div className="text-xs text-muted-foreground whitespace-nowrap overflow-hidden text-ellipsis">
+            <div className="truncate text-xs text-muted-foreground">
               {isRTL ? brief.summary_ar : brief.summary_en}
             </div>
           </div>
@@ -278,7 +278,7 @@ export function BriefsPage() {
             {brief.is_published ? (
               <>
                 <span className="inline-flex items-center gap-1 text-xs text-green-600">
-                  <Eye className="h-3 w-3" />
+                  <Eye className="size-3" />
                   {t('briefs.published')}
                 </span>
                 {brief.published_date && (
@@ -289,7 +289,7 @@ export function BriefsPage() {
               </>
             ) : (
               <span className="inline-flex items-center gap-1 text-xs text-muted-foreground">
-                <FileText className="h-3 w-3" />
+                <FileText className="size-3" />
                 {t('briefs.draft')}
               </span>
             )}
@@ -308,7 +308,7 @@ export function BriefsPage() {
             <Button
               size="icon"
               variant="ghost"
-              className="h-7 w-7"
+              className="size-7"
               onClick={async (e) => {
                 e.stopPropagation()
                 if (brief.isAiBrief) {
@@ -333,12 +333,12 @@ export function BriefsPage() {
               }}
               title={t('common.view')}
             >
-              <Eye className="h-3.5 w-3.5" />
+              <Eye className="size-3.5" />
             </Button>
             <Button
               size="icon"
               variant="ghost"
-              className="h-7 w-7"
+              className="size-7"
               onClick={(e) => {
                 e.stopPropagation()
                 const blob = new Blob([JSON.stringify(brief, null, 2)], {
@@ -353,7 +353,7 @@ export function BriefsPage() {
               }}
               title={t('common.download')}
             >
-              <Download className="h-3.5 w-3.5" />
+              <Download className="size-3.5" />
             </Button>
           </div>
         )
@@ -363,19 +363,19 @@ export function BriefsPage() {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">{t('navigation.briefs')}</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold sm:text-3xl">{t('navigation.briefs')}</h1>
         <Button onClick={() => setShowGenerateDialog(true)}>
-          <Plus className="h-4 w-4 me-2" />
+          <Plus className="me-2 size-4" />
           {t('briefs.generateBrief')}
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4 mb-6">
+      <div className="mb-6 grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('briefs.totalBriefs')}</CardTitle>
-            <FileText className="h-4 w-4 text-muted-foreground" />
+            <FileText className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{briefs?.length || 0}</div>
@@ -384,7 +384,7 @@ export function BriefsPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('briefs.published')}</CardTitle>
-            <Eye className="h-4 w-4 text-green-600" />
+            <Eye className="size-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -395,7 +395,7 @@ export function BriefsPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('briefs.drafts')}</CardTitle>
-            <FileText className="h-4 w-4 text-gray-400" />
+            <FileText className="size-4 text-gray-400" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -406,7 +406,7 @@ export function BriefsPage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('briefs.thisMonth')}</CardTitle>
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -436,7 +436,7 @@ export function BriefsPage() {
               className="max-w-sm"
             />
             <div className="flex gap-2">
-              <span className="text-sm text-muted-foreground mt-2">{t('briefs.status')}:</span>
+              <span className="mt-2 text-sm text-muted-foreground">{t('briefs.status')}:</span>
               <Button
                 variant={filterStatus === 'all' ? 'default' : 'outline'}
                 size="sm"
@@ -489,7 +489,7 @@ export function BriefsPage() {
         <DialogContent className="sm:max-w-lg" dir={isRTL ? 'rtl' : 'ltr'}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2">
-              <Sparkles className={`h-5 w-5 text-primary ${isRTL ? 'rotate-180' : ''}`} />
+              <Sparkles className={`size-5 text-primary ${isRTL ? 'rotate-180' : ''}`} />
               {t('briefs.generateBrief')}
             </DialogTitle>
             <DialogDescription>
@@ -555,7 +555,7 @@ export function BriefsPage() {
                 setShowGenerateDialog(false)
                 setSelectedDossier('')
               }}
-              className="border-0 shadow-none p-0"
+              className="border-0 p-0 shadow-none"
             />
           )}
         </DialogContent>
@@ -564,7 +564,7 @@ export function BriefsPage() {
       {/* Brief Viewer Dialog */}
       <Dialog open={briefViewerOpen} onOpenChange={setBriefViewerOpen}>
         <DialogContent
-          className="sm:max-w-4xl max-h-[90vh] overflow-hidden"
+          className="max-h-[90vh] overflow-hidden sm:max-w-4xl"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <DialogHeader className="sr-only">

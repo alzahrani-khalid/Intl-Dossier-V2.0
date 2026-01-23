@@ -162,19 +162,19 @@ export function CommitmentCard({
     <>
       <Card
         className={`
-          hover:shadow-md transition-shadow duration-200 cursor-pointer
+          cursor-pointer transition-shadow duration-200 hover:shadow-md
           ${overdue ? 'border-red-300 dark:border-red-800' : ''}
           ${commitment.status === 'completed' ? 'opacity-75' : ''}
         `}
         onClick={handleCardClick}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <CardHeader className={compact ? 'pb-2 pt-3 px-3' : 'pb-3'}>
+        <CardHeader className={compact ? 'px-3 pb-2 pt-3' : 'pb-3'}>
           <div className="flex items-start justify-between gap-2">
             {/* Title and Status */}
-            <div className="flex-1 min-w-0">
-              <div className="flex flex-col sm:flex-row sm:items-center gap-2 mb-1">
-                <h3 className="text-sm sm:text-base font-medium text-start truncate">
+            <div className="min-w-0 flex-1">
+              <div className="mb-1 flex flex-col gap-2 sm:flex-row sm:items-center">
+                <h3 className="truncate text-start text-sm font-medium sm:text-base">
                   {commitment.title || t('card.noTitle')}
                 </h3>
                 {/* T032: Inline StatusDropdown for quick status updates */}
@@ -194,7 +194,7 @@ export function CommitmentCard({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-9 w-9 p-0 shrink-0 min-h-11 min-w-11"
+                  className="size-9 min-h-11 min-w-11 shrink-0 p-0"
                   aria-label={t('actions.viewDetails')}
                 >
                   <MoreVertical className="size-4" />
@@ -268,10 +268,10 @@ export function CommitmentCard({
           </div>
         </CardHeader>
 
-        <CardContent className={compact ? 'pb-3 px-3' : 'pb-4'}>
+        <CardContent className={compact ? 'px-3 pb-3' : 'pb-4'}>
           {/* Description */}
           {!compact && commitment.description && (
-            <p className="text-sm text-muted-foreground text-start line-clamp-2 mb-3">
+            <p className="mb-3 line-clamp-2 text-start text-sm text-muted-foreground">
               {commitment.description}
             </p>
           )}
@@ -282,7 +282,7 @@ export function CommitmentCard({
             <div
               className={`flex items-center gap-1.5 text-sm ${
                 overdue
-                  ? 'text-red-600 dark:text-red-400 font-medium'
+                  ? 'font-medium text-red-600 dark:text-red-400'
                   : 'text-muted-foreground'
               }`}
             >
@@ -307,7 +307,7 @@ export function CommitmentCard({
             {/* Proof required indicator */}
             {commitment.proof_required && !commitment.proof_url && (
               <Badge variant="outline" className="text-xs">
-                <FileText className="size-3 me-1" />
+                <FileText className="me-1 size-3" />
                 {t('form.proofRequired')}
               </Badge>
             )}
@@ -316,9 +316,9 @@ export function CommitmentCard({
             {commitment.proof_url && (
               <Badge
                 variant="secondary"
-                className="text-xs text-green-700 dark:text-green-300 bg-green-50 dark:bg-green-900/20"
+                className="bg-green-50 text-xs text-green-700 dark:bg-green-900/20 dark:text-green-300"
               >
-                <CheckCircle className="size-3 me-1" />
+                <CheckCircle className="me-1 size-3" />
                 {t('detail.evidence')}
               </Badge>
             )}
@@ -326,7 +326,7 @@ export function CommitmentCard({
 
           {/* Dossier context (optional) */}
           {showDossierContext && commitment.dossier_id && (
-            <div className="mt-3 pt-3 border-t text-xs text-muted-foreground">
+            <div className="mt-3 border-t pt-3 text-xs text-muted-foreground">
               <span className="truncate">{commitment.dossier_id}</span>
             </div>
           )}
@@ -346,7 +346,7 @@ export function CommitmentCard({
           </AlertDialogHeader>
 
           <div className="py-4">
-            <Label htmlFor="cancel-reason" className="text-start block mb-2">
+            <Label htmlFor="cancel-reason" className="mb-2 block text-start">
               {t('confirm.cancelReason')}
             </Label>
             <Textarea
@@ -358,14 +358,14 @@ export function CommitmentCard({
             />
           </div>
 
-          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+          <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
             <AlertDialogCancel className="min-h-11">
               {t('actions.cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleCancelConfirm}
               disabled={!cancelReason.trim() || cancelMutation.isPending}
-              className="min-h-11 bg-red-600 hover:bg-red-700 text-white"
+              className="min-h-11 bg-red-600 text-white hover:bg-red-700"
             >
               {cancelMutation.isPending ? t('list.loading') : t('actions.delete')}
             </AlertDialogAction>
@@ -376,7 +376,7 @@ export function CommitmentCard({
       {/* T053: Evidence Upload Dialog */}
       <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
         <DialogContent
-          className="max-w-md max-h-[90vh] overflow-y-auto"
+          className="max-h-[90vh] max-w-md overflow-y-auto"
           dir={isRTL ? 'rtl' : 'ltr'}
           onClick={(e) => e.stopPropagation()}
         >
@@ -385,7 +385,7 @@ export function CommitmentCard({
               {t('evidence.title')}
             </DialogTitle>
           </DialogHeader>
-          <p className="text-sm text-muted-foreground text-start mb-4">
+          <p className="mb-4 text-start text-sm text-muted-foreground">
             {t('evidence.description')}
           </p>
           <EvidenceUpload

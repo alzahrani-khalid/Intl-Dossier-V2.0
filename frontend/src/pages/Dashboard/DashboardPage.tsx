@@ -65,7 +65,7 @@ export function DashboardPage() {
       </section>
 
       {/* Quick Stats Summary */}
-      <section className="grid gap-4 grid-cols-2 sm:grid-cols-4">
+      <section className="grid grid-cols-2 gap-4 sm:grid-cols-4">
         <QuickStatCard
           icon={FolderKanban}
           label={t('dossier-dashboard:summary.myDossiers', 'My Dossiers')}
@@ -145,18 +145,18 @@ export function DashboardPage() {
         {/* Dossiers Needing Review */}
         <Card className="lg:col-span-2">
           <CardHeader>
-            <CardTitle className="text-lg flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-lg">
               <CheckCircle2 className="size-5 text-primary" />
               {t('dossier-dashboard:review.title', 'Due for Review')}
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-              <CheckCircle2 className="size-10 mb-3 text-muted-foreground/50" />
+              <CheckCircle2 className="mb-3 size-10 text-muted-foreground/50" />
               <p className="text-sm">
                 {t('dossier-dashboard:review.empty', 'No dossiers scheduled for review')}
               </p>
-              <p className="text-xs mt-1">
+              <p className="mt-1 text-xs">
                 {t('dossier-dashboard:review.hint', 'Dossiers with review dates will appear here')}
               </p>
             </div>
@@ -227,9 +227,9 @@ function QuickStatCard({
             <Icon className="size-5" />
           </div>
           <div className="min-w-0">
-            <p className="text-xs text-muted-foreground truncate">{label}</p>
+            <p className="truncate text-xs text-muted-foreground">{label}</p>
             <p className="text-xl font-bold">{value.toLocaleString(i18n.language)}</p>
-            {subValue && <p className="text-xs text-muted-foreground truncate">{subValue}</p>}
+            {subValue && <p className="truncate text-xs text-muted-foreground">{subValue}</p>}
           </div>
         </div>
       </CardContent>

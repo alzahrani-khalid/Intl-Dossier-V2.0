@@ -116,7 +116,7 @@ function AdminApprovalsPage() {
 
  if (isLoading) {
  return (
- <div className="container mx-auto py-6 space-y-4">
+ <div className="container mx-auto space-y-4 py-6">
  <Skeleton className="h-8 w-64" />
  <Skeleton className="h-96" />
  </div>
@@ -124,11 +124,11 @@ function AdminApprovalsPage() {
  }
 
  return (
- <div className="container mx-auto py-6 space-y-6">
+ <div className="container mx-auto space-y-6 py-6">
  {/* Header */}
  <div className="flex items-center gap-3">
- <div className="p-3 bg-red-100 dark:bg-red-900 rounded-lg">
- <Shield className="h-6 w-6 text-red-600 dark:text-red-400" />
+ <div className="rounded-lg bg-red-100 p-3 dark:bg-red-900">
+ <Shield className="size-6 text-red-600 dark:text-red-400" />
  </div>
  <div>
  <h1 className="text-3xl font-bold">
@@ -141,9 +141,9 @@ function AdminApprovalsPage() {
  </div>
 
  {/* Warning Banner */}
- <Card className="p-4 border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
+ <Card className="border-yellow-500 bg-yellow-50 p-4 dark:bg-yellow-900/20">
  <div className="flex items-start gap-3">
- <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+ <AlertCircle className="mt-0.5 size-5 text-yellow-600 dark:text-yellow-400" />
  <div>
  <p className="font-medium text-yellow-800 dark:text-yellow-200">
  {t('admin.approvals.warning', 'Admin Privileges Active')}
@@ -204,7 +204,7 @@ function AdminApprovalsPage() {
  size="sm"
  onClick={() => handleReassign(position)}
  >
- <Users className="me-2 h-4 w-4" />
+ <Users className="me-2 size-4" />
  {t('admin.approvals.reassign', 'Reassign')}
  </Button>
  </TableCell>

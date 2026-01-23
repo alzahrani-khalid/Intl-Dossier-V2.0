@@ -58,11 +58,11 @@ interface ScenarioCardProps {
 }
 
 const typeIcons: Record<ScenarioType, React.ReactNode> = {
-  stakeholder_engagement: <Users className="h-4 w-4" />,
-  policy_change: <FileText className="h-4 w-4" />,
-  relationship_impact: <GitBranch className="h-4 w-4" />,
-  resource_allocation: <DollarSign className="h-4 w-4" />,
-  strategic_planning: <Target className="h-4 w-4" />,
+  stakeholder_engagement: <Users className="size-4" />,
+  policy_change: <FileText className="size-4" />,
+  relationship_impact: <GitBranch className="size-4" />,
+  resource_allocation: <DollarSign className="size-4" />,
+  strategic_planning: <Target className="size-4" />,
 }
 
 export function ScenarioCard({
@@ -86,18 +86,18 @@ export function ScenarioCard({
   const negativeOutcomes = scenario.negative_outcomes || 0
 
   return (
-    <Card className="group hover:shadow-md transition-shadow duration-200">
+    <Card className="group transition-shadow duration-200 hover:shadow-md">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-4">
-          <div className="flex items-start gap-3 min-w-0 flex-1">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary shrink-0">
+          <div className="flex min-w-0 flex-1 items-start gap-3">
+            <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10 text-primary">
               {typeIcons[scenario.type]}
             </div>
             <div className="min-w-0 flex-1">
-              <CardTitle className="text-base font-semibold truncate" title={title}>
+              <CardTitle className="truncate text-base font-semibold" title={title}>
                 {title}
               </CardTitle>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {isRTL ? typeLabel.ar : typeLabel.en}
               </p>
             </div>
@@ -108,35 +108,35 @@ export function ScenarioCard({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                className="size-8 opacity-0 transition-opacity group-hover:opacity-100"
               >
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="size-4" />
                 <span className="sr-only">{t('actions.more', { ns: 'translation' })}</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
               {onView && (
                 <DropdownMenuItem onClick={() => onView(scenario.id)}>
-                  <Eye className="h-4 w-4 me-2" />
+                  <Eye className="me-2 size-4" />
                   {t('scenario.view')}
                 </DropdownMenuItem>
               )}
               {onEdit && (
                 <DropdownMenuItem onClick={() => onEdit(scenario.id)}>
-                  <Edit className="h-4 w-4 me-2" />
+                  <Edit className="me-2 size-4" />
                   {t('scenario.edit')}
                 </DropdownMenuItem>
               )}
               {onClone && (
                 <DropdownMenuItem onClick={() => onClone(scenario.id)}>
-                  <Copy className="h-4 w-4 me-2" />
+                  <Copy className="me-2 size-4" />
                   {t('scenario.clone')}
                 </DropdownMenuItem>
               )}
               <DropdownMenuSeparator />
               {onArchive && scenario.status !== 'archived' && (
                 <DropdownMenuItem onClick={() => onArchive(scenario.id)}>
-                  <Archive className="h-4 w-4 me-2" />
+                  <Archive className="me-2 size-4" />
                   {t('scenario.archive')}
                 </DropdownMenuItem>
               )}
@@ -145,7 +145,7 @@ export function ScenarioCard({
                   onClick={() => onDelete(scenario.id)}
                   className="text-destructive focus:text-destructive"
                 >
-                  <Trash2 className="h-4 w-4 me-2" />
+                  <Trash2 className="me-2 size-4" />
                   {t('scenario.delete')}
                 </DropdownMenuItem>
               )}
@@ -155,23 +155,23 @@ export function ScenarioCard({
       </CardHeader>
 
       <CardContent className="space-y-4">
-        {description && <p className="text-sm text-muted-foreground line-clamp-2">{description}</p>}
+        {description && <p className="line-clamp-2 text-sm text-muted-foreground">{description}</p>}
 
         {/* Stats */}
         <div className="flex items-center gap-4 text-sm">
           <div className="flex items-center gap-1.5 text-muted-foreground">
-            <Variable className="h-4 w-4" />
+            <Variable className="size-4" />
             <span>{scenario.variable_count || 0}</span>
           </div>
           {positiveOutcomes > 0 && (
             <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
-              <TrendingUp className="h-4 w-4" />
+              <TrendingUp className="size-4" />
               <span>{positiveOutcomes}</span>
             </div>
           )}
           {negativeOutcomes > 0 && (
             <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
-              <TrendingDown className="h-4 w-4" />
+              <TrendingDown className="size-4" />
               <span>{negativeOutcomes}</span>
             </div>
           )}
@@ -194,12 +194,12 @@ export function ScenarioCard({
         )}
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-2 border-t">
+        <div className="flex items-center justify-between border-t pt-2">
           <Badge className={getStatusColor(scenario.status)}>
             {isRTL ? statusLabel.ar : statusLabel.en}
           </Badge>
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Calendar className="h-3.5 w-3.5" />
+            <Calendar className="size-3.5" />
             <span>
               {formatDistanceToNow(new Date(scenario.updated_at), {
                 addSuffix: true,

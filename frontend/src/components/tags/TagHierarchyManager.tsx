@@ -359,10 +359,10 @@ export function TagHierarchyManager({
           </button>
 
           {/* Tag color indicator */}
-          <div className="size-3 rounded-full shrink-0" style={{ backgroundColor: tag.color }} />
+          <div className="size-3 shrink-0 rounded-full" style={{ backgroundColor: tag.color }} />
 
           {/* Tag name */}
-          <span className="flex-1 text-sm truncate">{getTagName(tag, isRTL)}</span>
+          <span className="flex-1 truncate text-sm">{getTagName(tag, isRTL)}</span>
 
           {/* Usage count */}
           {tag.usage_count > 0 && (
@@ -391,7 +391,7 @@ export function TagHierarchyManager({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="size-7 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="size-7 opacity-0 transition-opacity group-hover:opacity-100"
                   onClick={(e) => e.stopPropagation()}
                 >
                   <MoreVertical className="size-4" />
@@ -399,16 +399,16 @@ export function TagHierarchyManager({
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                 <DropdownMenuItem onClick={() => openCreateChildDialog(tag)}>
-                  <Plus className="size-4 me-2" />
+                  <Plus className="me-2 size-4" />
                   {t('actions.addChild')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => openEditDialog(tag)} disabled={tag.is_system}>
-                  <Edit2 className="size-4 me-2" />
+                  <Edit2 className="me-2 size-4" />
                   {t('actions.edit')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => openMergeDialog(tag)} disabled={tag.is_system}>
-                  <GitMerge className="size-4 me-2" />
+                  <GitMerge className="me-2 size-4" />
                   {t('actions.merge')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -417,7 +417,7 @@ export function TagHierarchyManager({
                   disabled={tag.is_system}
                   className="text-destructive focus:text-destructive"
                 >
-                  <Trash2 className="size-4 me-2" />
+                  <Trash2 className="me-2 size-4" />
                   {t('actions.delete')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -448,10 +448,10 @@ export function TagHierarchyManager({
   if (error) {
     return (
       <div className={cn('flex flex-col items-center justify-center py-8 text-center', className)}>
-        <AlertCircle className="size-12 text-destructive mb-4" />
+        <AlertCircle className="mb-4 size-12 text-destructive" />
         <p className="text-muted-foreground">{t('errors.loadFailed')}</p>
         <Button variant="outline" onClick={() => refetch()} className="mt-4">
-          <RefreshCw className="size-4 me-2" />
+          <RefreshCw className="me-2 size-4" />
           {t('actions.refresh')}
         </Button>
       </div>
@@ -462,12 +462,12 @@ export function TagHierarchyManager({
   if (!filteredTree || filteredTree.length === 0) {
     return (
       <div className={cn('flex flex-col items-center justify-center py-8 text-center', className)}>
-        <Tag className="size-12 text-muted-foreground mb-4" />
+        <Tag className="mb-4 size-12 text-muted-foreground" />
         <h3 className="font-semibold">{t('empty.title')}</h3>
-        <p className="text-sm text-muted-foreground mt-1">{t('empty.description')}</p>
+        <p className="mt-1 text-sm text-muted-foreground">{t('empty.description')}</p>
         {showActions && (
           <Button onClick={() => setIsCreateDialogOpen(true)} className="mt-4">
-            <Plus className="size-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('empty.action')}
           </Button>
         )}
@@ -478,9 +478,9 @@ export function TagHierarchyManager({
   return (
     <div className={cn('flex flex-col', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with search and actions */}
-      <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between mb-4">
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+      <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div className="relative max-w-sm flex-1">
+          <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder={t('actions.search')}
             value={searchQuery}
@@ -498,7 +498,7 @@ export function TagHierarchyManager({
           </Button>
           {showActions && (
             <Button size="sm" onClick={() => setIsCreateDialogOpen(true)}>
-              <Plus className="size-4 me-1" />
+              <Plus className="me-1 size-4" />
               {t('actions.create')}
             </Button>
           )}
@@ -506,7 +506,7 @@ export function TagHierarchyManager({
       </div>
 
       {/* Tag hierarchy tree */}
-      <ScrollArea className="flex-1 max-h-[60vh]">
+      <ScrollArea className="max-h-[60vh] flex-1">
         <div className="space-y-0.5">{filteredTree.map((tag) => renderTagNode(tag))}</div>
       </ScrollArea>
 
@@ -533,7 +533,7 @@ export function TagHierarchyManager({
 
           <div className="grid gap-4 py-4">
             {/* Name fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="name_en">{t('form.nameEn')}</Label>
                 <Input
@@ -600,7 +600,7 @@ export function TagHierarchyManager({
             </div>
 
             {/* Description fields */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="description_en">{t('form.descriptionEn')}</Label>
                 <Input
@@ -641,7 +641,7 @@ export function TagHierarchyManager({
               }
             >
               {(createTag.isPending || updateTag.isPending) && (
-                <RefreshCw className="size-4 me-2 animate-spin" />
+                <RefreshCw className="me-2 size-4 animate-spin" />
               )}
               {editingTag ? t('common:save', 'Save') : t('actions.create')}
             </Button>
@@ -666,14 +666,14 @@ export function TagHierarchyManager({
           </DialogHeader>
 
           <div className="space-y-2 py-4">
-            <div className="flex items-start gap-2 p-3 rounded-md bg-destructive/10 text-destructive">
-              <AlertCircle className="size-5 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 rounded-md bg-destructive/10 p-3 text-destructive">
+              <AlertCircle className="mt-0.5 size-5 shrink-0" />
               <p className="text-sm">{t('delete.warning')}</p>
             </div>
 
             {tagToDelete?.children_count && tagToDelete.children_count > 0 && (
-              <div className="flex items-start gap-2 p-3 rounded-md bg-warning/10 text-warning-foreground">
-                <AlertCircle className="size-5 shrink-0 mt-0.5" />
+              <div className="bg-warning/10 text-warning-foreground flex items-start gap-2 rounded-md p-3">
+                <AlertCircle className="mt-0.5 size-5 shrink-0" />
                 <p className="text-sm">
                   {t('delete.childrenWarning', { count: tagToDelete.children_count })}
                 </p>
@@ -686,7 +686,7 @@ export function TagHierarchyManager({
               {t('common:cancel', 'Cancel')}
             </Button>
             <Button variant="destructive" onClick={handleDeleteTag} disabled={deleteTag.isPending}>
-              {deleteTag.isPending && <RefreshCw className="size-4 me-2 animate-spin" />}
+              {deleteTag.isPending && <RefreshCw className="me-2 size-4 animate-spin" />}
               {t('delete.confirm')}
             </Button>
           </DialogFooter>
@@ -705,7 +705,7 @@ export function TagHierarchyManager({
             {/* Source tag */}
             <div className="space-y-2">
               <Label>{t('merge.sourceTag')}</Label>
-              <div className="flex items-center gap-2 p-3 rounded-md border">
+              <div className="flex items-center gap-2 rounded-md border p-3">
                 <div
                   className="size-4 rounded-full"
                   style={{ backgroundColor: tagToMerge?.color }}
@@ -740,8 +740,8 @@ export function TagHierarchyManager({
             </div>
 
             {/* Warning */}
-            <div className="flex items-start gap-2 p-3 rounded-md bg-destructive/10 text-destructive">
-              <AlertCircle className="size-5 shrink-0 mt-0.5" />
+            <div className="flex items-start gap-2 rounded-md bg-destructive/10 p-3 text-destructive">
+              <AlertCircle className="mt-0.5 size-5 shrink-0" />
               <p className="text-sm">{t('merge.warning')}</p>
             </div>
           </div>
@@ -751,7 +751,7 @@ export function TagHierarchyManager({
               {t('common:cancel', 'Cancel')}
             </Button>
             <Button onClick={handleMergeTags} disabled={!mergeTargetId || mergeTags.isPending}>
-              {mergeTags.isPending && <RefreshCw className="size-4 me-2 animate-spin" />}
+              {mergeTags.isPending && <RefreshCw className="me-2 size-4 animate-spin" />}
               {t('merge.confirm')}
             </Button>
           </DialogFooter>

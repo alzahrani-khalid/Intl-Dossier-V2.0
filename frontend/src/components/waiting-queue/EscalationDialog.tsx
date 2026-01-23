@@ -174,7 +174,7 @@ export function EscalationDialog({
  return (
  <Dialog open={isOpen} onOpenChange={onClose}>
  <DialogContent
- className="px-4 sm:px-6 max-w-md sm:max-w-lg md:max-w-xl"
+ className="max-w-md px-4 sm:max-w-lg sm:px-6 md:max-w-xl"
  dir={isRTL ? 'rtl' : 'ltr'}
  aria-labelledby="escalation-dialog-title"
  aria-describedby="escalation-dialog-description"
@@ -184,10 +184,10 @@ export function EscalationDialog({
  id="escalation-dialog-title"
  className="flex items-center gap-2 text-lg sm:text-xl"
  >
- <ArrowUp className={`h-5 w-5 sm:h-6 sm:w-6 text-orange-600 ${isRTL ? 'rotate-180' : ''}`} />
+ <ArrowUp className={`size-5 text-orange-600 sm:size-6 ${isRTL ? 'rotate-180' : ''}`} />
  {t('waitingQueue.escalation.escalateAssignment', 'Escalate Assignment')}
  </DialogTitle>
- <DialogDescription id="escalation-dialog-description" className="text-sm text-start">
+ <DialogDescription id="escalation-dialog-description" className="text-start text-sm">
  {t(
  'waitingQueue.escalation.dialogDescription',
  'Escalate this assignment to higher management for attention'
@@ -197,17 +197,17 @@ export function EscalationDialog({
 
  <div className="space-y-4 py-4">
  {/* Assignment Details */}
- <div className="rounded-lg bg-muted p-3 sm:p-4 space-y-2">
+ <div className="space-y-2 rounded-lg bg-muted p-3 sm:p-4">
  <div className="flex items-center justify-between gap-2">
  <span className="text-sm font-medium text-foreground">{workItemId}</span>
  {daysWaiting >= 7 && (
  <Badge variant="destructive" className="gap-1">
- <AlertTriangle className="h-3 w-3" />
+ <AlertTriangle className="size-3" />
  {daysWaiting} {t('waitingQueue.agingIndicator.days', { count: daysWaiting })}
  </Badge>
  )}
  </div>
- <div className="text-xs text-muted-foreground text-start">
+ <div className="text-start text-xs text-muted-foreground">
  {t('waitingQueue.assignmentDetails.assignee', 'Assignee')}: {assigneeName}
  </div>
  </div>
@@ -215,7 +215,7 @@ export function EscalationDialog({
  {/* Error: No Escalation Path */}
  {hasNoEscalationPath && (
  <Alert variant="destructive">
- <AlertTriangle className="h-4 w-4" />
+ <AlertTriangle className="size-4" />
  <AlertDescription className="text-start">
  {t(
  'waitingQueue.escalation.noEscalationPathMessage',
@@ -229,7 +229,7 @@ export function EscalationDialog({
  {/* Recipient Selection */}
  {!hasNoEscalationPath && (
  <div className="space-y-2">
- <Label htmlFor="recipient-select" className="text-start block">
+ <Label htmlFor="recipient-select" className="block text-start">
  {t('waitingQueue.escalation.selectRecipient', 'Select Recipient')}
  </Label>
  <Select
@@ -249,7 +249,7 @@ export function EscalationDialog({
  className="flex items-center gap-2"
  data-testid="escalation-recipient"
  >
- <User className="h-4 w-4 text-muted-foreground" />
+ <User className="size-4 text-muted-foreground" />
  <div className="flex flex-col items-start">
  <span className="font-medium">{selectedRecipient.full_name}</span>
  <span className="text-xs text-muted-foreground">
@@ -280,7 +280,7 @@ export function EscalationDialog({
  ))}
  </SelectContent>
  </Select>
- <p className="text-xs text-muted-foreground text-start">
+ <p className="text-start text-xs text-muted-foreground">
  {t(
  'waitingQueue.escalation.autoResolve',
  'Auto-resolve from organizational hierarchy'
@@ -291,7 +291,7 @@ export function EscalationDialog({
 
  {/* Reason Textarea */}
  <div className="space-y-2">
- <Label htmlFor="escalation-reason" className="text-start block">
+ <Label htmlFor="escalation-reason" className="block text-start">
  {t('waitingQueue.escalation.reason', 'Reason (Optional)')}
  </Label>
  <Textarea
@@ -302,12 +302,12 @@ export function EscalationDialog({
  'waitingQueue.escalation.reasonPlaceholder',
  'Why are you escalating this assignment?'
  )}
- className="min-h-24 text-start resize-none"
+ className="min-h-24 resize-none text-start"
  maxLength={500}
  disabled={isLoading}
  aria-label={t('waitingQueue.escalation.reason', 'Reason')}
  />
- <div className="flex justify-between items-center text-xs text-muted-foreground">
+ <div className="flex items-center justify-between text-xs text-muted-foreground">
  <span className="text-start">
  {t('waitingQueue.escalation.reasonHint', 'Explain why escalation is needed')}
  </span>
@@ -318,19 +318,19 @@ export function EscalationDialog({
  {/* Local Error Display */}
  {localError && (
  <Alert variant="destructive">
- <AlertTriangle className="h-4 w-4" />
+ <AlertTriangle className="size-4" />
  <AlertDescription className="text-start">{localError}</AlertDescription>
  </Alert>
  )}
  </div>
 
- <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3">
+ <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row sm:gap-3">
  <Button
  type="button"
  variant="outline"
  onClick={onClose}
  disabled={isLoading}
- className=" px-4 sm:px-6 w-full sm:w-auto"
+ className=" w-full px-4 sm:w-auto sm:px-6"
  aria-label={t('common.cancel', 'Cancel')}
  >
  {t('common.cancel', 'Cancel')}
@@ -339,7 +339,7 @@ export function EscalationDialog({
  type="button"
  onClick={handleEscalate}
  disabled={isLoading || hasNoEscalationPath || !reason.trim()}
- className=" px-4 sm:px-6 w-full sm:w-auto"
+ className=" w-full px-4 sm:w-auto sm:px-6"
  aria-label={
  isLoading
  ? t('waitingQueue.escalation.escalating', 'Escalating...')
@@ -348,12 +348,12 @@ export function EscalationDialog({
  >
  {isLoading ? (
  <>
- <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('waitingQueue.escalation.escalating', 'Escalating...')}
  </>
  ) : (
  <>
- <ArrowUp className={`h-4 w-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
+ <ArrowUp className={`size-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
  {t('waitingQueue.escalation.escalate', 'Escalate')}
  </>
  )}

@@ -57,15 +57,15 @@ export function AgingIndicator({ days, className = '' }: AgingIndicatorProps) {
  return (
  <Badge
  variant={aging.variant}
- className={`inline-flex items-center gap-1.5 text-xs sm:text-sm px-2 py-1 ${aging.color} ${className}`}
+ className={`inline-flex items-center gap-1.5 px-2 py-1 text-xs sm:text-sm ${aging.color} ${className}`}
  data-aging-level={aging.level}
  data-testid="aging-badge"
  >
- <Clock className="h-3 w-3 shrink-0" />
+ <Clock className="size-3 shrink-0" />
  <span className="font-medium">
  {days} {t('common.days', 'days')}
  </span>
- <span className="hidden sm:inline text-xs opacity-75 ms-1">
+ <span className="ms-1 hidden text-xs opacity-75 sm:inline">
  ({aging.label})
  </span>
  </Badge>

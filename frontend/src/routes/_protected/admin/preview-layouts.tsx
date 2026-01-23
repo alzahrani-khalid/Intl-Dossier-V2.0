@@ -443,17 +443,17 @@ function PreviewLayoutsPage() {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <LayoutGrid className="h-7 w-7 text-primary" />
+          <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+            <LayoutGrid className="size-7 text-primary" />
             {t('pageTitle')}
           </h1>
-          <p className="text-muted-foreground mt-1">{t('pageDescription')}</p>
+          <p className="mt-1 text-muted-foreground">{t('pageDescription')}</p>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-12">
         {/* Entity Type Selection */}
         <Card className="lg:col-span-3">
           <CardHeader>
@@ -476,7 +476,7 @@ function PreviewLayoutsPage() {
                       : 'border-transparent hover:border-border hover:bg-muted/50',
                   )}
                 >
-                  <Icon className="h-5 w-5 flex-shrink-0" />
+                  <Icon className="size-5 shrink-0" />
                   <span className="font-medium">
                     {isRTL ? ENTITY_TYPE_LABELS[type].ar : ENTITY_TYPE_LABELS[type].en}
                   </span>
@@ -504,7 +504,7 @@ function PreviewLayoutsPage() {
                 <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
                   <DialogTrigger asChild>
                     <Button size="sm" onClick={resetLayoutForm}>
-                      <Plus className="h-4 w-4 me-2" />
+                      <Plus className="me-2 size-4" />
                       {t('layouts.createLayout')}
                     </Button>
                   </DialogTrigger>
@@ -536,7 +536,7 @@ function PreviewLayoutsPage() {
           </CardHeader>
           <CardContent>
             {!selectedEntityType ? (
-              <div className="text-center py-8 text-muted-foreground">{t('selectEntityDesc')}</div>
+              <div className="py-8 text-center text-muted-foreground">{t('selectEntityDesc')}</div>
             ) : layoutsLoading ? (
               <div className="space-y-3">
                 <Skeleton className="h-16 w-full" />
@@ -559,9 +559,9 @@ function PreviewLayoutsPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-8">
+              <div className="py-8 text-center">
                 <p className="text-muted-foreground">{t('layouts.noLayouts')}</p>
-                <p className="text-sm text-muted-foreground mt-1">{t('layouts.noLayoutsDesc')}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t('layouts.noLayoutsDesc')}</p>
               </div>
             )}
           </CardContent>
@@ -590,7 +590,7 @@ function PreviewLayoutsPage() {
               {layoutDetails && (
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" onClick={openEditDialog}>
-                    <Edit className="h-4 w-4" />
+                    <Edit className="size-4" />
                   </Button>
                 </div>
               )}
@@ -598,7 +598,7 @@ function PreviewLayoutsPage() {
           </CardHeader>
           <CardContent>
             {!selectedLayoutId ? (
-              <div className="text-center py-8 text-muted-foreground">
+              <div className="py-8 text-center text-muted-foreground">
                 {t('layouts.noLayoutsDesc')}
               </div>
             ) : layoutDetailsLoading ? (
@@ -614,23 +614,23 @@ function PreviewLayoutsPage() {
                   <TabsTrigger value="fields">{t('tabs.fields')}</TabsTrigger>
                 </TabsList>
 
-                <TabsContent value="settings" className="space-y-4 mt-4">
+                <TabsContent value="settings" className="mt-4 space-y-4">
                   <LayoutConfigDisplay config={layoutDetails.layout_config} isRTL={isRTL} t={t} />
                 </TabsContent>
 
-                <TabsContent value="fields" className="space-y-4 mt-4">
-                  <div className="flex justify-between items-center">
+                <TabsContent value="fields" className="mt-4 space-y-4">
+                  <div className="flex items-center justify-between">
                     <h3 className="font-medium">{t('fields.title')}</h3>
                     <Button size="sm" onClick={() => openFieldDialog()}>
-                      <Plus className="h-4 w-4 me-2" />
+                      <Plus className="me-2 size-4" />
                       {t('fields.addField')}
                     </Button>
                   </div>
 
                   {layoutDetails.fields.length === 0 ? (
-                    <div className="text-center py-8 border rounded-lg">
+                    <div className="rounded-lg border py-8 text-center">
                       <p className="text-muted-foreground">{t('fields.noFields')}</p>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {t('fields.noFieldsDesc')}
                       </p>
                     </div>
@@ -684,7 +684,7 @@ function PreviewLayoutsPage() {
 
       {/* Field Dialog */}
       <Dialog open={isFieldDialogOpen} onOpenChange={setIsFieldDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{editingField ? t('fields.editField') : t('fields.addField')}</DialogTitle>
           </DialogHeader>
@@ -743,16 +743,16 @@ function LayoutCard({
         isSelected ? 'border-primary bg-primary/5' : 'border-border hover:bg-muted/50',
       )}
     >
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <span className="font-medium truncate">{isRTL ? layout.name_ar : layout.name_en}</span>
+          <span className="truncate font-medium">{isRTL ? layout.name_ar : layout.name_en}</span>
           {layout.is_default && (
             <Badge variant="secondary" className="text-xs">
               {t('layouts.isDefault')}
             </Badge>
           )}
         </div>
-        <div className="flex items-center gap-2 text-sm text-muted-foreground mt-1">
+        <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
           <span>
             {isRTL ? CONTEXT_LABELS[layout.context].ar : CONTEXT_LABELS[layout.context].en}
           </span>
@@ -768,12 +768,12 @@ function LayoutCard({
             e.stopPropagation()
             onSetDefault()
           }}
-          className="h-8 w-8"
+          className="size-8"
         >
           {layout.is_default ? (
-            <Star className="h-4 w-4 text-yellow-500 fill-yellow-500" />
+            <Star className="size-4 fill-yellow-500 text-yellow-500" />
           ) : (
-            <StarOff className="h-4 w-4" />
+            <StarOff className="size-4" />
           )}
         </Button>
         <Button
@@ -783,9 +783,9 @@ function LayoutCard({
             e.stopPropagation()
             onDelete()
           }}
-          className="h-8 w-8 text-destructive"
+          className="size-8 text-destructive"
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="size-4" />
         </Button>
       </div>
     </div>
@@ -956,7 +956,7 @@ function LayoutConfigDisplay({ config, isRTL, t }: LayoutConfigDisplayProps) {
         <div key={item.key} className="flex items-center justify-between py-2">
           <span className="text-sm">{t(`layoutConfig.${item.key}`)}</span>
           <Badge variant={item.value ? 'default' : 'secondary'}>
-            {item.value ? <Eye className="h-3 w-3 me-1" /> : <EyeOff className="h-3 w-3 me-1" />}
+            {item.value ? <Eye className="me-1 size-3" /> : <EyeOff className="me-1 size-3" />}
             {item.value ? 'Visible' : 'Hidden'}
           </Badge>
         </div>
@@ -998,29 +998,29 @@ function FieldCard({
   t,
 }: FieldCardProps) {
   return (
-    <div className="flex items-center gap-2 p-3 border rounded-lg">
+    <div className="flex items-center gap-2 rounded-lg border p-3">
       <div className="flex flex-col gap-1">
         <Button
           size="icon"
           variant="ghost"
-          className="h-6 w-6"
+          className="size-6"
           onClick={onMoveUp}
           disabled={index === 0}
         >
-          <ChevronUp className="h-4 w-4" />
+          <ChevronUp className="size-4" />
         </Button>
         <Button
           size="icon"
           variant="ghost"
-          className="h-6 w-6"
+          className="size-6"
           onClick={onMoveDown}
           disabled={index === totalFields - 1}
         >
-          <ChevronDown className="h-4 w-4" />
+          <ChevronDown className="size-4" />
         </Button>
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
           <span className="font-medium">{isRTL ? field.label_ar : field.label_en}</span>
           <Badge variant="outline" className="text-xs">
@@ -1035,25 +1035,25 @@ function FieldCard({
           )}
           {!field.is_visible && (
             <Badge variant="secondary" className="text-xs">
-              <EyeOff className="h-3 w-3" />
+              <EyeOff className="size-3" />
             </Badge>
           )}
         </div>
-        <p className="text-xs text-muted-foreground mt-1">{field.field_key}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{field.field_key}</p>
       </div>
 
       <div className="flex items-center gap-1">
-        <Button size="icon" variant="ghost" className="h-8 w-8" onClick={onEdit}>
-          <Edit className="h-4 w-4" />
+        <Button size="icon" variant="ghost" className="size-8" onClick={onEdit}>
+          <Edit className="size-4" />
         </Button>
         <Button
           size="icon"
           variant="ghost"
-          className="h-8 w-8 text-destructive"
+          className="size-8 text-destructive"
           onClick={onDelete}
           disabled={field.is_required}
         >
-          <Trash2 className="h-4 w-4" />
+          <Trash2 className="size-4" />
         </Button>
       </div>
     </div>

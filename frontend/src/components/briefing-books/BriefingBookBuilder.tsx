@@ -110,7 +110,7 @@ function SortableSectionItem({
     <div
       ref={setNodeRef}
       style={style}
-      className="flex items-center gap-3 p-3 bg-background border rounded-lg"
+      className="flex items-center gap-3 rounded-lg border bg-background p-3"
     >
       <button
         type="button"
@@ -118,11 +118,11 @@ function SortableSectionItem({
         {...listeners}
         className="cursor-grab touch-none text-muted-foreground hover:text-foreground"
       >
-        <GripVertical className="h-5 w-5" />
+        <GripVertical className="size-5" />
       </button>
-      <div className="flex-1 min-w-0">
-        <p className="font-medium truncate">{t(`builder.sections.sectionTypes.${section.type}`)}</p>
-        <p className="text-sm text-muted-foreground truncate">
+      <div className="min-w-0 flex-1">
+        <p className="truncate font-medium">{t(`builder.sections.sectionTypes.${section.type}`)}</p>
+        <p className="truncate text-sm text-muted-foreground">
           {language === 'ar' ? section.title_ar : section.title_en}
         </p>
       </div>
@@ -460,7 +460,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
 
             {/* Search */}
             <div className="relative">
-              <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+              <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={t('builder.entities.searchPlaceholder')}
                 value={searchQuery}
@@ -478,7 +478,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                     <Badge
                       key={entity.id}
                       variant="secondary"
-                      className="gap-1 cursor-pointer hover:bg-destructive hover:text-destructive-foreground"
+                      className="cursor-pointer gap-1 hover:bg-destructive hover:text-destructive-foreground"
                       onClick={() =>
                         toggleEntity({
                           id: entity.id,
@@ -488,9 +488,9 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                         })
                       }
                     >
-                      <Icon className="h-3 w-3" />
+                      <Icon className="size-3" />
                       {isRTL ? entity.name_ar : entity.name_en}
-                      <Trash2 className="h-3 w-3 ms-1" />
+                      <Trash2 className="ms-1 size-3" />
                     </Badge>
                   )
                 })}
@@ -502,8 +502,8 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
             </p>
 
             {/* Entity list */}
-            <ScrollArea className="h-[300px] sm:h-[400px] border rounded-lg">
-              <div className="p-4 space-y-2">
+            <ScrollArea className="h-[300px] rounded-lg border sm:h-[400px]">
+              <div className="space-y-2 p-4">
                 {filteredDossiers.map((dossier) => {
                   const Icon = entityIcons[dossier.type]
                   const isSelected = selectedEntityIds.has(dossier.id)
@@ -512,9 +512,9 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                     <div
                       key={dossier.id}
                       className={`
-                        flex items-center gap-3 p-3 rounded-lg border cursor-pointer
-                        transition-colors min-h-[44px]
-                        ${isSelected ? 'bg-primary/10 border-primary' : 'hover:bg-muted'}
+                        flex min-h-touch-sm cursor-pointer items-center gap-3 rounded-lg border
+                        p-3 transition-colors
+                        ${isSelected ? 'border-primary bg-primary/10' : 'hover:bg-muted'}
                       `}
                       onClick={() =>
                         toggleEntity({
@@ -526,19 +526,19 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                       }
                     >
                       <Checkbox checked={isSelected} />
-                      <Icon className="h-5 w-5 text-muted-foreground shrink-0" />
-                      <div className="flex-1 min-w-0">
-                        <p className="font-medium truncate">
+                      <Icon className="size-5 shrink-0 text-muted-foreground" />
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate font-medium">
                           {isRTL ? dossier.name_ar : dossier.name_en}
                         </p>
-                        <p className="text-xs text-muted-foreground capitalize">{dossier.type}</p>
+                        <p className="text-xs capitalize text-muted-foreground">{dossier.type}</p>
                       </div>
                     </div>
                   )
                 })}
 
                 {filteredDossiers.length === 0 && (
-                  <p className="text-center text-muted-foreground py-8">
+                  <p className="py-8 text-center text-muted-foreground">
                     {searchQuery ? 'No matching entities found' : 'No entities available'}
                   </p>
                 )}
@@ -602,7 +602,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
       case 'sections':
         return (
           <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+            <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
               <div>
                 <h3 className="font-semibold">{t('builder.sections.title')}</h3>
                 <p className="text-sm text-muted-foreground">{t('builder.sections.subtitle')}</p>
@@ -682,7 +682,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                     variant={
                       config.topics?.includes(topic as BriefingBookTopic) ? 'default' : 'outline'
                     }
-                    className="cursor-pointer min-h-[32px] px-3"
+                    className="min-h-[32px] cursor-pointer px-3"
                     onClick={() => toggleTopic(topic as BriefingBookTopic)}
                   >
                     {t(`topics.${topic}`)}
@@ -699,7 +699,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
             {/* Format */}
             <div className="space-y-3">
               <Label>{t('builder.options.format.title')}</Label>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
                 {(['pdf', 'docx', 'html'] as const).map((format) => (
                   <Card
                     key={format}
@@ -708,8 +708,8 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                     }`}
                     onClick={() => setConfig((prev) => ({ ...prev, format }))}
                   >
-                    <CardContent className="p-4 flex flex-col items-center text-center gap-2">
-                      <FileDown className="h-8 w-8 text-muted-foreground" />
+                    <CardContent className="flex flex-col items-center gap-2 p-4 text-center">
+                      <FileDown className="size-8 text-muted-foreground" />
                       <div>
                         <p className="font-medium uppercase">{format}</p>
                         <p className="text-xs text-muted-foreground">
@@ -851,7 +851,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                 )}
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm">
+                <div className="grid grid-cols-2 gap-4 text-sm sm:grid-cols-3">
                   <div>
                     <p className="text-muted-foreground">
                       {t('builder.review.entitiesCount', { count: config.entities?.length ?? 0 })}
@@ -879,7 +879,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">{t('builder.review.formatLabel')}</span>
-                    <span className="uppercase font-medium">{config.format}</span>
+                    <span className="font-medium uppercase">{config.format}</span>
                   </div>
                   <div className="flex justify-between">
                     <span className="text-muted-foreground">
@@ -941,7 +941,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                       const Icon = entityIcons[entity.type]
                       return (
                         <Badge key={entity.id} variant="secondary" className="gap-1">
-                          <Icon className="h-3 w-3" />
+                          <Icon className="size-3" />
                           {isRTL ? entity.name_ar : entity.name_en}
                         </Badge>
                       )
@@ -952,7 +952,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
                 {/* Sections preview */}
                 <div className="space-y-2">
                   <p className="text-sm font-medium">Sections:</p>
-                  <ol className="list-decimal list-inside text-sm text-muted-foreground">
+                  <ol className="list-inside list-decimal text-sm text-muted-foreground">
                     {enabledSections
                       .sort((a, b) => a.order - b.order)
                       .map((section) => (
@@ -970,18 +970,18 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
   // Generation progress overlay
   if (isGenerating && progress) {
     return (
-      <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 p-4 backdrop-blur-sm">
         <Card className="w-full max-w-md">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Loader2 className="h-5 w-5 animate-spin" />
+              <Loader2 className="size-5 animate-spin" />
               {t('generation.title')}
             </CardTitle>
             <CardDescription>{t('generation.subtitle')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <Progress value={progress.progress} className="h-2" />
-            <p className="text-sm text-muted-foreground text-center">
+            <p className="text-center text-sm text-muted-foreground">
               {isRTL ? progress.message_ar : progress.message_en}
             </p>
           </CardContent>
@@ -994,7 +994,7 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div>
-        <h2 className="text-xl sm:text-2xl font-bold">{t('builder.title')}</h2>
+        <h2 className="text-xl font-bold sm:text-2xl">{t('builder.title')}</h2>
       </div>
 
       {/* Step indicators */}
@@ -1009,8 +1009,8 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
               key={step}
               type="button"
               className={`
-                flex items-center gap-2 px-3 py-2 rounded-lg text-sm whitespace-nowrap min-h-[44px]
-                transition-colors flex-1 justify-center
+                flex min-h-touch-sm flex-1 items-center justify-center gap-2 whitespace-nowrap rounded-lg px-3
+                py-2 text-sm transition-colors
                 ${isActive ? 'bg-primary text-primary-foreground' : ''}
                 ${isCompleted ? 'bg-primary/10 text-primary' : ''}
                 ${!isActive && !isCompleted ? 'bg-muted text-muted-foreground' : ''}
@@ -1020,13 +1020,13 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
             >
               <span
                 className={`
-                  w-6 h-6 rounded-full flex items-center justify-center text-xs font-medium
+                  flex size-6 items-center justify-center rounded-full text-xs font-medium
                   ${isActive ? 'bg-primary-foreground text-primary' : ''}
                   ${isCompleted ? 'bg-primary text-primary-foreground' : ''}
                   ${!isActive && !isCompleted ? 'bg-muted-foreground/20' : ''}
                 `}
               >
-                {isCompleted ? <Check className="h-3 w-3" /> : stepNumber}
+                {isCompleted ? <Check className="size-3" /> : stepNumber}
               </span>
               <span className="hidden sm:inline">{t(`builder.step${stepNumber}`)}</span>
             </button>
@@ -1048,19 +1048,19 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
       </AnimatePresence>
 
       {/* Navigation buttons */}
-      <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t">
+      <div className="flex flex-col-reverse justify-between gap-3 border-t pt-4 sm:flex-row">
         <div className="flex gap-2">
           {onCancel && (
-            <Button variant="ghost" onClick={onCancel} className="min-h-[44px]">
+            <Button variant="ghost" onClick={onCancel} className="min-h-touch-sm">
               {t('actions.cancel')}
             </Button>
           )}
           {canGoBack && (
-            <Button variant="outline" onClick={goBack} className="min-h-[44px]">
+            <Button variant="outline" onClick={goBack} className="min-h-touch-sm">
               {isRTL ? (
-                <ChevronRight className="h-4 w-4 me-2" />
+                <ChevronRight className="me-2 size-4" />
               ) : (
-                <ChevronLeft className="h-4 w-4 me-2" />
+                <ChevronLeft className="me-2 size-4" />
               )}
               {t('actions.back')}
             </Button>
@@ -1072,29 +1072,29 @@ export function BriefingBookBuilder({ onSuccess, onCancel }: BriefingBookBuilder
             <Button
               onClick={goNext}
               disabled={!canProceed}
-              className="flex-1 sm:flex-none min-h-[44px]"
+              className="min-h-touch-sm flex-1 sm:flex-none"
             >
               {t('actions.next')}
               {isRTL ? (
-                <ChevronLeft className="h-4 w-4 ms-2" />
+                <ChevronLeft className="ms-2 size-4" />
               ) : (
-                <ChevronRight className="h-4 w-4 ms-2" />
+                <ChevronRight className="ms-2 size-4" />
               )}
             </Button>
           ) : (
             <Button
               onClick={handleGenerate}
               disabled={!canProceed || isGenerating}
-              className="flex-1 sm:flex-none min-h-[44px]"
+              className="min-h-touch-sm flex-1 sm:flex-none"
             >
               {isGenerating ? (
                 <>
-                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                  <Loader2 className="me-2 size-4 animate-spin" />
                   {t('actions.generating')}
                 </>
               ) : (
                 <>
-                  <FileText className="h-4 w-4 me-2" />
+                  <FileText className="me-2 size-4" />
                   {t('actions.generate')}
                 </>
               )}

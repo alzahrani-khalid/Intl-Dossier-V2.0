@@ -90,7 +90,7 @@ export function RevokeDelegationDialog({
         <DialogContent className="sm:max-w-[425px]" dir={isRTL ? 'rtl' : 'ltr'}>
           <DialogHeader>
             <DialogTitle className="flex items-center gap-2 text-destructive">
-              <XCircle className="h-5 w-5" />
+              <XCircle className="size-5" />
               {t('revoke.title')}
             </DialogTitle>
             <DialogDescription>{t('revoke.description')}</DialogDescription>
@@ -98,7 +98,7 @@ export function RevokeDelegationDialog({
 
           <form onSubmit={handleSubmit} className="space-y-4 py-4">
             {/* Info about who we're revoking from */}
-            <div className="bg-muted/50 rounded-lg p-4">
+            <div className="rounded-lg bg-muted/50 p-4">
               <p className="text-sm">
                 <span className="text-muted-foreground">{t('card.to')}: </span>
                 <span className="font-medium">{granteeEmail}</span>
@@ -136,12 +136,12 @@ export function RevokeDelegationDialog({
             >
               {revokeMutation.isPending ? (
                 <>
-                  <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('common:common.loading')}
                 </>
               ) : (
                 <>
-                  <XCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <XCircle className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('revoke.buttonText')}
                 </>
               )}
@@ -155,7 +155,7 @@ export function RevokeDelegationDialog({
         <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertTriangle className="size-5 text-destructive" />
               {t('revoke.title')}
             </AlertDialogTitle>
             <AlertDialogDescription>{t('revoke.description')}</AlertDialogDescription>
@@ -168,7 +168,7 @@ export function RevokeDelegationDialog({
             >
               {revokeMutation.isPending ? (
                 <>
-                  <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('common:common.loading')}
                 </>
               ) : (

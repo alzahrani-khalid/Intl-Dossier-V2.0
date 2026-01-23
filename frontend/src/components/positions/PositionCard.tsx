@@ -86,7 +86,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
 
  return (
  <Card
- className="h-full transition-shadow hover:shadow-md flex flex-col"
+ className="flex h-full flex-col transition-shadow hover:shadow-md"
  role="article"
  aria-label={title}
  >
@@ -118,7 +118,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
  </div>
  </CardHeader>
 
- <CardContent className="pb-3 flex-1 flex flex-col">
+ <CardContent className="flex flex-1 flex-col pb-3">
  {/* Content Preview */}
  <p
  className="line-clamp-3 text-sm text-muted-foreground"
@@ -128,7 +128,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
  </p>
 
  {/* Metadata - Pushed to bottom of CardContent */}
- <div className="mt-auto pt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
+ <div className="mt-auto flex flex-wrap items-center gap-3 pt-3 text-xs text-muted-foreground">
  {position.thematic_category && (
  <Badge variant="outline" className="text-xs">
  {position.thematic_category}
@@ -137,7 +137,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
 
  {engagementAttachmentCount > 0 && (
  <div className="flex items-center gap-1">
- <Link2 className="h-3 w-3" />
+ <Link2 className="size-3" />
  <span>
  {t('card.attachedTo', { count: engagementAttachmentCount })}
  </span>
@@ -147,7 +147,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
 
  {/* Date - Always above the button */}
  <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
- <Calendar className="h-3 w-3" />
+ <Calendar className="size-3" />
  <span>{format(new Date(position.created_at), 'PP', { locale })}</span>
  </div>
  </CardContent>
@@ -162,7 +162,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
  aria-label={t('card.view', { title })}
  className="flex-1"
  >
- <Eye className="me-2 h-4 w-4" />
+ <Eye className="me-2 size-4" />
  {t('card.viewButton')}
  </Button>
  )}
@@ -179,7 +179,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
  aria-label={t('card.detach', { title })}
  aria-keyshortcuts="Delete"
  >
- <Trash2 className="me-2 h-4 w-4" />
+ <Trash2 className="me-2 size-4" />
  {t('card.detachButton')}
  </Button>
  ) : (
@@ -191,7 +191,7 @@ export const PositionCard: React.FC<PositionCardProps> = ({
  aria-label={t('card.attach', { title })}
  aria-keyshortcuts="Enter"
  >
- <Link2 className="me-2 h-4 w-4" />
+ <Link2 className="me-2 size-4" />
  {t('card.attachButton')}
  </Button>
  )}

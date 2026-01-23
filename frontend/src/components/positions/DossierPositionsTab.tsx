@@ -60,7 +60,7 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
  return (
  <div className="space-y-6">
  {/* Header Actions */}
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+ <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
  <div className="space-y-1">
  <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
  {t('positions:dossier_tab.title')}
@@ -79,8 +79,8 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
  </div>
 
  {/* Search and Filters */}
- <div className="bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-4">
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+ <div className="rounded-lg border border-gray-200 bg-white p-4 dark:border-gray-700 dark:bg-gray-800">
+ <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
  {/* Search Input */}
  <div className="lg:col-span-2">
  <Input
@@ -166,7 +166,7 @@ export function DossierPositionsTab({ dossierId }: DossierPositionsTabProps) {
  {/* Positions List */}
  {error ? (
  <div
- className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center"
+ className="rounded-lg border border-red-200 bg-red-50 p-6 text-center dark:border-red-800 dark:bg-red-900/20"
  role="alert"
  >
  <p className="text-sm text-red-700 dark:text-red-300">

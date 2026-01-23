@@ -252,8 +252,8 @@ export function CommitmentsList({
       <div dir={isRTL ? 'rtl' : 'ltr'}>
         {/* Header with filter button even when empty */}
         {showFilters && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1 mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground text-start">
+          <div className="mb-4 flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-start text-xl font-bold text-foreground sm:text-2xl">
               {t('title')}
             </h2>
             <div className="flex items-center gap-2">
@@ -266,7 +266,7 @@ export function CommitmentsList({
                 <Filter className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                 {t('filters.title')}
                 {hasActiveFilters && (
-                  <span className="ms-1 px-1.5 py-0.5 bg-primary text-primary-foreground rounded-full text-xs">
+                  <span className="ms-1 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
                     {(filters.status?.length || 0) +
                       (filters.priority?.length || 0) +
                       (filters.ownerId ? 1 : 0) +
@@ -296,14 +296,14 @@ export function CommitmentsList({
           />
         )}
 
-        <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
           {isFiltered ? (
             <>
-              <SearchX className="size-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">
+              <SearchX className="mb-4 size-12 text-muted-foreground" />
+              <h3 className="mb-2 text-lg font-medium text-foreground">
                 {t('list.emptyFiltered')}
               </h3>
-              <p className="text-sm text-muted-foreground max-w-md mb-6">
+              <p className="mb-6 max-w-md text-sm text-muted-foreground">
                 {t('list.emptyFiltered')}
               </p>
               <Button variant="outline" onClick={handleClearFilters} className="min-h-11">
@@ -312,9 +312,9 @@ export function CommitmentsList({
             </>
           ) : (
             <>
-              <CheckCircle className="size-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">{t('list.empty')}</h3>
-              <p className="text-sm text-muted-foreground max-w-md mb-6">{t('list.empty')}</p>
+              <CheckCircle className="mb-4 size-12 text-muted-foreground" />
+              <h3 className="mb-2 text-lg font-medium text-foreground">{t('list.empty')}</h3>
+              <p className="mb-6 max-w-md text-sm text-muted-foreground">{t('list.empty')}</p>
               {showCreateButton && dossierId && (
                 <Button onClick={() => setShowCreateDialog(true)} className="min-h-11">
                   <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -339,7 +339,7 @@ export function CommitmentsList({
         {dossierId && (
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogContent
-              className="max-w-lg max-h-[90vh] overflow-y-auto"
+              className="max-h-[90vh] max-w-lg overflow-y-auto"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
               <DialogHeader>
@@ -377,8 +377,8 @@ export function CommitmentsList({
       />
 
       {/* Header with count and actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1">
-        <h2 className="text-xl sm:text-2xl font-bold text-foreground text-start">
+      <div className="flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-start text-xl font-bold text-foreground sm:text-2xl">
           {t('title')}
           <span className="ms-2 text-sm font-normal text-muted-foreground">({totalCount})</span>
         </h2>
@@ -394,7 +394,7 @@ export function CommitmentsList({
               <Filter className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
               {t('filters.title')}
               {hasActiveFilters && (
-                <span className="ms-1 px-1.5 py-0.5 bg-primary text-primary-foreground rounded-full text-xs">
+                <span className="ms-1 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
                   {(filters.status?.length || 0) +
                     (filters.priority?.length || 0) +
                     (filters.ownerType ? 1 : 0) +
@@ -443,13 +443,13 @@ export function CommitmentsList({
           </div>
         )}
         {hasNextPage && !isFetchingNextPage && (
-          <p className="text-sm text-muted-foreground text-center">{t('list.loadMore')}</p>
+          <p className="text-center text-sm text-muted-foreground">{t('list.loadMore')}</p>
         )}
       </div>
 
       {/* T066: End of list indicator */}
       {!hasNextPage && allCommitments.length > 0 && (
-        <p className="text-sm text-muted-foreground text-center py-2">{t('list.endOfList')}</p>
+        <p className="py-2 text-center text-sm text-muted-foreground">{t('list.endOfList')}</p>
       )}
 
       {/* Filter Drawer */}
@@ -466,7 +466,7 @@ export function CommitmentsList({
       {dossierId && (
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogContent
-            className="max-w-lg max-h-[90vh] overflow-y-auto"
+            className="max-h-[90vh] max-w-lg overflow-y-auto"
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             <DialogHeader>
@@ -488,7 +488,7 @@ export function CommitmentsList({
       >
         <SheetContent
           side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-lg overflow-y-auto"
+          className="w-full overflow-y-auto sm:max-w-lg"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <SheetHeader>

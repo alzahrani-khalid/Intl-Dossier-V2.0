@@ -62,11 +62,11 @@ function PositionDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto space-y-6 p-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-96 w-full" />
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-          <Skeleton className="lg:col-span-2 h-64" />
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <Skeleton className="h-64 lg:col-span-2" />
           <Skeleton className="h-64" />
         </div>
       </div>
@@ -78,8 +78,8 @@ function PositionDetailPage() {
       <div className="container mx-auto p-6">
         <Card className="border-destructive">
           <CardHeader>
-            <CardTitle className="text-destructive flex items-center gap-2">
-              <FileText className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-destructive">
+              <FileText className="size-5" />
               {t('common:error')}
             </CardTitle>
             <CardDescription>
@@ -90,7 +90,7 @@ function PositionDetailPage() {
           </CardHeader>
           <CardContent>
             <Button onClick={() => navigate({ to: '/positions' })} variant="outline">
-              <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+              <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
               {t('positions:detail.back_to_library')}
             </Button>
           </CardContent>
@@ -112,10 +112,10 @@ function PositionDetailPage() {
   return (
     <div className={`min-h-screen bg-gray-50 dark:bg-gray-900 ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+        <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
           <div className="flex items-start justify-between gap-4">
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               {/* Back Button */}
               <Button
                 variant="ghost"
@@ -123,13 +123,13 @@ function PositionDetailPage() {
                 onClick={() => navigate({ to: '/positions' })}
                 className="mb-4"
               >
-                <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+                <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
                 {t('positions:detail.back_to_library')}
               </Button>
 
               {/* Title and Metadata */}
               <div className="space-y-2">
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex flex-wrap items-center gap-2">
                   <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100">
                     {isRTL ? position.title_ar : position.title_en}
                   </h1>
@@ -140,12 +140,12 @@ function PositionDetailPage() {
                 </div>
                 <div className="flex items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
                   <span className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
+                    <Calendar className="size-4" />
                     {format(new Date(position.updated_at), 'PPP', { locale })}
                   </span>
                   {position.created_by && (
                     <span className="flex items-center gap-1">
-                      <User className="h-4 w-4" />
+                      <User className="size-4" />
                       {position.created_by}
                     </span>
                   )}
@@ -157,12 +157,12 @@ function PositionDetailPage() {
             <div className="flex items-center gap-2">
               {position.status !== 'archived' && (
                 <Button variant="outline" size="sm">
-                  <Edit className="h-4 w-4" />
+                  <Edit className="size-4" />
                   {t('positions:detail.edit')}
                 </Button>
               )}
               <Button variant="outline" size="sm">
-                <Archive className="h-4 w-4" />
+                <Archive className="size-4" />
                 {position.status === 'archived'
                   ? t('positions:detail.restore')
                   : t('positions:detail.archive')}
@@ -173,10 +173,10 @@ function PositionDetailPage() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
           {/* Main Column - Position Content */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-6 lg:col-span-2">
             {/* Position Content */}
             <Card>
               <CardHeader>
@@ -184,7 +184,7 @@ function PositionDetailPage() {
                 <CardDescription>{t('positions:detail.content_description')}</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="prose dark:prose-invert max-w-none">
+                <div className="prose max-w-none dark:prose-invert">
                   {/* English Content */}
                   <div className="space-y-4">
                     <h3 className="text-lg font-semibold">
@@ -210,7 +210,7 @@ function PositionDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <LinkIcon className="h-5 w-5" />
+                  <LinkIcon className="size-5" />
                   {t('positions:detail.related_engagements')}
                 </CardTitle>
                 <CardDescription>
@@ -219,8 +219,8 @@ function PositionDetailPage() {
               </CardHeader>
               <CardContent>
                 {/* This would be populated with actual engagement data */}
-                <div className="text-center py-8 text-gray-500 dark:text-gray-400">
-                  <Building className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <div className="py-8 text-center text-gray-500 dark:text-gray-400">
+                  <Building className="mx-auto mb-4 size-12 opacity-50" />
                   <p className="text-sm">{t('positions:detail.no_related_engagements')}</p>
                 </div>
               </CardContent>
@@ -245,7 +245,7 @@ function PositionDetailPage() {
                   {position.dossier_id ? (
                     <Link
                       to={getDossierDetailPath(position.dossier_id, position.dossier_type)}
-                      className="text-sm text-blue-600 dark:text-blue-400 hover:underline"
+                      className="text-sm text-blue-600 hover:underline dark:text-blue-400"
                     >
                       {t('positions:detail.view_dossier')}
                     </Link>

@@ -97,11 +97,11 @@ export function WatchButton({
         title={isWatched ? t('actions.unwatch') : t('actions.watch')}
       >
         {isProcessing ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="size-4 animate-spin" />
         ) : isWatched ? (
-          <Eye className="h-4 w-4 fill-current" />
+          <Eye className="size-4 fill-current" />
         ) : (
-          <EyeOff className="h-4 w-4" />
+          <EyeOff className="size-4" />
         )}
       </Button>
     )
@@ -118,11 +118,11 @@ export function WatchButton({
         disabled={isProcessing}
       >
         {isProcessing ? (
-          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+          <Loader2 className="size-3.5 animate-spin" />
         ) : isWatched ? (
-          <Eye className="h-3.5 w-3.5" />
+          <Eye className="size-3.5" />
         ) : (
-          <EyeOff className="h-3.5 w-3.5" />
+          <EyeOff className="size-3.5" />
         )}
         <span className="text-xs">{isWatched ? t('actions.watching') : t('actions.watch')}</span>
       </Button>
@@ -140,11 +140,11 @@ export function WatchButton({
         disabled={isProcessing}
       >
         {isProcessing ? (
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="size-4 animate-spin" />
         ) : isWatched ? (
-          <Eye className="h-4 w-4" />
+          <Eye className="size-4" />
         ) : (
-          <EyeOff className="h-4 w-4" />
+          <EyeOff className="size-4" />
         )}
         <span>{isWatched ? t('actions.watching') : t('actions.watch')}</span>
       </Button>
@@ -155,10 +155,10 @@ export function WatchButton({
             <Button
               variant="ghost"
               size="icon"
-              className="h-9 w-9 min-h-9 min-w-9"
+              className="size-9 min-h-9 min-w-9"
               aria-label={t('actions.settings')}
             >
-              <Settings className="h-4 w-4" />
+              <Settings className="size-4" />
             </Button>
           </PopoverTrigger>
           <PopoverContent
@@ -168,9 +168,9 @@ export function WatchButton({
           >
             <div className="space-y-4">
               <div>
-                <h4 className="font-medium text-sm">{t('settings.title')}</h4>
+                <h4 className="text-sm font-medium">{t('settings.title')}</h4>
                 {entityName && (
-                  <p className="text-xs text-muted-foreground mt-1 truncate">{entityName}</p>
+                  <p className="mt-1 truncate text-xs text-muted-foreground">{entityName}</p>
                 )}
               </div>
 
@@ -209,7 +209,7 @@ export function WatchButton({
 
               {/* Notification toggles */}
               <div className="space-y-3">
-                <Label className="text-xs font-medium text-muted-foreground uppercase">
+                <Label className="text-xs font-medium uppercase text-muted-foreground">
                   {t('settings.notifications')}
                 </Label>
 
@@ -223,7 +223,7 @@ export function WatchButton({
                     ] as const
                   ).map(({ key, label }) => (
                     <div key={key} className="flex items-center justify-between gap-2">
-                      <Label className="text-sm font-normal cursor-pointer">
+                      <Label className="cursor-pointer text-sm font-normal">
                         {t(`settings.${label}`)}
                       </Label>
                       <Switch
@@ -252,7 +252,7 @@ export function WatchButton({
                   {t('common:cancel')}
                 </Button>
                 <Button size="sm" className="flex-1" onClick={handleToggle} disabled={isProcessing}>
-                  {isProcessing ? <Loader2 className="h-4 w-4 animate-spin me-2" /> : null}
+                  {isProcessing ? <Loader2 className="me-2 size-4 animate-spin" /> : null}
                   {isWatched ? t('actions.update') : t('actions.addToWatchlist')}
                 </Button>
               </div>

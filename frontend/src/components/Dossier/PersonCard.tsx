@@ -130,21 +130,21 @@ export const PersonCard = memo(function PersonCard({
       className={cn('flex flex-col gap-2 sm:gap-4', 'transition-shadow hover:shadow-lg', className)}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <CardHeader className="flex flex-col gap-3 sm:gap-4 p-4 sm:p-6">
+      <CardHeader className="flex flex-col gap-3 p-4 sm:gap-4 sm:p-6">
         {/* Header: Photo + Name + Status */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 sm:gap-4">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
           {/* Avatar */}
-          <Avatar className="h-16 w-16 sm:h-20 sm:w-20 shrink-0">
+          <Avatar className="size-16 shrink-0 sm:size-20">
             <AvatarImage src={dossier.extension?.photo_url} alt={displayName || ''} />
-            <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300 text-lg sm:text-xl font-semibold">
+            <AvatarFallback className="bg-teal-100 text-lg font-semibold text-teal-800 dark:bg-teal-900 dark:text-teal-300 sm:text-xl">
               {initials}
             </AvatarFallback>
           </Avatar>
 
           {/* Name and ID */}
-          <div className="flex-1 flex flex-col gap-1 min-w-0">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
-              <CardTitle className="text-lg sm:text-xl md:text-2xl line-clamp-2 text-start">
+          <div className="flex min-w-0 flex-1 flex-col gap-1">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+              <CardTitle className="line-clamp-2 text-start text-lg sm:text-xl md:text-2xl">
                 {displayName || t('dossier:untitled')}
               </CardTitle>
               <Badge
@@ -155,18 +155,18 @@ export const PersonCard = memo(function PersonCard({
               </Badge>
             </div>
 
-            <CardDescription className="text-xs sm:text-sm text-start font-mono">
+            <CardDescription className="text-start font-mono text-xs sm:text-sm">
               {t('dossier:id')}: {dossier.id.slice(0, 8)}...
             </CardDescription>
           </div>
         </div>
 
         {/* Contact Info Section */}
-        <div className="flex flex-col gap-2 pt-2 border-t">
+        <div className="flex flex-col gap-2 border-t pt-2">
           {/* Title */}
           {dossier.extension?.title && (
             <div className="flex items-center gap-2 text-sm sm:text-base">
-              <Briefcase className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <Briefcase className="size-4 shrink-0 text-muted-foreground" />
               <span className="text-start">{dossier.extension.title}</span>
             </div>
           )}
@@ -174,7 +174,7 @@ export const PersonCard = memo(function PersonCard({
           {/* Organization */}
           {dossier.extension?.organization_name && (
             <div className="flex items-center gap-2 text-sm sm:text-base">
-              <Building2 className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <Building2 className="size-4 shrink-0 text-muted-foreground" />
               <span className="text-start">{dossier.extension.organization_name}</span>
             </div>
           )}
@@ -182,7 +182,7 @@ export const PersonCard = memo(function PersonCard({
           {/* Nationality */}
           {dossier.extension?.nationality && (
             <div className="flex items-center gap-2 text-sm sm:text-base">
-              <Globe className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <Globe className="size-4 shrink-0 text-muted-foreground" />
               <span className="text-start">{dossier.extension.nationality}</span>
             </div>
           )}
@@ -190,10 +190,10 @@ export const PersonCard = memo(function PersonCard({
           {/* Email */}
           {dossier.extension?.contact_email && (
             <div className="flex items-center gap-2 text-sm sm:text-base">
-              <Mail className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <Mail className="size-4 shrink-0 text-muted-foreground" />
               <a
                 href={`mailto:${dossier.extension.contact_email}`}
-                className="text-start text-primary hover:underline truncate"
+                className="truncate text-start text-primary hover:underline"
               >
                 {dossier.extension.contact_email}
               </a>
@@ -203,7 +203,7 @@ export const PersonCard = memo(function PersonCard({
           {/* Phone */}
           {dossier.extension?.contact_phone && (
             <div className="flex items-center gap-2 text-sm sm:text-base">
-              <Phone className="h-4 w-4 shrink-0 text-muted-foreground" />
+              <Phone className="size-4 shrink-0 text-muted-foreground" />
               <a
                 href={`tel:${dossier.extension.contact_phone}`}
                 className="text-start text-primary hover:underline"
@@ -217,9 +217,9 @@ export const PersonCard = memo(function PersonCard({
 
       {/* Biography Section */}
       {displayBiography && (
-        <CardContent className="px-4 sm:px-6 py-0 flex flex-col gap-2">
+        <CardContent className="flex flex-col gap-2 px-4 py-0 sm:px-6">
           <div className="flex items-center justify-between">
-            <h3 className="text-sm sm:text-base font-semibold text-start">
+            <h3 className="text-start text-sm font-semibold sm:text-base">
               {t('person:biography')}
             </h3>
             <Button
@@ -229,14 +229,14 @@ export const PersonCard = memo(function PersonCard({
               className="min-h-9 min-w-9 p-1"
             >
               {isBioExpanded ? (
-                <ChevronUp className="h-4 w-4" />
+                <ChevronUp className="size-4" />
               ) : (
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="size-4" />
               )}
             </Button>
           </div>
 
-          <p className="text-sm sm:text-base text-muted-foreground text-start whitespace-pre-wrap">
+          <p className="whitespace-pre-wrap text-start text-sm text-muted-foreground sm:text-base">
             {isBioExpanded ? displayBiography : truncatedBio}
           </p>
         </CardContent>
@@ -244,7 +244,7 @@ export const PersonCard = memo(function PersonCard({
 
       {/* Tags */}
       {dossier.tags && dossier.tags.length > 0 && (
-        <CardContent className="px-4 sm:px-6 py-0">
+        <CardContent className="px-4 py-0 sm:px-6">
           <div className="flex flex-wrap gap-2">
             {dossier.tags.slice(0, 5).map((tag, index) => (
               <Badge key={index} variant="secondary" className="text-xs">
@@ -261,7 +261,7 @@ export const PersonCard = memo(function PersonCard({
       )}
 
       {/* Actions */}
-      <CardFooter className="flex items-center justify-between gap-2 p-4 sm:p-6 pt-2 sm:pt-4">
+      <CardFooter className="flex items-center justify-between gap-2 p-4 pt-2 sm:p-6 sm:pt-4">
         {/* Primary actions - touch-friendly */}
         <div className="flex gap-2">
           {onView && (
@@ -272,7 +272,7 @@ export const PersonCard = memo(function PersonCard({
               className=" px-3 sm:px-4"
             >
               <Eye className={cn('h-4 w-4', isRTL && 'rotate-180')} />
-              <span className="hidden sm:inline ms-2">{t('dossier:action.view')}</span>
+              <span className="ms-2 hidden sm:inline">{t('dossier:action.view')}</span>
             </Button>
           )}
 
@@ -283,8 +283,8 @@ export const PersonCard = memo(function PersonCard({
               onClick={() => onEdit(dossier.id)}
               className=" px-3 sm:px-4"
             >
-              <Edit className="h-4 w-4" />
-              <span className="hidden sm:inline ms-2">{t('dossier:action.edit')}</span>
+              <Edit className="size-4" />
+              <span className="ms-2 hidden sm:inline">{t('dossier:action.edit')}</span>
             </Button>
           )}
         </div>
@@ -294,7 +294,7 @@ export const PersonCard = memo(function PersonCard({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className=" " aria-label={t('dossier:action.more')}>
-                <User className="h-4 w-4" />
+                <User className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -302,7 +302,7 @@ export const PersonCard = memo(function PersonCard({
                 onClick={() => onDelete(dossier.id)}
                 className="text-destructive focus:text-destructive"
               >
-                <Trash2 className="h-4 w-4 me-2" />
+                <Trash2 className="me-2 size-4" />
                 {t('dossier:action.delete')}
               </DropdownMenuItem>
             </DropdownMenuContent>
@@ -337,17 +337,17 @@ export const PersonCardCompact = memo(function PersonCardCompact({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Avatar */}
-      <Avatar className="h-10 w-10 sm:h-12 sm:w-12 shrink-0">
+      <Avatar className="size-10 shrink-0 sm:size-12">
         <AvatarImage src={dossier.extension?.photo_url} alt={displayName || ''} />
-        <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300 text-sm font-semibold">
+        <AvatarFallback className="bg-teal-100 text-sm font-semibold text-teal-800 dark:bg-teal-900 dark:text-teal-300">
           {initials}
         </AvatarFallback>
       </Avatar>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 flex flex-col gap-1">
+      <div className="flex min-w-0 flex-1 flex-col gap-1">
         <div className="flex items-center gap-2">
-          <span className="text-sm sm:text-base font-medium truncate text-start">
+          <span className="truncate text-start text-sm font-medium sm:text-base">
             {displayName || t('dossier:untitled')}
           </span>
           <Badge
@@ -358,7 +358,7 @@ export const PersonCardCompact = memo(function PersonCardCompact({
           </Badge>
         </div>
 
-        <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
           {dossier.extension?.title && (
             <>
               <span className="truncate">{dossier.extension.title}</span>

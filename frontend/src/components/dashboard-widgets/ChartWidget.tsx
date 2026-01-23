@@ -42,21 +42,21 @@ function BarChart({
   const maxValue = Math.max(...datasets.flatMap((d) => d.data))
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex h-full flex-col">
       {/* Chart Area */}
-      <div className="flex-1 flex items-end gap-1 sm:gap-2">
+      <div className="flex flex-1 items-end gap-1 sm:gap-2">
         {labels.map((label, index) => (
           <div
             key={label}
-            className="flex-1 flex flex-col items-center gap-1"
+            className="flex flex-1 flex-col items-center gap-1"
             style={{ order: isRTL ? labels.length - index : index }}
           >
             {/* Bars for each dataset */}
-            <div className="w-full flex justify-center gap-0.5">
+            <div className="flex w-full justify-center gap-0.5">
               {datasets.map((dataset, datasetIndex) => (
                 <div
                   key={dataset.label}
-                  className="flex-1 max-w-8 rounded-t transition-all duration-300 hover:opacity-80"
+                  className="max-w-8 flex-1 rounded-t transition-all duration-300 hover:opacity-80"
                   style={{
                     height: `${((dataset.data[index] ?? 0) / maxValue) * 100}%`,
                     minHeight: (dataset.data[index] ?? 0) > 0 ? '4px' : '0',
@@ -72,7 +72,7 @@ function BarChart({
               ))}
             </div>
             {/* Label */}
-            <span className="text-[10px] sm:text-xs text-muted-foreground text-center truncate w-full">
+            <span className="w-full truncate text-center text-[10px] text-muted-foreground sm:text-xs">
               {label}
             </span>
           </div>
@@ -81,11 +81,11 @@ function BarChart({
 
       {/* Legend */}
       {showLegend && datasets.length > 1 && (
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-2 pt-2 border-t">
+        <div className="mt-2 flex flex-wrap justify-center gap-2 border-t pt-2 sm:gap-4">
           {datasets.map((dataset, index) => (
             <div key={dataset.label} className="flex items-center gap-1">
               <div
-                className="w-2.5 h-2.5 rounded-sm"
+                className="size-2.5 rounded-sm"
                 style={{
                   backgroundColor:
                     typeof dataset.backgroundColor === 'string'
@@ -173,10 +173,10 @@ function PieChart({
   }, [values, total, labels, datasets, colors, isDonut])
 
   return (
-    <div className="h-full flex flex-col sm:flex-row items-center gap-2 sm:gap-4">
+    <div className="flex h-full flex-col items-center gap-2 sm:flex-row sm:gap-4">
       {/* Pie SVG */}
-      <div className="flex-shrink-0 w-24 h-24 sm:w-32 sm:h-32">
-        <svg viewBox="0 0 100 100" className="w-full h-full">
+      <div className="size-24 shrink-0 sm:size-32">
+        <svg viewBox="0 0 100 100" className="size-full">
           {segments.map((segment, index) => (
             <path
               key={index}
@@ -196,7 +196,7 @@ function PieChart({
               y="50"
               textAnchor="middle"
               dominantBaseline="middle"
-              className="text-xs font-medium fill-foreground"
+              className="fill-foreground text-xs font-medium"
             >
               {total}
             </text>
@@ -206,17 +206,17 @@ function PieChart({
 
       {/* Legend */}
       {showLegend && (
-        <div className="flex flex-wrap sm:flex-col gap-1.5 sm:gap-2 justify-center">
+        <div className="flex flex-wrap justify-center gap-1.5 sm:flex-col sm:gap-2">
           {segments.map((segment, index) => (
             <div key={index} className="flex items-center gap-1.5">
               <div
-                className="w-2.5 h-2.5 rounded-sm flex-shrink-0"
+                className="size-2.5 shrink-0 rounded-sm"
                 style={{ backgroundColor: segment.color }}
               />
-              <span className="text-xs text-muted-foreground truncate max-w-[100px]">
+              <span className="max-w-[100px] truncate text-xs text-muted-foreground">
                 {segment.label}
               </span>
-              <span className="text-xs font-medium ms-auto">{segment.percentage.toFixed(0)}%</span>
+              <span className="ms-auto text-xs font-medium">{segment.percentage.toFixed(0)}%</span>
             </div>
           ))}
         </div>
@@ -276,12 +276,12 @@ function LineChart({
   }
 
   return (
-    <div className="h-full flex flex-col">
+    <div className="flex h-full flex-col">
       {/* Chart Area */}
       <div className="flex-1">
         <svg
           viewBox={`0 0 ${width} ${height}`}
-          className="w-full h-full"
+          className="size-full"
           preserveAspectRatio="none"
           style={{ direction: 'ltr' }}
         >
@@ -357,7 +357,7 @@ function LineChart({
       </div>
 
       {/* X-axis labels */}
-      <div className="flex justify-between px-1 mt-1">
+      <div className="mt-1 flex justify-between px-1">
         {labels.length <= 7 ? (
           labels.map((label, index) => (
             <span
@@ -378,11 +378,11 @@ function LineChart({
 
       {/* Legend */}
       {showLegend && datasets.length > 1 && (
-        <div className="flex flex-wrap justify-center gap-2 sm:gap-4 mt-2 pt-2 border-t">
+        <div className="mt-2 flex flex-wrap justify-center gap-2 border-t pt-2 sm:gap-4">
           {datasets.map((dataset, index) => (
             <div key={dataset.label} className="flex items-center gap-1">
               <div
-                className="w-2.5 h-2.5 rounded-sm"
+                className="size-2.5 rounded-sm"
                 style={{
                   backgroundColor:
                     dataset.borderColor ||
@@ -413,8 +413,8 @@ export function ChartWidget({ config, data, isLoading }: ChartWidgetProps) {
   // Loading skeleton
   if (isLoading || !data) {
     return (
-      <div className="h-full flex items-center justify-center animate-pulse">
-        <div className="w-full h-full bg-muted rounded" />
+      <div className="flex h-full animate-pulse items-center justify-center">
+        <div className="size-full rounded bg-muted" />
       </div>
     )
   }
@@ -422,7 +422,7 @@ export function ChartWidget({ config, data, isLoading }: ChartWidgetProps) {
   // Empty state
   if (!data.datasets.length || !data.labels.length) {
     return (
-      <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
+      <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
         <p>{t('emptyStates.noData')}</p>
       </div>
     )

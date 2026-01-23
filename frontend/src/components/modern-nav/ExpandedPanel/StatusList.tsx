@@ -60,21 +60,21 @@ export function StatusList({
  {
  id: 'new',
  label: t('navigation.new', 'New'),
- icon: <Circle className="h-4 w-4" />,
+ icon: <Circle className="size-4" />,
  count: 3,
  path: '/status/new',
  },
  {
  id: 'updates',
  label: t('navigation.updates', 'Updates'),
- icon: <Bell className="h-4 w-4" />,
+ icon: <Bell className="size-4" />,
  count: 2,
  path: '/status/updates',
  },
  {
  id: 'team-review',
  label: t('navigation.teamReview', 'Team Review'),
- icon: <Users className="h-4 w-4" />,
+ icon: <Users className="size-4" />,
  path: '/status/team-review',
  },
  ];

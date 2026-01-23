@@ -37,14 +37,14 @@ function LegislationDetailPage() {
   }, [refetch])
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <LegislationDetail id={id} onBack={handleBack} onEdit={handleEdit} />
 
       {/* Edit Legislation Sheet */}
       <Sheet open={isEditOpen} onOpenChange={setIsEditOpen}>
         <SheetContent
           side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-2xl overflow-y-auto"
+          className="w-full overflow-y-auto sm:max-w-2xl"
         >
           <SheetHeader>
             <SheetTitle className="text-start">{t('form.title.edit')}</SheetTitle>

@@ -56,18 +56,18 @@ function EntityTemplatesDemoPage() {
 
   // Entity type options
   const entityTypes: { type: TemplateEntityType; icon: React.ReactNode; label: string }[] = [
-    { type: 'task', icon: <ClipboardList className="h-4 w-4" />, label: t('entityType.task') },
+    { type: 'task', icon: <ClipboardList className="size-4" />, label: t('entityType.task') },
     {
       type: 'commitment',
-      icon: <CheckCircle className="h-4 w-4" />,
+      icon: <CheckCircle className="size-4" />,
       label: t('entityType.commitment'),
     },
     {
       type: 'engagement',
-      icon: <FileText className="h-4 w-4" />,
+      icon: <FileText className="size-4" />,
       label: t('entityType.engagement'),
     },
-    { type: 'dossier', icon: <FolderOpen className="h-4 w-4" />, label: t('entityType.dossier') },
+    { type: 'dossier', icon: <FolderOpen className="size-4" />, label: t('entityType.dossier') },
   ]
 
   return (
@@ -86,7 +86,7 @@ function EntityTemplatesDemoPage() {
           className="gap-2"
           data-testid="quick-entry-button"
         >
-          <Command className="h-4 w-4" />
+          <Command className="size-4" />
           Quick Entry (Alt+T)
         </Button>
       </div>
@@ -206,7 +206,7 @@ function EntityTemplatesDemoPage() {
           <Card className="mt-4">
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base">
-                <Command className="h-4 w-4" />
+                <Command className="size-4" />
                 Keyboard Shortcuts
               </CardTitle>
             </CardHeader>

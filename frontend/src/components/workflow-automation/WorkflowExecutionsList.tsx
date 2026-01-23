@@ -72,7 +72,7 @@ export function WorkflowExecutionsList({ ruleId }: WorkflowExecutionsListProps) 
 
   if (isError) {
     return (
-      <div className="text-center py-12">
+      <div className="py-12 text-center">
         <p className="text-destructive">{t('messages.error')}</p>
         <Button variant="outline" onClick={() => refetch()} className="mt-4">
           {t('actions.retry')}
@@ -83,9 +83,9 @@ export function WorkflowExecutionsList({ ruleId }: WorkflowExecutionsListProps) 
 
   if (!data?.data.length) {
     return (
-      <div className="text-center py-12">
-        <Clock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-        <h3 className="font-semibold text-lg">{t('messages.noExecutions')}</h3>
+      <div className="py-12 text-center">
+        <Clock className="mx-auto mb-4 size-12 text-muted-foreground" />
+        <h3 className="text-lg font-semibold">{t('messages.noExecutions')}</h3>
       </div>
     )
   }
@@ -143,15 +143,15 @@ function ExecutionCard({
         <CardHeader className="pb-2">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className={`p-2 rounded-lg ${config.bgColor}`}>
+              <div className={`rounded-lg p-2 ${config.bgColor}`}>
                 <StatusIcon
-                  className={`h-4 w-4 ${config.color} ${
+                  className={`size-4 ${config.color} ${
                     execution.status === 'running' ? 'animate-spin' : ''
                   }`}
                 />
               </div>
               <div>
-                <h4 className="font-medium text-sm">{ruleName || execution.rule_id}</h4>
+                <h4 className="text-sm font-medium">{ruleName || execution.rule_id}</h4>
                 <p className="text-xs text-muted-foreground">
                   {formatDistanceToNow(new Date(execution.created_at), {
                     addSuffix: true,
@@ -176,17 +176,17 @@ function ExecutionCard({
                   }}
                   disabled={isRetrying}
                 >
-                  <RotateCcw className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
+                  <RotateCcw className={`size-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
                   {t('actions.retry')}
                 </Button>
               )}
 
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" className="size-8">
                   {isExpanded ? (
-                    <ChevronUp className="h-4 w-4" />
+                    <ChevronUp className="size-4" />
                   ) : (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="size-4" />
                   )}
                 </Button>
               </CollapsibleTrigger>
@@ -195,7 +195,7 @@ function ExecutionCard({
         </CardHeader>
 
         <CollapsibleContent>
-          <CardContent className="pt-0 border-t mt-2">
+          <CardContent className="mt-2 border-t pt-0">
             <div className="space-y-4 pt-4">
               {/* Stats */}
               <div className="grid grid-cols-3 gap-4 text-sm">
@@ -204,7 +204,7 @@ function ExecutionCard({
                   <p className="font-medium">{execution.actions_executed}</p>
                 </div>
                 <div>
-                  <span className="text-muted-foreground text-green-600">
+                  <span className="text-green-600 text-muted-foreground">
                     {t('executionStatus.completed')}
                   </span>
                   <p className="font-medium text-green-600">{execution.actions_succeeded}</p>
@@ -227,9 +227,9 @@ function ExecutionCard({
 
               {/* Error Message */}
               {execution.error_message && (
-                <div className="p-3 bg-destructive/10 rounded-lg text-sm">
+                <div className="rounded-lg bg-destructive/10 p-3 text-sm">
                   <p className="font-medium text-destructive">{t('messages.error')}</p>
-                  <p className="text-destructive/80 mt-1">{execution.error_message}</p>
+                  <p className="mt-1 text-destructive/80">{execution.error_message}</p>
                 </div>
               )}
 
@@ -241,15 +241,15 @@ function ExecutionCard({
                     {execution.execution_log.map((entry, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-2 bg-muted/50 rounded text-xs"
+                        className="flex items-center justify-between rounded bg-muted/50 p-2 text-xs"
                       >
                         <div className="flex items-center gap-2">
                           {entry.status === 'success' ? (
-                            <CheckCircle2 className="h-3 w-3 text-green-600" />
+                            <CheckCircle2 className="size-3 text-green-600" />
                           ) : entry.status === 'failed' ? (
-                            <XCircle className="h-3 w-3 text-red-600" />
+                            <XCircle className="size-3 text-red-600" />
                           ) : (
-                            <Clock className="h-3 w-3 text-gray-600" />
+                            <Clock className="size-3 text-gray-600" />
                           )}
                           <span>{entry.type}</span>
                         </div>
@@ -266,7 +266,7 @@ function ExecutionCard({
               {Object.keys(execution.trigger_context).length > 0 && (
                 <div className="space-y-2">
                   <h5 className="text-sm font-medium">Trigger Context</h5>
-                  <pre className="p-2 bg-muted rounded text-xs overflow-auto">
+                  <pre className="overflow-auto rounded bg-muted p-2 text-xs">
                     {JSON.stringify(execution.trigger_context, null, 2)}
                   </pre>
                 </div>

@@ -200,20 +200,20 @@ function AIUsageDashboard() {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <BarChart3 className="h-7 w-7 text-primary" />
+          <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+            <BarChart3 className="size-7 text-primary" />
             {t('usage.title', 'AI Usage Dashboard')}
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 text-muted-foreground">
             {t('usage.description', 'Monitor AI feature usage, costs, and performance')}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Select value={dateRange} onValueChange={(v) => setDateRange(v as typeof dateRange)}>
             <SelectTrigger className="w-32">
-              <Calendar className="h-4 w-4 me-2" />
+              <Calendar className="me-2 size-4" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -229,7 +229,7 @@ function AIUsageDashboard() {
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <MetricCard
           title={t('usage.metrics.totalRuns', 'Total Runs')}
           value={isLoading ? undefined : formatNumber(metrics?.totalRuns || 0)}
@@ -267,7 +267,7 @@ function AIUsageDashboard() {
         </TabsList>
 
         <TabsContent value="overview">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Usage by Type */}
             <Card>
               <CardHeader>
@@ -290,7 +290,7 @@ function AIUsageDashboard() {
                         <div key={type} className="space-y-2">
                           <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
-                              <Icon className="h-4 w-4 text-muted-foreground" />
+                              <Icon className="size-4 text-muted-foreground" />
                               <span className="text-sm font-medium capitalize">
                                 {type.replace(/_/g, ' ')}
                               </span>
@@ -304,7 +304,7 @@ function AIUsageDashboard() {
                       )
                     })}
                     {Object.keys(metrics?.runsByType || {}).length === 0 && (
-                      <p className="text-center text-muted-foreground py-4">
+                      <p className="py-4 text-center text-muted-foreground">
                         {t('usage.noData', 'No usage data available')}
                       </p>
                     )}
@@ -344,7 +344,7 @@ function AIUsageDashboard() {
                       )
                     })}
                     {Object.keys(metrics?.costByProvider || {}).length === 0 && (
-                      <p className="text-center text-muted-foreground py-4">
+                      <p className="py-4 text-center text-muted-foreground">
                         {t('usage.noData', 'No cost data available')}
                       </p>
                     )}
@@ -366,25 +366,25 @@ function AIUsageDashboard() {
               {isLoading ? (
                 <Skeleton className="h-48 w-full" />
               ) : (
-                <div className="h-48 flex items-end gap-1">
+                <div className="flex h-48 items-end gap-1">
                   {metrics?.dailyUsage.slice(-30).map((day) => {
                     const maxRuns = Math.max(...(metrics?.dailyUsage.map((d) => d.runs) || [1]))
                     const height = (day.runs / maxRuns) * 100
                     return (
                       <div
                         key={day.date}
-                        className="flex-1 bg-primary/80 hover:bg-primary rounded-t transition-colors cursor-pointer group relative"
+                        className="group relative flex-1 cursor-pointer rounded-t bg-primary/80 transition-colors hover:bg-primary"
                         style={{ height: `${Math.max(height, 2)}%` }}
                         title={`${day.date}: ${day.runs} runs`}
                       >
-                        <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-popover text-popover-foreground text-xs px-2 py-1 rounded shadow-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap z-10">
+                        <div className="absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded bg-popover px-2 py-1 text-xs text-popover-foreground opacity-0 shadow-lg transition-opacity group-hover:opacity-100">
                           {day.date}: {day.runs} runs
                         </div>
                       </div>
                     )
                   })}
                   {(metrics?.dailyUsage.length || 0) === 0 && (
-                    <p className="w-full text-center text-muted-foreground py-8">
+                    <p className="w-full py-8 text-center text-muted-foreground">
                       {t('usage.noData', 'No usage data available')}
                     </p>
                   )}
@@ -397,8 +397,8 @@ function AIUsageDashboard() {
         <TabsContent value="users">
           <Card>
             <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Users className="h-5 w-5" />
+              <CardTitle className="flex items-center gap-2 text-lg">
+                <Users className="size-5" />
                 {t('usage.topUsers', 'Top Users by Cost')}
               </CardTitle>
             </CardHeader>
@@ -414,17 +414,17 @@ function AIUsageDashboard() {
                   {metrics?.topUsers.map((user, index) => (
                     <div
                       key={user.user_id}
-                      className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
+                      className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
                     >
                       <div className="flex items-center gap-3">
                         <Badge
                           variant="outline"
-                          className="w-8 h-8 rounded-full flex items-center justify-center"
+                          className="flex size-8 items-center justify-center rounded-full"
                         >
                           {index + 1}
                         </Badge>
                         <div>
-                          <p className="font-medium text-sm">{user.email}</p>
+                          <p className="text-sm font-medium">{user.email}</p>
                           <p className="text-xs text-muted-foreground">
                             {formatNumber(user.runs)} {t('usage.runs', 'runs')}
                           </p>
@@ -436,7 +436,7 @@ function AIUsageDashboard() {
                     </div>
                   ))}
                   {(metrics?.topUsers.length || 0) === 0 && (
-                    <p className="text-center text-muted-foreground py-8">
+                    <p className="py-8 text-center text-muted-foreground">
                       {t('usage.noUsers', 'No user data available')}
                     </p>
                   )}
@@ -447,7 +447,7 @@ function AIUsageDashboard() {
         </TabsContent>
 
         <TabsContent value="breakdown">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
             <Card>
               <CardHeader>
                 <CardTitle className="text-lg">{t('usage.performance', 'Performance')}</CardTitle>
@@ -489,7 +489,7 @@ function AIUsageDashboard() {
               <CardContent className="space-y-4">
                 <div className="flex items-center justify-between">
                   <span className="text-sm">{t('usage.totalCost', 'Total Cost')}</span>
-                  <span className="font-bold text-lg">
+                  <span className="text-lg font-bold">
                     {isLoading ? '...' : formatCost(metrics?.totalCost || 0)}
                   </span>
                 </div>
@@ -542,20 +542,20 @@ function MetricCard({ title, value, icon: Icon, trend, isLoading }: MetricCardPr
           <div>
             <p className="text-sm text-muted-foreground">{title}</p>
             {isLoading ? (
-              <Skeleton className="h-8 w-24 mt-1" />
+              <Skeleton className="mt-1 h-8 w-24" />
             ) : (
-              <p className="text-2xl font-bold mt-1">{value}</p>
+              <p className="mt-1 text-2xl font-bold">{value}</p>
             )}
           </div>
           <div className="flex items-center gap-2">
             {trend &&
               (trend === 'up' ? (
-                <TrendingUp className="h-4 w-4 text-green-500" />
+                <TrendingUp className="size-4 text-green-500" />
               ) : (
-                <TrendingDown className="h-4 w-4 text-red-500" />
+                <TrendingDown className="size-4 text-red-500" />
               ))}
-            <div className="p-2 rounded-full bg-primary/10">
-              <Icon className="h-5 w-5 text-primary" />
+            <div className="rounded-full bg-primary/10 p-2">
+              <Icon className="size-5 text-primary" />
             </div>
           </div>
         </div>

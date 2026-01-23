@@ -391,7 +391,7 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
     // Handle value change
     const handleChange = useCallback(
       (e: ChangeEvent<HTMLInputElement>) => {
-        let newValue = e.target.value
+        const newValue = e.target.value
         let rawValue = newValue
 
         // Apply mask if configured
@@ -515,7 +515,7 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
           >
             {label}
             {required && (
-              <span className="text-red-500 ms-1" aria-label={t('common:validation.required')}>
+              <span className="ms-1 text-red-500" aria-label={t('common:validation.required')}>
                 *
               </span>
             )}
@@ -537,7 +537,7 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
               animate={{ opacity: 1, scale: 1 }}
               transition={{ duration: 0.2, delay: 0.1 }}
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="size-5" />
             </motion.div>
           )}
 
@@ -570,7 +570,7 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
             <motion.p
               id={helpId}
               key="help-text"
-              className="text-sm text-gray-600 dark:text-gray-400 text-start"
+              className="text-start text-sm text-gray-600 dark:text-gray-400"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -585,7 +585,7 @@ export const SmartInput = forwardRef<HTMLInputElement, SmartInputProps>(
             <motion.p
               id={errorId}
               key="error"
-              className="text-sm text-red-600 dark:text-red-400 text-start"
+              className="text-start text-sm text-red-600 dark:text-red-400"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}

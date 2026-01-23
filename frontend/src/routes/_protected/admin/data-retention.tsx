@@ -221,35 +221,35 @@ function DataRetentionPage() {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Database className="h-7 w-7 text-primary" />
+          <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+            <Database className="size-7 text-primary" />
             {t('title', 'Data Retention Policies')}
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 text-muted-foreground">
             {t('description', 'Configure data lifecycle, retention periods, and legal holds')}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline" onClick={() => setShowProcessorDialog(true)}>
-            <Play className="h-4 w-4 me-2" />
+            <Play className="me-2 size-4" />
             {t('actions.runProcessor', 'Run Processor')}
           </Button>
           <Button onClick={() => setShowPolicyDialog(true)}>
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('actions.newPolicy', 'New Policy')}
           </Button>
         </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <FileText className="h-5 w-5 text-primary" />
+              <div className="rounded-lg bg-primary/10 p-2">
+                <FileText className="size-5 text-primary" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{totalPolicies}</p>
@@ -264,8 +264,8 @@ function DataRetentionPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
-                <Lock className="h-5 w-5 text-red-600 dark:text-red-400" />
+              <div className="rounded-lg bg-red-100 p-2 dark:bg-red-900/30">
+                <Lock className="size-5 text-red-600 dark:text-red-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{activeLegalHolds}</p>
@@ -280,8 +280,8 @@ function DataRetentionPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-                <Clock className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+              <div className="rounded-lg bg-yellow-100 p-2 dark:bg-yellow-900/30">
+                <Clock className="size-5 text-yellow-600 dark:text-yellow-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{totalPendingActions}</p>
@@ -296,8 +296,8 @@ function DataRetentionPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-orange-100 dark:bg-orange-900/30 rounded-lg">
-                <AlertTriangle className="h-5 w-5 text-orange-600 dark:text-orange-400" />
+              <div className="rounded-lg bg-orange-100 p-2 dark:bg-orange-900/30">
+                <AlertTriangle className="size-5 text-orange-600 dark:text-orange-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{totalExpiringSoon}</p>
@@ -312,8 +312,8 @@ function DataRetentionPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                <Shield className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <div className="rounded-lg bg-blue-100 p-2 dark:bg-blue-900/30">
+                <Shield className="size-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{entitiesUnderHold}</p>
@@ -328,37 +328,37 @@ function DataRetentionPage() {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-5 h-auto">
+        <TabsList className="grid h-auto w-full grid-cols-2 sm:grid-cols-5">
           <TabsTrigger value="overview" className="gap-2 py-2">
-            <BarChart3 className="h-4 w-4" />
+            <BarChart3 className="size-4" />
             <span className="hidden sm:inline">{t('tabs.overview', 'Overview')}</span>
           </TabsTrigger>
           <TabsTrigger value="policies" className="gap-2 py-2">
-            <Settings className="h-4 w-4" />
+            <Settings className="size-4" />
             <span className="hidden sm:inline">{t('tabs.policies', 'Policies')}</span>
           </TabsTrigger>
           <TabsTrigger value="legal-holds" className="gap-2 py-2">
-            <Lock className="h-4 w-4" />
+            <Lock className="size-4" />
             <span className="hidden sm:inline">{t('tabs.legalHolds', 'Legal Holds')}</span>
           </TabsTrigger>
           <TabsTrigger value="pending" className="gap-2 py-2">
-            <Clock className="h-4 w-4" />
+            <Clock className="size-4" />
             <span className="hidden sm:inline">{t('tabs.pending', 'Pending')}</span>
           </TabsTrigger>
           <TabsTrigger value="history" className="gap-2 py-2">
-            <History className="h-4 w-4" />
+            <History className="size-4" />
             <span className="hidden sm:inline">{t('tabs.history', 'History')}</span>
           </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Statistics by Entity Type */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <BarChart3 className="h-5 w-5" />
+                  <BarChart3 className="size-5" />
                   {t('overview.byEntityType', 'Statistics by Entity Type')}
                 </CardTitle>
               </CardHeader>
@@ -370,7 +370,7 @@ function DataRetentionPage() {
                     ))}
                   </div>
                 ) : statistics.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
+                  <p className="py-8 text-center text-muted-foreground">
                     {t('overview.noStats', 'No retention tracking data yet')}
                   </p>
                 ) : (
@@ -402,7 +402,7 @@ function DataRetentionPage() {
                             </Badge>
                           )}
                           {stat.expiring_soon > 0 && (
-                            <Badge className="text-xs bg-yellow-100 text-yellow-800">
+                            <Badge className="bg-yellow-100 text-xs text-yellow-800">
                               {stat.expiring_soon} expiring
                             </Badge>
                           )}
@@ -418,7 +418,7 @@ function DataRetentionPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <History className="h-5 w-5" />
+                  <History className="size-5" />
                   {t('overview.recentExecutions', 'Recent Executions')}
                 </CardTitle>
               </CardHeader>
@@ -430,7 +430,7 @@ function DataRetentionPage() {
                     ))}
                   </div>
                 ) : executionLog.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
+                  <p className="py-8 text-center text-muted-foreground">
                     {t('overview.noExecutions', 'No processor executions yet')}
                   </p>
                 ) : (
@@ -438,7 +438,7 @@ function DataRetentionPage() {
                     {executionLog.slice(0, 5).map((log) => (
                       <div
                         key={log.id}
-                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                        className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
                       >
                         <div>
                           <div className="flex items-center gap-2">
@@ -451,15 +451,15 @@ function DataRetentionPage() {
                               {new Date(log.started_at).toLocaleDateString()}
                             </span>
                           </div>
-                          <p className="text-sm mt-1">
+                          <p className="mt-1 text-sm">
                             {log.items_processed} processed, {log.items_archived} archived,{' '}
                             {log.items_deleted} deleted
                           </p>
                         </div>
                         {log.completed_at ? (
-                          <CheckCircle2 className="h-5 w-5 text-green-500" />
+                          <CheckCircle2 className="size-5 text-green-500" />
                         ) : (
-                          <RefreshCw className="h-5 w-5 text-yellow-500 animate-spin" />
+                          <RefreshCw className="size-5 animate-spin text-yellow-500" />
                         )}
                       </div>
                     ))}
@@ -472,7 +472,7 @@ function DataRetentionPage() {
           {/* Expiring Soon Alert */}
           {totalExpiringSoon > 0 && (
             <Alert>
-              <AlertTriangle className="h-4 w-4" />
+              <AlertTriangle className="size-4" />
               <AlertTitle>{t('overview.expiringAlert', 'Entities Expiring Soon')}</AlertTitle>
               <AlertDescription>
                 {t(
@@ -500,7 +500,7 @@ function DataRetentionPage() {
                   </CardDescription>
                 </div>
                 <Button onClick={() => setShowPolicyDialog(true)}>
-                  <Plus className="h-4 w-4 me-2" />
+                  <Plus className="me-2 size-4" />
                   {t('actions.newPolicy', 'New Policy')}
                 </Button>
               </div>
@@ -513,17 +513,17 @@ function DataRetentionPage() {
                   ))}
                 </div>
               ) : policies.length === 0 ? (
-                <div className="text-center py-12">
-                  <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <div className="py-12 text-center">
+                  <FileText className="mx-auto mb-4 size-12 text-muted-foreground" />
                   <p className="text-lg font-medium">{t('policies.empty', 'No Policies')}</p>
-                  <p className="text-muted-foreground mb-4">
+                  <p className="mb-4 text-muted-foreground">
                     {t(
                       'policies.emptyDesc',
                       'Create your first retention policy to start managing data lifecycle',
                     )}
                   </p>
                   <Button onClick={() => setShowPolicyDialog(true)}>
-                    <Plus className="h-4 w-4 me-2" />
+                    <Plus className="me-2 size-4" />
                     {t('actions.newPolicy', 'Create Policy')}
                   </Button>
                 </div>
@@ -592,7 +592,7 @@ function DataRetentionPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <CardTitle className="flex items-center gap-2">
-                    <Lock className="h-5 w-5" />
+                    <Lock className="size-5" />
                     {t('legalHolds.title', 'Legal Holds')}
                   </CardTitle>
                   <CardDescription>
@@ -603,7 +603,7 @@ function DataRetentionPage() {
                   </CardDescription>
                 </div>
                 <Button onClick={() => setShowLegalHoldDialog(true)}>
-                  <Plus className="h-4 w-4 me-2" />
+                  <Plus className="me-2 size-4" />
                   {t('actions.newLegalHold', 'New Legal Hold')}
                 </Button>
               </div>
@@ -616,17 +616,17 @@ function DataRetentionPage() {
                   ))}
                 </div>
               ) : legalHolds.length === 0 ? (
-                <div className="text-center py-12">
-                  <Lock className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <div className="py-12 text-center">
+                  <Lock className="mx-auto mb-4 size-12 text-muted-foreground" />
                   <p className="text-lg font-medium">{t('legalHolds.empty', 'No Legal Holds')}</p>
-                  <p className="text-muted-foreground mb-4">
+                  <p className="mb-4 text-muted-foreground">
                     {t(
                       'legalHolds.emptyDesc',
                       'Legal holds prevent data deletion during legal proceedings',
                     )}
                   </p>
                   <Button onClick={() => setShowLegalHoldDialog(true)}>
-                    <Plus className="h-4 w-4 me-2" />
+                    <Plus className="me-2 size-4" />
                     {t('actions.newLegalHold', 'Create Legal Hold')}
                   </Button>
                 </div>
@@ -651,7 +651,7 @@ function DataRetentionPage() {
                         <TableCell>
                           <p className="font-medium">{hold.name_en}</p>
                           {hold.entity_type && (
-                            <p className="text-sm text-muted-foreground capitalize">
+                            <p className="text-sm capitalize text-muted-foreground">
                               {hold.entity_type.replace(/_/g, ' ')}
                             </p>
                           )}
@@ -669,7 +669,7 @@ function DataRetentionPage() {
                               onClick={() => releaseLegalHold.mutate(hold.id)}
                               disabled={releaseLegalHold.isPending}
                             >
-                              <Unlock className="h-4 w-4 me-2" />
+                              <Unlock className="me-2 size-4" />
                               {t('actions.release', 'Release')}
                             </Button>
                           )}
@@ -685,12 +685,12 @@ function DataRetentionPage() {
 
         {/* Pending Actions Tab */}
         <TabsContent value="pending" className="space-y-6">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             {/* Pending Retention Actions */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <Clock className="h-5 w-5" />
+                  <Clock className="size-5" />
                   {t('pending.actions', 'Pending Retention Actions')}
                 </CardTitle>
                 <CardDescription>
@@ -705,7 +705,7 @@ function DataRetentionPage() {
                     ))}
                   </div>
                 ) : pendingActions.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
+                  <p className="py-8 text-center text-muted-foreground">
                     {t('pending.noActions', 'No pending actions')}
                   </p>
                 ) : (
@@ -713,7 +713,7 @@ function DataRetentionPage() {
                     {pendingActions.map((action) => (
                       <div
                         key={action.entity_id}
-                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                        className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
                       >
                         <div>
                           <p className="font-medium capitalize">
@@ -737,7 +737,7 @@ function DataRetentionPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
-                  <AlertTriangle className="h-5 w-5" />
+                  <AlertTriangle className="size-5" />
                   {t('pending.expiring', 'Expiring Soon')}
                 </CardTitle>
                 <CardDescription>
@@ -752,7 +752,7 @@ function DataRetentionPage() {
                     ))}
                   </div>
                 ) : expiringEntities.length === 0 ? (
-                  <p className="text-muted-foreground text-center py-8">
+                  <p className="py-8 text-center text-muted-foreground">
                     {t('pending.noExpiring', 'No entities expiring soon')}
                   </p>
                 ) : (
@@ -760,7 +760,7 @@ function DataRetentionPage() {
                     {expiringEntities.map((entity) => (
                       <div
                         key={entity.entity_id}
-                        className="flex items-center justify-between p-3 bg-muted/50 rounded-lg"
+                        className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
                       >
                         <div>
                           <p className="font-medium capitalize">
@@ -790,7 +790,7 @@ function DataRetentionPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5" />
+                <History className="size-5" />
                 {t('history.title', 'Execution History')}
               </CardTitle>
               <CardDescription>
@@ -805,8 +805,8 @@ function DataRetentionPage() {
                   ))}
                 </div>
               ) : executionLog.length === 0 ? (
-                <div className="text-center py-12">
-                  <History className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <div className="py-12 text-center">
+                  <History className="mx-auto mb-4 size-12 text-muted-foreground" />
                   <p className="text-lg font-medium">
                     {t('history.empty', 'No Execution History')}
                   </p>
@@ -850,9 +850,9 @@ function DataRetentionPage() {
                         </TableCell>
                         <TableCell>
                           {log.completed_at ? (
-                            <CheckCircle2 className="h-5 w-5 text-green-500" />
+                            <CheckCircle2 className="size-5 text-green-500" />
                           ) : (
-                            <RefreshCw className="h-5 w-5 text-yellow-500 animate-spin" />
+                            <RefreshCw className="size-5 animate-spin text-yellow-500" />
                           )}
                         </TableCell>
                       </TableRow>
@@ -952,7 +952,7 @@ function PolicyDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {policy
@@ -1180,7 +1180,7 @@ function LegalHoldDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{t('dialog.newLegalHold', 'New Legal Hold')}</DialogTitle>
           <DialogDescription>
@@ -1330,7 +1330,7 @@ function ProcessorDialog({
 
         <div className="grid gap-4 py-4">
           <Alert>
-            <AlertTriangle className="h-4 w-4" />
+            <AlertTriangle className="size-4" />
             <AlertTitle>{t('processor.warning', 'Warning')}</AlertTitle>
             <AlertDescription>
               {t(
@@ -1404,12 +1404,12 @@ function ProcessorDialog({
           <Button onClick={() => onRun(config)} disabled={isLoading}>
             {isLoading ? (
               <>
-                <RefreshCw className="h-4 w-4 me-2 animate-spin" />
+                <RefreshCw className="me-2 size-4 animate-spin" />
                 {t('processor.running', 'Running...')}
               </>
             ) : (
               <>
-                <Play className="h-4 w-4 me-2" />
+                <Play className="me-2 size-4" />
                 {config.dry_run
                   ? t('processor.preview', 'Preview')
                   : t('processor.run', 'Run Processor')}

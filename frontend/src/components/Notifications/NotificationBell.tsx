@@ -37,11 +37,11 @@ export function NotificationBell() {
   const getNotificationIcon = (type?: string) => {
     switch (type) {
       case 'health_score_drop':
-        return <TrendingDown className="h-4 w-4 text-orange-500" />;
+        return <TrendingDown className="size-4 text-orange-500" />;
       case 'commitment_overdue':
-        return <AlertCircle className="h-4 w-4 text-red-500" />;
+        return <AlertCircle className="size-4 text-red-500" />;
       default:
-        return <Bell className="h-4 w-4 text-blue-500" />;
+        return <Bell className="size-4 text-blue-500" />;
     }
   };
 
@@ -86,7 +86,7 @@ export function NotificationBell() {
   if (isLoading) {
     return (
       <Button variant="ghost" size="icon" className="relative" disabled>
-        <Bell className="h-5 w-5 text-gray-400" />
+        <Bell className="size-5 text-gray-400" />
       </Button>
     );
   }
@@ -101,11 +101,11 @@ export function NotificationBell() {
           aria-label={t('notifications.bell.ariaLabel')}
         >
           {/* T192: Display notification bell icon with unread count badge */}
-          <Bell className="h-5 w-5" />
+          <Bell className="size-5" />
           {unreadCount > 0 && (
             <Badge
               variant="destructive"
-              className="absolute -top-1 -end-1 h-5 min-w-5 rounded-full p-0 flex items-center justify-center text-xs"
+              className="absolute -end-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full p-0 text-xs"
             >
               {unreadCount > 99 ? '99+' : unreadCount}
             </Badge>
@@ -114,13 +114,13 @@ export function NotificationBell() {
       </PopoverTrigger>
 
       <PopoverContent
-        className="w-80 sm:w-96 p-0"
+        className="w-80 p-0 sm:w-96"
         align={isRTL ? 'start' : 'end'}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b">
-          <h3 className="text-base font-semibold text-start">
+        <div className="flex items-center justify-between border-b px-4 py-3">
+          <h3 className="text-start text-base font-semibold">
             {t('notifications.title')}
           </h3>
           {unreadCount > 0 && (
@@ -139,8 +139,8 @@ export function NotificationBell() {
         {/* T195: Show notification dropdown with list of notifications */}
         <ScrollArea className="h-96">
           {notifications.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
-              <CheckCircle className="h-12 w-12 text-gray-400 mb-2" />
+            <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
+              <CheckCircle className="mb-2 size-12 text-gray-400" />
               <p className="text-sm text-gray-600">
                 {t('notifications.noNotifications')}
               </p>
@@ -150,26 +150,26 @@ export function NotificationBell() {
               {notifications.map((notification) => (
                 <div
                   key={notification.id}
-                  className={`p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
+                  className={`cursor-pointer p-4 transition-colors hover:bg-gray-50 ${
                     !notification.read ? 'bg-blue-50' : ''
                   } ${getNotificationColor(notification.metadata?.type)}`}
                   onClick={() => handleNotificationClick(notification)}
                 >
                   <div className="flex gap-3">
                     {/* T196: Color-coded icon based on type */}
-                    <div className="flex-shrink-0 mt-0.5">
+                    <div className="mt-0.5 shrink-0">
                       {getNotificationIcon(notification.metadata?.type)}
                     </div>
 
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       {/* T196: Display title, message, timestamp */}
-                      <p className="text-sm font-medium text-gray-900 text-start mb-1">
+                      <p className="mb-1 text-start text-sm font-medium text-gray-900">
                         {notification.title}
                       </p>
-                      <p className="text-sm text-gray-700 text-start mb-2">
+                      <p className="mb-2 text-start text-sm text-gray-700">
                         {notification.message}
                       </p>
-                      <p className="text-xs text-gray-500 text-start">
+                      <p className="text-start text-xs text-gray-500">
                         {formatDistanceToNow(new Date(notification.created_at), {
                           addSuffix: true,
                         })}
@@ -178,8 +178,8 @@ export function NotificationBell() {
 
                     {/* Unread indicator */}
                     {!notification.read && (
-                      <div className="flex-shrink-0">
-                        <div className="h-2 w-2 rounded-full bg-blue-600" />
+                      <div className="shrink-0">
+                        <div className="size-2 rounded-full bg-blue-600" />
                       </div>
                     )}
                   </div>

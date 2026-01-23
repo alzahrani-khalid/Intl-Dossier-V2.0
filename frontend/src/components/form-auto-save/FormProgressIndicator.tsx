@@ -70,7 +70,7 @@ export function FormProgressIndicator({
       aria-label={t('progress.ariaLabel', { percentage })}
     >
       {/* Header with percentage and time estimate */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-2">
+      <div className="mb-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         {/* Progress percentage */}
         <div className="flex items-center gap-2">
           {isComplete ? (
@@ -117,7 +117,7 @@ export function FormProgressIndicator({
 
       {/* Step indicator for multi-step forms */}
       {showSteps && hasSteps && (
-        <div className="flex items-center justify-between mt-3 pt-3 border-t">
+        <div className="mt-3 flex items-center justify-between border-t pt-3">
           <span className={cn(classes.text, 'text-muted-foreground')}>
             {t('progress.step', { current: currentStep! + 1, total: totalSteps })}
           </span>

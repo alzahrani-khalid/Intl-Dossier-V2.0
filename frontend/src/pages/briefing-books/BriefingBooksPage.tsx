@@ -36,7 +36,7 @@ export function BriefingBooksPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <AnimatePresence mode="wait">
@@ -49,18 +49,18 @@ export function BriefingBooksPage() {
             transition={{ duration: 0.2 }}
           >
             {/* Page header */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 sm:mb-8">
+            <div className="mb-6 flex flex-col items-start justify-between gap-4 sm:mb-8 sm:flex-row sm:items-center">
               <div className="flex items-center gap-3">
-                <div className="p-2 sm:p-3 bg-primary/10 rounded-lg">
-                  <FileText className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+                <div className="rounded-lg bg-primary/10 p-2 sm:p-3">
+                  <FileText className="size-6 text-primary sm:size-8" />
                 </div>
                 <div>
-                  <h1 className="text-xl sm:text-2xl md:text-3xl font-bold">{t('title')}</h1>
-                  <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
+                  <h1 className="text-xl font-bold sm:text-2xl md:text-3xl">{t('title')}</h1>
+                  <p className="text-sm text-muted-foreground sm:text-base">{t('subtitle')}</p>
                 </div>
               </div>
-              <Button onClick={handleCreateNew} className="w-full sm:w-auto min-h-[44px]">
-                <Plus className="h-4 w-4 me-2" />
+              <Button onClick={handleCreateNew} className="min-h-touch-sm w-full sm:w-auto">
+                <Plus className="me-2 size-4" />
                 {t('newBriefingBook')}
               </Button>
             </div>
@@ -81,16 +81,16 @@ export function BriefingBooksPage() {
               <Button
                 variant="ghost"
                 onClick={handleBuilderCancel}
-                className="gap-2 min-h-[44px] -ms-2"
+                className="-ms-2 min-h-touch-sm gap-2"
               >
                 {isRTL ? (
                   <>
                     {t('myBriefingBooks')}
-                    <ArrowLeft className="h-4 w-4 rotate-180" />
+                    <ArrowLeft className="size-4 rotate-180" />
                   </>
                 ) : (
                   <>
-                    <ArrowLeft className="h-4 w-4" />
+                    <ArrowLeft className="size-4" />
                     {t('myBriefingBooks')}
                   </>
                 )}

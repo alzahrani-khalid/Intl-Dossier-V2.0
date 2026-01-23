@@ -50,9 +50,9 @@ export function DelegationList({
     return (
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
-          <div key={i} className="border rounded-lg p-4 space-y-3">
+          <div key={i} className="space-y-3 rounded-lg border p-4">
             <div className="flex items-center gap-3">
-              <Skeleton className="h-10 w-10 rounded-full" />
+              <Skeleton className="size-10 rounded-full" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-24" />
                 <Skeleton className="h-4 w-40" />
@@ -76,14 +76,14 @@ export function DelegationList({
 
     return (
       <div
-        className="flex flex-col items-center justify-center py-12 px-4 text-center"
+        className="flex flex-col items-center justify-center px-4 py-12 text-center"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="rounded-full bg-muted p-4 mb-4">
-          <EmptyIcon className="h-8 w-8 text-muted-foreground" />
+        <div className="mb-4 rounded-full bg-muted p-4">
+          <EmptyIcon className="size-8 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-semibold mb-2">{t(`list.empty.${type}`)}</h3>
-        <p className="text-sm text-muted-foreground max-w-md">
+        <h3 className="mb-2 text-lg font-semibold">{t(`list.empty.${type}`)}</h3>
+        <p className="max-w-md text-sm text-muted-foreground">
           {t(`list.emptyDescription.${type}`)}
         </p>
       </div>

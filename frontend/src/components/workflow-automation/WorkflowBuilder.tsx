@@ -391,7 +391,7 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
         <h1 className="text-2xl font-bold">
           {isEditing ? t('headings.edit') : t('headings.create')}
         </h1>
-        <p className="text-muted-foreground mt-1">{t(`builder.stepDescriptions.${currentStep}`)}</p>
+        <p className="mt-1 text-muted-foreground">{t(`builder.stepDescriptions.${currentStep}`)}</p>
       </div>
 
       {/* Steps indicator */}
@@ -426,12 +426,12 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
                   )}
                 >
                   {isCompleted && !isActive ? (
-                    <CheckCircle className="h-4 w-4" />
+                    <CheckCircle className="size-4" />
                   ) : (
-                    <StepIcon className="h-4 w-4" />
+                    <StepIcon className="size-4" />
                   )}
                 </div>
-                <span className="hidden sm:inline text-sm font-medium">
+                <span className="hidden text-sm font-medium sm:inline">
                   {t(`builder.steps.${step}`)}
                 </span>
               </button>
@@ -453,7 +453,7 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
       <div className="min-h-[400px]">{renderStepContent()}</div>
 
       {/* Navigation */}
-      <div className="flex items-center justify-between pt-4 border-t">
+      <div className="flex items-center justify-between border-t pt-4">
         <Button variant="outline" onClick={onCancel}>
           {t('actions.cancel')}
         </Button>
@@ -462,9 +462,9 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
           {currentStep !== 'trigger' && (
             <Button variant="outline" onClick={goToPreviousStep}>
               {isRTL ? (
-                <ChevronRight className="h-4 w-4 me-2" />
+                <ChevronRight className="me-2 size-4" />
               ) : (
-                <ChevronLeft className="h-4 w-4 me-2" />
+                <ChevronLeft className="me-2 size-4" />
               )}
               {t('actions.back')}
             </Button>
@@ -473,7 +473,7 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
           {currentStep === 'review' ? (
             <Button onClick={handleSave} disabled={isSaving}>
               {isSaving && (
-                <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
               )}
               {t('actions.save')}
             </Button>
@@ -481,9 +481,9 @@ export function WorkflowBuilder({ rule, onSave, onCancel }: WorkflowBuilderProps
             <Button onClick={goToNextStep} disabled={!canProceed(currentStep)}>
               {t('actions.next')}
               {isRTL ? (
-                <ChevronLeft className="h-4 w-4 ms-2" />
+                <ChevronLeft className="ms-2 size-4" />
               ) : (
-                <ChevronRight className="h-4 w-4 ms-2" />
+                <ChevronRight className="ms-2 size-4" />
               )}
             </Button>
           )}

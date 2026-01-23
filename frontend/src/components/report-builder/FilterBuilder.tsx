@@ -99,7 +99,7 @@ function FilterRow({ filter, fields, isRTL, onUpdate, onRemove }: FilterRowProps
   const needsEndValue = filter.operator === 'between'
 
   return (
-    <div className="flex flex-col sm:flex-row gap-2 p-3 rounded-lg border bg-background">
+    <div className="flex flex-col gap-2 rounded-lg border bg-background p-3 sm:flex-row">
       <Select value={filter.fieldId} onValueChange={(value) => onUpdate({ fieldId: value })}>
         <SelectTrigger className="sm:w-[200px]">
           <SelectValue placeholder={t('fields.title')} />
@@ -130,7 +130,7 @@ function FilterRow({ filter, fields, isRTL, onUpdate, onRemove }: FilterRowProps
       </Select>
 
       {needsValue && (
-        <div className="flex-1 flex gap-2">
+        <div className="flex flex-1 gap-2">
           {selectedField?.type === 'date' || selectedField?.type === 'datetime' ? (
             <Popover>
               <PopoverTrigger asChild>
@@ -141,7 +141,7 @@ function FilterRow({ filter, fields, isRTL, onUpdate, onRemove }: FilterRowProps
                     !filter.value && 'text-muted-foreground',
                   )}
                 >
-                  <CalendarIcon className="me-2 h-4 w-4" />
+                  <CalendarIcon className="me-2 size-4" />
                   {filter.value
                     ? format(new Date(filter.value as string), 'PPP')
                     : t('filters.value')}
@@ -197,10 +197,10 @@ function FilterRow({ filter, fields, isRTL, onUpdate, onRemove }: FilterRowProps
       <Button
         variant="ghost"
         size="icon"
-        className="h-10 w-10 text-destructive hover:text-destructive flex-shrink-0"
+        className="size-10 shrink-0 text-destructive hover:text-destructive"
         onClick={onRemove}
       >
-        <X className="h-4 w-4" />
+        <X className="size-4" />
       </Button>
     </div>
   )
@@ -234,8 +234,8 @@ export function FilterBuilder({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-              <Filter className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Filter className="size-5" />
               {t('filters.title')}
             </CardTitle>
             <CardDescription className="text-xs sm:text-sm">
@@ -286,7 +286,7 @@ export function FilterBuilder({
         </ScrollArea>
 
         {filters.filters.length === 0 && (
-          <p className="text-sm text-muted-foreground text-center py-4">{t('filters.empty')}</p>
+          <p className="py-4 text-center text-sm text-muted-foreground">{t('filters.empty')}</p>
         )}
 
         <Button
@@ -296,7 +296,7 @@ export function FilterBuilder({
           onClick={handleAddFilter}
           disabled={filterableFields.length === 0}
         >
-          <Plus className="h-4 w-4 me-2" />
+          <Plus className="me-2 size-4" />
           {t('filters.addFilter')}
         </Button>
       </CardContent>

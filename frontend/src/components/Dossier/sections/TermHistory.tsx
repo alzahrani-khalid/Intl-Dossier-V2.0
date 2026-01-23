@@ -72,7 +72,7 @@ export function TermHistory({ dossier }: TermHistoryProps) {
       <Card className="border-0 shadow-none">
         <CardContent className="p-0">
           <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-            <Calendar className="h-12 w-12 mb-3 opacity-50" />
+            <Calendar className="mb-3 size-12 opacity-50" />
             <p>{t('sections.electedOfficial.noTermInfo')}</p>
           </div>
         </CardContent>
@@ -82,15 +82,15 @@ export function TermHistory({ dossier }: TermHistoryProps) {
 
   return (
     <Card className="border-0 shadow-none">
-      <CardContent className="p-0 space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <CardContent className="space-y-4 p-0" dir={isRTL ? 'rtl' : 'ltr'}>
         {/* Current Term */}
-        <div className="p-4 rounded-lg bg-muted/50 space-y-3">
+        <div className="space-y-3 rounded-lg bg-muted/50 p-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
               {extension.is_current_term ? (
-                <CheckCircle2 className="h-5 w-5 text-green-500" />
+                <CheckCircle2 className="size-5 text-green-500" />
               ) : (
-                <Circle className="h-5 w-5 text-gray-400" />
+                <Circle className="size-5 text-gray-400" />
               )}
               <span className="font-medium">
                 {extension.is_current_term
@@ -100,21 +100,21 @@ export function TermHistory({ dossier }: TermHistoryProps) {
             </div>
             {extension.term_number && (
               <Badge variant="secondary">
-                <Hash className="h-3 w-3 me-1" />
+                <Hash className="me-1 size-3" />
                 {getTermOrdinal(extension.term_number)}
               </Badge>
             )}
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Start Date */}
             {extension.term_start && (
               <div className="space-y-1">
-                <span className="text-xs text-muted-foreground uppercase tracking-wide">
+                <span className="text-xs uppercase tracking-wide text-muted-foreground">
                   {t('sections.electedOfficial.termStart')}
                 </span>
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <Calendar className="size-4 text-muted-foreground" />
                   <span className="font-medium">{formatDate(extension.term_start)}</span>
                 </div>
               </div>
@@ -123,11 +123,11 @@ export function TermHistory({ dossier }: TermHistoryProps) {
             {/* End Date */}
             {extension.term_end && (
               <div className="space-y-1">
-                <span className="text-xs text-muted-foreground uppercase tracking-wide">
+                <span className="text-xs uppercase tracking-wide text-muted-foreground">
                   {t('sections.electedOfficial.termEnd')}
                 </span>
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <Calendar className="size-4 text-muted-foreground" />
                   <span className="font-medium">{formatDate(extension.term_end)}</span>
                 </div>
               </div>
@@ -136,9 +136,9 @@ export function TermHistory({ dossier }: TermHistoryProps) {
 
           {/* Duration */}
           {extension.term_start && (
-            <div className="pt-2 border-t border-muted">
+            <div className="border-t border-muted pt-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
+                <Clock className="size-4" />
                 <span>
                   {t('sections.electedOfficial.duration')}:{' '}
                   <span className="font-medium text-foreground">

@@ -89,7 +89,7 @@ export function TenantSwitcher({
         disabled
       >
         <span className="flex items-center gap-2">
-          <Building2 className="h-4 w-4 animate-pulse" />
+          <Building2 className="size-4 animate-pulse" />
           {!compact && (
             <span className="truncate text-muted-foreground">{t('loading', 'Loading...')}</span>
           )}
@@ -114,14 +114,14 @@ export function TenantSwitcher({
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <span className="flex items-center gap-2 truncate">
-            <Building2 className="h-4 w-4 shrink-0" />
+            <Building2 className="size-4 shrink-0" />
             {!compact && (
               <span className="truncate">
                 {currentTenantName || t('selectOrganization', 'Select organization')}
               </span>
             )}
           </span>
-          {!compact && <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />}
+          {!compact && <ChevronsUpDown className="ms-2 size-4 shrink-0 opacity-50" />}
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -145,7 +145,7 @@ export function TenantSwitcher({
                   className="flex items-center justify-between gap-2"
                 >
                   <div className="flex items-center gap-2 truncate">
-                    <Building2 className="h-4 w-4 shrink-0" />
+                    <Building2 className="size-4 shrink-0" />
                     <span className="truncate">{membership.organizationName}</span>
                     {membership.isPrimary && (
                       <span className="text-xs text-muted-foreground">
@@ -195,7 +195,7 @@ export function TenantBadge({ className }: { className?: string }) {
         className,
       )}
     >
-      <Building2 className="h-3 w-3" />
+      <Building2 className="size-3" />
       {currentTenantName}
     </span>
   )

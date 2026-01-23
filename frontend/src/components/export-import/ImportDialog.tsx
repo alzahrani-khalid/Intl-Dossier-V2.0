@@ -166,12 +166,12 @@ export function ImportDialog({
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
-        className="sm:max-w-[600px] max-h-[90vh] overflow-hidden flex flex-col"
+        className="flex max-h-[90vh] flex-col overflow-hidden sm:max-w-[600px]"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Upload className="h-5 w-5" />
+            <Upload className="size-5" />
             {t('import.title')}
           </DialogTitle>
           <DialogDescription>{t('import.description')}</DialogDescription>
@@ -192,15 +192,15 @@ export function ImportDialog({
                 <input {...getInputProps()} />
                 <div className="flex flex-col items-center gap-3">
                   <div className="flex gap-2">
-                    <FileSpreadsheet className="h-10 w-10 text-green-500" />
-                    <FileText className="h-10 w-10 text-blue-500" />
+                    <FileSpreadsheet className="size-10 text-green-500" />
+                    <FileText className="size-10 text-blue-500" />
                   </div>
                   <div>
                     <p className="text-lg font-medium">{t('import.dropzone.title')}</p>
-                    <p className="text-sm text-muted-foreground mt-1">
+                    <p className="mt-1 text-sm text-muted-foreground">
                       {t('import.dropzone.subtitle')}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-2">
+                    <p className="mt-2 text-xs text-muted-foreground">
                       {t('import.dropzone.maxSize', { size: 10 })}
                     </p>
                   </div>
@@ -208,9 +208,9 @@ export function ImportDialog({
               </div>
 
               {/* Template Instructions */}
-              <div className="rounded-lg border bg-muted/50 p-4 space-y-2">
+              <div className="space-y-2 rounded-lg border bg-muted/50 p-4">
                 <h4 className="font-medium">{t('template.instructions.title')}</h4>
-                <ul className="text-sm text-muted-foreground space-y-1">
+                <ul className="space-y-1 text-sm text-muted-foreground">
                   <li>{t('template.instructions.requiredFields')}</li>
                   <li>{t('template.instructions.dateFormat')}</li>
                   <li>{t('template.instructions.booleanFormat')}</li>
@@ -222,18 +222,18 @@ export function ImportDialog({
 
           {/* Step: Validating */}
           {step === 'validate' && (
-            <div className="flex flex-col items-center justify-center py-8 space-y-4">
-              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <div className="flex flex-col items-center justify-center space-y-4 py-8">
+              <Loader2 className="size-12 animate-spin text-primary" />
               <div className="text-center">
                 <p className="font-medium">{t('import.validation.validating')}</p>
                 {selectedFile && (
-                  <p className="text-sm text-muted-foreground mt-1">{selectedFile.name}</p>
+                  <p className="mt-1 text-sm text-muted-foreground">{selectedFile.name}</p>
                 )}
               </div>
               {progress && (
                 <div className="w-full max-w-xs space-y-2">
                   <Progress value={progress.progress} className="h-2" />
-                  <p className="text-xs text-center text-muted-foreground">
+                  <p className="text-center text-xs text-muted-foreground">
                     {isRTL ? progress.message_ar : progress.message_en}
                   </p>
                 </div>
@@ -245,17 +245,17 @@ export function ImportDialog({
           {step === 'options' && validationResult && (
             <div className="space-y-6">
               {/* File Info */}
-              <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-                <FileSpreadsheet className="h-8 w-8 text-green-500" />
-                <div className="flex-1 min-w-0">
-                  <p className="font-medium truncate">{validationResult.fileInfo?.name}</p>
+              <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
+                <FileSpreadsheet className="size-8 text-green-500" />
+                <div className="min-w-0 flex-1">
+                  <p className="truncate font-medium">{validationResult.fileInfo?.name}</p>
                   <p className="text-sm text-muted-foreground">
                     {validationResult.fileInfo?.rows} rows,{' '}
                     {validationResult.fileInfo?.columns.length} columns
                   </p>
                 </div>
                 <Button variant="ghost" size="icon" onClick={handleReset}>
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               </div>
 
@@ -273,10 +273,10 @@ export function ImportDialog({
                       onValueChange={(value) => setMode(value as ImportMode)}
                       className="space-y-2"
                     >
-                      <div className="flex items-start space-x-3 rtl:space-x-reverse p-3 rounded-lg border hover:bg-muted/50">
+                      <div className="flex items-start space-x-3 rounded-lg border p-3 hover:bg-muted/50 rtl:space-x-reverse">
                         <RadioGroupItem value="create" id="mode-create" className="mt-1" />
                         <div className="flex-1">
-                          <Label htmlFor="mode-create" className="font-medium cursor-pointer">
+                          <Label htmlFor="mode-create" className="cursor-pointer font-medium">
                             {t('import.mode.create')}
                           </Label>
                           <p className="text-sm text-muted-foreground">
@@ -284,10 +284,10 @@ export function ImportDialog({
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-start space-x-3 rtl:space-x-reverse p-3 rounded-lg border hover:bg-muted/50">
+                      <div className="flex items-start space-x-3 rounded-lg border p-3 hover:bg-muted/50 rtl:space-x-reverse">
                         <RadioGroupItem value="update" id="mode-update" className="mt-1" />
                         <div className="flex-1">
-                          <Label htmlFor="mode-update" className="font-medium cursor-pointer">
+                          <Label htmlFor="mode-update" className="cursor-pointer font-medium">
                             {t('import.mode.update')}
                           </Label>
                           <p className="text-sm text-muted-foreground">
@@ -295,10 +295,10 @@ export function ImportDialog({
                           </p>
                         </div>
                       </div>
-                      <div className="flex items-start space-x-3 rtl:space-x-reverse p-3 rounded-lg border hover:bg-muted/50">
+                      <div className="flex items-start space-x-3 rounded-lg border p-3 hover:bg-muted/50 rtl:space-x-reverse">
                         <RadioGroupItem value="upsert" id="mode-upsert" className="mt-1" />
                         <div className="flex-1">
-                          <Label htmlFor="mode-upsert" className="font-medium cursor-pointer">
+                          <Label htmlFor="mode-upsert" className="cursor-pointer font-medium">
                             {t('import.mode.upsert')}
                           </Label>
                           <p className="text-sm text-muted-foreground">
@@ -364,15 +364,15 @@ export function ImportDialog({
 
           {/* Step: Importing */}
           {step === 'import' && (
-            <div className="flex flex-col items-center justify-center py-8 space-y-4">
-              <Loader2 className="h-12 w-12 animate-spin text-primary" />
+            <div className="flex flex-col items-center justify-center space-y-4 py-8">
+              <Loader2 className="size-12 animate-spin text-primary" />
               <div className="text-center">
                 <p className="font-medium">{t('import.execute.importing')}</p>
               </div>
               {progress && (
                 <div className="w-full max-w-xs space-y-2">
                   <Progress value={progress.progress} className="h-2" />
-                  <p className="text-xs text-center text-muted-foreground">
+                  <p className="text-center text-xs text-muted-foreground">
                     {isRTL ? progress.message_ar : progress.message_en}
                   </p>
                 </div>
@@ -382,14 +382,14 @@ export function ImportDialog({
 
           {/* Step: Complete */}
           {step === 'complete' && importResponse && (
-            <div className="flex flex-col items-center justify-center py-8 space-y-4">
+            <div className="flex flex-col items-center justify-center space-y-4 py-8">
               {importResponse.success ? (
-                <CheckCircle2 className="h-12 w-12 text-green-500" />
+                <CheckCircle2 className="size-12 text-green-500" />
               ) : (
-                <AlertCircle className="h-12 w-12 text-yellow-500" />
+                <AlertCircle className="size-12 text-yellow-500" />
               )}
-              <div className="text-center space-y-2">
-                <p className="font-medium text-lg">
+              <div className="space-y-2 text-center">
+                <p className="text-lg font-medium">
                   {importResponse.success
                     ? t('import.success.title')
                     : t('import.error.partialSuccess', {
@@ -404,16 +404,16 @@ export function ImportDialog({
                   })}
                 </p>
               </div>
-              <div className="grid grid-cols-3 gap-4 w-full max-w-sm mt-4">
-                <div className="text-center p-3 rounded-lg bg-green-50 dark:bg-green-900/20">
+              <div className="mt-4 grid w-full max-w-sm grid-cols-3 gap-4">
+                <div className="rounded-lg bg-green-50 p-3 text-center dark:bg-green-900/20">
                   <p className="text-2xl font-bold text-green-600">{importResponse.createdCount}</p>
                   <p className="text-xs text-green-700">Created</p>
                 </div>
-                <div className="text-center p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
+                <div className="rounded-lg bg-blue-50 p-3 text-center dark:bg-blue-900/20">
                   <p className="text-2xl font-bold text-blue-600">{importResponse.updatedCount}</p>
                   <p className="text-xs text-blue-700">Updated</p>
                 </div>
-                <div className="text-center p-3 rounded-lg bg-muted">
+                <div className="rounded-lg bg-muted p-3 text-center">
                   <p className="text-2xl font-bold text-muted-foreground">
                     {importResponse.skippedCount}
                   </p>
@@ -424,7 +424,7 @@ export function ImportDialog({
           )}
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2 border-t pt-4">
+        <DialogFooter className="flex-col gap-2 border-t pt-4 sm:flex-row">
           {step === 'upload' && (
             <Button variant="outline" onClick={handleClose} className="w-full sm:w-auto">
               {t('common.cancel')}
@@ -437,7 +437,7 @@ export function ImportDialog({
                 {t('common.back')}
               </Button>
               <Button onClick={handleImport} disabled={!canImport} className="w-full sm:w-auto">
-                <Upload className="h-4 w-4 me-2" />
+                <Upload className="me-2 size-4" />
                 {t('import.execute.button')} ({validationResult?.validRows || 0})
               </Button>
             </>

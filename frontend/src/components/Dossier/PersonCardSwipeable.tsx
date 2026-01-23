@@ -91,7 +91,7 @@ export const PersonCardSwipeable = memo(function PersonCardSwipeable({
           {
             key: 'view',
             label: t('contextMenu.view'),
-            icon: <Eye className="h-4 w-4" />,
+            icon: <Eye className="size-4" />,
             onSelect: () => onView(dossier.id),
           },
         ]
@@ -101,7 +101,7 @@ export const PersonCardSwipeable = memo(function PersonCardSwipeable({
           {
             key: 'edit',
             label: t('contextMenu.edit'),
-            icon: <Edit className="h-4 w-4" />,
+            icon: <Edit className="size-4" />,
             onSelect: () => onEdit(dossier.id),
           },
         ]
@@ -121,7 +121,7 @@ export const PersonCardSwipeable = memo(function PersonCardSwipeable({
           {
             key: 'share',
             label: t('contextMenu.share'),
-            icon: <Share2 className="h-4 w-4" />,
+            icon: <Share2 className="size-4" />,
             onSelect: () => onShare(dossier.id),
           },
         ]
@@ -131,7 +131,7 @@ export const PersonCardSwipeable = memo(function PersonCardSwipeable({
           {
             key: 'archive',
             label: t('contextMenu.archive'),
-            icon: <Archive className="h-4 w-4" />,
+            icon: <Archive className="size-4" />,
             onSelect: handleArchive,
           },
         ]
@@ -141,7 +141,7 @@ export const PersonCardSwipeable = memo(function PersonCardSwipeable({
           {
             key: 'delete',
             label: t('contextMenu.delete'),
-            icon: <Trash2 className="h-4 w-4" />,
+            icon: <Trash2 className="size-4" />,
             destructive: true,
             onSelect: () => onDelete(dossier.id),
           },
@@ -180,7 +180,7 @@ export const PersonCardSwipeable = memo(function PersonCardSwipeable({
             ? {
                 type: 'archive',
                 label: t('actions.archive'),
-                icon: <Archive className="h-5 w-5" />,
+                icon: <Archive className="size-5" />,
                 colorClass: 'bg-gray-500',
                 onAction: handleArchive,
               }

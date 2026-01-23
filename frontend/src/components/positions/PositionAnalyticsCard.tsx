@@ -34,7 +34,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
  </CardHeader>
  <CardContent>
  <div className="flex items-center justify-center py-8">
- <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+ <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
  </div>
  </CardContent>
  </Card>
@@ -83,7 +83,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
  <Card className={className}>
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <TrendingUp className="h-5 w-5" />
+ <TrendingUp className="size-5" />
  {t('positions.analytics.title')}
  </CardTitle>
  <CardDescription>{t('positions.analytics.description')}</CardDescription>
@@ -94,7 +94,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
  {usage_rank && (
  <div className="flex items-center justify-between rounded-lg border bg-primary/5 p-4">
  <div className="flex items-center gap-3">
- <Award className="h-8 w-8 text-primary" />
+ <Award className="size-8 text-primary" />
  <div>
  <p className="text-sm font-medium">{t('positions.analytics.rank')}</p>
  <p className="text-2xl font-bold">#{usage_rank}</p>
@@ -111,7 +111,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
  {/* Views */}
  <div className="space-y-2 rounded-lg border p-4">
  <div className="flex items-center justify-between">
- <Eye className="h-5 w-5 text-muted-foreground" />
+ <Eye className="size-5 text-muted-foreground" />
  {trend_data?.views && (
  <TrendIcon direction={getTrendDirection(view_count, trend_data.views.previous)} />
  )}
@@ -129,7 +129,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
  {/* Attachments */}
  <div className="space-y-2 rounded-lg border p-4">
  <div className="flex items-center justify-between">
- <Link2 className="h-5 w-5 text-muted-foreground" />
+ <Link2 className="size-5 text-muted-foreground" />
  {trend_data?.attachments && (
  <TrendIcon
  direction={getTrendDirection(attachment_count, trend_data.attachments.previous)}
@@ -149,7 +149,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
  {/* Briefing Packs */}
  <div className="space-y-2 rounded-lg border p-4">
  <div className="flex items-center justify-between">
- <FileText className="h-5 w-5 text-muted-foreground" />
+ <FileText className="size-5 text-muted-foreground" />
  {trend_data?.briefings && (
  <TrendIcon
  direction={getTrendDirection(briefing_pack_count, trend_data.briefings.previous)}
@@ -179,7 +179,7 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
  );
  })}
  </div>
- <p className="text-xs text-muted-foreground text-center">
+ <p className="text-center text-xs text-muted-foreground">
  {t('positions.analytics.last7Days')}
  </p>
  </div>
@@ -192,10 +192,10 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
 // Trend Icon Component
 const TrendIcon: React.FC<{ direction: 'up' | 'down' | 'stable' }> = ({ direction }) => {
  if (direction === 'up') {
- return <TrendingUp className="h-4 w-4 text-green-600" />;
+ return <TrendingUp className="size-4 text-green-600" />;
  }
  if (direction === 'down') {
- return <TrendingUp className="h-4 w-4 rotate-180 text-red-600" />;
+ return <TrendingUp className="size-4 rotate-180 text-red-600" />;
  }
- return <div className="h-4 w-4" />; // Stable - no icon
+ return <div className="size-4" />; // Stable - no icon
 };

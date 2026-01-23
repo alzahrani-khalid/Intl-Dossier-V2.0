@@ -105,7 +105,7 @@ export function NotificationItem({
     >
       {/* Unread indicator */}
       {!notification.read && (
-        <span className="absolute top-2 end-2 h-2 w-2 rounded-full bg-primary" />
+        <span className="absolute end-2 top-2 size-2 rounded-full bg-primary" />
       )}
 
       {/* Icon */}
@@ -115,13 +115,13 @@ export function NotificationItem({
           categoryColors[notification.category],
         )}
       >
-        <Icon className="h-5 w-5" />
+        <Icon className="size-5" />
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <p
               className={cn(
                 'text-sm font-medium truncate',
@@ -130,7 +130,7 @@ export function NotificationItem({
             >
               {notification.title}
             </p>
-            <p className="text-sm text-muted-foreground mt-0.5 line-clamp-2">
+            <p className="mt-0.5 line-clamp-2 text-sm text-muted-foreground">
               {notification.message}
             </p>
           </div>
@@ -141,10 +141,10 @@ export function NotificationItem({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 shrink-0"
+                className="size-8 shrink-0"
                 onClick={(e) => e.stopPropagation()}
               >
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -155,7 +155,7 @@ export function NotificationItem({
                     onMarkAsRead(notification.id)
                   }}
                 >
-                  <Check className="h-4 w-4 me-2" />
+                  <Check className="me-2 size-4" />
                   {t('actions.markRead')}
                 </DropdownMenuItem>
               )}
@@ -166,7 +166,7 @@ export function NotificationItem({
                     window.open(notification.action_url!, '_blank')
                   }}
                 >
-                  <ExternalLink className="h-4 w-4 me-2" />
+                  <ExternalLink className="me-2 size-4" />
                   {t('actions.viewDetails')}
                 </DropdownMenuItem>
               )}
@@ -178,7 +178,7 @@ export function NotificationItem({
                   }}
                   className="text-destructive focus:text-destructive"
                 >
-                  <Trash2 className="h-4 w-4 me-2" />
+                  <Trash2 className="me-2 size-4" />
                   {t('actions.delete')}
                 </DropdownMenuItem>
               )}
@@ -187,15 +187,15 @@ export function NotificationItem({
         </div>
 
         {/* Metadata */}
-        <div className="flex items-center gap-2 mt-2">
+        <div className="mt-2 flex items-center gap-2">
           <span className="text-xs text-muted-foreground">{timeAgo}</span>
           {notification.priority === 'urgent' && (
-            <span className="text-xs font-medium text-red-600 bg-red-100 dark:bg-red-900/30 px-2 py-0.5 rounded">
+            <span className="rounded bg-red-100 px-2 py-0.5 text-xs font-medium text-red-600 dark:bg-red-900/30">
               {t('priority.urgent')}
             </span>
           )}
           {notification.priority === 'high' && (
-            <span className="text-xs font-medium text-orange-600 bg-orange-100 dark:bg-orange-900/30 px-2 py-0.5 rounded">
+            <span className="rounded bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-600 dark:bg-orange-900/30">
               {t('priority.high')}
             </span>
           )}

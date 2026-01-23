@@ -110,8 +110,8 @@ export const WidgetContainer = forwardRef<HTMLDivElement, WidgetContainerProps>(
             isError && 'border-destructive/50',
           )}
         >
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 pt-3 px-3 sm:px-4">
-            <div className="flex items-center gap-2 min-w-0">
+          <CardHeader className="flex flex-row items-center justify-between space-y-0 px-3 pb-2 pt-3 sm:px-4">
+            <div className="flex min-w-0 items-center gap-2">
               {/* Drag Handle - Only visible in edit mode */}
               {isEditMode && (
                 <button
@@ -124,16 +124,16 @@ export const WidgetContainer = forwardRef<HTMLDivElement, WidgetContainerProps>(
                   )}
                   aria-label={t('accessibility.dragHandle')}
                 >
-                  <GripVertical className="h-4 w-4 text-muted-foreground" />
+                  <GripVertical className="size-4 text-muted-foreground" />
                 </button>
               )}
-              <CardTitle className="text-sm sm:text-base font-medium truncate">{title}</CardTitle>
+              <CardTitle className="truncate text-sm font-medium sm:text-base">{title}</CardTitle>
             </div>
 
             {/* Action Buttons */}
             <div className="flex items-center gap-1">
               {/* Loading Indicator */}
-              {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+              {isLoading && <Loader2 className="size-4 animate-spin text-muted-foreground" />}
 
               {/* Refresh Button */}
               {onRefresh && !isEditMode && (
@@ -145,9 +145,9 @@ export const WidgetContainer = forwardRef<HTMLDivElement, WidgetContainerProps>(
                         size="icon"
                         onClick={onRefresh}
                         disabled={isLoading}
-                        className="h-8 w-8"
+                        className="size-8"
                       >
-                        <RefreshCw className="h-4 w-4" />
+                        <RefreshCw className="size-4" />
                         <span className="sr-only">{t('actions.refresh')}</span>
                       </Button>
                     </TooltipTrigger>
@@ -163,8 +163,8 @@ export const WidgetContainer = forwardRef<HTMLDivElement, WidgetContainerProps>(
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" onClick={onSettings} className="h-8 w-8">
-                        <Settings className="h-4 w-4" />
+                      <Button variant="ghost" size="icon" onClick={onSettings} className="size-8">
+                        <Settings className="size-4" />
                         <span className="sr-only">
                           {t('accessibility.settingsButton', { widget: title })}
                         </span>
@@ -186,9 +186,9 @@ export const WidgetContainer = forwardRef<HTMLDivElement, WidgetContainerProps>(
                         variant="ghost"
                         size="icon"
                         onClick={onRemove}
-                        className="h-8 w-8 text-destructive hover:text-destructive hover:bg-destructive/10"
+                        className="size-8 text-destructive hover:bg-destructive/10 hover:text-destructive"
                       >
-                        <X className="h-4 w-4" />
+                        <X className="size-4" />
                         <span className="sr-only">
                           {t('accessibility.removeButton', { widget: title })}
                         </span>
@@ -203,9 +203,9 @@ export const WidgetContainer = forwardRef<HTMLDivElement, WidgetContainerProps>(
             </div>
           </CardHeader>
 
-          <CardContent className="flex-1 p-3 sm:p-4 pt-0 overflow-hidden">
+          <CardContent className="flex-1 overflow-hidden p-3 pt-0 sm:p-4">
             {isError ? (
-              <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
+              <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
                 <p>{t('errors.loadFailed')}</p>
               </div>
             ) : (

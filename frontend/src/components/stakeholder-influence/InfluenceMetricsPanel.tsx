@@ -111,16 +111,16 @@ function MetricCard({
   color?: string
 }) {
   return (
-    <div className="flex items-start gap-3 p-3 rounded-lg bg-muted/50">
+    <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-3">
       <div
-        className="p-2 rounded-lg"
+        className="rounded-lg p-2"
         style={{ backgroundColor: color ? `${color}20` : 'var(--muted)' }}
       >
-        <Icon className="h-4 w-4" style={{ color: color || 'currentColor' }} />
+        <Icon className="size-4" style={{ color: color || 'currentColor' }} />
       </div>
       <div className="min-w-0 flex-1">
         <p className="text-sm text-muted-foreground">{label}</p>
-        <p className="font-semibold truncate">{value}</p>
+        <p className="truncate font-semibold">{value}</p>
         {sublabel && <p className="text-xs text-muted-foreground">{sublabel}</p>}
       </div>
     </div>
@@ -145,7 +145,7 @@ export function InfluenceMetricsPanel({
     return (
       <Card className={cn('animate-pulse', className)}>
         <CardHeader className={compact ? 'pb-2' : ''}>
-          <Skeleton className="h-6 w-32 mb-2" />
+          <Skeleton className="mb-2 h-6 w-32" />
           <Skeleton className="h-4 w-48" />
         </CardHeader>
         <CardContent className="space-y-4">
@@ -162,7 +162,7 @@ export function InfluenceMetricsPanel({
     return (
       <Card className={cn('', className)}>
         <CardContent className="py-8 text-center">
-          <Users className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
+          <Users className="mx-auto mb-3 size-12 text-muted-foreground" />
           <p className="text-muted-foreground">
             {t('no_data', 'Select a stakeholder to view metrics')}
           </p>
@@ -188,11 +188,11 @@ export function InfluenceMetricsPanel({
       <CardHeader className={compact ? 'pb-3' : ''}>
         <div className="flex items-start justify-between gap-3">
           <div className="min-w-0 flex-1">
-            <CardTitle className="text-lg sm:text-xl truncate">{name}</CardTitle>
+            <CardTitle className="truncate text-lg sm:text-xl">{name}</CardTitle>
             <CardDescription className="capitalize">{data.dossier_type}</CardDescription>
           </div>
           <div
-            className="flex items-center justify-center w-14 h-14 sm:w-16 sm:h-16 rounded-full font-bold text-lg sm:text-xl text-white flex-shrink-0"
+            className="flex size-14 shrink-0 items-center justify-center rounded-full text-lg font-bold text-white sm:size-16 sm:text-xl"
             style={{ backgroundColor: tierColor }}
           >
             {data.influence_score}
@@ -200,22 +200,22 @@ export function InfluenceMetricsPanel({
         </div>
 
         {/* Tier and Role badges */}
-        <div className="flex flex-wrap gap-2 mt-3">
+        <div className="mt-3 flex flex-wrap gap-2">
           <Badge
             variant="secondary"
             className="gap-1"
             style={{ backgroundColor: `${tierColor}20`, color: tierColor }}
           >
-            <TrendingUp className="h-3 w-3" />
+            <TrendingUp className="size-3" />
             {tierLabel}
           </Badge>
           <Badge variant="outline" className="gap-1">
-            <RoleIcon className="h-3 w-3" />
+            <RoleIcon className="size-3" />
             {roleLabel}
           </Badge>
           {data.cluster.id && (
             <Badge variant="outline">
-              <Users className="h-3 w-3 me-1" />
+              <Users className="me-1 size-3" />
               {clusterName}
             </Badge>
           )}
@@ -225,8 +225,8 @@ export function InfluenceMetricsPanel({
       <CardContent className="space-y-6">
         {/* Network Position Metrics */}
         <div className="space-y-3">
-          <h4 className="font-medium text-sm flex items-center gap-2">
-            <Target className="h-4 w-4" />
+          <h4 className="flex items-center gap-2 text-sm font-medium">
+            <Target className="size-4" />
             {t('network_position', 'Network Position')}
           </h4>
           <div className="space-y-3">
@@ -275,8 +275,8 @@ export function InfluenceMetricsPanel({
 
         {/* Engagement Metrics */}
         <div className="space-y-3">
-          <h4 className="font-medium text-sm flex items-center gap-2">
-            <Activity className="h-4 w-4" />
+          <h4 className="flex items-center gap-2 text-sm font-medium">
+            <Activity className="size-4" />
             {t('engagement', 'Engagement')}
           </h4>
           <div className={cn('grid gap-3', compact ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2')}>
@@ -305,8 +305,8 @@ export function InfluenceMetricsPanel({
 
         {/* Relationship Health */}
         <div className="space-y-3">
-          <h4 className="font-medium text-sm flex items-center gap-2">
-            <Heart className="h-4 w-4" />
+          <h4 className="flex items-center gap-2 text-sm font-medium">
+            <Heart className="size-4" />
             {t('relationships', 'Relationships')}
           </h4>
           <div className={cn('grid gap-3', compact ? 'grid-cols-1' : 'grid-cols-1 sm:grid-cols-2')}>
@@ -353,7 +353,7 @@ export function InfluenceMetricsPanel({
           <>
             <Separator />
             <div className="space-y-3">
-              <h4 className="font-medium text-sm text-muted-foreground">
+              <h4 className="text-sm font-medium text-muted-foreground">
                 {t('raw_metrics', 'Raw Metrics')}
               </h4>
               <div className="grid grid-cols-2 gap-2 text-sm">
@@ -385,7 +385,7 @@ export function InfluenceMetricsPanel({
         )}
 
         {/* Calculated timestamp */}
-        <p className="text-xs text-muted-foreground text-end">
+        <p className="text-end text-xs text-muted-foreground">
           {t('calculated_at', 'Calculated')}:{' '}
           {new Date(data.calculated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
         </p>

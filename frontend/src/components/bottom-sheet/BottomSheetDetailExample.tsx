@@ -71,14 +71,14 @@ export function BottomSheetDetailExample({
   return (
     <BottomSheet snapPreset="large">
       <BottomSheetTrigger asChild>
-        <button className="w-full text-start p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors min-h-11">
+        <button className="min-h-11 w-full rounded-lg border bg-card p-4 text-start transition-colors hover:bg-accent/50">
           <div className="flex items-center justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <h3 className="font-medium truncate">{title}</h3>
-              <p className="text-sm text-muted-foreground truncate">{description}</p>
+            <div className="min-w-0 flex-1">
+              <h3 className="truncate font-medium">{title}</h3>
+              <p className="truncate text-sm text-muted-foreground">{description}</p>
             </div>
             <ChevronRight
-              className={`size-5 text-muted-foreground shrink-0 ${isRTL ? 'rotate-180' : ''}`}
+              className={`size-5 shrink-0 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
             />
           </div>
         </button>
@@ -99,33 +99,33 @@ export function BottomSheetDetailExample({
         <BottomSheetBody className="px-4 sm:px-6">
           {/* Detail cards */}
           <div className="space-y-4">
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-              <Calendar className="size-5 text-muted-foreground shrink-0" />
-              <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
+              <Calendar className="size-5 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
                 <p className="text-xs text-muted-foreground">{isRTL ? 'التاريخ' : 'Date'}</p>
                 <p className="font-medium">{item.date}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-              <User className="size-5 text-muted-foreground shrink-0" />
-              <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
+              <User className="size-5 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
                 <p className="text-xs text-muted-foreground">{isRTL ? 'المسؤول' : 'Assignee'}</p>
                 <p className="font-medium">{item.assignee}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-              <MapPin className="size-5 text-muted-foreground shrink-0" />
-              <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
+              <MapPin className="size-5 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
                 <p className="text-xs text-muted-foreground">{isRTL ? 'الموقع' : 'Location'}</p>
                 <p className="font-medium">{item.location}</p>
               </div>
             </div>
 
-            <div className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-              <Clock className="size-5 text-muted-foreground shrink-0" />
-              <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
+              <Clock className="size-5 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
                 <p className="text-xs text-muted-foreground">
                   {isRTL ? 'آخر تحديث' : 'Last Updated'}
                 </p>
@@ -136,7 +136,7 @@ export function BottomSheetDetailExample({
         </BottomSheetBody>
 
         <BottomSheetFooter>
-          <div className="flex gap-2 w-full">
+          <div className="flex w-full gap-2">
             <Button variant="outline" size="icon" onClick={onShare} className="min-h-11 min-w-11">
               <Share2 className="size-4" />
               <span className="sr-only">{isRTL ? 'مشاركة' : 'Share'}</span>

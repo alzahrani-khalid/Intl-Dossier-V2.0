@@ -176,10 +176,10 @@ export function SettingsPage() {
   }
 
   const sections = [
-    { id: 'general', label: t('settings.general'), icon: <User className="h-4 w-4" /> },
-    { id: 'appearance', label: t('settings.appearance'), icon: <Palette className="h-4 w-4" /> },
-    { id: 'notifications', label: t('settings.notifications'), icon: <Bell className="h-4 w-4" /> },
-    { id: 'security', label: t('settings.security'), icon: <Shield className="h-4 w-4" /> },
+    { id: 'general', label: t('settings.general'), icon: <User className="size-4" /> },
+    { id: 'appearance', label: t('settings.appearance'), icon: <Palette className="size-4" /> },
+    { id: 'notifications', label: t('settings.notifications'), icon: <Bell className="size-4" /> },
+    { id: 'security', label: t('settings.security'), icon: <Shield className="size-4" /> },
   ]
 
   const timezones = [
@@ -193,14 +193,14 @@ export function SettingsPage() {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">{t('navigation.settings')}</h1>
         {hasChanges && (
           <Button
             onClick={() => updateSettingsMutation.mutate(formData)}
             disabled={updateSettingsMutation.isPending}
           >
-            <Save className="h-4 w-4 me-2" />
+            <Save className="me-2 size-4" />
             {t('common.save')}
           </Button>
         )}
@@ -210,7 +210,7 @@ export function SettingsPage() {
         <Card className="mb-6 border-green-200 bg-green-50">
           <CardContent className="p-4">
             <div className="flex items-center gap-2 text-green-800">
-              <Check className="h-5 w-5" />
+              <Check className="size-5" />
               <span>{t('settings.savedSuccessfully')}</span>
             </div>
           </CardContent>
@@ -224,7 +224,7 @@ export function SettingsPage() {
               {sections.map((section) => (
                 <button
                   key={section.id}
-                  className={`w-full flex items-center justify-between p-4 hover:bg-muted transition-colors ${
+                  className={`flex w-full items-center justify-between p-4 transition-colors hover:bg-muted ${
                     activeSection === section.id ? 'bg-muted' : ''
                   }`}
                   onClick={() => setActiveSection(section.id)}
@@ -233,7 +233,7 @@ export function SettingsPage() {
                     {section.icon}
                     <span className="font-medium">{section.label}</span>
                   </div>
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="size-4" />
                 </button>
               ))}
             </CardContent>
@@ -261,14 +261,14 @@ export function SettingsPage() {
                           variant={formData.language_preference === 'en' ? 'default' : 'outline'}
                           onClick={() => updateFormData({ language_preference: 'en' })}
                         >
-                          <Globe className="h-4 w-4 me-2" />
+                          <Globe className="me-2 size-4" />
                           English
                         </Button>
                         <Button
                           variant={formData.language_preference === 'ar' ? 'default' : 'outline'}
                           onClick={() => updateFormData({ language_preference: 'ar' })}
                         >
-                          <Globe className="h-4 w-4 me-2" />
+                          <Globe className="me-2 size-4" />
                           العربية
                         </Button>
                       </div>
@@ -325,7 +325,7 @@ export function SettingsPage() {
                           onClick={() => setColorMode('light')}
                         >
                           <CardContent className="p-6 text-center">
-                            <Sun className="h-10 w-10 mx-auto mb-3 text-yellow-500" />
+                            <Sun className="mx-auto mb-3 size-10 text-yellow-500" />
                             <span className="text-sm font-medium">{t('settings.lightMode')}</span>
                           </CardContent>
                         </Card>
@@ -336,7 +336,7 @@ export function SettingsPage() {
                           onClick={() => setColorMode('dark')}
                         >
                           <CardContent className="p-6 text-center">
-                            <Moon className="h-10 w-10 mx-auto mb-3 text-blue-500" />
+                            <Moon className="mx-auto mb-3 size-10 text-blue-500" />
                             <span className="text-sm font-medium">{t('settings.darkMode')}</span>
                           </CardContent>
                         </Card>
@@ -349,36 +349,36 @@ export function SettingsPage() {
                         <Label className="text-base font-semibold">
                           {isRTL ? 'نمط السمة' : 'Theme Style'}
                         </Label>
-                        <p className="text-sm text-muted-foreground mt-1">
+                        <p className="mt-1 text-sm text-muted-foreground">
                           {isRTL ? 'سمة التطبيق الحالية' : 'Current application theme'}
                         </p>
                       </div>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                         {/* Canvas Theme */}
                         <Card className="ring-2 ring-primary">
                           <CardContent className="p-6">
-                            <div className="flex items-center gap-3 mb-4">
+                            <div className="mb-4 flex items-center gap-3">
                               <div className="flex gap-1">
                                 <div
-                                  className="w-4 h-4 rounded-full"
+                                  className="size-4 rounded-full"
                                   style={{ backgroundColor: 'hsl(155 50.6% 37.3%)' }}
                                 />
                                 <div
-                                  className="w-4 h-4 rounded-full"
+                                  className="size-4 rounded-full"
                                   style={{ backgroundColor: 'hsl(0 0% 89.8%)' }}
                                 />
                                 <div
-                                  className="w-4 h-4 rounded-full"
+                                  className="size-4 rounded-full"
                                   style={{ backgroundColor: 'hsl(155 55.8% 58.4%)' }}
                                 />
                               </div>
-                              <Check className="h-5 w-5 text-primary ms-auto" />
+                              <Check className="ms-auto size-5 text-primary" />
                             </div>
                             <div className="text-center">
                               <span className="text-sm font-medium">
                                 {isRTL ? 'كانفس' : 'Canvas'}
                               </span>
-                              <p className="text-xs text-muted-foreground mt-1">
+                              <p className="mt-1 text-xs text-muted-foreground">
                                 {isRTL
                                   ? 'أخضر يوكاليبتوس مع رمادي ألاباستر'
                                   : 'Eucalyptus green with Alabaster gray'}
@@ -484,7 +484,7 @@ export function SettingsPage() {
                       <div className="flex items-center justify-between">
                         <div className="space-y-0.5">
                           <Label className="flex items-center gap-2">
-                            <Smartphone className="h-4 w-4" />
+                            <Smartphone className="size-4" />
                             {t('settings.twoFactorAuth')}
                           </Label>
                           <p className="text-sm text-muted-foreground">
@@ -501,12 +501,12 @@ export function SettingsPage() {
                         <Card className="border-orange-200 bg-orange-50">
                           <CardContent className="p-4">
                             <div className="flex items-start gap-2">
-                              <AlertCircle className="h-5 w-5 text-orange-600 mt-0.5" />
+                              <AlertCircle className="mt-0.5 size-5 text-orange-600" />
                               <div className="text-sm text-orange-800">
-                                <p className="font-medium mb-1">{t('settings.mfaSetupRequired')}</p>
+                                <p className="mb-1 font-medium">{t('settings.mfaSetupRequired')}</p>
                                 <p>{t('settings.mfaSetupInstructions')}</p>
                                 <Button size="sm" className="mt-2">
-                                  <Key className="h-4 w-4 me-2" />
+                                  <Key className="me-2 size-4" />
                                   {t('settings.setupMfa')}
                                 </Button>
                               </div>
@@ -535,8 +535,8 @@ export function SettingsPage() {
                         </select>
                       </div>
 
-                      <div className="pt-4 border-t">
-                        <h3 className="font-medium mb-4">{t('settings.passwordChange')}</h3>
+                      <div className="border-t pt-4">
+                        <h3 className="mb-4 font-medium">{t('settings.passwordChange')}</h3>
                         <div className="space-y-4">
                           <div>
                             <Label>{t('settings.currentPassword')}</Label>
@@ -551,7 +551,7 @@ export function SettingsPage() {
                             <Input type="password" className="mt-2" />
                           </div>
                           <Button>
-                            <Key className="h-4 w-4 me-2" />
+                            <Key className="me-2 size-4" />
                             {t('settings.changePassword')}
                           </Button>
                         </div>

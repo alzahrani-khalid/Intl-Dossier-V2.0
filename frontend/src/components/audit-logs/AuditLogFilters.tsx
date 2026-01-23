@@ -194,23 +194,23 @@ export function AuditLogFilters({
       {/* Search and Quick Actions Row */}
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Search */}
-        <div className="relative flex-1 max-w-sm">
-          <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <div className="relative max-w-sm flex-1">
+          <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             type="text"
             placeholder={t('filters.search_placeholder')}
             value={searchValue}
             onChange={(e) => handleSearchChange(e.target.value)}
-            className="ps-10 pe-4 h-10"
+            className="h-10 pe-4 ps-10"
           />
           {searchValue && (
             <Button
               variant="ghost"
               size="sm"
-              className="absolute end-1 top-1/2 h-7 w-7 -translate-y-1/2 p-0"
+              className="absolute end-1 top-1/2 size-7 -translate-y-1/2 p-0"
               onClick={() => handleSearchChange('')}
             >
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
           )}
         </div>
@@ -224,7 +224,7 @@ export function AuditLogFilters({
               onClick={onClearFilters}
               className="text-muted-foreground hover:text-foreground"
             >
-              <X className="h-4 w-4 me-1" />
+              <X className="me-1 size-4" />
               {t('filters.clear_all')}
               <Badge variant="secondary" className="ms-1">
                 {activeFilterCount}
@@ -240,14 +240,14 @@ export function AuditLogFilters({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="h-9">
-              <Database className="h-4 w-4 me-2" />
+              <Database className="me-2 size-4" />
               {t('filters.table')}
               {filters.table_name ? (
                 <Badge variant="secondary" className="ms-2">
                   1
                 </Badge>
               ) : (
-                <ChevronDown className="h-4 w-4 ms-2" />
+                <ChevronDown className="ms-2 size-4" />
               )}
             </Button>
           </PopoverTrigger>
@@ -282,14 +282,14 @@ export function AuditLogFilters({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="h-9">
-              <Filter className="h-4 w-4 me-2" />
+              <Filter className="me-2 size-4" />
               {t('filters.operation')}
               {filters.operation ? (
                 <Badge variant="secondary" className="ms-2">
                   1
                 </Badge>
               ) : (
-                <ChevronDown className="h-4 w-4 ms-2" />
+                <ChevronDown className="ms-2 size-4" />
               )}
             </Button>
           </PopoverTrigger>
@@ -328,7 +328,7 @@ export function AuditLogFilters({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="h-9">
-              <Calendar className="h-4 w-4 me-2" />
+              <Calendar className="me-2 size-4" />
               {t('filters.date_range')}
               {(filters.date_from || filters.date_to) && (
                 <Badge variant="secondary" className="ms-2">
@@ -416,7 +416,7 @@ export function AuditLogFilters({
         <Popover>
           <PopoverTrigger asChild>
             <Button variant="outline" size="sm" className="h-9">
-              <Globe className="h-4 w-4 me-2" />
+              <Globe className="me-2 size-4" />
               {t('filters.ip_address')}
               {filters.ip_address && (
                 <Badge variant="secondary" className="ms-2">
@@ -460,38 +460,38 @@ export function AuditLogFilters({
 
       {/* Active Filters Display */}
       {activeFilterCount > 0 && (
-        <div className="flex flex-wrap gap-2 pt-2 border-t">
+        <div className="flex flex-wrap gap-2 border-t pt-2">
           {filters.table_name && (
             <Badge variant="secondary" className="gap-1 px-2 py-1">
-              <Database className="h-3 w-3" />
+              <Database className="size-3" />
               {t(`tables.${filters.table_name}`, filters.table_name)}
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-4 w-4 p-0 ms-1 hover:bg-transparent"
+                className="ms-1 size-4 p-0 hover:bg-transparent"
                 onClick={() => onFiltersChange({ ...filters, table_name: undefined })}
               >
-                <X className="h-3 w-3" />
+                <X className="size-3" />
               </Button>
             </Badge>
           )}
           {filters.operation && (
             <Badge variant="secondary" className="gap-1 px-2 py-1">
-              <Filter className="h-3 w-3" />
+              <Filter className="size-3" />
               {t(`operations.${filters.operation}`)}
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-4 w-4 p-0 ms-1 hover:bg-transparent"
+                className="ms-1 size-4 p-0 hover:bg-transparent"
                 onClick={() => onFiltersChange({ ...filters, operation: undefined })}
               >
-                <X className="h-3 w-3" />
+                <X className="size-3" />
               </Button>
             </Badge>
           )}
           {(filters.date_from || filters.date_to) && (
             <Badge variant="secondary" className="gap-1 px-2 py-1">
-              <Calendar className="h-3 w-3" />
+              <Calendar className="size-3" />
               {filters.date_from &&
                 new Date(filters.date_from).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
               {filters.date_to &&
@@ -499,7 +499,7 @@ export function AuditLogFilters({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-4 w-4 p-0 ms-1 hover:bg-transparent"
+                className="ms-1 size-4 p-0 hover:bg-transparent"
                 onClick={() =>
                   onFiltersChange({
                     ...filters,
@@ -508,21 +508,21 @@ export function AuditLogFilters({
                   })
                 }
               >
-                <X className="h-3 w-3" />
+                <X className="size-3" />
               </Button>
             </Badge>
           )}
           {filters.ip_address && (
             <Badge variant="secondary" className="gap-1 px-2 py-1">
-              <Globe className="h-3 w-3" />
+              <Globe className="size-3" />
               {filters.ip_address}
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-4 w-4 p-0 ms-1 hover:bg-transparent"
+                className="ms-1 size-4 p-0 hover:bg-transparent"
                 onClick={() => onFiltersChange({ ...filters, ip_address: undefined })}
               >
-                <X className="h-3 w-3" />
+                <X className="size-3" />
               </Button>
             </Badge>
           )}

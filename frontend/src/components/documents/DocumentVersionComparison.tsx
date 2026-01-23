@@ -90,15 +90,15 @@ export function DocumentVersionComparison({
  const isDifferent = value1 !== value2;
 
  return (
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-3">
+ <div className="grid grid-cols-1 gap-4 py-3 sm:grid-cols-3">
  <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
- <Icon className="h-4 w-4" />
+ <Icon className="size-4" />
  {label}
  </div>
- <div className={`text-sm text-start ${isDifferent ? 'font-medium text-orange-600 dark:text-orange-400' : ''}`}>
+ <div className={`text-start text-sm ${isDifferent ? 'font-medium text-orange-600 dark:text-orange-400' : ''}`}>
  {value1}
  </div>
- <div className={`text-sm text-start ${isDifferent ? 'font-medium text-orange-600 dark:text-orange-400' : ''}`}>
+ <div className={`text-start text-sm ${isDifferent ? 'font-medium text-orange-600 dark:text-orange-400' : ''}`}>
  {value2}
  </div>
  </div>
@@ -106,35 +106,35 @@ export function DocumentVersionComparison({
  };
 
  return (
- <Card className="w-full max-w-6xl mx-auto" dir={isRTL ? 'rtl' : 'ltr'}>
- <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 pb-4">
- <CardTitle className="text-base sm:text-lg text-start">
+ <Card className="mx-auto w-full max-w-6xl" dir={isRTL ? 'rtl' : 'ltr'}>
+ <CardHeader className="flex flex-col gap-4 pb-4 sm:flex-row sm:items-center sm:justify-between">
+ <CardTitle className="text-start text-base sm:text-lg">
  {t('documents.comparison.title')}
  </CardTitle>
- <Button variant="ghost" size="icon" onClick={onClose} className="h-8 w-8 self-end sm:self-auto">
- <X className="h-4 w-4" />
+ <Button variant="ghost" size="icon" onClick={onClose} className="size-8 self-end sm:self-auto">
+ <X className="size-4" />
  </Button>
  </CardHeader>
 
  <CardContent className="space-y-6">
  {isLoading ? (
  <div className="flex items-center justify-center py-12">
- <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+ <Loader2 className="size-6 animate-spin text-muted-foreground" />
  </div>
  ) : !currentDoc || !compareDoc ? (
  <div className="flex items-center justify-center py-12 text-destructive">
- <AlertCircle className="h-5 w-5 me-2" />
+ <AlertCircle className="me-2 size-5" />
  <span className="text-sm">{t('documents.comparison.error_loading')}</span>
  </div>
  ) : (
  <>
  {/* Header Row */}
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+ <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
  <div className="text-sm font-medium text-muted-foreground">
  {t('documents.comparison.metadata')}
  </div>
  <div className="space-y-1">
- <p className="text-sm font-semibold text-start">
+ <p className="text-start text-sm font-semibold">
  {t('documents.comparison.version', { number: currentDoc.version_number })}
  </p>
  <Badge variant="outline" className="text-xs">
@@ -142,7 +142,7 @@ export function DocumentVersionComparison({
  </Badge>
  </div>
  <div className="space-y-1">
- <p className="text-sm font-semibold text-start">
+ <p className="text-start text-sm font-semibold">
  {t('documents.comparison.version', { number: compareDoc.version_number })}
  </p>
  <Badge variant="outline" className="text-xs">
@@ -200,9 +200,9 @@ export function DocumentVersionComparison({
  )}
 
  {/* Tags Row */}
- <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 py-3">
+ <div className="grid grid-cols-1 gap-4 py-3 sm:grid-cols-3">
  <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
- <Tag className="h-4 w-4" />
+ <Tag className="size-4" />
  {t('documents.comparison.tags')}
  </div>
  <div className="flex flex-wrap gap-1">
@@ -228,8 +228,8 @@ export function DocumentVersionComparison({
  {/* Binary Warning or Text Diff */}
  {isBinary ? (
  <div className="rounded-md bg-muted/50 p-6 text-center">
- <FileText className="h-12 w-12 mx-auto mb-3 text-muted-foreground" />
- <p className="text-sm font-medium mb-2">
+ <FileText className="mx-auto mb-3 size-12 text-muted-foreground" />
+ <p className="mb-2 text-sm font-medium">
  {t('documents.comparison.binary_warning_title')}
  </p>
  <p className="text-xs text-muted-foreground">
@@ -238,20 +238,20 @@ export function DocumentVersionComparison({
  </div>
  ) : (
  <div className="rounded-md bg-muted/50 p-6">
- <p className="text-sm text-muted-foreground text-center">
+ <p className="text-center text-sm text-muted-foreground">
  {t('documents.comparison.text_diff_placeholder')}
  </p>
  </div>
  )}
 
  {/* Download Buttons */}
- <div className="flex flex-col sm:flex-row gap-3">
+ <div className="flex flex-col gap-3 sm:flex-row">
  <Button
  variant="outline"
  onClick={() => handleDownload(currentDoc)}
  className="w-full sm:w-1/2"
  >
- <Download className="h-4 w-4 me-2" />
+ <Download className="me-2 size-4" />
  {t('documents.comparison.download_current')}
  </Button>
  <Button
@@ -259,7 +259,7 @@ export function DocumentVersionComparison({
  onClick={() => handleDownload(compareDoc)}
  className="w-full sm:w-1/2"
  >
- <Download className="h-4 w-4 me-2" />
+ <Download className="me-2 size-4" />
  {t('documents.comparison.download_compare')}
  </Button>
  </div>

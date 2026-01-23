@@ -95,7 +95,7 @@ export function MousPage() {
       <div className="flex items-center gap-2">
         <span
           className={`
- inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+ inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
  ${stateConfig.color === 'gray' ? 'bg-muted text-muted-foreground' : ''}
  ${stateConfig.color === 'yellow' ? 'bg-warning/10 text-warning' : ''}
  ${stateConfig.color === 'orange' ? 'bg-warning/20 text-warning' : ''}
@@ -115,7 +115,7 @@ export function MousPage() {
               /* handle transition */
             }}
           >
-            <ChevronRight className="h-3 w-3" />
+            <ChevronRight className="size-3" />
             {t(`mous.statuses.${stateConfig.next}`)}
           </Button>
         )}
@@ -166,16 +166,16 @@ export function MousPage() {
         id: 'dates',
         header: t('mous.dates'),
         cell: ({ row }) => (
-          <div className="text-sm space-y-1">
+          <div className="space-y-1 text-sm">
             {row.original.signing_date && (
               <div className="flex items-center gap-1">
-                <FileText className="h-3 w-3" />
+                <FileText className="size-3" />
                 {format(new Date(row.original.signing_date), 'dd MMM yyyy')}
               </div>
             )}
             {row.original.expiry_date && (
               <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
+                <Clock className="size-3" />
                 {format(new Date(row.original.expiry_date), 'dd MMM yyyy')}
               </div>
             )}
@@ -194,8 +194,8 @@ export function MousPage() {
             )
             if (daysUntilExpiry <= 30 && daysUntilExpiry > 0) {
               return (
-                <div className="flex items-center gap-1 text-warning">
-                  <AlertCircle className="h-4 w-4" />
+                <div className="text-warning flex items-center gap-1">
+                  <AlertCircle className="size-4" />
                   <span className="text-xs">{daysUntilExpiry}d</span>
                 </div>
               )
@@ -212,15 +212,15 @@ export function MousPage() {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">{t('navigation.mous')}</h1>
         <Button>
-          <Plus className="h-4 w-4 me-2" />
+          <Plus className="me-2 size-4" />
           {t('mous.addMou')}
         </Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-4 mb-6">
+      <div className="mb-6 grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('mous.total')}</CardTitle>
@@ -244,7 +244,7 @@ export function MousPage() {
             <CardTitle className="text-sm font-medium">{t('mous.expiringSoon')}</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-warning">
+            <div className="text-warning text-2xl font-bold">
               {mous?.filter((m) => {
                 if (!m.expiry_date) return false
                 const days = Math.floor(
@@ -282,7 +282,7 @@ export function MousPage() {
               onChange={(e) => setSearchTerm(e.target.value)}
               className="max-w-sm"
             />
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex flex-wrap gap-2">
               <Button
                 variant={filterState === 'all' ? 'default' : 'outline'}
                 size="sm"

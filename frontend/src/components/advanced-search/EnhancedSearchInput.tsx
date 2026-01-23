@@ -132,28 +132,28 @@ function SuggestionItem({ suggestion, query, isSelected, onClick, isRTL }: Sugge
         )}
       />
 
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium truncate">
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-medium">
           <HighlightedText
             text={isRTL && displayTextAr ? displayTextAr : displayText}
             query={query}
           />
         </div>
         {isSearchSuggestion(suggestion) && suggestion.entity_type && (
-          <div className="text-xs text-muted-foreground mt-0.5">
+          <div className="mt-0.5 text-xs text-muted-foreground">
             {t(`entityTypes.${suggestion.entity_type}`)}
           </div>
         )}
       </div>
 
       {resultCount !== null && resultCount >= 0 && (
-        <Badge variant="secondary" className="flex-shrink-0 text-xs">
+        <Badge variant="secondary" className="shrink-0 text-xs">
           {resultCount} {t('results.count')}
         </Badge>
       )}
 
       {isSearchSuggestion(suggestion) && suggestion.similarity_score < 1 && (
-        <Badge variant="outline" className="flex-shrink-0 text-xs">
+        <Badge variant="outline" className="shrink-0 text-xs">
           {t('suggestions.fuzzyMatch')}
         </Badge>
       )}
@@ -188,7 +188,7 @@ function SuggestionSection({
 
   return (
     <div className="py-1">
-      <div className="px-3 py-1.5 text-xs font-medium text-muted-foreground uppercase tracking-wide">
+      <div className="px-3 py-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
         {title}
       </div>
       {items.map((item, index) => (
@@ -238,7 +238,7 @@ function SuggestionsDropdown({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-8">
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        <Loader2 className="size-5 animate-spin text-muted-foreground" />
         <span className="ms-2 text-sm text-muted-foreground">{t('suggestions.loading')}</span>
       </div>
     )
@@ -412,7 +412,7 @@ export const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInpu
           {/* Clear & Search Buttons */}
           <div className={cn('absolute top-1/2 -translate-y-1/2 flex items-center gap-1', 'end-2')}>
             {/* Loading Indicator */}
-            {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground me-1" />}
+            {isLoading && <Loader2 className="me-1 size-4 animate-spin text-muted-foreground" />}
 
             {/* Clear Button */}
             {query && (
@@ -421,16 +421,16 @@ export const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInpu
                 variant="ghost"
                 size="sm"
                 onClick={clearQuery}
-                className="h-7 w-7 p-0 rounded-full"
+                className="size-7 rounded-full p-0"
                 aria-label={t('search.clear')}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             )}
 
             {/* Search Button */}
             <Button type="submit" size="sm" className="h-8 px-3" disabled={!query.trim()}>
-              <Search className="h-4 w-4 me-1" />
+              <Search className="me-1 size-4" />
               <span className="hidden sm:inline">{t('search.button')}</span>
             </Button>
           </div>
@@ -458,7 +458,7 @@ export const EnhancedSearchInput = forwardRef<HTMLDivElement, EnhancedSearchInpu
 
             {/* Keyboard Hints */}
             {suggestions && (
-              <div className="px-3 py-2 border-t border-border bg-muted/50 text-xs text-muted-foreground flex items-center justify-between">
+              <div className="flex items-center justify-between border-t border-border bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
                 <span>{t('suggestions.keyboardHints.navigate')}</span>
                 <span>{t('suggestions.keyboardHints.select')}</span>
               </div>

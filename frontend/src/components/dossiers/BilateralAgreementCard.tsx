@@ -55,7 +55,7 @@ export function BilateralAgreementCard({
       case 'active':
         return (
           <Badge variant="default" className="gap-1">
-            <CheckCircle className="h-3 w-3" />
+            <CheckCircle className="size-3" />
             {t('mou.status.active', 'Active')}
           </Badge>
         )
@@ -63,14 +63,14 @@ export function BilateralAgreementCard({
       case 'under_negotiation':
         return (
           <Badge variant="secondary" className="gap-1">
-            <Clock className="h-3 w-3" />
+            <Clock className="size-3" />
             {t('mou.status.draft', 'Draft')}
           </Badge>
         )
       case 'expired':
         return (
           <Badge variant="destructive" className="gap-1">
-            <AlertCircle className="h-3 w-3" />
+            <AlertCircle className="size-3" />
             {t('mou.status.expired', 'Expired')}
           </Badge>
         )
@@ -87,30 +87,30 @@ export function BilateralAgreementCard({
 
   return (
     <Card
-      className="group p-4 sm:p-6 hover:border-primary/50 transition-all cursor-pointer"
+      className="group cursor-pointer p-4 transition-all hover:border-primary/50 sm:p-6"
       onClick={onClick}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header: Title and Status */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
-        <div className="flex items-start gap-3 flex-1 min-w-0">
-          <div className="mt-1 flex-shrink-0">
-            <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-              <FileText className="h-5 w-5 text-primary" />
+      <div className="mb-3 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+        <div className="flex min-w-0 flex-1 items-start gap-3">
+          <div className="mt-1 shrink-0">
+            <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
+              <FileText className="size-5 text-primary" />
             </div>
           </div>
-          <div className="flex-1 min-w-0">
-            <h3 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-1">
+          <div className="min-w-0 flex-1">
+            <h3 className="mb-1 line-clamp-2 text-sm font-semibold text-foreground transition-colors group-hover:text-primary sm:text-base">
               {title}
             </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground">{agreement.reference_number}</p>
+            <p className="text-xs text-muted-foreground sm:text-sm">{agreement.reference_number}</p>
           </div>
         </div>
-        <div className="flex-shrink-0">{getStatusBadge()}</div>
+        <div className="shrink-0">{getStatusBadge()}</div>
       </div>
 
       {/* Type and Category */}
-      <div className="flex flex-wrap gap-2 mb-3">
+      <div className="mb-3 flex flex-wrap gap-2">
         <Badge variant="outline" className="text-xs">
           {t(`mou.type.${agreement.type.toLowerCase()}`, agreement.type)}
         </Badge>
@@ -121,10 +121,10 @@ export function BilateralAgreementCard({
 
       {/* Dates */}
       {(effectiveDate || expiryDate) && (
-        <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3 text-xs sm:text-sm text-muted-foreground">
+        <div className="mb-3 flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:gap-4 sm:text-sm">
           {effectiveDate && (
             <div className="flex items-center gap-2">
-              <Calendar className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
+              <Calendar className={`size-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
               <span className="text-start">
                 {t('mou.effective_date', 'Effective')}:{' '}
                 {new Date(effectiveDate).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
@@ -137,7 +137,7 @@ export function BilateralAgreementCard({
           )}
           {expiryDate && (
             <div className="flex items-center gap-2">
-              <AlertCircle className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
+              <AlertCircle className={`size-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
               <span className="text-start">
                 {t('mou.expiry_date', 'Expires')}:{' '}
                 {new Date(expiryDate).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
@@ -153,36 +153,36 @@ export function BilateralAgreementCard({
 
       {/* Description */}
       {agreement.description && (
-        <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-3 text-start">
+        <p className="mb-3 line-clamp-2 text-start text-xs text-muted-foreground sm:text-sm">
           {agreement.description}
         </p>
       )}
 
       {/* AI-Generated Significance Summary (Feature 029 - T082) */}
       {aiSummary && (
-        <div className="mt-4 pt-4 border-t border-border">
+        <div className="mt-4 border-t border-border pt-4">
           <div className="flex items-start gap-2">
-            <div className="mt-0.5 flex-shrink-0">
-              <div className="h-5 w-5 rounded-full bg-purple-100 dark:bg-purple-900/30 flex items-center justify-center">
+            <div className="mt-0.5 shrink-0">
+              <div className="flex size-5 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900/30">
                 <span className="text-xs">✨</span>
               </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-purple-700 dark:text-purple-300 mb-1">
+            <div className="min-w-0 flex-1">
+              <p className="mb-1 text-xs font-medium text-purple-700 dark:text-purple-300">
                 {t('intelligence.ai_insight', 'AI Insight')}
               </p>
-              <p className="text-xs text-muted-foreground line-clamp-3 text-start">{aiSummary}</p>
+              <p className="line-clamp-3 text-start text-xs text-muted-foreground">{aiSummary}</p>
             </div>
           </div>
         </div>
       )}
 
       {/* View Details Link */}
-      <div className="mt-4 pt-4 border-t border-border">
+      <div className="mt-4 border-t border-border pt-4">
         <Link
           to="/mous"
           search={{ id: agreement.id }}
-          className="text-xs sm:text-sm text-primary hover:underline font-medium inline-flex items-center gap-1"
+          className="inline-flex items-center gap-1 text-xs font-medium text-primary hover:underline sm:text-sm"
         >
           {t('common.view_details', 'View Details')}
           <span className={isRTL ? 'rotate-180' : ''}>→</span>

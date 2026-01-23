@@ -206,7 +206,7 @@ function ArrayFieldItemRow({
               disabled && 'pointer-events-none opacity-30',
             )}
           >
-            <GripVertical className="h-4 w-4" />
+            <GripVertical className="size-4" />
           </Reorder.Item>
         )}
 
@@ -236,7 +236,7 @@ function ArrayFieldItemRow({
                   isRTL ? 'start-3' : 'end-3',
                 )}
               >
-                <AlertCircle className="h-4 w-4" />
+                <AlertCircle className="size-4" />
               </div>
             )}
           </div>
@@ -274,7 +274,7 @@ function ArrayFieldItemRow({
             )}
             aria-label={`Remove item ${index + 1}`}
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         )}
       </div>
@@ -475,7 +475,7 @@ export function ArrayFieldManager<TFormValues extends Record<string, unknown>>({
               'transition-colors duration-200',
             )}
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="size-4" />
             {addButtonText || t('common:forms.add_item')}
           </Button>
         </motion.div>

@@ -167,14 +167,14 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
                 isCompleted && 'opacity-60',
               )}
             >
-              <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Icon className="size-4 sm:size-5" />
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               {/* Header Row */}
-              <div className="flex items-start justify-between gap-2 mb-1">
-                <div className="flex-1 min-w-0">
+              <div className="mb-1 flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
                   <h4
                     className={cn(
                       'text-sm font-medium text-foreground text-start truncate',
@@ -207,11 +207,11 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
                 )}
               >
                 {isOverdue ? (
-                  <AlertTriangle className="h-3 w-3" />
+                  <AlertTriangle className="size-3" />
                 ) : isCompleted ? (
-                  <Check className="h-3 w-3 text-green-600 dark:text-green-400" />
+                  <Check className="size-3 text-green-600 dark:text-green-400" />
                 ) : (
-                  <Calendar className="h-3 w-3" />
+                  <Calendar className="size-3" />
                 )}
                 <span>{getDueDateLabel()}</span>
               </div>
@@ -220,7 +220,7 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
               {!isCancelled && (
                 <div className="flex items-center gap-2">
                   <Progress value={deliverable.progress} className="h-1.5 flex-1" />
-                  <span className="text-xs text-muted-foreground min-w-[2.5rem] text-end">
+                  <span className="min-w-10 text-end text-xs text-muted-foreground">
                     {deliverable.progress}%
                   </span>
                 </div>
@@ -231,8 +231,8 @@ export function DeliverableCard({ deliverable, commitmentId, onEdit }: Deliverab
             {!isCancelled && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0 flex-shrink-0">
-                    <MoreVertical className="h-4 w-4" />
+                  <Button variant="ghost" size="sm" className="size-8 shrink-0 p-0">
+                    <MoreVertical className="size-4" />
                     <span className="sr-only">Actions</span>
                   </Button>
                 </DropdownMenuTrigger>

@@ -132,8 +132,8 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl font-bold text-start sm:text-3xl">{t('title')}</h1>
-          <p className="text-muted-foreground text-sm text-start">{t('subtitle')}</p>
+          <h1 className="text-start text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+          <p className="text-start text-sm text-muted-foreground">{t('subtitle')}</p>
         </div>
         {onCreateClick && (
           <Button onClick={onCreateClick} className="min-h-11 min-w-11">
@@ -176,7 +176,7 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
           <CardContent className="pt-4">
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <div>
-                <label className="text-sm font-medium mb-1.5 block text-start">
+                <label className="mb-1.5 block text-start text-sm font-medium">
                   {t('filters.type')}
                 </label>
                 <Select
@@ -197,7 +197,7 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium mb-1.5 block text-start">
+                <label className="mb-1.5 block text-start text-sm font-medium">
                   {t('filters.status')}
                 </label>
                 <Select
@@ -218,7 +218,7 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
                 </Select>
               </div>
               <div>
-                <label className="text-sm font-medium mb-1.5 block text-start">
+                <label className="mb-1.5 block text-start text-sm font-medium">
                   {t('filters.priority')}
                 </label>
                 <Select
@@ -258,7 +258,7 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
             <Card key={i}>
               <CardContent className="p-4">
                 <div className="flex items-center gap-4">
-                  <Skeleton className="h-10 w-10 rounded" />
+                  <Skeleton className="size-10 rounded" />
                   <div className="flex-1 space-y-2">
                     <Skeleton className="h-5 w-3/4" />
                     <Skeleton className="h-4 w-1/2" />
@@ -276,7 +276,7 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
         <Card className="border-destructive">
           <CardContent className="p-4">
             <div className="flex items-center gap-3 text-destructive">
-              <AlertCircle className="h-5 w-5" />
+              <AlertCircle className="size-5" />
               <p>{t('errors.loadFailed')}</p>
             </div>
           </CardContent>
@@ -287,8 +287,8 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
       {!isLoading && !error && data?.legislations.length === 0 && (
         <Card>
           <CardContent className="flex flex-col items-center justify-center p-8 text-center">
-            <FileText className="text-muted-foreground mb-4 h-12 w-12" />
-            <h3 className="text-lg font-semibold mb-2">
+            <FileText className="mb-4 size-12 text-muted-foreground" />
+            <h3 className="mb-2 text-lg font-semibold">
               {hasActiveFilters ? t('list.emptyFiltered') : t('list.empty')}
             </h3>
             {onCreateClick && !hasActiveFilters && (
@@ -318,7 +318,7 @@ export function LegislationList({ dossierId, onCreateClick, className }: Legisla
 
       {/* Results Count */}
       {data?.totalCount !== undefined && data.totalCount > 0 && (
-        <p className="text-muted-foreground text-center text-sm">
+        <p className="text-center text-sm text-muted-foreground">
           {t('list.showingCount', {
             count: data.legislations.length,
             total: data.totalCount,
@@ -366,15 +366,15 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
           </div>
 
           {/* Content */}
-          <div className="flex-1 min-w-0">
-            <div className="flex flex-wrap items-center gap-2 mb-1">
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex flex-wrap items-center gap-2">
               {/* Type Badge */}
               <Badge variant="outline" className="text-xs">
                 {t(`type.${legislation.type}`)}
               </Badge>
               {/* Reference Number */}
               {legislation.reference_number && (
-                <span className="text-muted-foreground text-xs">
+                <span className="text-xs text-muted-foreground">
                   {legislation.reference_number}
                 </span>
               )}
@@ -382,17 +382,17 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
 
             {/* Title */}
             <Link to="/legislation/$id" params={{ id: legislation.id }} className="block">
-              <h3 className="font-semibold text-start hover:text-primary transition-colors line-clamp-2">
+              <h3 className="line-clamp-2 text-start font-semibold transition-colors hover:text-primary">
                 {title}
               </h3>
             </Link>
 
             {/* Meta Info */}
-            <div className="flex flex-wrap items-center gap-3 mt-2 text-sm text-muted-foreground">
+            <div className="mt-2 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
               {legislation.jurisdiction && <span>{legislation.jurisdiction}</span>}
               {legislation.introduced_date && (
                 <span className="flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
+                  <Calendar className="size-3.5" />
                   {new Date(legislation.introduced_date).toLocaleDateString(
                     i18n.language === 'ar' ? 'ar-SA' : 'en-US',
                   )}
@@ -400,7 +400,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
               )}
               {hasOpenCommentPeriod && (
                 <span className="flex items-center gap-1 text-amber-600 dark:text-amber-400">
-                  <AlertCircle className="h-3.5 w-3.5" />
+                  <AlertCircle className="size-3.5" />
                   {t('commentPeriod.daysRemaining', { count: daysUntilCommentEnd })}
                 </span>
               )}
@@ -434,7 +434,7 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="size-8"
                 onClick={(e) => {
                   e.preventDefault()
                   onToggleWatch()
@@ -442,15 +442,15 @@ function LegislationCard({ legislation, isRTL, onToggleWatch, isWatching }: Legi
                 disabled={isWatching}
               >
                 {isWatching ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                 ) : legislation.is_watching ? (
-                  <Bell className="h-4 w-4 text-primary" />
+                  <Bell className="size-4 text-primary" />
                 ) : (
-                  <BellOff className="h-4 w-4" />
+                  <BellOff className="size-4" />
                 )}
               </Button>
               <Link to="/legislation/$id" params={{ id: legislation.id }}>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" className="size-8">
                   <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
                 </Button>
               </Link>

@@ -156,31 +156,31 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 p-4">
-      <div className="max-w-md w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6 text-center">
-        <div className="flex justify-center mb-4">
-          <AlertTriangle className="h-16 w-16 text-red-500" />
+    <div className="flex min-h-screen items-center justify-center bg-gray-50 p-4 dark:bg-gray-900">
+      <div className="w-full max-w-md rounded-lg bg-white p-6 text-center shadow-lg dark:bg-gray-800">
+        <div className="mb-4 flex justify-center">
+          <AlertTriangle className="size-16 text-red-500" />
         </div>
 
-        <h1 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+        <h1 className="mb-2 text-2xl font-bold text-gray-900 dark:text-white">
           {t('errorBoundary.title')}
         </h1>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-6">{t('errorBoundary.description')}</p>
+        <p className="mb-6 text-gray-600 dark:text-gray-400">{t('errorBoundary.description')}</p>
 
         <div className="space-y-3">
           <Button onClick={resetError} className="w-full">
-            <RefreshCw className="h-4 w-4 me-2" />
+            <RefreshCw className="me-2 size-4" />
             {t('errorBoundary.refreshPage')}
           </Button>
 
           <Button onClick={handleGoHome} variant="outline" className="w-full">
-            <Home className="h-4 w-4 me-2" />
+            <Home className="me-2 size-4" />
             {t('errorBoundary.goHome')}
           </Button>
 
           <Button onClick={handleReportError} variant="ghost" className="w-full">
-            <Bug className="h-4 w-4 me-2" />
+            <Bug className="me-2 size-4" />
             {t('errorBoundary.reportError')}
           </Button>
         </div>
@@ -192,15 +192,15 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
             </Button>
 
             {showDetails && (
-              <div className="mt-4 p-4 bg-gray-100 dark:bg-gray-700 rounded text-start text-xs overflow-auto max-h-64">
+              <div className="mt-4 max-h-64 overflow-auto rounded bg-gray-100 p-4 text-start text-xs dark:bg-gray-700">
                 <div className="font-mono">
-                  <div className="font-bold text-red-600 mb-2">Error:</div>
+                  <div className="mb-2 font-bold text-red-600">Error:</div>
                   <div className="mb-4 text-red-500">{error?.message}</div>
 
-                  <div className="font-bold text-red-600 mb-2">Stack Trace:</div>
-                  <pre className="whitespace-pre-wrap text-red-500 mb-4">{error?.stack}</pre>
+                  <div className="mb-2 font-bold text-red-600">Stack Trace:</div>
+                  <pre className="mb-4 whitespace-pre-wrap text-red-500">{error?.stack}</pre>
 
-                  <div className="font-bold text-red-600 mb-2">Component Stack:</div>
+                  <div className="mb-2 font-bold text-red-600">Component Stack:</div>
                   <pre className="whitespace-pre-wrap text-red-500">
                     {errorInfo?.componentStack}
                   </pre>

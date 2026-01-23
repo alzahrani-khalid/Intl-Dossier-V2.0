@@ -123,15 +123,15 @@ export function EngagementsListPage() {
     switch (type) {
       case 'bilateral_meeting':
       case 'consultation':
-        return <Users className="h-4 w-4" />
+        return <Users className="size-4" />
       case 'mission':
       case 'delegation':
       case 'official_visit':
-        return <Globe className="h-4 w-4" />
+        return <Globe className="size-4" />
       case 'summit':
-        return <Building2 className="h-4 w-4" />
+        return <Building2 className="size-4" />
       default:
-        return <Calendar className="h-4 w-4" />
+        return <Calendar className="size-4" />
     }
   }
 
@@ -230,30 +230,30 @@ export function EngagementsListPage() {
   return (
     <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <header className="sticky top-0 z-10 border-b bg-background">
+        <div className="container mx-auto p-4 sm:p-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-start">
+              <h1 className="text-start text-2xl font-bold sm:text-3xl">
                 {t('title', 'Engagements')}
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground mt-1 text-start">
+              <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
                 {t('subtitle', 'Manage bilateral meetings, missions, and delegations')}
               </p>
             </div>
 
             <Button onClick={handleCreateEngagement} className="w-full sm:w-auto">
-              <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+              <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
               {t('actions.createEngagement', 'New Engagement')}
             </Button>
           </div>
 
           {/* Search and Filters */}
-          <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
+          <div className="mt-4 flex flex-col gap-3 sm:mt-6 sm:flex-row">
             {/* Search Input */}
             <div className="relative flex-1">
               <Search
-                className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
+                className={`absolute top-1/2 size-4 -translate-y-1/2 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
               />
               <Input
                 placeholder={t('search.placeholder', 'Search engagements...')}
@@ -266,19 +266,19 @@ export function EngagementsListPage() {
                   onClick={() => setSearchTerm('')}
                   className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'start-3' : 'end-3'}`}
                 >
-                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                  <X className="size-4 text-muted-foreground hover:text-foreground" />
                 </button>
               )}
             </div>
 
             {/* Desktop Filters */}
-            <div className="hidden sm:flex gap-2">
+            <div className="hidden gap-2 sm:flex">
               <Select
                 value={typeFilter}
                 onValueChange={(value) => setTypeFilter(value as EngagementType | 'all')}
               >
-                <SelectTrigger className="w-[180px] h-11">
-                  <Calendar className="h-4 w-4 me-2 text-muted-foreground" />
+                <SelectTrigger className="h-11 w-[180px]">
+                  <Calendar className="me-2 size-4 text-muted-foreground" />
                   <SelectValue placeholder={t('filters.type', 'Type')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -295,7 +295,7 @@ export function EngagementsListPage() {
                 value={statusFilter}
                 onValueChange={(value) => setStatusFilter(value as EngagementStatus | 'all')}
               >
-                <SelectTrigger className="w-[160px] h-11">
+                <SelectTrigger className="h-11 w-[160px]">
                   <SelectValue placeholder={t('filters.status', 'Status')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -312,7 +312,7 @@ export function EngagementsListPage() {
 
               {hasActiveFilters && (
                 <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  <X className="h-4 w-4 me-1" />
+                  <X className="me-1 size-4" />
                   {t('filters.clear', 'Clear')}
                 </Button>
               )}
@@ -322,7 +322,7 @@ export function EngagementsListPage() {
             <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
               <SheetTrigger asChild className="sm:hidden">
                 <Button variant="outline" className="h-11">
-                  <SlidersHorizontal className="h-4 w-4 me-2" />
+                  <SlidersHorizontal className="me-2 size-4" />
                   {t('filters.title', 'Filters')}
                   {activeFilterCount > 0 && (
                     <Badge variant="secondary" className="ms-2">
@@ -338,7 +338,7 @@ export function EngagementsListPage() {
                 <div className="mt-6 space-y-4">
                   {/* Type Filter */}
                   <div>
-                    <label className="text-sm font-medium mb-2 block">
+                    <label className="mb-2 block text-sm font-medium">
                       {t('filters.type', 'Engagement Type')}
                     </label>
                     <Select
@@ -363,7 +363,7 @@ export function EngagementsListPage() {
 
                   {/* Category Filter */}
                   <div>
-                    <label className="text-sm font-medium mb-2 block">
+                    <label className="mb-2 block text-sm font-medium">
                       {t('filters.category', 'Category')}
                     </label>
                     <Select
@@ -392,7 +392,7 @@ export function EngagementsListPage() {
 
                   {/* Status Filter */}
                   <div>
-                    <label className="text-sm font-medium mb-2 block">
+                    <label className="mb-2 block text-sm font-medium">
                       {t('filters.status', 'Status')}
                     </label>
                     <Select
@@ -433,16 +433,16 @@ export function EngagementsListPage() {
           {/* Stats Summary */}
           <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
+              <Calendar className="size-4" />
               {t('stats.total', '{{count}} engagements', { count: totalEngagements })}
             </span>
-            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+            {isLoading && <Loader2 className="size-4 animate-spin" />}
           </div>
         </div>
       </header>
 
       {/* Engagements List */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         {data?.data.length === 0 ? (
           searchTerm || hasActiveFilters ? (
             <SearchEmptyState
@@ -461,7 +461,7 @@ export function EngagementsListPage() {
             />
           )
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {data?.data.map((engagement, index) => (
               <motion.div
                 key={engagement.id}
@@ -470,24 +470,24 @@ export function EngagementsListPage() {
                 transition={{ delay: index * 0.05 }}
               >
                 <Card
-                  className="cursor-pointer hover:shadow-md transition-shadow h-full"
+                  className="h-full cursor-pointer transition-shadow hover:shadow-md"
                   onClick={() => handleEngagementClick(engagement.id)}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
                       {/* Icon */}
-                      <div className="h-10 w-10 sm:h-12 sm:w-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
+                      <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-primary/10 sm:size-12">
                         {getTypeIcon(engagement.engagement_type)}
                       </div>
 
                       {/* Info */}
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
-                            <h3 className="font-semibold text-sm sm:text-base truncate">
+                            <h3 className="truncate text-sm font-semibold sm:text-base">
                               {isRTL ? engagement.name_ar : engagement.name_en}
                             </h3>
-                            <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                            <p className="truncate text-xs text-muted-foreground sm:text-sm">
                               {isRTL
                                 ? ENGAGEMENT_TYPE_LABELS[engagement.engagement_type].ar
                                 : ENGAGEMENT_TYPE_LABELS[engagement.engagement_type].en}
@@ -495,7 +495,7 @@ export function EngagementsListPage() {
                           </div>
                           <Badge
                             variant="outline"
-                            className={`text-xs flex-shrink-0 ${getStatusColor(engagement.engagement_status)}`}
+                            className={`shrink-0 text-xs ${getStatusColor(engagement.engagement_status)}`}
                           >
                             {isRTL
                               ? ENGAGEMENT_STATUS_LABELS[engagement.engagement_status].ar
@@ -504,23 +504,23 @@ export function EngagementsListPage() {
                         </div>
 
                         {/* Date */}
-                        <div className="flex items-center gap-1 mt-2 text-xs sm:text-sm text-muted-foreground">
-                          <Calendar className="h-3 w-3 flex-shrink-0" />
+                        <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground sm:text-sm">
+                          <Calendar className="size-3 shrink-0" />
                           <span>{formatDateRange(engagement.start_date, engagement.end_date)}</span>
                         </div>
 
                         {/* Location */}
-                        <div className="flex flex-wrap items-center gap-3 mt-2">
+                        <div className="mt-2 flex flex-wrap items-center gap-3">
                           {engagement.is_virtual ? (
                             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Video className="h-3 w-3" />
+                              <Video className="size-3" />
                               {t('card.virtual', 'Virtual')}
                             </span>
                           ) : (
                             (engagement.location_en || engagement.location_ar) && (
                               <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                                <MapPin className="h-3 w-3" />
-                                <span className="truncate max-w-[120px]">
+                                <MapPin className="size-3" />
+                                <span className="max-w-[120px] truncate">
                                   {isRTL ? engagement.location_ar : engagement.location_en}
                                 </span>
                               </span>
@@ -528,7 +528,7 @@ export function EngagementsListPage() {
                           )}
                           {engagement.participant_count > 0 && (
                             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Users className="h-3 w-3" />
+                              <Users className="size-3" />
                               {t('card.participants', '{{count}} participants', {
                                 count: engagement.participant_count,
                               })}
@@ -548,7 +548,7 @@ export function EngagementsListPage() {
 
                       {/* Arrow */}
                       <ChevronRight
-                        className={`h-5 w-5 text-muted-foreground flex-shrink-0 ${isRTL ? 'rotate-180' : ''}`}
+                        className={`size-5 shrink-0 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
                       />
                     </div>
                   </CardContent>
@@ -560,9 +560,9 @@ export function EngagementsListPage() {
 
         {/* Load More */}
         {data?.pagination.has_more && (
-          <div className="flex justify-center mt-8">
+          <div className="mt-8 flex justify-center">
             <Button variant="outline" disabled={isLoading}>
-              {isLoading ? <Loader2 className="h-4 w-4 animate-spin me-2" /> : null}
+              {isLoading ? <Loader2 className="me-2 size-4 animate-spin" /> : null}
               {t('actions.loadMore', 'Load More')}
             </Button>
           </div>

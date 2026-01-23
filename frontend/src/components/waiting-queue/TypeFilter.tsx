@@ -48,7 +48,7 @@ export function TypeFilter({ value = [], onChange, disabled = false }: TypeFilte
  return (
  <div
  key={type.value}
- className="flex items-center gap-2 rounded-sm hover:bg-accent/50 transition-colors px-1 py-1"
+ className="flex items-center gap-2 rounded-sm p-1 transition-colors hover:bg-accent/50"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <Checkbox
@@ -56,7 +56,7 @@ export function TypeFilter({ value = [], onChange, disabled = false }: TypeFilte
  checked={value.includes(type.value)}
  onCheckedChange={() => handleToggle(type.value)}
  disabled={disabled}
- className="h-4 w-4"
+ className="size-4"
  />
  <Label
  htmlFor={`type-${type.value}`}

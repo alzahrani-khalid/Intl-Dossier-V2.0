@@ -122,7 +122,7 @@ const UserAvatar = memo(function UserAvatar({
               <AvatarImage src={user.avatar} alt={user.name} />
               <AvatarFallback
                 style={{ backgroundColor: user.color }}
-                className="text-white font-medium"
+                className="font-medium text-white"
               >
                 {getInitials(user.name)}
               </AvatarFallback>
@@ -147,7 +147,7 @@ const UserAvatar = memo(function UserAvatar({
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <div className="flex items-center gap-2">
-            <StatusIcon className="h-4 w-4 text-muted-foreground" />
+            <StatusIcon className="size-4 text-muted-foreground" />
             <div>
               <p className="font-medium">{user.name}</p>
               <p className="text-xs text-muted-foreground">
@@ -201,7 +201,7 @@ const OverflowIndicator = memo(function OverflowIndicator({
         </TooltipTrigger>
         <TooltipContent side={isRTL ? 'right' : 'left'} dir={isRTL ? 'rtl' : 'ltr'}>
           <div className="space-y-1">
-            <p className="font-medium text-sm">{t('moreViewers', { count })}</p>
+            <p className="text-sm font-medium">{t('moreViewers', { count })}</p>
             <ul className="text-xs text-muted-foreground">
               {hiddenUsers.map((user) => (
                 <li key={user.user_id} className="flex items-center gap-1">
@@ -291,9 +291,9 @@ export function ActiveViewers({
       {editingCount > 0 && (
         <Badge
           variant="secondary"
-          className="gap-1 text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400"
+          className="gap-1 bg-green-100 text-xs text-green-700 dark:bg-green-900/30 dark:text-green-400"
         >
-          <Pencil className="h-3 w-3" />
+          <Pencil className="size-3" />
           <span>{t('editingCount', { count: editingCount })}</span>
         </Badge>
       )}
@@ -342,16 +342,16 @@ export function ActiveViewersCompact({
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             {editingCount > 0 ? (
-              <Pencil className="h-3.5 w-3.5" />
+              <Pencil className="size-3.5" />
             ) : (
-              <Users className="h-3.5 w-3.5" />
+              <Users className="size-3.5" />
             )}
             <span>{otherViewers.length}</span>
           </div>
         </TooltipTrigger>
         <TooltipContent side={isRTL ? 'right' : 'left'} dir={isRTL ? 'rtl' : 'ltr'}>
           <div className="space-y-1">
-            <p className="font-medium text-sm">
+            <p className="text-sm font-medium">
               {t('viewersSummary', {
                 total: otherViewers.length,
                 editing: editingCount,

@@ -51,14 +51,14 @@ function DashboardHeader({
   t: (key: string) => string
 }) {
   return (
-    <header className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+    <header className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
       <div className="flex items-center gap-3">
-        <div className="p-2 rounded-lg bg-primary/10">
-          <LayoutDashboard className="h-5 w-5 sm:h-6 sm:w-6 text-primary" />
+        <div className="rounded-lg bg-primary/10 p-2">
+          <LayoutDashboard className="size-5 text-primary sm:size-6" />
         </div>
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold">{t('customDashboard')}</h1>
-          <p className="text-sm text-muted-foreground hidden sm:block">
+          <h1 className="text-xl font-bold sm:text-2xl">{t('customDashboard')}</h1>
+          <p className="hidden text-sm text-muted-foreground sm:block">
             {isEditMode ? t('widgetLibrary.description') : t('title')}
           </p>
         </div>
@@ -76,7 +76,7 @@ function DashboardHeader({
             <Tooltip>
               <TooltipTrigger asChild>
                 <Button variant="outline" size="sm" onClick={onAddWidget} className="h-9">
-                  <Plus className="h-4 w-4 me-1" />
+                  <Plus className="me-1 size-4" />
                   <span className="hidden sm:inline">{t('addWidget')}</span>
                 </Button>
               </TooltipTrigger>
@@ -95,7 +95,7 @@ function DashboardHeader({
                 <TooltipTrigger asChild>
                   <AlertDialogTrigger asChild>
                     <Button variant="outline" size="sm" className="h-9">
-                      <RotateCcw className="h-4 w-4 me-1" />
+                      <RotateCcw className="me-1 size-4" />
                       <span className="hidden sm:inline">{t('resetLayout')}</span>
                     </Button>
                   </AlertDialogTrigger>
@@ -127,12 +127,12 @@ function DashboardHeader({
         >
           {isEditMode ? (
             <>
-              <Save className="h-4 w-4 me-1" />
+              <Save className="me-1 size-4" />
               <span>{t('exitEditMode')}</span>
             </>
           ) : (
             <>
-              <Settings className="h-4 w-4 me-1" />
+              <Settings className="me-1 size-4" />
               <span className="hidden sm:inline">{t('editMode')}</span>
             </>
           )}
@@ -147,16 +147,16 @@ function DashboardHeader({
  */
 function EmptyState({ onAddWidget, t }: { onAddWidget: () => void; t: (key: string) => string }) {
   return (
-    <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
-      <div className="p-4 rounded-full bg-muted mb-4">
-        <GripVertical className="h-8 w-8 text-muted-foreground" />
+    <div className="flex flex-col items-center justify-center py-12 text-center sm:py-16">
+      <div className="mb-4 rounded-full bg-muted p-4">
+        <GripVertical className="size-8 text-muted-foreground" />
       </div>
-      <h3 className="text-lg font-medium mb-2">{t('emptyStates.noWidgets')}</h3>
-      <p className="text-sm text-muted-foreground mb-6 max-w-md">
+      <h3 className="mb-2 text-lg font-medium">{t('emptyStates.noWidgets')}</h3>
+      <p className="mb-6 max-w-md text-sm text-muted-foreground">
         {t('emptyStates.addWidgetHint')}
       </p>
       <Button onClick={onAddWidget}>
-        <Plus className="h-4 w-4 me-2" />
+        <Plus className="me-2 size-4" />
         {t('addWidget')}
       </Button>
     </div>
@@ -168,7 +168,7 @@ function EmptyState({ onAddWidget, t }: { onAddWidget: () => void; t: (key: stri
  */
 function LoadingSkeleton() {
   return (
-    <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
       {Array.from({ length: 8 }).map((_, i) => (
         <Skeleton key={i} className="h-[150px] rounded-lg" />
       ))}
@@ -230,7 +230,7 @@ export function CustomDashboardPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+      className="container mx-auto p-4 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}

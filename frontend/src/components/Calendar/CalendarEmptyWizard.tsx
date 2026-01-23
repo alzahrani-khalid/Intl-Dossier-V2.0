@@ -228,44 +228,44 @@ export function CalendarEmptyWizard({
             exit={{ opacity: 0, x: isRTL ? 20 : -20 }}
             transition={{ duration: 0.2 }}
           >
-            <CardHeader className="text-center pb-2">
-              <div className="mx-auto mb-4 flex h-16 w-16 sm:h-20 sm:w-20 items-center justify-center rounded-full bg-primary/10">
-                <Calendar className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+            <CardHeader className="pb-2 text-center">
+              <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+                <Calendar className="size-8 text-primary sm:size-10" />
               </div>
               <CardTitle className="text-xl sm:text-2xl">{t('wizard.welcome.title')}</CardTitle>
-              <CardDescription className="text-sm sm:text-base max-w-md mx-auto">
+              <CardDescription className="mx-auto max-w-md text-sm sm:text-base">
                 {t('wizard.welcome.description')}
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4 sm:space-y-6">
               {/* Quick action cards */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
                 <button
                   onClick={() => setStep('templates')}
-                  className="flex flex-col items-center gap-2 p-4 sm:p-6 rounded-xl border-2 border-dashed border-primary/30 hover:border-primary hover:bg-primary/5 transition-all group min-h-[120px]"
+                  className="group flex min-h-[120px] flex-col items-center gap-2 rounded-xl border-2 border-dashed border-primary/30 p-4 transition-all hover:border-primary hover:bg-primary/5 sm:p-6"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-primary/10 group-hover:bg-primary/20 transition-colors">
-                    <Sparkles className="h-6 w-6 text-primary" />
+                  <div className="flex size-12 items-center justify-center rounded-full bg-primary/10 transition-colors group-hover:bg-primary/20">
+                    <Sparkles className="size-6 text-primary" />
                   </div>
-                  <span className="font-medium text-sm sm:text-base">
+                  <span className="text-sm font-medium sm:text-base">
                     {t('wizard.welcome.useTemplate')}
                   </span>
-                  <span className="text-xs sm:text-sm text-muted-foreground text-center">
+                  <span className="text-center text-xs text-muted-foreground sm:text-sm">
                     {t('wizard.welcome.useTemplateDesc')}
                   </span>
                 </button>
 
                 <button
                   onClick={() => onCreateEvent(EVENT_TEMPLATES[0]!)}
-                  className="flex flex-col items-center gap-2 p-4 sm:p-6 rounded-xl border-2 border-dashed border-muted-foreground/30 hover:border-muted-foreground hover:bg-muted/50 transition-all group min-h-[120px]"
+                  className="group flex min-h-[120px] flex-col items-center gap-2 rounded-xl border-2 border-dashed border-muted-foreground/30 p-4 transition-all hover:border-muted-foreground hover:bg-muted/50 sm:p-6"
                 >
-                  <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted group-hover:bg-muted/80 transition-colors">
-                    <Plus className="h-6 w-6 text-muted-foreground" />
+                  <div className="flex size-12 items-center justify-center rounded-full bg-muted transition-colors group-hover:bg-muted/80">
+                    <Plus className="size-6 text-muted-foreground" />
                   </div>
-                  <span className="font-medium text-sm sm:text-base">
+                  <span className="text-sm font-medium sm:text-base">
                     {t('wizard.welcome.createBlank')}
                   </span>
-                  <span className="text-xs sm:text-sm text-muted-foreground text-center">
+                  <span className="text-center text-xs text-muted-foreground sm:text-sm">
                     {t('wizard.welcome.createBlankDesc')}
                   </span>
                 </button>
@@ -275,7 +275,7 @@ export function CalendarEmptyWizard({
               {recommendedTemplates.length > 0 && (
                 <div className="space-y-3">
                   <div className="flex items-center gap-2">
-                    <Target className="h-4 w-4 text-muted-foreground" />
+                    <Target className="size-4 text-muted-foreground" />
                     <span className="text-sm font-medium text-muted-foreground">
                       {t('wizard.welcome.recommended')}
                     </span>
@@ -328,15 +328,15 @@ export function CalendarEmptyWizard({
                   className="min-h-11 min-w-11"
                 >
                   {isRTL ? (
-                    <ChevronRight className="h-4 w-4 me-1" />
+                    <ChevronRight className="me-1 size-4" />
                   ) : (
-                    <ChevronLeft className="h-4 w-4 me-1" />
+                    <ChevronLeft className="me-1 size-4" />
                   )}
                   {t('wizard.back')}
                 </Button>
                 {onDismiss && (
-                  <Button variant="ghost" size="icon" onClick={onDismiss} className="h-9 w-9">
-                    <X className="h-4 w-4" />
+                  <Button variant="ghost" size="icon" onClick={onDismiss} className="size-9">
+                    <X className="size-4" />
                   </Button>
                 )}
               </div>
@@ -345,7 +345,7 @@ export function CalendarEmptyWizard({
                 {t('wizard.templates.description')}
               </CardDescription>
             </CardHeader>
-            <CardContent className="space-y-3 sm:space-y-4 max-h-[400px] overflow-y-auto">
+            <CardContent className="max-h-[400px] space-y-3 overflow-y-auto sm:space-y-4">
               {sortedTemplates.map((template) => {
                 const isRecommended = template.suggestedFor.includes(userRole)
                 return (
@@ -366,9 +366,9 @@ export function CalendarEmptyWizard({
                     >
                       <template.icon className={cn('h-5 w-5 sm:h-6 sm:w-6', template.color)} />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <span className="font-medium text-sm sm:text-base">
+                    <div className="min-w-0 flex-1">
+                      <div className="flex flex-wrap items-center gap-2">
+                        <span className="text-sm font-medium sm:text-base">
                           {t(template.titleKey)}
                         </span>
                         {isRecommended && (
@@ -377,26 +377,26 @@ export function CalendarEmptyWizard({
                           </Badge>
                         )}
                       </div>
-                      <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">
+                      <p className="mt-1 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
                         {t(template.descriptionKey)}
                       </p>
-                      <div className="flex items-center gap-3 mt-2 text-xs text-muted-foreground">
+                      <div className="mt-2 flex items-center gap-3 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
+                          <Clock className="size-3" />
                           {template.defaults.duration_minutes > 0
                             ? `${template.defaults.duration_minutes} ${t('wizard.minutes')}`
                             : t('wizard.allDay')}
                         </span>
                         <span className="flex items-center gap-1">
-                          <CalendarDays className="h-3 w-3" />
+                          <CalendarDays className="size-3" />
                           {t(`types.${template.defaults.entry_type}`)}
                         </span>
                       </div>
                     </div>
                     {isRTL ? (
-                      <ChevronLeft className="h-5 w-5 text-muted-foreground shrink-0 self-center" />
+                      <ChevronLeft className="size-5 shrink-0 self-center text-muted-foreground" />
                     ) : (
-                      <ChevronRight className="h-5 w-5 text-muted-foreground shrink-0 self-center" />
+                      <ChevronRight className="size-5 shrink-0 self-center text-muted-foreground" />
                     )}
                   </button>
                 )
@@ -422,15 +422,15 @@ export function CalendarEmptyWizard({
                   className="min-h-11 min-w-11"
                 >
                   {isRTL ? (
-                    <ChevronRight className="h-4 w-4 me-1" />
+                    <ChevronRight className="me-1 size-4" />
                   ) : (
-                    <ChevronLeft className="h-4 w-4 me-1" />
+                    <ChevronLeft className="me-1 size-4" />
                   )}
                   {t('wizard.back')}
                 </Button>
                 {onDismiss && (
-                  <Button variant="ghost" size="icon" onClick={onDismiss} className="h-9 w-9">
-                    <X className="h-4 w-4" />
+                  <Button variant="ghost" size="icon" onClick={onDismiss} className="size-9">
+                    <X className="size-4" />
                   </Button>
                 )}
               </div>
@@ -452,11 +452,11 @@ export function CalendarEmptyWizard({
                     className={cn('h-7 w-7 sm:h-8 sm:w-8', selectedTemplate.color)}
                   />
                 </div>
-                <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-base sm:text-lg">
+                <div className="min-w-0 flex-1">
+                  <h3 className="text-base font-semibold sm:text-lg">
                     {t(selectedTemplate.titleKey)}
                   </h3>
-                  <p className="text-sm text-muted-foreground mt-1">
+                  <p className="mt-1 text-sm text-muted-foreground">
                     {t(selectedTemplate.descriptionKey)}
                   </p>
                 </div>
@@ -464,10 +464,10 @@ export function CalendarEmptyWizard({
 
               {/* Default settings summary */}
               <div className="space-y-3">
-                <h4 className="font-medium text-sm">{t('wizard.quickCreate.defaults')}</h4>
+                <h4 className="text-sm font-medium">{t('wizard.quickCreate.defaults')}</h4>
                 <div className="grid grid-cols-2 gap-3">
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
-                    <CalendarDays className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2 rounded-lg bg-muted/50 p-3">
+                    <CalendarDays className="size-4 text-muted-foreground" />
                     <div className="text-sm">
                       <span className="text-muted-foreground">
                         {t('wizard.quickCreate.type')}:{' '}
@@ -477,8 +477,8 @@ export function CalendarEmptyWizard({
                       </span>
                     </div>
                   </div>
-                  <div className="flex items-center gap-2 p-3 rounded-lg bg-muted/50">
-                    <Clock className="h-4 w-4 text-muted-foreground" />
+                  <div className="flex items-center gap-2 rounded-lg bg-muted/50 p-3">
+                    <Clock className="size-4 text-muted-foreground" />
                     <div className="text-sm">
                       <span className="text-muted-foreground">
                         {t('wizard.quickCreate.duration')}:{' '}
@@ -494,24 +494,24 @@ export function CalendarEmptyWizard({
               </div>
 
               {/* Tips */}
-              <div className="flex items-start gap-3 p-3 rounded-lg bg-primary/5 border border-primary/20">
-                <MessageSquare className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+              <div className="flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 p-3">
+                <MessageSquare className="mt-0.5 size-5 shrink-0 text-primary" />
                 <div className="text-sm">
                   <p className="font-medium text-primary">{t('wizard.quickCreate.tip')}</p>
-                  <p className="text-muted-foreground mt-1">{t('wizard.quickCreate.tipDesc')}</p>
+                  <p className="mt-1 text-muted-foreground">{t('wizard.quickCreate.tipDesc')}</p>
                 </div>
               </div>
 
               {/* Action buttons */}
-              <div className="flex flex-col-reverse sm:flex-row gap-2 sm:gap-3 pt-2">
+              <div className="flex flex-col-reverse gap-2 pt-2 sm:flex-row sm:gap-3">
                 <Button
                   variant="outline"
                   onClick={handleBack}
-                  className="w-full sm:w-auto min-h-11"
+                  className="min-h-11 w-full sm:w-auto"
                 >
                   {t('wizard.quickCreate.chooseAnother')}
                 </Button>
-                <Button onClick={handleCreateEvent} className="w-full sm:flex-1 min-h-11">
+                <Button onClick={handleCreateEvent} className="min-h-11 w-full sm:flex-1">
                   <Plus className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                   {t('wizard.quickCreate.createEvent')}
                 </Button>

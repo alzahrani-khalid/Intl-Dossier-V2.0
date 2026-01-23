@@ -79,19 +79,19 @@ export function ConvertMilestoneDialog({
       <DialogContent className="max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <CalendarPlus className="h-5 w-5" />
+            <CalendarPlus className="size-5" />
             {t('convert.title')}
           </DialogTitle>
           <DialogDescription>{t('convert.description')}</DialogDescription>
         </DialogHeader>
 
-        <div className="py-4 space-y-4">
+        <div className="space-y-4 py-4">
           {/* Milestone being converted */}
-          <div className="p-3 bg-muted rounded-lg">
-            <p className="text-xs text-muted-foreground mb-1">
+          <div className="rounded-lg bg-muted p-3">
+            <p className="mb-1 text-xs text-muted-foreground">
               {t('types.' + milestone.milestone_type)}
             </p>
-            <p className="font-medium text-sm">{title}</p>
+            <p className="text-sm font-medium">{title}</p>
           </div>
 
           {/* Event Type Selection */}
@@ -124,11 +124,11 @@ export function ConvertMilestoneDialog({
                     >
                       <Icon className={cn('h-5 w-5', type.color)} />
                     </div>
-                    <span className="font-medium text-sm">
+                    <span className="text-sm font-medium">
                       {t(`convert.eventTypes.${type.value}`)}
                     </span>
                     {selectedType === type.value && (
-                      <div className="ms-auto h-2 w-2 rounded-full bg-primary" />
+                      <div className="ms-auto size-2 rounded-full bg-primary" />
                     )}
                   </Label>
                 )
@@ -137,7 +137,7 @@ export function ConvertMilestoneDialog({
           </div>
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button
             type="button"
             variant="outline"

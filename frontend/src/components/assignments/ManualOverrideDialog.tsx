@@ -192,7 +192,7 @@ export function ManualOverrideDialog({
  <DialogContent className="sm:max-w-[500px]">
  <DialogHeader>
  <DialogTitle className="flex items-center gap-2">
- <UserCheck className="w-5 h-5" />
+ <UserCheck className="size-5" />
  {t('assignments:manualOverride.title')}
  </DialogTitle>
  <DialogDescription>
@@ -208,7 +208,7 @@ export function ManualOverrideDialog({
  </Label>
  {loadingStaff ? (
  <div className="flex items-center gap-2 text-sm text-gray-500">
- <Loader2 className="w-4 h-4 animate-spin" />
+ <Loader2 className="size-4 animate-spin" />
  {t('common:loading')}...
  </div>
  ) : (
@@ -280,7 +280,7 @@ export function ManualOverrideDialog({
  onClick={handleSubmit}
  disabled={manualOverrideMutation.isPending || !selectedAssigneeId || overrideReason.length < 10}
  >
- {manualOverrideMutation.isPending && <Loader2 className="w-4 h-4 animate-spin me-2" />}
+ {manualOverrideMutation.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
  {t('assignments:manualOverride.submit')}
  </Button>
  </DialogFooter>

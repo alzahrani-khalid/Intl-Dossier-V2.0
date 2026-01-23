@@ -255,13 +255,13 @@ function AISettingsPage() {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Settings className="h-7 w-7 text-primary" />
+          <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+            <Settings className="size-7 text-primary" />
             {t('settings.title', 'AI Settings')}
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 text-muted-foreground">
             {t('settings.description', 'Configure AI features, models, and spending limits')}
           </p>
         </div>
@@ -269,11 +269,11 @@ function AISettingsPage() {
           {hasChanges && (
             <>
               <Button variant="outline" onClick={handleReset}>
-                <RotateCcw className="h-4 w-4 me-2" />
+                <RotateCcw className="me-2 size-4" />
                 {t('settings.reset', 'Reset')}
               </Button>
               <Button onClick={handleSave} disabled={updatePolicyMutation.isPending}>
-                <Save className="h-4 w-4 me-2" />
+                <Save className="me-2 size-4" />
                 {t('settings.save', 'Save Changes')}
               </Button>
             </>
@@ -284,7 +284,7 @@ function AISettingsPage() {
       {/* Unsaved Changes Warning */}
       {hasChanges && (
         <Alert className="mb-6">
-          <AlertTriangle className="h-4 w-4" />
+          <AlertTriangle className="size-4" />
           <AlertTitle>{t('settings.unsaved', 'Unsaved Changes')}</AlertTitle>
           <AlertDescription>
             {t(
@@ -295,12 +295,12 @@ function AISettingsPage() {
         </Alert>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Feature Toggles */}
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Zap className="h-5 w-5" />
+              <Zap className="size-5" />
               {t('settings.features', 'AI Features')}
             </CardTitle>
             <CardDescription>
@@ -318,7 +318,7 @@ function AISettingsPage() {
               <>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <FileText className="h-5 w-5 text-muted-foreground" />
+                    <FileText className="size-5 text-muted-foreground" />
                     <div>
                       <p className="font-medium">
                         {t('settings.briefGeneration', 'Brief Generation')}
@@ -338,7 +338,7 @@ function AISettingsPage() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <MessageSquare className="h-5 w-5 text-muted-foreground" />
+                    <MessageSquare className="size-5 text-muted-foreground" />
                     <div>
                       <p className="font-medium">{t('settings.chat', 'AI Chat')}</p>
                       <p className="text-sm text-muted-foreground">
@@ -356,7 +356,7 @@ function AISettingsPage() {
 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-3">
-                    <Link2 className="h-5 w-5 text-muted-foreground" />
+                    <Link2 className="size-5 text-muted-foreground" />
                     <div>
                       <p className="font-medium">{t('settings.entityLinking', 'Entity Linking')}</p>
                       <p className="text-sm text-muted-foreground">
@@ -378,7 +378,7 @@ function AISettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Brain className="h-5 w-5" />
+              <Brain className="size-5" />
               {t('settings.modelConfig', 'Model Configuration')}
             </CardTitle>
             <CardDescription>
@@ -433,7 +433,7 @@ function AISettingsPage() {
                     </SelectContent>
                   </Select>
                   {currentState.default_model && (
-                    <div className="text-xs text-muted-foreground mt-1">
+                    <div className="mt-1 text-xs text-muted-foreground">
                       {getModelPricingInfo(currentState.default_model) && (
                         <>
                           Input: $
@@ -507,7 +507,7 @@ function AISettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Shield className="h-5 w-5" />
+              <Shield className="size-5" />
               {t('settings.rateLimits', 'Rate Limits')}
             </CardTitle>
             <CardDescription>
@@ -573,7 +573,7 @@ function AISettingsPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <DollarSign className="h-5 w-5" />
+              <DollarSign className="size-5" />
               {t('settings.spendingLimits', 'Spending Limits')}
             </CardTitle>
             <CardDescription>
@@ -610,7 +610,7 @@ function AISettingsPage() {
 
                 {currentState.monthly_spend_cap && (
                   <Alert>
-                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTriangle className="size-4" />
                     <AlertDescription>
                       {t(
                         'settings.capWarning',
@@ -629,7 +629,7 @@ function AISettingsPage() {
       <Card className="mt-6">
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
-            <CheckCircle2 className="h-5 w-5 text-green-500" />
+            <CheckCircle2 className="size-5 text-green-500" />
             {t('settings.status', 'Configuration Status')}
           </CardTitle>
         </CardHeader>
@@ -638,14 +638,14 @@ function AISettingsPage() {
             <Badge
               variant={currentState.features_enabled?.brief_generation ? 'default' : 'secondary'}
             >
-              <FileText className="h-3 w-3 me-1" />
+              <FileText className="me-1 size-3" />
               {t('settings.briefGeneration', 'Brief Generation')}:{' '}
               {currentState.features_enabled?.brief_generation
                 ? t('settings.enabled', 'Enabled')
                 : t('settings.disabled', 'Disabled')}
             </Badge>
             <Badge variant={currentState.features_enabled?.chat ? 'default' : 'secondary'}>
-              <MessageSquare className="h-3 w-3 me-1" />
+              <MessageSquare className="me-1 size-3" />
               {t('settings.chat', 'Chat')}:{' '}
               {currentState.features_enabled?.chat
                 ? t('settings.enabled', 'Enabled')
@@ -654,14 +654,14 @@ function AISettingsPage() {
             <Badge
               variant={currentState.features_enabled?.entity_linking ? 'default' : 'secondary'}
             >
-              <Link2 className="h-3 w-3 me-1" />
+              <Link2 className="me-1 size-3" />
               {t('settings.entityLinking', 'Entity Linking')}:{' '}
               {currentState.features_enabled?.entity_linking
                 ? t('settings.enabled', 'Enabled')
                 : t('settings.disabled', 'Disabled')}
             </Badge>
             <Badge variant="outline">
-              <Brain className="h-3 w-3 me-1" />
+              <Brain className="me-1 size-3" />
               {currentState.default_provider}/
               {currentState.default_model?.split('-').slice(0, 2).join('-')}
             </Badge>

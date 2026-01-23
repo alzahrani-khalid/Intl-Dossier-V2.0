@@ -54,7 +54,7 @@ export function VoiceMemoList({
         {[1, 2, 3].map((i) => (
           <Card key={i} className="animate-pulse">
             <CardContent className="p-4">
-              <div className="h-16 bg-muted rounded" />
+              <div className="h-16 rounded bg-muted" />
             </CardContent>
           </Card>
         ))}
@@ -66,8 +66,8 @@ export function VoiceMemoList({
     return (
       <Card className={cn('text-center', className)}>
         <CardContent className="py-8 sm:py-12">
-          <Volume2 className="mx-auto h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground mb-4" />
-          <p className="text-sm sm:text-base text-muted-foreground">{t('empty.noVoiceMemos')}</p>
+          <Volume2 className="mx-auto mb-4 size-10 text-muted-foreground sm:size-12" />
+          <p className="text-sm text-muted-foreground sm:text-base">{t('empty.noVoiceMemos')}</p>
         </CardContent>
       </Card>
     )
@@ -198,10 +198,10 @@ function VoiceMemoCard({ voiceMemo, onDelete, onDownload, isRTL }: VoiceMemoCard
 
   return (
     <Card className="overflow-hidden">
-      <CardHeader className="p-3 sm:p-4 pb-2 sm:pb-3">
+      <CardHeader className="p-3 pb-2 sm:p-4 sm:pb-3">
         <div className={cn('flex items-start gap-3', isRTL && 'flex-row-reverse')}>
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-sm sm:text-base truncate">
+          <div className="min-w-0 flex-1">
+            <CardTitle className="truncate text-sm sm:text-base">
               {voiceMemo.title || t('untitledMemo')}
             </CardTitle>
             <div
@@ -211,35 +211,35 @@ function VoiceMemoCard({ voiceMemo, onDelete, onDownload, isRTL }: VoiceMemoCard
               )}
             >
               <span className={cn('flex items-center gap-1', isRTL && 'flex-row-reverse')}>
-                <User className="h-3 w-3" />
+                <User className="size-3" />
                 {voiceMemo.recordedByName || t('unknownUser')}
               </span>
               <span className={cn('flex items-center gap-1', isRTL && 'flex-row-reverse')}>
-                <Clock className="h-3 w-3" />
+                <Clock className="size-3" />
                 {formatDate(voiceMemo.recordedAt)}
               </span>
             </div>
           </div>
-          <Badge variant={getStatusVariant(voiceMemo.status)} className="text-xs shrink-0">
+          <Badge variant={getStatusVariant(voiceMemo.status)} className="shrink-0 text-xs">
             {t(`status.${voiceMemo.status}`)}
           </Badge>
         </div>
       </CardHeader>
 
-      <CardContent className="p-3 sm:p-4 pt-0 sm:pt-0 space-y-3">
+      <CardContent className="space-y-3 p-3 pt-0 sm:p-4 sm:pt-0">
         {/* Player Controls */}
         <div className={cn('flex items-center gap-2 sm:gap-3', isRTL && 'flex-row-reverse')}>
           <Button
             variant="outline"
             size="icon"
-            className="h-10 w-10 sm:h-11 sm:w-11 shrink-0"
+            className="size-10 shrink-0 sm:size-11"
             onClick={togglePlayback}
             disabled={voiceMemo.status !== 'completed' && voiceMemo.status !== 'failed'}
           >
             {isPlaying ? (
-              <Pause className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Pause className="size-4 sm:size-5" />
             ) : (
-              <Play className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Play className="size-4 sm:size-5" />
             )}
           </Button>
 
@@ -262,27 +262,27 @@ function VoiceMemoCard({ voiceMemo, onDelete, onDownload, isRTL }: VoiceMemoCard
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9"
+                className="size-9"
                 onClick={() => setShowTranscription(!showTranscription)}
               >
-                <FileText className="h-4 w-4" />
+                <FileText className="size-4" />
               </Button>
             )}
             {onDownload && (
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-9 w-9"
+                className="size-9"
                 onClick={() => onDownload(voiceMemo)}
               >
-                <Download className="h-4 w-4" />
+                <Download className="size-4" />
               </Button>
             )}
             {onDelete && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-9 w-9 text-destructive">
-                    <Trash2 className="h-4 w-4" />
+                  <Button variant="ghost" size="icon" className="size-9 text-destructive">
+                    <Trash2 className="size-4" />
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -306,7 +306,7 @@ function VoiceMemoCard({ voiceMemo, onDelete, onDownload, isRTL }: VoiceMemoCard
         {voiceMemo.transcription && (
           <Collapsible open={showTranscription} onOpenChange={setShowTranscription}>
             <CollapsibleContent>
-              <div className="bg-muted/50 rounded-lg p-3 text-sm">
+              <div className="rounded-lg bg-muted/50 p-3 text-sm">
                 {voiceMemo.transcriptionSegments && voiceMemo.transcriptionSegments.length > 0 ? (
                   <div className="flex flex-wrap gap-1">
                     {voiceMemo.transcriptionSegments.map((segment, index) => (
@@ -325,11 +325,11 @@ function VoiceMemoCard({ voiceMemo, onDelete, onDownload, isRTL }: VoiceMemoCard
                     ))}
                   </div>
                 ) : (
-                  <p className="text-muted-foreground leading-relaxed">{voiceMemo.transcription}</p>
+                  <p className="leading-relaxed text-muted-foreground">{voiceMemo.transcription}</p>
                 )}
 
                 {voiceMemo.transcriptionConfidence !== undefined && (
-                  <p className="text-xs text-muted-foreground mt-2">
+                  <p className="mt-2 text-xs text-muted-foreground">
                     {t('transcription.confidence', {
                       value: Math.round(voiceMemo.transcriptionConfidence * 100),
                     })}
@@ -343,7 +343,7 @@ function VoiceMemoCard({ voiceMemo, onDelete, onDownload, isRTL }: VoiceMemoCard
         {/* Processing indicator */}
         {(voiceMemo.status === 'processing' || voiceMemo.status === 'transcribing') && (
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <div className="h-2 w-2 bg-yellow-500 rounded-full animate-pulse" />
+            <div className="size-2 animate-pulse rounded-full bg-yellow-500" />
             {t(`status.${voiceMemo.status}Description`)}
           </div>
         )}

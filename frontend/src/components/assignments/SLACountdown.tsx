@@ -74,11 +74,11 @@ export function SLACountdown({ sla }: SLACountdownProps): React.JSX.Element {
   const getIcon = (health: HealthStatus): React.JSX.Element => {
     switch (health) {
       case 'safe':
-        return <CheckCircle2 className="h-5 w-5" />
+        return <CheckCircle2 className="size-5" />
       case 'warning':
-        return <AlertTriangle className="h-5 w-5" />
+        return <AlertTriangle className="size-5" />
       case 'breached':
-        return <Clock className="h-5 w-5" />
+        return <Clock className="size-5" />
     }
   }
 
@@ -88,7 +88,7 @@ export function SLACountdown({ sla }: SLACountdownProps): React.JSX.Element {
     <Card dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Clock className="h-5 w-5" />
+          <Clock className="size-5" />
           {t('sla.title', { defaultValue: 'SLA Tracking' })}
         </CardTitle>
       </CardHeader>

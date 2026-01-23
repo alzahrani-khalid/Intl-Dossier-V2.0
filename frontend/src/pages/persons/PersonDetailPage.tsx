@@ -163,7 +163,7 @@ export function PersonDetailPage() {
           </p>
         </div>
         <Button onClick={handleBack}>
-          <ArrowLeft className="h-4 w-4 me-2" />
+          <ArrowLeft className="me-2 size-4" />
           {t('actions.backToList', 'Back to List')}
         </Button>
       </div>
@@ -178,22 +178,22 @@ export function PersonDetailPage() {
   return (
     <div className="min-h-screen bg-background" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="sticky top-0 z-10 border-b bg-background">
+        <div className="container mx-auto p-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
-                <ArrowLeft className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
+              <Button variant="ghost" size="icon" onClick={handleBack} className="size-10">
+                <ArrowLeft className={`size-5 ${isRTL ? 'rotate-180' : ''}`} />
               </Button>
               <div className="flex items-center gap-3">
-                <Avatar className="h-12 w-12">
+                <Avatar className="size-12">
                   <AvatarImage src={person.photo_url || ''} alt={name} />
-                  <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                  <AvatarFallback className="bg-primary/10 font-medium text-primary">
                     {getInitials(name)}
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h1 className="text-xl sm:text-2xl font-bold">{name}</h1>
+                  <h1 className="text-xl font-bold sm:text-2xl">{name}</h1>
                   {title && <p className="text-sm text-muted-foreground">{title}</p>}
                 </div>
               </div>
@@ -201,7 +201,7 @@ export function PersonDetailPage() {
 
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={handleEdit}>
-                <Edit className="h-4 w-4 sm:me-2" />
+                <Edit className="size-4 sm:me-2" />
                 <span className="hidden sm:inline">{t('actions.edit', 'Edit')}</span>
               </Button>
               <AlertDialog>
@@ -211,7 +211,7 @@ export function PersonDetailPage() {
                     size="sm"
                     className="text-destructive hover:text-destructive"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="size-4" />
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -230,7 +230,7 @@ export function PersonDetailPage() {
                       onClick={handleArchive}
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
-                      {archivePerson.isPending && <Loader2 className="h-4 w-4 animate-spin me-2" />}
+                      {archivePerson.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
                       {t('actions.archive', 'Archive')}
                     </AlertDialogAction>
                   </AlertDialogFooter>
@@ -242,7 +242,7 @@ export function PersonDetailPage() {
       </header>
 
       {/* Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="w-full sm:w-auto">
             <TabsTrigger value="overview" className="flex-1 sm:flex-none">
@@ -258,7 +258,7 @@ export function PersonDetailPage() {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               {/* Profile Card */}
               <Card className="lg:col-span-1">
                 <CardHeader>
@@ -267,9 +267,9 @@ export function PersonDetailPage() {
                 <CardContent className="space-y-4">
                   {/* Photo */}
                   <div className="flex justify-center">
-                    <Avatar className="h-24 w-24 sm:h-32 sm:w-32">
+                    <Avatar className="size-24 sm:size-32">
                       <AvatarImage src={person.photo_url || ''} alt={name} />
-                      <AvatarFallback className="bg-primary/10 text-primary text-2xl font-medium">
+                      <AvatarFallback className="bg-primary/10 text-2xl font-medium text-primary">
                         {getInitials(name)}
                       </AvatarFallback>
                     </Avatar>
@@ -281,7 +281,7 @@ export function PersonDetailPage() {
                       variant="outline"
                       className={getImportanceColor(person.importance_level as ImportanceLevel)}
                     >
-                      <Star className="h-3 w-3 me-1" />
+                      <Star className="me-1 size-3" />
                       {isRTL
                         ? IMPORTANCE_LEVEL_LABELS[person.importance_level as ImportanceLevel]?.ar
                         : IMPORTANCE_LEVEL_LABELS[person.importance_level as ImportanceLevel]?.en}
@@ -289,13 +289,13 @@ export function PersonDetailPage() {
                   </div>
 
                   {/* Contact Info */}
-                  <div className="space-y-2 pt-4 border-t">
+                  <div className="space-y-2 border-t pt-4">
                     {person.email && (
                       <a
                         href={`mailto:${person.email}`}
                         className="flex items-center gap-2 text-sm hover:text-primary"
                       >
-                        <Mail className="h-4 w-4 text-muted-foreground" />
+                        <Mail className="size-4 text-muted-foreground" />
                         <span className="truncate">{person.email}</span>
                       </a>
                     )}
@@ -304,7 +304,7 @@ export function PersonDetailPage() {
                         href={`tel:${person.phone}`}
                         className="flex items-center gap-2 text-sm hover:text-primary"
                       >
-                        <Phone className="h-4 w-4 text-muted-foreground" />
+                        <Phone className="size-4 text-muted-foreground" />
                         <span dir="ltr">{person.phone}</span>
                       </a>
                     )}
@@ -315,17 +315,17 @@ export function PersonDetailPage() {
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 text-sm hover:text-primary"
                       >
-                        <Globe className="h-4 w-4 text-muted-foreground" />
+                        <Globe className="size-4 text-muted-foreground" />
                         <span>LinkedIn</span>
-                        <ExternalLink className="h-3 w-3" />
+                        <ExternalLink className="size-3" />
                       </a>
                     )}
                   </div>
 
                   {/* Languages */}
                   {person.languages && person.languages.length > 0 && (
-                    <div className="pt-4 border-t">
-                      <h4 className="text-sm font-medium mb-2">
+                    <div className="border-t pt-4">
+                      <h4 className="mb-2 text-sm font-medium">
                         {t('profile.languages', 'Languages')}
                       </h4>
                       <div className="flex flex-wrap gap-1">
@@ -340,8 +340,8 @@ export function PersonDetailPage() {
 
                   {/* Expertise */}
                   {person.expertise_areas && person.expertise_areas.length > 0 && (
-                    <div className="pt-4 border-t">
-                      <h4 className="text-sm font-medium mb-2">
+                    <div className="border-t pt-4">
+                      <h4 className="mb-2 text-sm font-medium">
                         {t('profile.expertise', 'Expertise')}
                       </h4>
                       <div className="flex flex-wrap gap-1">
@@ -357,20 +357,20 @@ export function PersonDetailPage() {
               </Card>
 
               {/* Biography & Current Role */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="space-y-6 lg:col-span-2">
                 {/* Current Role */}
                 {personData.current_role && (
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2 text-lg">
-                        <Briefcase className="h-5 w-5 text-primary" />
+                        <Briefcase className="size-5 text-primary" />
                         {t('sections.currentRole', 'Current Position')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div className="flex items-start gap-4">
-                        <div className="h-12 w-12 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                          <Building2 className="h-6 w-6 text-primary" />
+                        <div className="flex size-12 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                          <Building2 className="size-6 text-primary" />
                         </div>
                         <div>
                           <h3 className="font-semibold">
@@ -386,7 +386,7 @@ export function PersonDetailPage() {
                               : personData.current_role.organization_name_en}
                           </p>
                           {personData.current_role.start_date && (
-                            <p className="text-xs text-muted-foreground mt-1">
+                            <p className="mt-1 text-xs text-muted-foreground">
                               {t('role.since', 'Since {{date}}', {
                                 date: formatDate(personData.current_role.start_date),
                               })}
@@ -407,7 +407,7 @@ export function PersonDetailPage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                      <p className="whitespace-pre-wrap text-sm text-muted-foreground">
                         {biography}
                       </p>
                     </CardContent>
@@ -418,14 +418,14 @@ export function PersonDetailPage() {
                 <div className="grid grid-cols-3 gap-4">
                   <Card>
                     <CardContent className="pt-6 text-center">
-                      <Briefcase className="h-6 w-6 text-primary mx-auto mb-2" />
+                      <Briefcase className="mx-auto mb-2 size-6 text-primary" />
                       <p className="text-2xl font-bold">{personData.roles?.length || 0}</p>
                       <p className="text-xs text-muted-foreground">{t('stats.roles', 'Roles')}</p>
                     </CardContent>
                   </Card>
                   <Card>
                     <CardContent className="pt-6 text-center">
-                      <Building2 className="h-6 w-6 text-primary mx-auto mb-2" />
+                      <Building2 className="mx-auto mb-2 size-6 text-primary" />
                       <p className="text-2xl font-bold">{personData.affiliations?.length || 0}</p>
                       <p className="text-xs text-muted-foreground">
                         {t('stats.affiliations', 'Affiliations')}
@@ -434,7 +434,7 @@ export function PersonDetailPage() {
                   </Card>
                   <Card>
                     <CardContent className="pt-6 text-center">
-                      <Users className="h-6 w-6 text-primary mx-auto mb-2" />
+                      <Users className="mx-auto mb-2 size-6 text-primary" />
                       <p className="text-2xl font-bold">{personData.relationships?.length || 0}</p>
                       <p className="text-xs text-muted-foreground">
                         {t('stats.connections', 'Connections')}
@@ -453,7 +453,7 @@ export function PersonDetailPage() {
               <CardHeader className="cursor-pointer" onClick={() => toggleSection('roles')}>
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <Briefcase className="h-5 w-5 text-primary" />
+                    <Briefcase className="size-5 text-primary" />
                     {t('sections.careerHistory', 'Career History')}
                     <Badge variant="secondary" className="ms-2">
                       {personData.roles?.length || 0}
@@ -461,9 +461,9 @@ export function PersonDetailPage() {
                   </CardTitle>
                   <Button variant="ghost" size="icon">
                     {expandedSections.roles ? (
-                      <ChevronUp className="h-4 w-4" />
+                      <ChevronUp className="size-4" />
                     ) : (
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="size-4" />
                     )}
                   </Button>
                 </div>
@@ -482,10 +482,10 @@ export function PersonDetailPage() {
                           {personData.roles.map((role: PersonRole, idx: number) => (
                             <div
                               key={role.id}
-                              className={`flex gap-4 ${idx < personData.roles.length - 1 ? 'pb-4 border-b' : ''}`}
+                              className={`flex gap-4 ${idx < personData.roles.length - 1 ? 'border-b pb-4' : ''}`}
                             >
-                              <div className="h-10 w-10 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                <Building2 className="h-5 w-5 text-primary" />
+                              <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-primary/10">
+                                <Building2 className="size-5 text-primary" />
                               </div>
                               <div className="flex-1">
                                 <div className="flex items-start justify-between">
@@ -505,7 +505,7 @@ export function PersonDetailPage() {
                                     <Badge variant="default">{t('role.current', 'Current')}</Badge>
                                   )}
                                 </div>
-                                <p className="text-xs text-muted-foreground mt-1">
+                                <p className="mt-1 text-xs text-muted-foreground">
                                   {formatDate(role.start_date)} -{' '}
                                   {role.end_date
                                     ? formatDate(role.end_date)
@@ -516,12 +516,12 @@ export function PersonDetailPage() {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-sm text-muted-foreground text-center py-8">
+                        <p className="py-8 text-center text-sm text-muted-foreground">
                           {t('empty.roles', 'No career history recorded')}
                         </p>
                       )}
                       <Button variant="outline" size="sm" className="mt-4 w-full">
-                        <Plus className="h-4 w-4 me-2" />
+                        <Plus className="me-2 size-4" />
                         {t('actions.addRole', 'Add Role')}
                       </Button>
                     </CardContent>
@@ -535,7 +535,7 @@ export function PersonDetailPage() {
               <CardHeader className="cursor-pointer" onClick={() => toggleSection('affiliations')}>
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <Building2 className="h-5 w-5 text-primary" />
+                    <Building2 className="size-5 text-primary" />
                     {t('sections.affiliations', 'Organization Affiliations')}
                     <Badge variant="secondary" className="ms-2">
                       {personData.affiliations?.length || 0}
@@ -543,9 +543,9 @@ export function PersonDetailPage() {
                   </CardTitle>
                   <Button variant="ghost" size="icon">
                     {expandedSections.affiliations ? (
-                      <ChevronUp className="h-4 w-4" />
+                      <ChevronUp className="size-4" />
                     ) : (
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="size-4" />
                     )}
                   </Button>
                 </div>
@@ -564,10 +564,10 @@ export function PersonDetailPage() {
                           {personData.affiliations.map((affiliation: PersonAffiliation) => (
                             <div
                               key={affiliation.id}
-                              className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
+                              className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
                             >
                               <div>
-                                <p className="font-medium text-sm">
+                                <p className="text-sm font-medium">
                                   {isRTL
                                     ? affiliation.organization_name_ar ||
                                       affiliation.organization_name_en
@@ -588,12 +588,12 @@ export function PersonDetailPage() {
                           ))}
                         </div>
                       ) : (
-                        <p className="text-sm text-muted-foreground text-center py-8">
+                        <p className="py-8 text-center text-sm text-muted-foreground">
                           {t('empty.affiliations', 'No affiliations recorded')}
                         </p>
                       )}
                       <Button variant="outline" size="sm" className="mt-4 w-full">
-                        <Plus className="h-4 w-4 me-2" />
+                        <Plus className="me-2 size-4" />
                         {t('actions.addAffiliation', 'Add Affiliation')}
                       </Button>
                     </CardContent>
@@ -609,7 +609,7 @@ export function PersonDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <Users className="h-5 w-5 text-primary" />
+                  <Users className="size-5 text-primary" />
                   {t('sections.relationships', 'Professional Network')}
                   <Badge variant="secondary" className="ms-2">
                     {personData.relationships?.length || 0}
@@ -618,11 +618,11 @@ export function PersonDetailPage() {
               </CardHeader>
               <CardContent>
                 {personData.relationships && personData.relationships.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {personData.relationships.map((rel: PersonRelationshipWithPerson) => (
                       <Card
                         key={rel.relationship.id}
-                        className="cursor-pointer hover:shadow-md transition-shadow"
+                        className="cursor-pointer transition-shadow hover:shadow-md"
                         onClick={() =>
                           navigate({
                             to: '/persons/$personId',
@@ -632,16 +632,16 @@ export function PersonDetailPage() {
                       >
                         <CardContent className="p-4">
                           <div className="flex items-center gap-3">
-                            <Avatar className="h-10 w-10">
+                            <Avatar className="size-10">
                               <AvatarImage src={rel.related_person.photo_url || ''} />
-                              <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                              <AvatarFallback className="bg-primary/10 text-sm text-primary">
                                 {getInitials(
                                   isRTL ? rel.related_person.name_ar : rel.related_person.name_en,
                                 )}
                               </AvatarFallback>
                             </Avatar>
-                            <div className="flex-1 min-w-0">
-                              <p className="font-medium text-sm truncate">
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-sm font-medium">
                                 {isRTL ? rel.related_person.name_ar : rel.related_person.name_en}
                               </p>
                               <p className="text-xs text-muted-foreground">
@@ -657,12 +657,12 @@ export function PersonDetailPage() {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground text-center py-8">
+                  <p className="py-8 text-center text-sm text-muted-foreground">
                     {t('empty.relationships', 'No connections recorded')}
                   </p>
                 )}
                 <Button variant="outline" size="sm" className="mt-4 w-full">
-                  <Plus className="h-4 w-4 me-2" />
+                  <Plus className="me-2 size-4" />
                   {t('actions.addConnection', 'Add Connection')}
                 </Button>
               </CardContent>
@@ -673,7 +673,7 @@ export function PersonDetailPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <Calendar className="h-5 w-5 text-primary" />
+                    <Calendar className="size-5 text-primary" />
                     {t('sections.engagements', 'Recent Engagements')}
                   </CardTitle>
                 </CardHeader>
@@ -682,10 +682,10 @@ export function PersonDetailPage() {
                     {personData.recent_engagements.map((eng: any) => (
                       <div
                         key={eng.link.id}
-                        className="flex items-center justify-between p-3 rounded-lg bg-muted/50"
+                        className="flex items-center justify-between rounded-lg bg-muted/50 p-3"
                       >
                         <div>
-                          <p className="font-medium text-sm">
+                          <p className="text-sm font-medium">
                             {isRTL ? eng.engagement.name_ar : eng.engagement.name_en}
                           </p>
                           <p className="text-xs text-muted-foreground">

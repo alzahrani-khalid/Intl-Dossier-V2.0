@@ -73,7 +73,7 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
   if (isLoading) {
     return (
       <div className="space-y-4 sm:space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
           {[1, 2, 3, 4].map((i) => (
             <Skeleton key={i} className="h-48 w-full" />
           ))}
@@ -86,7 +86,7 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
   if (isError) {
     return (
       <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
-        <AlertCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+        <AlertCircle className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
         <AlertDescription>
           {error instanceof Error
             ? error.message
@@ -99,8 +99,8 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
   // Empty state
   if (!intelligenceData || intelligenceData.data.length === 0) {
     return (
-      <div className="text-center py-12" dir={isRTL ? 'rtl' : 'ltr'}>
-        <Lightbulb className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" />
+      <div className="py-12 text-center" dir={isRTL ? 'rtl' : 'ltr'}>
+        <Lightbulb className="mx-auto size-12 text-gray-400 dark:text-gray-600" />
         <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
           {t('intelligence.empty', 'No Intelligence Reports')}
         </h3>
@@ -123,12 +123,12 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with Refresh Button */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg sm:text-xl font-semibold text-foreground">
+          <h2 className="text-lg font-semibold text-foreground sm:text-xl">
             {t('intelligence.title', 'Intelligence Reports')}
           </h2>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             {t(
               'intelligence.description',
               'AI-generated intelligence insights from credible sources',
@@ -145,7 +145,7 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
       </div>
 
       {/* Intelligence Reports Grid - Mobile First Responsive */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+      <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
         {sortedIntelligence.map((intelligence) => (
           <IntelligenceCard
             key={intelligence.id}

@@ -120,7 +120,7 @@ export function ActionItemsList({
     <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="flex items-center justify-between">
-        <h3 className="text-base sm:text-lg font-semibold text-foreground">
+        <h3 className="text-base font-semibold text-foreground sm:text-lg">
           {t('actionItems.title')}
           {items.length > 0 && (
             <span className="ms-2 text-sm font-normal text-muted-foreground">({items.length})</span>
@@ -173,13 +173,13 @@ export function ActionItemsList({
                   )}
                   title={t(`actionItems.status.${item.status}`)}
                 >
-                  <StatusIcon className="h-5 w-5" />
+                  <StatusIcon className="size-5" />
                 </button>
 
                 {/* Content */}
-                <div className="flex-1 min-w-0">
+                <div className="min-w-0 flex-1">
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <p
                         className={cn(
                           'text-sm sm:text-base font-medium text-foreground',
@@ -190,7 +190,7 @@ export function ActionItemsList({
                       </p>
 
                       {/* Meta info */}
-                      <div className="flex flex-wrap items-center gap-2 mt-1">
+                      <div className="mt-1 flex flex-wrap items-center gap-2">
                         {/* Priority */}
                         <Badge
                           variant="outline"
@@ -202,7 +202,7 @@ export function ActionItemsList({
                         {/* Assignee */}
                         {(item.assignee_name_en || item.assignee_name_ar) && (
                           <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                            <User className="h-3 w-3" />
+                            <User className="size-3" />
                             {isRTL
                               ? item.assignee_name_ar || item.assignee_name_en
                               : item.assignee_name_en}
@@ -219,7 +219,7 @@ export function ActionItemsList({
                                 'text-destructive',
                             )}
                           >
-                            <Calendar className="h-3 w-3" />
+                            <Calendar className="size-3" />
                             {format(new Date(item.due_date), 'MMM d')}
                           </span>
                         )}
@@ -227,7 +227,7 @@ export function ActionItemsList({
                         {/* AI Extracted */}
                         {item.ai_extracted && (
                           <span className="flex items-center gap-1 text-xs text-purple-600 dark:text-purple-400">
-                            <Sparkles className="h-3 w-3" />
+                            <Sparkles className="size-3" />
                             {item.ai_confidence
                               ? t('actionItems.aiConfidence', {
                                   confidence: Math.round(item.ai_confidence * 100),
@@ -239,7 +239,7 @@ export function ActionItemsList({
                         {/* Linked to Commitment */}
                         {item.linked_commitment_id && (
                           <span className="flex items-center gap-1 text-xs text-blue-600 dark:text-blue-400">
-                            <Link2 className="h-3 w-3" />
+                            <Link2 className="size-3" />
                             {t('actionItems.linkedCommitment')}
                           </span>
                         )}
@@ -247,7 +247,7 @@ export function ActionItemsList({
                         {/* Linked to Task */}
                         {item.linked_task_id && (
                           <span className="flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
-                            <Link2 className="h-3 w-3" />
+                            <Link2 className="size-3" />
                             {t('actionItems.linkedTask')}
                           </span>
                         )}
@@ -257,8 +257,8 @@ export function ActionItemsList({
                     {/* Actions Menu */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-                          <MoreVertical className="h-4 w-4" />
+                        <Button variant="ghost" size="icon" className="size-8 shrink-0">
+                          <MoreVertical className="size-4" />
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -327,8 +327,8 @@ export function ActionItemsList({
 
       {/* Empty State with Add Button */}
       {items.length === 0 && onAddItem && (
-        <div className="text-center py-8 border-2 border-dashed rounded-lg">
-          <p className="text-sm text-muted-foreground mb-3">{t('actionItems.noItems')}</p>
+        <div className="rounded-lg border-2 border-dashed py-8 text-center">
+          <p className="mb-3 text-sm text-muted-foreground">{t('actionItems.noItems')}</p>
           <Button variant="outline" size="sm" onClick={onAddItem} className="min-h-9">
             <Plus className={cn('h-4 w-4', isRTL ? 'ms-1' : 'me-1')} />
             {t('actionItems.addItem')}

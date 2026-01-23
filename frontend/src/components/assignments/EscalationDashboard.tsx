@@ -137,7 +137,7 @@ export function EscalationDashboard() {
  if (error) {
  return (
  <Alert variant="destructive">
- <AlertTriangle className="h-4 w-4" />
+ <AlertTriangle className="size-4" />
  <AlertDescription>
  {t('escalation_dashboard.error_loading')}
  </AlertDescription>
@@ -170,7 +170,7 @@ export function EscalationDashboard() {
  !dateRange && 'text-muted-foreground'
  )}
  >
- <CalendarIcon className="me-2 h-4 w-4" />
+ <CalendarIcon className="me-2 size-4" />
  {dateRange.start && dateRange.end ? (
  <>
  {format(dateRange.start, 'MMM dd')} - {format(dateRange.end, 'MMM dd, yyyy')}
@@ -214,13 +214,13 @@ export function EscalationDashboard() {
  <CardTitle className="text-sm font-medium">
  {t('escalation_dashboard.total_escalations')}
  </CardTitle>
- <AlertTriangle className="h-4 w-4 text-destructive" />
+ <AlertTriangle className="size-4 text-destructive" />
  </CardHeader>
  <CardContent>
  <div className="text-2xl font-bold">
  {isLoading ? '...' : report?.summary.total_escalations.toLocaleString()}
  </div>
- <p className="text-xs text-muted-foreground mt-1">
+ <p className="mt-1 text-xs text-muted-foreground">
  {!isLoading && trend && (
  <span className={cn(
  'flex items-center gap-1',
@@ -240,7 +240,7 @@ export function EscalationDashboard() {
  <CardTitle className="text-sm font-medium">
  {t('escalation_dashboard.avg_per_day')}
  </CardTitle>
- <TrendingUp className="h-4 w-4 text-muted-foreground" />
+ <TrendingUp className="size-4 text-muted-foreground" />
  </CardHeader>
  <CardContent>
  <div className="text-2xl font-bold">
@@ -254,7 +254,7 @@ export function EscalationDashboard() {
  <CardTitle className="text-sm font-medium">
  {t('escalation_dashboard.most_common_reason')}
  </CardTitle>
- <FileText className="h-4 w-4 text-muted-foreground" />
+ <FileText className="size-4 text-muted-foreground" />
  </CardHeader>
  <CardContent>
  <div className="text-lg font-medium">
@@ -268,7 +268,7 @@ export function EscalationDashboard() {
  <CardTitle className="text-sm font-medium">
  {t('escalation_dashboard.affected_assignments')}
  </CardTitle>
- <Users className="h-4 w-4 text-muted-foreground" />
+ <Users className="size-4 text-muted-foreground" />
  </CardHeader>
  <CardContent>
  <div className="text-2xl font-bold">
@@ -297,7 +297,7 @@ export function EscalationDashboard() {
  </CardHeader>
  <CardContent>
  {isLoading ? (
- <div className="h-64 flex items-center justify-center">
+ <div className="flex h-64 items-center justify-center">
  <p className="text-muted-foreground">{t('common.loading')}</p>
  </div>
  ) : (
@@ -305,19 +305,19 @@ export function EscalationDashboard() {
  {report?.time_series.map((item) => (
  <div
  key={item.date}
- className="flex items-center gap-4 p-3 rounded-lg hover:bg-muted/50 transition-colors"
+ className="flex items-center gap-4 rounded-lg p-3 transition-colors hover:bg-muted/50"
  >
  <div className="w-24 text-sm font-medium">
  {format(new Date(item.date), 'MMM dd')}
  </div>
  <div className="flex-1">
  <div
- className="h-6 bg-destructive/20 rounded-full overflow-hidden"
+ className="h-6 overflow-hidden rounded-full bg-destructive/20"
  style={{
  width: `${Math.min(100, (item.count / (report.summary.total_escalations / report.time_series.length)) * 100)}%`,
  }}
  >
- <div className="h-full bg-destructive rounded-full" />
+ <div className="h-full rounded-full bg-destructive" />
  </div>
  </div>
  <div className="w-12 text-end font-semibold">
@@ -353,7 +353,7 @@ export function EscalationDashboard() {
  </div>
  </div>
  <div
- className="h-2 bg-destructive rounded-full"
+ className="h-2 rounded-full bg-destructive"
  style={{ width: `${unit.percentage}%`, minWidth: '20px' }}
  />
  </div>
@@ -378,7 +378,7 @@ export function EscalationDashboard() {
  <p className="text-muted-foreground">{t('common.loading')}</p>
  ) : (
  report?.by_assignee.slice(0, 10).map((assignee) => (
- <div key={assignee.assignee_id} className="flex items-center justify-between p-3 rounded-lg hover:bg-muted/50">
+ <div key={assignee.assignee_id} className="flex items-center justify-between rounded-lg p-3 hover:bg-muted/50">
  <div>
  <div className="font-medium">{assignee.assignee_name}</div>
  <div className="text-sm text-muted-foreground">
@@ -423,7 +423,7 @@ export function EscalationDashboard() {
  </div>
  </div>
  <div
- className="h-2 bg-destructive rounded-full"
+ className="h-2 rounded-full bg-destructive"
  style={{ width: `${workType.percentage}%`, minWidth: '20px' }}
  />
  </div>

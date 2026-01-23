@@ -94,7 +94,7 @@ export function ReactionPicker({
   const hasReactions = activeReactions.length > 0
 
   return (
-    <div className="flex items-center gap-1 flex-wrap">
+    <div className="flex flex-wrap items-center gap-1">
       {/* Existing reactions */}
       {activeReactions.map(([emoji, count]) => {
         const isUserReaction = userReactions.includes(emoji)
@@ -134,7 +134,7 @@ export function ReactionPicker({
             className={cn('h-7', compact ? 'w-7 p-0' : 'px-2 text-xs gap-1')}
             data-testid="add-reaction-button"
           >
-            <SmilePlus className="h-4 w-4" />
+            <SmilePlus className="size-4" />
             {!compact && !hasReactions && <span>{t('reactions.add', 'React')}</span>}
           </Button>
         </PopoverTrigger>

@@ -183,13 +183,13 @@ export function DocumentUploader({ ownerType, ownerId, onUploadComplete }: Docum
     <div className="flex flex-col gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Upload Form */}
       <Card className="p-4">
-        <h3 className="text-base sm:text-lg font-semibold mb-4 flex items-center gap-2">
-          <Upload className="h-5 w-5" />
+        <h3 className="mb-4 flex items-center gap-2 text-base font-semibold sm:text-lg">
+          <Upload className="size-5" />
           {t('documents.upload_document')}
         </h3>
 
         <div className="flex flex-col gap-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium">{t('documents.file')}</label>
               <Input
@@ -222,7 +222,7 @@ export function DocumentUploader({ ownerType, ownerId, onUploadComplete }: Docum
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-2">
               <label className="text-sm font-medium">{t('documents.title_en')}</label>
               <Input
@@ -247,7 +247,7 @@ export function DocumentUploader({ ownerType, ownerId, onUploadComplete }: Docum
           {isUploading && (
             <div className="flex flex-col gap-2">
               <Progress value={uploadProgress} className="w-full" />
-              <p className="text-xs text-center text-muted-foreground">
+              <p className="text-center text-xs text-muted-foreground">
                 {uploadProgress}% {t('documents.uploading')}
               </p>
             </div>
@@ -272,19 +272,19 @@ export function DocumentUploader({ ownerType, ownerId, onUploadComplete }: Docum
         ) : (
           documents.map((doc) => (
             <Card key={doc.id} className="p-4">
-              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-                <div className="flex items-start gap-3 flex-1 min-w-0">
-                  <FileText className="h-5 w-5 text-muted-foreground shrink-0 mt-1" />
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h4 className="font-medium text-sm sm:text-base truncate">
+              <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
+                <div className="flex min-w-0 flex-1 items-start gap-3">
+                  <FileText className="mt-1 size-5 shrink-0 text-muted-foreground" />
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <h4 className="truncate text-sm font-medium sm:text-base">
                         {isRTL ? doc.title_ar || doc.title_en : doc.title_en || doc.title_ar}
                       </h4>
                       <Badge variant="outline" className="shrink-0">
                         {t(`documents.types.${doc.document_type}`)}
                       </Badge>
                     </div>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {doc.file_size ? `${Math.round(doc.file_size / 1024)} KB` : ''} •{' '}
                       {new Date(doc.created_at).toLocaleDateString()}
                     </p>
@@ -296,7 +296,7 @@ export function DocumentUploader({ ownerType, ownerId, onUploadComplete }: Docum
                   onClick={() => handleDelete(doc.id, doc.storage_path)}
                   className="shrink-0"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               </div>
             </Card>

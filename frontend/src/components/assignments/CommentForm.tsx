@@ -130,16 +130,16 @@ export const CommentForm = forwardRef<HTMLFormElement, CommentFormProps>(functio
 
         {/* @Mention Autocomplete Popup */}
         {showMentions && filteredUsers.length > 0 && (
-          <div className="absolute start-0 end-0 mt-1 bg-popover border rounded-md shadow-lg z-50 max-h-48 overflow-y-auto">
+          <div className="absolute end-0 start-0 z-50 mt-1 max-h-48 overflow-y-auto rounded-md border bg-popover shadow-lg">
             <div className="p-1">
               {filteredUsers.slice(0, 5).map((user) => (
                 <button
                   key={user.id}
                   type="button"
                   onClick={() => handleMentionSelect(user.username)}
-                  className="w-full flex items-center gap-2 px-3 py-2 rounded hover:bg-accent text-start"
+                  className="flex w-full items-center gap-2 rounded px-3 py-2 text-start hover:bg-accent"
                 >
-                  <AtSign className="h-4 w-4 text-muted-foreground" />
+                  <AtSign className="size-4 text-muted-foreground" />
                   <div className="flex-1">
                     <div className="text-sm font-medium">{user.username}</div>
                     <div className="text-xs text-muted-foreground">{user.name}</div>
@@ -162,7 +162,7 @@ export const CommentForm = forwardRef<HTMLFormElement, CommentFormProps>(functio
             <span>{t('comments.form.submitting')}</span>
           ) : (
             <>
-              <Send className="h-4 w-4 me-2" />
+              <Send className="me-2 size-4" />
               {t('comments.form.submit')}
             </>
           )}

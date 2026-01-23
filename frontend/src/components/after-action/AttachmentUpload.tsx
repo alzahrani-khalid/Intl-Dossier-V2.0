@@ -169,20 +169,20 @@ export function AttachmentUpload({
  const getStatusIcon = (attachment: AttachmentFile) => {
  switch (attachment.status) {
  case 'pending':
- return <FileText className="h-5 w-5 text-muted-foreground" />;
+ return <FileText className="size-5 text-muted-foreground" />;
  case 'uploading':
- return <Loader2 className="h-5 w-5 animate-spin text-primary" />;
+ return <Loader2 className="size-5 animate-spin text-primary" />;
  case 'scanning':
- return <Loader2 className="h-5 w-5 animate-spin text-yellow-500" />;
+ return <Loader2 className="size-5 animate-spin text-yellow-500" />;
  case 'scanned':
  if (attachment.virusScanResult === 'clean') {
- return <CheckCircle className="h-5 w-5 text-green-500" />;
+ return <CheckCircle className="size-5 text-green-500" />;
  }
- return <AlertCircle className="h-5 w-5 text-destructive" />;
+ return <AlertCircle className="size-5 text-destructive" />;
  case 'error':
- return <AlertCircle className="h-5 w-5 text-destructive" />;
+ return <AlertCircle className="size-5 text-destructive" />;
  default:
- return <FileText className="h-5 w-5 text-muted-foreground" />;
+ return <FileText className="size-5 text-muted-foreground" />;
  }
  };
 
@@ -198,18 +198,18 @@ export function AttachmentUpload({
  onDragOver={handleDragOver}
  onDragLeave={handleDragLeave}
  >
- <div className="p-6 sm:p-8 md:p-12 text-center">
- <Upload className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
+ <div className="p-6 text-center sm:p-8 md:p-12">
+ <Upload className="mx-auto mb-4 size-12 text-muted-foreground" />
 
- <h3 className="text-base sm:text-lg font-medium mb-2">
+ <h3 className="mb-2 text-base font-medium sm:text-lg">
  {t('upload.drag_drop_title')}
  </h3>
 
- <p className="text-xs sm:text-sm text-muted-foreground mb-4">
+ <p className="mb-4 text-xs text-muted-foreground sm:text-sm">
  {t('upload.accepted_formats', { formats: 'PDF, DOCX, TXT' })}
  </p>
 
- <p className="text-xs text-muted-foreground mb-6">
+ <p className="mb-6 text-xs text-muted-foreground">
  {t('upload.limits', { maxSize: maxSizeMB, maxFiles })}
  </p>
 
@@ -236,7 +236,7 @@ export function AttachmentUpload({
  {/* Global error */}
  {globalError && (
  <Alert variant="destructive">
- <AlertCircle className={`h-4 w-4 ${isRTL ? 'ms-0 me-2' : 'me-0 ms-2'}`} />
+ <AlertCircle className={`size-4 ${isRTL ? 'me-2 ms-0' : 'me-0 ms-2'}`} />
  <AlertDescription className="text-sm">{globalError}</AlertDescription>
  </Alert>
  )}
@@ -244,7 +244,7 @@ export function AttachmentUpload({
  {/* Attachments list */}
  {attachments.length > 0 && (
  <div className="space-y-2">
- <h4 className="text-sm sm:text-base font-medium">
+ <h4 className="text-sm font-medium sm:text-base">
  {t('upload.selected_files')} ({attachments.length}/{maxFiles})
  </h4>
 
@@ -252,13 +252,13 @@ export function AttachmentUpload({
  <Card key={attachment.id} className="p-3 sm:p-4">
  <div className="flex items-start gap-3">
  {/* Status icon */}
- <div className="flex-shrink-0 mt-0.5">
+ <div className="mt-0.5 shrink-0">
  {getStatusIcon(attachment)}
  </div>
 
  {/* File info */}
- <div className="flex-1 min-w-0">
- <p className="text-sm font-medium truncate">
+ <div className="min-w-0 flex-1">
+ <p className="truncate text-sm font-medium">
  {attachment.file.name}
  </p>
 
@@ -273,7 +273,7 @@ export function AttachmentUpload({
 
  {/* Virus scan status */}
  {attachment.status === 'scanned' && (
- <p className="text-xs mt-1">
+ <p className="mt-1 text-xs">
  {attachment.virusScanResult === 'clean' && (
  <span className="text-green-600">{t('upload.virus_scan_clean')}</span>
  )}
@@ -285,7 +285,7 @@ export function AttachmentUpload({
 
  {/* Error message */}
  {attachment.status === 'error' && attachment.errorMessage && (
- <p className="text-xs text-destructive mt-1">
+ <p className="mt-1 text-xs text-destructive">
  {attachment.errorMessage}
  </p>
  )}
@@ -296,10 +296,10 @@ export function AttachmentUpload({
  type="button"
  variant="ghost"
  size="sm"
- className="flex-shrink-0 h-8 w-8 p-0"
+ className="size-8 shrink-0 p-0"
  onClick={() => removeAttachment(attachment.id)}
  >
- <X className="h-4 w-4" />
+ <X className="size-4" />
  <span className="sr-only">{t('common.remove')}</span>
  </Button>
  </div>

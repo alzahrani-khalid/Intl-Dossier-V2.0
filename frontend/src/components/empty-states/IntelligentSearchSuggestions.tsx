@@ -83,7 +83,7 @@ function TypoCorrectionsSection({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        <SpellCheck className="h-4 w-4" />
+        <SpellCheck className="size-4" />
         <span>{t('noResults.didYouMean')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -125,7 +125,7 @@ function RelatedTermsSection({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        <Lightbulb className="h-4 w-4" />
+        <Lightbulb className="size-4" />
         <span>{t('noResults.relatedTerms')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -137,7 +137,7 @@ function RelatedTermsSection({
             onClick={() => onSelect(language === 'ar' && term.term_ar ? term.term_ar : term.term)}
             className="min-h-9 min-w-9"
           >
-            <Search className="h-3 w-3 me-1 text-muted-foreground" />
+            <Search className="me-1 size-3 text-muted-foreground" />
             <span>{language === 'ar' && term.term_ar ? term.term_ar : term.term}</span>
           </Button>
         ))}
@@ -165,7 +165,7 @@ function PopularSearchesSection({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        <TrendingUp className="h-4 w-4" />
+        <TrendingUp className="size-4" />
         <span>{t('noResults.popularSearches')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -228,7 +228,7 @@ function RecentContentSection({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        <Clock className="h-4 w-4" />
+        <Clock className="size-4" />
         <span>{t('noResults.recentlyAdded')}</span>
       </div>
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
@@ -246,9 +246,9 @@ function RecentContentSection({
                 'text-start min-h-11',
               )}
             >
-              <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">{title}</p>
+              <Icon className="size-4 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">{title}</p>
                 <p className="text-xs text-muted-foreground">
                   {formatEntityTypeLabel(item.entity_type, language)}
                 </p>
@@ -296,21 +296,21 @@ function CreateEntitySection({
   }
 
   return (
-    <Card className="border-dashed border-2 bg-muted/30">
+    <Card className="border-2 border-dashed bg-muted/30">
       <CardContent className="p-4">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <div className="flex-1">
             <p className="text-sm font-medium">
               {t('noResults.createNew', {
                 type: formatEntityTypeLabel(suggestion.entity_type, language),
               })}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="mt-1 text-xs text-muted-foreground">
               {t('noResults.createNewHint', { name: suggestion.suggested_name })}
             </p>
           </div>
           <Button onClick={handleCreate} size="sm" className="min-h-10 min-w-10">
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('noResults.createButton', {
               type: formatEntityTypeLabel(suggestion.entity_type, language),
             })}
@@ -341,7 +341,7 @@ function WorkspaceHistorySection({
   return (
     <div className="space-y-2">
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        <History className="h-4 w-4" />
+        <History className="size-4" />
         <span>{t('noResults.workspaceHistory')}</span>
       </div>
       <div className="flex flex-wrap gap-2">
@@ -351,7 +351,7 @@ function WorkspaceHistorySection({
             variant="outline"
             size="sm"
             onClick={() => onSelect(item.query)}
-            className="min-h-9 min-w-9 flex items-center gap-2"
+            className="flex min-h-9 min-w-9 items-center gap-2"
           >
             <span>{item.query}</span>
             <Badge variant="secondary" className="text-xs">
@@ -411,14 +411,14 @@ function ActionableTipsSection({
   return (
     <div className="space-y-3">
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        <AlertCircle className="h-4 w-4" />
+        <AlertCircle className="size-4" />
         <span>{t('noResults.actionableTips')}</span>
       </div>
 
       {/* Show filter removal button if filters are active */}
       {hasFilters && onClearFilters && (
-        <div className="flex items-center gap-3 p-3 rounded-lg border bg-amber-50 dark:bg-amber-950/20 border-amber-200 dark:border-amber-900">
-          <Filter className="h-5 w-5 text-amber-600 dark:text-amber-400 flex-shrink-0" />
+        <div className="flex items-center gap-3 rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950/20">
+          <Filter className="size-5 shrink-0 text-amber-600 dark:text-amber-400" />
           <div className="flex-1">
             <p className="text-sm font-medium text-amber-800 dark:text-amber-200">
               {t('noResults.filtersActive', { count: activeFiltersCount })}
@@ -433,7 +433,7 @@ function ActionableTipsSection({
             onClick={onClearFilters}
             className="min-h-9 border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/30"
           >
-            <X className="h-4 w-4 me-1" />
+            <X className="me-1 size-4" />
             {t('noResults.clearFilters')}
           </Button>
         </div>
@@ -444,8 +444,8 @@ function ActionableTipsSection({
         {actionTips.map((tip, index) => {
           const Icon = getCategoryIcon(tip.category)
           return (
-            <div key={index} className="flex items-start gap-3 p-3 rounded-lg border bg-muted/50">
-              <Icon className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+            <div key={index} className="flex items-start gap-3 rounded-lg border bg-muted/50 p-3">
+              <Icon className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
               <p className="text-sm text-muted-foreground">
                 {language === 'ar' ? tip.tip_ar : tip.tip}
               </p>
@@ -454,7 +454,7 @@ function ActionableTipsSection({
                   variant="ghost"
                   size="sm"
                   onClick={() => onChangeEntityType(tip.action!.payload?.entityType as string)}
-                  className="min-h-8 ms-auto"
+                  className="ms-auto min-h-8"
                 >
                   {t('noResults.tryThis')}
                 </Button>
@@ -476,9 +476,9 @@ function SearchTipsSection({ tips, isRTL }: { tips: string[]; isRTL: boolean }) 
   if (tips.length === 0) return null
 
   return (
-    <div className="space-y-2 pt-4 border-t">
+    <div className="space-y-2 border-t pt-4">
       <p className="text-sm font-medium text-muted-foreground">{t('noResults.searchTips')}</p>
-      <ul className="list-disc list-inside text-sm text-muted-foreground space-y-1 ps-2">
+      <ul className="list-inside list-disc space-y-1 ps-2 text-sm text-muted-foreground">
         {tips.map((tip, index) => (
           <li key={index}>{tip}</li>
         ))}
@@ -544,7 +544,7 @@ export function IntelligentSearchSuggestions({
         className={cn('flex flex-col items-center justify-center py-8', className)}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
         <p className="mt-2 text-sm text-muted-foreground">{t('noResults.findingSuggestions')}</p>
       </div>
     )

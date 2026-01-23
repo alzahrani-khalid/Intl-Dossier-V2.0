@@ -56,17 +56,17 @@ interface Notification {
 function getNotificationIcon(type: Notification['type']) {
  switch (type) {
  case 'delegation_expiry':
- return <Clock className="h-4 w-4 text-orange-500" />;
+ return <Clock className="size-4 text-orange-500" />;
  case 'role_changed':
- return <UserCog className="h-4 w-4 text-blue-500" />;
+ return <UserCog className="size-4 text-blue-500" />;
  case 'user_deactivated':
- return <AlertCircle className="h-4 w-4 text-red-500" />;
+ return <AlertCircle className="size-4 text-red-500" />;
  case 'access_review':
- return <Shield className="h-4 w-4 text-purple-500" />;
+ return <Shield className="size-4 text-purple-500" />;
  case 'user_created':
- return <Check className="h-4 w-4 text-green-500" />;
+ return <Check className="size-4 text-green-500" />;
  default:
- return <Bell className="h-4 w-4 text-muted-foreground" />;
+ return <Bell className="size-4 text-muted-foreground" />;
  }
 }
 
@@ -183,7 +183,7 @@ export function NotificationPanel() {
  size="icon"
  className="relative "
  >
- <Bell className="h-5 w-5" />
+ <Bell className="size-5" />
  {unreadCount > 0 && (
  <Badge
  variant="destructive"
@@ -211,7 +211,7 @@ export function NotificationPanel() {
  </SheetHeader>
 
  {/* Action Buttons */}
- <div className="flex gap-2 mt-4">
+ <div className="mt-4 flex gap-2">
  <Button
  variant="outline"
  size="sm"
@@ -219,7 +219,7 @@ export function NotificationPanel() {
  onClick={() => markAllAsReadMutation.mutate()}
  disabled={unreadCount === 0 || markAllAsReadMutation.isPending}
  >
- <CheckCheck className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <CheckCheck className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('user_management.mark_all_read')}
  </Button>
  <Button
@@ -229,13 +229,13 @@ export function NotificationPanel() {
  onClick={() => clearAllMutation.mutate()}
  disabled={notifications.length === 0 || clearAllMutation.isPending}
  >
- <Trash2 className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Trash2 className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('user_management.clear_all')}
  </Button>
  </div>
 
  {/* Notifications List */}
- <ScrollArea className="h-[calc(100vh-200px)] mt-4">
+ <ScrollArea className="mt-4 h-[calc(100vh-200px)]">
  {isLoading ? (
  <div className="flex items-center justify-center py-12">
  <p className="text-sm text-muted-foreground">
@@ -244,7 +244,7 @@ export function NotificationPanel() {
  </div>
  ) : notifications.length === 0 ? (
  <div className="flex flex-col items-center justify-center py-12">
- <Bell className="h-12 w-12 text-muted-foreground mb-4" />
+ <Bell className="mb-4 size-12 text-muted-foreground" />
  <p className="text-sm text-muted-foreground">
  {t('user_management.no_notifications')}
  </p>
@@ -255,7 +255,7 @@ export function NotificationPanel() {
  <div
  key={notification.id}
  className={`
- p-3 sm:p-4 rounded-lg border transition-colors
+ rounded-lg border p-3 transition-colors sm:p-4
  ${notification.is_read ? 'bg-background' : 'bg-accent'}
  ${notification.is_read ? 'border-border' : 'border-primary/20'}
  `}
@@ -268,22 +268,22 @@ export function NotificationPanel() {
  tabIndex={0}
  >
  <div className="flex gap-3">
- <div className="flex-shrink-0 mt-0.5">
+ <div className="mt-0.5 shrink-0">
  {getNotificationIcon(notification.type)}
  </div>
- <div className="flex-1 min-w-0">
- <p className={`text-sm text-start ${!notification.is_read ? 'font-medium' : ''}`}>
+ <div className="min-w-0 flex-1">
+ <p className={`text-start text-sm ${!notification.is_read ? 'font-medium' : ''}`}>
  {notification.message}
  </p>
- <p className="text-xs text-muted-foreground text-start mt-1">
+ <p className="mt-1 text-start text-xs text-muted-foreground">
  {formatDistanceToNow(new Date(notification.created_at), {
  addSuffix: true,
  })}
  </p>
  </div>
  {!notification.is_read && (
- <div className="flex-shrink-0">
- <div className="h-2 w-2 rounded-full bg-primary" />
+ <div className="shrink-0">
+ <div className="size-2 rounded-full bg-primary" />
  </div>
  )}
  </div>

@@ -137,15 +137,15 @@ export function ToolResultCard({
       className={cn('bg-muted/30 border-muted', 'transition-all duration-200', className)}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <CardHeader className="py-2 px-3">
+      <CardHeader className="px-3 py-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              <Loader2 className="size-4 animate-spin text-muted-foreground" />
             ) : (
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="size-4 text-green-500" />
             )}
-            <Icon className="h-4 w-4 text-muted-foreground" />
+            <Icon className="size-4 text-muted-foreground" />
             <span className="text-xs text-muted-foreground">
               {isLoading ? label : formatResult(result)}
             </span>
@@ -157,7 +157,7 @@ export function ToolResultCard({
               className="h-6 px-2"
               onClick={() => setIsExpanded(!isExpanded)}
             >
-              {isExpanded ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+              {isExpanded ? <ChevronUp className="size-3" /> : <ChevronDown className="size-3" />}
             </Button>
           )}
         </div>
@@ -165,12 +165,12 @@ export function ToolResultCard({
 
       {/* Expanded results */}
       {isExpanded && hasDetails && (
-        <CardContent className="py-2 px-3 pt-0">
-          <div className="space-y-1.5 max-h-32 overflow-y-auto">
+        <CardContent className="px-3 py-2 pt-0">
+          <div className="max-h-32 space-y-1.5 overflow-y-auto">
             {detailedResults.slice(0, 5).map((item, idx) => (
               <div key={item.id || idx} className="flex items-center gap-2 text-xs">
                 {item.type && (
-                  <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+                  <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
                     {item.type}
                   </Badge>
                 )}

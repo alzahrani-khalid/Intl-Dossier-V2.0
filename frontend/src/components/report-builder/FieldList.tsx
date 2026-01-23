@@ -79,14 +79,14 @@ function DraggableField({ field, isRTL, onAddColumn }: DraggableFieldProps) {
       )}
     >
       <div {...attributes} {...listeners} className="touch-none">
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
+        <GripVertical className="size-4 text-muted-foreground" />
       </div>
 
-      <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+      <Icon className="size-4 shrink-0 text-muted-foreground" />
 
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate">{isRTL ? field.nameAr : field.name}</p>
-        <p className="text-xs text-muted-foreground truncate">{t(`fieldTypes.${field.type}`)}</p>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">{isRTL ? field.nameAr : field.name}</p>
+        <p className="truncate text-xs text-muted-foreground">{t(`fieldTypes.${field.type}`)}</p>
       </div>
 
       <TooltipProvider>
@@ -95,13 +95,13 @@ function DraggableField({ field, isRTL, onAddColumn }: DraggableFieldProps) {
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 flex-shrink-0"
+              className="size-7 shrink-0"
               onClick={(e) => {
                 e.stopPropagation()
                 onAddColumn(field)
               }}
             >
-              <Plus className="h-4 w-4" />
+              <Plus className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>{t('tooltips.addColumn')}</TooltipContent>
@@ -156,13 +156,13 @@ export function FieldList({ fields, onAddColumn, onAddFilter, onAddGrouping }: F
   const hasFields = fields.length > 0
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'} className="h-full flex flex-col">
+    <Card dir={isRTL ? 'rtl' : 'ltr'} className="flex h-full flex-col">
       <CardHeader className="pb-3">
         <CardTitle className="text-base sm:text-lg">{t('fields.title')}</CardTitle>
         <CardDescription className="text-xs sm:text-sm">{t('fields.description')}</CardDescription>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col min-h-0">
+      <CardContent className="flex min-h-0 flex-1 flex-col">
         {hasFields ? (
           <>
             <div className="relative mb-3">
@@ -180,11 +180,11 @@ export function FieldList({ fields, onAddColumn, onAddFilter, onAddGrouping }: F
               />
             </div>
 
-            <ScrollArea className="flex-1 -mx-2 px-2">
+            <ScrollArea className="-mx-2 flex-1 px-2">
               <div className="space-y-4">
                 {Object.entries(filteredGroups).map(([entity, entityFields]) => (
                   <div key={entity}>
-                    <h4 className="text-sm font-medium mb-2 text-muted-foreground">
+                    <h4 className="mb-2 text-sm font-medium text-muted-foreground">
                       {t(`entities.${entity}`)}
                     </h4>
                     <div className="space-y-1">
@@ -202,10 +202,10 @@ export function FieldList({ fields, onAddColumn, onAddFilter, onAddGrouping }: F
               </div>
             </ScrollArea>
 
-            <p className="text-xs text-muted-foreground mt-3 text-center">{t('fields.dragHint')}</p>
+            <p className="mt-3 text-center text-xs text-muted-foreground">{t('fields.dragHint')}</p>
           </>
         ) : (
-          <div className="flex-1 flex items-center justify-center text-center">
+          <div className="flex flex-1 items-center justify-center text-center">
             <p className="text-sm text-muted-foreground">{t('fields.noFields')}</p>
           </div>
         )}

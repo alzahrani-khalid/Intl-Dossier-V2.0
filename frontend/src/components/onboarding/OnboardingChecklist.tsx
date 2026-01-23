@@ -145,18 +145,18 @@ function ChecklistItem({
           )}
         >
           {isCompleted ? (
-            <Check className="w-3 h-3 sm:w-4 sm:h-4" />
+            <Check className="size-3 sm:size-4" />
           ) : isLocked ? (
-            <Lock className="w-3 h-3 sm:w-4 sm:h-4" />
+            <Lock className="size-3 sm:size-4" />
           ) : isSkipped ? (
-            <SkipForward className="w-3 h-3 sm:w-4 sm:h-4" />
+            <SkipForward className="size-3 sm:size-4" />
           ) : (
-            <Icon className="w-3 h-3 sm:w-4 sm:h-4" />
+            <Icon className="size-3 sm:size-4" />
           )}
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <p
             className={cn(
               'text-xs sm:text-sm font-medium truncate',
@@ -207,16 +207,16 @@ function ChecklistItem({
           )}
         >
           {isCompleted ? (
-            <Check className="w-5 h-5 sm:w-6 sm:h-6" />
+            <Check className="size-5 sm:size-6" />
           ) : isLocked ? (
-            <Lock className="w-5 h-5 sm:w-6 sm:h-6" />
+            <Lock className="size-5 sm:size-6" />
           ) : (
-            <Icon className="w-5 h-5 sm:w-6 sm:h-6" />
+            <Icon className="size-5 sm:size-6" />
           )}
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div>
               <h4
@@ -228,42 +228,42 @@ function ChecklistItem({
               >
                 {t(item.titleKey)}
               </h4>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 sm:mt-1 line-clamp-2">
+              <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:mt-1 sm:text-sm">
                 {t(item.descriptionKey)}
               </p>
             </div>
 
             {/* Badge */}
             {item.isRequired && !isCompleted && (
-              <span className="flex-shrink-0 text-[10px] sm:text-xs font-medium px-1.5 sm:px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+              <span className="shrink-0 rounded-full bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary sm:px-2 sm:text-xs">
                 {t('checklist.required')}
               </span>
             )}
           </div>
 
           {/* Meta info */}
-          <div className="flex items-center gap-2 sm:gap-3 mt-2 sm:mt-3">
+          <div className="mt-2 flex items-center gap-2 sm:mt-3 sm:gap-3">
             {item.estimatedMinutes && !isCompleted && (
-              <span className="flex items-center gap-1 text-[10px] sm:text-xs text-muted-foreground">
-                <Clock className="w-3 h-3" />
+              <span className="flex items-center gap-1 text-[10px] text-muted-foreground sm:text-xs">
+                <Clock className="size-3" />
                 {t('checklist.estimatedTime', { minutes: item.estimatedMinutes })}
               </span>
             )}
 
             {isLocked && (
-              <span className="text-[10px] sm:text-xs text-muted-foreground">
+              <span className="text-[10px] text-muted-foreground sm:text-xs">
                 {t('checklist.locked')}
               </span>
             )}
 
             {isCompleted && (
-              <span className="text-[10px] sm:text-xs text-green-600 dark:text-green-400">
+              <span className="text-[10px] text-green-600 dark:text-green-400 sm:text-xs">
                 {t('checklist.completed')}
               </span>
             )}
 
             {isSkipped && (
-              <span className="text-[10px] sm:text-xs text-muted-foreground">
+              <span className="text-[10px] text-muted-foreground sm:text-xs">
                 {t('checklist.skipped')}
               </span>
             )}
@@ -271,7 +271,7 @@ function ChecklistItem({
 
           {/* Actions (visible on hover for desktop) */}
           {!isCompleted && !isLocked && (
-            <div className="flex items-center gap-2 mt-3 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
+            <div className="mt-3 flex items-center gap-2 transition-opacity sm:opacity-0 sm:group-hover:opacity-100">
               <Button size="sm" onClick={handleComplete} className="h-8 text-xs">
                 <Check className={cn('w-3 h-3', isRTL ? 'ms-1' : 'me-1')} />
                 {t('checklist.completed')}
@@ -299,8 +299,8 @@ function ChecklistItem({
 
       {/* Hint tooltip */}
       {item.hintKey && !isCompleted && !isLocked && (
-        <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-dashed">
-          <p className="text-[10px] sm:text-xs text-muted-foreground italic">
+        <div className="mt-2 border-t border-dashed pt-2 sm:mt-3 sm:pt-3">
+          <p className="text-[10px] italic text-muted-foreground sm:text-xs">
             💡 {t(item.hintKey)}
           </p>
         </div>
@@ -419,13 +419,13 @@ export function OnboardingChecklist({
         )}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-green-100 dark:bg-green-900/30 flex items-center justify-center mb-4">
-          <Check className="w-8 h-8 sm:w-10 sm:h-10 text-green-600 dark:text-green-400" />
+        <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-green-100 dark:bg-green-900/30 sm:size-20">
+          <Check className="size-8 text-green-600 dark:text-green-400 sm:size-10" />
         </div>
-        <h3 className="text-lg sm:text-xl font-semibold text-green-700 dark:text-green-400">
+        <h3 className="text-lg font-semibold text-green-700 dark:text-green-400 sm:text-xl">
           {t('checklist.allComplete')}
         </h3>
-        <p className="text-sm text-muted-foreground mt-2 max-w-xs">
+        <p className="mt-2 max-w-xs text-sm text-muted-foreground">
           {t('checklist.allCompleteMessage')}
         </p>
       </div>
@@ -436,11 +436,11 @@ export function OnboardingChecklist({
   if (isLoading) {
     return (
       <div className={cn('animate-pulse space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="h-4 bg-muted rounded w-1/3" />
-        <div className="h-2 bg-muted rounded w-full" />
-        <div className="space-y-2 mt-4">
+        <div className="h-4 w-1/3 rounded bg-muted" />
+        <div className="h-2 w-full rounded bg-muted" />
+        <div className="mt-4 space-y-2">
           {[1, 2, 3].map((i) => (
-            <div key={i} className="h-20 bg-muted rounded-lg" />
+            <div key={i} className="h-20 rounded-lg bg-muted" />
           ))}
         </div>
       </div>
@@ -457,8 +457,8 @@ export function OnboardingChecklist({
             {allowDismiss && (
               <AlertDialog>
                 <AlertDialogTrigger asChild>
-                  <Button variant="ghost" size="icon" className="h-8 w-8">
-                    <X className="w-4 h-4" />
+                  <Button variant="ghost" size="icon" className="size-8">
+                    <X className="size-4" />
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -476,13 +476,13 @@ export function OnboardingChecklist({
               </AlertDialog>
             )}
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground">{t('checklist.subtitle')}</p>
+          <p className="text-xs text-muted-foreground sm:text-sm">{t('checklist.subtitle')}</p>
         </CardHeader>
         <CardContent className="pt-0">
           {/* Progress */}
           {showProgress && (
             <div className="mb-4">
-              <div className="flex items-center justify-between text-xs sm:text-sm mb-2">
+              <div className="mb-2 flex items-center justify-between text-xs sm:text-sm">
                 <span className="text-muted-foreground">
                   {t('checklist.progress', { completed: completedCount, total: totalCount })}
                 </span>
@@ -496,8 +496,8 @@ export function OnboardingChecklist({
 
           {/* Estimated time */}
           {showEstimatedTime && estimatedTimeRemaining > 0 && (
-            <div className="flex items-center gap-1 text-xs text-muted-foreground mb-4">
-              <Clock className="w-3 h-3" />
+            <div className="mb-4 flex items-center gap-1 text-xs text-muted-foreground">
+              <Clock className="size-3" />
               {t('checklist.totalEstimatedTime', { minutes: estimatedTimeRemaining })}
             </div>
           )}
@@ -529,7 +529,7 @@ export function OnboardingChecklist({
               variant="ghost"
               size="sm"
               onClick={() => setShowCompleted(!showCompleted)}
-              className="w-full mt-3 text-xs"
+              className="mt-3 w-full text-xs"
             >
               {showCompleted ? t('checklist.hideCompleted') : t('checklist.showCompleted')}
             </Button>
@@ -544,9 +544,9 @@ export function OnboardingChecklist({
     return (
       <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         {showProgress && (
-          <div className="flex items-center gap-2 mb-3">
+          <div className="mb-3 flex items-center gap-2">
             <Progress value={completionPercentage} className="h-1.5 flex-1" />
-            <span className="text-xs text-muted-foreground whitespace-nowrap">
+            <span className="whitespace-nowrap text-xs text-muted-foreground">
               {completedCount}/{totalCount}
             </span>
           </div>
@@ -578,13 +578,13 @@ export function OnboardingChecklist({
       {/* Header */}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h2 className="text-lg sm:text-xl font-semibold">{t('checklist.title')}</h2>
-          <p className="text-sm text-muted-foreground mt-1">{t('checklist.subtitle')}</p>
+          <h2 className="text-lg font-semibold sm:text-xl">{t('checklist.title')}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t('checklist.subtitle')}</p>
         </div>
         {allowDismiss && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
-              <Button variant="outline" size="sm" className="flex-shrink-0">
+              <Button variant="outline" size="sm" className="shrink-0">
                 {t('checklist.dismiss')}
               </Button>
             </AlertDialogTrigger>
@@ -618,7 +618,7 @@ export function OnboardingChecklist({
           <Progress value={completionPercentage} className="h-2.5" />
           {showEstimatedTime && estimatedTimeRemaining > 0 && (
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Clock className="w-3 h-3" />
+              <Clock className="size-3" />
               {t('checklist.totalEstimatedTime', { minutes: estimatedTimeRemaining })}
             </div>
           )}

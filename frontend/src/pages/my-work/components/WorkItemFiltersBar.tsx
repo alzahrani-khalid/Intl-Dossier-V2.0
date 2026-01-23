@@ -91,7 +91,7 @@ export function WorkItemFiltersBar({
 
   return (
     <div
-      className="flex flex-col sm:flex-row gap-3 mb-4"
+      className="mb-4 flex flex-col gap-3 sm:flex-row"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Search Input */}
@@ -112,14 +112,14 @@ export function WorkItemFiltersBar({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-10 gap-2 whitespace-nowrap">
-            <SlidersHorizontal className="h-4 w-4" />
+            <SlidersHorizontal className="size-4" />
             <span className="hidden sm:inline">{t('filters.trackingType', 'Type')}</span>
             {trackingType && (
               <Badge variant="secondary" className="ms-1">
                 {trackingTypes.find((tt) => tt.id === trackingType)?.label}
               </Badge>
             )}
-            <ChevronDown className="h-4 w-4 ms-1" />
+            <ChevronDown className="ms-1 size-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-48">
@@ -146,9 +146,9 @@ export function WorkItemFiltersBar({
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="outline" className="h-10 gap-2 whitespace-nowrap">
-            <ArrowUpDown className="h-4 w-4" />
+            <ArrowUpDown className="size-4" />
             <span className="hidden sm:inline">{t('sort.label', 'Sort')}</span>
-            <ChevronDown className="h-4 w-4 ms-1" />
+            <ChevronDown className="ms-1 size-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-56">

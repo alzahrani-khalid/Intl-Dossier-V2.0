@@ -112,7 +112,7 @@ export function VisualizationSelector({
 
       <CardContent className="space-y-4">
         {/* Visualization Type Selection */}
-        <div className="grid grid-cols-5 sm:grid-cols-10 gap-2">
+        <div className="grid grid-cols-5 gap-2 sm:grid-cols-10">
           {VISUALIZATION_TYPES.map((type) => {
             const Icon = visualizationIcons[type]
             const isSelected = visualization.type === type
@@ -148,7 +148,7 @@ export function VisualizationSelector({
 
         {/* Chart Configuration */}
         {visualization.type !== 'table' && (
-          <div className="space-y-4 pt-4 border-t">
+          <div className="space-y-4 border-t pt-4">
             {/* Title */}
             <div className="grid gap-2">
               <Label htmlFor="chart-title">{t('visualization.settings.title')}</Label>
@@ -166,7 +166,7 @@ export function VisualizationSelector({
 
             {/* Axis Configuration */}
             {showAxisConfig && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="grid gap-2">
                   <Label>{t('visualization.settings.xAxis')}</Label>
                   <Select

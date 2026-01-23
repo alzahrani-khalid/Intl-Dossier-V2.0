@@ -85,7 +85,7 @@ export function ClassificationSelector({
         onValueChange={(newValue) => onChange(newValue as DocumentClassification)}
         disabled={disabled}
       >
-        <SelectTrigger className="w-full min-h-11 sm:min-h-10">
+        <SelectTrigger className="min-h-11 w-full sm:min-h-10">
           <SelectValue placeholder={t('selector.placeholder', 'Select classification')}>
             <div className="flex items-center gap-2">
               <ClassificationIcon classification={value} />
@@ -100,7 +100,7 @@ export function ClassificationSelector({
               <SelectItem
                 key={option}
                 value={option}
-                className={`flex items-center gap-2 min-h-10 ${colors.text}`}
+                className={`flex min-h-10 items-center gap-2 ${colors.text}`}
               >
                 <div className="flex items-center gap-2">
                   <ClassificationIcon classification={option} />

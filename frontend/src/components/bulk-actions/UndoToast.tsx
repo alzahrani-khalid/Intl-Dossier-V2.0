@@ -110,7 +110,7 @@ export function UndoToast({
       role="alert"
       aria-live="polite"
     >
-      <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 rounded-lg shadow-lg overflow-hidden">
+      <div className="overflow-hidden rounded-lg bg-gray-900 text-white shadow-lg dark:bg-gray-100 dark:text-gray-900">
         {/* Progress bar */}
         <div className="h-1 bg-gray-700 dark:bg-gray-300">
           <div
@@ -125,8 +125,8 @@ export function UndoToast({
         {/* Content */}
         <div className="flex items-center justify-between gap-3 p-3 sm:p-4">
           {/* Message */}
-          <div className="flex-1 min-w-0">
-            <p className="text-sm font-medium truncate">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm font-medium">
               {t('undo.message', {
                 action: actionLabel,
                 count: itemCount,
@@ -138,22 +138,22 @@ export function UndoToast({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex shrink-0 items-center gap-2">
             <Button
               variant="secondary"
               size="sm"
               onClick={handleUndo}
               disabled={isUndoing}
-              className="h-8 px-3 bg-white dark:bg-gray-900 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800"
+              className="h-8 bg-white px-3 text-gray-900 hover:bg-gray-100 dark:bg-gray-900 dark:text-white dark:hover:bg-gray-800"
             >
               {isUndoing ? (
                 <>
-                  <Loader2 className="h-4 w-4 me-1 animate-spin" />
+                  <Loader2 className="me-1 size-4 animate-spin" />
                   {t('undo.undoing')}
                 </>
               ) : (
                 <>
-                  <RotateCcw className="h-4 w-4 me-1" />
+                  <RotateCcw className="me-1 size-4" />
                   {t('undo.undo')}
                 </>
               )}
@@ -164,10 +164,10 @@ export function UndoToast({
               size="icon"
               onClick={onDismiss}
               disabled={isUndoing}
-              className="h-8 w-8 text-gray-400 hover:text-white dark:text-gray-600 dark:hover:text-gray-900"
+              className="size-8 text-gray-400 hover:text-white dark:text-gray-600 dark:hover:text-gray-900"
               aria-label={t('accessibility.closeDialog')}
             >
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
           </div>
         </div>

@@ -120,7 +120,7 @@ function SimilarityBadge({ score }: { score: number }) {
               'border-blue-200 dark:border-blue-800',
             )}
           >
-            <Sparkles className="h-3 w-3 text-amber-500" />
+            <Sparkles className="size-3 text-amber-500" />
             <span className={getSimilarityColor(score)}>{formatSimilarity(score)}</span>
           </Badge>
         </TooltipTrigger>
@@ -161,8 +161,8 @@ function DossierTypeBadge({ type }: { type: DossierType }) {
   const Icon = dossierTypeIcons[type] || FileText
 
   return (
-    <Badge variant="secondary" className="text-xs gap-1">
-      <Icon className="h-3 w-3" />
+    <Badge variant="secondary" className="gap-1 text-xs">
+      <Icon className="size-3" />
       <span>{t(`types.${type}`)}</span>
     </Badge>
   )
@@ -185,8 +185,8 @@ function ReasonBreakdownItem({ reason }: { reason: ReasonBreakdown }) {
       >
         <Icon className={cn('h-4 w-4', getReasonColor(reason.reason))} />
       </div>
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center justify-between mb-1">
+      <div className="min-w-0 flex-1">
+        <div className="mb-1 flex items-center justify-between">
           <span className="text-sm font-medium">{isRTL ? label.ar : label.en}</span>
           <span className={cn('text-xs font-medium', getReasonColor(reason.reason))}>
             {percentage}%
@@ -194,7 +194,7 @@ function ReasonBreakdownItem({ reason }: { reason: ReasonBreakdown }) {
         </div>
         <Progress value={percentage} className="h-1.5" />
         {reason.details && (
-          <p className="mt-1 text-xs text-muted-foreground truncate">{reason.details}</p>
+          <p className="mt-1 truncate text-xs text-muted-foreground">{reason.details}</p>
         )}
       </div>
     </div>
@@ -229,10 +229,10 @@ function WhyRecommendedSection({
         <Button
           variant="ghost"
           size="sm"
-          className="w-full justify-between text-muted-foreground hover:text-foreground min-h-11"
+          className="min-h-11 w-full justify-between text-muted-foreground hover:text-foreground"
         >
           <span className="flex items-center gap-2">
-            <Lightbulb className="h-4 w-4" />
+            <Lightbulb className="size-4" />
             {t('whyRecommended')}
           </span>
           <ChevronDown
@@ -243,13 +243,13 @@ function WhyRecommendedSection({
       <CollapsibleContent>
         <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="px-4 pb-4 pt-2">
           {/* Explanation text */}
-          <p className="text-sm text-muted-foreground mb-4 leading-relaxed">
+          <p className="mb-4 text-sm leading-relaxed text-muted-foreground">
             {isRTL ? explanationAr : explanationEn}
           </p>
 
           {/* Reason breakdown */}
           <div className="space-y-1 border-t pt-3">
-            <p className="text-xs font-medium text-muted-foreground mb-2">
+            <p className="mb-2 text-xs font-medium text-muted-foreground">
               {t('contributingFactors')}
             </p>
             {reasonBreakdown.map((reason, index) => (
@@ -348,21 +348,21 @@ export function DossierRecommendationCard({
         <CardHeader className="pb-2 ps-5 sm:ps-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             {/* Left: Icon and Name */}
-            <div className="flex items-start gap-3 min-w-0">
+            <div className="flex min-w-0 items-start gap-3">
               <div
                 className={cn(
                   'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
                   'bg-gradient-to-br from-blue-100 to-purple-100 dark:from-blue-900/40 dark:to-purple-900/40',
                 )}
               >
-                <Icon className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+                <Icon className="size-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-semibold leading-tight line-clamp-2 sm:text-base">
+                <h3 className="line-clamp-2 text-sm font-semibold leading-tight sm:text-base">
                   {name}
                 </h3>
                 {variant !== 'compact' && description && (
-                  <p className="mt-1 text-xs text-muted-foreground line-clamp-2">{description}</p>
+                  <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{description}</p>
                 )}
               </div>
             </div>
@@ -376,7 +376,7 @@ export function DossierRecommendationCard({
           </div>
         </CardHeader>
 
-        <CardContent className="ps-5 sm:ps-6 pt-0">
+        <CardContent className="ps-5 pt-0 sm:ps-6">
           {/* Why Recommended Section */}
           {variant !== 'compact' && (
             <WhyRecommendedSection
@@ -395,9 +395,9 @@ export function DossierRecommendationCard({
                   size="sm"
                   onClick={handleNavigate}
                   disabled={isLoading}
-                  className="min-h-11 min-w-11 flex-1 sm:flex-none gap-1.5"
+                  className="min-h-11 min-w-11 flex-1 gap-1.5 sm:flex-none"
                 >
-                  <ExternalLink className="h-4 w-4" />
+                  <ExternalLink className="size-4" />
                   <span>{t('viewDossier')}</span>
                 </Button>
                 <Button
@@ -407,7 +407,7 @@ export function DossierRecommendationCard({
                   disabled={isLoading}
                   className="min-h-11 min-w-11 gap-1.5"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                   <span className="sr-only sm:not-sr-only">{t('dismiss')}</span>
                 </Button>
               </div>
@@ -415,22 +415,22 @@ export function DossierRecommendationCard({
               {/* Feedback buttons */}
               {onFeedback && (
                 <div className="flex items-center gap-1">
-                  <span className="text-xs text-muted-foreground me-1">{t('wasThisHelpful')}</span>
+                  <span className="me-1 text-xs text-muted-foreground">{t('wasThisHelpful')}</span>
                   <Button
                     size="icon"
                     variant="ghost"
                     onClick={() => handleFeedback(true)}
-                    className="h-8 w-8"
+                    className="size-8"
                   >
-                    <ThumbsUp className="h-4 w-4" />
+                    <ThumbsUp className="size-4" />
                   </Button>
                   <Button
                     size="icon"
                     variant="ghost"
                     onClick={() => handleFeedback(false)}
-                    className="h-8 w-8"
+                    className="size-8"
                   >
-                    <ThumbsDown className="h-4 w-4" />
+                    <ThumbsDown className="size-4" />
                   </Button>
                 </div>
               )}

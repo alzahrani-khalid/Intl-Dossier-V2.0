@@ -31,16 +31,16 @@ export function DeliverablesTracker({
   if (deliverables.length === 0) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
-          <Target className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
+        <div className="mb-4 rounded-full bg-muted p-4 sm:p-6">
+          <Target className="size-8 text-muted-foreground sm:size-10" />
         </div>
-        <h3 className="text-sm sm:text-base font-medium text-muted-foreground mb-2">
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground sm:text-base">
           No Deliverables Tracked
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
+        <p className="max-w-md text-xs text-muted-foreground sm:text-sm">
           Deliverables and milestones will appear here as they are defined.
         </p>
       </div>
@@ -71,7 +71,7 @@ export function DeliverablesTracker({
 
   return (
     <div
-      className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6"
+      className="grid grid-cols-1 gap-4 sm:gap-6 md:grid-cols-3"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Group deliverables by status (Kanban columns) */}
@@ -86,7 +86,7 @@ export function DeliverablesTracker({
           return (
             <div key={status} className="space-y-3">
               {/* Column Header */}
-              <div className="flex items-center gap-2 pb-2 border-b">
+              <div className="flex items-center gap-2 border-b pb-2">
                 <Icon className={cn('h-4 w-4', config.className.split(' ')[0])} />
                 <h4 className="text-sm font-medium">{config.label}</h4>
                 <span className="ms-auto text-xs text-muted-foreground">
@@ -104,7 +104,7 @@ export function DeliverablesTracker({
                       config.className.split(' ').slice(1).join(' ')
                     )}
                   >
-                    <h5 className="text-sm font-medium mb-1">
+                    <h5 className="mb-1 text-sm font-medium">
                       {deliverable.name}
                     </h5>
                     <p className="text-xs text-muted-foreground">
@@ -114,7 +114,7 @@ export function DeliverablesTracker({
                 ))}
 
                 {statusDeliverables.length === 0 && (
-                  <div className="text-center py-4 text-xs text-muted-foreground">
+                  <div className="py-4 text-center text-xs text-muted-foreground">
                     No {config.label.toLowerCase()} items
                   </div>
                 )}

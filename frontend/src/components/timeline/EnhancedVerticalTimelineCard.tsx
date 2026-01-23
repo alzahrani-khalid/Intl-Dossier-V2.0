@@ -144,7 +144,7 @@ function CloseIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4 text-black dark:text-white"
+      className="size-4 text-black dark:text-white"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M18 6l-12 12" />
@@ -211,7 +211,7 @@ export function EnhancedVerticalTimelineCard({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm h-full w-full z-[100]"
+            className="fixed inset-0 z-[100] size-full bg-black/20 backdrop-blur-sm dark:bg-black/40"
           />
         )}
       </AnimatePresence>
@@ -219,7 +219,7 @@ export function EnhancedVerticalTimelineCard({
       {/* Modal Content */}
       <AnimatePresence>
         {isActive && (
-          <div className="fixed inset-0 grid place-items-center z-[101] p-4" dir={isRTL ? 'rtl' : 'ltr'}>
+          <div className="fixed inset-0 z-[101] grid place-items-center p-4" dir={isRTL ? 'rtl' : 'ltr'}>
             {/* Close Button */}
             <motion.button
               key={`button-${event.id}-${id}`}
@@ -227,7 +227,7 @@ export function EnhancedVerticalTimelineCard({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: { duration: 0.05 } }}
-              className="flex absolute top-4 end-4 items-center justify-center bg-white dark:bg-neutral-900 rounded-full h-10 w-10 shadow-lg z-[102] hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors"
+              className="absolute end-4 top-4 z-[102] flex size-10 items-center justify-center rounded-full bg-white shadow-lg transition-colors hover:bg-gray-100 dark:bg-neutral-900 dark:hover:bg-neutral-800"
               onClick={() => setIsActive(false)}
               aria-label={t('common.close')}
             >
@@ -238,7 +238,7 @@ export function EnhancedVerticalTimelineCard({
             <motion.div
               layoutId={`card-${event.id}-${id}`}
               ref={ref}
-              className="w-full max-w-3xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden shadow-2xl"
+              className="flex size-full max-w-3xl flex-col overflow-hidden bg-white shadow-2xl dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%]"
             >
               {/* Event Icon Header */}
               <div className={cn(
@@ -247,27 +247,27 @@ export function EnhancedVerticalTimelineCard({
                 "sm:rounded-t-3xl relative overflow-hidden"
               )}>
                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent" />
-                <EventIcon className="h-16 w-16 sm:h-20 sm:w-20 text-white relative z-10" />
+                <EventIcon className="relative z-10 size-16 text-white sm:size-20" />
               </div>
 
               {/* Content */}
               <div className="flex-1 overflow-auto">
                 {/* Title & Metadata */}
-                <div className="p-4 sm:p-6 border-b border-border">
+                <div className="border-b border-border p-4 sm:p-6">
                   <motion.h3
                     layoutId={`title-${event.id}-${id}`}
-                    className="font-bold text-neutral-700 dark:text-neutral-200 text-xl sm:text-2xl mb-3 text-start"
+                    className="mb-3 text-start text-xl font-bold text-neutral-700 dark:text-neutral-200 sm:text-2xl"
                   >
                     {title}
                   </motion.h3>
 
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground mb-4">
+                  <div className="mb-4 flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4" />
+                      <Calendar className="size-4" />
                       <span className="font-medium">{formattedDate}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      <Clock className="h-4 w-4" />
+                      <Clock className="size-4" />
                       <span>{formattedTime}</span>
                     </div>
                   </div>
@@ -291,7 +291,7 @@ export function EnhancedVerticalTimelineCard({
                 </div>
 
                 {/* Description & Details */}
-                <div className="p-4 sm:p-6 space-y-6">
+                <div className="space-y-6 p-4 sm:p-6">
                   {/* Description */}
                   {description && (
                     <motion.div
@@ -299,7 +299,7 @@ export function EnhancedVerticalTimelineCard({
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base text-start whitespace-pre-wrap leading-relaxed"
+                      className="whitespace-pre-wrap text-start text-sm leading-relaxed text-neutral-600 dark:text-neutral-400 sm:text-base"
                     >
                       {description}
                     </motion.div>
@@ -307,10 +307,10 @@ export function EnhancedVerticalTimelineCard({
 
                   {/* Location */}
                   {(event.metadata.location_en || event.metadata.location_ar) && (
-                    <div className="flex items-start gap-3 p-4 rounded-lg bg-muted">
+                    <div className="flex items-start gap-3 rounded-lg bg-muted p-4">
                       <MapPin className={cn('h-5 w-5 mt-0.5 text-primary', isRTL && 'rotate-180')} />
                       <div className="flex-1 text-start">
-                        <p className="font-semibold text-sm mb-1">{t('timeline.location')}</p>
+                        <p className="mb-1 text-sm font-semibold">{t('timeline.location')}</p>
                         <p className="text-sm text-muted-foreground">
                           {isRTL ? event.metadata.location_ar : event.metadata.location_en}
                         </p>
@@ -319,10 +319,10 @@ export function EnhancedVerticalTimelineCard({
                             href={event.metadata.virtual_link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary hover:underline inline-flex items-center gap-1 text-sm mt-2 font-medium"
+                            className="mt-2 inline-flex items-center gap-1 text-sm font-medium text-primary hover:underline"
                           >
                             {t('timeline.join_virtual')}
-                            <ExternalLink className="h-3.5 w-3.5" />
+                            <ExternalLink className="size-3.5" />
                           </a>
                         )}
                       </div>
@@ -332,17 +332,17 @@ export function EnhancedVerticalTimelineCard({
                   {/* Participants */}
                   {event.metadata.participants && event.metadata.participants.length > 0 && (
                     <div className="space-y-3">
-                      <p className="text-sm font-semibold text-start flex items-center gap-2">
-                        <Users className="h-4 w-4" />
+                      <p className="flex items-center gap-2 text-start text-sm font-semibold">
+                        <Users className="size-4" />
                         {t('timeline.participants')}
                       </p>
                       <div className="flex flex-wrap gap-2">
                         {event.metadata.participants.slice(0, 10).map((participant) => (
                           <div
                             key={participant.id}
-                            className="flex items-center gap-2 rounded-full bg-muted px-3 py-2 hover:bg-muted/80 transition-colors"
+                            className="flex items-center gap-2 rounded-full bg-muted px-3 py-2 transition-colors hover:bg-muted/80"
                           >
-                            <Avatar className="h-7 w-7">
+                            <Avatar className="size-7">
                               {participant.avatar_url && <AvatarImage src={participant.avatar_url} />}
                               <AvatarFallback className="text-xs">
                                 {(isRTL ? participant.name_ar : participant.name_en)
@@ -353,7 +353,7 @@ export function EnhancedVerticalTimelineCard({
                                   .slice(0, 2)}
                               </AvatarFallback>
                             </Avatar>
-                            <span className="text-xs sm:text-sm font-medium">
+                            <span className="text-xs font-medium sm:text-sm">
                               {isRTL ? participant.name_ar : participant.name_en}
                             </span>
                           </div>
@@ -370,8 +370,8 @@ export function EnhancedVerticalTimelineCard({
                   {/* Attachments */}
                   {event.metadata.attachments && event.metadata.attachments.length > 0 && (
                     <div className="space-y-3">
-                      <p className="text-sm font-semibold text-start flex items-center gap-2">
-                        <FileText className="h-4 w-4" />
+                      <p className="flex items-center gap-2 text-start text-sm font-semibold">
+                        <FileText className="size-4" />
                         {t('timeline.attachments')}
                       </p>
                       <div className="space-y-2">
@@ -381,11 +381,11 @@ export function EnhancedVerticalTimelineCard({
                             href={attachment.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-3 rounded-lg bg-muted px-4 py-3 text-sm hover:bg-muted/80 transition-colors group"
+                            className="group flex items-center gap-3 rounded-lg bg-muted px-4 py-3 text-sm transition-colors hover:bg-muted/80"
                           >
-                            <FileText className="h-5 w-5 text-muted-foreground flex-shrink-0" />
-                            <span className="flex-1 text-start truncate font-medium">{attachment.filename}</span>
-                            <Download className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors flex-shrink-0" />
+                            <FileText className="size-5 shrink-0 text-muted-foreground" />
+                            <span className="flex-1 truncate text-start font-medium">{attachment.filename}</span>
+                            <Download className="size-4 shrink-0 text-muted-foreground transition-colors group-hover:text-primary" />
                           </a>
                         ))}
                       </div>
@@ -394,8 +394,8 @@ export function EnhancedVerticalTimelineCard({
 
                   {/* Intelligence-specific metadata */}
                   {event.event_type === 'intelligence' && event.metadata.confidence_score && (
-                    <div className="flex items-center gap-3 p-4 rounded-lg bg-muted">
-                      <TrendingUp className="h-5 w-5 text-primary" />
+                    <div className="flex items-center gap-3 rounded-lg bg-muted p-4">
+                      <TrendingUp className="size-5 text-primary" />
                       <span className="text-sm font-medium">{t('timeline.confidence')}:</span>
                       <Badge variant="outline" className="font-semibold">
                         {Math.round(event.metadata.confidence_score * 100)}%
@@ -406,10 +406,10 @@ export function EnhancedVerticalTimelineCard({
 
                 {/* Action Buttons */}
                 {event.metadata.navigation_url && (
-                  <div className="p-4 sm:p-6 border-t border-border bg-muted/30">
+                  <div className="border-t border-border bg-muted/30 p-4 sm:p-6">
                     <Button
                       onClick={handleNavigate}
-                      className="w-full min-h-11 sm:min-h-10"
+                      className="min-h-11 w-full sm:min-h-10"
                       size="lg"
                     >
                       {t('timeline.view_details')}
@@ -439,37 +439,37 @@ export function EnhancedVerticalTimelineCard({
         iconStyle={{
           cursor: 'pointer',
         }}
-        icon={<EventIcon className="h-5 w-5 sm:h-6 sm:w-6" />}
+        icon={<EventIcon className="size-5 sm:size-6" />}
         iconClassName={eventColorClass}
         onTimelineElementClick={handleCardClick}
       >
         <div className="space-y-3" dir={isRTL ? 'rtl' : 'ltr'}>
           {/* Date - Prominent Display for Single-Side Layout (Mobile & Tablet up to 1169px) */}
-          <div className="xl:hidden mb-3 pb-3 border-b border-border">
+          <div className="mb-3 border-b border-border pb-3 xl:hidden">
             <div className="flex items-center gap-2 text-primary">
-              <Calendar className="h-4 w-4 sm:h-5 sm:w-5 flex-shrink-0" />
-              <span className="text-base sm:text-lg font-bold">{formattedDate}</span>
+              <Calendar className="size-4 shrink-0 sm:size-5" />
+              <span className="text-base font-bold sm:text-lg">{formattedDate}</span>
             </div>
-            <div className="flex items-center gap-2 text-muted-foreground mt-1 ms-6 sm:ms-7">
-              <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4" />
+            <div className="ms-6 mt-1 flex items-center gap-2 text-muted-foreground sm:ms-7">
+              <Clock className="size-3.5 sm:size-4" />
               <span className="text-sm sm:text-base">{formattedTime}</span>
             </div>
           </div>
 
           <div className="flex items-start justify-between gap-3">
-            <h3 className="vertical-timeline-element-title text-start flex-1">
+            <h3 className="vertical-timeline-element-title flex-1 text-start">
               {title}
             </h3>
           </div>
 
           {/* Time - Desktop Only (date is shown by library on 2-column layout) */}
-          <h4 className="hidden xl:flex vertical-timeline-element-subtitle text-start items-center gap-2">
-            <Clock className="h-3.5 w-3.5" />
+          <h4 className="vertical-timeline-element-subtitle hidden items-center gap-2 text-start xl:flex">
+            <Clock className="size-3.5" />
             {formattedTime}
           </h4>
 
           {description && (
-            <p className="text-start line-clamp-2">
+            <p className="line-clamp-2 text-start">
               {description}
             </p>
           )}
@@ -486,16 +486,16 @@ export function EnhancedVerticalTimelineCard({
           </div>
 
           {/* Quick info indicators */}
-          <div className="flex items-center gap-3 text-xs text-muted-foreground pt-1">
+          <div className="flex items-center gap-3 pt-1 text-xs text-muted-foreground">
             {event.metadata.participants && event.metadata.participants.length > 0 && (
               <span className="flex items-center gap-1">
-                <Users className="h-3.5 w-3.5" />
+                <Users className="size-3.5" />
                 {event.metadata.participants.length}
               </span>
             )}
             {event.metadata.attachments && event.metadata.attachments.length > 0 && (
               <span className="flex items-center gap-1">
-                <FileText className="h-3.5 w-3.5" />
+                <FileText className="size-3.5" />
                 {event.metadata.attachments.length}
               </span>
             )}

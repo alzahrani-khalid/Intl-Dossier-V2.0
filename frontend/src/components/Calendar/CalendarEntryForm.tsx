@@ -339,9 +339,9 @@ export function CalendarEntryForm({
 
   return (
     <Card className="p-4 sm:p-6" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="flex items-center gap-2 mb-6">
-        <CalendarIcon className="h-5 w-5" />
-        <h2 className="text-lg sm:text-xl font-semibold">
+      <div className="mb-6 flex items-center gap-2">
+        <CalendarIcon className="size-5" />
+        <h2 className="text-lg font-semibold sm:text-xl">
           {isEditing ? t('calendar.form.edit_event') : t('calendar.form.create_event')}
         </h2>
       </div>
@@ -369,7 +369,7 @@ export function CalendarEntryForm({
         </div>
 
         {/* Titles */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="title-en">{t('calendar.form.title_en')}</Label>
             <Input
@@ -394,7 +394,7 @@ export function CalendarEntryForm({
         </div>
 
         {/* Descriptions */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="desc-en">{t('calendar.form.description_en')}</Label>
             <Textarea
@@ -421,10 +421,10 @@ export function CalendarEntryForm({
         </div>
 
         {/* Date & Time */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex flex-col gap-2">
             <Label htmlFor="start-datetime" className="flex items-center gap-1">
-              <Clock className="h-4 w-4" />
+              <Clock className="size-4" />
               {t('calendar.form.start_datetime')}
               <span className="text-destructive">*</span>
             </Label>
@@ -451,7 +451,7 @@ export function CalendarEntryForm({
         </div>
 
         {/* All Day & Location */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="flex items-center gap-2">
             <Checkbox
               id="all-day"
@@ -479,22 +479,22 @@ export function CalendarEntryForm({
         {/* Participants (T128: Support for person_dossier and organization_dossier) */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-2">
-            <Users className="h-4 w-4" />
+            <Users className="size-4" />
             <Label>{t('calendar.form.participants')}</Label>
           </div>
 
           {/* Selected participants */}
           {participants.length > 0 && (
-            <div className="flex flex-wrap gap-2 mb-2">
+            <div className="mb-2 flex flex-wrap gap-2">
               {participants.map((participant) => (
                 <Badge
                   key={participant.participant_id}
                   variant="secondary"
-                  className="flex items-center gap-2 ps-2 pe-1 py-1"
+                  className="flex items-center gap-2 py-1 pe-1 ps-2"
                 >
                   {participant.participant_type === 'person_dossier' &&
                   participant.participant_photo ? (
-                    <Avatar className="h-5 w-5">
+                    <Avatar className="size-5">
                       <AvatarImage
                         src={participant.participant_photo}
                         alt={participant.participant_name || ''}
@@ -504,11 +504,11 @@ export function CalendarEntryForm({
                       </AvatarFallback>
                     </Avatar>
                   ) : (
-                    <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">
+                    <div className="flex size-5 items-center justify-center rounded-full bg-primary/10">
                       {participant.participant_type === 'person_dossier' ? (
-                        <Users className="h-3 w-3" />
+                        <Users className="size-3" />
                       ) : (
-                        <Building2 className="h-3 w-3" />
+                        <Building2 className="size-3" />
                       )}
                     </div>
                   )}
@@ -519,7 +519,7 @@ export function CalendarEntryForm({
                     type="button"
                     variant="ghost"
                     size="sm"
-                    className="h-5 w-5 p-0 hover:bg-transparent"
+                    className="size-5 p-0 hover:bg-transparent"
                     onClick={() => {
                       setParticipants(
                         participants.filter((p) => p.participant_id !== participant.participant_id),
@@ -527,7 +527,7 @@ export function CalendarEntryForm({
                     }}
                     disabled={isPending}
                   >
-                    <X className="h-3 w-3" />
+                    <X className="size-3" />
                   </Button>
                 </Badge>
               ))}
@@ -543,11 +543,11 @@ export function CalendarEntryForm({
                 className="w-full justify-start"
                 disabled={isPending}
               >
-                <Users className="h-4 w-4 me-2" />
+                <Users className="me-2 size-4" />
                 {t('calendar.form.add_participant')}
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-full sm:w-80 p-0" align={isRTL ? 'end' : 'start'}>
+            <PopoverContent className="w-full p-0 sm:w-80" align={isRTL ? 'end' : 'start'}>
               <Command>
                 <CommandInput placeholder={t('calendar.form.search_participants')} />
                 <CommandEmpty>{t('calendar.form.no_participants_found')}</CommandEmpty>
@@ -579,9 +579,9 @@ export function CalendarEntryForm({
                           }}
                           disabled={isSelected}
                         >
-                          <div className="flex items-center gap-2 flex-1">
+                          <div className="flex flex-1 items-center gap-2">
                             {(person.extension as any)?.photo_url ? (
-                              <Avatar className="h-6 w-6">
+                              <Avatar className="size-6">
                                 <AvatarImage
                                   src={(person.extension as any).photo_url}
                                   alt={displayName || ''}
@@ -591,8 +591,8 @@ export function CalendarEntryForm({
                                 </AvatarFallback>
                               </Avatar>
                             ) : (
-                              <div className="h-6 w-6 rounded-full bg-teal-100 dark:bg-teal-900 flex items-center justify-center">
-                                <Users className="h-3 w-3 text-teal-800 dark:text-teal-300" />
+                              <div className="flex size-6 items-center justify-center rounded-full bg-teal-100 dark:bg-teal-900">
+                                <Users className="size-3 text-teal-800 dark:text-teal-300" />
                               </div>
                             )}
                             <div className="flex flex-col">
@@ -604,7 +604,7 @@ export function CalendarEntryForm({
                               )}
                             </div>
                           </div>
-                          {isSelected && <Check className="h-4 w-4" />}
+                          {isSelected && <Check className="size-4" />}
                         </CommandItem>
                       )
                     })}
@@ -637,13 +637,13 @@ export function CalendarEntryForm({
                           }}
                           disabled={isSelected}
                         >
-                          <div className="flex items-center gap-2 flex-1">
-                            <div className="h-6 w-6 rounded-full bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
-                              <Building2 className="h-3 w-3 text-purple-800 dark:text-purple-300" />
+                          <div className="flex flex-1 items-center gap-2">
+                            <div className="flex size-6 items-center justify-center rounded-full bg-purple-100 dark:bg-purple-900">
+                              <Building2 className="size-3 text-purple-800 dark:text-purple-300" />
                             </div>
                             <span className="text-sm">{displayName}</span>
                           </div>
-                          {isSelected && <Check className="h-4 w-4" />}
+                          {isSelected && <Check className="size-4" />}
                         </CommandItem>
                       )
                     })}
@@ -684,8 +684,8 @@ export function CalendarEntryForm({
 
         {/* Recurrence indicator for editing */}
         {isEditing && initialData?.recurrence_pattern && (
-          <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg border">
-            <Repeat className="h-4 w-4 text-muted-foreground" />
+          <div className="flex items-center gap-2 rounded-lg border bg-muted/50 p-3">
+            <Repeat className="size-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
               {t('calendar.series.partOfSeries')}
             </span>
@@ -739,10 +739,10 @@ export function CalendarEntryForm({
 
         {/* Loading indicator for conflict check */}
         {isCheckingConflicts && !conflictData && (
-          <div className="mt-4 p-4 border rounded-lg bg-muted/30">
-            <div className="flex items-center gap-2 animate-pulse">
-              <div className="h-5 w-5 bg-muted rounded-full" />
-              <div className="h-4 w-32 bg-muted rounded" />
+          <div className="mt-4 rounded-lg border bg-muted/30 p-4">
+            <div className="flex animate-pulse items-center gap-2">
+              <div className="size-5 rounded-full bg-muted" />
+              <div className="h-4 w-32 rounded bg-muted" />
             </div>
           </div>
         )}
@@ -767,10 +767,10 @@ export function CalendarEntryForm({
             <Button
               type="button"
               variant="outline"
-              className="w-full justify-start border-warning/50 bg-warning/10 hover:bg-warning/20"
+              className="border-warning/50 bg-warning/10 hover:bg-warning/20 w-full justify-start"
               onClick={() => setShowSideBySideComparison(true)}
             >
-              <AlertTriangle className="h-4 w-4 text-warning me-2" />
+              <AlertTriangle className="text-warning me-2 size-4" />
               <span className="text-sm">
                 {t('calendar.conflicts.hasConflicts', { count: conflictData.total_conflicts })}
               </span>
@@ -779,10 +779,10 @@ export function CalendarEntryForm({
 
         {/* Proceed with conflict notice */}
         {proceedWithConflict && conflictData?.has_conflicts && (
-          <div className="mt-4 p-3 border border-warning/50 bg-warning/10 rounded-lg">
+          <div className="border-warning/50 bg-warning/10 mt-4 rounded-lg border p-3">
             <div className="flex items-center gap-2">
-              <AlertTriangle className="h-4 w-4 text-warning shrink-0" />
-              <span className="text-sm text-warning">
+              <AlertTriangle className="text-warning size-4 shrink-0" />
+              <span className="text-warning text-sm">
                 {t('calendar.conflicts.hasConflicts', { count: conflictData.total_conflicts })}
               </span>
               <Button
@@ -802,7 +802,7 @@ export function CalendarEntryForm({
         )}
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row gap-2 justify-end pt-4">
+        <div className="flex flex-col-reverse justify-end gap-2 pt-4 sm:flex-row">
           {onCancel && (
             <Button
               type="button"

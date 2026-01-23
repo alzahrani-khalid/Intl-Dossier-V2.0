@@ -29,16 +29,16 @@ export function DecisionLogs({
   if (decisions.length === 0) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
-          <FileText className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
+        <div className="mb-4 rounded-full bg-muted p-4 sm:p-6">
+          <FileText className="size-8 text-muted-foreground sm:size-10" />
         </div>
-        <h3 className="text-sm sm:text-base font-medium text-muted-foreground mb-2">
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground sm:text-base">
           No Decision Logs
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground max-w-md">
+        <p className="max-w-md text-xs text-muted-foreground sm:text-sm">
           Formal decisions and resolutions from meetings will appear here.
           Engagement dossiers integration pending.
         </p>
@@ -51,17 +51,17 @@ export function DecisionLogs({
       {decisions.map((decision) => (
         <div
           key={decision.id}
-          className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+          className="rounded-lg border bg-card p-4 transition-colors hover:bg-accent/50"
         >
           <div className="flex items-start gap-3">
-            <FileText className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <h4 className="text-sm font-medium mb-2">{decision.title}</h4>
-              <p className="text-xs text-muted-foreground mb-2">
+            <FileText className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
+            <div className="min-w-0 flex-1">
+              <h4 className="mb-2 text-sm font-medium">{decision.title}</h4>
+              <p className="mb-2 text-xs text-muted-foreground">
                 {decision.description}
               </p>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                <Calendar className="h-3 w-3" />
+                <Calendar className="size-3" />
                 <span>{decision.date}</span>
               </div>
             </div>

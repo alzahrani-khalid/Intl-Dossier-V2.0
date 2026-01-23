@@ -32,12 +32,12 @@ export function EngagementInformation({ dossier }: EngagementInformationProps) {
     >
       {/* Engagement Date */}
       <div className="flex items-start gap-3 sm:gap-4">
-        <Calendar className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground mt-0.5 flex-shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm sm:text-base font-medium mb-1">
+        <Calendar className="mt-0.5 size-5 shrink-0 text-muted-foreground sm:size-6" />
+        <div className="min-w-0 flex-1">
+          <p className="mb-1 text-sm font-medium sm:text-base">
             {t('sections.engagement.date')}
           </p>
-          <p className="text-sm sm:text-base text-muted-foreground">
+          <p className="text-sm text-muted-foreground sm:text-base">
             {format(new Date(dossier.created_at), 'PPP', { locale })}
           </p>
         </div>
@@ -46,12 +46,12 @@ export function EngagementInformation({ dossier }: EngagementInformationProps) {
       {/* Location */}
       {location && (
         <div className="flex items-start gap-3 sm:gap-4">
-          <MapPin className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground mt-0.5 flex-shrink-0" />
-          <div className="flex-1 min-w-0">
-            <p className="text-sm sm:text-base font-medium mb-1">
+          <MapPin className="mt-0.5 size-5 shrink-0 text-muted-foreground sm:size-6" />
+          <div className="min-w-0 flex-1">
+            <p className="mb-1 text-sm font-medium sm:text-base">
               {t('sections.engagement.location')}
             </p>
-            <p className="text-sm sm:text-base text-muted-foreground">
+            <p className="text-sm text-muted-foreground sm:text-base">
               {location}
             </p>
           </div>
@@ -61,12 +61,12 @@ export function EngagementInformation({ dossier }: EngagementInformationProps) {
       {/* Description */}
       {(isRTL ? dossier.description_ar : dossier.description_en) && (
         <div className="flex items-start gap-3 sm:gap-4">
-          <FileText className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground mt-0.5 flex-shrink-0" />
-          <div className="flex-1 min-w-0">
-            <p className="text-sm sm:text-base font-medium mb-1">
+          <FileText className="mt-0.5 size-5 shrink-0 text-muted-foreground sm:size-6" />
+          <div className="min-w-0 flex-1">
+            <p className="mb-1 text-sm font-medium sm:text-base">
               {t('sections.engagement.description')}
             </p>
-            <p className="text-sm sm:text-base text-muted-foreground whitespace-pre-wrap">
+            <p className="whitespace-pre-wrap text-sm text-muted-foreground sm:text-base">
               {isRTL ? dossier.description_ar : dossier.description_en}
             </p>
           </div>
@@ -75,12 +75,12 @@ export function EngagementInformation({ dossier }: EngagementInformationProps) {
 
       {/* Created By */}
       <div className="flex items-start gap-3 sm:gap-4">
-        <Users className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground mt-0.5 flex-shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm sm:text-base font-medium mb-1">
+        <Users className="mt-0.5 size-5 shrink-0 text-muted-foreground sm:size-6" />
+        <div className="min-w-0 flex-1">
+          <p className="mb-1 text-sm font-medium sm:text-base">
             {t('sections.engagement.createdBy')}
           </p>
-          <p className="text-sm sm:text-base text-muted-foreground">
+          <p className="text-sm text-muted-foreground sm:text-base">
             {format(new Date(dossier.created_at), 'PPp', { locale })}
           </p>
         </div>

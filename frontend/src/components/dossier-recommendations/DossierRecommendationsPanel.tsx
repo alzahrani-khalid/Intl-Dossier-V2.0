@@ -63,13 +63,13 @@ function LoadingSkeleton() {
         <Card key={i} className="overflow-hidden">
           <CardContent className="p-4">
             <div className="flex items-start gap-3">
-              <Skeleton className="h-10 w-10 rounded-lg" />
+              <Skeleton className="size-10 rounded-lg" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-3 w-1/2" />
               </div>
             </div>
-            <div className="flex gap-2 mt-4">
+            <div className="mt-4 flex gap-2">
               <Skeleton className="h-9 w-24" />
               <Skeleton className="h-9 w-16" />
             </div>
@@ -85,16 +85,16 @@ function EmptyState({ onRefresh }: { onRefresh?: () => void }) {
 
   return (
     <div className="flex flex-col items-center justify-center py-8 text-center">
-      <div className="flex h-12 w-12 items-center justify-center rounded-full bg-muted mb-4">
-        <Network className="h-6 w-6 text-muted-foreground" />
+      <div className="mb-4 flex size-12 items-center justify-center rounded-full bg-muted">
+        <Network className="size-6 text-muted-foreground" />
       </div>
       <h3 className="text-sm font-medium">{t('noRecommendations')}</h3>
-      <p className="mt-1 text-xs text-muted-foreground max-w-[200px]">
+      <p className="mt-1 max-w-[200px] text-xs text-muted-foreground">
         {t('noRecommendationsDescription')}
       </p>
       {onRefresh && (
         <Button variant="outline" size="sm" onClick={onRefresh} className="mt-4 gap-1.5">
-          <RefreshCw className="h-4 w-4" />
+          <RefreshCw className="size-4" />
           {t('generateRecommendations')}
         </Button>
       )}
@@ -121,8 +121,8 @@ function RecommendationsHeader({
   return (
     <div className="flex items-center justify-between">
       <div className="flex items-center gap-2">
-        <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
-          <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+        <div className="flex size-8 items-center justify-center rounded-lg bg-gradient-to-br from-amber-100 to-orange-100 dark:from-amber-900/40 dark:to-orange-900/40">
+          <Sparkles className="size-4 text-amber-600 dark:text-amber-400" />
         </div>
         <div>
           <h3 className="text-sm font-semibold">{t('title')}</h3>
@@ -140,10 +140,10 @@ function RecommendationsHeader({
                 size="icon"
                 onClick={onRefresh}
                 disabled={isGenerating}
-                className="h-8 w-8"
+                className="size-8"
               >
                 {isGenerating ? (
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                 ) : (
                   <RefreshCw className={cn('h-4 w-4', isRTL && 'scale-x-[-1]')} />
                 )}
@@ -247,7 +247,7 @@ export function DossierRecommendationsPanel({
 
       {/* View all link */}
       {hasRecommendations && recommendations.length >= maxRecommendations && (
-        <div className="mt-4 pt-3 border-t">
+        <div className="mt-4 border-t pt-3">
           <Button
             variant="ghost"
             size="sm"
@@ -268,7 +268,7 @@ export function DossierRecommendationsPanel({
         <Collapsible open={isExpanded} onOpenChange={setIsExpanded} className={className}>
           <Card dir={isRTL ? 'rtl' : 'ltr'}>
             <CollapsibleTrigger asChild>
-              <CardHeader className="cursor-pointer hover:bg-muted/50 transition-colors py-3 px-4">
+              <CardHeader className="cursor-pointer px-4 py-3 transition-colors hover:bg-muted/50">
                 <div className="flex items-center justify-between">
                   <RecommendationsHeader
                     count={recommendations.length}
@@ -289,7 +289,7 @@ export function DossierRecommendationsPanel({
               </CardHeader>
             </CollapsibleTrigger>
             <CollapsibleContent>
-              <CardContent className="pt-0 px-4 pb-4">{content}</CardContent>
+              <CardContent className="px-4 pb-4 pt-0">{content}</CardContent>
             </CollapsibleContent>
           </Card>
         </Collapsible>
@@ -298,7 +298,7 @@ export function DossierRecommendationsPanel({
 
     return (
       <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
-        <CardHeader className="py-3 px-4">
+        <CardHeader className="px-4 py-3">
           <RecommendationsHeader
             count={recommendations.length}
             isLoading={isLoading}
@@ -307,7 +307,7 @@ export function DossierRecommendationsPanel({
             showRefresh={showRefresh}
           />
         </CardHeader>
-        <CardContent className="pt-0 px-4 pb-4">{content}</CardContent>
+        <CardContent className="px-4 pb-4 pt-0">{content}</CardContent>
       </Card>
     )
   }
@@ -335,13 +335,13 @@ export function DossierRecommendationsPanel({
     <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {isLoading ? (
         <div className="flex items-center gap-2 py-2">
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="size-4 animate-spin" />
           <span className="text-xs text-muted-foreground">{t('loading')}</span>
         </div>
       ) : hasRecommendations ? (
         <>
-          <div className="flex items-center gap-2 mb-2">
-            <Sparkles className="h-4 w-4 text-amber-500" />
+          <div className="mb-2 flex items-center gap-2">
+            <Sparkles className="size-4 text-amber-500" />
             <span className="text-xs font-medium">{t('relatedDossiers')}</span>
             <Badge variant="secondary" className="text-xs">
               {recommendations.length}

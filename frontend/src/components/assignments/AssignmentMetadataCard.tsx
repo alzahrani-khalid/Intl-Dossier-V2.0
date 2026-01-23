@@ -67,7 +67,7 @@ export function AssignmentMetadataCard({
     <Card dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <AlertCircle className="h-5 w-5" />
+          <AlertCircle className="size-5" />
           {t('metadata.title')}
         </CardTitle>
       </CardHeader>
@@ -80,8 +80,8 @@ export function AssignmentMetadataCard({
 
         {/* Created Date */}
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground inline-flex items-center gap-1">
-            <Calendar className="h-4 w-4" />
+          <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
+            <Calendar className="size-4" />
             {t('metadata.created')}:
           </span>
           <span className="text-sm">{formatDate(assignment.created_at)}</span>
@@ -89,12 +89,12 @@ export function AssignmentMetadataCard({
 
         {/* Assignee */}
         <div className="flex items-center justify-between">
-          <span className="text-sm text-muted-foreground inline-flex items-center gap-1">
-            <User className="h-4 w-4" />
+          <span className="inline-flex items-center gap-1 text-sm text-muted-foreground">
+            <User className="size-4" />
             {t('metadata.assignee')}:
           </span>
           <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
+            <Avatar className="size-6">
               <AvatarImage src={assigneeAvatar} alt={assigneeName} />
               <AvatarFallback>
                 {assigneeName

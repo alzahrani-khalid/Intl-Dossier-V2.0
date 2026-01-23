@@ -92,7 +92,7 @@ function SparkleParticle({
         ease: 'easeInOut',
       }}
     >
-      <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-yellow-400" />
+      <Sparkles className="size-6 text-yellow-400 sm:size-8" />
     </motion.div>
   )
 }
@@ -115,7 +115,7 @@ function FireworkBurst({ x, y, delay }: { x: number; y: number; delay: number })
         return (
           <motion.div
             key={i}
-            className="absolute w-2 h-2 rounded-full"
+            className="absolute size-2 rounded-full"
             style={{ backgroundColor: colors[i % colors.length] }}
             initial={{ x: 0, y: 0, opacity: 1 }}
             animate={{
@@ -139,7 +139,7 @@ function FireworkBurst({ x, y, delay }: { x: number; y: number; delay: number })
 function CheckmarkAnimation() {
   return (
     <motion.div
-      className="w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-green-500 flex items-center justify-center"
+      className="flex size-20 items-center justify-center rounded-full bg-green-500 sm:size-24"
       initial={{ scale: 0 }}
       animate={{ scale: [0, 1.2, 1] }}
       transition={{ duration: 0.5, times: [0, 0.6, 1] }}
@@ -149,7 +149,7 @@ function CheckmarkAnimation() {
         animate={{ pathLength: 1 }}
         transition={{ duration: 0.4, delay: 0.3 }}
       >
-        <Check className="w-10 h-10 sm:w-12 sm:h-12 text-white" strokeWidth={3} />
+        <Check className="size-10 text-white sm:size-12" strokeWidth={3} />
       </motion.div>
     </motion.div>
   )
@@ -272,7 +272,7 @@ export function MilestonesCelebration({
         />
 
         {/* Animation layer */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="pointer-events-none absolute inset-0 overflow-hidden">
           {celebration.animationType === 'confetti' && <ConfettiAnimation />}
           {celebration.animationType === 'sparkle' && <SparkleAnimation />}
           {celebration.animationType === 'fireworks' && <FireworksAnimation />}
@@ -280,7 +280,7 @@ export function MilestonesCelebration({
 
         {/* Content card */}
         <motion.div
-          className="relative z-10 bg-card rounded-2xl sm:rounded-3xl p-6 sm:p-8 mx-4 max-w-sm w-full text-center shadow-2xl"
+          className="relative z-10 mx-4 w-full max-w-sm rounded-2xl bg-card p-6 text-center shadow-2xl sm:rounded-3xl sm:p-8"
           initial={{ scale: 0.8, y: 20 }}
           animate={{ scale: 1, y: 0 }}
           exit={{ scale: 0.8, y: 20 }}
@@ -289,13 +289,13 @@ export function MilestonesCelebration({
           {/* Close button */}
           <button
             onClick={handleDismiss}
-            className="absolute top-3 end-3 sm:top-4 sm:end-4 p-1.5 rounded-full hover:bg-muted transition-colors"
+            className="absolute end-3 top-3 rounded-full p-1.5 transition-colors hover:bg-muted sm:end-4 sm:top-4"
           >
-            <X className="w-4 h-4 text-muted-foreground" />
+            <X className="size-4 text-muted-foreground" />
           </button>
 
           {/* Icon/Animation */}
-          <div className="mb-4 sm:mb-6 flex justify-center">
+          <div className="mb-4 flex justify-center sm:mb-6">
             {celebration.animationType === 'checkmark' ? (
               <CheckmarkAnimation />
             ) : (
@@ -314,7 +314,7 @@ export function MilestonesCelebration({
                 animate={{ scale: 1, rotate: 0 }}
                 transition={{ type: 'spring', damping: 12, stiffness: 200 }}
               >
-                <BadgeIcon className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                <BadgeIcon className="size-8 text-white sm:size-10" />
               </motion.div>
             )}
           </div>
@@ -325,14 +325,14 @@ export function MilestonesCelebration({
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            <span className="inline-block px-3 py-1 rounded-full bg-primary/10 text-primary text-xs sm:text-sm font-medium mb-3">
+            <span className="mb-3 inline-block rounded-full bg-primary/10 px-3 py-1 text-xs font-medium text-primary sm:text-sm">
               {t(`milestones.badge.${celebration.percentage}`)}
             </span>
           </motion.div>
 
           {/* Title */}
           <motion.h2
-            className="text-xl sm:text-2xl font-bold mb-2"
+            className="mb-2 text-xl font-bold sm:text-2xl"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.3 }}
@@ -342,7 +342,7 @@ export function MilestonesCelebration({
 
           {/* Message */}
           <motion.p
-            className="text-sm sm:text-base text-muted-foreground mb-6"
+            className="mb-6 text-sm text-muted-foreground sm:text-base"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4 }}
@@ -352,7 +352,7 @@ export function MilestonesCelebration({
 
           {/* Progress indicator */}
           <motion.div
-            className="flex items-center justify-center gap-1.5 sm:gap-2 mb-6"
+            className="mb-6 flex items-center justify-center gap-1.5 sm:gap-2"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}

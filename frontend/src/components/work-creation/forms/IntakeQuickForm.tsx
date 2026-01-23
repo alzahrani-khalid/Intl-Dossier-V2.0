@@ -182,7 +182,7 @@ export function IntakeQuickForm({
         {/* T042/US4: Dossier context display or selector */}
         {/* Show badge when dossier is provided from props or context */}
         {selectedDossier && (
-          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+          <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2 text-sm">
             <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
             <DossierContextBadge
               dossierId={selectedDossier.id}
@@ -199,7 +199,7 @@ export function IntakeQuickForm({
         )}
         {/* Fallback for dossierId-only case (no full dossier info) */}
         {!selectedDossier && (dossierId || creationContext.dossierId) && (
-          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+          <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2 text-sm">
             <span className="text-muted-foreground">
               {t('form.linkedTo', 'Linked to dossier')}:
             </span>
@@ -220,7 +220,7 @@ export function IntakeQuickForm({
         )}
         {/* Show badge for user-selected dossier */}
         {!hasDossierContext && userSelectedDossiers.length > 0 && userSelectedDossiers[0] && (
-          <div className="flex items-center gap-2 p-2 rounded-md bg-muted/50 text-sm">
+          <div className="flex items-center gap-2 rounded-md bg-muted/50 p-2 text-sm">
             <span className="text-muted-foreground">{t('form.linkedTo', 'Linked to')}:</span>
             <DossierContextBadge
               dossierId={userSelectedDossiers[0].id}
@@ -242,7 +242,7 @@ export function IntakeQuickForm({
           name="requestType"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('intake:form.requestType', 'Request Type')} *
               </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -277,7 +277,7 @@ export function IntakeQuickForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('intake:form.title', 'Title')} *
               </FormLabel>
               <FormControl>
@@ -299,7 +299,7 @@ export function IntakeQuickForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('intake:form.description', 'Description')} *
               </FormLabel>
               <FormControl>
@@ -320,7 +320,7 @@ export function IntakeQuickForm({
           name="urgency"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('intake:form.urgency', 'Urgency')} *
               </FormLabel>
               <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -344,7 +344,7 @@ export function IntakeQuickForm({
         />
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row">
           <Button
             type="button"
             variant="outline"

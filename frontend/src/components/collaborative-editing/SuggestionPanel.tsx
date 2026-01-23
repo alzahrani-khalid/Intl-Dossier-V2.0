@@ -125,7 +125,7 @@ export function SuggestionPanel({
   return (
     <Card className={cn('flex flex-col', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-3">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle className="text-base sm:text-lg">{t('suggestions.title')}</CardTitle>
             <CardDescription className="text-sm">
@@ -139,7 +139,7 @@ export function SuggestionPanel({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" size="sm" className="gap-2">
-                <Filter className="h-4 w-4" />
+                <Filter className="size-4" />
                 <span className="hidden sm:inline">
                   {filter === 'all'
                     ? t('suggestions.filter.all')
@@ -168,8 +168,8 @@ export function SuggestionPanel({
       <CardContent className="flex-1 p-0">
         <ScrollArea className="h-[300px] sm:h-[400px]">
           {filteredSuggestions.length === 0 ? (
-            <div className="flex flex-col items-center justify-center h-full p-6 text-center text-muted-foreground">
-              <MessageSquare className="h-10 w-10 mb-2 opacity-50" />
+            <div className="flex h-full flex-col items-center justify-center p-6 text-center text-muted-foreground">
+              <MessageSquare className="mb-2 size-10 opacity-50" />
               <p>{t('suggestions.empty')}</p>
             </div>
           ) : (
@@ -180,10 +180,10 @@ export function SuggestionPanel({
                   open={expandedId === suggestion.id}
                   onOpenChange={(open) => setExpandedId(open ? suggestion.id : null)}
                 >
-                  <div className="p-3 sm:p-4 hover:bg-muted/50 transition-colors">
+                  <div className="p-3 transition-colors hover:bg-muted/50 sm:p-4">
                     {/* Header */}
                     <div className="flex items-start gap-3">
-                      <Avatar className="h-8 w-8 flex-shrink-0">
+                      <Avatar className="size-8 shrink-0">
                         <AvatarImage
                           src={suggestion.author.avatarUrl}
                           alt={suggestion.author.name}
@@ -194,9 +194,9 @@ export function SuggestionPanel({
                         </AvatarFallback>
                       </Avatar>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-wrap items-center gap-2 mb-1">
-                          <span className="font-medium text-sm">
+                      <div className="min-w-0 flex-1">
+                        <div className="mb-1 flex flex-wrap items-center gap-2">
+                          <span className="text-sm font-medium">
                             {suggestion.author.name || suggestion.author.email}
                           </span>
                           <Badge
@@ -209,7 +209,7 @@ export function SuggestionPanel({
                         </div>
 
                         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                          <Clock className="h-3 w-3" />
+                          <Clock className="size-3" />
                           <span>
                             {formatDistanceToNow(new Date(suggestion.createdAt), {
                               addSuffix: true,
@@ -219,9 +219,9 @@ export function SuggestionPanel({
                         </div>
 
                         {/* Change preview */}
-                        <div className="mt-2 p-2 rounded bg-muted text-sm">
+                        <div className="mt-2 rounded bg-muted p-2 text-sm">
                           {suggestion.changeType === 'deletion' ? (
-                            <span className="line-through text-red-600 dark:text-red-400">
+                            <span className="text-red-600 line-through dark:text-red-400">
                               {suggestion.originalText}
                             </span>
                           ) : suggestion.changeType === 'insertion' ? (
@@ -230,7 +230,7 @@ export function SuggestionPanel({
                             </span>
                           ) : (
                             <>
-                              <span className="line-through text-red-600 dark:text-red-400">
+                              <span className="text-red-600 line-through dark:text-red-400">
                                 {suggestion.originalText}
                               </span>
                               <span className="mx-1">&rarr;</span>
@@ -243,18 +243,18 @@ export function SuggestionPanel({
 
                         {/* Comment if exists */}
                         {suggestion.comment && (
-                          <p className="mt-2 text-sm text-muted-foreground italic">
+                          <p className="mt-2 text-sm italic text-muted-foreground">
                             &ldquo;{suggestion.comment}&rdquo;
                           </p>
                         )}
                       </div>
 
                       <CollapsibleTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-8 w-8">
+                        <Button variant="ghost" size="icon" className="size-8">
                           {expandedId === suggestion.id ? (
-                            <ChevronUp className="h-4 w-4" />
+                            <ChevronUp className="size-4" />
                           ) : (
-                            <ChevronDown className="h-4 w-4" />
+                            <ChevronDown className="size-4" />
                           )}
                         </Button>
                       </CollapsibleTrigger>
@@ -262,11 +262,11 @@ export function SuggestionPanel({
 
                     {/* Expanded content */}
                     <CollapsibleContent>
-                      <div className="mt-3 pt-3 border-t space-y-3">
+                      <div className="mt-3 space-y-3 border-t pt-3">
                         {/* Resolution info if resolved */}
                         {suggestion.resolvedByUser && (
                           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                            <User className="h-4 w-4" />
+                            <User className="size-4" />
                             <span>
                               {t('suggestions.resolvedBy', {
                                 name:
@@ -285,7 +285,7 @@ export function SuggestionPanel({
                         )}
 
                         {suggestion.resolutionComment && (
-                          <p className="text-sm p-2 bg-muted rounded">
+                          <p className="rounded bg-muted p-2 text-sm">
                             {suggestion.resolutionComment}
                           </p>
                         )}
@@ -301,15 +301,15 @@ export function SuggestionPanel({
                                   onChange={(e) => setReplyContent(e.target.value)}
                                   className="min-h-[60px] text-sm"
                                 />
-                                <div className="flex flex-col sm:flex-row gap-2">
+                                <div className="flex flex-col gap-2 sm:flex-row">
                                   <Button
                                     size="sm"
                                     variant="default"
                                     onClick={() => handleAccept(suggestion.id)}
                                     disabled={isLoading}
-                                    className="flex-1 sm:flex-none gap-1"
+                                    className="flex-1 gap-1 sm:flex-none"
                                   >
-                                    <Check className="h-4 w-4" />
+                                    <Check className="size-4" />
                                     {t('suggestions.accept')}
                                   </Button>
                                   <Button
@@ -317,9 +317,9 @@ export function SuggestionPanel({
                                     variant="destructive"
                                     onClick={() => handleReject(suggestion.id)}
                                     disabled={isLoading}
-                                    className="flex-1 sm:flex-none gap-1"
+                                    className="flex-1 gap-1 sm:flex-none"
                                   >
-                                    <X className="h-4 w-4" />
+                                    <X className="size-4" />
                                     {t('suggestions.reject')}
                                   </Button>
                                   <Button
@@ -336,15 +336,15 @@ export function SuggestionPanel({
                                 </div>
                               </div>
                             ) : (
-                              <div className="flex flex-col sm:flex-row gap-2">
+                              <div className="flex flex-col gap-2 sm:flex-row">
                                 <Button
                                   size="sm"
                                   variant="default"
                                   onClick={() => handleAccept(suggestion.id)}
                                   disabled={isLoading}
-                                  className="flex-1 sm:flex-none gap-1"
+                                  className="flex-1 gap-1 sm:flex-none"
                                 >
-                                  <Check className="h-4 w-4" />
+                                  <Check className="size-4" />
                                   {t('suggestions.accept')}
                                 </Button>
                                 <Button
@@ -352,18 +352,18 @@ export function SuggestionPanel({
                                   variant="destructive"
                                   onClick={() => handleReject(suggestion.id)}
                                   disabled={isLoading}
-                                  className="flex-1 sm:flex-none gap-1"
+                                  className="flex-1 gap-1 sm:flex-none"
                                 >
-                                  <X className="h-4 w-4" />
+                                  <X className="size-4" />
                                   {t('suggestions.reject')}
                                 </Button>
                                 <Button
                                   size="sm"
                                   variant="outline"
                                   onClick={() => setReplyingTo(suggestion.id)}
-                                  className="flex-1 sm:flex-none gap-1"
+                                  className="flex-1 gap-1 sm:flex-none"
                                 >
-                                  <MessageSquare className="h-4 w-4" />
+                                  <MessageSquare className="size-4" />
                                   {t('suggestions.addComment')}
                                 </Button>
                               </div>

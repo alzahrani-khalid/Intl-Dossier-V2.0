@@ -125,10 +125,10 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
   return (
     <div className={cn('flex flex-col h-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="px-4 py-3 border-b space-y-3">
+      <div className="space-y-3 border-b px-4 py-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Eye className="h-5 w-5 text-primary" />
+            <Eye className="size-5 text-primary" />
             <h2 className="font-semibold">{t('title')}</h2>
             {totals.total > 0 && (
               <Badge variant="secondary" className="text-xs">
@@ -139,14 +139,14 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
         </div>
 
         {/* Search and Filters */}
-        <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           <div className="relative flex-1">
-            <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               placeholder={t('search.placeholder')}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="ps-9 h-9"
+              className="h-9 ps-9"
             />
           </div>
 
@@ -161,8 +161,8 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
                 }))
               }
             >
-              <SelectTrigger className="w-[140px] h-9">
-                <Filter className="h-4 w-4 me-2" />
+              <SelectTrigger className="h-9 w-[140px]">
+                <Filter className="me-2 size-4" />
                 <SelectValue placeholder={t('filters.entityType')} />
               </SelectTrigger>
               <SelectContent>
@@ -185,7 +185,7 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
                 }))
               }
             >
-              <SelectTrigger className="w-[120px] h-9">
+              <SelectTrigger className="h-9 w-[120px]">
                 <SelectValue placeholder={t('filters.priority')} />
               </SelectTrigger>
               <SelectContent>
@@ -227,13 +227,13 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
 
       {/* Watchlist Items */}
       <ScrollArea className="flex-1">
-        <div className="p-4 space-y-2">
+        <div className="space-y-2 p-4">
           {isLoading ? (
             // Loading skeleton
             Array.from({ length: 5 }).map((_, i) => (
               <Card key={i} className="p-3">
                 <div className="flex items-start gap-3">
-                  <Skeleton className="h-10 w-10 rounded-lg" />
+                  <Skeleton className="size-10 rounded-lg" />
                   <div className="flex-1 space-y-2">
                     <Skeleton className="h-4 w-3/4" />
                     <Skeleton className="h-3 w-1/2" />
@@ -243,10 +243,10 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
             ))
           ) : filteredWatchlist.length === 0 ? (
             // Empty state
-            <div className="text-center py-12 px-4">
-              <Eye className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
-              <h3 className="font-medium text-lg">{t('empty.title')}</h3>
-              <p className="text-muted-foreground text-sm mt-1 max-w-xs mx-auto">
+            <div className="px-4 py-12 text-center">
+              <Eye className="mx-auto mb-4 size-12 text-muted-foreground/50" />
+              <h3 className="text-lg font-medium">{t('empty.title')}</h3>
+              <p className="mx-auto mt-1 max-w-xs text-sm text-muted-foreground">
                 {t('empty.description')}
               </p>
             </div>
@@ -278,21 +278,21 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
                           color: `var(--${entityInfo.color}-600, #4b5563)`,
                         }}
                       >
-                        <IconComponent className="h-5 w-5" />
+                        <IconComponent className="size-5" />
                       </div>
 
                       {/* Content */}
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
                             <button
                               onClick={() => handleEntityClick(item)}
-                              className="font-medium text-sm hover:text-primary transition-colors text-start truncate block max-w-full"
+                              className="block max-w-full truncate text-start text-sm font-medium transition-colors hover:text-primary"
                             >
                               {item.custom_label || item.entity_details?.name || t('unknown')}
                             </button>
-                            <div className="flex items-center gap-2 mt-0.5">
-                              <Badge variant="outline" className="text-xs px-1.5 py-0">
+                            <div className="mt-0.5 flex items-center gap-2">
+                              <Badge variant="outline" className="px-1.5 py-0 text-xs">
                                 {t(entityInfo.labelKey)}
                               </Badge>
                               <Badge
@@ -313,29 +313,29 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
                               <Button
                                 variant="ghost"
                                 size="icon"
-                                className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                                className="size-8 opacity-0 transition-opacity group-hover:opacity-100"
                               >
-                                <MoreHorizontal className="h-4 w-4" />
+                                <MoreHorizontal className="size-4" />
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                               <DropdownMenuItem onClick={() => handleEntityClick(item)}>
-                                <ExternalLink className="h-4 w-4 me-2" />
+                                <ExternalLink className="me-2 size-4" />
                                 {t('actions.viewEntity')}
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => setSelectedItem(item)}>
-                                <Settings className="h-4 w-4 me-2" />
+                                <Settings className="me-2 size-4" />
                                 {t('actions.settings')}
                               </DropdownMenuItem>
                               <DropdownMenuItem onClick={() => handleToggleActive(item)}>
                                 {item.is_active ? (
                                   <>
-                                    <BellOff className="h-4 w-4 me-2" />
+                                    <BellOff className="me-2 size-4" />
                                     {t('actions.pauseNotifications')}
                                   </>
                                 ) : (
                                   <>
-                                    <Bell className="h-4 w-4 me-2" />
+                                    <Bell className="me-2 size-4" />
                                     {t('actions.resumeNotifications')}
                                   </>
                                 )}
@@ -345,7 +345,7 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
                                 onClick={() => handleRemove(item)}
                                 className="text-destructive focus:text-destructive"
                               >
-                                <Trash2 className="h-4 w-4 me-2" />
+                                <Trash2 className="me-2 size-4" />
                                 {t('actions.remove')}
                               </DropdownMenuItem>
                             </DropdownMenuContent>
@@ -354,15 +354,15 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
 
                         {/* Notes preview */}
                         {item.notes && (
-                          <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                          <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
                             {item.notes}
                           </p>
                         )}
 
                         {/* Recent events indicator */}
                         {item.recent_events_count && item.recent_events_count > 0 && (
-                          <div className="flex items-center gap-1 mt-2 text-xs text-primary">
-                            <Bell className="h-3 w-3" />
+                          <div className="mt-2 flex items-center gap-1 text-xs text-primary">
+                            <Bell className="size-3" />
                             <span>{t('recentEvents', { count: item.recent_events_count })}</span>
                           </div>
                         )}
@@ -383,7 +383,7 @@ export function WatchlistPanel({ className, onEntityClick }: WatchlistPanelProps
                 onClick={() => fetchNextPage()}
                 disabled={isFetching}
               >
-                {isFetching ? <Loader2 className="h-4 w-4 animate-spin me-2" /> : null}
+                {isFetching ? <Loader2 className="me-2 size-4 animate-spin" /> : null}
                 {t('loadMore')}
               </Button>
             </div>
@@ -437,7 +437,7 @@ function WatchItemSettings({ item, onClose }: { item: WatchlistItem; onClose: ()
   }
 
   return (
-    <div className="space-y-6 mt-6">
+    <div className="mt-6 space-y-6">
       {/* Label */}
       <div className="space-y-2">
         <label className="text-sm font-medium">{t('settings.customLabel')}</label>
@@ -477,7 +477,7 @@ function WatchItemSettings({ item, onClose }: { item: WatchlistItem; onClose: ()
           value={settings.notes}
           onChange={(e) => setSettings((s) => ({ ...s, notes: e.target.value }))}
           placeholder={t('settings.notesPlaceholder')}
-          className="w-full min-h-[80px] p-2 text-sm border rounded-md resize-none"
+          className="min-h-[80px] w-full resize-none rounded-md border p-2 text-sm"
         />
       </div>
 
@@ -526,7 +526,7 @@ function WatchItemSettings({ item, onClose }: { item: WatchlistItem; onClose: ()
           {t('common:cancel')}
         </Button>
         <Button onClick={handleSave} disabled={isUpdating} className="flex-1">
-          {isUpdating && <Loader2 className="h-4 w-4 animate-spin me-2" />}
+          {isUpdating && <Loader2 className="me-2 size-4 animate-spin" />}
           {t('common:save')}
         </Button>
       </div>

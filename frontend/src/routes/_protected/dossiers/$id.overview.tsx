@@ -37,14 +37,14 @@ export const Route = createFileRoute('/_protected/dossiers/$id/overview')({
  */
 function OverviewLoadingSkeleton() {
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+    <div className="container mx-auto p-4 sm:p-6 lg:px-8">
       <div className="space-y-6">
         {/* Breadcrumb skeleton */}
         <Skeleton className="h-5 w-48" />
 
         {/* Header skeleton */}
         <div className="flex items-start gap-4">
-          <Skeleton className="h-14 w-14 rounded-lg" />
+          <Skeleton className="size-14 rounded-lg" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-8 w-64" />
             <Skeleton className="h-4 w-96" />
@@ -52,7 +52,7 @@ function OverviewLoadingSkeleton() {
         </div>
 
         {/* Stats skeleton */}
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
           {[...Array(6)].map((_, i) => (
             <Skeleton key={i} className="h-20" />
           ))}
@@ -76,26 +76,26 @@ function ErrorState({ message, isRTL }: { message: string; isRTL: boolean }) {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
+      className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div
-        className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6"
+        className="rounded-lg border border-destructive/20 bg-destructive/10 p-4 sm:p-6"
         role="alert"
       >
         <div className="flex items-start gap-3">
-          <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-destructive flex-shrink-0 mt-0.5" />
-          <div className="flex-1 min-w-0">
-            <h3 className="text-base sm:text-lg font-semibold text-destructive mb-2">
+          <AlertCircle className="mt-0.5 size-5 shrink-0 text-destructive sm:size-6" />
+          <div className="min-w-0 flex-1">
+            <h3 className="mb-2 text-base font-semibold text-destructive sm:text-lg">
               {t('error.title')}
             </h3>
-            <p className="text-sm sm:text-base text-destructive/90">
+            <p className="text-sm text-destructive/90 sm:text-base">
               {message || t('error.description')}
             </p>
             <div className="mt-4">
               <Button variant="outline" asChild>
                 <Link to="/dossiers">
-                  <Home className="h-4 w-4 me-2" />
+                  <Home className="me-2 size-4" />
                   {t('nav.dossiersHub')}
                 </Link>
               </Button>

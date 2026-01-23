@@ -331,7 +331,7 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
                   <FormLabel className="text-base sm:text-lg">
                     {isRTL ? 'الجمهور المستهدف' : 'Target Audience'}
                   </FormLabel>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mt-3">
+                  <div className="mt-3 grid grid-cols-1 gap-3 sm:grid-cols-2">
                     {AUDIENCE_OPTIONS.map((option) => (
                       <button
                         key={option.value}
@@ -356,10 +356,10 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
                             )}
                           >
                             {field.value === option.value && (
-                              <div className="w-2 h-2 rounded-full bg-white" />
+                              <div className="size-2 rounded-full bg-white" />
                             )}
                           </div>
-                          <span className="font-medium text-sm sm:text-base">
+                          <span className="text-sm font-medium sm:text-base">
                             {isRTL ? option.labelAr : option.labelEn}
                           </span>
                         </div>
@@ -442,20 +442,20 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center gap-4 text-center">
                     <div className="relative">
-                      <Sparkles className="h-12 w-12 text-primary animate-pulse" />
-                      <Loader2 className="h-6 w-6 text-primary absolute -bottom-1 -end-1 animate-spin" />
+                      <Sparkles className="size-12 animate-pulse text-primary" />
+                      <Loader2 className="absolute -bottom-1 -end-1 size-6 animate-spin text-primary" />
                     </div>
                     <div>
-                      <p className="font-medium text-lg">
+                      <p className="text-lg font-medium">
                         {isRTL ? 'جارٍ توليد المخطط...' : 'Generating outline...'}
                       </p>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {isRTL
                           ? 'يقوم الذكاء الاصطناعي بإنشاء هيكل موجز سياسي مخصص لك'
                           : 'AI is creating a custom policy brief structure for you'}
                       </p>
                     </div>
-                    <Progress value={progress} className="w-full max-w-xs h-2" />
+                    <Progress value={progress} className="h-2 w-full max-w-xs" />
                     <span className="text-sm text-muted-foreground">{Math.round(progress)}%</span>
                   </div>
                 </CardContent>
@@ -467,19 +467,19 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
               <Card className="border-destructive/20 bg-destructive/5">
                 <CardContent className="pt-6">
                   <div className="flex flex-col items-center gap-4 text-center">
-                    <AlertCircle className="h-12 w-12 text-destructive" />
+                    <AlertCircle className="size-12 text-destructive" />
                     <div>
-                      <p className="font-medium text-lg text-destructive">
+                      <p className="text-lg font-medium text-destructive">
                         {isRTL ? 'فشل التوليد' : 'Generation Failed'}
                       </p>
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {isRTL
                           ? 'حدث خطأ أثناء توليد المخطط. يرجى المحاولة مرة أخرى.'
                           : 'An error occurred while generating the outline. Please try again.'}
                       </p>
                     </div>
                     <Button onClick={retry} variant="outline" className="min-h-11">
-                      <RefreshCw className="h-4 w-4 me-2" />
+                      <RefreshCw className="me-2 size-4" />
                       {isRTL ? 'إعادة المحاولة' : 'Retry'}
                     </Button>
                   </div>
@@ -491,8 +491,8 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
             {outline && !isGenerating && (
               <div className="space-y-4">
                 {/* Success Header */}
-                <div className="flex items-center gap-3 p-4 bg-green-500/10 border border-green-500/20 rounded-lg">
-                  <CheckCircle2 className="h-5 w-5 text-green-600 shrink-0" />
+                <div className="flex items-center gap-3 rounded-lg border border-green-500/20 bg-green-500/10 p-4">
+                  <CheckCircle2 className="size-5 shrink-0 text-green-600" />
                   <div className="flex-1">
                     <p className="font-medium text-green-700 dark:text-green-400">
                       {isRTL ? 'تم توليد المخطط بنجاح!' : 'Outline generated successfully!'}
@@ -504,7 +504,7 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
                     </p>
                   </div>
                   <Button onClick={handleRegenerate} variant="ghost" size="sm" className="min-h-11">
-                    <RefreshCw className="h-4 w-4 me-2" />
+                    <RefreshCw className="me-2 size-4" />
                     {isRTL ? 'إعادة التوليد' : 'Regenerate'}
                   </Button>
                 </div>
@@ -512,8 +512,8 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
                 {/* Outline Title */}
                 <Card>
                   <CardHeader className="pb-3">
-                    <CardTitle className="text-lg flex items-center gap-2">
-                      <FileText className="h-5 w-5 text-primary" />
+                    <CardTitle className="flex items-center gap-2 text-lg">
+                      <FileText className="size-5 text-primary" />
                       {isRTL ? outline.title_ar : outline.title_en}
                     </CardTitle>
                     {outline.summary_en && (
@@ -527,7 +527,7 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
                 {/* Sections */}
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
-                    <h3 className="font-semibold text-sm text-muted-foreground uppercase tracking-wide">
+                    <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
                       {isRTL ? 'الأقسام المقترحة' : 'Suggested Sections'}
                     </h3>
                     <Badge variant="outline" className="text-xs">
@@ -578,12 +578,12 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
                                     ? saveSection(section.id)
                                     : setEditingSection(section.id)
                                 }
-                                className="h-8 w-8 p-0"
+                                className="size-8 p-0"
                               >
                                 {isEditing ? (
-                                  <Save className="h-4 w-4" />
+                                  <Save className="size-4" />
                                 ) : (
-                                  <Pencil className="h-4 w-4" />
+                                  <Pencil className="size-4" />
                                 )}
                               </Button>
                             </div>
@@ -629,11 +629,11 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
     <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="p-2 bg-gradient-to-br from-primary/20 to-primary/5 rounded-lg">
-          <Wand2 className="h-6 w-6 text-primary" />
+        <div className="rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 p-2">
+          <Wand2 className="size-6 text-primary" />
         </div>
         <div>
-          <h2 className="text-lg sm:text-xl font-semibold">
+          <h2 className="text-lg font-semibold sm:text-xl">
             {isRTL ? 'مساعد إنشاء الموجز السياسي' : 'Policy Brief Assistant'}
           </h2>
           <p className="text-sm text-muted-foreground">
@@ -646,7 +646,7 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
 
       {/* Progress */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
+        <div className="flex items-center justify-between text-xs text-muted-foreground sm:text-sm">
           <span>
             {isRTL
               ? `الخطوة ${currentStep + 1} من ${totalSteps}`
@@ -658,7 +658,7 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
       </div>
 
       {/* Step Indicators */}
-      <div className="flex items-center justify-between gap-1 sm:gap-2 overflow-x-auto pb-2">
+      <div className="flex items-center justify-between gap-1 overflow-x-auto pb-2 sm:gap-2">
         {WIZARD_STEPS.map((step, index) => {
           const Icon = step.icon
           const isActive = index === currentStep
@@ -687,9 +687,9 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
                   !isActive && !isCompleted && 'bg-muted-foreground/20',
                 )}
               >
-                {isCompleted ? <CheckCircle2 className="h-3 w-3" /> : <Icon className="h-3 w-3" />}
+                {isCompleted ? <CheckCircle2 className="size-3" /> : <Icon className="size-3" />}
               </span>
-              <span className="hidden sm:inline truncate">{isRTL ? step.titleAr : step.title}</span>
+              <span className="hidden truncate sm:inline">{isRTL ? step.titleAr : step.title}</span>
             </button>
           )
         })}
@@ -697,10 +697,10 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
 
       {/* Current Step Description */}
       <div className="text-center sm:text-start">
-        <h3 className="text-lg sm:text-xl font-semibold">
+        <h3 className="text-lg font-semibold sm:text-xl">
           {isRTL ? WIZARD_STEPS[currentStep].titleAr : WIZARD_STEPS[currentStep].title}
         </h3>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="mt-1 text-sm text-muted-foreground">
           {isRTL ? WIZARD_STEPS[currentStep].descriptionAr : WIZARD_STEPS[currentStep].description}
         </p>
       </div>
@@ -726,9 +726,9 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
       </FormProvider>
 
       {/* Navigation */}
-      <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t">
+      <div className="flex flex-col-reverse justify-between gap-3 border-t pt-4 sm:flex-row">
         {/* Left side */}
-        <div className="flex flex-col-reverse sm:flex-row gap-2">
+        <div className="flex flex-col-reverse gap-2 sm:flex-row">
           <Button
             type="button"
             variant="ghost"
@@ -747,9 +747,9 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
               className="min-h-11 w-full sm:w-auto"
             >
               {isRTL ? (
-                <ChevronRight className="h-4 w-4 me-2" />
+                <ChevronRight className="me-2 size-4" />
               ) : (
-                <ChevronLeft className="h-4 w-4 me-2" />
+                <ChevronLeft className="me-2 size-4" />
               )}
               {isRTL ? 'السابق' : 'Back'}
             </Button>
@@ -757,10 +757,10 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
         </div>
 
         {/* Right side */}
-        <div className="flex flex-col sm:flex-row gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row">
           {currentStep === 3 && outline ? (
             <Button type="button" onClick={handleComplete} className="min-h-11 w-full sm:w-auto">
-              <CheckCircle2 className="h-4 w-4 me-2" />
+              <CheckCircle2 className="me-2 size-4" />
               {isRTL ? 'استخدام هذا المخطط' : 'Use This Outline'}
             </Button>
           ) : currentStep < 3 ? (
@@ -772,16 +772,16 @@ export function AIPolicyBriefWizard({ onComplete, onCancel, className }: AIPolic
             >
               {currentStep === 2 ? (
                 <>
-                  <Sparkles className="h-4 w-4 me-2" />
+                  <Sparkles className="me-2 size-4" />
                   {isRTL ? 'توليد المخطط' : 'Generate Outline'}
                 </>
               ) : (
                 <>
                   {isRTL ? 'التالي' : 'Next'}
                   {isRTL ? (
-                    <ChevronLeft className="h-4 w-4 ms-2" />
+                    <ChevronLeft className="ms-2 size-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4 ms-2" />
+                    <ChevronRight className="ms-2 size-4" />
                   )}
                 </>
               )}

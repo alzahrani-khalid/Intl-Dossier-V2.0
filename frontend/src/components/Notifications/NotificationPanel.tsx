@@ -133,10 +133,10 @@ export function NotificationPanel({ className }: NotificationPanelProps) {
           aria-label={t('title')}
           data-testid="notification-bell"
         >
-          <Bell className="h-5 w-5" />
+          <Bell className="size-5" />
           <NotificationBadge
             count={unreadCount}
-            className="absolute -top-1 -end-1"
+            className="absolute -end-1 -top-1"
             variant={unreadCount > 10 ? 'urgent' : 'default'}
           />
         </Button>
@@ -159,29 +159,29 @@ export function NotificationPanel({ className }: NotificationPanelProps) {
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="size-8"
                 onClick={handleMarkAllAsRead}
                 disabled={unreadCount === 0 || isMarkingAsRead}
                 title={t('markAllRead')}
               >
-                <CheckCheck className="h-4 w-4" />
+                <CheckCheck className="size-4" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="size-8"
                 onClick={handleSettingsClick}
                 title={t('preferences.title')}
               >
-                <Settings className="h-4 w-4" />
+                <Settings className="size-4" />
               </Button>
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8"
+                className="size-8"
                 onClick={() => setIsOpen(false)}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             </div>
           </div>

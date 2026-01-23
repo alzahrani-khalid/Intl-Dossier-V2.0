@@ -135,7 +135,7 @@ export function UserProfileForm({ onSuccess }: UserProfileFormProps) {
 
  return (
  <div
- className="w-full max-w-2xl mx-auto px-4 sm:px-6"
+ className="mx-auto w-full max-w-2xl px-4 sm:px-6"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <Form {...form}>
@@ -157,7 +157,7 @@ export function UserProfileForm({ onSuccess }: UserProfileFormProps) {
  {...field}
  type="email"
  placeholder={t('user_management.email_placeholder', 'user@example.com')}
- className="h-11 sm:h-10 px-4 text-base sm:text-sm"
+ className="h-11 px-4 text-base sm:h-10 sm:text-sm"
  disabled={isPending}
  />
  </FormControl>
@@ -182,7 +182,7 @@ export function UserProfileForm({ onSuccess }: UserProfileFormProps) {
  <Input
  {...field}
  placeholder={t('user_management.username_placeholder', 'john_doe')}
- className="h-11 sm:h-10 px-4 text-base sm:text-sm"
+ className="h-11 px-4 text-base sm:h-10 sm:text-sm"
  disabled={isPending}
  />
  </FormControl>
@@ -207,7 +207,7 @@ export function UserProfileForm({ onSuccess }: UserProfileFormProps) {
  <Input
  {...field}
  placeholder={t('user_management.full_name_placeholder', 'John Doe')}
- className="h-11 sm:h-10 px-4 text-base sm:text-sm"
+ className="h-11 px-4 text-base sm:h-10 sm:text-sm"
  disabled={isPending}
  />
  </FormControl>
@@ -231,7 +231,7 @@ export function UserProfileForm({ onSuccess }: UserProfileFormProps) {
  disabled={isPending}
  >
  <FormControl>
- <SelectTrigger className="h-11 sm:h-10 px-4 text-base sm:text-sm">
+ <SelectTrigger className="h-11 px-4 text-base sm:h-10 sm:text-sm">
  <SelectValue placeholder={t('user_management.select_role', 'Select role')} />
  </SelectTrigger>
  </FormControl>
@@ -270,7 +270,7 @@ export function UserProfileForm({ onSuccess }: UserProfileFormProps) {
  disabled={isPending}
  >
  <FormControl>
- <SelectTrigger className="h-11 sm:h-10 px-4 text-base sm:text-sm">
+ <SelectTrigger className="h-11 px-4 text-base sm:h-10 sm:text-sm">
  <SelectValue placeholder={t('user_management.select_user_type', 'Select account type')} />
  </SelectTrigger>
  </FormControl>
@@ -306,10 +306,10 @@ export function UserProfileForm({ onSuccess }: UserProfileFormProps) {
  <FormControl>
  <Button
  variant="outline"
- className={`h-11 sm:h-10 px-4 text-base sm:text-sm justify-start text-start font-normal ${!field.value && 'text-muted-foreground'}`}
+ className={`h-11 justify-start px-4 text-start text-base font-normal sm:h-10 sm:text-sm ${!field.value && 'text-muted-foreground'}`}
  disabled={isPending}
  >
- <CalendarIcon className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {field.value ? (
  format(field.value, 'PPP')
  ) : (
@@ -338,10 +338,10 @@ export function UserProfileForm({ onSuccess }: UserProfileFormProps) {
  )}
 
  {/* Submit Button */}
- <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
+ <div className="flex flex-col gap-3 pt-4 sm:flex-row sm:gap-4">
  <Button
  type="submit"
- className="h-11 sm:h-10 px-6 sm:px-8 text-base sm:text-sm w-full sm:w-auto"
+ className="h-11 w-full px-6 text-base sm:h-10 sm:w-auto sm:px-8 sm:text-sm"
  disabled={isPending}
  >
  {isPending
@@ -351,7 +351,7 @@ export function UserProfileForm({ onSuccess }: UserProfileFormProps) {
  <Button
  type="button"
  variant="outline"
- className="h-11 sm:h-10 px-6 sm:px-8 text-base sm:text-sm w-full sm:w-auto"
+ className="h-11 w-full px-6 text-base sm:h-10 sm:w-auto sm:px-8 sm:text-sm"
  onClick={() => form.reset()}
  disabled={isPending}
  >

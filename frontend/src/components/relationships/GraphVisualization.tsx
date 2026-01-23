@@ -66,12 +66,12 @@ const DossierNode = memo(({ data }: { data: NodeData }) => {
   const name = isRTL ? data.name_ar : data.name_en
 
   return (
-    <Card className="min-w-[200px] px-4 py-3 border-2 shadow-md">
+    <Card className="min-w-[200px] border-2 px-4 py-3 shadow-md">
       <div className="flex flex-col gap-2">
         <div className="flex items-center justify-between gap-2">
-          <span className="text-sm font-semibold truncate">{name}</span>
+          <span className="truncate text-sm font-semibold">{name}</span>
           {data.degree > 0 && (
-            <Badge variant="outline" className="text-xs shrink-0">
+            <Badge variant="outline" className="shrink-0 text-xs">
               {data.degree}°
             </Badge>
           )}
@@ -131,29 +131,29 @@ const ZoomControls = memo(({ isRTL }: { isRTL: boolean }) => {
       <Button
         size="sm"
         variant="outline"
-        className="h-8 w-8 p-0"
+        className="size-8 p-0"
         onClick={() => zoomIn()}
         title={t('graph.zoomIn', 'Zoom In')}
       >
-        <ZoomIn className="h-4 w-4" />
+        <ZoomIn className="size-4" />
       </Button>
       <Button
         size="sm"
         variant="outline"
-        className="h-8 w-8 p-0"
+        className="size-8 p-0"
         onClick={() => zoomOut()}
         title={t('graph.zoomOut', 'Zoom Out')}
       >
-        <ZoomOut className="h-4 w-4" />
+        <ZoomOut className="size-4" />
       </Button>
       <Button
         size="sm"
         variant="outline"
-        className="h-8 w-8 p-0"
+        className="size-8 p-0"
         onClick={() => fitView()}
         title={t('graph.fitView', 'Fit View')}
       >
-        <Maximize2 className="h-4 w-4" />
+        <Maximize2 className="size-4" />
       </Button>
     </Panel>
   )
@@ -298,10 +298,10 @@ function GraphVisualizationInner({
         {(enableTypeFilter || enableRelationshipFilter) && (
           <Panel
             position={isRTL ? 'top-left' : 'top-right'}
-            className="bg-background/95 p-3 rounded-lg border shadow-sm flex flex-col gap-3"
+            className="flex flex-col gap-3 rounded-lg border bg-background/95 p-3 shadow-sm"
           >
             <div className="flex items-center gap-2 text-sm font-semibold">
-              <Filter className="h-4 w-4" />
+              <Filter className="size-4" />
               <span>{t('graph.filters', 'Filters')}</span>
             </div>
 
@@ -352,7 +352,7 @@ function GraphVisualizationInner({
               </div>
             )}
 
-            <div className="text-xs text-muted-foreground pt-1 border-t">
+            <div className="border-t pt-1 text-xs text-muted-foreground">
               {filteredNodes.length} {t('graph.nodesShown', 'nodes')} · {filteredEdges.length}{' '}
               {t('graph.edgesShown', 'edges')}
             </div>
@@ -361,25 +361,25 @@ function GraphVisualizationInner({
 
         <Panel
           position={isRTL ? 'top-right' : 'top-left'}
-          className="bg-background/95 p-3 rounded-lg border shadow-sm"
+          className="rounded-lg border bg-background/95 p-3 shadow-sm"
         >
           <div className="flex flex-col gap-2">
             <div className="text-sm font-semibold">{t('graph.legend', 'Legend')}</div>
             <div className="flex flex-col gap-1 text-xs">
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: '#3b82f6' }} />
+                <div className="size-3 rounded-full" style={{ backgroundColor: '#3b82f6' }} />
                 <span>{t('graph.country', 'Country')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: '#8b5cf6' }} />
+                <div className="size-3 rounded-full" style={{ backgroundColor: '#8b5cf6' }} />
                 <span>{t('graph.organization', 'Organization')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: '#10b981' }} />
+                <div className="size-3 rounded-full" style={{ backgroundColor: '#10b981' }} />
                 <span>{t('graph.individual', 'Individual')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full" style={{ backgroundColor: '#f59e0b' }} />
+                <div className="size-3 rounded-full" style={{ backgroundColor: '#f59e0b' }} />
                 <span>{t('graph.forum', 'Forum')}</span>
               </div>
             </div>

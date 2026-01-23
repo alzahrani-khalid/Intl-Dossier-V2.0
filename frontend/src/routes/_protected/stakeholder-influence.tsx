@@ -168,15 +168,15 @@ function StakeholderInfluencePage() {
   })
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Network className="h-6 w-6 sm:h-8 sm:w-8" />
+          <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+            <Network className="size-6 sm:size-8" />
             {t('title', 'Stakeholder Influence')}
           </h1>
-          <p className="text-muted-foreground mt-1">
+          <p className="mt-1 text-muted-foreground">
             {t(
               'description',
               'Analyze influence and identify key connectors for strategic planning',
@@ -191,16 +191,16 @@ function StakeholderInfluencePage() {
             disabled={calculateScores.isPending}
           >
             {calculateScores.isPending ? (
-              <Loader2 className="h-4 w-4 me-2 animate-spin" />
+              <Loader2 className="me-2 size-4 animate-spin" />
             ) : (
-              <RefreshCw className="h-4 w-4 me-2" />
+              <RefreshCw className="me-2 size-4" />
             )}
             {t('recalculate', 'Recalculate')}
           </Button>
           <Dialog open={showCreateReport} onOpenChange={setShowCreateReport}>
             <DialogTrigger asChild>
               <Button>
-                <Plus className="h-4 w-4 me-2" />
+                <Plus className="me-2 size-4" />
                 {t('new_report', 'New Report')}
               </Button>
             </DialogTrigger>
@@ -270,7 +270,7 @@ function StakeholderInfluencePage() {
                     <Button variant="outline">{t('cancel', 'Cancel')}</Button>
                   </DialogClose>
                   <Button type="submit" disabled={createReport.isPending}>
-                    {createReport.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+                    {createReport.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
                     {t('generate', 'Generate Report')}
                   </Button>
                 </DialogFooter>
@@ -281,11 +281,11 @@ function StakeholderInfluencePage() {
       </div>
 
       {/* Statistics Overview */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+      <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <Users className="h-5 w-5 text-blue-600" />
+              <Users className="size-5 text-blue-600" />
               <div>
                 <p className="text-xs text-muted-foreground">{t('stakeholders', 'Stakeholders')}</p>
                 <p className="text-xl font-bold">
@@ -302,7 +302,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <GitBranch className="h-5 w-5 text-purple-600" />
+              <GitBranch className="size-5 text-purple-600" />
               <div>
                 <p className="text-xs text-muted-foreground">
                   {t('relationships', 'Relationships')}
@@ -321,7 +321,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <TrendingUp className="h-5 w-5 text-amber-600" />
+              <TrendingUp className="size-5 text-amber-600" />
               <div>
                 <p className="text-xs text-muted-foreground">
                   {t('key_influencers', 'Key Influencers')}
@@ -340,7 +340,7 @@ function StakeholderInfluencePage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <BarChart3 className="h-5 w-5 text-green-600" />
+              <BarChart3 className="size-5 text-green-600" />
               <div>
                 <p className="text-xs text-muted-foreground">{t('avg_influence', 'Avg Score')}</p>
                 <p className="text-xl font-bold">
@@ -358,24 +358,24 @@ function StakeholderInfluencePage() {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:inline-grid mb-4">
+        <TabsList className="mb-4 grid w-full grid-cols-3 lg:inline-grid lg:w-auto">
           <TabsTrigger value="network" className="gap-2">
-            <Network className="h-4 w-4" />
+            <Network className="size-4" />
             <span className="hidden sm:inline">{t('network', 'Network')}</span>
           </TabsTrigger>
           <TabsTrigger value="list" className="gap-2">
-            <Users className="h-4 w-4" />
+            <Users className="size-4" />
             <span className="hidden sm:inline">{t('stakeholders', 'Stakeholders')}</span>
           </TabsTrigger>
           <TabsTrigger value="reports" className="gap-2">
-            <FileText className="h-4 w-4" />
+            <FileText className="size-4" />
             <span className="hidden sm:inline">{t('reports', 'Reports')}</span>
           </TabsTrigger>
         </TabsList>
 
         {/* Network Tab */}
         <TabsContent value="network" className="mt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-4">
             {/* Network Graph */}
             <div className="lg:col-span-3">
               <Card>
@@ -407,8 +407,8 @@ function StakeholderInfluencePage() {
             <div className="space-y-4">
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <TrendingUp className="h-4 w-4" />
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <TrendingUp className="size-4" />
                     {t('top_influencers', 'Top Influencers')}
                   </CardTitle>
                 </CardHeader>
@@ -430,18 +430,18 @@ function StakeholderInfluencePage() {
                           )}
                           onClick={() => handleNodeClick(s.dossier_id)}
                         >
-                          <div className="flex items-center gap-2 min-w-0">
+                          <div className="flex min-w-0 items-center gap-2">
                             <div
-                              className="w-2 h-2 rounded-full flex-shrink-0"
+                              className="size-2 shrink-0 rounded-full"
                               style={{
                                 backgroundColor: NODE_COLORS[s.influence_tier as InfluenceTier],
                               }}
                             />
-                            <span className="text-sm truncate">
+                            <span className="truncate text-sm">
                               {isRTL ? s.name_ar : s.name_en}
                             </span>
                           </div>
-                          <Badge variant="secondary" className="flex-shrink-0">
+                          <Badge variant="secondary" className="shrink-0">
                             {s.influence_score}
                           </Badge>
                         </button>
@@ -453,8 +453,8 @@ function StakeholderInfluencePage() {
 
               <Card>
                 <CardHeader className="pb-2">
-                  <CardTitle className="text-sm flex items-center gap-2">
-                    <GitBranch className="h-4 w-4" />
+                  <CardTitle className="flex items-center gap-2 text-sm">
+                    <GitBranch className="size-4" />
                     {t('key_connectors', 'Key Connectors')}
                   </CardTitle>
                 </CardHeader>
@@ -477,12 +477,12 @@ function StakeholderInfluencePage() {
                           onClick={() => handleNodeClick(c.dossier_id)}
                         >
                           <div className="min-w-0">
-                            <p className="text-sm truncate">{isRTL ? c.name_ar : c.name_en}</p>
+                            <p className="truncate text-sm">{isRTL ? c.name_ar : c.name_en}</p>
                             <p className="text-xs text-muted-foreground">
                               {c.groups_connected} {t('groups', 'groups')}
                             </p>
                           </div>
-                          <Badge variant="outline" className="flex-shrink-0">
+                          <Badge variant="outline" className="shrink-0">
                             {c.bridge_score}
                           </Badge>
                         </button>
@@ -499,9 +499,9 @@ function StakeholderInfluencePage() {
         <TabsContent value="list" className="mt-0">
           <Card>
             <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="relative flex-1">
-                  <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                  <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                   <Input
                     placeholder={t('search_stakeholders', 'Search stakeholders...')}
                     value={searchQuery}
@@ -511,7 +511,7 @@ function StakeholderInfluencePage() {
                 </div>
                 <Select value={filterType} onValueChange={setFilterType}>
                   <SelectTrigger className="w-full sm:w-40">
-                    <Filter className="h-4 w-4 me-2" />
+                    <Filter className="me-2 size-4" />
                     <SelectValue placeholder={t('filter_type', 'Type')} />
                   </SelectTrigger>
                   <SelectContent>
@@ -543,9 +543,9 @@ function StakeholderInfluencePage() {
                       )}
                       onClick={() => handleNodeClick(s.dossier_id)}
                     >
-                      <div className="flex items-center gap-3 min-w-0">
+                      <div className="flex min-w-0 items-center gap-3">
                         <div
-                          className="w-10 h-10 rounded-full flex items-center justify-center text-white font-bold text-sm"
+                          className="flex size-10 items-center justify-center rounded-full text-sm font-bold text-white"
                           style={{
                             backgroundColor: NODE_COLORS[s.influence_tier as InfluenceTier],
                           }}
@@ -553,8 +553,8 @@ function StakeholderInfluencePage() {
                           {s.influence_score}
                         </div>
                         <div className="min-w-0">
-                          <p className="font-medium truncate">{isRTL ? s.name_ar : s.name_en}</p>
-                          <p className="text-sm text-muted-foreground flex items-center gap-2">
+                          <p className="truncate font-medium">{isRTL ? s.name_ar : s.name_en}</p>
+                          <p className="flex items-center gap-2 text-sm text-muted-foreground">
                             <span className="capitalize">{s.dossier_type}</span>
                             <span>•</span>
                             <span>
@@ -571,7 +571,7 @@ function StakeholderInfluencePage() {
                     </button>
                   ))}
                   {filteredStakeholders?.length === 0 && (
-                    <p className="text-center py-8 text-muted-foreground">
+                    <p className="py-8 text-center text-muted-foreground">
                       {t('no_results', 'No stakeholders found')}
                     </p>
                   )}
@@ -583,7 +583,7 @@ function StakeholderInfluencePage() {
 
         {/* Reports Tab */}
         <TabsContent value="reports" className="mt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
             {/* Reports List */}
             <div className="lg:col-span-1">
               <Card>
@@ -608,10 +608,10 @@ function StakeholderInfluencePage() {
                           )}
                           onClick={() => setSelectedReportId(report.id)}
                         >
-                          <p className="font-medium truncate">
+                          <p className="truncate font-medium">
                             {isRTL ? report.title_ar : report.title_en}
                           </p>
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className="mt-1 text-xs text-muted-foreground">
                             {new Date(report.generated_at).toLocaleDateString(
                               isRTL ? 'ar-SA' : 'en-US',
                             )}
@@ -620,7 +620,7 @@ function StakeholderInfluencePage() {
                       ))}
                     </div>
                   ) : (
-                    <p className="text-center py-8 text-muted-foreground">
+                    <p className="py-8 text-center text-muted-foreground">
                       {t('no_reports', 'No reports generated yet')}
                     </p>
                   )}
@@ -644,7 +644,7 @@ function StakeholderInfluencePage() {
       <Sheet open={detailsSheetOpen} onOpenChange={setDetailsSheetOpen}>
         <SheetContent
           side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-md overflow-y-auto"
+          className="w-full overflow-y-auto sm:max-w-md"
         >
           <SheetHeader>
             <SheetTitle>{t('stakeholder_details', 'Stakeholder Details')}</SheetTitle>

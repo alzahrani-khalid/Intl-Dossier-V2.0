@@ -567,11 +567,11 @@ export function AnimatedSidebar() {
  {/* User Profile Card */}
  <SidebarMenu>
  <SidebarMenuItem>
- <div className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-sidebar-accent/50 transition-colors">
+ <div className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-sidebar-accent/50">
  <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
  <span className="text-sm font-bold">{userInitials}</span>
  </div>
- <div className="grid flex-1 text-start text-sm leading-tight min-w-0">
+ <div className="grid min-w-0 flex-1 text-start text-sm leading-tight">
  <span className="truncate font-semibold text-sidebar-foreground">{user?.name ?? user?.email}</span>
  <span className="truncate text-xs text-muted-foreground">
  {user?.role ?? t('common.administrator', 'Administrator')}
@@ -586,7 +586,7 @@ export function AnimatedSidebar() {
  )}
  aria-label={t('common.logout', 'Sign out')}
  >
- <LogOut className="h-4 w-4" />
+ <LogOut className="size-4" />
  </button>
  </div>
  </SidebarMenuItem>

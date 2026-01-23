@@ -126,17 +126,17 @@ export function SavedSearchTemplates({ onApply, className }: SavedSearchTemplate
           <IconComponent className={cn('h-4 w-4', colorClasses.text)} />
         </div>
 
-        <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+        <div className="min-w-0 flex-1">
+          <h4 className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
             {isRTL ? template.name_ar : template.name_en}
           </h4>
           {(template.description_en || template.description_ar) && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+            <p className="mt-0.5 truncate text-xs text-gray-500 dark:text-gray-400">
               {isRTL ? template.description_ar : template.description_en}
             </p>
           )}
           {template.use_count > 0 && (
-            <p className="text-xs text-gray-400 dark:text-gray-500 mt-1">
+            <p className="mt-1 text-xs text-gray-400 dark:text-gray-500">
               {t('templates.useCount', { count: template.use_count })}
             </p>
           )}
@@ -161,18 +161,18 @@ export function SavedSearchTemplates({ onApply, className }: SavedSearchTemplate
     <div className={cn('flex flex-col gap-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Quick Templates */}
       <section>
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-          <Star className="h-4 w-4 text-yellow-500" />
+        <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <Star className="size-4 text-yellow-500" />
           {t('templates.quick')}
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {loadingQuick ? (
             renderSkeletons(4)
           ) : quickTemplates?.data && quickTemplates.data.length > 0 ? (
             quickTemplates.data.map(renderTemplateCard)
           ) : (
-            <p className="text-sm text-gray-500 dark:text-gray-400 col-span-2">
+            <p className="col-span-2 text-sm text-gray-500 dark:text-gray-400">
               {t('templates.noTemplates')}
             </p>
           )}
@@ -181,18 +181,18 @@ export function SavedSearchTemplates({ onApply, className }: SavedSearchTemplate
 
       {/* Popular Templates */}
       <section>
-        <h3 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3 flex items-center gap-2">
-          <Users className="h-4 w-4 text-blue-500" />
+        <h3 className="mb-3 flex items-center gap-2 text-sm font-medium text-gray-700 dark:text-gray-300">
+          <Users className="size-4 text-blue-500" />
           {t('templates.popular')}
         </h3>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {loadingPopular ? (
             renderSkeletons(4)
           ) : popularTemplates?.data && popularTemplates.data.length > 0 ? (
             popularTemplates.data.map(renderTemplateCard)
           ) : (
-            <p className="text-sm text-gray-500 dark:text-gray-400 col-span-2">
+            <p className="col-span-2 text-sm text-gray-500 dark:text-gray-400">
               {t('templates.noTemplates')}
             </p>
           )}

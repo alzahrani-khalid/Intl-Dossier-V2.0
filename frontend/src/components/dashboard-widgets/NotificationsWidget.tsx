@@ -144,7 +144,7 @@ function NotificationItem({
       onClick={onMarkAsRead}
     >
       {/* Unread indicator */}
-      {!notification.isRead && <div className="w-2 h-2 mt-2 rounded-full bg-primary shrink-0" />}
+      {!notification.isRead && <div className="mt-2 size-2 shrink-0 rounded-full bg-primary" />}
 
       {/* Icon */}
       <div className={cn('p-1.5 rounded shrink-0', colors.bg)}>
@@ -152,19 +152,19 @@ function NotificationItem({
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <h4
             className={cn('text-sm truncate', notification.isRead ? 'font-normal' : 'font-medium')}
           >
             {notification.title}
           </h4>
-          <span className="text-[10px] text-muted-foreground whitespace-nowrap">
+          <span className="whitespace-nowrap text-[10px] text-muted-foreground">
             {relativeTime}
           </span>
         </div>
 
-        <p className="text-xs text-muted-foreground mt-0.5 line-clamp-2">{notification.message}</p>
+        <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">{notification.message}</p>
       </div>
 
       {/* Chevron for actionable notifications */}
@@ -218,14 +218,14 @@ export function NotificationsWidget({
   // Loading skeleton
   if (isLoading) {
     return (
-      <div className="h-full space-y-2 animate-pulse">
+      <div className="h-full animate-pulse space-y-2">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="flex items-start gap-3 p-2">
-            <div className="w-2 h-2 bg-muted rounded-full mt-2" />
-            <div className="w-6 h-6 bg-muted rounded" />
+            <div className="mt-2 size-2 rounded-full bg-muted" />
+            <div className="size-6 rounded bg-muted" />
             <div className="flex-1">
-              <div className="h-4 w-3/4 bg-muted rounded mb-1" />
-              <div className="h-3 w-full bg-muted rounded" />
+              <div className="mb-1 h-4 w-3/4 rounded bg-muted" />
+              <div className="h-3 w-full rounded bg-muted" />
             </div>
           </div>
         ))}
@@ -236,8 +236,8 @@ export function NotificationsWidget({
   // Empty state
   if (!filteredNotifications.length) {
     return (
-      <div className="h-full flex flex-col items-center justify-center text-center p-4">
-        <BellOff className="h-8 w-8 text-muted-foreground mb-2" />
+      <div className="flex h-full flex-col items-center justify-center p-4 text-center">
+        <BellOff className="mb-2 size-8 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">{t('emptyStates.noNotifications')}</p>
       </div>
     )

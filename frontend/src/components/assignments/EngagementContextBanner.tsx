@@ -73,8 +73,8 @@ export function EngagementContextBanner({
             <div className="flex-1 space-y-2">
               <div className="flex items-center gap-2">
                 <Badge variant={getTypeColor()}>{t(`engagement.type_${engagementType}`)}</Badge>
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
+                <span className="flex items-center gap-1 text-xs text-muted-foreground">
+                  <Calendar className="size-3" />
                   {formatDateRange()}
                 </span>
               </div>
@@ -85,13 +85,13 @@ export function EngagementContextBanner({
             <div className="flex items-center gap-2">
               <Button asChild variant="outline" size="sm">
                 <Link to="/engagements/$engagementId" params={{ engagementId }}>
-                  <ExternalLink className="h-4 w-4 me-2" />
+                  <ExternalLink className="me-2 size-4" />
                   {t('engagement.viewFull')}
                 </Link>
               </Button>
               {onShowKanban && (
                 <Button onClick={onShowKanban} variant="outline" size="sm">
-                  <LayoutGrid className="h-4 w-4 me-2" />
+                  <LayoutGrid className="me-2 size-4" />
                   {t('engagement.showKanban')}
                 </Button>
               )}

@@ -67,22 +67,22 @@ export function KeyContacts({ dossier }: KeyContactsProps) {
       const displayTitle = isRTL && contact.title_ar ? contact.title_ar : contact.title
 
       return (
-        <Card className="h-full hover:shadow-md transition-shadow">
-          <CardContent className="p-4 sm:p-5 h-full flex flex-col">
+        <Card className="h-full transition-shadow hover:shadow-md">
+          <CardContent className="flex h-full flex-col p-4 sm:p-5">
             {/* Avatar and Name */}
-            <div className="flex items-start gap-3 mb-3">
-              <Avatar className="h-12 w-12 sm:h-14 sm:w-14 shrink-0">
+            <div className="mb-3 flex items-start gap-3">
+              <Avatar className="size-12 shrink-0 sm:size-14">
                 <AvatarImage src={contact.photo_url} alt={displayName} />
-                <AvatarFallback className="bg-teal-100 text-teal-800 dark:bg-teal-900 dark:text-teal-300 text-sm font-semibold">
+                <AvatarFallback className="bg-teal-100 text-sm font-semibold text-teal-800 dark:bg-teal-900 dark:text-teal-300">
                   {getInitials(displayName)}
                 </AvatarFallback>
               </Avatar>
-              <div className="flex-1 min-w-0">
-                <h4 className="text-sm sm:text-base font-semibold text-foreground line-clamp-2">
+              <div className="min-w-0 flex-1">
+                <h4 className="line-clamp-2 text-sm font-semibold text-foreground sm:text-base">
                   {displayName}
                 </h4>
                 {displayTitle && (
-                  <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 mt-0.5">
+                  <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground sm:text-sm">
                     {displayTitle}
                   </p>
                 )}
@@ -93,22 +93,22 @@ export function KeyContacts({ dossier }: KeyContactsProps) {
             <div className="flex-1 space-y-2">
               {contact.email && (
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Mail className="h-3 w-3 shrink-0" />
+                  <Mail className="size-3 shrink-0" />
                   <span className="truncate">{contact.email}</span>
                 </div>
               )}
               {contact.phone && (
                 <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                  <Phone className="h-3 w-3 shrink-0" />
+                  <Phone className="size-3 shrink-0" />
                   <span>{contact.phone}</span>
                 </div>
               )}
             </div>
 
             {/* Action */}
-            <div className="mt-4 pt-3 border-t">
-              <Button variant="outline" size="sm" className="w-full min-h-10">
-                <ExternalLink className="h-4 w-4 me-2" />
+            <div className="mt-4 border-t pt-3">
+              <Button variant="outline" size="sm" className="min-h-10 w-full">
+                <ExternalLink className="me-2 size-4" />
                 {t('action.viewDetails')}
               </Button>
             </div>
@@ -122,16 +122,16 @@ export function KeyContacts({ dossier }: KeyContactsProps) {
   if (contacts.length === 0) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
-          <Users className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
+        <div className="mb-4 rounded-full bg-muted p-4 sm:p-6">
+          <Users className="size-8 text-muted-foreground sm:size-10" />
         </div>
-        <h3 className="text-sm sm:text-base font-medium text-muted-foreground mb-2">
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground sm:text-base">
           {t('sections.organization.keyContactsEmpty', 'No Key Contacts')}
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground max-w-md mb-6">
+        <p className="mb-6 max-w-md text-xs text-muted-foreground sm:text-sm">
           {t(
             'sections.organization.keyContactsEmptyDescription',
             'Add contacts from email signatures or create person dossiers to populate this section.',

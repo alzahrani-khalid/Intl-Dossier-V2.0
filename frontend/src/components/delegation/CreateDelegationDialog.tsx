@@ -165,12 +165,12 @@ export function CreateDelegationDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"
+        className="max-h-[90vh] overflow-y-auto sm:max-w-[500px]"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <UserPlus className={`h-5 w-5 ${isRTL ? 'ms-0 me-2' : 'me-0 ms-0'}`} />
+            <UserPlus className={`size-5 ${isRTL ? 'me-2 ms-0' : 'me-0 ms-0'}`} />
             {t('create.title')}
           </DialogTitle>
           <DialogDescription>{t('create.description')}</DialogDescription>
@@ -203,18 +203,18 @@ export function CreateDelegationDialog({
             <div className="py-2">
               {isValidating ? (
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <Loader2 className="size-4 animate-spin" />
                   {t('validation.checking')}
                 </div>
               ) : validation ? (
                 validation.valid ? (
                   <div className="flex items-center gap-2 text-sm text-green-600">
-                    <CheckCircle2 className="h-4 w-4" />
+                    <CheckCircle2 className="size-4" />
                     {t('validation.valid')}
                   </div>
                 ) : (
                   <Alert variant="destructive" className="py-2">
-                    <AlertCircle className="h-4 w-4" />
+                    <AlertCircle className="size-4" />
                     <AlertDescription>
                       {t('validation.invalid')}
                       {validation.issues?.map((issue, i) => (
@@ -241,7 +241,7 @@ export function CreateDelegationDialog({
                     !endDate && 'text-muted-foreground',
                   )}
                 >
-                  <CalendarIcon className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <CalendarIcon className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {endDate
                     ? format(endDate, 'PPP', { locale: dateLocale })
                     : t('create.form.validUntilPlaceholder')}
@@ -272,7 +272,7 @@ export function CreateDelegationDialog({
               placeholder={t('create.form.reasonPlaceholder')}
               className="min-h-[80px] resize-none"
             />
-            <div className="flex justify-between items-center">
+            <div className="flex items-center justify-between">
               <p className="text-xs text-muted-foreground">{t('create.form.reasonDescription')}</p>
               <Badge variant={reason.length >= 10 ? 'default' : 'outline'} className="text-xs">
                 {reason.length}/10
@@ -345,7 +345,7 @@ export function CreateDelegationDialog({
           >
             {delegateMutation.isPending ? (
               <>
-                <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
                 {t('common:common.loading')}
               </>
             ) : (

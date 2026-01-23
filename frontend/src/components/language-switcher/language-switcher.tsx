@@ -48,12 +48,12 @@ export function LanguageSwitcher() {
  <div className="relative">
  <button
  onClick={() => setIsOpen(!isOpen)}
- className="flex items-center gap-2 px-3 py-2 rounded-md border border-border bg-background hover:bg-accent transition-colors"
+ className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 transition-colors hover:bg-accent"
  aria-label={language === 'en' ? 'Select language' : 'اختر اللغة'}
  aria-expanded={isOpen}
  aria-haspopup="true"
  >
- <Globe className="w-4 h-4" aria-hidden="true" />
+ <Globe className="size-4" aria-hidden="true" />
  <span className="text-sm font-medium">
  {currentLanguage.nativeName}
  </span>
@@ -61,7 +61,7 @@ export function LanguageSwitcher() {
  {currentLanguage.flag}
  </span>
  <ChevronDown 
- className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+ className={`size-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
  aria-hidden="true"
  />
  </button>
@@ -77,7 +77,7 @@ export function LanguageSwitcher() {
  
  {/* Dropdown Menu */}
  <div
- className="absolute top-full mt-2 end-0 z-20 w-48 rounded-lg border border-border bg-popover shadow-lg"
+ className="absolute end-0 top-full z-20 mt-2 w-48 rounded-lg border border-border bg-popover shadow-lg"
  role="menu"
  aria-orientation="vertical"
  >
@@ -85,7 +85,7 @@ export function LanguageSwitcher() {
  <button
  key={lang.code}
  onClick={() => handleLanguageSelect(lang.code)}
- className="w-full px-4 py-3 flex items-center justify-between hover:bg-accent transition-colors first:rounded-t-lg last:rounded-b-lg"
+ className="flex w-full items-center justify-between px-4 py-3 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-accent"
  role="menuitem"
  aria-selected={language === lang.code}
  lang={lang.code}
@@ -106,7 +106,7 @@ export function LanguageSwitcher() {
  
  {/* Selected Indicator */}
  {language === lang.code && (
- <Check className="w-4 h-4 text-primary" aria-label="Selected" />
+ <Check className="size-4 text-primary" aria-label="Selected" />
  )}
  </button>
  ))}

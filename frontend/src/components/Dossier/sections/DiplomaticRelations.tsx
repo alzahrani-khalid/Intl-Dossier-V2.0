@@ -60,10 +60,10 @@ interface DiplomaticRelationsProps {
 
 // Custom node component for countries (memoized for performance)
 const CountryNode = memo(({ data }: { data: { label: string; isoCode: string; relationCount: number } }) => (
-  <div className="bg-card border-2 border-primary rounded-lg px-3 py-2 sm:px-4 sm:py-3 shadow-md min-w-[80px] sm:min-w-[100px] hover:shadow-lg transition-shadow">
+  <div className="min-w-[80px] rounded-lg border-2 border-primary bg-card px-3 py-2 shadow-md transition-shadow hover:shadow-lg sm:min-w-[100px] sm:px-4 sm:py-3">
     <div className="flex flex-col items-center gap-1">
-      <div className="text-xs sm:text-sm font-mono text-muted-foreground">{data.isoCode}</div>
-      <div className="text-sm sm:text-base font-semibold text-foreground text-center">{data.label}</div>
+      <div className="font-mono text-xs text-muted-foreground sm:text-sm">{data.isoCode}</div>
+      <div className="text-center text-sm font-semibold text-foreground sm:text-base">{data.label}</div>
       {data.relationCount > 0 && (
         <Badge variant="secondary" className="text-xs">
           {data.relationCount}
@@ -252,8 +252,8 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
     return (
       <div className="flex items-center justify-center py-12 sm:py-16" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="text-center">
-          <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
-          <p className="text-sm sm:text-base text-muted-foreground">{t('common.loading')}</p>
+          <div className="mx-auto mb-4 size-12 animate-spin rounded-full border-4 border-primary border-t-transparent sm:size-16" />
+          <p className="text-sm text-muted-foreground sm:text-base">{t('common.loading')}</p>
         </div>
       </div>
     );
@@ -263,20 +263,20 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
   if (!relations || relations.length === 0) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
-          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
-            <Globe2 className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+          <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+            <Globe2 className="size-8 text-primary sm:size-10" />
           </div>
         </div>
 
-        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
+        <h3 className="mb-2 text-base font-semibold text-foreground sm:text-lg">
           {t('sections.country.diplomaticRelationsEmpty')}
         </h3>
 
-        <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 px-4">
+        <p className="mb-6 max-w-md px-4 text-sm text-muted-foreground sm:text-base">
           {t('sections.country.diplomaticRelationsEmptyDescription')}
         </p>
       </div>
@@ -288,7 +288,7 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Bilateral Intelligence Widget (Feature 029 - User Story 4 - T059) */}
       <div className="w-full">
-        <h3 className="text-sm sm:text-base font-semibold text-foreground mb-3">
+        <h3 className="mb-3 text-sm font-semibold text-foreground sm:text-base">
           {t('intelligence.bilateral_insights', 'Bilateral Relationship Insights')}
         </h3>
         {isLoadingBilateral ? (
@@ -302,9 +302,9 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
             dossierId={dossierId}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center py-8 border border-dashed rounded-lg bg-muted/30">
-            <Globe2 className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground text-center">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 py-8">
+            <Globe2 className="mb-2 size-8 text-muted-foreground" />
+            <p className="text-center text-sm text-muted-foreground">
               {bilateralError
                 ? t('intelligence.error_loading', 'Error loading intelligence')
                 : t('intelligence.no_bilateral_data', 'No bilateral intelligence available')}
@@ -314,7 +314,7 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
       </div>
 
       {/* Diplomatic Relations Network Graph */}
-      <div className="w-full h-[400px] sm:h-[500px] lg:h-[600px] border rounded-lg overflow-hidden">
+      <div className="h-[400px] w-full overflow-hidden rounded-lg border sm:h-[500px] lg:h-[600px]">
         <ReactFlow
           nodes={nodes}
           edges={edges}

@@ -103,14 +103,14 @@ export function ComplianceViolationAlert({
         className={`flex items-center justify-between gap-3 rounded-lg border p-3 ${severityColors.bg} ${severityColors.border}`}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="flex items-center gap-3 min-w-0">
+        <div className="flex min-w-0 items-center gap-3">
           <SeverityIcon severity={violation.severity} />
           <div className="min-w-0 flex-1">
-            <p className={`text-sm font-medium truncate ${severityColors.text}`}>{getRuleName()}</p>
-            <p className="text-xs text-muted-foreground truncate">{getName()}</p>
+            <p className={`truncate text-sm font-medium ${severityColors.text}`}>{getRuleName()}</p>
+            <p className="truncate text-xs text-muted-foreground">{getName()}</p>
           </div>
         </div>
-        <div className="flex items-center gap-2 flex-shrink-0">
+        <div className="flex shrink-0 items-center gap-2">
           <Badge
             variant="outline"
             className={`${statusColors.bg} ${statusColors.text} ${statusColors.border}`}
@@ -124,7 +124,7 @@ export function ComplianceViolationAlert({
               onClick={() => onSignOff(violation)}
               className="h-8"
             >
-              <FileCheck className="h-4 w-4 me-1" />
+              <FileCheck className="me-1 size-4" />
               {t('violations.signOff')}
             </Button>
           )}
@@ -138,7 +138,7 @@ export function ComplianceViolationAlert({
       <Collapsible open={isOpen} onOpenChange={setIsOpen}>
         <CardHeader className="pb-2">
           <div className="flex items-start justify-between gap-4">
-            <div className="flex items-start gap-3 min-w-0 flex-1">
+            <div className="flex min-w-0 flex-1 items-start gap-3">
               <div className="mt-0.5">
                 <SeverityIcon severity={violation.severity} />
               </div>
@@ -146,10 +146,10 @@ export function ComplianceViolationAlert({
                 <CardTitle className={`text-base ${severityColors.text}`}>
                   {getRuleName()}
                 </CardTitle>
-                <p className="text-sm text-muted-foreground mt-1">{getName()}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{getName()}</p>
               </div>
             </div>
-            <div className="flex items-center gap-2 flex-shrink-0">
+            <div className="flex shrink-0 items-center gap-2">
               <Badge
                 variant="outline"
                 className={`${SEVERITY_COLORS[violation.severity].bg} ${SEVERITY_COLORS[violation.severity].text}`}
@@ -163,8 +163,8 @@ export function ComplianceViolationAlert({
                 {t(`violationStatus.${violation.status}`)}
               </Badge>
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  {isOpen ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+                <Button variant="ghost" size="sm" className="size-8 p-0">
+                  {isOpen ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
                   <span className="sr-only">
                     {isOpen ? t('accessibility.collapseDetails') : t('accessibility.expandDetails')}
                   </span>
@@ -177,11 +177,11 @@ export function ComplianceViolationAlert({
         <CollapsibleContent>
           <CardContent className="pt-0">
             {/* Violation details */}
-            <div className="space-y-4 mt-4">
+            <div className="mt-4 space-y-4">
               {/* Meta information */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                 <div className="flex items-center gap-2 text-muted-foreground">
-                  <Clock className="h-4 w-4" />
+                  <Clock className="size-4" />
                   <span>{t('violations.detectedAt')}:</span>
                   <span className="font-medium text-foreground">
                     {formatDate(violation.detected_at)}
@@ -189,7 +189,7 @@ export function ComplianceViolationAlert({
                 </div>
                 {violation.rule?.requires_signoff && (
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <FileCheck className="h-4 w-4" />
+                    <FileCheck className="size-4" />
                     <span className="font-medium text-orange-600 dark:text-orange-400">
                       {t('violations.requiresSignoff')}
                     </span>
@@ -201,14 +201,14 @@ export function ComplianceViolationAlert({
               {violation.violation_details &&
                 Object.keys(violation.violation_details).length > 0 && (
                   <div className="rounded-md bg-muted/50 p-3">
-                    <p className="text-sm font-medium mb-2">{t('violations.viewDetails')}</p>
-                    <dl className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm">
+                    <p className="mb-2 text-sm font-medium">{t('violations.viewDetails')}</p>
+                    <dl className="grid grid-cols-1 gap-2 text-sm sm:grid-cols-2">
                       {Object.entries(violation.violation_details).map(([key, value]) => {
                         if (key === 'rule_name' || key === 'conditions' || key === 'context')
                           return null
                         return (
                           <div key={key} className="flex gap-2">
-                            <dt className="text-muted-foreground capitalize">
+                            <dt className="capitalize text-muted-foreground">
                               {key.replace(/_/g, ' ')}:
                             </dt>
                             <dd className="font-medium">
@@ -224,7 +224,7 @@ export function ComplianceViolationAlert({
               {/* Related entity */}
               {violation.related_entity_id && (
                 <div className="flex items-center gap-2 text-sm">
-                  <User className="h-4 w-4 text-muted-foreground" />
+                  <User className="size-4 text-muted-foreground" />
                   <span className="text-muted-foreground">{t('violations.relatedEntity')}:</span>
                   <span className="font-medium">
                     {isRTL
@@ -239,7 +239,7 @@ export function ComplianceViolationAlert({
                 (isRTL
                   ? violation.rule.remediation_instructions_ar
                   : violation.rule.remediation_instructions_en) && (
-                  <div className="rounded-md bg-blue-50 dark:bg-blue-900/20 p-3 border border-blue-200 dark:border-blue-800">
+                  <div className="rounded-md border border-blue-200 bg-blue-50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
                     <p className="text-sm text-blue-700 dark:text-blue-300">
                       {isRTL
                         ? violation.rule.remediation_instructions_ar
@@ -250,10 +250,10 @@ export function ComplianceViolationAlert({
 
               {/* Actions */}
               {showActions && (
-                <div className="flex flex-wrap gap-2 pt-2 border-t">
+                <div className="flex flex-wrap gap-2 border-t pt-2">
                   {canSignOff(violation) && onSignOff && (
                     <Button onClick={() => onSignOff(violation)} size="sm">
-                      <FileCheck className="h-4 w-4 me-2" />
+                      <FileCheck className="me-2 size-4" />
                       {t('violations.signOff')}
                     </Button>
                   )}
@@ -266,7 +266,7 @@ export function ComplianceViolationAlert({
                     <Button onClick={() => onViewDetails(violation)} variant="ghost" size="sm">
                       {t('violations.viewDetails')}
                       <ArrowUpRight
-                        className={`h-4 w-4 ${isRTL ? 'me-2' : 'ms-2'} ${isRTL ? 'rotate-[-90deg]' : ''}`}
+                        className={`size-4 ${isRTL ? 'me-2' : 'ms-2'} ${isRTL ? '-rotate-90' : ''}`}
                       />
                     </Button>
                   )}
@@ -314,9 +314,9 @@ export function ComplianceViolationList({
         className="flex flex-col items-center justify-center py-8 text-center"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <AlertCircle className="h-12 w-12 text-muted-foreground mb-3" />
+        <AlertCircle className="mb-3 size-12 text-muted-foreground" />
         <p className="text-muted-foreground">{emptyMessage || t('violations.noViolations')}</p>
-        <p className="text-sm text-muted-foreground mt-1">
+        <p className="mt-1 text-sm text-muted-foreground">
           {t('violations.noViolationsDescription')}
         </p>
       </div>
@@ -336,7 +336,7 @@ export function ComplianceViolationList({
         />
       ))}
       {hasMore && (
-        <p className="text-sm text-center text-muted-foreground pt-2">
+        <p className="pt-2 text-center text-sm text-muted-foreground">
           +{violations.length - maxItems} {t('violations.allViolations').toLowerCase()}
         </p>
       )}

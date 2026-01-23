@@ -114,7 +114,7 @@ export default function Organizations() {
       <header className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h1 className="font-display text-2xl sm:text-3xl font-semibold text-foreground">
+            <h1 className="font-display text-2xl font-semibold text-foreground sm:text-3xl">
               {t('organizations.title', 'Organizations & delegations')}
             </h1>
             <p className="text-base text-muted-foreground">

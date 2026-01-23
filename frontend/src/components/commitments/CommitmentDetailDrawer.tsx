@@ -122,7 +122,7 @@ export function CommitmentDetailDrawer({
       <Sheet open={open} onOpenChange={handleOpenChange}>
         <SheetContent
           side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-lg overflow-y-auto"
+          className="w-full overflow-y-auto sm:max-w-lg"
           dir={isRTL ? 'rtl' : 'ltr'}
           accessibleTitle={t('detail.title', 'Commitment Details')}
         >
@@ -143,7 +143,7 @@ export function CommitmentDetailDrawer({
           {/* Error State */}
           {isError && (
             <div className="flex flex-col items-center justify-center py-12">
-              <AlertTriangle className="size-12 text-muted-foreground mb-4" />
+              <AlertTriangle className="mb-4 size-12 text-muted-foreground" />
               <p className="text-muted-foreground">{t('errors.loadFailed')}</p>
             </div>
           )}
@@ -171,7 +171,7 @@ export function CommitmentDetailDrawer({
                   {/* Header with title and actions */}
                   <SheetHeader className="space-y-4">
                     <div className="flex items-start justify-between gap-2">
-                      <SheetTitle className="text-start text-lg flex-1">
+                      <SheetTitle className="flex-1 text-start text-lg">
                         {commitment.title || t('card.noTitle')}
                       </SheetTitle>
                       {commitment.status !== 'cancelled' && commitment.status !== 'completed' && (
@@ -200,7 +200,7 @@ export function CommitmentDetailDrawer({
                     {/* Description */}
                     {commitment.description && (
                       <div>
-                        <p className="text-sm text-muted-foreground text-start">
+                        <p className="text-start text-sm text-muted-foreground">
                           {commitment.description}
                         </p>
                       </div>
@@ -212,12 +212,12 @@ export function CommitmentDetailDrawer({
                     <div className="grid grid-cols-2 gap-4">
                       {/* Due Date */}
                       <div className="space-y-1">
-                        <p className="text-xs text-muted-foreground text-start">
+                        <p className="text-start text-xs text-muted-foreground">
                           {t('form.dueDate')}
                         </p>
                         <div
                           className={`flex items-center gap-1.5 text-sm ${
-                            overdue ? 'text-red-600 dark:text-red-400 font-medium' : ''
+                            overdue ? 'font-medium text-red-600 dark:text-red-400' : ''
                           }`}
                         >
                           {overdue ? (
@@ -235,7 +235,7 @@ export function CommitmentDetailDrawer({
 
                       {/* Priority */}
                       <div className="space-y-1">
-                        <p className="text-xs text-muted-foreground text-start">
+                        <p className="text-start text-xs text-muted-foreground">
                           {t('form.priority')}
                         </p>
                         <Badge
@@ -248,7 +248,7 @@ export function CommitmentDetailDrawer({
 
                       {/* Owner Type */}
                       <div className="space-y-1">
-                        <p className="text-xs text-muted-foreground text-start">
+                        <p className="text-start text-xs text-muted-foreground">
                           {t('form.ownerType')}
                         </p>
                         <div className="flex items-center gap-1.5 text-sm">
@@ -259,7 +259,7 @@ export function CommitmentDetailDrawer({
 
                       {/* Tracking Mode */}
                       <div className="space-y-1">
-                        <p className="text-xs text-muted-foreground text-start">
+                        <p className="text-start text-xs text-muted-foreground">
                           {t('form.trackingMode')}
                         </p>
                         <span className="text-sm">{t(`form.${commitment.tracking_mode}`)}</span>
@@ -296,20 +296,20 @@ export function CommitmentDetailDrawer({
 
                     {/* Evidence Section */}
                     <div className="space-y-3">
-                      <p className="text-xs text-muted-foreground text-start font-medium">
+                      <p className="text-start text-xs font-medium text-muted-foreground">
                         {t('detail.evidence')}
                       </p>
 
                       {commitment.proof_url ? (
                         <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-2 p-3 bg-green-50 dark:bg-green-900/20 rounded-lg">
+                          <div className="flex items-center gap-2 rounded-lg bg-green-50 p-3 dark:bg-green-900/20">
                             <CheckCircle className="size-5 text-green-600 dark:text-green-400" />
                             <div className="flex-1">
-                              <p className="text-sm font-medium text-start">
+                              <p className="text-start text-sm font-medium">
                                 {t('evidence.uploadSuccess')}
                               </p>
                               {commitment.evidence_submitted_at && (
-                                <p className="text-xs text-muted-foreground text-start">
+                                <p className="text-start text-xs text-muted-foreground">
                                   {t('detail.evidenceSubmittedAt')}:{' '}
                                   {formatDateTime(commitment.evidence_submitted_at)}
                                 </p>
@@ -334,9 +334,9 @@ export function CommitmentDetailDrawer({
                         </div>
                       ) : commitment.proof_required ? (
                         <div className="flex flex-col gap-2">
-                          <div className="flex items-center gap-2 p-3 bg-yellow-50 dark:bg-yellow-900/20 rounded-lg">
+                          <div className="flex items-center gap-2 rounded-lg bg-yellow-50 p-3 dark:bg-yellow-900/20">
                             <AlertTriangle className="size-5 text-yellow-600 dark:text-yellow-400" />
-                            <p className="text-sm text-start">
+                            <p className="text-start text-sm">
                               {t('form.proofRequiredDescription')}
                             </p>
                           </div>
@@ -353,7 +353,7 @@ export function CommitmentDetailDrawer({
                             )}
                         </div>
                       ) : (
-                        <p className="text-sm text-muted-foreground text-start">
+                        <p className="text-start text-sm text-muted-foreground">
                           {t('detail.noEvidence')}
                         </p>
                       )}
@@ -363,7 +363,7 @@ export function CommitmentDetailDrawer({
 
                     {/* T058: Status Timeline */}
                     <div className="space-y-3">
-                      <p className="text-xs text-muted-foreground text-start font-medium">
+                      <p className="text-start text-xs font-medium text-muted-foreground">
                         {t('detail.statusHistory')}
                       </p>
                       <StatusTimeline
@@ -390,7 +390,7 @@ export function CommitmentDetailDrawer({
                         </p>
                       </div>
                       {commitment.completed_at && (
-                        <div className="space-y-1 col-span-2">
+                        <div className="col-span-2 space-y-1">
                           <p className="text-start">{t('detail.completedAt')}</p>
                           <p className="text-start font-medium text-foreground">
                             {formatDateTime(commitment.completed_at)}
@@ -410,13 +410,13 @@ export function CommitmentDetailDrawer({
       {commitment && (
         <Dialog open={showUploadDialog} onOpenChange={setShowUploadDialog}>
           <DialogContent
-            className="max-w-md max-h-[90vh] overflow-y-auto"
+            className="max-h-[90vh] max-w-md overflow-y-auto"
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             <DialogHeader>
               <DialogTitle className="text-start">{t('evidence.title')}</DialogTitle>
             </DialogHeader>
-            <p className="text-sm text-muted-foreground text-start mb-4">
+            <p className="mb-4 text-start text-sm text-muted-foreground">
               {t('evidence.description')}
             </p>
             <EvidenceUpload

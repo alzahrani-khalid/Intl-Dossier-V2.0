@@ -282,7 +282,7 @@ export function BreadcrumbBack({ segments, className }: BreadcrumbBackProps) {
               aria-hidden="true"
             />
           )}
-          <Link to={crumb.path as any} className="hover:text-foreground transition-colors">
+          <Link to={crumb.path as any} className="transition-colors hover:text-foreground">
             {crumb.label}
           </Link>
         </span>

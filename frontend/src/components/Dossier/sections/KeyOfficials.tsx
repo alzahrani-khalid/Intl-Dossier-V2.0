@@ -66,7 +66,7 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Political Intelligence Widget (Feature 029 - User Story 4 - T061) */}
       <div className="w-full">
-        <h3 className="text-sm sm:text-base font-semibold text-foreground mb-3">
+        <h3 className="mb-3 text-sm font-semibold text-foreground sm:text-base">
           {t('intelligence.political_analysis', 'Political Analysis')}
         </h3>
         {isLoadingPolitical ? (
@@ -80,9 +80,9 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
             dossierId={dossierId}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center py-8 border border-dashed rounded-lg bg-muted/30">
-            <Users className="h-8 w-8 text-muted-foreground mb-2" />
-            <p className="text-sm text-muted-foreground text-center">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 py-8">
+            <Users className="mb-2 size-8 text-muted-foreground" />
+            <p className="text-center text-sm text-muted-foreground">
               {politicalError
                 ? t('intelligence.error_loading', 'Error loading intelligence')
                 : t('intelligence.no_political_data', 'No political intelligence available')}
@@ -93,13 +93,13 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
 
       {/* Key Officials Section (T083-T086) */}
       <div className="w-full">
-        <h3 className="text-sm sm:text-base font-semibold text-foreground mb-3">
+        <h3 className="mb-3 text-sm font-semibold text-foreground sm:text-base">
           {t('sections.country.keyOfficials', 'Key Officials')}
         </h3>
 
         {/* Loading State */}
         {isLoadingOfficials && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <Skeleton className="h-64 w-full" />
             <Skeleton className="h-64 w-full" />
             <Skeleton className="h-64 w-full" />
@@ -108,9 +108,9 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
 
         {/* Error State */}
         {officialsError && (
-          <div className="flex flex-col items-center justify-center py-8 border border-dashed rounded-lg bg-muted/30">
-            <Users className="h-8 w-8 text-destructive mb-2" />
-            <p className="text-sm text-destructive text-center">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 py-8">
+            <Users className="mb-2 size-8 text-destructive" />
+            <p className="text-center text-sm text-destructive">
               {t('common.error', 'Error loading data')}: {officialsError.message}
             </p>
           </div>
@@ -118,18 +118,18 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
 
         {/* Empty State with AI Suggestions (T089) */}
         {!isLoadingOfficials && !officialsError && (!keyOfficials || keyOfficials.length === 0) && (
-          <div className="flex flex-col items-center justify-center py-8 sm:py-12 text-center border border-dashed rounded-lg bg-muted/30">
+          <div className="flex flex-col items-center justify-center rounded-lg border border-dashed bg-muted/30 py-8 text-center sm:py-12">
             <div className="mb-4 sm:mb-6">
-              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
-                <Users className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+              <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+                <Users className="size-8 text-primary sm:size-10" />
               </div>
             </div>
 
-            <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
+            <h3 className="mb-2 text-base font-semibold text-foreground sm:text-lg">
               {t('sections.country.keyOfficialsEmpty', 'No Key Officials')}
             </h3>
 
-            <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 px-4">
+            <p className="mb-6 max-w-md px-4 text-sm text-muted-foreground sm:text-base">
               {t(
                 'sections.country.keyOfficialsEmptyDescription',
                 'No key officials have been linked to this country yet.',
@@ -137,15 +137,15 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
             </p>
 
             {aiProfileSummary && (
-              <div className="max-w-lg px-4 mb-6">
-                <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
-                  <div className="flex items-start gap-2 mb-2">
+              <div className="mb-6 max-w-lg px-4">
+                <div className="rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20">
+                  <div className="mb-2 flex items-start gap-2">
                     <span className="text-lg">✨</span>
-                    <h4 className="text-sm font-semibold text-purple-900 dark:text-purple-100 text-start">
+                    <h4 className="text-start text-sm font-semibold text-purple-900 dark:text-purple-100">
                       {t('intelligence.political_context', 'Political Context')}
                     </h4>
                   </div>
-                  <p className="text-xs sm:text-sm text-purple-700 dark:text-purple-300 text-start line-clamp-3">
+                  <p className="line-clamp-3 text-start text-xs text-purple-700 dark:text-purple-300 sm:text-sm">
                     {aiProfileSummary}
                   </p>
                 </div>
@@ -159,14 +159,14 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
           <div className="space-y-4">
             {/* AI Context Banner (T086) */}
             {aiProfileSummary && (
-              <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800 mb-4">
+              <div className="mb-4 rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20">
                 <div className="flex items-start gap-2">
-                  <span className="text-lg flex-shrink-0">✨</span>
-                  <div className="flex-1 min-w-0">
-                    <h4 className="text-sm font-semibold text-purple-900 dark:text-purple-100 mb-1 text-start">
+                  <span className="shrink-0 text-lg">✨</span>
+                  <div className="min-w-0 flex-1">
+                    <h4 className="mb-1 text-start text-sm font-semibold text-purple-900 dark:text-purple-100">
                       {t('intelligence.political_context', 'Political Context')}
                     </h4>
-                    <p className="text-xs sm:text-sm text-purple-700 dark:text-purple-300 text-start line-clamp-4">
+                    <p className="line-clamp-4 text-start text-xs text-purple-700 dark:text-purple-300 sm:text-sm">
                       {aiProfileSummary}
                     </p>
                   </div>
@@ -175,7 +175,7 @@ export function KeyOfficials({ dossierId }: KeyOfficialsProps) {
             )}
 
             {/* Person Cards Grid (T084) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {keyOfficials.map((person) => (
                 <PersonCard
                   key={person.id}

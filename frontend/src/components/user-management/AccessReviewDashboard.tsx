@@ -53,12 +53,12 @@ export function AccessReviewDashboard() {
  };
 
  return (
- <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="container mx-auto p-4 sm:p-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
  {/* Header */}
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+ <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
  <div>
- <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('user_management.access_reviews')}</h1>
- <p className="text-sm sm:text-base text-muted-foreground text-start mt-1">
+ <h1 className="text-start text-2xl font-bold sm:text-3xl">{t('user_management.access_reviews')}</h1>
+ <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
  {t('user_management.access_review_description')}
  </p>
  </div>
@@ -131,14 +131,14 @@ export function AccessReviewDashboard() {
 
  {/* Summary Cards (when review selected) */}
  {selectedReviewId && (
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+ <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
  <Card>
  <CardHeader className="pb-3">
  <div className="flex flex-row items-center justify-between">
  <CardTitle className="text-sm font-medium">
  {t('user_management.total_findings')}
  </CardTitle>
- <AlertCircle className="h-4 w-4 text-muted-foreground" />
+ <AlertCircle className="size-4 text-muted-foreground" />
  </div>
  </CardHeader>
  <CardContent>
@@ -152,12 +152,12 @@ export function AccessReviewDashboard() {
  <CardTitle className="text-sm font-medium">
  {t('user_management.inactive_users')}
  </CardTitle>
- <UserX className="h-4 w-4 text-orange-500" />
+ <UserX className="size-4 text-orange-500" />
  </div>
  </CardHeader>
  <CardContent>
  <div className="text-2xl font-bold text-orange-600">{summary.inactiveUsers}</div>
- <p className="text-xs text-muted-foreground mt-1">
+ <p className="mt-1 text-xs text-muted-foreground">
  {t('user_management.inactive_90_days')}
  </p>
  </CardContent>
@@ -169,7 +169,7 @@ export function AccessReviewDashboard() {
  <CardTitle className="text-sm font-medium">
  {t('user_management.excessive_permissions')}
  </CardTitle>
- <ShieldAlert className="h-4 w-4 text-red-500" />
+ <ShieldAlert className="size-4 text-red-500" />
  </div>
  </CardHeader>
  <CardContent>
@@ -183,12 +183,12 @@ export function AccessReviewDashboard() {
  <CardTitle className="text-sm font-medium">
  {t('user_management.certified_users')}
  </CardTitle>
- <CheckCircle className="h-4 w-4 text-green-500" />
+ <CheckCircle className="size-4 text-green-500" />
  </div>
  </CardHeader>
  <CardContent>
  <div className="text-2xl font-bold text-green-600">{summary.certifiedUsers}</div>
- <p className="text-xs text-muted-foreground mt-1">
+ <p className="mt-1 text-xs text-muted-foreground">
  {t('user_management.out_of')} {summary.totalFindings}
  </p>
  </CardContent>
@@ -200,24 +200,24 @@ export function AccessReviewDashboard() {
  <Tabs defaultValue="in_progress" className="w-full">
  <TabsList className="grid w-full grid-cols-2">
  <TabsTrigger value="in_progress" className="">
- <Clock className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Clock className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('user_management.in_progress')} ({inProgressReviews?.length || 0})
  </TabsTrigger>
  <TabsTrigger value="completed" className="">
- <CheckCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <CheckCircle className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('user_management.completed')} ({completedReviews?.length || 0})
  </TabsTrigger>
  </TabsList>
 
  <TabsContent value="in_progress" className="mt-4">
  {loadingInProgress ? (
- <div className="text-center py-8 text-muted-foreground">
+ <div className="py-8 text-center text-muted-foreground">
  {t('common.loading')}
  </div>
  ) : inProgressReviews?.length === 0 ? (
  <Card>
  <CardContent className="flex flex-col items-center justify-center py-12">
- <Users className="h-12 w-12 text-muted-foreground mb-4" />
+ <Users className="mb-4 size-12 text-muted-foreground" />
  <p className="text-muted-foreground">{t('user_management.no_active_reviews')}</p>
  </CardContent>
  </Card>
@@ -232,7 +232,7 @@ export function AccessReviewDashboard() {
  onClick={() => setSelectedReviewId(review.id)}
  >
  <CardHeader>
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+ <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
  <CardTitle className="text-start text-lg">{review.review_name}</CardTitle>
  <Badge variant="outline">
  {t(`user_management.scope_${review.review_scope}`)}
@@ -243,7 +243,7 @@ export function AccessReviewDashboard() {
  </CardDescription>
  </CardHeader>
  <CardContent>
- <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-muted-foreground">
+ <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center">
  <span>
  {t('user_management.started')}: {new Date(review.review_date).toLocaleDateString()}
  </span>
@@ -261,13 +261,13 @@ export function AccessReviewDashboard() {
 
  <TabsContent value="completed" className="mt-4">
  {loadingCompleted ? (
- <div className="text-center py-8 text-muted-foreground">
+ <div className="py-8 text-center text-muted-foreground">
  {t('common.loading')}
  </div>
  ) : completedReviews?.length === 0 ? (
  <Card>
  <CardContent className="flex flex-col items-center justify-center py-12">
- <CheckCircle className="h-12 w-12 text-muted-foreground mb-4" />
+ <CheckCircle className="mb-4 size-12 text-muted-foreground" />
  <p className="text-muted-foreground">{t('user_management.no_completed_reviews')}</p>
  </CardContent>
  </Card>
@@ -276,10 +276,10 @@ export function AccessReviewDashboard() {
  {completedReviews?.map((review) => (
  <Card key={review.id}>
  <CardHeader>
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+ <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
  <CardTitle className="text-start text-lg">{review.review_name}</CardTitle>
  <Badge variant="secondary">
- <CheckCircle className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
+ <CheckCircle className={`size-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
  {t('user_management.completed')}
  </Badge>
  </div>
@@ -288,7 +288,7 @@ export function AccessReviewDashboard() {
  </CardDescription>
  </CardHeader>
  <CardContent>
- <div className="flex flex-col sm:flex-row sm:items-center gap-2 text-sm text-muted-foreground">
+ <div className="flex flex-col gap-2 text-sm text-muted-foreground sm:flex-row sm:items-center">
  <span>
  {t('user_management.completed_on')}: {new Date(review.completed_at).toLocaleDateString()}
  </span>

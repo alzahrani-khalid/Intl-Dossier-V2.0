@@ -228,9 +228,9 @@ export function LanguageDropdownMenu({
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="outline" size="sm" disabled={disabled} className={cn('gap-2', className)}>
-          <Languages className="h-4 w-4" />
+          <Languages className="size-4" />
           <span>{t('addLanguage')}</span>
-          <ChevronDown className="h-3 w-3 opacity-50" />
+          <ChevronDown className="size-3 opacity-50" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={isRTL ? 'start' : 'end'} dir={isRTL ? 'rtl' : 'ltr'}>
@@ -242,7 +242,7 @@ export function LanguageDropdownMenu({
             <DropdownMenuItem key={code} onClick={() => onSelectLanguage(code)} className="gap-2">
               {meta.flag_emoji && <span className="text-base">{meta.flag_emoji}</span>}
               <span dir={isRTLLanguage(code) ? 'rtl' : 'ltr'}>{meta.name_native}</span>
-              <span className="text-muted-foreground text-xs ms-auto">{meta.name_en}</span>
+              <span className="ms-auto text-xs text-muted-foreground">{meta.name_en}</span>
             </DropdownMenuItem>
           )
         })}
@@ -284,7 +284,7 @@ export function LanguageIndicator({
       {meta.flag_emoji && <span>{meta.flag_emoji}</span>}
       <span>{meta.name_native}</span>
       {showRTLIndicator && isRTLLang && (
-        <span className="text-xs bg-muted px-1.5 py-0.5 rounded">RTL</span>
+        <span className="rounded bg-muted px-1.5 py-0.5 text-xs">RTL</span>
       )}
     </span>
   )

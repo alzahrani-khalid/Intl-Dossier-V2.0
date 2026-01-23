@@ -105,7 +105,7 @@ export function ExpirationBadge({
           <p className="font-medium">{t(`status.${status}`)}</p>
           <p className="text-xs text-muted-foreground">{t(`statusDescription.${status}`)}</p>
           {expiresAt && (
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="mt-1 text-xs text-muted-foreground">
               {new Date(expiresAt).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
                 year: 'numeric',
                 month: 'long',
@@ -198,7 +198,7 @@ export function ExpirationCountdown({
       className={cn('inline-flex items-center gap-1.5', getColor(), className)}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      {showIcon && <Clock className="h-4 w-4" />}
+      {showIcon && <Clock className="size-4" />}
       <span className="text-sm font-medium">
         {isExpired ? t('badge.expired', { days: Math.abs(days) }) : t('badge.expiresIn', { days })}
       </span>

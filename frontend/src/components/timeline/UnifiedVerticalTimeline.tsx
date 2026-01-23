@@ -42,8 +42,8 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
         <div key={index} className="flex gap-4">
           {/* Timeline dot skeleton */}
           <div className="flex flex-col items-center">
-            <Skeleton className="h-11 w-11 rounded-full" />
-            {index < count - 1 && <Skeleton className="h-20 w-0.5 mt-2" />}
+            <Skeleton className="size-11 rounded-full" />
+            {index < count - 1 && <Skeleton className="mt-2 h-20 w-0.5" />}
           </div>
           {/* Card skeleton */}
           <div className="flex-1 space-y-3">
@@ -63,12 +63,12 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
 function TimelineEmptyState({ message }: { message: string }) {
   const { t } = useTranslation('dossier');
   return (
-    <div className="flex flex-col items-center justify-center py-12 sm:py-16 text-center">
-      <div className="rounded-full bg-muted p-6 sm:p-8 mb-4 sm:mb-6">
-        <Calendar className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground" />
+    <div className="flex flex-col items-center justify-center py-12 text-center sm:py-16">
+      <div className="mb-4 rounded-full bg-muted p-6 sm:mb-6 sm:p-8">
+        <Calendar className="size-12 text-muted-foreground sm:size-16" />
       </div>
-      <h3 className="text-lg sm:text-xl font-semibold mb-2">{t('timeline.empty.title')}</h3>
-      <p className="text-sm sm:text-base text-muted-foreground max-w-md">
+      <h3 className="mb-2 text-lg font-semibold sm:text-xl">{t('timeline.empty.title')}</h3>
+      <p className="max-w-md text-sm text-muted-foreground sm:text-base">
         {message || t('timeline.empty.description')}
       </p>
     </div>
@@ -184,7 +184,7 @@ export function UnifiedVerticalTimeline({
         <div ref={loadMoreRef} className="flex justify-center py-6 sm:py-8">
           {isFetchingNextPage ? (
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
               <span>{t('timeline.loading_more')}</span>
             </div>
           ) : (

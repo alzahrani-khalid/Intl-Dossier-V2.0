@@ -101,7 +101,7 @@ function renderWidget(config: WidgetConfig, data: unknown, isLoading: boolean): 
       return <QuickActionsWidget config={config as WidgetConfig & { type: 'quick-actions' }} />
     default:
       return (
-        <div className="h-full flex items-center justify-center text-sm text-muted-foreground">
+        <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
           Unknown widget type: {config.type}
         </div>
       )

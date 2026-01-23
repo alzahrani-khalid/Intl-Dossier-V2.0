@@ -318,16 +318,16 @@ export function Sidebar() {
           <>
             <button
               onClick={() => toggleExpand(item.id)}
-              className={`flex w-full items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${indentClass} ${
+              className={`flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${indentClass} ${
                 isActive
                   ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                   : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
               }`}
             >
-              <Icon className="h-4 w-4 shrink-0" />
+              <Icon className="size-4 shrink-0" />
               <span className="flex-1 text-start">{item.label}</span>
               <ChevronRight
-                className={`h-4 w-4 shrink-0 transition-transform ${
+                className={`size-4 shrink-0 transition-transform ${
                   isExpanded ? 'rotate-90' : ''
                 } ${isRTL ? 'rotate-180' : ''}`}
               />
@@ -341,13 +341,13 @@ export function Sidebar() {
         ) : (
           <Link
             to={item.path}
-            className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-colors ${indentClass} ${
+            className={`flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${indentClass} ${
               isActive
                 ? 'bg-sidebar-accent text-sidebar-accent-foreground'
                 : 'text-sidebar-foreground hover:bg-sidebar-accent/50 hover:text-sidebar-accent-foreground'
             }`}
           >
-            <Icon className="h-4 w-4 shrink-0" />
+            <Icon className="size-4 shrink-0" />
             <span>{item.label}</span>
           </Link>
         )}
@@ -363,15 +363,15 @@ export function Sidebar() {
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="p-4">
-        <div className="flex items-center gap-3 mb-6">
-          <div className="w-8 h-8 bg-foreground rounded-lg flex items-center justify-center">
-            <span className="text-background font-bold text-sm">G</span>
+        <div className="mb-6 flex items-center gap-3">
+          <div className="flex size-8 items-center justify-center rounded-lg bg-foreground">
+            <span className="text-sm font-bold text-background">G</span>
           </div>
           <span className="font-semibold text-sidebar-foreground">GASTAT Dossier</span>
         </div>
 
-        <button className="w-full flex items-center justify-center gap-2 bg-primary hover:bg-primary/90 text-primary-foreground px-3 py-2 rounded-lg text-sm font-medium mb-6">
-          <Plus className="h-4 w-4" />
+        <button className="mb-6 flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90">
+          <Plus className="size-4" />
           {t('navigation.quickCreate')}
         </button>
       </div>
@@ -384,7 +384,7 @@ export function Sidebar() {
 
         {/* Workflows Section */}
         <div className="mb-6">
-          <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+          <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t('navigation.sections.workflows')}
           </h3>
           <ul className="space-y-1">{workflowItems.map((item) => renderNavItem(item))}</ul>
@@ -392,7 +392,7 @@ export function Sidebar() {
 
         {/* Content Section */}
         <div className="mb-6">
-          <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+          <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t('navigation.sections.content')}
           </h3>
           <ul className="space-y-1">{contentItems.map((item) => renderNavItem(item))}</ul>
@@ -400,7 +400,7 @@ export function Sidebar() {
 
         {/* Tools & Reports Section */}
         <div className="mb-6">
-          <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+          <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t('navigation.sections.tools')}
           </h3>
           <ul className="space-y-1">{toolItems.map((item) => renderNavItem(item))}</ul>
@@ -409,7 +409,7 @@ export function Sidebar() {
         {/* Admin Section */}
         {isAdmin && (
           <div className="mb-6">
-            <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+            <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
               {t('navigation.sections.admin')}
             </h3>
             <ul className="space-y-1">{adminItems.map((item) => renderNavItem(item))}</ul>
@@ -418,35 +418,35 @@ export function Sidebar() {
 
         {/* Documents Section */}
         <div className="mb-6">
-          <h3 className="px-3 text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-2">
+          <h3 className="mb-2 px-3 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {t('navigation.sections.documents')}
           </h3>
           <ul className="space-y-1">{documentItems.map((item) => renderNavItem(item))}</ul>
-          <button className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-muted-foreground hover:text-sidebar-foreground hover:bg-sidebar-accent/50 w-full transition-colors mt-1">
-            <Plus className="h-4 w-4" />
+          <button className="mt-1 flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-muted-foreground transition-colors hover:bg-sidebar-accent/50 hover:text-sidebar-foreground">
+            <Plus className="size-4" />
             <span>{t('navigation.sections.more')}</span>
           </button>
         </div>
       </nav>
 
-      <div className="p-4 border-t border-sidebar-border">
+      <div className="border-t border-sidebar-border p-4">
         <ul className="space-y-1">{bottomNavItems.map((item) => renderNavItem(item))}</ul>
 
-        <div className="mt-4 p-3 bg-sidebar-accent/30 rounded-lg">
+        <div className="mt-4 rounded-lg bg-sidebar-accent/30 p-3">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-muted rounded-full flex items-center justify-center">
-              <User className="h-4 w-4 text-muted-foreground" />
+            <div className="flex size-8 items-center justify-center rounded-full bg-muted">
+              <User className="size-4 text-muted-foreground" />
             </div>
             <div className="flex-1">
-              <p className="text-sidebar-foreground text-sm font-medium">{user?.name || 'User'}</p>
-              <p className="text-muted-foreground text-xs">{user?.email || 'user@gastat.gov.sa'}</p>
+              <p className="text-sm font-medium text-sidebar-foreground">{user?.name || 'User'}</p>
+              <p className="text-xs text-muted-foreground">{user?.email || 'user@gastat.gov.sa'}</p>
             </div>
             <button
               aria-label={t('common.logout')}
-              className="p-1 hover:bg-sidebar-accent rounded"
+              className="rounded p-1 hover:bg-sidebar-accent"
               onClick={handleLogout}
             >
-              <LogOut className="h-4 w-4 text-muted-foreground" />
+              <LogOut className="size-4 text-muted-foreground" />
             </button>
           </div>
         </div>

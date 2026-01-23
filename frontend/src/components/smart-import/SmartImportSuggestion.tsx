@@ -114,7 +114,7 @@ export function SmartImportSuggestion({
         className={cn('flex items-center justify-center py-4', className)}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <Loader2 className="h-5 w-5 animate-spin text-muted-foreground" />
+        <Loader2 className="size-5 animate-spin text-muted-foreground" />
         <span className="ms-2 text-sm text-muted-foreground">
           {t('loading', 'Checking available data sources...')}
         </span>
@@ -130,11 +130,11 @@ export function SmartImportSuggestion({
 
     return (
       <Card className={cn('border-dashed', className)} dir={isRTL ? 'rtl' : 'ltr'}>
-        <CardContent className="flex flex-col items-center justify-center py-6 sm:py-8 text-center">
-          <div className="rounded-full bg-muted p-3 mb-3">
-            <Sparkles className="h-5 w-5 sm:h-6 sm:w-6 text-muted-foreground" />
+        <CardContent className="flex flex-col items-center justify-center py-6 text-center sm:py-8">
+          <div className="mb-3 rounded-full bg-muted p-3">
+            <Sparkles className="size-5 text-muted-foreground sm:size-6" />
           </div>
-          <p className="text-sm text-muted-foreground max-w-md px-4">
+          <p className="max-w-md px-4 text-sm text-muted-foreground">
             {t('noSources.description', 'Connect external services to enable smart import')}
           </p>
           <Button variant="outline" size="sm" className="mt-4 min-h-11">
@@ -161,9 +161,9 @@ export function SmartImportSuggestion({
         )}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary flex-shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-xs sm:text-sm text-foreground">
+        <Sparkles className="size-4 shrink-0 text-primary sm:size-5" />
+        <div className="min-w-0 flex-1">
+          <p className="text-xs text-foreground sm:text-sm">
             {t('compact.suggestion', 'Import data from {{source}}', {
               source: isRTL ? recommendedSource.nameAr : recommendedSource.name,
             })}
@@ -173,11 +173,11 @@ export function SmartImportSuggestion({
           variant="ghost"
           size="sm"
           onClick={() => handleSourceClick(recommendedSource)}
-          className="min-h-9 min-w-9 flex-shrink-0"
+          className="min-h-9 min-w-9 shrink-0"
           disabled={isPreviewLoading}
         >
           {isPreviewLoading ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="size-4 animate-spin" />
           ) : (
             <>
               {t('compact.action', 'Import')}
@@ -196,13 +196,13 @@ export function SmartImportSuggestion({
         <CardHeader className="pb-3 sm:pb-4">
           <div className="flex items-start gap-3">
             <div className="rounded-full bg-primary/10 p-2">
-              <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+              <Sparkles className="size-4 text-primary sm:size-5" />
             </div>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <CardTitle className="text-sm sm:text-base">
                 {t('title', 'Smart Import Available')}
               </CardTitle>
-              <CardDescription className="text-xs sm:text-sm mt-1">
+              <CardDescription className="mt-1 text-xs sm:text-sm">
                 {t('description', 'Import data from connected services to populate this section')}
               </CardDescription>
             </div>
@@ -242,9 +242,9 @@ export function SmartImportSuggestion({
                     />
                   </div>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-sm font-medium truncate">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <span className="truncate text-sm font-medium">
                         {isRTL ? source.nameAr : source.name}
                       </span>
                       {source.isRecommended && isConnected && (
@@ -258,12 +258,12 @@ export function SmartImportSuggestion({
                         </Badge>
                       )}
                     </div>
-                    <p className="text-xs text-muted-foreground mt-0.5 truncate">
+                    <p className="mt-0.5 truncate text-xs text-muted-foreground">
                       {isRTL ? source.descriptionAr : source.description}
                     </p>
                   </div>
 
-                  <div className="flex items-center gap-2 flex-shrink-0">
+                  <div className="flex shrink-0 items-center gap-2">
                     {isConnected && hasItems && (
                       <Tooltip>
                         <TooltipTrigger asChild>
@@ -283,7 +283,7 @@ export function SmartImportSuggestion({
                         className={cn('h-4 w-4 text-muted-foreground', isRTL && 'rotate-180')}
                       />
                     ) : (
-                      <ExternalLink className="h-4 w-4 text-muted-foreground" />
+                      <ExternalLink className="size-4 text-muted-foreground" />
                     )}
                   </div>
                 </button>
@@ -292,7 +292,7 @@ export function SmartImportSuggestion({
           </div>
 
           {suggestions?.message && (
-            <p className="text-xs text-muted-foreground mt-4 text-center">
+            <p className="mt-4 text-center text-xs text-muted-foreground">
               {isRTL ? suggestions.messageAr : suggestions.message}
             </p>
           )}

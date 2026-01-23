@@ -39,15 +39,15 @@ export function DelegationExpiryBanner({ className }: DelegationExpiryBannerProp
       className={`border-yellow-500/50 bg-yellow-50/50 dark:bg-yellow-950/20 ${className}`}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <AlertTriangle className="h-4 w-4 text-yellow-600" />
+      <AlertTriangle className="size-4 text-yellow-600" />
       <AlertTitle className="flex items-center gap-2 text-yellow-800 dark:text-yellow-400">
-        <Clock className="h-4 w-4" />
+        <Clock className="size-4" />
         {t('notification.expiringTitle')}
-        <Badge variant="outline" className="ms-2 text-yellow-700 border-yellow-600">
+        <Badge variant="outline" className="ms-2 border-yellow-600 text-yellow-700">
           {count}
         </Badge>
       </AlertTitle>
-      <AlertDescription className="mt-2 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <AlertDescription className="mt-2 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <span className="text-yellow-700 dark:text-yellow-300">
           {count === 1
             ? t('notification.expiringDescriptionSingle')
@@ -64,17 +64,17 @@ export function DelegationExpiryBanner({ className }: DelegationExpiryBannerProp
           >
             <Link to="/delegations">
               {t('notification.viewAll')}
-              <ChevronRight className={`h-4 w-4 ${isRTL ? 'me-1 rotate-180' : 'ms-1'}`} />
+              <ChevronRight className={`size-4 ${isRTL ? 'me-1 rotate-180' : 'ms-1'}`} />
             </Link>
           </Button>
           <Button
             variant="ghost"
             size="icon"
             onClick={() => setIsDismissed(true)}
-            className="h-8 w-8 text-yellow-700 hover:text-yellow-800 hover:bg-yellow-100 dark:hover:bg-yellow-900/30"
+            className="size-8 text-yellow-700 hover:bg-yellow-100 hover:text-yellow-800 dark:hover:bg-yellow-900/30"
             aria-label={t('notification.dismiss')}
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         </div>
       </AlertDescription>

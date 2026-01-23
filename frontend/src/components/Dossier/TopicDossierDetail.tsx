@@ -32,16 +32,16 @@ function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier
 
   return (
     <Card>
-      <CardContent className="p-4 sm:p-6 space-y-4">
+      <CardContent className="space-y-4 p-4 sm:p-6">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg bg-pink-500/10">
-            <Target className="h-5 w-5 text-pink-600 dark:text-pink-400" />
+          <div className="rounded-lg bg-pink-500/10 p-2">
+            <Target className="size-5 text-pink-600 dark:text-pink-400" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-base sm:text-lg text-start">
+            <h3 className="text-start text-base font-semibold sm:text-lg">
               {t('sections.topic.policyOverview')}
             </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground text-start">
+            <p className="text-start text-xs text-muted-foreground sm:text-sm">
               {t('sections.topic.policyOverviewDescription')}
             </p>
           </div>
@@ -50,8 +50,8 @@ function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier
         <div className="space-y-3">
           {/* Topic Category */}
           {extension?.topic_category && (
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <span className="text-sm font-medium text-muted-foreground min-w-[120px] text-start">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <span className="min-w-[120px] text-start text-sm font-medium text-muted-foreground">
                 {t('sections.topic.category')}:
               </span>
               <Badge variant="secondary" className="w-fit capitalize">
@@ -62,8 +62,8 @@ function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier
 
           {/* Parent Topic */}
           {extension?.parent_topic_id && (
-            <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-              <span className="text-sm font-medium text-muted-foreground min-w-[120px] text-start">
+            <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+              <span className="min-w-[120px] text-start text-sm font-medium text-muted-foreground">
                 {t('sections.topic.parentTopic')}:
               </span>
               <Badge variant="outline" className="w-fit">
@@ -73,8 +73,8 @@ function PolicyOverview({ dossier }: { dossier: TopicDossierDetailProps['dossier
           )}
 
           {/* Description */}
-          <div className="pt-3 border-t">
-            <p className="text-sm text-muted-foreground text-start leading-relaxed">
+          <div className="border-t pt-3">
+            <p className="text-start text-sm leading-relaxed text-muted-foreground">
               {isRTL ? dossier.description_ar : dossier.description_en || t('common.notAvailable')}
             </p>
           </div>
@@ -94,21 +94,21 @@ function RelatedDossiers({ dossierId }: { dossierId: string }) {
   return (
     <Card>
       <CardContent className="p-4 sm:p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-lg bg-blue-500/10">
-            <Network className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+        <div className="mb-4 flex items-center gap-3">
+          <div className="rounded-lg bg-blue-500/10 p-2">
+            <Network className="size-5 text-blue-600 dark:text-blue-400" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-base sm:text-lg text-start">
+            <h3 className="text-start text-base font-semibold sm:text-lg">
               {t('sections.topic.relatedDossiers')}
             </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground text-start">
+            <p className="text-start text-xs text-muted-foreground sm:text-sm">
               {t('sections.topic.relatedDossiersDescription')}
             </p>
           </div>
         </div>
 
-        <div className="text-center py-8 text-sm text-muted-foreground">
+        <div className="py-8 text-center text-sm text-muted-foreground">
           {t('sections.topic.relatedDossiersPlaceholder')}
         </div>
       </CardContent>
@@ -126,21 +126,21 @@ function KeyDocuments({ dossierId }: { dossierId: string }) {
   return (
     <Card>
       <CardContent className="p-4 sm:p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-lg bg-green-500/10">
-            <FileText className="h-5 w-5 text-green-600 dark:text-green-400" />
+        <div className="mb-4 flex items-center gap-3">
+          <div className="rounded-lg bg-green-500/10 p-2">
+            <FileText className="size-5 text-green-600 dark:text-green-400" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-base sm:text-lg text-start">
+            <h3 className="text-start text-base font-semibold sm:text-lg">
               {t('sections.topic.keyDocuments')}
             </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground text-start">
+            <p className="text-start text-xs text-muted-foreground sm:text-sm">
               {t('sections.topic.keyDocumentsDescription')}
             </p>
           </div>
         </div>
 
-        <div className="text-center py-8 text-sm text-muted-foreground">
+        <div className="py-8 text-center text-sm text-muted-foreground">
           {t('sections.topic.keyDocumentsPlaceholder')}
         </div>
       </CardContent>
@@ -158,21 +158,21 @@ function Subtopics({ dossierId }: { dossierId: string }) {
   return (
     <Card>
       <CardContent className="p-4 sm:p-6">
-        <div className="flex items-center gap-3 mb-4">
-          <div className="p-2 rounded-lg bg-purple-500/10">
-            <FolderTree className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+        <div className="mb-4 flex items-center gap-3">
+          <div className="rounded-lg bg-purple-500/10 p-2">
+            <FolderTree className="size-5 text-purple-600 dark:text-purple-400" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-base sm:text-lg text-start">
+            <h3 className="text-start text-base font-semibold sm:text-lg">
               {t('sections.topic.subtopics')}
             </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground text-start">
+            <p className="text-start text-xs text-muted-foreground sm:text-sm">
               {t('sections.topic.subtopicsDescription')}
             </p>
           </div>
         </div>
 
-        <div className="text-center py-8 text-sm text-muted-foreground">
+        <div className="py-8 text-center text-sm text-muted-foreground">
           {t('sections.topic.subtopicsPlaceholder')}
         </div>
       </CardContent>

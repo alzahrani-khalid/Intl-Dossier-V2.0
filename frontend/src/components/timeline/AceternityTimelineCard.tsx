@@ -142,7 +142,7 @@ function CloseIcon() {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      className="h-4 w-4 text-black dark:text-white"
+      className="size-4 text-black dark:text-white"
     >
       <path stroke="none" d="M0 0h24v24H0z" fill="none" />
       <path d="M18 6l-12 12" />
@@ -201,7 +201,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/20 dark:bg-black/40 backdrop-blur-sm h-full w-full z-[100]"
+            className="fixed inset-0 z-[100] size-full bg-black/20 backdrop-blur-sm dark:bg-black/40"
           />
         )}
       </AnimatePresence>
@@ -209,7 +209,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
       {/* Modal Content */}
       <AnimatePresence>
         {isActive && (
-          <div className="fixed inset-0 grid place-items-center z-[101] p-4" dir={isRTL ? 'rtl' : 'ltr'}>
+          <div className="fixed inset-0 z-[101] grid place-items-center p-4" dir={isRTL ? 'rtl' : 'ltr'}>
             {/* Close Button */}
             <motion.button
               key={`button-${event.id}-${id}`}
@@ -217,7 +217,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0, transition: { duration: 0.05 } }}
-              className="flex absolute top-4 end-4 items-center justify-center bg-white dark:bg-neutral-900 rounded-full h-8 w-8 shadow-lg z-[102]"
+              className="absolute end-4 top-4 z-[102] flex size-8 items-center justify-center rounded-full bg-white shadow-lg dark:bg-neutral-900"
               onClick={() => setIsActive(false)}
               aria-label={t('common.close')}
             >
@@ -228,7 +228,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
             <motion.div
               layoutId={`card-${event.id}-${id}`}
               ref={ref}
-              className="w-full max-w-2xl h-full md:h-fit md:max-h-[90%] flex flex-col bg-white dark:bg-neutral-900 sm:rounded-3xl overflow-hidden shadow-2xl"
+              className="flex size-full max-w-2xl flex-col overflow-hidden bg-white shadow-2xl dark:bg-neutral-900 sm:rounded-3xl md:h-fit md:max-h-[90%]"
             >
               {/* Event Icon Header */}
               <div className={cn(
@@ -236,22 +236,22 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                 `bg-${color}-500 dark:bg-${color}-600`,
                 "sm:rounded-t-3xl"
               )}>
-                <EventIcon className="h-16 w-16 sm:h-20 sm:w-20 text-white" />
+                <EventIcon className="size-16 text-white sm:size-20" />
               </div>
 
               {/* Content */}
               <div className="flex-1 overflow-auto">
                 {/* Title & Metadata */}
-                <div className="p-4 sm:p-6 border-b border-border">
+                <div className="border-b border-border p-4 sm:p-6">
                   <motion.h3
                     layoutId={`title-${event.id}-${id}`}
-                    className="font-bold text-neutral-700 dark:text-neutral-200 text-lg sm:text-xl mb-2 text-start"
+                    className="mb-2 text-start text-lg font-bold text-neutral-700 dark:text-neutral-200 sm:text-xl"
                   >
                     {title}
                   </motion.h3>
 
-                  <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground mb-3">
-                    <Clock className="h-4 w-4" />
+                  <div className="mb-3 flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
+                    <Clock className="size-4" />
                     <span>{formattedDate}</span>
                   </div>
 
@@ -274,7 +274,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                 </div>
 
                 {/* Description & Details */}
-                <div className="p-4 sm:p-6 space-y-6">
+                <div className="space-y-6 p-4 sm:p-6">
                   {/* Description */}
                   {description && (
                     <motion.div
@@ -282,7 +282,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      className="text-neutral-600 dark:text-neutral-400 text-sm sm:text-base text-start whitespace-pre-wrap"
+                      className="whitespace-pre-wrap text-start text-sm text-neutral-600 dark:text-neutral-400 sm:text-base"
                     >
                       {description}
                     </motion.div>
@@ -293,7 +293,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                     <div className="flex items-start gap-3">
                       <MapPin className={cn('h-5 w-5 mt-0.5 text-muted-foreground', isRTL && 'rotate-180')} />
                       <div className="flex-1 text-start">
-                        <p className="font-medium text-sm">{t('timeline.location')}</p>
+                        <p className="text-sm font-medium">{t('timeline.location')}</p>
                         <p className="text-sm text-muted-foreground">
                           {isRTL ? event.metadata.location_ar : event.metadata.location_en}
                         </p>
@@ -302,10 +302,10 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                             href={event.metadata.virtual_link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-primary hover:underline inline-flex items-center gap-1 text-sm mt-1"
+                            className="mt-1 inline-flex items-center gap-1 text-sm text-primary hover:underline"
                           >
                             {t('timeline.join_virtual')}
-                            <ExternalLink className="h-3 w-3" />
+                            <ExternalLink className="size-3" />
                           </a>
                         )}
                       </div>
@@ -315,14 +315,14 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                   {/* Participants */}
                   {event.metadata.participants && event.metadata.participants.length > 0 && (
                     <div className="space-y-3">
-                      <p className="text-sm font-medium text-start">{t('timeline.participants')}</p>
+                      <p className="text-start text-sm font-medium">{t('timeline.participants')}</p>
                       <div className="flex flex-wrap gap-2">
                         {event.metadata.participants.slice(0, 8).map((participant) => (
                           <div
                             key={participant.id}
                             className="flex items-center gap-2 rounded-full bg-muted px-3 py-1.5"
                           >
-                            <Avatar className="h-6 w-6">
+                            <Avatar className="size-6">
                               {participant.avatar_url && <AvatarImage src={participant.avatar_url} />}
                               <AvatarFallback className="text-xs">
                                 {(isRTL ? participant.name_ar : participant.name_en)
@@ -350,7 +350,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                   {/* Attachments */}
                   {event.metadata.attachments && event.metadata.attachments.length > 0 && (
                     <div className="space-y-3">
-                      <p className="text-sm font-medium text-start">{t('timeline.attachments')}</p>
+                      <p className="text-start text-sm font-medium">{t('timeline.attachments')}</p>
                       <div className="space-y-2">
                         {event.metadata.attachments.map((attachment) => (
                           <a
@@ -358,11 +358,11 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                             href={attachment.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center gap-3 rounded-lg bg-muted px-4 py-3 text-sm hover:bg-muted/80 transition-colors group"
+                            className="group flex items-center gap-3 rounded-lg bg-muted px-4 py-3 text-sm transition-colors hover:bg-muted/80"
                           >
-                            <FileText className="h-5 w-5 text-muted-foreground" />
-                            <span className="flex-1 text-start truncate font-medium">{attachment.filename}</span>
-                            <Download className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                            <FileText className="size-5 text-muted-foreground" />
+                            <span className="flex-1 truncate text-start font-medium">{attachment.filename}</span>
+                            <Download className="size-4 text-muted-foreground transition-colors group-hover:text-primary" />
                           </a>
                         ))}
                       </div>
@@ -371,7 +371,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
 
                   {/* Intelligence-specific metadata */}
                   {event.event_type === 'intelligence' && event.metadata.confidence_score && (
-                    <div className="flex items-center gap-2 p-3 rounded-lg bg-muted">
+                    <div className="flex items-center gap-2 rounded-lg bg-muted p-3">
                       <span className="text-sm font-medium">{t('timeline.confidence')}:</span>
                       <Badge variant="outline" className="font-semibold">
                         {Math.round(event.metadata.confidence_score * 100)}%
@@ -382,10 +382,10 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
 
                 {/* Action Buttons */}
                 {event.metadata.navigation_url && (
-                  <div className="p-4 sm:p-6 border-t border-border">
+                  <div className="border-t border-border p-4 sm:p-6">
                     <Button
                       onClick={handleNavigate}
-                      className="w-full min-h-11 sm:min-h-10"
+                      className="min-h-11 w-full sm:min-h-10"
                       size="lg"
                     >
                       {t('timeline.view_details')}
@@ -409,17 +409,17 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
       )} dir={isRTL ? 'rtl' : 'ltr'}>
 
         {/* MOBILE LAYOUT: Date/Time + Dot on left, Card on right */}
-        <div className="md:hidden flex gap-4 w-full">
+        <div className="flex w-full gap-4 md:hidden">
           {/* Date/Time & Dot */}
-          <div className="flex flex-col items-center gap-2 flex-shrink-0">
+          <div className="flex shrink-0 flex-col items-center gap-2">
             <div className="text-center">
-              <div className="font-bold text-sm text-foreground whitespace-nowrap">
+              <div className="whitespace-nowrap text-sm font-bold text-foreground">
                 {new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
                   month: 'short',
                   day: 'numeric',
                 }).format(new Date(event.event_date))}
               </div>
-              <div className="text-xs text-muted-foreground whitespace-nowrap">
+              <div className="whitespace-nowrap text-xs text-muted-foreground">
                 {new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
                   hour: '2-digit',
                   minute: '2-digit',
@@ -437,7 +437,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                 "hover:scale-110 active:scale-95"
               )}
             >
-              <EventIcon className="h-5 w-5 text-white" />
+              <EventIcon className="size-5 text-white" />
             </div>
           </div>
 
@@ -445,18 +445,18 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
           <motion.div
             layoutId={`card-${event.id}-${id}`}
             onClick={() => setIsActive(true)}
-            className="cursor-pointer rounded-lg border border-border bg-card p-4 shadow-sm flex-1 hover:shadow-md hover:border-primary/50 transition-all duration-200"
+            className="flex-1 cursor-pointer rounded-lg border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:border-primary/50 hover:shadow-md"
           >
             <div className="space-y-2">
               <motion.h4
                 layoutId={`title-${event.id}-${id}`}
-                className="font-semibold text-base text-card-foreground text-start"
+                className="text-start text-base font-semibold text-card-foreground"
               >
                 {title}
               </motion.h4>
 
               {description && (
-                <p className="text-sm text-muted-foreground line-clamp-2 text-start">
+                <p className="line-clamp-2 text-start text-sm text-muted-foreground">
                   {description}
                 </p>
               )}
@@ -485,7 +485,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
           <motion.div
             layoutId={`card-${event.id}-${id}`}
             onClick={() => setIsActive(true)}
-            className="cursor-pointer rounded-lg border border-border bg-card p-4 sm:p-6 shadow-sm hover:shadow-md hover:border-primary/50 transition-all duration-200 w-[calc(50%-5rem)]"
+            className="w-[calc(50%-5rem)] cursor-pointer rounded-lg border border-border bg-card p-4 shadow-sm transition-all duration-200 hover:border-primary/50 hover:shadow-md sm:p-6"
           >
             <div className="space-y-3">
               <motion.h4
@@ -528,13 +528,13 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
             "sticky top-40 flex flex-col items-center z-40 flex-shrink-0",
             isEven ? "text-start" : "text-end"
           )}>
-            <motion.time className="font-bold text-xl lg:text-2xl text-foreground whitespace-nowrap">
+            <motion.time className="whitespace-nowrap text-xl font-bold text-foreground lg:text-2xl">
               {new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
                 month: 'short',
                 day: 'numeric',
               }).format(new Date(event.event_date))}
             </motion.time>
-            <motion.time className="text-base text-muted-foreground whitespace-nowrap">
+            <motion.time className="whitespace-nowrap text-base text-muted-foreground">
               {new Intl.DateTimeFormat(i18n.language === 'ar' ? 'ar-SA' : 'en-US', {
                 hour: '2-digit',
                 minute: '2-digit',
@@ -543,7 +543,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
           </div>
 
           {/* Timeline Dot (centered) */}
-          <div className="sticky top-40 flex items-center justify-center z-40 flex-shrink-0">
+          <div className="sticky top-40 z-40 flex shrink-0 items-center justify-center">
             <div
               onClick={() => setIsActive(true)}
               className={cn(
@@ -554,7 +554,7 @@ export function AceternityTimelineCard({ event, index, isEven }: AceternityTimel
                 "hover:scale-110 active:scale-95"
               )}
             >
-              <EventIcon className="h-5 w-5 text-white" />
+              <EventIcon className="size-5 text-white" />
             </div>
           </div>
         </div>

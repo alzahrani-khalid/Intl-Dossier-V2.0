@@ -253,13 +253,13 @@ export function ProgressiveFormDemoPage() {
   const getGroupIcon = (iconName?: string) => {
     switch (iconName) {
       case 'user':
-        return <User className="w-5 h-5 text-blue-500" />
+        return <User className="size-5 text-blue-500" />
       case 'phone':
-        return <Phone className="w-5 h-5 text-green-500" />
+        return <Phone className="size-5 text-green-500" />
       case 'file':
-        return <FileText className="w-5 h-5 text-purple-500" />
+        return <FileText className="size-5 text-purple-500" />
       case 'settings':
-        return <Bell className="w-5 h-5 text-amber-500" />
+        return <Bell className="size-5 text-amber-500" />
       default:
         return null
     }
@@ -270,21 +270,21 @@ export function ProgressiveFormDemoPage() {
     switch (fieldName) {
       case 'firstName':
       case 'lastName':
-        return <User className="w-4 h-4" />
+        return <User className="size-4" />
       case 'email':
-        return <Mail className="w-4 h-4" />
+        return <Mail className="size-4" />
       case 'phone':
-        return <Phone className="w-4 h-4" />
+        return <Phone className="size-4" />
       case 'organization':
-        return <Building2 className="w-4 h-4" />
+        return <Building2 className="size-4" />
       case 'jobTitle':
-        return <Briefcase className="w-4 h-4" />
+        return <Briefcase className="size-4" />
       case 'department':
-        return <Users className="w-4 h-4" />
+        return <Users className="size-4" />
       case 'bio':
-        return <FileText className="w-4 h-4" />
+        return <FileText className="size-4" />
       case 'website':
-        return <Globe className="w-4 h-4" />
+        return <Globe className="size-4" />
       default:
         return null
     }
@@ -352,15 +352,15 @@ export function ProgressiveFormDemoPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-12"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
+        <h1 className="mb-2 text-start text-2xl font-bold sm:text-3xl md:text-4xl">
           {t('demo.title')}
         </h1>
-        <p className="text-muted-foreground text-start">{t('demo.description')}</p>
+        <p className="text-start text-muted-foreground">{t('demo.description')}</p>
       </motion.div>
 
       {/* Feature Badges */}
@@ -368,7 +368,7 @@ export function ProgressiveFormDemoPage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ delay: 0.1 }}
-        className="flex flex-wrap gap-2 mb-8"
+        className="mb-8 flex flex-wrap gap-2"
       >
         <Badge variant="secondary">{t('importance.required')}</Badge>
         <Badge variant="secondary">{t('importance.recommended')}</Badge>
@@ -378,24 +378,24 @@ export function ProgressiveFormDemoPage() {
         <Badge variant="secondary">{isRTL ? 'الكشف التدريجي' : 'Progressive Disclosure'}</Badge>
       </motion.div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Form Column */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           {/* Optional Fields Toggle */}
           <Card>
             <CardContent className="p-4 sm:p-5">
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-3">
                   {showOptional ? (
-                    <Eye className="w-5 h-5 text-primary-500" />
+                    <Eye className="size-5 text-primary-500" />
                   ) : (
-                    <EyeOff className="w-5 h-5 text-gray-400" />
+                    <EyeOff className="size-5 text-gray-400" />
                   )}
                   <div>
-                    <p className="font-medium text-gray-900 dark:text-white text-start">
+                    <p className="text-start font-medium text-gray-900 dark:text-white">
                       {showOptional ? t('toggle.hideOptional') : t('toggle.showOptional')}
                     </p>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 text-start">
+                    <p className="text-start text-sm text-gray-500 dark:text-gray-400">
                       {t('toggle.optionalFieldsCount', {
                         count: formConfig.fields.filter(
                           (f) => f.importance === 'optional' || f.importance === 'recommended',
@@ -472,22 +472,22 @@ export function ProgressiveFormDemoPage() {
             })}
 
             {/* Form Actions */}
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
               <Button
                 type="submit"
                 disabled={!completionState.canSubmit}
-                className="min-h-11 sm:min-h-10 gap-2"
+                className="min-h-11 gap-2 sm:min-h-10"
               >
-                <Send className="w-4 h-4" />
+                <Send className="size-4" />
                 {t('demo.submit')}
               </Button>
               <Button
                 type="button"
                 variant="outline"
                 onClick={handleReset}
-                className="min-h-11 sm:min-h-10 gap-2"
+                className="min-h-11 gap-2 sm:min-h-10"
               >
-                <RotateCcw className="w-4 h-4" />
+                <RotateCcw className="size-4" />
                 {t('demo.reset')}
               </Button>
             </div>
@@ -509,7 +509,7 @@ export function ProgressiveFormDemoPage() {
             {/* Additional Stats Card */}
             <Card className="mt-6">
               <CardHeader className="pb-3">
-                <CardTitle className="text-sm font-medium text-start">
+                <CardTitle className="text-start text-sm font-medium">
                   {isRTL ? 'إحصائيات النموذج' : 'Form Statistics'}
                 </CardTitle>
               </CardHeader>

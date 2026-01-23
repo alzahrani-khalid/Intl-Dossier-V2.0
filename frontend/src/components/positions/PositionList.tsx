@@ -119,16 +119,16 @@ export const PositionList: React.FC<PositionListProps> = ({
 
   if (isLoading && positions.length === 0) {
     return layout === 'grid' ? (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {/* Skeleton loading cards - Grid */}
         {Array.from({ length: 6 }).map((_, i) => (
-          <div key={i} className="rounded-lg border bg-card p-4 animate-pulse">
+          <div key={i} className="animate-pulse rounded-lg border bg-card p-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 space-y-2">
-                <div className="h-5 bg-muted rounded w-3/4" />
-                <div className="h-4 bg-muted rounded w-1/2" />
+                <div className="h-5 w-3/4 rounded bg-muted" />
+                <div className="h-4 w-1/2 rounded bg-muted" />
               </div>
-              <div className="h-6 w-20 bg-muted rounded" />
+              <div className="h-6 w-20 rounded bg-muted" />
             </div>
           </div>
         ))}
@@ -137,13 +137,13 @@ export const PositionList: React.FC<PositionListProps> = ({
       <div className="space-y-3">
         {/* Skeleton loading cards - List */}
         {Array.from({ length: 3 }).map((_, i) => (
-          <div key={i} className="rounded-lg border bg-card p-4 animate-pulse">
+          <div key={i} className="animate-pulse rounded-lg border bg-card p-4">
             <div className="flex items-start justify-between gap-4">
               <div className="flex-1 space-y-2">
-                <div className="h-5 bg-muted rounded w-3/4" />
-                <div className="h-4 bg-muted rounded w-1/2" />
+                <div className="h-5 w-3/4 rounded bg-muted" />
+                <div className="h-4 w-1/2 rounded bg-muted" />
               </div>
-              <div className="h-6 w-20 bg-muted rounded" />
+              <div className="h-6 w-20 rounded bg-muted" />
             </div>
           </div>
         ))}
@@ -159,7 +159,7 @@ export const PositionList: React.FC<PositionListProps> = ({
           {/* Search Input */}
           <div className="relative">
             <Search
-              className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-3 h-4 w-4 text-muted-foreground`}
+              className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-3 size-4 text-muted-foreground`}
             />
             <Input
               type="search"
@@ -225,7 +225,7 @@ export const PositionList: React.FC<PositionListProps> = ({
                   setDateRangeFilter('all')
                 }}
               >
-                <Filter className="me-2 h-4 w-4" />
+                <Filter className="me-2 size-4" />
                 {t('filter.clear')}
               </Button>
             )}
@@ -266,7 +266,7 @@ export const PositionList: React.FC<PositionListProps> = ({
       ) : layout === 'grid' ? (
         // Grid Layout
         <div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
+          className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3"
           role="list"
           aria-label={t('list.label')}
         >

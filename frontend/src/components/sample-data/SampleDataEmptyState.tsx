@@ -45,48 +45,48 @@ export function SampleDataEmptyState({
       <div
         className={`
           flex flex-col items-center justify-center
-          text-center py-12 sm:py-16 px-4 sm:px-6
-          rounded-2xl bg-gradient-to-br from-muted/30 to-muted/10
-          border border-dashed border-muted-foreground/20
+          rounded-2xl border border-dashed border-muted-foreground/20 bg-gradient-to-br
+          from-muted/30 to-muted/10 px-4 py-12
+          text-center sm:px-6 sm:py-16
           ${className}
         `}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Icon */}
         <div className="relative mb-6">
-          <div className="p-4 rounded-full bg-primary/10">
-            <Sparkles className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+          <div className="rounded-full bg-primary/10 p-4">
+            <Sparkles className="size-8 text-primary sm:size-10" />
           </div>
           {/* Decorative dots */}
-          <div className="absolute -top-1 -end-1 h-3 w-3 rounded-full bg-amber-400 animate-pulse" />
-          <div className="absolute -bottom-1 -start-1 h-2 w-2 rounded-full bg-emerald-400 animate-pulse delay-300" />
+          <div className="absolute -end-1 -top-1 size-3 animate-pulse rounded-full bg-amber-400" />
+          <div className="absolute -bottom-1 -start-1 size-2 animate-pulse rounded-full bg-emerald-400 delay-300" />
         </div>
 
         {/* Title */}
-        <h3 className="text-xl sm:text-2xl font-semibold text-foreground mb-2">
+        <h3 className="mb-2 text-xl font-semibold text-foreground sm:text-2xl">
           {t('emptyState.title')}
         </h3>
 
         {/* Description */}
-        <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6">
+        <p className="mb-6 max-w-md text-sm text-muted-foreground sm:text-base">
           {t('emptyState.description')}
         </p>
 
         {/* Hint */}
-        <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mb-6 bg-muted/50 px-3 py-2 rounded-full">
-          <Lightbulb className="h-4 w-4 flex-shrink-0" />
+        <div className="mb-6 flex items-center gap-2 rounded-full bg-muted/50 px-3 py-2 text-xs text-muted-foreground sm:text-sm">
+          <Lightbulb className="size-4 shrink-0" />
           <span>{t('emptyState.hint')}</span>
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col sm:flex-row items-center gap-3">
+        <div className="flex flex-col items-center gap-3 sm:flex-row">
           <Button
             size="lg"
-            className="w-full sm:w-auto min-h-11 px-6"
+            className="min-h-11 w-full px-6 sm:w-auto"
             onClick={() => setShowTemplateSelector(true)}
             disabled={isPopulating}
           >
-            <Sparkles className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Sparkles className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('emptyState.buttonText')}
           </Button>
 
@@ -96,10 +96,10 @@ export function SampleDataEmptyState({
               <Button
                 variant="outline"
                 size="lg"
-                className="w-full sm:w-auto min-h-11"
+                className="min-h-11 w-full sm:w-auto"
                 onClick={onCreateNew}
               >
-                <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                 {i18n.language === 'ar' ? 'إنشاء ملف جديد' : 'Create Dossier'}
               </Button>
             </>

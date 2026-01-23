@@ -265,23 +265,23 @@ function WidgetCard({
     >
       <div className="flex items-start gap-3">
         {/* Icon */}
-        <div className="p-2 rounded-lg bg-primary/10 shrink-0">
-          <Icon className="h-5 w-5 text-primary" />
+        <div className="shrink-0 rounded-lg bg-primary/10 p-2">
+          <Icon className="size-5 text-primary" />
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 mb-1">
-            <h4 className="font-medium text-sm">{name}</h4>
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex items-center gap-2">
+            <h4 className="text-sm font-medium">{name}</h4>
             {isAdded && (
-              <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+              <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
                 {t('actions.added', 'Added')}
               </Badge>
             )}
           </div>
-          <p className="text-xs text-muted-foreground line-clamp-2">{description}</p>
-          <div className="flex items-center gap-2 mt-2">
-            <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+          <p className="line-clamp-2 text-xs text-muted-foreground">{description}</p>
+          <div className="mt-2 flex items-center gap-2">
+            <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
               {t(`settings.sizes.${entry.defaultSize}`)}
             </Badge>
           </div>
@@ -293,9 +293,9 @@ function WidgetCard({
           size="icon"
           onClick={onAdd}
           disabled={isAdded}
-          className="shrink-0 h-8 w-8"
+          className="size-8 shrink-0"
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="size-4" />
           <span className="sr-only">{t('addWidget')}</span>
         </Button>
       </div>
@@ -361,7 +361,7 @@ export function WidgetLibrary({
 
         {/* Search */}
         <div className="relative mb-4">
-          <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder={t('widgetLibrary.search')}
             value={searchQuery}
@@ -371,14 +371,14 @@ export function WidgetLibrary({
         </div>
 
         {/* Category Tabs */}
-        <div className="flex flex-wrap gap-1.5 mb-4">
+        <div className="mb-4 flex flex-wrap gap-1.5">
           {categories.map((category) => (
             <Button
               key={category.value}
               variant={selectedCategory === category.value ? 'default' : 'outline'}
               size="sm"
               onClick={() => setSelectedCategory(category.value)}
-              className="text-xs h-7"
+              className="h-7 text-xs"
             >
               {category.label}
             </Button>
@@ -389,7 +389,7 @@ export function WidgetLibrary({
         <ScrollArea className="h-[calc(100vh-280px)]">
           <div className="space-y-3 pe-4">
             {filteredWidgets.length === 0 ? (
-              <div className="text-center py-8 text-sm text-muted-foreground">
+              <div className="py-8 text-center text-sm text-muted-foreground">
                 {t('emptyStates.noWidgets')}
               </div>
             ) : (

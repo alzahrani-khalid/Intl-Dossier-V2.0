@@ -26,11 +26,11 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
   const getRoleIcon = (role: string) => {
     switch (role) {
       case 'chair':
-        return <Crown className="h-4 w-4 text-yellow-500" />
+        return <Crown className="size-4 text-yellow-500" />
       case 'vice_chair':
-        return <UserCheck className="h-4 w-4 text-blue-500" />
+        return <UserCheck className="size-4 text-blue-500" />
       default:
-        return <User className="h-4 w-4 text-gray-500" />
+        return <User className="size-4 text-gray-500" />
     }
   }
 
@@ -49,7 +49,7 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
       <Card className="border-0 shadow-none">
         <CardContent className="p-0">
           <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-            <Users className="h-12 w-12 mb-3 opacity-50" />
+            <Users className="mb-3 size-12 opacity-50" />
             <p>{t('sections.electedOfficial.noCommittees')}</p>
           </div>
         </CardContent>
@@ -63,12 +63,12 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
 
   return (
     <Card className="border-0 shadow-none">
-      <CardContent className="p-0 space-y-4">
+      <CardContent className="space-y-4 p-0">
         {/* Active Committees */}
         {activeCommittees.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-green-500"></span>
+            <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <span className="size-2 rounded-full bg-green-500"></span>
               {t('sections.electedOfficial.activeCommittees')}
             </h3>
 
@@ -76,15 +76,15 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
               {activeCommittees.map((committee, index) => (
                 <div
                   key={index}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                  className="flex items-start gap-3 rounded-lg bg-muted/50 p-3 transition-colors hover:bg-muted"
                   dir={isRTL ? 'rtl' : 'ltr'}
                 >
                   {getRoleIcon(committee.role)}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium">
                       {isRTL ? committee.name_ar || committee.name_en : committee.name_en}
                     </p>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="mt-1 flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">
                         {getRoleLabel(committee.role)}
                       </Badge>
@@ -99,8 +99,8 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
         {/* Inactive Committees */}
         {inactiveCommittees.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide flex items-center gap-2">
-              <span className="h-2 w-2 rounded-full bg-gray-400"></span>
+            <h3 className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-muted-foreground">
+              <span className="size-2 rounded-full bg-gray-400"></span>
               {t('sections.electedOfficial.pastCommittees')}
             </h3>
 
@@ -108,15 +108,15 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
               {inactiveCommittees.map((committee, index) => (
                 <div
                   key={index}
-                  className="flex items-start gap-3 p-3 rounded-lg bg-muted/30 opacity-70"
+                  className="flex items-start gap-3 rounded-lg bg-muted/30 p-3 opacity-70"
                   dir={isRTL ? 'rtl' : 'ltr'}
                 >
                   {getRoleIcon(committee.role)}
-                  <div className="flex-1 min-w-0">
-                    <p className="font-medium truncate text-muted-foreground">
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-medium text-muted-foreground">
                       {isRTL ? committee.name_ar || committee.name_en : committee.name_en}
                     </p>
-                    <div className="flex items-center gap-2 mt-1">
+                    <div className="mt-1 flex items-center gap-2">
                       <Badge variant="outline" className="text-xs opacity-70">
                         {getRoleLabel(committee.role)}
                       </Badge>
@@ -129,17 +129,17 @@ export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {
         )}
 
         {/* Summary Stats */}
-        <div className="pt-2 border-t">
+        <div className="border-t pt-2">
           <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
             <div className="flex items-center gap-2">
-              <Users className="h-4 w-4" />
+              <Users className="size-4" />
               <span>
                 {t('sections.electedOfficial.totalCommittees', { count: committees.length })}
               </span>
             </div>
             {activeCommittees.some((c) => c.role === 'chair') && (
               <div className="flex items-center gap-2">
-                <Crown className="h-4 w-4 text-yellow-500" />
+                <Crown className="size-4 text-yellow-500" />
                 <span>
                   {t('sections.electedOfficial.chairPositions', {
                     count: activeCommittees.filter((c) => c.role === 'chair').length,

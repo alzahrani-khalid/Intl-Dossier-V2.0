@@ -162,7 +162,7 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
   if (isLoading || !agenda) {
     return (
       <div className="flex h-64 items-center justify-center">
-        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+        <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
       </div>
     )
   }
@@ -182,15 +182,15 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
               </div>
               <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                 <span className="flex items-center gap-1">
-                  <Calendar className="h-4 w-4" />
+                  <Calendar className="size-4" />
                   {new Date(agenda.meeting_date).toLocaleDateString(i18n.language)}
                 </span>
                 <span className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
+                  <Clock className="size-4" />
                   {formatDuration(totalDuration)}
                 </span>
                 <span className="flex items-center gap-1">
-                  <Users className="h-4 w-4" />
+                  <Users className="size-4" />
                   {stats?.participant_count || 0} {t('participants')}
                 </span>
               </div>
@@ -205,7 +205,7 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
                   onClick={() => setShowItemForm(true)}
                   className="min-h-11 sm:min-h-10"
                 >
-                  <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('addItem')}
                 </Button>
               )}
@@ -218,7 +218,7 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
                   disabled={startMeeting.isPending}
                   className="min-h-11 bg-green-600 hover:bg-green-700 sm:min-h-10"
                 >
-                  <Play className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Play className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('startMeeting')}
                 </Button>
               )}
@@ -231,7 +231,7 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
                   disabled={endMeeting.isPending}
                   className="min-h-11 sm:min-h-10"
                 >
-                  <Square className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Square className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('endMeeting')}
                 </Button>
               )}
@@ -239,16 +239,16 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="outline" size="sm" className="min-h-11 sm:min-h-10">
-                    <Settings className="h-4 w-4" />
+                    <Settings className="size-4" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                   <DropdownMenuItem>
-                    <Download className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                    <Download className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('exportPdf')}
                   </DropdownMenuItem>
                   <DropdownMenuItem>
-                    <FileText className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                    <FileText className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('saveAsTemplate')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -271,21 +271,21 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
       <Tabs value={activeTab} onValueChange={setActiveTab} className="flex-1">
         <TabsList className="grid w-full grid-cols-3 lg:w-auto lg:grid-cols-none lg:gap-2">
           <TabsTrigger value="items" className="min-h-11 sm:min-h-10">
-            <FileText className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <FileText className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             <span className="hidden sm:inline">{t('agendaItems')}</span>
             <Badge variant="secondary" className="ms-2">
               {items.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="participants" className="min-h-11 sm:min-h-10">
-            <Users className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Users className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             <span className="hidden sm:inline">{t('participants')}</span>
             <Badge variant="secondary" className="ms-2">
               {participants.length}
             </Badge>
           </TabsTrigger>
           <TabsTrigger value="documents" className="min-h-11 sm:min-h-10">
-            <FileText className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <FileText className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             <span className="hidden sm:inline">{t('documents')}</span>
             <Badge variant="secondary" className="ms-2">
               {documents.length}
@@ -301,9 +301,9 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
                 <CardTitle className="text-base">{t('agendaItems')}</CardTitle>
                 <Button variant="ghost" size="sm" onClick={() => setExpandedView(!expandedView)}>
                   {expandedView ? (
-                    <ChevronUp className="h-4 w-4" />
+                    <ChevronUp className="size-4" />
                   ) : (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="size-4" />
                   )}
                 </Button>
               </div>
@@ -311,7 +311,7 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
             <CardContent>
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <FileText className="h-12 w-12 text-muted-foreground/50" />
+                  <FileText className="size-12 text-muted-foreground/50" />
                   <p className="mt-4 text-muted-foreground">{t('noItems')}</p>
                   {canEdit && (
                     <Button
@@ -319,7 +319,7 @@ export function AgendaBuilder({ agendaId, onClose }: AgendaBuilderProps) {
                       className="mt-4 min-h-11"
                       onClick={() => setShowItemForm(true)}
                     >
-                      <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                       {t('addFirstItem')}
                     </Button>
                   )}

@@ -26,19 +26,19 @@ function HomePage() {
   }, [isAuthenticated, navigate])
 
   return (
-    <div className="from-base-50 to-base-100 min-h-screen bg-gradient-to-b">
+    <div className="min-h-screen bg-gradient-to-b from-base-50 to-base-100">
       <div className="container mx-auto px-4 py-16">
         <div className="mx-auto max-w-3xl text-center">
-          <h1 className="font-display text-base-900 mb-6 text-5xl">
+          <h1 className="mb-6 font-display text-5xl text-base-900">
             GASTAT International Dossier System
           </h1>
-          <p className="font-text text-base-600 mb-8 text-xl">
+          <p className="mb-8 font-text text-xl text-base-600">
             Welcome to the International Relations Management Platform
           </p>
           <div className="flex justify-center gap-4">
             <button
               onClick={() => navigate({ to: '/login' })}
-              className="font-text rounded-lg bg-primary-600 px-8 py-3 text-primary-50 transition-colors hover:bg-primary-700"
+              className="rounded-lg bg-primary-600 px-8 py-3 font-text text-primary-50 transition-colors hover:bg-primary-700"
             >
               Sign In
             </button>

@@ -182,12 +182,12 @@ function DetailedMode({
 
  {/* Progress bar (if not completed) */}
  {!status.status.includes('completed') && status.percentElapsed !== undefined && (
- <div className="flex flex-col gap-1 w-full md:w-48">
+ <div className="flex w-full flex-col gap-1 md:w-48">
  <div className="flex justify-between text-xs text-muted-foreground">
  <span>{t('tasks.sla.progress')}</span>
  <span>{Math.round(status.percentElapsed)}%</span>
  </div>
- <div className="w-full h-2 bg-gray-200 rounded-full overflow-hidden">
+ <div className="h-2 w-full overflow-hidden rounded-full bg-gray-200">
  <div
  className={cn('h-full transition-all duration-500', getStatusColors(status.status))}
  style={{ width: `${Math.min(status.percentElapsed, 100)}%` }}

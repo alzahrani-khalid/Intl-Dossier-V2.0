@@ -27,12 +27,12 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
           <Skeleton className="h-5 w-40" />
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <div key={i} className="flex items-center gap-3">
-                <Skeleton className="h-10 w-10 rounded-lg" />
+                <Skeleton className="size-10 rounded-lg" />
                 <div className="flex-1">
-                  <Skeleton className="h-3 w-20 mb-1" />
+                  <Skeleton className="mb-1 h-3 w-20" />
                   <Skeleton className="h-6 w-16" />
                 </div>
               </div>
@@ -90,33 +90,33 @@ export function ProductivityMetrics({ metrics, isLoading }: ProductivityMetricsP
 
   return (
     <Card className="mb-4 sm:mb-6" dir={isRTL ? 'rtl' : 'ltr'}>
-      <CardHeader className="pb-2 px-4 sm:px-6">
-        <CardTitle className="text-base sm:text-lg text-start">
+      <CardHeader className="px-4 pb-2 sm:px-6">
+        <CardTitle className="text-start text-base sm:text-lg">
           {t('metrics.title', 'Your Productivity')}
         </CardTitle>
       </CardHeader>
       <CardContent className="px-4 sm:px-6">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           {metricItems.map((item) => {
             const Icon = item.icon;
 
             return (
               <div key={item.key} className="flex items-center gap-3">
                 <div className={cn('p-2.5 rounded-lg shrink-0', item.color)}>
-                  <Icon className="h-5 w-5" />
+                  <Icon className="size-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs text-muted-foreground text-start">
+                  <p className="text-start text-xs text-muted-foreground">
                     {item.label}
                   </p>
                   <div className="flex items-center gap-2">
-                    <p className="text-lg sm:text-xl font-semibold text-start">
+                    <p className="text-start text-lg font-semibold sm:text-xl">
                       {item.format(item.value)}
                     </p>
                     {item.showProgress && (
                       <Progress
                         value={item.value}
-                        className="h-2 flex-1 max-w-20"
+                        className="h-2 max-w-20 flex-1"
                       />
                     )}
                   </div>

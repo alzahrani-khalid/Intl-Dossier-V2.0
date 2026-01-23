@@ -162,7 +162,7 @@ function DraftBanner<T extends Record<string, unknown>>({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="flex items-center gap-3">
-        <RotateCcw className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+        <RotateCcw className="size-5 text-amber-600 dark:text-amber-400" />
         <div>
           <p className="text-sm font-medium text-amber-800 dark:text-amber-300">
             {t('forms.draft_found')}
@@ -181,16 +181,16 @@ function DraftBanner<T extends Record<string, unknown>>({
           onClick={onDiscard}
           className="flex-1 sm:flex-none"
         >
-          <X className="h-4 w-4 me-1" />
+          <X className="me-1 size-4" />
           {t('forms.discard_draft')}
         </Button>
         <Button
           type="button"
           size="sm"
           onClick={onRestore}
-          className="flex-1 sm:flex-none bg-amber-600 hover:bg-amber-700 text-white"
+          className="flex-1 bg-amber-600 text-white hover:bg-amber-700 sm:flex-none"
         >
-          <RotateCcw className="h-4 w-4 me-1" />
+          <RotateCcw className="me-1 size-4" />
           {t('forms.restore_draft')}
         </Button>
       </div>
@@ -224,7 +224,7 @@ function ProgressIndicator({ progress, isRTL }: ProgressIndicatorProps) {
 
       {progress.estimatedMinutesRemaining > 0 && (
         <p className="flex items-center gap-1 text-xs text-gray-500 dark:text-gray-400">
-          <Clock className="h-3 w-3" />
+          <Clock className="size-3" />
           {t('forms.time_remaining', { minutes: progress.estimatedMinutesRemaining })}
         </p>
       )}
@@ -248,7 +248,7 @@ function SaveStatusIndicator({ status, isRTL }: SaveStatusIndicatorProps) {
   if (status.error) {
     return (
       <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
-        <AlertCircle className="h-4 w-4" />
+        <AlertCircle className="size-4" />
         <span className="text-xs">{t('forms.save_error')}</span>
       </div>
     )
@@ -257,7 +257,7 @@ function SaveStatusIndicator({ status, isRTL }: SaveStatusIndicatorProps) {
   if (status.isSaving) {
     return (
       <div className="flex items-center gap-2 text-gray-500 dark:text-gray-400">
-        <Loader2 className="h-4 w-4 animate-spin" />
+        <Loader2 className="size-4 animate-spin" />
         <span className="text-xs">{t('forms.saving')}</span>
       </div>
     )
@@ -266,7 +266,7 @@ function SaveStatusIndicator({ status, isRTL }: SaveStatusIndicatorProps) {
   if (status.hasUnsavedChanges) {
     return (
       <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400">
-        <Save className="h-4 w-4" />
+        <Save className="size-4" />
         <span className="text-xs">{t('forms.unsaved_changes')}</span>
       </div>
     )
@@ -276,7 +276,7 @@ function SaveStatusIndicator({ status, isRTL }: SaveStatusIndicatorProps) {
     const savedDate = new Date(status.lastSavedAt)
     return (
       <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-        <CheckCircle2 className="h-4 w-4" />
+        <CheckCircle2 className="size-4" />
         <span className="text-xs">
           {t('forms.saved_at', {
             time: savedDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -403,7 +403,7 @@ export function AutoSaveFormWrapper<T extends Record<string, unknown>>({
         {(showProgress || showSaveStatus) && (
           <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
             {showProgress && autoSave.progress.totalFields > 0 && (
-              <div className="flex-1 max-w-md">
+              <div className="max-w-md flex-1">
                 <ProgressIndicator progress={autoSave.progress} isRTL={isRTL} />
               </div>
             )}

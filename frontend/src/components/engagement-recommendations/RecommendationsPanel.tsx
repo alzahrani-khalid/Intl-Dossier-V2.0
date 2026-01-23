@@ -66,15 +66,15 @@ interface StatCardProps {
 function StatCard({ title, value, icon, trend, description, className }: StatCardProps) {
   return (
     <div className={cn('flex items-center gap-3 rounded-lg border p-3', className)}>
-      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-muted">
+      <div className="flex size-10 shrink-0 items-center justify-center rounded-lg bg-muted">
         {icon}
       </div>
       <div className="min-w-0 flex-1">
-        <p className="text-xs text-muted-foreground truncate">{title}</p>
+        <p className="truncate text-xs text-muted-foreground">{title}</p>
         <div className="flex items-center gap-1.5">
           <p className="text-lg font-bold">{value}</p>
-          {trend === 'up' && <TrendingUp className="h-3.5 w-3.5 text-green-500" />}
-          {trend === 'down' && <TrendingUp className="h-3.5 w-3.5 text-red-500 rotate-180" />}
+          {trend === 'up' && <TrendingUp className="size-3.5 text-green-500" />}
+          {trend === 'down' && <TrendingUp className="size-3.5 rotate-180 text-red-500" />}
         </div>
         {description && <p className="text-xs text-muted-foreground">{description}</p>}
       </div>
@@ -124,7 +124,7 @@ function TypeDistribution({ data }: TypeDistributionProps) {
               <span className="truncate">{isRTL ? label?.ar || type : label?.en || type}</span>
               <span className="text-muted-foreground">{count}</span>
             </div>
-            <div className="h-1.5 rounded-full bg-muted overflow-hidden">
+            <div className="h-1.5 overflow-hidden rounded-full bg-muted">
               <motion.div
                 initial={{ width: 0 }}
                 animate={{ width: `${percentage}%` }}
@@ -186,14 +186,14 @@ export function RecommendationsPanel({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Sparkles className="h-5 w-5 text-amber-500" />
+            <Sparkles className="size-5 text-amber-500" />
             <CardTitle className="text-base sm:text-lg">{t('panelTitle')}</CardTitle>
           </div>
           <div className="flex items-center gap-1">
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="size-8"
               onClick={handleRefresh}
               disabled={isLoading}
             >
@@ -202,14 +202,14 @@ export function RecommendationsPanel({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="size-8"
               onClick={handleGenerate}
               disabled={generateMutation.isPending}
             >
               {generateMutation.isPending ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
-                <Sparkles className="h-4 w-4" />
+                <Sparkles className="size-4" />
               )}
             </Button>
           </div>
@@ -232,12 +232,12 @@ export function RecommendationsPanel({
                 <StatCard
                   title={t('pendingRecommendations')}
                   value={stats?.total_pending || 0}
-                  icon={<Clock className="h-5 w-5 text-amber-500" />}
+                  icon={<Clock className="size-5 text-amber-500" />}
                 />
                 <StatCard
                   title={t('criticalUrgency')}
                   value={stats?.critical_urgency_count || 0}
-                  icon={<AlertTriangle className="h-5 w-5 text-red-500" />}
+                  icon={<AlertTriangle className="size-5 text-red-500" />}
                   className={
                     stats?.critical_urgency_count ? 'border-red-200 dark:border-red-900' : ''
                   }
@@ -245,12 +245,12 @@ export function RecommendationsPanel({
                 <StatCard
                   title={t('acceptanceRate')}
                   value={`${Math.round(stats?.acceptance_rate || 0)}%`}
-                  icon={<CheckCircle className="h-5 w-5 text-green-500" />}
+                  icon={<CheckCircle className="size-5 text-green-500" />}
                 />
                 <StatCard
                   title={t('avgConfidence')}
                   value={formatConfidence(stats?.average_confidence || 0)}
-                  icon={<Sparkles className="h-5 w-5 text-purple-500" />}
+                  icon={<Sparkles className="size-5 text-purple-500" />}
                 />
               </>
             )}
@@ -304,7 +304,7 @@ export function RecommendationsPanel({
 
         {/* View All Button */}
         {onViewAll && (
-          <Button variant="outline" className="w-full min-h-11 gap-1.5" onClick={onViewAll}>
+          <Button variant="outline" className="min-h-11 w-full gap-1.5" onClick={onViewAll}>
             <span>{t('viewAll')}</span>
             <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
           </Button>

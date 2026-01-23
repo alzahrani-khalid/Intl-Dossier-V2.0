@@ -149,25 +149,25 @@ function DossierLinkItem({ link, isRTL, editable, compact, onRemove, t }: Dossie
       <DossierTypeIcon type={dossier.type as DossierType} size={compact ? 'sm' : 'md'} colored />
 
       {/* Dossier Info */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Dossier Name with Link */}
           <Link
             to={getDossierDetailPath(dossier.id, dossier.type as DossierType)}
-            className="font-medium text-sm sm:text-base truncate hover:text-primary hover:underline"
+            className="truncate text-sm font-medium hover:text-primary hover:underline sm:text-base"
           >
             {displayName}
           </Link>
 
           {/* Primary Badge */}
           {link.is_primary && (
-            <Badge variant="default" className="text-[10px] px-1.5 py-0 h-5">
+            <Badge variant="default" className="h-5 px-1.5 py-0 text-[10px]">
               {t('widget.primary', 'Primary')}
             </Badge>
           )}
 
           {/* Type Badge */}
-          <Badge variant="outline" className="text-[10px] px-1.5 py-0 h-5 hidden sm:inline-flex">
+          <Badge variant="outline" className="hidden h-5 px-1.5 py-0 text-[10px] sm:inline-flex">
             {t(`type.${dossier.type}`, dossier.type)}
           </Badge>
         </div>
@@ -189,7 +189,7 @@ function DossierLinkItem({ link, isRTL, editable, compact, onRemove, t }: Dossie
               {inheritancePath && inheritancePath.length > 0 && (
                 <TooltipContent side={isRTL ? 'left' : 'right'} className="max-w-xs">
                   <div className="space-y-1">
-                    <p className="font-medium text-xs">
+                    <p className="text-xs font-medium">
                       {t('widget.inheritance_path', 'Inheritance Path')}
                     </p>
                     <p className="text-xs text-muted-foreground">{inheritancePath.join(' → ')}</p>
@@ -202,7 +202,7 @@ function DossierLinkItem({ link, isRTL, editable, compact, onRemove, t }: Dossie
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-1 shrink-0">
+      <div className="flex shrink-0 items-center gap-1">
         {/* Navigate Button */}
         <TooltipProvider>
           <Tooltip>
@@ -226,7 +226,7 @@ function DossierLinkItem({ link, isRTL, editable, compact, onRemove, t }: Dossie
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="size-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="size-8 p-0 text-destructive opacity-0 transition-opacity hover:bg-destructive/10 hover:text-destructive group-hover:opacity-100"
                   onClick={() => onRemove(link)}
                 >
                   <X className="size-4" />
@@ -347,7 +347,7 @@ export function DossierLinksWidget({
   // Error state
   if (isError) {
     const content = (
-      <div className="flex items-center gap-2 text-destructive text-sm p-3 bg-destructive/10 rounded-lg">
+      <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
         <AlertCircle className="size-4 shrink-0" />
         <span>{t('errors.load_timeline_failed', 'Failed to load dossier links')}</span>
         <Button variant="ghost" size="sm" onClick={() => refetch()} className="ms-auto">
@@ -377,8 +377,8 @@ export function DossierLinksWidget({
 
     const content = (
       <div className="flex flex-col items-center justify-center py-6 text-center">
-        <Link2 className="size-10 text-muted-foreground/50 mb-3" />
-        <p className="text-sm text-muted-foreground mb-3">
+        <Link2 className="mb-3 size-10 text-muted-foreground/50" />
+        <p className="mb-3 text-sm text-muted-foreground">
           {t('widget.no_links', 'No dossiers linked')}
         </p>
         {editable && (
@@ -432,7 +432,7 @@ export function DossierLinksWidget({
         {/* Show More/Less */}
         {hasMore && (
           <CollapsibleTrigger asChild>
-            <Button variant="ghost" size="sm" className="w-full mt-2 text-muted-foreground">
+            <Button variant="ghost" size="sm" className="mt-2 w-full text-muted-foreground">
               {isExpanded ? (
                 <>
                   <ChevronUp className={cn('size-4', isRTL ? 'ms-2' : 'me-2')} />
@@ -453,7 +453,7 @@ export function DossierLinksWidget({
 
       {/* Add Dossier Section */}
       {isAddingDossier && (
-        <div className="pt-3 border-t space-y-3">
+        <div className="space-y-3 border-t pt-3">
           <DossierSelector
             onChange={handleAddDossier}
             required={false}
@@ -481,7 +481,7 @@ export function DossierLinksWidget({
           variant="outline"
           size="sm"
           onClick={() => setIsAddingDossier(true)}
-          className="w-full min-h-11"
+          className="min-h-11 w-full"
         >
           <Plus className={cn('size-4', isRTL ? 'ms-2' : 'me-2')} />
           {t('widget.add_dossier', 'Add Dossier')}

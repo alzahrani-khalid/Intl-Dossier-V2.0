@@ -101,7 +101,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
  <Card className={className}>
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <FileText className="h-5 w-5" />
+ <FileText className="size-5" />
  {t('positions.briefing.title')}
  </CardTitle>
  <CardDescription>
@@ -146,12 +146,12 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
  >
  {generateMutation.isPending ? (
  <>
- <Loader2 className="me-2 h-4 w-4 animate-spin" />
+ <Loader2 className="me-2 size-4 animate-spin" />
  {t('positions.briefing.initiating')}
  </>
  ) : (
  <>
- <FileText className="me-2 h-4 w-4" />
+ <FileText className="me-2 size-4" />
  {t('positions.briefing.generate')}
  </>
  )}
@@ -163,7 +163,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
  {status === 'generating' && (
  <div className="space-y-4">
  <div className="flex items-center justify-center py-6">
- <Loader2 className="h-12 w-12 animate-spin text-primary" />
+ <Loader2 className="size-12 animate-spin text-primary" />
  </div>
  <div className="space-y-2">
  <p className="text-center text-sm font-medium">{t('positions.briefing.generating')}</p>
@@ -179,14 +179,14 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
  {status === 'completed' && fileUrl && (
  <div className="space-y-4">
  <div className="flex flex-col items-center gap-2 rounded-lg border border-green-500 bg-green-50 p-6 dark:bg-green-950">
- <CheckCircle className="h-12 w-12 text-green-600 dark:text-green-400" />
+ <CheckCircle className="size-12 text-green-600 dark:text-green-400" />
  <p className="font-medium text-green-900 dark:text-green-100">
  {t('positions.briefing.completed')}
  </p>
  </div>
 
  <Button onClick={handleDownload} className="w-full" >
- <Download className="me-2 h-5 w-5" />
+ <Download className="me-2 size-5" />
  {t('positions.briefing.download')}
  </Button>
 
@@ -200,7 +200,7 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
  {status === 'failed' && (
  <div className="space-y-4">
  <Alert variant="destructive">
- <XCircle className="h-4 w-4" />
+ <XCircle className="size-4" />
  <AlertDescription>{errorMessage}</AlertDescription>
  </Alert>
 

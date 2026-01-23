@@ -111,12 +111,12 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
   if (isLoading) {
     return (
       <div className={cn('space-y-4', className)}>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-24" />
           ))}
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
           <Skeleton className="h-64" />
           <Skeleton className="h-64" />
         </div>
@@ -128,10 +128,10 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
   if (error || !stats) {
     return (
       <div className={cn('flex flex-col items-center justify-center py-12 text-center', className)}>
-        <AlertCircle className="size-12 text-destructive mb-4" />
+        <AlertCircle className="mb-4 size-12 text-destructive" />
         <p className="text-muted-foreground">{t('errors.loadFailed')}</p>
         <Button variant="outline" onClick={() => refetch()} className="mt-4">
-          <RefreshCw className="size-4 me-2" />
+          <RefreshCw className="me-2 size-4" />
           {t('actions.refresh')}
         </Button>
       </div>
@@ -143,7 +143,7 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
       {/* Header */}
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-lg sm:text-xl font-semibold">{t('analytics.title')}</h2>
+          <h2 className="text-lg font-semibold sm:text-xl">{t('analytics.title')}</h2>
           <p className="text-sm text-muted-foreground">{t('analytics.overview')}</p>
         </div>
         <Button
@@ -158,7 +158,7 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
       </div>
 
       {/* Overview Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
         <StatCard
           icon={Tag}
           label={t('analytics.totalTags')}
@@ -184,11 +184,11 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
       </div>
 
       {/* Charts row */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Entity breakdown */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base">
               <PieChart className="size-4" />
               {t('analytics.usageByEntity')}
             </CardTitle>
@@ -222,7 +222,7 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
         {/* Hierarchy distribution */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base">
               <Layers className="size-4" />
               {t('hierarchy.title')}
             </CardTitle>
@@ -261,11 +261,11 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
       </div>
 
       {/* Top and unused tags */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {/* Top tags */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base">
               <BarChart3 className="size-4" />
               {t('analytics.topTags')}
             </CardTitle>
@@ -274,21 +274,21 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
             <ScrollArea className="h-48">
               <div className="space-y-2">
                 {stats.topTags.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-4">
+                  <p className="py-4 text-center text-sm text-muted-foreground">
                     {t('assignment.noAssigned')}
                   </p>
                 ) : (
                   stats.topTags.map((tag, index) => (
                     <div
                       key={tag.tag_id}
-                      className="flex items-center gap-2 p-2 rounded-md hover:bg-muted/50"
+                      className="flex items-center gap-2 rounded-md p-2 hover:bg-muted/50"
                     >
-                      <span className="text-sm text-muted-foreground w-5">{index + 1}</span>
+                      <span className="w-5 text-sm text-muted-foreground">{index + 1}</span>
                       <div
-                        className="size-3 rounded-full shrink-0"
+                        className="size-3 shrink-0 rounded-full"
                         style={{ backgroundColor: tag.color }}
                       />
-                      <span className="flex-1 text-sm truncate">{getTagName(tag, isRTL)}</span>
+                      <span className="flex-1 truncate text-sm">{getTagName(tag, isRTL)}</span>
                       <Badge variant="secondary" className="text-xs">
                         {tag.total_assignments}
                       </Badge>
@@ -303,7 +303,7 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
         {/* Unused tags */}
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
+            <CardTitle className="flex items-center gap-2 text-base">
               <AlertCircle className="size-4 text-muted-foreground" />
               {t('analytics.unusedTags')}
             </CardTitle>
@@ -315,7 +315,7 @@ export function TagAnalytics({ className }: TagAnalyticsProps) {
             <ScrollArea className="h-48">
               <div className="flex flex-wrap gap-2">
                 {stats.unusedTags.length === 0 ? (
-                  <p className="text-sm text-muted-foreground text-center py-4 w-full">
+                  <p className="w-full py-4 text-center text-sm text-muted-foreground">
                     {t('assignment.noAvailable')}
                   </p>
                 ) : (
@@ -354,12 +354,12 @@ function StatCard({ icon: Icon, label, value, subValue }: StatCardProps) {
   return (
     <Card>
       <CardContent className="p-4">
-        <div className="flex items-center gap-2 text-muted-foreground mb-2">
+        <div className="mb-2 flex items-center gap-2 text-muted-foreground">
           <Icon className="size-4" />
-          <span className="text-xs sm:text-sm truncate">{label}</span>
+          <span className="truncate text-xs sm:text-sm">{label}</span>
         </div>
-        <div className="text-xl sm:text-2xl font-bold">{value}</div>
-        {subValue && <p className="text-xs text-muted-foreground mt-1">{subValue}</p>}
+        <div className="text-xl font-bold sm:text-2xl">{value}</div>
+        {subValue && <p className="mt-1 text-xs text-muted-foreground">{subValue}</p>}
       </CardContent>
     </Card>
   )

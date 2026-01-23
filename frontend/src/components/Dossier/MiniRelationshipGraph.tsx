@@ -158,24 +158,24 @@ const MiniDossierNode = memo(({ data }: { data: MiniNodeData }) => {
       <Handle
         type="target"
         position={Position.Top}
-        className="!w-2 !h-2 !bg-transparent !border-0"
+        className="!h-2 !w-2 !border-0 !bg-transparent"
       />
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!w-2 !h-2 !bg-transparent !border-0"
+        className="!h-2 !w-2 !border-0 !bg-transparent"
       />
       <Handle
         type="target"
         position={Position.Left}
         id="left"
-        className="!w-2 !h-2 !bg-transparent !border-0"
+        className="!h-2 !w-2 !border-0 !bg-transparent"
       />
       <Handle
         type="source"
         position={Position.Right}
         id="right"
-        className="!w-2 !h-2 !bg-transparent !border-0"
+        className="!h-2 !w-2 !border-0 !bg-transparent"
       />
 
       {/* Node circle */}
@@ -189,7 +189,7 @@ const MiniDossierNode = memo(({ data }: { data: MiniNodeData }) => {
 
       {/* Type indicator */}
       <div
-        className="absolute inset-0 flex items-center justify-center font-bold text-xs"
+        className="absolute inset-0 flex items-center justify-center text-xs font-bold"
         style={{ color: nodeColor }}
       >
         {data.type?.[0]?.toUpperCase() || '?'}
@@ -197,7 +197,7 @@ const MiniDossierNode = memo(({ data }: { data: MiniNodeData }) => {
 
       {/* Label (only for non-center nodes) */}
       {!data.isCenter && (
-        <div className="absolute top-full mt-1 whitespace-nowrap text-[10px] font-medium text-center max-w-[60px] truncate">
+        <div className="absolute top-full mt-1 max-w-[60px] truncate whitespace-nowrap text-center text-[10px] font-medium">
           {name}
         </div>
       )}
@@ -227,9 +227,9 @@ function DossierQuickPreview({ node, isRTL, t }: DossierPreviewProps) {
     <div className="flex flex-col gap-2">
       <div className="flex items-center gap-2">
         <DossierTypeIcon type={node.type as DossierType} size="sm" colored />
-        <div className="flex-1 min-w-0">
-          <p className="font-medium text-sm truncate">{displayName}</p>
-          <p className="text-xs text-muted-foreground capitalize">
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium">{displayName}</p>
+          <p className="text-xs capitalize text-muted-foreground">
             {t(`type.${node.type}`, node.type)}
           </p>
         </div>
@@ -268,14 +268,14 @@ function RelationshipListItem({ node, relationship, isRTL, t }: RelationshipList
   return (
     <Link
       to={getDossierDetailPath(node.id, node.type)}
-      className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent/50 transition-colors"
+      className="flex items-center gap-2 rounded-lg p-2 transition-colors hover:bg-accent/50"
     >
       <DossierTypeIcon type={node.type as DossierType} size="sm" colored />
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate">{displayName}</p>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">{displayName}</p>
         <p className="text-xs text-muted-foreground">{relationshipLabel}</p>
       </div>
-      <ExternalLink className="size-3 text-muted-foreground shrink-0" />
+      <ExternalLink className="size-3 shrink-0 text-muted-foreground" />
     </Link>
   )
 }
@@ -425,7 +425,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
   return (
     <div
       ref={containerRef}
-      className="relative w-full rounded-lg border bg-background/50 overflow-hidden"
+      className="relative w-full overflow-hidden rounded-lg border bg-background/50"
       style={{ height }}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
@@ -454,7 +454,7 @@ function MiniGraphInner({ centerDossier, nodes, edges, height, isRTL, t }: MiniG
         {/* Stats Panel */}
         <Panel
           position={isRTL ? 'top-left' : 'top-right'}
-          className="bg-background/80 px-2 py-1 rounded text-[10px] text-muted-foreground"
+          className="rounded bg-background/80 px-2 py-1 text-[10px] text-muted-foreground"
         >
           {flowNodes.length - 1} {t('miniGraph.connections', 'connections')}
         </Panel>
@@ -615,7 +615,7 @@ export function MiniRelationshipGraph({
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-2 text-destructive text-sm p-3 bg-destructive/10 rounded-lg">
+          <div className="flex items-center gap-2 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
             <AlertCircle className="size-4 shrink-0" />
             <span>{t('error', 'Failed to load graph data')}</span>
             <Button variant="ghost" size="sm" onClick={() => refetch()} className="ms-auto">
@@ -632,7 +632,7 @@ export function MiniRelationshipGraph({
       <Collapsible open={!isCollapsed} onOpenChange={(open) => setIsCollapsed(!open)}>
         <CardHeader className="pb-3">
           <CollapsibleTrigger asChild>
-            <button className="flex items-center justify-between w-full text-start group">
+            <button className="group flex w-full items-center justify-between text-start">
               <CardTitle className="flex items-center gap-2 text-base">
                 <Network className="size-4" />
                 {t('miniGraph.title', 'Relationships')}
@@ -642,7 +642,7 @@ export function MiniRelationshipGraph({
                   </Badge>
                 )}
               </CardTitle>
-              <div className="flex items-center gap-1 text-muted-foreground group-hover:text-foreground transition-colors">
+              <div className="flex items-center gap-1 text-muted-foreground transition-colors group-hover:text-foreground">
                 {isCollapsed ? (
                   <ChevronDown className="size-4" />
                 ) : (
@@ -654,11 +654,11 @@ export function MiniRelationshipGraph({
         </CardHeader>
 
         <CollapsibleContent>
-          <CardContent className="pt-0 space-y-3">
+          <CardContent className="space-y-3 pt-0">
             {/* No connections state */}
             {!hasConnections && !isLoading && (
               <div className="flex flex-col items-center justify-center py-6 text-center">
-                <Network className="size-10 text-muted-foreground/50 mb-3" />
+                <Network className="mb-3 size-10 text-muted-foreground/50" />
                 <p className="text-sm text-muted-foreground">
                   {t('miniGraph.noConnections', 'No relationships found')}
                 </p>
@@ -682,7 +682,7 @@ export function MiniRelationshipGraph({
                 </div>
 
                 {/* List view for mobile */}
-                <div className="sm:hidden space-y-1">
+                <div className="space-y-1 sm:hidden">
                   {data.nodes
                     .filter((n) => n.id !== dossier.id)
                     .slice(0, 5)
@@ -703,7 +703,7 @@ export function MiniRelationshipGraph({
                       )
                     })}
                   {data.nodes.length > 6 && (
-                    <p className="text-xs text-muted-foreground text-center pt-2">
+                    <p className="pt-2 text-center text-xs text-muted-foreground">
                       {t('miniGraph.moreConnections', '+{{count}} more', {
                         count: data.nodes.length - 6,
                       })}
@@ -714,7 +714,7 @@ export function MiniRelationshipGraph({
             )}
 
             {/* View Full Graph Link */}
-            <Button variant="outline" size="sm" className="w-full min-h-10" asChild>
+            <Button variant="outline" size="sm" className="min-h-10 w-full" asChild>
               <Link to="/relationships/graph" search={{ dossierId: dossier.id } as any}>
                 <Network className={cn('size-4', isRTL ? 'ms-2' : 'me-2')} />
                 {t('miniGraph.viewFullGraph', 'View Full Graph')}

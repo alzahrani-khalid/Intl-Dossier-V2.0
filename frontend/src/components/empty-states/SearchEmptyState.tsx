@@ -186,7 +186,7 @@ export function SearchEmptyState({
 
       {/* Intelligent Suggestions Section with Filter Presets */}
       {shouldShowIntelligentSuggestions && (
-        <div className="mt-8 max-w-2xl mx-auto px-4">
+        <div className="mx-auto mt-8 max-w-2xl px-4">
           <IntelligentSearchSuggestions
             query={searchQuery}
             entityTypes={entityTypes}

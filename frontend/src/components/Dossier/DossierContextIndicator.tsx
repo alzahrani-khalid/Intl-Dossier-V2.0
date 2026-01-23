@@ -212,7 +212,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
                 <ChevronDown className={cn('size-4', isRTL ? 'me-1 sm:me-0' : 'ms-1 sm:ms-0')} />
               </Button>
             </PopoverTrigger>
-            <PopoverContent className="w-[300px] sm:w-[400px] p-2" align={isRTL ? 'end' : 'start'}>
+            <PopoverContent className="w-[300px] p-2 sm:w-[400px]" align={isRTL ? 'end' : 'start'}>
               <DossierSelector
                 onChange={handleDossierChange}
                 required={false}
@@ -255,7 +255,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
         </span>
 
         {/* Dossier name with link */}
-        <div className="flex items-center gap-1.5 min-w-0 flex-1">
+        <div className="flex min-w-0 flex-1 items-center gap-1.5">
           {linkable && activeDossier && dossierType ? (
             <TooltipProvider>
               <Tooltip>
@@ -334,7 +334,7 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
         </div>
 
         {/* Action buttons */}
-        <div className="flex items-center gap-1 shrink-0 ms-auto">
+        <div className="ms-auto flex shrink-0 items-center gap-1">
           {/* Change button */}
           {changeable && (
             <Popover open={changePopoverOpen} onOpenChange={setChangePopoverOpen}>
@@ -361,14 +361,14 @@ export const DossierContextIndicator = memo(function DossierContextIndicator({
                 </TooltipProvider>
               </PopoverTrigger>
               <PopoverContent
-                className="w-[300px] sm:w-[400px] p-2"
+                className="w-[300px] p-2 sm:w-[400px]"
                 align={isRTL ? 'start' : 'end'}
               >
                 <div className="mb-3">
                   <h4 className={cn('font-medium', sizeClasses.text)}>
                     {t('contextIndicator.changeDossier', 'Change Dossier Context')}
                   </h4>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="mt-1 text-xs text-muted-foreground">
                     {t(
                       'contextIndicator.changeDescription',
                       'Select a different dossier to work within',

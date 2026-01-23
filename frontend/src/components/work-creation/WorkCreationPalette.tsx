@@ -203,7 +203,7 @@ export function WorkCreationPalette({
       <div className="flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
         {/* Header with back button */}
         {step !== 'type-select' && (
-          <div className="flex items-center gap-2 px-3 py-2 border-b">
+          <div className="flex items-center gap-2 border-b px-3 py-2">
             <Button
               type="button"
               variant="ghost"
@@ -241,7 +241,7 @@ export function WorkCreationPalette({
                       key={option.type}
                       value={option.type}
                       onSelect={() => handleTypeSelect(option.type)}
-                      className="min-h-14 flex items-center gap-3 cursor-pointer"
+                      className="flex min-h-14 cursor-pointer items-center gap-3"
                     >
                       <div className="flex size-10 items-center justify-center rounded-lg bg-muted">
                         <Icon className="size-5" />
@@ -263,7 +263,7 @@ export function WorkCreationPalette({
 
         {/* Step: Context Selection (Dossier Picker) - US4 T036/T037 */}
         {step === 'context-select' && (
-          <div className="p-4 space-y-4">
+          <div className="space-y-4 p-4">
             <p className="text-sm text-muted-foreground">
               {t(
                 'palette.dossierRequiredGeneric',
@@ -289,7 +289,7 @@ export function WorkCreationPalette({
                 type="button"
                 variant="outline"
                 onClick={handleCancel}
-                className="flex-1 min-h-11"
+                className="min-h-11 flex-1"
               >
                 {t('actions.cancel', 'Cancel')}
               </Button>
@@ -297,7 +297,7 @@ export function WorkCreationPalette({
                 type="button"
                 onClick={handleDossierContinue}
                 disabled={!selectedDossier}
-                className="flex-1 min-h-11"
+                className="min-h-11 flex-1"
               >
                 {t('actions.continue', 'Continue')}
               </Button>
@@ -307,7 +307,7 @@ export function WorkCreationPalette({
 
         {/* Step: Form */}
         {step === 'form' && selectedType && (
-          <div className="p-4 max-h-[70vh] overflow-y-auto">
+          <div className="max-h-[70vh] overflow-y-auto p-4">
             {selectedType === 'commitment' && finalDossierId && (
               <CommitmentQuickForm
                 dossierId={finalDossierId}

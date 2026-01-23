@@ -231,7 +231,7 @@ export const PDFPreview = memo(function PDFPreview({
     >
       {/* Toolbar */}
       {mergedOptions.show_toolbar && (
-        <div className="flex flex-wrap items-center justify-between gap-2 p-2 sm:p-3 bg-gray-800/95 backdrop-blur-sm border-b border-gray-700">
+        <div className="flex flex-wrap items-center justify-between gap-2 border-b border-gray-700 bg-gray-800/95 p-2 backdrop-blur-sm sm:p-3">
           {/* Navigation controls */}
           {mergedOptions.show_page_navigation && (
             <div className="flex items-center gap-1 sm:gap-2">
@@ -240,7 +240,7 @@ export const PDFPreview = memo(function PDFPreview({
                 size="sm"
                 onClick={goToFirstPage}
                 disabled={currentPage <= 1}
-                className="h-9 w-9 text-gray-200 hover:bg-gray-700 hidden sm:flex"
+                className="hidden size-9 text-gray-200 hover:bg-gray-700 sm:flex"
                 title={t('actions.firstPage', 'First page')}
               >
                 <ChevronsLeft className={cn('h-4 w-4', isRTL && 'rotate-180')} />
@@ -250,20 +250,20 @@ export const PDFPreview = memo(function PDFPreview({
                 size="sm"
                 onClick={goToPreviousPage}
                 disabled={currentPage <= 1}
-                className="h-9 w-9 text-gray-200 hover:bg-gray-700"
+                className="size-9 text-gray-200 hover:bg-gray-700"
                 title={t('actions.previousPage', 'Previous page')}
               >
                 <ChevronLeft className={cn('h-4 w-4', isRTL && 'rotate-180')} />
               </Button>
 
-              <div className="flex items-center gap-1 text-gray-200 text-sm">
+              <div className="flex items-center gap-1 text-sm text-gray-200">
                 <Input
                   type="text"
                   value={pageInputValue}
                   onChange={handlePageInputChange}
                   onBlur={handlePageInputBlur}
                   onKeyDown={handlePageInputKeyDown}
-                  className="h-8 w-12 sm:w-14 text-center bg-gray-700 border-gray-600 text-gray-200"
+                  className="h-8 w-12 border-gray-600 bg-gray-700 text-center text-gray-200 sm:w-14"
                 />
                 <span className="text-gray-400">/</span>
                 <span>{numPages}</span>
@@ -274,7 +274,7 @@ export const PDFPreview = memo(function PDFPreview({
                 size="sm"
                 onClick={goToNextPage}
                 disabled={currentPage >= numPages}
-                className="h-9 w-9 text-gray-200 hover:bg-gray-700"
+                className="size-9 text-gray-200 hover:bg-gray-700"
                 title={t('actions.nextPage', 'Next page')}
               >
                 <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
@@ -284,7 +284,7 @@ export const PDFPreview = memo(function PDFPreview({
                 size="sm"
                 onClick={goToLastPage}
                 disabled={currentPage >= numPages}
-                className="h-9 w-9 text-gray-200 hover:bg-gray-700 hidden sm:flex"
+                className="hidden size-9 text-gray-200 hover:bg-gray-700 sm:flex"
                 title={t('actions.lastPage', 'Last page')}
               >
                 <ChevronsRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
@@ -299,12 +299,12 @@ export const PDFPreview = memo(function PDFPreview({
               size="sm"
               onClick={handleZoomOut}
               disabled={zoom <= (ZOOM_LEVELS[0] ?? 0.5)}
-              className="h-9 w-9 text-gray-200 hover:bg-gray-700"
+              className="size-9 text-gray-200 hover:bg-gray-700"
               title={t('actions.zoomOut', 'Zoom out')}
             >
-              <ZoomOut className="h-4 w-4" />
+              <ZoomOut className="size-4" />
             </Button>
-            <span className="text-xs sm:text-sm text-gray-300 min-w-[3rem] text-center">
+            <span className="min-w-12 text-center text-xs text-gray-300 sm:text-sm">
               {Math.round(zoom * 100)}%
             </span>
             <Button
@@ -312,19 +312,19 @@ export const PDFPreview = memo(function PDFPreview({
               size="sm"
               onClick={handleZoomIn}
               disabled={zoom >= (ZOOM_LEVELS[ZOOM_LEVELS.length - 1] ?? 3)}
-              className="h-9 w-9 text-gray-200 hover:bg-gray-700"
+              className="size-9 text-gray-200 hover:bg-gray-700"
               title={t('actions.zoomIn', 'Zoom in')}
             >
-              <ZoomIn className="h-4 w-4" />
+              <ZoomIn className="size-4" />
             </Button>
             <Button
               variant="ghost"
               size="sm"
               onClick={handleFitToWidth}
-              className="h-9 w-9 text-gray-200 hover:bg-gray-700"
+              className="size-9 text-gray-200 hover:bg-gray-700"
               title={t('actions.fitToWidth', 'Fit to width')}
             >
-              <Maximize2 className="h-4 w-4" />
+              <Maximize2 className="size-4" />
             </Button>
           </div>
 
@@ -334,20 +334,20 @@ export const PDFPreview = memo(function PDFPreview({
               variant="ghost"
               size="sm"
               onClick={handlePrint}
-              className="h-9 w-9 text-gray-200 hover:bg-gray-700 hidden sm:flex"
+              className="hidden size-9 text-gray-200 hover:bg-gray-700 sm:flex"
               title={t('actions.print', 'Print')}
             >
-              <Printer className="h-4 w-4" />
+              <Printer className="size-4" />
             </Button>
             {onDownload && (
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onDownload}
-                className="h-9 w-9 text-gray-200 hover:bg-gray-700"
+                className="size-9 text-gray-200 hover:bg-gray-700"
                 title={t('actions.download', 'Download')}
               >
-                <Download className="h-4 w-4" />
+                <Download className="size-4" />
               </Button>
             )}
             {onClose && (
@@ -355,10 +355,10 @@ export const PDFPreview = memo(function PDFPreview({
                 variant="ghost"
                 size="sm"
                 onClick={onClose}
-                className="h-9 w-9 text-gray-200 hover:bg-gray-700"
+                className="size-9 text-gray-200 hover:bg-gray-700"
                 title={t('actions.close', 'Close')}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             )}
           </div>
@@ -368,13 +368,13 @@ export const PDFPreview = memo(function PDFPreview({
       {/* PDF Container */}
       <div
         id="pdf-container"
-        className="flex-1 overflow-auto flex flex-col items-center py-4 px-2 sm:px-4"
+        className="flex flex-1 flex-col items-center overflow-auto px-2 py-4 sm:px-4"
       >
         {isLoading && (
-          <div className="flex items-center justify-center h-full">
+          <div className="flex h-full items-center justify-center">
             <div className="text-center">
-              <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full border-4 border-gray-600 border-t-blue-500 animate-spin mx-auto mb-4" />
-              <p className="text-gray-400 text-sm sm:text-base">
+              <div className="mx-auto mb-4 size-12 animate-spin rounded-full border-4 border-gray-600 border-t-blue-500 sm:size-16" />
+              <p className="text-sm text-gray-400 sm:text-base">
                 {t('loading.pdf', 'Loading PDF...')}
               </p>
             </div>
@@ -382,8 +382,8 @@ export const PDFPreview = memo(function PDFPreview({
         )}
 
         {error && (
-          <div className="flex items-center justify-center h-full">
-            <div className="text-center text-gray-400 p-4">
+          <div className="flex h-full items-center justify-center">
+            <div className="p-4 text-center text-gray-400">
               <p className="text-base sm:text-lg">{error}</p>
             </div>
           </div>
@@ -404,7 +404,7 @@ export const PDFPreview = memo(function PDFPreview({
             renderTextLayer
             loading={
               <div className="flex items-center justify-center py-8">
-                <div className="h-8 w-8 rounded-full border-2 border-gray-600 border-t-blue-500 animate-spin" />
+                <div className="size-8 animate-spin rounded-full border-2 border-gray-600 border-t-blue-500" />
               </div>
             }
             className="shadow-lg"
@@ -414,7 +414,7 @@ export const PDFPreview = memo(function PDFPreview({
 
       {/* Mobile page indicator */}
       {numPages > 0 && (
-        <div className="sm:hidden fixed bottom-4 start-1/2 -translate-x-1/2 text-xs text-gray-300 bg-gray-800/90 px-3 py-1.5 rounded-full">
+        <div className="fixed bottom-4 start-1/2 -translate-x-1/2 rounded-full bg-gray-800/90 px-3 py-1.5 text-xs text-gray-300 sm:hidden">
           {currentPage} / {numPages}
         </div>
       )}

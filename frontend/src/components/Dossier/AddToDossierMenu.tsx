@@ -111,49 +111,49 @@ const getDefaultActions = (
 ): Record<AddToDossierActionType, AddToDossierAction> => ({
   intake: {
     type: 'intake',
-    icon: <Inbox className="h-4 w-4" />,
+    icon: <Inbox className="size-4" />,
     label: t('addToDossier.actions.intake.label'),
     description: t('addToDossier.actions.intake.description'),
   },
   task: {
     type: 'task',
-    icon: <CheckSquare className="h-4 w-4" />,
+    icon: <CheckSquare className="size-4" />,
     label: t('addToDossier.actions.task.label'),
     description: t('addToDossier.actions.task.description'),
   },
   commitment: {
     type: 'commitment',
-    icon: <Handshake className="h-4 w-4" />,
+    icon: <Handshake className="size-4" />,
     label: t('addToDossier.actions.commitment.label'),
     description: t('addToDossier.actions.commitment.description'),
   },
   position: {
     type: 'position',
-    icon: <MessageSquare className="h-4 w-4" />,
+    icon: <MessageSquare className="size-4" />,
     label: t('addToDossier.actions.position.label'),
     description: t('addToDossier.actions.position.description'),
   },
   event: {
     type: 'event',
-    icon: <Calendar className="h-4 w-4" />,
+    icon: <Calendar className="size-4" />,
     label: t('addToDossier.actions.event.label'),
     description: t('addToDossier.actions.event.description'),
   },
   relationship: {
     type: 'relationship',
-    icon: <GitBranch className="h-4 w-4" />,
+    icon: <GitBranch className="size-4" />,
     label: t('addToDossier.actions.relationship.label'),
     description: t('addToDossier.actions.relationship.description'),
   },
   brief: {
     type: 'brief',
-    icon: <FileText className="h-4 w-4" />,
+    icon: <FileText className="size-4" />,
     label: t('addToDossier.actions.brief.label'),
     description: t('addToDossier.actions.brief.description'),
   },
   document: {
     type: 'document',
-    icon: <Upload className="h-4 w-4" />,
+    icon: <Upload className="size-4" />,
     label: t('addToDossier.actions.document.label'),
     description: t('addToDossier.actions.document.description'),
   },
@@ -257,7 +257,7 @@ function AddToDossierButton({
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-64 sm:w-72">
-        <DropdownMenuLabel className="text-xs text-muted-foreground font-normal">
+        <DropdownMenuLabel className="text-xs font-normal text-muted-foreground">
           {t('addToDossier.subtitle', { name: isRTL ? dossier.name_ar : dossier.name_en })}
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
@@ -266,7 +266,7 @@ function AddToDossierButton({
           <React.Fragment key={group.labelKey}>
             {groupIndex > 0 && <DropdownMenuSeparator />}
             <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-xs text-muted-foreground font-medium">
+              <DropdownMenuLabel className="text-xs font-medium text-muted-foreground">
                 {t(group.labelKey)}
               </DropdownMenuLabel>
               {group.actions.map((actionType) => {
@@ -278,13 +278,13 @@ function AddToDossierButton({
                     key={actionType}
                     onClick={() => handleAction(actionType)}
                     disabled={action.disabled}
-                    className="flex items-start gap-3 py-2 cursor-pointer"
+                    className="flex cursor-pointer items-start gap-3 py-2"
                   >
-                    <span className="shrink-0 mt-0.5 text-muted-foreground">{action.icon}</span>
-                    <div className="flex-1 min-w-0">
+                    <span className="mt-0.5 shrink-0 text-muted-foreground">{action.icon}</span>
+                    <div className="min-w-0 flex-1">
                       <div className="font-medium">{action.label}</div>
                       {showDescriptions && action.description && (
-                        <div className="text-xs text-muted-foreground mt-0.5 line-clamp-2">
+                        <div className="mt-0.5 line-clamp-2 text-xs text-muted-foreground">
                           {action.description}
                         </div>
                       )}
@@ -453,9 +453,9 @@ function AddToDossierFAB({
         >
           <motion.div animate={{ rotate: isExpanded ? 45 : 0 }} transition={{ duration: 0.2 }}>
             {isExpanded ? (
-              <X className={size === 'sm' ? 'h-5 w-5' : 'h-6 w-6'} />
+              <X className={size === 'sm' ? 'size-5' : 'size-6'} />
             ) : (
-              <Plus className={size === 'sm' ? 'h-5 w-5' : 'h-6 w-6'} />
+              <Plus className={size === 'sm' ? 'size-5' : 'size-6'} />
             )}
           </motion.div>
         </Button>
@@ -506,19 +506,19 @@ function AddToDossierCard({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="px-4 py-3 border-b">
+      <div className="border-b px-4 py-3">
         <h3 className="text-sm font-semibold">{t('addToDossier.title')}</h3>
-        <p className="text-xs text-muted-foreground mt-0.5">
+        <p className="mt-0.5 text-xs text-muted-foreground">
           {t('addToDossier.subtitle', { name: isRTL ? dossier.name_ar : dossier.name_en })}
         </p>
       </div>
 
       {/* Actions Grid */}
-      <div className="p-3 space-y-1">
+      <div className="space-y-1 p-3">
         {ACTION_GROUPS.map((group, groupIndex) => (
           <div key={group.labelKey}>
-            {groupIndex > 0 && <div className="h-px bg-border my-2" />}
-            <div className="text-xs font-medium text-muted-foreground mb-1 px-1">
+            {groupIndex > 0 && <div className="my-2 h-px bg-border" />}
+            <div className="mb-1 px-1 text-xs font-medium text-muted-foreground">
               {t(group.labelKey)}
             </div>
             {group.actions.map((actionType) => {
@@ -537,10 +537,10 @@ function AddToDossierCard({
                   disabled={action.disabled}
                 >
                   <span className="shrink-0 text-muted-foreground">{action.icon}</span>
-                  <div className="flex-1 min-w-0 text-start">
-                    <div className="font-medium text-sm">{action.label}</div>
+                  <div className="min-w-0 flex-1 text-start">
+                    <div className="text-sm font-medium">{action.label}</div>
                     {showDescriptions && action.description && (
-                      <div className="text-xs text-muted-foreground mt-0.5 line-clamp-1">
+                      <div className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">
                         {action.description}
                       </div>
                     )}

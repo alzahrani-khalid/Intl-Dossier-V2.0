@@ -133,11 +133,11 @@ function AnnotationBadge({
       )}
       onClick={onClick}
     >
-      <Icon className="h-3 w-3 me-1" />
+      <Icon className="me-1 size-3" />
       <span className="max-w-20 truncate text-xs">
         {isRTL && annotation.content_ar ? annotation.content_ar : annotation.content_en}
       </span>
-      {annotation.is_key_moment && <Star className="h-3 w-3 ms-1 fill-current" />}
+      {annotation.is_key_moment && <Star className="ms-1 size-3 fill-current" />}
     </Badge>
   )
 }
@@ -204,20 +204,20 @@ export function StakeholderTimelineCard({
             bgColor,
           )}
         >
-          <Icon className="h-5 w-5" />
+          <Icon className="size-5" />
         </div>
         {/* Connector line */}
-        {!isLast && <div className="w-0.5 flex-1 bg-border mt-2 min-h-8" />}
+        {!isLast && <div className="mt-2 min-h-8 w-0.5 flex-1 bg-border" />}
       </div>
 
       {/* Event card */}
-      <Card className="flex-1 mb-4 overflow-hidden">
+      <Card className="mb-4 flex-1 overflow-hidden">
         <CardContent className="p-4 sm:p-6">
           {/* Header row */}
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-2 mb-3">
+          <div className="mb-3 flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex-1">
               {/* Event type badge */}
-              <div className="flex flex-wrap items-center gap-2 mb-2">
+              <div className="mb-2 flex flex-wrap items-center gap-2">
                 <Badge variant="secondary" className="text-xs">
                   {t(`types.${eventType}`)}
                 </Badge>
@@ -234,14 +234,14 @@ export function StakeholderTimelineCard({
               </div>
 
               {/* Title */}
-              <h3 className="text-base sm:text-lg font-semibold text-start">
+              <h3 className="text-start text-base font-semibold sm:text-lg">
                 {isRTL && event.title_ar ? event.title_ar : event.title_en}
               </h3>
             </div>
 
             {/* Date and time */}
             <div className="flex items-center gap-2 text-sm text-muted-foreground">
-              <Calendar className="h-4 w-4" />
+              <Calendar className="size-4" />
               <span>{formattedDate}</span>
               <span className="hidden sm:inline">{formattedTime}</span>
             </div>
@@ -260,11 +260,11 @@ export function StakeholderTimelineCard({
           )}
 
           {/* Metadata row */}
-          <div className="flex flex-wrap items-center gap-3 mb-3">
+          <div className="mb-3 flex flex-wrap items-center gap-3">
             {/* Location */}
             {(event.metadata?.location_en || event.metadata?.location_ar) && (
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <MapPin className="h-3 w-3" />
+                <MapPin className="size-3" />
                 <span>
                   {isRTL && event.metadata.location_ar
                     ? event.metadata.location_ar
@@ -281,9 +281,9 @@ export function StakeholderTimelineCard({
                 rel="noopener noreferrer"
                 className="flex items-center gap-1 text-xs text-primary hover:underline"
               >
-                <Video className="h-3 w-3" />
+                <Video className="size-3" />
                 <span>{t('join_virtual')}</span>
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink className="size-3" />
               </a>
             )}
 
@@ -299,7 +299,7 @@ export function StakeholderTimelineCard({
             {/* Impact score */}
             {event.metadata?.impact_score && (
               <div className="flex items-center gap-1 text-xs text-muted-foreground">
-                <Activity className="h-3 w-3" />
+                <Activity className="size-3" />
                 <span>
                   {t('impact')}: {event.metadata.impact_score}/5
                 </span>
@@ -309,14 +309,14 @@ export function StakeholderTimelineCard({
 
           {/* Participants */}
           {participants.length > 0 && (
-            <div className="flex items-center gap-2 mb-3">
+            <div className="mb-3 flex items-center gap-2">
               <span className="text-xs text-muted-foreground">{t('participants')}:</span>
               <div className="flex -space-x-2">
                 {participants.slice(0, 5).map((participant, idx) => (
                   <TooltipProvider key={idx}>
                     <Tooltip>
                       <TooltipTrigger>
-                        <Avatar className="h-6 w-6 border-2 border-background">
+                        <Avatar className="size-6 border-2 border-background">
                           <AvatarImage src={participant.avatar_url} />
                           <AvatarFallback className="text-xs">
                             {(participant.name_en || '?').charAt(0)}
@@ -332,7 +332,7 @@ export function StakeholderTimelineCard({
                   </TooltipProvider>
                 ))}
                 {participants.length > 5 && (
-                  <span className="flex items-center justify-center h-6 w-6 rounded-full bg-muted text-xs">
+                  <span className="flex size-6 items-center justify-center rounded-full bg-muted text-xs">
                     +{participants.length - 5}
                   </span>
                 )}
@@ -342,8 +342,8 @@ export function StakeholderTimelineCard({
 
           {/* Attachments */}
           {attachments.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 mb-3">
-              <Paperclip className="h-3 w-3 text-muted-foreground" />
+            <div className="mb-3 flex flex-wrap items-center gap-2">
+              <Paperclip className="size-3 text-muted-foreground" />
               {attachments.slice(0, 3).map((attachment, idx) => (
                 <Badge key={idx} variant="outline" className="text-xs">
                   {attachment.filename}
@@ -359,7 +359,7 @@ export function StakeholderTimelineCard({
 
           {/* Annotations */}
           {showAnnotations && event.annotations && event.annotations.length > 0 && (
-            <div className="flex flex-wrap items-center gap-2 mb-3 pt-3 border-t">
+            <div className="mb-3 flex flex-wrap items-center gap-2 border-t pt-3">
               {event.annotations.map((annotation) => (
                 <AnnotationBadge key={annotation.id} annotation={annotation} />
               ))}
@@ -368,9 +368,9 @@ export function StakeholderTimelineCard({
 
           {/* Outcome (expanded) */}
           {isExpanded && (event.metadata?.outcome_en || event.metadata?.outcome_ar) && (
-            <div className="mt-3 pt-3 border-t">
-              <h4 className="text-sm font-medium mb-1 text-start">{t('outcome')}</h4>
-              <p className="text-sm text-muted-foreground text-start">
+            <div className="mt-3 border-t pt-3">
+              <h4 className="mb-1 text-start text-sm font-medium">{t('outcome')}</h4>
+              <p className="text-start text-sm text-muted-foreground">
                 {isRTL && event.metadata.outcome_ar
                   ? event.metadata.outcome_ar
                   : event.metadata.outcome_en}
@@ -379,7 +379,7 @@ export function StakeholderTimelineCard({
           )}
 
           {/* Actions */}
-          <div className="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t">
+          <div className="mt-4 flex flex-wrap items-center gap-2 border-t pt-3">
             {/* Expand/collapse */}
             <Button
               variant="ghost"

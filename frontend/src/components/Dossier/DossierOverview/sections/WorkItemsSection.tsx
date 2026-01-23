@@ -114,24 +114,24 @@ function WorkItemCard({ item, isRTL }: { item: DossierWorkItem; isRTL: boolean }
   const StatusIcon = statusConfig.icon
 
   return (
-    <Card className="hover:shadow-md transition-shadow">
+    <Card className="transition-shadow hover:shadow-md">
       <CardContent className="p-3 sm:p-4">
         <div className="flex items-start gap-3">
-          <div className={`p-2 rounded-lg ${statusConfig.bgColor} shrink-0`}>
-            <StatusIcon className={`h-5 w-5 ${statusConfig.color}`} />
+          <div className={`rounded-lg p-2 ${statusConfig.bgColor} shrink-0`}>
+            <StatusIcon className={`size-5 ${statusConfig.color}`} />
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-1">
-              <h4 className="text-sm font-semibold line-clamp-2">
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex items-start justify-between gap-2">
+              <h4 className="line-clamp-2 text-sm font-semibold">
                 {isRTL && item.title_ar ? item.title_ar : item.title_en}
               </h4>
-              <Badge variant={getPriorityVariant(item.priority)} className="text-xs shrink-0">
+              <Badge variant={getPriorityVariant(item.priority)} className="shrink-0 text-xs">
                 {t(`priority.${item.priority}`)}
               </Badge>
             </div>
             <div className="flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground">
-              <Badge variant="outline" className="text-xs flex items-center gap-1">
-                <SourceIcon className="h-3 w-3" />
+              <Badge variant="outline" className="flex items-center gap-1 text-xs">
+                <SourceIcon className="size-3" />
                 {t(`workItemSource.${item.source}`)}
               </Badge>
               <Badge
@@ -148,23 +148,23 @@ function WorkItemCard({ item, isRTL }: { item: DossierWorkItem; isRTL: boolean }
                 </Badge>
               )}
             </div>
-            <div className="flex flex-wrap items-center gap-3 mt-2 text-xs text-muted-foreground">
+            <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-muted-foreground">
               {item.deadline && (
                 <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
+                  <Calendar className="size-3" />
                   {new Date(item.deadline).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
                 </div>
               )}
               {item.assignee_name && (
                 <div className="flex items-center gap-1">
-                  <User className="h-3 w-3" />
+                  <User className="size-3" />
                   {item.assignee_name}
                 </div>
               )}
             </div>
           </div>
           <ChevronRight
-            className={`h-5 w-5 text-muted-foreground shrink-0 ${isRTL ? 'rotate-180' : ''}`}
+            className={`size-5 shrink-0 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
           />
         </div>
       </CardContent>
@@ -197,21 +197,21 @@ function StatusBreakdown({
   ]
 
   return (
-    <div className="space-y-4 p-4 bg-muted/50 rounded-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="space-y-4 rounded-lg bg-muted/50 p-4" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="flex items-center justify-between">
         <span className="text-sm font-medium">{t('workItems.completion')}</span>
         <span className="text-sm text-muted-foreground">{completedPercent}%</span>
       </div>
       <Progress value={completedPercent} className="h-2" />
-      <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+      <div className="grid grid-cols-2 gap-2 sm:grid-cols-5">
         {statusItems.map(({ status, count }) => {
           const config = getStatusConfig(status)
           const Icon = config.icon
           return (
-            <div key={status} className="flex items-center gap-2 p-2 bg-background rounded-md">
-              <Icon className={`h-4 w-4 ${config.color}`} />
-              <div className="flex-1 min-w-0">
-                <p className="text-xs text-muted-foreground truncate">
+            <div key={status} className="flex items-center gap-2 rounded-md bg-background p-2">
+              <Icon className={`size-4 ${config.color}`} />
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-xs text-muted-foreground">
                   {t(`workItemStatus.${status}`)}
                 </p>
                 <p className="text-sm font-semibold">{count}</p>
@@ -231,9 +231,9 @@ function EmptyState({ source, isRTL }: { source?: WorkItemSource | 'all'; isRTL:
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="p-3 rounded-full bg-muted inline-block mb-3">
-        <ClipboardList className="h-6 w-6 text-muted-foreground" />
+    <div className="py-6 text-center sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="mb-3 inline-block rounded-full bg-muted p-3">
+        <ClipboardList className="size-6 text-muted-foreground" />
       </div>
       <p className="text-sm text-muted-foreground">
         {source && source !== 'all' ? t(`workItems.empty.${source}`) : t('workItems.empty.all')}
@@ -293,7 +293,7 @@ export function WorkItemsSection({
         <CardContent className="p-6">
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-20 bg-muted animate-pulse rounded-lg" />
+              <div key={i} className="h-20 animate-pulse rounded-lg bg-muted" />
             ))}
           </div>
         </CardContent>
@@ -305,12 +305,12 @@ export function WorkItemsSection({
     return (
       <Card className={className}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <ClipboardList className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <ClipboardList className="size-5" />
             {t('workItems.title')}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 pt-0">
+        <CardContent className="p-4 pt-0 sm:p-6">
           <EmptyState source="all" isRTL={isRTL} />
         </CardContent>
       </Card>
@@ -320,8 +320,8 @@ export function WorkItemsSection({
   return (
     <Card className={className}>
       <CardHeader className="pb-2 sm:pb-4">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <ClipboardList className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <ClipboardList className="size-5" />
           {t('workItems.title')}
           <Badge variant="secondary">{data.total_count}</Badge>
           {data.status_breakdown.overdue > 0 && (
@@ -332,15 +332,15 @@ export function WorkItemsSection({
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-6 pt-0 space-y-4">
+      <CardContent className="space-y-4 p-4 pt-0 sm:p-6">
         {/* Status Breakdown */}
         <StatusBreakdown breakdown={data.status_breakdown} total={data.total_count} isRTL={isRTL} />
 
         {/* Urgent Items Alert */}
         {data.urgent_items.length > 0 && (
-          <div className="p-3 border border-amber-200 dark:border-amber-800 bg-amber-50 dark:bg-amber-950 rounded-lg">
-            <div className="flex items-center gap-2 mb-2">
-              <AlertTriangle className="h-4 w-4 text-amber-600 dark:text-amber-400" />
+          <div className="rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-950">
+            <div className="mb-2 flex items-center gap-2">
+              <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400" />
               <span className="text-sm font-medium text-amber-800 dark:text-amber-200">
                 {t('workItems.urgentItems', { count: data.urgent_items.length })}
               </span>
@@ -362,20 +362,20 @@ export function WorkItemsSection({
 
         {/* Tabs by Source */}
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="w-full justify-start overflow-x-auto flex-nowrap mb-4 h-auto p-1">
-            <TabsTrigger value="all" className="text-xs sm:text-sm shrink-0">
+          <TabsList className="mb-4 h-auto w-full flex-nowrap justify-start overflow-x-auto p-1">
+            <TabsTrigger value="all" className="shrink-0 text-xs sm:text-sm">
               {t('workItems.tabs.all')} ({allWorkItems.length})
             </TabsTrigger>
-            <TabsTrigger value="tasks" className="text-xs sm:text-sm shrink-0">
-              <CheckSquare className="h-4 w-4 me-1" />
+            <TabsTrigger value="tasks" className="shrink-0 text-xs sm:text-sm">
+              <CheckSquare className="me-1 size-4" />
               {t('workItems.tabs.tasks')} ({data.by_source.tasks.length})
             </TabsTrigger>
-            <TabsTrigger value="commitments" className="text-xs sm:text-sm shrink-0">
-              <Handshake className="h-4 w-4 me-1" />
+            <TabsTrigger value="commitments" className="shrink-0 text-xs sm:text-sm">
+              <Handshake className="me-1 size-4" />
               {t('workItems.tabs.commitments')} ({data.by_source.commitments.length})
             </TabsTrigger>
-            <TabsTrigger value="intakes" className="text-xs sm:text-sm shrink-0">
-              <Inbox className="h-4 w-4 me-1" />
+            <TabsTrigger value="intakes" className="shrink-0 text-xs sm:text-sm">
+              <Inbox className="me-1 size-4" />
               {t('workItems.tabs.intakes')} ({data.by_source.intakes.length})
             </TabsTrigger>
           </TabsList>

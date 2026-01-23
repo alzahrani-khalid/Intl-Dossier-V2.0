@@ -97,7 +97,7 @@ export function PendingWorkByDossier({
 
   return (
     <Card className={cn('', className)}>
-      <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4">
+      <CardHeader className="flex flex-col gap-2 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <ListTodo className="size-5 text-primary" />
           <CardTitle className="text-lg">
@@ -110,7 +110,7 @@ export function PendingWorkByDossier({
               {data.total_pending} {t('pendingWork.total', 'total')}
             </Badge>
             {data.total_overdue > 0 && (
-              <Badge variant="destructive" className="text-xs flex items-center gap-1">
+              <Badge variant="destructive" className="flex items-center gap-1 text-xs">
                 <AlertTriangle className="size-3" />
                 {data.total_overdue} {t('pendingWork.overdue', 'overdue')}
               </Badge>
@@ -132,7 +132,7 @@ export function PendingWorkByDossier({
         {/* Error State */}
         {isError && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <p className="text-sm text-destructive mb-2">
+            <p className="mb-2 text-sm text-destructive">
               {error?.message || t('pendingWork.error', 'Failed to load pending work')}
             </p>
             <Button variant="outline" size="sm" onClick={() => refetch()} className="min-h-11">
@@ -144,11 +144,11 @@ export function PendingWorkByDossier({
         {/* Empty State */}
         {!isLoading && !isError && data?.items.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <ListTodo className="size-12 text-muted-foreground/50 mb-4" />
+            <ListTodo className="mb-4 size-12 text-muted-foreground/50" />
             <p className="text-sm text-muted-foreground">
               {t('pendingWork.empty', 'No pending work across your dossiers')}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="mt-1 text-xs text-muted-foreground">
               {t('pendingWork.emptyHint', 'All caught up!')}
             </p>
           </div>
@@ -240,8 +240,8 @@ function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps
             </div>
 
             {/* Dossier Info */}
-            <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-sm truncate">{dossierName}</h4>
+            <div className="min-w-0 flex-1">
+              <h4 className="truncate text-sm font-medium">{dossierName}</h4>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 <span>
                   {item.summary.total_pending} {t('pendingWork.pending', 'pending')}
@@ -262,17 +262,17 @@ function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps
             </div>
 
             {/* Stats Summary */}
-            <div className="hidden sm:flex items-center gap-2 shrink-0">
+            <div className="hidden shrink-0 items-center gap-2 sm:flex">
               <Badge variant="outline" className="text-xs">
-                <CheckSquare className="size-3 me-1" />
+                <CheckSquare className="me-1 size-3" />
                 {item.summary.by_source.tasks}
               </Badge>
               <Badge variant="outline" className="text-xs">
-                <FileCheck className="size-3 me-1" />
+                <FileCheck className="me-1 size-3" />
                 {item.summary.by_source.commitments}
               </Badge>
               <Badge variant="outline" className="text-xs">
-                <ClipboardList className="size-3 me-1" />
+                <ClipboardList className="me-1 size-3" />
                 {item.summary.by_source.intakes}
               </Badge>
             </div>
@@ -290,26 +290,26 @@ function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps
 
         {/* Expanded Content */}
         <CollapsibleContent>
-          <div className="px-3 pb-3 space-y-2">
+          <div className="space-y-2 px-3 pb-3">
             {/* Mobile Stats */}
-            <div className="flex sm:hidden items-center gap-2 py-2 border-t">
+            <div className="flex items-center gap-2 border-t py-2 sm:hidden">
               <Badge variant="outline" className="text-xs">
-                <CheckSquare className="size-3 me-1" />
+                <CheckSquare className="me-1 size-3" />
                 {item.summary.by_source.tasks} {t('pendingWork.tasks', 'tasks')}
               </Badge>
               <Badge variant="outline" className="text-xs">
-                <FileCheck className="size-3 me-1" />
+                <FileCheck className="me-1 size-3" />
                 {item.summary.by_source.commitments}
               </Badge>
               <Badge variant="outline" className="text-xs">
-                <ClipboardList className="size-3 me-1" />
+                <ClipboardList className="me-1 size-3" />
                 {item.summary.by_source.intakes}
               </Badge>
             </div>
 
             {/* Urgent Items */}
             {item.urgent_items.length > 0 && (
-              <div className="space-y-1.5 pt-2 border-t">
+              <div className="space-y-1.5 border-t pt-2">
                 <p className="text-xs font-medium text-muted-foreground">
                   {t('pendingWork.urgentItems', 'Most urgent')}:
                 </p>
@@ -333,9 +333,9 @@ function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps
                           urgent.work_item_type === 'intake' && 'text-green-500',
                         )}
                       />
-                      <span className="flex-1 text-sm truncate">{urgent.title}</span>
+                      <span className="flex-1 truncate text-sm">{urgent.title}</span>
                       {urgent.is_overdue && (
-                        <AlertTriangle className="size-4 text-red-500 shrink-0" />
+                        <AlertTriangle className="size-4 shrink-0 text-red-500" />
                       )}
                       <ChevronRight
                         className={cn(
@@ -353,7 +353,7 @@ function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps
             <Button
               variant="outline"
               size="sm"
-              className="w-full mt-2"
+              className="mt-2 w-full"
               onClick={handleDossierClick}
             >
               {t('pendingWork.viewAllInDossier', 'View all in dossier')}
@@ -372,7 +372,7 @@ function DossierWorkItem({ item, defaultExpanded = false }: DossierWorkItemProps
 
 function DossierWorkItemSkeleton() {
   return (
-    <div className="border rounded-lg p-3">
+    <div className="rounded-lg border p-3">
       <div className="flex items-center gap-3">
         <Skeleton className="size-10 rounded-lg" />
         <div className="flex-1 space-y-2">

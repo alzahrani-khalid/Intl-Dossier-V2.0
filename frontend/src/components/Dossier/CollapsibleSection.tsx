@@ -128,7 +128,7 @@ export function CollapsibleSection({
   }
 
   return (
-    <div className="border rounded-lg overflow-hidden" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="overflow-hidden rounded-lg border" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header - WCAG AA touch target: min 44x44px */}
       <button
         type="button"
@@ -149,8 +149,8 @@ export function CollapsibleSection({
         )}
       >
         <div className="flex-1">
-          <h2 className="text-base sm:text-lg font-semibold">{title}</h2>
-          {description && <p className="text-sm text-muted-foreground mt-1">{description}</p>}
+          <h2 className="text-base font-semibold sm:text-lg">{title}</h2>
+          {description && <p className="mt-1 text-sm text-muted-foreground">{description}</p>}
         </div>
 
         {/* Chevron icon */}
@@ -193,7 +193,7 @@ export function CollapsibleSection({
                   aria-live="polite"
                   aria-busy="true"
                 >
-                  <Loader2 className="h-6 w-6 sm:h-8 sm:w-8 animate-spin text-muted-foreground" />
+                  <Loader2 className="size-6 animate-spin text-muted-foreground sm:size-8" />
                   <span className="ms-3 text-muted-foreground">
                     {t('sections.collapsible.loading')}
                   </span>
@@ -207,14 +207,14 @@ export function CollapsibleSection({
                   role="alert"
                   aria-live="assertive"
                 >
-                  <p className="text-destructive text-sm sm:text-base">{error}</p>
+                  <p className="text-sm text-destructive sm:text-base">{error}</p>
                 </div>
               )}
 
               {/* Empty State */}
               {showEmptyState && !isLoading && !error && !children && (
                 <div className="flex items-center justify-center py-8 sm:py-12">
-                  <p className="text-muted-foreground text-sm sm:text-base">
+                  <p className="text-sm text-muted-foreground sm:text-base">
                     {emptyMessage || t('sections.collapsible.empty')}
                   </p>
                 </div>
@@ -222,7 +222,7 @@ export function CollapsibleSection({
 
               {/* Content */}
               {!isLoading && !error && children && (
-                <div className="prose prose-sm sm:prose max-w-none dark:prose-invert">
+                <div className="prose prose-sm max-w-none dark:prose-invert sm:prose">
                   {children}
                 </div>
               )}

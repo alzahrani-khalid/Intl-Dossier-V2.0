@@ -28,19 +28,19 @@ export function KanbanColumn({ id, title, assignments }: KanbanColumnProps) {
  return (
  <div
  ref={setNodeRef}
- className={`flex flex-col gap-2 p-4 rounded-lg min-w-[280px] sm:min-w-[300px] flex-1 ${bgClass} ${ringClass} transition-all`}
+ className={`flex min-w-[280px] flex-1 flex-col gap-2 rounded-lg p-4 sm:min-w-[300px] ${bgClass} ${ringClass} transition-all`}
  >
- <div className="flex items-center justify-between mb-2">
- <h3 className="text-sm sm:text-base font-semibold">{title}</h3>
- <span className="text-xs sm:text-sm text-muted-foreground">
+ <div className="mb-2 flex items-center justify-between">
+ <h3 className="text-sm font-semibold sm:text-base">{title}</h3>
+ <span className="text-xs text-muted-foreground sm:text-sm">
  {assignments.length}
  </span>
  </div>
 
  <SortableContext items={assignments.map((a) => a.id)} strategy={verticalListSortingStrategy}>
- <div className="flex flex-col gap-2 min-h-[200px]">
+ <div className="flex min-h-[200px] flex-col gap-2">
  {assignments.length === 0 ? (
- <div className="flex items-center justify-center h-32 text-sm text-muted-foreground">
+ <div className="flex h-32 items-center justify-center text-sm text-muted-foreground">
  {t('kanban.no_assignments')}
  </div>
  ) : (

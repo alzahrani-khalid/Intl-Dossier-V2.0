@@ -158,7 +158,7 @@ export function EngagementBriefsSection({
   return (
     <Card dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <CardTitle className="flex items-center gap-2 text-lg">
               <FileText className="size-5 text-primary" />
@@ -191,7 +191,7 @@ export function EngagementBriefsSection({
                 <div className="space-y-4 py-4">
                   {/* Context Info */}
                   {contextData && (
-                    <div className="p-3 bg-muted/50 rounded-lg text-sm text-muted-foreground">
+                    <div className="rounded-lg bg-muted/50 p-3 text-sm text-muted-foreground">
                       {t('generateDialog.contextInfo', {
                         participantCount: contextData.participants?.length || 0,
                         positionCount: contextData.positions?.length || 0,
@@ -259,12 +259,12 @@ export function EngagementBriefsSection({
 
       <CardContent>
         <Tabs value={activeTab} onValueChange={setActiveTab}>
-          <TabsList className="w-full sm:w-auto mb-4">
-            <TabsTrigger value="briefs" className="flex-1 sm:flex-none gap-2">
+          <TabsList className="mb-4 w-full sm:w-auto">
+            <TabsTrigger value="briefs" className="flex-1 gap-2 sm:flex-none">
               <FileText className="size-4" />
               {t('tabs.briefs')}
             </TabsTrigger>
-            <TabsTrigger value="context" className="flex-1 sm:flex-none gap-2">
+            <TabsTrigger value="context" className="flex-1 gap-2 sm:flex-none">
               <MessageSquare className="size-4" />
               {t('tabs.context')}
             </TabsTrigger>
@@ -279,10 +279,10 @@ export function EngagementBriefsSection({
                 ))}
               </div>
             ) : briefs.length === 0 ? (
-              <div className="text-center py-12">
-                <FileText className="size-12 text-muted-foreground mx-auto mb-4" />
+              <div className="py-12 text-center">
+                <FileText className="mx-auto mb-4 size-12 text-muted-foreground" />
                 <h3 className="text-lg font-medium">{t('empty.title')}</h3>
-                <p className="text-sm text-muted-foreground mt-1">{t('empty.description')}</p>
+                <p className="mt-1 text-sm text-muted-foreground">{t('empty.description')}</p>
               </div>
             ) : (
               <AnimatePresence mode="popLayout">
@@ -305,7 +305,7 @@ export function EngagementBriefsSection({
 
           {/* Context Tab */}
           <TabsContent value="context" className="space-y-4">
-            <div className="flex items-center justify-between mb-4">
+            <div className="mb-4 flex items-center justify-between">
               <h4 className="font-medium">{t('sections.context')}</h4>
               <Button
                 variant="outline"
@@ -326,7 +326,7 @@ export function EngagementBriefsSection({
                 ))}
               </div>
             ) : contextData ? (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 {/* Participants */}
                 <ContextCard
                   icon={Users}
@@ -376,10 +376,10 @@ export function EngagementBriefsSection({
                 />
               </div>
             ) : (
-              <div className="text-center py-8">
-                <MessageSquare className="size-12 text-muted-foreground mx-auto mb-4" />
+              <div className="py-8 text-center">
+                <MessageSquare className="mx-auto mb-4 size-12 text-muted-foreground" />
                 <h3 className="text-lg font-medium">{t('empty.contextTitle')}</h3>
-                <p className="text-sm text-muted-foreground mt-1">
+                <p className="mt-1 text-sm text-muted-foreground">
                   {t('empty.contextDescription')}
                 </p>
               </div>
@@ -418,12 +418,12 @@ function BriefCard({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      className="border rounded-lg p-4 hover:shadow-md transition-shadow"
+      className="rounded-lg border p-4 transition-shadow hover:shadow-md"
     >
-      <div className="flex flex-col sm:flex-row sm:items-start gap-4">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-2">
-            <h4 className="font-medium truncate">{brief.title || t('card.viewDetails')}</h4>
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start">
+        <div className="min-w-0 flex-1">
+          <div className="mb-2 flex flex-wrap items-center gap-2">
+            <h4 className="truncate font-medium">{brief.title || t('card.viewDetails')}</h4>
             <Badge variant="outline" className={getStatusColor(brief.status)}>
               <span className="me-1">{getStatusIcon(brief.status)}</span>
               {t(`statuses.${brief.status}`)}
@@ -442,10 +442,10 @@ function BriefCard({
           </div>
 
           {brief.summary && (
-            <p className="text-sm text-muted-foreground line-clamp-2">{brief.summary}</p>
+            <p className="line-clamp-2 text-sm text-muted-foreground">{brief.summary}</p>
           )}
 
-          <div className="flex items-center gap-4 mt-2 text-xs text-muted-foreground">
+          <div className="mt-2 flex items-center gap-4 text-xs text-muted-foreground">
             <span className="flex items-center gap-1">
               <Clock className="size-3" />
               {formatDate(brief.created_at)}
@@ -455,7 +455,7 @@ function BriefCard({
         </div>
 
         <div className="flex gap-2 sm:flex-col">
-          <Button variant="outline" size="sm" className="gap-1 flex-1 sm:flex-none">
+          <Button variant="outline" size="sm" className="flex-1 gap-1 sm:flex-none">
             <ChevronRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
             {t('actions.view')}
           </Button>
@@ -490,11 +490,11 @@ interface ContextCardProps {
 
 function ContextCard({ icon: Icon, title, count, items, isRTL }: ContextCardProps) {
   return (
-    <div className="border rounded-lg p-4">
-      <div className="flex items-center justify-between mb-3">
+    <div className="rounded-lg border p-4">
+      <div className="mb-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <Icon className="size-4 text-primary" />
-          <span className="font-medium text-sm">{title}</span>
+          <span className="text-sm font-medium">{title}</span>
         </div>
         <Badge variant="secondary">{count}</Badge>
       </div>
@@ -504,7 +504,7 @@ function ContextCard({ icon: Icon, title, count, items, isRTL }: ContextCardProp
             <li key={idx} className="text-sm">
               <span className="font-medium">{item.label}</span>
               {item.sublabel && (
-                <span className="text-muted-foreground text-xs ms-2">({item.sublabel})</span>
+                <span className="ms-2 text-xs text-muted-foreground">({item.sublabel})</span>
               )}
             </li>
           ))}

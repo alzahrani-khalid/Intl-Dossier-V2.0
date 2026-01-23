@@ -194,23 +194,23 @@ function FileItem({ uploadedFile, onRemove, isRTL, disabled }: FileItemProps) {
       {/* Preview or Icon */}
       <div className="shrink-0">
         {uploadedFile.preview ? (
-          <div className="h-12 w-12 rounded overflow-hidden bg-gray-100 dark:bg-gray-700">
+          <div className="size-12 overflow-hidden rounded bg-gray-100 dark:bg-gray-700">
             <img
               src={uploadedFile.preview}
               alt={uploadedFile.file.name}
-              className="h-full w-full object-cover"
+              className="size-full object-cover"
             />
           </div>
         ) : (
-          <div className="flex h-12 w-12 items-center justify-center rounded bg-gray-100 dark:bg-gray-700">
-            <IconComponent className="h-6 w-6 text-gray-500 dark:text-gray-400" />
+          <div className="flex size-12 items-center justify-center rounded bg-gray-100 dark:bg-gray-700">
+            <IconComponent className="size-6 text-gray-500 dark:text-gray-400" />
           </div>
         )}
       </div>
 
       {/* File info */}
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
           {uploadedFile.file.name}
         </p>
         <p className="text-xs text-gray-500 dark:text-gray-400">
@@ -233,10 +233,10 @@ function FileItem({ uploadedFile, onRemove, isRTL, disabled }: FileItemProps) {
       {/* Status indicator */}
       <div className="shrink-0">
         {uploadedFile.status === 'uploading' && (
-          <Loader2 className="h-5 w-5 text-primary-500 animate-spin" />
+          <Loader2 className="size-5 animate-spin text-primary-500" />
         )}
-        {uploadedFile.status === 'success' && <CheckCircle2 className="h-5 w-5 text-green-500" />}
-        {uploadedFile.status === 'error' && <AlertCircle className="h-5 w-5 text-red-500" />}
+        {uploadedFile.status === 'success' && <CheckCircle2 className="size-5 text-green-500" />}
+        {uploadedFile.status === 'error' && <AlertCircle className="size-5 text-red-500" />}
       </div>
 
       {/* Remove button */}
@@ -253,7 +253,7 @@ function FileItem({ uploadedFile, onRemove, isRTL, disabled }: FileItemProps) {
         )}
         aria-label={t('forms.remove_file')}
       >
-        <X className="h-4 w-4" />
+        <X className="size-4" />
       </Button>
     </motion.div>
   )
@@ -561,7 +561,7 @@ export function UnifiedFileUpload({
             exit={{ opacity: 0, height: 0 }}
             className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400"
           >
-            <AlertCircle className="h-4 w-4 shrink-0" />
+            <AlertCircle className="size-4 shrink-0" />
             <span>{displayError}</span>
           </motion.div>
         )}

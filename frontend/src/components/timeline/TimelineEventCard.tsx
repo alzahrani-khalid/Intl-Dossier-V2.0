@@ -140,13 +140,13 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
             'shadow-sm'
           )}
         >
-          <EventIcon className="h-5 w-5 text-white" />
+          <EventIcon className="size-5 text-white" />
         </div>
 
         {/* Line Below (hidden for last item) */}
         {!isLast && (
           <div
-            className="flex-1 w-0.5 bg-border"
+            className="w-0.5 flex-1 bg-border"
             style={{ minHeight: isExpanded ? '200px' : '80px' }}
           />
         )}
@@ -163,9 +163,9 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
         <CardHeader className="pb-3 sm:pb-4">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             <div className="flex-1 space-y-1">
-              <CardTitle className="text-base sm:text-lg text-start">{title}</CardTitle>
+              <CardTitle className="text-start text-base sm:text-lg">{title}</CardTitle>
               <CardDescription className="flex flex-wrap items-center gap-2 text-start">
-                <Clock className="h-3.5 w-3.5" />
+                <Clock className="size-3.5" />
                 <span className="text-xs sm:text-sm">{formattedDate}</span>
               </CardDescription>
             </div>
@@ -192,7 +192,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
         <CardContent className="space-y-4">
           {/* Collapsed State - Brief Description */}
           {!isExpanded && description && (
-            <p className="text-sm text-muted-foreground text-start line-clamp-2">{description}</p>
+            <p className="line-clamp-2 text-start text-sm text-muted-foreground">{description}</p>
           )}
 
           {/* Expanded State - Full Details */}
@@ -200,7 +200,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
             <div className="space-y-4">
               {/* Full Description */}
               {description && (
-                <div className="text-sm text-start">
+                <div className="text-start text-sm">
                   <p className="whitespace-pre-wrap">{description}</p>
                 </div>
               )}
@@ -209,7 +209,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
               {(event.metadata.location_en || event.metadata.location_ar) && (
                 <div className="flex items-start gap-2">
                   <MapPin className={cn('h-4 w-4 mt-0.5 text-muted-foreground', isRTL && 'rotate-180')} />
-                  <div className="text-sm text-start">
+                  <div className="text-start text-sm">
                     <p className="font-medium">{t('timeline.location')}</p>
                     <p className="text-muted-foreground">
                       {isRTL ? event.metadata.location_ar : event.metadata.location_en}
@@ -219,10 +219,10 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
                         href={event.metadata.virtual_link}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-primary hover:underline inline-flex items-center gap-1"
+                        className="inline-flex items-center gap-1 text-primary hover:underline"
                       >
                         {t('timeline.join_virtual')}
-                        <ExternalLink className="h-3 w-3" />
+                        <ExternalLink className="size-3" />
                       </a>
                     )}
                   </div>
@@ -232,14 +232,14 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
               {/* Participants */}
               {event.metadata.participants && event.metadata.participants.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-start">{t('timeline.participants')}</p>
+                  <p className="text-start text-sm font-medium">{t('timeline.participants')}</p>
                   <div className="flex flex-wrap gap-2">
                     {event.metadata.participants.slice(0, 5).map((participant) => (
                       <div
                         key={participant.id}
                         className="flex items-center gap-2 rounded-full bg-muted px-3 py-1.5"
                       >
-                        <Avatar className="h-6 w-6">
+                        <Avatar className="size-6">
                           {participant.avatar_url && <AvatarImage src={participant.avatar_url} />}
                           <AvatarFallback className="text-xs">
                             {(isRTL ? participant.name_ar : participant.name_en)
@@ -267,7 +267,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
               {/* Attachments */}
               {event.metadata.attachments && event.metadata.attachments.length > 0 && (
                 <div className="space-y-2">
-                  <p className="text-sm font-medium text-start">{t('timeline.attachments')}</p>
+                  <p className="text-start text-sm font-medium">{t('timeline.attachments')}</p>
                   <div className="space-y-1">
                     {event.metadata.attachments.map((attachment) => (
                       <a
@@ -275,11 +275,11 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
                         href={attachment.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm hover:bg-muted/80 transition-colors"
+                        className="flex items-center gap-2 rounded-md bg-muted px-3 py-2 text-sm transition-colors hover:bg-muted/80"
                       >
-                        <FileText className="h-4 w-4 text-muted-foreground" />
-                        <span className="flex-1 text-start truncate">{attachment.filename}</span>
-                        <Download className="h-4 w-4 text-muted-foreground" />
+                        <FileText className="size-4 text-muted-foreground" />
+                        <span className="flex-1 truncate text-start">{attachment.filename}</span>
+                        <Download className="size-4 text-muted-foreground" />
                       </a>
                     ))}
                   </div>
@@ -299,13 +299,13 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 pt-2">
+          <div className="flex flex-col gap-2 pt-2 sm:flex-row">
             {/* Expand/Collapse Button */}
             <Button
               variant="outline"
               size="sm"
               onClick={toggleExpand}
-              className="min-h-11 sm:min-h-10 w-full sm:w-auto"
+              className="min-h-11 w-full sm:min-h-10 sm:w-auto"
             >
               {isExpanded ? (
                 <>
@@ -326,7 +326,7 @@ export function TimelineEventCard({ event, isFirst, isLast, className }: Timelin
                 variant="default"
                 size="sm"
                 onClick={handleNavigate}
-                className="min-h-11 sm:min-h-10 w-full sm:w-auto"
+                className="min-h-11 w-full sm:min-h-10 sm:w-auto"
               >
                 {t('timeline.view_details')}
                 <ExternalLink className={cn('h-4 w-4', isRTL ? 'me-2' : 'ms-2')} />

@@ -153,7 +153,7 @@ export function AssignmentDetailsModal({
  return (
  <Dialog open={isOpen} onOpenChange={onClose}>
  <DialogContent
- className="max-w-2xl w-full px-4 py-6 sm:px-6 md:px-8 max-h-[90vh] overflow-y-auto"
+ className="max-h-[90vh] w-full max-w-2xl overflow-y-auto px-4 py-6 sm:px-6 md:px-8"
  dir={isRTL ? 'rtl' : 'ltr'}
  data-testid="assignment-details-modal"
  >
@@ -161,7 +161,7 @@ export function AssignmentDetailsModal({
  <DialogHeader className="flex flex-col gap-2 sm:gap-3">
  <div className="flex items-start justify-between gap-4">
  <DialogTitle
- className="text-lg sm:text-xl md:text-2xl font-semibold text-start"
+ className="text-start text-lg font-semibold sm:text-xl md:text-2xl"
  data-testid="modal-title"
  >
  {t('waitingQueue.assignmentDetails.title', 'Assignment Details')}
@@ -172,11 +172,11 @@ export function AssignmentDetailsModal({
  <Button
  variant="ghost"
  size="icon"
- className=" h-11 w-11 rounded-full"
+ className=" size-11 rounded-full"
  data-testid="close-modal-button"
  aria-label={t('common.close', 'Close')}
  >
- <X className={`h-5 w-5 ${isRTL ? 'rotate-0' : ''}`} />
+ <X className={`size-5 ${isRTL ? 'rotate-0' : ''}`} />
  </Button>
  </DialogClose>
  </div>
@@ -191,7 +191,7 @@ export function AssignmentDetailsModal({
  {/* Work Item Title and Aging Badge */}
  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
  <h3
- className="text-base sm:text-lg font-medium text-start"
+ className="text-start text-base font-medium sm:text-lg"
  data-testid="work-item-id"
  >
  {getWorkItemTitle()}
@@ -201,17 +201,17 @@ export function AssignmentDetailsModal({
  </DialogHeader>
 
  {/* Content - Mobile-first grid layout */}
- <div className="mt-4 sm:mt-6 space-y-4 sm:space-y-6">
+ <div className="mt-4 space-y-4 sm:mt-6 sm:space-y-6">
  {/* Assignee Information */}
  <section className="space-y-3 sm:space-y-4">
- <h4 className="text-sm font-semibold text-muted-foreground uppercase">
+ <h4 className="text-sm font-semibold uppercase text-muted-foreground">
  {t('waitingQueue.assignmentDetails.assignee', 'Assignee')}
  </h4>
 
  <div className="space-y-2 sm:space-y-3">
  {/* Assignee Name */}
  <div className="flex items-center gap-2 sm:gap-3">
- <User className="h-4 w-4 text-muted-foreground shrink-0" />
+ <User className="size-4 shrink-0 text-muted-foreground" />
  <span
  className="text-sm sm:text-base"
  data-testid="assignee-name"
@@ -223,10 +223,10 @@ export function AssignmentDetailsModal({
  {/* Assignee Email */}
  {assignment.assignee_email && (
  <div className="flex items-center gap-2 sm:gap-3">
- <Mail className="h-4 w-4 text-muted-foreground shrink-0" />
+ <Mail className="size-4 shrink-0 text-muted-foreground" />
  <a
  href={`mailto:${assignment.assignee_email}`}
- className="text-sm sm:text-base text-primary hover:underline"
+ className="text-sm text-primary hover:underline sm:text-base"
  data-testid="assignee-email"
  >
  {assignment.assignee_email}
@@ -238,7 +238,7 @@ export function AssignmentDetailsModal({
 
  {/* Status and Priority */}
  <section className="space-y-3 sm:space-y-4">
- <h4 className="text-sm font-semibold text-muted-foreground uppercase">
+ <h4 className="text-sm font-semibold uppercase text-muted-foreground">
  {t('waitingQueue.assignmentDetails.statusAndPriority', 'Status & Priority')}
  </h4>
 
@@ -258,7 +258,7 @@ export function AssignmentDetailsModal({
  className="text-xs sm:text-sm"
  data-testid="assignment-priority"
  >
- <Tag className="h-3 w-3 me-1" />
+ <Tag className="me-1 size-3" />
  {t(`waitingQueue.priority.${assignment.priority}`, assignment.priority)}
  </Badge>
  </div>
@@ -267,10 +267,10 @@ export function AssignmentDetailsModal({
  {/* Task Description (if available) */}
  {assignment.work_item?.description && (
  <section className="space-y-3 sm:space-y-4">
- <h4 className="text-sm font-semibold text-muted-foreground uppercase">
+ <h4 className="text-sm font-semibold uppercase text-muted-foreground">
  {t('waitingQueue.assignmentDetails.description', 'Description')}
  </h4>
- <p className="text-sm sm:text-base text-start" data-testid="task-description">
+ <p className="text-start text-sm sm:text-base" data-testid="task-description">
  {assignment.work_item.description}
  </p>
  </section>
@@ -279,7 +279,7 @@ export function AssignmentDetailsModal({
  {/* Linked Entities (for tasks) */}
  {assignment.work_item?.linked_entities && assignment.work_item.linked_entities.length > 0 && (
  <section className="space-y-3 sm:space-y-4">
- <h4 className="text-sm font-semibold text-muted-foreground uppercase">
+ <h4 className="text-sm font-semibold uppercase text-muted-foreground">
  {t('waitingQueue.assignmentDetails.linkedItems', 'Linked Items')}
  </h4>
  <div className="space-y-2">
@@ -295,19 +295,19 @@ export function AssignmentDetailsModal({
  return (
  <div
  key={`${entity.type}-${entity.id}-${index}`}
- className="flex items-start gap-2 sm:gap-3 p-2 sm:p-3 rounded-lg bg-muted/50"
+ className="flex items-start gap-2 rounded-lg bg-muted/50 p-2 sm:gap-3 sm:p-3"
  data-testid={`linked-entity-${index}`}
  >
- <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
- <div className="flex-1 min-w-0">
- <p className="text-xs text-muted-foreground capitalize">
+ <ExternalLink className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+ <div className="min-w-0 flex-1">
+ <p className="text-xs capitalize text-muted-foreground">
  {entityTypeLabel}
  </p>
- <p className="text-sm sm:text-base font-medium text-start">
+ <p className="text-start text-sm font-medium sm:text-base">
  {entityTitle}
  </p>
  {entity.status && (
- <Badge variant="outline" className="text-xs mt-1">
+ <Badge variant="outline" className="mt-1 text-xs">
  {entity.status}
  </Badge>
  )}
@@ -321,15 +321,15 @@ export function AssignmentDetailsModal({
 
  {/* Timestamps */}
  <section className="space-y-3 sm:space-y-4">
- <h4 className="text-sm font-semibold text-muted-foreground uppercase">
+ <h4 className="text-sm font-semibold uppercase text-muted-foreground">
  {t('waitingQueue.assignmentDetails.timeline', 'Timeline')}
  </h4>
 
  <div className="space-y-2 sm:space-y-3">
  {/* Assigned At */}
  <div className="flex items-start gap-2 sm:gap-3">
- <Calendar className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
- <div className="flex-1 min-w-0">
+ <Calendar className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+ <div className="min-w-0 flex-1">
  <p className="text-xs text-muted-foreground">
  {t('waitingQueue.assignmentDetails.assignedAt', 'Assigned At')}
  </p>
@@ -341,12 +341,12 @@ export function AssignmentDetailsModal({
 
  {/* Days Waiting */}
  <div className="flex items-start gap-2 sm:gap-3">
- <Clock className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
- <div className="flex-1 min-w-0">
+ <Clock className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+ <div className="min-w-0 flex-1">
  <p className="text-xs text-muted-foreground">
  {t('waitingQueue.assignmentDetails.daysWaiting', 'Days Waiting')}
  </p>
- <p className="text-sm sm:text-base font-medium" data-testid="days-waiting">
+ <p className="text-sm font-medium sm:text-base" data-testid="days-waiting">
  {daysWaiting} {t('common.days', 'days')}
  </p>
  </div>
@@ -354,8 +354,8 @@ export function AssignmentDetailsModal({
 
  {/* Last Reminder Sent */}
  <div className="flex items-start gap-2 sm:gap-3">
- <Mail className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
- <div className="flex-1 min-w-0">
+ <Mail className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+ <div className="min-w-0 flex-1">
  <p className="text-xs text-muted-foreground">
  {t('waitingQueue.assignmentDetails.lastReminder', 'Last Reminder')}
  </p>
@@ -370,21 +370,21 @@ export function AssignmentDetailsModal({
  </section>
 
  {/* Actions */}
- <section className="pt-2 sm:pt-4 border-t space-y-3">
+ <section className="space-y-3 border-t pt-2 sm:pt-4">
  {/* Show task details link if it's a task */}
  {assignment.work_item_type === 'task' && isWorkItemValid && (
  <div className="space-y-2">
- <h4 className="text-xs font-semibold text-muted-foreground uppercase">
+ <h4 className="text-xs font-semibold uppercase text-muted-foreground">
  {t('waitingQueue.assignmentDetails.taskActions', 'Task')}
  </h4>
  <Button
  asChild
  variant="outline"
- className="w-full h-11 sm:w-auto"
+ className="h-11 w-full sm:w-auto"
  data-testid="view-task-link"
  >
  <a href={getWorkItemRoute()} className="inline-flex items-center justify-center gap-2">
- <ExternalLink className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+ <ExternalLink className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
  {t('waitingQueue.assignmentDetails.viewTask', 'View Task')}
  </a>
  </Button>
@@ -394,7 +394,7 @@ export function AssignmentDetailsModal({
  {/* Show linked entity links */}
  {assignment.work_item?.linked_entities && assignment.work_item.linked_entities.length > 0 && (
  <div className="space-y-2">
- <h4 className="text-xs font-semibold text-muted-foreground uppercase">
+ <h4 className="text-xs font-semibold uppercase text-muted-foreground">
  {t('waitingQueue.assignmentDetails.viewLinkedItems', 'View Linked Items')}
  </h4>
  <div className="flex flex-wrap gap-2">
@@ -421,7 +421,7 @@ export function AssignmentDetailsModal({
  data-testid={`view-linked-entity-${index}`}
  >
  <a href={entityRoute} className="inline-flex items-center gap-1.5">
- <ExternalLink className={`h-3.5 w-3.5 ${isRTL ? 'rotate-180' : ''}`} />
+ <ExternalLink className={`size-3.5 ${isRTL ? 'rotate-180' : ''}`} />
  {entityTitle?.substring(0, 30)}{entityTitle && entityTitle.length > 30 ? '...' : ''}
  </a>
  </Button>
@@ -436,11 +436,11 @@ export function AssignmentDetailsModal({
  <Button
  asChild
  variant="outline"
- className="w-full h-11 sm:w-auto"
+ className="h-11 w-full sm:w-auto"
  data-testid="view-full-details-link"
  >
  <a href={getWorkItemRoute()} className="inline-flex items-center justify-center gap-2">
- <ExternalLink className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+ <ExternalLink className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
  {t('waitingQueue.assignmentDetails.viewFullDetails', 'View Full Details')}
  </a>
  </Button>
@@ -451,14 +451,14 @@ export function AssignmentDetailsModal({
  <div className="space-y-2">
  <Button
  variant="outline"
- className="w-full h-11 sm:w-auto"
+ className="h-11 w-full sm:w-auto"
  disabled
  data-testid="view-full-details-disabled"
  >
- <ExternalLink className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+ <ExternalLink className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
  {t('waitingQueue.assignmentDetails.viewFullDetails', 'View Full Details')}
  </Button>
- <p className="text-xs sm:text-sm text-muted-foreground text-start">
+ <p className="text-start text-xs text-muted-foreground sm:text-sm">
  {t(
  'waitingQueue.assignmentDetails.workItemNotAvailable',
  'The work item for this assignment is not available.'

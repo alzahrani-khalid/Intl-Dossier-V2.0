@@ -170,8 +170,8 @@ export function MapFilterControls({
           onValueChange={handleTimeRangeChange}
           disabled={isLoading}
         >
-          <SelectTrigger className="w-[120px] h-9 text-xs">
-            <CalendarDays className="h-3 w-3 me-1" />
+          <SelectTrigger className="h-9 w-[120px] text-xs">
+            <CalendarDays className="me-1 size-3" />
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -186,8 +186,8 @@ export function MapFilterControls({
         {/* Filter Popover */}
         <Popover>
           <PopoverTrigger asChild>
-            <Button variant="outline" size="sm" className="h-9 text-xs gap-1">
-              <Filter className="h-3 w-3" />
+            <Button variant="outline" size="sm" className="h-9 gap-1 text-xs">
+              <Filter className="size-3" />
               {t('filters.filters', 'Filters')}
               {activeFilterCount > 0 && (
                 <Badge variant="secondary" className="ms-1 h-4 px-1 text-[10px]">
@@ -201,11 +201,11 @@ export function MapFilterControls({
               {/* Regions */}
               <div>
                 <Label className="text-xs font-medium">{t('filters.regions', 'Regions')}</Label>
-                <div className="flex flex-wrap gap-2 mt-2">
+                <div className="mt-2 flex flex-wrap gap-2">
                   {regionOptions.map((opt) => (
                     <label
                       key={opt.value}
-                      className="flex items-center gap-1.5 text-xs cursor-pointer"
+                      className="flex cursor-pointer items-center gap-1.5 text-xs"
                     >
                       <Checkbox
                         checked={filters.regions.includes(opt.value)}
@@ -266,8 +266,8 @@ export function MapFilterControls({
               </div>
 
               {/* Reset */}
-              <Button variant="ghost" size="sm" className="w-full h-8 text-xs" onClick={onReset}>
-                <RotateCcw className="h-3 w-3 me-1" />
+              <Button variant="ghost" size="sm" className="h-8 w-full text-xs" onClick={onReset}>
+                <RotateCcw className="me-1 size-3" />
                 {t('filters.reset', 'Reset Filters')}
               </Button>
             </div>
@@ -280,10 +280,10 @@ export function MapFilterControls({
   // Full filter layout
   return (
     <div className={`space-y-4 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="flex flex-col sm:flex-row flex-wrap gap-3">
+      <div className="flex flex-col flex-wrap gap-3 sm:flex-row">
         {/* Time Range */}
-        <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">
+        <div className="min-w-[150px] flex-1">
+          <Label className="mb-1.5 block text-xs font-medium">
             {t('filters.timeRange.label', 'Time Period')}
           </Label>
           <Select
@@ -292,7 +292,7 @@ export function MapFilterControls({
             disabled={isLoading}
           >
             <SelectTrigger className="h-9">
-              <CalendarDays className="h-4 w-4 me-2 text-muted-foreground" />
+              <CalendarDays className="me-2 size-4 text-muted-foreground" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -306,26 +306,26 @@ export function MapFilterControls({
         </div>
 
         {/* Regions */}
-        <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">
+        <div className="min-w-[150px] flex-1">
+          <Label className="mb-1.5 block text-xs font-medium">
             {t('filters.regions', 'Regions')}
           </Label>
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full h-9 justify-between font-normal">
+              <Button variant="outline" className="h-9 w-full justify-between font-normal">
                 <div className="flex items-center gap-2 truncate">
-                  <Globe className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <Globe className="size-4 shrink-0 text-muted-foreground" />
                   {filters.regions.length === 0
                     ? t('filters.allRegions', 'All Regions')
                     : `${filters.regions.length} ${t('filters.selected', 'selected')}`}
                 </div>
-                <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
+                <ChevronDown className="size-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-56" align={isRTL ? 'end' : 'start'}>
               <div className="space-y-2">
                 {regionOptions.map((opt) => (
-                  <label key={opt.value} className="flex items-center gap-2 text-sm cursor-pointer">
+                  <label key={opt.value} className="flex cursor-pointer items-center gap-2 text-sm">
                     <Checkbox
                       checked={filters.regions.includes(opt.value)}
                       onCheckedChange={(checked) => handleRegionToggle(opt.value, !!checked)}
@@ -339,29 +339,29 @@ export function MapFilterControls({
         </div>
 
         {/* Relationship Types */}
-        <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">
+        <div className="min-w-[150px] flex-1">
+          <Label className="mb-1.5 block text-xs font-medium">
             {t('filters.relationshipTypes', 'Relationship Types')}
           </Label>
           <Popover>
             <PopoverTrigger asChild>
-              <Button variant="outline" className="w-full h-9 justify-between font-normal">
+              <Button variant="outline" className="h-9 w-full justify-between font-normal">
                 <div className="flex items-center gap-2 truncate">
-                  <Network className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <Network className="size-4 shrink-0 text-muted-foreground" />
                   {filters.relationshipTypes.length === 0
                     ? t('filters.allTypes', 'All Types')
                     : `${filters.relationshipTypes.length} ${t('filters.selected', 'selected')}`}
                 </div>
-                <ChevronDown className="h-4 w-4 opacity-50 shrink-0" />
+                <ChevronDown className="size-4 shrink-0 opacity-50" />
               </Button>
             </PopoverTrigger>
             <PopoverContent
-              className="w-64 max-h-64 overflow-y-auto"
+              className="max-h-64 w-64 overflow-y-auto"
               align={isRTL ? 'end' : 'start'}
             >
               <div className="space-y-2">
                 {relationshipTypeOptions.map((opt) => (
-                  <label key={opt.value} className="flex items-center gap-2 text-sm cursor-pointer">
+                  <label key={opt.value} className="flex cursor-pointer items-center gap-2 text-sm">
                     <Checkbox
                       checked={filters.relationshipTypes.includes(opt.value)}
                       onCheckedChange={(checked) =>
@@ -377,8 +377,8 @@ export function MapFilterControls({
         </div>
 
         {/* Intensity Threshold */}
-        <div className="flex-1 min-w-[150px]">
-          <Label className="text-xs font-medium mb-1.5 block">
+        <div className="min-w-[150px] flex-1">
+          <Label className="mb-1.5 block text-xs font-medium">
             {t('filters.minIntensity', 'Min. Intensity')}
           </Label>
           <Select
@@ -387,7 +387,7 @@ export function MapFilterControls({
             disabled={isLoading}
           >
             <SelectTrigger className="h-9">
-              <Thermometer className="h-4 w-4 me-2 text-muted-foreground" />
+              <Thermometer className="me-2 size-4 text-muted-foreground" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -402,7 +402,7 @@ export function MapFilterControls({
       </div>
 
       {/* View Toggles & Reset */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pt-2 border-t">
+      <div className="flex flex-wrap items-center justify-between gap-3 border-t pt-2">
         <div className="flex flex-wrap gap-4">
           <div className="flex items-center gap-2">
             <Switch
@@ -410,7 +410,7 @@ export function MapFilterControls({
               checked={filters.showRelationshipFlows}
               onCheckedChange={(checked) => onFiltersChange({ showRelationshipFlows: checked })}
             />
-            <Label htmlFor="show-flows" className="text-xs cursor-pointer">
+            <Label htmlFor="show-flows" className="cursor-pointer text-xs">
               {t('filters.showFlows', 'Relationship Flows')}
             </Label>
           </div>
@@ -420,7 +420,7 @@ export function MapFilterControls({
               checked={filters.showEngagementHeatmap}
               onCheckedChange={(checked) => onFiltersChange({ showEngagementHeatmap: checked })}
             />
-            <Label htmlFor="show-heatmap" className="text-xs cursor-pointer">
+            <Label htmlFor="show-heatmap" className="cursor-pointer text-xs">
               {t('filters.showHeatmap', 'Engagement Heatmap')}
             </Label>
           </div>
@@ -433,7 +433,7 @@ export function MapFilterControls({
           onClick={onReset}
           disabled={activeFilterCount === 0}
         >
-          <RotateCcw className="h-3 w-3 me-1" />
+          <RotateCcw className="me-1 size-3" />
           {t('filters.reset', 'Reset')}
           {activeFilterCount > 0 && (
             <Badge variant="secondary" className="ms-1 h-4 px-1 text-[10px]">

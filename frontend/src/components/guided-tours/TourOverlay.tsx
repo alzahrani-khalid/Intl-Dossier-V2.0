@@ -301,10 +301,10 @@ export function TourOverlay() {
           >
             <CardContent className="p-0">
               {/* Header with progress */}
-              <div className="px-4 sm:px-6 pt-4 sm:pt-5 pb-3">
+              <div className="px-4 pb-3 pt-4 sm:px-6 sm:pt-5">
                 {/* Progress bar */}
-                <div className="flex items-center justify-between mb-3 sm:mb-4">
-                  <span className="text-xs sm:text-sm font-medium text-muted-foreground">
+                <div className="mb-3 flex items-center justify-between sm:mb-4">
+                  <span className="text-xs font-medium text-muted-foreground sm:text-sm">
                     {t('common.stepOf', {
                       current: currentStepIndex + 1,
                       total: activeTour.steps.length,
@@ -314,39 +314,39 @@ export function TourOverlay() {
                     variant="ghost"
                     size="sm"
                     onClick={skipTour}
-                    className="h-8 w-8 p-0 rounded-full hover:bg-black/5"
+                    className="size-8 rounded-full p-0 hover:bg-black/5"
                     aria-label={t('common.closeTour')}
                   >
-                    <X className="h-4 w-4" />
+                    <X className="size-4" />
                   </Button>
                 </div>
                 <Progress value={progress} className="h-1 sm:h-1.5" />
               </div>
 
               {/* Content */}
-              <div className="px-4 sm:px-6 py-3 sm:py-4">
+              <div className="px-4 py-3 sm:px-6 sm:py-4">
                 {/* Icon */}
                 {StepIcon && (
-                  <div className="flex items-center justify-center w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 mb-3 sm:mb-4 mx-auto">
-                    <StepIcon className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
+                  <div className="mx-auto mb-3 flex size-10 items-center justify-center rounded-full bg-primary/10 sm:mb-4 sm:size-12">
+                    <StepIcon className="size-5 text-primary sm:size-6" />
                   </div>
                 )}
 
                 {/* Title */}
-                <h3 className="text-base sm:text-lg font-semibold text-center mb-2">
+                <h3 className="mb-2 text-center text-base font-semibold sm:text-lg">
                   {t(currentStep.title)}
                 </h3>
 
                 {/* Content */}
-                <p className="text-sm sm:text-base text-muted-foreground text-center mb-3 sm:mb-4 leading-relaxed">
+                <p className="mb-3 text-center text-sm leading-relaxed text-muted-foreground sm:mb-4 sm:text-base">
                   {t(currentStep.content)}
                 </p>
 
                 {/* Hint */}
                 {currentStep.hint && (
-                  <div className="flex items-start gap-2 p-2.5 sm:p-3 rounded-xl bg-amber-50 border border-amber-100 mb-3 sm:mb-4">
-                    <HelpCircle className="w-4 h-4 text-amber-600 mt-0.5 flex-shrink-0" />
-                    <p className="text-xs sm:text-sm text-amber-800 text-start">
+                  <div className="mb-3 flex items-start gap-2 rounded-xl border border-amber-100 bg-amber-50 p-2.5 sm:mb-4 sm:p-3">
+                    <HelpCircle className="mt-0.5 size-4 shrink-0 text-amber-600" />
+                    <p className="text-start text-xs text-amber-800 sm:text-sm">
                       {t(currentStep.hint)}
                     </p>
                   </div>
@@ -354,7 +354,7 @@ export function TourOverlay() {
               </div>
 
               {/* Actions */}
-              <div className="px-4 sm:px-6 pb-4 sm:pb-5 pt-2 border-t border-black/5 bg-black/[0.02]">
+              <div className="border-t border-black/5 bg-black/[0.02] px-4 pb-4 pt-2 sm:px-6 sm:pb-5">
                 <div className="flex items-center justify-between gap-2 sm:gap-3">
                   {/* Back button */}
                   <Button
@@ -377,7 +377,7 @@ export function TourOverlay() {
                   {/* Skip link */}
                   <button
                     onClick={skipTour}
-                    className="text-xs sm:text-sm text-muted-foreground hover:text-foreground transition-colors underline-offset-4 hover:underline"
+                    className="text-xs text-muted-foreground underline-offset-4 transition-colors hover:text-foreground hover:underline sm:text-sm"
                   >
                     {t('common.skipTour')}
                   </button>
@@ -424,7 +424,7 @@ export function TourOverlay() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed pointer-events-none z-[9998]"
+            className="pointer-events-none fixed z-[9998]"
             style={{
               top: targetRect.top - 4,
               left: targetRect.left - 4,
@@ -432,7 +432,7 @@ export function TourOverlay() {
               height: targetRect.height + 8,
             }}
           >
-            <div className="absolute inset-0 rounded-lg border-2 border-primary animate-pulse" />
+            <div className="absolute inset-0 animate-pulse rounded-lg border-2 border-primary" />
           </motion.div>
         )}
       </div>

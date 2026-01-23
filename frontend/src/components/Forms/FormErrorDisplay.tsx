@@ -205,8 +205,8 @@ export function ErrorWithSuggestion({
 
           {/* Suggestion */}
           {suggestion && (
-            <div className="flex items-start gap-2 mt-2 ps-6">
-              <Lightbulb className="h-4 w-4 mt-0.5 shrink-0 text-amber-500" />
+            <div className="mt-2 flex items-start gap-2 ps-6">
+              <Lightbulb className="mt-0.5 size-4 shrink-0 text-amber-500" />
               <span className="text-sm text-gray-600 dark:text-gray-400">{suggestion}</span>
             </div>
           )}
@@ -271,9 +271,9 @@ export function ErrorSummary({
         aria-live="assertive"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b border-red-200 dark:border-red-800">
+        <div className="flex items-center justify-between border-b border-red-200 px-4 py-3 dark:border-red-800">
           <div className="flex items-center gap-2">
-            <AlertCircle className="h-5 w-5 text-red-500" />
+            <AlertCircle className="size-5 text-red-500" />
             <span className="font-medium text-red-700 dark:text-red-400">
               {title || t('form_errors', { count: errorCount })}
             </span>
@@ -285,9 +285,9 @@ export function ErrorSummary({
               variant="ghost"
               size="icon"
               onClick={onDismiss}
-              className="h-6 w-6 text-red-500 hover:text-red-700 hover:bg-red-100 dark:hover:bg-red-900/50"
+              className="size-6 text-red-500 hover:bg-red-100 hover:text-red-700 dark:hover:bg-red-900/50"
             >
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
           )}
         </div>
@@ -314,13 +314,13 @@ export function ErrorSummary({
               >
                 <div className="flex items-start gap-2">
                   <IconComponent className={cn('h-4 w-4 mt-0.5 shrink-0', styles.icon)} />
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <p className={cn('text-sm', styles.text)}>
                       {error.field && <span className="font-medium">{error.field}: </span>}
                       {error.message}
                     </p>
                     {error.suggestion && (
-                      <p className="text-xs text-gray-500 dark:text-gray-400 mt-0.5">
+                      <p className="mt-0.5 text-xs text-gray-500 dark:text-gray-400">
                         {error.suggestion}
                       </p>
                     )}
@@ -336,7 +336,7 @@ export function ErrorSummary({
 
         {/* Summary footer */}
         {(errorCount > 0 || warningCount > 0) && (
-          <div className="px-4 py-2 text-xs text-gray-600 dark:text-gray-400 border-t border-red-200 dark:border-red-800">
+          <div className="border-t border-red-200 px-4 py-2 text-xs text-gray-600 dark:border-red-800 dark:text-gray-400">
             {errorCount > 0 && t('error_count', { count: errorCount })}
             {errorCount > 0 && warningCount > 0 && ', '}
             {warningCount > 0 && t('warning_count', { count: warningCount })}
@@ -456,9 +456,9 @@ export function ToastError({
               variant="ghost"
               size="icon"
               onClick={onClose}
-              className="h-6 w-6 shrink-0"
+              className="size-6 shrink-0"
             >
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
           </div>
         </motion.div>

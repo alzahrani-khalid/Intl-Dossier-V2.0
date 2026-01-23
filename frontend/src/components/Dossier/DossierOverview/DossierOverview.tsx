@@ -83,12 +83,12 @@ function StatCard({
     <Card className={`${variantStyles[variant]} transition-colors`}>
       <CardContent className="p-3 sm:p-4">
         <div className="flex items-center gap-2 sm:gap-3" dir={isRTL ? 'rtl' : 'ltr'}>
-          <div className={`p-2 rounded-lg bg-background/80 ${iconStyles[variant]}`}>
-            <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+          <div className={`rounded-lg bg-background/80 p-2 ${iconStyles[variant]}`}>
+            <Icon className="size-4 sm:size-5" />
           </div>
-          <div className="flex-1 min-w-0">
-            <p className="text-xs sm:text-sm text-muted-foreground truncate">{label}</p>
-            <p className="text-lg sm:text-xl font-bold">{value}</p>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs text-muted-foreground sm:text-sm">{label}</p>
+            <p className="text-lg font-bold sm:text-xl">{value}</p>
           </div>
         </div>
       </CardContent>
@@ -109,7 +109,7 @@ function OverviewSkeleton() {
       </div>
 
       {/* Stats skeleton */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-6">
         {[...Array(6)].map((_, i) => (
           <Skeleton key={i} className="h-20" />
         ))}
@@ -219,7 +219,7 @@ export function DossierOverview({
   // Loading state
   if (isLoading) {
     return (
-      <div className={`container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 ${className}`}>
+      <div className={`container mx-auto p-4 sm:p-6 lg:px-8 ${className}`}>
         <OverviewSkeleton />
       </div>
     )
@@ -228,14 +228,14 @@ export function DossierOverview({
   // Error state
   if (isError || !data) {
     return (
-      <div className={`container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 ${className}`}>
+      <div className={`container mx-auto p-4 sm:p-6 lg:px-8 ${className}`}>
         <Card className="border-destructive">
-          <CardContent className="p-6 sm:p-8 text-center">
-            <AlertCircle className="h-12 w-12 text-destructive mx-auto mb-4" />
-            <h2 className="text-lg font-semibold mb-2">{t('error.title')}</h2>
-            <p className="text-muted-foreground mb-4">{error?.message || t('error.description')}</p>
+          <CardContent className="p-6 text-center sm:p-8">
+            <AlertCircle className="mx-auto mb-4 size-12 text-destructive" />
+            <h2 className="mb-2 text-lg font-semibold">{t('error.title')}</h2>
+            <p className="mb-4 text-muted-foreground">{error?.message || t('error.description')}</p>
             <Button onClick={() => refetch()} variant="outline">
-              <RefreshCw className="h-4 w-4 me-2" />
+              <RefreshCw className="me-2 size-4" />
               {t('actions.retry')}
             </Button>
           </CardContent>
@@ -248,44 +248,44 @@ export function DossierOverview({
 
   return (
     <div
-      className={`container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 ${className}`}
+      className={`container mx-auto p-4 sm:p-6 lg:p-8 ${className}`}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Breadcrumbs */}
       <nav
-        className="flex items-center gap-2 text-sm sm:text-base mb-4 sm:mb-6"
+        className="mb-4 flex items-center gap-2 text-sm sm:mb-6 sm:text-base"
         aria-label="Breadcrumb"
       >
         <Link
           to="/dossiers"
-          className="flex items-center gap-1 sm:gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground sm:gap-2"
         >
-          <Home className="h-4 w-4" />
+          <Home className="size-4" />
           <span>{t('nav.dossiersHub')}</span>
         </Link>
-        <ChevronRight className={`h-4 w-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`} />
-        <span className="text-foreground font-medium truncate">
+        <ChevronRight className={`size-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`} />
+        <span className="truncate font-medium text-foreground">
           {isRTL ? dossier.name_ar : dossier.name_en}
         </span>
       </nav>
 
       {/* Header */}
       <header className="mb-6 sm:mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+        <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
           <div className="flex items-start gap-3 sm:gap-4">
-            <div className="p-2 sm:p-3 rounded-lg bg-primary/10">
-              <DossierTypeIcon type={dossier.type} className="h-6 w-6 sm:h-8 sm:w-8" />
+            <div className="rounded-lg bg-primary/10 p-2 sm:p-3">
+              <DossierTypeIcon type={dossier.type} className="size-6 sm:size-8" />
             </div>
-            <div className="flex-1 min-w-0">
-              <h1 className="text-xl sm:text-2xl md:text-3xl font-bold mb-1 sm:mb-2">
+            <div className="min-w-0 flex-1">
+              <h1 className="mb-1 text-xl font-bold sm:mb-2 sm:text-2xl md:text-3xl">
                 {isRTL ? dossier.name_ar : dossier.name_en}
               </h1>
               {(dossier.description_en || dossier.description_ar) && (
-                <p className="text-sm sm:text-base text-muted-foreground line-clamp-2">
+                <p className="line-clamp-2 text-sm text-muted-foreground sm:text-base">
                   {isRTL ? dossier.description_ar : dossier.description_en}
                 </p>
               )}
-              <div className="flex items-center gap-2 mt-2">
+              <div className="mt-2 flex items-center gap-2">
                 <Badge variant="outline">{t(`dossierType.${dossier.type}`)}</Badge>
                 <Badge variant={dossier.status === 'active' ? 'default' : 'secondary'}>
                   {t(`status.${dossier.status}`)}
@@ -295,9 +295,9 @@ export function DossierOverview({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex shrink-0 items-center gap-2">
             <Button variant="outline" size="sm" onClick={() => refetch()} className="min-h-10">
-              <RefreshCw className="h-4 w-4 me-2" />
+              <RefreshCw className="me-2 size-4" />
               <span className="hidden sm:inline">{t('actions.refresh')}</span>
             </Button>
 
@@ -305,21 +305,21 @@ export function DossierOverview({
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="default" size="sm" disabled={isExporting} className="min-h-10">
-                    <Download className="h-4 w-4 me-2" />
+                    <Download className="me-2 size-4" />
                     {isExporting ? t('actions.exporting') : t('actions.export')}
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                   <DropdownMenuItem onClick={() => handleExport('json')}>
-                    <FileJson className="h-4 w-4 me-2" />
+                    <FileJson className="me-2 size-4" />
                     {t('export.json')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleExport('pdf')}>
-                    <File className="h-4 w-4 me-2" />
+                    <File className="me-2 size-4" />
                     {t('export.pdf')}
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={() => handleExport('docx')}>
-                    <FileText className="h-4 w-4 me-2" />
+                    <FileText className="me-2 size-4" />
                     {t('export.docx')}
                   </DropdownMenuItem>
                 </DropdownMenuContent>
@@ -331,7 +331,7 @@ export function DossierOverview({
 
       {/* Stats Overview */}
       <section className="mb-6 sm:mb-8">
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 sm:gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-6">
           <StatCard
             icon={Network}
             label={t('stats.relatedDossiers')}
@@ -375,14 +375,14 @@ export function DossierOverview({
 
       {/* Tabbed Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
-        <TabsList className="w-full justify-start overflow-x-auto flex-nowrap mb-4 sm:mb-6 h-auto p-1">
+        <TabsList className="mb-4 h-auto w-full flex-nowrap justify-start overflow-x-auto p-1 sm:mb-6">
           {tabs.map((tab) => (
             <TabsTrigger
               key={tab.id}
               value={tab.id}
-              className="flex items-center gap-1 sm:gap-2 min-h-10 px-2 sm:px-4 shrink-0"
+              className="flex min-h-10 shrink-0 items-center gap-1 px-2 sm:gap-2 sm:px-4"
             >
-              <tab.icon className="h-4 w-4" />
+              <tab.icon className="size-4" />
               <span className="hidden sm:inline">{tab.label}</span>
               <span className="text-xs text-muted-foreground">({tab.count})</span>
               {tab.badge && (
@@ -424,7 +424,7 @@ export function DossierOverview({
       </Tabs>
 
       {/* Generated timestamp */}
-      <footer className="mt-6 sm:mt-8 pt-4 border-t text-xs sm:text-sm text-muted-foreground">
+      <footer className="mt-6 border-t pt-4 text-xs text-muted-foreground sm:mt-8 sm:text-sm">
         {t('footer.generatedAt', {
           date: new Date(data.generated_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
         })}

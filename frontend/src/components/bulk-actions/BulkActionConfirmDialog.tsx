@@ -220,8 +220,8 @@ export function BulkActionConfirmDialog({
 
       case 'delete':
         return (
-          <div className="flex items-start gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-md mt-4">
-            <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+          <div className="mt-4 flex items-start gap-3 rounded-md bg-red-50 p-3 dark:bg-red-950">
+            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600 dark:text-red-400" />
             <div className="space-y-1">
               <p className="text-sm text-red-800 dark:text-red-200">
                 {t('confirmation.delete.warning')}
@@ -235,7 +235,7 @@ export function BulkActionConfirmDialog({
 
       case 'archive':
         return (
-          <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-md mt-4">
+          <div className="mt-4 rounded-md bg-blue-50 p-3 dark:bg-blue-950">
             <p className="text-sm text-blue-800 dark:text-blue-200">
               {t('confirmation.archive.note')}
             </p>
@@ -275,7 +275,7 @@ export function BulkActionConfirmDialog({
 
         {/* Undo availability notice */}
         {action.supportsUndo && !action.isDestructive && (
-          <p className="text-xs text-muted-foreground mt-2">
+          <p className="mt-2 text-xs text-muted-foreground">
             {t('confirmation.undoAvailable', { seconds: undoSeconds })}
           </p>
         )}
@@ -291,7 +291,7 @@ export function BulkActionConfirmDialog({
           >
             {isProcessing ? (
               <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
                 {t('confirmation.processing')}
               </>
             ) : (

@@ -169,15 +169,15 @@ const CitationNode = memo(({ data, selected }: { data: CitationNodeData; selecte
       >
         <div className="flex items-start gap-2">
           {getNodeIcon(data.type)}
-          <div className="flex-1 min-w-0">
-            <p className="text-xs font-medium text-foreground truncate">{label}</p>
-            <Badge variant="outline" className="text-xs mt-1 px-1 py-0">
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-xs font-medium text-foreground">{label}</p>
+            <Badge variant="outline" className="mt-1 px-1 py-0 text-xs">
               {typeLabel}
             </Badge>
           </div>
         </div>
         {data.depth > 0 && (
-          <div className="absolute -top-1 -end-1 h-5 w-5 rounded-full bg-muted flex items-center justify-center text-xs font-medium">
+          <div className="absolute -end-1 -top-1 flex size-5 items-center justify-center rounded-full bg-muted text-xs font-medium">
             {data.depth}
           </div>
         )}
@@ -313,7 +313,7 @@ export function CitationNetworkGraph({
   if (isLoading) {
     return (
       <div className={`${className}`} style={{ height }}>
-        <Skeleton className="w-full h-full rounded-lg" />
+        <Skeleton className="size-full rounded-lg" />
       </div>
     )
   }
@@ -336,10 +336,10 @@ export function CitationNetworkGraph({
     return (
       <Card className={className}>
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-            <Link className="h-8 w-8 text-primary" />
+          <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10">
+            <Link className="size-8 text-primary" />
           </div>
-          <p className="text-sm text-muted-foreground text-center">
+          <p className="text-center text-sm text-muted-foreground">
             {t('network.empty', 'No citations found for this entity')}
           </p>
         </CardContent>
@@ -348,7 +348,7 @@ export function CitationNetworkGraph({
   }
 
   return (
-    <div className={`border rounded-lg overflow-hidden ${className}`} style={{ height }}>
+    <div className={`overflow-hidden rounded-lg border ${className}`} style={{ height }}>
       <ReactFlow
         nodes={nodes}
         edges={edges}
@@ -381,28 +381,28 @@ export function CitationNetworkGraph({
 
       {/* Legend */}
       <div
-        className="absolute bottom-4 end-4 bg-card/90 backdrop-blur-sm rounded-lg p-3 border shadow-sm"
+        className="absolute bottom-4 end-4 rounded-lg border bg-card/90 p-3 shadow-sm backdrop-blur-sm"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <p className="text-xs font-medium mb-2">{t('network.legend', 'Legend')}</p>
+        <p className="mb-2 text-xs font-medium">{t('network.legend', 'Legend')}</p>
         <div className="space-y-1">
           <div className="flex items-center gap-2 text-xs">
-            <div className="w-3 h-3 rounded border-2 border-primary bg-primary/10" />
+            <div className="size-3 rounded border-2 border-primary bg-primary/10" />
             <span>{t('network.startNode', 'Current Entity')}</span>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <div className="w-3 h-3 rounded border-2 border-blue-500 bg-blue-50 dark:bg-blue-950" />
+            <div className="size-3 rounded border-2 border-blue-500 bg-blue-50 dark:bg-blue-950" />
             <span>{t('network.internal', 'Internal Reference')}</span>
           </div>
           <div className="flex items-center gap-2 text-xs">
-            <div className="w-3 h-3 rounded border-2 border-amber-500 bg-amber-50 dark:bg-amber-950" />
+            <div className="size-3 rounded border-2 border-amber-500 bg-amber-50 dark:bg-amber-950" />
             <span>{t('network.external', 'External Source')}</span>
           </div>
         </div>
       </div>
 
       {/* Stats badge */}
-      <div className="absolute top-4 start-4 bg-card/90 backdrop-blur-sm rounded-lg px-3 py-2 border shadow-sm">
+      <div className="absolute start-4 top-4 rounded-lg border bg-card/90 px-3 py-2 shadow-sm backdrop-blur-sm">
         <p className="text-xs text-muted-foreground">
           {t('network.stats', '{{nodes}} nodes, {{edges}} connections', {
             nodes: networkData.total_nodes || nodes.length,

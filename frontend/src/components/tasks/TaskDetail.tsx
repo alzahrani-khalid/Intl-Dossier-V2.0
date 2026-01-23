@@ -99,10 +99,10 @@ export function TaskDetail({
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Page Header with Task Title */}
       <div>
-        <div className="flex flex-wrap items-start justify-between gap-4 mb-4">
+        <div className="mb-4 flex flex-wrap items-start justify-between gap-4">
           {/* Task Title - Mobile-first, RTL-compatible */}
           <h1
-            className={`text-2xl sm:text-3xl md:text-4xl font-bold flex-1 ${isRTL ? 'text-end' : 'text-start'}`}
+            className={`flex-1 text-2xl font-bold sm:text-3xl md:text-4xl ${isRTL ? 'text-end' : 'text-start'}`}
           >
             {task.title}
           </h1>
@@ -112,13 +112,13 @@ export function TaskDetail({
             <div className="flex gap-2">
               {onEdit && (
                 <Button variant="outline" size="sm" onClick={() => onEdit(task)}>
-                  <Edit className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Edit className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('edit', 'Edit')}
                 </Button>
               )}
               {onDelete && task.status !== 'completed' && (
                 <Button variant="destructive" size="sm" onClick={() => onDelete(task)}>
-                  <Trash2 className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Trash2 className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('delete', 'Delete')}
                 </Button>
               )}
@@ -139,7 +139,7 @@ export function TaskDetail({
           </Badge>
           {task.work_item_type && (
             <Badge variant="outline">
-              <LinkIcon className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
+              <LinkIcon className={`size-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
               {t(`work_item.${task.work_item_type}`, task.work_item_type)}
             </Badge>
           )}
@@ -173,12 +173,12 @@ export function TaskDetail({
           {/* Description */}
           {task.description && (
             <div>
-              <div className="flex items-center gap-2 mb-2">
-                <FileText className="h-4 w-4 text-muted-foreground" />
+              <div className="mb-2 flex items-center gap-2">
+                <FileText className="size-4 text-muted-foreground" />
                 <p className="text-sm font-medium">{t('description', 'Description')}</p>
               </div>
               <p
-                className={`text-sm text-muted-foreground whitespace-pre-wrap ${isRTL ? 'text-end' : 'text-start'}`}
+                className={`whitespace-pre-wrap text-sm text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}
               >
                 {task.description}
               </p>
@@ -189,8 +189,8 @@ export function TaskDetail({
 
           {/* Assignee */}
           <div>
-            <div className="flex items-center gap-2 mb-2">
-              <User className="h-4 w-4 text-muted-foreground" />
+            <div className="mb-2 flex items-center gap-2">
+              <User className="size-4 text-muted-foreground" />
               <p className="text-sm font-medium">{t('assignee', 'Assignee')}</p>
             </div>
             <div className="ps-6">
@@ -213,7 +213,7 @@ export function TaskDetail({
           {/* Workflow Stage */}
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Clock className="h-4 w-4 text-muted-foreground" />
+              <Clock className="size-4 text-muted-foreground" />
               <p className="text-sm font-medium">{t('workflow_stage', 'Workflow Stage')}</p>
             </div>
             <Badge variant="outline">
@@ -227,7 +227,7 @@ export function TaskDetail({
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <Calendar className="size-4 text-muted-foreground" />
                 <p className="text-sm font-medium">{t('created', 'Created')}</p>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -237,7 +237,7 @@ export function TaskDetail({
 
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <Calendar className="size-4 text-muted-foreground" />
                 <p className="text-sm font-medium">{t('updated', 'Last Updated')}</p>
               </div>
               <p className="text-sm text-muted-foreground">
@@ -248,7 +248,7 @@ export function TaskDetail({
             {task.completed_at && (
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <Calendar className="size-4 text-muted-foreground" />
                   <p className="text-sm font-medium">{t('completed', 'Completed')}</p>
                 </div>
                 <p className="text-sm text-muted-foreground">
@@ -265,7 +265,7 @@ export function TaskDetail({
               <div className="space-y-3">
                 {/* Section Header */}
                 <div className="flex items-center gap-2">
-                  <UserCheck className="h-4 w-4 text-muted-foreground" />
+                  <UserCheck className="size-4 text-muted-foreground" />
                   <p className="text-sm font-medium">{t('engagement', 'Engagement')}</p>
                 </div>
 
@@ -277,15 +277,15 @@ export function TaskDetail({
                 </div>
 
                 {/* Engagement Type & Date */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 ps-6">
+                <div className="grid grid-cols-1 gap-3 ps-6 sm:grid-cols-2">
                   <div>
-                    <p className="text-xs text-muted-foreground mb-1">{t('type', 'Type')}</p>
+                    <p className="mb-1 text-xs text-muted-foreground">{t('type', 'Type')}</p>
                     <Badge variant="outline" className="capitalize">
                       {(task as any).engagement.engagement_type.replace(/_/g, ' ')}
                     </Badge>
                   </div>
                   <div>
-                    <p className="text-xs text-muted-foreground mb-1">{t('date', 'Date')}</p>
+                    <p className="mb-1 text-xs text-muted-foreground">{t('date', 'Date')}</p>
                     <p className="text-sm">
                       {new Date((task as any).engagement.engagement_date).toLocaleDateString(
                         isRTL ? 'ar-SA' : 'en-US',
@@ -298,7 +298,7 @@ export function TaskDetail({
                 {/* Location */}
                 {(task as any).engagement.location && (
                   <div className="ps-6">
-                    <p className="text-xs text-muted-foreground mb-1">
+                    <p className="mb-1 text-xs text-muted-foreground">
                       {t('location', 'Location')}
                     </p>
                     <p className="text-sm text-foreground">{(task as any).engagement.location}</p>
@@ -308,12 +308,12 @@ export function TaskDetail({
                 {/* Linked Dossier */}
                 {(task as any).engagement.dossier && (
                   <div className="ps-6">
-                    <p className="text-xs text-muted-foreground mb-1">
+                    <p className="mb-1 text-xs text-muted-foreground">
                       {t('related_dossier', 'Related Dossier')}
                     </p>
                     <Button asChild variant="outline" size="sm" className="mt-1 h-9">
                       <a href={`/dossiers/${(task as any).engagement.dossier.id}`}>
-                        <ExternalLink className={`h-3.5 w-3.5 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                        <ExternalLink className={`size-3.5 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {isRTL
                           ? (task as any).engagement.dossier.name_ar
                           : (task as any).engagement.dossier.name_en}
@@ -375,7 +375,7 @@ export function TaskDetail({
       <Card>
         <CardHeader>
           <CardTitle className={`flex items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
-            <LinkIcon className="h-5 w-5" />
+            <LinkIcon className="size-5" />
             {t('linked_work_items', 'Linked Work Items')}
             {(() => {
               // Parse source JSONB to get all linked items
@@ -459,8 +459,8 @@ export function TaskDetail({
 
           {/* Work Item Linker for editing (if task owner) */}
           {isTaskOwner && !isCompleted && (
-            <div className="pt-2 border-t mt-4 pt-4">
-              <p className="text-sm text-muted-foreground mb-2">
+            <div className="mt-4 border-t pt-2 pt-4">
+              <p className="mb-2 text-sm text-muted-foreground">
                 {t('edit_linked_items', 'Edit linked work items (re-link if deleted)')}
               </p>
               <WorkItemLinker

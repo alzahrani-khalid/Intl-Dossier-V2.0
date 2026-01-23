@@ -102,11 +102,11 @@ export function WorkItemList({
   if (isError) {
     return (
       <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
-        <AlertCircle className="h-4 w-4" />
+        <AlertCircle className="size-4" />
         <AlertDescription className="flex items-center justify-between">
           <span>{error?.message || t('error.loading', 'Failed to load work items')}</span>
           <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
-            <RefreshCcw className="h-4 w-4 me-2" />
+            <RefreshCcw className="me-2 size-4" />
             {t('error.retry', 'Retry')}
           </Button>
         </AlertDescription>
@@ -119,11 +119,11 @@ export function WorkItemList({
     return (
       <Card dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="py-12 text-center">
-          <div className="mx-auto w-12 h-12 rounded-full bg-muted flex items-center justify-center mb-4">
-            <AlertCircle className="h-6 w-6 text-muted-foreground" />
+          <div className="mx-auto mb-4 flex size-12 items-center justify-center rounded-full bg-muted">
+            <AlertCircle className="size-6 text-muted-foreground" />
           </div>
-          <h3 className="font-medium text-lg mb-1">{t('empty.title', 'No work items found')}</h3>
-          <p className="text-muted-foreground text-sm">
+          <h3 className="mb-1 text-lg font-medium">{t('empty.title', 'No work items found')}</h3>
+          <p className="text-sm text-muted-foreground">
             {t('empty.description', 'Try adjusting your filters or check back later')}
           </p>
         </CardContent>

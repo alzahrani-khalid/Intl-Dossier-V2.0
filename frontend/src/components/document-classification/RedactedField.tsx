@@ -36,13 +36,13 @@ export function RedactedField({
       className={`
         inline-flex items-center gap-1.5
         ${colors.bg} ${colors.text} ${colors.border}
-        border rounded px-2 py-0.5
-        text-xs sm:text-sm font-mono
+        rounded border px-2 py-0.5
+        font-mono text-xs sm:text-sm
         ${className}
       `}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <EyeOff className="h-3 w-3 sm:h-4 sm:w-4" />
+      <EyeOff className="size-3 sm:size-4" />
       <span>{redactedText}</span>
     </span>
   )
@@ -61,7 +61,7 @@ export function RedactedField({
       >
         <div className="space-y-1">
           <div className="flex items-center gap-1.5">
-            <ShieldAlert className="h-4 w-4 text-amber-500" />
+            <ShieldAlert className="size-4 text-amber-500" />
             <span className="font-medium">
               {t('redacted.accessRestricted', 'Access Restricted')}
             </span>

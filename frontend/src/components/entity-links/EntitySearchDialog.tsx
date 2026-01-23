@@ -214,7 +214,7 @@ export function EntitySearchDialog({
  </DialogDescription>
  </DialogHeader>
 
- <div className="flex flex-col h-full overflow-hidden">
+ <div className="flex h-full flex-col overflow-hidden">
  {/* Search input */}
  <div className={cn(
  'px-4 pb-3 sm:px-6 sm:pb-4',
@@ -254,7 +254,7 @@ export function EntitySearchDialog({
  onClick={() => setQuery('')}
  aria-label={t('common.clear')}
  >
- <X className="h-4 w-4" />
+ <X className="size-4" />
  </Button>
  )}
  </div>
@@ -326,7 +326,7 @@ export function EntitySearchDialog({
  {/* Loading state */}
  {isLoading && (
  <div className="flex items-center justify-center py-8">
- <Loader2 className="h-8 w-8 animate-spin text-slate-400" />
+ <Loader2 className="size-8 animate-spin text-slate-400" />
  <span className={cn(
  'text-sm text-slate-500',
  isRTL ? 'me-3' : 'ms-3'
@@ -338,7 +338,7 @@ export function EntitySearchDialog({
 
  {/* Error state */}
  {error && (
- <div className="text-center py-8">
+ <div className="py-8 text-center">
  <p className="text-sm text-red-600">
  {t('entityLinks.searchError')}
  </p>
@@ -347,14 +347,14 @@ export function EntitySearchDialog({
 
  {/* Empty state - no query yet */}
  {!isLoading && !error && query.length < 2 && (
- <div className="text-center py-12">
- <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-blue-100 dark:bg-blue-900/30 mb-4">
- <Search className="h-8 w-8 text-blue-600 dark:text-blue-400" />
+ <div className="py-12 text-center">
+ <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900/30">
+ <Search className="size-8 text-blue-600 dark:text-blue-400" />
  </div>
- <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2">
+ <h3 className="mb-2 text-base font-semibold text-slate-900 dark:text-slate-100">
  {t('entityLinks.searchTitle', 'Find and link entities')}
  </h3>
- <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm mx-auto">
+ <p className="mx-auto max-w-sm text-sm text-slate-600 dark:text-slate-400">
  {t('entityLinks.searchEmptyState', 'Enter at least 2 characters to search for dossiers, positions, countries, and more')}
  </p>
  </div>
@@ -362,19 +362,19 @@ export function EntitySearchDialog({
 
  {/* No results state */}
  {!isLoading && !error && query.length >= 2 && results?.length === 0 && (
- <div className="text-center py-12">
- <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 mb-4">
- <Search className="h-8 w-8 text-slate-400" />
+ <div className="py-12 text-center">
+ <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+ <Search className="size-8 text-slate-400" />
  </div>
- <h3 className="text-base font-semibold text-slate-900 dark:text-slate-100 mb-2">
+ <h3 className="mb-2 text-base font-semibold text-slate-900 dark:text-slate-100">
  {t('entityLinks.noResultsTitle', 'No entities found')}
  </h3>
- <p className="text-sm text-slate-600 dark:text-slate-400 max-w-sm mx-auto mb-4">
+ <p className="mx-auto mb-4 max-w-sm text-sm text-slate-600 dark:text-slate-400">
  {t('entityLinks.noResults', `No entities match "${query}"`)}
  </p>
- <div className="text-xs text-slate-500 dark:text-slate-400 space-y-1">
+ <div className="space-y-1 text-xs text-slate-500 dark:text-slate-400">
  <p>{t('entityLinks.searchTips', 'Try:')}</p>
- <ul className="list-disc list-inside space-y-0.5">
+ <ul className="list-inside list-disc space-y-0.5">
  <li>{t('entityLinks.tip1', 'Using fewer or different keywords')}</li>
  <li>{t('entityLinks.tip2', 'Checking your spelling')}</li>
  <li>{t('entityLinks.tip3', 'Clearing filters to search all entity types')}</li>
@@ -437,7 +437,7 @@ export function EntitySearchDialog({
  />
  )}
  {isAlreadyLinked && (
- <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400 mt-1 flex-shrink-0" />
+ <CheckCircle2 className="mt-1 size-5 shrink-0 text-green-600 dark:text-green-400" />
  )}
 
  {/* Primary radio button (only for dossier/position if selected) */}
@@ -465,7 +465,7 @@ export function EntitySearchDialog({
  : 'border-slate-400'
  )}>
  {primaryEntityKey === entityKey && (
- <div className="w-1.5 h-1.5 rounded-full bg-green-600 dark:bg-green-400" />
+ <div className="size-1.5 rounded-full bg-green-600 dark:bg-green-400" />
  )}
  </div>
  <span className="font-medium">
@@ -475,7 +475,7 @@ export function EntitySearchDialog({
  )}
 
  {/* Entity info */}
- <div className="flex-1 min-w-0 space-y-1">
+ <div className="min-w-0 flex-1 space-y-1">
  {/* Entity name */}
  <div className={cn(
  'flex items-center gap-2 flex-wrap',
@@ -583,12 +583,12 @@ export function EntitySearchDialog({
  'bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg',
  isRTL && 'flex-row-reverse'
  )}>
- <div className="flex-shrink-0 mt-0.5">
- <svg className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+ <div className="mt-0.5 shrink-0">
+ <svg className="size-4 text-amber-600 dark:text-amber-400 sm:size-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
  </svg>
  </div>
- <div className="flex-1 min-w-0">
+ <div className="min-w-0 flex-1">
  <p className={cn(
  'text-xs sm:text-sm text-amber-800 dark:text-amber-200',
  'text-start'

@@ -135,7 +135,7 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="size-8 animate-spin rounded-full border-b-2 border-primary" />
       </div>
     )
   }
@@ -144,9 +144,9 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center py-8 text-muted-foreground">
-          <Mail className="h-12 w-12 mb-4 opacity-50" />
+          <Mail className="mb-4 size-12 opacity-50" />
           <p className="text-center">{t('thread.noEmails')}</p>
-          <p className="text-sm text-center mt-1">{t('thread.noEmailsDescription')}</p>
+          <p className="mt-1 text-center text-sm">{t('thread.noEmailsDescription')}</p>
         </CardContent>
       </Card>
     )
@@ -155,8 +155,8 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
   return (
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="flex items-center justify-between">
-        <h3 className="text-lg font-semibold flex items-center gap-2">
-          <Mail className="h-5 w-5" />
+        <h3 className="flex items-center gap-2 text-lg font-semibold">
+          <Mail className="size-5" />
           {t('thread.emailThread')}
           <Badge variant="secondary">{threads.length}</Badge>
         </h3>
@@ -168,11 +168,11 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
             <Card key={thread.id}>
               <CardHeader className="pb-2">
                 <div className="flex items-start justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <CardTitle className="text-base truncate text-start">
+                  <div className="min-w-0 flex-1">
+                    <CardTitle className="truncate text-start text-base">
                       {thread.subject}
                     </CardTitle>
-                    <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
+                    <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
                       <span className="truncate">{thread.from_name || thread.from_email}</span>
                       <span>-</span>
                       <span>
@@ -194,7 +194,7 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
                         onClick={() => onReply(thread.id)}
                         className="gap-1"
                       >
-                        <Reply className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+                        <Reply className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
                         {t('thread.reply')}
                       </Button>
                     )}
@@ -219,38 +219,38 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
                         <div
                           className={`rounded-lg border p-3 ${
                             message.direction === 'outbound'
-                              ? 'bg-primary/5 border-primary/20'
+                              ? 'border-primary/20 bg-primary/5'
                               : 'bg-muted/50'
                           }`}
                         >
                           <CollapsibleTrigger className="w-full">
                             <div className="flex items-center justify-between gap-3">
-                              <div className="flex items-center gap-3 min-w-0">
-                                <Avatar className="h-8 w-8">
+                              <div className="flex min-w-0 items-center gap-3">
+                                <Avatar className="size-8">
                                   <AvatarImage src="" />
                                   <AvatarFallback className="text-xs">
                                     {getInitials(message.from_name, message.from_email)}
                                   </AvatarFallback>
                                 </Avatar>
-                                <div className="flex-1 min-w-0 text-start">
+                                <div className="min-w-0 flex-1 text-start">
                                   <div className="flex items-center gap-2">
-                                    <span className="font-medium text-sm truncate">
+                                    <span className="truncate text-sm font-medium">
                                       {message.from_name || message.from_email}
                                     </span>
                                     {message.direction === 'inbound' ? (
-                                      <ArrowDownLeft className="h-3 w-3 text-blue-500" />
+                                      <ArrowDownLeft className="size-3 text-blue-500" />
                                     ) : (
-                                      <ArrowUpRight className="h-3 w-3 text-green-500" />
+                                      <ArrowUpRight className="size-3 text-green-500" />
                                     )}
                                     {getStatusBadge(message.status)}
                                   </div>
                                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                                    <Clock className="h-3 w-3" />
+                                    <Clock className="size-3" />
                                     {format(new Date(message.created_at), 'PPp', { locale })}
                                     {message.opened_at && (
                                       <>
                                         <span>-</span>
-                                        <MailOpen className="h-3 w-3" />
+                                        <MailOpen className="size-3" />
                                         {t('thread.opened')}
                                       </>
                                     )}
@@ -260,9 +260,9 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
                               <div className="flex items-center gap-2">
                                 {expandedMessages.has(message.id) ||
                                 index === (thread.messages?.length || 0) - 1 ? (
-                                  <ChevronUp className="h-4 w-4" />
+                                  <ChevronUp className="size-4" />
                                 ) : (
-                                  <ChevronDown className="h-4 w-4" />
+                                  <ChevronDown className="size-4" />
                                 )}
                               </div>
                             </div>
@@ -272,7 +272,7 @@ export function EmailThreadViewer({ ticketId, onReply }: EmailThreadViewerProps)
                             <Separator className="my-3" />
                             <div className="space-y-2">
                               {/* To/CC recipients */}
-                              <div className="text-xs text-muted-foreground space-y-1">
+                              <div className="space-y-1 text-xs text-muted-foreground">
                                 <p>
                                   <span className="font-medium">{t('thread.to')}:</span>{' '}
                                   {message.to_emails.join(', ')}

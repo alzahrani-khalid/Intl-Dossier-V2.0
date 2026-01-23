@@ -152,21 +152,21 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Shield className="h-7 w-7" />
+          <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+            <Shield className="size-7" />
             {t('title')}
           </h1>
-          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
+          <p className="mt-1 text-muted-foreground">{t('subtitle')}</p>
         </div>
       </div>
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 h-auto">
+        <TabsList className="grid h-auto w-full grid-cols-2 sm:grid-cols-4">
           <TabsTrigger value="violations" className="gap-2 py-2">
-            <AlertTriangle className="h-4 w-4" />
+            <AlertTriangle className="size-4" />
             <span className="hidden sm:inline">{t('tabs.violations')}</span>
             {allViolations.length > 0 && (
               <Badge variant="secondary" className="ms-1">
@@ -175,15 +175,15 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
             )}
           </TabsTrigger>
           <TabsTrigger value="rules" className="gap-2 py-2">
-            <FileText className="h-4 w-4" />
+            <FileText className="size-4" />
             <span className="hidden sm:inline">{t('tabs.rules')}</span>
           </TabsTrigger>
           <TabsTrigger value="templates" className="gap-2 py-2">
-            <BookTemplate className="h-4 w-4" />
+            <BookTemplate className="size-4" />
             <span className="hidden sm:inline">{t('tabs.templates')}</span>
           </TabsTrigger>
           <TabsTrigger value="exemptions" className="gap-2 py-2">
-            <FileCheck className="h-4 w-4" />
+            <FileCheck className="size-4" />
             <span className="hidden sm:inline">{t('tabs.exemptions')}</span>
           </TabsTrigger>
         </TabsList>
@@ -192,7 +192,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
         <TabsContent value="violations" className="mt-6">
           <Card>
             <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <CardTitle className="text-lg">{t('violations.title')}</CardTitle>
                 <div className="flex items-center gap-2">
                   <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -216,13 +216,13 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
             <CardContent>
               {violationsLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  <Loader2 className="size-8 animate-spin text-muted-foreground" />
                 </div>
               ) : allViolations.length === 0 ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <CheckCircle className="h-16 w-16 text-green-500 mb-4" />
+                  <CheckCircle className="mb-4 size-16 text-green-500" />
                   <h3 className="text-lg font-medium">{t('violations.noViolations')}</h3>
-                  <p className="text-muted-foreground mt-1">
+                  <p className="mt-1 text-muted-foreground">
                     {t('violations.noViolationsDescription')}
                   </p>
                 </div>
@@ -243,7 +243,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                         onClick={() => fetchNextPage()}
                         disabled={isFetchingNextPage}
                       >
-                        {isFetchingNextPage && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+                        {isFetchingNextPage && <Loader2 className="me-2 size-4 animate-spin" />}
                         {t('common:loadMore', 'Load More')}
                       </Button>
                     </div>
@@ -258,16 +258,16 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
         <TabsContent value="rules" className="mt-6">
           <Card>
             <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
                 <CardTitle className="text-lg">{t('rules.title')}</CardTitle>
                 <div className="flex flex-wrap items-center gap-2">
                   <div className="relative flex-1 sm:flex-initial">
-                    <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       placeholder={t('rules.searchPlaceholder')}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="ps-9 w-full sm:w-[200px]"
+                      className="w-full ps-9 sm:w-[200px]"
                     />
                   </div>
                   <Select value={ruleTypeFilter} onValueChange={setRuleTypeFilter}>
@@ -302,13 +302,13 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
             <CardContent>
               {rulesLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  <Loader2 className="size-8 animate-spin text-muted-foreground" />
                 </div>
               ) : !rulesData?.rules.length ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <FileText className="h-16 w-16 text-muted-foreground mb-4" />
+                  <FileText className="mb-4 size-16 text-muted-foreground" />
                   <h3 className="text-lg font-medium">{t('rules.noRules')}</h3>
-                  <p className="text-muted-foreground mt-1">{t('rules.noRulesDescription')}</p>
+                  <p className="mt-1 text-muted-foreground">{t('rules.noRulesDescription')}</p>
                 </div>
               ) : (
                 <ScrollArea className="h-[500px]">
@@ -338,7 +338,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                               <div>
                                 <p className="font-medium">{getName(rule)}</p>
                                 {getDescription(rule) && (
-                                  <p className="text-xs text-muted-foreground line-clamp-1">
+                                  <p className="line-clamp-1 text-xs text-muted-foreground">
                                     {getDescription(rule)}
                                   </p>
                                 )}
@@ -357,7 +357,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                             <TableCell>
                               {rule.requires_signoff ? (
                                 <Badge variant="secondary">
-                                  <FileCheck className="h-3 w-3 me-1" />
+                                  <FileCheck className="me-1 size-3" />
                                   {t('ruleForm.requiresSignoff')}
                                 </Badge>
                               ) : (
@@ -367,22 +367,22 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                             <TableCell>
                               <DropdownMenu>
                                 <DropdownMenuTrigger asChild>
-                                  <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                                    <MoreVertical className="h-4 w-4" />
+                                  <Button variant="ghost" size="sm" className="size-8 p-0">
+                                    <MoreVertical className="size-4" />
                                   </Button>
                                 </DropdownMenuTrigger>
                                 <DropdownMenuContent align="end">
                                   <DropdownMenuItem>
-                                    <Eye className="h-4 w-4 me-2" />
+                                    <Eye className="me-2 size-4" />
                                     {t('rules.viewRule')}
                                   </DropdownMenuItem>
                                   <DropdownMenuItem>
-                                    <Edit className="h-4 w-4 me-2" />
+                                    <Edit className="me-2 size-4" />
                                     {t('rules.editRule')}
                                   </DropdownMenuItem>
                                   <DropdownMenuSeparator />
                                   <DropdownMenuItem className="text-destructive">
-                                    <Trash2 className="h-4 w-4 me-2" />
+                                    <Trash2 className="me-2 size-4" />
                                     {t('rules.deleteRule')}
                                   </DropdownMenuItem>
                                 </DropdownMenuContent>
@@ -408,15 +408,15 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
             <CardContent>
               {templatesLoading ? (
                 <div className="flex items-center justify-center py-12">
-                  <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+                  <Loader2 className="size-8 animate-spin text-muted-foreground" />
                 </div>
               ) : !templates?.length ? (
                 <div className="flex flex-col items-center justify-center py-12 text-center">
-                  <BookTemplate className="h-16 w-16 text-muted-foreground mb-4" />
+                  <BookTemplate className="mb-4 size-16 text-muted-foreground" />
                   <h3 className="text-lg font-medium">{t('templates.noTemplates')}</h3>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
                   {templates.map((template) => (
                     <Card key={template.id} className="relative">
                       <CardHeader className="pb-2">
@@ -425,7 +425,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                             <CardTitle className="text-sm">
                               {isRTL ? template.name_ar : template.name_en}
                             </CardTitle>
-                            <p className="text-xs text-muted-foreground mt-1">
+                            <p className="mt-1 text-xs text-muted-foreground">
                               {template.template_code}
                             </p>
                           </div>
@@ -437,7 +437,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                         </div>
                       </CardHeader>
                       <CardContent className="space-y-3">
-                        <p className="text-sm text-muted-foreground line-clamp-2">
+                        <p className="line-clamp-2 text-sm text-muted-foreground">
                           {isRTL
                             ? template.description_ar || template.description_en
                             : template.description_en || template.description_ar}
@@ -449,7 +449,7 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                           )}
                         </div>
                         <Button size="sm" variant="outline" className="w-full">
-                          <Plus className="h-4 w-4 me-2" />
+                          <Plus className="me-2 size-4" />
                           {t('templates.useTemplate')}
                         </Button>
                       </CardContent>
@@ -471,16 +471,16 @@ export function ComplianceRulesManager({ entityType, entityId }: ComplianceRules
                   <p className="text-sm text-muted-foreground">{t('exemptions.subtitle')}</p>
                 </div>
                 <Button>
-                  <Plus className="h-4 w-4 me-2" />
+                  <Plus className="me-2 size-4" />
                   {t('exemptions.createExemption')}
                 </Button>
               </div>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col items-center justify-center py-12 text-center">
-                <FileCheck className="h-16 w-16 text-muted-foreground mb-4" />
+                <FileCheck className="mb-4 size-16 text-muted-foreground" />
                 <h3 className="text-lg font-medium">{t('exemptions.noExemptions')}</h3>
-                <p className="text-muted-foreground mt-1">
+                <p className="mt-1 text-muted-foreground">
                   {t('exemptions.noExemptionsDescription')}
                 </p>
               </div>

@@ -118,7 +118,7 @@ function SeverityBadge({ severity, size = 'default' }: SeverityBadgeProps) {
         size === 'sm' ? 'text-[10px] px-1.5 py-0' : 'text-xs',
       )}
     >
-      <SeverityIcon severity={severity} className="h-3 w-3 me-1" />
+      <SeverityIcon severity={severity} className="me-1 size-3" />
       {isRTL ? config.label.ar : config.label.en}
     </Badge>
   )
@@ -146,35 +146,35 @@ function AffectedEntityCard({ entity, onNavigate }: AffectedEntityCardProps) {
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="flex items-start justify-between gap-2">
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap">
-            <span className="font-medium text-sm sm:text-base truncate">
+        <div className="min-w-0 flex-1">
+          <div className="flex flex-wrap items-center gap-2">
+            <span className="truncate text-sm font-medium sm:text-base">
               {isRTL ? entity.affected_entity_name_ar : entity.affected_entity_name_en}
             </span>
-            <Badge variant="secondary" className="text-[10px] sm:text-xs capitalize">
+            <Badge variant="secondary" className="text-[10px] capitalize sm:text-xs">
               {entity.affected_entity_type}
             </Badge>
           </div>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
             {isRTL ? entity.impact_description_ar : entity.impact_description_en}
           </p>
         </div>
         <SeverityBadge severity={entity.impact_severity} size="sm" />
       </div>
 
-      <div className="flex flex-wrap items-center gap-2 mt-2">
+      <div className="mt-2 flex flex-wrap items-center gap-2">
         <Badge variant="outline" className="text-[10px] sm:text-xs">
           {isRTL
             ? CATEGORY_LABELS[entity.impact_category]?.ar
             : CATEGORY_LABELS[entity.impact_category]?.en}
         </Badge>
-        <span className="text-[10px] sm:text-xs text-muted-foreground">
+        <span className="text-[10px] text-muted-foreground sm:text-xs">
           {isRTL ? 'العمق:' : 'Depth:'} {entity.depth}
         </span>
       </div>
 
       {entity.action_required && entity.suggested_action_en && (
-        <div className="mt-2 p-2 bg-orange-100 dark:bg-orange-900/20 rounded text-xs sm:text-sm">
+        <div className="mt-2 rounded bg-orange-100 p-2 text-xs dark:bg-orange-900/20 sm:text-sm">
           <span className="font-medium">{isRTL ? 'الإجراء المقترح:' : 'Suggested action:'}</span>{' '}
           {isRTL ? entity.suggested_action_ar : entity.suggested_action_en}
         </div>
@@ -187,7 +187,7 @@ function AffectedEntityCard({ entity, onNavigate }: AffectedEntityCardProps) {
           className="mt-2 h-7 text-xs"
           onClick={() => onNavigate(entity.affected_entity_id, entity.affected_entity_type)}
         >
-          <ExternalLink className="h-3 w-3 me-1" />
+          <ExternalLink className="me-1 size-3" />
           {isRTL ? 'عرض' : 'View'}
         </Button>
       )}
@@ -216,41 +216,41 @@ function SummaryStats({ assessment }: SummaryStatsProps) {
   )
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-4">
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-4">
       <Card className="p-3 sm:p-4">
         <div className="flex items-center gap-2">
-          <Users className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+          <Users className="size-4 text-muted-foreground sm:size-5" />
           <div>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground sm:text-xs">
               {t('summary.totalAffected')}
             </p>
-            <p className="text-lg sm:text-xl font-bold">{assessment.total_affected_entities}</p>
+            <p className="text-lg font-bold sm:text-xl">{assessment.total_affected_entities}</p>
           </div>
         </div>
       </Card>
 
       <Card className="p-3 sm:p-4">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+          <AlertTriangle className="size-4 text-muted-foreground sm:size-5" />
           <div>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground sm:text-xs">
               {t('summary.actionRequired')}
             </p>
-            <p className="text-lg sm:text-xl font-bold text-orange-600">
+            <p className="text-lg font-bold text-orange-600 sm:text-xl">
               {assessment.affected_entities?.filter((e) => e.action_required).length || 0}
             </p>
           </div>
         </div>
       </Card>
 
-      <Card className="p-3 sm:p-4 col-span-2 sm:col-span-1">
+      <Card className="col-span-2 p-3 sm:col-span-1 sm:p-4">
         <div className="flex items-center gap-2">
-          <Clock className="h-4 w-4 sm:h-5 sm:w-5 text-muted-foreground" />
+          <Clock className="size-4 text-muted-foreground sm:size-5" />
           <div>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground sm:text-xs">
               {t('summary.assessedAt')}
             </p>
-            <p className="text-sm sm:text-base font-medium">
+            <p className="text-sm font-medium sm:text-base">
               {new Date(assessment.assessed_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
             </p>
           </div>
@@ -321,7 +321,7 @@ export function ImpactAssessmentPanel({
           <CardDescription>{t('create.description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="p-4 bg-muted/50 rounded-lg mb-4">
+          <div className="mb-4 rounded-lg bg-muted/50 p-4">
             <p className="text-sm">
               <span className="font-medium">{t('create.changeType')}:</span>{' '}
               {isRTL ? CHANGE_TYPE_LABELS[changeType].ar : CHANGE_TYPE_LABELS[changeType].en}
@@ -343,13 +343,13 @@ export function ImpactAssessmentPanel({
     return (
       <Card className={cn('w-full animate-pulse', className)}>
         <CardHeader>
-          <div className="h-6 bg-muted rounded w-48" />
-          <div className="h-4 bg-muted rounded w-64 mt-2" />
+          <div className="h-6 w-48 rounded bg-muted" />
+          <div className="mt-2 h-4 w-64 rounded bg-muted" />
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="h-24 bg-muted rounded" />
-            <div className="h-32 bg-muted rounded" />
+            <div className="h-24 rounded bg-muted" />
+            <div className="h-32 rounded bg-muted" />
           </div>
         </CardContent>
       </Card>
@@ -360,7 +360,7 @@ export function ImpactAssessmentPanel({
     return (
       <Card className={cn('w-full', className)}>
         <CardContent className="p-6 text-center">
-          <AlertCircle className="h-12 w-12 mx-auto text-destructive mb-4" />
+          <AlertCircle className="mx-auto mb-4 size-12 text-destructive" />
           <p className="text-destructive">{t('errors.loadFailed')}</p>
         </CardContent>
       </Card>
@@ -380,10 +380,10 @@ export function ImpactAssessmentPanel({
   return (
     <Card className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-2 sm:pb-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-              <FileText className="h-4 w-4 sm:h-5 sm:w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <FileText className="size-4 sm:size-5" />
               {t('assessment.title')}
             </CardTitle>
             <CardDescription className="mt-1">
@@ -403,7 +403,7 @@ export function ImpactAssessmentPanel({
 
       <CardContent className="space-y-4 sm:space-y-6">
         {/* Summary */}
-        <div className="p-3 sm:p-4 bg-muted/50 rounded-lg">
+        <div className="rounded-lg bg-muted/50 p-3 sm:p-4">
           <p className="text-sm sm:text-base">
             {isRTL ? assessment.assessment_summary_ar : assessment.assessment_summary_en}
           </p>
@@ -415,14 +415,14 @@ export function ImpactAssessmentPanel({
         {/* Recommendations */}
         {assessment.recommendations_en?.length > 0 && (
           <div>
-            <h3 className="text-sm sm:text-base font-medium mb-2">
+            <h3 className="mb-2 text-sm font-medium sm:text-base">
               {t('assessment.recommendations')}
             </h3>
             <ul className="space-y-1.5 sm:space-y-2">
               {(isRTL ? assessment.recommendations_ar : assessment.recommendations_en).map(
                 (rec, idx) => (
                   <li key={idx} className="flex items-start gap-2 text-xs sm:text-sm">
-                    <CheckCircle className="h-4 w-4 text-green-600 mt-0.5 flex-shrink-0" />
+                    <CheckCircle className="mt-0.5 size-4 shrink-0 text-green-600" />
                     {rec}
                   </li>
                 ),
@@ -436,7 +436,7 @@ export function ImpactAssessmentPanel({
         {/* Affected Entities by Category */}
         {groupedEntities && Object.keys(groupedEntities).length > 0 && (
           <div>
-            <h3 className="text-sm sm:text-base font-medium mb-3">
+            <h3 className="mb-3 text-sm font-medium sm:text-base">
               {t('assessment.affectedEntities')}
             </h3>
             <Accordion type="multiple" defaultValue={Object.keys(groupedEntities)}>
@@ -471,7 +471,7 @@ export function ImpactAssessmentPanel({
 
         {/* Action Buttons */}
         {assessment.status === 'pending' && (
-          <div className="flex flex-col sm:flex-row gap-2 pt-4">
+          <div className="flex flex-col gap-2 pt-4 sm:flex-row">
             <Dialog open={isReviewDialogOpen} onOpenChange={setIsReviewDialogOpen}>
               <DialogTrigger asChild>
                 <Button className="flex-1 sm:flex-none">{t('actions.acknowledge')}</Button>
@@ -530,8 +530,8 @@ export function ImpactAssessmentPanel({
 
         {/* Review notes display */}
         {assessment.review_notes && (
-          <div className="p-3 bg-muted/30 rounded-lg mt-4">
-            <p className="text-xs text-muted-foreground mb-1">{t('assessment.reviewNotes')}</p>
+          <div className="mt-4 rounded-lg bg-muted/30 p-3">
+            <p className="mb-1 text-xs text-muted-foreground">{t('assessment.reviewNotes')}</p>
             <p className="text-sm">{assessment.review_notes}</p>
           </div>
         )}

@@ -109,9 +109,9 @@ export function ContactForm({
           <TooltipTrigger asChild>
             <Badge
               variant="outline"
-              className={`${colorClass} text-xs gap-1 ${isRTL ? 'me-2' : 'ms-2'}`}
+              className={`${colorClass} gap-1 text-xs ${isRTL ? 'me-2' : 'ms-2'}`}
             >
-              <Sparkles className="h-3 w-3" />
+              <Sparkles className="size-3" />
               {Math.round(confidence)}%
             </Badge>
           </TooltipTrigger>
@@ -335,9 +335,9 @@ export function ContactForm({
                   variant="outline"
                   size="icon"
                   onClick={() => removeEmailField(index)}
-                  className=" sm:h-10 sm:w-10"
+                  className=" sm:size-10"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               )}
             </div>
@@ -349,7 +349,7 @@ export function ContactForm({
             onClick={addEmailField}
             className="h-9 gap-2"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="size-4" />
             {t('contactDirectory.form.add_email')}
           </Button>
         </div>
@@ -387,9 +387,9 @@ export function ContactForm({
                   variant="outline"
                   size="icon"
                   onClick={() => removePhoneField(index)}
-                  className=" sm:h-10 sm:w-10"
+                  className=" sm:size-10"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               )}
             </div>
@@ -401,7 +401,7 @@ export function ContactForm({
             onClick={addPhoneField}
             className="h-9 gap-2"
           >
-            <Plus className="h-4 w-4" />
+            <Plus className="size-4" />
             {t('contactDirectory.form.add_phone')}
           </Button>
         </div>
@@ -448,7 +448,7 @@ export function ContactForm({
                 <Textarea
                   {...field}
                   placeholder={t('contactDirectory.form.notes_placeholder')}
-                  className="min-h-[100px] px-4 py-3 text-base resize-y"
+                  className="min-h-[100px] resize-y px-4 py-3 text-base"
                   dir={isRTL ? 'rtl' : 'ltr'}
                 />
               </FormControl>
@@ -473,7 +473,7 @@ export function ContactForm({
           )}
           <Button type="submit" disabled={isSubmitting} className="h-11 px-6 sm:h-10">
             {isSubmitting && (
-              <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+              <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
             )}
             {mode === 'create'
               ? t('contactDirectory.form.create_contact')

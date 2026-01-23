@@ -243,21 +243,21 @@ export function EmailDigestSettings() {
   if (isPrefsLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Loader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl space-y-6"
+      className="container mx-auto max-w-4xl space-y-6 px-4 sm:px-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
       data-testid="email-digest-settings"
     >
       {/* Page Header */}
       <div className="space-y-2">
-        <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('title')}</h1>
-        <p className="text-muted-foreground text-start">{t('description')}</p>
+        <h1 className="text-start text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+        <p className="text-start text-muted-foreground">{t('description')}</p>
       </div>
 
       <Form {...form}>
@@ -266,7 +266,7 @@ export function EmailDigestSettings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-start">
-                <Clock className="h-5 w-5" />
+                <Clock className="size-5" />
                 {t('schedule.title')}
               </CardTitle>
               <CardDescription className="text-start">{t('schedule.description')}</CardDescription>
@@ -327,7 +327,7 @@ export function EmailDigestSettings() {
                 />
 
                 {form.watch('weekly_digest_enabled') && (
-                  <div className="ms-4 sm:ms-8 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="ms-4 grid grid-cols-1 gap-4 sm:ms-8 sm:grid-cols-2">
                     <FormField
                       control={form.control}
                       name="weekly_digest_day"
@@ -377,7 +377,7 @@ export function EmailDigestSettings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-start">
-                <Mail className="h-5 w-5" />
+                <Mail className="size-5" />
                 {t('content.title')}
               </CardTitle>
               <CardDescription className="text-start">{t('content.description')}</CardDescription>
@@ -393,7 +393,7 @@ export function EmailDigestSettings() {
                     render={({ field }) => (
                       <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 sm:p-4">
                         <div className="flex items-center gap-3 text-start">
-                          <Icon className="h-5 w-5 text-muted-foreground shrink-0" />
+                          <Icon className="size-5 shrink-0 text-muted-foreground" />
                           <div className="space-y-0.5">
                             <FormLabel className="text-sm font-medium">{section.label}</FormLabel>
                             <FormDescription className="text-xs sm:text-sm">
@@ -416,7 +416,7 @@ export function EmailDigestSettings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-start">
-                <Eye className="h-5 w-5" />
+                <Eye className="size-5" />
                 {t('watchlist.title')}
               </CardTitle>
               <CardDescription className="text-start">{t('watchlist.description')}</CardDescription>
@@ -424,31 +424,31 @@ export function EmailDigestSettings() {
             <CardContent>
               {isWatchlistLoading ? (
                 <div className="flex items-center justify-center py-4">
-                  <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+                  <Loader2 className="size-6 animate-spin text-muted-foreground" />
                 </div>
               ) : !watchlistSummary || watchlistSummary.length === 0 ? (
-                <div className="text-center py-6 text-muted-foreground">
-                  <Eye className="h-12 w-12 mx-auto mb-3 opacity-50" />
+                <div className="py-6 text-center text-muted-foreground">
+                  <Eye className="mx-auto mb-3 size-12 opacity-50" />
                   <p className="font-medium">{t('watchlist.noEntities')}</p>
-                  <p className="text-sm mt-1">{t('watchlist.noEntitiesDescription')}</p>
+                  <p className="mt-1 text-sm">{t('watchlist.noEntitiesDescription')}</p>
                   <Button variant="outline" size="sm" className="mt-4" asChild>
                     <Link to="/my-work">{t('watchlist.addEntities')}</Link>
                   </Button>
                 </div>
               ) : (
                 <div className="space-y-4">
-                  <div className="flex items-center justify-between p-3 bg-muted/50 rounded-lg">
+                  <div className="flex items-center justify-between rounded-lg bg-muted/50 p-3">
                     <span className="font-medium">{t('watchlist.totalWatched')}</span>
-                    <Badge variant="secondary" className="text-base px-3 py-1">
+                    <Badge variant="secondary" className="px-3 py-1 text-base">
                       {totalWatchedEntities}
                     </Badge>
                   </div>
 
-                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+                  <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
                     {watchlistSummary.map((item) => (
                       <div
                         key={item.entity_type}
-                        className="flex items-center justify-between p-2 sm:p-3 border rounded-lg"
+                        className="flex items-center justify-between rounded-lg border p-2 sm:p-3"
                       >
                         <span className="text-sm capitalize">
                           {t(`watchlist.types.${item.entity_type}`)}
@@ -472,13 +472,13 @@ export function EmailDigestSettings() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-start">
-                <Bell className="h-5 w-5" />
+                <Bell className="size-5" />
                 {t('advanced.title')}
               </CardTitle>
               <CardDescription className="text-start">{t('advanced.description')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6">
                 <FormField
                   control={form.control}
                   name="digest_deadline_lookahead_days"
@@ -543,12 +543,12 @@ export function EmailDigestSettings() {
             <Button type="submit" disabled={updateMutation.isPending} className="min-h-11 min-w-32">
               {updateMutation.isPending ? (
                 <>
-                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                  <Loader2 className="me-2 size-4 animate-spin" />
                   {t('saving')}
                 </>
               ) : (
                 <>
-                  <Check className="h-4 w-4 me-2" />
+                  <Check className="me-2 size-4" />
                   {t('saveChanges')}
                 </>
               )}

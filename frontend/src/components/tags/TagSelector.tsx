@@ -180,11 +180,11 @@ export function TagSelector({
               }}
             >
               <span className="size-2 rounded-full" style={{ backgroundColor: tag.color }} />
-              <span className="text-xs max-w-24 truncate">{getTagName(tag, isRTL)}</span>
+              <span className="max-w-24 truncate text-xs">{getTagName(tag, isRTL)}</span>
               {!disabled && (
                 <button
                   type="button"
-                  className="ms-1 rounded-full hover:bg-muted/50 p-0.5"
+                  className="ms-1 rounded-full p-0.5 hover:bg-muted/50"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleUnassign(assignment.tag_id)
@@ -197,7 +197,7 @@ export function TagSelector({
             </Badge>
           </TooltipTrigger>
           <TooltipContent side="top">
-            <div className="text-xs space-y-1">
+            <div className="space-y-1 text-xs">
               <p className="font-medium">{getTagName(tag, isRTL)}</p>
               {assignment.is_auto_assigned && (
                 <p className="text-muted-foreground">{t('assignment.autoAssigned')}</p>
@@ -247,7 +247,7 @@ export function TagSelector({
               <Button
                 variant="outline"
                 size="sm"
-                className="h-6 px-2 text-xs gap-1"
+                className="h-6 gap-1 px-2 text-xs"
                 disabled={disabled || isAssigning}
               >
                 {isAssigning ? (
@@ -291,7 +291,7 @@ export function TagSelector({
                             className="gap-2"
                           >
                             <div
-                              className="size-3 rounded-full shrink-0"
+                              className="size-3 shrink-0 rounded-full"
                               style={{ backgroundColor: suggestion.color }}
                             />
                             <span className="flex-1 truncate">
@@ -328,7 +328,7 @@ export function TagSelector({
                             className="gap-2"
                           >
                             <div
-                              className="size-3 rounded-full shrink-0"
+                              className="size-3 shrink-0 rounded-full"
                               style={{ backgroundColor: tag.color }}
                             />
                             <span className="flex-1 truncate">{getTagName(tag, isRTL)}</span>
@@ -360,7 +360,7 @@ export function TagSelector({
                 key={suggestion.tag_id}
                 variant="ghost"
                 size="sm"
-                className="h-5 px-2 text-xs gap-1"
+                className="h-5 gap-1 px-2 text-xs"
                 onClick={() => handleApplySuggestion(suggestion)}
                 disabled={isAssigning}
               >
@@ -400,7 +400,7 @@ export function TagDisplay({ tags, maxDisplay = 3, className }: TagDisplayProps)
         <Badge
           key={tag.id}
           variant="outline"
-          className="text-xs px-1.5 py-0"
+          className="px-1.5 py-0 text-xs"
           style={{
             backgroundColor: `${tag.color}15`,
             borderColor: `${tag.color}40`,
@@ -410,7 +410,7 @@ export function TagDisplay({ tags, maxDisplay = 3, className }: TagDisplayProps)
         </Badge>
       ))}
       {tags.length > maxDisplay && (
-        <Badge variant="secondary" className="text-xs px-1.5 py-0">
+        <Badge variant="secondary" className="px-1.5 py-0 text-xs">
           +{tags.length - maxDisplay}
         </Badge>
       )}

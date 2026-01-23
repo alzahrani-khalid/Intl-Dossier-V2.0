@@ -33,11 +33,11 @@ export interface BulkActionProgressIndicatorProps {
  */
 const STATUS_ICONS: Record<BulkActionStatus, React.ReactNode> = {
   idle: null,
-  pending: <Loader2 className="h-5 w-5 animate-spin text-blue-600" />,
-  processing: <Loader2 className="h-5 w-5 animate-spin text-blue-600" />,
-  completed: <CheckCircle2 className="h-5 w-5 text-green-600" />,
-  failed: <XCircle className="h-5 w-5 text-red-600" />,
-  cancelled: <AlertCircle className="h-5 w-5 text-orange-600" />,
+  pending: <Loader2 className="size-5 animate-spin text-blue-600" />,
+  processing: <Loader2 className="size-5 animate-spin text-blue-600" />,
+  completed: <CheckCircle2 className="size-5 text-green-600" />,
+  failed: <XCircle className="size-5 text-red-600" />,
+  cancelled: <AlertCircle className="size-5 text-orange-600" />,
 }
 
 /**

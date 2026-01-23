@@ -36,7 +36,7 @@ export function FormSelect({
  >
  {label}
  {required && (
- <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+ <span className="ms-1 text-red-500" aria-label={t('validation.required')}>
  *
  </span>
  )}
@@ -48,14 +48,14 @@ export function FormSelect({
  id={name}
  {...(register ? register(name) : {})}
  className={`
- w-full px-4 py-2 pe-10
- appearance-none
- border ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+ w-full appearance-none border px-4
+ py-2
+ pe-10 ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
  rounded-lg
- focus:ring-2 focus:ring-primary-500 focus:border-transparent
- dark:bg-gray-700 dark:text-white
- disabled:opacity-50 disabled:cursor-not-allowed
- transition-colors
+ transition-colors focus:border-transparent focus:ring-2
+ focus:ring-primary-500 disabled:cursor-not-allowed
+ disabled:opacity-50 dark:bg-gray-700
+ dark:text-white
  `}
  aria-invalid={!!error}
  aria-describedby={
@@ -75,7 +75,7 @@ export function FormSelect({
  ))}
  </select>
  <ChevronDown
- className={`absolute ${isRTL ? 'start-3' : 'end-3'} top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 pointer-events-none`}
+ className={`absolute ${isRTL ? 'start-3' : 'end-3'} pointer-events-none top-1/2 size-4 -translate-y-1/2 text-gray-400`}
  />
  </div>
 

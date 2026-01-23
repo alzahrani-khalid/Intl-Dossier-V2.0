@@ -144,9 +144,9 @@ export function RelationshipGraphPage() {
 
   if (!startDossierId) {
     return (
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <Alert>
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>
             {t(
               'graph.noDossier',
@@ -159,10 +159,10 @@ export function RelationshipGraphPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold mb-2">
+        <h1 className="mb-2 text-2xl font-bold sm:text-3xl">
           {t('graph.title', 'Relationship Graph')}
         </h1>
         <p className="text-muted-foreground">
@@ -173,7 +173,7 @@ export function RelationshipGraphPage() {
       {/* Controls */}
       <Card className="mb-6">
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <div>
               <Label htmlFor="maxDegrees" className="mb-2 block">
                 {t('graph.maxDegrees', 'Degrees of Separation')}
@@ -227,7 +227,7 @@ export function RelationshipGraphPage() {
 
             <div className="flex items-end">
               <Button onClick={handleRefresh} variant="outline" className="w-full">
-                <Settings className="h-4 w-4 me-2" />
+                <Settings className="me-2 size-4" />
                 {t('graph.refresh', 'Refresh')}
               </Button>
             </div>
@@ -235,11 +235,11 @@ export function RelationshipGraphPage() {
 
           {/* Stats */}
           {graphData && (
-            <div className="mt-4 p-4 bg-muted rounded-lg">
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+            <div className="mt-4 rounded-lg bg-muted p-4">
+              <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 {/* Complexity Indicator */}
                 <div className="flex items-center gap-2">
-                  <Layers className="h-4 w-4 text-muted-foreground" />
+                  <Layers className="size-4 text-muted-foreground" />
                   <span className="text-sm font-medium">
                     {t('graph.complexity.label', 'Complexity')}:
                   </span>
@@ -277,19 +277,19 @@ export function RelationshipGraphPage() {
                     <SelectContent>
                       <SelectItem value="basic" className="text-xs">
                         <div className="flex items-center gap-2">
-                          <Network className="h-3 w-3" />
+                          <Network className="size-3" />
                           {t('graph.basicMode', 'Basic')}
                         </div>
                       </SelectItem>
                       <SelectItem value="enhanced" className="text-xs">
                         <div className="flex items-center gap-2">
-                          <Sparkles className="h-3 w-3" />
+                          <Sparkles className="size-3" />
                           {t('graph.enhancedMode', 'Enhanced')}
                         </div>
                       </SelectItem>
                       <SelectItem value="advanced" className="text-xs">
                         <div className="flex items-center gap-2">
-                          <Rocket className="h-3 w-3" />
+                          <Rocket className="size-3" />
                           {t('graph.advancedMode', 'Advanced')}
                         </div>
                       </SelectItem>
@@ -298,7 +298,7 @@ export function RelationshipGraphPage() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 text-center">
+              <div className="grid grid-cols-2 gap-4 text-center sm:grid-cols-4">
                 <div>
                   <div className="text-2xl font-bold">{graphData.stats.node_count}</div>
                   <div className="text-xs text-muted-foreground">
@@ -327,7 +327,7 @@ export function RelationshipGraphPage() {
 
               {graphData.stats.performance_warning && (
                 <Alert variant="destructive" className="mt-4">
-                  <AlertCircle className="h-4 w-4" />
+                  <AlertCircle className="size-4" />
                   <AlertDescription>{graphData.stats.performance_warning}</AlertDescription>
                 </Alert>
               )}
@@ -339,7 +339,7 @@ export function RelationshipGraphPage() {
       {/* Error State */}
       {error && (
         <Alert variant="destructive" className="mb-6">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>
             {t('graph.error', 'Failed to load graph data')}: {(error as Error).message}
           </AlertDescription>
@@ -360,11 +360,11 @@ export function RelationshipGraphPage() {
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as 'graph' | 'list')}>
           <TabsList className="mb-4">
             <TabsTrigger value="graph" className="gap-2">
-              <Network className="h-4 w-4" />
+              <Network className="size-4" />
               {t('graph.graphView', 'Graph View')}
             </TabsTrigger>
             <TabsTrigger value="list" className="gap-2">
-              <List className="h-4 w-4" />
+              <List className="size-4" />
               {t('graph.listView', 'List View')}
             </TabsTrigger>
           </TabsList>

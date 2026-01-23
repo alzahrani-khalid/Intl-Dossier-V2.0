@@ -143,13 +143,13 @@ function ActionableErrorsDemo() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl font-bold text-start">Actionable Errors Demo</h1>
-        <p className="text-muted-foreground mt-2 text-start">
+        <h1 className="text-start text-2xl font-bold sm:text-3xl">Actionable Errors Demo</h1>
+        <p className="mt-2 text-start text-muted-foreground">
           Transform generic error messages into actionable guidance with fix buttons
         </p>
       </div>
@@ -179,7 +179,7 @@ function ActionableErrorsDemo() {
           <CardContent className="space-y-6">
             {/* Email Field */}
             <div className="space-y-2">
-              <Label htmlFor="email" className="text-start block">
+              <Label htmlFor="email" className="block text-start">
                 {t('fields.email')}
               </Label>
               <FieldErrorHighlight
@@ -210,7 +210,7 @@ function ActionableErrorsDemo() {
 
             {/* Website Field */}
             <div className="space-y-2">
-              <Label htmlFor="website" className="text-start block">
+              <Label htmlFor="website" className="block text-start">
                 {t('fields.website')}
               </Label>
               <FieldErrorHighlight
@@ -241,7 +241,7 @@ function ActionableErrorsDemo() {
 
             {/* Phone Field */}
             <div className="space-y-2">
-              <Label htmlFor="phone" className="text-start block">
+              <Label htmlFor="phone" className="block text-start">
                 {t('fields.phone')}
               </Label>
               <FieldErrorHighlight
@@ -316,15 +316,15 @@ function ActionableErrorsDemo() {
                   transition={{ delay: index * 0.05 }}
                   className="flex items-start gap-2 text-start"
                 >
-                  <span className="text-emerald-500 mt-1">✓</span>
+                  <span className="mt-1 text-emerald-500">✓</span>
                   {feature}
                 </motion.li>
               ))}
             </motion.ul>
 
-            <div className="pt-4 border-t">
-              <h4 className="font-medium mb-2 text-start">Try these scenarios:</h4>
-              <ul className="text-sm text-muted-foreground space-y-1 text-start">
+            <div className="border-t pt-4">
+              <h4 className="mb-2 text-start font-medium">Try these scenarios:</h4>
+              <ul className="space-y-1 text-start text-sm text-muted-foreground">
                 <li>• Enter "john doe@email" (spaces in email)</li>
                 <li>• Enter "www.example.com" (missing https://)</li>
                 <li>• Enter "abc" in phone (no digits)</li>

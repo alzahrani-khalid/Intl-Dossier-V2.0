@@ -103,7 +103,7 @@ function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps
  <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
  <Button
  onClick={onReset}
- className=" w-full sm: sm:w-auto"
+ className=" sm: w-full sm:w-auto"
  variant="default"
  >
  <RefreshCw className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -113,7 +113,7 @@ function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps
  {isNetworkError && (
  <Button
  onClick={() => window.location.reload()}
- className=" w-full sm: sm:w-auto"
+ className=" sm: w-full sm:w-auto"
  variant="outline"
  >
  <Wifi className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
@@ -124,7 +124,7 @@ function QueryErrorFallback({ onReset, message, error }: QueryErrorFallbackProps
  {isAuthError && (
  <Button
  onClick={() => window.location.href = '/login'}
- className=" w-full sm: sm:w-auto"
+ className=" sm: w-full sm:w-auto"
  variant="outline"
  >
  {t('error.query.signIn', 'Sign In')}

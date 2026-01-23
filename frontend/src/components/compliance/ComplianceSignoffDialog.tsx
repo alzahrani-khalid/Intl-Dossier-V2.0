@@ -138,7 +138,7 @@ export function ComplianceSignoffDialog({
           <div className="flex items-start justify-between gap-3">
             <div className="min-w-0 flex-1">
               <p className={`font-medium ${severityColors.text}`}>{getRuleName()}</p>
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {isRTL
                   ? violation.entity_name_ar || violation.entity_name_en
                   : violation.entity_name_en || violation.entity_name_ar}
@@ -175,11 +175,11 @@ export function ComplianceSignoffDialog({
                     />
                     <Label
                       htmlFor={`action-${action}`}
-                      className={`flex items-center gap-2 rounded-lg border-2 p-3 cursor-pointer transition-colors
-                          peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5
-                          hover:bg-muted/50`}
+                      className={`flex cursor-pointer items-center gap-2 rounded-lg border-2 p-3 transition-colors
+                          hover:bg-muted/50 peer-data-[state=checked]:border-primary
+                          peer-data-[state=checked]:bg-primary/5`}
                     >
-                      <Icon className="h-4 w-4" />
+                      <Icon className="size-4" />
                       <span className="text-sm font-medium">{t(`signoffActions.${action}`)}</span>
                     </Label>
                   </div>
@@ -192,7 +192,7 @@ export function ComplianceSignoffDialog({
           <div className="space-y-2">
             <Label htmlFor="justification">
               {t('signoff.justification')}
-              <span className="text-destructive ms-1">*</span>
+              <span className="ms-1 text-destructive">*</span>
             </Label>
             <Textarea
               id="justification"
@@ -223,7 +223,7 @@ export function ComplianceSignoffDialog({
           {selectedAction === 'waive' && (
             <div className="space-y-2">
               <Label htmlFor="waiver_valid_until" className="flex items-center gap-2">
-                <Calendar className="h-4 w-4" />
+                <Calendar className="size-4" />
                 {t('signoff.waiverValidUntil')}
               </Label>
               <Input
@@ -251,7 +251,7 @@ export function ComplianceSignoffDialog({
                     : ''
               }
             >
-              {signoffMutation.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+              {signoffMutation.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('signoff.confirm')}
             </Button>
           </DialogFooter>

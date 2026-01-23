@@ -102,7 +102,7 @@ function PasswordStrength({ password, isRTL }: PasswordStrengthProps) {
 
   return (
     <div className="mt-2 space-y-2">
-      <p className="text-xs sm:text-sm font-medium text-muted-foreground">
+      <p className="text-xs font-medium text-muted-foreground sm:text-sm">
         {t('auth.password_requirements', 'Password requirements:')}
       </p>
       {passwordRequirements.map((req, index) => {
@@ -113,9 +113,9 @@ function PasswordStrength({ password, isRTL }: PasswordStrengthProps) {
             className={`flex items-center gap-2 text-xs sm:text-sm ${isRTL ? 'flex-row-reverse' : ''}`}
           >
             {met ? (
-              <CheckCircle className="h-4 w-4 text-green-500" />
+              <CheckCircle className="size-4 text-green-500" />
             ) : (
-              <XCircle className="h-4 w-4 text-muted-foreground" />
+              <XCircle className="size-4 text-muted-foreground" />
             )}
             <span className={met ? 'text-green-500' : 'text-muted-foreground'}>{req.label}</span>
           </div>
@@ -170,12 +170,12 @@ export function ActivateAccountPage() {
 
   return (
     <div
-      className="min-h-screen flex items-center justify-center px-4 sm:px-6 lg:px-8 bg-muted/30"
+      className="flex min-h-screen items-center justify-center bg-muted/30 px-4 sm:px-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <Card className="w-full max-w-md sm:max-w-lg">
         <CardHeader className="space-y-2 sm:space-y-3">
-          <CardTitle className="text-2xl sm:text-3xl text-center">
+          <CardTitle className="text-center text-2xl sm:text-3xl">
             {t('auth.activate_account', 'Activate Your Account')}
           </CardTitle>
           <CardDescription className="text-center text-sm sm:text-base">
@@ -203,20 +203,20 @@ export function ActivateAccountPage() {
                           {...field}
                           type={showPassword ? 'text' : 'password'}
                           placeholder={t('auth.password_placeholder', 'Enter your password')}
-                          className="h-11 sm:h-10 px-4 text-base sm:text-sm pe-12"
+                          className="h-11 px-4 pe-12 text-base sm:h-10 sm:text-sm"
                           disabled={isPending}
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className={`absolute top-0 ${isRTL ? 'start-0' : 'end-0'} h-11 sm:h-10 px-3`}
+                          className={`absolute top-0 ${isRTL ? 'start-0' : 'end-0'} h-11 px-3 sm:h-10`}
                           onClick={() => setShowPassword(!showPassword)}
                         >
                           {showPassword ? (
-                            <EyeOff className="h-4 w-4" />
+                            <EyeOff className="size-4" />
                           ) : (
-                            <Eye className="h-4 w-4" />
+                            <Eye className="size-4" />
                           )}
                         </Button>
                       </div>
@@ -245,20 +245,20 @@ export function ActivateAccountPage() {
                             'auth.confirm_password_placeholder',
                             'Re-enter your password',
                           )}
-                          className="h-11 sm:h-10 px-4 text-base sm:text-sm pe-12"
+                          className="h-11 px-4 pe-12 text-base sm:h-10 sm:text-sm"
                           disabled={isPending}
                         />
                         <Button
                           type="button"
                           variant="ghost"
                           size="sm"
-                          className={`absolute top-0 ${isRTL ? 'start-0' : 'end-0'} h-11 sm:h-10 px-3`}
+                          className={`absolute top-0 ${isRTL ? 'start-0' : 'end-0'} h-11 px-3 sm:h-10`}
                           onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                         >
                           {showConfirmPassword ? (
-                            <EyeOff className="h-4 w-4" />
+                            <EyeOff className="size-4" />
                           ) : (
-                            <Eye className="h-4 w-4" />
+                            <Eye className="size-4" />
                           )}
                         </Button>
                       </div>
@@ -284,7 +284,7 @@ export function ActivateAccountPage() {
               {/* Submit Button */}
               <Button
                 type="submit"
-                className="h-11 sm:h-10 px-6 sm:px-8 text-base sm:text-sm w-full"
+                className="h-11 w-full px-6 text-base sm:h-10 sm:px-8 sm:text-sm"
                 disabled={isPending}
               >
                 {isPending
@@ -293,9 +293,9 @@ export function ActivateAccountPage() {
               </Button>
 
               {/* Back to Login Link */}
-              <p className="text-center text-xs sm:text-sm text-muted-foreground">
+              <p className="text-center text-xs text-muted-foreground sm:text-sm">
                 {t('auth.already_activated', 'Already activated?')}{' '}
-                <a href="/login" className="text-primary hover:underline font-medium">
+                <a href="/login" className="font-medium text-primary hover:underline">
                   {t('auth.sign_in', 'Sign in')}
                 </a>
               </p>

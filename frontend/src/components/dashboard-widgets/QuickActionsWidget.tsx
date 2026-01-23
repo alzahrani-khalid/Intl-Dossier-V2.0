@@ -120,9 +120,9 @@ function ActionButton({
   const buttonContent = (
     <div className="flex flex-col items-center gap-1.5 p-2 sm:p-3">
       <div className={cn('p-2 sm:p-3 rounded-lg', action.color || 'bg-muted')}>
-        <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+        <Icon className="size-4 sm:size-5" />
       </div>
-      <span className="text-[10px] sm:text-xs font-medium text-center line-clamp-1">{label}</span>
+      <span className="line-clamp-1 text-center text-[10px] font-medium sm:text-xs">{label}</span>
     </div>
   )
 
@@ -169,8 +169,8 @@ export function QuickActionsWidget({ config, onActionClick }: QuickActionsWidget
   }
 
   return (
-    <div className="h-full flex items-center justify-center">
-      <div className="flex flex-wrap justify-center gap-2 sm:gap-3 p-1">
+    <div className="flex h-full items-center justify-center">
+      <div className="flex flex-wrap justify-center gap-2 p-1 sm:gap-3">
         {actions.map((action) => (
           <ActionButton
             key={action.id}

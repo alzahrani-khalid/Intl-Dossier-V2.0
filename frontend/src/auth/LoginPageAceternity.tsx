@@ -77,7 +77,7 @@ export function LoginPageAceternity() {
               label={t('auth.email')}
               name="email"
               type="email"
-              icon={<Mail className="h-4 w-4" />}
+              icon={<Mail className="size-4" />}
               register={register}
               error={errors.email}
               required
@@ -88,25 +88,25 @@ export function LoginPageAceternity() {
 
             {/* Password field with custom show/hide toggle */}
             <div className="space-y-2">
-              <label className="block text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 text-start">
+              <label className="block text-start text-sm font-medium text-gray-700 dark:text-gray-300 sm:text-base">
                 {t('auth.password')}
-                <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+                <span className="ms-1 text-red-500" aria-label={t('validation.required')}>
                   *
                 </span>
               </label>
               <div className="relative">
-                <Lock className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+                <Lock className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
                 <input
                   {...register('password')}
                   type={showPassword ? 'text' : 'password'}
                   id="password"
                   autoComplete="current-password"
-                  className="w-full min-h-11 sm:min-h-10 md:min-h-12 text-sm sm:text-base px-4 ps-12 pe-12 py-2 border border-input dark:border-gray-600 rounded-lg focus:ring-2 focus:border-transparent focus:ring-primary-500 dark:bg-zinc-800 dark:text-white disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 bg-white shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] focus:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.2),_0px_1px_0px_0px_rgba(25,28,33,0.04),_0px_0px_0px_2px_rgba(var(--primary),0.3)]"
+                  className="min-h-11 w-full rounded-lg border border-input bg-white px-4 py-2 pe-12 ps-12 text-sm shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.1),_0px_1px_0px_0px_rgba(25,28,33,0.02),_0px_0px_0px_1px_rgba(25,28,33,0.08)] transition-all duration-200 focus:border-transparent focus:shadow-[0px_2px_3px_-1px_rgba(0,0,0,0.2),_0px_1px_0px_0px_rgba(25,28,33,0.04),_0px_0px_0px_2px_rgba(var(--primary),0.3)] focus:ring-2 focus:ring-primary-500 disabled:cursor-not-allowed disabled:opacity-50 dark:border-gray-600 dark:bg-zinc-800 dark:text-white sm:min-h-10 sm:text-base md:min-h-12"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground transition-colors hover:text-foreground"
                   aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
                   aria-pressed={showPassword}
                 >
@@ -118,7 +118,7 @@ export function LoginPageAceternity() {
                 </button>
               </div>
               {errors.password && (
-                <p className="text-sm text-red-600 dark:text-red-400 text-start">
+                <p className="text-start text-sm text-red-600 dark:text-red-400">
                   {t(errors.password.message || '', { min: 6 })}
                 </p>
               )}
@@ -164,7 +164,7 @@ export function LoginPageAceternity() {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full min-h-11 sm:min-h-10 md:min-h-12 rounded-lg bg-primary px-4 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+              className="min-h-11 w-full rounded-lg bg-primary px-4 py-3 font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 sm:min-h-10 md:min-h-12"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center">

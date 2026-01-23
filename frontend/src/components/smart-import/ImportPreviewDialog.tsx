@@ -233,12 +233,12 @@ export function ImportPreviewDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-xl md:max-w-2xl lg:max-w-3xl max-h-[90vh] flex flex-col p-0"
+        className="flex max-h-[90vh] flex-col p-0 sm:max-w-xl md:max-w-2xl lg:max-w-3xl"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-0">
+        <DialogHeader className="px-4 pb-0 pt-4 sm:px-6 sm:pt-6">
           <DialogTitle className="flex items-center gap-2 text-base sm:text-lg">
-            <SectionIcon className="h-5 w-5 text-primary" />
+            <SectionIcon className="size-5 text-primary" />
             {t('preview.title', 'Import Preview')}
           </DialogTitle>
           <DialogDescription className="text-sm">
@@ -250,11 +250,11 @@ export function ImportPreviewDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <div className="flex-1 overflow-hidden px-4 sm:px-6 py-4">
+        <div className="flex-1 overflow-hidden p-4 sm:px-6">
           {/* Error state */}
           {error && (
             <Alert variant="destructive" className="mb-4">
-              <AlertTriangle className="h-4 w-4" />
+              <AlertTriangle className="size-4" />
               <AlertTitle>{t('preview.errorTitle', 'Error')}</AlertTitle>
               <AlertDescription>{error}</AlertDescription>
             </Alert>
@@ -264,9 +264,9 @@ export function ImportPreviewDialog({
           {importResult && (
             <Alert variant={importResult.success ? 'default' : 'destructive'} className="mb-4">
               {importResult.success ? (
-                <CheckCircle2 className="h-4 w-4 text-green-500" />
+                <CheckCircle2 className="size-4 text-green-500" />
               ) : (
-                <XCircle className="h-4 w-4" />
+                <XCircle className="size-4" />
               )}
               <AlertTitle>
                 {importResult.success
@@ -290,7 +290,7 @@ export function ImportPreviewDialog({
           {/* Loading state */}
           {isLoading && (
             <div className="flex flex-col items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary mb-3" />
+              <Loader2 className="mb-3 size-8 animate-spin text-primary" />
               <p className="text-sm text-muted-foreground">
                 {t('preview.loading', 'Loading preview...')}
               </p>
@@ -321,12 +321,12 @@ export function ImportPreviewDialog({
                   onClick={() => setShowMappings(!showMappings)}
                   className="min-h-9"
                 >
-                  <Settings2 className="h-4 w-4 me-1" />
+                  <Settings2 className="me-1 size-4" />
                   {t('preview.mappings', 'Mappings')}
                   {showMappings ? (
-                    <ChevronUp className="h-4 w-4 ms-1" />
+                    <ChevronUp className="ms-1 size-4" />
                   ) : (
-                    <ChevronDown className="h-4 w-4 ms-1" />
+                    <ChevronDown className="ms-1 size-4" />
                   )}
                 </Button>
               </div>
@@ -334,7 +334,7 @@ export function ImportPreviewDialog({
               {/* Field mappings */}
               <Collapsible open={showMappings} onOpenChange={setShowMappings}>
                 <CollapsibleContent>
-                  <div className="border rounded-lg p-3 sm:p-4 bg-muted/30 space-y-3">
+                  <div className="space-y-3 rounded-lg border bg-muted/30 p-3 sm:p-4">
                     <h4 className="text-sm font-medium">
                       {t('preview.fieldMappings', 'Field Mappings')}
                     </h4>
@@ -342,17 +342,17 @@ export function ImportPreviewDialog({
                       {fieldMappings.map((mapping, index) => (
                         <div
                           key={mapping.sourceField}
-                          className="flex items-center gap-2 flex-wrap sm:flex-nowrap"
+                          className="flex flex-wrap items-center gap-2 sm:flex-nowrap"
                         >
-                          <span className="text-xs sm:text-sm text-muted-foreground min-w-[100px]">
+                          <span className="min-w-[100px] text-xs text-muted-foreground sm:text-sm">
                             {mapping.sourceField}
                           </span>
-                          <ArrowRight className="h-3 w-3 text-muted-foreground flex-shrink-0" />
+                          <ArrowRight className="size-3 shrink-0 text-muted-foreground" />
                           <Select
                             value={mapping.targetField}
                             onValueChange={(value) => updateMapping(index, { targetField: value })}
                           >
-                            <SelectTrigger className="h-8 text-xs sm:text-sm flex-1">
+                            <SelectTrigger className="h-8 flex-1 text-xs sm:text-sm">
                               <SelectValue />
                             </SelectTrigger>
                             <SelectContent>
@@ -389,7 +389,7 @@ export function ImportPreviewDialog({
                   ))}
 
                   {items.length === 0 && (
-                    <div className="text-center py-8 text-muted-foreground">
+                    <div className="py-8 text-center text-muted-foreground">
                       <p className="text-sm">{t('preview.noItems', 'No items to import')}</p>
                     </div>
                   )}
@@ -399,10 +399,10 @@ export function ImportPreviewDialog({
               {/* Warnings */}
               {previewData.warnings && previewData.warnings.length > 0 && (
                 <Alert>
-                  <AlertTriangle className="h-4 w-4" />
+                  <AlertTriangle className="size-4" />
                   <AlertTitle>{t('preview.warnings', 'Warnings')}</AlertTitle>
                   <AlertDescription>
-                    <ul className="list-disc list-inside text-xs mt-1">
+                    <ul className="mt-1 list-inside list-disc text-xs">
                       {previewData.warnings.map((warning, i) => (
                         <li key={i}>{warning}</li>
                       ))}
@@ -414,8 +414,8 @@ export function ImportPreviewDialog({
           )}
         </div>
 
-        <DialogFooter className="px-4 sm:px-6 py-4 border-t">
-          <div className="flex flex-col-reverse sm:flex-row gap-2 w-full sm:w-auto">
+        <DialogFooter className="border-t p-4 sm:px-6">
+          <div className="flex w-full flex-col-reverse gap-2 sm:w-auto sm:flex-row">
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}
@@ -432,12 +432,12 @@ export function ImportPreviewDialog({
               >
                 {isImporting ? (
                   <>
-                    <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                    <Loader2 className="me-2 size-4 animate-spin" />
                     {t('actions.importing', 'Importing...')}
                   </>
                 ) : (
                   <>
-                    <Check className="h-4 w-4 me-2" />
+                    <Check className="me-2 size-4" />
                     {t('actions.import', 'Import {{count}} Items', { count: selectedCount })}
                   </>
                 )}
@@ -486,13 +486,13 @@ function ImportItemRow({ item, selected, onToggle, isRTL }: ImportItemRowProps) 
         aria-label={t('preview.selectItem', 'Select {{title}}', { title: item.title })}
         className="mt-0.5"
       />
-      <div className="flex-1 min-w-0">
-        <p className="text-sm font-medium truncate">{item.title}</p>
+      <div className="min-w-0 flex-1">
+        <p className="truncate text-sm font-medium">{item.title}</p>
         {item.preview && (
-          <p className="text-xs text-muted-foreground truncate mt-0.5">{item.preview}</p>
+          <p className="mt-0.5 truncate text-xs text-muted-foreground">{item.preview}</p>
         )}
         {item.timestamp && (
-          <p className="text-xs text-muted-foreground mt-1">
+          <p className="mt-1 text-xs text-muted-foreground">
             {new Date(item.timestamp).toLocaleDateString(isRTL ? 'ar' : 'en', {
               year: 'numeric',
               month: 'short',
@@ -503,8 +503,8 @@ function ImportItemRow({ item, selected, onToggle, isRTL }: ImportItemRowProps) 
         {hasErrors && (
           <div className="mt-2 space-y-1">
             {item.validationErrors?.map((error, i) => (
-              <p key={i} className="text-xs text-destructive flex items-center gap-1">
-                <XCircle className="h-3 w-3 flex-shrink-0" />
+              <p key={i} className="flex items-center gap-1 text-xs text-destructive">
+                <XCircle className="size-3 shrink-0" />
                 {error}
               </p>
             ))}
@@ -514,7 +514,7 @@ function ImportItemRow({ item, selected, onToggle, isRTL }: ImportItemRowProps) 
       {item.mappingConfidence !== undefined && (
         <Badge
           variant={item.mappingConfidence >= 0.8 ? 'default' : 'secondary'}
-          className="text-xs flex-shrink-0"
+          className="shrink-0 text-xs"
         >
           {Math.round(item.mappingConfidence * 100)}%
         </Badge>

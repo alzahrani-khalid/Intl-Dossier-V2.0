@@ -138,12 +138,12 @@ function ActionButton({
             animate={{ rotate: 360 }}
             transition={{ duration: 1, repeat: Infinity, ease: 'linear' }}
           >
-            <RotateCcw className="h-4 w-4" />
+            <RotateCcw className="size-4" />
           </motion.div>
         ) : isCompleted ? (
-          <CheckCircle2 className="h-4 w-4" />
+          <CheckCircle2 className="size-4" />
         ) : (
-          <IconComponent className="h-4 w-4" />
+          <IconComponent className="size-4" />
         )}
         <span className={compact ? 'hidden sm:inline' : ''}>{t(action.labelKey)}</span>
         {action.primary && !compact && (
@@ -234,7 +234,7 @@ export function ActionableErrorMessage({
               aria-hidden="true"
             />
 
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               {/* Title */}
               <h4 className={cn('font-medium text-sm sm:text-base', styles.text)}>
                 {t(error.titleKey, error.params)}
@@ -276,7 +276,7 @@ export function ActionableErrorMessage({
                 className={cn('h-8 w-8 shrink-0 opacity-60 hover:opacity-100', styles.text)}
                 aria-label={t('dismiss')}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             )}
           </div>

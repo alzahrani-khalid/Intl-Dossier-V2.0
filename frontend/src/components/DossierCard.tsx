@@ -101,7 +101,7 @@ export function DossierCard({ dossier }: DossierCardProps) {
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className="group cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      className="group cursor-pointer transition-all duration-200 hover:scale-[1.01] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       aria-label={t('viewDetails') + ': ' + name}
     >
       <CardHeader className="pb-3">
@@ -136,7 +136,7 @@ export function DossierCard({ dossier }: DossierCardProps) {
               </Badge>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-2 shrink-0">
+          <div className="flex shrink-0 flex-col items-end gap-2">
             <Badge
               variant="none"
               className={`whitespace-nowrap text-xs font-semibold ${getSensitivityBadgeClass(sensitivityKey)}`}
@@ -166,8 +166,8 @@ export function DossierCard({ dossier }: DossierCardProps) {
       <CardFooter className="flex flex-col items-start gap-3 pt-0">
         {/* Tags */}
         {dossier.tags && dossier.tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 w-full">
-            <Tag className="size-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
+          <div className="flex w-full flex-wrap items-center gap-1.5">
+            <Tag className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
             {dossier.tags.slice(0, 3).map((tag, index) => (
               <Badge
                 key={index}
@@ -187,7 +187,7 @@ export function DossierCard({ dossier }: DossierCardProps) {
         )}
 
         {/* Metadata */}
-        <div className="flex items-center justify-between gap-2 w-full text-xs text-muted-foreground">
+        <div className="flex w-full items-center justify-between gap-2 text-xs text-muted-foreground">
           <span className="font-medium">
             {t('fields.version')} {dossier.version}
           </span>

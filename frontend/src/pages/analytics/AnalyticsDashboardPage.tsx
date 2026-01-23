@@ -177,24 +177,24 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
   if (isLoading && !summary) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+        className="container mx-auto p-4 sm:p-6 lg:px-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Header skeleton */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <Skeleton className="h-8 w-48 mb-2" />
+            <Skeleton className="mb-2 h-8 w-48" />
             <Skeleton className="h-4 w-64" />
           </div>
           <div className="flex items-center gap-2">
             <Skeleton className="h-10 w-32" />
-            <Skeleton className="h-10 w-10" />
+            <Skeleton className="size-10" />
           </div>
         </div>
         {/* Metrics grid skeleton - mirrors the 4 summary cards */}
         <MetricsGridSkeleton count={4} columns={4} className="mb-6" />
         {/* Charts grid skeleton - mirrors the 2x2 layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
           <ChartSkeleton height="h-64 sm:h-80" />
           <ChartSkeleton height="h-64 sm:h-80" />
           <ChartSkeleton height="h-64 sm:h-80" />
@@ -208,16 +208,16 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
   if (isError) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+        className="container mx-auto p-4 sm:p-6 lg:px-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Alert variant="destructive">
-          <AlertTriangle className="h-4 w-4" />
+          <AlertTriangle className="size-4" />
           <AlertTitle>{t('errors.loadFailed')}</AlertTitle>
           <AlertDescription>{error?.message || t('errors.networkError')}</AlertDescription>
         </Alert>
         <Button onClick={() => refetch()} className="mt-4">
-          <RefreshCw className="h-4 w-4 me-2" />
+          <RefreshCw className="me-2 size-4" />
           {t('refresh.button')}
         </Button>
       </div>
@@ -226,19 +226,19 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+      className="container mx-auto p-4 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground text-sm sm:text-base mt-1">{t('subtitle')}</p>
+          <h1 className="text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+          <p className="mt-1 text-sm text-muted-foreground sm:text-base">{t('subtitle')}</p>
         </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2">
+        <div className="flex flex-col items-stretch gap-2 sm:flex-row sm:items-center">
           <Select value={timeRange} onValueChange={handleTimeRangeChange}>
             <SelectTrigger className="w-full sm:w-40">
-              <Calendar className="h-4 w-4 me-2" />
+              <Calendar className="me-2 size-4" />
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
@@ -265,7 +265,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
               onClick={handleExport}
               className="min-h-11 min-w-11"
             >
-              <Download className="h-4 w-4" />
+              <Download className="size-4" />
             </Button>
           </div>
         </div>
@@ -283,7 +283,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
 
       {/* Alerts */}
       {alerts.length > 0 && (
-        <div className="space-y-2 mb-6">
+        <div className="mb-6 space-y-2">
           {alerts.map((alert, index) => (
             <Alert
               key={index}
@@ -293,7 +293,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
                 alert.type === 'info' && 'border-blue-500/50 bg-blue-50 dark:bg-blue-900/20',
               )}
             >
-              <AlertTriangle className="h-4 w-4" />
+              <AlertTriangle className="size-4" />
               <AlertDescription>{alert.message}</AlertDescription>
             </Alert>
           ))}
@@ -301,13 +301,13 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
       )}
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <SummaryCard
           title={t('summary.totalEngagements')}
           value={displayData.summary?.totalEngagements || 0}
           change={displayData.summary?.engagementsChange}
           changeLabel={t('summary.fromPrevious')}
-          icon={<BarChart3 className="h-5 w-5" />}
+          icon={<BarChart3 className="size-5" />}
           format="number"
         />
         <SummaryCard
@@ -315,7 +315,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
           value={displayData.summary?.avgHealthScore || 0}
           change={displayData.summary?.healthScoreChange}
           changeLabel={t('summary.fromPrevious')}
-          icon={<TrendingUp className="h-5 w-5" />}
+          icon={<TrendingUp className="size-5" />}
           format="score"
         />
         <SummaryCard
@@ -323,7 +323,7 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
           value={displayData.summary?.fulfillmentRate || 0}
           change={displayData.summary?.fulfillmentRateChange}
           changeLabel={t('summary.fromPrevious')}
-          icon={<ClipboardCheck className="h-5 w-5" />}
+          icon={<ClipboardCheck className="size-5" />}
           format="percentage"
         />
         <SummaryCard
@@ -331,18 +331,18 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
           value={displayData.summary?.totalActiveWork || 0}
           change={displayData.summary?.activeWorkChange}
           changeLabel={t('summary.fromPrevious')}
-          icon={<Users className="h-5 w-5" />}
+          icon={<Users className="size-5" />}
           format="number"
         />
       </div>
 
       {/* Alert summary cards */}
       {summary && (summary.criticalAlerts > 0 || summary.overdueItems > 0) && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+        <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
           {summary.criticalAlerts > 0 && (
             <Card className="border-red-500/30 bg-red-50 dark:bg-red-900/20">
-              <CardContent className="p-4 flex items-center gap-3">
-                <AlertTriangle className="h-8 w-8 text-red-500" />
+              <CardContent className="flex items-center gap-3 p-4">
+                <AlertTriangle className="size-8 text-red-500" />
                 <div>
                   <p className="text-2xl font-bold text-red-600 dark:text-red-400">
                     {summary.criticalAlerts}
@@ -354,8 +354,8 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
           )}
           {summary.overdueItems > 0 && (
             <Card className="border-amber-500/30 bg-amber-50 dark:bg-amber-900/20">
-              <CardContent className="p-4 flex items-center gap-3">
-                <Clock className="h-8 w-8 text-amber-500" />
+              <CardContent className="flex items-center gap-3 p-4">
+                <Clock className="size-8 text-amber-500" />
                 <div>
                   <p className="text-2xl font-bold text-amber-600 dark:text-amber-400">
                     {summary.overdueItems}
@@ -367,8 +367,8 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
           )}
           {summary.relationshipsNeedingAttention > 0 && (
             <Card className="border-blue-500/30 bg-blue-50 dark:bg-blue-900/20">
-              <CardContent className="p-4 flex items-center gap-3">
-                <TrendingUp className="h-8 w-8 text-blue-500" />
+              <CardContent className="flex items-center gap-3 p-4">
+                <TrendingUp className="size-8 text-blue-500" />
                 <div>
                   <p className="text-2xl font-bold text-blue-600 dark:text-blue-400">
                     {summary.relationshipsNeedingAttention}
@@ -383,27 +383,27 @@ export function AnalyticsDashboardPage({ initialState }: AnalyticsDashboardPageP
 
       {/* Main content tabs */}
       <Tabs value={activeTab} onValueChange={handleTabChange} className="w-full">
-        <TabsList className="w-full sm:w-auto flex flex-wrap mb-6">
-          <TabsTrigger value="overview" className="flex-1 sm:flex-none min-h-11">
+        <TabsList className="mb-6 flex w-full flex-wrap sm:w-auto">
+          <TabsTrigger value="overview" className="min-h-11 flex-1 sm:flex-none">
             {t('tabs.overview')}
           </TabsTrigger>
-          <TabsTrigger value="engagements" className="flex-1 sm:flex-none min-h-11">
+          <TabsTrigger value="engagements" className="min-h-11 flex-1 sm:flex-none">
             {t('tabs.engagements')}
           </TabsTrigger>
-          <TabsTrigger value="relationships" className="flex-1 sm:flex-none min-h-11">
+          <TabsTrigger value="relationships" className="min-h-11 flex-1 sm:flex-none">
             {t('tabs.relationships')}
           </TabsTrigger>
-          <TabsTrigger value="commitments" className="flex-1 sm:flex-none min-h-11">
+          <TabsTrigger value="commitments" className="min-h-11 flex-1 sm:flex-none">
             {t('tabs.commitments')}
           </TabsTrigger>
-          <TabsTrigger value="workload" className="flex-1 sm:flex-none min-h-11">
+          <TabsTrigger value="workload" className="min-h-11 flex-1 sm:flex-none">
             {t('tabs.workload')}
           </TabsTrigger>
         </TabsList>
 
         {/* Overview Tab */}
         <TabsContent value="overview" className="mt-0">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <EngagementMetricsChart
               data={displayData.engagements}
               isLoading={isLoading}

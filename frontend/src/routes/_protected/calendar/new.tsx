@@ -23,7 +23,7 @@ function NewCalendarEntryPage() {
  };
 
  return (
- <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 max-w-4xl" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="container mx-auto max-w-4xl px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
  {/* Breadcrumb */}
  <div className="mb-6">
  <Button
@@ -32,13 +32,13 @@ function NewCalendarEntryPage() {
  onClick={handleCancel}
  className="mb-2"
  >
- <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180 ms-2' : 'me-2'}`} />
+ <ArrowLeft className={`size-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
  {t('calendar.new_event.back_to_calendar')}
  </Button>
- <h1 className="text-2xl sm:text-3xl font-bold text-start">
+ <h1 className="text-start text-2xl font-bold sm:text-3xl">
  {t('calendar.new_event.title')}
  </h1>
- <p className="text-sm sm:text-base text-muted-foreground mt-1 text-start">
+ <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
  {t('calendar.new_event.description')}
  </p>
  </div>
@@ -46,7 +46,7 @@ function NewCalendarEntryPage() {
  {/* Form Card */}
  <Card>
  <CardHeader>
- <CardTitle className="text-base sm:text-lg text-start">
+ <CardTitle className="text-start text-base sm:text-lg">
  {t('calendar.new_event.form_title')}
  </CardTitle>
  </CardHeader>

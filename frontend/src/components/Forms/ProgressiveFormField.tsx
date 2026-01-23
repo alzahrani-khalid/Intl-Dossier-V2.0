@@ -56,17 +56,17 @@ function ImportanceBadge({ importance, className }: ImportanceBadgeProps) {
     required: {
       label: t('importance.required'),
       className: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
-      icon: <AlertCircle className="w-3 h-3" />,
+      icon: <AlertCircle className="size-3" />,
     },
     recommended: {
       label: t('importance.recommended'),
       className: 'bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400',
-      icon: <CircleDot className="w-3 h-3" />,
+      icon: <CircleDot className="size-3" />,
     },
     optional: {
       label: t('importance.optional'),
       className: 'bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400',
-      icon: <Info className="w-3 h-3" />,
+      icon: <Info className="size-3" />,
     },
   }
 
@@ -99,29 +99,29 @@ function StatusIndicator({ status, importance, className }: StatusIndicatorProps
     empty: {
       icon:
         importance === 'required' ? (
-          <div className="w-4 h-4 rounded-full border-2 border-red-400 dark:border-red-500" />
+          <div className="size-4 rounded-full border-2 border-red-400 dark:border-red-500" />
         ) : (
-          <div className="w-4 h-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
+          <div className="size-4 rounded-full border-2 border-gray-300 dark:border-gray-600" />
         ),
       label: t('status.empty'),
       color: importance === 'required' ? 'text-red-500' : 'text-gray-400',
     },
     partial: {
       icon: (
-        <div className="w-4 h-4 rounded-full border-2 border-amber-400 bg-amber-100 dark:border-amber-500 dark:bg-amber-900/30">
-          <div className="w-1/2 h-full bg-amber-400 rounded-s-full" />
+        <div className="size-4 rounded-full border-2 border-amber-400 bg-amber-100 dark:border-amber-500 dark:bg-amber-900/30">
+          <div className="h-full w-1/2 rounded-s-full bg-amber-400" />
         </div>
       ),
       label: t('status.partial'),
       color: 'text-amber-500',
     },
     complete: {
-      icon: <CheckCircle2 className="w-4 h-4 text-emerald-500" />,
+      icon: <CheckCircle2 className="size-4 text-emerald-500" />,
       label: t('status.complete'),
       color: 'text-emerald-500',
     },
     error: {
-      icon: <AlertCircle className="w-4 h-4 text-red-500" />,
+      icon: <AlertCircle className="size-4 text-red-500" />,
       label: t('status.error'),
       color: 'text-red-500',
     },
@@ -210,8 +210,8 @@ export function ProgressiveFormField({
       transition={{ duration: 0.3 }}
     >
       {/* Label Row */}
-      <div className="flex flex-wrap items-center justify-between gap-2 mb-2">
-        <div className="flex items-center gap-2 flex-wrap">
+      <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+        <div className="flex flex-wrap items-center gap-2">
           <label
             htmlFor={inputId}
             className={cn(
@@ -223,7 +223,7 @@ export function ProgressiveFormField({
           >
             {label}
             {importance === 'required' && (
-              <span className="text-red-500 ms-1" aria-label={t('common:validation.required')}>
+              <span className="ms-1 text-red-500" aria-label={t('common:validation.required')}>
                 *
               </span>
             )}
@@ -249,21 +249,21 @@ export function ProgressiveFormField({
           <motion.p
             key="error"
             id={errorId}
-            className="mt-2 text-sm text-red-600 dark:text-red-400 text-start flex items-center gap-1"
+            className="mt-2 flex items-center gap-1 text-start text-sm text-red-600 dark:text-red-400"
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.2 }}
             role="alert"
           >
-            <AlertCircle className="w-4 h-4 flex-shrink-0" />
+            <AlertCircle className="size-4 shrink-0" />
             {error}
           </motion.p>
         ) : helpText ? (
           <motion.p
             key="help"
             id={helpId}
-            className="mt-2 text-sm text-gray-500 dark:text-gray-400 text-start"
+            className="mt-2 text-start text-sm text-gray-500 dark:text-gray-400"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

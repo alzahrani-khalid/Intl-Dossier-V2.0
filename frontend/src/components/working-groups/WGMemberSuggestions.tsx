@@ -226,7 +226,7 @@ export function WGMemberSuggestions({
     return (
       <Card className={cn('border-2 border-dashed border-primary/30', className)}>
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
+          <Loader2 className="mb-4 size-8 animate-spin text-primary" />
           <p className="text-sm text-muted-foreground">
             {isRTL ? 'جاري البحث عن أعضاء محتملين...' : 'Finding potential members...'}
           </p>
@@ -240,7 +240,7 @@ export function WGMemberSuggestions({
     return (
       <Card className={cn('border-2 border-dashed border-destructive/30', className)}>
         <CardContent className="flex flex-col items-center justify-center py-12">
-          <X className="h-8 w-8 text-destructive mb-4" />
+          <X className="mb-4 size-8 text-destructive" />
           <p className="text-sm text-muted-foreground">
             {isRTL ? 'فشل في تحميل الاقتراحات' : 'Failed to load suggestions'}
           </p>
@@ -254,13 +254,13 @@ export function WGMemberSuggestions({
     return (
       <Card className={cn('border-2 border-dashed border-muted', className)}>
         <CardContent className="flex flex-col items-center justify-center py-12 text-center">
-          <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-            <Users className="h-8 w-8 text-muted-foreground" />
+          <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-muted">
+            <Users className="size-8 text-muted-foreground" />
           </div>
-          <h3 className="text-base font-semibold mb-2">
+          <h3 className="mb-2 text-base font-semibold">
             {isRTL ? 'لا توجد اقتراحات متاحة' : 'No Suggestions Available'}
           </h3>
-          <p className="text-sm text-muted-foreground max-w-md">
+          <p className="max-w-md text-sm text-muted-foreground">
             {isRTL
               ? 'لم نتمكن من العثور على أعضاء محتملين بناءً على البيانات المتاحة. يمكنك إضافة أعضاء يدويًا.'
               : "We couldn't find potential members based on available data. You can add members manually."}
@@ -390,8 +390,8 @@ function SelectionStep({
       <CardHeader className="pb-4">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-3">
-            <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-              <Sparkles className="h-6 w-6 text-primary" />
+            <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+              <Sparkles className="size-6 text-primary" />
             </div>
             <div>
               <CardTitle className="text-lg sm:text-xl">
@@ -405,21 +405,21 @@ function SelectionStep({
             </div>
           </div>
           {onClose && (
-            <Button variant="ghost" size="sm" onClick={onClose} className="h-8 w-8 p-0">
-              <X className="h-4 w-4" />
+            <Button variant="ghost" size="sm" onClick={onClose} className="size-8 p-0">
+              <X className="size-4" />
             </Button>
           )}
         </div>
 
         {/* Summary badges */}
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div className="mt-4 flex flex-wrap gap-2">
           <Badge variant="secondary">
-            <Users className="h-3 w-3 me-1" />
+            <Users className="me-1 size-3" />
             {summary.total_suggestions} {isRTL ? 'اقتراحات' : 'suggestions'}
           </Badge>
           {summary.high_confidence_count > 0 && (
             <Badge variant="default">
-              <Sparkles className="h-3 w-3 me-1" />
+              <Sparkles className="me-1 size-3" />
               {summary.high_confidence_count} {isRTL ? 'موصى به بشدة' : 'highly recommended'}
             </Badge>
           )}
@@ -437,18 +437,18 @@ function SelectionStep({
               {isRTL ? 'الكل' : 'All'} ({orgCount + personCount})
             </TabsTrigger>
             <TabsTrigger value="organizations">
-              <Building2 className="h-4 w-4 me-1" />
+              <Building2 className="me-1 size-4" />
               {isRTL ? 'منظمات' : 'Orgs'} ({orgCount})
             </TabsTrigger>
             <TabsTrigger value="persons">
-              <UserCircle className="h-4 w-4 me-1" />
+              <UserCircle className="me-1 size-4" />
               {isRTL ? 'أشخاص' : 'People'} ({personCount})
             </TabsTrigger>
           </TabsList>
         </Tabs>
 
         {/* Select all / deselect all */}
-        <div className="flex items-center justify-between pb-2 border-b">
+        <div className="flex items-center justify-between border-b pb-2">
           <span className="text-sm text-muted-foreground">
             {selectedMembers.size} {isRTL ? 'محدد' : 'selected'}
           </span>
@@ -463,7 +463,7 @@ function SelectionStep({
         </div>
 
         {/* Suggestions list */}
-        <div className="space-y-3 max-h-[400px] overflow-y-auto pe-2">
+        <div className="max-h-[400px] space-y-3 overflow-y-auto pe-2">
           {suggestions.map((suggestion, index) => (
             <SuggestionCard
               key={getKey(suggestion)}
@@ -479,7 +479,7 @@ function SelectionStep({
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse justify-between gap-3 border-t pt-4 sm:flex-row">
           {onClose && (
             <Button variant="ghost" onClick={onClose} className="min-h-11">
               {isRTL ? 'تخطي في الوقت الحالي' : 'Skip for now'}
@@ -488,9 +488,9 @@ function SelectionStep({
           <Button onClick={onNext} disabled={selectedMembers.size === 0} className="min-h-11">
             {isRTL ? 'تعيين الأدوار' : 'Assign Roles'}
             {isRTL ? (
-              <ArrowLeft className="h-4 w-4 ms-2" />
+              <ArrowLeft className="ms-2 size-4" />
             ) : (
-              <ArrowRight className="h-4 w-4 ms-2" />
+              <ArrowRight className="ms-2 size-4" />
             )}
           </Button>
         </div>
@@ -548,14 +548,14 @@ function SuggestionCard({
             isOrg ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600',
           )}
         >
-          {isOrg ? <Building2 className="h-5 w-5" /> : <UserCircle className="h-5 w-5" />}
+          {isOrg ? <Building2 className="size-5" /> : <UserCircle className="size-5" />}
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-start justify-between gap-2">
             <div>
-              <h4 className="text-sm font-semibold line-clamp-1">
+              <h4 className="line-clamp-1 text-sm font-semibold">
                 {isRTL ? suggestion.suggested_name_ar : suggestion.suggested_name_en}
               </h4>
               <p className="text-xs text-muted-foreground">
@@ -570,14 +570,14 @@ function SuggestionCard({
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="h-8 w-8 p-0 text-muted-foreground hover:text-destructive"
+                    className="size-8 p-0 text-muted-foreground hover:text-destructive"
                     onClick={(e) => {
                       e.stopPropagation()
                       onReject()
                     }}
                     disabled={isRejecting}
                   >
-                    <X className="h-4 w-4" />
+                    <X className="size-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>
@@ -588,9 +588,9 @@ function SuggestionCard({
           </div>
 
           {/* Badges */}
-          <div className="flex flex-wrap items-center gap-2 mt-2">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <Badge variant="outline" className="text-xs">
-              <SuggestionIcon className="h-3 w-3 me-1" />
+              <SuggestionIcon className="me-1 size-3" />
               {isRTL ? typeLabel.ar : typeLabel.en}
             </Badge>
             <Badge
@@ -611,7 +611,7 @@ function SuggestionCard({
           </div>
 
           {/* Context */}
-          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+          <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
             {isRTL ? suggestion.context_notes_ar : suggestion.context_notes_en}
           </p>
         </div>
@@ -647,8 +647,8 @@ function RoleAssignmentStep({
     <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Crown className="h-6 w-6 text-primary" />
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+            <Crown className="size-6 text-primary" />
           </div>
           <div>
             <CardTitle className="text-lg sm:text-xl">
@@ -665,7 +665,7 @@ function RoleAssignmentStep({
 
       <CardContent className="space-y-4">
         {/* Member role cards */}
-        <div className="space-y-4 max-h-[400px] overflow-y-auto pe-2">
+        <div className="max-h-[400px] space-y-4 overflow-y-auto pe-2">
           {items.map(([key, item], index) => {
             const isOrg = item.suggestion.suggested_entity_type === 'organization'
             return (
@@ -674,16 +674,16 @@ function RoleAssignmentStep({
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.05 }}
-                className="p-4 rounded-lg border bg-card"
+                className="rounded-lg border bg-card p-4"
               >
-                <div className="flex items-start gap-3 mb-4">
+                <div className="mb-4 flex items-start gap-3">
                   <div
                     className={cn(
                       'h-10 w-10 rounded-full flex items-center justify-center flex-shrink-0',
                       isOrg ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600',
                     )}
                   >
-                    {isOrg ? <Building2 className="h-5 w-5" /> : <UserCircle className="h-5 w-5" />}
+                    {isOrg ? <Building2 className="size-5" /> : <UserCircle className="size-5" />}
                   </div>
                   <div>
                     <h4 className="text-sm font-semibold">
@@ -700,7 +700,7 @@ function RoleAssignmentStep({
                 <div className="space-y-3">
                   {/* Role selector */}
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground mb-1 block">
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
                       {isRTL ? 'الدور' : 'Role'}
                     </label>
                     <Select
@@ -722,7 +722,7 @@ function RoleAssignmentStep({
 
                   {/* Notes */}
                   <div>
-                    <label className="text-xs font-medium text-muted-foreground mb-1 block">
+                    <label className="mb-1 block text-xs font-medium text-muted-foreground">
                       {isRTL ? 'ملاحظات (اختياري)' : 'Notes (optional)'}
                     </label>
                     <Textarea
@@ -739,21 +739,21 @@ function RoleAssignmentStep({
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse justify-between gap-3 border-t pt-4 sm:flex-row">
           <Button variant="outline" onClick={onBack} className="min-h-11">
             {isRTL ? (
-              <ChevronRight className="h-4 w-4 me-2" />
+              <ChevronRight className="me-2 size-4" />
             ) : (
-              <ChevronLeft className="h-4 w-4 me-2" />
+              <ChevronLeft className="me-2 size-4" />
             )}
             {isRTL ? 'العودة' : 'Back'}
           </Button>
           <Button onClick={onNext} className="min-h-11">
             {isRTL ? 'مراجعة' : 'Review'}
             {isRTL ? (
-              <ArrowLeft className="h-4 w-4 ms-2" />
+              <ArrowLeft className="ms-2 size-4" />
             ) : (
-              <ArrowRight className="h-4 w-4 ms-2" />
+              <ArrowRight className="ms-2 size-4" />
             )}
           </Button>
         </div>
@@ -788,8 +788,8 @@ function ReviewStep({
     <Card className="border-2 border-dashed border-primary/30 bg-gradient-to-b from-primary/5 to-transparent">
       <CardHeader className="pb-4">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Check className="h-6 w-6 text-primary" />
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+            <Check className="size-6 text-primary" />
           </div>
           <div>
             <CardTitle className="text-lg sm:text-xl">
@@ -804,16 +804,16 @@ function ReviewStep({
         </div>
 
         {/* Summary */}
-        <div className="flex flex-wrap gap-2 mt-4">
+        <div className="mt-4 flex flex-wrap gap-2">
           {orgCount > 0 && (
             <Badge variant="secondary">
-              <Building2 className="h-3 w-3 me-1" />
+              <Building2 className="me-1 size-3" />
               {orgCount} {isRTL ? 'منظمات' : 'organizations'}
             </Badge>
           )}
           {personCount > 0 && (
             <Badge variant="secondary">
-              <UserCircle className="h-3 w-3 me-1" />
+              <UserCircle className="me-1 size-3" />
               {personCount} {isRTL ? 'أشخاص' : 'people'}
             </Badge>
           )}
@@ -822,7 +822,7 @@ function ReviewStep({
 
       <CardContent className="space-y-4">
         {/* Member summary list */}
-        <div className="space-y-2 max-h-[400px] overflow-y-auto pe-2">
+        <div className="max-h-[400px] space-y-2 overflow-y-auto pe-2">
           {items.map((item, index) => {
             const isOrg = item.suggestion.suggested_entity_type === 'organization'
             const roleLabel = MEMBER_ROLE_LABELS[item.role]
@@ -833,7 +833,7 @@ function ReviewStep({
                 initial={{ opacity: 0, x: isRTL ? 10 : -10 }}
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: index * 0.03 }}
-                className="flex items-center justify-between p-3 rounded-lg border bg-card"
+                className="flex items-center justify-between rounded-lg border bg-card p-3"
               >
                 <div className="flex items-center gap-3">
                   <div
@@ -842,7 +842,7 @@ function ReviewStep({
                       isOrg ? 'bg-blue-100 text-blue-600' : 'bg-purple-100 text-purple-600',
                     )}
                   >
-                    {isOrg ? <Building2 className="h-4 w-4" /> : <UserCircle className="h-4 w-4" />}
+                    {isOrg ? <Building2 className="size-4" /> : <UserCircle className="size-4" />}
                   </div>
                   <span className="text-sm font-medium">
                     {isRTL ? item.suggestion.suggested_name_ar : item.suggestion.suggested_name_en}
@@ -857,24 +857,24 @@ function ReviewStep({
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col-reverse sm:flex-row justify-between gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse justify-between gap-3 border-t pt-4 sm:flex-row">
           <Button variant="outline" onClick={onBack} disabled={isAdding} className="min-h-11">
             {isRTL ? (
-              <ChevronRight className="h-4 w-4 me-2" />
+              <ChevronRight className="me-2 size-4" />
             ) : (
-              <ChevronLeft className="h-4 w-4 me-2" />
+              <ChevronLeft className="me-2 size-4" />
             )}
             {isRTL ? 'العودة' : 'Back'}
           </Button>
           <Button onClick={onAdd} disabled={isAdding} className="min-h-11">
             {isAdding ? (
               <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
                 {isRTL ? 'جاري الإضافة...' : 'Adding...'}
               </>
             ) : (
               <>
-                <Check className="h-4 w-4 me-2" />
+                <Check className="me-2 size-4" />
                 {isRTL ? `إضافة ${items.length} أعضاء` : `Add ${items.length} Members`}
               </>
             )}

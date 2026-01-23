@@ -69,8 +69,8 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
  return (
  <div className="space-y-4">
  <div className={cn('flex items-center justify-between', isRTL && 'flex-row-reverse')}>
- <h3 className="text-lg font-semibold flex items-center gap-2">
- <AlertTriangle className="h-5 w-5" />
+ <h3 className="flex items-center gap-2 text-lg font-semibold">
+ <AlertTriangle className="size-5" />
  {t('afterActions.risks.title')}
  </h3>
  {!readOnly && (
@@ -110,7 +110,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
  size="sm"
  onClick={() => removeRisk(index)}
  >
- <Trash2 className="h-4 w-4 text-destructive" />
+ <Trash2 className="size-4 text-destructive" />
  </Button>
  )}
  </div>
@@ -134,7 +134,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
  />
  </div>
 
- <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
  <div>
  <Label htmlFor={`severity-${index}`}>{t('afterActions.risks.severity')} *</Label>
  <Select

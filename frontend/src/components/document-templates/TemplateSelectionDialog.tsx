@@ -131,17 +131,17 @@ export function TemplateSelectionDialog({
   return (
     <Dialog open={open} onOpenChange={onClose}>
       <DialogContent
-        className="max-w-4xl max-h-[90vh] flex flex-col p-0"
+        className="flex max-h-[90vh] max-w-4xl flex-col p-0"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-2 flex-shrink-0">
+        <DialogHeader className="shrink-0 px-4 pb-2 pt-4 sm:px-6 sm:pt-6">
           <DialogTitle className="text-xl sm:text-2xl">{t('templates.selectTitle')}</DialogTitle>
           <DialogDescription>{t('templates.selectDescription')}</DialogDescription>
         </DialogHeader>
 
         {/* Search and filter */}
-        <div className="px-4 sm:px-6 py-3 border-b flex-shrink-0">
-          <div className="flex flex-col sm:flex-row gap-3">
+        <div className="shrink-0 border-b px-4 py-3 sm:px-6">
+          <div className="flex flex-col gap-3 sm:flex-row">
             {/* Search input */}
             <div className="relative flex-1">
               <Search
@@ -160,8 +160,8 @@ export function TemplateSelectionDialog({
             </div>
 
             {/* Category filter - hidden on mobile, shown in tabs */}
-            <div className="hidden sm:flex items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground" />
+            <div className="hidden items-center gap-2 sm:flex">
+              <Filter className="size-4 text-muted-foreground" />
               <select
                 value={selectedCategory}
                 onChange={(e) =>
@@ -180,7 +180,7 @@ export function TemplateSelectionDialog({
           </div>
 
           {/* Category tabs for mobile */}
-          <div className="sm:hidden mt-3 overflow-x-auto">
+          <div className="mt-3 overflow-x-auto sm:hidden">
             <div className="flex gap-2 pb-1">
               <Button
                 variant={selectedCategory === 'all' ? 'default' : 'outline'}
@@ -209,22 +209,22 @@ export function TemplateSelectionDialog({
         <ScrollArea className="flex-1 px-4 sm:px-6">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <Loader2 className="size-8 animate-spin text-primary" />
             </div>
           ) : error ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+              <AlertCircle className="mb-4 size-12 text-destructive" />
               <p className="text-destructive">{t('errors.loadFailed')}</p>
             </div>
           ) : filteredTemplates.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <FileText className="h-12 w-12 text-muted-foreground mb-4" />
+              <FileText className="mb-4 size-12 text-muted-foreground" />
               <p className="text-muted-foreground">
                 {searchQuery ? t('templates.noTemplates') : t('templates.noTemplates')}
               </p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 py-4">
+            <div className="grid grid-cols-1 gap-4 py-4 sm:grid-cols-2 lg:grid-cols-3">
               {filteredTemplates.map((template) => (
                 <TemplateCard
                   key={template.id}
@@ -238,8 +238,8 @@ export function TemplateSelectionDialog({
         </ScrollArea>
 
         {/* Footer */}
-        <DialogFooter className="px-4 sm:px-6 py-4 border-t flex-shrink-0">
-          <div className="flex flex-col-reverse sm:flex-row items-stretch sm:items-center gap-2 w-full sm:w-auto">
+        <DialogFooter className="shrink-0 border-t p-4 sm:px-6">
+          <div className="flex w-full flex-col-reverse items-stretch gap-2 sm:w-auto sm:flex-row sm:items-center">
             <Button variant="outline" onClick={onClose} className="min-h-11">
               {t('actions.cancel')}
             </Button>

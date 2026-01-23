@@ -77,7 +77,7 @@ export function ComplianceSummaryCard({
     if (summary.blocking_violations > 0) {
       return (
         <Badge variant="destructive" className="gap-1">
-          <XCircle className="h-3 w-3" />
+          <XCircle className="size-3" />
           {t('summary.blockingViolations')}: {summary.blocking_violations}
         </Badge>
       )
@@ -87,9 +87,9 @@ export function ComplianceSummaryCard({
       return (
         <Badge
           variant="outline"
-          className="bg-orange-50 text-orange-700 border-orange-200 dark:bg-orange-900/20 dark:text-orange-300 gap-1"
+          className="gap-1 border-orange-200 bg-orange-50 text-orange-700 dark:bg-orange-900/20 dark:text-orange-300"
         >
-          <AlertTriangle className="h-3 w-3" />
+          <AlertTriangle className="size-3" />
           {t('summary.criticalViolations')}: {summary.critical_violations}
         </Badge>
       )
@@ -99,9 +99,9 @@ export function ComplianceSummaryCard({
       return (
         <Badge
           variant="outline"
-          className="bg-yellow-50 text-yellow-700 border-yellow-200 dark:bg-yellow-900/20 dark:text-yellow-300 gap-1"
+          className="gap-1 border-yellow-200 bg-yellow-50 text-yellow-700 dark:bg-yellow-900/20 dark:text-yellow-300"
         >
-          <Clock className="h-3 w-3" />
+          <Clock className="size-3" />
           {t('summary.pendingViolations')}: {summary.pending_violations}
         </Badge>
       )
@@ -110,9 +110,9 @@ export function ComplianceSummaryCard({
     return (
       <Badge
         variant="outline"
-        className="bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 gap-1"
+        className="gap-1 border-green-200 bg-green-50 text-green-700 dark:bg-green-900/20 dark:text-green-300"
       >
-        <CheckCircle className="h-3 w-3" />
+        <CheckCircle className="size-3" />
         {t('check.passed')}
       </Badge>
     )
@@ -122,7 +122,7 @@ export function ComplianceSummaryCard({
     return (
       <Card dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
         </CardContent>
       </Card>
     )
@@ -132,7 +132,7 @@ export function ComplianceSummaryCard({
     return (
       <Card dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="flex flex-col items-center justify-center py-8 text-center">
-          <AlertTriangle className="h-8 w-8 text-destructive mb-2" />
+          <AlertTriangle className="mb-2 size-8 text-destructive" />
           <p className="text-sm text-muted-foreground">{t('messages.error')}</p>
         </CardContent>
       </Card>
@@ -142,14 +142,14 @@ export function ComplianceSummaryCard({
   if (compact) {
     return (
       <div
-        className="flex items-center justify-between gap-4 p-3 rounded-lg border bg-card"
+        className="flex items-center justify-between gap-4 rounded-lg border bg-card p-3"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex items-center gap-3">
-          <Shield className={`h-5 w-5 ${getScoreColor(complianceScore)}`} />
+          <Shield className={`size-5 ${getScoreColor(complianceScore)}`} />
           <div>
             <p className="text-sm font-medium">{t('summary.title')}</p>
-            <div className="flex items-center gap-2 mt-1">
+            <div className="mt-1 flex items-center gap-2">
               <span className={`text-lg font-bold ${getScoreColor(complianceScore)}`}>
                 {complianceScore}%
               </span>
@@ -159,7 +159,7 @@ export function ComplianceSummaryCard({
         </div>
         {summary?.requires_signoff ? (
           <Button size="sm" variant="outline" onClick={onViewViolations}>
-            <FileCheck className="h-4 w-4 me-1" />
+            <FileCheck className="me-1 size-4" />
             {summary.requires_signoff}
           </Button>
         ) : null}
@@ -172,7 +172,7 @@ export function ComplianceSummaryCard({
       <CardHeader className="pb-2">
         <div className="flex items-center justify-between">
           <CardTitle className="flex items-center gap-2 text-base">
-            <Shield className={`h-5 w-5 ${getScoreColor(complianceScore)}`} />
+            <Shield className={`size-5 ${getScoreColor(complianceScore)}`} />
             {t('summary.title')}
           </CardTitle>
           {getStatusBadge()}
@@ -199,24 +199,24 @@ export function ComplianceSummaryCard({
         </div>
 
         {/* Violation Counts */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="text-center p-2 rounded-lg bg-muted/50">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="rounded-lg bg-muted/50 p-2 text-center">
             <p className="text-2xl font-bold">{summary?.total_violations || 0}</p>
             <p className="text-xs text-muted-foreground">{t('summary.totalViolations')}</p>
           </div>
-          <div className="text-center p-2 rounded-lg bg-yellow-50 dark:bg-yellow-900/20">
+          <div className="rounded-lg bg-yellow-50 p-2 text-center dark:bg-yellow-900/20">
             <p className="text-2xl font-bold text-yellow-700 dark:text-yellow-300">
               {summary?.pending_violations || 0}
             </p>
             <p className="text-xs text-muted-foreground">{t('summary.pendingViolations')}</p>
           </div>
-          <div className="text-center p-2 rounded-lg bg-orange-50 dark:bg-orange-900/20">
+          <div className="rounded-lg bg-orange-50 p-2 text-center dark:bg-orange-900/20">
             <p className="text-2xl font-bold text-orange-700 dark:text-orange-300">
               {summary?.critical_violations || 0}
             </p>
             <p className="text-xs text-muted-foreground">{t('summary.criticalViolations')}</p>
           </div>
-          <div className="text-center p-2 rounded-lg bg-red-50 dark:bg-red-900/20">
+          <div className="rounded-lg bg-red-50 p-2 text-center dark:bg-red-900/20">
             <p className="text-2xl font-bold text-red-700 dark:text-red-300">
               {summary?.blocking_violations || 0}
             </p>
@@ -226,9 +226,9 @@ export function ComplianceSummaryCard({
 
         {/* Sign-off required indicator */}
         {summary && summary.requires_signoff > 0 && (
-          <div className="flex items-center justify-between p-3 rounded-lg bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800">
+          <div className="flex items-center justify-between rounded-lg border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-900/20">
             <div className="flex items-center gap-2">
-              <FileCheck className="h-5 w-5 text-amber-600 dark:text-amber-400" />
+              <FileCheck className="size-5 text-amber-600 dark:text-amber-400" />
               <div>
                 <p className="text-sm font-medium text-amber-700 dark:text-amber-300">
                   {t('summary.requiresSignoff')}
@@ -252,7 +252,7 @@ export function ComplianceSummaryCard({
         )}
 
         {/* Actions */}
-        <div className="flex gap-2 pt-2 border-t">
+        <div className="flex gap-2 border-t pt-2">
           {onViewViolations && (
             <Button variant="outline" size="sm" onClick={onViewViolations} className="flex-1">
               {t('check.viewViolations')}

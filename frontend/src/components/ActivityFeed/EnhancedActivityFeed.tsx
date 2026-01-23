@@ -248,31 +248,31 @@ function ActivityItemComponent({
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         {/* Actor Row */}
-        <div className="flex items-center gap-2 mb-1">
-          <Avatar className="h-6 w-6">
+        <div className="mb-1 flex items-center gap-2">
+          <Avatar className="size-6">
             <AvatarImage src={activity.actor_avatar_url} alt={activity.actor_name} />
             <AvatarFallback className="text-xs">
               {activity.actor_name.charAt(0).toUpperCase()}
             </AvatarFallback>
           </Avatar>
-          <span className="font-medium text-sm text-foreground truncate">
+          <span className="truncate text-sm font-medium text-foreground">
             {activity.actor_name}
           </span>
           <span className="text-sm text-muted-foreground">{description}</span>
         </div>
 
         {/* Entity Row */}
-        <div className="flex items-center gap-2 mb-2">
+        <div className="mb-2 flex items-center gap-2">
           <EntityIcon className={cn('h-4 w-4 flex-shrink-0', entityColor)} />
-          <span className="font-medium text-sm text-foreground truncate">{entityName}</span>
+          <span className="truncate text-sm font-medium text-foreground">{entityName}</span>
           {activity.related_entity_type && (
             <>
               <ChevronRight
                 className={cn('h-4 w-4 text-muted-foreground', isRTL && 'rotate-180')}
               />
-              <span className="text-sm text-muted-foreground truncate">
+              <span className="truncate text-sm text-muted-foreground">
                 {isRTL && activity.related_entity_name_ar
                   ? activity.related_entity_name_ar
                   : activity.related_entity_name_en}
@@ -283,7 +283,7 @@ function ActivityItemComponent({
 
         {/* Metadata (status change, comment, etc.) */}
         {activity.metadata?.from_status && activity.metadata?.to_status && (
-          <div className="flex items-center gap-2 mb-2">
+          <div className="mb-2 flex items-center gap-2">
             <Badge variant="outline" className="text-xs">
               {activity.metadata.from_status}
             </Badge>
@@ -295,7 +295,7 @@ function ActivityItemComponent({
         )}
 
         {activity.metadata?.comment_text && (
-          <p className="text-sm text-muted-foreground italic bg-muted/50 rounded px-2 py-1 mb-2">
+          <p className="mb-2 rounded bg-muted/50 px-2 py-1 text-sm italic text-muted-foreground">
             "{activity.metadata.comment_text}"
           </p>
         )}
@@ -318,12 +318,12 @@ function ActivityItemComponent({
             <Button variant="ghost" size="sm" className="h-7 px-2" onClick={handleFollowToggle}>
               {isFollowing ? (
                 <>
-                  <BellOff className="h-3 w-3 me-1" />
+                  <BellOff className="me-1 size-3" />
                   <span className="text-xs">{isRTL ? 'إلغاء المتابعة' : 'Unfollow'}</span>
                 </>
               ) : (
                 <>
-                  <Bell className="h-3 w-3 me-1" />
+                  <Bell className="me-1 size-3" />
                   <span className="text-xs">{isRTL ? 'متابعة' : 'Follow'}</span>
                 </>
               )}
@@ -341,16 +341,16 @@ function ActivityItemComponent({
 
 function ActivitySkeleton() {
   return (
-    <div className="flex gap-3 p-4 border-b">
-      <Skeleton className="h-10 w-10 rounded-full flex-shrink-0" />
+    <div className="flex gap-3 border-b p-4">
+      <Skeleton className="size-10 shrink-0 rounded-full" />
       <div className="flex-1 space-y-2">
         <div className="flex items-center gap-2">
-          <Skeleton className="h-6 w-6 rounded-full" />
+          <Skeleton className="size-6 rounded-full" />
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-4 w-32" />
         </div>
         <div className="flex items-center gap-2">
-          <Skeleton className="h-4 w-4" />
+          <Skeleton className="size-4" />
           <Skeleton className="h-4 w-40" />
         </div>
         <Skeleton className="h-3 w-20" />
@@ -456,7 +456,7 @@ export function EnhancedActivityFeed({
     <Card className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <CalendarDays className="h-5 w-5" />
+          <CalendarDays className="size-5" />
           {isRTL ? 'سجل النشاطات' : 'Activity Feed'}
         </CardTitle>
       </CardHeader>
@@ -474,7 +474,7 @@ export function EnhancedActivityFeed({
         )}
 
         {/* Activity List */}
-        <div className="overflow-y-auto border rounded-lg" style={{ maxHeight }}>
+        <div className="overflow-y-auto rounded-lg border" style={{ maxHeight }}>
           {/* Loading State */}
           {isLoading && (
             <div>
@@ -487,11 +487,11 @@ export function EnhancedActivityFeed({
           {/* Error State */}
           {error && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-              <p className="text-sm text-muted-foreground mb-4">
+              <AlertCircle className="mb-4 size-12 text-destructive" />
+              <p className="mb-4 text-sm text-muted-foreground">
                 {isRTL ? 'حدث خطأ أثناء تحميل النشاطات' : 'Failed to load activities'}
               </p>
-              <p className="text-xs text-destructive mb-4">{error.message}</p>
+              <p className="mb-4 text-xs text-destructive">{error.message}</p>
               <Button variant="outline" size="sm" onClick={() => window.location.reload()}>
                 {isRTL ? 'إعادة المحاولة' : 'Try again'}
               </Button>
@@ -501,12 +501,12 @@ export function EnhancedActivityFeed({
           {/* Empty State */}
           {!isLoading && !error && activities.length === 0 && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <CalendarDays className="h-12 w-12 text-muted-foreground/50 mb-4" />
+              <CalendarDays className="mb-4 size-12 text-muted-foreground/50" />
               <p className="text-sm text-muted-foreground">
                 {emptyMessage || (isRTL ? 'لا توجد نشاطات لعرضها' : 'No activities to display')}
               </p>
               {filters.followed_only && (
-                <p className="text-xs text-muted-foreground mt-2">
+                <p className="mt-2 text-xs text-muted-foreground">
                   {isRTL
                     ? 'جرب إلغاء تحديد "المتابعة فقط" لرؤية جميع النشاطات'
                     : 'Try unchecking "Following only" to see all activities'}
@@ -534,7 +534,7 @@ export function EnhancedActivityFeed({
                 <div ref={loadMoreRef} className="flex items-center justify-center py-4">
                   {isFetchingNextPage ? (
                     <div className="flex items-center gap-2 text-muted-foreground">
-                      <Loader2 className="h-4 w-4 animate-spin" />
+                      <Loader2 className="size-4 animate-spin" />
                       <span className="text-sm">
                         {isRTL ? 'جاري التحميل...' : 'Loading more...'}
                       </span>
@@ -552,7 +552,7 @@ export function EnhancedActivityFeed({
 
         {/* Following Summary */}
         {following.length > 0 && (
-          <div className="mt-4 pt-4 border-t">
+          <div className="mt-4 border-t pt-4">
             <p className="text-xs text-muted-foreground">
               {isRTL
                 ? `أنت تتابع ${following.length} عنصر`

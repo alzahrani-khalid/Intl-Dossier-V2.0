@@ -60,7 +60,7 @@ export function PermissionDeniedInline({
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           {/* Title */}
           <h4
             className={cn(
@@ -89,7 +89,7 @@ export function PermissionDeniedInline({
           )}
 
           {/* Reason badge */}
-          <div className="flex items-center gap-2 mt-2">
+          <div className="mt-2 flex items-center gap-2">
             <Badge
               variant="secondary"
               className={cn(
@@ -115,7 +115,7 @@ export function PermissionDeniedInline({
                   compact && 'h-8 px-3 text-xs',
                 )}
               >
-                <Send className={compact ? 'h-3 w-3' : 'h-4 w-4'} />
+                <Send className={compact ? 'size-3' : 'size-4'} />
                 <span className={compact ? 'hidden sm:inline' : ''}>
                   {t('inline.requestAccess', { name: primaryGranter.name })}
                 </span>
@@ -129,7 +129,7 @@ export function PermissionDeniedInline({
               <Button
                 variant="outline"
                 size="sm"
-                className="gap-1.5 border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 hover:bg-red-100 dark:hover:bg-red-900"
+                className="gap-1.5 border-red-200 text-red-700 hover:bg-red-100 dark:border-red-800 dark:text-red-300 dark:hover:bg-red-900"
               >
                 +{error.accessGranters.length - 1} {t('accessGranters.title').toLowerCase()}
                 <ChevronRight className={cn('h-3 w-3', isRTL && 'rotate-180')} />
@@ -151,20 +151,20 @@ export function PermissionDeniedInline({
             )}
             aria-label={t('actions.dismiss')}
           >
-            <X className={compact ? 'h-3.5 w-3.5' : 'h-4 w-4'} />
+            <X className={compact ? 'size-3.5' : 'size-4'} />
           </Button>
         )}
       </div>
 
       {/* Granter info (non-compact mode) */}
       {!compact && primaryGranter && (
-        <div className="mt-3 pt-3 border-t border-red-200 dark:border-red-800">
-          <p className="text-xs text-red-600 dark:text-red-400 mb-2">
+        <div className="mt-3 border-t border-red-200 pt-3 dark:border-red-800">
+          <p className="mb-2 text-xs text-red-600 dark:text-red-400">
             {t('inline.contactForHelp', { name: primaryGranter.name })}
           </p>
           <div className="flex items-center gap-2">
-            <Avatar className="h-6 w-6">
-              <AvatarFallback className="text-[10px] bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300">
+            <Avatar className="size-6">
+              <AvatarFallback className="bg-red-100 text-[10px] text-red-700 dark:bg-red-900 dark:text-red-300">
                 {primaryGranter.name
                   .split(' ')
                   .map((n) => n[0])
@@ -174,7 +174,7 @@ export function PermissionDeniedInline({
               </AvatarFallback>
             </Avatar>
             <div className="flex items-center gap-1.5 text-xs text-red-700 dark:text-red-300">
-              <Mail className="h-3 w-3" />
+              <Mail className="size-3" />
               <span>{primaryGranter.email}</span>
             </div>
           </div>
@@ -215,7 +215,7 @@ export function PermissionDeniedBadge({ error, onClick, className }: PermissionB
       )}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <ShieldX className="h-3 w-3" />
+      <ShieldX className="size-3" />
       {t('badge.noAccess')}
       {onClick && <ChevronRight className={cn('h-3 w-3', isRTL && 'rotate-180')} />}
     </motion.button>
@@ -250,7 +250,7 @@ export function PendingRequestIndicator({
       )}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <Clock className="h-4 w-4 animate-pulse" />
+      <Clock className="size-4 animate-pulse" />
       <span>{t('inline.pendingRequest')}</span>
       <Badge variant="outline" className="text-xs">
         {granterName}

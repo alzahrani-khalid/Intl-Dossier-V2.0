@@ -93,19 +93,19 @@ export function ValidationBadge({
         <div className="mt-2 space-y-1 text-xs">
           {errors.map((error, index) => (
             <div key={index} className="flex items-start gap-1 text-destructive">
-              <AlertCircle className="h-3 w-3 mt-0.5 flex-shrink-0" />
+              <AlertCircle className="mt-0.5 size-3 shrink-0" />
               <span>{error.message}</span>
             </div>
           ))}
           {warnings.map((warning, index) => (
-            <div key={index} className="flex items-start gap-1 text-warning">
-              <AlertTriangle className="h-3 w-3 mt-0.5 flex-shrink-0" />
+            <div key={index} className="text-warning flex items-start gap-1">
+              <AlertTriangle className="mt-0.5 size-3 shrink-0" />
               <span>{warning.message}</span>
             </div>
           ))}
           {info.map((item, index) => (
             <div key={index} className="flex items-start gap-1 text-muted-foreground">
-              <Info className="h-3 w-3 mt-0.5 flex-shrink-0" />
+              <Info className="mt-0.5 size-3 shrink-0" />
               <span>{item.message}</span>
             </div>
           ))}
@@ -139,7 +139,7 @@ export function ValidationSummary({ componentNames, className }: ValidationSumma
 
   return (
     <div className={cn('p-4 rounded-md border bg-card', className)}>
-      <h3 className="text-sm font-semibold mb-2">Compliance Summary</h3>
+      <h3 className="mb-2 text-sm font-semibold">Compliance Summary</h3>
       <div className="space-y-2">
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Components</span>
@@ -147,7 +147,7 @@ export function ValidationSummary({ componentNames, className }: ValidationSumma
             {validComponents.length}/{componentNames.length}
           </span>
         </div>
-        <div className="w-full bg-secondary rounded-full h-2">
+        <div className="h-2 w-full rounded-full bg-secondary">
           <div
             className={cn(
               'h-2 rounded-full transition-all',

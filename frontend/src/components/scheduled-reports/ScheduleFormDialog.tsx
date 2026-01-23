@@ -160,7 +160,7 @@ export function ScheduleFormDialog({ open, onOpenChange, schedule }: ScheduleFor
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle>{schedule ? t('editSchedule') : t('createNew')}</DialogTitle>
           <DialogDescription>{t('description')}</DialogDescription>
@@ -179,9 +179,9 @@ export function ScheduleFormDialog({ open, onOpenChange, schedule }: ScheduleFor
 
           <Form {...form}>
             <form onSubmit={form.handleSubmit(onSubmit)}>
-              <TabsContent value="general" className="space-y-4 mt-4">
+              <TabsContent value="general" className="mt-4 space-y-4">
                 {/* Name */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="name"
@@ -256,7 +256,7 @@ export function ScheduleFormDialog({ open, onOpenChange, schedule }: ScheduleFor
                 />
 
                 {/* Frequency & Time */}
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                   <FormField
                     control={form.control}
                     name="frequency"
@@ -382,7 +382,7 @@ export function ScheduleFormDialog({ open, onOpenChange, schedule }: ScheduleFor
                 />
 
                 {/* Format & Language */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="export_format"
@@ -432,7 +432,7 @@ export function ScheduleFormDialog({ open, onOpenChange, schedule }: ScheduleFor
                 </div>
 
                 {/* Toggles */}
-                <div className="flex flex-col sm:flex-row gap-4 sm:gap-8">
+                <div className="flex flex-col gap-4 sm:flex-row sm:gap-8">
                   <FormField
                     control={form.control}
                     name="is_active"

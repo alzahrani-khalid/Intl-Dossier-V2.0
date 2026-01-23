@@ -111,7 +111,7 @@ export function TimelineZoomControls({
                 onClick={onGoToToday}
                 className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9"
               >
-                <Home className="h-4 w-4" />
+                <Home className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -143,15 +143,15 @@ export function TimelineZoomControls({
       {/* Current Date Label */}
       {currentDateLabel && (
         <>
-          <Separator orientation="vertical" className="hidden sm:block h-6" />
+          <Separator orientation="vertical" className="hidden h-6 sm:block" />
           <div className="flex items-center gap-2 px-2">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm font-medium whitespace-nowrap">{currentDateLabel}</span>
+            <Calendar className="size-4 text-muted-foreground" />
+            <span className="whitespace-nowrap text-sm font-medium">{currentDateLabel}</span>
           </div>
         </>
       )}
 
-      <Separator orientation="vertical" className="hidden sm:block h-6" />
+      <Separator orientation="vertical" className="hidden h-6 sm:block" />
 
       {/* Zoom Controls */}
       <div className="flex items-center gap-1">
@@ -165,7 +165,7 @@ export function TimelineZoomControls({
                 disabled={!canZoomOut}
                 className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9"
               >
-                <ZoomOut className="h-4 w-4" />
+                <ZoomOut className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -178,7 +178,7 @@ export function TimelineZoomControls({
           value={currentZoom}
           onValueChange={(value) => onZoomChange(value as TimelineZoomLevel)}
         >
-          <SelectTrigger className="w-28 sm:w-32 min-h-10 sm:min-h-9">
+          <SelectTrigger className="min-h-10 w-28 sm:min-h-9 sm:w-32">
             <SelectValue>{isRTL ? currentConfig?.label_ar : currentConfig?.label_en}</SelectValue>
           </SelectTrigger>
           <SelectContent>
@@ -200,7 +200,7 @@ export function TimelineZoomControls({
                 disabled={!canZoomIn}
                 className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9"
               >
-                <ZoomIn className="h-4 w-4" />
+                <ZoomIn className="size-4" />
               </Button>
             </TooltipTrigger>
             <TooltipContent>
@@ -218,9 +218,9 @@ export function TimelineZoomControls({
               variant="ghost"
               size="icon"
               onClick={() => onZoomChange('all')}
-              className="min-h-10 min-w-10 sm:min-h-9 sm:min-w-9 hidden sm:flex"
+              className="hidden min-h-10 min-w-10 sm:flex sm:min-h-9 sm:min-w-9"
             >
-              <Maximize2 className="h-4 w-4" />
+              <Maximize2 className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>

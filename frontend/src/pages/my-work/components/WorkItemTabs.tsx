@@ -58,7 +58,7 @@ export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsPro
       className="mb-4"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <TabsList className="w-full h-auto flex-wrap justify-start gap-1 bg-muted/50 p-1">
+      <TabsList className="h-auto w-full flex-wrap justify-start gap-1 bg-muted/50 p-1">
         {tabs.map((tab) => {
           const Icon = tab.icon;
           const isActive = activeTab === tab.id;
@@ -72,7 +72,7 @@ export function WorkItemTabs({ activeTab, onTabChange, counts }: WorkItemTabsPro
                 'data-[state=active]:bg-background data-[state=active]:shadow-sm'
               )}
             >
-              <Icon className="h-4 w-4 shrink-0" />
+              <Icon className="size-4 shrink-0" />
               <span className="text-sm font-medium">{tab.label}</span>
               {tab.count > 0 && (
                 <Badge

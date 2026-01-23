@@ -79,15 +79,15 @@ interface AgendaItemCardProps {
 
 // Map item types to icons
 const ITEM_TYPE_ICONS: Record<AgendaItemType, React.ReactNode> = {
-  opening: <Play className="h-4 w-4" />,
-  approval: <CheckCircle className="h-4 w-4" />,
-  discussion: <MessageSquare className="h-4 w-4" />,
-  presentation: <Presentation className="h-4 w-4" />,
-  decision: <Scale className="h-4 w-4" />,
-  action_review: <ClipboardCheck className="h-4 w-4" />,
-  break: <Coffee className="h-4 w-4" />,
-  closing: <Flag className="h-4 w-4" />,
-  other: <MoreHorizontal className="h-4 w-4" />,
+  opening: <Play className="size-4" />,
+  approval: <CheckCircle className="size-4" />,
+  discussion: <MessageSquare className="size-4" />,
+  presentation: <Presentation className="size-4" />,
+  decision: <Scale className="size-4" />,
+  action_review: <ClipboardCheck className="size-4" />,
+  break: <Coffee className="size-4" />,
+  closing: <Flag className="size-4" />,
+  other: <MoreHorizontal className="size-4" />,
 }
 
 export function AgendaItemCard({
@@ -197,12 +197,12 @@ export function AgendaItemCard({
                   'min-h-8 min-w-8 flex items-center justify-center',
                 )}
               >
-                <GripVertical className="h-4 w-4" />
+                <GripVertical className="size-4" />
               </button>
             )}
 
             {/* Item number */}
-            <div className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted text-sm font-medium">
               {index + 1}
             </div>
 
@@ -241,7 +241,7 @@ export function AgendaItemCard({
                 <div className="flex flex-wrap items-center gap-2 text-sm text-muted-foreground">
                   {/* Planned time */}
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />
+                    <Clock className="size-3.5" />
                     {calculatedStart && calculatedEnd
                       ? `${calculatedStart} - ${calculatedEnd}`
                       : formatDuration(item.planned_duration_minutes)}
@@ -266,7 +266,7 @@ export function AgendaItemCard({
                   {/* Presenter */}
                   {presenterName && (
                     <div className="flex items-center gap-2 text-sm">
-                      <User className="h-4 w-4 text-muted-foreground" />
+                      <User className="size-4 text-muted-foreground" />
                       <span>{presenterName}</span>
                       {item.presenter_title_en && (
                         <span className="text-muted-foreground">
@@ -283,8 +283,8 @@ export function AgendaItemCard({
                   {/* Linked entities */}
                   {(item.linked_dossier_id || item.linked_commitment_id) && (
                     <div className="flex items-center gap-2 text-sm">
-                      <Link className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-primary hover:underline cursor-pointer">
+                      <Link className="size-4 text-muted-foreground" />
+                      <span className="cursor-pointer text-primary hover:underline">
                         {item.linked_dossier_id && t('linkedDossier')}
                         {item.linked_commitment_id && t('linkedCommitment')}
                       </span>
@@ -295,7 +295,7 @@ export function AgendaItemCard({
                   {(item.status === 'discussed' || item.status === 'deferred') && (
                     <div className="rounded-lg bg-muted/50 p-2">
                       <div className="flex items-center gap-2 text-sm font-medium">
-                        <FileText className="h-4 w-4" />
+                        <FileText className="size-4" />
                         {t('outcome')}
                       </div>
                       {item.outcome_en && (
@@ -320,7 +320,7 @@ export function AgendaItemCard({
             </div>
 
             {/* Action buttons */}
-            <div className="flex flex-shrink-0 items-center gap-1">
+            <div className="flex shrink-0 items-center gap-1">
               {/* Meeting controls (visible during meeting) */}
               {inMeeting && !isCompleted && (
                 <>
@@ -335,7 +335,7 @@ export function AgendaItemCard({
                             disabled={startItem.isPending}
                             className="min-h-9 min-w-9 bg-green-50 hover:bg-green-100"
                           >
-                            <Play className="h-4 w-4 text-green-600" />
+                            <Play className="size-4 text-green-600" />
                           </Button>
                         </TooltipTrigger>
                         <TooltipContent>{t('startItem')}</TooltipContent>
@@ -355,7 +355,7 @@ export function AgendaItemCard({
                               disabled={completeItem.isPending}
                               className="min-h-9 min-w-9 bg-blue-50 hover:bg-blue-100"
                             >
-                              <Check className="h-4 w-4 text-blue-600" />
+                              <Check className="size-4 text-blue-600" />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>{t('completeItem')}</TooltipContent>
@@ -372,7 +372,7 @@ export function AgendaItemCard({
                               disabled={skipItem.isPending}
                               className="min-h-9 min-w-9"
                             >
-                              <SkipForward className="h-4 w-4 text-muted-foreground" />
+                              <SkipForward className="size-4 text-muted-foreground" />
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>{t('skipItem')}</TooltipContent>
@@ -388,7 +388,7 @@ export function AgendaItemCard({
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button variant="ghost" size="sm" className="min-h-9 min-w-9">
-                      <MoreHorizontal className="h-4 w-4" />
+                      <MoreHorizontal className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -413,7 +413,7 @@ export function AgendaItemCard({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <AlertCircle className="h-5 w-5 text-red-500" />
+                      <AlertCircle className="size-5 text-red-500" />
                     </TooltipTrigger>
                     <TooltipContent>{t('runningOver')}</TooltipContent>
                   </Tooltip>

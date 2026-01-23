@@ -151,24 +151,24 @@ export function IntakeRoleEmptyState({
     >
       {/* Icon and Badge */}
       <div className="relative mb-4 sm:mb-6">
-        <div className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/10">
-          <RoleIcon className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+        <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+          <RoleIcon className="size-8 text-primary sm:size-10" />
         </div>
         <Badge
           variant="secondary"
-          className="absolute -bottom-2 start-1/2 -translate-x-1/2 rtl:translate-x-1/2 text-xs whitespace-nowrap"
+          className="absolute -bottom-2 start-1/2 -translate-x-1/2 whitespace-nowrap text-xs rtl:translate-x-1/2"
         >
           {roleContent.badge}
         </Badge>
       </div>
 
       {/* Title */}
-      <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground text-center mb-2 sm:mb-3">
+      <h2 className="mb-2 text-center text-lg font-semibold text-foreground sm:mb-3 sm:text-xl md:text-2xl">
         {roleContent.title}
       </h2>
 
       {/* Description */}
-      <p className="text-sm sm:text-base text-muted-foreground text-center max-w-lg mb-6 sm:mb-8">
+      <p className="mb-6 max-w-lg text-center text-sm text-muted-foreground sm:mb-8 sm:text-base">
         {roleContent.description}
       </p>
 
@@ -196,13 +196,13 @@ export function IntakeRoleEmptyState({
 
       {/* Quick Actions */}
       {quickActions.length > 0 && (
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3 mt-6 sm:mt-8">
+        <div className="mt-6 flex flex-col items-center gap-2 sm:mt-8 sm:flex-row sm:gap-3">
           {quickActions.map((action, index) => (
             <Button
               key={index}
               variant={action.variant}
               onClick={action.onClick}
-              className="min-h-11 min-w-11 px-4 sm:px-6 w-full sm:w-auto"
+              className="min-h-11 w-full min-w-11 px-4 sm:w-auto sm:px-6"
               disabled={!action.onClick}
             >
               <action.icon className={cn('w-4 h-4', isRTL ? 'ms-2' : 'me-2')} />
@@ -232,36 +232,36 @@ function RequesterContent({
   return (
     <div className="w-full max-w-2xl space-y-4 sm:space-y-6">
       {/* Examples Header */}
-      <div className="flex items-center gap-2 justify-center">
-        <Sparkles className="w-4 h-4 text-amber-500" />
+      <div className="flex items-center justify-center gap-2">
+        <Sparkles className="size-4 text-amber-500" />
         <span className="text-sm font-medium text-muted-foreground">
           {t('empty-states:intake.requester.examplesTitle')}
         </span>
       </div>
 
       {/* Example Request Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         {exampleRequests.map((example, index) => (
           <Card
             key={index}
-            className="cursor-pointer transition-all hover:shadow-md hover:border-primary/50"
+            className="cursor-pointer transition-all hover:border-primary/50 hover:shadow-md"
             onClick={onCreateRequest}
           >
             <CardContent className="p-3 sm:p-4">
               <Badge variant="outline" className="mb-2 text-xs">
                 {example.type}
               </Badge>
-              <h4 className="text-sm font-medium text-foreground mb-1 line-clamp-1">
+              <h4 className="mb-1 line-clamp-1 text-sm font-medium text-foreground">
                 {example.title}
               </h4>
-              <p className="text-xs text-muted-foreground line-clamp-2">{example.description}</p>
+              <p className="line-clamp-2 text-xs text-muted-foreground">{example.description}</p>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Hint */}
-      <p className="text-xs text-muted-foreground/70 text-center italic">
+      <p className="text-center text-xs italic text-muted-foreground/70">
         {t('empty-states:intake.requester.hint')}
       </p>
     </div>
@@ -307,21 +307,21 @@ function ReviewerContent({
     <div className="w-full max-w-2xl">
       <Card>
         <CardHeader className="pb-2 sm:pb-4">
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <ClipboardList className="w-5 h-5 text-primary" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <ClipboardList className="size-5 text-primary" />
             {t('empty-states:intake.reviewer.criteriaTitle')}
           </CardTitle>
         </CardHeader>
         <CardContent className="pt-0">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
             {criteria.map((item, index) => (
-              <div key={index} className="flex items-start gap-3 p-2 sm:p-3 rounded-lg bg-muted/50">
-                <div className="flex items-center justify-center w-8 h-8 rounded-md bg-background flex-shrink-0">
-                  <item.icon className="w-4 h-4 text-primary" />
+              <div key={index} className="flex items-start gap-3 rounded-lg bg-muted/50 p-2 sm:p-3">
+                <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-background">
+                  <item.icon className="size-4 text-primary" />
                 </div>
                 <div className="min-w-0">
                   <h4 className="text-sm font-medium text-foreground">{item.title}</h4>
-                  <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -330,7 +330,7 @@ function ReviewerContent({
       </Card>
 
       {/* Hint */}
-      <p className="text-xs text-muted-foreground/70 text-center italic mt-4">
+      <p className="mt-4 text-center text-xs italic text-muted-foreground/70">
         {t('empty-states:intake.reviewer.hint')}
       </p>
     </div>
@@ -376,8 +376,8 @@ function AssigneeContent({
     <div className="w-full max-w-xl">
       <Card>
         <CardHeader className="pb-2 sm:pb-4">
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <CheckCircle2 className="w-5 h-5 text-primary" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <CheckCircle2 className="size-5 text-primary" />
             {t('empty-states:intake.assignee.workflowTitle')}
           </CardTitle>
         </CardHeader>
@@ -385,12 +385,12 @@ function AssigneeContent({
           <div className="space-y-3 sm:space-y-4">
             {taskSteps.map((item, index) => (
               <div key={index} className="flex items-start gap-3">
-                <div className="flex items-center justify-center w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-primary text-primary-foreground text-xs sm:text-sm font-semibold flex-shrink-0">
+                <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-semibold text-primary-foreground sm:size-8 sm:text-sm">
                   {item.step}
                 </div>
                 <div className="min-w-0 pt-0.5">
                   <h4 className="text-sm font-medium text-foreground">{item.title}</h4>
-                  <p className="text-xs text-muted-foreground mt-0.5">{item.description}</p>
+                  <p className="mt-0.5 text-xs text-muted-foreground">{item.description}</p>
                 </div>
               </div>
             ))}
@@ -399,7 +399,7 @@ function AssigneeContent({
       </Card>
 
       {/* Hint */}
-      <p className="text-xs text-muted-foreground/70 text-center italic mt-4">
+      <p className="mt-4 text-center text-xs italic text-muted-foreground/70">
         {t('empty-states:intake.assignee.hint')}
       </p>
     </div>
@@ -420,15 +420,15 @@ function ViewerContent({
 }) {
   return (
     <div className="w-full max-w-md text-center">
-      <div className="p-4 sm:p-6 rounded-lg bg-muted/50">
-        <Inbox className="w-8 h-8 text-muted-foreground mx-auto mb-3" />
+      <div className="rounded-lg bg-muted/50 p-4 sm:p-6">
+        <Inbox className="mx-auto mb-3 size-8 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">
           {t('empty-states:intake.viewer.description')}
         </p>
       </div>
 
       {/* Hint */}
-      <p className="text-xs text-muted-foreground/70 italic mt-4">
+      <p className="mt-4 text-xs italic text-muted-foreground/70">
         {t('empty-states:intake.viewer.hint')}
       </p>
     </div>

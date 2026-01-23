@@ -108,20 +108,20 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
             }}
           >
             <SelectTrigger className="w-full sm:w-[180px]">
-              <Filter className="h-4 w-4 me-2" />
+              <Filter className="me-2 size-4" />
               <SelectValue placeholder={t('entity_type', 'Entity Type')} />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('all_types', 'All Types')}</SelectItem>
               <SelectItem value="person">
                 <div className="flex items-center">
-                  <Users className="h-4 w-4 me-2" />
+                  <Users className="me-2 size-4" />
                   {t('persons', 'Persons')}
                 </div>
               </SelectItem>
               <SelectItem value="organization">
                 <div className="flex items-center">
-                  <Building2 className="h-4 w-4 me-2" />
+                  <Building2 className="me-2 size-4" />
                   {t('organizations', 'Organizations')}
                 </div>
               </SelectItem>
@@ -179,7 +179,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
       {scanMutation.isPending && (
         <div className="rounded-lg border bg-muted/50 p-4">
           <div className="flex items-center gap-2">
-            <RefreshCw className="h-4 w-4 animate-spin" />
+            <RefreshCw className="size-4 animate-spin" />
             <span>{t('scanning', 'Scanning for duplicates...')}</span>
           </div>
         </div>
@@ -197,7 +197,7 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
       {isError && (
         <div className="rounded-lg border border-destructive bg-destructive/10 p-4">
           <div className="flex items-center gap-2 text-destructive">
-            <AlertCircle className="h-5 w-5" />
+            <AlertCircle className="size-5" />
             <span>{t('error_loading', 'Error loading duplicate candidates')}</span>
           </div>
           <Button variant="outline" size="sm" className="mt-2" onClick={() => refetch()}>
@@ -218,17 +218,17 @@ export function DuplicateCandidatesList({ onMerge, onViewDetails }: DuplicateCan
       {/* Empty State */}
       {!isLoading && !isError && candidates.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed p-12 text-center">
-          <div className="rounded-full bg-muted p-3 mb-4">
-            <Search className="h-6 w-6 text-muted-foreground" />
+          <div className="mb-4 rounded-full bg-muted p-3">
+            <Search className="size-6 text-muted-foreground" />
           </div>
           <h3 className="text-lg font-semibold">{t('no_duplicates', 'No Duplicate Candidates')}</h3>
-          <p className="text-muted-foreground mt-1 max-w-sm">
+          <p className="mt-1 max-w-sm text-muted-foreground">
             {t(
               'no_duplicates_desc',
               'No potential duplicates found. Run a scan to check for new duplicates.',
             )}
           </p>
-          <div className="flex gap-2 mt-4">
+          <div className="mt-4 flex gap-2">
             <Button
               variant="outline"
               onClick={() => handleScan('person')}

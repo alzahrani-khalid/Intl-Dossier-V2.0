@@ -153,15 +153,15 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
         <div className="flex items-start gap-3">
           {/* Source Icon */}
           <div className={cn('p-2 rounded-lg shrink-0', sourceInfo.color)}>
-            <Icon className="h-5 w-5" />
+            <Icon className="size-5" />
           </div>
 
           {/* Content */}
           <div className="min-w-0 flex-1">
             {/* Title */}
-            <div className="flex items-start justify-between gap-2 mb-1">
+            <div className="mb-1 flex items-start justify-between gap-2">
               <span
-                className="font-medium text-sm sm:text-base hover:text-primary transition-colors line-clamp-2 text-start"
+                className="line-clamp-2 text-start text-sm font-medium transition-colors hover:text-primary sm:text-base"
               >
                 {item.title}
               </span>
@@ -175,7 +175,7 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
 
             {/* Description (truncated) */}
             {item.description && (
-              <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 mb-2 text-start">
+              <p className="mb-2 line-clamp-1 text-start text-xs text-muted-foreground sm:text-sm">
                 {item.description}
               </p>
             )}
@@ -183,7 +183,7 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
             {/* Badges Row */}
             <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
               {/* Source Badge */}
-              <Badge variant="outline" className="text-xs px-1.5 py-0">
+              <Badge variant="outline" className="px-1.5 py-0 text-xs">
                 {sourceInfo.label}
               </Badge>
 
@@ -199,8 +199,8 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
 
               {/* Overdue Indicator */}
               {item.is_overdue && (
-                <Badge variant="destructive" className="text-xs px-1.5 py-0 gap-1">
-                  <AlertTriangle className="h-3 w-3" />
+                <Badge variant="destructive" className="gap-1 px-1.5 py-0 text-xs">
+                  <AlertTriangle className="size-3" />
                   {t('status.overdue', 'Overdue')}
                 </Badge>
               )}
@@ -214,14 +214,14 @@ export function WorkItemCard({ item }: WorkItemCardProps) {
                     deadlineInfo.urgent && 'border-orange-300 text-orange-700 dark:border-orange-700 dark:text-orange-400'
                   )}
                 >
-                  <Calendar className="h-3 w-3" />
+                  <Calendar className="size-3" />
                   {deadlineInfo.text}
                 </Badge>
               )}
 
               {/* Days until due (on larger screens) */}
               {item.days_until_due !== null && !item.is_overdue && (
-                <span className="hidden sm:inline text-xs text-muted-foreground">
+                <span className="hidden text-xs text-muted-foreground sm:inline">
                   {item.days_until_due === 0
                     ? t('deadline.dueToday', 'Due today')
                     : item.days_until_due === 1

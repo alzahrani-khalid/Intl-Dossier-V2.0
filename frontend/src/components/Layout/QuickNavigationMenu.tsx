@@ -132,10 +132,10 @@ function QuickNavItem({
               )}
             >
               <Icon className={cn('h-4 w-4 shrink-0', colorClass)} />
-              <span className="truncate flex-1">{truncatedName}</span>
+              <span className="flex-1 truncate">{truncatedName}</span>
               {isPinned && (
                 <Star
-                  className="h-3 w-3 shrink-0 text-amber-500 fill-amber-500"
+                  className="size-3 shrink-0 fill-amber-500 text-amber-500"
                   aria-label={t('quickNav.pinned', 'Pinned')}
                 />
               )}
@@ -175,9 +175,9 @@ function QuickNavItem({
           }
         >
           {isPinned ? (
-            <PinOff className="h-3.5 w-3.5 text-muted-foreground" />
+            <PinOff className="size-3.5 text-muted-foreground" />
           ) : (
-            <Pin className="h-3.5 w-3.5 text-muted-foreground" />
+            <Pin className="size-3.5 text-muted-foreground" />
           )}
         </Button>
       )}
@@ -256,12 +256,12 @@ export function QuickNavigationMenu({
         <Tooltip>
           <TooltipTrigger asChild>
             <Button variant="ghost" size="icon" className={cn('h-10 w-10', className)}>
-              <Zap className="h-5 w-5" />
+              <Zap className="size-5" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side={isRTL ? 'left' : 'right'}>
             {t('quickNav.title', 'Quick Access')}
-            <span className="text-xs text-muted-foreground ms-2">
+            <span className="ms-2 text-xs text-muted-foreground">
               ({displayedPinned.length + displayedRecent.length})
             </span>
           </TooltipContent>
@@ -273,8 +273,8 @@ export function QuickNavigationMenu({
   return (
     <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Section Header */}
-      <div className="flex items-center gap-2 px-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
-        <Zap className="h-3.5 w-3.5" />
+      <div className="flex items-center gap-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+        <Zap className="size-3.5" />
         <span>{t('quickNav.title', 'Quick Access')}</span>
       </div>
 
@@ -291,16 +291,16 @@ export function QuickNavigationMenu({
               )}
             >
               <span className="flex items-center gap-1.5">
-                <Star className="h-3.5 w-3.5 text-amber-500" />
+                <Star className="size-3.5 text-amber-500" />
                 {t('quickNav.pinned', 'Pinned')}
-                <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded-full">
+                <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px]">
                   {pinned.length}
                 </span>
               </span>
               {isPinnedOpen ? (
-                <ChevronUp className="h-3.5 w-3.5" />
+                <ChevronUp className="size-3.5" />
               ) : (
-                <ChevronDown className="h-3.5 w-3.5" />
+                <ChevronDown className="size-3.5" />
               )}
             </button>
           </CollapsibleTrigger>
@@ -334,9 +334,9 @@ export function QuickNavigationMenu({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="w-full justify-start h-8 px-2 text-xs text-muted-foreground"
+                        className="h-8 w-full justify-start px-2 text-xs text-muted-foreground"
                       >
-                        <MoreHorizontal className="h-3.5 w-3.5 me-1.5" />
+                        <MoreHorizontal className="me-1.5 size-3.5" />
                         {t('quickNav.viewAll', 'View all')} ({pinned.length - maxPinned}{' '}
                         {t('quickNav.more', 'more')})
                       </Button>
@@ -379,16 +379,16 @@ export function QuickNavigationMenu({
               )}
             >
               <span className="flex items-center gap-1.5">
-                <History className="h-3.5 w-3.5" />
+                <History className="size-3.5" />
                 {t('quickNav.recent', 'Recent')}
-                <span className="text-[10px] bg-muted px-1.5 py-0.5 rounded-full">
+                <span className="rounded-full bg-muted px-1.5 py-0.5 text-[10px]">
                   {history.length}
                 </span>
               </span>
               {isRecentOpen ? (
-                <ChevronUp className="h-3.5 w-3.5" />
+                <ChevronUp className="size-3.5" />
               ) : (
-                <ChevronDown className="h-3.5 w-3.5" />
+                <ChevronDown className="size-3.5" />
               )}
             </button>
           </CollapsibleTrigger>
@@ -422,9 +422,9 @@ export function QuickNavigationMenu({
                       <Button
                         variant="ghost"
                         size="sm"
-                        className="w-full justify-start h-8 px-2 text-xs text-muted-foreground"
+                        className="h-8 w-full justify-start px-2 text-xs text-muted-foreground"
                       >
-                        <MoreHorizontal className="h-3.5 w-3.5 me-1.5" />
+                        <MoreHorizontal className="me-1.5 size-3.5" />
                         {t('quickNav.viewAll', 'View all')} ({history.length - maxRecent}{' '}
                         {t('quickNav.more', 'more')})
                       </Button>

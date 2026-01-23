@@ -183,17 +183,17 @@ export function TimelineAnnotationDialog({
           {/* Annotation Type Selection (only for create) */}
           {!isEditing && (
             <div className="space-y-3">
-              <Label className="text-start block">{t('timeline.annotations.type')}</Label>
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+              <Label className="block text-start">{t('timeline.annotations.type')}</Label>
+              <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
                 {annotationTypes.map(({ type: t, icon: Icon, label_en, label_ar }) => (
                   <Button
                     key={t}
                     type="button"
                     variant={type === t ? 'default' : 'outline'}
-                    className="flex flex-col items-center gap-1 h-auto py-3 min-h-16"
+                    className="flex h-auto min-h-16 flex-col items-center gap-1 py-3"
                     onClick={() => setType(t)}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="size-5" />
                     <span className="text-xs">{isRTL ? label_ar : label_en}</span>
                   </Button>
                 ))}
@@ -203,9 +203,9 @@ export function TimelineAnnotationDialog({
 
           {/* Content - English */}
           <div className="space-y-2">
-            <Label htmlFor="content-en" className="text-start block">
+            <Label htmlFor="content-en" className="block text-start">
               {t('timeline.annotations.content_en')}
-              <span className="text-destructive ms-1">*</span>
+              <span className="ms-1 text-destructive">*</span>
             </Label>
             <Textarea
               id="content-en"
@@ -219,7 +219,7 @@ export function TimelineAnnotationDialog({
 
           {/* Content - Arabic */}
           <div className="space-y-2">
-            <Label htmlFor="content-ar" className="text-start block">
+            <Label htmlFor="content-ar" className="block text-start">
               {t('timeline.annotations.content_ar')}
             </Label>
             <Textarea
@@ -234,7 +234,7 @@ export function TimelineAnnotationDialog({
 
           {/* Color Selection */}
           <div className="space-y-3">
-            <Label className="text-start block">{t('timeline.annotations.color')}</Label>
+            <Label className="block text-start">{t('timeline.annotations.color')}</Label>
             <div className="flex flex-wrap gap-2">
               {colorOptions.map(({ color: c, class: colorClass }) => (
                 <button
@@ -254,7 +254,7 @@ export function TimelineAnnotationDialog({
 
           {/* Visibility Selection */}
           <div className="space-y-3">
-            <Label className="text-start block">{t('timeline.annotations.visibility')}</Label>
+            <Label className="block text-start">{t('timeline.annotations.visibility')}</Label>
             <RadioGroup
               value={visibility}
               onValueChange={(v) => setVisibility(v as AnnotationVisibility)}
@@ -277,12 +277,12 @@ export function TimelineAnnotationDialog({
                     )}
                   >
                     <RadioGroupItem value={v} id={v} className="sr-only" />
-                    <Icon className="h-5 w-5 text-muted-foreground" />
+                    <Icon className="size-5 text-muted-foreground" />
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-start">
+                      <p className="text-start text-sm font-medium">
                         {isRTL ? label_ar : label_en}
                       </p>
-                      <p className="text-xs text-muted-foreground text-start">
+                      <p className="text-start text-xs text-muted-foreground">
                         {isRTL ? description_ar : description_en}
                       </p>
                     </div>
@@ -299,7 +299,7 @@ export function TimelineAnnotationDialog({
           </div>
         </div>
 
-        <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
+        <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row">
           <Button
             type="button"
             variant="outline"
@@ -357,7 +357,7 @@ export function TimelineAnnotationBadge({
       onClick={onClick}
     >
       <span className={cn('w-2 h-2 rounded-full', colorClass)} />
-      <TypeIcon className="h-3 w-3" />
+      <TypeIcon className="size-3" />
       <span className="max-w-24 truncate text-xs">
         {isRTL && annotation.content_ar ? annotation.content_ar : annotation.content_en}
       </span>
@@ -368,9 +368,9 @@ export function TimelineAnnotationBadge({
             e.stopPropagation()
             onDelete()
           }}
-          className="opacity-0 group-hover:opacity-100 transition-opacity"
+          className="opacity-0 transition-opacity group-hover:opacity-100"
         >
-          <X className="h-3 w-3 text-muted-foreground hover:text-destructive" />
+          <X className="size-3 text-muted-foreground hover:text-destructive" />
         </button>
       )}
     </Badge>

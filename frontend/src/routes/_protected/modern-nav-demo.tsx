@@ -32,19 +32,19 @@ function ModernNavDemo() {
       defaultPanelOpen={true}
     >
       {/* Dashboard Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+      <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-12">
         {/* Page Header */}
         <header className="mb-6 sm:mb-8 lg:mb-12">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-content-text mb-2">
+          <h1 className="text-content-text mb-2 text-2xl font-bold sm:text-3xl md:text-4xl">
             {t('navigation.dashboard', 'Dashboard')}
           </h1>
-          <p className="text-sm sm:text-base text-content-text-muted">
+          <p className="text-content-text-muted text-sm sm:text-base">
             {t('demo.subtitle', 'Modern navigation design system demonstration')}
           </p>
         </header>
 
         {/* Content Grid - Mobile: 1 column, Desktop: 2 columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
           {/* Metric Card - Large */}
           <div className="lg:col-span-2">
             <MetricCard
@@ -86,11 +86,11 @@ function ModernNavDemo() {
         </div>
 
         {/* Demo Information */}
-        <div className="mt-12 p-6 bg-panel rounded-lg border border-panel-border">
-          <h2 className="text-lg font-semibold text-content-text mb-4">
+        <div className="bg-panel border-panel-border mt-12 rounded-lg border p-6">
+          <h2 className="text-content-text mb-4 text-lg font-semibold">
             {t('demo.features', 'Features Demonstrated')}
           </h2>
-          <ul className="space-y-2 text-sm text-content-text-muted">
+          <ul className="text-content-text-muted space-y-2 text-sm">
             <li className="flex items-start gap-2">
               <span className="text-icon-rail-active-indicator">✓</span>
               <span>
@@ -135,30 +135,30 @@ function ModernNavDemo() {
         </div>
 
         {/* Testing Guide */}
-        <div className="mt-6 p-6 bg-background rounded-lg border border-content-border">
-          <h2 className="text-lg font-semibold text-content-text mb-4">
+        <div className="border-content-border mt-6 rounded-lg border bg-background p-6">
+          <h2 className="text-content-text mb-4 text-lg font-semibold">
             {t('demo.testing', 'Testing Guide')}
           </h2>
-          <div className="space-y-4 text-sm text-content-text-muted">
+          <div className="text-content-text-muted space-y-4 text-sm">
             <div>
-              <h3 className="font-medium text-content-text mb-2">Responsive Testing:</h3>
-              <ul className="list-disc list-inside space-y-1 ms-4">
+              <h3 className="text-content-text mb-2 font-medium">Responsive Testing:</h3>
+              <ul className="ms-4 list-inside list-disc space-y-1">
                 <li>Mobile (&lt;768px): Hamburger menu, full-screen overlay</li>
                 <li>Tablet (768-1024px): Icon rail visible, panel collapsed</li>
                 <li>Desktop (&gt;1024px): Full 3-column layout</li>
               </ul>
             </div>
             <div>
-              <h3 className="font-medium text-content-text mb-2">RTL Testing:</h3>
-              <ul className="list-disc list-inside space-y-1 ms-4">
+              <h3 className="text-content-text mb-2 font-medium">RTL Testing:</h3>
+              <ul className="ms-4 list-inside list-disc space-y-1">
                 <li>Switch to Arabic language to test RTL layout</li>
                 <li>All icons, text, and layout should flip correctly</li>
                 <li>Logical properties ensure proper RTL behavior</li>
               </ul>
             </div>
             <div>
-              <h3 className="font-medium text-content-text mb-2">Dark Mode Testing:</h3>
-              <ul className="list-disc list-inside space-y-1 ms-4">
+              <h3 className="text-content-text mb-2 font-medium">Dark Mode Testing:</h3>
+              <ul className="ms-4 list-inside list-disc space-y-1">
                 <li>Toggle theme via settings to test dark mode</li>
                 <li>All colors should adapt via CSS custom properties</li>
                 <li>Icon rail background: #1A1D26 (dark gray)</li>

@@ -44,7 +44,7 @@ export function ReportsPage() {
       id: 'country-overview',
       name: t('reports.templates.countryOverview'),
       description: t('reports.templates.countryOverviewDesc'),
-      icon: <FileText className="h-8 w-8" />,
+      icon: <FileText className="size-8" />,
       formats: ['pdf', 'excel'],
       parameters: [
         {
@@ -69,7 +69,7 @@ export function ReportsPage() {
       id: 'mou-status',
       name: t('reports.templates.mouStatus'),
       description: t('reports.templates.mouStatusDesc'),
-      icon: <FileSpreadsheet className="h-8 w-8" />,
+      icon: <FileSpreadsheet className="size-8" />,
       formats: ['excel', 'pdf'],
       parameters: [
         {
@@ -97,7 +97,7 @@ export function ReportsPage() {
       id: 'event-summary',
       name: t('reports.templates.eventSummary'),
       description: t('reports.templates.eventSummaryDesc'),
-      icon: <Calendar className="h-8 w-8" />,
+      icon: <Calendar className="size-8" />,
       formats: ['pdf', 'word'],
       parameters: [
         {
@@ -116,7 +116,7 @@ export function ReportsPage() {
       id: 'intelligence-digest',
       name: t('reports.templates.intelligenceDigest'),
       description: t('reports.templates.intelligenceDigestDesc'),
-      icon: <FileText className="h-8 w-8" />,
+      icon: <FileText className="size-8" />,
       formats: ['pdf'],
       parameters: [
         {
@@ -144,7 +144,7 @@ export function ReportsPage() {
       id: 'organization-profile',
       name: t('reports.templates.organizationProfile'),
       description: t('reports.templates.organizationProfileDesc'),
-      icon: <FileSpreadsheet className="h-8 w-8" />,
+      icon: <FileSpreadsheet className="size-8" />,
       formats: ['pdf', 'excel'],
       parameters: [
         {
@@ -164,7 +164,7 @@ export function ReportsPage() {
       id: 'executive-dashboard',
       name: t('reports.templates.executiveDashboard'),
       description: t('reports.templates.executiveDashboardDesc'),
-      icon: <FileText className="h-8 w-8" />,
+      icon: <FileText className="size-8" />,
       formats: ['pdf'],
       parameters: [
         {
@@ -223,8 +223,8 @@ export function ReportsPage() {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">{t('navigation.reports')}</h1>
+      <div className="mb-6 flex items-center justify-between">
+        <h1 className="text-2xl font-bold sm:text-3xl">{t('navigation.reports')}</h1>
       </div>
 
       <div className="grid gap-6 md:grid-cols-3">
@@ -252,14 +252,14 @@ export function ReportsPage() {
                         <div className="text-primary">{template.icon}</div>
                         <div className="flex-1">
                           <h3 className="font-semibold">{template.name}</h3>
-                          <p className="text-sm text-muted-foreground mt-1">
+                          <p className="mt-1 text-sm text-muted-foreground">
                             {template.description}
                           </p>
-                          <div className="flex gap-2 mt-2">
+                          <div className="mt-2 flex gap-2">
                             {template.formats.map((format) => (
                               <span
                                 key={format}
-                                className="inline-flex items-center px-2 py-1 bg-muted rounded text-xs"
+                                className="inline-flex items-center rounded bg-muted px-2 py-1 text-xs"
                               >
                                 {format.toUpperCase()}
                               </span>
@@ -284,7 +284,7 @@ export function ReportsPage() {
                 <div className="space-y-4">
                   <div>
                     <Label>{t('reports.format')}</Label>
-                    <div className="flex gap-2 mt-2">
+                    <div className="mt-2 flex gap-2">
                       {template.formats.map((format) => (
                         <Button
                           key={format}
@@ -368,12 +368,12 @@ export function ReportsPage() {
                   >
                     {generateReportMutation.isPending ? (
                       <>
-                        <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                        <Loader2 className="me-2 size-4 animate-spin" />
                         {t('reports.generating')}
                       </>
                     ) : (
                       <>
-                        <Download className="h-4 w-4 me-2" />
+                        <Download className="me-2 size-4" />
                         {t('reports.generateReport')}
                       </>
                     )}
@@ -397,15 +397,15 @@ export function ReportsPage() {
                   {generatedReports.map((report) => (
                     <div
                       key={report.id}
-                      className="flex items-center justify-between p-3 border rounded"
+                      className="flex items-center justify-between rounded border p-3"
                     >
                       <div className="flex-1">
-                        <div className="font-medium text-sm">{report.name}</div>
-                        <div className="flex items-center gap-2 mt-1">
+                        <div className="text-sm font-medium">{report.name}</div>
+                        <div className="mt-1 flex items-center gap-2">
                           <span className="text-xs text-muted-foreground">
                             {format(report.createdAt, 'dd MMM HH:mm')}
                           </span>
-                          <span className="text-xs px-2 py-0.5 bg-muted rounded">
+                          <span className="rounded bg-muted px-2 py-0.5 text-xs">
                             {report.format.toUpperCase()}
                           </span>
                         </div>
@@ -413,15 +413,15 @@ export function ReportsPage() {
                       <div className="flex items-center gap-2">
                         {report.status === 'completed' ? (
                           <>
-                            <CheckCircle className="h-4 w-4 text-green-600" />
+                            <CheckCircle className="size-4 text-green-600" />
                             <Button size="sm" variant="ghost" asChild>
                               <a href={report.url} download>
-                                <Download className="h-4 w-4" />
+                                <Download className="size-4" />
                               </a>
                             </Button>
                           </>
                         ) : (
-                          <Clock className="h-4 w-4 text-yellow-600 animate-pulse" />
+                          <Clock className="size-4 animate-pulse text-yellow-600" />
                         )}
                       </div>
                     </div>

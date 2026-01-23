@@ -57,14 +57,14 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
   if (agreementsError) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
+        <AlertCircle className="mb-4 size-12 text-destructive" />
+        <h3 className="mb-2 text-base font-semibold text-foreground sm:text-lg">
           {t('common.error', 'Error loading data')}
         </h3>
-        <p className="text-sm text-muted-foreground max-w-md px-4">
+        <p className="max-w-md px-4 text-sm text-muted-foreground">
           {agreementsError.message}
         </p>
       </div>
@@ -75,34 +75,34 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
   if (!agreements || agreements.length === 0) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
-          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
-            <FileText className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+          <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+            <FileText className="size-8 text-primary sm:size-10" />
           </div>
         </div>
 
-        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
+        <h3 className="mb-2 text-base font-semibold text-foreground sm:text-lg">
           {t('sections.country.bilateralAgreementsEmpty', 'No Bilateral Agreements')}
         </h3>
 
-        <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 px-4">
+        <p className="mb-6 max-w-md px-4 text-sm text-muted-foreground sm:text-base">
           {t('sections.country.bilateralAgreementsEmptyDescription', 'No bilateral agreements or MoUs have been recorded for this country yet.')}
         </p>
 
         {/* AI-Suggested Opportunities (T088) */}
         {aiSummary && (
-          <div className="max-w-lg px-4 mb-6">
-            <div className="p-4 rounded-lg bg-purple-50 dark:bg-purple-900/20 border border-purple-200 dark:border-purple-800">
-              <div className="flex items-start gap-2 mb-2">
+          <div className="mb-6 max-w-lg px-4">
+            <div className="rounded-lg border border-purple-200 bg-purple-50 p-4 dark:border-purple-800 dark:bg-purple-900/20">
+              <div className="mb-2 flex items-start gap-2">
                 <span className="text-lg">✨</span>
-                <h4 className="text-sm font-semibold text-purple-900 dark:text-purple-100 text-start">
+                <h4 className="text-start text-sm font-semibold text-purple-900 dark:text-purple-100">
                   {t('intelligence.suggested_opportunities', 'AI-Suggested Opportunities')}
                 </h4>
               </div>
-              <p className="text-xs sm:text-sm text-purple-700 dark:text-purple-300 text-start">
+              <p className="text-start text-xs text-purple-700 dark:text-purple-300 sm:text-sm">
                 {aiSummary}
               </p>
             </div>
@@ -122,8 +122,8 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
   return (
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-4">
-        <h3 className="text-base sm:text-lg font-semibold text-foreground">
+      <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+        <h3 className="text-base font-semibold text-foreground sm:text-lg">
           {t('sections.country.bilateralAgreements', 'Bilateral Agreements')} ({agreements.length})
         </h3>
         <Button asChild variant="outline" size="sm">
@@ -134,7 +134,7 @@ export function BilateralAgreements({ dossierId }: BilateralAgreementsProps) {
       </div>
 
       {/* Agreements Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         {agreements.map((agreement) => (
           <BilateralAgreementCard
             key={agreement.id}

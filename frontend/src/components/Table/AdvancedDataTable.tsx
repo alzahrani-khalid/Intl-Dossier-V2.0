@@ -172,7 +172,7 @@ export function AdvancedDataTable<TData, TValue>({
   return (
     <div className="w-full space-y-3 sm:space-y-4">
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+      <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
         {/* Global Search */}
         <div className="relative flex-1">
           <Search
@@ -197,7 +197,7 @@ export function AdvancedDataTable<TData, TValue>({
               )}
               onClick={() => setGlobalFilter('')}
             >
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
           )}
         </div>
@@ -208,7 +208,7 @@ export function AdvancedDataTable<TData, TValue>({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className=" sm:min-h-0">
-                <ChevronDown className="h-4 w-4 me-2" />
+                <ChevronDown className="me-2 size-4" />
                 {t('common:columns')}
               </Button>
             </DropdownMenuTrigger>
@@ -239,7 +239,7 @@ export function AdvancedDataTable<TData, TValue>({
               disabled={data.length === 0}
               className=" sm:min-h-0"
             >
-              <Download className="h-4 w-4 me-2" />
+              <Download className="me-2 size-4" />
               {t('common:export')}
             </Button>
           )}
@@ -247,8 +247,8 @@ export function AdvancedDataTable<TData, TValue>({
       </div>
 
       {/* Table */}
-      <div className="rounded-lg border border-border overflow-hidden">
-        <div className="overflow-x-auto touch-pan-x">
+      <div className="overflow-hidden rounded-lg border border-border">
+        <div className="touch-pan-x overflow-x-auto">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
@@ -271,7 +271,7 @@ export function AdvancedDataTable<TData, TValue>({
                             )}
                           >
                             {flexRender(header.column.columnDef.header, header.getContext())}
-                            {header.column.getCanSort() && <ArrowUpDown className="h-3 w-3" />}
+                            {header.column.getCanSort() && <ArrowUpDown className="size-3" />}
                           </div>
                         )}
                       </TableHead>
@@ -295,7 +295,7 @@ export function AdvancedDataTable<TData, TValue>({
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
                         key={cell.id}
-                        className="px-3 py-3 sm:px-4 sm:py-4 lg:px-6 text-xs sm:text-sm"
+                        className="p-3 text-xs sm:p-4 sm:text-sm lg:px-6"
                       >
                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                       </TableCell>
@@ -315,10 +315,10 @@ export function AdvancedDataTable<TData, TValue>({
       </div>
 
       {/* Footer */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+      <div className="flex flex-col items-center justify-between gap-3 sm:flex-row sm:gap-4">
         {/* Selection info */}
         {enableRowSelection && (
-          <div className="text-xs sm:text-sm text-muted-foreground order-2 sm:order-1">
+          <div className="order-2 text-xs text-muted-foreground sm:order-1 sm:text-sm">
             {table.getFilteredSelectedRowModel().rows.length} {t('common:of')}{' '}
             {table.getFilteredRowModel().rows.length} {t('common:selected')}
           </div>
@@ -326,7 +326,7 @@ export function AdvancedDataTable<TData, TValue>({
 
         {/* Results count */}
         {!enableRowSelection && (
-          <div className="text-xs sm:text-sm text-muted-foreground order-2 sm:order-1">
+          <div className="order-2 text-xs text-muted-foreground sm:order-1 sm:text-sm">
             {t('common:showing')}{' '}
             {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1} -{' '}
             {Math.min(
@@ -338,27 +338,27 @@ export function AdvancedDataTable<TData, TValue>({
         )}
 
         {/* Pagination */}
-        <div className="flex items-center gap-1 sm:gap-2 order-1 sm:order-2">
+        <div className="order-1 flex items-center gap-1 sm:order-2 sm:gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            className=" min-w-[44px] sm:min-h-0 sm:min-w-0"
+            className=" min-w-touch-sm sm:min-h-0 sm:min-w-0"
           >
-            {isRTL ? <ChevronsRight className="h-4 w-4" /> : <ChevronsLeft className="h-4 w-4" />}
+            {isRTL ? <ChevronsRight className="size-4" /> : <ChevronsLeft className="size-4" />}
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className=" min-w-[44px] sm:min-h-0 sm:min-w-0"
+            className=" min-w-touch-sm sm:min-h-0 sm:min-w-0"
           >
-            {isRTL ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
+            {isRTL ? <ChevronRight className="size-4" /> : <ChevronLeft className="size-4" />}
           </Button>
 
-          <span className="text-xs sm:text-sm text-muted-foreground px-2 whitespace-nowrap">
+          <span className="whitespace-nowrap px-2 text-xs text-muted-foreground sm:text-sm">
             {t('common:page')} {table.getState().pagination.pageIndex + 1} {t('common:of')}{' '}
             {table.getPageCount()}
           </span>
@@ -368,18 +368,18 @@ export function AdvancedDataTable<TData, TValue>({
             size="sm"
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className=" min-w-[44px] sm:min-h-0 sm:min-w-0"
+            className=" min-w-touch-sm sm:min-h-0 sm:min-w-0"
           >
-            {isRTL ? <ChevronLeft className="h-4 w-4" /> : <ChevronRight className="h-4 w-4" />}
+            {isRTL ? <ChevronLeft className="size-4" /> : <ChevronRight className="size-4" />}
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
-            className=" min-w-[44px] sm:min-h-0 sm:min-w-0"
+            className=" min-w-touch-sm sm:min-h-0 sm:min-w-0"
           >
-            {isRTL ? <ChevronsLeft className="h-4 w-4" /> : <ChevronsRight className="h-4 w-4" />}
+            {isRTL ? <ChevronsLeft className="size-4" /> : <ChevronsRight className="size-4" />}
           </Button>
         </div>
       </div>

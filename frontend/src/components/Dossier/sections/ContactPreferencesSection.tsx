@@ -25,15 +25,15 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
   const getChannelIcon = (channel?: string) => {
     switch (channel) {
       case 'email':
-        return <Mail className="h-5 w-5 text-blue-500" />
+        return <Mail className="size-5 text-blue-500" />
       case 'phone':
-        return <Phone className="h-5 w-5 text-green-500" />
+        return <Phone className="size-5 text-green-500" />
       case 'in_person':
-        return <Users className="h-5 w-5 text-purple-500" />
+        return <Users className="size-5 text-purple-500" />
       case 'formal_letter':
-        return <FileText className="h-5 w-5 text-orange-500" />
+        return <FileText className="size-5 text-orange-500" />
       default:
-        return <Mail className="h-5 w-5 text-gray-500" />
+        return <Mail className="size-5 text-gray-500" />
     }
   }
 
@@ -71,7 +71,7 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
       <Card className="border-0 shadow-none">
         <CardContent className="p-0">
           <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-            <Info className="h-12 w-12 mb-3 opacity-50" />
+            <Info className="mb-3 size-12 opacity-50" />
             <p>{t('sections.electedOfficial.noContactPreferences')}</p>
           </div>
         </CardContent>
@@ -81,13 +81,13 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
 
   return (
     <Card className="border-0 shadow-none">
-      <CardContent className="p-0 space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <CardContent className="space-y-4 p-0" dir={isRTL ? 'rtl' : 'ltr'}>
         {/* Preferred Channel & Time */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Preferred Channel */}
           {preferences?.preferred_channel && (
-            <div className="p-4 rounded-lg bg-muted/50">
-              <div className="flex items-center gap-3 mb-2">
+            <div className="rounded-lg bg-muted/50 p-4">
+              <div className="mb-2 flex items-center gap-3">
                 {getChannelIcon(preferences.preferred_channel)}
                 <span className="text-sm font-medium text-muted-foreground">
                   {t('sections.electedOfficial.preferredChannel')}
@@ -101,9 +101,9 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
 
           {/* Best Time */}
           {preferences?.best_time && (
-            <div className="p-4 rounded-lg bg-muted/50">
-              <div className="flex items-center gap-3 mb-2">
-                <Clock className="h-5 w-5 text-indigo-500" />
+            <div className="rounded-lg bg-muted/50 p-4">
+              <div className="mb-2 flex items-center gap-3">
+                <Clock className="size-5 text-indigo-500" />
                 <span className="text-sm font-medium text-muted-foreground">
                   {t('sections.electedOfficial.bestTime')}
                 </span>
@@ -118,10 +118,10 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
         {/* Scheduling Notes */}
         {schedulingNotes && (
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               {t('sections.electedOfficial.schedulingNotes')}
             </h3>
-            <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30 border border-blue-100 dark:border-blue-900">
+            <div className="rounded-lg border border-blue-100 bg-blue-50 p-3 dark:border-blue-900 dark:bg-blue-950/30">
               <p className="text-sm leading-relaxed">{schedulingNotes}</p>
             </div>
           </div>
@@ -130,10 +130,10 @@ export function ContactPreferencesSection({ dossier }: ContactPreferencesSection
         {/* Protocol Notes */}
         {protocolNotes && (
           <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               {t('sections.electedOfficial.protocolNotes')}
             </h3>
-            <div className="p-3 rounded-lg bg-amber-50 dark:bg-amber-950/30 border border-amber-100 dark:border-amber-900">
+            <div className="rounded-lg border border-amber-100 bg-amber-50 p-3 dark:border-amber-900 dark:bg-amber-950/30">
               <p className="text-sm leading-relaxed">{protocolNotes}</p>
             </div>
           </div>

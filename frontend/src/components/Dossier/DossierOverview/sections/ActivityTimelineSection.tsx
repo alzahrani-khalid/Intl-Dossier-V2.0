@@ -164,11 +164,11 @@ function ActivityItem({
   const ActionIcon = getActionIcon(activity.action)
 
   return (
-    <div className="flex gap-3 sm:gap-4 relative">
+    <div className="relative flex gap-3 sm:gap-4">
       {/* Timeline line */}
       {!isLast && (
         <div
-          className={`absolute top-12 w-0.5 h-[calc(100%-12px)] bg-border ${
+          className={`absolute top-12 h-[calc(100%-12px)] w-0.5 bg-border ${
             isRTL ? 'end-[19px] sm:end-[23px]' : 'start-[19px] sm:start-[23px]'
           }`}
         />
@@ -176,7 +176,7 @@ function ActivityItem({
 
       {/* Avatar */}
       <div className="relative z-10 shrink-0">
-        <Avatar className="h-10 w-10 sm:h-12 sm:w-12 border-2 border-background">
+        <Avatar className="size-10 border-2 border-background sm:size-12">
           <AvatarImage
             src={activity.actor.avatar_url || undefined}
             alt={activity.actor.name || ''}
@@ -189,43 +189,43 @@ function ActivityItem({
         </Avatar>
         {/* Action icon badge */}
         <div
-          className={`absolute -bottom-1 -end-1 p-1 rounded-full bg-background border ${getActionColor(
+          className={`absolute -bottom-1 -end-1 rounded-full border bg-background p-1 ${getActionColor(
             activity.action,
           )}`}
         >
-          <ActionIcon className="h-3 w-3" />
+          <ActionIcon className="size-3" />
         </div>
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 pb-4">
+      <div className="min-w-0 flex-1 pb-4">
         <div className="flex items-start justify-between gap-2">
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             {/* Title */}
-            <h4 className="text-sm font-semibold line-clamp-2">
+            <h4 className="line-clamp-2 text-sm font-semibold">
               {isRTL ? activity.title_ar : activity.title_en}
             </h4>
 
             {/* Actor and action */}
-            <p className="text-xs text-muted-foreground mt-0.5">
+            <p className="mt-0.5 text-xs text-muted-foreground">
               {activity.actor.name && <span className="font-medium">{activity.actor.name}</span>}{' '}
               <span>{t(`activityAction.${activity.action}`)}</span>
             </p>
           </div>
 
           {/* Time */}
-          <span className="text-xs text-muted-foreground shrink-0">
+          <span className="shrink-0 text-xs text-muted-foreground">
             {formatRelativeTime(activity.timestamp, locale)}
           </span>
         </div>
 
         {/* Badges */}
-        <div className="flex flex-wrap items-center gap-1.5 mt-2">
+        <div className="mt-2 flex flex-wrap items-center gap-1.5">
           <Badge
             variant="outline"
             className={`text-xs ${getActivityTypeColor(activity.activity_type)}`}
           >
-            <TypeIcon className="h-3 w-3 me-1" />
+            <TypeIcon className="me-1 size-3" />
             {t(`activityType.${activity.activity_type}`)}
           </Badge>
 
@@ -253,7 +253,7 @@ function ActivityItem({
 
         {/* Description */}
         {(activity.description_en || activity.description_ar) && (
-          <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+          <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
             {isRTL ? activity.description_ar : activity.description_en}
           </p>
         )}
@@ -269,12 +269,12 @@ function EmptyState({ isRTL }: { isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-8 sm:py-12" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="p-4 rounded-full bg-muted inline-block mb-4">
-        <Activity className="h-8 w-8 text-muted-foreground" />
+    <div className="py-8 text-center sm:py-12" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="mb-4 inline-block rounded-full bg-muted p-4">
+        <Activity className="size-8 text-muted-foreground" />
       </div>
-      <h3 className="text-base font-medium mb-2">{t('activityTimeline.empty.title')}</h3>
-      <p className="text-sm text-muted-foreground max-w-md mx-auto">
+      <h3 className="mb-2 text-base font-medium">{t('activityTimeline.empty.title')}</h3>
+      <p className="mx-auto max-w-md text-sm text-muted-foreground">
         {t('activityTimeline.empty.description')}
       </p>
     </div>
@@ -301,10 +301,10 @@ export function ActivityTimelineSection({
           <div className="space-y-6">
             {[...Array(3)].map((_, i) => (
               <div key={i} className="flex gap-4">
-                <div className="h-12 w-12 bg-muted animate-pulse rounded-full shrink-0" />
+                <div className="size-12 shrink-0 animate-pulse rounded-full bg-muted" />
                 <div className="flex-1 space-y-2">
-                  <div className="h-4 bg-muted animate-pulse rounded w-3/4" />
-                  <div className="h-3 bg-muted animate-pulse rounded w-1/2" />
+                  <div className="h-4 w-3/4 animate-pulse rounded bg-muted" />
+                  <div className="h-3 w-1/2 animate-pulse rounded bg-muted" />
                 </div>
               </div>
             ))}
@@ -318,12 +318,12 @@ export function ActivityTimelineSection({
     return (
       <Card className={className}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <Activity className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Activity className="size-5" />
             {t('activityTimeline.title')}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 pt-0">
+        <CardContent className="p-4 pt-0 sm:p-6">
           <EmptyState isRTL={isRTL} />
         </CardContent>
       </Card>
@@ -333,14 +333,14 @@ export function ActivityTimelineSection({
   return (
     <Card className={className}>
       <CardHeader className="pb-2 sm:pb-4">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <Activity className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <Activity className="size-5" />
           {t('activityTimeline.title')}
           <Badge variant="secondary">{data.total_count}</Badge>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-6 pt-0">
+      <CardContent className="p-4 pt-0 sm:p-6">
         <div className="space-y-1" dir={isRTL ? 'rtl' : 'ltr'}>
           {data.recent_activities.map((activity, index) => (
             <ActivityItem
@@ -354,9 +354,9 @@ export function ActivityTimelineSection({
 
         {/* Load more button */}
         {data.has_more && (
-          <div className="mt-4 pt-4 border-t text-center">
+          <div className="mt-4 border-t pt-4 text-center">
             <Button variant="outline" size="sm" onClick={onLoadMore} className="min-h-10">
-              <ChevronDown className="h-4 w-4 me-2" />
+              <ChevronDown className="me-2 size-4" />
               {t('activityTimeline.loadMore')}
             </Button>
           </div>

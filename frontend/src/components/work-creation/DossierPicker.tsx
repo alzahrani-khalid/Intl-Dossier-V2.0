@@ -192,11 +192,11 @@ export function DossierPicker({
       {/* Selected dossier display */}
       {selectedDossier && (
         <div
-          className="flex items-center gap-2 p-3 mb-2 rounded-lg border bg-muted/50"
+          className="mb-2 flex items-center gap-2 rounded-lg border bg-muted/50 p-3"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
-          {Icon && <Icon className="size-4 text-muted-foreground shrink-0" />}
-          <span className="flex-1 text-sm font-medium truncate">{displayName}</span>
+          {Icon && <Icon className="size-4 shrink-0 text-muted-foreground" />}
+          <span className="flex-1 truncate text-sm font-medium">{displayName}</span>
           <Badge variant="outline" className="text-xs">
             {selectedDossier.type}
           </Badge>
@@ -281,7 +281,7 @@ export function DossierPicker({
                           className={cn('size-4 shrink-0 text-muted-foreground', isRTL ? 'ms-2' : 'me-2')}
                         />
                         <span className="flex-1 truncate">{name}</span>
-                        <Badge variant="outline" className="text-xs ms-2">
+                        <Badge variant="outline" className="ms-2 text-xs">
                           {dossier.type}
                         </Badge>
                       </CommandItem>
@@ -314,7 +314,7 @@ export function DossierPicker({
                           className={cn('size-4 shrink-0 text-muted-foreground', isRTL ? 'ms-2' : 'me-2')}
                         />
                         <span className="flex-1 truncate">{name}</span>
-                        <Badge variant="outline" className="text-xs ms-2">
+                        <Badge variant="outline" className="ms-2 text-xs">
                           {dossier.type}
                         </Badge>
                       </CommandItem>

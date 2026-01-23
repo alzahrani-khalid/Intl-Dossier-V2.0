@@ -112,7 +112,7 @@ function TypeBadge({ type }: { type: RecommendationType }) {
       variant="outline"
       className={cn('text-xs font-medium gap-1', getRecommendationTypeBgColor(type), 'border-0')}
     >
-      <Icon className="h-3 w-3" />
+      <Icon className="size-3" />
       <span className="hidden sm:inline">{isRTL ? label.ar : label.en}</span>
     </Badge>
   )
@@ -154,7 +154,7 @@ function ConfidenceIndicator({ score }: { score: number }) {
       <Tooltip>
         <TooltipTrigger asChild>
           <div className="flex items-center gap-1.5">
-            <Sparkles className="h-3.5 w-3.5 text-amber-500" />
+            <Sparkles className="size-3.5 text-amber-500" />
             <span className="text-xs font-medium">{formatConfidence(score)}</span>
           </div>
         </TooltipTrigger>
@@ -181,7 +181,7 @@ function OptimalTimingBadge({ startDate, endDate }: { startDate?: string; endDat
 
   return (
     <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-      <Calendar className="h-3.5 w-3.5" />
+      <Calendar className="size-3.5" />
       <span>
         {startDate && endDate
           ? `${formatDate(startDate)} - ${formatDate(endDate)}`
@@ -280,21 +280,21 @@ export function RecommendationCard({
         <CardHeader className="pb-2 ps-5 sm:ps-6">
           <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
             {/* Left: Icon and Title */}
-            <div className="flex items-start gap-3 min-w-0">
+            <div className="flex min-w-0 items-start gap-3">
               <div
                 className={cn(
                   'flex h-10 w-10 shrink-0 items-center justify-center rounded-lg',
                   getRecommendationTypeBgColor(recommendation.recommendation_type),
                 )}
               >
-                <Icon className="h-5 w-5" />
+                <Icon className="size-5" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-semibold leading-tight line-clamp-2 sm:text-base">
+                <h3 className="line-clamp-2 text-sm font-semibold leading-tight sm:text-base">
                   {title}
                 </h3>
                 {targetName && (
-                  <p className="mt-0.5 text-xs text-muted-foreground truncate">{targetName}</p>
+                  <p className="mt-0.5 truncate text-xs text-muted-foreground">{targetName}</p>
                 )}
               </div>
             </div>
@@ -325,7 +325,7 @@ export function RecommendationCard({
 
           {/* Expanded content for expanded variant */}
           {variant === 'expanded' && 'description_en' in recommendation && (
-            <p className="mt-3 text-sm text-muted-foreground line-clamp-3">
+            <p className="mt-3 line-clamp-3 text-sm text-muted-foreground">
               {isRTL
                 ? (recommendation as EngagementRecommendationSummary).description_ar
                 : (recommendation as EngagementRecommendationSummary).description_en}
@@ -340,9 +340,9 @@ export function RecommendationCard({
                   size="sm"
                   onClick={handleAccept}
                   disabled={isLoading}
-                  className="min-h-11 min-w-11 flex-1 sm:flex-none gap-1.5"
+                  className="min-h-11 min-w-11 flex-1 gap-1.5 sm:flex-none"
                 >
-                  <CheckCircle className="h-4 w-4" />
+                  <CheckCircle className="size-4" />
                   <span>{t('accept')}</span>
                 </Button>
                 <Button
@@ -350,9 +350,9 @@ export function RecommendationCard({
                   variant="outline"
                   onClick={handleDismiss}
                   disabled={isLoading}
-                  className="min-h-11 min-w-11 flex-1 sm:flex-none gap-1.5"
+                  className="min-h-11 min-w-11 flex-1 gap-1.5 sm:flex-none"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                   <span>{t('dismiss')}</span>
                 </Button>
               </div>

@@ -90,17 +90,17 @@ export function AuditLogsPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6"
+      className="container mx-auto space-y-6 px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <div className="flex items-center justify-center w-10 h-10 rounded-lg bg-primary/10">
-            <Shield className="h-5 w-5 text-primary" />
+          <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
+            <Shield className="size-5 text-primary" />
           </div>
           <div>
-            <h1 className="text-xl sm:text-2xl font-bold">{t('title')}</h1>
+            <h1 className="text-xl font-bold sm:text-2xl">{t('title')}</h1>
             <p className="text-sm text-muted-foreground">{t('description')}</p>
           </div>
         </div>
@@ -112,15 +112,15 @@ export function AuditLogsPage() {
             onClick={() => setShowStatistics(!showStatistics)}
             className="gap-2"
           >
-            <BarChart3 className="h-4 w-4" />
+            <BarChart3 className="size-4" />
             <span className="hidden sm:inline">{t('statistics.title')}</span>
           </Button>
           <AuditLogExport filters={filters} disabled={isLoading || logs.length === 0} />
           <Button variant="outline" size="sm" onClick={() => refetch()} disabled={isLoading}>
             {isLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
             ) : (
-              <RefreshCcw className="h-4 w-4" />
+              <RefreshCcw className="size-4" />
             )}
           </Button>
         </div>
@@ -154,9 +154,9 @@ export function AuditLogsPage() {
           {/* Error State */}
           {error && (
             <div className="flex flex-col items-center justify-center py-12 text-center">
-              <AlertCircle className="h-12 w-12 text-destructive mb-4" />
-              <h3 className="text-lg font-medium mb-2">{t('error.title')}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
+              <AlertCircle className="mb-4 size-12 text-destructive" />
+              <h3 className="mb-2 text-lg font-medium">{t('error.title')}</h3>
+              <p className="mb-4 text-sm text-muted-foreground">
                 {error.message || t('error.description')}
               </p>
               <Button variant="outline" onClick={() => refetch()}>
@@ -178,7 +178,7 @@ export function AuditLogsPage() {
 
               {/* Pagination */}
               {!isLoading && logs.length > 0 && (
-                <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mt-4 pt-4 border-t">
+                <div className="mt-4 flex flex-col gap-4 border-t pt-4 sm:flex-row sm:items-center sm:justify-between">
                   {/* Showing info */}
                   <div className="text-sm text-muted-foreground">
                     {t('pagination.showing', {
@@ -198,7 +198,7 @@ export function AuditLogsPage() {
                         value={pagination.limit.toString()}
                         onValueChange={handlePageSizeChange}
                       >
-                        <SelectTrigger className="w-[70px] h-8">
+                        <SelectTrigger className="h-8 w-[70px]">
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
@@ -218,10 +218,10 @@ export function AuditLogsPage() {
                         disabled={pagination.offset === 0 || isFetchingNextPage}
                       >
                         <ChevronLeft className={cn('h-4 w-4', isRTL && 'rotate-180')} />
-                        <span className="hidden sm:inline ms-1">{t('pagination.previous')}</span>
+                        <span className="ms-1 hidden sm:inline">{t('pagination.previous')}</span>
                       </Button>
 
-                      <span className="text-sm px-2">
+                      <span className="px-2 text-sm">
                         {t('pagination.page', {
                           page: currentPage,
                           pages: totalPages || 1,
@@ -234,7 +234,7 @@ export function AuditLogsPage() {
                         onClick={nextPage}
                         disabled={!hasMore || isFetchingNextPage}
                       >
-                        <span className="hidden sm:inline me-1">{t('pagination.next')}</span>
+                        <span className="me-1 hidden sm:inline">{t('pagination.next')}</span>
                         <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
                       </Button>
                     </div>

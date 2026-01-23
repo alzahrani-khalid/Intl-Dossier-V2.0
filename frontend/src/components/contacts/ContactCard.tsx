@@ -47,11 +47,11 @@ export function ContactCard({ contact, tags = [], onClick, className = '' }: Con
  >
  <CardHeader className="pb-3">
  <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
- <div className="flex-1 min-w-0">
- <h3 className="text-lg font-semibold truncate text-start">{contact.full_name}</h3>
+ <div className="min-w-0 flex-1">
+ <h3 className="truncate text-start text-lg font-semibold">{contact.full_name}</h3>
  {contact.position && (
- <div className="flex items-center gap-2 mt-1 text-sm text-muted-foreground">
- <Briefcase className="h-3.5 w-3.5 flex-shrink-0" />
+ <div className="mt-1 flex items-center gap-2 text-sm text-muted-foreground">
+ <Briefcase className="size-3.5 shrink-0" />
  <span className="truncate text-start">{contact.position}</span>
  </div>
  )}
@@ -59,14 +59,14 @@ export function ContactCard({ contact, tags = [], onClick, className = '' }: Con
 
  <div className="flex items-center gap-2">
  {contact.organization && (
- <Badge variant="secondary" className="flex items-center gap-1.5 px-3 py-1 text-xs whitespace-nowrap">
- <Building2 className="h-3 w-3" />
- <span className="truncate max-w-[120px] sm:max-w-none">{contact.organization.name}</span>
+ <Badge variant="secondary" className="flex items-center gap-1.5 whitespace-nowrap px-3 py-1 text-xs">
+ <Building2 className="size-3" />
+ <span className="max-w-[120px] truncate sm:max-w-none">{contact.organization.name}</span>
  </Badge>
  )}
  {relationshipStats && relationshipStats.total > 0 && (
  <Badge variant="outline" className="flex items-center gap-1.5 px-2 py-1 text-xs">
- <Network className="h-3 w-3" />
+ <Network className="size-3" />
  <span>{relationshipStats.total}</span>
  </Badge>
  )}
@@ -79,14 +79,14 @@ export function ContactCard({ contact, tags = [], onClick, className = '' }: Con
  <div className="space-y-2">
  {primaryEmail && (
  <div className="flex items-center gap-2 text-sm">
- <Mail className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+ <Mail className="size-4 shrink-0 text-muted-foreground" />
  <span className="truncate text-start">{primaryEmail}</span>
  </div>
  )}
 
  {primaryPhone && (
  <div className="flex items-center gap-2 text-sm">
- <Phone className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+ <Phone className="size-4 shrink-0 text-muted-foreground" />
  <span className={`${isRTL ? 'text-end' : 'text-start'}`} dir="ltr">
  {primaryPhone}
  </span>
@@ -96,14 +96,14 @@ export function ContactCard({ contact, tags = [], onClick, className = '' }: Con
 
  {/* Tags */}
  {contactTags.length > 0 && (
- <div className="flex items-start gap-2 pt-2 border-t">
- <Tag className="h-3.5 w-3.5 text-muted-foreground flex-shrink-0 mt-0.5" />
- <div className="flex flex-wrap gap-1.5 flex-1">
+ <div className="flex items-start gap-2 border-t pt-2">
+ <Tag className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
+ <div className="flex flex-1 flex-wrap gap-1.5">
  {contactTags.map((tag) => (
  <Badge
  key={tag.id}
  variant="outline"
- className="text-xs px-2 py-0.5"
+ className="px-2 py-0.5 text-xs"
  style={tag.color ? { borderColor: tag.color, color: tag.color } : undefined}
  >
  {tag.name}
@@ -115,7 +115,7 @@ export function ContactCard({ contact, tags = [], onClick, className = '' }: Con
 
  {/* Additional email/phone count indicators */}
  {((contact.email_addresses?.length || 0) > 1 || (contact.phone_numbers?.length || 0) > 1) && (
- <div className="flex gap-3 text-xs text-muted-foreground pt-2">
+ <div className="flex gap-3 pt-2 text-xs text-muted-foreground">
  {(contact.email_addresses?.length || 0) > 1 && (
  <span>
  +{contact.email_addresses!.length - 1} email{contact.email_addresses!.length - 1 > 1 ? 's' : ''}

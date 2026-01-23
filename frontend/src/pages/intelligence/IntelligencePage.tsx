@@ -211,9 +211,9 @@ export function IntelligencePage() {
 
     return (
       <div
-        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}
+        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${config.bgColor} ${config.color}`}
       >
-        <Shield className="h-3 w-3 me-1" />
+        <Shield className="me-1 size-3" />
         {t(`intelligence.confidenceLevels.${level}`)} ({config.icon})
       </div>
     )
@@ -230,7 +230,7 @@ export function IntelligencePage() {
 
     return (
       <span
-        className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${config.bgColor} ${config.color}`}
+        className={`inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium ${config.bgColor} ${config.color}`}
       >
         {t(`intelligence.classification.${classification}`)}
       </span>
@@ -239,11 +239,11 @@ export function IntelligencePage() {
 
   const AnalysisTypeBadges = ({ types }: { types: string[] }) => {
     const typeIcons = {
-      trends: <TrendingUp className="h-3 w-3" />,
-      patterns: <Brain className="h-3 w-3" />,
-      predictions: <Target className="h-3 w-3" />,
-      risks: <AlertTriangle className="h-3 w-3" />,
-      opportunities: <Target className="h-3 w-3" />,
+      trends: <TrendingUp className="size-3" />,
+      patterns: <Brain className="size-3" />,
+      predictions: <Target className="size-3" />,
+      risks: <AlertTriangle className="size-3" />,
+      opportunities: <Target className="size-3" />,
     }
 
     return (
@@ -251,7 +251,7 @@ export function IntelligencePage() {
         {types?.map((type, i) => (
           <span
             key={i}
-            className="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 rounded text-xs"
+            className="inline-flex items-center gap-1 rounded bg-gray-100 px-2 py-1 text-xs"
           >
             {typeIcons[type as keyof typeof typeIcons]}
             {t(`intelligence.analysisTypes.${type}`)}
@@ -267,9 +267,9 @@ export function IntelligencePage() {
       header: t('intelligence.report'),
       cell: (report: IntelligenceReport) => (
         <div>
-          <div className="font-mono text-xs text-muted-foreground mb-1">{report.report_number}</div>
+          <div className="mb-1 font-mono text-xs text-muted-foreground">{report.report_number}</div>
           <div className="font-medium">{isRTL ? report.title_ar : report.title_en}</div>
-          <div className="text-sm text-muted-foreground line-clamp-2 mt-1">
+          <div className="mt-1 line-clamp-2 text-sm text-muted-foreground">
             {isRTL ? report.executive_summary_ar : report.executive_summary_en}
           </div>
         </div>
@@ -309,7 +309,7 @@ export function IntelligencePage() {
         <div className="space-y-1">
           <span
             className={`
- inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+ inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
  ${report.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
  ${report.status === 'review' ? 'bg-yellow-100 text-yellow-800' : ''}
  ${report.status === 'approved' ? 'bg-blue-100 text-blue-800' : ''}
@@ -330,7 +330,7 @@ export function IntelligencePage() {
       key: 'people',
       header: t('intelligence.people'),
       cell: (report: IntelligenceReport) => (
-        <div className="text-sm space-y-1">
+        <div className="space-y-1 text-sm">
           <div>
             <span className="text-muted-foreground">{t('intelligence.author')}:</span>{' '}
             {report.author.full_name}
@@ -355,7 +355,7 @@ export function IntelligencePage() {
       header: '',
       cell: () => (
         <Button size="sm" variant="ghost">
-          <Download className="h-4 w-4" />
+          <Download className="size-4" />
         </Button>
       ),
     },
@@ -366,19 +366,19 @@ export function IntelligencePage() {
 
   return (
     <div className="container mx-auto py-6">
-      <div className="flex justify-between items-center mb-6">
+      <div className="mb-6 flex items-center justify-between">
         <h1 className="text-3xl font-bold">{t('navigation.intelligence')}</h1>
         <Button>
-          <Plus className="h-4 w-4 me-2" />
+          <Plus className="me-2 size-4" />
           {t('intelligence.createReport')}
         </Button>
       </div>
 
-      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4 mb-6">
+      <div className="mb-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('intelligence.totalReports')}</CardTitle>
-            <Brain className="h-4 w-4 text-muted-foreground" />
+            <Brain className="size-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{reports?.length || 0}</div>
@@ -389,7 +389,7 @@ export function IntelligencePage() {
             <CardTitle className="text-sm font-medium">
               {t('intelligence.verifiedReports')}
             </CardTitle>
-            <Shield className="h-4 w-4 text-green-600" />
+            <Shield className="size-4 text-green-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -400,7 +400,7 @@ export function IntelligencePage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('intelligence.pendingReview')}</CardTitle>
-            <AlertTriangle className="h-4 w-4 text-yellow-600" />
+            <AlertTriangle className="size-4 text-yellow-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -411,7 +411,7 @@ export function IntelligencePage() {
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">{t('intelligence.published')}</CardTitle>
-            <Target className="h-4 w-4 text-blue-600" />
+            <Target className="size-4 text-blue-600" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -434,7 +434,7 @@ export function IntelligencePage() {
                 onChange={(e) => setSearchTerm(e.target.value)}
                 className="max-w-sm"
               />
-              <div className="flex-1 flex gap-2">
+              <div className="flex flex-1 gap-2">
                 <Input
                   placeholder={t('intelligence.similaritySearchPlaceholder')}
                   value={similaritySearch}
@@ -444,14 +444,14 @@ export function IntelligencePage() {
                   onClick={() => similaritySearchMutation.mutate(similaritySearch)}
                   disabled={!similaritySearch || similaritySearchMutation.isPending}
                 >
-                  <Search className="h-4 w-4 me-2" />
+                  <Search className="me-2 size-4" />
                   {t('intelligence.vectorSearch')}
                 </Button>
               </div>
             </div>
             <div className="flex gap-4">
               <div className="flex gap-2">
-                <span className="text-sm text-muted-foreground mt-2">
+                <span className="mt-2 text-sm text-muted-foreground">
                   {t('intelligence.confidence')}:
                 </span>
                 <Button
@@ -473,7 +473,7 @@ export function IntelligencePage() {
                 ))}
               </div>
               <div className="flex gap-2">
-                <span className="text-sm text-muted-foreground mt-2">
+                <span className="mt-2 text-sm text-muted-foreground">
                   {t('intelligence.classification')}:
                 </span>
                 <Button

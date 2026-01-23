@@ -95,10 +95,10 @@ export function ExportDialog({
   }, [isExporting, reset, onOpenChange])
 
   const formatIcons: Record<ExportFormat, React.ReactNode> = {
-    xlsx: <FileSpreadsheet className="h-4 w-4" />,
-    csv: <FileText className="h-4 w-4" />,
-    json: <FileJson className="h-4 w-4" />,
-    pdf: <FileText className="h-4 w-4" />,
+    xlsx: <FileSpreadsheet className="size-4" />,
+    csv: <FileText className="size-4" />,
+    json: <FileJson className="size-4" />,
+    pdf: <FileText className="size-4" />,
   }
 
   return (
@@ -106,7 +106,7 @@ export function ExportDialog({
       <DialogContent className="sm:max-w-[480px]" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Download className="h-5 w-5" />
+            <Download className="size-5" />
             {t('export.title')}
           </DialogTitle>
           <DialogDescription>{t('export.description')}</DialogDescription>
@@ -125,30 +125,30 @@ export function ExportDialog({
                 <RadioGroupItem value="xlsx" id="format-xlsx" className="peer sr-only" />
                 <Label
                   htmlFor="format-xlsx"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                  className="flex cursor-pointer flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                   {formatIcons.xlsx}
-                  <span className="text-xs mt-1">{t('export.format.xlsx')}</span>
+                  <span className="mt-1 text-xs">{t('export.format.xlsx')}</span>
                 </Label>
               </div>
               <div>
                 <RadioGroupItem value="csv" id="format-csv" className="peer sr-only" />
                 <Label
                   htmlFor="format-csv"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                  className="flex cursor-pointer flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                   {formatIcons.csv}
-                  <span className="text-xs mt-1">{t('export.format.csv')}</span>
+                  <span className="mt-1 text-xs">{t('export.format.csv')}</span>
                 </Label>
               </div>
               <div>
                 <RadioGroupItem value="json" id="format-json" className="peer sr-only" />
                 <Label
                   htmlFor="format-json"
-                  className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer"
+                  className="flex cursor-pointer flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                 >
                   {formatIcons.json}
-                  <span className="text-xs mt-1">{t('export.format.json')}</span>
+                  <span className="mt-1 text-xs">{t('export.format.json')}</span>
                 </Label>
               </div>
             </RadioGroup>
@@ -183,7 +183,7 @@ export function ExportDialog({
                     checked={exportSelected}
                     onCheckedChange={(checked) => setExportSelected(!!checked)}
                   />
-                  <Label htmlFor="export-selected" className="text-sm font-normal cursor-pointer">
+                  <Label htmlFor="export-selected" className="cursor-pointer text-sm font-normal">
                     {t('export.options.selectedOnly')} ({selectedIds.length})
                   </Label>
                 </div>
@@ -194,7 +194,7 @@ export function ExportDialog({
                   checked={includeTemplate}
                   onCheckedChange={(checked) => setIncludeTemplate(!!checked)}
                 />
-                <Label htmlFor="include-template" className="text-sm font-normal cursor-pointer">
+                <Label htmlFor="include-template" className="cursor-pointer text-sm font-normal">
                   {t('export.options.includeTemplate')}
                 </Label>
               </div>
@@ -213,17 +213,17 @@ export function ExportDialog({
           )}
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button
             variant="outline"
             onClick={handleDownloadTemplate}
             disabled={isExporting}
             className="w-full sm:w-auto"
           >
-            <FileSpreadsheet className="h-4 w-4 me-2" />
+            <FileSpreadsheet className="me-2 size-4" />
             {t('template.button')}
           </Button>
-          <div className="flex gap-2 w-full sm:w-auto">
+          <div className="flex w-full gap-2 sm:w-auto">
             <Button
               variant="outline"
               onClick={handleClose}
@@ -235,12 +235,12 @@ export function ExportDialog({
             <Button onClick={handleExport} disabled={isExporting} className="flex-1 sm:flex-none">
               {isExporting ? (
                 <>
-                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                  <Loader2 className="me-2 size-4 animate-spin" />
                   {t('export.downloading')}
                 </>
               ) : (
                 <>
-                  <Download className="h-4 w-4 me-2" />
+                  <Download className="me-2 size-4" />
                   {t('export.button')}
                 </>
               )}

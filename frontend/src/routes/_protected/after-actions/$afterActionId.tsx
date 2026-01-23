@@ -42,7 +42,7 @@ function AfterActionDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto p-6 space-y-6">
+      <div className="container mx-auto space-y-6 p-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-screen w-full" />
       </div>
@@ -113,13 +113,13 @@ function AfterActionDetailPage() {
   }
 
   return (
-    <div className={`container mx-auto p-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
+    <div className={`container mx-auto space-y-6 p-6 ${isRTL ? 'rtl' : 'ltr'}`}>
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
           <Button variant="ghost" size="icon" asChild>
             <Link to={getDossierDetailPath(afterAction.dossier_id, afterAction.dossier_type)}>
-              <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+              <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
             </Link>
           </Button>
           <div>
@@ -133,7 +133,7 @@ function AfterActionDetailPage() {
           <Badge variant={statusConfig.variant as any}>{statusConfig.label}</Badge>
           {afterAction.is_confidential && (
             <Badge variant="destructive">
-              <Lock className="h-3 w-3 me-1" />
+              <Lock className="me-1 size-3" />
               {t('afterActions.confidential')}
             </Badge>
           )}
@@ -141,10 +141,10 @@ function AfterActionDetailPage() {
       </div>
 
       {/* Actions */}
-      <div className="flex items-center gap-2 justify-end flex-wrap">
+      <div className="flex flex-wrap items-center justify-end gap-2">
         {afterAction.publication_status === 'draft' && canPublish && (
           <Button onClick={handlePublish} disabled={publishMutation.isPending}>
-            <CheckCircle className="h-4 w-4 me-2" />
+            <CheckCircle className="me-2 size-4" />
             {t('afterActions.publish')}
           </Button>
         )}
@@ -155,14 +155,14 @@ function AfterActionDetailPage() {
             onClick={handleRequestEdit}
             disabled={requestEditMutation.isPending}
           >
-            <Edit className="h-4 w-4 me-2" />
+            <Edit className="me-2 size-4" />
             {t('afterActions.requestEdit')}
           </Button>
         )}
 
         <Button variant="outline" asChild>
           <Link to="/after-actions/$afterActionId/versions" params={{ afterActionId }}>
-            <History className="h-4 w-4 me-2" />
+            <History className="me-2 size-4" />
             {t('afterActions.versionHistory')}
           </Link>
         </Button>
@@ -182,7 +182,7 @@ function AfterActionDetailPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Users className="h-5 w-5" />
+              <Users className="size-5" />
               {t('afterActions.attendees')}
             </CardTitle>
           </CardHeader>
@@ -217,11 +217,11 @@ function AfterActionDetailPage() {
                   <div className="pt-2">
                     <p className="font-medium">{decision.description}</p>
                     {decision.rationale && (
-                      <p className="text-sm text-muted-foreground mt-1">
+                      <p className="mt-1 text-sm text-muted-foreground">
                         {t('afterActions.rationale')}: {decision.rationale}
                       </p>
                     )}
-                    <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground">
+                    <div className="mt-2 flex items-center gap-4 text-sm text-muted-foreground">
                       <span>
                         {t('afterActions.decisionMaker')}: {decision.decision_maker}
                       </span>
@@ -251,7 +251,7 @@ function AfterActionDetailPage() {
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1">
                         <p className="font-medium">{commitment.description}</p>
-                        <div className="flex items-center gap-4 mt-2 text-sm text-muted-foreground flex-wrap">
+                        <div className="mt-2 flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
                           <span>
                             {t('afterActions.owner')}:{' '}
                             {commitment.owner_type === 'internal'
@@ -279,7 +279,7 @@ function AfterActionDetailPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <AlertCircle className="h-5 w-5" />
+                <AlertCircle className="size-5" />
                 {t('afterActions.risks')}
               </CardTitle>
               <CardDescription>
@@ -292,7 +292,7 @@ function AfterActionDetailPage() {
                   {index > 0 && <Separator />}
                   <div className="pt-2">
                     <p className="font-medium">{risk.description}</p>
-                    <div className="flex items-center gap-2 mt-2 flex-wrap">
+                    <div className="mt-2 flex flex-wrap items-center gap-2">
                       <Badge
                         variant={
                           risk.severity === 'critical' || risk.severity === 'high'
@@ -307,7 +307,7 @@ function AfterActionDetailPage() {
                       </Badge>
                     </div>
                     {risk.mitigation_strategy && (
-                      <p className="text-sm text-muted-foreground mt-2">
+                      <p className="mt-2 text-sm text-muted-foreground">
                         {t('afterActions.mitigation')}: {risk.mitigation_strategy}
                       </p>
                     )}
@@ -334,16 +334,16 @@ function AfterActionDetailPage() {
                   <div className="pt-2">
                     <div className="flex items-start gap-2">
                       {action.completed ? (
-                        <CheckCircle className="h-5 w-5 text-green-600 mt-0.5" />
+                        <CheckCircle className="mt-0.5 size-5 text-green-600" />
                       ) : (
-                        <div className="h-5 w-5 rounded-full border-2 border-muted-foreground mt-0.5" />
+                        <div className="mt-0.5 size-5 rounded-full border-2 border-muted-foreground" />
                       )}
                       <div className="flex-1">
-                        <p className={action.completed ? 'line-through text-muted-foreground' : ''}>
+                        <p className={action.completed ? 'text-muted-foreground line-through' : ''}>
                           {action.description}
                         </p>
                         {action.assigned_to || action.target_date ? (
-                          <div className="flex items-center gap-4 mt-1 text-sm text-muted-foreground">
+                          <div className="mt-1 flex items-center gap-4 text-sm text-muted-foreground">
                             {action.assigned_to && <span>{action.assigned_to}</span>}
                             {action.target_date && (
                               <span>{format(new Date(action.target_date), 'PP', { locale })}</span>
@@ -364,12 +364,12 @@ function AfterActionDetailPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <FileText className="h-5 w-5" />
+                <FileText className="size-5" />
                 {t('afterActions.notes')}
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-sm whitespace-pre-wrap">{afterAction.notes}</p>
+              <p className="whitespace-pre-wrap text-sm">{afterAction.notes}</p>
             </CardContent>
           </Card>
         )}

@@ -224,7 +224,7 @@ export function ListEmptyState({
 
       {/* Contextual Suggestions */}
       {showContextualSuggestions && (
-        <div className="mt-4 sm:mt-6 pt-4 sm:pt-6 border-t border-border">
+        <div className="mt-4 border-t border-border pt-4 sm:mt-6 sm:pt-6">
           <ContextualSuggestions
             context={config.suggestionContext}
             limit={3}

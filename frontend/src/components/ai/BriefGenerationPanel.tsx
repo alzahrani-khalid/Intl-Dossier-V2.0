@@ -146,7 +146,7 @@ export function BriefGenerationPanel({
           </div>
           {isGenerating && (
             <Button variant="ghost" size="sm" onClick={cancel} className="h-8">
-              <X className="h-4 w-4 me-1" />
+              <X className="me-1 size-4" />
               {t('cancel', 'Cancel')}
             </Button>
           )}
@@ -162,7 +162,7 @@ export function BriefGenerationPanel({
           <div className="space-y-3">
             <div className="flex items-center justify-between">
               {/* Step indicators */}
-              <div className="flex items-center gap-2 flex-1">
+              <div className="flex flex-1 items-center gap-2">
                 <StepIndicator
                   step={1}
                   label={t('steps.context', 'Context')}
@@ -200,11 +200,11 @@ export function BriefGenerationPanel({
             {isGenerating && (
               <div className="space-y-1">
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground flex items-center gap-2">
-                    <Loader2 className="h-3 w-3 animate-spin" />
+                  <span className="flex items-center gap-2 text-muted-foreground">
+                    <Loader2 className="size-3 animate-spin" />
                     {getPhaseLabel()}
                   </span>
-                  <span className="text-muted-foreground font-mono">{Math.round(progress)}%</span>
+                  <span className="font-mono text-muted-foreground">{Math.round(progress)}%</span>
                 </div>
                 <Progress value={progress} className="h-2" />
               </div>
@@ -214,11 +214,11 @@ export function BriefGenerationPanel({
 
         {/* Streaming Content Preview with shimmer effect */}
         {isGenerating && (
-          <div className="bg-muted/50 rounded-lg p-4 max-h-64 overflow-y-auto border">
+          <div className="max-h-64 overflow-y-auto rounded-lg border bg-muted/50 p-4">
             {streamingContent ? (
-              <pre className="text-sm whitespace-pre-wrap font-sans leading-relaxed">
+              <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed">
                 {streamingContent}
-                <span className="inline-block w-2 h-4 bg-primary/60 animate-pulse ms-1" />
+                <span className="ms-1 inline-block h-4 w-2 animate-pulse bg-primary/60" />
               </pre>
             ) : (
               <div className="space-y-2">
@@ -234,17 +234,17 @@ export function BriefGenerationPanel({
         {/* Error Display with formatted message and manual fallback option */}
         {phase === 'error' && formattedError && (
           <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="size-4" />
             <AlertTitle>{formattedError.title}</AlertTitle>
             <AlertDescription className="mt-2 space-y-3">
               <p>{formattedError.message}</p>
               {formattedError.action && (
                 <p className="text-sm opacity-80">{formattedError.action}</p>
               )}
-              <div className="flex flex-wrap items-center gap-2 mt-3">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 {formattedError.retryable && (
                   <Button variant="outline" size="sm" onClick={retry} className="gap-1">
-                    <RefreshCw className="h-3 w-3" />
+                    <RefreshCw className="size-3" />
                     {t('retry', 'Retry')}
                   </Button>
                 )}
@@ -254,11 +254,11 @@ export function BriefGenerationPanel({
                   onClick={handleSwitchToManual}
                   className="gap-1"
                 >
-                  <PenLine className="h-3 w-3" />
+                  <PenLine className="size-3" />
                   {t('fallback.switchToManual', 'Enter Manually')}
                 </Button>
                 <Button variant="ghost" size="sm" onClick={handleGenerateAnother} className="gap-1">
-                  <RotateCcw className="h-3 w-3" />
+                  <RotateCcw className="size-3" />
                   {t('startOver', 'Start over')}
                 </Button>
               </div>
@@ -268,16 +268,16 @@ export function BriefGenerationPanel({
 
         {/* Success Display */}
         {phase === 'success' && brief && (
-          <Alert className="bg-green-50 border-green-200 dark:bg-green-950 dark:border-green-800">
-            <CheckCircle className="h-4 w-4 text-green-600" />
+          <Alert className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950">
+            <CheckCircle className="size-4 text-green-600" />
             <AlertTitle className="text-green-800 dark:text-green-200">
               {t('success', 'Brief generated successfully!')}
             </AlertTitle>
             <AlertDescription className="mt-3">
-              <p className="text-sm text-green-700 dark:text-green-300 mb-3">{brief.title}</p>
+              <p className="mb-3 text-sm text-green-700 dark:text-green-300">{brief.title}</p>
               <div className="flex items-center gap-2">
                 <Button variant="default" size="sm" onClick={handleViewBrief} className="gap-1">
-                  <Eye className="h-3 w-3" />
+                  <Eye className="size-3" />
                   {t('viewBrief', 'Open Brief')}
                 </Button>
                 <Button
@@ -317,7 +317,7 @@ export function BriefGenerationPanel({
 
               {showAdvanced && (
                 <div className="mt-2 space-y-2">
-                  <label className="text-sm font-medium mb-1 block">
+                  <label className="mb-1 block text-sm font-medium">
                     {t('customPrompt', 'Custom instructions (optional)')}
                   </label>
                   <Textarea
@@ -331,7 +331,7 @@ export function BriefGenerationPanel({
                     rows={3}
                     maxLength={500}
                   />
-                  <p className="text-xs text-muted-foreground text-end">
+                  <p className="text-end text-xs text-muted-foreground">
                     {customPrompt.length}/500
                   </p>
                 </div>
@@ -342,7 +342,7 @@ export function BriefGenerationPanel({
             <Button
               onClick={handleGenerate}
               disabled={!engagementId && !dossierId}
-              className="w-full min-h-11"
+              className="min-h-11 w-full"
             >
               <Sparkles className={cn('h-4 w-4 me-2', isRTL && 'rotate-180')} />
               {t('generate', 'Generate Brief')}
@@ -353,8 +353,8 @@ export function BriefGenerationPanel({
         {/* Manual Fallback UI */}
         {phase === 'manual' && (
           <div className="space-y-4">
-            <Alert className="bg-amber-50 border-amber-200 dark:bg-amber-950 dark:border-amber-800">
-              <PenLine className="h-4 w-4 text-amber-600" />
+            <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950">
+              <PenLine className="size-4 text-amber-600" />
               <AlertTitle className="text-amber-800 dark:text-amber-200">
                 {t('fallback.title', 'Manual Brief Entry')}
               </AlertTitle>
@@ -380,7 +380,7 @@ export function BriefGenerationPanel({
                     'fallback.summaryPlaceholder',
                     'Enter a brief executive summary...',
                   )}
-                  className="resize-none min-h-[100px]"
+                  className="min-h-[100px] resize-none"
                   rows={4}
                   dir={isRTL ? 'rtl' : 'ltr'}
                 />
@@ -401,7 +401,7 @@ export function BriefGenerationPanel({
                     'fallback.backgroundPlaceholder',
                     'Enter background information...',
                   )}
-                  className="resize-none min-h-[80px]"
+                  className="min-h-[80px] resize-none"
                   rows={3}
                   dir={isRTL ? 'rtl' : 'ltr'}
                 />
@@ -422,24 +422,24 @@ export function BriefGenerationPanel({
                     'fallback.recommendationsPlaceholder',
                     'Enter your recommendations...',
                   )}
-                  className="resize-none min-h-[80px]"
+                  className="min-h-[80px] resize-none"
                   rows={3}
                   dir={isRTL ? 'rtl' : 'ltr'}
                 />
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-col sm:flex-row gap-2">
+              <div className="flex flex-col gap-2 sm:flex-row">
                 <Button
                   onClick={handleManualSubmit}
                   disabled={!manualContent.summary.trim()}
-                  className="flex-1 min-h-11"
+                  className="min-h-11 flex-1"
                 >
-                  <CheckCircle className="h-4 w-4 me-2" />
+                  <CheckCircle className="me-2 size-4" />
                   {t('fallback.submit', 'Submit Brief')}
                 </Button>
                 <Button variant="outline" onClick={handleGenerateAnother} className="min-h-11">
-                  <RotateCcw className="h-3 w-3 me-2" />
+                  <RotateCcw className="me-2 size-3" />
                   {t('startOver', 'Start over')}
                 </Button>
               </div>
@@ -471,7 +471,7 @@ function StepIndicator({ step, label, active, complete }: StepIndicatorProps) {
               : 'bg-muted text-muted-foreground',
         )}
       >
-        {complete ? <CheckCircle className="h-3 w-3" /> : step}
+        {complete ? <CheckCircle className="size-3" /> : step}
       </div>
       <span
         className={cn('text-xs', active || complete ? 'text-foreground' : 'text-muted-foreground')}

@@ -133,10 +133,10 @@ export function SLAEscalationsList({
 
   return (
     <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
-      <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <CardHeader className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <CardTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-red-500" />
+            <AlertTriangle className="size-5 text-red-500" />
             {t('escalations.title')}
           </CardTitle>
           <CardDescription>{t('escalations.description')}</CardDescription>
@@ -167,9 +167,9 @@ export function SLAEscalationsList({
                     escalation.status === 'acknowledged' && 'border-yellow-300 bg-yellow-50',
                   )}
                 >
-                  <div className="flex items-start justify-between gap-4 mb-3">
+                  <div className="mb-3 flex items-start justify-between gap-4">
                     <div className="flex-1">
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="flex flex-wrap items-center gap-2">
                         <StatusBadge status={escalation.status} />
                         <Badge variant="secondary">
                           {t(`escalations.level`)} {escalation.escalation_level}
@@ -177,26 +177,26 @@ export function SLAEscalationsList({
                         <Badge variant="outline">{escalation.target_type}</Badge>
                       </div>
                       {escalation.reason && (
-                        <p className="text-sm text-muted-foreground mt-2">{escalation.reason}</p>
+                        <p className="mt-2 text-sm text-muted-foreground">{escalation.reason}</p>
                       )}
                     </div>
                   </div>
 
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground mb-3">
+                  <div className="mb-3 flex items-center gap-4 text-sm text-muted-foreground">
                     <div className="flex items-center gap-1">
-                      <Clock className="h-4 w-4" />
+                      <Clock className="size-4" />
                       <span>{formatTimestamp(escalation.triggered_at)}</span>
                     </div>
                     {escalation.escalated_to_role && (
                       <div className="flex items-center gap-1">
-                        <UserCircle className="h-4 w-4" />
+                        <UserCircle className="size-4" />
                         <span>{escalation.escalated_to_role}</span>
                       </div>
                     )}
                   </div>
 
                   {escalation.status === 'triggered' && (
-                    <div className="flex items-center gap-2 pt-2 border-t">
+                    <div className="flex items-center gap-2 border-t pt-2">
                       <Button
                         size="sm"
                         variant="outline"
@@ -243,7 +243,7 @@ export function SLAEscalationsList({
                   )}
 
                   {escalation.status === 'acknowledged' && (
-                    <div className="flex items-center gap-2 pt-2 border-t">
+                    <div className="flex items-center gap-2 border-t pt-2">
                       <Dialog open={resolveDialogOpen} onOpenChange={setResolveDialogOpen}>
                         <DialogTrigger asChild>
                           <Button size="sm" onClick={() => setSelectedEscalation(escalation)}>
@@ -282,7 +282,7 @@ export function SLAEscalationsList({
                   )}
 
                   {escalation.status === 'resolved' && escalation.notes && (
-                    <div className="pt-2 border-t text-sm">
+                    <div className="border-t pt-2 text-sm">
                       <span className="text-muted-foreground">
                         {t('escalations.resolutionNotes')}:
                       </span>
@@ -294,8 +294,8 @@ export function SLAEscalationsList({
             </div>
           </ScrollArea>
         ) : (
-          <div className="h-32 flex flex-col items-center justify-center text-muted-foreground">
-            <CheckCircle className="h-8 w-8 mb-2 text-green-500" />
+          <div className="flex h-32 flex-col items-center justify-center text-muted-foreground">
+            <CheckCircle className="mb-2 size-8 text-green-500" />
             <p>{t('escalations.noEscalations')}</p>
           </div>
         )}

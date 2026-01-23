@@ -110,7 +110,7 @@ export function ScenarioForm({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle>{scenario ? t('scenario.edit') : t('scenario.create')}</DialogTitle>
           <DialogDescription>{t('description')}</DialogDescription>
@@ -251,7 +251,7 @@ export function ScenarioForm({
                 {t('actions.cancel')}
               </Button>
               <Button type="submit" disabled={isLoading}>
-                {isLoading && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+                {isLoading && <Loader2 className="me-2 size-4 animate-spin" />}
                 {scenario ? t('actions.update') : t('actions.create')}
               </Button>
             </DialogFooter>

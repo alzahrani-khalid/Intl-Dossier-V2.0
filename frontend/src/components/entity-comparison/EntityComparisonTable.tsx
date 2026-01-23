@@ -67,11 +67,11 @@ const DIFFERENCE_COLORS: Record<FieldDifferenceType, string> = {
  * Difference type icons
  */
 const DIFFERENCE_ICONS: Record<FieldDifferenceType, React.ReactNode> = {
-  same: <Check className="h-3 w-3" />,
-  different: <X className="h-3 w-3" />,
-  added: <Plus className="h-3 w-3" />,
-  removed: <Minus className="h-3 w-3" />,
-  modified: <AlertCircle className="h-3 w-3" />,
+  same: <Check className="size-3" />,
+  different: <X className="size-3" />,
+  added: <Plus className="size-3" />,
+  removed: <Minus className="size-3" />,
+  modified: <AlertCircle className="size-3" />,
 }
 
 /**
@@ -145,7 +145,7 @@ const FieldRow = memo(function FieldRow({
       )}
     >
       {/* Field name */}
-      <td className="p-2 sm:p-3 font-medium text-sm whitespace-nowrap sticky start-0 bg-background z-10 border-e">
+      <td className="sticky start-0 z-10 whitespace-nowrap border-e bg-background p-2 text-sm font-medium sm:p-3">
         <div className="flex items-center gap-2">
           <TooltipProvider>
             <Tooltip>
@@ -165,7 +165,7 @@ const FieldRow = memo(function FieldRow({
               </TooltipContent>
             </Tooltip>
           </TooltipProvider>
-          <span className="truncate max-w-[120px] sm:max-w-[200px]">
+          <span className="max-w-[120px] truncate sm:max-w-[200px]">
             {t(field.fieldLabel, field.fieldKey)}
           </span>
         </div>
@@ -205,40 +205,40 @@ const ComparisonSummary = memo(function ComparisonSummary({
   return (
     <Card className="mb-4">
       <CardHeader className="pb-2">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <ArrowLeftRight className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <ArrowLeftRight className="size-5" />
           {t('summary.title')}
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4">
-          <div className="text-center p-2 sm:p-3 rounded-lg bg-muted/50">
-            <div className="text-lg sm:text-2xl font-bold">{summary.totalFields}</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
+          <div className="rounded-lg bg-muted/50 p-2 text-center sm:p-3">
+            <div className="text-lg font-bold sm:text-2xl">{summary.totalFields}</div>
+            <div className="text-xs text-muted-foreground sm:text-sm">
               {t('summary.totalFields')}
             </div>
           </div>
-          <div className="text-center p-2 sm:p-3 rounded-lg bg-green-50 dark:bg-green-950/30">
-            <div className="text-lg sm:text-2xl font-bold text-green-600 dark:text-green-400">
+          <div className="rounded-lg bg-green-50 p-2 text-center dark:bg-green-950/30 sm:p-3">
+            <div className="text-lg font-bold text-green-600 dark:text-green-400 sm:text-2xl">
               {summary.sameFields}
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
+            <div className="text-xs text-muted-foreground sm:text-sm">
               {t('summary.sameFields')}
             </div>
           </div>
-          <div className="text-center p-2 sm:p-3 rounded-lg bg-red-50 dark:bg-red-950/30">
-            <div className="text-lg sm:text-2xl font-bold text-red-600 dark:text-red-400">
+          <div className="rounded-lg bg-red-50 p-2 text-center dark:bg-red-950/30 sm:p-3">
+            <div className="text-lg font-bold text-red-600 dark:text-red-400 sm:text-2xl">
               {summary.differentFields}
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
+            <div className="text-xs text-muted-foreground sm:text-sm">
               {t('summary.differentFields')}
             </div>
           </div>
-          <div className="text-center p-2 sm:p-3 rounded-lg bg-blue-50 dark:bg-blue-950/30">
-            <div className="text-lg sm:text-2xl font-bold text-blue-600 dark:text-blue-400">
+          <div className="rounded-lg bg-blue-50 p-2 text-center dark:bg-blue-950/30 sm:p-3">
+            <div className="text-lg font-bold text-blue-600 dark:text-blue-400 sm:text-2xl">
               {summary.similarityPercentage}%
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
+            <div className="text-xs text-muted-foreground sm:text-sm">
               {t('summary.similarity')}
             </div>
           </div>
@@ -270,12 +270,12 @@ const FilterControls = memo(function FilterControls({
     <Collapsible>
       <CollapsibleTrigger asChild>
         <Button variant="outline" size="sm" className="mb-4 w-full sm:w-auto">
-          <Filter className="h-4 w-4 me-2" />
+          <Filter className="me-2 size-4" />
           {t('table.filters.title')}
         </Button>
       </CollapsibleTrigger>
       <CollapsibleContent className="mb-4">
-        <div className="flex flex-col sm:flex-row flex-wrap gap-4 p-3 sm:p-4 border rounded-lg bg-muted/30">
+        <div className="flex flex-col flex-wrap gap-4 rounded-lg border bg-muted/30 p-3 sm:flex-row sm:p-4">
           <div className="flex items-center gap-2">
             <Switch
               id="show-differences"
@@ -286,7 +286,7 @@ const FilterControls = memo(function FilterControls({
               {t('table.filters.showDifferences')}
             </Label>
           </div>
-          <Separator orientation="vertical" className="hidden sm:block h-6" />
+          <Separator orientation="vertical" className="hidden h-6 sm:block" />
           <div className="flex items-center gap-2">
             <Switch
               id="show-base"
@@ -338,7 +338,7 @@ const ViewModeToggle = memo(function ViewModeToggle({
   if (!onViewModeChange) return null
 
   return (
-    <div className="flex items-center border rounded-md overflow-hidden mb-4">
+    <div className="mb-4 flex items-center overflow-hidden rounded-md border">
       <Button
         variant={viewMode === 'table' ? 'secondary' : 'ghost'}
         size="sm"
@@ -346,7 +346,7 @@ const ViewModeToggle = memo(function ViewModeToggle({
         className="rounded-none border-e"
         aria-label={t('accessibility.viewModeToggle')}
       >
-        <Table className="h-4 w-4 me-1 sm:me-2" />
+        <Table className="me-1 size-4 sm:me-2" />
         <span className="hidden sm:inline">{t('table.viewMode.table')}</span>
       </Button>
       <Button
@@ -355,7 +355,7 @@ const ViewModeToggle = memo(function ViewModeToggle({
         onClick={() => onViewModeChange('side_by_side')}
         className="rounded-none border-e"
       >
-        <Columns className="h-4 w-4 me-1 sm:me-2" />
+        <Columns className="me-1 size-4 sm:me-2" />
         <span className="hidden sm:inline">{t('table.viewMode.side_by_side')}</span>
       </Button>
       <Button
@@ -364,7 +364,7 @@ const ViewModeToggle = memo(function ViewModeToggle({
         onClick={() => onViewModeChange('highlights_only')}
         className="rounded-none"
       >
-        <Rows className="h-4 w-4 me-1 sm:me-2" />
+        <Rows className="me-1 size-4 sm:me-2" />
         <span className="hidden sm:inline">{t('table.viewMode.highlights_only')}</span>
       </Button>
     </div>
@@ -418,10 +418,10 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
         <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
           <ComparisonSummary comparisonResult={comparisonResult} />
           <ViewModeToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
-          <div className="text-center py-8 sm:py-12 border rounded-lg bg-muted/30">
-            <Check className="h-12 w-12 mx-auto text-green-500 mb-4" />
-            <h4 className="font-medium text-sm sm:text-base">{t('table.empty.title')}</h4>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+          <div className="rounded-lg border bg-muted/30 py-8 text-center sm:py-12">
+            <Check className="mx-auto mb-4 size-12 text-green-500" />
+            <h4 className="text-sm font-medium sm:text-base">{t('table.empty.title')}</h4>
+            <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
               All fields are identical across selected entities
             </p>
           </div>
@@ -436,7 +436,7 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
       <ComparisonSummary comparisonResult={comparisonResult} />
 
       {/* Controls */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <ViewModeToggle viewMode={viewMode} onViewModeChange={onViewModeChange} />
         <FilterControls filters={filters} onFiltersChange={onFiltersChange} />
       </div>
@@ -452,13 +452,13 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
             >
               <thead>
                 <tr className="border-b bg-muted/50">
-                  <th className="p-2 sm:p-3 text-start font-semibold text-sm sticky start-0 bg-muted/50 z-10 border-e">
+                  <th className="sticky start-0 z-10 border-e bg-muted/50 p-2 text-start text-sm font-semibold sm:p-3">
                     {t('table.field')}
                   </th>
                   {entities.map((entity, index) => (
                     <th
                       key={entity.id}
-                      className="p-2 sm:p-3 text-start font-semibold text-sm min-w-[150px]"
+                      className="min-w-[150px] p-2 text-start text-sm font-semibold sm:p-3"
                     >
                       <div className="flex items-center gap-2">
                         <Badge variant="outline" className="text-xs">
@@ -477,7 +477,7 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
                     <tr className="bg-muted/30">
                       <td
                         colSpan={entities.length + 1}
-                        className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide"
+                        className="p-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
                       >
                         {t('table.category.base')}
                       </td>
@@ -499,7 +499,7 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
                     <tr className="bg-muted/30">
                       <td
                         colSpan={entities.length + 1}
-                        className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide"
+                        className="p-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
                       >
                         {t('table.category.extension')}
                       </td>
@@ -521,7 +521,7 @@ export const EntityComparisonTable = memo(function EntityComparisonTable({
                     <tr className="bg-muted/30">
                       <td
                         colSpan={entities.length + 1}
-                        className="p-2 text-xs font-semibold text-muted-foreground uppercase tracking-wide"
+                        className="p-2 text-xs font-semibold uppercase tracking-wide text-muted-foreground"
                       >
                         {t('table.category.metadata')}
                       </td>

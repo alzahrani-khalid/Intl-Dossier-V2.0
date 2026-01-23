@@ -77,7 +77,7 @@ export function DeliverablesTimeline({
           <Skeleton className="h-6 w-32" />
           <Skeleton className="h-9 w-24" />
         </div>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           <Skeleton className="h-16" />
           <Skeleton className="h-16" />
           <Skeleton className="h-16" />
@@ -104,44 +104,44 @@ export function DeliverablesTimeline({
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'} data-testid="deliverables-timeline">
       {/* Stats Bar */}
       {!isCompact && summary && (
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-4">
           <Card className="p-2 sm:p-3">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-primary/10 flex items-center justify-center">
-                <Target className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-primary" />
+              <div className="flex size-7 items-center justify-center rounded-lg bg-primary/10 sm:size-8">
+                <Target className="size-3.5 text-primary sm:size-4" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t('stats.total')}</p>
-                <p className="text-base sm:text-lg font-semibold">{summary.total}</p>
+                <p className="text-base font-semibold sm:text-lg">{summary.total}</p>
               </div>
             </div>
           </Card>
           <Card className="p-2 sm:p-3">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-green-100 dark:bg-green-900/30 flex items-center justify-center">
-                <CheckCircle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-green-600 dark:text-green-400" />
+              <div className="flex size-7 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30 sm:size-8">
+                <CheckCircle className="size-3.5 text-green-600 dark:text-green-400 sm:size-4" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t('stats.completed')}</p>
-                <p className="text-base sm:text-lg font-semibold">{summary.completed}</p>
+                <p className="text-base font-semibold sm:text-lg">{summary.completed}</p>
               </div>
             </div>
           </Card>
           <Card className="p-2 sm:p-3">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                <Clock className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-blue-600 dark:text-blue-400" />
+              <div className="flex size-7 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 sm:size-8">
+                <Clock className="size-3.5 text-blue-600 dark:text-blue-400 sm:size-4" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t('stats.inProgress')}</p>
-                <p className="text-base sm:text-lg font-semibold">{summary.inProgress}</p>
+                <p className="text-base font-semibold sm:text-lg">{summary.inProgress}</p>
               </div>
             </div>
           </Card>
           <Card className="p-2 sm:p-3">
             <div className="flex items-center gap-2">
-              <div className="h-7 w-7 sm:h-8 sm:w-8 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                <AlertTriangle className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-red-600 dark:text-red-400" />
+              <div className="flex size-7 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30 sm:size-8">
+                <AlertTriangle className="size-3.5 text-red-600 dark:text-red-400 sm:size-4" />
               </div>
               <div>
                 <p className="text-xs text-muted-foreground">{t('stats.overdue')}</p>
@@ -163,17 +163,17 @@ export function DeliverablesTimeline({
       {summary && (
         <Card>
           <CardContent className="p-3 sm:p-4">
-            <div className="flex items-center justify-between mb-2">
+            <div className="mb-2 flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <TrendingUp className="h-4 w-4 text-muted-foreground" />
+                <TrendingUp className="size-4 text-muted-foreground" />
                 <span className="text-sm font-medium">{t('progress.title')}</span>
               </div>
               <span className="text-sm font-semibold text-primary">{summary.progress}%</span>
             </div>
             <Progress value={summary.progress} className="h-2" />
             {summary.progress === 100 && (
-              <p className="text-xs text-green-600 dark:text-green-400 mt-2 flex items-center gap-1">
-                <CheckCircle className="h-3 w-3" />
+              <p className="mt-2 flex items-center gap-1 text-xs text-green-600 dark:text-green-400">
+                <CheckCircle className="size-3" />
                 {t('progress.allComplete')}
               </p>
             )}
@@ -184,7 +184,7 @@ export function DeliverablesTimeline({
       {/* Header with Add Button */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-sm sm:text-base font-semibold text-foreground text-start">
+          <h3 className="text-start text-sm font-semibold text-foreground sm:text-base">
             {t('timeline.title')}
           </h3>
         </div>

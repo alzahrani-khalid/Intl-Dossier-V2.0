@@ -81,13 +81,13 @@ export function WizardStep({
         <div className="flex items-center gap-2">
           <Label htmlFor={fieldId} className={cn(hasError && 'text-destructive')}>
             {label}
-            {field.is_required && <span className="text-destructive ms-1">*</span>}
+            {field.is_required && <span className="ms-1 text-destructive">*</span>}
           </Label>
           {helpText && (
             <TooltipProvider>
               <Tooltip>
                 <TooltipTrigger asChild>
-                  <HelpCircle className="h-4 w-4 text-muted-foreground cursor-help" />
+                  <HelpCircle className="size-4 cursor-help text-muted-foreground" />
                 </TooltipTrigger>
                 <TooltipContent side={isRTL ? 'left' : 'right'} className="max-w-xs">
                   {helpText}
@@ -101,7 +101,7 @@ export function WizardStep({
 
         {hasError && (
           <p className="flex items-center gap-1 text-sm text-destructive" role="alert">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="size-4" />
             {t(`validation.${error.error}`)}
           </p>
         )}
@@ -212,7 +212,7 @@ export function WizardStep({
       case 'date_range':
         const dateRange = value as { from?: string; to?: string } | undefined
         return (
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             <Popover>
               <PopoverTrigger asChild>
                 <Button
@@ -317,7 +317,7 @@ export function WizardStep({
                       }
                       className="rounded-full hover:bg-muted"
                     >
-                      <X className="h-3 w-3" />
+                      <X className="size-3" />
                     </button>
                   </Badge>
                 )
@@ -352,7 +352,7 @@ export function WizardStep({
 
       case 'boolean':
         return (
-          <div className="flex items-center gap-2 min-h-11">
+          <div className="flex min-h-11 items-center gap-2">
             <Checkbox
               id={fieldId}
               checked={(value as boolean) || false}
@@ -373,7 +373,7 @@ export function WizardStep({
               hasError && 'border-destructive',
             )}
           >
-            <Upload className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <Upload className="mx-auto mb-2 size-8 text-muted-foreground" />
             <p className="text-sm text-muted-foreground">{t('fields.dragDropFile')}</p>
             <input
               id={fieldId}
@@ -425,7 +425,7 @@ export function WizardStep({
                     }
                     className="rounded-full hover:bg-muted"
                   >
-                    <X className="h-3 w-3" />
+                    <X className="size-3" />
                   </button>
                 </Badge>
               ))}

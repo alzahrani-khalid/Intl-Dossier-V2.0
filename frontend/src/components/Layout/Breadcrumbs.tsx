@@ -130,7 +130,7 @@ export function Breadcrumbs() {
  <Fragment key={index}>
  {index > 0 && (
  <ChevronRight
- className={`h-4 w-4 text-gray-400 flex-shrink-0 ${isRTL ? 'rotate-180' : ''}`}
+ className={`size-4 shrink-0 text-gray-400 ${isRTL ? 'rotate-180' : ''}`}
  aria-hidden="true"
  />
  )}
@@ -145,11 +145,11 @@ export function Breadcrumbs() {
  <Link
  to={crumb.to as any}
  params={crumb.params}
- className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
+ className="text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
  >
  {index === 0 ? (
  <span className="flex items-center gap-1">
- <Home className="h-4 w-4" aria-hidden="true" />
+ <Home className="size-4" aria-hidden="true" />
  <span className="sr-only">{crumb.label}</span>
  </span>
  ) : (
@@ -197,7 +197,7 @@ export function CustomBreadcrumbs({ segments }: CustomBreadcrumbsProps) {
  <Fragment key={index}>
  {index > 0 && (
  <ChevronRight
- className={`h-4 w-4 text-gray-400 flex-shrink-0 ${isRTL ? 'rotate-180' : ''}`}
+ className={`size-4 shrink-0 text-gray-400 ${isRTL ? 'rotate-180' : ''}`}
  aria-hidden="true"
  />
  )}
@@ -212,11 +212,11 @@ export function CustomBreadcrumbs({ segments }: CustomBreadcrumbsProps) {
  <Link
  to={crumb.to as any}
  params={crumb.params}
- className="text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300 transition-colors"
+ className="text-gray-500 transition-colors hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300"
  >
  {index === 0 ? (
  <span className="flex items-center gap-1">
- <Home className="h-4 w-4" aria-hidden="true" />
+ <Home className="size-4" aria-hidden="true" />
  <span className="sr-only">{crumb.label}</span>
  </span>
  ) : (

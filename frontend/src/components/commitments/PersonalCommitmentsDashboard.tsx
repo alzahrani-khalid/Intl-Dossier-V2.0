@@ -73,7 +73,7 @@ export function PersonalCommitmentsDashboard() {
   if (userLoading) {
     return (
       <div className="flex items-center justify-center py-12" dir={isRTL ? 'rtl' : 'ltr'}>
-        <Loader2 className="h-8 w-8 animate-spin text-gray-400" />
+        <Loader2 className="size-8 animate-spin text-gray-400" />
         <span className="ms-3 text-gray-600">{t('list.loading')}</span>
       </div>
     )
@@ -85,32 +85,32 @@ export function PersonalCommitmentsDashboard() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <div className="mb-6 sm:mb-8">
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
+        <h1 className="mb-2 text-start text-2xl font-bold sm:text-3xl md:text-4xl">
           {t('pageTitle')}
         </h1>
-        <p className="text-sm sm:text-base text-gray-600 text-start">{t('subtitle')}</p>
+        <p className="text-start text-sm text-gray-600 sm:text-base">{t('subtitle')}</p>
       </div>
 
       {/* Quick Stats */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6 sm:mb-8">
+      <div className="mb-6 grid grid-cols-1 gap-4 sm:mb-8 sm:grid-cols-3">
         <Card>
           <CardHeader className="pb-3">
             <CardDescription className="text-start">
               {t('status.pending')} / {t('status.in_progress')}
             </CardDescription>
-            <CardTitle className="text-2xl sm:text-3xl text-start">{stats?.active ?? 0}</CardTitle>
+            <CardTitle className="text-start text-2xl sm:text-3xl">{stats?.active ?? 0}</CardTitle>
           </CardHeader>
         </Card>
 
         <Card>
           <CardHeader className="pb-3">
             <CardDescription className="text-start">{t('status.overdue')}</CardDescription>
-            <CardTitle className="text-2xl sm:text-3xl text-red-600 text-start">
+            <CardTitle className="text-start text-2xl text-red-600 sm:text-3xl">
               {stats?.overdue ?? 0}
             </CardTitle>
           </CardHeader>
@@ -119,7 +119,7 @@ export function PersonalCommitmentsDashboard() {
         <Card>
           <CardHeader className="pb-3">
             <CardDescription className="text-start">{t('status.completed')}</CardDescription>
-            <CardTitle className="text-2xl sm:text-3xl text-green-600 text-start">
+            <CardTitle className="text-start text-2xl text-green-600 sm:text-3xl">
               {stats?.completed ?? 0}
             </CardTitle>
           </CardHeader>
@@ -128,7 +128,7 @@ export function PersonalCommitmentsDashboard() {
 
       {/* Tabs with CommitmentsList for each status */}
       <Tabs defaultValue="active" className="w-full">
-        <TabsList className="grid w-full grid-cols-3 mb-4">
+        <TabsList className="mb-4 grid w-full grid-cols-3">
           <TabsTrigger value="active">
             <bdi>
               {t('status.pending')} ({stats?.active ?? 0})

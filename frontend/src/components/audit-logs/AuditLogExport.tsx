@@ -54,20 +54,20 @@ export function AuditLogExport({ filters, disabled = false, className }: AuditLo
           className={cn('gap-2', className)}
         >
           {isExporting ? (
-            <Loader2 className="h-4 w-4 animate-spin" />
+            <Loader2 className="size-4 animate-spin" />
           ) : (
-            <Download className="h-4 w-4" />
+            <Download className="size-4" />
           )}
           {isExporting ? t('export.exporting') : t('export.button')}
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
         <DropdownMenuItem onClick={() => handleExport('csv')} disabled={isExporting}>
-          <FileSpreadsheet className="h-4 w-4 me-2" />
+          <FileSpreadsheet className="me-2 size-4" />
           {t('export.csv')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleExport('json')} disabled={isExporting}>
-          <FileJson className="h-4 w-4 me-2" />
+          <FileJson className="me-2 size-4" />
           {t('export.json')}
         </DropdownMenuItem>
       </DropdownMenuContent>

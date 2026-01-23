@@ -73,7 +73,7 @@ export function SLAComplianceChart({ data, isLoading, className }: SLACompliance
           <CardDescription>{t('charts.complianceTrendDescription')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-64 flex items-center justify-center text-muted-foreground">
+          <div className="flex h-64 items-center justify-center text-muted-foreground">
             {t('charts.noDataAvailable')}
           </div>
         </CardContent>
@@ -84,11 +84,11 @@ export function SLAComplianceChart({ data, isLoading, className }: SLACompliance
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
-          <p className="font-medium mb-2">{label}</p>
+        <div className="rounded-lg border bg-background p-3 shadow-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+          <p className="mb-2 font-medium">{label}</p>
           {payload.map((entry: any, index: number) => (
             <div key={index} className="flex items-center gap-2 text-sm">
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
+              <div className="size-3 rounded-full" style={{ backgroundColor: entry.color }} />
               <span className="text-muted-foreground">{entry.name}:</span>
               <span className="font-medium">
                 {entry.name === t('charts.compliance')

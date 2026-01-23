@@ -220,7 +220,7 @@ export function KanbanBoard({
  </CardHeader>
  <CardContent className="space-y-2">
  {stageTasks.length === 0 ? (
- <p className="text-sm text-muted-foreground text-center py-4">
+ <p className="py-4 text-center text-sm text-muted-foreground">
  {t('no_tasks_in_stage', 'No tasks')}
  </p>
  ) : (
@@ -243,7 +243,7 @@ export function KanbanBoard({
  </div>
 
  {/* Desktop View: Multi-column kanban board with drag-and-drop (lg:) */}
- <div className="hidden lg:grid lg:grid-cols-4 gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="hidden gap-4 lg:grid lg:grid-cols-4" dir={isRTL ? 'rtl' : 'ltr'}>
  {WORKFLOW_STAGES.map(stage => {
  const stageTasks = tasksByStage[stage];
  return (
@@ -260,13 +260,13 @@ export function KanbanBoard({
  </div>
  </CardHeader>
  <ScrollArea className="h-[calc(100vh-300px)]">
- <CardContent className="space-y-2 min-h-[200px]">
+ <CardContent className="min-h-[200px] space-y-2">
  <SortableContext
  items={stageTasks.map(t => t.id)}
  strategy={verticalListSortingStrategy}
  >
  {stageTasks.length === 0 ? (
- <p className="text-sm text-muted-foreground text-center py-8">
+ <p className="py-8 text-center text-sm text-muted-foreground">
  {t('no_tasks_in_stage', 'No tasks')}
  </p>
  ) : (
@@ -338,13 +338,13 @@ function KanbanCard({
 
  return (
  <Card
- className="cursor-pointer hover:shadow-md transition-shadow "
+ className="cursor-pointer transition-shadow hover:shadow-md "
  onClick={() => onClick?.(task)}
  >
  <CardContent className="p-3">
  {/* Priority indicator + SLA indicator - T081: Using SLAIndicator component */}
- <div className="flex items-start justify-between mb-2">
- <div className={`w-1 h-8 ${getPriorityColor(task.priority)} rounded`} />
+ <div className="mb-2 flex items-start justify-between">
+ <div className={`h-8 w-1 ${getPriorityColor(task.priority)} rounded`} />
  <SLAIndicator
  deadline={task.sla_deadline}
  isCompleted={isCompleted}
@@ -355,12 +355,12 @@ function KanbanCard({
  </div>
 
  {/* Task Title - Mobile-first, RTL-compatible */}
- <h4 className={`text-sm font-medium line-clamp-2 mb-2 ${isRTL ? 'text-end' : 'text-start'}`}>
+ <h4 className={`mb-2 line-clamp-2 text-sm font-medium ${isRTL ? 'text-end' : 'text-start'}`}>
  {task.title}
  </h4>
 
  {/* Metadata */}
- <div className="flex items-center gap-2 flex-wrap">
+ <div className="flex flex-wrap items-center gap-2">
  <Badge variant="outline" className="text-xs">
  {t(`priority.${task.priority}`, task.priority)}
  </Badge>
@@ -373,15 +373,15 @@ function KanbanCard({
 
  {/* Contributor Avatars (T051) - Max 3 avatars with +N overflow */}
  {contributors.length > 0 && (
- <div className="flex items-center gap-1 mt-2" dir={isRTL ? 'rtl' : 'ltr'}>
- <span className="text-xs text-muted-foreground me-1">
+ <div className="mt-2 flex items-center gap-1" dir={isRTL ? 'rtl' : 'ltr'}>
+ <span className="me-1 text-xs text-muted-foreground">
  {t('tasks.contributors', 'Contributors')}:
  </span>
  <div className="flex items-center -space-x-2">
  {displayedContributors.map((contributor, index) => (
  <div
  key={contributor.user_id}
- className="relative size-8 sm:size-10 rounded-full border-2 border-background bg-muted flex items-center justify-center text-xs font-medium"
+ className="relative flex size-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium sm:size-10"
  style={{ zIndex: displayedContributors.length - index }}
  title={`${t(`tasks.contributorRole.${contributor.role}`, contributor.role)}`}
  >
@@ -390,7 +390,7 @@ function KanbanCard({
  ))}
  {overflowCount > 0 && (
  <div
- className="relative size-8 sm:size-10 rounded-full border-2 border-background bg-muted flex items-center justify-center text-xs font-medium"
+ className="relative flex size-8 items-center justify-center rounded-full border-2 border-background bg-muted text-xs font-medium sm:size-10"
  title={t('tasks.moreContributors', `+${overflowCount} more`)}
  >
  +{overflowCount}
@@ -483,8 +483,8 @@ function DraggableKanbanCard({
  <div className="relative">
  {/* T062: Loading indicator visible within 200ms during retries */}
  {isRetrying && (
- <div className="absolute inset-0 bg-background/50 backdrop-blur-sm flex items-center justify-center z-10 rounded-lg">
- <Loader2 className="h-6 w-6 animate-spin text-primary" />
+ <div className="absolute inset-0 z-10 flex items-center justify-center rounded-lg bg-background/50 backdrop-blur-sm">
+ <Loader2 className="size-6 animate-spin text-primary" />
  </div>
  )}
  <KanbanCard

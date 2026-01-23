@@ -56,7 +56,7 @@ function ErrorItem({ error, onAction, onFieldFocus, isRTL, index }: ErrorItemPro
         )}
       >
         {error.fieldName && (
-          <span className="font-medium shrink-0">
+          <span className="shrink-0 font-medium">
             {t(`fields.${error.fieldName}`, error.fieldName)}:
           </span>
         )}
@@ -76,7 +76,7 @@ function ErrorItem({ error, onAction, onFieldFocus, isRTL, index }: ErrorItemPro
             'text-red-700 dark:text-red-300',
           )}
         >
-          <Wand2 className="h-3 w-3 me-1" />
+          <Wand2 className="me-1 size-3" />
           <span className="hidden sm:inline">{t(primaryAction.labelKey)}</span>
           <span className="sm:hidden">{t('fix')}</span>
         </Button>
@@ -146,15 +146,15 @@ export function ActionableErrorSummary({
       {/* Header */}
       <div className="flex items-start justify-between gap-3">
         <div className="flex items-start gap-3">
-          <XCircle className="h-5 w-5 text-red-500 shrink-0 mt-0.5" aria-hidden="true" />
+          <XCircle className="mt-0.5 size-5 shrink-0 text-red-500" aria-hidden="true" />
           <div>
             <h3
               id="error-summary-title"
-              className="font-medium text-red-800 dark:text-red-200 text-sm sm:text-base"
+              className="text-sm font-medium text-red-800 dark:text-red-200 sm:text-base"
             >
               {t('summary.title', { count: errorItems.length })}
             </h3>
-            <p className="text-sm text-red-700 dark:text-red-300 opacity-80 mt-1">
+            <p className="mt-1 text-sm text-red-700 opacity-80 dark:text-red-300">
               {t('summary.description')}
             </p>
           </div>
@@ -169,7 +169,7 @@ export function ActionableErrorSummary({
             onClick={onFixAll}
             className={cn('shrink-0 gap-2', 'bg-red-600 hover:bg-red-700 text-white')}
           >
-            <Wand2 className="h-4 w-4" />
+            <Wand2 className="size-4" />
             <span className="hidden sm:inline">
               {t('fixAll', { count: autoFixableErrors.length })}
             </span>
@@ -208,12 +208,12 @@ export function ActionableErrorSummary({
         >
           {isExpanded ? (
             <>
-              <ChevronUp className="h-4 w-4 me-1" />
+              <ChevronUp className="me-1 size-4" />
               {t('showLess')}
             </>
           ) : (
             <>
-              <ChevronDown className="h-4 w-4 me-1" />
+              <ChevronDown className="me-1 size-4" />
               {t('showMore', { count: errorItems.length - maxVisible })}
             </>
           )}
@@ -222,9 +222,9 @@ export function ActionableErrorSummary({
 
       {/* Warnings section */}
       {warningItems.length > 0 && (
-        <div className="mt-4 pt-4 border-t border-red-200 dark:border-red-800">
-          <div className="flex items-center gap-2 text-amber-600 dark:text-amber-400 text-sm">
-            <AlertTriangle className="h-4 w-4" />
+        <div className="mt-4 border-t border-red-200 pt-4 dark:border-red-800">
+          <div className="flex items-center gap-2 text-sm text-amber-600 dark:text-amber-400">
+            <AlertTriangle className="size-4" />
             <span>{t('warnings.count', { count: warningItems.length })}</span>
           </div>
         </div>
@@ -237,7 +237,7 @@ export function ActionableErrorSummary({
           animate={{ opacity: 1, scale: 1 }}
           className="flex items-center gap-3 text-emerald-600 dark:text-emerald-400"
         >
-          <CheckCircle2 className="h-5 w-5" />
+          <CheckCircle2 className="size-5" />
           <span className="text-sm font-medium">{t('allFixed')}</span>
         </motion.div>
       )}

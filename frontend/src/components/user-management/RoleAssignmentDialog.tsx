@@ -116,12 +116,12 @@ export function RoleAssignmentDialog({
  return (
  <Dialog open={open} onOpenChange={onOpenChange}>
  <DialogContent
- className="w-[95vw] max-w-md sm:max-w-lg px-4 sm:px-6"
+ className="w-[95vw] max-w-md px-4 sm:max-w-lg sm:px-6"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <DialogHeader>
  <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
- <UserCog className="h-5 w-5 sm:h-6 sm:w-6" />
+ <UserCog className="size-5 sm:size-6" />
  {t('user_management.assign_role', 'Assign Role')}
  </DialogTitle>
  <DialogDescription className="text-sm sm:text-base">
@@ -133,10 +133,10 @@ export function RoleAssignmentDialog({
  <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 sm:space-y-5">
  {/* User Email Display */}
  <div className="rounded-lg bg-muted p-3 sm:p-4">
- <p className="text-xs sm:text-sm text-muted-foreground">
+ <p className="text-xs text-muted-foreground sm:text-sm">
  {t('user_management.user', 'User')}
  </p>
- <p className="text-sm sm:text-base font-medium text-start">{userEmail}</p>
+ <p className="text-start text-sm font-medium sm:text-base">{userEmail}</p>
  </div>
 
  {/* Current Role Display */}
@@ -162,7 +162,7 @@ export function RoleAssignmentDialog({
  disabled={isPending}
  >
  <FormControl>
- <SelectTrigger className="h-11 sm:h-10 px-4 text-base sm:text-sm">
+ <SelectTrigger className="h-11 px-4 text-base sm:h-10 sm:text-sm">
  <SelectValue
  placeholder={t('user_management.select_role', 'Select role')}
  />
@@ -200,7 +200,7 @@ export function RoleAssignmentDialog({
  <FormLabel className="text-sm sm:text-base">
  {t('user_management.reason', 'Reason')}
  {isAdminRole && (
- <span className="text-destructive ms-1">*</span>
+ <span className="ms-1 text-destructive">*</span>
  )}
  </FormLabel>
  <FormControl>
@@ -210,7 +210,7 @@ export function RoleAssignmentDialog({
  'user_management.reason_placeholder',
  'Explain why this role change is needed'
  )}
- className="min-h-20 sm:min-h-24 px-4 py-3 text-base sm:text-sm resize-none"
+ className="min-h-20 resize-none px-4 py-3 text-base sm:min-h-24 sm:text-sm"
  disabled={isPending}
  />
  </FormControl>
@@ -233,11 +233,11 @@ export function RoleAssignmentDialog({
  {/* Admin Role Warning */}
  {isAdminRole && isRoleChanged && (
  <Alert variant="default" className="border-yellow-500 bg-yellow-50 dark:bg-yellow-950">
- <AlertCircle className="h-4 w-4 text-yellow-600 dark:text-yellow-400" />
- <AlertTitle className="text-sm sm:text-base text-yellow-800 dark:text-yellow-200">
+ <AlertCircle className="size-4 text-yellow-600 dark:text-yellow-400" />
+ <AlertTitle className="text-sm text-yellow-800 dark:text-yellow-200 sm:text-base">
  {t('user_management.dual_approval_required', 'Dual Approval Required')}
  </AlertTitle>
- <AlertDescription className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300">
+ <AlertDescription className="text-xs text-yellow-700 dark:text-yellow-300 sm:text-sm">
  {t(
  'user_management.dual_approval_description',
  'Admin role assignments require approval from two distinct administrators. This request will be pending until approved.'
@@ -249,7 +249,7 @@ export function RoleAssignmentDialog({
  {/* Session Termination Warning */}
  {!isAdminRole && isRoleChanged && (
  <Alert variant="default">
- <AlertCircle className="h-4 w-4" />
+ <AlertCircle className="size-4" />
  <AlertTitle className="text-sm sm:text-base">
  {t('user_management.session_termination', 'Active Sessions Will Be Terminated')}
  </AlertTitle>
@@ -262,20 +262,20 @@ export function RoleAssignmentDialog({
  </Alert>
  )}
 
- <DialogFooter className="flex-col sm:flex-row gap-3 sm:gap-2">
+ <DialogFooter className="flex-col gap-3 sm:flex-row sm:gap-2">
  <Button
  type="button"
  variant="outline"
  onClick={() => onOpenChange(false)}
  disabled={isPending}
- className="h-11 sm:h-10 px-6 text-base sm:text-sm w-full sm:w-auto order-2 sm:order-1"
+ className="order-2 h-11 w-full px-6 text-base sm:order-1 sm:h-10 sm:w-auto sm:text-sm"
  >
  {t('common.cancel', 'Cancel')}
  </Button>
  <Button
  type="submit"
  disabled={isPending || !isRoleChanged}
- className="h-11 sm:h-10 px-6 text-base sm:text-sm w-full sm:w-auto order-1 sm:order-2"
+ className="order-1 h-11 w-full px-6 text-base sm:order-2 sm:h-10 sm:w-auto sm:text-sm"
  >
  {isPending
  ? t('user_management.assigning', 'Assigning...')

@@ -78,9 +78,9 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
  return (
  <div className="flex flex-col gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
  {/* Header */}
- <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
- <h3 className="text-lg sm:text-xl font-semibold flex items-center gap-2">
- <LinkIcon className="h-5 w-5" />
+ <div className="flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center">
+ <h3 className="flex items-center gap-2 text-lg font-semibold sm:text-xl">
+ <LinkIcon className="size-5" />
  {t('position_dossier_links.title')}
  </h3>
  {!isAdding && (
@@ -89,7 +89,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
  onClick={() => setIsAdding(true)}
  className="w-full sm:w-auto"
  >
- <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('position_dossier_links.add_link')}
  </Button>
  )}
@@ -99,7 +99,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
  {isAdding && (
  <Card className="p-4">
  <div className="flex flex-col gap-4">
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
  <div className="flex flex-col gap-2">
  <label className="text-sm font-medium">{t('position_dossier_links.select_dossier')}</label>
  <Select value={selectedDossierId} onValueChange={setSelectedDossierId}>
@@ -138,7 +138,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
  />
  </div>
 
- <div className="flex flex-col-reverse sm:flex-row gap-2 justify-end">
+ <div className="flex flex-col-reverse justify-end gap-2 sm:flex-row">
  <Button
  variant="outline"
  onClick={() => {
@@ -171,10 +171,10 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
  <div className="grid grid-cols-1 gap-2">
  {links.map((link) => (
  <Card key={link.dossier_id} className="p-4">
- <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
- <div className="flex-1 min-w-0">
- <div className="flex items-center gap-2 flex-wrap">
- <h4 className="font-medium text-sm sm:text-base truncate">
+ <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
+ <div className="min-w-0 flex-1">
+ <div className="flex flex-wrap items-center gap-2">
+ <h4 className="truncate text-sm font-medium sm:text-base">
  {isRTL ? link.dossier?.name_ar : link.dossier?.name_en}
  </h4>
  <Badge variant="outline" className="shrink-0">
@@ -182,7 +182,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
  </Badge>
  </div>
  {link.notes && (
- <p className="text-xs sm:text-sm text-muted-foreground mt-1 line-clamp-2">{link.notes}</p>
+ <p className="mt-1 line-clamp-2 text-xs text-muted-foreground sm:text-sm">{link.notes}</p>
  )}
  </div>
  <Button
@@ -192,7 +192,7 @@ export function PositionDossierLinker({ positionId }: PositionDossierLinkerProps
  disabled={deleteLink.isPending}
  className="shrink-0"
  >
- <X className="h-4 w-4" />
+ <X className="size-4" />
  </Button>
  </div>
  </Card>

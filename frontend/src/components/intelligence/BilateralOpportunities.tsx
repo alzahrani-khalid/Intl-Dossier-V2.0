@@ -75,7 +75,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         <CardHeader>
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Handshake className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <Handshake className="size-5 text-blue-600 dark:text-blue-400" />
               <CardTitle className="text-base sm:text-lg">
                 {t('intelligence.types.bilateral', 'Bilateral Opportunities')}
               </CardTitle>
@@ -90,8 +90,8 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
-            <Globe className="mx-auto h-12 w-12 mb-3 text-gray-400" />
+          <div className="py-8 text-center text-muted-foreground">
+            <Globe className="mx-auto mb-3 size-12 text-gray-400" />
             <p className="text-sm">
               {t('intelligence.noBilateralData', 'No bilateral intelligence available')}
             </p>
@@ -105,17 +105,17 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
   const [isExpanded, setIsExpanded] = React.useState(false);
 
   return (
-    <Card className="h-full flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+    <Card className="flex h-full flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-3">
-        <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-2">
-              <Handshake className="h-5 w-5 flex-shrink-0 text-blue-600 dark:text-blue-400" />
-              <CardTitle className="text-base sm:text-lg truncate">
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div className="min-w-0 flex-1">
+            <div className="mb-2 flex items-center gap-2">
+              <Handshake className="size-5 shrink-0 text-blue-600 dark:text-blue-400" />
+              <CardTitle className="truncate text-base sm:text-lg">
                 {t('intelligence.types.bilateral', 'Bilateral Opportunities')}
               </CardTitle>
             </div>
-            <CardDescription className="text-xs sm:text-sm line-clamp-2">
+            <CardDescription className="line-clamp-2 text-xs sm:text-sm">
               {isRTL && latestReport?.title_ar ? latestReport.title_ar : latestReport?.title}
             </CardDescription>
           </div>
@@ -125,16 +125,16 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
             isLoading={isRefreshing}
             showTypeSelection={false}
             size="sm"
-            className="w-full sm:w-auto flex-shrink-0"
+            className="w-full shrink-0 sm:w-auto"
           />
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col gap-4">
+      <CardContent className="flex flex-1 flex-col gap-4">
         {/* Metadata Row */}
         <div className="flex flex-wrap items-center gap-2 text-xs">
           {isStale && (
-            <Badge variant="outline" className="bg-yellow-50 text-yellow-700 border-yellow-200">
+            <Badge variant="outline" className="border-yellow-200 bg-yellow-50 text-yellow-700">
               {t('intelligence.stale', 'Stale Data')}
             </Badge>
           )}
@@ -149,7 +149,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
 
         {/* Executive Summary */}
         <div className="flex-1">
-          <div className="flex items-center justify-between mb-2">
+          <div className="mb-2 flex items-center justify-between">
             <h4 className="text-sm font-medium">
               {t('intelligence.relationshipAnalysis', 'Relationship Analysis')}
             </h4>
@@ -163,7 +163,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
             </button>
           </div>
           <p
-            className={`text-sm text-muted-foreground whitespace-pre-wrap ${
+            className={`whitespace-pre-wrap text-sm text-muted-foreground ${
               isExpanded ? '' : 'line-clamp-4'
             }`}
           >
@@ -174,16 +174,16 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         {/* Opportunity Highlights */}
         {latestReport?.metrics && Object.keys(latestReport.metrics).length > 0 && (
           <div>
-            <h4 className="text-sm font-medium mb-3 flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-yellow-600" />
+            <h4 className="mb-3 flex items-center gap-2 text-sm font-medium">
+              <Sparkles className="size-4 text-yellow-600" />
               {t('intelligence.keyOpportunities', 'Key Opportunities')}
             </h4>
             <div className="grid grid-cols-2 gap-3">
               {Object.entries(latestReport.metrics).map(([key, value]) => (
-                <div key={key} className="bg-muted/50 rounded-lg p-3">
-                  <div className="flex items-center gap-2 mb-1">
-                    <Handshake className="h-4 w-4 text-blue-600" />
-                    <span className="text-xs font-medium text-muted-foreground capitalize">
+                <div key={key} className="rounded-lg bg-muted/50 p-3">
+                  <div className="mb-1 flex items-center gap-2">
+                    <Handshake className="size-4 text-blue-600" />
+                    <span className="text-xs font-medium capitalize text-muted-foreground">
                       {key.replace(/_/g, ' ')}
                     </span>
                   </div>
@@ -199,7 +199,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
         {/* Data Sources Attribution */}
         {dataSources.length > 0 && (
           <div className="border-t pt-3">
-            <h4 className="text-xs font-medium mb-2 text-muted-foreground">
+            <h4 className="mb-2 text-xs font-medium text-muted-foreground">
               {t('intelligence.sources', 'Data Sources')}
             </h4>
             <div className="flex flex-wrap gap-2">
@@ -207,7 +207,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
                 <Badge
                   key={idx}
                   variant="outline"
-                  className="text-xs bg-background hover:bg-muted"
+                  className="bg-background text-xs hover:bg-muted"
                 >
                   {source.source}
                 </Badge>
@@ -218,7 +218,7 @@ export function BilateralOpportunities({ reports, dossierId }: BilateralOpportun
 
         {/* AnythingLLM Attribution with Confidence */}
         {latestReport?.anythingllm_workspace_id && (
-          <div className="text-xs text-muted-foreground border-t pt-2 flex flex-wrap items-center justify-between gap-2">
+          <div className="flex flex-wrap items-center justify-between gap-2 border-t pt-2 text-xs text-muted-foreground">
             <div>
               <span className="font-medium">
                 {t('intelligence.generatedBy', 'Generated by')}:

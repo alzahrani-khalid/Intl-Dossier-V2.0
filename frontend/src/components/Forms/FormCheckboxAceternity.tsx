@@ -86,7 +86,7 @@ export function FormCheckboxAceternity({
           checked={checked}
           onCheckedChange={onCheckedChange}
           disabled={disabled}
-          className={variant === 'aceternity' ? aceternityCheckboxClasses : 'h-4 w-4'}
+          className={variant === 'aceternity' ? aceternityCheckboxClasses : 'size-4'}
           onFocus={() => setIsFocused(true)}
           onBlur={() => setIsFocused(false)}
           aria-invalid={!!error}
@@ -100,7 +100,7 @@ export function FormCheckboxAceternity({
         <label htmlFor={name} className={labelClasses}>
           {label}
           {required && (
-            <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+            <span className="ms-1 text-red-500" aria-label={t('validation.required')}>
               *
             </span>
           )}

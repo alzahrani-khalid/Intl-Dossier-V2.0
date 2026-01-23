@@ -46,7 +46,7 @@ export function CommitmentsHelpPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+      className="container mx-auto p-4 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header with Back Navigation */}
@@ -57,10 +57,10 @@ export function CommitmentsHelpPage() {
             {isRTL ? 'العودة للمساعدة' : 'Back to Help'}
           </Button>
         </Link>
-        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
+        <h1 className="mb-2 text-start text-2xl font-bold sm:text-3xl md:text-4xl">
           {isRTL ? 'دليل إدارة الالتزامات' : 'Commitments Management Guide'}
         </h1>
-        <p className="text-sm sm:text-base text-muted-foreground text-start">
+        <p className="text-start text-sm text-muted-foreground sm:text-base">
           {isRTL
             ? 'تعلم كيفية إنشاء وتتبع وإدارة الالتزامات المرتبطة بملفاتك'
             : 'Learn how to create, track, and manage commitments linked to your dossiers'}
@@ -68,7 +68,7 @@ export function CommitmentsHelpPage() {
       </div>
 
       {/* Quick Navigation Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+      <div className="mb-8 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <QuickNavCard
           icon={Target}
           title={isRTL ? 'ما هو الالتزام؟' : 'What is a Commitment?'}
@@ -101,7 +101,7 @@ export function CommitmentsHelpPage() {
 
       {/* Main Content Tabs */}
       <Tabs value={activeSection} onValueChange={setActiveSection} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-2 sm:grid-cols-4 gap-2 h-auto">
+        <TabsList className="grid h-auto w-full grid-cols-2 gap-2 sm:grid-cols-4">
           <TabsTrigger value="overview" className="min-h-11 text-xs sm:text-sm">
             {isRTL ? 'نظرة عامة' : 'Overview'}
           </TabsTrigger>
@@ -131,14 +131,14 @@ export function CommitmentsHelpPage() {
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm sm:text-base text-start">
+              <p className="text-start text-sm sm:text-base">
                 {isRTL
                   ? 'الالتزامات هي وعود أو مهام يجب إنجازها كجزء من إدارة العلاقات الدولية. يمكن أن تكون مهام داخلية يجب على فريقك إكمالها، أو التزامات خارجية تراقبها مع الشركاء.'
                   : 'Commitments are promises or tasks that need to be fulfilled as part of managing international relationships. They can be internal tasks your team must complete, or external obligations you monitor with partners.'}
               </p>
 
               {/* Commitment Attributes */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">
+              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <AttributeCard
                   title={isRTL ? 'العنوان والوصف' : 'Title & Description'}
                   description={isRTL ? 'اسم قصير ووصف تفصيلي للالتزام' : 'Short name and detailed explanation'}
@@ -169,7 +169,7 @@ export function CommitmentsHelpPage() {
 
               {/* Status Workflow */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-start">
+                <h3 className="mb-4 text-start text-lg font-semibold">
                   {isRTL ? 'دورة حياة الحالة' : 'Status Lifecycle'}
                 </h3>
                 <div className="flex flex-wrap items-center justify-start gap-2 sm:gap-4">
@@ -179,7 +179,7 @@ export function CommitmentsHelpPage() {
                   <ChevronRight className={`size-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`} />
                   <StatusBadge status="completed" isRTL={isRTL} />
                 </div>
-                <p className="text-sm text-muted-foreground mt-4 text-start">
+                <p className="mt-4 text-start text-sm text-muted-foreground">
                   {isRTL
                     ? 'يمكن أيضًا إلغاء الالتزامات أو تصبح متأخرة تلقائيًا عند تجاوز تاريخ الاستحقاق'
                     : 'Commitments can also be cancelled, or become overdue automatically when past due date'}
@@ -190,21 +190,21 @@ export function CommitmentsHelpPage() {
 
               {/* Owner Types */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-start">
+                <h3 className="mb-4 text-start text-lg font-semibold">
                   {isRTL ? 'أنواع المالكين' : 'Owner Types'}
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <Card className="border-blue-200 dark:border-blue-800">
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                        <div className="flex size-10 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900">
                           <Users className="size-5 text-blue-600 dark:text-blue-400" />
                         </div>
                         <div className="flex-1">
-                          <h4 className="font-semibold text-start">
+                          <h4 className="text-start font-semibold">
                             {isRTL ? 'داخلي' : 'Internal'}
                           </h4>
-                          <p className="text-sm text-muted-foreground text-start">
+                          <p className="text-start text-sm text-muted-foreground">
                             {isRTL
                               ? 'أحد أعضاء فريقك مسؤول. يتم تتبعه تلقائيًا.'
                               : 'A team member is responsible. Tracked automatically.'}
@@ -219,14 +219,14 @@ export function CommitmentsHelpPage() {
                   <Card className="border-purple-200 dark:border-purple-800">
                     <CardContent className="pt-6">
                       <div className="flex items-start gap-3">
-                        <div className="w-10 h-10 rounded-lg bg-purple-100 dark:bg-purple-900 flex items-center justify-center">
+                        <div className="flex size-10 items-center justify-center rounded-lg bg-purple-100 dark:bg-purple-900">
                           <Users className="size-5 text-purple-600 dark:text-purple-400" />
                         </div>
                         <div className="flex-1">
-                          <h4 className="font-semibold text-start">
+                          <h4 className="text-start font-semibold">
                             {isRTL ? 'خارجي' : 'External'}
                           </h4>
-                          <p className="text-sm text-muted-foreground text-start">
+                          <p className="text-start text-sm text-muted-foreground">
                             {isRTL
                               ? 'شريك أو جهة اتصال خارجية مسؤولة. تحتاج للمتابعة.'
                               : 'A partner or external contact is responsible. Needs follow-up.'}
@@ -293,7 +293,7 @@ export function CommitmentsHelpPage() {
                     </ol>
                     <Card className="bg-muted/50">
                       <CardContent className="pt-4">
-                        <p className="text-sm text-muted-foreground text-start">
+                        <p className="text-start text-sm text-muted-foreground">
                           <strong>{isRTL ? 'نصيحة:' : 'Tip:'}</strong>{' '}
                           {isRTL
                             ? 'استخدم عناوين واضحة ومحددة لتسهيل التتبع لاحقًا'
@@ -352,7 +352,7 @@ export function CommitmentsHelpPage() {
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="space-y-4">
-                    <p className="text-sm sm:text-base text-start">
+                    <p className="text-start text-sm sm:text-base">
                       {isRTL
                         ? 'يمكنك تحديث الحالة مباشرة من قائمة الالتزامات بدون فتح التفاصيل:'
                         : 'You can update status directly from the commitments list without opening details:'}
@@ -379,9 +379,9 @@ export function CommitmentsHelpPage() {
                           : 'Update happens immediately!'}
                       </li>
                     </ol>
-                    <Card className="bg-amber-50 dark:bg-amber-950 border-amber-200 dark:border-amber-800">
+                    <Card className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950">
                       <CardContent className="pt-4">
-                        <p className="text-sm text-amber-800 dark:text-amber-200 text-start">
+                        <p className="text-start text-sm text-amber-800 dark:text-amber-200">
                           <strong>{isRTL ? 'ملاحظة:' : 'Note:'}</strong>{' '}
                           {isRTL
                             ? 'لا يمكن إرجاع الحالة من "مكتمل" إلى "معلق" إلا للمسؤولين'
@@ -401,7 +401,7 @@ export function CommitmentsHelpPage() {
                     </span>
                   </AccordionTrigger>
                   <AccordionContent className="space-y-4">
-                    <p className="text-sm sm:text-base text-start">
+                    <p className="text-start text-sm sm:text-base">
                       {isRTL
                         ? 'بدلاً من الحذف، نوصي بإلغاء الالتزامات للحفاظ على السجل:'
                         : 'Instead of deleting, we recommend cancelling commitments to preserve history:'}
@@ -452,10 +452,10 @@ export function CommitmentsHelpPage() {
             <CardContent className="space-y-6">
               {/* Filter Options */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-start">
+                <h3 className="mb-4 text-start text-lg font-semibold">
                   {isRTL ? 'خيارات التصفية المتاحة' : 'Available Filter Options'}
                 </h3>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FilterOptionCard
                     title={isRTL ? 'الحالة' : 'Status'}
                     options={isRTL
@@ -489,17 +489,17 @@ export function CommitmentsHelpPage() {
 
               {/* URL Sharing */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-start">
+                <h3 className="mb-4 text-start text-lg font-semibold">
                   {isRTL ? 'مشاركة عبر الرابط' : 'URL Sharing'}
                 </h3>
-                <p className="text-sm sm:text-base text-start mb-4">
+                <p className="mb-4 text-start text-sm sm:text-base">
                   {isRTL
                     ? 'المرشحات المطبقة يتم حفظها في عنوان URL. يمكنك نسخ الرابط ومشاركته مع الزملاء!'
                     : 'Applied filters are saved in the URL. You can copy and share the link with colleagues!'}
                 </p>
                 <Card className="bg-muted/50">
                   <CardContent className="pt-4">
-                    <code className="text-xs sm:text-sm break-all">
+                    <code className="break-all text-xs sm:text-sm">
                       /commitments?status=pending,in_progress&priority=high,critical&overdue=true
                     </code>
                   </CardContent>
@@ -510,10 +510,10 @@ export function CommitmentsHelpPage() {
 
               {/* Filter Chips */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-start">
+                <h3 className="mb-4 text-start text-lg font-semibold">
                   {isRTL ? 'شرائح المرشحات' : 'Filter Chips'}
                 </h3>
-                <p className="text-sm sm:text-base text-start mb-4">
+                <p className="mb-4 text-start text-sm sm:text-base">
                   {isRTL
                     ? 'المرشحات النشطة تظهر كشرائح فوق القائمة. انقر على X لإزالة مرشح معين.'
                     : 'Active filters appear as chips above the list. Click X to remove a specific filter.'}
@@ -554,10 +554,10 @@ export function CommitmentsHelpPage() {
             <CardContent className="space-y-6">
               {/* When to Upload */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-start">
+                <h3 className="mb-4 text-start text-lg font-semibold">
                   {isRTL ? 'متى يجب الرفع؟' : 'When to Upload?'}
                 </h3>
-                <p className="text-sm sm:text-base text-start">
+                <p className="text-start text-sm sm:text-base">
                   {isRTL
                     ? 'بعض الالتزامات تتطلب إثباتًا للإنجاز. ستظهر أيقونة رفع على البطاقة عندما يكون "الإثبات مطلوب" مفعلًا.'
                     : 'Some commitments require proof of completion. An upload icon appears on the card when "Proof Required" is enabled.'}
@@ -568,16 +568,16 @@ export function CommitmentsHelpPage() {
 
               {/* Supported Formats */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-start">
+                <h3 className="mb-4 text-start text-lg font-semibold">
                   {isRTL ? 'الصيغ المدعومة' : 'Supported Formats'}
                 </h3>
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
                   <FormatBadge format="PDF" color="red" />
                   <FormatBadge format="JPG" color="green" />
                   <FormatBadge format="PNG" color="blue" />
                   <FormatBadge format="DOCX" color="indigo" />
                 </div>
-                <p className="text-sm text-muted-foreground mt-4 text-start">
+                <p className="mt-4 text-start text-sm text-muted-foreground">
                   {isRTL
                     ? 'الحد الأقصى لحجم الملف: 10 ميجابايت'
                     : 'Maximum file size: 10MB'}
@@ -588,7 +588,7 @@ export function CommitmentsHelpPage() {
 
               {/* Upload Steps */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-start">
+                <h3 className="mb-4 text-start text-lg font-semibold">
                   {isRTL ? 'خطوات الرفع' : 'Upload Steps'}
                 </h3>
                 <ol className={`list-decimal ${isRTL ? 'list-inside' : 'ms-4'} space-y-2 text-sm sm:text-base`}>
@@ -624,10 +624,10 @@ export function CommitmentsHelpPage() {
 
               {/* Viewing Evidence */}
               <div>
-                <h3 className="text-lg font-semibold mb-4 text-start">
+                <h3 className="mb-4 text-start text-lg font-semibold">
                   {isRTL ? 'عرض الأدلة المرفوعة' : 'Viewing Uploaded Evidence'}
                 </h3>
-                <p className="text-sm sm:text-base text-start">
+                <p className="text-start text-sm sm:text-base">
                   {isRTL
                     ? 'بعد الرفع، ستظهر الأدلة في تفاصيل الالتزام مع رابط تنزيل ووقت الرفع.'
                     : 'After upload, evidence appears in commitment details with a download link and upload timestamp.'}
@@ -641,12 +641,12 @@ export function CommitmentsHelpPage() {
       {/* Quick Links Footer */}
       <Card className="mt-8">
         <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
             <div>
-              <h3 className="font-semibold text-start">
+              <h3 className="text-start font-semibold">
                 {isRTL ? 'هل تحتاج مساعدة إضافية؟' : 'Need more help?'}
               </h3>
-              <p className="text-sm text-muted-foreground text-start">
+              <p className="text-start text-sm text-muted-foreground">
                 {isRTL
                   ? 'تواصل مع فريق الدعم أو عد إلى صفحة المساعدة الرئيسية'
                   : 'Contact support or go back to the main help page'}
@@ -689,17 +689,17 @@ function QuickNavCard({
 }) {
   return (
     <Card
-      className="cursor-pointer hover:shadow-md transition-shadow"
+      className="cursor-pointer transition-shadow hover:shadow-md"
       onClick={onClick}
     >
       <CardContent className="pt-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center">
+          <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10">
             <Icon className="size-5 text-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="font-semibold text-sm text-start">{title}</h3>
-            <p className="text-xs text-muted-foreground text-start">{description}</p>
+            <h3 className="text-start text-sm font-semibold">{title}</h3>
+            <p className="text-start text-xs text-muted-foreground">{description}</p>
           </div>
         </div>
       </CardContent>
@@ -719,11 +719,11 @@ function AttributeCard({
   isRTL: boolean;
 }) {
   return (
-    <div className="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
-      <Icon className="size-5 text-primary mt-0.5" />
+    <div className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
+      <Icon className="mt-0.5 size-5 text-primary" />
       <div>
-        <h4 className="font-medium text-sm text-start">{title}</h4>
-        <p className="text-xs text-muted-foreground text-start">{description}</p>
+        <h4 className="text-start text-sm font-medium">{title}</h4>
+        <p className="text-start text-xs text-muted-foreground">{description}</p>
       </div>
     </div>
   );
@@ -767,8 +767,8 @@ function FilterOptionCard({
   isRTL: boolean;
 }) {
   return (
-    <div className="p-4 rounded-lg border bg-card">
-      <h4 className="font-medium text-sm mb-2 text-start">{title}</h4>
+    <div className="rounded-lg border bg-card p-4">
+      <h4 className="mb-2 text-start text-sm font-medium">{title}</h4>
       <div className="flex flex-wrap gap-1">
         {options.map((option, index) => (
           <Badge key={index} variant="outline" className="text-xs">
@@ -789,7 +789,7 @@ function FormatBadge({ format, color }: { format: string; color: string }) {
   };
 
   return (
-    <div className={`flex items-center justify-center p-4 rounded-lg ${colorClasses[color]}`}>
+    <div className={`flex items-center justify-center rounded-lg p-4 ${colorClasses[color]}`}>
       <span className="font-mono font-bold">{format}</span>
     </div>
   );

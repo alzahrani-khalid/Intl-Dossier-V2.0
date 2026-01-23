@@ -130,11 +130,11 @@ function KanbanTaskBoardPage() {
   }, [])
 
   return (
-    <div className="flex flex-col h-full" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex h-full flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Top bar with view toggle */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b bg-background">
+      <div className="flex items-center justify-between border-b bg-background px-4 py-3 sm:px-6">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl sm:text-2xl font-bold">{t('title')}</h1>
+          <h1 className="text-xl font-bold sm:text-2xl">{t('title')}</h1>
         </div>
         <div className="flex items-center gap-2">
           <Button
@@ -143,7 +143,7 @@ function KanbanTaskBoardPage() {
             onClick={handleSwitchToList}
             className="flex items-center gap-2"
           >
-            <List className="h-4 w-4" />
+            <List className="size-4" />
             <span className="hidden sm:inline">{t('viewModes.list')}</span>
           </Button>
         </div>

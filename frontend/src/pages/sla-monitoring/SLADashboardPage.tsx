@@ -185,14 +185,14 @@ export function SLADashboardPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
+          <h1 className="text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+          <p className="mt-1 text-muted-foreground">{t('subtitle')}</p>
         </div>
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-wrap items-center gap-2">
           <Select value={dateRange} onValueChange={(v) => setDateRange(v as DateRangeOption)}>
             <SelectTrigger className="w-[140px]">
               <Calendar className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
@@ -217,7 +217,7 @@ export function SLADashboardPage() {
           </Select>
 
           <Button variant="outline" size="icon" onClick={handleRefresh}>
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw className="size-4" />
           </Button>
         </div>
       </div>
@@ -236,7 +236,7 @@ export function SLADashboardPage() {
           <SLAOverviewCards data={dashboardQuery.data} isLoading={dashboardQuery.isLoading} />
 
           {/* Charts and Tables */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
             <SLAComplianceChart
               data={dashboardQuery.data?.trend_data}
               isLoading={dashboardQuery.isLoading}
@@ -320,7 +320,7 @@ export function SLADashboardPage() {
                             size="sm"
                             onClick={() => handleEditPolicy(policy)}
                           >
-                            <Settings className="h-4 w-4" />
+                            <Settings className="size-4" />
                           </Button>
                         </TableCell>
                       </TableRow>
@@ -332,9 +332,9 @@ export function SLADashboardPage() {
           ) : (
             <Card>
               <CardContent className="py-12 text-center">
-                <Settings className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <Settings className="mx-auto mb-4 size-12 text-muted-foreground" />
                 <h3 className="text-lg font-medium">{t('empty.noPolicies')}</h3>
-                <p className="text-muted-foreground mt-1">{t('empty.createFirst')}</p>
+                <p className="mt-1 text-muted-foreground">{t('empty.createFirst')}</p>
                 <Button onClick={() => setPolicyDialogOpen(true)} className="mt-4">
                   <Plus className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                   {t('policies.create')}
@@ -359,7 +359,7 @@ export function SLADashboardPage() {
       {/* Policy Dialog */}
       <Dialog open={policyDialogOpen} onOpenChange={setPolicyDialogOpen}>
         <DialogContent
-          className="max-w-4xl max-h-[90vh] overflow-y-auto"
+          className="max-h-[90vh] max-w-4xl overflow-y-auto"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <DialogHeader>

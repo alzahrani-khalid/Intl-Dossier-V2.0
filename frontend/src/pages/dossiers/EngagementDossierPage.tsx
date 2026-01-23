@@ -34,19 +34,19 @@ export function EngagementDossierPage({ dossier }: EngagementDossierPageProps) {
       <Button
         variant="outline"
         onClick={() => setKanbanOpen(true)}
-        className="gap-2 min-h-11 min-w-11"
+        className="min-h-11 min-w-11 gap-2"
       >
-        <LayoutGrid className="h-4 w-4" />
+        <LayoutGrid className="size-4" />
         <span className="hidden sm:inline">
           {t('engagement.viewKanban')}
         </span>
       </Button>
-      <Button asChild className="gap-2 min-h-11 min-w-11">
+      <Button asChild className="min-h-11 min-w-11 gap-2">
         <Link
           to="/engagements/$engagementId/after-action"
           params={{ engagementId: dossier.id }}
         >
-          <FileText className="h-4 w-4" />
+          <FileText className="size-4" />
           <span className="hidden sm:inline">
             {t('engagement.logAfterAction')}
           </span>

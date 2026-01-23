@@ -80,7 +80,7 @@ export function UpcomingEvents() {
  {events.map((event) => (
  <div
  key={event.id}
- className="border border-gray-200 dark:border-gray-700 rounded-lg p-3 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+ className="rounded-lg border border-gray-200 p-3 transition-colors hover:bg-gray-50 dark:border-gray-700 dark:hover:bg-gray-700/50"
  >
  <div className="flex items-start gap-3">
  <span className="text-2xl" role="img" aria-label={event.type}>
@@ -90,24 +90,24 @@ export function UpcomingEvents() {
  <h4 className="font-medium text-gray-900 dark:text-white">
  {event.title}
  </h4>
- <div className="flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400">
- <Calendar className="h-3 w-3" />
+ <div className="mt-1 flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+ <Calendar className="size-3" />
  <span>{format(event.date, 'MMM dd, yyyy')}</span>
  </div>
- <div className="flex items-center gap-2 mt-1 text-xs text-gray-600 dark:text-gray-400">
- <MapPin className="h-3 w-3" />
+ <div className="mt-1 flex items-center gap-2 text-xs text-gray-600 dark:text-gray-400">
+ <MapPin className="size-3" />
  <span>{event.location}</span>
  </div>
- <div className="flex items-center gap-2 mt-2">
+ <div className="mt-2 flex items-center gap-2">
  <span
- className={`px-2 py-0.5 text-xs rounded-full ${getPriorityColor(
+ className={`rounded-full px-2 py-0.5 text-xs ${getPriorityColor(
  event.priority
  )}`}
  >
  {event.priority}
  </span>
  <div className="flex items-center gap-1 text-xs text-gray-500">
- <Users className="h-3 w-3" />
+ <Users className="size-3" />
  <span>{event.participants}</span>
  </div>
  </div>

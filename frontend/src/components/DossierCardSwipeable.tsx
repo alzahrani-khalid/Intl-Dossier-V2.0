@@ -128,7 +128,7 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
     {
       key: 'view',
       label: t('swipe-gestures:contextMenu.view'),
-      icon: <Eye className="h-4 w-4" />,
+      icon: <Eye className="size-4" />,
       onSelect: handleClick,
     },
     ...(onEdit
@@ -136,7 +136,7 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
           {
             key: 'edit',
             label: t('swipe-gestures:contextMenu.edit'),
-            icon: <Edit className="h-4 w-4" />,
+            icon: <Edit className="size-4" />,
             onSelect: () => onEdit(dossier.id),
           },
         ]
@@ -158,7 +158,7 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
           {
             key: 'share',
             label: t('swipe-gestures:contextMenu.share'),
-            icon: <Share2 className="h-4 w-4" />,
+            icon: <Share2 className="size-4" />,
             onSelect: () => onShare(dossier.id),
           },
         ]
@@ -168,7 +168,7 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
           {
             key: 'archive',
             label: t('swipe-gestures:contextMenu.archive'),
-            icon: <Archive className="h-4 w-4" />,
+            icon: <Archive className="size-4" />,
             onSelect: handleArchive,
           },
         ]
@@ -178,7 +178,7 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
           {
             key: 'delete',
             label: t('swipe-gestures:contextMenu.delete'),
-            icon: <Trash2 className="h-4 w-4" />,
+            icon: <Trash2 className="size-4" />,
             destructive: true,
             onSelect: () => onDelete(dossier.id),
           },
@@ -235,7 +235,7 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
       tabIndex={0}
       onClick={handleClick}
       onKeyDown={handleKeyDown}
-      className="group cursor-pointer transition-all duration-200 hover:shadow-lg hover:scale-[1.01] focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      className="group cursor-pointer transition-all duration-200 hover:scale-[1.01] hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       aria-label={t('dossiers:viewDetails') + ': ' + name}
     >
       <CardHeader className="pb-3">
@@ -245,14 +245,14 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
               {/* Pinned indicator */}
               {isPinned && (
                 <Pin
-                  className="h-4 w-4 text-blue-500 me-2 shrink-0"
+                  className="me-2 size-4 shrink-0 text-blue-500"
                   aria-label={t('swipe-gestures:actions.pin')}
                 />
               )}
               {/* Favorited indicator */}
               {isFavorited && (
                 <Star
-                  className="h-4 w-4 text-yellow-500 fill-yellow-500 me-2 shrink-0"
+                  className="me-2 size-4 shrink-0 fill-yellow-500 text-yellow-500"
                   aria-label={t('swipe-gestures:actions.favorite')}
                 />
               )}
@@ -284,7 +284,7 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
               </Badge>
             </div>
           </div>
-          <div className="flex flex-col items-end gap-2 shrink-0">
+          <div className="flex shrink-0 flex-col items-end gap-2">
             <Badge
               variant="secondary"
               className={`whitespace-nowrap text-xs font-semibold ${getSensitivityBadgeClass(sensitivityKey)}`}
@@ -314,8 +314,8 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
       <CardFooter className="flex flex-col items-start gap-3 pt-0">
         {/* Tags */}
         {dossier.tags && dossier.tags.length > 0 && (
-          <div className="flex flex-wrap items-center gap-1.5 w-full">
-            <Tag className="size-3.5 text-muted-foreground shrink-0" aria-hidden="true" />
+          <div className="flex w-full flex-wrap items-center gap-1.5">
+            <Tag className="size-3.5 shrink-0 text-muted-foreground" aria-hidden="true" />
             {dossier.tags.slice(0, 3).map((tag, index) => (
               <Badge
                 key={index}
@@ -335,7 +335,7 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
         )}
 
         {/* Metadata */}
-        <div className="flex items-center justify-between gap-2 w-full text-xs text-muted-foreground">
+        <div className="flex w-full items-center justify-between gap-2 text-xs text-muted-foreground">
           <span className="font-medium">
             {t('dossiers:fields.version')} {dossier.version}
           </span>
@@ -377,7 +377,7 @@ export const DossierCardSwipeable = memo(function DossierCardSwipeable({
             ? {
                 type: 'archive',
                 label: t('swipe-gestures:actions.archive'),
-                icon: <Archive className="h-5 w-5" />,
+                icon: <Archive className="size-5" />,
                 colorClass: 'bg-gray-500',
                 onAction: handleArchive,
               }

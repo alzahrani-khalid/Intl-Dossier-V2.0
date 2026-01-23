@@ -39,11 +39,11 @@ export function AccessDeniedCard({
     >
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
-          <div className="flex h-10 w-10 items-center justify-center rounded-full bg-destructive/10">
-            <ShieldX className="h-5 w-5 text-destructive" />
+          <div className="flex size-10 items-center justify-center rounded-full bg-destructive/10">
+            <ShieldX className="size-5 text-destructive" />
           </div>
           <div className="flex-1">
-            <CardTitle className="text-base sm:text-lg text-destructive">
+            <CardTitle className="text-base text-destructive sm:text-lg">
               {t('accessDenied.title', 'Access Denied')}
             </CardTitle>
             <CardDescription>
@@ -60,20 +60,20 @@ export function AccessDeniedCard({
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
               {t('accessDenied.requiredClearance', 'Required Clearance')}
             </p>
             <ClassificationBadge classification={requiredClassification} showTooltip={false} />
           </div>
 
           <div className="space-y-1">
-            <p className="text-xs text-muted-foreground uppercase tracking-wide">
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
               {t('accessDenied.yourClearance', 'Your Clearance')}
             </p>
             <div className="flex items-center gap-2">
-              <UserX className="h-4 w-4 text-muted-foreground" />
+              <UserX className="size-4 text-muted-foreground" />
               <span className="text-sm font-medium">
                 {t(`clearanceLevels.${userClearance}`, `Level ${userClearance}`)}
               </span>
@@ -82,8 +82,8 @@ export function AccessDeniedCard({
         </div>
 
         {reason && (
-          <div className="flex items-start gap-2 p-3 rounded-md bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800">
-            <AlertTriangle className="h-4 w-4 text-amber-600 mt-0.5 shrink-0" />
+          <div className="flex items-start gap-2 rounded-md border border-amber-200 bg-amber-50 p-3 dark:border-amber-800 dark:bg-amber-950">
+            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-amber-600" />
             <p className="text-sm text-amber-700 dark:text-amber-300">{reason}</p>
           </div>
         )}
@@ -97,7 +97,7 @@ export function AccessDeniedCard({
 
         {onRequestAccess && (
           <Button variant="outline" onClick={onRequestAccess} className="w-full sm:w-auto">
-            <Lock className="h-4 w-4 me-2" />
+            <Lock className="me-2 size-4" />
             {t('accessDenied.requestAccess', 'Request Access')}
           </Button>
         )}

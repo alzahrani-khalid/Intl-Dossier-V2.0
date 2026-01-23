@@ -60,22 +60,22 @@ export function WordAssistantPage() {
 
  const suggestedPrompts: SuggestedPrompt[] = [
  {
- icon: <FileText className="h-5 w-5" />,
+ icon: <FileText className="size-5" />,
  title: t('wordAssistant.prompts.briefTitle'),
  prompt: t('wordAssistant.prompts.briefPrompt')
  },
  {
- icon: <Sparkles className="h-5 w-5" />,
+ icon: <Sparkles className="size-5" />,
  title: t('wordAssistant.prompts.analysisTitle'),
  prompt: t('wordAssistant.prompts.analysisPrompt')
  },
  {
- icon: <FileText className="h-5 w-5" />,
+ icon: <FileText className="size-5" />,
  title: t('wordAssistant.prompts.summaryTitle'),
  prompt: t('wordAssistant.prompts.summaryPrompt')
  },
  {
- icon: <Bot className="h-5 w-5" />,
+ icon: <Bot className="size-5" />,
  title: t('wordAssistant.prompts.recommendationTitle'),
  prompt: t('wordAssistant.prompts.recommendationPrompt')
  }
@@ -270,17 +270,17 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
  }, [assistantMode])
 
  return (
- <div className="container mx-auto py-6 h-[calc(100vh-8rem)]">
- <div className="flex justify-between items-center mb-6">
+ <div className="container mx-auto h-[calc(100vh-8rem)] py-6">
+ <div className="mb-6 flex items-center justify-between">
  <div>
  <h1 className="text-3xl font-bold">{t('navigation.wordAssistant')}</h1>
- <p className="text-muted-foreground mt-1">{t('wordAssistant.description')}</p>
+ <p className="mt-1 text-muted-foreground">{t('wordAssistant.description')}</p>
  </div>
  <div className="flex items-center gap-2">
- <div className={`flex items-center gap-2 px-3 py-1 rounded-full text-sm ${
+ <div className={`flex items-center gap-2 rounded-full px-3 py-1 text-sm ${
  isConnected ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
  }`}>
- <div className={`w-2 h-2 rounded-full ${
+ <div className={`size-2 rounded-full ${
  isConnected ? 'bg-green-600' : 'bg-red-600'
  }`} />
  {isConnected ? t('wordAssistant.connected') : t('wordAssistant.disconnected')}
@@ -290,36 +290,36 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
  size="sm"
  onClick={() => setMessages([])}
  >
- <RefreshCw className="h-4 w-4 me-2" />
+ <RefreshCw className="me-2 size-4" />
  {t('wordAssistant.clearChat')}
  </Button>
  </div>
  </div>
 
- <div className="grid gap-6 md:grid-cols-4 h-[calc(100%-5rem)]">
+ <div className="grid h-[calc(100%-5rem)] gap-6 md:grid-cols-4">
  <div className="md:col-span-3">
- <Card className="h-full flex flex-col">
+ <Card className="flex h-full flex-col">
  <CardContent className="flex-1 overflow-y-auto p-6">
  {messages.length === 0 ? (
- <div className="flex flex-col items-center justify-center h-full text-center">
- <Bot className="h-16 w-16 text-muted-foreground mb-4" />
- <h2 className="text-xl font-semibold mb-2">{t('wordAssistant.welcomeTitle')}</h2>
- <p className="text-muted-foreground max-w-md">
+ <div className="flex h-full flex-col items-center justify-center text-center">
+ <Bot className="mb-4 size-16 text-muted-foreground" />
+ <h2 className="mb-2 text-xl font-semibold">{t('wordAssistant.welcomeTitle')}</h2>
+ <p className="max-w-md text-muted-foreground">
  {t('wordAssistant.welcomeMessage')}
  </p>
- <div className="grid gap-3 mt-6 md:grid-cols-2 w-full max-w-2xl">
+ <div className="mt-6 grid w-full max-w-2xl gap-3 md:grid-cols-2">
  {suggestedPrompts.map((prompt, i) => (
  <Card
  key={i}
- className="cursor-pointer hover:shadow-md transition-shadow"
+ className="cursor-pointer transition-shadow hover:shadow-md"
  onClick={() => handlePromptClick(prompt.prompt)}
  >
  <CardContent className="p-4">
  <div className="flex items-center gap-3">
  <div className="text-primary">{prompt.icon}</div>
  <div className="text-start">
- <p className="font-medium text-sm">{prompt.title}</p>
- <p className="text-xs text-muted-foreground line-clamp-2">
+ <p className="text-sm font-medium">{prompt.title}</p>
+ <p className="line-clamp-2 text-xs text-muted-foreground">
  {prompt.prompt}
  </p>
  </div>
@@ -339,8 +339,8 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
  }`}
  >
  {message.role === 'assistant' && (
- <div className="w-8 h-8 rounded-full bg-primary/10 flex items-center justify-center">
- <Bot className="h-5 w-5 text-primary" />
+ <div className="flex size-8 items-center justify-center rounded-full bg-primary/10">
+ <Bot className="size-5 text-primary" />
  </div>
  )}
  <div className={`max-w-[70%] ${
@@ -352,40 +352,40 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
  <CardContent className="p-4">
  {message.isTyping ? (
  <div className="flex gap-1">
- <span className="w-2 h-2 rounded-full bg-current animate-bounce" />
- <span className="w-2 h-2 rounded-full bg-current animate-bounce delay-100" />
- <span className="w-2 h-2 rounded-full bg-current animate-bounce delay-200" />
+ <span className="size-2 animate-bounce rounded-full bg-current" />
+ <span className="size-2 animate-bounce rounded-full bg-current delay-100" />
+ <span className="size-2 animate-bounce rounded-full bg-current delay-200" />
  </div>
  ) : (
  <>
  <p className="whitespace-pre-wrap">{message.content}</p>
- <div className="flex items-center gap-2 mt-3 pt-3 border-t border-current/10">
+ <div className="border-current/10 mt-3 flex items-center gap-2 border-t pt-3">
  <span className="text-xs opacity-70">
  {format(message.timestamp, 'HH:mm')}
  </span>
  {message.role === 'assistant' && (
- <div className="flex gap-1 ms-auto">
+ <div className="ms-auto flex gap-1">
  <Button
  size="sm"
  variant="ghost"
- className="h-6 w-6 p-0"
+ className="size-6 p-0"
  onClick={() => copyToClipboard(message.content)}
  >
- <Copy className="h-3 w-3" />
+ <Copy className="size-3" />
  </Button>
  <Button
  size="sm"
  variant="ghost"
- className="h-6 w-6 p-0"
+ className="size-6 p-0"
  >
- <ThumbsUp className="h-3 w-3" />
+ <ThumbsUp className="size-3" />
  </Button>
  <Button
  size="sm"
  variant="ghost"
- className="h-6 w-6 p-0"
+ className="size-6 p-0"
  >
- <ThumbsDown className="h-3 w-3" />
+ <ThumbsDown className="size-3" />
  </Button>
  </div>
  )}
@@ -396,8 +396,8 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
  </Card>
  </div>
  {message.role === 'user' && (
- <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center order-2">
- <User className="h-5 w-5 text-primary-foreground" />
+ <div className="order-2 flex size-8 items-center justify-center rounded-full bg-primary">
+ <User className="size-5 text-primary-foreground" />
  </div>
  )}
  </div>
@@ -419,7 +419,7 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
  onClick={handleSend}
  disabled={!input.trim() || sendMessageMutation.isPending}
  >
- <Send className="h-4 w-4" />
+ <Send className="size-4" />
  </Button>
  </div>
  </div>
@@ -432,7 +432,7 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
  <CardTitle className="text-sm">{t('wordAssistant.capabilities')}</CardTitle>
  </CardHeader>
  <CardContent>
- <ul className="text-sm space-y-2 text-muted-foreground">
+ <ul className="space-y-2 text-sm text-muted-foreground">
  <li>• {t('wordAssistant.capability1')}</li>
  <li>• {t('wordAssistant.capability2')}</li>
  <li>• {t('wordAssistant.capability3')}</li>
@@ -448,7 +448,7 @@ const sendMessageMutation = useMutation<WordAssistantResponse, Error, SendMessag
  <CardTitle className="text-sm">{t('wordAssistant.tips')}</CardTitle>
  </CardHeader>
  <CardContent>
- <ul className="text-sm space-y-2 text-muted-foreground">
+ <ul className="space-y-2 text-sm text-muted-foreground">
  <li>• {t('wordAssistant.tip1')}</li>
  <li>• {t('wordAssistant.tip2')}</li>
  <li>• {t('wordAssistant.tip3')}</li>

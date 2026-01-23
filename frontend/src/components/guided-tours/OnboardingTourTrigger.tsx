@@ -167,7 +167,7 @@ export function OnboardingTourTrigger({
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[9998] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm"
+            className="fixed inset-0 z-[9998] flex items-center justify-center bg-black/50 p-4 backdrop-blur-sm"
             onClick={handleSkip}
           >
             <motion.div
@@ -194,21 +194,21 @@ export function OnboardingTourTrigger({
                 )}
                 aria-label={t('common.closeTour')}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </button>
 
               {/* Icon */}
-              <div className="flex items-center justify-center w-16 h-16 mx-auto mb-6 rounded-2xl bg-primary/10">
-                <HelpCircle className="w-8 h-8 text-primary" />
+              <div className="mx-auto mb-6 flex size-16 items-center justify-center rounded-2xl bg-primary/10">
+                <HelpCircle className="size-8 text-primary" />
               </div>
 
               {/* Title */}
-              <h2 className="text-xl sm:text-2xl font-bold text-center mb-3">
+              <h2 className="mb-3 text-center text-xl font-bold sm:text-2xl">
                 {t('tours.onboarding.welcome.title', 'Welcome to GASTAT Dossier!')}
               </h2>
 
               {/* Description */}
-              <p className="text-center text-muted-foreground mb-6 leading-relaxed">
+              <p className="mb-6 text-center leading-relaxed text-muted-foreground">
                 {t(
                   'tours.onboarding.welcome.description',
                   "Let's take a quick tour to help you understand how everything is organized around Dossiers - your central hub for managing international relations.",
@@ -216,19 +216,19 @@ export function OnboardingTourTrigger({
               </p>
 
               {/* Estimated time */}
-              <p className="text-center text-sm text-muted-foreground mb-6">
+              <p className="mb-6 text-center text-sm text-muted-foreground">
                 <span className="inline-flex items-center gap-1.5">
-                  <Play className="h-3.5 w-3.5" />
+                  <Play className="size-3.5" />
                   {t('trigger.estimatedTime', '~{{minutes}} min', { minutes: 3 })}
                 </span>
               </p>
 
               {/* Actions */}
-              <div className="flex flex-col sm:flex-row gap-3">
-                <Button variant="outline" className="flex-1 h-11" onClick={handleSkip}>
+              <div className="flex flex-col gap-3 sm:flex-row">
+                <Button variant="outline" className="h-11 flex-1" onClick={handleSkip}>
                   {t('tours.onboarding.welcome.skipButton', 'Skip for now')}
                 </Button>
-                <Button className="flex-1 h-11" onClick={handleStartTour}>
+                <Button className="h-11 flex-1" onClick={handleStartTour}>
                   <Play className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                   {t('tours.onboarding.welcome.startButton', 'Start Tour')}
                 </Button>
@@ -267,7 +267,7 @@ export function OnboardingTourTrigger({
                 )}
                 aria-label={t('tours.onboarding.replay', 'Replay onboarding tour')}
               >
-                <RefreshCw className="h-5 w-5" />
+                <RefreshCw className="size-5" />
               </motion.button>
             </TooltipTrigger>
             <TooltipContent

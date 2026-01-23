@@ -90,7 +90,7 @@ export function FormRadioAceternity({
       >
         {label}
         {required && (
-          <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+          <span className="ms-1 text-red-500" aria-label={t('validation.required')}>
             *
           </span>
         )}
@@ -146,7 +146,7 @@ export function FormRadioAceternity({
                 {option.label}
               </Label>
               {option.description && (
-                <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1 text-start">
+                <p className="mt-1 text-start text-xs text-gray-500 dark:text-gray-400 sm:text-sm">
                   {option.description}
                 </p>
               )}
@@ -159,7 +159,7 @@ export function FormRadioAceternity({
       {helpText && !error && (
         <motion.p
           id={`${name}-help`}
-          className="text-sm text-gray-600 dark:text-gray-400 text-start"
+          className="text-start text-sm text-gray-600 dark:text-gray-400"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2, delay: 0.15 }}
@@ -173,7 +173,7 @@ export function FormRadioAceternity({
         {error && (
           <motion.p
             id={`${name}-error`}
-            className="text-sm text-red-600 dark:text-red-400 text-start"
+            className="text-start text-sm text-red-600 dark:text-red-400"
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -5 }}

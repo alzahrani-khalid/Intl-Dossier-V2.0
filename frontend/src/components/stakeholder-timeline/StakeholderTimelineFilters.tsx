@@ -155,8 +155,8 @@ export function StakeholderTimelineFilters({
     >
       {/* Event Types */}
       <div className="space-y-3">
-        <Label className="text-start block font-medium">{t('filters.event_types')}</Label>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+        <Label className="block text-start font-medium">{t('filters.event_types')}</Label>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
           {availableEventTypes.map((eventType) => (
             <div key={eventType} className="flex items-center gap-2">
               <Checkbox
@@ -168,7 +168,7 @@ export function StakeholderTimelineFilters({
               />
               <Label
                 htmlFor={`event-type-${eventType}`}
-                className="text-sm font-normal cursor-pointer text-start"
+                className="cursor-pointer text-start text-sm font-normal"
               >
                 {t(`types.${eventType}`)}
               </Label>
@@ -180,10 +180,10 @@ export function StakeholderTimelineFilters({
       <Separator />
 
       {/* Sentiment & Direction Filters */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         {/* Sentiment Filter */}
         <div className="space-y-2">
-          <Label className="text-start block">{t('filters.sentiment')}</Label>
+          <Label className="block text-start">{t('filters.sentiment')}</Label>
           <Select value={filters.sentiment || 'all'} onValueChange={handleSentimentChange}>
             <SelectTrigger className="min-h-11 sm:min-h-10">
               <SelectValue />
@@ -200,7 +200,7 @@ export function StakeholderTimelineFilters({
 
         {/* Direction Filter */}
         <div className="space-y-2">
-          <Label className="text-start block">{t('filters.direction')}</Label>
+          <Label className="block text-start">{t('filters.direction')}</Label>
           <Select value={filters.direction || 'all'} onValueChange={handleDirectionChange}>
             <SelectTrigger className="min-h-11 sm:min-h-10">
               <SelectValue />
@@ -219,7 +219,7 @@ export function StakeholderTimelineFilters({
 
       {/* Date Range Filter */}
       <div className="space-y-3">
-        <Label className="text-start block font-medium">{t('filters.date_range')}</Label>
+        <Label className="block text-start font-medium">{t('filters.date_range')}</Label>
 
         {/* Preset Options */}
         <div className="flex flex-wrap gap-2">
@@ -254,7 +254,7 @@ export function StakeholderTimelineFilters({
               </Button>
             </PopoverTrigger>
             <PopoverContent className="w-auto p-0" align="start">
-              <div className="p-4 space-y-4">
+              <div className="space-y-4 p-4">
                 <div className="space-y-2">
                   <Label>{t('filters.from_date')}</Label>
                   <Calendar mode="single" selected={customDateFrom} onSelect={setCustomDateFrom} />
@@ -285,7 +285,7 @@ export function StakeholderTimelineFilters({
           <Button
             variant="outline"
             onClick={handleResetFilters}
-            className="w-full min-h-11 sm:min-h-10"
+            className="min-h-11 w-full sm:min-h-10"
           >
             <X className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
             {t('filters.reset_filters')}

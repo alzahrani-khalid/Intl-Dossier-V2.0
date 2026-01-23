@@ -23,24 +23,24 @@ export function ParticipantsList({ dossierId }: ParticipantsListProps) {
 
   return (
     <div
-      className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+      className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <div className="mb-4 sm:mb-6">
-        <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
-          <Users className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+        <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+          <Users className="size-8 text-primary sm:size-10" />
         </div>
       </div>
 
-      <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
+      <h3 className="mb-2 text-base font-semibold text-foreground sm:text-lg">
         {t('sections.engagement.participantsListEmpty')}
       </h3>
 
-      <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 px-4">
+      <p className="mb-6 max-w-md px-4 text-sm text-muted-foreground sm:text-base">
         {t('sections.engagement.participantsListEmptyDescription')}
       </p>
 
-      <div className="text-xs sm:text-sm text-muted-foreground px-4">
+      <div className="px-4 text-xs text-muted-foreground sm:text-sm">
         <p>{t('sections.engagement.participantsListPlaceholder')}</p>
       </div>
     </div>

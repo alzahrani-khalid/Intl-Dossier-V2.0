@@ -100,7 +100,7 @@ export function ReportPreview({
     if (!previewData?.data || previewData.data.length === 0) {
       return (
         <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
-          <Database className="h-12 w-12 mb-4" />
+          <Database className="mb-4 size-12" />
           <p>{t('preview.noData')}</p>
         </div>
       )
@@ -152,7 +152,7 @@ export function ReportPreview({
     const { xAxisFieldId, yAxisFieldId, showLegend, showGrid } = configuration.visualization
     if (!xAxisFieldId || !yAxisFieldId) {
       return (
-        <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+        <div className="flex h-[300px] items-center justify-center text-muted-foreground">
           <p>{t('visualization.settings.xAxis')}</p>
         </div>
       )
@@ -180,7 +180,7 @@ export function ReportPreview({
     const { xAxisFieldId, yAxisFieldId, showLegend, showGrid } = configuration.visualization
     if (!xAxisFieldId || !yAxisFieldId) {
       return (
-        <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+        <div className="flex h-[300px] items-center justify-center text-muted-foreground">
           <p>{t('visualization.settings.xAxis')}</p>
         </div>
       )
@@ -214,7 +214,7 @@ export function ReportPreview({
     const { xAxisFieldId, yAxisFieldId, showLegend, showGrid } = configuration.visualization
     if (!xAxisFieldId || !yAxisFieldId) {
       return (
-        <div className="flex items-center justify-center h-[300px] text-muted-foreground">
+        <div className="flex h-[300px] items-center justify-center text-muted-foreground">
           <p>{t('visualization.settings.xAxis')}</p>
         </div>
       )
@@ -311,9 +311,9 @@ export function ReportPreview({
     if (error) {
       return (
         <div className="flex flex-col items-center justify-center py-8 text-destructive">
-          <AlertCircle className="h-12 w-12 mb-4" />
+          <AlertCircle className="mb-4 size-12" />
           <p>{t('preview.error')}</p>
-          <p className="text-sm text-muted-foreground mt-2">{error}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{error}</p>
         </div>
       )
     }
@@ -321,7 +321,7 @@ export function ReportPreview({
     if (!previewData) {
       return (
         <div className="flex flex-col items-center justify-center py-8 text-muted-foreground">
-          <Database className="h-12 w-12 mb-4" />
+          <Database className="mb-4 size-12" />
           <p>{t('preview.noData')}</p>
         </div>
       )
@@ -383,7 +383,7 @@ export function ReportPreview({
         {renderVisualization()}
 
         {previewData && previewData.data.length < previewData.totalCount && (
-          <p className="text-xs text-muted-foreground text-center mt-4">
+          <p className="mt-4 text-center text-xs text-muted-foreground">
             {t('preview.limitWarning', { limit: previewData.data.length })}
           </p>
         )}

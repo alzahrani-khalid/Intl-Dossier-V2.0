@@ -35,7 +35,7 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
               <Skeleton className="h-4 w-24" />
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-8 w-16 mb-2" />
+              <Skeleton className="mb-2 h-8 w-16" />
               <Skeleton className="h-3 w-32" />
             </CardContent>
           </Card>
@@ -68,7 +68,7 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
     {
       title: t('overview.complianceRate'),
       value: `${data.compliance_rate}%`,
-      icon: <CheckCircle className="h-5 w-5 text-green-500" />,
+      icon: <CheckCircle className="size-5 text-green-500" />,
       trend: complianceTrend,
       subtitle: complianceThreshold.label,
       subtitleColor: complianceThreshold.color,
@@ -77,14 +77,14 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
     {
       title: t('overview.totalItems'),
       value: data.total_items.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
-      icon: <Clock className="h-5 w-5 text-blue-500" />,
+      icon: <Clock className="size-5 text-blue-500" />,
       subtitle: t('overview.processed'),
       subtitleColor: 'text-muted-foreground',
     },
     {
       title: t('overview.atRisk'),
       value: data.at_risk_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
-      icon: <AlertTriangle className="h-5 w-5 text-yellow-500" />,
+      icon: <AlertTriangle className="size-5 text-yellow-500" />,
       subtitle: t('overview.approachingDeadline'),
       subtitleColor: data.at_risk_count > 0 ? 'text-yellow-600' : 'text-muted-foreground',
       bgColor: data.at_risk_count > 0 ? 'bg-yellow-50' : undefined,
@@ -92,7 +92,7 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
     {
       title: t('overview.breached'),
       value: data.breached_count.toLocaleString(isRTL ? 'ar-SA' : 'en-US'),
-      icon: <XCircle className="h-5 w-5 text-red-500" />,
+      icon: <XCircle className="size-5 text-red-500" />,
       subtitle: t('overview.requiresAttention'),
       subtitleColor: data.breached_count > 0 ? 'text-red-600' : 'text-muted-foreground',
       bgColor: data.breached_count > 0 ? 'bg-red-50' : undefined,
@@ -114,7 +114,7 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
           </CardHeader>
           <CardContent>
             <div className="flex items-baseline gap-2">
-              <div className="text-2xl sm:text-3xl font-bold">{card.value}</div>
+              <div className="text-2xl font-bold sm:text-3xl">{card.value}</div>
               {card.trend !== null && card.trend !== undefined && (
                 <div
                   className={cn(
@@ -144,22 +144,22 @@ export function SLAOverviewCards({ data, isLoading, className }: SLAOverviewCard
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center gap-4 flex-wrap">
+          <div className="flex flex-wrap items-center gap-4">
             <div>
               <span className="text-2xl font-bold">{avgDuration}</span>
-              <span className="text-muted-foreground text-sm ms-2">
+              <span className="ms-2 text-sm text-muted-foreground">
                 {t('overview.avgResolutionSubtitle')}
               </span>
             </div>
-            <div className="flex-1 flex items-center gap-4">
+            <div className="flex flex-1 items-center gap-4">
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full bg-green-500" />
+                <div className="size-3 rounded-full bg-green-500" />
                 <span className="text-sm">
                   {t('overview.met')}: {data.met_count}
                 </span>
               </div>
               <div className="flex items-center gap-2">
-                <div className="h-3 w-3 rounded-full bg-red-500" />
+                <div className="size-3 rounded-full bg-red-500" />
                 <span className="text-sm">
                   {t('overview.breachedLabel')}: {data.breached_count}
                 </span>

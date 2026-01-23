@@ -206,13 +206,13 @@ function FieldPermissionsPage() {
   const getScopeIcon = (scope: FieldPermissionScope) => {
     switch (scope) {
       case 'role':
-        return <Users className="h-4 w-4" />
+        return <Users className="size-4" />
       case 'user':
-        return <User className="h-4 w-4" />
+        return <User className="size-4" />
       case 'team':
-        return <Building2 className="h-4 w-4" />
+        return <Building2 className="size-4" />
       default:
-        return <Users className="h-4 w-4" />
+        return <Users className="size-4" />
     }
   }
 
@@ -225,33 +225,33 @@ function FieldPermissionsPage() {
   return (
     <div className="container mx-auto px-4 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <Shield className="h-7 w-7 text-primary" />
+          <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+            <Shield className="size-7 text-primary" />
             {t('title')}
           </h1>
-          <p className="text-muted-foreground mt-1">{t('description')}</p>
+          <p className="mt-1 text-muted-foreground">{t('description')}</p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="outline" onClick={() => refetchPermissions()}>
-            <RefreshCw className="h-4 w-4 me-2" />
+            <RefreshCw className="me-2 size-4" />
             {t('actions.refresh')}
           </Button>
           <Button onClick={() => setShowPermissionDialog(true)}>
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('permissions.create')}
           </Button>
         </div>
       </div>
 
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+      <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-5">
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-primary/10 rounded-lg">
-                <Shield className="h-5 w-5 text-primary" />
+              <div className="rounded-lg bg-primary/10 p-2">
+                <Shield className="size-5 text-primary" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.totalPermissions}</p>
@@ -264,8 +264,8 @@ function FieldPermissionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                <CheckCircle2 className="h-5 w-5 text-green-600 dark:text-green-400" />
+              <div className="rounded-lg bg-green-100 p-2 dark:bg-green-900/30">
+                <CheckCircle2 className="size-5 text-green-600 dark:text-green-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.activePermissions}</p>
@@ -278,8 +278,8 @@ function FieldPermissionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
-                <Users className="h-5 w-5 text-blue-600 dark:text-blue-400" />
+              <div className="rounded-lg bg-blue-100 p-2 dark:bg-blue-900/30">
+                <Users className="size-5 text-blue-600 dark:text-blue-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.rolePermissions}</p>
@@ -292,8 +292,8 @@ function FieldPermissionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                <User className="h-5 w-5 text-purple-600 dark:text-purple-400" />
+              <div className="rounded-lg bg-purple-100 p-2 dark:bg-purple-900/30">
+                <User className="size-5 text-purple-600 dark:text-purple-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.userPermissions}</p>
@@ -306,8 +306,8 @@ function FieldPermissionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-red-100 dark:bg-red-900/30 rounded-lg">
-                <Lock className="h-5 w-5 text-red-600 dark:text-red-400" />
+              <div className="rounded-lg bg-red-100 p-2 dark:bg-red-900/30">
+                <Lock className="size-5 text-red-600 dark:text-red-400" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.restrictedFields}</p>
@@ -320,17 +320,17 @@ function FieldPermissionsPage() {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3 h-auto">
+        <TabsList className="grid h-auto w-full grid-cols-3">
           <TabsTrigger value="permissions" className="gap-2 py-2">
-            <Shield className="h-4 w-4" />
+            <Shield className="size-4" />
             <span className="hidden sm:inline">{t('tabs.permissions')}</span>
           </TabsTrigger>
           <TabsTrigger value="definitions" className="gap-2 py-2">
-            <Settings className="h-4 w-4" />
+            <Settings className="size-4" />
             <span className="hidden sm:inline">{t('tabs.definitions')}</span>
           </TabsTrigger>
           <TabsTrigger value="audit" className="gap-2 py-2">
-            <History className="h-4 w-4" />
+            <History className="size-4" />
             <span className="hidden sm:inline">{t('tabs.audit')}</span>
           </TabsTrigger>
         </TabsList>
@@ -339,20 +339,20 @@ function FieldPermissionsPage() {
         <TabsContent value="permissions">
           <Card>
             <CardHeader>
-              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <div>
                   <CardTitle>{t('permissions.title')}</CardTitle>
                   <CardDescription>{t('permissions.description')}</CardDescription>
                 </div>
-                <div className="flex flex-col sm:flex-row gap-3">
+                <div className="flex flex-col gap-3 sm:flex-row">
                   {/* Search */}
                   <div className="relative">
-                    <Search className="absolute start-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                     <Input
                       placeholder={t('filters.search', 'Search...')}
                       value={searchQuery}
                       onChange={(e) => setSearchQuery(e.target.value)}
-                      className="ps-10 w-full sm:w-64"
+                      className="w-full ps-10 sm:w-64"
                     />
                   </div>
 
@@ -402,12 +402,12 @@ function FieldPermissionsPage() {
                   ))}
                 </div>
               ) : filteredPermissions.length === 0 ? (
-                <div className="text-center py-12">
-                  <Shield className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <div className="py-12 text-center">
+                  <Shield className="mx-auto mb-4 size-12 text-muted-foreground" />
                   <p className="text-lg font-medium">{t('permissions.empty')}</p>
-                  <p className="text-muted-foreground mb-4">{t('permissions.empty_description')}</p>
+                  <p className="mb-4 text-muted-foreground">{t('permissions.empty_description')}</p>
                   <Button onClick={() => setShowPermissionDialog(true)}>
-                    <Plus className="h-4 w-4 me-2" />
+                    <Plus className="me-2 size-4" />
                     {t('permissions.create')}
                   </Button>
                 </div>
@@ -449,22 +449,22 @@ function FieldPermissionsPage() {
                           </span>
                         </TableCell>
                         <TableCell>
-                          <code className="text-sm bg-muted px-2 py-1 rounded">
+                          <code className="rounded bg-muted px-2 py-1 text-sm">
                             {permission.field_name}
                           </code>
                         </TableCell>
                         <TableCell className="text-center">
                           {permission.can_view ? (
-                            <Eye className="h-4 w-4 text-green-600 mx-auto" />
+                            <Eye className="mx-auto size-4 text-green-600" />
                           ) : (
-                            <EyeOff className="h-4 w-4 text-red-600 mx-auto" />
+                            <EyeOff className="mx-auto size-4 text-red-600" />
                           )}
                         </TableCell>
                         <TableCell className="text-center">
                           {permission.can_edit ? (
-                            <Edit3 className="h-4 w-4 text-green-600 mx-auto" />
+                            <Edit3 className="mx-auto size-4 text-green-600" />
                           ) : (
-                            <Lock className="h-4 w-4 text-red-600 mx-auto" />
+                            <Lock className="mx-auto size-4 text-red-600" />
                           )}
                         </TableCell>
                         <TableCell>
@@ -482,14 +482,14 @@ function FieldPermissionsPage() {
                                 setShowPermissionDialog(true)
                               }}
                             >
-                              <Edit3 className="h-4 w-4" />
+                              <Edit3 className="size-4" />
                             </Button>
                             <Button
                               variant="ghost"
                               size="sm"
                               onClick={() => handleDeletePermission(permission.id)}
                             >
-                              <Trash2 className="h-4 w-4 text-destructive" />
+                              <Trash2 className="size-4 text-destructive" />
                             </Button>
                           </div>
                         </TableCell>
@@ -517,16 +517,16 @@ function FieldPermissionsPage() {
                   ))}
                 </div>
               ) : Object.keys(definitionsByEntity).length === 0 ? (
-                <div className="text-center py-12">
-                  <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <div className="py-12 text-center">
+                  <FileText className="mx-auto mb-4 size-12 text-muted-foreground" />
                   <p className="text-lg font-medium">{t('definitions.empty')}</p>
                 </div>
               ) : (
                 <div className="space-y-6">
                   {Object.entries(definitionsByEntity).map(([entityType, fields]) => (
                     <div key={entityType} className="space-y-4">
-                      <h3 className="text-lg font-semibold capitalize flex items-center gap-2">
-                        <FileText className="h-5 w-5" />
+                      <h3 className="flex items-center gap-2 text-lg font-semibold capitalize">
+                        <FileText className="size-5" />
                         {t(`entity_types.${entityType}`)}
                         <Badge variant="secondary">{fields.length} fields</Badge>
                       </h3>
@@ -546,7 +546,7 @@ function FieldPermissionsPage() {
                           {fields.map((field) => (
                             <TableRow key={field.id}>
                               <TableCell>
-                                <code className="text-sm bg-muted px-2 py-1 rounded">
+                                <code className="rounded bg-muted px-2 py-1 text-sm">
                                   {field.field_name}
                                 </code>
                               </TableCell>
@@ -570,16 +570,16 @@ function FieldPermissionsPage() {
                               </TableCell>
                               <TableCell>
                                 {field.default_visible ? (
-                                  <Eye className="h-4 w-4 text-green-600" />
+                                  <Eye className="size-4 text-green-600" />
                                 ) : (
-                                  <EyeOff className="h-4 w-4 text-red-600" />
+                                  <EyeOff className="size-4 text-red-600" />
                                 )}
                               </TableCell>
                               <TableCell>
                                 {field.default_editable ? (
-                                  <Edit3 className="h-4 w-4 text-green-600" />
+                                  <Edit3 className="size-4 text-green-600" />
                                 ) : (
-                                  <Lock className="h-4 w-4 text-red-600" />
+                                  <Lock className="size-4 text-red-600" />
                                 )}
                               </TableCell>
                             </TableRow>
@@ -599,7 +599,7 @@ function FieldPermissionsPage() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
-                <History className="h-5 w-5" />
+                <History className="size-5" />
                 {t('audit.title')}
               </CardTitle>
               <CardDescription>{t('audit.description')}</CardDescription>
@@ -612,8 +612,8 @@ function FieldPermissionsPage() {
                   ))}
                 </div>
               ) : auditLogs.length === 0 ? (
-                <div className="text-center py-12">
-                  <History className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <div className="py-12 text-center">
+                  <History className="mx-auto mb-4 size-12 text-muted-foreground" />
                   <p className="text-lg font-medium">{t('audit.empty')}</p>
                 </div>
               ) : (
@@ -649,7 +649,7 @@ function FieldPermissionsPage() {
                         </TableCell>
                         <TableCell>
                           {log.old_values ? (
-                            <code className="text-xs bg-muted px-2 py-1 rounded block max-w-xs truncate">
+                            <code className="block max-w-xs truncate rounded bg-muted px-2 py-1 text-xs">
                               {JSON.stringify(log.old_values).slice(0, 50)}...
                             </code>
                           ) : (
@@ -658,7 +658,7 @@ function FieldPermissionsPage() {
                         </TableCell>
                         <TableCell>
                           {log.new_values ? (
-                            <code className="text-xs bg-muted px-2 py-1 rounded block max-w-xs truncate">
+                            <code className="block max-w-xs truncate rounded bg-muted px-2 py-1 text-xs">
                               {JSON.stringify(log.new_values).slice(0, 50)}...
                             </code>
                           ) : (
@@ -759,7 +759,7 @@ function PermissionDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{permission ? t('permissions.edit') : t('permissions.create')}</DialogTitle>
           <DialogDescription>{t('permissions.description')}</DialogDescription>
@@ -880,7 +880,7 @@ function PermissionDialog({
                 onCheckedChange={(checked) => setFormData({ ...formData, can_view: checked })}
               />
               <Label htmlFor="can-view" className="flex items-center gap-2">
-                <Eye className="h-4 w-4" />
+                <Eye className="size-4" />
                 {t('permissions.fields.can_view')}
               </Label>
             </div>
@@ -891,7 +891,7 @@ function PermissionDialog({
                 onCheckedChange={(checked) => setFormData({ ...formData, can_edit: checked })}
               />
               <Label htmlFor="can-edit" className="flex items-center gap-2">
-                <Edit3 className="h-4 w-4" />
+                <Edit3 className="size-4" />
                 {t('permissions.fields.can_edit')}
               </Label>
             </div>
@@ -938,7 +938,7 @@ function PermissionDialog({
           <Button onClick={handleSubmit} disabled={isLoading}>
             {isLoading ? (
               <>
-                <RefreshCw className="h-4 w-4 me-2 animate-spin" />
+                <RefreshCw className="me-2 size-4 animate-spin" />
                 Saving...
               </>
             ) : (

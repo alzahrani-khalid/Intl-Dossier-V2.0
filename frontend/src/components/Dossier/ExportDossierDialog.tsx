@@ -112,12 +112,12 @@ export function ExportDossierDialog({
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
-        className="max-w-md sm:max-w-lg md:max-w-xl max-h-[90vh] overflow-y-auto"
+        className="max-h-[90vh] max-w-md overflow-y-auto sm:max-w-lg md:max-w-xl"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <FileText className="h-5 w-5 text-primary" />
+            <FileText className="size-5 text-primary" />
             {t('title', { defaultValue: 'Export Briefing Pack' })}
           </DialogTitle>
           <DialogDescription>
@@ -129,8 +129,8 @@ export function ExportDossierDialog({
 
         {/* Dossier Info */}
         <div className="rounded-lg bg-muted/50 p-3 sm:p-4">
-          <p className="font-medium text-sm sm:text-base line-clamp-1">{dossierName}</p>
-          <p className="text-xs sm:text-sm text-muted-foreground capitalize">
+          <p className="line-clamp-1 text-sm font-medium sm:text-base">{dossierName}</p>
+          <p className="text-xs capitalize text-muted-foreground sm:text-sm">
             {t(`type.${dossierType}`, { defaultValue: dossierType })}
           </p>
         </div>
@@ -139,18 +139,18 @@ export function ExportDossierDialog({
         {isExporting && progress && (
           <div className="space-y-3 py-4">
             <div className="flex items-center gap-2">
-              <Loader2 className="h-4 w-4 animate-spin text-primary" />
+              <Loader2 className="size-4 animate-spin text-primary" />
               <span className="text-sm">{isRTL ? progress.message_ar : progress.message_en}</span>
             </div>
             <Progress value={progress.progress} className="h-2" />
-            <p className="text-xs text-muted-foreground text-center">{progress.progress}%</p>
+            <p className="text-center text-xs text-muted-foreground">{progress.progress}%</p>
           </div>
         )}
 
         {/* Success State */}
         {progress?.status === 'ready' && (
-          <div className="flex items-center gap-3 rounded-lg bg-green-50 dark:bg-green-950/30 p-4">
-            <CheckCircle2 className="h-5 w-5 text-green-600" />
+          <div className="flex items-center gap-3 rounded-lg bg-green-50 p-4 dark:bg-green-950/30">
+            <CheckCircle2 className="size-5 text-green-600" />
             <span className="text-sm text-green-700 dark:text-green-400">
               {t('success', { defaultValue: 'Export complete! Download starting...' })}
             </span>
@@ -159,8 +159,8 @@ export function ExportDossierDialog({
 
         {/* Error State */}
         {error && (
-          <div className="flex items-center gap-3 rounded-lg bg-red-50 dark:bg-red-950/30 p-4">
-            <AlertCircle className="h-5 w-5 text-red-600" />
+          <div className="flex items-center gap-3 rounded-lg bg-red-50 p-4 dark:bg-red-950/30">
+            <AlertCircle className="size-5 text-red-600" />
             <span className="text-sm text-red-700 dark:text-red-400">{error.message}</span>
           </div>
         )}
@@ -188,7 +188,7 @@ export function ExportDossierDialog({
                   )}
                 >
                   <RadioGroupItem value="pdf" id="pdf" className="sr-only" />
-                  <FileText className="h-5 w-5" />
+                  <FileText className="size-5" />
                   <span className="font-medium">PDF</span>
                 </Label>
                 <Label
@@ -201,7 +201,7 @@ export function ExportDossierDialog({
                   )}
                 >
                   <RadioGroupItem value="docx" id="docx" className="sr-only" />
-                  <FileDown className="h-5 w-5" />
+                  <FileDown className="size-5" />
                   <span className="font-medium">Word</span>
                 </Label>
               </RadioGroup>
@@ -250,9 +250,9 @@ export function ExportDossierDialog({
             >
               <span>{t('advanced.label', { defaultValue: 'Advanced Options' })}</span>
               {showAdvanced ? (
-                <ChevronUp className="h-4 w-4" />
+                <ChevronUp className="size-4" />
               ) : (
-                <ChevronDown className="h-4 w-4" />
+                <ChevronDown className="size-4" />
               )}
             </Button>
 
@@ -267,7 +267,7 @@ export function ExportDossierDialog({
                       checked={includeCoverPage}
                       onCheckedChange={(c) => setIncludeCoverPage(c === true)}
                     />
-                    <Label htmlFor="coverPage" className="text-sm cursor-pointer">
+                    <Label htmlFor="coverPage" className="cursor-pointer text-sm">
                       {t('options.coverPage', { defaultValue: 'Include cover page' })}
                     </Label>
                   </div>
@@ -277,7 +277,7 @@ export function ExportDossierDialog({
                       checked={includeTableOfContents}
                       onCheckedChange={(c) => setIncludeTableOfContents(c === true)}
                     />
-                    <Label htmlFor="toc" className="text-sm cursor-pointer">
+                    <Label htmlFor="toc" className="cursor-pointer text-sm">
                       {t('options.tableOfContents', {
                         defaultValue: 'Include table of contents',
                       })}
@@ -290,7 +290,7 @@ export function ExportDossierDialog({
                   <Label className="text-sm font-medium">
                     {t('sections.label', { defaultValue: 'Include Sections' })}
                   </Label>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {sections.map((section) => (
                       <div key={section.type} className="flex items-center gap-2">
                         <Checkbox
@@ -300,7 +300,7 @@ export function ExportDossierDialog({
                         />
                         <Label
                           htmlFor={`section-${section.type}`}
-                          className="text-sm cursor-pointer"
+                          className="cursor-pointer text-sm"
                         >
                           {isRTL ? section.title_ar : section.title_en}
                         </Label>
@@ -324,12 +324,12 @@ export function ExportDossierDialog({
           >
             {isExporting ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
                 {t('exporting', { defaultValue: 'Exporting...' })}
               </>
             ) : (
               <>
-                <FileDown className="h-4 w-4" />
+                <FileDown className="size-4" />
                 {t('export', { defaultValue: 'Export' })}
               </>
             )}

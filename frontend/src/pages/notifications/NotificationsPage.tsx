@@ -162,17 +162,17 @@ export function NotificationsPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
         <div className="flex items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center">
-            <Bell className="h-6 w-6 text-primary" />
+          <div className="flex size-12 items-center justify-center rounded-full bg-primary/10">
+            <Bell className="size-6 text-primary" />
           </div>
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">{t('notificationCenter')}</h1>
+            <h1 className="text-2xl font-bold sm:text-3xl">{t('notificationCenter')}</h1>
             <p className="text-muted-foreground">
               {unreadCount > 0 ? `${unreadCount} ${t('badge.unread')}` : t('empty.title')}
             </p>
@@ -185,25 +185,25 @@ export function NotificationsPage() {
             onClick={handleMarkAllAsRead}
             disabled={unreadCount === 0 || isMarkingAsRead}
           >
-            <CheckCheck className="h-4 w-4 me-2" />
+            <CheckCheck className="me-2 size-4" />
             {t('markAllRead')}
           </Button>
           <Button variant="outline" onClick={handleSettingsClick}>
-            <Settings className="h-4 w-4 me-2" />
+            <Settings className="me-2 size-4" />
             {t('preferences.title')}
           </Button>
         </div>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 mb-6">
+      <div className="mb-6 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
         {/* Category tabs */}
         <Tabs
           value={activeCategory}
           onValueChange={(v) => setActiveCategory(v as NotificationCategory | 'all')}
           className="w-full sm:w-auto"
         >
-          <TabsList className="h-10 w-full sm:w-auto overflow-x-auto">
+          <TabsList className="h-10 w-full overflow-x-auto sm:w-auto">
             <TabsTrigger value="all" className="px-4">
               {t('categories.all')}
               {unreadCount > 0 && (
@@ -225,7 +225,7 @@ export function NotificationsPage() {
         {/* Filter dropdown */}
         <Select value={filter} onValueChange={(v: 'all' | 'unread') => setFilter(v)}>
           <SelectTrigger className="w-[180px]">
-            <Filter className="h-4 w-4 me-2" />
+            <Filter className="me-2 size-4" />
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
@@ -237,7 +237,7 @@ export function NotificationsPage() {
 
       {/* Show preview timeline for first-time users with no notifications */}
       {showPreview ? (
-        <div className="bg-card rounded-lg border p-4 sm:p-6 lg:p-8">
+        <div className="rounded-lg border bg-card p-4 sm:p-6 lg:p-8">
           <NotificationPreviewTimeline
             onComplete={handlePreviewComplete}
             onSkip={handleSkipPreview}
@@ -245,7 +245,7 @@ export function NotificationsPage() {
         </div>
       ) : (
         /* Notification list */
-        <div className="bg-card rounded-lg border p-4 sm:p-6">
+        <div className="rounded-lg border bg-card p-4 sm:p-6">
           <NotificationList
             notifications={notifications}
             isLoading={isLoading}

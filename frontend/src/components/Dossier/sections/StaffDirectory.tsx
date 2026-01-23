@@ -66,7 +66,7 @@ export function StaffDirectory({ dossier }: StaffDirectoryProps) {
       <Card className="border-0 shadow-none">
         <CardContent className="p-0">
           <div className="flex flex-col items-center justify-center py-8 text-center text-muted-foreground">
-            <Users className="h-12 w-12 mb-3 opacity-50" />
+            <Users className="mb-3 size-12 opacity-50" />
             <p>{t('sections.electedOfficial.noStaffContacts')}</p>
           </div>
         </CardContent>
@@ -76,21 +76,21 @@ export function StaffDirectory({ dossier }: StaffDirectoryProps) {
 
   return (
     <Card className="border-0 shadow-none">
-      <CardContent className="p-0 space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
+      <CardContent className="space-y-4 p-0" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="grid grid-cols-1 gap-3">
           {staffContacts.map((staff, index) => (
             <div
               key={index}
-              className="flex items-start gap-3 p-4 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+              className="flex items-start gap-3 rounded-lg bg-muted/50 p-4 transition-colors hover:bg-muted"
             >
-              <Avatar className="h-10 w-10 flex-shrink-0">
+              <Avatar className="size-10 shrink-0">
                 <AvatarFallback className="text-sm">{getInitials(staff.name)}</AvatarFallback>
               </Avatar>
 
-              <div className="flex-1 min-w-0 space-y-2">
-                <div className="flex flex-col sm:flex-row sm:items-center gap-2">
-                  <span className="font-medium truncate">{staff.name}</span>
-                  <Badge className={`text-xs w-fit ${getRoleVariant(staff.role)}`}>
+              <div className="min-w-0 flex-1 space-y-2">
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
+                  <span className="truncate font-medium">{staff.name}</span>
+                  <Badge className={`w-fit text-xs ${getRoleVariant(staff.role)}`}>
                     {getRoleLabel(staff.role)}
                   </Badge>
                 </div>
@@ -99,18 +99,18 @@ export function StaffDirectory({ dossier }: StaffDirectoryProps) {
                   {staff.email && (
                     <a
                       href={`mailto:${staff.email}`}
-                      className="flex items-center gap-2 hover:text-primary transition-colors"
+                      className="flex items-center gap-2 transition-colors hover:text-primary"
                     >
-                      <Mail className="h-3.5 w-3.5 flex-shrink-0" />
+                      <Mail className="size-3.5 shrink-0" />
                       <span className="truncate">{staff.email}</span>
                     </a>
                   )}
                   {staff.phone && (
                     <a
                       href={`tel:${staff.phone}`}
-                      className="flex items-center gap-2 hover:text-primary transition-colors"
+                      className="flex items-center gap-2 transition-colors hover:text-primary"
                     >
-                      <Phone className="h-3.5 w-3.5 flex-shrink-0" />
+                      <Phone className="size-3.5 shrink-0" />
                       <span>{staff.phone}</span>
                     </a>
                   )}
@@ -118,7 +118,7 @@ export function StaffDirectory({ dossier }: StaffDirectoryProps) {
 
                 {staff.notes && (
                   <div className="flex items-start gap-2 pt-1">
-                    <Info className="h-3.5 w-3.5 flex-shrink-0 mt-0.5 text-muted-foreground" />
+                    <Info className="mt-0.5 size-3.5 shrink-0 text-muted-foreground" />
                     <p className="text-xs text-muted-foreground">{staff.notes}</p>
                   </div>
                 )}
@@ -128,9 +128,9 @@ export function StaffDirectory({ dossier }: StaffDirectoryProps) {
         </div>
 
         {/* Summary */}
-        <div className="pt-2 border-t">
+        <div className="border-t pt-2">
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
-            <Briefcase className="h-4 w-4" />
+            <Briefcase className="size-4" />
             <span>{t('sections.electedOfficial.totalStaff', { count: staffContacts.length })}</span>
           </div>
         </div>

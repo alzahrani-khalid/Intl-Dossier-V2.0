@@ -270,7 +270,7 @@ export function VideoTutorial({
               onTimeUpdate={handleTimeUpdate}
               onLoadedMetadata={handleLoadedMetadata}
               onEnded={handleEnded}
-              className="w-full h-full object-cover"
+              className="size-full object-cover"
               data-testid={`${testId}-video`}
             >
               {/* Add WebVTT track for accessibility if transcript exists */}
@@ -285,14 +285,14 @@ export function VideoTutorial({
                 <Button
                   variant="secondary"
                   size="lg"
-                  className="h-14 w-14 sm:h-16 sm:w-16 min-h-11 min-w-11 rounded-full bg-white/90 hover:bg-white shadow-lg"
+                  className="size-14 min-h-11 min-w-11 rounded-full bg-white/90 shadow-lg hover:bg-white sm:size-16"
                   onClick={(e) => {
                     e.stopPropagation()
                     handlePlayPause()
                   }}
                   data-testid={`${testId}-play-button`}
                 >
-                  <Play className="h-6 w-6 sm:h-7 sm:w-7 text-foreground fill-current" />
+                  <Play className="size-6 fill-current text-foreground sm:size-7" />
                 </Button>
               </div>
             )}
@@ -303,16 +303,16 @@ export function VideoTutorial({
                 <Button
                   variant="secondary"
                   size="lg"
-                  className="h-14 w-14 sm:h-16 sm:w-16 min-h-11 min-w-11 rounded-full bg-white/90 hover:bg-white shadow-lg"
+                  className="size-14 min-h-11 min-w-11 rounded-full bg-white/90 shadow-lg hover:bg-white sm:size-16"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleReplay()
                   }}
                   data-testid={`${testId}-replay-button`}
                 >
-                  <RotateCcw className="h-6 w-6 sm:h-7 sm:w-7 text-foreground" />
+                  <RotateCcw className="size-6 text-foreground sm:size-7" />
                 </Button>
-                <span className="text-white text-sm font-medium">
+                <span className="text-sm font-medium text-white">
                   {t('video.replayLabel', 'Watch Again')}
                 </span>
               </div>
@@ -328,7 +328,7 @@ export function VideoTutorial({
             >
               {/* Progress Bar */}
               <div
-                className="w-full h-1.5 sm:h-2 bg-white/30 rounded-full cursor-pointer mb-2"
+                className="mb-2 h-1.5 w-full cursor-pointer rounded-full bg-white/30 sm:h-2"
                 onClick={(e) => {
                   e.stopPropagation()
                   handleSeek(e)
@@ -336,7 +336,7 @@ export function VideoTutorial({
                 data-testid={`${testId}-progress`}
               >
                 <div
-                  className="h-full bg-white rounded-full transition-all duration-100"
+                  className="h-full rounded-full bg-white transition-all duration-100"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -438,12 +438,12 @@ export function VideoTutorial({
 
           {/* Video Info */}
           <div className="p-3 sm:p-4">
-            <h4 className="text-sm sm:text-base font-medium text-foreground mb-1">{title}</h4>
+            <h4 className="mb-1 text-sm font-medium text-foreground sm:text-base">{title}</h4>
             {description && (
-              <p className="text-xs sm:text-sm text-muted-foreground">{description}</p>
+              <p className="text-xs text-muted-foreground sm:text-sm">{description}</p>
             )}
             {videoDuration > 0 && !hasStarted && (
-              <p className="text-xs text-muted-foreground/70 mt-1">
+              <p className="mt-1 text-xs text-muted-foreground/70">
                 {t('video.durationLabel', '{{duration}} video', {
                   duration: formatTime(videoDuration),
                 })}
@@ -464,19 +464,19 @@ export function VideoTutorial({
             data-testid={`${testId}-transcript-toggle`}
           >
             <span className="flex items-center gap-2">
-              <FileText className="h-4 w-4" />
+              <FileText className="size-4" />
               {t('video.transcriptTitle', 'Transcript')}
             </span>
             {showTranscript ? (
-              <ChevronUp className="h-4 w-4" />
+              <ChevronUp className="size-4" />
             ) : (
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="size-4" />
             )}
           </Button>
 
           {showTranscript && (
             <Card className="mt-2">
-              <CardContent className="p-3 sm:p-4 max-h-48 overflow-y-auto">
+              <CardContent className="max-h-48 overflow-y-auto p-3 sm:p-4">
                 <div className="space-y-2">
                   {transcript.map((segment, index) => (
                     <button
@@ -491,7 +491,7 @@ export function VideoTutorial({
                       onClick={() => handleTranscriptClick(segment.startTime)}
                       data-testid={`${testId}-transcript-segment-${index}`}
                     >
-                      <span className="text-xs text-muted-foreground/60 tabular-nums">
+                      <span className="text-xs tabular-nums text-muted-foreground/60">
                         {formatTime(segment.startTime)}
                       </span>
                       <span className={cn('block mt-0.5', isRTL ? 'me-4' : 'ms-4')}>

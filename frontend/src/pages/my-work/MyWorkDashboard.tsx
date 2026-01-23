@@ -145,14 +145,14 @@ export default function MyWorkDashboard() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+      className="container mx-auto p-4 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
-      <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="mb-4 flex flex-col gap-3 sm:mb-6 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('title', 'My Work')}</h1>
-          <p className="text-muted-foreground text-sm sm:text-base mt-1 text-start">
+          <h1 className="text-start text-2xl font-bold sm:text-3xl">{t('title', 'My Work')}</h1>
+          <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
             {t('subtitle', 'Track your commitments, tasks, and intake tickets in one place')}
           </p>
         </div>
@@ -162,7 +162,7 @@ export default function MyWorkDashboard() {
           onClick={() => navigate({ to: '/my-work/board' })}
           className="flex items-center gap-2 self-start sm:self-auto"
         >
-          <LayoutGrid className="h-4 w-4" />
+          <LayoutGrid className="size-4" />
           <span>{t('viewBoard', 'Board View')}</span>
         </Button>
       </div>

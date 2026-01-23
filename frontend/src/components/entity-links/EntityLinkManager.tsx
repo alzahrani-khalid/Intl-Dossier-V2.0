@@ -225,7 +225,7 @@ export function EntityLinkManager({
         )}
       >
         <div className={cn('flex items-center gap-2', isRTL && 'flex-row-reverse')}>
-          <LinkIcon className="h-5 w-5 sm:h-6 sm:w-6 text-slate-600 dark:text-slate-400" />
+          <LinkIcon className="size-5 text-slate-600 dark:text-slate-400 sm:size-6" />
           <h2
             className={cn(
               'text-lg sm:text-xl font-semibold',
@@ -307,8 +307,8 @@ export function EntityLinkManager({
 
           {/* Error state */}
           {error && (
-            <div className="text-center py-8 sm:py-12">
-              <p className="text-sm sm:text-base text-red-600">{t('entityLinks.loadError')}</p>
+            <div className="py-8 text-center sm:py-12">
+              <p className="text-sm text-red-600 sm:text-base">{t('entityLinks.loadError')}</p>
             </div>
           )}
 
@@ -336,8 +336,8 @@ export function EntityLinkManager({
 
           {/* Error state */}
           {error && (
-            <div className="text-center py-8 sm:py-12">
-              <p className="text-sm sm:text-base text-red-600">{t('entityLinks.loadError')}</p>
+            <div className="py-8 text-center sm:py-12">
+              <p className="text-sm text-red-600 sm:text-base">{t('entityLinks.loadError')}</p>
             </div>
           )}
 

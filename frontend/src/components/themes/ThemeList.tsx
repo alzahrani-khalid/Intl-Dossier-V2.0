@@ -107,25 +107,25 @@ export function ThemeList({
   return (
     <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with Actions */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold">{t('title')}</h2>
-          <p className="text-sm text-muted-foreground mt-1">{t('subtitle')}</p>
+          <h2 className="text-xl font-bold sm:text-2xl">{t('title')}</h2>
+          <p className="mt-1 text-sm text-muted-foreground">{t('subtitle')}</p>
         </div>
 
         {onCreateTheme && (
-          <Button onClick={onCreateTheme} className="w-full sm:w-auto min-h-11">
-            <Plus className="me-2 h-4 w-4" />
+          <Button onClick={onCreateTheme} className="min-h-11 w-full sm:w-auto">
+            <Plus className="me-2 size-4" />
             {t('actions.create')}
           </Button>
         )}
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         {/* Search */}
         <div className="relative flex-1">
-          <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+          <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
           <Input
             placeholder={t('tree.searchPlaceholder')}
             value={searchInput}
@@ -148,13 +148,13 @@ export function ThemeList({
         </Select>
 
         {/* Standard Only Toggle */}
-        <div className="flex items-center gap-2 px-3 py-2 border rounded-md">
+        <div className="flex items-center gap-2 rounded-md border px-3 py-2">
           <Switch
             id="standard-filter"
             checked={filters.is_standard || false}
             onCheckedChange={handleStandardChange}
           />
-          <Label htmlFor="standard-filter" className="text-sm whitespace-nowrap">
+          <Label htmlFor="standard-filter" className="whitespace-nowrap text-sm">
             {t('tree.showStandardOnly')}
           </Label>
         </div>
@@ -162,7 +162,7 @@ export function ThemeList({
         {/* View Hierarchy Button */}
         {onViewHierarchy && (
           <Button variant="outline" onClick={() => onViewHierarchy('')} className="min-h-11">
-            <FolderTree className="me-2 h-4 w-4" />
+            <FolderTree className="me-2 size-4" />
             {t('actions.viewHierarchy')}
           </Button>
         )}
@@ -171,12 +171,12 @@ export function ThemeList({
       {/* Error State */}
       {isError && (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertTitle>{t('errors.loadFailed')}</AlertTitle>
           <AlertDescription className="flex items-center justify-between">
             <span>{error?.message || 'Unknown error'}</span>
             <Button variant="outline" size="sm" onClick={() => refetch()}>
-              <RefreshCw className="me-2 h-4 w-4" />
+              <RefreshCw className="me-2 size-4" />
               Retry
             </Button>
           </AlertDescription>
@@ -185,7 +185,7 @@ export function ThemeList({
 
       {/* Loading State */}
       {isLoading && (
-        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={i} className="h-48 rounded-lg" />
           ))}
@@ -194,21 +194,21 @@ export function ThemeList({
 
       {/* Empty State */}
       {!isLoading && !isError && themes.length === 0 && (
-        <div className="text-center py-12 px-4 border rounded-lg bg-muted/50">
-          <FolderTree className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+        <div className="rounded-lg border bg-muted/50 px-4 py-12 text-center">
+          <FolderTree className="mx-auto mb-4 size-12 text-muted-foreground" />
           <h3 className="text-lg font-semibold">
             {filters.search || filters.status || filters.is_standard
               ? t('list.emptyFiltered')
               : t('list.empty')}
           </h3>
-          <p className="text-sm text-muted-foreground mt-2 max-w-md mx-auto">
+          <p className="mx-auto mt-2 max-w-md text-sm text-muted-foreground">
             {filters.search || filters.status || filters.is_standard
               ? t('list.emptyFilteredDescription')
               : t('list.emptyDescription')}
           </p>
           {onCreateTheme && !filters.search && !filters.status && !filters.is_standard && (
             <Button onClick={onCreateTheme} className="mt-4">
-              <Plus className="me-2 h-4 w-4" />
+              <Plus className="me-2 size-4" />
               {t('actions.create')}
             </Button>
           )}
@@ -218,7 +218,7 @@ export function ThemeList({
       {/* Theme Grid */}
       {!isLoading && !isError && themes.length > 0 && (
         <>
-          <div className="grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
             {themes.map((theme) => (
               <ThemeCard
                 key={theme.id}
@@ -234,7 +234,7 @@ export function ThemeList({
 
           {/* Pagination */}
           {pagination && pagination.totalPages > 1 && (
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t">
+            <div className="flex flex-col items-center justify-between gap-4 border-t pt-4 sm:flex-row">
               <p className="text-sm text-muted-foreground">
                 Page {pagination.page} of {pagination.totalPages}
                 {pagination.total && ` (${pagination.total} total)`}

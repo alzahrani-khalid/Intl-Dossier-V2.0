@@ -72,7 +72,7 @@ export class PositionModuleErrorBoundary extends Component<Props, State> {
  <Card className="m-4">
  <CardContent className="p-6">
  <Alert variant="destructive">
- <AlertTriangle className="h-4 w-4" />
+ <AlertTriangle className="size-4" />
  <AlertTitle className="text-lg font-semibold">
  خطأ في وحدة المواقف / Position Module Error
  </AlertTitle>
@@ -104,7 +104,7 @@ export class PositionModuleErrorBoundary extends Component<Props, State> {
  {/* Retry Button */}
  <div className="mt-4 flex justify-center">
  <Button onClick={this.handleReset} variant="outline">
- <RefreshCw className="me-2 h-4 w-4" />
+ <RefreshCw className="me-2 size-4" />
  <span className="me-2">إعادة المحاولة</span>
  <span>/</span>
  <span className="ms-2">Retry</span>

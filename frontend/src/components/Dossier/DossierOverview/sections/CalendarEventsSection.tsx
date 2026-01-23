@@ -123,24 +123,24 @@ function EventCard({
   }
 
   return (
-    <Card className={`hover:shadow-md transition-shadow ${variantStyles[variant]}`}>
+    <Card className={`transition-shadow hover:shadow-md ${variantStyles[variant]}`}>
       <CardContent className="p-3 sm:p-4">
         <div className="flex items-start gap-3">
-          <div className={`p-2 rounded-lg ${getEventTypeColor(event.event_type)} shrink-0`}>
-            <Icon className="h-5 w-5" />
+          <div className={`rounded-lg p-2 ${getEventTypeColor(event.event_type)} shrink-0`}>
+            <Icon className="size-5" />
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-start justify-between gap-2 mb-1">
-              <h4 className="text-sm font-semibold line-clamp-2">
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex items-start justify-between gap-2">
+              <h4 className="line-clamp-2 text-sm font-semibold">
                 {isRTL && event.title_ar ? event.title_ar : event.title_en}
               </h4>
               {variant === 'today' && (
-                <Badge variant="default" className="text-xs shrink-0">
+                <Badge variant="default" className="shrink-0 text-xs">
                   {t('calendarEvents.today')}
                 </Badge>
               )}
             </div>
-            <div className="flex flex-wrap items-center gap-1.5 text-xs mb-2">
+            <div className="mb-2 flex flex-wrap items-center gap-1.5 text-xs">
               <Badge variant="outline" className="text-xs">
                 {t(`eventType.${event.event_type}`)}
               </Badge>
@@ -152,7 +152,7 @@ function EventCard({
             </div>
             <div className="space-y-1.5 text-xs text-muted-foreground">
               <div className="flex items-center gap-2">
-                <Clock className="h-3 w-3 shrink-0" />
+                <Clock className="size-3 shrink-0" />
                 <span>
                   {formatEventTime(
                     event.start_datetime,
@@ -164,27 +164,27 @@ function EventCard({
               </div>
               {(event.location_en || event.location_ar) && (
                 <div className="flex items-center gap-2">
-                  <MapPin className="h-3 w-3 shrink-0" />
+                  <MapPin className="size-3 shrink-0" />
                   <span>{isRTL && event.location_ar ? event.location_ar : event.location_en}</span>
                 </div>
               )}
               {event.is_virtual && event.meeting_link && (
                 <div className="flex items-center gap-2">
-                  <Video className="h-3 w-3 shrink-0" />
+                  <Video className="size-3 shrink-0" />
                   <a
                     href={event.meeting_link}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-primary hover:underline flex items-center gap-1"
+                    className="flex items-center gap-1 text-primary hover:underline"
                   >
                     {t('calendarEvents.joinMeeting')}
-                    <ExternalLink className="h-3 w-3" />
+                    <ExternalLink className="size-3" />
                   </a>
                 </div>
               )}
             </div>
             {event.description_en && (
-              <p className="text-xs text-muted-foreground mt-2 line-clamp-2">
+              <p className="mt-2 line-clamp-2 text-xs text-muted-foreground">
                 {isRTL && event.description_ar ? event.description_ar : event.description_en}
               </p>
             )}
@@ -208,9 +208,9 @@ function EmptyState({
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="p-3 rounded-full bg-muted inline-block mb-3">
-        <Calendar className="h-6 w-6 text-muted-foreground" />
+    <div className="py-6 text-center sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="mb-3 inline-block rounded-full bg-muted p-3">
+        <Calendar className="size-6 text-muted-foreground" />
       </div>
       <p className="text-sm text-muted-foreground">
         {type ? t(`calendarEvents.empty.${type}`) : t('calendarEvents.empty.all')}
@@ -271,7 +271,7 @@ export function CalendarEventsSection({
         <CardContent className="p-6">
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-24 bg-muted animate-pulse rounded-lg" />
+              <div key={i} className="h-24 animate-pulse rounded-lg bg-muted" />
             ))}
           </div>
         </CardContent>
@@ -283,12 +283,12 @@ export function CalendarEventsSection({
     return (
       <Card className={className}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Calendar className="size-5" />
             {t('calendarEvents.title')}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 pt-0">
+        <CardContent className="p-4 pt-0 sm:p-6">
           <EmptyState type="all" isRTL={isRTL} />
         </CardContent>
       </Card>
@@ -298,8 +298,8 @@ export function CalendarEventsSection({
   return (
     <Card className={className}>
       <CardHeader className="pb-2 sm:pb-4">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <Calendar className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <Calendar className="size-5" />
           {t('calendarEvents.title')}
           <Badge variant="secondary">{data.total_count}</Badge>
           {data.today.length > 0 && (
@@ -310,22 +310,22 @@ export function CalendarEventsSection({
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-6 pt-0">
+      <CardContent className="p-4 pt-0 sm:p-6">
         <Tabs defaultValue={data.today.length > 0 ? 'today' : 'upcoming'} className="w-full">
-          <TabsList className="w-full justify-start overflow-x-auto flex-nowrap mb-4 h-auto p-1">
-            <TabsTrigger value="today" className="text-xs sm:text-sm shrink-0">
-              <CalendarCheck className="h-4 w-4 me-1" />
+          <TabsList className="mb-4 h-auto w-full flex-nowrap justify-start overflow-x-auto p-1">
+            <TabsTrigger value="today" className="shrink-0 text-xs sm:text-sm">
+              <CalendarCheck className="me-1 size-4" />
               {t('calendarEvents.tabs.today')} ({data.today.length})
             </TabsTrigger>
-            <TabsTrigger value="upcoming" className="text-xs sm:text-sm shrink-0">
-              <CalendarClock className="h-4 w-4 me-1" />
+            <TabsTrigger value="upcoming" className="shrink-0 text-xs sm:text-sm">
+              <CalendarClock className="me-1 size-4" />
               {t('calendarEvents.tabs.upcoming')} ({data.upcoming.length})
             </TabsTrigger>
-            <TabsTrigger value="past" className="text-xs sm:text-sm shrink-0">
-              <CalendarX className="h-4 w-4 me-1" />
+            <TabsTrigger value="past" className="shrink-0 text-xs sm:text-sm">
+              <CalendarX className="me-1 size-4" />
               {t('calendarEvents.tabs.past')} ({data.past.length})
             </TabsTrigger>
-            <TabsTrigger value="all" className="text-xs sm:text-sm shrink-0">
+            <TabsTrigger value="all" className="shrink-0 text-xs sm:text-sm">
               {t('calendarEvents.tabs.all')} ({allEvents.length})
             </TabsTrigger>
           </TabsList>

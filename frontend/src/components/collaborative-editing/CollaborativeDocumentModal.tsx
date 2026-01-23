@@ -113,18 +113,18 @@ export function CollaborativeDocumentModal({
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Header */}
-        <DialogHeader className="flex flex-row items-center justify-between gap-4 p-3 sm:p-4 border-b shrink-0">
-          <div className="flex items-center gap-3 min-w-0">
-            <FileText className="h-5 w-5 text-muted-foreground shrink-0" />
+        <DialogHeader className="flex shrink-0 flex-row items-center justify-between gap-4 border-b p-3 sm:p-4">
+          <div className="flex min-w-0 items-center gap-3">
+            <FileText className="size-5 shrink-0 text-muted-foreground" />
             <div className="min-w-0">
-              <DialogTitle className="text-base sm:text-lg truncate">{document.name}</DialogTitle>
+              <DialogTitle className="truncate text-base sm:text-lg">{document.name}</DialogTitle>
               <DialogDescription className="text-xs sm:text-sm">
                 {t('description')}
               </DialogDescription>
             </div>
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          <div className="flex shrink-0 items-center gap-2 sm:gap-3">
             {/* Active editors */}
             <ActiveEditorAvatars
               editors={activeEditors}
@@ -162,7 +162,7 @@ export function CollaborativeDocumentModal({
               </Badge>
             )}
 
-            <Separator orientation="vertical" className="h-6 hidden sm:block" />
+            <Separator orientation="vertical" className="hidden h-6 sm:block" />
 
             {/* Fullscreen toggle */}
             <TooltipProvider>
@@ -172,12 +172,12 @@ export function CollaborativeDocumentModal({
                     variant="ghost"
                     size="icon"
                     onClick={toggleFullscreen}
-                    className="h-8 w-8"
+                    className="size-8"
                   >
                     {isFullscreen ? (
-                      <Minimize2 className="h-4 w-4" />
+                      <Minimize2 className="size-4" />
                     ) : (
-                      <Maximize2 className="h-4 w-4" />
+                      <Maximize2 className="size-4" />
                     )}
                   </Button>
                 </TooltipTrigger>
@@ -188,8 +188,8 @@ export function CollaborativeDocumentModal({
             </TooltipProvider>
 
             {/* Close button */}
-            <Button variant="ghost" size="icon" onClick={handleClose} className="h-8 w-8">
-              <X className="h-4 w-4" />
+            <Button variant="ghost" size="icon" onClick={handleClose} className="size-8">
+              <X className="size-4" />
             </Button>
           </div>
         </DialogHeader>

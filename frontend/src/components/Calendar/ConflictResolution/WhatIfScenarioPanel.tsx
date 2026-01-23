@@ -147,7 +147,7 @@ export function WhatIfScenarioPanel({
         <div className="flex items-center justify-between">
           <div>
             <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-              <FlaskConical className="h-5 w-5 text-primary" />
+              <FlaskConical className="size-5 text-primary" />
               {t('scenarios.title')}
             </CardTitle>
             <CardDescription className="mt-1">{t('scenarios.description')}</CardDescription>
@@ -203,7 +203,7 @@ export function WhatIfScenarioPanel({
                   </div>
                 </div>
 
-                <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
+                <DialogFooter className="flex-col-reverse gap-2 sm:flex-row">
                   <Button
                     variant="outline"
                     onClick={() => setCreateDialogOpen(false)}
@@ -232,14 +232,14 @@ export function WhatIfScenarioPanel({
 
       <CardContent className="p-0">
         {isLoading ? (
-          <div className="p-6 flex items-center justify-center">
-            <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <div className="flex items-center justify-center p-6">
+            <Loader2 className="size-8 animate-spin text-muted-foreground" />
           </div>
         ) : scenarios.length === 0 ? (
           <div className="p-6 text-center">
-            <FlaskConical className="h-12 w-12 mx-auto text-muted-foreground/50 mb-3" />
+            <FlaskConical className="mx-auto mb-3 size-12 text-muted-foreground/50" />
             <p className="text-sm font-medium">{t('scenarios.noScenarios')}</p>
-            <p className="text-xs text-muted-foreground mt-1">{t('scenarios.noScenariosDesc')}</p>
+            <p className="mt-1 text-xs text-muted-foreground">{t('scenarios.noScenariosDesc')}</p>
           </div>
         ) : (
           <Accordion type="single" collapsible className="divide-y">
@@ -251,8 +251,8 @@ export function WhatIfScenarioPanel({
 
               return (
                 <AccordionItem key={scenario.id} value={scenario.id} className="border-0">
-                  <AccordionTrigger className="px-4 py-3 hover:no-underline hover:bg-muted/50">
-                    <div className="flex items-center gap-3 flex-1 min-w-0 text-start">
+                  <AccordionTrigger className="px-4 py-3 hover:bg-muted/50 hover:no-underline">
+                    <div className="flex min-w-0 flex-1 items-center gap-3 text-start">
                       <div className={cn('p-2 rounded-lg', statusConfig.bg)}>
                         <StatusIcon
                           className={cn(
@@ -263,16 +263,16 @@ export function WhatIfScenarioPanel({
                         />
                       </div>
 
-                      <div className="flex-1 min-w-0">
-                        <p className="text-sm font-medium truncate">
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-sm font-medium">
                           {isRTL ? scenario.name_ar || scenario.name_en : scenario.name_en}
                         </p>
-                        <div className="flex items-center gap-2 mt-1">
+                        <div className="mt-1 flex items-center gap-2">
                           <Badge variant="outline" className="text-xs">
                             {scenario.affected_event_ids.length} {t('scenarios.events')}
                           </Badge>
                           <span className={cn('text-xs flex items-center gap-1', impact.color)}>
-                            <ImpactIcon className="h-3 w-3" />
+                            <ImpactIcon className="size-3" />
                             {impact.label}
                           </span>
                         </div>
@@ -292,7 +292,7 @@ export function WhatIfScenarioPanel({
                       )}
 
                       {/* Impact summary */}
-                      <div className="grid grid-cols-2 gap-4 p-3 bg-muted/50 rounded-lg">
+                      <div className="grid grid-cols-2 gap-4 rounded-lg bg-muted/50 p-3">
                         <div>
                           <p className="text-xs text-muted-foreground">
                             {t('scenarios.conflictsBefore')}
@@ -311,11 +311,11 @@ export function WhatIfScenarioPanel({
 
                       {/* AI Recommendation */}
                       {(scenario.ai_recommendation_en || scenario.ai_recommendation_ar) && (
-                        <div className="p-3 bg-primary/5 border border-primary/20 rounded-lg">
+                        <div className="rounded-lg border border-primary/20 bg-primary/5 p-3">
                           <div className="flex items-start gap-2">
-                            <AlertTriangle className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                            <AlertTriangle className="mt-0.5 size-4 shrink-0 text-primary" />
                             <div>
-                              <p className="text-xs font-medium text-primary mb-1">
+                              <p className="mb-1 text-xs font-medium text-primary">
                                 {t('scenarios.aiRecommendation')}
                               </p>
                               <p className="text-xs text-muted-foreground">
@@ -331,17 +331,17 @@ export function WhatIfScenarioPanel({
                       {/* Proposed changes preview */}
                       {scenario.proposed_changes.length > 0 && (
                         <div>
-                          <p className="text-xs font-medium text-muted-foreground mb-2">
+                          <p className="mb-2 text-xs font-medium text-muted-foreground">
                             {t('scenarios.proposedChanges')}
                           </p>
-                          <div className="space-y-2 max-h-32 overflow-y-auto">
+                          <div className="max-h-32 space-y-2 overflow-y-auto">
                             {scenario.proposed_changes.slice(0, 3).map((change, idx) => (
                               <div
                                 key={idx}
-                                className="flex items-center gap-2 text-xs p-2 bg-muted/30 rounded"
+                                className="flex items-center gap-2 rounded bg-muted/30 p-2 text-xs"
                               >
-                                <Calendar className="h-3 w-3 text-muted-foreground" />
-                                <span className="truncate flex-1">
+                                <Calendar className="size-3 text-muted-foreground" />
+                                <span className="flex-1 truncate">
                                   {change.original_start && change.new_start
                                     ? `${formatDate(change.original_start)} → ${formatDate(change.new_start)}`
                                     : change.event_id}
@@ -360,7 +360,7 @@ export function WhatIfScenarioPanel({
                       {/* Metadata */}
                       <div className="flex items-center gap-4 text-xs text-muted-foreground">
                         <span className="flex items-center gap-1">
-                          <Clock className="h-3 w-3" />
+                          <Clock className="size-3" />
                           {formatDate(scenario.created_at)}
                         </span>
                         {scenario.analyzed_at && (
@@ -373,7 +373,7 @@ export function WhatIfScenarioPanel({
                       <Separator />
 
                       {/* Actions */}
-                      <div className="flex items-center gap-2 flex-wrap">
+                      <div className="flex flex-wrap items-center gap-2">
                         {scenario.status === 'ready' && onApply && (
                           <Button
                             size="sm"
@@ -396,7 +396,7 @@ export function WhatIfScenarioPanel({
                             variant="secondary"
                             className="bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
                           >
-                            <CheckCircle2 className="h-3 w-3 me-1" />
+                            <CheckCircle2 className="me-1 size-3" />
                             {t('scenarios.applied')}
                             {scenario.applied_at && ` - ${formatDate(scenario.applied_at)}`}
                           </Badge>

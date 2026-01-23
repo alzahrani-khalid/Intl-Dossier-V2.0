@@ -107,14 +107,14 @@ export function DeliverableFilterDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side={isRTL ? 'left' : 'right'}
-        className="w-full sm:max-w-md overflow-y-auto"
+        className="w-full overflow-y-auto sm:max-w-md"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <SheetHeader>
           <SheetTitle className="text-start">{t('filters.title')}</SheetTitle>
         </SheetHeader>
 
-        <div className="py-6 space-y-6">
+        <div className="space-y-6 py-6">
           {/* Status Filter */}
           <div className="space-y-3">
             <Label className="text-sm font-medium">{t('filters.status')}</Label>
@@ -126,7 +126,7 @@ export function DeliverableFilterDrawer({
                     checked={filters.status?.includes(status) || false}
                     onCheckedChange={() => handleStatusToggle(status)}
                   />
-                  <Label htmlFor={`status-${status}`} className="text-sm cursor-pointer">
+                  <Label htmlFor={`status-${status}`} className="cursor-pointer text-sm">
                     {t(`status.${status}`)}
                   </Label>
                 </div>
@@ -145,7 +145,7 @@ export function DeliverableFilterDrawer({
                     checked={filters.priority?.includes(priority) || false}
                     onCheckedChange={() => handlePriorityToggle(priority)}
                   />
-                  <Label htmlFor={`priority-${priority}`} className="text-sm cursor-pointer">
+                  <Label htmlFor={`priority-${priority}`} className="cursor-pointer text-sm">
                     {t(`priority.${priority}`)}
                   </Label>
                 </div>
@@ -187,7 +187,7 @@ export function DeliverableFilterDrawer({
                       : t('filters.selectDate')}
                     {filters.dueDateFrom && (
                       <X
-                        className="size-4 ms-auto cursor-pointer"
+                        className="ms-auto size-4 cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation()
                           handleDueDateFromChange(undefined)
@@ -225,7 +225,7 @@ export function DeliverableFilterDrawer({
                       : t('filters.selectDate')}
                     {filters.dueDateTo && (
                       <X
-                        className="size-4 ms-auto cursor-pointer"
+                        className="ms-auto size-4 cursor-pointer"
                         onClick={(e) => {
                           e.stopPropagation()
                           handleDueDateToChange(undefined)
@@ -247,11 +247,11 @@ export function DeliverableFilterDrawer({
           </div>
         </div>
 
-        <SheetFooter className="flex flex-row gap-2 pt-4 border-t">
-          <Button variant="outline" onClick={onClear} className="flex-1 min-h-11">
+        <SheetFooter className="flex flex-row gap-2 border-t pt-4">
+          <Button variant="outline" onClick={onClear} className="min-h-11 flex-1">
             {t('filters.clear')}
           </Button>
-          <Button onClick={onApply} className="flex-1 min-h-11">
+          <Button onClick={onApply} className="min-h-11 flex-1">
             {t('filters.apply')}
           </Button>
         </SheetFooter>

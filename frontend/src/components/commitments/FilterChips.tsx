@@ -69,7 +69,7 @@ export function FilterChips({
           <button
             type="button"
             onClick={() => onRemoveFilter('status', status)}
-            className="ms-1 rounded-full hover:bg-muted p-0.5 min-w-6 min-h-6 flex items-center justify-center"
+            className="ms-1 flex min-h-6 min-w-6 items-center justify-center rounded-full p-0.5 hover:bg-muted"
             aria-label={`Remove ${t(`status.${status}`)} filter`}
           >
             <X className="size-3" />
@@ -88,7 +88,7 @@ export function FilterChips({
           <button
             type="button"
             onClick={() => onRemoveFilter('priority', priority)}
-            className="ms-1 rounded-full hover:bg-muted p-0.5 min-w-6 min-h-6 flex items-center justify-center"
+            className="ms-1 flex min-h-6 min-w-6 items-center justify-center rounded-full p-0.5 hover:bg-muted"
             aria-label={`Remove ${t(`priority.${priority}`)} filter`}
           >
             <X className="size-3" />
@@ -106,7 +106,7 @@ export function FilterChips({
           <button
             type="button"
             onClick={() => onRemoveFilter('ownerType')}
-            className="ms-1 rounded-full hover:bg-muted p-0.5 min-w-6 min-h-6 flex items-center justify-center"
+            className="ms-1 flex min-h-6 min-w-6 items-center justify-center rounded-full p-0.5 hover:bg-muted"
             aria-label={`Remove ${t(`ownerType.${filters.ownerType}`)} filter`}
           >
             <X className="size-3" />
@@ -118,13 +118,13 @@ export function FilterChips({
       {filters.overdue && (
         <Badge
           variant="secondary"
-          className="flex items-center gap-1 pe-1 text-xs bg-red-100 dark:bg-red-900/30 text-red-700 dark:text-red-300"
+          className="flex items-center gap-1 bg-red-100 pe-1 text-xs text-red-700 dark:bg-red-900/30 dark:text-red-300"
         >
           <span>{t('filters.overdue')}</span>
           <button
             type="button"
             onClick={() => onRemoveFilter('overdue')}
-            className="ms-1 rounded-full hover:bg-red-200 dark:hover:bg-red-800 p-0.5 min-w-6 min-h-6 flex items-center justify-center"
+            className="ms-1 flex min-h-6 min-w-6 items-center justify-center rounded-full p-0.5 hover:bg-red-200 dark:hover:bg-red-800"
             aria-label={`Remove ${t('filters.overdue')} filter`}
           >
             <X className="size-3" />
@@ -144,7 +144,7 @@ export function FilterChips({
           <button
             type="button"
             onClick={() => onRemoveFilter('dueDateFrom')}
-            className="ms-1 rounded-full hover:bg-muted p-0.5 min-w-6 min-h-6 flex items-center justify-center"
+            className="ms-1 flex min-h-6 min-w-6 items-center justify-center rounded-full p-0.5 hover:bg-muted"
             aria-label="Remove from date filter"
           >
             <X className="size-3" />
@@ -164,7 +164,7 @@ export function FilterChips({
           <button
             type="button"
             onClick={() => onRemoveFilter('dueDateTo')}
-            className="ms-1 rounded-full hover:bg-muted p-0.5 min-w-6 min-h-6 flex items-center justify-center"
+            className="ms-1 flex min-h-6 min-w-6 items-center justify-center rounded-full p-0.5 hover:bg-muted"
             aria-label="Remove to date filter"
           >
             <X className="size-3" />

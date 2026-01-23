@@ -234,16 +234,16 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
       const subtitle = isRTL ? value.subtitle_ar : value.subtitle_en
 
       return (
-        <div className="flex items-center gap-2 min-w-0">
-          <Badge variant="outline" className="flex-shrink-0 text-xs">
+        <div className="flex min-w-0 items-center gap-2">
+          <Badge variant="outline" className="shrink-0 text-xs">
             {isRTL
               ? ENTITY_TYPE_OPTIONS.find((o) => o.value === value.entity_type)?.labelAr
               : ENTITY_TYPE_OPTIONS.find((o) => o.value === value.entity_type)?.labelEn}
           </Badge>
-          <div className="flex flex-col min-w-0">
-            <span className="truncate font-medium text-start">{displayName}</span>
+          <div className="flex min-w-0 flex-col">
+            <span className="truncate text-start font-medium">{displayName}</span>
             {subtitle && (
-              <span className="truncate text-xs text-muted-foreground text-start">{subtitle}</span>
+              <span className="truncate text-start text-xs text-muted-foreground">{subtitle}</span>
             )}
           </div>
         </div>
@@ -290,7 +290,7 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
           >
             {label}
             {required && (
-              <span className="text-red-500 ms-1" aria-label={t('common:validation.required')}>
+              <span className="ms-1 text-red-500" aria-label={t('common:validation.required')}>
                 *
               </span>
             )}
@@ -315,16 +315,16 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
               className={cn(triggerClasses, className)}
             >
               <span className="flex-1 truncate text-start">{renderSelectedValue()}</span>
-              <div className="flex items-center gap-1 ms-2">
+              <div className="ms-2 flex items-center gap-1">
                 {/* Clear button */}
                 {value && !disabled && (
                   <span
                     role="button"
                     aria-label={t('clear')}
                     onClick={handleClear}
-                    className="p-0.5 hover:bg-muted rounded-sm"
+                    className="rounded-sm p-0.5 hover:bg-muted"
                   >
-                    <X className="h-4 w-4 text-muted-foreground" />
+                    <X className="size-4 text-muted-foreground" />
                   </span>
                 )}
                 {/* Chevron */}
@@ -340,15 +340,15 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
           </PopoverTrigger>
 
           <PopoverContent
-            className="w-[var(--radix-popover-trigger-width)] min-w-[320px] sm:min-w-[400px] p-0"
+            className="w-[var(--radix-popover-trigger-width)] min-w-[320px] p-0 sm:min-w-[400px]"
             align="start"
             sideOffset={4}
           >
             <Command shouldFilter={false}>
               {/* Search input + Filter toggle */}
               <div className="flex items-center border-b">
-                <div className="flex-1 flex items-center px-3">
-                  <Search className="h-4 w-4 text-muted-foreground me-2 shrink-0" />
+                <div className="flex flex-1 items-center px-3">
+                  <Search className="me-2 size-4 shrink-0 text-muted-foreground" />
                   <CommandInput
                     ref={inputRef}
                     placeholder={searchPlaceholder || t('searchPlaceholder')}
@@ -357,7 +357,7 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
                     className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
                   />
                   {isLoading && (
-                    <Loader2 className="h-4 w-4 animate-spin text-muted-foreground ms-2" />
+                    <Loader2 className="ms-2 size-4 animate-spin text-muted-foreground" />
                   )}
                 </div>
                 {showTypeFilter && (
@@ -368,7 +368,7 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
                     className="me-2"
                     onClick={() => setShowFilters(!showFilters)}
                   >
-                    <Filter className="h-4 w-4" />
+                    <Filter className="size-4" />
                   </Button>
                 )}
               </div>
@@ -381,7 +381,7 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
                     animate={{ height: 'auto', opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
                     transition={{ duration: 0.2 }}
-                    className="border-b overflow-hidden"
+                    className="overflow-hidden border-b"
                   >
                     <div className="flex flex-wrap gap-2 p-2">
                       {ENTITY_TYPE_OPTIONS.map((option) => {
@@ -396,7 +396,7 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
                             className={cn('h-8', isActive && 'bg-primary text-primary-foreground')}
                             onClick={() => handleToggleType(option.value)}
                           >
-                            <Icon className="h-3.5 w-3.5 me-1.5" />
+                            <Icon className="me-1.5 size-3.5" />
                             {isRTL ? option.labelAr : option.labelEn}
                           </Button>
                         )
@@ -411,7 +411,7 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
                 {/* Empty state */}
                 {searchQuery.length < minSearchLength && (
                   <div className="py-8 text-center text-sm text-muted-foreground">
-                    <Search className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                    <Search className="mx-auto mb-2 size-8 opacity-50" />
                     <p>{t('minSearchHint', { count: minSearchLength })}</p>
                   </div>
                 )}
@@ -421,16 +421,16 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
                   !isLoading &&
                   (!searchResults || searchResults.length === 0) && (
                     <div className="py-8 text-center text-sm text-muted-foreground">
-                      <FileText className="h-8 w-8 mx-auto mb-2 opacity-50" />
+                      <FileText className="mx-auto mb-2 size-8 opacity-50" />
                       <p>{t('noResults')}</p>
-                      <p className="text-xs mt-1">{t('noResultsHint')}</p>
+                      <p className="mt-1 text-xs">{t('noResultsHint')}</p>
                     </div>
                   )}
 
                 {/* Loading state */}
                 {searchQuery.length >= minSearchLength && isLoading && (
                   <div className="py-8 text-center">
-                    <Loader2 className="h-8 w-8 mx-auto mb-2 animate-spin text-primary" />
+                    <Loader2 className="mx-auto mb-2 size-8 animate-spin text-primary" />
                     <p className="text-sm text-muted-foreground">{t('searching')}</p>
                   </div>
                 )}
@@ -464,7 +464,7 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
 
               {/* Footer hint */}
               {searchResults && searchResults.length > 0 && (
-                <div className="border-t px-3 py-2 text-xs text-center text-muted-foreground">
+                <div className="border-t px-3 py-2 text-center text-xs text-muted-foreground">
                   {t('selectHint')}
                 </div>
               )}
@@ -478,7 +478,7 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
             <motion.p
               id={helpId}
               key="help-text"
-              className="text-sm text-gray-600 dark:text-gray-400 text-start"
+              className="text-start text-sm text-gray-600 dark:text-gray-400"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -493,7 +493,7 @@ export const RichEntityAutocomplete = forwardRef<HTMLButtonElement, RichEntityAu
             <motion.p
               id={errorId}
               key="error"
-              className="text-sm text-red-600 dark:text-red-400 text-start"
+              className="text-start text-sm text-red-600 dark:text-red-400"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}

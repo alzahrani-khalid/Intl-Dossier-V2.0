@@ -98,7 +98,7 @@ export function CommentList({
         className={cn('flex items-center justify-center py-8', className)}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
         <span className="ms-2 text-muted-foreground">{t('loading', 'Loading comments...')}</span>
       </div>
     )
@@ -107,7 +107,7 @@ export function CommentList({
   if (isError) {
     return (
       <Alert variant="destructive" className={className}>
-        <AlertCircle className="h-4 w-4" />
+        <AlertCircle className="size-4" />
         <AlertDescription className="flex items-center justify-between">
           <span>{error?.message || t('error', 'Failed to load comments')}</span>
           <Button variant="outline" size="sm" onClick={() => refetch()}>
@@ -127,11 +127,11 @@ export function CommentList({
       {/* Header */}
       {title !== null && (
         <div className="flex items-center gap-2">
-          <MessageSquare className="h-5 w-5" />
+          <MessageSquare className="size-5" />
           <h3 className="text-lg font-semibold">
             {title || t('title', 'Comments')}
             {totalCount > 0 && (
-              <span className="text-sm font-normal text-muted-foreground ms-2">({totalCount})</span>
+              <span className="ms-2 text-sm font-normal text-muted-foreground">({totalCount})</span>
             )}
           </h3>
         </div>
@@ -153,7 +153,7 @@ export function CommentList({
       {/* Empty state */}
       {comments.length === 0 && (
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <MessageSquare className="h-12 w-12 text-muted-foreground/50 mb-3" />
+          <MessageSquare className="mb-3 size-12 text-muted-foreground/50" />
           <p className="text-muted-foreground">
             {emptyMessage || t('empty', 'No comments yet. Be the first to comment!')}
           </p>
@@ -179,7 +179,7 @@ export function CommentList({
         <div ref={loadMoreRef} className="flex items-center justify-center py-4">
           {isFetchingNextPage ? (
             <>
-              <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />
+              <Loader2 className="size-4 animate-spin text-muted-foreground" />
               <span className="ms-2 text-sm text-muted-foreground">
                 {t('loadingMore', 'Loading more comments...')}
               </span>

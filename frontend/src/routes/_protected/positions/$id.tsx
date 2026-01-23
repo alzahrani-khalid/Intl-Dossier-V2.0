@@ -36,7 +36,7 @@ function PositionDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="container mx-auto py-6 space-y-6">
+      <div className="container mx-auto space-y-6 py-6">
         <Skeleton className="h-8 w-64" />
         <Skeleton className="h-96" />
       </div>
@@ -83,7 +83,7 @@ function PositionDetailPage() {
   }
 
   return (
-    <div className="container mx-auto py-6 space-y-6">
+    <div className="container mx-auto space-y-6 py-6">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="space-y-1">
@@ -100,14 +100,14 @@ function PositionDetailPage() {
           {position.status === 'draft' && (
             <>
               <Button variant="outline" onClick={handleSubmit}>
-                <Send className="me-2 h-4 w-4" />
+                <Send className="me-2 size-4" />
                 {t('submit', 'Submit for Review')}
               </Button>
             </>
           )}
           {position.status === 'approved' && (
             <Button>
-              <CheckCircle className="me-2 h-4 w-4" />
+              <CheckCircle className="me-2 size-4" />
               {t('publish', 'Publish')}
             </Button>
           )}
@@ -118,19 +118,19 @@ function PositionDetailPage() {
       <Tabs defaultValue="editor" className="space-y-4">
         <TabsList>
           <TabsTrigger value="editor">
-            <FileText className="me-2 h-4 w-4" />
+            <FileText className="me-2 size-4" />
             {t('tabs.editor', 'Editor')}
           </TabsTrigger>
           {(position.status === 'under_review' ||
             position.status === 'approved' ||
             position.status === 'published') && (
             <TabsTrigger value="approvals">
-              <Users className="me-2 h-4 w-4" />
+              <Users className="me-2 size-4" />
               {t('tabs.approvals', 'Approvals')}
             </TabsTrigger>
           )}
           <TabsTrigger value="versions">
-            <History className="me-2 h-4 w-4" />
+            <History className="me-2 size-4" />
             {t('tabs.versions', 'Versions')}
           </TabsTrigger>
         </TabsList>
@@ -138,10 +138,10 @@ function PositionDetailPage() {
         <TabsContent value="editor" className="space-y-6">
           {/* Editor Status Banner */}
           {position.status !== 'draft' && (
-            <Card className="bg-muted/50 border-border">
-              <CardContent className="pt-3 pb-3">
+            <Card className="border-border bg-muted/50">
+              <CardContent className="py-3">
                 <div className="flex items-start gap-2">
-                  <FileText className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <FileText className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                   <p className="text-xs font-bold text-foreground">
                     {position.status === 'under_review' &&
                       'Position Under Review - Read Only. This position is currently under review and cannot be edited. It must go through the approval chain before any changes can be made.'}
@@ -156,10 +156,10 @@ function PositionDetailPage() {
           )}
 
           {position.status === 'draft' && (
-            <Card className="bg-muted/50 border-border">
-              <CardContent className="pt-3 pb-3">
+            <Card className="border-border bg-muted/50">
+              <CardContent className="py-3">
                 <div className="flex items-start gap-2">
-                  <FileText className="h-4 w-4 text-muted-foreground mt-0.5 flex-shrink-0" />
+                  <FileText className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                   <p className="text-xs font-bold text-foreground">
                     Draft Mode - Editing Enabled. You can edit this position. Changes are auto-saved
                     every 30 seconds. Click "Submit for Review" when ready to start the approval
@@ -170,8 +170,8 @@ function PositionDetailPage() {
             </Card>
           )}
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            <div className="lg:col-span-2 space-y-6">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+            <div className="space-y-6 lg:col-span-2">
               <Card className="p-6">
                 <PositionEditor
                   initialData={position}
@@ -182,7 +182,7 @@ function PositionDetailPage() {
               </Card>
 
               <Card className="p-6">
-                <h3 className="text-lg font-semibold mb-4">{t('attachments', 'Attachments')}</h3>
+                <h3 className="mb-4 text-lg font-semibold">{t('attachments', 'Attachments')}</h3>
                 <AttachmentUploader positionId={position.id} />
               </Card>
             </div>
@@ -190,7 +190,7 @@ function PositionDetailPage() {
             <div className="space-y-6">
               {position.consistency_score !== undefined && (
                 <Card className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">
+                  <h3 className="mb-4 text-lg font-semibold">
                     {t('consistency.title', 'Consistency Check')}
                   </h3>
                   <ConsistencyPanel positionId={position.id} />
@@ -199,7 +199,7 @@ function PositionDetailPage() {
 
               {(position.status === 'under_review' || position.status === 'approved') && (
                 <Card className="p-6">
-                  <h3 className="text-lg font-semibold mb-4">
+                  <h3 className="mb-4 text-lg font-semibold">
                     {t('approvalChain', 'Approval Progress')}
                   </h3>
                   <ApprovalChain positionId={position.id} currentStage={position.current_stage} />

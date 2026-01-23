@@ -132,7 +132,7 @@ export function ActiveEditorAvatars({
                     'ring-2 ring-background bg-muted cursor-pointer',
                   )}
                 >
-                  <AvatarFallback className="text-muted-foreground font-medium">
+                  <AvatarFallback className="font-medium text-muted-foreground">
                     +{remainingCount}
                   </AvatarFallback>
                 </Avatar>
@@ -176,7 +176,7 @@ export function ActiveEditorBadge({ count, className }: { count: number; classNa
 
   return (
     <Badge variant="secondary" className={cn('gap-1', className)} dir={isRTL ? 'rtl' : 'ltr'}>
-      <span className="h-2 w-2 rounded-full bg-green-500 animate-pulse" />
+      <span className="size-2 animate-pulse rounded-full bg-green-500" />
       {t('editors.count', { count })}
     </Badge>
   )

@@ -56,16 +56,16 @@ export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberO
   if (members.length === 0) {
     return (
       <div
-        className="flex flex-col items-center justify-center py-8 sm:py-12 text-center"
+        className="flex flex-col items-center justify-center py-8 text-center sm:py-12"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="rounded-full bg-muted p-4 sm:p-6 mb-4">
-          <Building2 className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground" />
+        <div className="mb-4 rounded-full bg-muted p-4 sm:p-6">
+          <Building2 className="size-8 text-muted-foreground sm:size-10" />
         </div>
-        <h3 className="text-sm sm:text-base font-medium text-muted-foreground mb-2">
+        <h3 className="mb-2 text-sm font-medium text-muted-foreground sm:text-base">
           {isRTL ? 'لا يوجد أعضاء' : 'No Members Yet'}
         </h3>
-        <p className="text-xs sm:text-sm text-muted-foreground max-w-md mb-4">
+        <p className="mb-4 max-w-md text-xs text-muted-foreground sm:text-sm">
           {isRTL
             ? 'سيظهر أعضاء المنظمات هنا بمجرد إضافتهم.'
             : 'Member organizations will appear here once added.'}
@@ -77,7 +77,7 @@ export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberO
             onClick={() => setShowSuggestions(true)}
             className="gap-2"
           >
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="size-4" />
             {isRTL ? 'عرض الاقتراحات الذكية' : 'Show Smart Suggestions'}
           </Button>
         )}
@@ -87,7 +87,7 @@ export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberO
 
   return (
     <div
-      className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+      className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {members.map((member, index) => {
@@ -98,16 +98,16 @@ export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberO
         return (
           <div
             key={memberId || index}
-            className="p-4 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+            className="rounded-lg border bg-card p-4 transition-colors hover:bg-accent/50"
           >
             <div className="flex items-start gap-3">
-              <Building2 className="h-10 w-10 text-muted-foreground shrink-0" />
-              <div className="flex-1 min-w-0">
-                <h4 className="text-sm font-medium mb-1 truncate">Organization {index + 1}</h4>
-                <p className="text-xs text-muted-foreground truncate">ID: {memberId}</p>
+              <Building2 className="size-10 shrink-0 text-muted-foreground" />
+              <div className="min-w-0 flex-1">
+                <h4 className="mb-1 truncate text-sm font-medium">Organization {index + 1}</h4>
+                <p className="truncate text-xs text-muted-foreground">ID: {memberId}</p>
                 {memberRole && (
                   <div className="mt-2 inline-flex items-center gap-1 rounded-full bg-primary/10 px-2 py-0.5">
-                    <span className="text-xs font-medium text-primary capitalize">
+                    <span className="text-xs font-medium capitalize text-primary">
                       {memberRole}
                     </span>
                   </div>

@@ -61,13 +61,13 @@ interface EntityComparisonSelectorProps {
  * Entity type options with icons
  */
 const ENTITY_TYPE_OPTIONS: { value: DossierType; icon: React.ReactNode }[] = [
-  { value: 'country', icon: <Globe className="h-4 w-4" /> },
-  { value: 'organization', icon: <Building2 className="h-4 w-4" /> },
-  { value: 'person', icon: <User className="h-4 w-4" /> },
-  { value: 'engagement', icon: <Calendar className="h-4 w-4" /> },
-  { value: 'forum', icon: <MessageSquare className="h-4 w-4" /> },
-  { value: 'working_group', icon: <Users className="h-4 w-4" /> },
-  { value: 'topic', icon: <Tag className="h-4 w-4" /> },
+  { value: 'country', icon: <Globe className="size-4" /> },
+  { value: 'organization', icon: <Building2 className="size-4" /> },
+  { value: 'person', icon: <User className="size-4" /> },
+  { value: 'engagement', icon: <Calendar className="size-4" /> },
+  { value: 'forum', icon: <MessageSquare className="size-4" /> },
+  { value: 'working_group', icon: <Users className="size-4" /> },
+  { value: 'topic', icon: <Tag className="size-4" /> },
 ]
 
 /**
@@ -75,7 +75,7 @@ const ENTITY_TYPE_OPTIONS: { value: DossierType; icon: React.ReactNode }[] = [
  */
 function getEntityTypeIcon(type: DossierType): React.ReactNode {
   const option = ENTITY_TYPE_OPTIONS.find((o) => o.value === type)
-  return option?.icon ?? <Tag className="h-4 w-4" />
+  return option?.icon ?? <Tag className="size-4" />
 }
 
 /**
@@ -121,20 +121,20 @@ const EntityCard = memo(function EntityCard({
               : 'border-muted-foreground/30',
           )}
         >
-          {isSelected && <Check className="h-3 w-3" />}
+          {isSelected && <Check className="size-3" />}
         </div>
-        <div className="flex-1 min-w-0">
-          <h4 className="font-medium text-sm sm:text-base truncate">
+        <div className="min-w-0 flex-1">
+          <h4 className="truncate text-sm font-medium sm:text-base">
             {isRTL ? entity.name_ar : entity.name_en}
           </h4>
           {entity.name_ar && entity.name_en && (
-            <p className="text-xs sm:text-sm text-muted-foreground truncate mt-0.5">
+            <p className="mt-0.5 truncate text-xs text-muted-foreground sm:text-sm">
               {isRTL ? entity.name_en : entity.name_ar}
             </p>
           )}
         </div>
         {isSelected && (
-          <Badge variant="secondary" className="flex-shrink-0 text-xs">
+          <Badge variant="secondary" className="shrink-0 text-xs">
             {t('difference.same')}
           </Badge>
         )}
@@ -148,9 +148,9 @@ const EntityCard = memo(function EntityCard({
  */
 function EntityCardSkeleton() {
   return (
-    <div className="p-3 sm:p-4 rounded-lg border border-border">
+    <div className="rounded-lg border border-border p-3 sm:p-4">
       <div className="flex items-start gap-3">
-        <Skeleton className="w-5 h-5 rounded-full flex-shrink-0" />
+        <Skeleton className="size-5 shrink-0 rounded-full" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-4 w-3/4" />
           <Skeleton className="h-3 w-1/2" />
@@ -255,9 +255,9 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
         {/* Search and selection controls */}
         {selectedType && (
           <>
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <div className="relative flex-1">
-                <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   type="search"
                   placeholder={t('selector.searchPlaceholder')}
@@ -277,7 +277,7 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
                     onClick={handleClear}
                     className="text-destructive hover:text-destructive"
                   >
-                    <X className="h-4 w-4 me-1" />
+                    <X className="me-1 size-4" />
                     {t('selector.clearSelection')}
                   </Button>
                 )}
@@ -297,21 +297,21 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
             )}
 
             {/* Entity list */}
-            <ScrollArea className="h-[300px] sm:h-[400px] border rounded-lg">
-              <div className="p-2 sm:p-3 space-y-2">
+            <ScrollArea className="h-[300px] rounded-lg border sm:h-[400px]">
+              <div className="space-y-2 p-2 sm:p-3">
                 {isLoading ? (
                   // Loading state
                   Array.from({ length: 5 }).map((_, i) => <EntityCardSkeleton key={i} />)
                 ) : filteredEntities.length === 0 ? (
                   // Empty state
-                  <div className="text-center py-8 sm:py-12">
-                    <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-muted mb-4">
+                  <div className="py-8 text-center sm:py-12">
+                    <div className="mb-4 inline-flex size-12 items-center justify-center rounded-full bg-muted">
                       {getEntityTypeIcon(selectedType)}
                     </div>
-                    <h4 className="font-medium text-sm sm:text-base">
+                    <h4 className="text-sm font-medium sm:text-base">
                       {t('selector.noEntitiesFound')}
                     </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
                       {t('selector.noEntitiesDescription')}
                     </p>
                   </div>
@@ -342,12 +342,12 @@ export const EntityComparisonSelector = memo(function EntityComparisonSelector({
 
         {/* Initial state - no type selected */}
         {!selectedType && (
-          <div className="text-center py-8 sm:py-12 border rounded-lg bg-muted/30">
-            <div className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-muted mb-4">
-              <Globe className="h-6 w-6 text-muted-foreground" />
+          <div className="rounded-lg border bg-muted/30 py-8 text-center sm:py-12">
+            <div className="mb-4 inline-flex size-12 items-center justify-center rounded-full bg-muted">
+              <Globe className="size-6 text-muted-foreground" />
             </div>
-            <h4 className="font-medium text-sm sm:text-base">{t('table.empty.title')}</h4>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1 max-w-sm mx-auto">
+            <h4 className="text-sm font-medium sm:text-base">{t('table.empty.title')}</h4>
+            <p className="mx-auto mt-1 max-w-sm text-xs text-muted-foreground sm:text-sm">
               {t('description')}
             </p>
           </div>

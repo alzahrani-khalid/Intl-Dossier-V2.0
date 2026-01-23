@@ -75,9 +75,9 @@ export function SeriesEditDialog({
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             {isDelete ? (
-              <AlertTriangle className="h-5 w-5 text-destructive" />
+              <AlertTriangle className="size-5 text-destructive" />
             ) : (
-              <Repeat className="h-5 w-5" />
+              <Repeat className="size-5" />
             )}
             {isEdit ? t('calendar.series.confirmEdit') : t('calendar.series.confirmDelete')}
           </DialogTitle>
@@ -87,7 +87,7 @@ export function SeriesEditDialog({
               : t('calendar.series.confirmDeleteMessage')}
           </DialogDescription>
           {eventTitle && (
-            <div className="mt-2 p-2 bg-muted rounded-md text-sm">
+            <div className="mt-2 rounded-md bg-muted p-2 text-sm">
               <span className="font-medium">{eventTitle}</span>
             </div>
           )}
@@ -100,13 +100,13 @@ export function SeriesEditDialog({
             className="space-y-3"
           >
             {/* Single occurrence */}
-            <div className="flex items-center space-x-2 rtl:space-x-reverse p-3 border rounded-lg hover:bg-muted/50 cursor-pointer">
+            <div className="flex cursor-pointer items-center space-x-2 rounded-lg border p-3 hover:bg-muted/50 rtl:space-x-reverse">
               <RadioGroupItem value="single" id="scope-single" />
               <Label
                 htmlFor="scope-single"
-                className="flex-1 cursor-pointer flex items-center gap-2"
+                className="flex flex-1 cursor-pointer items-center gap-2"
               >
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <Calendar className="size-4 text-muted-foreground" />
                 <span>
                   {isEdit ? t('calendar.series.editSingle') : t('calendar.series.deleteSingle')}
                 </span>
@@ -114,14 +114,14 @@ export function SeriesEditDialog({
             </div>
 
             {/* This and future occurrences */}
-            <div className="flex items-center space-x-2 rtl:space-x-reverse p-3 border rounded-lg hover:bg-muted/50 cursor-pointer">
+            <div className="flex cursor-pointer items-center space-x-2 rounded-lg border p-3 hover:bg-muted/50 rtl:space-x-reverse">
               <RadioGroupItem value="this_and_future" id="scope-future" />
               <Label
                 htmlFor="scope-future"
-                className="flex-1 cursor-pointer flex items-center gap-2"
+                className="flex flex-1 cursor-pointer items-center gap-2"
               >
                 <div className="flex items-center">
-                  <Calendar className="h-4 w-4 text-muted-foreground" />
+                  <Calendar className="size-4 text-muted-foreground" />
                   <span className={`mx-1 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}>
                     &rarr;
                   </span>
@@ -135,10 +135,10 @@ export function SeriesEditDialog({
             </div>
 
             {/* All occurrences */}
-            <div className="flex items-center space-x-2 rtl:space-x-reverse p-3 border rounded-lg hover:bg-muted/50 cursor-pointer">
+            <div className="flex cursor-pointer items-center space-x-2 rounded-lg border p-3 hover:bg-muted/50 rtl:space-x-reverse">
               <RadioGroupItem value="all" id="scope-all" />
-              <Label htmlFor="scope-all" className="flex-1 cursor-pointer flex items-center gap-2">
-                <Repeat className="h-4 w-4 text-muted-foreground" />
+              <Label htmlFor="scope-all" className="flex flex-1 cursor-pointer items-center gap-2">
+                <Repeat className="size-4 text-muted-foreground" />
                 <span>
                   {isEdit ? t('calendar.series.editAll') : t('calendar.series.deleteAll')}
                 </span>
@@ -161,7 +161,7 @@ export function SeriesEditDialog({
           )}
         </div>
 
-        <DialogFooter className="flex-col-reverse sm:flex-row gap-2">
+        <DialogFooter className="flex-col-reverse gap-2 sm:flex-row">
           <Button
             type="button"
             variant="outline"

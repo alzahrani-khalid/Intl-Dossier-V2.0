@@ -63,11 +63,11 @@ type GenerationPhase = 'idle' | 'generating' | 'success' | 'error' | 'fallback'
 
 // Focus area icons mapping
 const focusAreaIcons: Record<SummaryFocusArea, React.ReactNode> = {
-  all: <Grid3X3 className="h-4 w-4" />,
-  activity: <Activity className="h-4 w-4" />,
-  relationships: <Users className="h-4 w-4" />,
-  commitments: <CheckSquare className="h-4 w-4" />,
-  strategic: <Target className="h-4 w-4" />,
+  all: <Grid3X3 className="size-4" />,
+  activity: <Activity className="size-4" />,
+  relationships: <Users className="size-4" />,
+  commitments: <CheckSquare className="size-4" />,
+  strategic: <Target className="size-4" />,
 }
 
 export function AISummaryPanel({
@@ -187,11 +187,11 @@ export function AISummaryPanel({
         {phase === 'generating' && (
           <div className="space-y-3">
             <div className="flex items-center justify-between text-sm">
-              <span className="text-muted-foreground flex items-center gap-2">
-                <Loader2 className="h-4 w-4 animate-spin" />
+              <span className="flex items-center gap-2 text-muted-foreground">
+                <Loader2 className="size-4 animate-spin" />
                 {t('generating', 'Generating summary...')}
               </span>
-              <span className="text-muted-foreground font-mono">{Math.round(progress)}%</span>
+              <span className="font-mono text-muted-foreground">{Math.round(progress)}%</span>
             </div>
             <Progress value={progress} className="h-2" />
             <div className="space-y-2">
@@ -205,17 +205,17 @@ export function AISummaryPanel({
         {/* Error state */}
         {phase === 'error' && formattedError && (
           <Alert variant="destructive">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="size-4" />
             <AlertTitle>{formattedError.title}</AlertTitle>
             <AlertDescription className="mt-2 space-y-3">
               <p>{formattedError.message}</p>
               {formattedError.action && (
                 <p className="text-sm opacity-80">{formattedError.action}</p>
               )}
-              <div className="flex flex-wrap items-center gap-2 mt-3">
+              <div className="mt-3 flex flex-wrap items-center gap-2">
                 {formattedError.retryable && (
                   <Button variant="outline" size="sm" onClick={retry} className="gap-1">
-                    <RefreshCw className="h-3 w-3" />
+                    <RefreshCw className="size-3" />
                     {t('retry', 'Retry')}
                   </Button>
                 )}
@@ -229,8 +229,8 @@ export function AISummaryPanel({
 
         {/* Fallback warning */}
         {phase === 'fallback' && (
-          <Alert className="bg-amber-50 border-amber-200 dark:bg-amber-950 dark:border-amber-800">
-            <AlertTriangle className="h-4 w-4 text-amber-600" />
+          <Alert className="border-amber-200 bg-amber-50 dark:border-amber-800 dark:bg-amber-950">
+            <AlertTriangle className="size-4 text-amber-600" />
             <AlertTitle className="text-amber-800 dark:text-amber-200">
               {t('fallback.title', 'Basic Summary Generated')}
             </AlertTitle>
@@ -261,13 +261,13 @@ export function AISummaryPanel({
                   }
                 >
                   {copiedSection === 'Executive Summary' ? (
-                    <Check className="h-3 w-3" />
+                    <Check className="size-3" />
                   ) : (
-                    <Copy className="h-3 w-3" />
+                    <Copy className="size-3" />
                   )}
                 </Button>
               </div>
-              <p className="text-sm text-muted-foreground leading-relaxed">
+              <p className="text-sm leading-relaxed text-muted-foreground">
                 {summaryContent.executive_summary}
               </p>
             </div>
@@ -278,7 +278,7 @@ export function AISummaryPanel({
                 <Label className="text-sm font-medium">
                   {t('sections.keyHighlights', 'Key Highlights')}
                 </Label>
-                <ul className="list-disc list-inside space-y-1">
+                <ul className="list-inside list-disc space-y-1">
                   {summaryContent.key_highlights.map((highlight, idx) => (
                     <li key={idx} className="text-sm text-muted-foreground">
                       {highlight}
@@ -294,8 +294,8 @@ export function AISummaryPanel({
                 <Label className="text-sm font-medium">{t('sections.details', 'Details')}</Label>
                 {summaryContent.sections.map((section, idx) => (
                   <Collapsible key={idx} defaultOpen={section.importance === 'high'}>
-                    <div className="border rounded-lg">
-                      <CollapsibleTrigger className="flex items-center justify-between w-full p-3 hover:bg-muted/50">
+                    <div className="rounded-lg border">
+                      <CollapsibleTrigger className="flex w-full items-center justify-between p-3 hover:bg-muted/50">
                         <div className="flex items-center gap-2">
                           <Badge
                             variant={
@@ -309,13 +309,13 @@ export function AISummaryPanel({
                           >
                             {t(`importance.${section.importance}`, section.importance)}
                           </Badge>
-                          <span className="font-medium text-sm">{section.title}</span>
+                          <span className="text-sm font-medium">{section.title}</span>
                         </div>
-                        <ChevronDown className="h-4 w-4 text-muted-foreground" />
+                        <ChevronDown className="size-4 text-muted-foreground" />
                       </CollapsibleTrigger>
                       <CollapsibleContent>
                         <div className="px-3 pb-3 pt-0">
-                          <p className="text-sm text-muted-foreground leading-relaxed">
+                          <p className="text-sm leading-relaxed text-muted-foreground">
                             {section.content}
                           </p>
                         </div>
@@ -327,7 +327,7 @@ export function AISummaryPanel({
             )}
 
             {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-2 pt-2 border-t text-xs text-muted-foreground">
+            <div className="flex flex-wrap items-center gap-2 border-t pt-2 text-xs text-muted-foreground">
               <span>
                 {t('metadata.dataPoints', '{{count}} data points analyzed', {
                   count: summaryContent.metadata.data_points_analyzed,
@@ -344,8 +344,8 @@ export function AISummaryPanel({
             </div>
 
             {/* Actions */}
-            <div className="flex flex-col sm:flex-row gap-2 pt-2">
-              <Button variant="outline" onClick={handleReset} className="gap-1 flex-1">
+            <div className="flex flex-col gap-2 pt-2 sm:flex-row">
+              <Button variant="outline" onClick={handleReset} className="flex-1 gap-1">
                 <Sparkles className={cn('h-4 w-4', isRTL && 'rotate-180')} />
                 {t('generateAnother', 'Generate New Summary')}
               </Button>
@@ -359,22 +359,22 @@ export function AISummaryPanel({
             {/* Options toggle */}
             <Collapsible open={showOptions} onOpenChange={setShowOptions}>
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="sm" className="text-muted-foreground gap-1">
+                <Button variant="ghost" size="sm" className="gap-1 text-muted-foreground">
                   {showOptions ? (
                     <>
-                      <ChevronUp className="h-4 w-4" />
+                      <ChevronUp className="size-4" />
                       {t('hideOptions', 'Hide options')}
                     </>
                   ) : (
                     <>
-                      <ChevronDown className="h-4 w-4" />
+                      <ChevronDown className="size-4" />
                       {t('showOptions', 'Customize summary')}
                     </>
                   )}
                 </Button>
               </CollapsibleTrigger>
 
-              <CollapsibleContent className="space-y-4 mt-4">
+              <CollapsibleContent className="mt-4 space-y-4">
                 {/* Length selector */}
                 <div className="space-y-2">
                   <Label className="text-sm">{t('options.length', 'Summary Length')}</Label>
@@ -385,19 +385,19 @@ export function AISummaryPanel({
                     <SelectContent>
                       <SelectItem value="brief">
                         <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4" />
+                          <FileText className="size-4" />
                           {t('length.brief', 'Brief (~150 words)')}
                         </div>
                       </SelectItem>
                       <SelectItem value="standard">
                         <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4" />
+                          <FileText className="size-4" />
                           {t('length.standard', 'Standard (~300 words)')}
                         </div>
                       </SelectItem>
                       <SelectItem value="detailed">
                         <div className="flex items-center gap-2">
-                          <FileText className="h-4 w-4" />
+                          <FileText className="size-4" />
                           {t('length.detailed', 'Detailed (~500 words)')}
                         </div>
                       </SelectItem>
@@ -440,7 +440,7 @@ export function AISummaryPanel({
             </Collapsible>
 
             {/* Generate button */}
-            <Button onClick={handleGenerate} disabled={!entityId} className="w-full min-h-11">
+            <Button onClick={handleGenerate} disabled={!entityId} className="min-h-11 w-full">
               <Sparkles className={cn('h-4 w-4 me-2', isRTL && 'rotate-180')} />
               {t('generate', 'Generate Summary')}
             </Button>

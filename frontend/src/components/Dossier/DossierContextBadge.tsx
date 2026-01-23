@@ -142,14 +142,14 @@ export function DossierContextBadge({
           className={isPrimary ? 'text-primary-foreground' : undefined}
         />
       )}
-      <span className="truncate max-w-[120px] sm:max-w-[180px]">{displayName}</span>
+      <span className="max-w-[120px] truncate sm:max-w-[180px]">{displayName}</span>
       {isPrimary && (
-        <span className="text-[10px] opacity-75 shrink-0">{t('badge.primary', 'Primary')}</span>
+        <span className="shrink-0 text-[10px] opacity-75">{t('badge.primary', 'Primary')}</span>
       )}
       {inheritanceLabel && (
-        <span className="text-[10px] opacity-75 shrink-0 hidden sm:inline">{inheritanceLabel}</span>
+        <span className="hidden shrink-0 text-[10px] opacity-75 sm:inline">{inheritanceLabel}</span>
       )}
-      {clickable && <ExternalLink className="size-3 opacity-50 shrink-0" />}
+      {clickable && <ExternalLink className="size-3 shrink-0 opacity-50" />}
     </Badge>
   )
 

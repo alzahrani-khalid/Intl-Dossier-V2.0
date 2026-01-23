@@ -22,12 +22,12 @@ export const router = createRouter({
  auth: undefined!,
  },
  defaultErrorComponent: ({ error, reset }) => (
- <div className="from-base-50 to-base-100 flex min-h-screen items-center justify-center bg-gradient-to-br p-4 sm:p-8">
- <div className="border-base-200 w-full max-w-lg rounded-2xl border bg-white p-6 text-center shadow-xl sm:p-8">
+ <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-base-50 to-base-100 p-4 sm:p-8">
+ <div className="w-full max-w-lg rounded-2xl border border-base-200 bg-white p-6 text-center shadow-xl sm:p-8">
  <h2 className="font-display text-xl font-semibold text-red-600 sm:text-2xl">
  {error?.name ?? 'Application error'}
  </h2>
- <p className="text-base-600 mt-4 text-sm sm:text-base">
+ <p className="mt-4 text-sm text-base-600 sm:text-base">
  {error?.message ?? 'Something went wrong while loading this page.'}
  </p>
  <button
@@ -46,19 +46,19 @@ export const router = createRouter({
 
  return (
  <div
- className="from-base-50 to-base-100 flex min-h-screen items-center justify-center bg-gradient-to-br p-4 sm:p-8"
+ className="flex min-h-screen items-center justify-center bg-gradient-to-br from-base-50 to-base-100 p-4 sm:p-8"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
- <div className="border-base-200 w-full max-w-lg rounded-2xl border bg-white p-6 text-center shadow-xl sm:p-8">
+ <div className="w-full max-w-lg rounded-2xl border border-base-200 bg-white p-6 text-center shadow-xl sm:p-8">
  <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-amber-100 sm:mb-6 sm:size-20">
  <span className="text-3xl font-bold text-amber-600 sm:text-4xl">404</span>
  </div>
 
- <h1 className="font-display text-base-900 text-xl font-semibold sm:text-2xl md:text-3xl">
+ <h1 className="font-display text-xl font-semibold text-base-900 sm:text-2xl md:text-3xl">
  {t('common.notFound.title', 'Page Not Found')}
  </h1>
 
- <p className="text-base-600 mt-3 text-sm sm:mt-4 sm:text-base">
+ <p className="mt-3 text-sm text-base-600 sm:mt-4 sm:text-base">
  {t('common.notFound.message', 'The page you are looking for does not exist or has been moved.')}
  </p>
 
@@ -74,7 +74,7 @@ export const router = createRouter({
  <button
  type="button"
  onClick={() => window.history.back()}
- className="border-base-300 text-base-700 hover:bg-base-50 inline-flex items-center justify-center gap-2 rounded-lg border bg-white px-4 py-2.5 text-sm font-medium shadow-sm transition-colors sm:px-6 sm:py-3"
+ className="inline-flex items-center justify-center gap-2 rounded-lg border border-base-300 bg-white px-4 py-2.5 text-sm font-medium text-base-700 shadow-sm transition-colors hover:bg-base-50 sm:px-6 sm:py-3"
  >
  <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
  {t('common.notFound.goBack', 'Go Back')}

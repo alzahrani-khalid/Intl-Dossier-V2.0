@@ -181,10 +181,10 @@ export function DocumentTree({
  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-icon-rail-active-indicator'
  )}
  >
- <Folder className="h-4 w-4 shrink-0 text-panel-text-muted" />
+ <Folder className="text-panel-text-muted size-4 shrink-0" />
  <span className="flex-1 truncate">{folder.label}</span>
  {folder.count !== undefined && (
- <span className="text-xs text-panel-text-muted tabular-nums">
+ <span className="text-panel-text-muted text-xs tabular-nums">
  {folder.count}
  </span>
  )}
@@ -211,11 +211,11 @@ export function DocumentTree({
  <Button
  variant="ghost"
  size="sm"
- className="h-6 w-6 p-0 hover:bg-panel-hover"
+ className="hover:bg-panel-hover size-6 p-0"
  onClick={onAddClick}
  aria-label={t('common.add', 'Add document')}
  >
- <Plus className="h-4 w-4 text-panel-text-muted" />
+ <Plus className="text-panel-text-muted size-4" />
  </Button>
  </div>
 
@@ -223,7 +223,7 @@ export function DocumentTree({
  {showSearch && (
  <div className="px-2 pb-3">
  <div className="relative mx-2">
- <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-panel-text-muted opacity-50" />
+ <Search className="text-panel-text-muted absolute start-3 top-1/2 size-4 -translate-y-1/2 opacity-50" />
  <Input
  type="search"
  placeholder={t('common.search', 'Search')}
@@ -246,11 +246,11 @@ export function DocumentTree({
  )}
 
  {/* Top Separator */}
- <div className="border-t border-panel-border mx-2 mb-2" />
+ <div className="border-panel-border mx-2 mb-2 border-t" />
 
  {/* Document Tree */}
  <nav
- className="flex flex-col px-2 overflow-y-auto"
+ className="flex flex-col overflow-y-auto px-2"
  role="navigation"
  aria-label={t('navigation.documents', 'Documents')}
  >
@@ -258,7 +258,7 @@ export function DocumentTree({
  </nav>
 
  {/* Bottom Separator */}
- <div className="border-t border-panel-border mx-2 mt-2" />
+ <div className="border-panel-border mx-2 mt-2 border-t" />
 
  {/* More Button */}
  <button
@@ -270,7 +270,7 @@ export function DocumentTree({
  'focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-icon-rail-active-indicator'
  )}
  >
- <Plus className="h-4 w-4" />
+ <Plus className="size-4" />
  <span>{t('common.more', 'More')}</span>
  </button>
  </div>

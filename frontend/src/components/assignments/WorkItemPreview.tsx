@@ -42,7 +42,7 @@ export function WorkItemPreview({
   }
 
   const getTypeIcon = (): React.JSX.Element => {
-    return <FileText className="h-5 w-5" />
+    return <FileText className="size-5" />
   }
 
   const getTypeColor = (): 'default' | 'secondary' | 'outline' | 'destructive' => {
@@ -111,7 +111,7 @@ export function WorkItemPreview({
         {/* Work Item Title */}
         {assignment.work_item_title && (
           <div className="space-y-1">
-            <h3 className="text-lg font-semibold text-start">{assignment.work_item_title}</h3>
+            <h3 className="text-start text-lg font-semibold">{assignment.work_item_title}</h3>
           </div>
         )}
 
@@ -129,7 +129,7 @@ export function WorkItemPreview({
             <span className="text-sm text-muted-foreground">
               {t('workItem.preview', 'Description')}:
             </span>
-            <p className="text-sm text-muted-foreground leading-relaxed text-start">
+            <p className="text-start text-sm leading-relaxed text-muted-foreground">
               {truncateContent(assignment.work_item_preview)}
             </p>
           </div>
@@ -139,7 +139,7 @@ export function WorkItemPreview({
         {assignment.work_item_linked_entities &&
           assignment.work_item_linked_entities.length > 0 && (
             <div className="space-y-3">
-              <span className="text-sm font-semibold text-muted-foreground uppercase">
+              <span className="text-sm font-semibold uppercase text-muted-foreground">
                 {t('workItem.linkedItems', 'Linked Items')}
               </span>
               <div className="space-y-2">
@@ -168,21 +168,21 @@ export function WorkItemPreview({
                     <Link
                       key={`${entity.type}-${entity.id}-${index}`}
                       to={entityLink}
-                      className="flex items-start gap-2 p-3 rounded-lg bg-muted/50 hover:bg-muted transition-colors"
+                      className="flex items-start gap-2 rounded-lg bg-muted/50 p-3 transition-colors hover:bg-muted"
                     >
-                      <Folder className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-                      <div className="flex-1 min-w-0">
-                        <p className="text-xs text-muted-foreground capitalize">
+                      <Folder className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs capitalize text-muted-foreground">
                           {entityTypeLabel}
                         </p>
-                        <p className="text-sm font-medium text-start">{entityTitle}</p>
+                        <p className="text-start text-sm font-medium">{entityTitle}</p>
                         {entity.status && (
-                          <Badge variant="outline" className="text-xs mt-1">
+                          <Badge variant="outline" className="mt-1 text-xs">
                             {entity.status}
                           </Badge>
                         )}
                       </div>
-                      <ExternalLink className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                      <ExternalLink className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                     </Link>
                   )
                 })}
@@ -209,9 +209,9 @@ export function WorkItemPreview({
         {/* View Full Link - only show if showViewButton is true */}
         {showViewButton && (
           <div className="pt-2">
-            <Button asChild variant="outline" className="w-full h-11">
+            <Button asChild variant="outline" className="h-11 w-full">
               <Link to={getViewFullLink()}>
-                <ExternalLink className="h-4 w-4 me-2" />
+                <ExternalLink className="me-2 size-4" />
                 {t('workItem.viewFull', 'View Full Details')}
               </Link>
             </Button>

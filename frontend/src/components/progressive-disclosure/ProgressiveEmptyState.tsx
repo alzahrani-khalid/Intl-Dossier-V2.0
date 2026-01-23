@@ -122,11 +122,11 @@ function HintTierSection({
         disabled={isLocked}
         aria-expanded={isExpanded}
       >
-        <div className="p-1.5 rounded-md bg-primary/10">
-          <TierIcon className="w-4 h-4 text-primary" />
+        <div className="rounded-md bg-primary/10 p-1.5">
+          <TierIcon className="size-4 text-primary" />
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <span className="text-sm font-medium">{t(config.labelKey)}</span>
         </div>
 
@@ -135,11 +135,11 @@ function HintTierSection({
         </Badge>
 
         {isLocked ? (
-          <HelpCircle className="w-4 h-4 text-muted-foreground" />
+          <HelpCircle className="size-4 text-muted-foreground" />
         ) : isExpanded ? (
-          <ChevronUp className="w-4 h-4 text-muted-foreground" />
+          <ChevronUp className="size-4 text-muted-foreground" />
         ) : (
-          <ChevronDown className="w-4 h-4 text-muted-foreground" />
+          <ChevronDown className="size-4 text-muted-foreground" />
         )}
       </button>
 
@@ -331,14 +331,14 @@ export function ProgressiveEmptyState({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3, delay: 0.2 }}
-          className="w-full max-w-lg mt-8 sm:mt-10"
+          className="mt-8 w-full max-w-lg sm:mt-10"
         >
           <Separator className="mb-6" />
 
           <div className="text-start">
-            <div className="flex items-center gap-2 mb-4">
-              <Lightbulb className="w-5 h-5 text-primary" />
-              <h4 className="text-sm sm:text-base font-medium text-foreground">
+            <div className="mb-4 flex items-center gap-2">
+              <Lightbulb className="size-5 text-primary" />
+              <h4 className="text-sm font-medium text-foreground sm:text-base">
                 {t('hints.section.title')}
               </h4>
             </div>
@@ -359,7 +359,7 @@ export function ProgressiveEmptyState({
 
             {/* Show locked tier notice */}
             {(!unlockedTiers.intermediate || !unlockedTiers.advanced) && (
-              <p className="text-xs text-muted-foreground mt-4 text-center">
+              <p className="mt-4 text-center text-xs text-muted-foreground">
                 {!unlockedTiers.intermediate
                   ? t('hints.unlock.intermediate')
                   : t('hints.unlock.advanced')}
@@ -378,7 +378,7 @@ export function ProgressiveEmptyState({
           className="mt-6"
         >
           <Badge variant="outline" className="text-xs">
-            <Keyboard className="w-3 h-3 me-1.5" />
+            <Keyboard className="me-1.5 size-3" />
             {t('hints.keyboard.available')}
           </Badge>
         </motion.div>
@@ -401,8 +401,8 @@ export function ProgressiveEmptyState({
         dir={isRTL ? 'rtl' : 'ltr'}
         data-testid="progressive-empty-state"
       >
-        <Icon className="w-10 h-10 text-muted-foreground mb-3" />
-        <p className="text-sm text-muted-foreground mb-4">{description}</p>
+        <Icon className="mb-3 size-10 text-muted-foreground" />
+        <p className="mb-4 text-sm text-muted-foreground">{description}</p>
         {primaryAction && (
           <Button onClick={handlePrimaryAction} variant="ghost" size="sm">
             {primaryAction.icon && (

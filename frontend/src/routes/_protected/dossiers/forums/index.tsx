@@ -52,23 +52,23 @@ function ForumsListPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8"
+      className="container mx-auto p-4 sm:p-6 lg:p-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
-      <header className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6 sm:mb-8">
+      <header className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-3">
-          <MessageSquare className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+          <MessageSquare className="size-6 text-primary sm:size-8" />
           <div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold">{t('type.forum')}</h1>
-            <p className="text-sm sm:text-base text-muted-foreground mt-1">
+            <h1 className="text-2xl font-bold sm:text-3xl md:text-4xl">{t('type.forum')}</h1>
+            <p className="mt-1 text-sm text-muted-foreground sm:text-base">
               {t('typeDescription.forum')}
             </p>
           </div>
         </div>
         <Button asChild>
           <Link to="/dossiers/create">
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('action.create')}
           </Link>
         </Button>
@@ -88,8 +88,8 @@ function ForumsListPage() {
       {/* Loading State */}
       {isLoading && (
         <div className="flex items-center justify-center py-12 sm:py-16 lg:py-20">
-          <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin text-muted-foreground" />
-          <span className="ms-3 text-muted-foreground text-sm sm:text-base">
+          <Loader2 className="size-8 animate-spin text-muted-foreground sm:size-10" />
+          <span className="ms-3 text-sm text-muted-foreground sm:text-base">
             {t('list.loading')}
           </span>
         </div>
@@ -98,24 +98,24 @@ function ForumsListPage() {
       {/* Error State */}
       {error && !isLoading && (
         <div
-          className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6"
+          className="rounded-lg border border-destructive/20 bg-destructive/10 p-4 sm:p-6"
           role="alert"
         >
-          <h3 className="text-base sm:text-lg font-semibold text-destructive mb-2">
+          <h3 className="mb-2 text-base font-semibold text-destructive sm:text-lg">
             {t('list.error')}
           </h3>
-          <p className="text-sm sm:text-base text-destructive/90">{error.message}</p>
+          <p className="text-sm text-destructive/90 sm:text-base">{error.message}</p>
         </div>
       )}
 
       {/* Empty State */}
       {!isLoading && !error && filteredDossiers?.length === 0 && (
-        <div className="flex flex-col items-center justify-center py-12 sm:py-16 lg:py-20 text-center">
-          <MessageSquare className="h-12 w-12 sm:h-16 sm:w-16 text-muted-foreground mb-4" />
-          <h3 className="text-base sm:text-lg font-semibold mb-2">
+        <div className="flex flex-col items-center justify-center py-12 text-center sm:py-16 lg:py-20">
+          <MessageSquare className="mb-4 size-12 text-muted-foreground sm:size-16" />
+          <h3 className="mb-2 text-base font-semibold sm:text-lg">
             {searchQuery ? t('list.emptyFiltered') : t('list.empty')}
           </h3>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6">
+          <p className="mb-6 max-w-md text-sm text-muted-foreground sm:text-base">
             {searchQuery ? t('list.emptyFilteredDescription') : t('list.emptyDescription')}
           </p>
           {!searchQuery && (
@@ -129,7 +129,7 @@ function ForumsListPage() {
       {/* Table - Desktop */}
       {!isLoading && !error && filteredDossiers && filteredDossiers.length > 0 && (
         <>
-          <div className="hidden md:block rounded-lg border overflow-hidden">
+          <div className="hidden overflow-hidden rounded-lg border md:block">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -176,15 +176,15 @@ function ForumsListPage() {
           </div>
 
           {/* Card List - Mobile */}
-          <div className="md:hidden space-y-4">
+          <div className="space-y-4 md:hidden">
             {filteredDossiers.map((dossier) => (
               <Link
                 key={dossier.id}
                 to={getDossierDetailPath(dossier.id, 'forum')}
-                className="block p-4 rounded-lg border bg-card hover:bg-accent transition-colors"
+                className="block rounded-lg border bg-card p-4 transition-colors hover:bg-accent"
               >
-                <div className="flex items-start justify-between gap-3 mb-3">
-                  <h3 className="font-semibold text-base">
+                <div className="mb-3 flex items-start justify-between gap-3">
+                  <h3 className="text-base font-semibold">
                     {isRTL ? dossier.name_ar : dossier.name_en}
                   </h3>
                   <Badge variant={dossier.status === 'active' ? 'default' : 'secondary'}>
@@ -192,7 +192,7 @@ function ForumsListPage() {
                   </Badge>
                 </div>
                 {(isRTL ? dossier.description_ar : dossier.description_en) && (
-                  <p className="text-sm text-muted-foreground mb-3 line-clamp-2">
+                  <p className="mb-3 line-clamp-2 text-sm text-muted-foreground">
                     {isRTL ? dossier.description_ar : dossier.description_en}
                   </p>
                 )}

@@ -132,7 +132,7 @@ export function AvailabilityStatusToggle({
  <Card className={cn('availability-status-toggle', className)}>
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <UserCheck className="w-5 h-5" />
+ <UserCheck className="size-5" />
  {t('assignments:availability.title')}
  </CardTitle>
  <CardDescription>{t('assignments:availability.description')}</CardDescription>
@@ -140,7 +140,7 @@ export function AvailabilityStatusToggle({
 
  <CardContent className="space-y-4">
  {/* Current Status Display */}
- <div className="flex items-center gap-2 pb-2 border-b">
+ <div className="flex items-center gap-2 border-b pb-2">
  <span className="text-sm text-gray-600 dark:text-gray-400">
  {t('assignments:availability.currentStatus')}:
  </span>
@@ -186,7 +186,7 @@ export function AvailabilityStatusToggle({
  !unavailableUntil && 'text-muted-foreground'
  )}
  >
- <CalendarIcon className="me-2 h-4 w-4" />
+ <CalendarIcon className="me-2 size-4" />
  {unavailableUntil ? (
  format(unavailableUntil, 'PPP', {
  locale: i18n.language === 'ar' ? undefined : undefined,
@@ -234,7 +234,7 @@ export function AvailabilityStatusToggle({
 
  {/* Reassignment Summary */}
  {showReassignmentSummary && reassignmentData && (
- <div className="p-4 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg space-y-2">
+ <div className="space-y-2 rounded-lg border border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-900/20">
  <p className="font-medium text-blue-900 dark:text-blue-300">
  {t('assignments:availability.reassignmentSummary')}
  </p>
@@ -266,7 +266,7 @@ export function AvailabilityStatusToggle({
  className="flex-1"
  >
  {updateAvailabilityMutation.isPending && (
- <Loader2 className="w-4 h-4 animate-spin me-2" />
+ <Loader2 className="me-2 size-4 animate-spin" />
  )}
  {t('assignments:availability.updateStatus')}
  </Button>

@@ -87,7 +87,7 @@ export function SampleDataBanner({
     <>
       <div
         className={`
-          w-full border rounded-lg mb-4 overflow-hidden transition-all
+          mb-4 w-full overflow-hidden rounded-lg border transition-all
           ${bannerColor}
         `}
         dir={isRTL ? 'rtl' : 'ltr'}
@@ -95,16 +95,16 @@ export function SampleDataBanner({
         aria-live="polite"
       >
         {/* Main banner row */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-3 sm:p-4">
-          <div className="flex items-start sm:items-center gap-3 flex-1 min-w-0">
-            <div className="flex-shrink-0 p-1.5 rounded-full bg-amber-100 dark:bg-amber-900/50">
-              <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-400" />
+        <div className="flex flex-col items-start justify-between gap-3 p-3 sm:flex-row sm:items-center sm:p-4">
+          <div className="flex min-w-0 flex-1 items-start gap-3 sm:items-center">
+            <div className="shrink-0 rounded-full bg-amber-100 p-1.5 dark:bg-amber-900/50">
+              <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400 sm:size-5" />
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm sm:text-base text-foreground">
+            <div className="min-w-0 flex-1">
+              <p className="text-sm font-medium text-foreground sm:text-base">
                 {t('banner.title')}
               </p>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5 truncate">
+              <p className="mt-0.5 truncate text-xs text-muted-foreground sm:text-sm">
                 {instances.length === 1
                   ? t('banner.description', { templateName })
                   : t('banner.descriptionMultiple', { count: instances.length })}
@@ -113,21 +113,21 @@ export function SampleDataBanner({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
             <Button
               variant="ghost"
               size="sm"
-              className="flex-1 sm:flex-none h-9 text-xs sm:text-sm"
+              className="h-9 flex-1 text-xs sm:flex-none sm:text-sm"
               onClick={() => setIsExpanded(!isExpanded)}
             >
               {isExpanded ? (
                 <>
-                  <ChevronUp className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
+                  <ChevronUp className={`size-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
                   <span className="hidden sm:inline">{t('banner.viewDetails')}</span>
                 </>
               ) : (
                 <>
-                  <ChevronDown className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
+                  <ChevronDown className={`size-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
                   <span className="hidden sm:inline">{t('banner.viewDetails')}</span>
                 </>
               )}
@@ -135,16 +135,16 @@ export function SampleDataBanner({
             <Button
               variant="destructive"
               size="sm"
-              className="flex-1 sm:flex-none h-9 text-xs sm:text-sm"
+              className="h-9 flex-1 text-xs sm:flex-none sm:text-sm"
               onClick={() => handleRemoveClick()}
               disabled={isRemoving}
             >
-              <Trash2 className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
+              <Trash2 className={`size-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
               <span className="hidden sm:inline">
                 {instances.length === 1 ? t('banner.removeButton') : t('banner.removeAll')}
               </span>
               <span className="sm:hidden">
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </span>
             </Button>
           </div>
@@ -152,9 +152,9 @@ export function SampleDataBanner({
 
         {/* Expanded details */}
         {isExpanded && (
-          <div className="border-t px-3 sm:px-4 py-3 bg-background/50">
+          <div className="border-t bg-background/50 p-3 sm:px-4">
             {/* Stats row */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4">
+            <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4">
               <StatCard
                 icon={FileText}
                 label={t('stats.dossiers', { count: totals.dossiers })}
@@ -180,13 +180,13 @@ export function SampleDataBanner({
             {/* Instance list (if multiple) */}
             {instances.length > 1 && (
               <div className="space-y-2">
-                <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">
+                <p className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   {t('templates.title')}
                 </p>
                 {instances.map((instance) => (
                   <div
                     key={instance.id}
-                    className="flex items-center justify-between p-2 rounded-md bg-muted/50"
+                    className="flex items-center justify-between rounded-md bg-muted/50 p-2"
                   >
                     <div className="flex items-center gap-2">
                       <Badge variant="outline" className="text-xs">
@@ -203,7 +203,7 @@ export function SampleDataBanner({
                       onClick={() => handleRemoveClick(instance.id)}
                       disabled={isRemoving}
                     >
-                      <Trash2 className="h-3 w-3" />
+                      <Trash2 className="size-3" />
                     </Button>
                   </div>
                 ))}
@@ -236,7 +236,7 @@ export function SampleDataBanner({
             >
               {isRemoving ? (
                 <span className="flex items-center gap-2">
-                  <span className="h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  <span className="size-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
                   {t('loading.removing')}
                 </span>
               ) : (
@@ -261,9 +261,9 @@ function StatCard({
   isRTL: boolean
 }) {
   return (
-    <div className="flex items-center gap-2 p-2 rounded-md bg-muted/30">
-      <Icon className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-      <span className="text-xs sm:text-sm font-medium truncate">{label}</span>
+    <div className="flex items-center gap-2 rounded-md bg-muted/30 p-2">
+      <Icon className="size-4 shrink-0 text-muted-foreground" />
+      <span className="truncate text-xs font-medium sm:text-sm">{label}</span>
     </div>
   )
 }

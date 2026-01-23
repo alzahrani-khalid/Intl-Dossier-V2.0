@@ -57,23 +57,23 @@ function CountryDossierDetailRoute() {
   if (error) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16"
+        className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div
-          className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6"
+          className="rounded-lg border border-destructive/20 bg-destructive/10 p-4 sm:p-6"
           role="alert"
         >
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-destructive flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg font-semibold text-destructive mb-2">
+            <AlertCircle className="mt-0.5 size-5 shrink-0 text-destructive sm:size-6" />
+            <div className="min-w-0 flex-1">
+              <h3 className="mb-2 text-base font-semibold text-destructive sm:text-lg">
                 {t('detail.error')}
               </h3>
-              <p className="text-sm sm:text-base text-destructive/90">
+              <p className="text-sm text-destructive/90 sm:text-base">
                 {error.message || t('detail.errorGeneric')}
               </p>
-              <div className="mt-4 flex flex-col sm:flex-row gap-2">
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                 <Button variant="outline" asChild>
                   <Link to="/dossiers">{t('action.backToHub')}</Link>
                 </Button>
@@ -92,26 +92,26 @@ function CountryDossierDetailRoute() {
   if (!dossier || !isCountryDossier(dossier)) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16"
+        className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div
-          className="bg-destructive/10 border border-destructive/20 rounded-lg p-4 sm:p-6"
+          className="rounded-lg border border-destructive/20 bg-destructive/10 p-4 sm:p-6"
           role="alert"
         >
           <div className="flex items-start gap-3">
-            <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-destructive flex-shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <h3 className="text-base sm:text-lg font-semibold text-destructive mb-2">
+            <AlertCircle className="mt-0.5 size-5 shrink-0 text-destructive sm:size-6" />
+            <div className="min-w-0 flex-1">
+              <h3 className="mb-2 text-base font-semibold text-destructive sm:text-lg">
                 {t('detail.wrongType')}
               </h3>
-              <p className="text-sm sm:text-base text-destructive/90">
+              <p className="text-sm text-destructive/90 sm:text-base">
                 {t('detail.wrongTypeDescription', {
                   expectedType: t('type.country'),
                   actualType: dossier ? t(`type.${dossier.dossier_type}`) : 'unknown',
                 })}
               </p>
-              <div className="mt-4 flex flex-col sm:flex-row gap-2">
+              <div className="mt-4 flex flex-col gap-2 sm:flex-row">
                 <Button variant="outline" asChild>
                   <Link to="/dossiers">{t('action.backToHub')}</Link>
                 </Button>

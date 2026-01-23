@@ -120,7 +120,7 @@ function InfluenceNode({ data }: { data: Record<string, unknown> }) {
 
   return (
     <div
-      className={`relative rounded-full flex items-center justify-center cursor-pointer transition-all hover:ring-2 hover:ring-offset-2 ${
+      className={`relative flex cursor-pointer items-center justify-center rounded-full transition-all hover:ring-2 hover:ring-offset-2 ${
         isCenter ? 'ring-2 ring-primary ring-offset-2' : ''
       }`}
       style={{
@@ -135,16 +135,16 @@ function InfluenceNode({ data }: { data: Record<string, unknown> }) {
       {/* Role badge */}
       {RoleIcon && (
         <div
-          className="absolute -bottom-1 -end-1 bg-white rounded-full p-0.5 shadow-md"
+          className="absolute -bottom-1 -end-1 rounded-full bg-white p-0.5 shadow-md"
           style={{ borderColor: tierColor, borderWidth: 2 }}
         >
-          <RoleIcon className="w-3 h-3" style={{ color: tierColor }} />
+          <RoleIcon className="size-3" style={{ color: tierColor }} />
         </div>
       )}
 
       {/* Tooltip with name */}
       <div
-        className="absolute -bottom-8 left-1/2 -translate-x-1/2 px-2 py-1 bg-background border rounded shadow-sm whitespace-nowrap text-xs font-medium opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none"
+        className="pointer-events-none absolute -bottom-8 left-1/2 -translate-x-1/2 whitespace-nowrap rounded border bg-background px-2 py-1 text-xs font-medium opacity-0 shadow-sm transition-opacity group-hover:opacity-100"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {name}
@@ -175,16 +175,16 @@ function DetailedInfluenceNode({ data }: { data: Record<string, unknown> }) {
 
   return (
     <Card
-      className={`p-3 min-w-[160px] sm:min-w-[180px] cursor-pointer transition-shadow hover:shadow-lg ${
+      className={`min-w-[160px] cursor-pointer p-3 transition-shadow hover:shadow-lg sm:min-w-[180px] ${
         isCenter ? 'ring-2 ring-primary' : ''
       }`}
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <div className="p-1.5 rounded-full" style={{ backgroundColor: NODE_COLORS[tier] + '20' }}>
-            <Icon className="h-4 w-4" style={{ color: NODE_COLORS[tier] }} />
+          <div className="rounded-full p-1.5" style={{ backgroundColor: NODE_COLORS[tier] + '20' }}>
+            <Icon className="size-4" style={{ color: NODE_COLORS[tier] }} />
           </div>
-          <span className="font-semibold text-sm truncate">{name}</span>
+          <span className="truncate text-sm font-semibold">{name}</span>
         </div>
 
         <div className="flex items-center justify-between text-xs">
@@ -336,11 +336,11 @@ export function InfluenceNetworkGraph({
   if (isLoading) {
     return (
       <div
-        className="flex items-center justify-center bg-muted/10 rounded-lg"
+        className="flex items-center justify-center rounded-lg bg-muted/10"
         style={{ height: typeof height === 'number' ? `${height}px` : height }}
       >
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="size-8 animate-spin text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
             {t('loading_network', 'Loading network...')}
           </p>
@@ -353,12 +353,12 @@ export function InfluenceNetworkGraph({
   if (!data?.nodes?.length) {
     return (
       <div
-        className="flex items-center justify-center bg-muted/10 rounded-lg border border-dashed"
+        className="flex items-center justify-center rounded-lg border border-dashed bg-muted/10"
         style={{ height: typeof height === 'number' ? `${height}px` : height }}
       >
-        <div className="text-center px-4">
-          <Users className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
-          <p className="font-medium mb-1">{t('no_network_data', 'No network data available')}</p>
+        <div className="px-4 text-center">
+          <Users className="mx-auto mb-3 size-12 text-muted-foreground" />
+          <p className="mb-1 font-medium">{t('no_network_data', 'No network data available')}</p>
           <p className="text-sm text-muted-foreground">
             {t('no_network_hint', 'Select a stakeholder to view their influence network')}
           </p>
@@ -369,7 +369,7 @@ export function InfluenceNetworkGraph({
 
   return (
     <div
-      className={`rounded-lg border overflow-hidden bg-background ${className}`}
+      className={`overflow-hidden rounded-lg border bg-background ${className}`}
       style={{ height: typeof height === 'number' ? `${height}px` : height }}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
@@ -399,15 +399,15 @@ export function InfluenceNetworkGraph({
               return NODE_COLORS[tier] || NODE_COLORS.peripheral
             }}
             maskColor="rgba(0, 0, 0, 0.1)"
-            className="bg-background/80 backdrop-blur-sm rounded-lg border"
+            className="rounded-lg border bg-background/80 backdrop-blur-sm"
           />
         )}
 
         {/* Statistics Panel */}
         {showStats && data?.statistics && (
           <Panel position={isRTL ? 'top-right' : 'top-left'}>
-            <Card className="p-3 bg-background/90 backdrop-blur-sm">
-              <div className="text-xs space-y-1">
+            <Card className="bg-background/90 p-3 backdrop-blur-sm">
+              <div className="space-y-1 text-xs">
                 <div className="flex justify-between gap-4">
                   <span className="text-muted-foreground">{t('nodes', 'Nodes')}:</span>
                   <span className="font-medium">{data.statistics.total_nodes}</span>
@@ -430,14 +430,14 @@ export function InfluenceNetworkGraph({
         )}
 
         {/* Legend Panel */}
-        <Panel position="bottom-right" className={isRTL ? 'start-4 end-auto' : ''}>
-          <Card className="p-3 bg-background/90 backdrop-blur-sm">
-            <div className="text-xs space-y-2">
-              <p className="font-medium mb-2">{t('legend', 'Legend')}</p>
+        <Panel position="bottom-right" className={isRTL ? 'end-auto start-4' : ''}>
+          <Card className="bg-background/90 p-3 backdrop-blur-sm">
+            <div className="space-y-2 text-xs">
+              <p className="mb-2 font-medium">{t('legend', 'Legend')}</p>
               <div className="grid grid-cols-2 gap-2">
                 {(Object.entries(NODE_COLORS) as [InfluenceTier, string][]).map(([tier, color]) => (
                   <div key={tier} className="flex items-center gap-1.5">
-                    <div className="w-3 h-3 rounded-full" style={{ backgroundColor: color }} />
+                    <div className="size-3 rounded-full" style={{ backgroundColor: color }} />
                     <span className="text-muted-foreground">
                       {isRTL ? INFLUENCE_TIER_LABELS[tier].ar : INFLUENCE_TIER_LABELS[tier].en}
                     </span>

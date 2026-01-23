@@ -245,11 +245,11 @@ export function ForumDetailsDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-4xl max-h-[90vh] p-0">
-        <DialogHeader className="px-6 pt-6 pb-4">
+      <DialogContent className="max-h-[90vh] max-w-4xl p-0">
+        <DialogHeader className="px-6 pb-4 pt-6">
           <div className="flex items-start justify-between gap-4">
-            <DialogTitle className="text-xl sm:text-2xl flex items-start gap-3 flex-1">
-              <Users className="h-6 w-6 mt-1 shrink-0" />
+            <DialogTitle className="flex flex-1 items-start gap-3 text-xl sm:text-2xl">
+              <Users className="mt-1 size-6 shrink-0" />
               <div className="flex-1">
                 <div>{title}</div>
                 <Badge className={`mt-2 ${getStatusColor(forum.status)}`}>
@@ -265,12 +265,12 @@ export function ForumDetailsDialog({
                 disabled={addToCalendarMutation.isPending}
                 className="shrink-0"
               >
-                <CalendarPlus className="h-4 w-4 me-2" />
+                <CalendarPlus className="me-2 size-4" />
                 {addToCalendarMutation.isPending ? 'Adding...' : 'Add to Calendar'}
               </Button>
               {canEdit && (
                 <Button variant="outline" size="sm" onClick={handleEdit} className="shrink-0">
-                  <Edit className="h-4 w-4 me-2" />
+                  <Edit className="me-2 size-4" />
                   {t('common:common.edit')}
                 </Button>
               )}
@@ -288,23 +288,23 @@ export function ForumDetailsDialog({
             {/* Basic Information */}
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Info className="h-4 w-4" />
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Info className="size-4" />
                   {t('common:common.about')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-3">
                 {description && (
                   <div>
-                    <p className="text-sm text-muted-foreground mb-1">{t('common:common.about')}</p>
+                    <p className="mb-1 text-sm text-muted-foreground">{t('common:common.about')}</p>
                     <p className="text-sm">{description}</p>
                   </div>
                 )}
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   {/* Dates */}
                   <div className="flex items-start gap-2">
-                    <Calendar className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                    <Calendar className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">{t('dates')}</p>
                       <p className="text-sm text-muted-foreground">
@@ -316,7 +316,7 @@ export function ForumDetailsDialog({
 
                   {/* Location */}
                   <div className="flex items-start gap-2">
-                    <MapPin className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                    <MapPin className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">{t('location')}</p>
                       <p className="text-sm text-muted-foreground">{location || '-'}</p>
@@ -326,9 +326,9 @@ export function ForumDetailsDialog({
                   {/* Venue */}
                   <div className="flex items-start gap-2">
                     {forum.is_virtual ? (
-                      <Video className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                      <Video className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                     ) : (
-                      <Building2 className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                      <Building2 className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                     )}
                     <div>
                       <p className="text-sm font-medium">{t('venue')}</p>
@@ -340,7 +340,7 @@ export function ForumDetailsDialog({
 
                   {/* Sessions */}
                   <div className="flex items-start gap-2">
-                    <Clock className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                    <Clock className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">{t('sessions')}</p>
                       <p className="text-sm text-muted-foreground">
@@ -352,7 +352,7 @@ export function ForumDetailsDialog({
                   {/* Max Participants */}
                   {forum.max_participants && (
                     <div className="flex items-start gap-2">
-                      <Users className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                      <Users className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                       <div>
                         <p className="text-sm font-medium">{t('participants')}</p>
                         <p className="text-sm text-muted-foreground">
@@ -364,7 +364,7 @@ export function ForumDetailsDialog({
 
                   {/* Organizer */}
                   <div className="flex items-start gap-2">
-                    <Building2 className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
+                    <Building2 className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                     <div>
                       <p className="text-sm font-medium">{t('organizer', 'Organizer')}</p>
                       <p className="text-sm text-muted-foreground">{organizerName}</p>
@@ -377,18 +377,18 @@ export function ForumDetailsDialog({
             {/* Participating Countries */}
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Globe2 className="h-4 w-4" />
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Globe2 className="size-4" />
                   {t('countries')} ({countries.length})
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {countries.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {countries.map((country, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-2 rounded-lg border"
+                        className="flex items-center justify-between rounded-lg border p-2"
                       >
                         <span className="text-sm">{isRTL ? country.name_ar : country.name_en}</span>
                         <Badge variant="outline" className="text-xs">
@@ -398,7 +398,7 @@ export function ForumDetailsDialog({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground text-center py-4">
+                  <p className="py-4 text-center text-sm text-muted-foreground">
                     {t('noCountries')}
                   </p>
                 )}
@@ -408,18 +408,18 @@ export function ForumDetailsDialog({
             {/* Participating Organizations */}
             <Card>
               <CardHeader className="pb-3">
-                <CardTitle className="text-base flex items-center gap-2">
-                  <Building2 className="h-4 w-4" />
+                <CardTitle className="flex items-center gap-2 text-base">
+                  <Building2 className="size-4" />
                   {t('organizations')} ({organizations.length})
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {organizations.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
                     {organizations.map((org, idx) => (
                       <div
                         key={idx}
-                        className="flex items-center justify-between p-2 rounded-lg border"
+                        className="flex items-center justify-between rounded-lg border p-2"
                       >
                         <span className="text-sm">{isRTL ? org.name_ar : org.name_en}</span>
                         <Badge variant="outline" className="text-xs">
@@ -429,7 +429,7 @@ export function ForumDetailsDialog({
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground text-center py-4">
+                  <p className="py-4 text-center text-sm text-muted-foreground">
                     {t('noOrganizations')}
                   </p>
                 )}

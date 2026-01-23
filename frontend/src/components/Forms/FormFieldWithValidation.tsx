@@ -249,7 +249,7 @@ export function FormFieldWithValidation({
         >
           {label}
           {required && (
-            <span className="text-red-500 ms-1" aria-label={t('common:validation.required')}>
+            <span className="ms-1 text-red-500" aria-label={t('common:validation.required')}>
               *
             </span>
           )}
@@ -331,7 +331,7 @@ export function FormFieldWithValidation({
 
       {/* Character count (mobile - shown below input) */}
       {showCharCount && maxLength && (
-        <div id={charCountId} className="sm:hidden text-end">
+        <div id={charCountId} className="text-end sm:hidden">
           <CharacterCount current={value.length} max={maxLength} />
         </div>
       )}
@@ -342,7 +342,7 @@ export function FormFieldWithValidation({
           <motion.p
             id={helpId}
             key="help-text"
-            className="text-sm text-gray-600 dark:text-gray-400 text-start"
+            className="text-start text-sm text-gray-600 dark:text-gray-400"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}

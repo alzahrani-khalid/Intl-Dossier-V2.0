@@ -205,21 +205,21 @@ export function SavedSearchesManager({
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+            <h4 className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
               {isRTL ? search.name_ar : search.name_en}
             </h4>
-            {search.is_pinned && <Pin className="h-3 w-3 text-amber-500 shrink-0" />}
-            {search.is_shared && <Share2 className="h-3 w-3 text-blue-500 shrink-0" />}
-            {search.alert?.is_enabled && <Bell className="h-3 w-3 text-green-500 shrink-0" />}
+            {search.is_pinned && <Pin className="size-3 shrink-0 text-amber-500" />}
+            {search.is_shared && <Share2 className="size-3 shrink-0 text-blue-500" />}
+            {search.alert?.is_enabled && <Bell className="size-3 shrink-0 text-green-500" />}
           </div>
           {(search.description_en || search.description_ar) && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+            <p className="mt-0.5 truncate text-xs text-gray-500 dark:text-gray-400">
               {isRTL ? search.description_ar : search.description_en}
             </p>
           )}
-          <div className="flex items-center gap-2 mt-1.5">
+          <div className="mt-1.5 flex items-center gap-2">
             {search.use_count > 0 && (
               <Badge variant="outline" className="text-xs">
                 {t('useCount', { count: search.use_count })}
@@ -235,24 +235,24 @@ export function SavedSearchesManager({
 
         {/* Actions */}
         {showActions && (
-          <div className="shrink-0 flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+          <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
             <Button
               variant="ghost"
               size="sm"
-              className="h-8 w-8 p-0"
+              className="size-8 p-0"
               onClick={(e) => {
                 e.stopPropagation()
                 handleExecute(search)
               }}
               title={t('execute')}
             >
-              <PlayCircle className="h-4 w-4" />
+              <PlayCircle className="size-4" />
             </Button>
 
             <DropdownMenu>
               <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
-                <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                  <MoreVertical className="h-4 w-4" />
+                <Button variant="ghost" size="sm" className="size-8 p-0">
+                  <MoreVertical className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -264,12 +264,12 @@ export function SavedSearchesManager({
                 >
                   {search.is_pinned ? (
                     <>
-                      <PinOff className="h-4 w-4 me-2" />
+                      <PinOff className="me-2 size-4" />
                       {t('actions.unpin')}
                     </>
                   ) : (
                     <>
-                      <Pin className="h-4 w-4 me-2" />
+                      <Pin className="me-2 size-4" />
                       {t('actions.pin')}
                     </>
                   )}
@@ -282,7 +282,7 @@ export function SavedSearchesManager({
                       onEdit(search)
                     }}
                   >
-                    <Edit className="h-4 w-4 me-2" />
+                    <Edit className="me-2 size-4" />
                     {t('actions.edit')}
                   </DropdownMenuItem>
                 )}
@@ -294,7 +294,7 @@ export function SavedSearchesManager({
                       onShare(search)
                     }}
                   >
-                    <Share2 className="h-4 w-4 me-2" />
+                    <Share2 className="me-2 size-4" />
                     {t('actions.share')}
                   </DropdownMenuItem>
                 )}
@@ -306,7 +306,7 @@ export function SavedSearchesManager({
                       onConfigureAlert(search)
                     }}
                   >
-                    <Bell className="h-4 w-4 me-2" />
+                    <Bell className="me-2 size-4" />
                     {t('actions.configureAlert')}
                   </DropdownMenuItem>
                 )}
@@ -321,7 +321,7 @@ export function SavedSearchesManager({
                         setDeleteSearchId(search.id)
                       }}
                     >
-                      <Trash2 className="h-4 w-4 me-2" />
+                      <Trash2 className="me-2 size-4" />
                       {t('actions.delete')}
                     </DropdownMenuItem>
                   </>
@@ -363,12 +363,12 @@ export function SavedSearchesManager({
           <IconComponent className={cn('h-4 w-4', colorClasses.text)} />
         </div>
 
-        <div className="flex-1 min-w-0">
-          <h4 className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
+        <div className="min-w-0 flex-1">
+          <h4 className="truncate text-sm font-medium text-gray-900 dark:text-gray-100">
             {isRTL ? filter.name_ar : filter.name_en}
           </h4>
           {(filter.description_en || filter.description_ar) && (
-            <p className="text-xs text-gray-500 dark:text-gray-400 truncate mt-0.5">
+            <p className="mt-0.5 truncate text-xs text-gray-500 dark:text-gray-400">
               {isRTL ? filter.description_ar : filter.description_en}
             </p>
           )}
@@ -393,11 +393,11 @@ export function SavedSearchesManager({
   // Render empty state
   const renderEmpty = (message: string) => (
     <div className="flex flex-col items-center justify-center py-8 text-center">
-      <Search className="h-12 w-12 text-gray-300 dark:text-gray-600 mb-3" />
+      <Search className="mb-3 size-12 text-gray-300 dark:text-gray-600" />
       <p className="text-sm text-gray-500 dark:text-gray-400">{message}</p>
       {onCreateNew && (
         <Button variant="outline" size="sm" className="mt-4" onClick={onCreateNew}>
-          <Plus className="h-4 w-4 me-2" />
+          <Plus className="me-2 size-4" />
           {t('createNew')}
         </Button>
       )}
@@ -411,7 +411,7 @@ export function SavedSearchesManager({
         <h2 className="text-lg font-semibold text-gray-900 dark:text-gray-100">{t('title')}</h2>
         {onCreateNew && !compact && (
           <Button onClick={onCreateNew} size="sm">
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('createNew')}
           </Button>
         )}
@@ -420,7 +420,7 @@ export function SavedSearchesManager({
       {/* Search */}
       {!compact && (
         <div className="relative">
-          <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+          <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-gray-400" />
           <Input
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
@@ -434,15 +434,15 @@ export function SavedSearchesManager({
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as typeof activeTab)}>
         <TabsList className="grid w-full grid-cols-3">
           <TabsTrigger value="all" className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
+            <Filter className="size-4" />
             {!compact && t('tabs.all')}
           </TabsTrigger>
           <TabsTrigger value="pinned" className="flex items-center gap-2">
-            <Star className="h-4 w-4" />
+            <Star className="size-4" />
             {!compact && t('tabs.pinned')}
           </TabsTrigger>
           <TabsTrigger value="smart" className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4" />
+            <Sparkles className="size-4" />
             {!compact && t('tabs.smart')}
           </TabsTrigger>
         </TabsList>
@@ -476,7 +476,7 @@ export function SavedSearchesManager({
         {/* Smart Filters */}
         <TabsContent value="smart" className="mt-4">
           <ScrollArea className={compact ? 'h-[300px]' : 'h-[400px]'}>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
               {loadingSmart ? (
                 renderSkeletons(6)
               ) : smartFilters?.data && smartFilters.data.length > 0 ? (
@@ -494,7 +494,7 @@ export function SavedSearchesManager({
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle className="flex items-center gap-2">
-              <AlertTriangle className="h-5 w-5 text-red-500" />
+              <AlertTriangle className="size-5 text-red-500" />
               {t('deleteDialog.title')}
             </AlertDialogTitle>
             <AlertDialogDescription>{t('deleteDialog.description')}</AlertDialogDescription>

@@ -100,12 +100,12 @@ export function EngagementKanbanDialog({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent dir={isRTL ? 'rtl' : 'ltr'} className="max-w-[95vw] max-h-[90vh] p-0">
-        <DialogHeader className="px-4 sm:px-6 pt-4 sm:pt-6 pb-4">
+      <DialogContent dir={isRTL ? 'rtl' : 'ltr'} className="max-h-[90vh] max-w-[95vw] p-0">
+        <DialogHeader className="p-4 sm:px-6 sm:pt-6">
           <div className="flex items-start justify-between gap-4">
             <div className="flex-1 space-y-2">
               <DialogTitle className="flex items-center gap-2 text-lg sm:text-xl">
-                <LayoutGrid className="h-4 w-4 sm:h-5 sm:w-5" />
+                <LayoutGrid className="size-4 sm:size-5" />
                 {engagementTitle}
               </DialogTitle>
               <DialogDescription className="sr-only">
@@ -131,37 +131,37 @@ export function EngagementKanbanDialog({
             </div>
 
             <Button variant="ghost" size="icon" onClick={onClose} className="shrink-0">
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
           </div>
         </DialogHeader>
 
         {/* Kanban Board */}
-        <div className="px-4 sm:px-6 pb-4 sm:pb-6 overflow-x-auto">
+        <div className="overflow-x-auto px-4 pb-4 sm:px-6 sm:pb-6">
           <KanbanProvider
             columns={kanbanColumns}
             data={kanbanData}
             onDragEnd={handleDragEnd}
-            className="min-w-[1200px] pb-2 gap-3"
+            className="min-w-[1200px] gap-3 pb-2"
           >
             {(column) => (
-              <KanbanBoard key={column.id} id={column.id} className="bg-muted/30 border-muted">
-                <KanbanHeader className="bg-muted/50 font-semibold text-sm px-4 py-3 border-b">
+              <KanbanBoard key={column.id} id={column.id} className="border-muted bg-muted/30">
+                <KanbanHeader className="border-b bg-muted/50 px-4 py-3 text-sm font-semibold">
                   <div className="flex items-center justify-between">
                     <span>{column.name}</span>
-                    <span className="ms-2 px-2 py-0.5 bg-background rounded-full text-xs font-normal">
+                    <span className="ms-2 rounded-full bg-background px-2 py-0.5 text-xs font-normal">
                       {kanbanData.filter((a) => a.column === column.id).length}
                     </span>
                   </div>
                 </KanbanHeader>
-                <KanbanCards id={column.id} className="p-3 gap-3 min-h-[400px]">
+                <KanbanCards id={column.id} className="min-h-[400px] gap-3 p-3">
                   {(assignment) => (
                     <KanbanCard
                       key={assignment.id}
                       id={assignment.id}
                       name={assignment.work_item_id}
                       column={assignment.column}
-                      className="bg-background hover:shadow-md transition-shadow border-border"
+                      className="border-border bg-background transition-shadow hover:shadow-md"
                     >
                       <KanbanTaskCard assignment={assignment} />
                     </KanbanCard>
@@ -173,7 +173,7 @@ export function EngagementKanbanDialog({
         </div>
 
         {/* Keyboard Hint */}
-        <div className="px-4 sm:px-6 pb-3 sm:pb-4 text-xs text-muted-foreground">
+        <div className="px-4 pb-3 text-xs text-muted-foreground sm:px-6 sm:pb-4">
           {t('kanban.keyboardHint', 'Drag tasks between columns to update their status')}
         </div>
       </DialogContent>

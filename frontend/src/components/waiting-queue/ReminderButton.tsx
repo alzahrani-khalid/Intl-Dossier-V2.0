@@ -191,21 +191,21 @@ export function ReminderButton({
  >
  {isPending ? (
  <>
- <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? '' : ''}`} />
+ <Loader2 className={`size-4 animate-spin ${isRTL ? '' : ''}`} />
  <span className="hidden sm:inline">
  {t('waitingQueue.reminder.button.sending', 'Sending...')}
  </span>
  </>
  ) : showSuccess ? (
  <>
- <CheckCircle2 className="h-4 w-4 text-green-600" />
- <span className="hidden sm:inline text-green-600">
+ <CheckCircle2 className="size-4 text-green-600" />
+ <span className="hidden text-green-600 sm:inline">
  {t('waitingQueue.reminder.button.sent', 'Sent!')}
  </span>
  </>
  ) : (
  <>
- <Bell className="h-4 w-4" />
+ <Bell className="size-4" />
  <span className="hidden sm:inline">
  {t('waitingQueue.reminder.button.send', 'Send Reminder')}
  </span>

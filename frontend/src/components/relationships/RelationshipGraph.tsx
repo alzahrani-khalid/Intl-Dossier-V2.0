@@ -73,19 +73,19 @@ function ContactNode({ data }: { data: any }) {
 
   return (
     <Card
-      className={`p-3 min-w-[180px] sm:min-w-[200px] cursor-pointer transition-shadow hover:shadow-md ${
+      className={`min-w-[180px] cursor-pointer p-3 transition-shadow hover:shadow-md sm:min-w-[200px] ${
         isCenter ? 'ring-2 ring-primary' : ''
       }`}
     >
       <div className="flex flex-col gap-2">
         <div className="flex items-center gap-2">
-          <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-          <span className="font-semibold text-sm truncate">{data.label}</span>
+          <User className="size-4 shrink-0 text-muted-foreground" />
+          <span className="truncate text-sm font-semibold">{data.label}</span>
         </div>
-        {data.position && <p className="text-xs text-muted-foreground truncate">{data.position}</p>}
+        {data.position && <p className="truncate text-xs text-muted-foreground">{data.position}</p>}
         {data.organization && (
-          <Badge variant="secondary" className="text-xs px-2 py-0.5 w-fit">
-            <Building2 className="h-3 w-3 me-1" />
+          <Badge variant="secondary" className="w-fit px-2 py-0.5 text-xs">
+            <Building2 className="me-1 size-3" />
             {data.organization}
           </Badge>
         )}
@@ -150,7 +150,7 @@ export function RelationshipGraph({
 
       // Center contact in the middle
       let x = isCenter ? 0 : radius * Math.cos(index * angleStep)
-      let y = isCenter ? 0 : radius * Math.sin(index * angleStep)
+      const y = isCenter ? 0 : radius * Math.sin(index * angleStep)
 
       // For RTL, flip x coordinates
       if (isRTL) {
@@ -250,7 +250,7 @@ export function RelationshipGraph({
         style={{ height: typeof height === 'number' ? `${height}px` : height }}
       >
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="size-8 animate-spin text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
             {t('contactDirectory.relationships.loading_network')}
           </p>
@@ -263,11 +263,11 @@ export function RelationshipGraph({
   if (!relationships.length) {
     return (
       <div
-        className="flex items-center justify-center bg-muted/10 rounded-lg border border-dashed"
+        className="flex items-center justify-center rounded-lg border border-dashed bg-muted/10"
         style={{ height: typeof height === 'number' ? `${height}px` : height }}
       >
-        <div className="text-center px-4">
-          <p className="font-medium mb-1">{t('contactDirectory.relationships.no_relationships')}</p>
+        <div className="px-4 text-center">
+          <p className="mb-1 font-medium">{t('contactDirectory.relationships.no_relationships')}</p>
           <p className="text-sm text-muted-foreground">
             {t('contactDirectory.relationships.add_relationships_hint')}
           </p>
@@ -278,7 +278,7 @@ export function RelationshipGraph({
 
   return (
     <div
-      className={`rounded-lg border overflow-hidden ${className}`}
+      className={`overflow-hidden rounded-lg border ${className}`}
       style={{ height: typeof height === 'number' ? `${height}px` : height }}
       dir={isRTL ? 'rtl' : 'ltr'}
     >

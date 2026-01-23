@@ -74,27 +74,27 @@ function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: bo
   const lastInteraction = formatLastInteraction(contact.last_interaction_date, locale)
 
   const cardContent = (
-    <Card className="hover:shadow-md transition-shadow h-full">
-      <CardContent className="p-4 sm:p-5 h-full flex flex-col">
+    <Card className="h-full transition-shadow hover:shadow-md">
+      <CardContent className="flex h-full flex-col p-4 sm:p-5">
         {/* Avatar and Name */}
-        <div className="flex items-start gap-3 mb-3">
-          <Avatar className="h-12 w-12 sm:h-14 sm:w-14 shrink-0">
+        <div className="mb-3 flex items-start gap-3">
+          <Avatar className="size-12 shrink-0 sm:size-14">
             <AvatarImage src={contact.photo_url || undefined} alt={displayName} />
-            <AvatarFallback className="bg-primary/10 text-primary text-sm font-semibold">
+            <AvatarFallback className="bg-primary/10 text-sm font-semibold text-primary">
               {getInitials(displayName)}
             </AvatarFallback>
           </Avatar>
-          <div className="flex-1 min-w-0">
-            <h4 className="text-sm sm:text-base font-semibold line-clamp-2">{displayName}</h4>
+          <div className="min-w-0 flex-1">
+            <h4 className="line-clamp-2 text-sm font-semibold sm:text-base">{displayName}</h4>
             {displayTitle && (
-              <p className="text-xs sm:text-sm text-muted-foreground line-clamp-1 mt-0.5">
+              <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground sm:text-sm">
                 {displayTitle}
               </p>
             )}
           </div>
           {contact.linked_person_dossier_id && (
-            <Badge variant="outline" className="text-xs shrink-0">
-              <UserCircle className="h-3 w-3 me-1" />
+            <Badge variant="outline" className="shrink-0 text-xs">
+              <UserCircle className="me-1 size-3" />
               {t('keyContacts.linkedDossier')}
             </Badge>
           )}
@@ -102,8 +102,8 @@ function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: bo
 
         {/* Organization */}
         {displayOrg && (
-          <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-            <Building2 className="h-3 w-3 shrink-0" />
+          <div className="mb-2 flex items-center gap-2 text-xs text-muted-foreground">
+            <Building2 className="size-3 shrink-0" />
             <span className="truncate">{displayOrg}</span>
           </div>
         )}
@@ -113,18 +113,18 @@ function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: bo
           {contact.email && (
             <a
               href={`mailto:${contact.email}`}
-              className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
+              className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-primary"
             >
-              <Mail className="h-3 w-3 shrink-0" />
+              <Mail className="size-3 shrink-0" />
               <span className="truncate">{contact.email}</span>
             </a>
           )}
           {contact.phone && (
             <a
               href={`tel:${contact.phone}`}
-              className="flex items-center gap-2 text-xs text-muted-foreground hover:text-primary transition-colors"
+              className="flex items-center gap-2 text-xs text-muted-foreground transition-colors hover:text-primary"
             >
-              <Phone className="h-3 w-3 shrink-0" />
+              <Phone className="size-3 shrink-0" />
               <span dir="ltr">{contact.phone}</span>
             </a>
           )}
@@ -132,8 +132,8 @@ function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: bo
 
         {/* Last Interaction */}
         {lastInteraction && (
-          <div className="mt-3 pt-3 border-t flex items-center gap-2 text-xs text-muted-foreground">
-            <Calendar className="h-3 w-3" />
+          <div className="mt-3 flex items-center gap-2 border-t pt-3 text-xs text-muted-foreground">
+            <Calendar className="size-3" />
             <span>
               {t('keyContacts.lastInteraction')}: {lastInteraction}
             </span>
@@ -142,17 +142,17 @@ function ContactCard({ contact, isRTL }: { contact: DossierKeyContact; isRTL: bo
 
         {/* Notes */}
         {contact.notes && (
-          <p className="text-xs text-muted-foreground mt-2 line-clamp-2 italic">
+          <p className="mt-2 line-clamp-2 text-xs italic text-muted-foreground">
             "{contact.notes}"
           </p>
         )}
 
         {/* View linked dossier */}
         {contact.linked_person_dossier_id && (
-          <div className="mt-3 pt-3 border-t">
-            <Button variant="outline" size="sm" className="w-full min-h-10" asChild>
+          <div className="mt-3 border-t pt-3">
+            <Button variant="outline" size="sm" className="min-h-10 w-full" asChild>
               <Link to={getDossierDetailPath(contact.linked_person_dossier_id, 'person')}>
-                <ExternalLink className="h-4 w-4 me-2" />
+                <ExternalLink className="me-2 size-4" />
                 {t('keyContacts.viewDossier')}
               </Link>
             </Button>
@@ -180,12 +180,12 @@ function EmptyState({ isRTL }: { isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-8 sm:py-12" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="p-4 rounded-full bg-muted inline-block mb-4">
-        <Users className="h-8 w-8 text-muted-foreground" />
+    <div className="py-8 text-center sm:py-12" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="mb-4 inline-block rounded-full bg-muted p-4">
+        <Users className="size-8 text-muted-foreground" />
       </div>
-      <h3 className="text-base font-medium mb-2">{t('keyContacts.empty.title')}</h3>
-      <p className="text-sm text-muted-foreground max-w-md mx-auto">
+      <h3 className="mb-2 text-base font-medium">{t('keyContacts.empty.title')}</h3>
+      <p className="mx-auto max-w-md text-sm text-muted-foreground">
         {t('keyContacts.empty.description')}
       </p>
     </div>
@@ -207,9 +207,9 @@ export function KeyContactsSection({
     return (
       <Card className={className}>
         <CardContent className="p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-48 bg-muted animate-pulse rounded-lg" />
+              <div key={i} className="h-48 animate-pulse rounded-lg bg-muted" />
             ))}
           </div>
         </CardContent>
@@ -221,12 +221,12 @@ export function KeyContactsSection({
     return (
       <Card className={className}>
         <CardHeader className="pb-2">
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <Users className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Users className="size-5" />
             {t('keyContacts.title')}
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4 sm:p-6 pt-0">
+        <CardContent className="p-4 pt-0 sm:p-6">
           <EmptyState isRTL={isRTL} />
         </CardContent>
       </Card>
@@ -236,15 +236,15 @@ export function KeyContactsSection({
   return (
     <Card className={className}>
       <CardHeader className="pb-2 sm:pb-4">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <Users className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <Users className="size-5" />
           {t('keyContacts.title')}
           <Badge variant="secondary">{data.total_count}</Badge>
         </CardTitle>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-6 pt-0">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+      <CardContent className="p-4 pt-0 sm:p-6">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
           {data.contacts.map((contact) => (
             <ContactCard key={contact.id} contact={contact} isRTL={isRTL} />
           ))}

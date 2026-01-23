@@ -102,7 +102,7 @@ export function RelationshipNavigator({
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Filter className="h-5 w-5" />
+          <Filter className="size-5" />
           {t('relationship.navigator.title', 'Relationship Navigator')}
         </CardTitle>
         <CardDescription>
@@ -114,10 +114,10 @@ export function RelationshipNavigator({
       </CardHeader>
       <CardContent>
         {/* Search and Filters */}
-        <div className="flex flex-col gap-4 mb-6">
+        <div className="mb-6 flex flex-col gap-4">
           <div className="relative">
             <Search
-              className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-3 h-4 w-4 text-muted-foreground`}
+              className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-3 size-4 text-muted-foreground`}
             />
             <Input
               placeholder={t('relationship.navigator.search', 'Search entities...')}
@@ -127,9 +127,9 @@ export function RelationshipNavigator({
             />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <label className="text-sm font-medium mb-2 block">
+              <label className="mb-2 block text-sm font-medium">
                 {t('relationship.navigator.degree', 'Degree')}
               </label>
               <Select value={degreeFilter} onValueChange={setDegreeFilter}>
@@ -150,7 +150,7 @@ export function RelationshipNavigator({
             </div>
 
             <div>
-              <label className="text-sm font-medium mb-2 block">
+              <label className="mb-2 block text-sm font-medium">
                 {t('relationship.navigator.type', 'Entity Type')}
               </label>
               <Select value={typeFilter} onValueChange={setTypeFilter}>
@@ -186,7 +186,7 @@ export function RelationshipNavigator({
             .sort((a, b) => parseInt(a) - parseInt(b))
             .map((degree) => (
               <div key={degree} className="mb-6">
-                <div className="flex items-center gap-2 mb-3">
+                <div className="mb-3 flex items-center gap-2">
                   <Badge variant="outline" className="text-sm font-semibold">
                     {degree}° {t('relationship.navigator.separation', 'Separation')}
                   </Badge>
@@ -201,13 +201,13 @@ export function RelationshipNavigator({
                       <Button
                         key={node.id}
                         variant="ghost"
-                        className="w-full justify-start h-auto p-3 hover:bg-accent"
+                        className="h-auto w-full justify-start p-3 hover:bg-accent"
                         onClick={() => handleNodeClick(node.id)}
                       >
-                        <div className="flex items-center gap-3 w-full">
+                        <div className="flex w-full items-center gap-3">
                           <div className="flex-1 text-start">
-                            <div className="font-medium mb-1">{name}</div>
-                            <div className="flex items-center gap-2 flex-wrap">
+                            <div className="mb-1 font-medium">{name}</div>
+                            <div className="flex flex-wrap items-center gap-2">
                               <Badge variant="secondary" className="text-xs">
                                 {t(`dossier.type.${node.type}`, node.type)}
                               </Badge>
@@ -220,7 +220,7 @@ export function RelationshipNavigator({
                             </div>
                           </div>
                           <ChevronRight
-                            className={`h-4 w-4 shrink-0 ${isRTL ? 'rotate-180' : ''}`}
+                            className={`size-4 shrink-0 ${isRTL ? 'rotate-180' : ''}`}
                           />
                         </div>
                       </Button>
@@ -231,7 +231,7 @@ export function RelationshipNavigator({
             ))}
 
           {filteredNodes.length === 0 && (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="py-8 text-center text-muted-foreground">
               {t('relationship.navigator.noResults', 'No entities match your filters')}
             </div>
           )}

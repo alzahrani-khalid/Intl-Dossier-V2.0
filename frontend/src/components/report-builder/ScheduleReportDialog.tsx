@@ -165,7 +165,7 @@ export function ScheduleReportDialog({
       <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Calendar className="h-5 w-5" />
+            <Calendar className="size-5" />
             {existingSchedule ? t('schedule.updateButton') : t('schedule.title')}
           </DialogTitle>
           <DialogDescription>{t('schedule.description')}</DialogDescription>
@@ -366,7 +366,7 @@ export function ScheduleReportDialog({
                     />
                   </FormControl>
                   {recipients.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="mt-2 flex flex-wrap gap-2">
                       {recipients.map((email) => (
                         <Badge
                           key={email}
@@ -375,7 +375,7 @@ export function ScheduleReportDialog({
                           onClick={() => handleRemoveRecipient(email)}
                         >
                           {email}
-                          <X className="h-3 w-3 ms-1" />
+                          <X className="ms-1 size-3" />
                         </Badge>
                       ))}
                     </div>
@@ -406,7 +406,7 @@ export function ScheduleReportDialog({
                 {t('savedReports.confirmDelete.cancel')}
               </Button>
               <Button type="submit" disabled={isSaving}>
-                {isSaving && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+                {isSaving && <Loader2 className="me-2 size-4 animate-spin" />}
                 {existingSchedule ? t('schedule.updateButton') : t('schedule.createButton')}
               </Button>
             </DialogFooter>

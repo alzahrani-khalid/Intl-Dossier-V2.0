@@ -101,9 +101,9 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
 
             <Button onClick={handleTest} disabled={testMutation.isPending} className="w-full">
               {testMutation.isPending ? (
-                <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
               ) : (
-                <PlayCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <PlayCircle className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
               )}
               {t('test.runTest')}
             </Button>
@@ -115,9 +115,9 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   {testResult.conditions_matched ? (
-                    <CheckCircle2 className="h-5 w-5 text-green-600" />
+                    <CheckCircle2 className="size-5 text-green-600" />
                   ) : (
-                    <XCircle className="h-5 w-5 text-red-600" />
+                    <XCircle className="size-5 text-red-600" />
                   )}
                   {t('test.results')}
                 </CardTitle>
@@ -138,17 +138,17 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
                     {testResult.conditions_details.map((detail, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-2 bg-muted/50 rounded text-sm"
+                        className="flex items-center justify-between rounded bg-muted/50 p-2 text-sm"
                       >
                         <div className="flex items-center gap-2">
                           {detail.matched ? (
-                            <CheckCircle2 className="h-4 w-4 text-green-600" />
+                            <CheckCircle2 className="size-4 text-green-600" />
                           ) : (
-                            <XCircle className="h-4 w-4 text-red-600" />
+                            <XCircle className="size-4 text-red-600" />
                           )}
                           <span className="font-mono">{detail.field}</span>
                         </div>
-                        <span className="text-muted-foreground text-xs">{detail.reason}</span>
+                        <span className="text-xs text-muted-foreground">{detail.reason}</span>
                       </div>
                     ))}
                     {testResult.conditions_details.length === 0 && (
@@ -166,7 +166,7 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
                       return (
                         <div
                           key={index}
-                          className="flex items-center justify-between p-2 bg-muted/50 rounded text-sm"
+                          className="flex items-center justify-between rounded bg-muted/50 p-2 text-sm"
                         >
                           <div className="flex items-center gap-2">
                             <Badge variant="outline">{index + 1}</Badge>
@@ -183,7 +183,7 @@ export function WorkflowTestDialog({ rule, open, onOpenChange }: WorkflowTestDia
 
           {/* Error */}
           {testMutation.isError && (
-            <div className="p-4 bg-destructive/10 rounded-lg">
+            <div className="rounded-lg bg-destructive/10 p-4">
               <p className="text-sm text-destructive">
                 {testMutation.error instanceof Error ? testMutation.error.message : 'Test failed'}
               </p>

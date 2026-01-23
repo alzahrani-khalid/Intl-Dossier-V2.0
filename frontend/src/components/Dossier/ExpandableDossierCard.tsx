@@ -83,7 +83,7 @@ function CountryFlag({ countryName, className }: { countryName: string | null | 
   if (!countryCode) {
     return (
       <div className={cn("rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg", className)}>
-        <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+        <Globe className="size-5 text-white sm:size-6" />
       </div>
     );
   }
@@ -95,7 +95,7 @@ function CountryFlag({ countryName, className }: { countryName: string | null | 
       <img
         src={flagPath}
         alt={countryName || 'Country flag'}
-        className="w-full h-full object-cover"
+        className="size-full object-cover"
         onError={(e) => {
           const target = e.target as HTMLImageElement;
           target.style.display = 'none';
@@ -247,43 +247,43 @@ export function ExpandableDossierCard({
             countryCode={countryCode}
             size="lg"
             showLoading={false}
-            className="absolute inset-0 opacity-20 group-hover/card:opacity-30 transition-opacity duration-300"
+            className="absolute inset-0 opacity-20 transition-opacity duration-300 group-hover/card:opacity-30"
           />
         )}
 
         {/* Hover overlay effect */}
-        <div className="absolute w-full h-full top-0 start-0 transition duration-300 group-hover/card:bg-black/20 opacity-0 group-hover/card:opacity-100"></div>
+        <div className="absolute start-0 top-0 size-full opacity-0 transition duration-300 group-hover/card:bg-black/20 group-hover/card:opacity-100"></div>
 
         {/* Header section with avatar/icon and metadata */}
-        <div className="flex flex-col gap-3 sm:gap-4 z-10">
+        <div className="z-10 flex flex-col gap-3 sm:gap-4">
           <div className="flex items-center gap-3 sm:gap-4">
             {dossier.type === 'person' && (dossier.extension as any)?.photo_url ? (
-              <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-white/30 shadow-lg">
+              <Avatar className="size-12 border-2 border-white/30 shadow-lg sm:size-14">
                 <AvatarImage src={(dossier.extension as any).photo_url} alt={displayName || ''} />
-                <AvatarFallback className="bg-white/20 text-white text-sm sm:text-base font-bold backdrop-blur-sm">
+                <AvatarFallback className="bg-white/20 text-sm font-bold text-white backdrop-blur-sm sm:text-base">
                   {displayName ? getInitials(displayName) : 'VIP'}
                 </AvatarFallback>
               </Avatar>
             ) : dossier.type === 'country' ? (
               <CountryFlag
                 countryName={displayName}
-                className="h-12 w-12 sm:h-14 sm:w-14"
+                className="size-12 sm:size-14"
               />
             ) : (
-              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+              <div className="flex size-12 items-center justify-center rounded-full border-2 border-white/30 bg-white/20 shadow-lg backdrop-blur-sm sm:size-14">
                 {getTypeIcon(dossier.type)}
               </div>
             )}
 
-            <div className="flex flex-col gap-1.5 sm:gap-2 flex-1 min-w-0">
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:gap-2">
               <Badge
                 variant="secondary"
-                className="w-fit text-xs sm:text-sm bg-white/20 text-white border-white/30 backdrop-blur-sm"
+                className="w-fit border-white/30 bg-white/20 text-xs text-white backdrop-blur-sm sm:text-sm"
               >
                 {t(`type.${dossier.type}`)}
               </Badge>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80">
-                <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+              <div className="flex items-center gap-2 text-xs text-white/80 sm:text-sm">
+                <Clock className="size-3 sm:size-4" />
                 <span>{relativeTime}</span>
               </div>
             </div>
@@ -303,14 +303,14 @@ export function ExpandableDossierCard({
         <div className="text-content z-10">
           <motion.h1
             layoutId={`title-${dossier.id}-${id}`}
-            className="font-bold text-xl sm:text-2xl md:text-3xl text-white relative line-clamp-2 text-start mb-2"
+            className="relative mb-2 line-clamp-2 text-start text-xl font-bold text-white sm:text-2xl md:text-3xl"
           >
             {displayName || t('untitled')}
           </motion.h1>
           {displayDescription && (
             <motion.p
               layoutId={`description-${dossier.id}-${id}`}
-              className="font-normal text-sm sm:text-base text-white/90 relative line-clamp-2 text-start"
+              className="relative line-clamp-2 text-start text-sm font-normal text-white/90 sm:text-base"
             >
               {displayDescription}
             </motion.p>
@@ -327,15 +327,15 @@ export function ExpandableDossierCard({
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              className="fixed inset-0 bg-black/40 backdrop-blur-sm h-full w-full z-[100]"
+              className="fixed inset-0 z-[100] size-full bg-black/40 backdrop-blur-sm"
             />
 
             {/* Expanded Card */}
-            <div className="fixed inset-0 grid place-items-center z-[101] p-4">
+            <div className="fixed inset-0 z-[101] grid place-items-center p-4">
               <motion.div
                 ref={ref}
                 layoutId={`card-${dossier.id}-${id}`}
-                className="w-full max-w-2xl h-full md:h-fit md:max-h-[90vh] flex flex-col bg-white dark:bg-neutral-900 rounded-3xl overflow-hidden shadow-2xl"
+                className="flex size-full max-w-2xl flex-col overflow-hidden rounded-3xl bg-white shadow-2xl dark:bg-neutral-900 md:h-fit md:max-h-[90vh]"
               >
                 {/* Close Button */}
                 <motion.button
@@ -357,7 +357,7 @@ export function ExpandableDossierCard({
                   onClick={onDeactivate}
                   aria-label={t('action.close')}
                 >
-                  <X className="h-4 w-4 sm:h-5 sm:w-5 text-neutral-700 dark:text-neutral-200" />
+                  <X className="size-4 text-neutral-700 dark:text-neutral-200 sm:size-5" />
                 </motion.button>
 
                 {/* Header Image/Map */}
@@ -382,19 +382,19 @@ export function ExpandableDossierCard({
                   {/* Large Avatar/Icon/Flag */}
                   <div className="relative z-10">
                     {dossier.type === 'person' && (dossier.extension as any)?.photo_url ? (
-                      <Avatar className="h-24 w-24 sm:h-32 sm:w-32 border-4 border-white/30 shadow-2xl">
+                      <Avatar className="size-24 border-4 border-white/30 shadow-2xl sm:size-32">
                         <AvatarImage src={(dossier.extension as any).photo_url} alt={displayName || ''} />
-                        <AvatarFallback className="bg-white/20 text-white text-3xl font-bold backdrop-blur-sm">
+                        <AvatarFallback className="bg-white/20 text-3xl font-bold text-white backdrop-blur-sm">
                           {displayName ? getInitials(displayName) : 'VIP'}
                         </AvatarFallback>
                       </Avatar>
                     ) : dossier.type === 'country' ? (
                       <CountryFlag
                         countryName={displayName}
-                        className="h-24 w-24 sm:h-32 sm:w-32"
+                        className="size-24 sm:size-32"
                       />
                     ) : (
-                      <div className="h-24 w-24 sm:h-32 sm:w-32 rounded-full border-4 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-2xl">
+                      <div className="flex size-24 items-center justify-center rounded-full border-4 border-white/30 bg-white/20 shadow-2xl backdrop-blur-sm sm:size-32">
                         {getTypeIcon(dossier.type, 'h-12 w-12 sm:h-16 sm:w-16')}
                       </div>
                     )}
@@ -407,7 +407,7 @@ export function ExpandableDossierCard({
                     <div className="flex flex-col gap-4">
                       {/* Title and Badges */}
                       <div>
-                        <div className="flex flex-wrap items-center gap-2 mb-3">
+                        <div className="mb-3 flex flex-wrap items-center gap-2">
                           <Badge
                             variant="secondary"
                             className="text-xs sm:text-sm"
@@ -422,22 +422,22 @@ export function ExpandableDossierCard({
                           >
                             {t(`status.${dossier.status}`)}
                           </Badge>
-                          <div className="flex items-center gap-1.5 text-xs sm:text-sm text-muted-foreground">
-                            <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <div className="flex items-center gap-1.5 text-xs text-muted-foreground sm:text-sm">
+                            <Clock className="size-3 sm:size-4" />
                             <span>{relativeTime}</span>
                           </div>
                         </div>
 
                         <motion.h3
                           layoutId={`title-${dossier.id}-${id}`}
-                          className="font-bold text-2xl sm:text-3xl md:text-4xl text-start mb-2"
+                          className="mb-2 text-start text-2xl font-bold sm:text-3xl md:text-4xl"
                         >
                           {displayName || t('untitled')}
                         </motion.h3>
 
                         <motion.p
                           layoutId={`description-${dossier.id}-${id}`}
-                          className="text-sm sm:text-base text-muted-foreground text-start"
+                          className="text-start text-sm text-muted-foreground sm:text-base"
                         >
                           {displayDescription}
                         </motion.p>
@@ -459,20 +459,20 @@ export function ExpandableDossierCard({
                       )}
 
                       {/* Additional Info */}
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-4 border-t">
+                      <div className="grid grid-cols-1 gap-3 border-t pt-4 sm:grid-cols-2">
                         <div className="flex flex-col gap-1">
-                          <span className="text-xs text-muted-foreground text-start">
+                          <span className="text-start text-xs text-muted-foreground">
                             {t('detail.id')}
                           </span>
-                          <span className="text-sm font-mono text-start">
+                          <span className="text-start font-mono text-sm">
                             {dossier.id}
                           </span>
                         </div>
                         <div className="flex flex-col gap-1">
-                          <span className="text-xs text-muted-foreground text-start">
+                          <span className="text-start text-xs text-muted-foreground">
                             {t('detail.updated')}
                           </span>
-                          <span className="text-sm text-start">
+                          <span className="text-start text-sm">
                             {new Date(dossier.updated_at).toLocaleDateString(
                               i18n.language,
                               { year: 'numeric', month: 'long', day: 'numeric' }
@@ -486,7 +486,7 @@ export function ExpandableDossierCard({
                         layout
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
-                        className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4"
+                        className="flex flex-col gap-2 pt-4 sm:flex-row sm:gap-3"
                       >
                         {onView && (
                           <Button

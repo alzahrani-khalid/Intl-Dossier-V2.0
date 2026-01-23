@@ -157,8 +157,8 @@ export function ModularMonolithDemo() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]" dir={isRTL ? 'rtl' : 'ltr'}>
-        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      <div className="flex min-h-[400px] items-center justify-center" dir={isRTL ? 'rtl' : 'ltr'}>
+        <Loader2 className="size-8 animate-spin text-primary" />
         <span className="ms-2 text-muted-foreground">
           {isRTL ? 'جاري تهيئة الوحدات...' : 'Initializing modules...'}
         </span>
@@ -171,7 +171,7 @@ export function ModularMonolithDemo() {
       <Card className="border-destructive" dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="pt-6">
           <div className="flex items-center text-destructive">
-            <X className="h-5 w-5 me-2" />
+            <X className="me-2 size-5" />
             <span>{error}</span>
           </div>
         </CardContent>
@@ -180,15 +180,15 @@ export function ModularMonolithDemo() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold text-start">
+            <h1 className="text-start text-2xl font-bold sm:text-3xl">
               {isRTL ? 'عرض البنية المعيارية' : 'Modular Monolith Demo'}
             </h1>
-            <p className="text-muted-foreground text-start">
+            <p className="text-start text-muted-foreground">
               {isRTL
                 ? 'يوضح هذا العرض كيفية تواصل الوحدات من خلال واجهات محددة'
                 : 'Demonstrates how modules communicate through defined interfaces'}
@@ -201,12 +201,12 @@ export function ModularMonolithDemo() {
           >
             {modulesInitialized ? (
               <>
-                <Check className="h-3 w-3" />
+                <Check className="size-3" />
                 {isRTL ? 'جاهز' : 'Ready'}
               </>
             ) : (
               <>
-                <Loader2 className="h-3 w-3 animate-spin" />
+                <Loader2 className="size-3 animate-spin" />
                 {isRTL ? 'جاري التهيئة' : 'Initializing'}
               </>
             )}
@@ -216,15 +216,15 @@ export function ModularMonolithDemo() {
         <Tabs defaultValue="health" className="w-full">
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="health" className="flex items-center gap-2">
-              <Activity className="h-4 w-4" />
+              <Activity className="size-4" />
               <span className="hidden sm:inline">{isRTL ? 'حالة الصحة' : 'Health'}</span>
             </TabsTrigger>
             <TabsTrigger value="modules" className="flex items-center gap-2">
-              <Zap className="h-4 w-4" />
+              <Zap className="size-4" />
               <span className="hidden sm:inline">{isRTL ? 'الوحدات' : 'Modules'}</span>
             </TabsTrigger>
             <TabsTrigger value="events" className="flex items-center gap-2">
-              <Activity className="h-4 w-4" />
+              <Activity className="size-4" />
               <span className="hidden sm:inline">{isRTL ? 'الأحداث' : 'Events'}</span>
             </TabsTrigger>
           </TabsList>
@@ -232,14 +232,14 @@ export function ModularMonolithDemo() {
           {/* Health Status Tab */}
           <TabsContent value="health" className="space-y-4">
             <div
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+              className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3"
               data-testid="module-health-cards"
             >
               {healthStatus.map((status) => (
                 <Card key={status.module} data-testid={`health-card-${status.module}`}>
                   <CardHeader className="pb-2">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-lg flex items-center gap-2">
+                      <CardTitle className="flex items-center gap-2 text-lg">
                         {getModuleIcon(status.module)}
                         {getModuleDisplayName(status.module, isRTL)}
                       </CardTitle>
@@ -270,11 +270,11 @@ export function ModularMonolithDemo() {
 
           {/* Module Interactions Tab */}
           <TabsContent value="modules" className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <FileText className="h-5 w-5" />
+                    <FileText className="size-5" />
                     {isRTL ? 'وحدة المستندات' : 'Documents Module'}
                   </CardTitle>
                   <CardDescription>
@@ -296,7 +296,7 @@ export function ModularMonolithDemo() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <Network className="h-5 w-5" />
+                    <Network className="size-5" />
                     {isRTL ? 'وحدة العلاقات' : 'Relationships Module'}
                   </CardTitle>
                   <CardDescription>
@@ -318,7 +318,7 @@ export function ModularMonolithDemo() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <Brain className="h-5 w-5" />
+                    <Brain className="size-5" />
                     {isRTL ? 'وحدة الذكاء الاصطناعي' : 'AI Module'}
                   </CardTitle>
                   <CardDescription>
@@ -350,7 +350,7 @@ export function ModularMonolithDemo() {
               </CardHeader>
               <CardContent>
                 {events.length === 0 ? (
-                  <div className="text-center text-muted-foreground py-8">
+                  <div className="py-8 text-center text-muted-foreground">
                     {isRTL ? 'لا توجد أحداث بعد' : 'No events yet'}
                   </div>
                 ) : (
@@ -358,13 +358,13 @@ export function ModularMonolithDemo() {
                     {events.map((event, index) => (
                       <div
                         key={index}
-                        className="flex items-center justify-between p-2 bg-muted rounded-md text-sm"
+                        className="flex items-center justify-between rounded-md bg-muted p-2 text-sm"
                       >
                         <div className="flex items-center gap-2">
                           <Badge variant="outline">{event.source}</Badge>
                           <span className="font-medium">{event.type}</span>
                         </div>
-                        <span className="text-muted-foreground text-xs">
+                        <span className="text-xs text-muted-foreground">
                           {new Date(event.timestamp).toLocaleTimeString(isRTL ? 'ar-SA' : 'en-US')}
                         </span>
                       </div>
@@ -384,13 +384,13 @@ export function ModularMonolithDemo() {
 function getModuleIcon(moduleId: string) {
   switch (moduleId) {
     case 'documents':
-      return <FileText className="h-4 w-4" />
+      return <FileText className="size-4" />
     case 'relationships':
-      return <Network className="h-4 w-4" />
+      return <Network className="size-4" />
     case 'ai':
-      return <Brain className="h-4 w-4" />
+      return <Brain className="size-4" />
     default:
-      return <Zap className="h-4 w-4" />
+      return <Zap className="size-4" />
   }
 }
 

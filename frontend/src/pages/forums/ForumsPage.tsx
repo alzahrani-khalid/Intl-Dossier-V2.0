@@ -120,7 +120,7 @@ export function ForumsPage() {
         <div className={`font-medium ${isRTL ? 'text-end' : 'text-start'}`}>
           <div>{isRTL ? row.original.name_ar : row.original.name_en}</div>
           {row.original.description_en && (
-            <div className="text-xs text-muted-foreground mt-1 line-clamp-1">
+            <div className="mt-1 line-clamp-1 text-xs text-muted-foreground">
               {isRTL ? row.original.description_ar : row.original.description_en}
             </div>
           )}
@@ -136,7 +136,7 @@ export function ForumsPage() {
 
         return (
           <div className="flex items-center gap-1">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
+            <Calendar className="size-4 text-muted-foreground" />
             <span className="text-sm">
               {isValidDate ? format(createdDate, 'dd MMM yyyy') : '-'}
             </span>
@@ -188,18 +188,18 @@ export function ForumsPage() {
                 setDialogOpen(true)
               }}
             >
-              <Eye className="size-4 me-2" />
+              <Eye className="me-2 size-4" />
               {t('viewDetails')}
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => console.log('Edit:', row.original.id)}>
-              <Pencil className="size-4 me-2" />
+              <Pencil className="me-2 size-4" />
               {t('editForum')}
             </DropdownMenuItem>
             <DropdownMenuItem
               onClick={() => openDeleteDialog(row.original)}
               className="text-destructive focus:text-destructive"
             >
-              <Trash2 className="size-4 me-2" />
+              <Trash2 className="me-2 size-4" />
               {t('deleteForum')}
             </DropdownMenuItem>
           </DropdownMenuContent>
@@ -216,27 +216,27 @@ export function ForumsPage() {
   ]
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6">
+    <div className="container mx-auto space-y-6 p-4 sm:p-6 lg:px-8">
       {/* Header - Mobile First */}
       <header className="flex flex-col gap-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center sm:gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">{t('pageTitle')}</h1>
-            <p className="text-sm sm:text-base text-muted-foreground">{t('pageSubtitle')}</p>
+            <h1 className="text-2xl font-bold sm:text-3xl">{t('pageTitle')}</h1>
+            <p className="text-sm text-muted-foreground sm:text-base">{t('pageSubtitle')}</p>
           </div>
           {/* Hide button on mobile where FAB is used */}
           <Button
-            className="hidden sm:flex sm:w-auto min-h-11"
+            className="hidden min-h-11 sm:flex sm:w-auto"
             onClick={() => setCreateDialogOpen(true)}
           >
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('addForum')}
           </Button>
         </div>
       </header>
 
       {/* Metrics Cards */}
-      <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-semibold">{t('metrics.totalForums')}</CardTitle>
@@ -271,20 +271,20 @@ export function ForumsPage() {
       {/* Filters - Mobile First */}
       <Card>
         <CardContent className="pt-6">
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row">
             <div className="flex-1">
               <div className="relative">
-                <Search className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+                <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder={t('searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="ps-10 min-h-11"
+                  className="min-h-11 ps-10"
                 />
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <Filter className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+              <Filter className="size-4 shrink-0 text-muted-foreground" />
               {statusOptions.map((option) => (
                 <Button
                   key={option.value}
@@ -436,7 +436,7 @@ export function ForumsPage() {
               onClick={handleCreateForum}
               disabled={!formData.name_en || !formData.name_ar || createMutation.isPending}
             >
-              {createMutation.isPending && <Loader2 className="size-4 me-2 animate-spin" />}
+              {createMutation.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('form.save')}
             </Button>
           </DialogFooter>
@@ -450,14 +450,14 @@ export function ForumsPage() {
             <AlertDialogTitle>{t('deleteDialog.title')}</AlertDialogTitle>
             <AlertDialogDescription>{t('deleteDialog.description')}</AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+          <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
             <AlertDialogCancel className="min-h-11">{t('deleteDialog.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteForum}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90 min-h-11"
+              className="min-h-11 bg-destructive text-destructive-foreground hover:bg-destructive/90"
               disabled={deleteMutation.isPending}
             >
-              {deleteMutation.isPending && <Loader2 className="size-4 me-2 animate-spin" />}
+              {deleteMutation.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('deleteDialog.confirm')}
             </AlertDialogAction>
           </AlertDialogFooter>

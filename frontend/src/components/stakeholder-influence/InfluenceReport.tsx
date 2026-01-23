@@ -66,16 +66,16 @@ function StatCard({
   color?: string
 }) {
   return (
-    <div className="flex items-center gap-3 p-3 sm:p-4 rounded-lg border bg-card">
+    <div className="flex items-center gap-3 rounded-lg border bg-card p-3 sm:p-4">
       <div
-        className="p-2 sm:p-2.5 rounded-lg"
+        className="rounded-lg p-2 sm:p-2.5"
         style={{ backgroundColor: color ? `${color}20` : 'var(--muted)' }}
       >
-        <Icon className="h-4 w-4 sm:h-5 sm:w-5" style={{ color: color || 'currentColor' }} />
+        <Icon className="size-4 sm:size-5" style={{ color: color || 'currentColor' }} />
       </div>
       <div>
-        <p className="text-xs sm:text-sm text-muted-foreground">{label}</p>
-        <p className="text-lg sm:text-xl font-bold">{value}</p>
+        <p className="text-xs text-muted-foreground sm:text-sm">{label}</p>
+        <p className="text-lg font-bold sm:text-xl">{value}</p>
       </div>
     </div>
   )
@@ -106,7 +106,7 @@ function FindingCard({
   const text = isRTL ? finding.ar : finding.en
 
   return (
-    <div className="flex gap-3 p-3 rounded-lg bg-muted/50">
+    <div className="flex gap-3 rounded-lg bg-muted/50 p-3">
       <Icon className={cn('h-5 w-5 flex-shrink-0 mt-0.5', colors[type])} />
       <p className="text-sm">{text}</p>
     </div>
@@ -125,8 +125,8 @@ function RecommendationCard({
   const text = isRTL ? recommendation.ar : recommendation.en
 
   return (
-    <div className="flex gap-3 p-3 rounded-lg border bg-card">
-      <div className="flex items-center justify-center w-6 h-6 rounded-full bg-primary/10 text-primary text-sm font-medium flex-shrink-0">
+    <div className="flex gap-3 rounded-lg border bg-card p-3">
+      <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
         {index + 1}
       </div>
       <p className="text-sm">{text}</p>
@@ -148,18 +148,18 @@ function InfluencerRow({
   const tierColor = NODE_COLORS[tier as keyof typeof NODE_COLORS] || NODE_COLORS.peripheral
 
   return (
-    <div className="flex items-center justify-between py-2 border-b last:border-0">
-      <div className="flex items-center gap-3 min-w-0">
+    <div className="flex items-center justify-between border-b py-2 last:border-0">
+      <div className="flex min-w-0 items-center gap-3">
         <div
-          className="w-2 h-2 rounded-full flex-shrink-0"
+          className="size-2 shrink-0 rounded-full"
           style={{ backgroundColor: tierColor }}
         />
         <div className="min-w-0">
-          <p className="font-medium text-sm truncate">{name}</p>
-          <p className="text-xs text-muted-foreground capitalize">{type}</p>
+          <p className="truncate text-sm font-medium">{name}</p>
+          <p className="text-xs capitalize text-muted-foreground">{type}</p>
         </div>
       </div>
-      <Badge variant="secondary" className="ms-2 flex-shrink-0">
+      <Badge variant="secondary" className="ms-2 shrink-0">
         {score}
       </Badge>
     </div>
@@ -185,7 +185,7 @@ export function InfluenceReportView({
     return (
       <div className={cn('space-y-4', className)}>
         <Skeleton className="h-10 w-48" />
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           {[...Array(4)].map((_, i) => (
             <Skeleton key={i} className="h-20" />
           ))}
@@ -201,7 +201,7 @@ export function InfluenceReportView({
     return (
       <Card className={cn('', className)}>
         <CardContent className="py-12 text-center">
-          <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
+          <FileText className="mx-auto mb-3 size-12 text-muted-foreground" />
           <p className="text-muted-foreground">{t('no_report', 'No report data available')}</p>
         </CardContent>
       </Card>
@@ -221,19 +221,19 @@ export function InfluenceReportView({
   return (
     <div className={cn('space-y-6 print:space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Report Header */}
-      <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <div className="flex items-center gap-2 mb-2">
-            <FileText className="h-5 w-5 text-muted-foreground" />
+          <div className="mb-2 flex items-center gap-2">
+            <FileText className="size-5 text-muted-foreground" />
             <Badge variant="outline">{reportTypeLabel}</Badge>
             <Badge variant={report.status === 'final' ? 'default' : 'secondary'}>
               {report.status}
             </Badge>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold">{title}</h1>
-          {description && <p className="text-muted-foreground mt-1">{description}</p>}
-          <div className="flex items-center gap-2 mt-2 text-sm text-muted-foreground">
-            <Calendar className="h-4 w-4" />
+          <h1 className="text-xl font-bold sm:text-2xl">{title}</h1>
+          {description && <p className="mt-1 text-muted-foreground">{description}</p>}
+          <div className="mt-2 flex items-center gap-2 text-sm text-muted-foreground">
+            <Calendar className="size-4" />
             {new Date(report.generated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
               dateStyle: 'medium',
             })}
@@ -243,13 +243,13 @@ export function InfluenceReportView({
         <div className="flex gap-2 print:hidden">
           {onPrint && (
             <Button variant="outline" size="sm" onClick={onPrint}>
-              <Printer className="h-4 w-4 me-2" />
+              <Printer className="me-2 size-4" />
               {t('print', 'Print')}
             </Button>
           )}
           {onExport && (
             <Button variant="outline" size="sm" onClick={onExport}>
-              <Download className="h-4 w-4 me-2" />
+              <Download className="me-2 size-4" />
               {t('export', 'Export')}
             </Button>
           )}
@@ -258,11 +258,11 @@ export function InfluenceReportView({
 
       {/* Network Statistics */}
       <section>
-        <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-          <BarChart3 className="h-5 w-5" />
+        <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+          <BarChart3 className="size-5" />
           {t('network_statistics', 'Network Statistics')}
         </h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
           <StatCard
             label={t('total_stakeholders', 'Total Stakeholders')}
             value={stats.total_stakeholders}
@@ -293,8 +293,8 @@ export function InfluenceReportView({
       {/* Key Findings */}
       {report.key_findings?.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-            <Lightbulb className="h-5 w-5" />
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+            <Lightbulb className="size-5" />
             {t('key_findings', 'Key Findings')}
           </h2>
           <div className="space-y-3">
@@ -308,8 +308,8 @@ export function InfluenceReportView({
       {/* Recommendations */}
       {report.recommendations?.length > 0 && (
         <section>
-          <h2 className="text-lg font-semibold flex items-center gap-2 mb-4">
-            <CheckCircle className="h-5 w-5" />
+          <h2 className="mb-4 flex items-center gap-2 text-lg font-semibold">
+            <CheckCircle className="size-5" />
             {t('recommendations', 'Recommendations')}
           </h2>
           <div className="space-y-3">
@@ -320,12 +320,12 @@ export function InfluenceReportView({
         </section>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
         {/* Top Influencers */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <TrendingUp className="h-4 w-4" />
+            <CardTitle className="flex items-center gap-2 text-base">
+              <TrendingUp className="size-4" />
               {t('top_influencers', 'Top Influencers')}
             </CardTitle>
             <CardDescription>
@@ -346,7 +346,7 @@ export function InfluenceReportView({
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">
+              <p className="py-4 text-center text-sm text-muted-foreground">
                 {t('no_influencers', 'No influencers identified')}
               </p>
             )}
@@ -356,8 +356,8 @@ export function InfluenceReportView({
         {/* Key Connectors */}
         <Card>
           <CardHeader className="pb-3">
-            <CardTitle className="text-base flex items-center gap-2">
-              <GitBranch className="h-4 w-4" />
+            <CardTitle className="flex items-center gap-2 text-base">
+              <GitBranch className="size-4" />
               {t('key_connectors', 'Key Connectors')}
             </CardTitle>
             <CardDescription>
@@ -370,24 +370,24 @@ export function InfluenceReportView({
                 {keyConnectors.slice(0, 10).map((connector, index) => (
                   <div
                     key={connector.dossier_id || index}
-                    className="flex items-center justify-between py-2 border-b last:border-0"
+                    className="flex items-center justify-between border-b py-2 last:border-0"
                   >
                     <div className="min-w-0">
-                      <p className="font-medium text-sm truncate">
+                      <p className="truncate text-sm font-medium">
                         {isRTL ? connector.name_ar : connector.name_en}
                       </p>
                       <p className="text-xs text-muted-foreground">
                         {connector.groups_connected} {t('groups_connected', 'groups connected')}
                       </p>
                     </div>
-                    <Badge variant="outline" className="ms-2 flex-shrink-0">
+                    <Badge variant="outline" className="ms-2 shrink-0">
                       {connector.bridge_score}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-4">
+              <p className="py-4 text-center text-sm text-muted-foreground">
                 {t('no_connectors', 'No bridge stakeholders identified')}
               </p>
             )}
@@ -397,7 +397,7 @@ export function InfluenceReportView({
 
       {/* Report Period */}
       {(report.period_start || report.period_end) && (
-        <div className="text-sm text-muted-foreground text-end">
+        <div className="text-end text-sm text-muted-foreground">
           {t('analysis_period', 'Analysis Period')}:{' '}
           {report.period_start &&
             new Date(report.period_start).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}

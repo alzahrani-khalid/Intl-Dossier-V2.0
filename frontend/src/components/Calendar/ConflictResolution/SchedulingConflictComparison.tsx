@@ -158,9 +158,9 @@ export function SchedulingConflictComparison({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <CardHeader className="pb-3 bg-background/50">
+      <CardHeader className="bg-background/50 pb-3">
         <div className="flex items-start justify-between gap-3">
-          <div className="flex items-center gap-2 min-w-0 flex-1">
+          <div className="flex min-w-0 flex-1 items-center gap-2">
             <div
               className={cn(
                 'p-2 rounded-lg shrink-0',
@@ -169,33 +169,33 @@ export function SchedulingConflictComparison({
                   : 'bg-warning/10 text-warning',
               )}
             >
-              <AlertTriangle className="h-5 w-5" />
+              <AlertTriangle className="size-5" />
             </div>
             <div className="min-w-0 flex-1">
               <CardTitle className="text-base sm:text-lg">
                 {t('conflictComparison.title', { count: conflicts.total_conflicts })}
               </CardTitle>
-              <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+              <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
                 {t('conflictComparison.subtitle')}
               </p>
             </div>
           </div>
 
           {/* Severity badges */}
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex shrink-0 items-center gap-1">
             {conflicts.severity_summary.critical > 0 && (
-              <Badge variant="destructive" className="text-xs px-2">
+              <Badge variant="destructive" className="px-2 text-xs">
                 {conflicts.severity_summary.critical}
               </Badge>
             )}
             {conflicts.severity_summary.high > 0 && (
-              <Badge className="bg-orange-500 text-white text-xs px-2">
+              <Badge className="bg-orange-500 px-2 text-xs text-white">
                 {conflicts.severity_summary.high}
               </Badge>
             )}
             {onDismiss && (
-              <Button variant="ghost" size="icon" className="h-8 w-8 ms-1" onClick={onDismiss}>
-                <X className="h-4 w-4" />
+              <Button variant="ghost" size="icon" className="ms-1 size-8" onClick={onDismiss}>
+                <X className="size-4" />
               </Button>
             )}
           </div>
@@ -205,9 +205,9 @@ export function SchedulingConflictComparison({
       <CardContent className="p-0">
         {/* Participant Availability Section */}
         {participantConflicts && participantConflicts.length > 0 && (
-          <div className="p-3 sm:p-4 bg-muted/30 border-b">
-            <div className="flex items-center gap-2 mb-3">
-              <Users className="h-4 w-4 text-muted-foreground" />
+          <div className="border-b bg-muted/30 p-3 sm:p-4">
+            <div className="mb-3 flex items-center gap-2">
+              <Users className="size-4 text-muted-foreground" />
               <span className="text-sm font-medium">
                 {t('conflictComparison.participantAvailability')}
               </span>
@@ -253,14 +253,14 @@ export function SchedulingConflictComparison({
         </div>
 
         {/* Resolution Actions */}
-        <div className="p-3 sm:p-4 bg-background border-t">
-          <p className="text-xs text-muted-foreground mb-3">
+        <div className="border-t bg-background p-3 sm:p-4">
+          <p className="mb-3 text-xs text-muted-foreground">
             {t('conflictComparison.resolvePrompt')}
           </p>
 
           <div className="flex flex-col gap-2">
             {/* Primary actions - grid layout */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-2">
+            <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
               {/* Reschedule button */}
               {onReschedule && (
                 <TooltipProvider>
@@ -291,7 +291,7 @@ export function SchedulingConflictComparison({
                     </Button>
                   </CollapsibleTrigger>
                   <CollapsibleContent>
-                    <div className="flex flex-wrap gap-1 mt-2">
+                    <div className="mt-2 flex flex-wrap gap-1">
                       {durationOptions.map((duration) => (
                         <Button
                           key={duration}
@@ -338,7 +338,7 @@ export function SchedulingConflictComparison({
                 variant="ghost"
                 size="sm"
                 onClick={onGenerateSuggestions}
-                className="w-full mt-1"
+                className="mt-1 w-full"
               >
                 <Sparkles className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                 {t('conflictComparison.getAISuggestions')}
@@ -387,11 +387,11 @@ function ParticipantAvailabilityBadge({
             )}
           >
             {participant.is_conflicting ? (
-              <AlertCircle className="h-3 w-3" />
+              <AlertCircle className="size-3" />
             ) : (
-              <Check className="h-3 w-3" />
+              <Check className="size-3" />
             )}
-            <span className="truncate max-w-24 sm:max-w-32">
+            <span className="max-w-24 truncate sm:max-w-32">
               {participant.participant_name || participant.participant_id}
             </span>
           </Badge>
@@ -403,7 +403,7 @@ function ParticipantAvailabilityBadge({
               <p className="text-muted-foreground">
                 {t('conflictComparison.participantBusy')}
                 {participant.conflicting_event_title && (
-                  <span className="block text-warning">{participant.conflicting_event_title}</span>
+                  <span className="text-warning block">{participant.conflicting_event_title}</span>
                 )}
               </p>
             ) : (
@@ -461,11 +461,11 @@ function ConflictComparisonItem({
         variant === 'new' ? 'bg-primary/5 border-primary/20' : 'bg-muted/50 border-muted',
       )}
     >
-      <div className="flex items-center gap-1.5 mb-2">
+      <div className="mb-2 flex items-center gap-1.5">
         {variant === 'new' ? (
-          <Edit3 className="h-3.5 w-3.5 text-primary" />
+          <Edit3 className="size-3.5 text-primary" />
         ) : (
-          <Calendar className="h-3.5 w-3.5 text-muted-foreground" />
+          <Calendar className="size-3.5 text-muted-foreground" />
         )}
         <span className="text-xs font-medium text-muted-foreground">
           {variant === 'new'
@@ -474,17 +474,17 @@ function ConflictComparisonItem({
         </span>
       </div>
 
-      <p className="text-sm font-medium line-clamp-2 mb-2">
+      <p className="mb-2 line-clamp-2 text-sm font-medium">
         {title || t('conflictComparison.untitled')}
       </p>
 
       <div className="space-y-1.5 text-xs text-muted-foreground">
         <div className="flex items-center gap-1.5">
-          <Calendar className="h-3.5 w-3.5" />
+          <Calendar className="size-3.5" />
           <span>{formatDate(startDatetime)}</span>
         </div>
         <div className="flex items-center gap-1.5">
-          <Clock className="h-3.5 w-3.5" />
+          <Clock className="size-3.5" />
           <span>
             {formatTime(startDatetime)}
             {endDatetime && ` - ${formatTime(endDatetime)}`}
@@ -492,7 +492,7 @@ function ConflictComparisonItem({
         </div>
         {location && (
           <div className="flex items-center gap-1.5">
-            <MapPin className="h-3.5 w-3.5" />
+            <MapPin className="size-3.5" />
             <span className="truncate">{location}</span>
           </div>
         )}
@@ -510,24 +510,24 @@ function ConflictComparisonItem({
           )}
         >
           <div className="flex items-center justify-between gap-3">
-            <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="flex min-w-0 flex-1 items-center gap-2">
               <Badge
                 variant="outline"
                 className={cn('text-xs shrink-0', colors.bg, colors.text, colors.border)}
               >
                 {t(`conflicts.severity.${conflict.severity}`)}
               </Badge>
-              <Badge variant="secondary" className="text-xs shrink-0">
+              <Badge variant="secondary" className="shrink-0 text-xs">
                 {t(`conflicts.types.${conflict.conflict_type}`)}
               </Badge>
-              <p className="text-sm text-muted-foreground truncate">
+              <p className="truncate text-sm text-muted-foreground">
                 {isRTL ? conflict.message_ar || conflict.message_en : conflict.message_en}
               </p>
             </div>
             {isExpanded ? (
-              <ChevronUp className="h-4 w-4 text-muted-foreground shrink-0" />
+              <ChevronUp className="size-4 shrink-0 text-muted-foreground" />
             ) : (
-              <ChevronDown className="h-4 w-4 text-muted-foreground shrink-0" />
+              <ChevronDown className="size-4 shrink-0 text-muted-foreground" />
             )}
           </div>
         </div>
@@ -538,10 +538,10 @@ function ConflictComparisonItem({
           initial={{ opacity: 0, height: 0 }}
           animate={{ opacity: 1, height: 'auto' }}
           exit={{ opacity: 0, height: 0 }}
-          className="px-3 sm:px-4 pb-4"
+          className="px-3 pb-4 sm:px-4"
         >
           {/* Side-by-side comparison */}
-          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-stretch">
+          <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:gap-4">
             {/* New event */}
             <EventCard
               title={isRTL ? newEvent.title_ar : newEvent.title_en}
@@ -582,9 +582,9 @@ function ConflictComparisonItem({
 
           {/* Overlap details */}
           {conflict.overlap_start && conflict.overlap_end && (
-            <div className="mt-3 p-2 bg-warning/10 border border-warning/20 rounded-lg">
-              <div className="flex items-center gap-2 text-xs text-warning">
-                <AlertTriangle className="h-3.5 w-3.5 shrink-0" />
+            <div className="bg-warning/10 border-warning/20 mt-3 rounded-lg border p-2">
+              <div className="text-warning flex items-center gap-2 text-xs">
+                <AlertTriangle className="size-3.5 shrink-0" />
                 <span className="font-medium">{t('conflictComparison.overlapPeriod')}:</span>
                 <span>
                   {formatTime(conflict.overlap_start)} - {formatTime(conflict.overlap_end)}

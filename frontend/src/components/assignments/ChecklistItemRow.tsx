@@ -38,21 +38,21 @@ export function ChecklistItemRow({
   return (
     <div
       dir={isRTL ? 'rtl' : 'ltr'}
-      className={`flex items-start gap-3 p-2 rounded hover:bg-accent/50 transition-colors ${
+      className={`flex items-start gap-3 rounded p-2 transition-colors hover:bg-accent/50 ${
         item.completed ? 'opacity-70' : ''
       }`}
     >
       {/* Sequence Number */}
-      <span className="text-xs text-muted-foreground font-mono mt-1 w-6 text-end">
+      <span className="mt-1 w-6 text-end font-mono text-xs text-muted-foreground">
         {item.sequence}
       </span>
 
       {/* Checkbox */}
       <button onClick={handleToggle} disabled={disabled} className="mt-0.5">
         {item.completed ? (
-          <CheckCircle2 className="h-5 w-5 text-primary" />
+          <CheckCircle2 className="size-5 text-primary" />
         ) : (
-          <Circle className="h-5 w-5 text-muted-foreground" />
+          <Circle className="size-5 text-muted-foreground" />
         )}
       </button>
 
@@ -60,7 +60,7 @@ export function ChecklistItemRow({
       <div className="flex-1 space-y-1">
         <p
           className={`text-sm leading-relaxed ${
-            item.completed ? 'line-through text-muted-foreground' : ''
+            item.completed ? 'text-muted-foreground line-through' : ''
           }`}
         >
           {item.text}

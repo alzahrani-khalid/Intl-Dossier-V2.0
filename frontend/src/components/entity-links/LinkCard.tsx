@@ -149,12 +149,12 @@ export function LinkCard({
  aria-label={t('entityLinks.dragHandle')}
  // Drag handle functionality will be added by parent (LinkList)
  >
- <GripVertical className="h-5 w-5" />
+ <GripVertical className="size-5" />
  </button>
  )}
 
  {/* Entity info */}
- <div className="flex-1 min-w-0">
+ <div className="min-w-0 flex-1">
  {/* First line: Entity name (full width for more space) */}
  <h3
  className={cn(
@@ -208,7 +208,7 @@ export function LinkCard({
  onClick={() => setIsEditing(!isEditing)}
  aria-label={t('entityLinks.editNotes')}
  >
- <Edit2 className="h-4 w-4 sm:h-5 sm:w-5" />
+ <Edit2 className="size-4 sm:size-5" />
  </Button>
  )}
 
@@ -225,7 +225,7 @@ export function LinkCard({
  onClick={() => setShowDeleteDialog(true)}
  aria-label={t('entityLinks.deleteLink')}
  >
- <Trash2 className="h-4 w-4 sm:h-5 sm:w-5" />
+ <Trash2 className="size-4 sm:size-5" />
  </Button>
  )}
  </>

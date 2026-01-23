@@ -131,7 +131,7 @@ function InteractionNoteItem({
  <div className="flex flex-col gap-3 sm:gap-4">
  {/* Header: Icon, Type, Date, Actions */}
  <div className="flex items-start justify-between gap-3">
- <div className="flex items-start gap-3 flex-1 min-w-0">
+ <div className="flex min-w-0 flex-1 items-start gap-3">
  {/* Icon */}
  <div
  className={cn(
@@ -139,22 +139,22 @@ function InteractionNoteItem({
  'bg-primary/10 text-primary'
  )}
  >
- <TypeIcon className="w-5 h-5" />
+ <TypeIcon className="size-5" />
  </div>
 
  {/* Type, Date */}
- <div className="flex-1 min-w-0">
- <div className="flex flex-col sm:flex-row sm:items-center gap-1 sm:gap-2">
+ <div className="min-w-0 flex-1">
+ <div className="flex flex-col gap-1 sm:flex-row sm:items-center sm:gap-2">
  <Badge variant="secondary" className={cn('w-fit text-xs', getTypeColor(note.type))}>
  {t(`contactDirectory.interactions.types.${note.type}`)}
  </Badge>
- <span className="text-xs sm:text-sm text-muted-foreground">{formattedDate}</span>
+ <span className="text-xs text-muted-foreground sm:text-sm">{formattedDate}</span>
  </div>
 
  {/* Attendees */}
  {hasAttendees && (
- <div className="flex items-center gap-1 mt-1">
- <Users className="w-3 h-3 text-muted-foreground" />
+ <div className="mt-1 flex items-center gap-1">
+ <Users className="size-3 text-muted-foreground" />
  <span className="text-xs text-muted-foreground">
  {t('contactDirectory.interactions.attendees_count', {
  count: note.attendees!.length,
@@ -168,15 +168,15 @@ function InteractionNoteItem({
  {/* Actions Menu */}
  <DropdownMenu>
  <DropdownMenuTrigger asChild>
- <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
- <MoreVertical className="h-4 w-4" />
+ <Button variant="ghost" size="sm" className="size-8 p-0">
+ <MoreVertical className="size-4" />
  <span className="sr-only">{t('contactDirectory.interactions.actions')}</span>
  </Button>
  </DropdownMenuTrigger>
  <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
  {onEdit && (
  <DropdownMenuItem onClick={() => onEdit(note)}>
- <Edit className="w-4 h-4 me-2" />
+ <Edit className="me-2 size-4" />
  {t('contactDirectory.interactions.edit')}
  </DropdownMenuItem>
  )}
@@ -184,7 +184,7 @@ function InteractionNoteItem({
  onClick={() => onDelete(note.id, note.contact_id)}
  className="text-destructive"
  >
- <Trash2 className="w-4 h-4 me-2" />
+ <Trash2 className="me-2 size-4" />
  {t('contactDirectory.interactions.delete')}
  </DropdownMenuItem>
  </DropdownMenuContent>
@@ -200,7 +200,7 @@ function InteractionNoteItem({
  {hasAttachments && (
  <div className="flex flex-col gap-2">
  <div className="flex items-center gap-1 text-xs text-muted-foreground">
- <Paperclip className="w-3 h-3" />
+ <Paperclip className="size-3" />
  <span>
  {t('contactDirectory.interactions.attachments_count', {
  count: note.attachments!.length,
@@ -215,11 +215,11 @@ function InteractionNoteItem({
  key={index}
  variant="outline"
  size="sm"
- className="h-8 text-xs gap-2"
+ className="h-8 gap-2 text-xs"
  onClick={() => onDownload(path, filename)}
  >
- <Download className="w-3 h-3" />
- <span className="truncate max-w-[150px] sm:max-w-[200px]">{filename}</span>
+ <Download className="size-3" />
+ <span className="max-w-[150px] truncate sm:max-w-[200px]">{filename}</span>
  </Button>
  );
  })}
@@ -232,17 +232,17 @@ function InteractionNoteItem({
  <Button
  variant="ghost"
  size="sm"
- className="h-8 w-full sm:w-auto text-xs gap-1"
+ className="h-8 w-full gap-1 text-xs sm:w-auto"
  onClick={() => setIsExpanded(!isExpanded)}
  >
  {isExpanded ? (
  <>
- <ChevronUp className="w-4 h-4" />
+ <ChevronUp className="size-4" />
  {t('contactDirectory.interactions.show_less')}
  </>
  ) : (
  <>
- <ChevronDown className="w-4 h-4" />
+ <ChevronDown className="size-4" />
  {t('contactDirectory.interactions.show_more')}
  </>
  )}
@@ -283,7 +283,7 @@ export function InteractionTimeline({
  return (
  <div className={cn('flex items-center justify-center py-8', className)} dir={isRTL ? 'rtl' : 'ltr'}>
  <div className="flex flex-col items-center gap-2">
- <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+ <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
  <p className="text-sm text-muted-foreground">
  {t('contactDirectory.interactions.loading')}
  </p>
@@ -308,11 +308,11 @@ export function InteractionTimeline({
  className={cn('flex flex-col items-center justify-center py-12 text-center', className)}
  dir={isRTL ? 'rtl' : 'ltr'}
  >
- <FileText className="w-12 h-12 text-muted-foreground/50 mb-4" />
- <h3 className="text-base font-medium mb-2">
+ <FileText className="mb-4 size-12 text-muted-foreground/50" />
+ <h3 className="mb-2 text-base font-medium">
  {t('contactDirectory.interactions.no_notes_title')}
  </h3>
- <p className="text-sm text-muted-foreground max-w-sm">
+ <p className="max-w-sm text-sm text-muted-foreground">
  {t('contactDirectory.interactions.no_notes_description')}
  </p>
  </div>
@@ -323,7 +323,7 @@ export function InteractionTimeline({
  <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
  {/* Timeline Header */}
  <div className="flex items-center justify-between">
- <h3 className="text-base sm:text-lg font-semibold">
+ <h3 className="text-base font-semibold sm:text-lg">
  {t('contactDirectory.interactions.timeline_title')}
  </h3>
  <Badge variant="secondary" className="text-xs">

@@ -43,7 +43,7 @@ export async function getWGMemberSuggestions(
   })
 
   // Get rejected suggestions if not including them
-  let rejectedIds: Set<string> = new Set()
+  const rejectedIds: Set<string> = new Set()
   if (!includeRejected) {
     const { data: rejectedSuggestions } = await supabase
       .from('working_group_member_suggestions')

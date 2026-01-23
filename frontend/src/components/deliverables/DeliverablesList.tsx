@@ -323,8 +323,8 @@ export function DeliverablesList({
       <div dir={isRTL ? 'rtl' : 'ltr'}>
         {/* Header */}
         {showFilters && (
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1 mb-4">
-            <h2 className="text-xl sm:text-2xl font-bold text-foreground text-start">
+          <div className="mb-4 flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
+            <h2 className="text-start text-xl font-bold text-foreground sm:text-2xl">
               {t('title')}
             </h2>
             <div className="flex items-center gap-2">
@@ -356,14 +356,14 @@ export function DeliverablesList({
           />
         )}
 
-        <div className="flex flex-col items-center justify-center py-12 px-4 text-center">
+        <div className="flex flex-col items-center justify-center px-4 py-12 text-center">
           {isFiltered ? (
             <>
-              <SearchX className="size-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">
+              <SearchX className="mb-4 size-12 text-muted-foreground" />
+              <h3 className="mb-2 text-lg font-medium text-foreground">
                 {t('list.emptyFiltered')}
               </h3>
-              <p className="text-sm text-muted-foreground max-w-md mb-6">
+              <p className="mb-6 max-w-md text-sm text-muted-foreground">
                 {t('list.emptyFilteredDescription')}
               </p>
               <Button variant="outline" onClick={handleClearFilters} className="min-h-11">
@@ -372,9 +372,9 @@ export function DeliverablesList({
             </>
           ) : (
             <>
-              <CheckCircle className="size-12 text-muted-foreground mb-4" />
-              <h3 className="text-lg font-medium text-foreground mb-2">{t('list.empty')}</h3>
-              <p className="text-sm text-muted-foreground max-w-md mb-6">
+              <CheckCircle className="mb-4 size-12 text-muted-foreground" />
+              <h3 className="mb-2 text-lg font-medium text-foreground">{t('list.empty')}</h3>
+              <p className="mb-6 max-w-md text-sm text-muted-foreground">
                 {t('list.emptyDescription')}
               </p>
               {showCreateButton && mouId && (
@@ -401,7 +401,7 @@ export function DeliverablesList({
         {mouId && (
           <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
             <DialogContent
-              className="max-w-lg max-h-[90vh] overflow-y-auto"
+              className="max-h-[90vh] max-w-lg overflow-y-auto"
               dir={isRTL ? 'rtl' : 'ltr'}
             >
               <DialogHeader>
@@ -422,13 +422,13 @@ export function DeliverablesList({
   return (
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with count and actions */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 px-1">
-        <h2 className="text-xl sm:text-2xl font-bold text-foreground text-start">
+      <div className="flex flex-col gap-3 px-1 sm:flex-row sm:items-center sm:justify-between">
+        <h2 className="text-start text-xl font-bold text-foreground sm:text-2xl">
           {t('title')}
           <span className="ms-2 text-sm font-normal text-muted-foreground">({totalCount})</span>
         </h2>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-wrap items-center gap-2">
           {showFilters && (
             <Button
               variant="outline"
@@ -470,7 +470,7 @@ export function DeliverablesList({
 
       {/* Bulk actions bar */}
       {showBulkActions && (
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 p-3 bg-muted/50 rounded-lg">
+        <div className="flex flex-col items-start gap-3 rounded-lg bg-muted/50 p-3 sm:flex-row sm:items-center">
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={handleSelectAll} className="min-h-9">
               {selectedIds.size === deliverables.length ? (
@@ -493,12 +493,12 @@ export function DeliverablesList({
           </div>
 
           {selectedIds.size > 0 && (
-            <div className="flex items-center gap-2 flex-1">
+            <div className="flex flex-1 items-center gap-2">
               <Select
                 value={bulkStatus}
                 onValueChange={(v) => setBulkStatus(v as DeliverableStatus)}
               >
-                <SelectTrigger className="w-40 min-h-9">
+                <SelectTrigger className="min-h-9 w-40">
                   <SelectValue placeholder={t('bulkActions.selectStatus')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -597,7 +597,7 @@ export function DeliverablesList({
       {mouId && (
         <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
           <DialogContent
-            className="max-w-lg max-h-[90vh] overflow-y-auto"
+            className="max-h-[90vh] max-w-lg overflow-y-auto"
             dir={isRTL ? 'rtl' : 'ltr'}
           >
             <DialogHeader>
@@ -619,7 +619,7 @@ export function DeliverablesList({
       >
         <SheetContent
           side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-lg overflow-y-auto"
+          className="w-full overflow-y-auto sm:max-w-lg"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           <SheetHeader>

@@ -70,21 +70,21 @@ interface AgendaParticipantsListProps {
 
 // Role icons
 const ROLE_ICONS: Record<ParticipantRole, React.ReactNode> = {
-  chair: <Crown className="h-4 w-4 text-amber-500" />,
-  co_chair: <Crown className="h-4 w-4 text-amber-400" />,
-  secretary: <Mail className="h-4 w-4 text-blue-500" />,
-  presenter: <Mic className="h-4 w-4 text-purple-500" />,
-  required: <Users className="h-4 w-4 text-green-500" />,
-  optional: <Users className="h-4 w-4 text-gray-400" />,
-  observer: <Eye className="h-4 w-4 text-gray-400" />,
+  chair: <Crown className="size-4 text-amber-500" />,
+  co_chair: <Crown className="size-4 text-amber-400" />,
+  secretary: <Mail className="size-4 text-blue-500" />,
+  presenter: <Mic className="size-4 text-purple-500" />,
+  required: <Users className="size-4 text-green-500" />,
+  optional: <Users className="size-4 text-gray-400" />,
+  observer: <Eye className="size-4 text-gray-400" />,
 }
 
 // RSVP icons
 const RSVP_ICONS: Record<RsvpStatus, React.ReactNode> = {
-  pending: <HelpCircle className="h-4 w-4" />,
-  accepted: <Check className="h-4 w-4" />,
-  declined: <X className="h-4 w-4" />,
-  tentative: <HelpCircle className="h-4 w-4" />,
+  pending: <HelpCircle className="size-4" />,
+  accepted: <Check className="size-4" />,
+  declined: <X className="size-4" />,
+  tentative: <HelpCircle className="size-4" />,
 }
 
 export function AgendaParticipantsList({
@@ -203,7 +203,7 @@ export function AgendaParticipantsList({
         className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50"
       >
         {/* Avatar */}
-        <Avatar className="h-10 w-10">
+        <Avatar className="size-10">
           <AvatarImage src={undefined} />
           <AvatarFallback>{getInitials(p)}</AvatarFallback>
         </Avatar>
@@ -218,7 +218,7 @@ export function AgendaParticipantsList({
             {p.title_en && <span>{isRTL ? p.title_ar || p.title_en : p.title_en}</span>}
             {p.organization_name_en && (
               <span className="flex items-center gap-1">
-                <Building className="h-3 w-3" />
+                <Building className="size-3" />
                 {isRTL ? p.organization_name_ar || p.organization_name_en : p.organization_name_en}
               </span>
             )}
@@ -236,7 +236,7 @@ export function AgendaParticipantsList({
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="sm" className="min-h-9 min-w-9">
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="size-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -307,7 +307,7 @@ export function AgendaParticipantsList({
       <CardHeader className="pb-3">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="flex items-center gap-2 text-base">
-            <Users className="h-5 w-5" />
+            <Users className="size-5" />
             {t('participants')}
             <Badge variant="secondary">{participants.length}</Badge>
           </CardTitle>
@@ -349,7 +349,7 @@ export function AgendaParticipantsList({
       <CardContent className="space-y-4">
         {participants.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <Users className="h-12 w-12 text-muted-foreground/50" />
+            <Users className="size-12 text-muted-foreground/50" />
             <p className="mt-4 text-muted-foreground">{t('noParticipants')}</p>
             {canEdit && (
               <Button

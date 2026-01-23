@@ -191,17 +191,17 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
+          <h1 className="text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+          <p className="mt-1 text-muted-foreground">{t('subtitle')}</p>
         </div>
         <Button onClick={() => setCreateDialogOpen(true)} className="min-h-11 min-w-11">
-          <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+          <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
           {t('actions.create')}
         </Button>
       </div>
@@ -216,10 +216,10 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
         {/* Webhooks List Tab */}
         <TabsContent value="list">
           {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="mb-6 flex flex-col gap-4 sm:flex-row">
             <div className="relative flex-1">
               <Search
-                className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground`}
+                className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-1/2 size-4 -translate-y-1/2 text-muted-foreground`}
               />
               <Input
                 placeholder={t('placeholders.search')}
@@ -232,7 +232,7 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
               value={activeFilter}
               onValueChange={(v: 'all' | 'active' | 'inactive') => setActiveFilter(v)}
             >
-              <SelectTrigger className="w-full sm:w-48 min-h-11">
+              <SelectTrigger className="min-h-11 w-full sm:w-48">
                 <SelectValue />
               </SelectTrigger>
               <SelectContent>
@@ -242,17 +242,17 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
               </SelectContent>
             </Select>
             <Button variant="outline" onClick={() => refetch()} className="min-h-11">
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className="size-4" />
             </Button>
           </div>
 
           {/* Webhooks Grid */}
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+              <Loader2 className="size-8 animate-spin text-muted-foreground" />
             </div>
           ) : webhooksData?.data && webhooksData.data.length > 0 ? (
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
               {webhooksData.data.map((webhook) => (
                 <WebhookCard
                   key={webhook.id}
@@ -275,7 +275,7 @@ export function WebhooksPage({ initialTab = 'list', initialSearch = '' }: Webhoo
 
         {/* Templates Tab */}
         <TabsContent value="templates">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {templates?.map((template) => (
               <TemplateCard
                 key={template.id}
@@ -385,29 +385,29 @@ function WebhookCard({
     <Card className="relative">
       <CardHeader className="pb-3">
         <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-lg truncate">{name}</CardTitle>
+          <div className="min-w-0 flex-1">
+            <CardTitle className="truncate text-lg">{name}</CardTitle>
             {description && (
               <CardDescription className="mt-1 line-clamp-2">{description}</CardDescription>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <div className={`h-2 w-2 rounded-full ${statusColor}`} />
+            <div className={`size-2 rounded-full ${statusColor}`} />
             <span className="text-xs text-muted-foreground">{statusText}</span>
           </div>
         </div>
       </CardHeader>
       <CardContent>
         {/* URL */}
-        <div className="flex items-center gap-2 mb-3">
-          <code className="flex-1 text-xs bg-muted px-2 py-1 rounded truncate">{webhook.url}</code>
-          <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0" onClick={onCopyUrl}>
-            <Copy className="h-3.5 w-3.5" />
+        <div className="mb-3 flex items-center gap-2">
+          <code className="flex-1 truncate rounded bg-muted px-2 py-1 text-xs">{webhook.url}</code>
+          <Button variant="ghost" size="icon" className="size-8 shrink-0" onClick={onCopyUrl}>
+            <Copy className="size-3.5" />
           </Button>
         </div>
 
         {/* Events */}
-        <div className="flex flex-wrap gap-1 mb-3">
+        <div className="mb-3 flex flex-wrap gap-1">
           {webhook.subscribed_events.slice(0, 3).map((event) => (
             <Badge key={event} variant="secondary" className="text-xs">
               {t(`events.${event}`)}
@@ -421,18 +421,18 @@ function WebhookCard({
         </div>
 
         {/* Stats */}
-        <div className="flex items-center gap-4 text-xs text-muted-foreground mb-4">
+        <div className="mb-4 flex items-center gap-4 text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
-            <CheckCircle className="h-3.5 w-3.5 text-green-500" />
+            <CheckCircle className="size-3.5 text-green-500" />
             <span>{webhook.success_count}</span>
           </div>
           <div className="flex items-center gap-1">
-            <XCircle className="h-3.5 w-3.5 text-red-500" />
+            <XCircle className="size-3.5 text-red-500" />
             <span>{webhook.failure_count}</span>
           </div>
           {webhook.last_triggered_at && (
             <div className="flex items-center gap-1">
-              <Clock className="h-3.5 w-3.5" />
+              <Clock className="size-3.5" />
               <span>{new Date(webhook.last_triggered_at).toLocaleDateString()}</span>
             </div>
           )}
@@ -440,8 +440,8 @@ function WebhookCard({
 
         {/* Auto-disabled warning */}
         {webhook.auto_disabled_at && (
-          <div className="flex items-center gap-2 text-xs text-yellow-600 bg-yellow-50 dark:bg-yellow-950 px-2 py-1.5 rounded mb-4">
-            <AlertCircle className="h-3.5 w-3.5 shrink-0" />
+          <div className="mb-4 flex items-center gap-2 rounded bg-yellow-50 px-2 py-1.5 text-xs text-yellow-600 dark:bg-yellow-950">
+            <AlertCircle className="size-3.5 shrink-0" />
             <span>{t('messages.autoDisabledWarning')}</span>
           </div>
         )}
@@ -455,29 +455,29 @@ function WebhookCard({
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8"
+              className="size-8"
               onClick={onTest}
               disabled={isTestLoading}
             >
               {isTestLoading ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
-                <TestTube className="h-4 w-4" />
+                <TestTube className="size-4" />
               )}
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onViewDetails}>
-              <History className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8" onClick={onViewDetails}>
+              <History className="size-4" />
             </Button>
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onEdit}>
-              <Settings className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8" onClick={onEdit}>
+              <Settings className="size-4" />
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="h-8 w-8 text-destructive"
+              className="size-8 text-destructive"
               onClick={onDelete}
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="size-4" />
             </Button>
           </div>
         </div>
@@ -502,27 +502,27 @@ function TemplateCard({ template, isRTL, onUse }: TemplateCardProps) {
   const description = i18n.language === 'ar' ? template.description_ar : template.description_en
 
   return (
-    <Card className="hover:shadow-md transition-shadow cursor-pointer" onClick={onUse}>
+    <Card className="cursor-pointer transition-shadow hover:shadow-md" onClick={onUse}>
       <CardHeader className="pb-3">
         <div className="flex items-center gap-3">
           {template.icon_url && (
-            <img src={template.icon_url} alt={name} className="h-8 w-8 object-contain" />
+            <img src={template.icon_url} alt={name} className="size-8 object-contain" />
           )}
           <CardTitle className="text-base">{name}</CardTitle>
         </div>
       </CardHeader>
       <CardContent>
-        <p className="text-sm text-muted-foreground mb-4">{description}</p>
+        <p className="mb-4 text-sm text-muted-foreground">{description}</p>
         {template.documentation_url && (
           <a
             href={template.documentation_url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-xs text-primary flex items-center gap-1 hover:underline"
+            className="flex items-center gap-1 text-xs text-primary hover:underline"
             onClick={(e) => e.stopPropagation()}
           >
             {t('templates.useTemplate')}
-            <ExternalLink className="h-3 w-3" />
+            <ExternalLink className="size-3" />
           </a>
         )}
       </CardContent>
@@ -538,14 +538,14 @@ function EmptyState({ onCreateClick }: { onCreateClick: () => void }) {
   const { t } = useTranslation('webhooks')
 
   return (
-    <div className="text-center py-12">
-      <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
-        <Settings className="h-8 w-8 text-muted-foreground" />
+    <div className="py-12 text-center">
+      <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-muted">
+        <Settings className="size-8 text-muted-foreground" />
       </div>
-      <h3 className="text-lg font-medium mb-2">{t('empty.title')}</h3>
-      <p className="text-muted-foreground mb-4 max-w-md mx-auto">{t('empty.description')}</p>
+      <h3 className="mb-2 text-lg font-medium">{t('empty.title')}</h3>
+      <p className="mx-auto mb-4 max-w-md text-muted-foreground">{t('empty.description')}</p>
       <Button onClick={onCreateClick}>
-        <Plus className="h-4 w-4 me-2" />
+        <Plus className="me-2 size-4" />
         {t('empty.action')}
       </Button>
     </div>
@@ -627,7 +627,7 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-2xl max-h-[90vh] overflow-hidden flex flex-col"
+        className="flex max-h-[90vh] max-w-2xl flex-col overflow-hidden"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
@@ -638,7 +638,7 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
         <ScrollArea className="flex-1 pe-4">
           <div className="space-y-6 py-4">
             {/* Basic Info */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label>{t('labels.nameEn')}</Label>
                 <Input
@@ -670,7 +670,7 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
             </div>
 
             {/* HTTP Method */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label>{t('labels.httpMethod')}</Label>
                 <Select
@@ -765,7 +765,7 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
                         </div>
                       </AccordionTrigger>
                       <AccordionContent>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 ps-6">
+                        <div className="grid grid-cols-1 gap-2 ps-6 sm:grid-cols-2">
                           {category.events.map((event) => (
                             <div key={event} className="flex items-center gap-2">
                               <Checkbox
@@ -775,7 +775,7 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
                                 )}
                                 onCheckedChange={() => handleEventToggle(event as WebhookEventType)}
                               />
-                              <Label htmlFor={event} className="text-sm font-normal cursor-pointer">
+                              <Label htmlFor={event} className="cursor-pointer text-sm font-normal">
                                 {t(`events.${event}`)}
                               </Label>
                             </div>
@@ -796,7 +796,7 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
                 <AccordionTrigger>{t('headings.advanced')}</AccordionTrigger>
                 <AccordionContent>
                   <div className="space-y-4">
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
                       <div className="space-y-2">
                         <Label>{t('labels.maxRetries')}</Label>
                         <Input
@@ -880,7 +880,7 @@ function WebhookFormDialog({ open, onOpenChange, initialData, mode }: WebhookFor
             {t('actions.cancel')}
           </Button>
           <Button onClick={handleSubmit} disabled={isSubmitting}>
-            {isSubmitting && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+            {isSubmitting && <Loader2 className="me-2 size-4 animate-spin" />}
             {t('actions.save')}
           </Button>
         </DialogFooter>
@@ -920,20 +920,20 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
   const getStatusIcon = (status: WebhookDeliveryStatus) => {
     switch (status) {
       case 'delivered':
-        return <CheckCircle className="h-4 w-4 text-green-500" />
+        return <CheckCircle className="size-4 text-green-500" />
       case 'failed':
-        return <XCircle className="h-4 w-4 text-red-500" />
+        return <XCircle className="size-4 text-red-500" />
       case 'retrying':
-        return <RefreshCw className="h-4 w-4 text-yellow-500" />
+        return <RefreshCw className="size-4 text-yellow-500" />
       default:
-        return <Clock className="h-4 w-4 text-muted-foreground" />
+        return <Clock className="size-4 text-muted-foreground" />
     }
   }
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-3xl max-h-[90vh] overflow-hidden flex flex-col"
+        className="flex max-h-[90vh] max-w-3xl flex-col overflow-hidden"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
@@ -943,7 +943,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
 
         {/* Statistics */}
         {stats && (
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 py-4">
+          <div className="grid grid-cols-2 gap-4 py-4 sm:grid-cols-4">
             <div className="text-center">
               <div className="text-2xl font-bold">{stats.total_deliveries}</div>
               <div className="text-xs text-muted-foreground">{t('statistics.totalDeliveries')}</div>
@@ -992,7 +992,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
         <ScrollArea className="flex-1">
           {isLoading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin" />
+              <Loader2 className="size-6 animate-spin" />
             </div>
           ) : deliveries?.data && deliveries.data.length > 0 ? (
             <div className="space-y-3">
@@ -1002,7 +1002,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
                     <div className="flex items-center gap-3">
                       {getStatusIcon(delivery.status)}
                       <div>
-                        <div className="font-medium text-sm">
+                        <div className="text-sm font-medium">
                           {t(`events.${delivery.event_type}`)}
                         </div>
                         <div className="text-xs text-muted-foreground">
@@ -1019,14 +1019,14 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
                         </Badge>
                       )}
                       {delivery.response_time_ms && (
-                        <div className="text-xs text-muted-foreground mt-1">
+                        <div className="mt-1 text-xs text-muted-foreground">
                           {delivery.response_time_ms}ms
                         </div>
                       )}
                     </div>
                   </div>
                   {delivery.error_message && (
-                    <div className="mt-2 text-xs text-red-500 bg-red-50 dark:bg-red-950 p-2 rounded">
+                    <div className="mt-2 rounded bg-red-50 p-2 text-xs text-red-500 dark:bg-red-950">
                       {delivery.error_message}
                     </div>
                   )}
@@ -1034,7 +1034,7 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-muted-foreground">
+            <div className="py-8 text-center text-muted-foreground">
               {t('messages.noDeliveries')}
             </div>
           )}
@@ -1050,9 +1050,9 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
               disabled={page === 1}
             >
               {isRTL ? (
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="size-4" />
               ) : (
-                <ChevronRight className="h-4 w-4 rotate-180" />
+                <ChevronRight className="size-4 rotate-180" />
               )}
             </Button>
             <span className="text-sm">
@@ -1065,9 +1065,9 @@ function WebhookDetailsDialog({ open, onOpenChange, webhookId }: WebhookDetailsD
               disabled={page === deliveries.pagination.totalPages}
             >
               {isRTL ? (
-                <ChevronRight className="h-4 w-4 rotate-180" />
+                <ChevronRight className="size-4 rotate-180" />
               ) : (
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="size-4" />
               )}
             </Button>
           </div>

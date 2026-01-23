@@ -197,7 +197,7 @@ export function ValidationMessage({
               transition={{ delay: 0.2 }}
               className="mt-2 flex items-start gap-2 text-xs opacity-80"
             >
-              <Lightbulb className="h-3.5 w-3.5 mt-0.5 shrink-0" />
+              <Lightbulb className="mt-0.5 size-3.5 shrink-0" />
               <div className="flex-1 text-start">
                 {result.suggestionKey && t(result.suggestionKey, allParams)}
                 {result.suggestion && onSuggestionClick && (
@@ -364,7 +364,7 @@ export function PasswordStrength({
     <div className={cn('space-y-2', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Strength bar */}
       <div className="flex items-center gap-3">
-        <div className="flex-1 h-2 bg-muted rounded-full overflow-hidden">
+        <div className="h-2 flex-1 overflow-hidden rounded-full bg-muted">
           <motion.div
             className={cn('h-full rounded-full', strengthColors[level])}
             initial={{ width: 0 }}
@@ -385,11 +385,11 @@ export function PasswordStrength({
           transition={{ duration: 0.2 }}
           className="space-y-1"
         >
-          <p className="text-xs text-muted-foreground flex items-center gap-1">
-            <Lightbulb className="h-3 w-3" />
+          <p className="flex items-center gap-1 text-xs text-muted-foreground">
+            <Lightbulb className="size-3" />
             {t('password.improvements')}
           </p>
-          <ul className="text-xs text-muted-foreground space-y-0.5 ps-5">
+          <ul className="space-y-0.5 ps-5 text-xs text-muted-foreground">
             {improvements.slice(0, 3).map((improvement) => (
               <li key={improvement} className="list-disc text-start">
                 {t(improvement)}
@@ -437,9 +437,9 @@ export function ValidationSummary({ errors, className, onFieldClick }: Validatio
     >
       <h3
         id="validation-summary-title"
-        className="text-sm font-medium text-red-800 dark:text-red-200 flex items-center gap-2"
+        className="flex items-center gap-2 text-sm font-medium text-red-800 dark:text-red-200"
       >
-        <XCircle className="h-4 w-4" />
+        <XCircle className="size-4" />
         {t('summary.title', { count: errorEntries.length })}
       </h3>
       <ul className="mt-2 space-y-1">

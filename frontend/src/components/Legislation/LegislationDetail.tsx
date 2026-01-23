@@ -120,7 +120,7 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
       <Card className="border-destructive">
         <CardContent className="p-8">
           <div className="flex flex-col items-center gap-4 text-center">
-            <AlertCircle className="h-12 w-12 text-destructive" />
+            <AlertCircle className="size-12 text-destructive" />
             <h3 className="text-lg font-semibold">{t('errors.notFound')}</h3>
             {onBack && (
               <Button variant="outline" onClick={onBack}>
@@ -154,7 +154,7 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
             </Button>
           )}
           <div>
-            <div className="flex flex-wrap items-center gap-2 mb-2">
+            <div className="mb-2 flex flex-wrap items-center gap-2">
               <Badge variant="outline">{t(`type.${legislation.type}`)}</Badge>
               {legislation.reference_number && (
                 <span className="text-sm text-muted-foreground">
@@ -162,9 +162,9 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
                 </span>
               )}
             </div>
-            <h1 className="text-2xl font-bold text-start sm:text-3xl">{title}</h1>
+            <h1 className="text-start text-2xl font-bold sm:text-3xl">{title}</h1>
             {legislation.jurisdiction && (
-              <p className="text-muted-foreground mt-1">{legislation.jurisdiction}</p>
+              <p className="mt-1 text-muted-foreground">{legislation.jurisdiction}</p>
             )}
           </div>
         </div>
@@ -178,7 +178,7 @@ export function LegislationDetail({ id, onEdit, onBack }: LegislationDetailProps
             className="min-h-11"
           >
             {isWatchingLoading ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
             ) : legislation.is_watching ? (
               <>
                 <Bell className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
@@ -333,7 +333,7 @@ function StatusCard({
   return (
     <Card className={cn('border', colors.border)}>
       <CardContent className="p-4">
-        <p className="text-sm text-muted-foreground text-start">{label}</p>
+        <p className="text-start text-sm text-muted-foreground">{label}</p>
         <p className={cn('text-lg font-semibold text-start', colors.text)}>{value}</p>
       </CardContent>
     </Card>
@@ -347,10 +347,10 @@ function CommentPeriodCard({ endDate, isRTL }: { endDate: string; isRTL: boolean
   )
 
   return (
-    <Card className="border-amber-200 dark:border-amber-700 bg-amber-50 dark:bg-amber-900/20">
+    <Card className="border-amber-200 bg-amber-50 dark:border-amber-700 dark:bg-amber-900/20">
       <CardContent className="p-4">
-        <p className="text-sm text-muted-foreground text-start">{t('commentPeriod.title')}</p>
-        <p className="text-lg font-semibold text-amber-700 dark:text-amber-300 text-start">
+        <p className="text-start text-sm text-muted-foreground">{t('commentPeriod.title')}</p>
+        <p className="text-start text-lg font-semibold text-amber-700 dark:text-amber-300">
           {t('commentPeriod.daysRemaining', { count: daysRemaining })}
         </p>
       </CardContent>
@@ -379,7 +379,7 @@ function OverviewTab({
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
-      <div className="lg:col-span-2 space-y-6">
+      <div className="space-y-6 lg:col-span-2">
         {/* Summary */}
         {summary && (
           <Card>
@@ -387,7 +387,7 @@ function OverviewTab({
               <CardTitle className="text-start">{t('form.sections.basic')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-start whitespace-pre-wrap">{summary}</p>
+              <p className="whitespace-pre-wrap text-start">{summary}</p>
             </CardContent>
           </Card>
         )}
@@ -399,7 +399,7 @@ function OverviewTab({
               <CardTitle className="text-start">{t('form.fields.descriptionEn')}</CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-start whitespace-pre-wrap">{description}</p>
+              <p className="whitespace-pre-wrap text-start">{description}</p>
             </CardContent>
           </Card>
         )}
@@ -413,7 +413,7 @@ function OverviewTab({
             <CardContent className="space-y-4">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <p className="text-sm text-muted-foreground text-start">
+                  <p className="text-start text-sm text-muted-foreground">
                     {t('commentPeriod.status')}
                   </p>
                   <Badge variant="outline" className="mt-1">
@@ -422,10 +422,10 @@ function OverviewTab({
                 </div>
                 {legislation.comment_period_start && (
                   <div>
-                    <p className="text-sm text-muted-foreground text-start">
+                    <p className="text-start text-sm text-muted-foreground">
                       {t('commentPeriod.startDate')}
                     </p>
-                    <p className="font-medium text-start">
+                    <p className="text-start font-medium">
                       {new Date(legislation.comment_period_start).toLocaleDateString(
                         i18n.language === 'ar' ? 'ar-SA' : 'en-US',
                       )}
@@ -434,10 +434,10 @@ function OverviewTab({
                 )}
                 {legislation.comment_period_end && (
                   <div>
-                    <p className="text-sm text-muted-foreground text-start">
+                    <p className="text-start text-sm text-muted-foreground">
                       {t('commentPeriod.endDate')}
                     </p>
-                    <p className="font-medium text-start">
+                    <p className="text-start font-medium">
                       {new Date(legislation.comment_period_end).toLocaleDateString(
                         i18n.language === 'ar' ? 'ar-SA' : 'en-US',
                       )}
@@ -472,12 +472,12 @@ function OverviewTab({
           <CardContent className="space-y-3">
             {legislation.introduced_date && (
               <div className="flex items-center gap-3">
-                <Calendar className="h-4 w-4 text-muted-foreground" />
+                <Calendar className="size-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground text-start">
+                  <p className="text-start text-sm text-muted-foreground">
                     {t('detail.introducedDate')}
                   </p>
-                  <p className="font-medium text-start">
+                  <p className="text-start font-medium">
                     {new Date(legislation.introduced_date).toLocaleDateString(
                       i18n.language === 'ar' ? 'ar-SA' : 'en-US',
                     )}
@@ -487,12 +487,12 @@ function OverviewTab({
             )}
             {legislation.effective_date && (
               <div className="flex items-center gap-3">
-                <CheckCircle2 className="h-4 w-4 text-muted-foreground" />
+                <CheckCircle2 className="size-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground text-start">
+                  <p className="text-start text-sm text-muted-foreground">
                     {t('detail.effectiveDate')}
                   </p>
-                  <p className="font-medium text-start">
+                  <p className="text-start font-medium">
                     {new Date(legislation.effective_date).toLocaleDateString(
                       i18n.language === 'ar' ? 'ar-SA' : 'en-US',
                     )}
@@ -502,12 +502,12 @@ function OverviewTab({
             )}
             {legislation.expiration_date && (
               <div className="flex items-center gap-3">
-                <Clock className="h-4 w-4 text-muted-foreground" />
+                <Clock className="size-4 text-muted-foreground" />
                 <div>
-                  <p className="text-sm text-muted-foreground text-start">
+                  <p className="text-start text-sm text-muted-foreground">
                     {t('detail.expirationDate')}
                   </p>
-                  <p className="font-medium text-start">
+                  <p className="text-start font-medium">
                     {new Date(legislation.expiration_date).toLocaleDateString(
                       i18n.language === 'ar' ? 'ar-SA' : 'en-US',
                     )}
@@ -564,7 +564,7 @@ function OverviewTab({
               {legislation.sectors?.length > 0 && (
                 <>
                   <Separator />
-                  <p className="text-sm text-muted-foreground text-start">
+                  <p className="text-start text-sm text-muted-foreground">
                     {t('form.fields.sectors')}
                   </p>
                   <div className="flex flex-wrap gap-2">
@@ -589,10 +589,10 @@ function OverviewTab({
             <CardContent>
               <Link
                 to={`/dossiers/${legislation.dossier.type}s/${legislation.dossier.id}`}
-                className="flex items-center gap-3 p-3 rounded-lg border hover:bg-muted transition-colors"
+                className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted"
               >
-                <Building className="h-5 w-5 text-muted-foreground" />
-                <span className="font-medium text-start">
+                <Building className="size-5 text-muted-foreground" />
+                <span className="text-start font-medium">
                   {i18n.language === 'ar' && legislation.dossier.name_ar
                     ? legislation.dossier.name_ar
                     : legislation.dossier.name_en}
@@ -608,12 +608,12 @@ function OverviewTab({
           <CardContent className="p-4">
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
-                <p className="text-muted-foreground text-start">{t('detail.version')}</p>
-                <p className="font-medium text-start">{legislation.version}</p>
+                <p className="text-start text-muted-foreground">{t('detail.version')}</p>
+                <p className="text-start font-medium">{legislation.version}</p>
               </div>
               <div>
-                <p className="text-muted-foreground text-start">{t('detail.lastUpdated')}</p>
-                <p className="font-medium text-start">
+                <p className="text-start text-muted-foreground">{t('detail.lastUpdated')}</p>
+                <p className="text-start font-medium">
                   {new Date(legislation.updated_at).toLocaleDateString(
                     i18n.language === 'ar' ? 'ar-SA' : 'en-US',
                   )}
@@ -648,7 +648,7 @@ function DeadlinesTab({
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center p-8 text-center">
-          <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
+          <Calendar className="mb-4 size-12 text-muted-foreground" />
           <h3 className="text-lg font-semibold">{t('deadlines.noDeadlines')}</h3>
         </CardContent>
       </Card>
@@ -676,7 +676,7 @@ function DeadlinesTab({
             <CardContent className="p-4">
               <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
                 <div className="flex-1">
-                  <div className="flex items-center gap-2 mb-1">
+                  <div className="mb-1 flex items-center gap-2">
                     <Badge variant="outline">{t(`deadlines.type.${deadline.deadline_type}`)}</Badge>
                     <Badge
                       className={cn(
@@ -688,18 +688,18 @@ function DeadlinesTab({
                     </Badge>
                     {deadline.is_completed && (
                       <Badge variant="secondary">
-                        <CheckCircle2 className="h-3 w-3 me-1" />
+                        <CheckCircle2 className="me-1 size-3" />
                         {t('common:completed')}
                       </Badge>
                     )}
                   </div>
-                  <h4 className="font-medium text-start">
+                  <h4 className="text-start font-medium">
                     {i18n.language === 'ar' && deadline.title_ar
                       ? deadline.title_ar
                       : deadline.title_en}
                   </h4>
                   {deadline.description_en && (
-                    <p className="text-sm text-muted-foreground text-start mt-1">
+                    <p className="mt-1 text-start text-sm text-muted-foreground">
                       {i18n.language === 'ar' && deadline.description_ar
                         ? deadline.description_ar
                         : deadline.description_en}
@@ -730,7 +730,7 @@ function DeadlinesTab({
                   </div>
                   {!deadline.is_completed && (
                     <Button variant="outline" size="sm" onClick={() => onComplete(deadline.id)}>
-                      <CheckCircle2 className="h-4 w-4" />
+                      <CheckCircle2 className="size-4" />
                     </Button>
                   )}
                 </div>
@@ -756,7 +756,7 @@ function AmendmentsTab({
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center p-8 text-center">
-          <GitBranch className="h-12 w-12 text-muted-foreground mb-4" />
+          <GitBranch className="mb-4 size-12 text-muted-foreground" />
           <h3 className="text-lg font-semibold">{t('amendments.noAmendments')}</h3>
         </CardContent>
       </Card>
@@ -775,20 +775,20 @@ function AmendmentsTab({
                 )}
                 <Badge>{t(`amendments.status.${amendment.status}`)}</Badge>
               </div>
-              <h4 className="font-medium text-start">
+              <h4 className="text-start font-medium">
                 {i18n.language === 'ar' && amendment.title_ar
                   ? amendment.title_ar
                   : amendment.title_en}
               </h4>
               {amendment.description_en && (
-                <p className="text-sm text-muted-foreground text-start">
+                <p className="text-start text-sm text-muted-foreground">
                   {i18n.language === 'ar' && amendment.description_ar
                     ? amendment.description_ar
                     : amendment.description_en}
                 </p>
               )}
               {amendment.proposed_date && (
-                <p className="text-sm text-muted-foreground text-start">
+                <p className="text-start text-sm text-muted-foreground">
                   {t('amendments.form.proposedDate')}:{' '}
                   {new Date(amendment.proposed_date).toLocaleDateString(
                     i18n.language === 'ar' ? 'ar-SA' : 'en-US',
@@ -810,7 +810,7 @@ function SponsorsTab({ sponsors, isRTL }: { sponsors: LegislationSponsor[]; isRT
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center p-8 text-center">
-          <User className="h-12 w-12 text-muted-foreground mb-4" />
+          <User className="mb-4 size-12 text-muted-foreground" />
           <h3 className="text-lg font-semibold">{t('sponsors.noSponsors')}</h3>
         </CardContent>
       </Card>
@@ -832,30 +832,30 @@ function SponsorsTab({ sponsors, isRTL }: { sponsors: LegislationSponsor[]; isRT
     <div className="space-y-6">
       {Object.entries(groupedSponsors).map(([type, typedSponsors]) => (
         <div key={type}>
-          <h3 className="font-semibold mb-3 text-start">{t(`sponsors.type.${type}`)}</h3>
+          <h3 className="mb-3 text-start font-semibold">{t(`sponsors.type.${type}`)}</h3>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {typedSponsors.map((sponsor) => (
               <Card key={sponsor.id}>
                 <CardContent className="p-4">
                   <div className="flex items-start gap-3">
-                    <div className="p-2 bg-muted rounded-full">
-                      <User className="h-5 w-5" />
+                    <div className="rounded-full bg-muted p-2">
+                      <User className="size-5" />
                     </div>
                     <div className="flex-1">
-                      <p className="font-medium text-start">
+                      <p className="text-start font-medium">
                         {i18n.language === 'ar' && sponsor.name_ar
                           ? sponsor.name_ar
                           : sponsor.name_en || t('common:unknown')}
                       </p>
                       {sponsor.title_en && (
-                        <p className="text-sm text-muted-foreground text-start">
+                        <p className="text-start text-sm text-muted-foreground">
                           {i18n.language === 'ar' && sponsor.title_ar
                             ? sponsor.title_ar
                             : sponsor.title_en}
                         </p>
                       )}
                       {sponsor.affiliation_en && (
-                        <p className="text-sm text-muted-foreground text-start">
+                        <p className="text-start text-sm text-muted-foreground">
                           {i18n.language === 'ar' && sponsor.affiliation_ar
                             ? sponsor.affiliation_ar
                             : sponsor.affiliation_en}
@@ -886,7 +886,7 @@ function RelatedTab({
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center p-8 text-center">
-          <MessageSquare className="h-12 w-12 text-muted-foreground mb-4" />
+          <MessageSquare className="mb-4 size-12 text-muted-foreground" />
           <h3 className="text-lg font-semibold">{t('related.noRelated')}</h3>
         </CardContent>
       </Card>
@@ -905,9 +905,9 @@ function RelatedTab({
                 params={{ id: rel.related_legislation.id }}
                 className="flex-1"
               >
-                <div className="flex items-center gap-3 hover:text-primary transition-colors">
-                  <FileText className="h-4 w-4" />
-                  <span className="font-medium text-start">
+                <div className="flex items-center gap-3 transition-colors hover:text-primary">
+                  <FileText className="size-4" />
+                  <span className="text-start font-medium">
                     {i18n.language === 'ar' && rel.related_legislation.title_ar
                       ? rel.related_legislation.title_ar
                       : rel.related_legislation.title_en}
@@ -941,7 +941,7 @@ function HistoryTab({
     return (
       <Card>
         <CardContent className="flex flex-col items-center justify-center p-8 text-center">
-          <History className="h-12 w-12 text-muted-foreground mb-4" />
+          <History className="mb-4 size-12 text-muted-foreground" />
           <h3 className="text-lg font-semibold">{t('history.noHistory')}</h3>
         </CardContent>
       </Card>
@@ -955,15 +955,15 @@ function HistoryTab({
           <CardContent className="p-4">
             <div className="flex items-start gap-4">
               <div className="relative">
-                <div className="p-2 bg-muted rounded-full">
-                  <History className="h-4 w-4" />
+                <div className="rounded-full bg-muted p-2">
+                  <History className="size-4" />
                 </div>
                 {index < statusHistory.length - 1 && (
-                  <div className="absolute top-10 start-1/2 w-px h-full bg-border -translate-x-1/2" />
+                  <div className="absolute start-1/2 top-10 h-full w-px -translate-x-1/2 bg-border" />
                 )}
               </div>
               <div className="flex-1">
-                <div className="flex flex-wrap items-center gap-2 mb-1">
+                <div className="mb-1 flex flex-wrap items-center gap-2">
                   {entry.from_status && (
                     <>
                       <Badge
@@ -987,13 +987,13 @@ function HistoryTab({
                     {t(`status.${entry.to_status}`)}
                   </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground text-start">
+                <p className="text-start text-sm text-muted-foreground">
                   {new Date(entry.changed_at).toLocaleString(
                     i18n.language === 'ar' ? 'ar-SA' : 'en-US',
                   )}
                 </p>
                 {entry.change_reason && (
-                  <p className="text-sm mt-2 text-start">
+                  <p className="mt-2 text-start text-sm">
                     <span className="font-medium">{t('history.reason')}:</span>{' '}
                     {entry.change_reason}
                   </p>
@@ -1011,7 +1011,7 @@ function LegislationDetailSkeleton() {
   return (
     <div className="space-y-6">
       <div className="flex items-start gap-4">
-        <Skeleton className="h-10 w-10" />
+        <Skeleton className="size-10" />
         <div className="flex-1 space-y-2">
           <Skeleton className="h-8 w-3/4" />
           <Skeleton className="h-4 w-1/2" />
@@ -1024,7 +1024,7 @@ function LegislationDetailSkeleton() {
       </div>
       <Skeleton className="h-12" />
       <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2 space-y-6">
+        <div className="space-y-6 lg:col-span-2">
           <Skeleton className="h-48" />
           <Skeleton className="h-32" />
         </div>

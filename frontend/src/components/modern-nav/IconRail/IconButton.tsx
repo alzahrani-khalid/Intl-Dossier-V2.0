@@ -78,7 +78,7 @@ export function IconButton({
  )}
  >
  {/* Icon */}
- <Icon className="h-6 w-6 shrink-0" strokeWidth={2} />
+ <Icon className="size-6 shrink-0" strokeWidth={2} />
 
  {/* Optional Badge */}
  {badge !== undefined && badge > 0 && (
@@ -103,7 +103,7 @@ export function IconButton({
  <TooltipContent
  side={isRTL ? 'left' : 'right'}
  sideOffset={8}
- className="bg-gray-900 text-white border-gray-800"
+ className="border-gray-800 bg-gray-900 text-white"
  >
  <p className="text-sm font-medium">{tooltip}</p>
  </TooltipContent>

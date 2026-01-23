@@ -88,7 +88,7 @@ export function EventsPage() {
  return (
  <div className="grid grid-cols-7 gap-1">
  {['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'].map(day => (
- <div key={day} className="p-2 text-center font-semibold text-sm">
+ <div key={day} className="p-2 text-center text-sm font-semibold">
  {t(`calendar.${day.toLowerCase()}`)}
  </div>
  ))}
@@ -99,19 +99,19 @@ export function EventsPage() {
  return (
  <Card
  key={index}
- className={`min-h-[100px] p-2 cursor-pointer hover:shadow-md transition-shadow ${
+ className={`min-h-[100px] cursor-pointer p-2 transition-shadow hover:shadow-md ${
  !isCurrentMonth ? 'opacity-50' : ''
  }`}
  onClick={() => setSelectedDate(day)}
  >
- <div className="font-semibold text-sm mb-1">
+ <div className="mb-1 text-sm font-semibold">
  {format(day, 'd')}
  </div>
  <div className="space-y-1">
  {dayEvents.slice(0, 3).map((event, i) => (
  <div
  key={i}
- className={`text-xs p-1 rounded text-white truncate ${
+ className={`truncate rounded p-1 text-xs text-white ${
  eventTypeColors[event.type as keyof typeof eventTypeColors]
  }`}
  >
@@ -147,7 +147,7 @@ export function EventsPage() {
  header: t('events.eventType'),
  cell: (event: Event) => (
  <span className={`
- inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+ inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
  ${event.type === 'meeting' ? 'bg-blue-100 text-blue-800' : ''}
  ${event.type === 'conference' ? 'bg-purple-100 text-purple-800' : ''}
  ${event.type === 'workshop' ? 'bg-green-100 text-green-800' : ''}
@@ -179,12 +179,12 @@ export function EventsPage() {
  <div className="text-sm">
  {event.is_virtual ? (
  <div className="flex items-center gap-1">
- <Video className="h-4 w-4 text-blue-500" />
+ <Video className="size-4 text-blue-500" />
  <span>{t('events.virtual')}</span>
  </div>
  ) : (
  <div className="flex items-center gap-1">
- <MapPin className="h-4 w-4 text-muted-foreground" />
+ <MapPin className="size-4 text-muted-foreground" />
  <span>{isRTL ? event.location_ar : event.location_en}</span>
  </div>
  )}
@@ -196,7 +196,7 @@ export function EventsPage() {
  header: t('events.organizer'),
  cell: (event: Event) => (
  <div className="flex items-center gap-1 text-sm">
- <Building2 className="h-4 w-4 text-muted-foreground" />
+ <Building2 className="size-4 text-muted-foreground" />
  <span>{isRTL ? (event.organizer_name_ar || '-') : (event.organizer_name_en || '-')}</span>
  </div>
  )
@@ -206,7 +206,7 @@ export function EventsPage() {
  header: t('events.country'),
  cell: (event: Event) => (
  <div className="flex items-center gap-1 text-sm">
- <Flag className="h-4 w-4 text-muted-foreground" />
+ <Flag className="size-4 text-muted-foreground" />
  <span>{isRTL ? (event.country_name_ar || '-') : (event.country_name_en || '-')}</span>
  </div>
  )
@@ -216,7 +216,7 @@ export function EventsPage() {
  header: t('events.participants'),
  cell: (event: Event) => (
  <div className="flex items-center gap-1">
- <Users className="h-4 w-4 text-muted-foreground" />
+ <Users className="size-4 text-muted-foreground" />
  <span className="text-sm">{event.max_participants || '-'}</span>
  </div>
  )
@@ -226,7 +226,7 @@ export function EventsPage() {
  header: t('events.status'),
  cell: (event: Event) => (
  <span className={`
- inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium
+ inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium
  ${event.status === 'draft' ? 'bg-gray-100 text-gray-800' : ''}
  ${event.status === 'scheduled' ? 'bg-blue-100 text-blue-800' : ''}
  ${event.status === 'ongoing' ? 'bg-green-100 text-green-800' : ''}
@@ -242,12 +242,12 @@ export function EventsPage() {
  return (
  <div className="space-y-4">
  {events?.map(event => (
- <Card key={event.id} className="hover:shadow-md transition-shadow cursor-pointer">
+ <Card key={event.id} className="cursor-pointer transition-shadow hover:shadow-md">
  <CardContent className="p-4">
  <div className="grid grid-cols-6 gap-4">
  {columns.map(col => (
  <div key={col.key}>
- <div className="text-xs text-muted-foreground mb-1">{col.header}</div>
+ <div className="mb-1 text-xs text-muted-foreground">{col.header}</div>
  {col.cell(event)}
  </div>
  ))}
@@ -263,7 +263,7 @@ export function EventsPage() {
 
  return (
  <div className="container mx-auto py-6">
- <div className="flex justify-between items-center mb-6">
+ <div className="mb-6 flex items-center justify-between">
  <h1 className="text-3xl font-bold">{t('navigation.calendar')}</h1>
  <div className="flex gap-2">
  <Button
@@ -271,7 +271,7 @@ export function EventsPage() {
  size="sm"
  onClick={() => setViewMode('calendar')}
  >
- <CalendarIcon className="h-4 w-4 me-2" />
+ <CalendarIcon className="me-2 size-4" />
  {t('events.calendarView')}
  </Button>
  <Button
@@ -279,11 +279,11 @@ export function EventsPage() {
  size="sm"
  onClick={() => setViewMode('list')}
  >
- <List className="h-4 w-4 me-2" />
+ <List className="me-2 size-4" />
  {t('events.listView')}
  </Button>
  <Button>
- <Plus className="h-4 w-4 me-2" />
+ <Plus className="me-2 size-4" />
  {t('events.addEvent')}
  </Button>
  </div>

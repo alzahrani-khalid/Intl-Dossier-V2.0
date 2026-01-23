@@ -100,7 +100,7 @@ export function AvailabilityPollResults({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="size-8 animate-spin rounded-full border-b-2 border-primary" />
       </div>
     )
   }
@@ -121,7 +121,7 @@ export function AvailabilityPollResults({
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-xl font-semibold">
             {isRTL ? poll.meeting_title_ar || poll.meeting_title_en : poll.meeting_title_en}
           </h2>
@@ -137,8 +137,8 @@ export function AvailabilityPollResults({
       {responseStats && (
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-base flex items-center gap-2">
-              <Users className="h-4 w-4" />
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Users className="size-4" />
               {t('results.title')}
             </CardTitle>
             <CardDescription>
@@ -179,8 +179,8 @@ export function AvailabilityPollResults({
       {optimal_slots && optimal_slots.length > 0 && (
         <Card>
           <CardHeader>
-            <CardTitle className="text-base flex items-center gap-2">
-              <Trophy className="h-4 w-4 text-yellow-500" />
+            <CardTitle className="flex items-center gap-2 text-base">
+              <Trophy className="size-4 text-yellow-500" />
               {t('results.optimalSlots')}
             </CardTitle>
             <CardDescription>{t('results.optimalSlotsDescription')}</CardDescription>
@@ -203,7 +203,7 @@ export function AvailabilityPollResults({
                   )}
                 >
                   <CardContent className="p-3 sm:p-4">
-                    <div className="flex items-center gap-3 flex-wrap">
+                    <div className="flex flex-wrap items-center gap-3">
                       {/* Rank Badge */}
                       <div
                         className={cn(
@@ -217,16 +217,16 @@ export function AvailabilityPollResults({
                       </div>
 
                       {/* Date & Time */}
-                      <div className="flex-1 min-w-0">
-                        <div className="font-medium flex items-center gap-2">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex items-center gap-2 font-medium">
                           {format(startDate, 'EEEE, MMMM d', { locale: dateLocale })}
                           {isSelected && (
-                            <Badge variant="outline" className="text-green-600 border-green-600">
+                            <Badge variant="outline" className="border-green-600 text-green-600">
                               {t('slots.selectedSlot')}
                             </Badge>
                           )}
                           {isFirst && !isSelected && (
-                            <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+                            <Badge variant="outline" className="border-yellow-600 text-yellow-600">
                               {t('slots.bestSlot')}
                             </Badge>
                           )}
@@ -236,8 +236,8 @@ export function AvailabilityPollResults({
                           {format(endDate, 'h:mm a', { locale: dateLocale })}
                         </div>
                         {(optSlot.venue_suggestion_en || optSlot.venue_suggestion_ar) && (
-                          <div className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                            <MapPin className="h-3 w-3" />
+                          <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                            <MapPin className="size-3" />
                             {isRTL
                               ? optSlot.venue_suggestion_ar || optSlot.venue_suggestion_en
                               : optSlot.venue_suggestion_en}
@@ -259,7 +259,7 @@ export function AvailabilityPollResults({
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <span className="flex items-center gap-0.5 text-green-600">
-                                <Check className="h-4 w-4" />
+                                <Check className="size-4" />
                                 {optSlot.available_count}
                               </span>
                             </TooltipTrigger>
@@ -273,7 +273,7 @@ export function AvailabilityPollResults({
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <span className="flex items-center gap-0.5 text-yellow-600">
-                                <HelpCircle className="h-4 w-4" />
+                                <HelpCircle className="size-4" />
                                 {optSlot.maybe_count}
                               </span>
                             </TooltipTrigger>
@@ -287,7 +287,7 @@ export function AvailabilityPollResults({
                           <Tooltip>
                             <TooltipTrigger asChild>
                               <span className="flex items-center gap-0.5 text-red-600">
-                                <X className="h-4 w-4" />
+                                <X className="size-4" />
                                 {optSlot.unavailable_count}
                               </span>
                             </TooltipTrigger>
@@ -318,7 +318,7 @@ export function AvailabilityPollResults({
                               disabled={autoSchedule.isPending}
                               className="gap-1"
                             >
-                              <CalendarPlus className="h-4 w-4" />
+                              <CalendarPlus className="size-4" />
                               {t('actions.schedule')}
                             </Button>
                           )}
@@ -327,8 +327,8 @@ export function AvailabilityPollResults({
                     </div>
 
                     {/* Score Breakdown */}
-                    <div className="mt-3 pt-3 border-t">
-                      <div className="text-xs text-muted-foreground mb-2">
+                    <div className="mt-3 border-t pt-3">
+                      <div className="mb-2 text-xs text-muted-foreground">
                         {t('results.breakdown')}
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-sm">
@@ -364,8 +364,8 @@ export function AvailabilityPollResults({
         responseStats &&
         responseStats.responded === 0 && (
           <Card className="p-6">
-            <div className="text-center space-y-2">
-              <BarChart3 className="h-12 w-12 mx-auto text-muted-foreground" />
+            <div className="space-y-2 text-center">
+              <BarChart3 className="mx-auto size-12 text-muted-foreground" />
               <h3 className="font-medium">{t('results.noOptimalSlots')}</h3>
               <p className="text-sm text-muted-foreground">
                 {t('results.optimalSlotsDescription')}
@@ -389,7 +389,7 @@ export function AvailabilityPollResults({
                       {t('matrix.participant')}
                     </TableHead>
                     {slots.slice(0, 5).map((slot) => (
-                      <TableHead key={slot.id} className="text-center min-w-[100px]">
+                      <TableHead key={slot.id} className="min-w-[100px] text-center">
                         <div className="text-xs">
                           {format(parseISO(slot.slot_start), 'MMM d', { locale: dateLocale })}
                         </div>
@@ -440,7 +440,7 @@ export function AvailabilityPollResults({
 
       {/* Organizer Actions */}
       {isOrganizer && poll.status === 'active' && (
-        <div className="flex items-center justify-end gap-2 pt-4 border-t">
+        <div className="flex items-center justify-end gap-2 border-t pt-4">
           <Button
             variant="outline"
             onClick={() => handleClosePoll()}
@@ -452,23 +452,23 @@ export function AvailabilityPollResults({
       )}
 
       {isOrganizer && poll.status === 'closed' && !isPollScheduled && (
-        <div className="flex items-center justify-end gap-2 pt-4 border-t">
+        <div className="flex items-center justify-end gap-2 border-t pt-4">
           <Button
             onClick={() => handleSchedule()}
             disabled={autoSchedule.isPending}
             className="gap-2"
           >
-            <CalendarPlus className="h-4 w-4" />
+            <CalendarPlus className="size-4" />
             {t('results.selectAndSchedule')}
           </Button>
         </div>
       )}
 
       {isPollScheduled && poll.scheduled_event_id && (
-        <Card className="bg-green-50 dark:bg-green-900/20 border-green-200 dark:border-green-800">
+        <Card className="border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-900/20">
           <CardContent className="py-4">
             <div className="flex items-center justify-center gap-2 text-green-700 dark:text-green-300">
-              <Calendar className="h-5 w-5" />
+              <Calendar className="size-5" />
               <span className="font-medium">{t('notifications.pollScheduled')}</span>
             </div>
           </CardContent>

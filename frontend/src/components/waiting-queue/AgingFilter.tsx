@@ -43,7 +43,7 @@ export function AgingFilter({ value = [], onChange, disabled = false }: AgingFil
  {agingBuckets.map((bucket) => (
  <div
  key={bucket.value}
- className="flex items-center gap-2 rounded-sm hover:bg-accent/50 transition-colors px-1 py-1"
+ className="flex items-center gap-2 rounded-sm p-1 transition-colors hover:bg-accent/50"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <Checkbox
@@ -51,7 +51,7 @@ export function AgingFilter({ value = [], onChange, disabled = false }: AgingFil
  checked={value.includes(bucket.value)}
  onCheckedChange={() => handleToggle(bucket.value)}
  disabled={disabled}
- className="h-4 w-4"
+ className="size-4"
  />
  <Label
  htmlFor={`aging-${bucket.value}`}

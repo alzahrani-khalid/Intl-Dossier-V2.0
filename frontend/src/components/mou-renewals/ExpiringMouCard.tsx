@@ -127,7 +127,7 @@ export function ExpiringMouCard({
             {/* Auto-renewal badge */}
             {mou.auto_renewal && (
               <Badge variant="secondary" className="text-xs">
-                <RefreshCw className="me-1 h-3 w-3" />
+                <RefreshCw className="me-1 size-3" />
                 {t('autoRenewal')}
               </Badge>
             )}
@@ -135,7 +135,7 @@ export function ExpiringMouCard({
             {/* Pending alerts badge */}
             {mou.pending_alert_count > 0 && (
               <Badge variant="destructive" className="text-xs">
-                <Bell className="me-1 h-3 w-3" />
+                <Bell className="me-1 size-3" />
                 {mou.pending_alert_count}
               </Badge>
             )}
@@ -167,13 +167,13 @@ export function ExpiringMouCard({
           <div className="flex flex-col gap-1 text-xs text-muted-foreground sm:flex-row sm:gap-4">
             {mou.primary_party_name && (
               <div className="flex items-center gap-1">
-                <Building2 className="h-3 w-3" />
+                <Building2 className="size-3" />
                 <span className="truncate">{mou.primary_party_name}</span>
               </div>
             )}
             {mou.secondary_party_name && (
               <div className="flex items-center gap-1">
-                <Building2 className="h-3 w-3" />
+                <Building2 className="size-3" />
                 <span className="truncate">{mou.secondary_party_name}</span>
               </div>
             )}

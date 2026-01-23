@@ -100,32 +100,32 @@ export function TourTrigger({
               )}
             >
               {/* Decorative sparkles */}
-              <div className="absolute top-2 end-2 opacity-20">
-                <Sparkles className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+              <div className="absolute end-2 top-2 opacity-20">
+                <Sparkles className="size-8 text-primary sm:size-10" />
               </div>
 
-              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+              <div className="flex flex-col items-start gap-4 sm:flex-row sm:items-center">
                 {/* Icon */}
-                <div className="flex items-center justify-center w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-primary/10 flex-shrink-0">
-                  <TourIcon className="w-6 h-6 sm:w-7 sm:h-7 text-primary" />
+                <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-primary/10 sm:size-14">
+                  <TourIcon className="size-6 text-primary sm:size-7" />
                 </div>
 
                 {/* Content */}
-                <div className="flex-1 min-w-0">
-                  <h3 className="text-base sm:text-lg font-semibold text-start mb-1">
+                <div className="min-w-0 flex-1">
+                  <h3 className="mb-1 text-start text-base font-semibold sm:text-lg">
                     {t('trigger.title')}
                   </h3>
-                  <p className="text-sm text-muted-foreground text-start">{t(tour.description)}</p>
+                  <p className="text-start text-sm text-muted-foreground">{t(tour.description)}</p>
                   {tour.estimatedTime && (
-                    <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
-                      <Clock className="w-3.5 h-3.5" />
+                    <div className="mt-2 flex items-center gap-1.5 text-xs text-muted-foreground">
+                      <Clock className="size-3.5" />
                       <span>{t('trigger.estimatedTime', { minutes: tour.estimatedTime })}</span>
                     </div>
                   )}
                 </div>
 
                 {/* Actions */}
-                <div className="flex items-center gap-2 w-full sm:w-auto">
+                <div className="flex w-full items-center gap-2 sm:w-auto">
                   <Button
                     onClick={handleStartTour}
                     className={cn(
@@ -141,10 +141,10 @@ export function TourTrigger({
                     variant="ghost"
                     size="icon"
                     onClick={handleDismiss}
-                    className="h-10 w-10 rounded-xl hover:bg-black/5"
+                    className="size-10 rounded-xl hover:bg-black/5"
                     aria-label={t('trigger.dismiss')}
                   >
-                    <X className="w-4 h-4" />
+                    <X className="size-4" />
                   </Button>
                 </div>
               </div>
@@ -178,7 +178,7 @@ export function TourTrigger({
                 'transition-all duration-150',
               )}
             >
-              <GraduationCap className="w-4 h-4" />
+              <GraduationCap className="size-4" />
               <span>{t('trigger.takeQuickTour')}</span>
               <ChevronRight
                 className={cn(
@@ -210,31 +210,31 @@ export function TourTrigger({
               {/* Close button */}
               <button
                 onClick={handleDismiss}
-                className="absolute top-3 end-3 p-1 rounded-full hover:bg-black/5 transition-colors"
+                className="absolute end-3 top-3 rounded-full p-1 transition-colors hover:bg-black/5"
                 aria-label={t('trigger.dismiss')}
               >
-                <X className="w-4 h-4 text-muted-foreground" />
+                <X className="size-4 text-muted-foreground" />
               </button>
 
               {/* Icon */}
-              <div className="flex items-center justify-center w-12 h-12 rounded-xl bg-primary/10 mb-3">
-                <TourIcon className="w-6 h-6 text-primary" />
+              <div className="mb-3 flex size-12 items-center justify-center rounded-xl bg-primary/10">
+                <TourIcon className="size-6 text-primary" />
               </div>
 
               {/* Content */}
-              <h3 className="text-base font-semibold text-start mb-1">{t('trigger.cardTitle')}</h3>
-              <p className="text-sm text-muted-foreground text-start mb-4">{t(tour.description)}</p>
+              <h3 className="mb-1 text-start text-base font-semibold">{t('trigger.cardTitle')}</h3>
+              <p className="mb-4 text-start text-sm text-muted-foreground">{t(tour.description)}</p>
 
               {/* Estimated time */}
               {tour.estimatedTime && (
-                <div className="flex items-center gap-1.5 mb-4 text-xs text-muted-foreground">
-                  <Clock className="w-3.5 h-3.5" />
+                <div className="mb-4 flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Clock className="size-3.5" />
                   <span>{t('trigger.estimatedTime', { minutes: tour.estimatedTime })}</span>
                 </div>
               )}
 
               {/* Action */}
-              <Button onClick={handleStartTour} className="w-full h-10 rounded-xl shadow-sm">
+              <Button onClick={handleStartTour} className="h-10 w-full rounded-xl shadow-sm">
                 <PlayCircle className={cn('w-4 h-4', isRTL ? 'ms-2' : 'me-2')} />
                 {t('trigger.startTour')}
               </Button>

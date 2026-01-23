@@ -181,11 +181,11 @@ function ErrorFallback({
 
         {/* Actions */}
         <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
-          <Button onClick={onReset} className=" w-full sm: sm:w-auto" variant="default">
+          <Button onClick={onReset} className=" sm: w-full sm:w-auto" variant="default">
             <RefreshCw className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('error.boundary.tryAgain', 'Try Again')}
           </Button>
-          <Button onClick={onGoHome} className=" w-full sm: sm:w-auto" variant="outline">
+          <Button onClick={onGoHome} className=" sm: w-full sm:w-auto" variant="outline">
             <Home className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('error.boundary.goHome', 'Go to Home')}
           </Button>

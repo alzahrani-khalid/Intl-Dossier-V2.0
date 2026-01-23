@@ -59,10 +59,10 @@ interface CommentItemProps {
 }
 
 const VISIBILITY_ICONS: Record<CommentVisibility, React.ReactNode> = {
-  public: <Eye className="h-3 w-3" />,
-  internal: <Users className="h-3 w-3" />,
-  team: <Users className="h-3 w-3" />,
-  private: <Lock className="h-3 w-3" />,
+  public: <Eye className="size-3" />,
+  internal: <Users className="size-3" />,
+  team: <Users className="size-3" />,
+  private: <Lock className="size-3" />,
 }
 
 export function CommentItem({
@@ -143,7 +143,7 @@ export function CommentItem({
           <Tooltip>
             <TooltipTrigger asChild>
               <span
-                className="text-primary font-medium cursor-pointer hover:underline"
+                className="cursor-pointer font-medium text-primary hover:underline"
                 data-testid="mention-link"
               >
                 @{username}
@@ -221,30 +221,30 @@ export function CommentItem({
     >
       {/* Comment header */}
       <div className="flex items-start gap-3">
-        <Avatar className="h-8 w-8 shrink-0">
+        <Avatar className="size-8 shrink-0">
           <AvatarImage src={comment.author.avatar || undefined} alt={comment.author.name || ''} />
           <AvatarFallback className="text-xs">
             {(comment.author.name || comment.author.email)?.[0]?.toUpperCase()}
           </AvatarFallback>
         </Avatar>
 
-        <div className="flex-1 min-w-0 space-y-1">
+        <div className="min-w-0 flex-1 space-y-1">
           {/* Author info and actions */}
-          <div className="flex items-center justify-between gap-2 flex-wrap">
-            <div className="flex items-center gap-2 flex-wrap">
-              <span className="font-medium text-sm" data-testid="comment-author">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div className="flex flex-wrap items-center gap-2">
+              <span className="text-sm font-medium" data-testid="comment-author">
                 {comment.author.name || comment.author.email}
               </span>
               <span className="text-xs text-muted-foreground" data-testid="comment-timestamp">
                 {timeAgo}
               </span>
               {comment.is_edited && (
-                <span className="text-xs text-muted-foreground italic">
+                <span className="text-xs italic text-muted-foreground">
                   ({t('edited', 'edited')})
                 </span>
               )}
               {comment.visibility !== 'public' && (
-                <Badge variant="outline" className="h-5 text-xs gap-1">
+                <Badge variant="outline" className="h-5 gap-1 text-xs">
                   {VISIBILITY_ICONS[comment.visibility]}
                   {t(`visibility.${comment.visibility}`, comment.visibility)}
                 </Badge>
@@ -255,15 +255,15 @@ export function CommentItem({
             {(canEdit || canDelete) && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="ghost" size="sm" className="h-6 w-6 p-0">
-                    <MoreHorizontal className="h-4 w-4" />
+                  <Button variant="ghost" size="sm" className="size-6 p-0">
+                    <MoreHorizontal className="size-4" />
                     <span className="sr-only">{t('actions', 'Actions')}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                   {canEdit && (
                     <DropdownMenuItem onClick={() => setIsEditing(true)}>
-                      <Edit2 className="h-4 w-4 me-2" />
+                      <Edit2 className="me-2 size-4" />
                       {t('actions.edit', 'Edit')}
                     </DropdownMenuItem>
                   )}
@@ -274,7 +274,7 @@ export function CommentItem({
                         onClick={handleDelete}
                         className="text-destructive focus:text-destructive"
                       >
-                        <Trash2 className="h-4 w-4 me-2" />
+                        <Trash2 className="me-2 size-4" />
                         {t('actions.delete', 'Delete')}
                       </DropdownMenuItem>
                     </>
@@ -288,7 +288,7 @@ export function CommentItem({
           <div className="text-sm">{renderedContent}</div>
 
           {/* Reactions and reply button */}
-          <div className="flex items-center gap-2 mt-2 flex-wrap">
+          <div className="mt-2 flex flex-wrap items-center gap-2">
             <ReactionPicker
               commentId={comment.id}
               entityType={comment.entity_type}
@@ -303,7 +303,7 @@ export function CommentItem({
                 className="h-7 text-xs"
                 onClick={() => setIsReplying(!isReplying)}
               >
-                <MessageSquare className="h-3 w-3 me-1" />
+                <MessageSquare className="me-1 size-3" />
                 {t('actions.reply', 'Reply')}
               </Button>
             )}
@@ -318,12 +318,12 @@ export function CommentItem({
               >
                 {showRepliesExpanded ? (
                   <>
-                    <ChevronUp className="h-3 w-3 me-1" />
+                    <ChevronUp className="me-1 size-3" />
                     {t('hideReplies', 'Hide replies')}
                   </>
                 ) : (
                   <>
-                    <ChevronDown className="h-3 w-3 me-1" />
+                    <ChevronDown className="me-1 size-3" />
                     {t('showReplies', 'Show {{count}} replies', { count: comment.reply_count })}
                   </>
                 )}
@@ -352,7 +352,7 @@ export function CommentItem({
       {showReplies && showRepliesExpanded && replies.length > 0 && (
         <div className="mt-2">
           {isLoadingReplies ? (
-            <div className="ps-11 py-2 text-sm text-muted-foreground">
+            <div className="py-2 ps-11 text-sm text-muted-foreground">
               {t('loadingReplies', 'Loading replies...')}
             </div>
           ) : (

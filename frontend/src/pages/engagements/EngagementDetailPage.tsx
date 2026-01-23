@@ -237,7 +237,7 @@ export function EngagementDetailPage() {
           </p>
         </div>
         <Button onClick={handleBack}>
-          <ArrowLeft className="h-4 w-4 me-2" />
+          <ArrowLeft className="me-2 size-4" />
           {t('actions.backToList', 'Back to List')}
         </Button>
       </div>
@@ -256,16 +256,16 @@ export function EngagementDetailPage() {
   return (
     <div className="min-h-screen bg-background" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="sticky top-0 z-10 border-b bg-background">
+        <div className="container mx-auto p-4 sm:px-6 lg:px-8">
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-4">
-              <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
-                <ArrowLeft className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
+              <Button variant="ghost" size="icon" onClick={handleBack} className="size-10">
+                <ArrowLeft className={`size-5 ${isRTL ? 'rotate-180' : ''}`} />
               </Button>
               <div>
-                <div className="flex items-center gap-2 flex-wrap">
-                  <h1 className="text-xl sm:text-2xl font-bold">{name}</h1>
+                <div className="flex flex-wrap items-center gap-2">
+                  <h1 className="text-xl font-bold sm:text-2xl">{name}</h1>
                   <Badge variant="outline" className={getStatusColor(engagement.engagement_status)}>
                     {isRTL
                       ? ENGAGEMENT_STATUS_LABELS[engagement.engagement_status].ar
@@ -282,7 +282,7 @@ export function EngagementDetailPage() {
 
             <div className="flex gap-2">
               <Button variant="outline" size="sm" onClick={handleEdit}>
-                <Edit className="h-4 w-4 sm:me-2" />
+                <Edit className="size-4 sm:me-2" />
                 <span className="hidden sm:inline">{t('actions.edit', 'Edit')}</span>
               </Button>
               <AlertDialog>
@@ -292,7 +292,7 @@ export function EngagementDetailPage() {
                     size="sm"
                     className="text-destructive hover:text-destructive"
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="size-4" />
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
@@ -312,7 +312,7 @@ export function EngagementDetailPage() {
                       className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                     >
                       {archiveEngagement.isPending && (
-                        <Loader2 className="h-4 w-4 animate-spin me-2" />
+                        <Loader2 className="me-2 size-4 animate-spin" />
                       )}
                       {t('actions.archive', 'Archive')}
                     </AlertDialogAction>
@@ -325,7 +325,7 @@ export function EngagementDetailPage() {
       </header>
 
       {/* Content */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
           <TabsList className="w-full sm:w-auto">
             <TabsTrigger value="overview" className="flex-1 sm:flex-none">
@@ -350,7 +350,7 @@ export function EngagementDetailPage() {
 
           {/* Overview Tab */}
           <TabsContent value="overview" className="space-y-6">
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
               {/* Details Card */}
               <Card className="lg:col-span-1">
                 <CardHeader>
@@ -360,7 +360,7 @@ export function EngagementDetailPage() {
                   {/* Type & Category */}
                   <div className="space-y-2">
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-4 w-4 text-muted-foreground" />
+                      <Calendar className="size-4 text-muted-foreground" />
                       <span className="text-sm">
                         {isRTL
                           ? ENGAGEMENT_TYPE_LABELS[engagement.engagement_type].ar
@@ -375,33 +375,33 @@ export function EngagementDetailPage() {
                   </div>
 
                   {/* Dates */}
-                  <div className="pt-4 border-t">
-                    <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-                      <Clock className="h-4 w-4 text-muted-foreground" />
+                  <div className="border-t pt-4">
+                    <h4 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                      <Clock className="size-4 text-muted-foreground" />
                       {t('sections.schedule', 'Schedule')}
                     </h4>
                     <p className="text-sm text-muted-foreground">
                       {formatDateRange(engagement.start_date, engagement.end_date)}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {formatTime(engagement.start_date)} - {formatTime(engagement.end_date)}
                     </p>
                   </div>
 
                   {/* Location */}
-                  <div className="pt-4 border-t">
-                    <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
+                  <div className="border-t pt-4">
+                    <h4 className="mb-2 flex items-center gap-2 text-sm font-medium">
                       {engagement.is_virtual ? (
-                        <Video className="h-4 w-4 text-muted-foreground" />
+                        <Video className="size-4 text-muted-foreground" />
                       ) : (
-                        <MapPin className="h-4 w-4 text-muted-foreground" />
+                        <MapPin className="size-4 text-muted-foreground" />
                       )}
                       {t('sections.location', 'Location')}
                     </h4>
                     {engagement.is_virtual ? (
                       <div>
                         <Badge variant="outline" className="mb-2">
-                          <Video className="h-3 w-3 me-1" />
+                          <Video className="me-1 size-3" />
                           {t('card.virtual', 'Virtual')}
                         </Badge>
                         {engagement.virtual_link && (
@@ -409,7 +409,7 @@ export function EngagementDetailPage() {
                             href={engagement.virtual_link}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="text-sm text-primary hover:underline block truncate"
+                            className="block truncate text-sm text-primary hover:underline"
                           >
                             {engagement.virtual_link}
                           </a>
@@ -425,22 +425,22 @@ export function EngagementDetailPage() {
 
                   {/* Host Info */}
                   {(engagementData.host_country || engagementData.host_organization) && (
-                    <div className="pt-4 border-t">
-                      <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-                        <Building2 className="h-4 w-4 text-muted-foreground" />
+                    <div className="border-t pt-4">
+                      <h4 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                        <Building2 className="size-4 text-muted-foreground" />
                         {t('form.hostOrganization', 'Host')}
                       </h4>
                       {engagementData.host_country && (
                         <div className="flex items-center gap-2 text-sm">
-                          <Globe className="h-3 w-3 text-muted-foreground" />
+                          <Globe className="size-3 text-muted-foreground" />
                           {isRTL
                             ? engagementData.host_country.name_ar
                             : engagementData.host_country.name_en}
                         </div>
                       )}
                       {engagementData.host_organization && (
-                        <div className="flex items-center gap-2 text-sm mt-1">
-                          <Building2 className="h-3 w-3 text-muted-foreground" />
+                        <div className="mt-1 flex items-center gap-2 text-sm">
+                          <Building2 className="size-3 text-muted-foreground" />
                           {isRTL
                             ? engagementData.host_organization.name_ar
                             : engagementData.host_organization.name_en}
@@ -451,9 +451,9 @@ export function EngagementDetailPage() {
 
                   {/* Delegation Info */}
                   {(engagement.delegation_level || engagement.delegation_size) && (
-                    <div className="pt-4 border-t">
-                      <h4 className="text-sm font-medium mb-2 flex items-center gap-2">
-                        <Users className="h-4 w-4 text-muted-foreground" />
+                    <div className="border-t pt-4">
+                      <h4 className="mb-2 flex items-center gap-2 text-sm font-medium">
+                        <Users className="size-4 text-muted-foreground" />
                         {t('sections.delegation', 'Delegation')}
                       </h4>
                       {engagement.delegation_level && (
@@ -475,7 +475,7 @@ export function EngagementDetailPage() {
               </Card>
 
               {/* Main Content */}
-              <div className="lg:col-span-2 space-y-6">
+              <div className="space-y-6 lg:col-span-2">
                 {/* Description */}
                 {description && (
                   <Card>
@@ -485,7 +485,7 @@ export function EngagementDetailPage() {
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                      <p className="whitespace-pre-wrap text-sm text-muted-foreground">
                         {description}
                       </p>
                     </CardContent>
@@ -497,12 +497,12 @@ export function EngagementDetailPage() {
                   <Card>
                     <CardHeader>
                       <CardTitle className="flex items-center gap-2 text-lg">
-                        <Target className="h-5 w-5 text-primary" />
+                        <Target className="size-5 text-primary" />
                         {t('sections.objectives', 'Objectives')}
                       </CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <p className="text-sm text-muted-foreground whitespace-pre-wrap">
+                      <p className="whitespace-pre-wrap text-sm text-muted-foreground">
                         {objectives}
                       </p>
                     </CardContent>
@@ -513,7 +513,7 @@ export function EngagementDetailPage() {
                 <div className="grid grid-cols-3 gap-4">
                   <Card>
                     <CardContent className="pt-6 text-center">
-                      <Users className="h-6 w-6 text-primary mx-auto mb-2" />
+                      <Users className="mx-auto mb-2 size-6 text-primary" />
                       <p className="text-2xl font-bold">
                         {engagementData.participants?.length || 0}
                       </p>
@@ -524,7 +524,7 @@ export function EngagementDetailPage() {
                   </Card>
                   <Card>
                     <CardContent className="pt-6 text-center">
-                      <FileText className="h-6 w-6 text-primary mx-auto mb-2" />
+                      <FileText className="mx-auto mb-2 size-6 text-primary" />
                       <p className="text-2xl font-bold">{engagementData.agenda?.length || 0}</p>
                       <p className="text-xs text-muted-foreground">
                         {t('stats.agendaItems', 'Agenda Items')}
@@ -533,7 +533,7 @@ export function EngagementDetailPage() {
                   </Card>
                   <Card>
                     <CardContent className="pt-6 text-center">
-                      <CheckCircle2 className="h-6 w-6 text-primary mx-auto mb-2" />
+                      <CheckCircle2 className="mx-auto mb-2 size-6 text-primary" />
                       <p className="text-2xl font-bold">
                         {engagementData.agenda?.filter((a) => a.item_status === 'completed')
                           .length || 0}
@@ -554,21 +554,21 @@ export function EngagementDetailPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <Users className="h-5 w-5 text-primary" />
+                    <Users className="size-5 text-primary" />
                     {t('sections.participants', 'Participants')}
                     <Badge variant="secondary" className="ms-2">
                       {engagementData.participants?.length || 0}
                     </Badge>
                   </CardTitle>
                   <Button variant="outline" size="sm">
-                    <Plus className="h-4 w-4 me-2" />
+                    <Plus className="me-2 size-4" />
                     {t('actions.addParticipant', 'Add Participant')}
                   </Button>
                 </div>
               </CardHeader>
               <CardContent>
                 {engagementData.participants && engagementData.participants.length > 0 ? (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     {engagementData.participants.map((item) => {
                       const participant = item.participant
                       const participantName =
@@ -580,21 +580,21 @@ export function EngagementDetailPage() {
                             ''
 
                       return (
-                        <Card key={participant.id} className="hover:shadow-md transition-shadow">
+                        <Card key={participant.id} className="transition-shadow hover:shadow-md">
                           <CardContent className="p-4">
                             <div className="flex items-center gap-3">
-                              <Avatar className="h-10 w-10">
-                                <AvatarFallback className="bg-primary/10 text-primary text-sm">
+                              <Avatar className="size-10">
+                                <AvatarFallback className="bg-primary/10 text-sm text-primary">
                                   {participantName ? (
                                     getInitials(participantName)
                                   ) : (
-                                    <User className="h-4 w-4" />
+                                    <User className="size-4" />
                                   )}
                                 </AvatarFallback>
                               </Avatar>
-                              <div className="flex-1 min-w-0">
-                                <p className="font-medium text-sm truncate">{participantName}</p>
-                                <div className="flex items-center gap-2 mt-1">
+                              <div className="min-w-0 flex-1">
+                                <p className="truncate text-sm font-medium">{participantName}</p>
+                                <div className="mt-1 flex items-center gap-2">
                                   <Badge variant="outline" className="text-xs">
                                     {isRTL
                                       ? PARTICIPANT_ROLE_LABELS[participant.role].ar
@@ -609,7 +609,7 @@ export function EngagementDetailPage() {
                                   </Badge>
                                 </div>
                                 {participant.external_title_en && (
-                                  <p className="text-xs text-muted-foreground mt-1">
+                                  <p className="mt-1 text-xs text-muted-foreground">
                                     {isRTL
                                       ? participant.external_title_ar
                                       : participant.external_title_en}
@@ -623,12 +623,12 @@ export function EngagementDetailPage() {
                     })}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <Users className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <div className="py-8 text-center">
+                    <Users className="mx-auto mb-4 size-12 text-muted-foreground" />
                     <p className="text-sm text-muted-foreground">
                       {t('empty.participants', 'No participants added')}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {t('empty.participantsDescription', 'Add participants to this engagement')}
                     </p>
                   </div>
@@ -643,14 +643,14 @@ export function EngagementDetailPage() {
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <FileText className="h-5 w-5 text-primary" />
+                    <FileText className="size-5 text-primary" />
                     {t('sections.agenda', 'Agenda')}
                     <Badge variant="secondary" className="ms-2">
                       {engagementData.agenda?.length || 0}
                     </Badge>
                   </CardTitle>
                   <Button variant="outline" size="sm">
-                    <Plus className="h-4 w-4 me-2" />
+                    <Plus className="me-2 size-4" />
                     {t('actions.addAgendaItem', 'Add Agenda Item')}
                   </Button>
                 </div>
@@ -663,14 +663,14 @@ export function EngagementDetailPage() {
                       .map((item, idx) => (
                         <div
                           key={item.id}
-                          className={`flex gap-4 ${idx < engagementData.agenda.length - 1 ? 'pb-4 border-b' : ''}`}
+                          className={`flex gap-4 ${idx < engagementData.agenda.length - 1 ? 'border-b pb-4' : ''}`}
                         >
                           <div className="flex flex-col items-center">
-                            <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center text-sm font-medium text-primary">
+                            <div className="flex size-8 items-center justify-center rounded-full bg-primary/10 text-sm font-medium text-primary">
                               {item.order_number}
                             </div>
                             {idx < engagementData.agenda.length - 1 && (
-                              <div className="w-0.5 flex-1 bg-border mt-2" />
+                              <div className="mt-2 w-0.5 flex-1 bg-border" />
                             )}
                           </div>
                           <div className="flex-1 pb-2">
@@ -680,7 +680,7 @@ export function EngagementDetailPage() {
                                   {isRTL ? item.title_ar || item.title_en : item.title_en}
                                 </h4>
                                 {(item.description_en || item.description_ar) && (
-                                  <p className="text-sm text-muted-foreground mt-1">
+                                  <p className="mt-1 text-sm text-muted-foreground">
                                     {isRTL ? item.description_ar : item.description_en}
                                   </p>
                                 )}
@@ -695,8 +695,8 @@ export function EngagementDetailPage() {
                               </Badge>
                             </div>
                             {(item.start_time || item.duration_minutes) && (
-                              <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-                                <Clock className="h-3 w-3" />
+                              <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                                <Clock className="size-3" />
                                 {item.start_time && <span>{formatTime(item.start_time)}</span>}
                                 {item.duration_minutes && (
                                   <span>
@@ -706,8 +706,8 @@ export function EngagementDetailPage() {
                               </div>
                             )}
                             {(item.outcome_en || item.outcome_ar) && (
-                              <div className="mt-2 p-2 bg-muted/50 rounded-lg">
-                                <p className="text-xs font-medium text-muted-foreground mb-1">
+                              <div className="mt-2 rounded-lg bg-muted/50 p-2">
+                                <p className="mb-1 text-xs font-medium text-muted-foreground">
                                   {t('form.agenda.outcomeEn', 'Outcome')}:
                                 </p>
                                 <p className="text-sm">
@@ -720,12 +720,12 @@ export function EngagementDetailPage() {
                       ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8">
-                    <FileText className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <div className="py-8 text-center">
+                    <FileText className="mx-auto mb-4 size-12 text-muted-foreground" />
                     <p className="text-sm text-muted-foreground">
                       {t('empty.agenda', 'No agenda items')}
                     </p>
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {t('empty.agendaDescription', 'Add agenda items to organize this engagement')}
                     </p>
                   </div>
@@ -739,16 +739,16 @@ export function EngagementDetailPage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <CheckCircle2 className="h-5 w-5 text-primary" />
+                  <CheckCircle2 className="size-5 text-primary" />
                   {t('sections.outcomes', 'Outcomes')}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 {outcomes ? (
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">{outcomes}</p>
+                  <p className="whitespace-pre-wrap text-sm text-muted-foreground">{outcomes}</p>
                 ) : (
-                  <div className="text-center py-8">
-                    <CheckCircle2 className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
+                  <div className="py-8 text-center">
+                    <CheckCircle2 className="mx-auto mb-4 size-12 text-muted-foreground" />
                     <p className="text-sm text-muted-foreground">
                       {t('empty.outcomes', 'No outcomes recorded yet')}
                     </p>
@@ -762,12 +762,12 @@ export function EngagementDetailPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2 text-lg">
-                    <FileText className="h-5 w-5 text-primary" />
+                    <FileText className="size-5 text-primary" />
                     {t('sections.notes', 'Notes')}
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <p className="text-sm text-muted-foreground whitespace-pre-wrap">{notes}</p>
+                  <p className="whitespace-pre-wrap text-sm text-muted-foreground">{notes}</p>
                 </CardContent>
               </Card>
             )}

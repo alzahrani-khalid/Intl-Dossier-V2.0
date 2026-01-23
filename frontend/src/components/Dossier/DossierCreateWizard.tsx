@@ -360,7 +360,7 @@ export function DossierCreateWizard({
       case 1: // Basic information
         return (
           <FormWizardStep stepId="basic" className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* English Name */}
               <FormField
                 control={form.control}
@@ -433,7 +433,7 @@ export function DossierCreateWizard({
               />
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
               {/* English Description */}
               <FormField
                 control={form.control}
@@ -489,7 +489,7 @@ export function DossierCreateWizard({
       case 2: // Classification
         return (
           <FormWizardStep stepId="classification" className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Status */}
               <FormField
                 control={form.control}
@@ -579,7 +579,7 @@ export function DossierCreateWizard({
             {/* Person fields */}
             <ConditionalField show={selectedType === 'person'}>
               <div className="space-y-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="extension_data.title_en"
@@ -643,7 +643,7 @@ export function DossierCreateWizard({
                   )}
                 />
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="extension_data.biography_en"
@@ -689,7 +689,7 @@ export function DossierCreateWizard({
             {/* Country fields */}
             <ConditionalField show={selectedType === 'country'}>
               <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
                   <FormField
                     control={form.control}
                     name="extension_data.iso_code_2"
@@ -745,7 +745,7 @@ export function DossierCreateWizard({
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="extension_data.capital_en"
@@ -780,7 +780,7 @@ export function DossierCreateWizard({
             {/* Organization fields */}
             <ConditionalField show={selectedType === 'organization'}>
               <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="extension_data.org_code"
@@ -845,7 +845,7 @@ export function DossierCreateWizard({
             {/* Engagement fields */}
             <ConditionalField show={selectedType === 'engagement'}>
               <div className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="extension_data.engagement_type"
@@ -898,7 +898,7 @@ export function DossierCreateWizard({
                   />
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="extension_data.location_en"
@@ -945,13 +945,13 @@ export function DossierCreateWizard({
                 !['person', 'country', 'organization', 'engagement'].includes(selectedType || '')
               }
             >
-              <div className="text-center py-8 text-muted-foreground">
+              <div className="py-8 text-center text-muted-foreground">
                 <p>
                   {t('dossier:form.typeSpecificFieldsPlaceholder', {
                     type: selectedType ? t(`dossier:type.${selectedType}`) : '',
                   })}
                 </p>
-                <p className="text-sm mt-2">{t('form-wizard:optional')}</p>
+                <p className="mt-2 text-sm">{t('form-wizard:optional')}</p>
               </div>
             </ConditionalField>
           </FormWizardStep>
@@ -966,7 +966,7 @@ export function DossierCreateWizard({
                   {selectedType &&
                     (() => {
                       const Icon = typeIcons[selectedType as DossierType]
-                      return Icon ? <Icon className="h-5 w-5 text-primary" /> : null
+                      return Icon ? <Icon className="size-5 text-primary" /> : null
                     })()}
                   <CardTitle className="text-lg">
                     {isRTL ? formValues.name_ar : formValues.name_en}
@@ -984,7 +984,7 @@ export function DossierCreateWizard({
               <CardContent className="space-y-4">
                 <Separator />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                   <div>
                     <p className="text-muted-foreground">{t('dossier:form.nameEn')}</p>
                     <p className="font-medium">{formValues.name_en || '-'}</p>
@@ -999,7 +999,7 @@ export function DossierCreateWizard({
 
                 <Separator />
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                   <div>
                     <p className="text-muted-foreground">{t('dossier:form.status')}</p>
                     <Badge variant="outline">{t(`dossier:status.${formValues.status}`)}</Badge>
@@ -1016,7 +1016,7 @@ export function DossierCreateWizard({
                 {selectedType === 'person' && formValues.extension_data?.title_en && (
                   <>
                     <Separator />
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                    <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                       <div>
                         <p className="text-muted-foreground">{t('dossier:form.person.titleEn')}</p>
                         <p className="font-medium">{formValues.extension_data.title_en}</p>
@@ -1038,7 +1038,7 @@ export function DossierCreateWizard({
                 {selectedType === 'country' && formValues.extension_data?.iso_code_2 && (
                   <>
                     <Separator />
-                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                    <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-3">
                       <div>
                         <p className="text-muted-foreground">ISO Code</p>
                         <p className="font-medium uppercase">

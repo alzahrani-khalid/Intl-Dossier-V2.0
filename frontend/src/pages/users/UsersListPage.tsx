@@ -195,11 +195,11 @@ export function UsersListPage() {
   if (isLoading) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+        className="container mx-auto p-4 sm:p-6 lg:px-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="flex flex-col items-center justify-center py-12 gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="flex flex-col items-center justify-center gap-4 py-12">
+          <Loader2 className="size-8 animate-spin text-primary" />
           <p className="text-muted-foreground">{t('translation:loading', 'Loading...')}</p>
         </div>
       </div>
@@ -209,12 +209,12 @@ export function UsersListPage() {
   if (isError) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+        className="container mx-auto p-4 sm:p-6 lg:px-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="flex flex-col items-center justify-center py-12 gap-4">
-          <AlertCircle className="h-12 w-12 text-destructive" />
-          <p className="text-destructive font-medium">{t('errors.loadFailed')}</p>
+        <div className="flex flex-col items-center justify-center gap-4 py-12">
+          <AlertCircle className="size-12 text-destructive" />
+          <p className="font-medium text-destructive">{t('errors.loadFailed')}</p>
           <p className="text-sm text-muted-foreground">
             {(error as Error)?.message || 'Unknown error'}
           </p>
@@ -225,14 +225,14 @@ export function UsersListPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6"
+      className="container mx-auto p-4 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('usersList.title')}</h1>
-          <p className="text-sm sm:text-base text-muted-foreground text-start mt-1">
+          <h1 className="text-start text-2xl font-bold sm:text-3xl">{t('usersList.title')}</h1>
+          <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
             {t('usersList.showing', {
               from: (currentPage - 1) * pageSize + 1,
               to: Math.min(currentPage * pageSize, usersData?.total || 0),
@@ -243,9 +243,9 @@ export function UsersListPage() {
 
         <Button
           onClick={handleCreateUser}
-          className={`w-full sm:w-auto min-h-11 ${isRTL ? 'flex-row-reverse' : ''}`}
+          className={`min-h-11 w-full sm:w-auto ${isRTL ? 'flex-row-reverse' : ''}`}
         >
-          <UserPlus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+          <UserPlus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
           {t('userOnboarding.createUser')}
         </Button>
       </div>
@@ -253,12 +253,12 @@ export function UsersListPage() {
       {/* Search & Filters */}
       <Card className="mb-6">
         <CardContent className="pt-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
             {/* Search */}
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="relative">
                 <Search
-                  className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
+                  className={`absolute top-1/2 size-4 -translate-y-1/2 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
                 />
                 <Input
                   type="search"
@@ -343,7 +343,7 @@ export function UsersListPage() {
                     <div className="flex flex-row items-center gap-2">
                       {user.mfa_enabled && (
                         <CheckCircle
-                          className="h-3 w-3 text-green-600"
+                          className="size-3 text-green-600"
                           title={t('userProfile.mfaEnabled')}
                         />
                       )}
@@ -377,7 +377,7 @@ export function UsersListPage() {
                       onClick={() => handleViewUser(user.id)}
                       className={isRTL ? 'flex-row-reverse' : ''}
                     >
-                      <Eye className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      <Eye className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                       {t('actions.viewDetails')}
                     </Button>
                   </TableCell>
@@ -389,16 +389,16 @@ export function UsersListPage() {
       </div>
 
       {/* Users Cards - Mobile */}
-      <div className="md:hidden space-y-4">
+      <div className="space-y-4 md:hidden">
         {usersData?.users?.map((user) => (
           <Card key={user.id}>
             <CardHeader className="pb-3">
               <div className="flex flex-row items-start justify-between">
                 <div className="flex-1">
-                  <CardTitle className="text-base flex flex-row items-center gap-2">
+                  <CardTitle className="flex flex-row items-center gap-2 text-base">
                     {user.mfa_enabled && (
                       <CheckCircle
-                        className="h-3 w-3 text-green-600"
+                        className="size-3 text-green-600"
                         title={t('userProfile.mfaEnabled')}
                       />
                     )}
@@ -430,14 +430,14 @@ export function UsersListPage() {
               </div>
 
               {/* Actions */}
-              <div className="pt-2 border-t">
+              <div className="border-t pt-2">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={() => handleViewUser(user.id)}
-                  className={`w-full min-h-9 ${isRTL ? 'flex-row-reverse' : ''}`}
+                  className={`min-h-9 w-full ${isRTL ? 'flex-row-reverse' : ''}`}
                 >
-                  <Eye className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Eye className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('actions.viewDetails')}
                 </Button>
               </div>
@@ -447,7 +447,7 @@ export function UsersListPage() {
       </div>
 
       {/* Pagination */}
-      <div className="mt-6 flex flex-col sm:flex-row items-center justify-between gap-4">
+      <div className="mt-6 flex flex-col items-center justify-between gap-4 sm:flex-row">
         {/* Page Size Selector */}
         <div className="flex flex-row items-center gap-2">
           <span className="text-sm text-muted-foreground">{t('usersList.resultsPerPage')}:</span>
@@ -458,7 +458,7 @@ export function UsersListPage() {
               setCurrentPage(1)
             }}
           >
-            <SelectTrigger className="w-20 h-9">
+            <SelectTrigger className="h-9 w-20">
               <SelectValue />
             </SelectTrigger>
             <SelectContent>

@@ -168,10 +168,10 @@ export function ScheduledReportsManager() {
   if (showLoading) {
     return (
       <div className="space-y-4 sm:space-y-6">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <Skeleton className="h-8 w-48" />
-            <Skeleton className="h-4 w-64 mt-2" />
+            <Skeleton className="mt-2 h-4 w-64" />
           </div>
           <Skeleton className="h-12 w-32" />
         </div>
@@ -187,7 +187,7 @@ export function ScheduledReportsManager() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center py-12 text-center">
-        <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+        <AlertCircle className="mb-4 size-12 text-destructive" />
         <p className="text-lg font-medium">{t('messages.error')}</p>
       </div>
     )
@@ -196,26 +196,26 @@ export function ScheduledReportsManager() {
   return (
     <div className="space-y-4 sm:space-y-6">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('description')}</p>
+          <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t('title')}</h1>
+          <p className="mt-1 text-muted-foreground">{t('description')}</p>
         </div>
         <Button onClick={handleCreate} className="w-full sm:w-auto">
-          <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+          <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
           {t('createNew')}
         </Button>
       </div>
 
       {/* Empty State */}
       {schedules?.length === 0 && (
-        <Card className="text-center py-12">
+        <Card className="py-12 text-center">
           <CardContent>
-            <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <Calendar className="mx-auto mb-4 size-12 text-muted-foreground" />
             <h3 className="text-lg font-medium">{t('noSchedules')}</h3>
-            <p className="text-muted-foreground mt-1">{t('noSchedulesDescription')}</p>
+            <p className="mt-1 text-muted-foreground">{t('noSchedulesDescription')}</p>
             <Button onClick={handleCreate} className="mt-4">
-              <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+              <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
               {t('createNew')}
             </Button>
           </CardContent>
@@ -227,13 +227,13 @@ export function ScheduledReportsManager() {
         {schedules?.map((schedule) => (
           <Card
             key={schedule.id}
-            className="hover:shadow-md transition-shadow cursor-pointer"
+            className="cursor-pointer transition-shadow hover:shadow-md"
             onClick={() => handleEdit(schedule)}
           >
             <CardHeader className="pb-2">
-              <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
-                <div className="flex-1 min-w-0">
-                  <CardTitle className="text-lg truncate">
+              <div className="flex flex-col items-start justify-between gap-2 sm:flex-row">
+                <div className="min-w-0 flex-1">
+                  <CardTitle className="truncate text-lg">
                     {isRTL && schedule.name_ar ? schedule.name_ar : schedule.name}
                   </CardTitle>
                   {schedule.description && (
@@ -249,7 +249,7 @@ export function ScheduledReportsManager() {
                   <DropdownMenu>
                     <DropdownMenuTrigger asChild onClick={(e) => e.stopPropagation()}>
                       <Button variant="ghost" size="icon-sm">
-                        <MoreVertical className="h-4 w-4" />
+                        <MoreVertical className="size-4" />
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -259,7 +259,7 @@ export function ScheduledReportsManager() {
                           handleRunNow(schedule)
                         }}
                       >
-                        <Play className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                        <Play className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {t('actions.runNow')}
                       </DropdownMenuItem>
                       <DropdownMenuItem
@@ -268,7 +268,7 @@ export function ScheduledReportsManager() {
                           handleToggleStatus(schedule)
                         }}
                       >
-                        <Pause className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                        <Pause className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {schedule.is_active ? t('actions.pause') : t('actions.resume')}
                       </DropdownMenuItem>
                       <DropdownMenuItem
@@ -277,7 +277,7 @@ export function ScheduledReportsManager() {
                           handleViewHistory(schedule)
                         }}
                       >
-                        <History className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                        <History className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {t('actions.viewHistory')}
                       </DropdownMenuItem>
                       <DropdownMenuSeparator />
@@ -288,7 +288,7 @@ export function ScheduledReportsManager() {
                         }}
                         className="text-destructive"
                       >
-                        <Trash2 className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                        <Trash2 className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {t('actions.delete')}
                       </DropdownMenuItem>
                     </DropdownMenuContent>
@@ -299,13 +299,13 @@ export function ScheduledReportsManager() {
             <CardContent>
               <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
-                  <Clock className="h-4 w-4" />
+                  <Clock className="size-4" />
                   <span>{getFrequencyLabel(schedule)}</span>
                   <span>@ {schedule.time}</span>
                 </div>
                 {schedule.report && (
                   <div className="flex items-center gap-1">
-                    <Calendar className="h-4 w-4" />
+                    <Calendar className="size-4" />
                     <span>
                       {isRTL && schedule.report.name_ar
                         ? schedule.report.name_ar
@@ -314,7 +314,7 @@ export function ScheduledReportsManager() {
                   </div>
                 )}
               </div>
-              <div className="flex flex-wrap gap-4 mt-3 text-sm">
+              <div className="mt-3 flex flex-wrap gap-4 text-sm">
                 {schedule.next_run_at && (
                   <div>
                     <span className="text-muted-foreground">{t('schedule.nextRun')}: </span>

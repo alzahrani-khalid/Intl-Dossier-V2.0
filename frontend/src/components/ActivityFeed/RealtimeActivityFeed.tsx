@@ -286,20 +286,20 @@ export function RealtimeActivityFeed({
  const EntityIcon = entityIcons[activity.entityType]
 
  return (
- <div className="flex-1 min-w-0">
+ <div className="min-w-0 flex-1">
  <div className="flex items-center space-x-2">
  {activity.actorAvatar ? (
  <img
  src={activity.actorAvatar}
  alt={activity.actorName}
- className="h-6 w-6 rounded-full"
+ className="size-6 rounded-full"
  />
  ) : (
- <div className="h-6 w-6 rounded-full bg-gray-300 flex items-center justify-center text-xs text-white">
+ <div className="flex size-6 items-center justify-center rounded-full bg-gray-300 text-xs text-white">
  {activity.actorName.charAt(0).toUpperCase()}
  </div>
  )}
- <span className="font-medium text-sm text-gray-900">
+ <span className="text-sm font-medium text-gray-900">
  {activity.actorName}
  </span>
  <span className="text-sm text-gray-600">
@@ -307,23 +307,23 @@ export function RealtimeActivityFeed({
  </span>
  </div>
  <div className="mt-1 flex items-center space-x-2">
- <EntityIcon className="h-3 w-3 text-gray-400" />
+ <EntityIcon className="size-3 text-gray-400" />
  <span className="text-sm font-medium text-gray-700">
  {activity.entityName}
  </span>
  </div>
  {activity.metadata?.comment && (
- <div className="mt-2 text-sm text-gray-600 italic">
+ <div className="mt-2 text-sm italic text-gray-600">
  "{activity.metadata.comment}"
  </div>
  )}
  {activity.metadata?.from && activity.metadata?.to && (
  <div className="mt-2 text-sm">
- <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
+ <span className="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-800">
  {activity.metadata.from}
  </span>
  <span className="mx-1 text-gray-500">→</span>
- <span className="inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-green-100 text-green-800">
+ <span className="inline-flex items-center rounded bg-green-100 px-2 py-0.5 text-xs font-medium text-green-800">
  {activity.metadata.to}
  </span>
  </div>
@@ -338,13 +338,13 @@ export function RealtimeActivityFeed({
  return (
  <div className={cn('bg-white rounded-lg shadow', className)}>
  {/* Header */}
- <div className="px-4 py-3 border-b border-gray-200">
+ <div className="border-b border-gray-200 px-4 py-3">
  <div className="flex items-center justify-between">
  <h3 className="text-lg font-semibold text-gray-900">Activity Feed</h3>
  <div className="flex items-center space-x-2">
  {isConnected && (
  <div className="flex items-center space-x-1">
- <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+ <div className="size-2 animate-pulse rounded-full bg-green-500" />
  <span className="text-xs text-gray-500">Live</span>
  </div>
  )}
@@ -362,7 +362,7 @@ export function RealtimeActivityFeed({
 
  {/* Filters */}
  {showFilters && (
- <div className="px-4 py-2 border-b border-gray-100">
+ <div className="border-b border-gray-100 px-4 py-2">
  <div className="flex flex-wrap gap-2">
  {Object.entries(activityConfig).map(([type, config]) => {
  const Icon = config.icon
@@ -378,7 +378,7 @@ export function RealtimeActivityFeed({
  : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
  )}
  >
- <Icon className="h-3 w-3 me-1" />
+ <Icon className="me-1 size-3" />
  {type.replace('_', ' ')}
  </button>
  )
@@ -395,7 +395,7 @@ export function RealtimeActivityFeed({
  {isLoading ? (
  <div className="px-4 py-8 text-center">
  <div className="inline-flex items-center space-x-2 text-gray-500">
- <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-gray-900" />
+ <div className="size-4 animate-spin rounded-full border-b-2 border-gray-900" />
  <span>Loading activities...</span>
  </div>
  </div>
@@ -421,8 +421,8 @@ export function RealtimeActivityFeed({
  ))}
  {hasMore && (
  <div ref={loadMoreRef} className="px-4 py-3 text-center">
- <div className="inline-flex items-center space-x-2 text-gray-500 text-sm">
- <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-gray-900" />
+ <div className="inline-flex items-center space-x-2 text-sm text-gray-500">
+ <div className="size-3 animate-spin rounded-full border-b-2 border-gray-900" />
  <span>Loading more...</span>
  </div>
  </div>

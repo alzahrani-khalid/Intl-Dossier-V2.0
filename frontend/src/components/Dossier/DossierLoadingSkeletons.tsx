@@ -17,27 +17,27 @@ export function CountryDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="mb-6 sm:mb-8 space-y-3">
-        <Skeleton className="h-8 sm:h-10 w-2/3" />
-        <Skeleton className="h-4 sm:h-5 w-1/2" />
+      <div className="mb-6 space-y-3 sm:mb-8">
+        <Skeleton className="h-8 w-2/3 sm:h-10" />
+        <Skeleton className="h-4 w-1/2 sm:h-5" />
       </div>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-[2fr_1fr] gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-[2fr_1fr] lg:gap-8">
         {/* Main Column */}
         <div className="space-y-6">
           {/* World Map */}
           <div className="rounded-lg border border-border p-4 sm:p-6">
-            <Skeleton className="h-4 w-32 mb-4" />
-            <Skeleton className="h-64 sm:h-80 lg:h-96 w-full" />
+            <Skeleton className="mb-4 h-4 w-32" />
+            <Skeleton className="h-64 w-full sm:h-80 lg:h-96" />
           </div>
 
           {/* Diplomatic Relations */}
           <div className="rounded-lg border border-border p-4 sm:p-6">
-            <Skeleton className="h-4 w-40 mb-4" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Skeleton className="mb-4 h-4 w-40" />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <SkeletonCard />
               <SkeletonCard />
             </div>
@@ -48,13 +48,13 @@ export function CountryDossierSkeleton() {
         <div className="space-y-6">
           {/* Geographic Context */}
           <div className="rounded-lg border border-border p-4 sm:p-6">
-            <Skeleton className="h-4 w-36 mb-4" />
+            <Skeleton className="mb-4 h-4 w-36" />
             <SkeletonText lines={5} />
           </div>
 
           {/* Key Officials */}
           <div className="rounded-lg border border-border p-4 sm:p-6">
-            <Skeleton className="h-4 w-32 mb-4" />
+            <Skeleton className="mb-4 h-4 w-32" />
             <SkeletonCard />
             <div className="mt-4">
               <SkeletonCard />
@@ -75,18 +75,18 @@ export function EngagementDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="mb-6 sm:mb-8 space-y-3">
-        <Skeleton className="h-8 sm:h-10 w-2/3" />
-        <Skeleton className="h-4 sm:h-5 w-1/2" />
+      <div className="mb-6 space-y-3 sm:mb-8">
+        <Skeleton className="h-8 w-2/3 sm:h-10" />
+        <Skeleton className="h-4 w-1/2 sm:h-5" />
       </div>
 
       {/* Vertical Stack */}
       <div className="grid grid-cols-1 gap-6">
         {/* Event Timeline */}
         <div className="rounded-lg border border-border p-4 sm:p-6">
-          <Skeleton className="h-4 w-32 mb-4" />
+          <Skeleton className="mb-4 h-4 w-32" />
           <div className="space-y-4">
             <SkeletonCard />
             <SkeletonCard />
@@ -96,8 +96,8 @@ export function EngagementDossierSkeleton() {
 
         {/* Participants */}
         <div className="rounded-lg border border-border p-4 sm:p-6">
-          <Skeleton className="h-4 w-24 mb-4" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <Skeleton className="mb-4 h-4 w-24" />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
@@ -106,7 +106,7 @@ export function EngagementDossierSkeleton() {
 
         {/* Outcomes */}
         <div className="rounded-lg border border-border p-4 sm:p-6">
-          <Skeleton className="h-4 w-28 mb-4" />
+          <Skeleton className="mb-4 h-4 w-28" />
           <SkeletonText lines={4} />
         </div>
       </div>
@@ -123,20 +123,20 @@ export function PersonDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="mb-6 sm:mb-8 space-y-3">
-        <Skeleton className="h-8 sm:h-10 w-2/3" />
-        <Skeleton className="h-4 sm:h-5 w-1/2" />
+      <div className="mb-6 space-y-3 sm:mb-8">
+        <Skeleton className="h-8 w-2/3 sm:h-10" />
+        <Skeleton className="h-4 w-1/2 sm:h-5" />
       </div>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 md:grid-cols-[300px_1fr] gap-6 lg:gap-8">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-[300px_1fr] lg:gap-8">
         {/* Sidebar */}
         <div className="space-y-6">
           {/* Profile Photo */}
           <div className="flex justify-center">
-            <Skeleton className="h-32 w-32 rounded-full" />
+            <Skeleton className="size-32 rounded-full" />
           </div>
 
           {/* Bio */}
@@ -149,7 +149,7 @@ export function PersonDossierSkeleton() {
         <div className="space-y-6">
           {/* Positions Held */}
           <div className="rounded-lg border border-border p-4 sm:p-6">
-            <Skeleton className="h-4 w-32 mb-4" />
+            <Skeleton className="mb-4 h-4 w-32" />
             <SkeletonCard />
             <div className="mt-4">
               <SkeletonCard />
@@ -158,8 +158,8 @@ export function PersonDossierSkeleton() {
 
           {/* Organization Affiliations */}
           <div className="rounded-lg border border-border p-4 sm:p-6">
-            <Skeleton className="h-4 w-40 mb-4" />
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <Skeleton className="mb-4 h-4 w-40" />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <SkeletonCard />
               <SkeletonCard />
             </div>
@@ -179,24 +179,24 @@ export function OrganizationDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="mb-6 sm:mb-8 space-y-3">
-        <Skeleton className="h-8 sm:h-10 w-2/3" />
-        <Skeleton className="h-4 sm:h-5 w-1/2" />
+      <div className="mb-6 space-y-3 sm:mb-8">
+        <Skeleton className="h-8 w-2/3 sm:h-10" />
+        <Skeleton className="h-4 w-1/2 sm:h-5" />
       </div>
 
       {/* Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Org Chart (spans 2 columns) */}
-        <div className="lg:col-span-2 rounded-lg border border-border p-4 sm:p-6">
-          <Skeleton className="h-4 w-36 mb-4" />
-          <Skeleton className="h-64 sm:h-80 w-full" />
+        <div className="rounded-lg border border-border p-4 sm:p-6 lg:col-span-2">
+          <Skeleton className="mb-4 h-4 w-36" />
+          <Skeleton className="h-64 w-full sm:h-80" />
         </div>
 
         {/* Key Contacts */}
         <div className="rounded-lg border border-border p-4 sm:p-6">
-          <Skeleton className="h-4 w-32 mb-4" />
+          <Skeleton className="mb-4 h-4 w-32" />
           <div className="space-y-4">
             <SkeletonCard />
             <SkeletonCard />
@@ -204,9 +204,9 @@ export function OrganizationDossierSkeleton() {
         </div>
 
         {/* Active MoUs (spans 3 columns) */}
-        <div className="lg:col-span-3 rounded-lg border border-border p-4 sm:p-6">
-          <Skeleton className="h-4 w-28 mb-4" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="rounded-lg border border-border p-4 sm:p-6 lg:col-span-3">
+          <Skeleton className="mb-4 h-4 w-28" />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
@@ -226,19 +226,19 @@ export function ForumDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="mb-6 sm:mb-8 space-y-3">
-        <Skeleton className="h-8 sm:h-10 w-2/3" />
-        <Skeleton className="h-4 sm:h-5 w-1/2" />
+      <div className="mb-6 space-y-3 sm:mb-8">
+        <Skeleton className="h-8 w-2/3 sm:h-10" />
+        <Skeleton className="h-4 w-1/2 sm:h-5" />
       </div>
 
       {/* Bento Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
         {/* Member Organizations (spans 2 columns) */}
-        <div className="md:col-span-2 rounded-lg border border-border p-4 sm:p-6">
-          <Skeleton className="h-4 w-40 mb-4" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="rounded-lg border border-border p-4 sm:p-6 md:col-span-2">
+          <Skeleton className="mb-4 h-4 w-40" />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
@@ -248,14 +248,14 @@ export function ForumDossierSkeleton() {
 
         {/* Meeting Schedule */}
         <div className="rounded-lg border border-border p-4 sm:p-6">
-          <Skeleton className="h-4 w-32 mb-4" />
+          <Skeleton className="mb-4 h-4 w-32" />
           <SkeletonText lines={4} />
         </div>
 
         {/* Deliverables (spans 3 columns) */}
-        <div className="lg:col-span-3 rounded-lg border border-border p-4 sm:p-6">
-          <Skeleton className="h-4 w-36 mb-4" />
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="rounded-lg border border-border p-4 sm:p-6 lg:col-span-3">
+          <Skeleton className="mb-4 h-4 w-36" />
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <SkeletonCard />
             <SkeletonCard />
             <SkeletonCard />
@@ -284,62 +284,62 @@ export function DossiersHubSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="mb-6 sm:mb-8">
-        <Skeleton className="h-8 sm:h-10 w-1/2 mb-3" />
-        <Skeleton className="h-4 sm:h-5 w-1/3" />
+        <Skeleton className="mb-3 h-8 w-1/2 sm:h-10" />
+        <Skeleton className="h-4 w-1/3 sm:h-5" />
       </div>
 
       {/* Bento Grid - matches hub card layout */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
         {/* P1 Cards (2x2 grid span) */}
-        <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 md:row-span-2">
-          <div className="rounded-lg border border-border p-6 h-full">
-            <Skeleton className="h-12 w-12 rounded-lg mb-4" />
-            <Skeleton className="h-6 w-3/4 mb-2" />
+        <div className="sm:col-span-2 md:col-span-2 md:row-span-2 lg:col-span-2">
+          <div className="h-full rounded-lg border border-border p-6">
+            <Skeleton className="mb-4 size-12 rounded-lg" />
+            <Skeleton className="mb-2 h-6 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
           </div>
         </div>
 
-        <div className="sm:col-span-2 md:col-span-2 lg:col-span-2 md:row-span-2">
-          <div className="rounded-lg border border-border p-6 h-full">
-            <Skeleton className="h-12 w-12 rounded-lg mb-4" />
-            <Skeleton className="h-6 w-3/4 mb-2" />
+        <div className="sm:col-span-2 md:col-span-2 md:row-span-2 lg:col-span-2">
+          <div className="h-full rounded-lg border border-border p-6">
+            <Skeleton className="mb-4 size-12 rounded-lg" />
+            <Skeleton className="mb-2 h-6 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
           </div>
         </div>
 
         {/* P2 Card */}
         <div className="sm:col-span-1 md:col-span-1 lg:col-span-2">
-          <div className="rounded-lg border border-border p-6 h-full">
-            <Skeleton className="h-12 w-12 rounded-lg mb-4" />
-            <Skeleton className="h-6 w-3/4 mb-2" />
+          <div className="h-full rounded-lg border border-border p-6">
+            <Skeleton className="mb-4 size-12 rounded-lg" />
+            <Skeleton className="mb-2 h-6 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
           </div>
         </div>
 
         {/* P3 Cards */}
         <div className="sm:col-span-1 md:col-span-1 lg:col-span-1">
-          <div className="rounded-lg border border-border p-6 h-full">
-            <Skeleton className="h-12 w-12 rounded-lg mb-4" />
-            <Skeleton className="h-6 w-3/4 mb-2" />
+          <div className="h-full rounded-lg border border-border p-6">
+            <Skeleton className="mb-4 size-12 rounded-lg" />
+            <Skeleton className="mb-2 h-6 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
           </div>
         </div>
 
         <div className="sm:col-span-1 md:col-span-1 lg:col-span-1">
-          <div className="rounded-lg border border-border p-6 h-full">
-            <Skeleton className="h-12 w-12 rounded-lg mb-4" />
-            <Skeleton className="h-6 w-3/4 mb-2" />
+          <div className="h-full rounded-lg border border-border p-6">
+            <Skeleton className="mb-4 size-12 rounded-lg" />
+            <Skeleton className="mb-2 h-6 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
           </div>
         </div>
 
         <div className="sm:col-span-1 md:col-span-1 lg:col-span-1">
-          <div className="rounded-lg border border-border p-6 h-full">
-            <Skeleton className="h-12 w-12 rounded-lg mb-4" />
-            <Skeleton className="h-6 w-3/4 mb-2" />
+          <div className="h-full rounded-lg border border-border p-6">
+            <Skeleton className="mb-4 size-12 rounded-lg" />
+            <Skeleton className="mb-2 h-6 w-3/4" />
             <Skeleton className="h-4 w-1/2" />
           </div>
         </div>

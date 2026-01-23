@@ -127,10 +127,10 @@ export function AfterActionCreatePage() {
  >
  {/* Page Header */}
  <div className="mb-6">
- <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start">
+ <h1 className="text-start text-2xl font-bold sm:text-3xl md:text-4xl">
  {t('afterActions.create.title')}
  </h1>
- <p className="text-sm sm:text-base text-muted-foreground mt-2 text-start">
+ <p className="mt-2 text-start text-sm text-muted-foreground sm:text-base">
  {t('afterActions.create.subtitle')}
  </p>
  </div>
@@ -138,7 +138,7 @@ export function AfterActionCreatePage() {
  {/* Auto-save Status */}
  {lastSaved && (
  <Alert className="mb-6 border-green-500">
- <CheckCircle2 className="h-4 w-4 text-green-500" />
+ <CheckCircle2 className="size-4 text-green-500" />
  <AlertDescription>
  {t('afterActions.create.lastSaved', {
  time: lastSaved.toLocaleTimeString(i18n.language, {
@@ -153,7 +153,7 @@ export function AfterActionCreatePage() {
  {/* Error Display */}
  {saveError && (
  <Alert variant="destructive" className="mb-6">
- <AlertCircle className="h-4 w-4" />
+ <AlertCircle className="size-4" />
  <AlertDescription>{saveError}</AlertDescription>
  </Alert>
  )}

@@ -124,7 +124,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
   // Get file icon based on extension
   const getFileIcon = (fileName: string) => {
     const ext = fileName.toLowerCase().split('.').pop()
-    return <FileText className="h-8 w-8 text-muted-foreground" />
+    return <FileText className="size-8 text-muted-foreground" />
   }
 
   // Format file size for display
@@ -152,11 +152,11 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
           <CardContent className="space-y-4">
             {/* File Preview */}
             {selectedFile && (
-              <div className="border rounded-lg p-4 flex items-start gap-4">
-                <div className="flex-shrink-0">{getFileIcon(selectedFile.name)}</div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate text-start">{selectedFile.name}</p>
-                  <p className="text-xs text-muted-foreground text-start">
+              <div className="flex items-start gap-4 rounded-lg border p-4">
+                <div className="shrink-0">{getFileIcon(selectedFile.name)}</div>
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-start text-sm font-medium">{selectedFile.name}</p>
+                  <p className="text-start text-xs text-muted-foreground">
                     {formatFileSize(selectedFile.size)}
                   </p>
                 </div>
@@ -165,9 +165,9 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
                   variant="ghost"
                   size="icon"
                   onClick={clearFile}
-                  className="flex-shrink-0 min-h-8 min-w-8"
+                  className="min-h-8 min-w-8 shrink-0"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               </div>
             )}
@@ -175,11 +175,11 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
             {/* Upload Button */}
             {!selectedFile && (
               <div
-                className="border-2 border-dashed rounded-lg p-8 sm:p-12 text-center cursor-pointer hover:border-primary transition-colors"
+                className="cursor-pointer rounded-lg border-2 border-dashed p-8 text-center transition-colors hover:border-primary sm:p-12"
                 onClick={() => fileInputRef.current?.click()}
               >
-                <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
-                <p className="text-sm font-medium mb-2">
+                <Upload className="mx-auto mb-4 size-12 text-muted-foreground" />
+                <p className="mb-2 text-sm font-medium">
                   {t('contactDirectory.documentExtraction.click_to_upload')}
                 </p>
                 <p className="text-xs text-muted-foreground">
@@ -203,10 +203,10 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
                 type="button"
                 onClick={handleUpload}
                 disabled={uploadMutation.isPending}
-                className="w-full h-11 sm:h-10"
+                className="h-11 w-full sm:h-10"
               >
                 {uploadMutation.isPending && (
-                  <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
                 )}
                 {t('contactDirectory.documentExtraction.extract_contacts')}
               </Button>
@@ -218,15 +218,15 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
       {/* Processing Indicator */}
       {isProcessing && (
         <Card>
-          <CardContent className="p-6 space-y-4">
+          <CardContent className="space-y-4 p-6">
             <div className="flex items-center gap-3">
-              <Loader2 className="h-5 w-5 animate-spin text-primary" />
+              <Loader2 className="size-5 animate-spin text-primary" />
               <div className="flex-1">
-                <p className="text-sm font-medium text-start">
+                <p className="text-start text-sm font-medium">
                   {t('contactDirectory.documentExtraction.processing')}
                 </p>
                 {statusData && (
-                  <p className="text-xs text-muted-foreground text-start">
+                  <p className="text-start text-xs text-muted-foreground">
                     {t(
                       `contactDirectory.documentExtraction.status_${statusData.processing_status}`,
                     )}
@@ -235,7 +235,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
               </div>
             </div>
             <Progress value={undefined} className="h-2" />
-            <p className="text-xs text-center text-muted-foreground">
+            <p className="text-center text-xs text-muted-foreground">
               {t('contactDirectory.documentExtraction.processing_time_estimate')}
             </p>
           </CardContent>
@@ -245,7 +245,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
       {/* Processing Error */}
       {processingError && (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription className="text-start">
             {t('contactDirectory.documentExtraction.processing_error', { error: processingError })}
           </AlertDescription>
@@ -257,12 +257,12 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
         <Card>
           <CardHeader>
             <div className="flex items-center justify-between">
-              <CardTitle className="text-start flex items-center gap-2">
-                <CheckCircle2 className="h-5 w-5 text-green-600" />
+              <CardTitle className="flex items-center gap-2 text-start">
+                <CheckCircle2 className="size-5 text-green-600" />
                 {t('contactDirectory.documentExtraction.extraction_complete')}
               </CardTitle>
               <Badge variant="secondary" className="text-sm">
-                <Users className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
+                <Users className={`size-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
                 {extractedContacts.length} {t('contactDirectory.documentExtraction.contacts_found')}
               </Badge>
             </div>
@@ -272,16 +272,16 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
           </CardHeader>
           <CardContent className="space-y-3">
             {/* Contact Preview List */}
-            <div className="space-y-2 max-h-[400px] overflow-y-auto">
+            <div className="max-h-[400px] space-y-2 overflow-y-auto">
               {extractedContacts.map((contact, index) => (
                 <div
                   key={index}
-                  className="border rounded-lg p-3 sm:p-4 hover:bg-accent transition-colors"
+                  className="rounded-lg border p-3 transition-colors hover:bg-accent sm:p-4"
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex items-center gap-2 mb-1">
-                        <p className="text-sm font-medium truncate text-start">
+                    <div className="min-w-0 flex-1">
+                      <div className="mb-1 flex items-center gap-2">
+                        <p className="truncate text-start text-sm font-medium">
                           {contact.full_name}
                         </p>
                         <Badge className={`text-xs ${getConfidenceColor(contact.confidence)}`}>
@@ -289,16 +289,16 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
                         </Badge>
                       </div>
                       {contact.organization && (
-                        <p className="text-xs text-muted-foreground text-start truncate">
+                        <p className="truncate text-start text-xs text-muted-foreground">
                           {contact.organization}
                         </p>
                       )}
                       {contact.position && (
-                        <p className="text-xs text-muted-foreground text-start truncate">
+                        <p className="truncate text-start text-xs text-muted-foreground">
                           {contact.position}
                         </p>
                       )}
-                      <div className="flex flex-wrap gap-1 mt-2">
+                      <div className="mt-2 flex flex-wrap gap-1">
                         {contact.email_addresses?.map((email, i) => (
                           <Badge key={i} variant="outline" className="text-xs">
                             {email}
@@ -317,11 +317,11 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col-reverse sm:flex-row gap-2 pt-4 border-t">
+            <div className="flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row">
               <Button type="button" variant="outline" onClick={clearFile} className="h-11 sm:h-10">
                 {t('contactDirectory.documentExtraction.start_over')}
               </Button>
-              <Button type="button" onClick={handleContinue} className="h-11 sm:h-10 flex-1">
+              <Button type="button" onClick={handleContinue} className="h-11 flex-1 sm:h-10">
                 {t('contactDirectory.documentExtraction.review_and_import')}
               </Button>
             </div>
@@ -332,7 +332,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
       {/* No Contacts Found */}
       {processingComplete && extractedContacts.length === 0 && (
         <Alert>
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription className="text-start">
             {t('contactDirectory.documentExtraction.no_contacts_found')}
           </AlertDescription>
@@ -342,7 +342,7 @@ export function DocumentExtractor({ onExtracted, onCancel }: DocumentExtractorPr
       {/* Info Alert */}
       {!documentSourceId && (
         <Alert>
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription className="text-start text-sm">
             {t('contactDirectory.documentExtraction.info_alert')}
           </AlertDescription>

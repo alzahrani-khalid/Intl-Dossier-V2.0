@@ -40,7 +40,7 @@ export function MouVersionTimeline({
     return (
       <Card dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="py-8 text-center">
-          <FileText className="mx-auto h-10 w-10 text-muted-foreground/50" />
+          <FileText className="mx-auto size-10 text-muted-foreground/50" />
           <p className="mt-2 text-sm text-muted-foreground">{t('versionHistory.noVersions')}</p>
         </CardContent>
       </Card>
@@ -51,7 +51,7 @@ export function MouVersionTimeline({
     <Card dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-base">
-          <RefreshCw className="h-4 w-4" />
+          <RefreshCw className="size-4" />
           {t('versionHistory.title')}
           <Badge variant="secondary" className="ms-auto">
             {t('versionHistory.versionCount', { count: versions.length })}
@@ -88,9 +88,9 @@ export function MouVersionTimeline({
                     )}
                   >
                     {isCurrent ? (
-                      <CheckCircle className="h-3.5 w-3.5" />
+                      <CheckCircle className="size-3.5" />
                     ) : (
-                      <Clock className="h-3.5 w-3.5" />
+                      <Clock className="size-3.5" />
                     )}
                   </div>
 
@@ -135,7 +135,7 @@ export function MouVersionTimeline({
 
                     {/* Date range */}
                     <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
-                      <Calendar className="h-3 w-3" />
+                      <Calendar className="size-3" />
                       <span>
                         {format(new Date(version.effective_from), 'PP', {
                           locale: dateLocale,

@@ -169,33 +169,33 @@ export function HelpPage() {
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Hero Section */}
-      <div className="bg-primary/5 border-b">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-          <div className="max-w-3xl mx-auto text-center">
-            <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-4">
+      <div className="border-b bg-primary/5">
+        <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8 lg:py-16">
+          <div className="mx-auto max-w-3xl text-center">
+            <div className="mb-4 inline-flex items-center gap-2 rounded-full bg-primary/10 px-4 py-2 text-primary">
               <Sparkles className="size-4" />
               <span className="text-sm font-medium">{isRTL ? 'مركز المساعدة' : 'Help Center'}</span>
             </div>
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
+            <h1 className="mb-4 text-3xl font-bold sm:text-4xl lg:text-5xl">
               {isRTL ? 'كيف يمكننا مساعدتك؟' : 'How can we help you?'}
             </h1>
-            <p className="text-lg text-muted-foreground mb-8">
+            <p className="mb-8 text-lg text-muted-foreground">
               {isRTL
                 ? 'ابحث في المقالات أو تصفح الأدلة أدناه'
                 : 'Search articles or browse guides below'}
             </p>
 
             {/* Search Bar */}
-            <div className="relative max-w-xl mx-auto">
+            <div className="relative mx-auto max-w-xl">
               <Search
-                className={`absolute top-1/2 -translate-y-1/2 size-5 text-muted-foreground ${isRTL ? 'end-4' : 'start-4'}`}
+                className={`absolute top-1/2 size-5 -translate-y-1/2 text-muted-foreground ${isRTL ? 'end-4' : 'start-4'}`}
               />
               <Input
                 type="search"
                 placeholder={isRTL ? 'ابحث عن المساعدة...' : 'Search for help...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={`h-14 text-lg rounded-full border-2 ${isRTL ? 'pe-12 ps-4' : 'ps-12 pe-4'}`}
+                className={`h-14 rounded-full border-2 text-lg ${isRTL ? 'pe-12 ps-4' : 'pe-4 ps-12'}`}
               />
             </div>
           </div>
@@ -203,21 +203,21 @@ export function HelpPage() {
       </div>
 
       {/* Main Content */}
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12">
+      <div className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
         {/* Feature Guides Section */}
         <section className="mb-12">
-          <div className="flex items-center justify-between mb-6">
+          <div className="mb-6 flex items-center justify-between">
             <div>
-              <h2 className="text-2xl font-bold text-start">
+              <h2 className="text-start text-2xl font-bold">
                 {isRTL ? 'أدلة الميزات' : 'Feature Guides'}
               </h2>
-              <p className="text-muted-foreground text-start">
+              <p className="text-start text-muted-foreground">
                 {isRTL ? 'تعلم كيفية استخدام كل ميزة' : 'Learn how to use each feature'}
               </p>
             </div>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3">
             {featureGuides.map((guide) => (
               <FeatureGuideCard key={guide.id} guide={guide} isRTL={isRTL} />
             ))}
@@ -227,12 +227,12 @@ export function HelpPage() {
         <Separator className="my-8" />
 
         {/* Two Column Layout: FAQ + Support */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
           {/* FAQ Section - Takes 2 columns */}
           <section className="lg:col-span-2">
-            <div className="flex items-center gap-2 mb-6">
+            <div className="mb-6 flex items-center gap-2">
               <HelpCircle className="size-6 text-primary" />
-              <h2 className="text-2xl font-bold text-start">
+              <h2 className="text-start text-2xl font-bold">
                 {isRTL ? 'الأسئلة الشائعة' : 'Frequently Asked Questions'}
               </h2>
             </div>
@@ -253,15 +253,15 @@ export function HelpPage() {
                         <AccordionItem key={item.id} value={item.id}>
                           <AccordionTrigger className="text-start hover:no-underline">
                             <span className="flex items-center gap-3">
-                              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
+                              <div className="flex size-8 shrink-0 items-center justify-center rounded-lg bg-primary/10">
                                 <Icon className="size-4 text-primary" />
                               </div>
-                              <span className="text-sm sm:text-base font-medium">
+                              <span className="text-sm font-medium sm:text-base">
                                 {item.question}
                               </span>
                             </span>
                           </AccordionTrigger>
-                          <AccordionContent className="text-muted-foreground ps-11">
+                          <AccordionContent className="ps-11 text-muted-foreground">
                             {item.answer}
                           </AccordionContent>
                         </AccordionItem>
@@ -283,31 +283,31 @@ export function HelpPage() {
 
           {/* Support Section - Takes 1 column */}
           <section>
-            <div className="flex items-center gap-2 mb-6">
+            <div className="mb-6 flex items-center gap-2">
               <Phone className="size-6 text-primary" />
-              <h2 className="text-2xl font-bold text-start">
+              <h2 className="text-start text-2xl font-bold">
                 {isRTL ? 'تواصل معنا' : 'Contact Support'}
               </h2>
             </div>
 
             <div className="space-y-4">
               {/* Email Support Card */}
-              <Card className="border-2 hover:border-primary/50 transition-colors">
+              <Card className="border-2 transition-colors hover:border-primary/50">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-blue-100 dark:bg-blue-900 flex items-center justify-center shrink-0">
+                    <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-blue-100 dark:bg-blue-900">
                       <Mail className="size-6 text-blue-600 dark:text-blue-400" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-start">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-start font-semibold">
                         {isRTL ? 'البريد الإلكتروني' : 'Email Support'}
                       </h3>
-                      <p className="text-sm text-muted-foreground text-start truncate">
+                      <p className="truncate text-start text-sm text-muted-foreground">
                         support@gastat.gov.sa
                       </p>
-                      <Button variant="link" className="h-auto p-0 mt-1">
+                      <Button variant="link" className="mt-1 h-auto p-0">
                         {isRTL ? 'إرسال رسالة' : 'Send message'}
-                        <ChevronRight className={`size-4 ms-1 ${isRTL ? 'rotate-180' : ''}`} />
+                        <ChevronRight className={`ms-1 size-4 ${isRTL ? 'rotate-180' : ''}`} />
                       </Button>
                     </div>
                   </div>
@@ -315,22 +315,22 @@ export function HelpPage() {
               </Card>
 
               {/* Phone Support Card */}
-              <Card className="border-2 hover:border-primary/50 transition-colors">
+              <Card className="border-2 transition-colors hover:border-primary/50">
                 <CardContent className="pt-6">
                   <div className="flex items-start gap-4">
-                    <div className="w-12 h-12 rounded-xl bg-green-100 dark:bg-green-900 flex items-center justify-center shrink-0">
+                    <div className="flex size-12 shrink-0 items-center justify-center rounded-xl bg-green-100 dark:bg-green-900">
                       <Phone className="size-6 text-green-600 dark:text-green-400" />
                     </div>
-                    <div className="flex-1 min-w-0">
-                      <h3 className="font-semibold text-start">
+                    <div className="min-w-0 flex-1">
+                      <h3 className="text-start font-semibold">
                         {isRTL ? 'الدعم الهاتفي' : 'Phone Support'}
                       </h3>
-                      <p className="text-sm text-muted-foreground text-start" dir="ltr">
+                      <p className="text-start text-sm text-muted-foreground" dir="ltr">
                         +966 11 123 4567
                       </p>
-                      <Button variant="link" className="h-auto p-0 mt-1">
+                      <Button variant="link" className="mt-1 h-auto p-0">
                         {isRTL ? 'اتصل الآن' : 'Call now'}
-                        <ChevronRight className={`size-4 ms-1 ${isRTL ? 'rotate-180' : ''}`} />
+                        <ChevronRight className={`ms-1 size-4 ${isRTL ? 'rotate-180' : ''}`} />
                       </Button>
                     </div>
                   </div>
@@ -341,7 +341,7 @@ export function HelpPage() {
               <Card className="bg-muted/50">
                 <CardContent className="pt-6">
                   <div className="text-center">
-                    <p className="text-sm font-medium mb-1">
+                    <p className="mb-1 text-sm font-medium">
                       {isRTL ? 'ساعات العمل' : 'Support Hours'}
                     </p>
                     <p className="text-sm text-muted-foreground">
@@ -359,11 +359,11 @@ export function HelpPage() {
 
         {/* Additional Resources */}
         <section>
-          <h2 className="text-2xl font-bold mb-6 text-start">
+          <h2 className="mb-6 text-start text-2xl font-bold">
             {isRTL ? 'موارد إضافية' : 'Additional Resources'}
           </h2>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <ResourceCard
               icon={Book}
               title={isRTL ? 'دليل المستخدم' : 'User Guide'}
@@ -412,23 +412,23 @@ function FeatureGuideCard({
     <Card
       className={`group relative overflow-hidden transition-all duration-300 ${
         guide.comingSoon
-          ? 'opacity-60 cursor-not-allowed'
-          : 'hover:shadow-lg hover:border-primary/50 cursor-pointer'
+          ? 'cursor-not-allowed opacity-60'
+          : 'cursor-pointer hover:border-primary/50 hover:shadow-lg'
       }`}
     >
       {/* Color accent bar */}
-      <div className={`absolute top-0 ${isRTL ? 'end-0' : 'start-0'} w-1 h-full ${guide.color}`} />
+      <div className={`absolute top-0 ${isRTL ? 'end-0' : 'start-0'} h-full w-1 ${guide.color}`} />
 
-      <CardContent className="pt-6 ps-5">
+      <CardContent className="ps-5 pt-6">
         <div className="flex items-start gap-4">
           <div
-            className={`w-12 h-12 rounded-xl ${guide.color} bg-opacity-10 flex items-center justify-center shrink-0 group-hover:scale-110 transition-transform`}
+            className={`size-12 rounded-xl ${guide.color} flex shrink-0 items-center justify-center bg-opacity-10 transition-transform group-hover:scale-110`}
           >
             <Icon className={`size-6 ${guide.color.replace('bg-', 'text-')}`} />
           </div>
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1">
-              <h3 className="font-semibold text-start">{guide.title}</h3>
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex items-center gap-2">
+              <h3 className="text-start font-semibold">{guide.title}</h3>
               {guide.badge && (
                 <Badge variant="secondary" className="text-xs">
                   {guide.badge}
@@ -440,13 +440,13 @@ function FeatureGuideCard({
                 </Badge>
               )}
             </div>
-            <p className="text-sm text-muted-foreground text-start line-clamp-2">
+            <p className="line-clamp-2 text-start text-sm text-muted-foreground">
               {guide.description}
             </p>
           </div>
           {!guide.comingSoon && (
             <ChevronRight
-              className={`size-5 text-muted-foreground group-hover:text-primary transition-colors shrink-0 ${
+              className={`size-5 shrink-0 text-muted-foreground transition-colors group-hover:text-primary ${
                 isRTL ? 'rotate-180' : ''
               }`}
             />
@@ -476,15 +476,15 @@ function ResourceCard({
   isRTL: boolean
 }) {
   return (
-    <Card className="group hover:shadow-md transition-shadow cursor-pointer">
+    <Card className="group cursor-pointer transition-shadow hover:shadow-md">
       <CardContent className="pt-6">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-lg bg-muted flex items-center justify-center group-hover:bg-primary/10 transition-colors">
-            <Icon className="size-5 text-muted-foreground group-hover:text-primary transition-colors" />
+          <div className="flex size-10 items-center justify-center rounded-lg bg-muted transition-colors group-hover:bg-primary/10">
+            <Icon className="size-5 text-muted-foreground transition-colors group-hover:text-primary" />
           </div>
           <div className="flex-1">
-            <h3 className="font-medium text-sm text-start">{title}</h3>
-            <p className="text-xs text-muted-foreground text-start">{description}</p>
+            <h3 className="text-start text-sm font-medium">{title}</h3>
+            <p className="text-start text-xs text-muted-foreground">{description}</p>
           </div>
           <ExternalLink className="size-4 text-muted-foreground" />
         </div>

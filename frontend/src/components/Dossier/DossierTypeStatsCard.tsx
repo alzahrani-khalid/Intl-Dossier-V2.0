@@ -160,7 +160,7 @@ export function DossierTypeStatsCard({
       whileHover={{ scale: 1.02 }}
       whileTap={{ scale: 0.98 }}
       transition={{ duration: 0.2 }}
-      className="w-full aspect-square sm:aspect-auto"
+      className="aspect-square w-full sm:aspect-auto"
     >
       <Card
         className={cn(
@@ -185,9 +185,9 @@ export function DossierTypeStatsCard({
             'flex-shrink-0',
           )}
         >
-          <div className="flex items-center justify-between mb-0.5 sm:mb-1">
+          <div className="mb-0.5 flex items-center justify-between sm:mb-1">
             {/* Icon */}
-            <div className="p-0.5 sm:p-1.5 bg-white/20 backdrop-blur-sm rounded">
+            <div className="rounded bg-white/20 p-0.5 backdrop-blur-sm sm:p-1.5">
               {getTypeIcon(type, 'h-2.5 w-2.5 sm:h-4 sm:w-4')}
             </div>
 
@@ -211,7 +211,7 @@ export function DossierTypeStatsCard({
                     )}
                     aria-label={t('typeGuide.learnMore', 'Learn more about this type')}
                   >
-                    <HelpCircle className="h-3 w-3" />
+                    <HelpCircle className="size-3" />
                   </button>
                 }
               />
@@ -232,7 +232,7 @@ export function DossierTypeStatsCard({
           </div>
 
           {/* Type Title */}
-          <h3 className="text-sm sm:text-base font-bold text-start leading-tight">
+          <h3 className="text-start text-sm font-bold leading-tight sm:text-base">
             {t(`type.${type}`)}
           </h3>
 
@@ -240,7 +240,7 @@ export function DossierTypeStatsCard({
           {trend && trendValue && (
             <Badge
               variant="secondary"
-              className="hidden sm:inline-flex mt-1 bg-white/20 backdrop-blur-sm text-white border-0 text-xs"
+              className="mt-1 hidden border-0 bg-white/20 text-xs text-white backdrop-blur-sm sm:inline-flex"
             >
               {getTrendIcon(trend)}
               <span className={cn(isRTL ? 'me-1' : 'ms-1')}>
@@ -252,32 +252,32 @@ export function DossierTypeStatsCard({
         </div>
 
         {/* Stats Content */}
-        <CardContent className="p-1.5 sm:p-3 flex-1 flex flex-col justify-between bg-white">
+        <CardContent className="flex flex-1 flex-col justify-between bg-white p-1.5 sm:p-3">
           {/* Percentage Display */}
-          <div className="mb-2 sm:mb-3 text-center">
-            <div className="text-[10px] sm:text-xs font-medium text-muted-foreground mb-1">
+          <div className="mb-2 text-center sm:mb-3">
+            <div className="mb-1 text-[10px] font-medium text-muted-foreground sm:text-xs">
               % of total active dossiers
             </div>
-            <div className="text-sm sm:text-lg font-bold text-foreground">
+            <div className="text-sm font-bold text-foreground sm:text-lg">
               {Math.round(percentage)}%
             </div>
           </div>
 
           {/* Status Breakdown */}
           <div className="grid grid-cols-2 gap-1 sm:gap-2">
-            <div className="flex flex-col gap-0.5 items-center">
-              <span className="text-[10px] sm:text-xs text-muted-foreground text-center leading-tight">
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-center text-[10px] leading-tight text-muted-foreground sm:text-xs">
                 {t('status.active')}
               </span>
-              <span className="text-xs sm:text-base font-semibold text-green-600 dark:text-green-400 text-center">
+              <span className="text-center text-xs font-semibold text-green-600 dark:text-green-400 sm:text-base">
                 {activeCount}
               </span>
             </div>
-            <div className="flex flex-col gap-0.5 items-center">
-              <span className="text-[10px] sm:text-xs text-muted-foreground text-center leading-tight">
+            <div className="flex flex-col items-center gap-0.5">
+              <span className="text-center text-[10px] leading-tight text-muted-foreground sm:text-xs">
                 {t('status.inactive')}
               </span>
-              <span className="text-xs sm:text-base font-semibold text-yellow-600 dark:text-yellow-400 text-center">
+              <span className="text-center text-xs font-semibold text-yellow-600 dark:text-yellow-400 sm:text-base">
                 {inactiveCount}
               </span>
             </div>
@@ -293,29 +293,29 @@ export function DossierTypeStatsCard({
  */
 export function DossierTypeStatsCardSkeleton({ className }: { className?: string }) {
   return (
-    <div className="w-full aspect-square sm:aspect-auto">
+    <div className="aspect-square w-full sm:aspect-auto">
       <Card className={cn('h-full flex flex-col overflow-hidden', className)}>
-        <div className="bg-gradient-to-br from-gray-400 to-gray-500 p-1.5 sm:p-3 flex-shrink-0">
-          <div className="flex items-center justify-between mb-0.5 sm:mb-1">
-            <Skeleton className="h-4 w-4 sm:h-7 sm:w-7 rounded bg-white/20" />
-            <Skeleton className="h-5 sm:h-9 w-9 sm:w-16 rounded bg-white/20" />
+        <div className="shrink-0 bg-gradient-to-br from-gray-400 to-gray-500 p-1.5 sm:p-3">
+          <div className="mb-0.5 flex items-center justify-between sm:mb-1">
+            <Skeleton className="size-4 rounded bg-white/20 sm:size-7" />
+            <Skeleton className="h-5 w-9 rounded bg-white/20 sm:h-9 sm:w-16" />
           </div>
-          <Skeleton className="h-4 sm:h-5 w-16 sm:w-20 bg-white/20" />
-          <Skeleton className="hidden sm:block h-4 w-12 rounded-full bg-white/20 mt-1" />
+          <Skeleton className="h-4 w-16 bg-white/20 sm:h-5 sm:w-20" />
+          <Skeleton className="mt-1 hidden h-4 w-12 rounded-full bg-white/20 sm:block" />
         </div>
-        <CardContent className="p-1.5 sm:p-3 flex-1 flex flex-col justify-between bg-white">
-          <div className="mb-2 sm:mb-3 text-center">
-            <Skeleton className="h-3 sm:h-4 w-24 sm:w-32 mx-auto mb-1" />
-            <Skeleton className="h-4 sm:h-5 w-12 sm:w-16 mx-auto" />
+        <CardContent className="flex flex-1 flex-col justify-between bg-white p-1.5 sm:p-3">
+          <div className="mb-2 text-center sm:mb-3">
+            <Skeleton className="mx-auto mb-1 h-3 w-24 sm:h-4 sm:w-32" />
+            <Skeleton className="mx-auto h-4 w-12 sm:h-5 sm:w-16" />
           </div>
           <div className="grid grid-cols-2 gap-1 sm:gap-2">
-            <div className="flex flex-col gap-0.5 items-center">
-              <Skeleton className="h-2.5 sm:h-3 w-8" />
-              <Skeleton className="h-3 sm:h-4 w-4" />
+            <div className="flex flex-col items-center gap-0.5">
+              <Skeleton className="h-2.5 w-8 sm:h-3" />
+              <Skeleton className="h-3 w-4 sm:h-4" />
             </div>
-            <div className="flex flex-col gap-0.5 items-center">
-              <Skeleton className="h-2.5 sm:h-3 w-8" />
-              <Skeleton className="h-3 sm:h-4 w-4" />
+            <div className="flex flex-col items-center gap-0.5">
+              <Skeleton className="h-2.5 w-8 sm:h-3" />
+              <Skeleton className="h-3 w-4 sm:h-4" />
             </div>
           </div>
         </CardContent>

@@ -67,7 +67,7 @@ export function StatusDropdown({
   // Early return with loading state if currentStatus is not yet available or invalid
   if (!currentStatus || !STATUS_COLORS[currentStatus]) {
     return (
-      <Badge variant="secondary" className="bg-gray-100 text-gray-500 border flex items-center gap-1 text-xs">
+      <Badge variant="secondary" className="flex items-center gap-1 border bg-gray-100 text-xs text-gray-500">
         <Clock className="size-3.5" />
         <span>{t('status.loading', 'Loading...')}</span>
       </Badge>
@@ -108,7 +108,7 @@ export function StatusDropdown({
     return (
       <Badge
         variant="secondary"
-        className={`${statusColors.bg} ${statusColors.text} ${statusColors.border} border flex items-center gap-1 text-xs`}
+        className={`${statusColors.bg} ${statusColors.text} ${statusColors.border} flex items-center gap-1 border text-xs`}
       >
         {statusIcons[currentStatus]}
         <span>{t(`status.${currentStatus}`)}</span>
@@ -126,8 +126,8 @@ export function StatusDropdown({
           className={`
             ${compact ? 'h-8 px-2' : 'min-h-11 px-3'}
             ${statusColors.bg} ${statusColors.text} ${statusColors.border}
-            border hover:opacity-90 focus:ring-2 focus:ring-offset-2
-            flex items-center gap-1.5
+            flex items-center gap-1.5 border
+            hover:opacity-90 focus:ring-2 focus:ring-offset-2
           `}
           onClick={(e) => e.stopPropagation()}
         >
@@ -154,7 +154,7 @@ export function StatusDropdown({
             <DropdownMenuItem
               key={status}
               onClick={() => handleStatusChange(status)}
-              className={`flex items-center gap-2 cursor-pointer min-h-11 ${colors.text}`}
+              className={`flex min-h-11 cursor-pointer items-center gap-2 ${colors.text}`}
             >
               {statusIcons[status]}
               <span>{t(`status.${status}`)}</span>
@@ -184,7 +184,7 @@ export function StatusBadge({
   // Guard against undefined status
   if (!status) {
     return (
-      <Badge variant="secondary" className="bg-gray-100 text-gray-500 border flex items-center gap-1 text-xs">
+      <Badge variant="secondary" className="flex items-center gap-1 border bg-gray-100 text-xs text-gray-500">
         <Clock className="size-3.5" />
         <span>{t('status.loading', 'Loading...')}</span>
       </Badge>
@@ -196,7 +196,7 @@ export function StatusBadge({
   return (
     <Badge
       variant="secondary"
-      className={`${statusColors.bg} ${statusColors.text} ${statusColors.border} border flex items-center gap-1 text-xs ${className}`}
+      className={`${statusColors.bg} ${statusColors.text} ${statusColors.border} flex items-center gap-1 border text-xs ${className}`}
     >
       {showIcon && statusIcons[status]}
       <span>{t(`status.${status}`)}</span>

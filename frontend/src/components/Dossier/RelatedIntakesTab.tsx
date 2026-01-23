@@ -69,7 +69,7 @@ export function RelatedIntakesTab({ entityType, entityId }: RelatedIntakesTabPro
  if (error) {
  return (
  <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
- <AlertCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <AlertCircle className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  <AlertDescription>
  {t('entity.related_intakes.error', 'Failed to load related intakes. Please try again.')}
  </AlertDescription>
@@ -86,8 +86,8 @@ export function RelatedIntakesTab({ entityType, entityId }: RelatedIntakesTabPro
  {/* Filter Section */}
  <Card>
  <CardHeader>
- <CardTitle className="text-lg sm:text-xl flex items-center gap-2">
- <Filter className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
+ <CardTitle className="flex items-center gap-2 text-lg sm:text-xl">
+ <Filter className={`size-5 ${isRTL ? 'rotate-180' : ''}`} />
  {t('entity.related_intakes.filters', 'Filter by Link Type')}
  </CardTitle>
  <CardDescription>
@@ -151,9 +151,9 @@ export function RelatedIntakesTab({ entityType, entityId }: RelatedIntakesTabPro
  ) : (
  <div className="space-y-4">
  {intakes.map((intake: IntakeLink) => (
- <Card key={intake.id} className="hover:shadow-md transition-shadow">
+ <Card key={intake.id} className="transition-shadow hover:shadow-md">
  <CardHeader>
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+ <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
  <CardTitle className="text-base sm:text-lg">
  {intake.intake_title}
  </CardTitle>
@@ -172,15 +172,15 @@ export function RelatedIntakesTab({ entityType, entityId }: RelatedIntakesTabPro
  </CardDescription>
  </CardHeader>
  <CardContent className="space-y-2">
- <p className="text-sm text-muted-foreground line-clamp-2">
+ <p className="line-clamp-2 text-sm text-muted-foreground">
  {intake.intake_description}
  </p>
  {intake.notes && (
- <div className="pt-2 border-t">
- <p className="text-sm font-medium mb-1">
+ <div className="border-t pt-2">
+ <p className="mb-1 text-sm font-medium">
  {t('entity.related_intakes.notes', 'Notes')}:
  </p>
- <p className="text-sm text-muted-foreground italic">
+ <p className="text-sm italic text-muted-foreground">
  {intake.notes}
  </p>
  </div>
@@ -188,7 +188,7 @@ export function RelatedIntakesTab({ entityType, entityId }: RelatedIntakesTabPro
  <Button
  variant="link"
  size="sm"
- className="p-0 h-auto"
+ className="h-auto p-0"
  onClick={() => window.location.href = `/intakes/${intake.intake_id}`}
  >
  {t('entity.related_intakes.view_intake', 'View Intake')} →
@@ -211,7 +211,7 @@ export function RelatedIntakesTab({ entityType, entityId }: RelatedIntakesTabPro
  >
  {isRTL ? '→' : '←'}
  </Button>
- <span className="text-sm text-muted-foreground px-4">
+ <span className="px-4 text-sm text-muted-foreground">
  {t('common.pagination', {
  current: currentPage,
  total: totalPages,

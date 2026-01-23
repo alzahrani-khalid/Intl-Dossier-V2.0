@@ -274,42 +274,42 @@ export function TutorialEmptyState({
   // Compact tutorial preview card
   const TutorialPreviewCard = () => (
     <Card
-      className="overflow-hidden cursor-pointer hover:shadow-md transition-shadow"
+      className="cursor-pointer overflow-hidden transition-shadow hover:shadow-md"
       onClick={() => setExpandedVideo(true)}
       data-testid={`${testId}-preview`}
     >
       <CardContent className="p-0">
-        <div className="flex items-center gap-3 sm:gap-4 p-3 sm:p-4">
+        <div className="flex items-center gap-3 p-3 sm:gap-4 sm:p-4">
           {/* Thumbnail */}
-          <div className="relative flex-shrink-0 w-20 h-14 sm:w-28 sm:h-20 rounded-md overflow-hidden bg-muted">
+          <div className="relative h-14 w-20 shrink-0 overflow-hidden rounded-md bg-muted sm:h-20 sm:w-28">
             {translatedTutorial?.poster ? (
-              <img src={translatedTutorial.poster} alt="" className="w-full h-full object-cover" />
+              <img src={translatedTutorial.poster} alt="" className="size-full object-cover" />
             ) : (
-              <div className="w-full h-full flex items-center justify-center bg-primary/10">
-                <Play className="h-6 w-6 sm:h-8 sm:w-8 text-primary" />
+              <div className="flex size-full items-center justify-center bg-primary/10">
+                <Play className="size-6 text-primary sm:size-8" />
               </div>
             )}
             <div className="absolute inset-0 flex items-center justify-center bg-black/30">
-              <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-white/90 flex items-center justify-center">
-                <Play className="h-3.5 w-3.5 sm:h-4 sm:w-4 text-foreground fill-current" />
+              <div className="flex size-8 items-center justify-center rounded-full bg-white/90 sm:size-10">
+                <Play className="size-3.5 fill-current text-foreground sm:size-4" />
               </div>
             </div>
             {/* Duration badge */}
-            <div className="absolute bottom-1 end-1 px-1.5 py-0.5 rounded text-[10px] sm:text-xs font-medium bg-black/70 text-white">
+            <div className="absolute bottom-1 end-1 rounded bg-black/70 px-1.5 py-0.5 text-[10px] font-medium text-white sm:text-xs">
               {Math.floor((translatedTutorial?.duration || 0) / 60)}:
               {String((translatedTutorial?.duration || 0) % 60).padStart(2, '0')}
             </div>
           </div>
 
           {/* Info */}
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <div>
-                <h4 className="text-sm sm:text-base font-medium text-foreground line-clamp-1">
+                <h4 className="line-clamp-1 text-sm font-medium text-foreground sm:text-base">
                   {translatedTutorial?.title}
                 </h4>
                 {translatedTutorial?.description && (
-                  <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 mt-0.5">
+                  <p className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
                     {translatedTutorial.description}
                   </p>
                 )}
@@ -317,33 +317,33 @@ export function TutorialEmptyState({
               <Button
                 variant="ghost"
                 size="sm"
-                className="flex-shrink-0 h-8 w-8 min-h-8 min-w-8 p-0"
+                className="size-8 min-h-8 min-w-8 shrink-0 p-0"
                 onClick={(e) => {
                   e.stopPropagation()
                   setShowTutorials(false)
                 }}
                 title={t('video.hideTutorial', 'Hide tutorial')}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             </div>
 
             {/* Navigation dots for multiple tutorials */}
             {hasMultipleTutorials && (
-              <div className="flex items-center gap-2 mt-2">
+              <div className="mt-2 flex items-center gap-2">
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 min-h-6 min-w-6 p-0"
+                  className="size-6 min-h-6 min-w-6 p-0"
                   onClick={(e) => {
                     e.stopPropagation()
                     handlePrevious()
                   }}
                 >
                   {isRTL ? (
-                    <ChevronRight className="h-3.5 w-3.5" />
+                    <ChevronRight className="size-3.5" />
                   ) : (
-                    <ChevronLeft className="h-3.5 w-3.5" />
+                    <ChevronLeft className="size-3.5" />
                   )}
                 </Button>
                 <div className="flex gap-1">
@@ -366,19 +366,19 @@ export function TutorialEmptyState({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-6 w-6 min-h-6 min-w-6 p-0"
+                  className="size-6 min-h-6 min-w-6 p-0"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleNext()
                   }}
                 >
                   {isRTL ? (
-                    <ChevronLeft className="h-3.5 w-3.5" />
+                    <ChevronLeft className="size-3.5" />
                   ) : (
-                    <ChevronRight className="h-3.5 w-3.5" />
+                    <ChevronRight className="size-3.5" />
                   )}
                 </Button>
-                <span className="text-xs text-muted-foreground ms-1">
+                <span className="ms-1 text-xs text-muted-foreground">
                   {activeTutorialIndex + 1} / {relevantTutorials.length}
                 </span>
               </div>
@@ -402,7 +402,7 @@ export function TutorialEmptyState({
           className="h-8 px-2 text-xs"
           onClick={() => setExpandedVideo(false)}
         >
-          <X className="h-3.5 w-3.5 me-1" />
+          <X className="me-1 size-3.5" />
           {t('video.close', 'Close')}
         </Button>
       </div>
@@ -426,9 +426,9 @@ export function TutorialEmptyState({
         <div className="flex items-center justify-center gap-4 py-2">
           <Button variant="outline" size="sm" onClick={handlePrevious} className="h-9 min-h-9">
             {isRTL ? (
-              <ChevronRight className="h-4 w-4 me-1" />
+              <ChevronRight className="me-1 size-4" />
             ) : (
-              <ChevronLeft className="h-4 w-4 me-1" />
+              <ChevronLeft className="me-1 size-4" />
             )}
             {t('video.previous', 'Previous')}
           </Button>
@@ -438,9 +438,9 @@ export function TutorialEmptyState({
           <Button variant="outline" size="sm" onClick={handleNext} className="h-9 min-h-9">
             {t('video.next', 'Next')}
             {isRTL ? (
-              <ChevronLeft className="h-4 w-4 ms-1" />
+              <ChevronLeft className="ms-1 size-4" />
             ) : (
-              <ChevronRight className="h-4 w-4 ms-1" />
+              <ChevronRight className="ms-1 size-4" />
             )}
           </Button>
         </div>
@@ -457,7 +457,7 @@ export function TutorialEmptyState({
       onClick={() => setShowTutorials(true)}
       data-testid={`${testId}-show-button`}
     >
-      <Play className="h-3.5 w-3.5 me-1" />
+      <Play className="me-1 size-3.5" />
       {t('video.showTutorials', 'Show video tutorial')}
     </Button>
   )
@@ -466,7 +466,7 @@ export function TutorialEmptyState({
     <div className={containerClasses} dir={isRTL ? 'rtl' : 'ltr'} data-testid={testId}>
       {/* Tutorial Section */}
       {showTutorials && (
-        <div className="w-full max-w-lg sm:max-w-xl lg:max-w-2xl mx-auto">
+        <div className="mx-auto w-full max-w-lg sm:max-w-xl lg:max-w-2xl">
           {expandedVideo ? <ExpandedVideoPlayer /> : <TutorialPreviewCard />}
         </div>
       )}

@@ -82,19 +82,19 @@ export function ActivityFeed() {
  return (
  <div
  key={activity.id}
- className="flex gap-3 p-3 rounded-lg hover:bg-accent transition-colors"
+ className="flex gap-3 rounded-lg p-3 transition-colors hover:bg-accent"
  >
- <div className={`p-2 rounded-lg ${iconColor} flex-shrink-0`}>
- <Icon className="h-5 w-5" />
+ <div className={`rounded-lg p-2 ${iconColor} shrink-0`}>
+ <Icon className="size-5" />
  </div>
- <div className="flex-1 min-w-0">
+ <div className="min-w-0 flex-1">
  <p className="font-medium text-foreground">
  {activity.title}
  </p>
- <p className="text-sm text-muted-foreground truncate">
+ <p className="truncate text-sm text-muted-foreground">
  {activity.description}
  </p>
- <p className="text-xs text-muted-foreground mt-1">
+ <p className="mt-1 text-xs text-muted-foreground">
  {activity.user} • {formatDistanceToNow(activity.timestamp, { addSuffix: true })}
  </p>
  </div>

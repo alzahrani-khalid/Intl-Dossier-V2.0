@@ -109,16 +109,16 @@ export const DocumentVersionModal = memo(function DocumentVersionModal({
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Header */}
-        <DialogHeader className="px-4 py-3 sm:px-6 sm:py-4 border-b flex-shrink-0">
+        <DialogHeader className="shrink-0 border-b px-4 py-3 sm:px-6 sm:py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <History className="h-5 w-5" />
+              <History className="size-5" />
               <DialogTitle className="text-base sm:text-lg">
                 {t('modal.title', 'Version History')}
               </DialogTitle>
             </div>
             {documentName && (
-              <span className="text-sm text-muted-foreground truncate max-w-[200px]">
+              <span className="max-w-[200px] truncate text-sm text-muted-foreground">
                 {documentName}
               </span>
             )}
@@ -130,9 +130,9 @@ export const DocumentVersionModal = memo(function DocumentVersionModal({
           <Tabs
             value={activeTab}
             onValueChange={(v) => setActiveTab(v as 'history' | 'compare')}
-            className="h-full flex flex-col"
+            className="flex h-full flex-col"
           >
-            <TabsList className="mx-4 sm:mx-6 mt-4 grid w-auto grid-cols-2 max-w-xs">
+            <TabsList className="mx-4 mt-4 grid w-auto max-w-xs grid-cols-2 sm:mx-6">
               <TabsTrigger value="history">{t('tabs.history', 'History')}</TabsTrigger>
               <TabsTrigger value="compare" disabled={!comparisonState.comparisonResult}>
                 {t('tabs.compare', 'Compare')}
@@ -141,7 +141,7 @@ export const DocumentVersionModal = memo(function DocumentVersionModal({
 
             <TabsContent
               value="history"
-              className="flex-1 overflow-auto px-4 sm:px-6 pb-4 sm:pb-6 mt-4"
+              className="mt-4 flex-1 overflow-auto px-4 pb-4 sm:px-6 sm:pb-6"
             >
               <DocumentVersionHistory
                 documentId={documentId}
@@ -155,7 +155,7 @@ export const DocumentVersionModal = memo(function DocumentVersionModal({
 
             <TabsContent
               value="compare"
-              className="flex-1 overflow-auto px-4 sm:px-6 pb-4 sm:pb-6 mt-4"
+              className="mt-4 flex-1 overflow-auto px-4 pb-4 sm:px-6 sm:pb-6"
             >
               {comparisonState.comparisonResult ? (
                 <DocumentVersionComparison
@@ -169,8 +169,8 @@ export const DocumentVersionModal = memo(function DocumentVersionModal({
                   onDownloadVersion={handleDownload}
                 />
               ) : (
-                <div className="text-center py-12">
-                  <History className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+                <div className="py-12 text-center">
+                  <History className="mx-auto mb-4 size-12 text-muted-foreground" />
                   <p className="text-muted-foreground">
                     {t('compare.selectVersions', 'Select two versions from the history to compare')}
                   </p>

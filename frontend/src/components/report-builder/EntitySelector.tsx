@@ -55,7 +55,7 @@ export function EntitySelector({ selectedEntities, onToggleEntity }: EntitySelec
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2 sm:gap-3">
+        <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3 lg:grid-cols-5">
           {REPORT_ENTITY_TYPES.map((entity) => {
             const Icon = entityIcons[entity]
             const isSelected = selectedEntities.includes(entity)
@@ -80,7 +80,7 @@ export function EntitySelector({ selectedEntities, onToggleEntity }: EntitySelec
                   }
                 }}
               >
-                <div className="absolute top-2 end-2">
+                <div className="absolute end-2 top-2">
                   <Checkbox checked={isSelected} className="pointer-events-none" aria-hidden />
                 </div>
                 <Icon
@@ -104,7 +104,7 @@ export function EntitySelector({ selectedEntities, onToggleEntity }: EntitySelec
 
         {selectedEntities.length > 0 && (
           <div className="mt-4 flex flex-wrap gap-2">
-            <span className="text-sm text-muted-foreground me-2">{t('entities.title')}:</span>
+            <span className="me-2 text-sm text-muted-foreground">{t('entities.title')}:</span>
             {selectedEntities.map((entity) => (
               <Badge
                 key={entity}

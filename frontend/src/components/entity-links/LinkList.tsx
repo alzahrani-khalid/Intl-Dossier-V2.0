@@ -125,7 +125,7 @@ export function LinkList({
  'text-center py-8 sm:py-12',
  className
  )}>
- <p className="text-sm sm:text-base text-slate-500">
+ <p className="text-sm text-slate-500 sm:text-base">
  {showDeleted
  ? t('entityLinks.noDeletedLinks')
  : t('entityLinks.noLinks')}

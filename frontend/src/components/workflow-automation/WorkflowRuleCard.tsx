@@ -71,9 +71,9 @@ export function WorkflowRuleCard({
     >
       <CardHeader className="pb-2">
         <div className="flex items-start justify-between gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
-              <h3 className="font-semibold text-base truncate">{name}</h3>
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <h3 className="truncate text-base font-semibold">{name}</h3>
               {rule.is_active ? (
                 <Badge variant="default\" className="bg-green-500">
                   {t('filters.active')}
@@ -83,7 +83,7 @@ export function WorkflowRuleCard({
               )}
             </div>
             {description && (
-              <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{description}</p>
+              <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{description}</p>
             )}
           </div>
 
@@ -99,27 +99,27 @@ export function WorkflowRuleCard({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="size-8 opacity-0 transition-opacity group-hover:opacity-100"
                 >
-                  <MoreHorizontal className="h-4 w-4" />
+                  <MoreHorizontal className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                 <DropdownMenuItem onClick={() => onEdit(rule)}>
-                  <Settings className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Settings className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('actions.edit')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onTest(rule)}>
-                  <Play className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Play className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('actions.test')}
                 </DropdownMenuItem>
                 <DropdownMenuItem onClick={() => onViewExecutions(rule)}>
-                  <History className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <History className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('actions.viewExecutions')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => onDuplicate(rule)}>
-                  <Copy className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Copy className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('actions.duplicate')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
@@ -127,7 +127,7 @@ export function WorkflowRuleCard({
                   onClick={() => onDelete(rule)}
                   className="text-destructive focus:text-destructive"
                 >
-                  <Trash2 className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Trash2 className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('actions.delete')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -140,7 +140,7 @@ export function WorkflowRuleCard({
         <div className="flex flex-wrap items-center gap-2 text-sm">
           {/* Trigger Badge */}
           <Badge variant="outline" className="flex items-center gap-1">
-            <Zap className="h-3 w-3" />
+            <Zap className="size-3" />
             {triggerLabel}
           </Badge>
 
@@ -161,9 +161,9 @@ export function WorkflowRuleCard({
         </div>
 
         {/* Last Triggered */}
-        <div className="flex items-center justify-between mt-4 text-xs text-muted-foreground">
+        <div className="mt-4 flex items-center justify-between text-xs text-muted-foreground">
           <div className="flex items-center gap-1">
-            <Clock className="h-3 w-3" />
+            <Clock className="size-3" />
             {rule.last_triggered_at ? (
               <span>
                 {t('labels.last_triggered')}:{' '}

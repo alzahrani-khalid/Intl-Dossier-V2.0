@@ -263,7 +263,7 @@ export function DocumentWizard({
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="max-w-3xl">
           <div className="flex items-center justify-center py-12">
-            <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            <Loader2 className="size-8 animate-spin text-primary" />
           </div>
         </DialogContent>
       </Dialog>
@@ -276,7 +276,7 @@ export function DocumentWizard({
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent className="max-w-3xl">
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <AlertCircle className="h-12 w-12 text-destructive mb-4" />
+            <AlertCircle className="mb-4 size-12 text-destructive" />
             <p className="text-destructive">{t('errors.loadFailed')}</p>
           </div>
         </DialogContent>
@@ -297,11 +297,11 @@ export function DocumentWizard({
             </DialogDescription>
           </DialogHeader>
           <div className="py-4">
-            <p className="text-sm text-muted-foreground mb-4">
+            <p className="mb-4 text-sm text-muted-foreground">
               {t('templates.sections', { count: totalSections })}
             </p>
-            <Button onClick={handleStart} disabled={isStarting} className="w-full min-h-11">
-              {isStarting ? <Loader2 className="h-4 w-4 animate-spin me-2" /> : null}
+            <Button onClick={handleStart} disabled={isStarting} className="min-h-11 w-full">
+              {isStarting ? <Loader2 className="me-2 size-4 animate-spin" /> : null}
               {t('actions.startWizard')}
             </Button>
           </div>
@@ -316,10 +316,10 @@ export function DocumentWizard({
     <>
       <Dialog open={open} onOpenChange={handleClose}>
         <DialogContent
-          className="max-w-4xl max-h-[90vh] overflow-hidden flex flex-col"
+          className="flex max-h-[90vh] max-w-4xl flex-col overflow-hidden"
           dir={isRTL ? 'rtl' : 'ltr'}
         >
-          <DialogHeader className="flex-shrink-0">
+          <DialogHeader className="shrink-0">
             <DialogTitle className="flex items-center justify-between">
               <span>{t('wizard.title')}</span>
               <Badge variant="outline">
@@ -332,11 +332,11 @@ export function DocumentWizard({
           </DialogHeader>
 
           {/* Progress bar */}
-          <div className="flex-shrink-0 space-y-2">
+          <div className="shrink-0 space-y-2">
             <Progress value={progressPercent} className="h-2" />
 
             {/* Step indicators */}
-            <div className="flex justify-between items-center overflow-x-auto pb-2 px-1">
+            <div className="flex items-center justify-between overflow-x-auto px-1 pb-2">
               {sections.map((section, index) => {
                 const isComplete = isSectionComplete(index)
                 const isCurrent = index === currentSectionIndex
@@ -371,12 +371,12 @@ export function DocumentWizard({
                       )}
                     >
                       {isComplete ? (
-                        <Check className="h-3 w-3" />
+                        <Check className="size-3" />
                       ) : (
                         <span className="text-xs">{index + 1}</span>
                       )}
                     </div>
-                    <span className="text-xs text-center line-clamp-1 hidden sm:block">
+                    <span className="line-clamp-1 hidden text-center text-xs sm:block">
                       {sectionName}
                     </span>
                   </button>
@@ -386,7 +386,7 @@ export function DocumentWizard({
           </div>
 
           {/* Wizard content */}
-          <div className="flex-1 overflow-y-auto py-4 px-1">
+          <div className="flex-1 overflow-y-auto px-1 py-4">
             {currentSection && (
               <WizardStep
                 section={currentSection}
@@ -399,8 +399,8 @@ export function DocumentWizard({
           </div>
 
           {/* Footer actions */}
-          <div className="flex-shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 pt-4 border-t">
-            <div className="flex items-center gap-2 order-2 sm:order-1">
+          <div className="flex shrink-0 flex-col items-center justify-between gap-3 border-t pt-4 sm:flex-row">
+            <div className="order-2 flex items-center gap-2 sm:order-1">
               <Button
                 variant="outline"
                 onClick={handleSave}
@@ -408,7 +408,7 @@ export function DocumentWizard({
                 className="min-h-11"
               >
                 {isSaving ? (
-                  <Loader2 className="h-4 w-4 animate-spin me-2" />
+                  <Loader2 className="me-2 size-4 animate-spin" />
                 ) : (
                   <Save className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                 )}
@@ -416,17 +416,17 @@ export function DocumentWizard({
               </Button>
             </div>
 
-            <div className="flex items-center gap-2 order-1 sm:order-2 w-full sm:w-auto">
+            <div className="order-1 flex w-full items-center gap-2 sm:order-2 sm:w-auto">
               <Button
                 variant="outline"
                 onClick={handleBack}
                 disabled={currentSectionIndex === 0}
-                className="flex-1 sm:flex-none min-h-11"
+                className="min-h-11 flex-1 sm:flex-none"
               >
                 {isRTL ? (
-                  <ChevronRight className="h-4 w-4 me-2" />
+                  <ChevronRight className="me-2 size-4" />
                 ) : (
-                  <ChevronLeft className="h-4 w-4 me-2" />
+                  <ChevronLeft className="me-2 size-4" />
                 )}
                 {t('actions.back')}
               </Button>
@@ -435,10 +435,10 @@ export function DocumentWizard({
                 <Button
                   onClick={handleFinish}
                   disabled={isCompleting}
-                  className="flex-1 sm:flex-none min-h-11"
+                  className="min-h-11 flex-1 sm:flex-none"
                 >
                   {isCompleting ? (
-                    <Loader2 className="h-4 w-4 animate-spin me-2" />
+                    <Loader2 className="me-2 size-4 animate-spin" />
                   ) : (
                     <Check className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                   )}
@@ -448,13 +448,13 @@ export function DocumentWizard({
                 <Button
                   onClick={handleNext}
                   disabled={isSaving}
-                  className="flex-1 sm:flex-none min-h-11"
+                  className="min-h-11 flex-1 sm:flex-none"
                 >
                   {t('actions.next')}
                   {isRTL ? (
-                    <ChevronLeft className="h-4 w-4 ms-2" />
+                    <ChevronLeft className="ms-2 size-4" />
                   ) : (
-                    <ChevronRight className="h-4 w-4 ms-2" />
+                    <ChevronRight className="ms-2 size-4" />
                   )}
                 </Button>
               )}
@@ -470,7 +470,7 @@ export function DocumentWizard({
             <AlertDialogTitle>{t('wizard.unsavedChanges')}</AlertDialogTitle>
             <AlertDialogDescription>{t('wizard.confirmExit')}</AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col-reverse sm:flex-row gap-2">
+          <AlertDialogFooter className="flex-col-reverse gap-2 sm:flex-row">
             <AlertDialogCancel className="min-h-11">{t('actions.cancel')}</AlertDialogCancel>
             <AlertDialogAction onClick={handleConfirmExit} className="min-h-11">
               {t('actions.saveDraft')}

@@ -30,19 +30,19 @@ function StandaloneDemo() {
         defaultPanelOpen={true}
       >
         {/* Dashboard Content */}
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12">
+        <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-12">
           {/* Page Header */}
           <header className="mb-6 sm:mb-8 lg:mb-12">
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-content-text mb-2">
+            <h1 className="text-content-text mb-2 text-2xl font-bold sm:text-3xl md:text-4xl">
               {t('navigation.dashboard', 'Dashboard')}
             </h1>
-            <p className="text-sm sm:text-base text-content-text-muted">
+            <p className="text-content-text-muted text-sm sm:text-base">
               All Your Workflows And Permissions
             </p>
           </header>
 
           {/* Content Grid */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8">
+          <div className="grid grid-cols-1 gap-6 lg:grid-cols-2 lg:gap-8">
             {/* Large Metric Card */}
             <div className="lg:col-span-2">
               <MetricCard
@@ -84,14 +84,14 @@ function StandaloneDemo() {
           </div>
 
           {/* Reference Comparison */}
-          <div className="mt-12 p-6 bg-panel rounded-lg border border-panel-border">
-            <h2 className="text-lg font-semibold text-content-text mb-4">
+          <div className="bg-panel border-panel-border mt-12 rounded-lg border p-6">
+            <h2 className="text-content-text mb-4 text-lg font-semibold">
               ✅ Reference Design Match
             </h2>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+            <div className="grid grid-cols-1 gap-4 text-sm md:grid-cols-3">
               <div>
-                <h3 className="font-medium text-content-text mb-2">Icon Rail (Left)</h3>
-                <ul className="space-y-1 text-content-text-muted">
+                <h3 className="text-content-text mb-2 font-medium">Icon Rail (Left)</h3>
+                <ul className="text-content-text-muted space-y-1">
                   <li>✓ 56px width</li>
                   <li>✓ Dark background (#1A1D26)</li>
                   <li>✓ Icon-only buttons</li>
@@ -100,8 +100,8 @@ function StandaloneDemo() {
                 </ul>
               </div>
               <div>
-                <h3 className="font-medium text-content-text mb-2">Expanded Panel (Middle)</h3>
-                <ul className="space-y-1 text-content-text-muted">
+                <h3 className="text-content-text mb-2 font-medium">Expanded Panel (Middle)</h3>
+                <ul className="text-content-text-muted space-y-1">
                   <li>✓ 280px width</li>
                   <li>✓ Light gray background</li>
                   <li>✓ User profile at top</li>
@@ -111,8 +111,8 @@ function StandaloneDemo() {
                 </ul>
               </div>
               <div>
-                <h3 className="font-medium text-content-text mb-2">Content Area (Right)</h3>
-                <ul className="space-y-1 text-content-text-muted">
+                <h3 className="text-content-text mb-2 font-medium">Content Area (Right)</h3>
+                <ul className="text-content-text-muted space-y-1">
                   <li>✓ White background</li>
                   <li>✓ Dashboard title</li>
                   <li>✓ Executions: 340 +23%</li>

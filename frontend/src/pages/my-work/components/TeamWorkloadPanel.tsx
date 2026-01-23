@@ -58,9 +58,9 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
 
   return (
     <Card className="mb-4 sm:mb-6" dir={isRTL ? 'rtl' : 'ltr'}>
-      <CardHeader className="pb-2 px-4 sm:px-6">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2 text-start">
-          <Users className="h-5 w-5" />
+      <CardHeader className="px-4 pb-2 sm:px-6">
+        <CardTitle className="flex items-center gap-2 text-start text-base sm:text-lg">
+          <Users className="size-5" />
           {t('team.title', 'Team Workload')}
           <Badge variant="secondary" className="ms-2">
             {teamMembers.length} {t('team.members', 'members')}
@@ -84,19 +84,19 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
                 >
                   <CardContent className="p-3">
                     {/* Member Info */}
-                    <div className="flex items-center gap-2 mb-3">
-                      <Avatar className="h-8 w-8">
+                    <div className="mb-3 flex items-center gap-2">
+                      <Avatar className="size-8">
                         <AvatarFallback className="text-xs">
                           {getInitials(member.user_email)}
                         </AvatarFallback>
                       </Avatar>
                       <div className="min-w-0 flex-1">
-                        <p className="text-sm font-medium truncate text-start">
+                        <p className="truncate text-start text-sm font-medium">
                           {member.user_email.split('@')[0]}
                         </p>
                         {hasOverdue && (
                           <div className="flex items-center gap-1 text-xs text-red-600 dark:text-red-400">
-                            <AlertTriangle className="h-3 w-3" />
+                            <AlertTriangle className="size-3" />
                             <span>{member.overdue_count} {t('team.overdue', 'overdue')}</span>
                           </div>
                         )}
@@ -107,7 +107,7 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
                     <div className="space-y-2">
                       {/* Total Active */}
                       <div className="flex items-center justify-between text-xs">
-                        <span className="text-muted-foreground text-start">
+                        <span className="text-start text-muted-foreground">
                           {t('team.active', 'Active')}
                         </span>
                         <span className="font-medium">{member.total_active}</span>
@@ -124,9 +124,9 @@ export function TeamWorkloadPanel({ teamMembers, isLoading }: TeamWorkloadPanelP
                       />
 
                       {/* On-Time Rate */}
-                      <div className="flex items-center justify-between text-xs pt-1">
-                        <span className="text-muted-foreground flex items-center gap-1 text-start">
-                          <TrendingUp className="h-3 w-3" />
+                      <div className="flex items-center justify-between pt-1 text-xs">
+                        <span className="flex items-center gap-1 text-start text-muted-foreground">
+                          <TrendingUp className="size-3" />
                           {t('team.onTime', 'On-time')}
                         </span>
                         <span

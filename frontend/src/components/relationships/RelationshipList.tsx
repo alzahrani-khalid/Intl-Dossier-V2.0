@@ -106,9 +106,9 @@ export function RelationshipList({
  return (
  <div className="flex flex-col gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
  {[1, 2, 3].map((i) => (
- <Card key={i} className="p-4 sm:p-6 animate-pulse">
- <div className="h-6 bg-muted rounded w-3/4 mb-4" />
- <div className="h-4 bg-muted rounded w-1/2" />
+ <Card key={i} className="animate-pulse p-4 sm:p-6">
+ <div className="mb-4 h-6 w-3/4 rounded bg-muted" />
+ <div className="h-4 w-1/2 rounded bg-muted" />
  </Card>
  ))}
  </div>
@@ -118,11 +118,11 @@ export function RelationshipList({
  if (!relationships || relationships.length === 0) {
  return (
  <Card
- className="p-6 sm:p-8 text-center"
+ className="p-6 text-center sm:p-8"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
- <FileText className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
- <h3 className="text-base sm:text-lg font-medium mb-2">
+ <FileText className="mx-auto mb-4 size-12 text-muted-foreground" />
+ <h3 className="mb-2 text-base font-medium sm:text-lg">
  {t('relationship.list.empty.title')}
  </h3>
  <p className="text-sm text-muted-foreground">
@@ -154,15 +154,15 @@ export function RelationshipList({
  return (
  <Card
  key={relationship.id}
- className="p-4 sm:p-6 hover:shadow-md transition-shadow"
+ className="p-4 transition-shadow hover:shadow-md sm:p-6"
  >
  {/* Header: Type badge + Direction indicator + Related dossier */}
- <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4 mb-4">
- <div className="flex items-start gap-3 flex-1 min-w-0">
+ <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+ <div className="flex min-w-0 flex-1 items-start gap-3">
  {/* Direction indicator */}
- <div className="flex-shrink-0 mt-1">
+ <div className="mt-1 shrink-0">
  <DirectionIcon
- className={`h-5 w-5 sm:h-6 sm:w-6 ${
+ className={`size-5 sm:size-6 ${
  relationship.direction === 'outgoing'
  ? 'text-blue-600 dark:text-blue-400'
  : 'text-green-600 dark:text-green-400'
@@ -171,8 +171,8 @@ export function RelationshipList({
  </div>
 
  {/* Related dossier info */}
- <div className="flex-1 min-w-0">
- <div className="flex flex-wrap items-center gap-2 mb-2">
+ <div className="min-w-0 flex-1">
+ <div className="mb-2 flex flex-wrap items-center gap-2">
  <Badge
  variant="outline"
  className={`text-xs ${
@@ -190,7 +190,7 @@ export function RelationshipList({
  </Badge>
  </div>
 
- <h3 className="text-base sm:text-lg font-semibold text-start truncate">
+ <h3 className="truncate text-start text-base font-semibold sm:text-lg">
  {relatedDossier
  ? isRTL
  ? relatedDossier.name_ar || relatedDossier.name_en
@@ -198,7 +198,7 @@ export function RelationshipList({
  : t('common.unknown')}
  </h3>
 
- <p className="text-xs sm:text-sm text-muted-foreground text-start mt-1">
+ <p className="mt-1 text-start text-xs text-muted-foreground sm:text-sm">
  {relationship.direction === 'outgoing'
  ? t('relationship.direction.outgoing')
  : t('relationship.direction.incoming')}
@@ -208,16 +208,16 @@ export function RelationshipList({
 
  {/* Actions */}
  {showActions && (
- <div className="flex items-center gap-2 flex-shrink-0">
+ <div className="flex shrink-0 items-center gap-2">
  {onEdit && (
  <Button
  variant="ghost"
  size="sm"
  onClick={() => onEdit(relationship)}
- className="h-9 w-9 p-0 sm:h-10 sm:w-10"
+ className="size-9 p-0 sm:size-10"
  aria-label={t('common.edit')}
  >
- <Edit className="h-4 w-4" />
+ <Edit className="size-4" />
  </Button>
  )}
 
@@ -227,10 +227,10 @@ export function RelationshipList({
  <Button
  variant="ghost"
  size="sm"
- className="h-9 w-9 p-0 sm:h-10 sm:w-10 text-destructive hover:text-destructive"
+ className="size-9 p-0 text-destructive hover:text-destructive sm:size-10"
  aria-label={t('common.delete')}
  >
- <Trash2 className="h-4 w-4" />
+ <Trash2 className="size-4" />
  </Button>
  </AlertDialogTrigger>
  <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
@@ -242,7 +242,7 @@ export function RelationshipList({
  {t('relationship.delete.confirm.description')}
  </AlertDialogDescription>
  </AlertDialogHeader>
- <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+ <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
  <AlertDialogCancel className="mt-0">
  {t('common.cancel')}
  </AlertDialogCancel>
@@ -264,7 +264,7 @@ export function RelationshipList({
  {(relationship.notes_en || relationship.notes_ar) && (
  <>
  <Separator className="my-3 sm:my-4" />
- <div className="text-sm text-muted-foreground text-start">
+ <div className="text-start text-sm text-muted-foreground">
  <p className="whitespace-pre-wrap">
  {isRTL
  ? relationship.notes_ar || relationship.notes_en
@@ -278,10 +278,10 @@ export function RelationshipList({
  {(relationship.effective_from || relationship.effective_to) && (
  <>
  <Separator className="my-3 sm:my-4" />
- <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 text-xs sm:text-sm text-muted-foreground">
+ <div className="flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:gap-4 sm:text-sm">
  {relationship.effective_from && (
  <div className="flex items-center gap-2">
- <Calendar className="h-4 w-4 flex-shrink-0" />
+ <Calendar className="size-4 shrink-0" />
  <span>
  {t('relationship.effectiveFrom')}:{' '}
  {formatDate(relationship.effective_from)}
@@ -290,7 +290,7 @@ export function RelationshipList({
  )}
  {relationship.effective_to && (
  <div className="flex items-center gap-2">
- <Calendar className="h-4 w-4 flex-shrink-0" />
+ <Calendar className="size-4 shrink-0" />
  <span>
  {t('relationship.effectiveTo')}:{' '}
  {formatDate(relationship.effective_to)}

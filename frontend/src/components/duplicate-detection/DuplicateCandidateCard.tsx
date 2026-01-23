@@ -53,19 +53,19 @@ export function DuplicateCandidateCard({
   const getConfidenceIcon = (level: ConfidenceLevel) => {
     switch (level) {
       case 'high':
-        return <AlertTriangle className="h-4 w-4" />
+        return <AlertTriangle className="size-4" />
       case 'medium':
-        return <AlertTriangle className="h-4 w-4" />
+        return <AlertTriangle className="size-4" />
       case 'low':
-        return <CheckCircle2 className="h-4 w-4" />
+        return <CheckCircle2 className="size-4" />
     }
   }
 
   const getEntityIcon = () => {
     return candidate.entity_type === 'person' ? (
-      <User className="h-5 w-5 text-muted-foreground" />
+      <User className="size-5 text-muted-foreground" />
     ) : (
-      <Building2 className="h-5 w-5 text-muted-foreground" />
+      <Building2 className="size-5 text-muted-foreground" />
     )
   }
 
@@ -129,23 +129,23 @@ export function DuplicateCandidateCard({
         {/* Entity comparison */}
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {/* Source entity */}
-          <div className="rounded-lg border p-3 bg-muted/30">
-            <div className="text-xs text-muted-foreground mb-1">{t('entity_1', 'Entity 1')}</div>
-            <div className="font-medium truncate">
+          <div className="rounded-lg border bg-muted/30 p-3">
+            <div className="mb-1 text-xs text-muted-foreground">{t('entity_1', 'Entity 1')}</div>
+            <div className="truncate font-medium">
               {isRTL ? candidate.source_name_ar : candidate.source_name_en}
             </div>
-            <div className="text-sm text-muted-foreground truncate">
+            <div className="truncate text-sm text-muted-foreground">
               {isRTL ? candidate.source_name_en : candidate.source_name_ar}
             </div>
           </div>
 
           {/* Target entity */}
-          <div className="rounded-lg border p-3 bg-muted/30">
-            <div className="text-xs text-muted-foreground mb-1">{t('entity_2', 'Entity 2')}</div>
-            <div className="font-medium truncate">
+          <div className="rounded-lg border bg-muted/30 p-3">
+            <div className="mb-1 text-xs text-muted-foreground">{t('entity_2', 'Entity 2')}</div>
+            <div className="truncate font-medium">
               {isRTL ? candidate.target_name_ar : candidate.target_name_en}
             </div>
-            <div className="text-sm text-muted-foreground truncate">
+            <div className="truncate text-sm text-muted-foreground">
               {isRTL ? candidate.target_name_en : candidate.target_name_ar}
             </div>
           </div>
@@ -157,11 +157,11 @@ export function DuplicateCandidateCard({
           <div className="flex flex-wrap gap-1">
             {matchingFields.map((field) => (
               <Badge key={field} variant="secondary" className="text-xs">
-                {field === 'name_en' && <FileText className="h-3 w-3 me-1" />}
-                {field === 'name_ar' && <FileText className="h-3 w-3 me-1" />}
-                {field === 'email' && <Mail className="h-3 w-3 me-1" />}
-                {field === 'phone' && <Phone className="h-3 w-3 me-1" />}
-                {field === 'organization' && <Building2 className="h-3 w-3 me-1" />}
+                {field === 'name_en' && <FileText className="me-1 size-3" />}
+                {field === 'name_ar' && <FileText className="me-1 size-3" />}
+                {field === 'email' && <Mail className="me-1 size-3" />}
+                {field === 'phone' && <Phone className="me-1 size-3" />}
+                {field === 'organization' && <Building2 className="me-1 size-3" />}
                 {t(`field_${field}`, field.replace('_', ' '))}
               </Badge>
             ))}

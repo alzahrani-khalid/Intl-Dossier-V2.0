@@ -131,22 +131,22 @@ export function RecipientsManager({ scheduleId }: RecipientsManagerProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <div>
           <h3 className="font-medium">{t('recipients.title')}</h3>
           <p className="text-sm text-muted-foreground">{t('recipients.description')}</p>
         </div>
         <Button variant="outline" size="sm" onClick={() => setAddDialogOpen(true)}>
-          <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+          <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
           {t('recipients.addExternal')}
         </Button>
       </div>
 
       {/* Empty State */}
       {recipients?.length === 0 && (
-        <Card className="text-center py-8">
+        <Card className="py-8 text-center">
           <CardContent>
-            <Mail className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <Mail className="mx-auto mb-2 size-8 text-muted-foreground" />
             <p className="font-medium">{t('recipients.noRecipients')}</p>
             <p className="text-sm text-muted-foreground">
               {t('recipients.noRecipientsDescription')}
@@ -159,13 +159,13 @@ export function RecipientsManager({ scheduleId }: RecipientsManagerProps) {
       <div className="space-y-2">
         {recipients?.map((recipient) => (
           <Card key={recipient.id}>
-            <CardContent className="flex items-center justify-between py-3 px-4">
+            <CardContent className="flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-muted flex items-center justify-center">
+                <div className="flex size-10 items-center justify-center rounded-full bg-muted">
                   {recipient.user_id ? (
-                    <User className="h-5 w-5 text-muted-foreground" />
+                    <User className="size-5 text-muted-foreground" />
                   ) : (
-                    <Mail className="h-5 w-5 text-muted-foreground" />
+                    <Mail className="size-5 text-muted-foreground" />
                   )}
                 </div>
                 <div>
@@ -193,7 +193,7 @@ export function RecipientsManager({ scheduleId }: RecipientsManagerProps) {
                   onClick={() => handleRemove(recipient)}
                   disabled={removeRecipient.isPending}
                 >
-                  <Trash2 className="h-4 w-4 text-destructive" />
+                  <Trash2 className="size-4 text-destructive" />
                 </Button>
               </div>
             </CardContent>

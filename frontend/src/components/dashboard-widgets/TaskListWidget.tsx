@@ -158,7 +158,7 @@ function TaskItemComponent({
         <Checkbox
           checked={isCompleted}
           onCheckedChange={(checked) => onToggle?.(checked as boolean)}
-          className="h-4 w-4"
+          className="size-4"
         />
       </div>
 
@@ -168,7 +168,7 @@ function TaskItemComponent({
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <h4
           className={cn(
             'text-sm font-medium truncate',
@@ -178,15 +178,15 @@ function TaskItemComponent({
           {task.title}
         </h4>
 
-        <div className="flex flex-wrap items-center gap-1.5 mt-1">
+        <div className="mt-1 flex flex-wrap items-center gap-1.5">
           {/* Source Badge */}
-          <Badge variant="outline" className="text-[10px] px-1.5 py-0">
+          <Badge variant="outline" className="px-1.5 py-0 text-[10px]">
             {t(`sources.${task.source}`)}
           </Badge>
 
           {/* Priority Badge (only for high/urgent) */}
           {(task.priority === 'high' || task.priority === 'urgent') && (
-            <Badge variant={priorityBadge.variant} className="text-[10px] px-1.5 py-0">
+            <Badge variant={priorityBadge.variant} className="px-1.5 py-0 text-[10px]">
               {t(`sortBy.${task.priority}`, priorityBadge.label)}
             </Badge>
           )}
@@ -200,9 +200,9 @@ function TaskItemComponent({
               )}
             >
               {task.isOverdue ? (
-                <AlertTriangle className="h-3 w-3" />
+                <AlertTriangle className="size-3" />
               ) : (
-                <Clock className="h-3 w-3" />
+                <Clock className="size-3" />
               )}
               <span>{formatDeadline(task.deadline, locale)}</span>
             </div>
@@ -226,9 +226,9 @@ function TaskItemComponent({
  */
 function GroupHeader({ label, count }: { label: string; count: number }) {
   return (
-    <div className="flex items-center justify-between px-2 py-1.5 bg-muted/50 rounded-lg mb-1">
+    <div className="mb-1 flex items-center justify-between rounded-lg bg-muted/50 px-2 py-1.5">
       <span className="text-xs font-medium text-muted-foreground">{label}</span>
-      <Badge variant="secondary" className="text-[10px] px-1.5 py-0">
+      <Badge variant="secondary" className="px-1.5 py-0 text-[10px]">
         {count}
       </Badge>
     </div>
@@ -295,14 +295,14 @@ export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskLi
   // Loading skeleton
   if (isLoading) {
     return (
-      <div className="h-full space-y-2 animate-pulse">
+      <div className="h-full animate-pulse space-y-2">
         {Array.from({ length: 4 }).map((_, i) => (
           <div key={i} className="flex items-start gap-3 p-2">
-            <div className="w-4 h-4 bg-muted rounded" />
-            <div className="w-6 h-6 bg-muted rounded" />
+            <div className="size-4 rounded bg-muted" />
+            <div className="size-6 rounded bg-muted" />
             <div className="flex-1">
-              <div className="h-4 w-3/4 bg-muted rounded mb-1" />
-              <div className="h-3 w-1/2 bg-muted rounded" />
+              <div className="mb-1 h-4 w-3/4 rounded bg-muted" />
+              <div className="h-3 w-1/2 rounded bg-muted" />
             </div>
           </div>
         ))}
@@ -317,8 +317,8 @@ export function TaskListWidget({ config, data, isLoading, onTaskToggle }: TaskLi
 
   if (isEmpty) {
     return (
-      <div className="h-full flex flex-col items-center justify-center text-center p-4">
-        <CheckCircle2 className="h-8 w-8 text-muted-foreground mb-2" />
+      <div className="flex h-full flex-col items-center justify-center p-4 text-center">
+        <CheckCircle2 className="mb-2 size-8 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">{t('emptyStates.noTasks')}</p>
       </div>
     )

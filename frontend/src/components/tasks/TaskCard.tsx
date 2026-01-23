@@ -59,13 +59,13 @@ export function TaskCard({
 
  return (
  <Card
- className={`hover:shadow-md transition-shadow cursor-pointer ${className}`}
+ className={`cursor-pointer transition-shadow hover:shadow-md ${className}`}
  onClick={() => onClick?.(task)}
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <CardContent className="p-4 sm:p-6">
  {/* Header: Badges and Metadata */}
- <div className="flex flex-wrap items-start justify-between gap-2 mb-3">
+ <div className="mb-3 flex flex-wrap items-start justify-between gap-2">
  <div className="flex flex-wrap gap-2">
  <Badge className={getPriorityColor(task.priority)}>
  {t(`priority.${task.priority}`, task.priority)}
@@ -90,19 +90,19 @@ export function TaskCard({
  </div>
 
  {/* Task Title (Primary Display) - Mobile-first, RTL-compatible */}
- <h3 className={`text-sm sm:text-base md:text-lg font-semibold mb-2 ${isRTL ? 'text-end' : 'text-start'}`}>
+ <h3 className={`mb-2 text-sm font-semibold sm:text-base md:text-lg ${isRTL ? 'text-end' : 'text-start'}`}>
  {task.title}
  </h3>
 
  {/* Description Preview */}
  {task.description && (
- <p className={`text-xs sm:text-sm text-muted-foreground line-clamp-2 mb-3 ${isRTL ? 'text-end' : 'text-start'}`}>
+ <p className={`mb-3 line-clamp-2 text-xs text-muted-foreground sm:text-sm ${isRTL ? 'text-end' : 'text-start'}`}>
  {task.description}
  </p>
  )}
 
  {/* Footer: Timestamps */}
- <div className={`flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 text-xs text-muted-foreground ${isRTL ? 'text-end' : 'text-start'}`}>
+ <div className={`flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row sm:items-center sm:justify-between ${isRTL ? 'text-end' : 'text-start'}`}>
  <div>
  {t('created', 'Created')}: {new Date(task.created_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
  </div>

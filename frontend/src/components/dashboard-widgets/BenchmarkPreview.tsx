@@ -152,7 +152,7 @@ function BenchmarkStatCard({
       >
         <Icon className={cn(compact ? 'h-4 w-4 sm:h-5 sm:w-5' : 'h-5 w-5 sm:h-6 sm:w-6')} />
       </div>
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <p
           className={cn(
             'font-bold tabular-nums',
@@ -184,10 +184,10 @@ function BenchmarkPreviewSkeleton({ compact }: { compact?: boolean }) {
       <CardHeader className={cn(compact ? 'pb-2' : 'pb-4')}>
         <div className="flex items-start justify-between gap-4">
           <div className="flex-1">
-            <Skeleton className="h-6 w-48 mb-2" />
+            <Skeleton className="mb-2 h-6 w-48" />
             <Skeleton className="h-4 w-64" />
           </div>
-          <Skeleton className="h-8 w-8 rounded-full" />
+          <Skeleton className="size-8 rounded-full" />
         </div>
       </CardHeader>
       <CardContent>
@@ -198,10 +198,10 @@ function BenchmarkPreviewSkeleton({ compact }: { compact?: boolean }) {
           )}
         >
           {Array.from({ length: 6 }).map((_, i) => (
-            <div key={i} className="flex items-center gap-3 p-3 rounded-lg bg-muted/50">
-              <Skeleton className="h-10 w-10 rounded-lg" />
+            <div key={i} className="flex items-center gap-3 rounded-lg bg-muted/50 p-3">
+              <Skeleton className="size-10 rounded-lg" />
               <div className="flex-1">
-                <Skeleton className="h-6 w-16 mb-1" />
+                <Skeleton className="mb-1 h-6 w-16" />
                 <Skeleton className="h-4 w-20" />
               </div>
             </div>
@@ -270,23 +270,23 @@ export function BenchmarkPreview({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Decorative background elements */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        <div className="absolute -top-24 -end-24 w-48 h-48 bg-primary/5 rounded-full blur-3xl" />
-        <div className="absolute -bottom-16 -start-16 w-32 h-32 bg-primary/10 rounded-full blur-2xl" />
+      <div className="pointer-events-none absolute inset-0 overflow-hidden">
+        <div className="absolute -end-24 -top-24 size-48 rounded-full bg-primary/5 blur-3xl" />
+        <div className="absolute -bottom-16 -start-16 size-32 rounded-full bg-primary/10 blur-2xl" />
       </div>
 
       <CardHeader className={cn('relative', compact ? 'pb-2 sm:pb-3' : 'pb-3 sm:pb-4')}>
         <div className="flex items-start justify-between gap-3 sm:gap-4">
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 mb-1 sm:mb-2">
-              <div className="p-1.5 sm:p-2 rounded-lg bg-primary/10">
-                <Sparkles className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+          <div className="min-w-0 flex-1">
+            <div className="mb-1 flex items-center gap-2 sm:mb-2">
+              <div className="rounded-lg bg-primary/10 p-1.5 sm:p-2">
+                <Sparkles className="size-4 text-primary sm:size-5" />
               </div>
               <CardTitle className={cn('text-base sm:text-lg lg:text-xl')}>
                 {t('benchmarks.title')}
               </CardTitle>
-              <Badge variant="secondary" className="hidden sm:inline-flex text-xs">
-                <Users className="h-3 w-3 me-1" />
+              <Badge variant="secondary" className="hidden text-xs sm:inline-flex">
+                <Users className="me-1 size-3" />
                 {data.benchmarks.sampleSize} {t('benchmarks.organizations')}
               </Badge>
             </div>
@@ -303,11 +303,11 @@ export function BenchmarkPreview({
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 sm:h-9 sm:w-9 rounded-full shrink-0 hover:bg-destructive/10 hover:text-destructive"
+            className="size-8 shrink-0 rounded-full hover:bg-destructive/10 hover:text-destructive sm:size-9"
             onClick={handleDismiss}
             aria-label={t('benchmarks.dismiss')}
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         </div>
       </CardHeader>
@@ -338,8 +338,8 @@ export function BenchmarkPreview({
           )}
         >
           {/* Info text */}
-          <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-            <TrendingUp className="h-4 w-4 text-primary shrink-0" />
+          <div className="flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
+            <TrendingUp className="size-4 shrink-0 text-primary" />
             <span>
               {t('benchmarks.typicalRange', {
                 min: data.benchmarks.dossierRange.min,
@@ -353,7 +353,7 @@ export function BenchmarkPreview({
             <Button
               variant="default"
               size="sm"
-              className="w-full sm:w-auto min-h-11 sm:min-h-9"
+              className="min-h-11 w-full sm:min-h-9 sm:w-auto"
               onClick={onCustomize}
             >
               {t('benchmarks.customize')}

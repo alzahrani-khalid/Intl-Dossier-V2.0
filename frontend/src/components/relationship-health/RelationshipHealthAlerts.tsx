@@ -100,7 +100,7 @@ function AlertItem({ alert, compact, onMarkRead, onDismiss }: AlertItemProps) {
         <Icon
           className={cn('h-4 w-4 mt-0.5 flex-shrink-0', getAlertSeverityColor(alert.severity))}
         />
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <p className={cn('text-sm font-medium truncate', !alert.is_read && 'font-semibold')}>
             {title}
           </p>
@@ -110,13 +110,13 @@ function AlertItem({ alert, compact, onMarkRead, onDismiss }: AlertItemProps) {
           <Button
             variant="ghost"
             size="icon"
-            className="h-6 w-6 flex-shrink-0"
+            className="size-6 shrink-0"
             onClick={(e) => {
               e.stopPropagation()
               onDismiss?.(alert.id)
             }}
           >
-            <X className="h-3 w-3" />
+            <X className="size-3" />
           </Button>
         )}
       </div>
@@ -132,7 +132,7 @@ function AlertItem({ alert, compact, onMarkRead, onDismiss }: AlertItemProps) {
       )}
     >
       <Icon className={cn('h-5 w-5 mt-0.5 flex-shrink-0', getAlertSeverityColor(alert.severity))} />
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div>
             <p
@@ -140,7 +140,7 @@ function AlertItem({ alert, compact, onMarkRead, onDismiss }: AlertItemProps) {
             >
               {title}
             </p>
-            <p className="text-xs sm:text-sm text-muted-foreground mt-1">{description}</p>
+            <p className="mt-1 text-xs text-muted-foreground sm:text-sm">{description}</p>
           </div>
           <Badge
             variant="outline"
@@ -149,7 +149,7 @@ function AlertItem({ alert, compact, onMarkRead, onDismiss }: AlertItemProps) {
             {alert.severity}
           </Badge>
         </div>
-        <div className="flex items-center justify-between mt-2 pt-2 border-t border-current/10">
+        <div className="border-current/10 mt-2 flex items-center justify-between border-t pt-2">
           <span className="text-xs text-muted-foreground">{timeAgo}</span>
           <div className="flex items-center gap-1">
             {!alert.is_read && (
@@ -159,7 +159,7 @@ function AlertItem({ alert, compact, onMarkRead, onDismiss }: AlertItemProps) {
                 className="h-7 px-2 text-xs"
                 onClick={() => onMarkRead?.(alert.id)}
               >
-                <Bell className="h-3 w-3 me-1" />
+                <Bell className="me-1 size-3" />
                 Mark read
               </Button>
             )}
@@ -170,7 +170,7 @@ function AlertItem({ alert, compact, onMarkRead, onDismiss }: AlertItemProps) {
                 className="h-7 px-2 text-xs"
                 onClick={() => onDismiss?.(alert.id)}
               >
-                <BellOff className="h-3 w-3 me-1" />
+                <BellOff className="me-1 size-3" />
                 Dismiss
               </Button>
             )}
@@ -211,7 +211,7 @@ function AlertsSkeleton({ compact }: { compact?: boolean }) {
       <div className="space-y-2">
         {[1, 2, 3].map((i) => (
           <div key={i} className="flex items-start gap-2 p-2">
-            <Skeleton className="h-4 w-4 rounded-full" />
+            <Skeleton className="size-4 rounded-full" />
             <div className="flex-1 space-y-1">
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-3 w-1/3" />
@@ -225,8 +225,8 @@ function AlertsSkeleton({ compact }: { compact?: boolean }) {
   return (
     <div className="space-y-3">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="flex items-start gap-3 p-4 rounded-lg bg-muted/50">
-          <Skeleton className="h-5 w-5 rounded-full" />
+        <div key={i} className="flex items-start gap-3 rounded-lg bg-muted/50 p-4">
+          <Skeleton className="size-5 rounded-full" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-5 w-3/4" />
             <Skeleton className="h-4 w-full" />
@@ -282,7 +282,7 @@ export function RelationshipHealthAlerts({
     return (
       <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
         {showHeader && (
-          <CardHeader className="p-4 sm:p-6 pb-2">
+          <CardHeader className="p-4 pb-2 sm:p-6">
             <Skeleton className="h-5 w-1/3" />
           </CardHeader>
         )}
@@ -297,7 +297,7 @@ export function RelationshipHealthAlerts({
     return (
       <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="p-6 text-center">
-          <CheckCircle2 className="h-12 w-12 mx-auto text-green-500 mb-3" />
+          <CheckCircle2 className="mx-auto mb-3 size-12 text-green-500" />
           <p className="text-muted-foreground">{t('alerts.noAlerts')}</p>
         </CardContent>
       </Card>
@@ -307,10 +307,10 @@ export function RelationshipHealthAlerts({
   return (
     <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
       {showHeader && (
-        <CardHeader className="p-4 sm:p-6 pb-2">
+        <CardHeader className="p-4 pb-2 sm:p-6">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-sm sm:text-base flex items-center gap-2">
-              <Bell className="h-4 w-4" />
+            <CardTitle className="flex items-center gap-2 text-sm sm:text-base">
+              <Bell className="size-4" />
               {t('alerts.title')}
               {unreadCount > 0 && (
                 <Badge variant="destructive" className="text-xs">

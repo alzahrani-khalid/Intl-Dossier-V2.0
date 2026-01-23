@@ -111,17 +111,17 @@ function InlineHint({
       )}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <div className="flex-shrink-0 p-1.5 rounded-md bg-primary/10">
+      <div className="shrink-0 rounded-md bg-primary/10 p-1.5">
         <Icon className={cn('text-primary', sizes.icon)} />
       </div>
 
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <p className={cn('text-foreground', sizes.title)}>{t(hint.titleKey)}</p>
         <p className={cn('text-muted-foreground mt-0.5', sizes.content)}>{t(hint.contentKey)}</p>
 
         {hint.shortcut && (
           <Badge variant="secondary" className={cn('mt-2', sizes.badge)}>
-            <Keyboard className="w-3 h-3 me-1" />
+            <Keyboard className="me-1 size-3" />
             {hint.shortcut}
           </Badge>
         )}
@@ -149,7 +149,7 @@ function InlineHint({
           onClick={onDismiss}
           aria-label={t('hint.dismiss')}
         >
-          <X className="w-4 h-4" />
+          <X className="size-4" />
         </Button>
       )}
     </motion.div>
@@ -196,11 +196,11 @@ function ExpandableHint({
         onClick={handleToggle}
         aria-expanded={isExpanded}
       >
-        <div className="flex-shrink-0 p-1.5 rounded-md bg-primary/10">
+        <div className="shrink-0 rounded-md bg-primary/10 p-1.5">
           <Icon className={cn('text-primary', sizes.icon)} />
         </div>
 
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <p className={cn('text-foreground truncate', sizes.title)}>{t(hint.titleKey)}</p>
         </div>
 
@@ -219,7 +219,7 @@ function ExpandableHint({
               }}
               aria-label={t('hint.dismiss')}
             >
-              <X className="w-4 h-4" />
+              <X className="size-4" />
             </Button>
           )}
           {isExpanded ? (
@@ -250,7 +250,7 @@ function ExpandableHint({
 
               {hint.shortcut && (
                 <Badge variant="secondary" className={cn('mt-3', sizes.badge)}>
-                  <Keyboard className="w-3 h-3 me-1" />
+                  <Keyboard className="me-1 size-3" />
                   {hint.shortcut}
                 </Badge>
               )}
@@ -304,16 +304,16 @@ function CardHint({
               onClick={onDismiss}
               aria-label={t('hint.dismiss')}
             >
-              <X className="w-4 h-4" />
+              <X className="size-4" />
             </Button>
           )}
 
-          <div className="flex flex-col sm:flex-row items-start gap-3 sm:gap-4">
-            <div className="p-2 sm:p-3 rounded-lg bg-primary/10">
+          <div className="flex flex-col items-start gap-3 sm:flex-row sm:gap-4">
+            <div className="rounded-lg bg-primary/10 p-2 sm:p-3">
               <Icon className={cn('text-primary', sizes.icon)} />
             </div>
 
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <p className={cn('text-foreground', sizes.title)}>{t(hint.titleKey)}</p>
               <p className={cn('text-muted-foreground mt-1 sm:mt-2', sizes.content)}>
                 {t(hint.contentKey)}
@@ -325,10 +325,10 @@ function CardHint({
                 </p>
               )}
 
-              <div className="flex flex-wrap items-center gap-2 mt-3 sm:mt-4">
+              <div className="mt-3 flex flex-wrap items-center gap-2 sm:mt-4">
                 {hint.shortcut && (
                   <Badge variant="secondary" className={sizes.badge}>
-                    <Keyboard className="w-3 h-3 me-1" />
+                    <Keyboard className="me-1 size-3" />
                     {hint.shortcut}
                   </Badge>
                 )}
@@ -380,14 +380,14 @@ function TooltipHint({
         >
           <div className="flex items-start gap-2" dir={isRTL ? 'rtl' : 'ltr'}>
             <Icon className={cn('text-primary flex-shrink-0 mt-0.5', sizes.icon)} />
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <p className={cn('font-medium', sizes.title)}>{t(hint.titleKey)}</p>
               <p className={cn('text-muted-foreground mt-1', sizes.content)}>
                 {t(hint.contentKey)}
               </p>
               {hint.shortcut && (
                 <Badge variant="secondary" className={cn('mt-2', sizes.badge)}>
-                  <Keyboard className="w-3 h-3 me-1" />
+                  <Keyboard className="me-1 size-3" />
                   {hint.shortcut}
                 </Badge>
               )}
@@ -396,14 +396,14 @@ function TooltipHint({
               <Button
                 variant="ghost"
                 size="icon"
-                className="min-h-6 min-w-6 h-6 w-6 text-muted-foreground hover:text-foreground"
+                className="size-6 min-h-6 min-w-6 text-muted-foreground hover:text-foreground"
                 onClick={(e) => {
                   e.stopPropagation()
                   onDismiss?.()
                 }}
                 aria-label={t('hint.dismiss')}
               >
-                <X className="w-3 h-3" />
+                <X className="size-3" />
               </Button>
             )}
           </div>

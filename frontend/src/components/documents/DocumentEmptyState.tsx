@@ -238,7 +238,7 @@ export function DocumentEmptyState({
       >
         <input {...getInputProps()} />
 
-        <CardContent className="flex flex-col items-center justify-center py-12 px-4 sm:py-16 sm:px-8 lg:py-20">
+        <CardContent className="flex flex-col items-center justify-center px-4 py-12 sm:px-8 sm:py-16 lg:py-20">
           {/* Animated Upload Icon */}
           <motion.div
             animate={{
@@ -285,7 +285,7 @@ export function DocumentEmptyState({
                 exit={{ opacity: 0, y: -10 }}
                 className="mb-4 flex items-center gap-2 rounded-lg bg-destructive/10 px-4 py-2 text-sm text-destructive"
               >
-                <AlertCircle className="h-4 w-4 shrink-0" />
+                <AlertCircle className="size-4 shrink-0" />
                 <span>{dragError}</span>
               </motion.div>
             )}
@@ -340,7 +340,7 @@ export function DocumentEmptyState({
         <Card>
           <CardHeader className="pb-3">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-5 w-5 text-amber-500" />
+              <Sparkles className="size-5 text-amber-500" />
               <CardTitle className="text-base sm:text-lg">
                 {isRTL ? 'قوالب مقترحة' : 'Suggested Templates'}
               </CardTitle>
@@ -377,7 +377,7 @@ export function DocumentEmptyState({
                         colorClass,
                       )}
                     >
-                      <Icon className="h-5 w-5" />
+                      <Icon className="size-5" />
                     </div>
                     <div className="min-w-0 flex-1">
                       <p className="truncate text-sm font-medium">{name}</p>

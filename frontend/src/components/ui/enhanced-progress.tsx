@@ -215,7 +215,7 @@ export function EnhancedProgress({
             )}
           />
         )}
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <Progress value={progress} className={cn(sizeConfig.progress)} />
         </div>
         <span className={cn('text-xs tabular-nums shrink-0', statusConfig.textColor)}>
@@ -239,8 +239,8 @@ export function EnhancedProgress({
       aria-label={title || t('loading.progress')}
     >
       {/* Header */}
-      <div className="flex items-start justify-between gap-3 mb-3">
-        <div className="flex items-start gap-2 sm:gap-3 min-w-0 flex-1">
+      <div className="mb-3 flex items-start justify-between gap-3">
+        <div className="flex min-w-0 flex-1 items-start gap-2 sm:gap-3">
           {StatusIcon && (
             <div className={cn('shrink-0 mt-0.5', statusConfig.textColor)}>
               <StatusIcon className={cn(sizeConfig.icon, statusConfig.animate && 'animate-spin')} />
@@ -268,7 +268,7 @@ export function EnhancedProgress({
 
         {/* Controls */}
         {(canPause || canCancel) && isActive && (
-          <div className="flex items-center gap-1 shrink-0">
+          <div className="flex shrink-0 items-center gap-1">
             {canPause && onPauseResume && (
               <Button
                 variant="ghost"
@@ -338,7 +338,7 @@ export function EnhancedProgress({
             {/* ETA */}
             {eta && isActive && (
               <span className={cn('flex items-center gap-1', sizeConfig.description)}>
-                <Clock className="h-3 w-3" />
+                <Clock className="size-3" />
                 <span className="tabular-nums">{eta.eta}</span>
               </span>
             )}
@@ -368,7 +368,7 @@ export function EnhancedProgress({
             statusConfig.textColor,
           )}
         >
-          <Info className="h-3 w-3 shrink-0" />
+          <Info className="size-3 shrink-0" />
           <span>{t(`statusMessage.${status}`)}</span>
         </motion.div>
       )}

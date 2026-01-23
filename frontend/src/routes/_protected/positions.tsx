@@ -108,12 +108,12 @@ export function PositionsLibraryPage() {
  return (
  <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
  {/* Page Header */}
- <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
- <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+ <div className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+ <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+ <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
  <div className="space-y-1">
- <h1 className="text-3xl font-bold text-gray-900 dark:text-gray-100 flex items-center gap-3">
- <FileText className="h-8 w-8" />
+ <h1 className="flex items-center gap-3 text-3xl font-bold text-gray-900 dark:text-gray-100">
+ <FileText className="size-8" />
  {t('positions:library.title')}
  </h1>
  <p className="text-gray-500 dark:text-gray-400">
@@ -121,7 +121,7 @@ export function PositionsLibraryPage() {
  </p>
  </div>
  <Button onClick={() => setShowCreateDialog(true)} className="gap-2">
- <Plus className="h-5 w-5" />
+ <Plus className="size-5" />
  {t('positions:library.create_position')}
  </Button>
  </div>
@@ -179,17 +179,17 @@ export function PositionsLibraryPage() {
  </div>
 
  {/* Main Content */}
- <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+ <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
  {/* Search and Filters */}
  <Card className="mb-6">
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <Search className="h-5 w-5" />
+ <Search className="size-5" />
  {t('positions:library.search_and_filter')}
  </CardTitle>
  </CardHeader>
  <CardContent>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
+ <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
  {/* Search Input */}
  <div className="lg:col-span-2">
  <Input
@@ -302,7 +302,7 @@ export function PositionsLibraryPage() {
  {/* Positions List */}
  {error ? (
  <div
- className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center"
+ className="rounded-lg border border-red-200 bg-red-50 p-6 text-center dark:border-red-800 dark:bg-red-900/20"
  role="alert"
  >
  <p className="text-sm text-red-700 dark:text-red-300">

@@ -104,7 +104,7 @@ export function AIExtractionStatus({
  <Card dir={isRTL ? 'rtl' : 'ltr'}>
  <CardHeader>
  <div className="flex items-center gap-3">
- <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin text-primary" />
+ <Loader2 className="size-5 animate-spin text-primary sm:size-6" />
  <div className="flex-1">
  <CardTitle className="text-base sm:text-lg">
  {t('ai.extraction.processing')}
@@ -119,7 +119,7 @@ export function AIExtractionStatus({
  {mode === 'async' && estimatedTimeMs && (
  <>
  <Progress value={progressPercent} className="mb-2" />
- <p className="text-xs sm:text-sm text-muted-foreground">
+ <p className="text-xs text-muted-foreground sm:text-sm">
  {t('ai.extraction.estimated_time', { time: formatTime(estimatedTimeMs) })}
  </p>
  </>
@@ -135,7 +135,7 @@ export function AIExtractionStatus({
  if (status === 'error') {
  return (
  <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
- <AlertTriangle className={`h-4 w-4 ${isRTL ? 'ms-0 me-2' : 'me-0 ms-2'}`} />
+ <AlertTriangle className={`size-4 ${isRTL ? 'me-2 ms-0' : 'me-0 ms-2'}`} />
  <AlertDescription className="text-sm">
  {error || t('ai.extraction.error')}
  </AlertDescription>
@@ -166,7 +166,7 @@ export function AIExtractionStatus({
  <Card>
  <CardHeader>
  <div className="flex items-start gap-3">
- <CheckCircle className="h-5 w-5 sm:h-6 sm:w-6 text-green-500 flex-shrink-0 mt-0.5" />
+ <CheckCircle className="mt-0.5 size-5 shrink-0 text-green-500 sm:size-6" />
  <div className="flex-1">
  <CardTitle className="text-base sm:text-lg">
  {t('ai.extraction.completed')}
@@ -187,7 +187,7 @@ export function AIExtractionStatus({
  {/* Low confidence warning */}
  {lowConfidenceItems.length > 0 && (
  <Alert>
- <AlertTriangle className={`h-4 w-4 ${isRTL ? 'ms-0 me-2' : 'me-0 ms-2'}`} />
+ <AlertTriangle className={`size-4 ${isRTL ? 'me-2 ms-0' : 'me-0 ms-2'}`} />
  <AlertDescription className="text-sm">
  {t('ai.extraction.low_confidence_warning', { count: lowConfidenceItems.length })}
  </AlertDescription>
@@ -195,7 +195,7 @@ export function AIExtractionStatus({
  )}
 
  {/* Extraction results summary */}
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+ <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4">
  {result.decisions.length > 0 && (
  <Card>
  <CardHeader className="p-4">
@@ -247,11 +247,11 @@ export function AIExtractionStatus({
  {result.decisions.slice(0, 3).map((decision, idx) => {
  const badge = getConfidenceBadge(decision.confidence_score);
  return (
- <div key={idx} className="p-3 border rounded-lg bg-muted/50">
- <div className="flex items-start justify-between gap-2 mb-2">
- <p className="text-sm flex-1">{decision.description}</p>
- <Badge variant={badge.variant} className="flex-shrink-0 text-xs">
- {badge.icon && <badge.icon className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />}
+ <div key={idx} className="rounded-lg border bg-muted/50 p-3">
+ <div className="mb-2 flex items-start justify-between gap-2">
+ <p className="flex-1 text-sm">{decision.description}</p>
+ <Badge variant={badge.variant} className="shrink-0 text-xs">
+ {badge.icon && <badge.icon className={`size-3 ${isRTL ? 'ms-1' : 'me-1'}`} />}
  {(decision.confidence_score * 100).toFixed(0)}%
  </Badge>
  </div>
@@ -262,7 +262,7 @@ export function AIExtractionStatus({
  );
  })}
  {result.decisions.length > 3 && (
- <p className="text-xs text-muted-foreground text-center">
+ <p className="text-center text-xs text-muted-foreground">
  +{result.decisions.length - 3} {t('common.more')}
  </p>
  )}
@@ -282,11 +282,11 @@ export function AIExtractionStatus({
  {result.commitments.slice(0, 3).map((commitment, idx) => {
  const badge = getConfidenceBadge(commitment.confidence_score);
  return (
- <div key={idx} className="p-3 border rounded-lg bg-muted/50">
- <div className="flex items-start justify-between gap-2 mb-2">
- <p className="text-sm flex-1">{commitment.description}</p>
- <Badge variant={badge.variant} className="flex-shrink-0 text-xs">
- {badge.icon && <badge.icon className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />}
+ <div key={idx} className="rounded-lg border bg-muted/50 p-3">
+ <div className="mb-2 flex items-start justify-between gap-2">
+ <p className="flex-1 text-sm">{commitment.description}</p>
+ <Badge variant={badge.variant} className="shrink-0 text-xs">
+ {badge.icon && <badge.icon className={`size-3 ${isRTL ? 'ms-1' : 'me-1'}`} />}
  {(commitment.confidence_score * 100).toFixed(0)}%
  </Badge>
  </div>
@@ -298,7 +298,7 @@ export function AIExtractionStatus({
  );
  })}
  {result.commitments.length > 3 && (
- <p className="text-xs text-muted-foreground text-center">
+ <p className="text-center text-xs text-muted-foreground">
  +{result.commitments.length - 3} {t('common.more')}
  </p>
  )}
@@ -309,11 +309,11 @@ export function AIExtractionStatus({
 
  {/* Action buttons */}
  {(onAcceptSuggestions || onRejectSuggestions) && (
- <div className="flex flex-col sm:flex-row gap-3 pt-2">
+ <div className="flex flex-col gap-3 pt-2 sm:flex-row">
  {onAcceptSuggestions && (
  <button
  onClick={() => onAcceptSuggestions(result)}
- className="h-11 px-6 bg-primary text-primary-foreground rounded-md font-medium text-sm hover:bg-primary/90 transition-colors"
+ className="h-11 rounded-md bg-primary px-6 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
  >
  {t('ai.extraction.accept_suggestions')}
  </button>
@@ -321,7 +321,7 @@ export function AIExtractionStatus({
  {onRejectSuggestions && (
  <button
  onClick={onRejectSuggestions}
- className="h-11 px-6 bg-secondary text-secondary-foreground rounded-md font-medium text-sm hover:bg-secondary/80 transition-colors"
+ className="h-11 rounded-md bg-secondary px-6 text-sm font-medium text-secondary-foreground transition-colors hover:bg-secondary/80"
  >
  {t('ai.extraction.reject_suggestions')}
  </button>

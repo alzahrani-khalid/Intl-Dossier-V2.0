@@ -100,8 +100,8 @@ export function AccessReviewPage() {
 
  if (isLoading) {
  return (
- <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6" dir={isRTL ? 'rtl' : 'ltr'}>
- <div className="text-center py-12 text-muted-foreground">
+ <div className="container mx-auto p-4 sm:p-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="py-12 text-center text-muted-foreground">
  {t('common.loading')}
  </div>
  </div>
@@ -109,24 +109,24 @@ export function AccessReviewPage() {
  }
 
  return (
- <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="container mx-auto p-4 sm:p-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
  {/* Header */}
- <div className="flex flex-col gap-4 mb-6">
+ <div className="mb-6 flex flex-col gap-4">
  <Button
  variant="ghost"
  onClick={() => navigate({ to: '/users/access-reviews' })}
  className={`w-fit ${isRTL ? 'flex-row-reverse' : ''}`}
  >
- <ArrowLeft className={`h-4 w-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
+ <ArrowLeft className={`size-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
  {t('common.back')}
  </Button>
 
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+ <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
  <div>
- <h1 className="text-2xl sm:text-3xl font-bold text-start">
+ <h1 className="text-start text-2xl font-bold sm:text-3xl">
  {reviewDetail?.review_name}
  </h1>
- <p className="text-sm sm:text-base text-muted-foreground text-start mt-1">
+ <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
  {t('user_management.review_scope')}: {t(`user_management.scope_${reviewDetail?.review_scope}`)}
  </p>
  </div>
@@ -137,7 +137,7 @@ export function AccessReviewPage() {
  disabled={isCompleting || summary.certifiedUsers < summary.totalFindings}
  className="w-full sm:w-auto "
  >
- <CheckCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <CheckCircle className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('user_management.complete_review')}
  </Button>
  )}
@@ -145,26 +145,26 @@ export function AccessReviewPage() {
  </div>
 
  {/* Summary Cards */}
- <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-6">
+ <div className="mb-6 grid grid-cols-2 gap-3 sm:grid-cols-4 sm:gap-4">
  <Card>
  <CardHeader className="pb-2 sm:pb-3">
- <CardTitle className="text-xs sm:text-sm font-medium">
+ <CardTitle className="text-xs font-medium sm:text-sm">
  {t('user_management.total_findings')}
  </CardTitle>
  </CardHeader>
  <CardContent>
- <div className="text-xl sm:text-2xl font-bold">{summary.totalFindings}</div>
+ <div className="text-xl font-bold sm:text-2xl">{summary.totalFindings}</div>
  </CardContent>
  </Card>
 
  <Card>
  <CardHeader className="pb-2 sm:pb-3">
- <CardTitle className="text-xs sm:text-sm font-medium">
+ <CardTitle className="text-xs font-medium sm:text-sm">
  {t('user_management.certified')}
  </CardTitle>
  </CardHeader>
  <CardContent>
- <div className="text-xl sm:text-2xl font-bold text-green-600">
+ <div className="text-xl font-bold text-green-600 sm:text-2xl">
  {summary.certifiedUsers}
  </div>
  </CardContent>
@@ -172,12 +172,12 @@ export function AccessReviewPage() {
 
  <Card>
  <CardHeader className="pb-2 sm:pb-3">
- <CardTitle className="text-xs sm:text-sm font-medium">
+ <CardTitle className="text-xs font-medium sm:text-sm">
  {t('user_management.inactive')}
  </CardTitle>
  </CardHeader>
  <CardContent>
- <div className="text-xl sm:text-2xl font-bold text-orange-600">
+ <div className="text-xl font-bold text-orange-600 sm:text-2xl">
  {summary.inactiveUsers}
  </div>
  </CardContent>
@@ -185,12 +185,12 @@ export function AccessReviewPage() {
 
  <Card>
  <CardHeader className="pb-2 sm:pb-3">
- <CardTitle className="text-xs sm:text-sm font-medium">
+ <CardTitle className="text-xs font-medium sm:text-sm">
  {t('user_management.excessive')}
  </CardTitle>
  </CardHeader>
  <CardContent>
- <div className="text-xl sm:text-2xl font-bold text-red-600">
+ <div className="text-xl font-bold text-red-600 sm:text-2xl">
  {summary.excessivePermissions}
  </div>
  </CardContent>
@@ -198,9 +198,9 @@ export function AccessReviewPage() {
  </div>
 
  {/* Filter */}
- <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 mb-6">
+ <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:gap-4">
  <div className="w-full sm:w-64">
- <Label htmlFor="finding-filter" className="text-start block mb-2">
+ <Label htmlFor="finding-filter" className="mb-2 block text-start">
  {t('user_management.filter_by_finding')}
  </Label>
  <Select value={findingTypeFilter} onValueChange={setFindingTypeFilter}>
@@ -264,12 +264,12 @@ export function AccessReviewPage() {
  <TableCell>
  {finding.certified_by ? (
  <Badge variant="secondary" className="gap-1">
- <CheckCircle className="h-3 w-3" />
+ <CheckCircle className="size-3" />
  {t('user_management.certified')}
  </Badge>
  ) : (
  <Badge variant="outline" className="gap-1">
- <Clock className="h-3 w-3" />
+ <Clock className="size-3" />
  {t('user_management.pending')}
  </Badge>
  )}
@@ -295,7 +295,7 @@ export function AccessReviewPage() {
  </div>
 
  {/* Findings Cards - Mobile */}
- <div className="md:hidden space-y-4">
+ <div className="space-y-4 md:hidden">
  {reviewDetail?.findings?.map((finding: Finding) => (
  <Card key={finding.user_id}>
  <CardHeader className="pb-3">
@@ -311,7 +311,7 @@ export function AccessReviewPage() {
  {/* Issues */}
  <div>
  <Label className="text-xs text-muted-foreground">{t('user_management.issues')}</Label>
- <div className="flex flex-wrap gap-1 mt-1">
+ <div className="mt-1 flex flex-wrap gap-1">
  {finding.issues?.map((issue) => (
  <Badge key={issue} variant={getIssueBadgeVariant(issue)} className="text-xs">
  {t(`user_management.issue_${issue}`)}
@@ -331,15 +331,15 @@ export function AccessReviewPage() {
  </div>
 
  {/* Status & Actions */}
- <div className="flex flex-row items-center justify-between pt-2 border-t">
+ <div className="flex flex-row items-center justify-between border-t pt-2">
  {finding.certified_by ? (
  <Badge variant="secondary" className="gap-1">
- <CheckCircle className="h-3 w-3" />
+ <CheckCircle className="size-3" />
  {t('user_management.certified')}
  </Badge>
  ) : (
  <Badge variant="outline" className="gap-1">
- <Clock className="h-3 w-3" />
+ <Clock className="size-3" />
  {t('user_management.pending')}
  </Badge>
  )}
@@ -378,7 +378,7 @@ export function AccessReviewPage() {
  </TabsList>
 
  <TabsContent value="approve" className="mt-4">
- <p className="text-sm text-muted-foreground mb-4">
+ <p className="mb-4 text-sm text-muted-foreground">
  {t('user_management.approve_access_description')}
  </p>
  <Button
@@ -386,7 +386,7 @@ export function AccessReviewPage() {
  disabled={isCertifying}
  className="w-full "
  >
- <CheckCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <CheckCircle className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('user_management.confirm_approval')}
  </Button>
  </TabsContent>
@@ -425,7 +425,7 @@ export function AccessReviewPage() {
  variant="destructive"
  className="w-full "
  >
- <XCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <XCircle className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('user_management.submit_change_request')}
  </Button>
  </TabsContent>

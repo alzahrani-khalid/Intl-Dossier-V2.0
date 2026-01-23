@@ -203,7 +203,7 @@ export function BulkActionsDemo() {
 
   return (
     <div
-      className="container mx-auto px-4 py-6 sm:px-6 lg:px-8 space-y-6"
+      className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
@@ -237,7 +237,7 @@ export function BulkActionsDemo() {
       )}
 
       {/* Data Table */}
-      <div className="border rounded-lg overflow-hidden">
+      <div className="overflow-hidden rounded-lg border">
         <SelectableDataTable
           data={data}
           columns={columns}

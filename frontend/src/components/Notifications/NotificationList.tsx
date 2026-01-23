@@ -48,7 +48,7 @@ export function NotificationList({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center py-12">
-        <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+        <Loader2 className="size-8 animate-spin text-muted-foreground" />
       </div>
     )
   }
@@ -59,11 +59,11 @@ export function NotificationList({
         className={cn('flex flex-col items-center justify-center py-12 text-center', className)}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center mb-4">
-          <Bell className="h-8 w-8 text-muted-foreground" />
+        <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-muted">
+          <Bell className="size-8 text-muted-foreground" />
         </div>
-        <h3 className="text-lg font-medium text-foreground mb-1">{t('empty.title')}</h3>
-        <p className="text-sm text-muted-foreground max-w-sm">{getEmptyMessage()}</p>
+        <h3 className="mb-1 text-lg font-medium text-foreground">{t('empty.title')}</h3>
+        <p className="max-w-sm text-sm text-muted-foreground">{getEmptyMessage()}</p>
       </div>
     )
   }
@@ -75,7 +75,7 @@ export function NotificationList({
     <div className={cn('space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {Object.entries(groupedNotifications).map(([dateLabel, items]) => (
         <div key={dateLabel}>
-          <h4 className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-3 px-1">
+          <h4 className="mb-3 px-1 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
             {dateLabel}
           </h4>
           <div className="space-y-2">
@@ -98,7 +98,7 @@ export function NotificationList({
           <Button variant="outline" onClick={onFetchNextPage} disabled={isFetchingNextPage}>
             {isFetchingNextPage ? (
               <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
                 {t('loading')}
               </>
             ) : (

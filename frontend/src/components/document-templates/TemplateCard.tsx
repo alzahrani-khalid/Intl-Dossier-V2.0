@@ -97,9 +97,9 @@ export function TemplateCard({ template, onSelect, isSelected, disabled }: Templ
     >
       {/* Selected indicator */}
       {isSelected && (
-        <div className="absolute top-2 end-2">
-          <div className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
-            <Check className="h-4 w-4" />
+        <div className="absolute end-2 top-2">
+          <div className="flex size-6 items-center justify-center rounded-full bg-primary text-primary-foreground">
+            <Check className="size-4" />
           </div>
         </div>
       )}
@@ -113,12 +113,12 @@ export function TemplateCard({ template, onSelect, isSelected, disabled }: Templ
               colorClass,
             )}
           >
-            <Icon className="h-5 w-5 sm:h-6 sm:w-6" />
+            <Icon className="size-5 sm:size-6" />
           </div>
 
-          <div className="flex-1 min-w-0">
-            <CardTitle className="text-base sm:text-lg line-clamp-1">{name}</CardTitle>
-            <div className="flex flex-wrap items-center gap-1.5 mt-1">
+          <div className="min-w-0 flex-1">
+            <CardTitle className="line-clamp-1 text-base sm:text-lg">{name}</CardTitle>
+            <div className="mt-1 flex flex-wrap items-center gap-1.5">
               {template.is_system_template && (
                 <Badge variant="secondary" className="text-xs">
                   {t('templates.systemTemplate')}
@@ -134,11 +134,11 @@ export function TemplateCard({ template, onSelect, isSelected, disabled }: Templ
 
       <CardContent className="pt-0">
         {description && (
-          <CardDescription className="text-sm line-clamp-2 mb-3">{description}</CardDescription>
+          <CardDescription className="mb-3 line-clamp-2 text-sm">{description}</CardDescription>
         )}
 
         {/* Target entity types */}
-        <div className="flex flex-wrap gap-1 mb-3">
+        <div className="mb-3 flex flex-wrap gap-1">
           {template.target_entity_types.slice(0, 3).map((type) => (
             <Badge key={type} variant="outline" className="text-xs">
               {t(`entityTypes.${type}`, type)}
@@ -153,7 +153,7 @@ export function TemplateCard({ template, onSelect, isSelected, disabled }: Templ
 
         {/* Classification indicator */}
         <div className="flex items-center gap-2 text-xs text-muted-foreground">
-          <Lock className="h-3 w-3" />
+          <Lock className="size-3" />
           <span>{t(`classification.${template.default_classification}`)}</span>
         </div>
       </CardContent>

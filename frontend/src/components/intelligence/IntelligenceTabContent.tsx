@@ -153,12 +153,12 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
         <span className="sr-only">
           {t('intelligence.loadingDashboard', 'Loading intelligence dashboard...')}
         </span>
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
           <Skeleton className="h-10 w-full sm:w-48" />
           <Skeleton className="h-10 w-full sm:w-48" />
           <Skeleton className="h-10 w-full sm:w-32" />
         </div>
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2">
           {[1, 2, 3, 4].map((i) => (
             <Skeleton key={i} className="h-96 w-full" />
           ))}
@@ -171,7 +171,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
   if (isError && error?.status !== 404) {
     return (
       <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
-        <AlertCircle className="h-4 w-4" />
+        <AlertCircle className="size-4" />
         <AlertDescription>
           {error instanceof Error
             ? error.message
@@ -201,29 +201,29 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
     if (refreshMutation.isPending || (autoGenerationAttempted && !refreshMutation.isError)) {
       return (
         <div
-          className="flex flex-col items-center justify-center py-12 px-4 text-center"
+          className="flex flex-col items-center justify-center px-4 py-12 text-center"
           dir={isRTL ? 'rtl' : 'ltr'}
           role="region"
           aria-live="polite"
           aria-busy="true"
         >
           <RefreshCw
-            className="h-16 w-16 sm:h-20 sm:w-20 text-primary mb-6 animate-spin"
+            className="mb-6 size-16 animate-spin text-primary sm:size-20"
             aria-hidden="true"
           />
 
-          <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
+          <h3 className="mb-2 text-lg font-semibold sm:text-xl md:text-2xl">
             {t('intelligence.generating', 'Generating Intelligence...')}
           </h3>
 
-          <p className="text-sm sm:text-base text-muted-foreground mb-4 max-w-md">
+          <p className="mb-4 max-w-md text-sm text-muted-foreground sm:text-base">
             {t(
               'intelligence.generatingDescription',
               'AI is analyzing available data to generate comprehensive intelligence insights. This may take 30-60 seconds.',
             )}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-2 text-xs text-muted-foreground">
+          <div className="flex flex-col gap-2 text-xs text-muted-foreground sm:flex-row">
             <span>✓ Economic indicators</span>
             <span>✓ Political analysis</span>
             <span>✓ Security assessment</span>
@@ -236,21 +236,21 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
     // Show empty state with manual generate button
     return (
       <div
-        className="flex flex-col items-center justify-center py-12 px-4 text-center"
+        className="flex flex-col items-center justify-center px-4 py-12 text-center"
         dir={isRTL ? 'rtl' : 'ltr'}
         role="region"
         aria-live="polite"
       >
         <AlertCircle
-          className="h-16 w-16 sm:h-20 sm:w-20 text-muted-foreground mb-6"
+          className="mb-6 size-16 text-muted-foreground sm:size-20"
           aria-hidden="true"
         />
 
-        <h3 className="text-lg sm:text-xl md:text-2xl font-semibold mb-2">
+        <h3 className="mb-2 text-lg font-semibold sm:text-xl md:text-2xl">
           {t('intelligence.noData', 'No Intelligence Available')}
         </h3>
 
-        <p className="text-sm sm:text-base text-muted-foreground mb-8 max-w-md">
+        <p className="mb-8 max-w-md text-sm text-muted-foreground sm:text-base">
           {t(
             'intelligence.noDataDescription',
             'Generate AI-powered intelligence insights for this country. The system will analyze available data to provide economic, political, security, and bilateral intelligence in both English and Arabic.',
@@ -261,7 +261,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           onClick={handleGenerateIntelligence}
           disabled={refreshMutation.isPending}
           size="lg"
-          className="h-11 sm:h-12 px-6 sm:px-8 gap-2 min-w-11"
+          className="h-11 min-w-11 gap-2 px-6 sm:h-12 sm:px-8"
           aria-label={
             refreshMutation.isPending
               ? t('intelligence.generating', 'Generating intelligence...')
@@ -269,7 +269,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
           }
         >
           <RefreshCw
-            className={`h-4 w-4 sm:h-5 sm:w-5 ${refreshMutation.isPending ? 'animate-spin' : ''}`}
+            className={`size-4 sm:size-5 ${refreshMutation.isPending ? 'animate-spin' : ''}`}
             aria-hidden="true"
           />
           <span>
@@ -281,7 +281,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
 
         {refreshMutation.isError && (
           <Alert variant="destructive" className="mt-6 max-w-md">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="size-4" />
             <AlertDescription>
               {refreshMutation.error instanceof Error
                 ? refreshMutation.error.message
@@ -318,10 +318,10 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
       <div className="flex flex-col gap-4">
         {/* Title */}
         <div>
-          <h2 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground">
+          <h2 className="text-lg font-semibold text-foreground sm:text-xl md:text-2xl">
             {t('intelligence.dashboardTitle', 'Intelligence Dashboard')}
           </h2>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
             {t(
               'intelligence.dashboardDescription',
               'Comprehensive analysis across economic, political, security, and bilateral dimensions',
@@ -331,15 +331,15 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
 
         {/* Geographic Context Summary - Replaces Filters */}
         {dossier?.extension && (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 p-4 bg-muted/50 rounded-lg border">
+          <div className="grid grid-cols-2 gap-4 rounded-lg border bg-muted/50 p-4 sm:grid-cols-3 lg:grid-cols-5">
             {/* ISO Code */}
             <div className="flex items-start gap-2">
-              <Globe className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+              <Globe className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">
                   {t('geographic.isoCode', 'ISO Code')}
                 </p>
-                <p className="text-sm font-semibold truncate">
+                <p className="truncate text-sm font-semibold">
                   {dossier.extension.iso_code_2 || dossier.extension.iso_code_3 || 'N/A'}
                 </p>
               </div>
@@ -347,10 +347,10 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
 
             {/* Region */}
             <div className="flex items-start gap-2">
-              <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+              <MapPin className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">{t('geographic.region', 'Region')}</p>
-                <p className="text-sm font-semibold truncate">
+                <p className="truncate text-sm font-semibold">
                   {dossier.extension.region || 'N/A'}
                 </p>
               </div>
@@ -358,12 +358,12 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
 
             {/* Capital */}
             <div className="flex items-start gap-2">
-              <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+              <MapPin className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">
                   {t('geographic.capital', 'Capital')}
                 </p>
-                <p className="text-sm font-semibold truncate">
+                <p className="truncate text-sm font-semibold">
                   {(isRTL ? dossier.extension.capital_ar : dossier.extension.capital_en) ||
                     dossier.extension.capital_en ||
                     dossier.extension.capital_ar ||
@@ -374,12 +374,12 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
 
             {/* Population */}
             <div className="flex items-start gap-2">
-              <Users className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+              <Users className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">
                   {t('geographic.population', 'Population')}
                 </p>
-                <p className="text-sm font-semibold truncate">
+                <p className="truncate text-sm font-semibold">
                   {dossier.extension.population
                     ? dossier.extension.population.toLocaleString()
                     : 'N/A'}
@@ -389,12 +389,12 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
 
             {/* Area */}
             <div className="flex items-start gap-2">
-              <Maximize2 className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+              <Maximize2 className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
               <div className="min-w-0">
                 <p className="text-xs text-muted-foreground">
                   {t('geographic.area', 'Area (km²)')}
                 </p>
-                <p className="text-sm font-semibold truncate">
+                <p className="truncate text-sm font-semibold">
                   {dossier.extension.area_sq_km
                     ? dossier.extension.area_sq_km.toLocaleString()
                     : 'N/A'}
@@ -415,7 +415,7 @@ export function IntelligenceTabContent({ dossierId, dossier }: IntelligenceTabCo
 
       {/* Dashboard Sections Grid - Mobile First Responsive */}
       <div
-        className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6"
+        className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-2"
         role="list"
         aria-label={t('intelligence.dashboardSectionsLabel', 'Intelligence sections')}
       >

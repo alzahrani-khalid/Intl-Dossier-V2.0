@@ -83,9 +83,9 @@ export function ContactDetails() {
   // Loading state
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="size-8 animate-spin text-muted-foreground" />
           <p className="text-sm text-muted-foreground">
             {t('contactDirectory.list.loading_contacts')}
           </p>
@@ -97,13 +97,13 @@ export function ContactDetails() {
   // Not found
   if (!contact) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="flex min-h-screen items-center justify-center">
         <div className="text-center">
-          <h2 className="text-xl font-semibold mb-2">
+          <h2 className="mb-2 text-xl font-semibold">
             {t('contactDirectory.messages.noContacts')}
           </h2>
           <Button onClick={handleBack} variant="outline">
-            <ArrowLeft className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <ArrowLeft className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('contactDirectory.buttons.back')}
           </Button>
         </div>
@@ -113,11 +113,11 @@ export function ContactDetails() {
 
   return (
     <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6">
+        <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <Button variant="ghost" onClick={handleBack} className="self-start">
-            <ArrowLeft className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <ArrowLeft className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('contactDirectory.buttons.back')}
           </Button>
 
@@ -128,12 +128,12 @@ export function ContactDetails() {
                 onClick={() => setShowNetworkDialog(true)}
                 className="h-11 sm:h-10"
               >
-                <Network className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <Network className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                 {t('contactDirectory.relationships.view_network')}
               </Button>
 
               <Button variant="outline" onClick={() => setIsEditing(true)} className="h-11 sm:h-10">
-                <Edit className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <Edit className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                 {t('contactDirectory.buttons.edit')}
               </Button>
 
@@ -142,7 +142,7 @@ export function ContactDetails() {
                 onClick={() => setShowArchiveDialog(true)}
                 className="h-11 sm:h-10"
               >
-                <Archive className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <Archive className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                 {t('contactDirectory.buttons.archive')}
               </Button>
             </div>
@@ -171,10 +171,10 @@ export function ContactDetails() {
               <CardHeader>
                 <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
                   <div>
-                    <CardTitle className="text-2xl text-start">{contact.full_name}</CardTitle>
+                    <CardTitle className="text-start text-2xl">{contact.full_name}</CardTitle>
                     {contact.position && (
-                      <div className="flex items-center gap-2 mt-2 text-muted-foreground">
-                        <Briefcase className="h-4 w-4" />
+                      <div className="mt-2 flex items-center gap-2 text-muted-foreground">
+                        <Briefcase className="size-4" />
                         <span className="text-start">{contact.position}</span>
                       </div>
                     )}
@@ -182,7 +182,7 @@ export function ContactDetails() {
 
                   {contact.organization && (
                     <Badge variant="secondary" className="flex items-center gap-2 px-3 py-1.5">
-                      <Building2 className="h-4 w-4" />
+                      <Building2 className="size-4" />
                       {contact.organization.name}
                     </Badge>
                   )}
@@ -193,16 +193,16 @@ export function ContactDetails() {
                 {/* Email Addresses */}
                 {contact.email_addresses && contact.email_addresses.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-medium mb-2 text-start">
+                    <h3 className="mb-2 text-start text-sm font-medium">
                       {t('contactDirectory.labels.email')}
                     </h3>
                     <div className="space-y-2">
                       {contact.email_addresses.map((email, index) => (
                         <div key={index} className="flex items-center gap-2 text-sm">
-                          <Mail className="h-4 w-4 text-muted-foreground" />
+                          <Mail className="size-4 text-muted-foreground" />
                           <a
                             href={`mailto:${email}`}
-                            className="text-primary hover:underline text-start"
+                            className="text-start text-primary hover:underline"
                           >
                             {email}
                           </a>
@@ -215,13 +215,13 @@ export function ContactDetails() {
                 {/* Phone Numbers */}
                 {contact.phone_numbers && contact.phone_numbers.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-medium mb-2 text-start">
+                    <h3 className="mb-2 text-start text-sm font-medium">
                       {t('contactDirectory.labels.phone')}
                     </h3>
                     <div className="space-y-2">
                       {contact.phone_numbers.map((phone, index) => (
                         <div key={index} className="flex items-center gap-2 text-sm">
-                          <Phone className="h-4 w-4 text-muted-foreground" />
+                          <Phone className="size-4 text-muted-foreground" />
                           <a
                             href={`tel:${phone}`}
                             className="text-primary hover:underline"
@@ -238,13 +238,13 @@ export function ContactDetails() {
                 {/* Tags */}
                 {contact.tags && contact.tags.length > 0 && (
                   <div>
-                    <h3 className="text-sm font-medium mb-2 text-start">
+                    <h3 className="mb-2 text-start text-sm font-medium">
                       {t('contactDirectory.labels.tags')}
                     </h3>
                     <div className="flex flex-wrap gap-2">
                       {contact.tags.map((tag) => (
                         <Badge key={tag.id} variant="outline">
-                          <Tag className="h-3 w-3 me-1" />
+                          <Tag className="me-1 size-3" />
                           {tag.name}
                         </Badge>
                       ))}
@@ -255,19 +255,19 @@ export function ContactDetails() {
                 {/* Notes */}
                 {contact.notes && (
                   <div>
-                    <h3 className="text-sm font-medium mb-2 text-start">
+                    <h3 className="mb-2 text-start text-sm font-medium">
                       {t('contactDirectory.labels.notes')}
                     </h3>
-                    <p className="text-sm text-muted-foreground whitespace-pre-wrap text-start">
+                    <p className="whitespace-pre-wrap text-start text-sm text-muted-foreground">
                       {contact.notes}
                     </p>
                   </div>
                 )}
 
                 {/* Metadata */}
-                <div className="pt-4 border-t space-y-2 text-xs text-muted-foreground">
+                <div className="space-y-2 border-t pt-4 text-xs text-muted-foreground">
                   <div className="flex items-center gap-2">
-                    <Calendar className="h-3 w-3" />
+                    <Calendar className="size-3" />
                     <span>
                       {t('contactDirectory.labels.createdAt')}:{' '}
                       {format(new Date(contact.created_at), 'PPP')}
@@ -275,7 +275,7 @@ export function ContactDetails() {
                   </div>
                   {contact.updated_at !== contact.created_at && (
                     <div className="flex items-center gap-2">
-                      <Calendar className="h-3 w-3" />
+                      <Calendar className="size-3" />
                       <span>
                         {t('contactDirectory.labels.updatedAt')}:{' '}
                         {format(new Date(contact.updated_at), 'PPP')}
@@ -303,9 +303,9 @@ export function ContactDetails() {
                     variant="default"
                     size="sm"
                     onClick={() => setShowAddNoteDialog(true)}
-                    className="h-11 sm:h-10 w-full sm:w-auto"
+                    className="h-11 w-full sm:h-10 sm:w-auto"
                   >
-                    <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                    <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('contactDirectory.interactions.add_note')}
                   </Button>
                 </div>
@@ -325,7 +325,7 @@ export function ContactDetails() {
 
         {/* Network Dialog */}
         <Dialog open={showNetworkDialog} onOpenChange={setShowNetworkDialog}>
-          <DialogContent className="max-w-5xl max-h-[90vh]">
+          <DialogContent className="max-h-[90vh] max-w-5xl">
             <DialogHeader>
               <div className="flex items-center justify-between">
                 <DialogTitle>{t('contactDirectory.relationships.title')}</DialogTitle>
@@ -338,7 +338,7 @@ export function ContactDetails() {
                   }}
                   className="h-9"
                 >
-                  <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('contactDirectory.relationships.add_relationship')}
                 </Button>
               </div>
@@ -416,7 +416,7 @@ export function ContactDetails() {
                 disabled={archiveMutation.isPending}
               >
                 {archiveMutation.isPending && (
-                  <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
                 )}
                 {t('contactDirectory.buttons.archive')}
               </Button>

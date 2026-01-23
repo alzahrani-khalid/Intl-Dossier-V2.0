@@ -259,7 +259,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="title_en"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">{t('form.fields.titleEn')} *</FormLabel>
+                    <FormLabel className="block text-start">{t('form.fields.titleEn')} *</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -276,7 +276,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="title_ar"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">{t('form.fields.titleAr')}</FormLabel>
+                    <FormLabel className="block text-start">{t('form.fields.titleAr')}</FormLabel>
                     <FormControl>
                       <Input {...field} dir="rtl" className="h-11" />
                     </FormControl>
@@ -292,7 +292,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="short_title_en"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('form.fields.shortTitleEn')}
                     </FormLabel>
                     <FormControl>
@@ -307,7 +307,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="short_title_ar"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('form.fields.shortTitleAr')}
                     </FormLabel>
                     <FormControl>
@@ -324,7 +324,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
               name="reference_number"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-start block">
+                  <FormLabel className="block text-start">
                     {t('form.fields.referenceNumber')}
                   </FormLabel>
                   <FormControl>
@@ -345,7 +345,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="summary_en"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">{t('form.fields.summaryEn')}</FormLabel>
+                    <FormLabel className="block text-start">{t('form.fields.summaryEn')}</FormLabel>
                     <FormControl>
                       <Textarea {...field} rows={4} />
                     </FormControl>
@@ -358,7 +358,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="summary_ar"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">{t('form.fields.summaryAr')}</FormLabel>
+                    <FormLabel className="block text-start">{t('form.fields.summaryAr')}</FormLabel>
                     <FormControl>
                       <Textarea {...field} dir="rtl" rows={4} />
                     </FormControl>
@@ -382,7 +382,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="type"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">{t('form.fields.type')} *</FormLabel>
+                    <FormLabel className="block text-start">{t('form.fields.type')} *</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-11">
@@ -408,7 +408,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                   name="status"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-start block">{t('form.fields.status')}</FormLabel>
+                      <FormLabel className="block text-start">{t('form.fields.status')}</FormLabel>
                       <Select onValueChange={field.onChange} defaultValue={field.value}>
                         <FormControl>
                           <SelectTrigger className="h-11">
@@ -434,7 +434,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="priority"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">{t('form.fields.priority')}</FormLabel>
+                    <FormLabel className="block text-start">{t('form.fields.priority')}</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-11">
@@ -459,7 +459,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="impact_level"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('form.fields.impactLevel')}
                     </FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
@@ -488,7 +488,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="jurisdiction"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('form.fields.jurisdiction')}
                     </FormLabel>
                     <FormControl>
@@ -507,7 +507,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="issuing_body"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('form.fields.issuingBody')}
                     </FormLabel>
                     <FormControl>
@@ -537,7 +537,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="introduced_date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('form.fields.introducedDate')}
                     </FormLabel>
                     <FormControl>
@@ -552,7 +552,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="effective_date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('form.fields.effectiveDate')}
                     </FormLabel>
                     <FormControl>
@@ -567,7 +567,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="expiration_date"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('form.fields.expirationDate')}
                     </FormLabel>
                     <FormControl>
@@ -593,7 +593,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="comment_period_status"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">{t('commentPeriod.status')}</FormLabel>
+                    <FormLabel className="block text-start">{t('commentPeriod.status')}</FormLabel>
                     <Select onValueChange={field.onChange} defaultValue={field.value}>
                       <FormControl>
                         <SelectTrigger className="h-11">
@@ -617,7 +617,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="comment_period_start"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('commentPeriod.startDate')}
                     </FormLabel>
                     <FormControl>
@@ -632,7 +632,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="comment_period_end"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">{t('commentPeriod.endDate')}</FormLabel>
+                    <FormLabel className="block text-start">{t('commentPeriod.endDate')}</FormLabel>
                     <FormControl>
                       <Input {...field} type="date" className="h-11" />
                     </FormControl>
@@ -647,7 +647,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
               name="comment_submission_url"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel className="text-start block">{t('commentPeriod.submitUrl')}</FormLabel>
+                  <FormLabel className="block text-start">{t('commentPeriod.submitUrl')}</FormLabel>
                   <FormControl>
                     <Input {...field} type="url" placeholder="https://..." className="h-11" />
                   </FormControl>
@@ -670,7 +670,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="source_url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">{t('form.fields.sourceUrl')}</FormLabel>
+                    <FormLabel className="block text-start">{t('form.fields.sourceUrl')}</FormLabel>
                     <FormControl>
                       <Input
                         {...field}
@@ -688,7 +688,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
                 name="official_text_url"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel className="text-start block">
+                    <FormLabel className="block text-start">
                       {t('form.fields.officialTextUrl')}
                     </FormLabel>
                     <FormControl>
@@ -716,7 +716,7 @@ export function LegislationForm({ legislation, onSuccess, onCancel }: Legislatio
             </Button>
           )}
           <Button type="submit" disabled={isSubmitting} className="min-h-11">
-            {isSubmitting && <Loader2 className="h-4 w-4 animate-spin me-2" />}
+            {isSubmitting && <Loader2 className="me-2 size-4 animate-spin" />}
             {t('actions.save')}
           </Button>
         </div>

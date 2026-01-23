@@ -100,21 +100,21 @@ function getChangeTypeBadge(changeType: DocumentChangeType): {
 } {
   switch (changeType) {
     case 'initial':
-      return { variant: 'default', icon: <FileText className="h-3 w-3" /> }
+      return { variant: 'default', icon: <FileText className="size-3" /> }
     case 'update':
-      return { variant: 'secondary', icon: <History className="h-3 w-3" /> }
+      return { variant: 'secondary', icon: <History className="size-3" /> }
     case 'major_revision':
       return {
         variant: 'default',
-        icon: <AlertTriangle className="h-3 w-3" />,
+        icon: <AlertTriangle className="size-3" />,
         className: 'bg-orange-500',
       }
     case 'minor_edit':
-      return { variant: 'outline', icon: <FileText className="h-3 w-3" /> }
+      return { variant: 'outline', icon: <FileText className="size-3" /> }
     case 'revert':
-      return { variant: 'destructive', icon: <RotateCcw className="h-3 w-3" /> }
+      return { variant: 'destructive', icon: <RotateCcw className="size-3" /> }
     default:
-      return { variant: 'outline', icon: <FileText className="h-3 w-3" /> }
+      return { variant: 'outline', icon: <FileText className="size-3" /> }
   }
 }
 
@@ -153,7 +153,7 @@ const VersionItem = memo(function VersionItem({
       )}
     >
       {/* Selection checkbox */}
-      <div className="flex-shrink-0 pt-0.5">
+      <div className="shrink-0 pt-0.5">
         <Checkbox
           checked={isSelected}
           onCheckedChange={(checked) => onSelect(version, checked === true)}
@@ -164,8 +164,8 @@ const VersionItem = memo(function VersionItem({
       </div>
 
       {/* Version info */}
-      <div className="flex-1 min-w-0">
-        <div className="flex flex-wrap items-center gap-2 mb-1">
+      <div className="min-w-0 flex-1">
+        <div className="mb-1 flex flex-wrap items-center gap-2">
           <Badge variant="outline" className="font-mono">
             v{version.version_number}
           </Badge>
@@ -177,43 +177,43 @@ const VersionItem = memo(function VersionItem({
           </Badge>
           {isCurrent && (
             <Badge variant="default" className="bg-green-500 text-xs">
-              <Check className="h-3 w-3 me-1" />
+              <Check className="me-1 size-3" />
               {t('history.current', 'Current')}
             </Badge>
           )}
         </div>
 
-        <p className="text-sm font-medium truncate">{version.file_name}</p>
+        <p className="truncate text-sm font-medium">{version.file_name}</p>
 
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1 mt-1 text-xs text-muted-foreground">
+        <div className="mt-1 flex flex-wrap items-center gap-x-3 gap-y-1 text-xs text-muted-foreground">
           <span className="flex items-center gap-1">
-            <User className="h-3 w-3" />
+            <User className="size-3" />
             {version.created_by_name || t('common.unknown', 'Unknown')}
           </span>
           <span className="flex items-center gap-1">
-            <Calendar className="h-3 w-3" />
+            <Calendar className="size-3" />
             {formatDate(version.created_at, locale)}
           </span>
           <span>{formatFileSize(version.size_bytes)}</span>
         </div>
 
         {version.change_summary && (
-          <p className="mt-2 text-xs text-muted-foreground italic">"{version.change_summary}"</p>
+          <p className="mt-2 text-xs italic text-muted-foreground">"{version.change_summary}"</p>
         )}
       </div>
 
       {/* Actions */}
-      <div className="flex-shrink-0">
+      <div className="shrink-0">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <MoreVertical className="h-4 w-4" />
+            <Button variant="ghost" size="sm" className="size-8 p-0">
+              <MoreVertical className="size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             {onDownload && (
               <DropdownMenuItem onClick={() => onDownload(version)}>
-                <Download className="h-4 w-4 me-2" />
+                <Download className="me-2 size-4" />
                 {t('actions.download', 'Download')}
               </DropdownMenuItem>
             )}
@@ -224,7 +224,7 @@ const VersionItem = memo(function VersionItem({
                   onClick={() => onRevert(version)}
                   className="text-destructive focus:text-destructive"
                 >
-                  <RotateCcw className="h-4 w-4 me-2" />
+                  <RotateCcw className="me-2 size-4" />
                   {t('actions.revertTo', 'Revert to this version')}
                 </DropdownMenuItem>
               </>
@@ -243,8 +243,8 @@ const VersionHistorySkeleton = memo(function VersionHistorySkeleton() {
   return (
     <div className="space-y-3">
       {[1, 2, 3].map((i) => (
-        <div key={i} className="flex items-start gap-3 p-4 border rounded-lg">
-          <Skeleton className="h-4 w-4 rounded" />
+        <div key={i} className="flex items-start gap-3 rounded-lg border p-4">
+          <Skeleton className="size-4 rounded" />
           <div className="flex-1 space-y-2">
             <div className="flex gap-2">
               <Skeleton className="h-5 w-12" />
@@ -345,7 +345,7 @@ export const DocumentVersionHistory = memo(function DocumentVersionHistory({
     return (
       <Card className={className}>
         <CardContent className="py-8 text-center">
-          <AlertTriangle className="h-10 w-10 mx-auto text-destructive mb-4" />
+          <AlertTriangle className="mx-auto mb-4 size-10 text-destructive" />
           <p className="text-destructive">{error}</p>
         </CardContent>
       </Card>
@@ -357,7 +357,7 @@ export const DocumentVersionHistory = memo(function DocumentVersionHistory({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <History className="h-5 w-5" />
+            <History className="size-5" />
             <CardTitle className="text-base">{t('history.title', 'Version History')}</CardTitle>
             {versions.length > 0 && (
               <Badge variant="secondary" className="text-xs">
@@ -369,15 +369,15 @@ export const DocumentVersionHistory = memo(function DocumentVersionHistory({
             variant="ghost"
             size="sm"
             onClick={() => setIsExpanded(!isExpanded)}
-            className="h-8 w-8 p-0"
+            className="size-8 p-0"
           >
-            {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+            {isExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
           </Button>
         </div>
 
         {/* Compare action bar */}
         {isExpanded && selectedVersions.size > 0 && (
-          <div className="flex flex-wrap items-center gap-2 mt-3 pt-3 border-t">
+          <div className="mt-3 flex flex-wrap items-center gap-2 border-t pt-3">
             <span className="text-sm text-muted-foreground">
               {t('history.selectedCount', '{{count}} selected', { count: selectedVersions.size })}
             </span>
@@ -387,7 +387,7 @@ export const DocumentVersionHistory = memo(function DocumentVersionHistory({
             </Button>
             {selectedVersions.size === 2 && (
               <Button size="sm" onClick={handleCompare}>
-                <GitCompare className="h-4 w-4 me-2" />
+                <GitCompare className="me-2 size-4" />
                 {t('actions.compare', 'Compare')}
               </Button>
             )}
@@ -400,8 +400,8 @@ export const DocumentVersionHistory = memo(function DocumentVersionHistory({
           {isLoading ? (
             <VersionHistorySkeleton />
           ) : versions.length === 0 ? (
-            <div className="text-center py-8">
-              <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <div className="py-8 text-center">
+              <FileText className="mx-auto mb-4 size-12 text-muted-foreground" />
               <p className="text-muted-foreground">
                 {t('history.noVersions', 'No version history available')}
               </p>
@@ -470,12 +470,12 @@ export const DocumentVersionHistory = memo(function DocumentVersionHistory({
             >
               {isReverting ? (
                 <>
-                  <span className="animate-spin me-2">⏳</span>
+                  <span className="me-2 animate-spin">⏳</span>
                   {t('actions.reverting', 'Reverting...')}
                 </>
               ) : (
                 <>
-                  <RotateCcw className="h-4 w-4 me-2" />
+                  <RotateCcw className="me-2 size-4" />
                   {t('actions.revert', 'Revert')}
                 </>
               )}

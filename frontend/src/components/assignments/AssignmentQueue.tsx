@@ -108,8 +108,8 @@ export function AssignmentQueue({ unitId, className }: AssignmentQueueProps) {
  <div className={cn('assignment-queue space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
  {/* Filters */}
  <div className={cn('flex flex-wrap gap-4 items-center', { 'flex-row-reverse': isRTL })}>
- <div className="flex-1 min-w-[200px]">
- <label className="text-sm font-medium mb-2 block">
+ <div className="min-w-[200px] flex-1">
+ <label className="mb-2 block text-sm font-medium">
  {t('assignments:queue.filterPriority')}
  </label>
  <Select
@@ -131,8 +131,8 @@ export function AssignmentQueue({ unitId, className }: AssignmentQueueProps) {
  </Select>
  </div>
 
- <div className="flex-1 min-w-[200px]">
- <label className="text-sm font-medium mb-2 block">
+ <div className="min-w-[200px] flex-1">
+ <label className="mb-2 block text-sm font-medium">
  {t('assignments:queue.filterWorkItemType')}
  </label>
  <Select
@@ -152,8 +152,8 @@ export function AssignmentQueue({ unitId, className }: AssignmentQueueProps) {
  </Select>
  </div>
 
- <div className="flex-1 min-w-[150px]">
- <label className="text-sm font-medium mb-2 block">
+ <div className="min-w-[150px] flex-1">
+ <label className="mb-2 block text-sm font-medium">
  {t('assignments:queue.pageSize')}
  </label>
  <Select
@@ -193,8 +193,8 @@ export function AssignmentQueue({ unitId, className }: AssignmentQueueProps) {
 
  {/* Loading State */}
  {isLoading && (
- <div className="flex justify-center items-center py-12">
- <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+ <div className="flex items-center justify-center py-12">
+ <Loader2 className="size-8 animate-spin text-blue-600" />
  <span className="ms-3 text-gray-600 dark:text-gray-400">
  {t('assignments:queue.loading')}
  </span>
@@ -203,7 +203,7 @@ export function AssignmentQueue({ unitId, className }: AssignmentQueueProps) {
 
  {/* Error State */}
  {isError && (
- <div className="p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+ <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
  <p className="text-red-700 dark:text-red-400">
  {t('assignments:queue.error')}: {error?.message}
  </p>
@@ -212,8 +212,8 @@ export function AssignmentQueue({ unitId, className }: AssignmentQueueProps) {
 
  {/* Queue Table */}
  {!isLoading && !isError && data && (
- <div className="border rounded-lg overflow-hidden">
- <div className="px-4 py-2 text-sm text-muted-foreground text-center border-b">
+ <div className="overflow-hidden rounded-lg border">
+ <div className="border-b px-4 py-2 text-center text-sm text-muted-foreground">
  {data.items.length === 0
  ? t('assignments:queue.emptyQueue')
  : t('assignments:queue.queueSummary', { count: data.total_count })}
@@ -232,7 +232,7 @@ export function AssignmentQueue({ unitId, className }: AssignmentQueueProps) {
  <TableBody>
  {data.items.length === 0 ? (
  <TableRow>
- <TableCell colSpan={6} className="text-center text-gray-500 py-8">
+ <TableCell colSpan={6} className="py-8 text-center text-gray-500">
  {t('assignments:queue.noItemsFound')}
  </TableCell>
  </TableRow>
@@ -289,7 +289,7 @@ export function AssignmentQueue({ unitId, className }: AssignmentQueueProps) {
  onClick={() => setPage((p) => Math.max(1, p - 1))}
  disabled={page === 1}
  >
- <ChevronLeft className="w-4 h-4" />
+ <ChevronLeft className="size-4" />
  {t('common:previous')}
  </Button>
  <Button
@@ -299,7 +299,7 @@ export function AssignmentQueue({ unitId, className }: AssignmentQueueProps) {
  disabled={page === totalPages}
  >
  {t('common:next')}
- <ChevronRight className="w-4 h-4" />
+ <ChevronRight className="size-4" />
  </Button>
  </div>
  </div>

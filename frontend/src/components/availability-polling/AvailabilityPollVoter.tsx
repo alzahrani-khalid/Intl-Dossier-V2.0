@@ -139,7 +139,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="size-8 animate-spin rounded-full border-b-2 border-primary" />
       </div>
     )
   }
@@ -176,7 +176,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="space-y-2">
-        <div className="flex items-center justify-between flex-wrap gap-2">
+        <div className="flex flex-wrap items-center justify-between gap-2">
           <h2 className="text-xl font-semibold">
             {isRTL ? poll.meeting_title_ar || poll.meeting_title_en : poll.meeting_title_en}
           </h2>
@@ -193,15 +193,15 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
           </p>
         )}
 
-        <div className="flex items-center gap-4 text-sm text-muted-foreground flex-wrap">
+        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
           <span className="flex items-center gap-1">
-            <Clock className="h-4 w-4" />
+            <Clock className="size-4" />
             {t('form.durationMinutes', { count: poll.meeting_duration_minutes })}
           </span>
 
           {!deadlinePassed && (
             <span className="flex items-center gap-1">
-              <Calendar className="h-4 w-4" />
+              <Calendar className="size-4" />
               {t('voting.deadline', {
                 date: format(parseISO(poll.deadline), 'PPp', { locale: dateLocale }),
               })}
@@ -210,7 +210,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
 
           {(poll.location_en || poll.location_ar) && (
             <span className="flex items-center gap-1">
-              <MapPin className="h-4 w-4" />
+              <MapPin className="size-4" />
               {isRTL ? poll.location_ar || poll.location_en : poll.location_en}
             </span>
           )}
@@ -230,7 +230,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
 
       {/* Quick Actions */}
       {canVote && (
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-wrap items-center gap-2">
           <span className="text-sm text-muted-foreground">{t('voting.selectAll')}:</span>
           <Button
             type="button"
@@ -239,7 +239,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
             className="gap-1"
             onClick={() => markAllAs('available')}
           >
-            <Check className="h-3 w-3 text-green-600" />
+            <Check className="size-3 text-green-600" />
             {t('responses.available')}
           </Button>
           <Button
@@ -249,7 +249,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
             className="gap-1"
             onClick={() => markAllAs('unavailable')}
           >
-            <X className="h-3 w-3 text-red-600" />
+            <X className="size-3 text-red-600" />
             {t('responses.unavailable')}
           </Button>
           <Button
@@ -259,7 +259,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
             className="gap-1"
             onClick={() => markAllAs('maybe')}
           >
-            <HelpCircle className="h-3 w-3 text-yellow-600" />
+            <HelpCircle className="size-3 text-yellow-600" />
             {t('responses.maybe')}
           </Button>
         </div>
@@ -283,9 +283,9 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
               )}
             >
               <CardContent className="p-3 sm:p-4">
-                <div className="flex items-center gap-3 flex-wrap">
+                <div className="flex flex-wrap items-center gap-3">
                   {/* Date & Time */}
-                  <div className="flex-1 min-w-0">
+                  <div className="min-w-0 flex-1">
                     <div className="font-medium">
                       {format(startDate, 'EEEE, MMMM d', { locale: dateLocale })}
                     </div>
@@ -294,8 +294,8 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                       {format(endDate, 'h:mm a', { locale: dateLocale })}
                     </div>
                     {(slot.venue_suggestion_en || slot.venue_suggestion_ar) && (
-                      <div className="text-sm text-muted-foreground flex items-center gap-1 mt-1">
-                        <MapPin className="h-3 w-3" />
+                      <div className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                        <MapPin className="size-3" />
                         {isRTL
                           ? slot.venue_suggestion_ar || slot.venue_suggestion_en
                           : slot.venue_suggestion_en}
@@ -309,7 +309,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-0.5 text-green-600">
-                            <Check className="h-3 w-3" />
+                            <Check className="size-3" />
                             {slot.available_count}
                           </span>
                         </TooltipTrigger>
@@ -323,7 +323,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-0.5 text-yellow-600">
-                            <HelpCircle className="h-3 w-3" />
+                            <HelpCircle className="size-3" />
                             {slot.maybe_count}
                           </span>
                         </TooltipTrigger>
@@ -337,7 +337,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <span className="flex items-center gap-0.5 text-red-600">
-                            <X className="h-3 w-3" />
+                            <X className="size-3" />
                             {slot.unavailable_count}
                           </span>
                         </TooltipTrigger>
@@ -361,7 +361,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                         )}
                         onClick={() => handleVoteChange(slot.id, 'available')}
                       >
-                        <Check className="h-4 w-4" />
+                        <Check className="size-4" />
                       </Button>
                       <Button
                         type="button"
@@ -373,7 +373,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                         )}
                         onClick={() => handleVoteChange(slot.id, 'maybe')}
                       >
-                        <HelpCircle className="h-4 w-4" />
+                        <HelpCircle className="size-4" />
                       </Button>
                       <Button
                         type="button"
@@ -385,7 +385,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
                         )}
                         onClick={() => handleVoteChange(slot.id, 'unavailable')}
                       >
-                        <X className="h-4 w-4" />
+                        <X className="size-4" />
                       </Button>
                     </div>
                   )}
@@ -393,7 +393,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
 
                 {/* Notes (expandable) */}
                 {canVote && vote?.response && (
-                  <div className="mt-3 pt-3 border-t">
+                  <div className="mt-3 border-t pt-3">
                     <Textarea
                       value={vote?.notes || ''}
                       onChange={(e) => handleNoteChange(slot.id, e.target.value)}
@@ -411,7 +411,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
 
       {/* Submit */}
       {canVote && (
-        <div className="flex items-center justify-between flex-wrap gap-4 pt-4 border-t">
+        <div className="flex flex-wrap items-center justify-between gap-4 border-t pt-4">
           <div className="text-sm text-muted-foreground">
             <span className="text-green-600">{voteCounts.available}</span>{' '}
             {t('responses.available')} / <span className="text-yellow-600">{voteCounts.maybe}</span>{' '}
@@ -426,7 +426,7 @@ export function AvailabilityPollVoter({ pollId, onVoteSuccess }: AvailabilityPol
             }
             className="gap-2"
           >
-            <Send className="h-4 w-4" />
+            <Send className="size-4" />
             {pollData.my_responses && pollData.my_responses.length > 0
               ? t('voting.updateVotes')
               : t('voting.submitVotes')}

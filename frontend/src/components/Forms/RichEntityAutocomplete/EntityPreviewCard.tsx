@@ -248,7 +248,7 @@ export const EntityPreviewCard = memo(
         >
           {/* Left Section: Icon/Avatar */}
           {shouldShowAvatar && (
-            <div className="flex-shrink-0 me-3">
+            <div className="me-3 shrink-0">
               {entity.photo_url ? (
                 <Avatar className={cn(compact ? 'h-10 w-10' : 'h-12 w-12 sm:h-14 sm:w-14')}>
                   <AvatarImage src={entity.photo_url} alt={displayName} />
@@ -276,10 +276,10 @@ export const EntityPreviewCard = memo(
           )}
 
           {/* Middle Section: Content */}
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             {/* Header: Name + Type Badge */}
-            <div className="flex items-start justify-between gap-2 mb-1">
-              <div className="flex-1 min-w-0">
+            <div className="mb-1 flex items-start justify-between gap-2">
+              <div className="min-w-0 flex-1">
                 <h4
                   className={cn(
                     'font-semibold text-start truncate',
@@ -290,7 +290,7 @@ export const EntityPreviewCard = memo(
                   {displayName}
                 </h4>
                 {subtitle && (
-                  <p className="text-xs sm:text-sm text-muted-foreground truncate text-start">
+                  <p className="truncate text-start text-xs text-muted-foreground sm:text-sm">
                     {subtitle}
                   </p>
                 )}
@@ -315,7 +315,7 @@ export const EntityPreviewCard = memo(
                     <span className="font-medium">
                       {isRTL ? detail.label_ar : detail.label_en}:
                     </span>
-                    <span className="truncate max-w-[120px]">
+                    <span className="max-w-[120px] truncate">
                       {isRTL ? detail.value_ar : detail.value_en}
                     </span>
                   </div>
@@ -325,14 +325,14 @@ export const EntityPreviewCard = memo(
 
             {/* Recent Activity */}
             {config.showRecentActivity && entity.recent_activity && !compact && (
-              <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
-                <Activity className="h-3 w-3 flex-shrink-0" />
+              <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
+                <Activity className="size-3 shrink-0" />
                 <span className="truncate">
                   {isRTL
                     ? entity.recent_activity.description_ar
                     : entity.recent_activity.description_en}
                 </span>
-                <span className="flex-shrink-0 text-muted-foreground/60">
+                <span className="shrink-0 text-muted-foreground/60">
                   · {getRelativeTime(entity.recent_activity.date, isRTL)}
                 </span>
               </div>
@@ -340,14 +340,14 @@ export const EntityPreviewCard = memo(
 
             {/* Tags */}
             {entity.tags && entity.tags.length > 0 && !compact && config.maxTags > 0 && (
-              <div className="flex flex-wrap gap-1 mt-2">
+              <div className="mt-2 flex flex-wrap gap-1">
                 {entity.tags.slice(0, config.maxTags).map((tag) => (
-                  <Badge key={tag} variant="secondary" className="text-xs px-1.5 py-0">
+                  <Badge key={tag} variant="secondary" className="px-1.5 py-0 text-xs">
                     {tag}
                   </Badge>
                 ))}
                 {entity.tags.length > config.maxTags && (
-                  <Badge variant="secondary" className="text-xs px-1.5 py-0">
+                  <Badge variant="secondary" className="px-1.5 py-0 text-xs">
                     +{entity.tags.length - config.maxTags}
                   </Badge>
                 )}
@@ -356,7 +356,7 @@ export const EntityPreviewCard = memo(
           </div>
 
           {/* Right Section: Status & Score */}
-          <div className="flex flex-col items-end justify-between ms-2 flex-shrink-0">
+          <div className="ms-2 flex shrink-0 flex-col items-end justify-between">
             {/* Status Badge */}
             {config.showStatus && (
               <Badge
@@ -367,7 +367,7 @@ export const EntityPreviewCard = memo(
                   statusConfig.color,
                 )}
               >
-                <StatusIcon className="h-3 w-3" />
+                <StatusIcon className="size-3" />
                 <span className={compact ? 'hidden sm:inline' : ''}>
                   {getStatusLabel(entity.status, isRTL)}
                 </span>
@@ -376,8 +376,8 @@ export const EntityPreviewCard = memo(
 
             {/* Last Updated */}
             {config.showLastUpdated && !compact && (
-              <div className="flex items-center gap-1 text-xs text-muted-foreground mt-auto">
-                <Clock className="h-3 w-3" />
+              <div className="mt-auto flex items-center gap-1 text-xs text-muted-foreground">
+                <Clock className="size-3" />
                 <span>{getRelativeTime(entity.last_updated, isRTL)}</span>
               </div>
             )}
@@ -401,7 +401,7 @@ export const EntityPreviewCard = memo(
           {/* Selection Indicator */}
           {isSelected && (
             <motion.div
-              className="absolute inset-y-0 start-0 w-1 bg-primary rounded-s-lg"
+              className="absolute inset-y-0 start-0 w-1 rounded-s-lg bg-primary"
               initial={{ scaleY: 0 }}
               animate={{ scaleY: 1 }}
               transition={{ duration: 0.2 }}

@@ -71,21 +71,21 @@ function ProviderIcon({ provider }: { provider: ExternalCalendarProvider }) {
   switch (provider) {
     case 'google_calendar':
       return (
-        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+        <svg className="size-5" viewBox="0 0 24 24" fill="currentColor">
           <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z" />
         </svg>
       )
     case 'outlook':
     case 'exchange':
       return (
-        <svg className="h-5 w-5" viewBox="0 0 24 24" fill="currentColor">
+        <svg className="size-5" viewBox="0 0 24 24" fill="currentColor">
           <path d="M2 5.5V18.5C2 19.33 2.67 20 3.5 20H20.5C21.33 20 22 19.33 22 18.5V5.5C22 4.67 21.33 4 20.5 4H3.5C2.67 4 2 4.67 2 5.5ZM12 13L4 8V6L12 11L20 6V8L12 13Z" />
         </svg>
       )
     case 'ical_feed':
-      return <Calendar className="h-5 w-5" />
+      return <Calendar className="size-5" />
     default:
-      return <Calendar className="h-5 w-5" />
+      return <Calendar className="size-5" />
   }
 }
 
@@ -152,7 +152,7 @@ function ConnectionCard({
           <div className="flex items-center justify-between gap-4">
             <div className="flex items-center gap-3">
               <div
-                className="flex h-10 w-10 items-center justify-center rounded-lg"
+                className="flex size-10 items-center justify-center rounded-lg"
                 style={{
                   backgroundColor: providerConfig.color + '20',
                   color: providerConfig.color,
@@ -170,11 +170,11 @@ function ConnectionCard({
             <div className="flex items-center gap-2">
               <SyncStatusBadge status={connection.sync_status} />
               <CollapsibleTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
+                <Button variant="ghost" size="icon" className="size-8">
                   {isExpanded ? (
-                    <ChevronUp className="h-4 w-4" />
+                    <ChevronUp className="size-4" />
                   ) : (
-                    <ChevronDown className="h-4 w-4" />
+                    <ChevronDown className="size-4" />
                   )}
                 </Button>
               </CollapsibleTrigger>
@@ -183,9 +183,9 @@ function ConnectionCard({
         </CardHeader>
 
         <CollapsibleContent>
-          <CardContent className="space-y-4 pt-4 border-t">
+          <CardContent className="space-y-4 border-t pt-4">
             {/* Sync Controls */}
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Button
                 variant="outline"
                 size="sm"
@@ -193,7 +193,7 @@ function ConnectionCard({
                 disabled={isSyncing || connection.sync_status === 'disconnected'}
                 className="flex-1"
               >
-                <RefreshCw className={`h-4 w-4 me-2 ${isSyncing ? 'animate-spin' : ''}`} />
+                <RefreshCw className={`me-2 size-4 ${isSyncing ? 'animate-spin' : ''}`} />
                 {isSyncing ? t('syncing') : t('syncNow')}
               </Button>
               <Dialog open={showDisconnectDialog} onOpenChange={setShowDisconnectDialog}>
@@ -203,7 +203,7 @@ function ConnectionCard({
                     size="sm"
                     className="flex-1 text-destructive hover:text-destructive"
                   >
-                    <Unlink className="h-4 w-4 me-2" />
+                    <Unlink className="me-2 size-4" />
                     {t('disconnect')}
                   </Button>
                 </DialogTrigger>
@@ -214,7 +214,7 @@ function ConnectionCard({
                       {t('disconnectConfirm.description', { provider: providerConfig.name })}
                     </DialogDescription>
                   </DialogHeader>
-                  <DialogFooter className="flex-col sm:flex-row gap-2">
+                  <DialogFooter className="flex-col gap-2 sm:flex-row">
                     <Button variant="outline" onClick={() => setShowDisconnectDialog(false)}>
                       {t('cancel')}
                     </Button>
@@ -280,7 +280,7 @@ function ConnectionCard({
                 </Select>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
                   <Label className="text-sm font-medium">{t('settings.syncPastDays')}</Label>
                   <Input
@@ -314,11 +314,11 @@ function ConnectionCard({
                   {calendars.map((calendar) => (
                     <div
                       key={calendar.id}
-                      className="flex items-center justify-between p-3 rounded-lg border bg-muted/30"
+                      className="flex items-center justify-between rounded-lg border bg-muted/30 p-3"
                     >
                       <div className="flex items-center gap-3">
                         <div
-                          className="h-3 w-3 rounded-full"
+                          className="size-3 rounded-full"
                           style={{ backgroundColor: calendar.color || '#3B82F6' }}
                         />
                         <div>
@@ -345,7 +345,7 @@ function ConnectionCard({
             {/* Last Sync Info */}
             {connection.last_sync_at && (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Clock className="h-4 w-4" />
+                <Clock className="size-4" />
                 <span>
                   {t('lastSync')}:{' '}
                   {new Date(connection.last_sync_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
@@ -355,7 +355,7 @@ function ConnectionCard({
 
             {connection.last_sync_error && (
               <div className="flex items-center gap-2 text-sm text-destructive">
-                <AlertTriangle className="h-4 w-4" />
+                <AlertTriangle className="size-4" />
                 <span>{connection.last_sync_error}</span>
               </div>
             )}
@@ -402,12 +402,12 @@ function ConnectProviderDialog({
               <Button
                 key={provider}
                 variant="outline"
-                className="h-auto p-4 justify-start gap-3"
+                className="h-auto justify-start gap-3 p-4"
                 onClick={() => onConnect(provider)}
                 disabled={isConnecting}
               >
                 <div
-                  className="flex h-10 w-10 items-center justify-center rounded-lg"
+                  className="flex size-10 items-center justify-center rounded-lg"
                   style={{ backgroundColor: config.color + '20', color: config.color }}
                 >
                   <ProviderIcon provider={provider} />
@@ -494,7 +494,7 @@ function ICalFeedDialog({ open, onOpenChange, onAdd, isAdding }: ICalFeedDialogP
             </div>
           </div>
         </div>
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button variant="outline" onClick={() => onOpenChange(false)}>
             {t('cancel')}
           </Button>
@@ -533,15 +533,15 @@ function ICalSubscriptionCard({
     <Card className="w-full" dir={isRTL ? 'rtl' : 'ltr'}>
       <CardContent className="p-4">
         <div className="flex items-center justify-between gap-4">
-          <div className="flex items-center gap-3 flex-1 min-w-0">
+          <div className="flex min-w-0 flex-1 items-center gap-3">
             <div
-              className="h-10 w-10 rounded-lg flex items-center justify-center flex-shrink-0"
+              className="flex size-10 shrink-0 items-center justify-center rounded-lg"
               style={{ backgroundColor: subscription.color + '20', color: subscription.color }}
             >
-              <Calendar className="h-5 w-5" />
+              <Calendar className="size-5" />
             </div>
             <div className="min-w-0 flex-1">
-              <p className="font-medium truncate">{subscription.feed_name}</p>
+              <p className="truncate font-medium">{subscription.feed_name}</p>
               <p className="text-sm text-muted-foreground">
                 {subscription.event_count} {t('ical.events')}
               </p>
@@ -557,23 +557,23 @@ function ICalSubscriptionCard({
               size="icon"
               onClick={onRefresh}
               disabled={isRefreshing}
-              className="h-8 w-8"
+              className="size-8"
             >
-              <RefreshCw className={`h-4 w-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw className={`size-4 ${isRefreshing ? 'animate-spin' : ''}`} />
             </Button>
             <Button
               variant="ghost"
               size="icon"
               onClick={onRemove}
-              className="h-8 w-8 text-destructive hover:text-destructive"
+              className="size-8 text-destructive hover:text-destructive"
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="size-4" />
             </Button>
           </div>
         </div>
         {subscription.last_refresh_error && (
           <div className="mt-2 flex items-center gap-2 text-sm text-destructive">
-            <AlertTriangle className="h-4 w-4" />
+            <AlertTriangle className="size-4" />
             <span>{subscription.last_refresh_error}</span>
           </div>
         )}
@@ -597,15 +597,15 @@ function ConflictCard({ conflict, onResolve, isResolving }: ConflictCardProps) {
   const isRTL = i18n.language === 'ar'
 
   return (
-    <Card className="w-full border-warning" dir={isRTL ? 'rtl' : 'ltr'}>
-      <CardContent className="p-4 space-y-4">
-        <div className="flex items-center gap-2 text-warning">
-          <AlertTriangle className="h-5 w-5" />
+    <Card className="border-warning w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+      <CardContent className="space-y-4 p-4">
+        <div className="text-warning flex items-center gap-2">
+          <AlertTriangle className="size-5" />
           <span className="font-medium">{t('conflicts.detected')}</span>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-          <div className="space-y-2 p-3 rounded-lg bg-muted/50">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <div className="space-y-2 rounded-lg bg-muted/50 p-3">
             <p className="text-sm font-medium">{t('conflicts.internal')}</p>
             <p className="text-sm">{conflict.internal_snapshot.title}</p>
             <p className="text-xs text-muted-foreground">
@@ -614,7 +614,7 @@ function ConflictCard({ conflict, onResolve, isResolving }: ConflictCardProps) {
               )}
             </p>
           </div>
-          <div className="space-y-2 p-3 rounded-lg bg-muted/50">
+          <div className="space-y-2 rounded-lg bg-muted/50 p-3">
             <p className="text-sm font-medium">{t('conflicts.external')}</p>
             <p className="text-sm">{conflict.external_snapshot.title}</p>
             <p className="text-xs text-muted-foreground">
@@ -698,17 +698,17 @@ export function CalendarSyncSettings() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
+      className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
+          <h1 className="text-2xl font-bold sm:text-3xl">{t('title')}</h1>
           <p className="text-muted-foreground">{t('description')}</p>
         </div>
         <Button onClick={() => setShowConnectDialog(true)} className="h-11 min-w-11">
-          <Plus className="h-4 w-4 me-2" />
+          <Plus className="me-2 size-4" />
           {t('addConnection')}
         </Button>
       </div>
@@ -716,10 +716,10 @@ export function CalendarSyncSettings() {
       {/* Conflicts Alert */}
       {pendingConflicts.length > 0 && (
         <Card className="border-warning bg-warning/10">
-          <CardContent className="p-4 flex items-center gap-3">
-            <AlertTriangle className="h-5 w-5 text-warning flex-shrink-0" />
+          <CardContent className="flex items-center gap-3 p-4">
+            <AlertTriangle className="text-warning size-5 shrink-0" />
             <div className="flex-1">
-              <p className="font-medium text-warning">
+              <p className="text-warning font-medium">
                 {t('conflicts.pending', { count: pendingConflicts.length })}
               </p>
               <p className="text-sm text-muted-foreground">{t('conflicts.resolvePrompt')}</p>
@@ -753,10 +753,10 @@ export function CalendarSyncSettings() {
         ) : (
           <Card>
             <CardContent className="p-6 text-center">
-              <CloudOff className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <CloudOff className="mx-auto mb-4 size-12 text-muted-foreground" />
               <p className="text-muted-foreground">{t('noConnections')}</p>
               <Button variant="outline" className="mt-4" onClick={() => setShowConnectDialog(true)}>
-                <Link2 className="h-4 w-4 me-2" />
+                <Link2 className="me-2 size-4" />
                 {t('connectFirst')}
               </Button>
             </CardContent>
@@ -769,7 +769,7 @@ export function CalendarSyncSettings() {
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">{t('sections.icalFeeds')}</h2>
           <Button variant="outline" size="sm" onClick={() => setShowICalDialog(true)}>
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('ical.add')}
           </Button>
         </div>
@@ -789,10 +789,10 @@ export function CalendarSyncSettings() {
         ) : (
           <Card>
             <CardContent className="p-6 text-center">
-              <Calendar className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+              <Calendar className="mx-auto mb-4 size-12 text-muted-foreground" />
               <p className="text-muted-foreground">{t('ical.noFeeds')}</p>
               <Button variant="outline" className="mt-4" onClick={() => setShowICalDialog(true)}>
-                <Plus className="h-4 w-4 me-2" />
+                <Plus className="me-2 size-4" />
                 {t('ical.addFirst')}
               </Button>
             </CardContent>

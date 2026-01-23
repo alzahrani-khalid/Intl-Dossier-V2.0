@@ -68,11 +68,11 @@ function SortableColumn({ column, isRTL, onRemove, onUpdate }: SortableColumnPro
         isDragging && 'opacity-50 shadow-lg z-50',
       )}
     >
-      <div {...attributes} {...listeners} className="cursor-grab active:cursor-grabbing touch-none">
-        <GripVertical className="h-4 w-4 text-muted-foreground" />
+      <div {...attributes} {...listeners} className="cursor-grab touch-none active:cursor-grabbing">
+        <GripVertical className="size-4 text-muted-foreground" />
       </div>
 
-      <div className="flex-1 min-w-0 space-y-2">
+      <div className="min-w-0 flex-1 space-y-2">
         <div className="flex items-center gap-2">
           <Input
             value={isRTL ? column.labelAr || column.label || '' : column.label || ''}
@@ -93,23 +93,23 @@ function SortableColumn({ column, isRTL, onRemove, onUpdate }: SortableColumnPro
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8"
+          className="size-8"
           onClick={() => onUpdate({ visible: !column.visible })}
         >
           {column.visible ? (
-            <Eye className="h-4 w-4" />
+            <Eye className="size-4" />
           ) : (
-            <EyeOff className="h-4 w-4 text-muted-foreground" />
+            <EyeOff className="size-4 text-muted-foreground" />
           )}
         </Button>
 
         <Button
           variant="ghost"
           size="icon"
-          className="h-8 w-8 text-destructive hover:text-destructive"
+          className="size-8 text-destructive hover:text-destructive"
           onClick={onRemove}
         >
-          <X className="h-4 w-4" />
+          <X className="size-4" />
         </Button>
       </div>
     </div>
@@ -151,12 +151,12 @@ export function ColumnBuilder({
   const hiddenCount = columns.length - visibleCount
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'} className="h-full flex flex-col">
+    <Card dir={isRTL ? 'rtl' : 'ltr'} className="flex h-full flex-col">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div>
-            <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-              <Columns className="h-5 w-5" />
+            <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+              <Columns className="size-5" />
               {t('columns.title')}
             </CardTitle>
             <CardDescription className="text-xs sm:text-sm">
@@ -176,7 +176,7 @@ export function ColumnBuilder({
         </div>
       </CardHeader>
 
-      <CardContent className="flex-1 min-h-0">
+      <CardContent className="min-h-0 flex-1">
         <div
           ref={setNodeRef}
           className={cn(
@@ -211,7 +211,7 @@ export function ColumnBuilder({
               </SortableContext>
             </DndContext>
           ) : (
-            <p className="text-sm text-muted-foreground text-center px-4">{t('columns.empty')}</p>
+            <p className="px-4 text-center text-sm text-muted-foreground">{t('columns.empty')}</p>
           )}
         </div>
       </CardContent>

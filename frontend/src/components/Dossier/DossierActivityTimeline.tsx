@@ -158,8 +158,8 @@ export function DossierActivityTimeline({
       {isLoading && (
         <div className="space-y-3">
           {[...Array(5)].map((_, i) => (
-            <div key={i} className="flex gap-3 p-3 border rounded-lg">
-              <Skeleton className="size-10 rounded-full shrink-0" />
+            <div key={i} className="flex gap-3 rounded-lg border p-3">
+              <Skeleton className="size-10 shrink-0 rounded-full" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-4 w-3/4" />
                 <Skeleton className="h-3 w-1/2" />
@@ -172,7 +172,7 @@ export function DossierActivityTimeline({
       {/* Error State */}
       {isError && (
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <p className="text-destructive mb-4">
+          <p className="mb-4 text-destructive">
             {error?.message || t('timeline.error', 'Failed to load activities')}
           </p>
           <Button variant="outline" onClick={() => refetch()}>
@@ -197,7 +197,7 @@ export function DossierActivityTimeline({
 
       {/* Timeline Content */}
       {!isLoading && activities.length > 0 && (
-        <div className="overflow-y-auto space-y-2" style={{ maxHeight }}>
+        <div className="space-y-2 overflow-y-auto" style={{ maxHeight }}>
           {activities.map((activity, index) => (
             <ActivityTimelineItem
               key={activity.id}
@@ -222,7 +222,7 @@ export function DossierActivityTimeline({
 
           {/* End of List Indicator */}
           {!hasNextPage && activities.length > 0 && (
-            <p className="text-center text-xs text-muted-foreground py-4">
+            <p className="py-4 text-center text-xs text-muted-foreground">
               {t('timeline.endOfList', 'End of activities')}
             </p>
           )}

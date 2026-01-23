@@ -79,21 +79,21 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
 
   return (
     <Card className="border-0 shadow-none">
-      <CardContent className="p-0 space-y-4 sm:space-y-6">
+      <CardContent className="space-y-4 p-0 sm:space-y-6">
         {/* Profile Header */}
-        <div className="flex flex-col sm:flex-row items-center sm:items-start gap-4">
-          <Avatar className="h-20 w-20 sm:h-24 sm:w-24">
+        <div className="flex flex-col items-center gap-4 sm:flex-row sm:items-start">
+          <Avatar className="size-20 sm:size-24">
             <AvatarImage src={extension.photo_url} alt={name} />
             <AvatarFallback className="text-2xl">{name?.charAt(0) || 'EO'}</AvatarFallback>
           </Avatar>
 
-          <div className="flex-1 text-center sm:text-start space-y-2">
+          <div className="flex-1 space-y-2 text-center sm:text-start">
             <div className="space-y-1">
-              <h2 className="text-xl sm:text-2xl font-bold">{name}</h2>
-              {title && <p className="text-base sm:text-lg text-muted-foreground">{title}</p>}
+              <h2 className="text-xl font-bold sm:text-2xl">{name}</h2>
+              {title && <p className="text-base text-muted-foreground sm:text-lg">{title}</p>}
             </div>
 
-            <div className="flex flex-wrap justify-center sm:justify-start gap-2">
+            <div className="flex flex-wrap justify-center gap-2 sm:justify-start">
               {extension.is_current_term && (
                 <Badge variant="default" className="bg-green-500">
                   {t('status.currentTerm')}
@@ -109,7 +109,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
 
         {/* Office Information */}
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
             {t('sections.electedOfficial.officeInfo')}
           </h3>
 
@@ -117,7 +117,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
             {officeName && (
               <div className="flex items-start gap-3">
                 <Building2
-                  className={`h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5 ${isRTL ? 'rotate-180' : ''}`}
+                  className={`mt-0.5 size-5 shrink-0 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
                 />
                 <div>
                   <p className="font-medium">{officeName}</p>
@@ -130,14 +130,14 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
 
             {district && (
               <div className="flex items-center gap-3">
-                <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                <MapPin className="size-5 shrink-0 text-muted-foreground" />
                 <span>{district}</span>
               </div>
             )}
 
             {party && (
               <div className="flex items-center gap-3">
-                <Flag className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                <Flag className="size-5 shrink-0 text-muted-foreground" />
                 <span>{party}</span>
               </div>
             )}
@@ -146,14 +146,14 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
 
         {/* Contact Information */}
         <div className="space-y-3">
-          <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+          <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
             {t('sections.electedOfficial.contactInfo')}
           </h3>
 
           <div className="grid grid-cols-1 gap-3">
             {extension.email_official && (
               <div className="flex items-center gap-3">
-                <Mail className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                <Mail className="size-5 shrink-0 text-muted-foreground" />
                 <a
                   href={`mailto:${extension.email_official}`}
                   className="text-primary hover:underline"
@@ -165,7 +165,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
 
             {extension.phone_office && (
               <div className="flex items-center gap-3">
-                <Phone className="h-5 w-5 text-muted-foreground flex-shrink-0" />
+                <Phone className="size-5 shrink-0 text-muted-foreground" />
                 <a href={`tel:${extension.phone_office}`} className="text-primary hover:underline">
                   {extension.phone_office}
                 </a>
@@ -174,7 +174,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
 
             {officeAddress && (
               <div className="flex items-start gap-3">
-                <MapPin className="h-5 w-5 text-muted-foreground flex-shrink-0 mt-0.5" />
+                <MapPin className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
                 <span className="text-sm">{officeAddress}</span>
               </div>
             )}
@@ -184,7 +184,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
         {/* Websites */}
         {(extension.website_official || extension.website_campaign) && (
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               {t('sections.electedOfficial.websites')}
             </h3>
 
@@ -197,9 +197,9 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2"
                   >
-                    <Globe className="h-4 w-4" />
+                    <Globe className="size-4" />
                     {t('sections.electedOfficial.officialWebsite')}
-                    <ExternalLink className="h-3 w-3" />
+                    <ExternalLink className="size-3" />
                   </a>
                 </Button>
               )}
@@ -211,9 +211,9 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2"
                   >
-                    <Globe className="h-4 w-4" />
+                    <Globe className="size-4" />
                     {t('sections.electedOfficial.campaignWebsite')}
-                    <ExternalLink className="h-3 w-3" />
+                    <ExternalLink className="size-3" />
                   </a>
                 </Button>
               )}
@@ -224,7 +224,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
         {/* Social Media */}
         {extension.social_media && Object.keys(extension.social_media).length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               {t('sections.electedOfficial.socialMedia')}
             </h3>
 
@@ -237,7 +237,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2"
                   >
-                    <Twitter className="h-4 w-4" />
+                    <Twitter className="size-4" />
                     {extension.social_media.twitter}
                   </a>
                 </Button>
@@ -250,7 +250,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2"
                   >
-                    <Linkedin className="h-4 w-4" />
+                    <Linkedin className="size-4" />
                     LinkedIn
                   </a>
                 </Button>
@@ -262,7 +262,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
         {/* Biography */}
         {biography && (
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               {t('sections.electedOfficial.biography')}
             </h3>
             <p className="text-sm leading-relaxed">{biography}</p>
@@ -272,7 +272,7 @@ export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps)
         {/* Policy Priorities */}
         {extension.policy_priorities && extension.policy_priorities.length > 0 && (
           <div className="space-y-3">
-            <h3 className="text-sm font-semibold text-muted-foreground uppercase tracking-wide">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">
               {t('sections.electedOfficial.policyPriorities')}
             </h3>
             <div className="flex flex-wrap gap-2">

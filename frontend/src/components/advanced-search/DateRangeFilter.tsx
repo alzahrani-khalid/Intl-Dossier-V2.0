@@ -86,7 +86,7 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
             className={cn('w-full justify-between min-h-11 px-3', value && 'text-foreground')}
           >
             <span className="flex items-center gap-2">
-              <Calendar className="h-4 w-4 text-muted-foreground" />
+              <Calendar className="size-4 text-muted-foreground" />
               <span className="truncate">{getDisplayText()}</span>
             </span>
             <div className="flex items-center gap-1">
@@ -97,10 +97,10 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
                     e.stopPropagation()
                     handleClear()
                   }}
-                  className="p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+                  className="rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700"
                   aria-label={t('dateRange.clear')}
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </button>
               )}
               <ChevronDown className={cn('h-4 w-4 transition-transform', isOpen && 'rotate-180')} />
@@ -111,8 +111,8 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
         <PopoverContent className="w-auto p-0" align={isRTL ? 'end' : 'start'} side="bottom">
           <div className="flex flex-col sm:flex-row">
             {/* Presets Column */}
-            <div className="border-b sm:border-b-0 sm:border-e p-2 sm:p-3">
-              <div className="flex gap-2 mb-2">
+            <div className="border-b p-2 sm:border-b-0 sm:border-e sm:p-3">
+              <div className="mb-2 flex gap-2">
                 <Button
                   variant={mode === 'preset' ? 'default' : 'ghost'}
                   size="sm"
@@ -132,7 +132,7 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
               </div>
 
               {mode === 'preset' && (
-                <div className="flex flex-col gap-1 max-h-64 overflow-y-auto">
+                <div className="flex max-h-64 flex-col gap-1 overflow-y-auto">
                   {presets.map((preset) => {
                     const label = isRTL
                       ? DATE_PRESET_LABELS[preset].label_ar
@@ -159,9 +159,9 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
               )}
 
               {mode === 'custom' && (
-                <div className="flex flex-col gap-3 mt-3">
+                <div className="mt-3 flex flex-col gap-3">
                   <div>
-                    <label className="text-xs font-medium text-gray-500 mb-1 block">
+                    <label className="mb-1 block text-xs font-medium text-gray-500">
                       {t('dateRange.from')}
                     </label>
                     <CalendarComponent
@@ -172,7 +172,7 @@ export function DateRangeFilter({ value, onChange, className }: DateRangeFilterP
                     />
                   </div>
                   <div>
-                    <label className="text-xs font-medium text-gray-500 mb-1 block">
+                    <label className="mb-1 block text-xs font-medium text-gray-500">
                       {t('dateRange.to')}
                     </label>
                     <CalendarComponent

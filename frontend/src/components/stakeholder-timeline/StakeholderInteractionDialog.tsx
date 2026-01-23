@@ -191,7 +191,7 @@ export function StakeholderInteractionDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-2xl max-h-[90vh] overflow-y-auto"
+        className="max-h-[90vh] overflow-y-auto sm:max-w-2xl"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
@@ -204,8 +204,8 @@ export function StakeholderInteractionDialog({
         <div className="space-y-6 py-4">
           {/* Interaction Type Selection */}
           <div className="space-y-3">
-            <Label className="text-start block font-medium">{t('dialog.interaction_type')}</Label>
-            <div className="grid grid-cols-3 sm:grid-cols-4 gap-2">
+            <Label className="block text-start font-medium">{t('dialog.interaction_type')}</Label>
+            <div className="grid grid-cols-3 gap-2 sm:grid-cols-4">
               {interactionTypes.map((type) => {
                 const Icon = interactionTypeIcons[type] || Activity
                 return (
@@ -213,10 +213,10 @@ export function StakeholderInteractionDialog({
                     key={type}
                     type="button"
                     variant={interactionType === type ? 'default' : 'outline'}
-                    className="flex flex-col items-center gap-1 h-auto py-3 min-h-16"
+                    className="flex h-auto min-h-16 flex-col items-center gap-1 py-3"
                     onClick={() => setInteractionType(type)}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon className="size-5" />
                     <span className="text-xs">{t(`types.${type}`)}</span>
                   </Button>
                 )
@@ -227,11 +227,11 @@ export function StakeholderInteractionDialog({
           <Separator />
 
           {/* Title */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="title-en" className="text-start block">
+              <Label htmlFor="title-en" className="block text-start">
                 {t('dialog.title_en')}
-                <span className="text-destructive ms-1">*</span>
+                <span className="ms-1 text-destructive">*</span>
               </Label>
               <Input
                 id="title-en"
@@ -243,7 +243,7 @@ export function StakeholderInteractionDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="title-ar" className="text-start block">
+              <Label htmlFor="title-ar" className="block text-start">
                 {t('dialog.title_ar')}
               </Label>
               <Input
@@ -258,9 +258,9 @@ export function StakeholderInteractionDialog({
           </div>
 
           {/* Summary */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="summary-en" className="text-start block">
+              <Label htmlFor="summary-en" className="block text-start">
                 {t('dialog.summary_en')}
               </Label>
               <Textarea
@@ -273,7 +273,7 @@ export function StakeholderInteractionDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="summary-ar" className="text-start block">
+              <Label htmlFor="summary-ar" className="block text-start">
                 {t('dialog.summary_ar')}
               </Label>
               <Textarea
@@ -290,9 +290,9 @@ export function StakeholderInteractionDialog({
           <Separator />
 
           {/* Date, Time, Duration */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="space-y-2">
-              <Label htmlFor="date" className="text-start block">
+              <Label htmlFor="date" className="block text-start">
                 {t('dialog.date')}
               </Label>
               <Input
@@ -304,7 +304,7 @@ export function StakeholderInteractionDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="time" className="text-start block">
+              <Label htmlFor="time" className="block text-start">
                 {t('dialog.time')}
               </Label>
               <Input
@@ -316,7 +316,7 @@ export function StakeholderInteractionDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="duration" className="text-start block">
+              <Label htmlFor="duration" className="block text-start">
                 {t('dialog.duration')}
               </Label>
               <Input
@@ -342,7 +342,7 @@ export function StakeholderInteractionDialog({
 
             {isVirtual ? (
               <div className="space-y-2">
-                <Label htmlFor="virtual-link" className="text-start block">
+                <Label htmlFor="virtual-link" className="block text-start">
                   {t('dialog.virtual_link')}
                 </Label>
                 <Input
@@ -355,9 +355,9 @@ export function StakeholderInteractionDialog({
                 />
               </div>
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                 <div className="space-y-2">
-                  <Label htmlFor="location-en" className="text-start block">
+                  <Label htmlFor="location-en" className="block text-start">
                     {t('dialog.location_en')}
                   </Label>
                   <Input
@@ -370,7 +370,7 @@ export function StakeholderInteractionDialog({
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="location-ar" className="text-start block">
+                  <Label htmlFor="location-ar" className="block text-start">
                     {t('dialog.location_ar')}
                   </Label>
                   <Input
@@ -389,9 +389,9 @@ export function StakeholderInteractionDialog({
           <Separator />
 
           {/* Direction, Sentiment, Priority */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <div className="space-y-2">
-              <Label className="text-start block">{t('dialog.direction')}</Label>
+              <Label className="block text-start">{t('dialog.direction')}</Label>
               <Select
                 value={direction}
                 onValueChange={(v) => setDirection(v as InteractionDirection)}
@@ -407,7 +407,7 @@ export function StakeholderInteractionDialog({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-start block">{t('dialog.sentiment')}</Label>
+              <Label className="block text-start">{t('dialog.sentiment')}</Label>
               <Select
                 value={sentiment}
                 onValueChange={(v) => setSentiment(v as InteractionSentiment)}
@@ -424,7 +424,7 @@ export function StakeholderInteractionDialog({
               </Select>
             </div>
             <div className="space-y-2">
-              <Label className="text-start block">{t('dialog.priority')}</Label>
+              <Label className="block text-start">{t('dialog.priority')}</Label>
               <Select value={priority} onValueChange={(v) => setPriority(v as InteractionPriority)}>
                 <SelectTrigger className="min-h-11 sm:min-h-10">
                   <SelectValue />
@@ -450,7 +450,7 @@ export function StakeholderInteractionDialog({
 
             {requiresFollowup && (
               <div className="space-y-2">
-                <Label htmlFor="followup-date" className="text-start block">
+                <Label htmlFor="followup-date" className="block text-start">
                   {t('dialog.followup_date')}
                 </Label>
                 <Input
@@ -467,9 +467,9 @@ export function StakeholderInteractionDialog({
           <Separator />
 
           {/* Outcome */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
-              <Label htmlFor="outcome-en" className="text-start block">
+              <Label htmlFor="outcome-en" className="block text-start">
                 {t('dialog.outcome_en')}
               </Label>
               <Textarea
@@ -482,7 +482,7 @@ export function StakeholderInteractionDialog({
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="outcome-ar" className="text-start block">
+              <Label htmlFor="outcome-ar" className="block text-start">
                 {t('dialog.outcome_ar')}
               </Label>
               <Textarea
@@ -498,7 +498,7 @@ export function StakeholderInteractionDialog({
 
           {/* Impact Score */}
           <div className="space-y-2">
-            <Label className="text-start block">{t('dialog.impact_score')}</Label>
+            <Label className="block text-start">{t('dialog.impact_score')}</Label>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((score) => (
                 <Button
@@ -513,13 +513,13 @@ export function StakeholderInteractionDialog({
                 </Button>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground text-start">
+            <p className="text-start text-xs text-muted-foreground">
               {t('dialog.impact_score_hint')}
             </p>
           </div>
         </div>
 
-        <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
+        <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row">
           <Button
             type="button"
             variant="outline"

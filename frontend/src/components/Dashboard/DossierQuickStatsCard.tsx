@@ -141,8 +141,8 @@ export function DossierQuickStatsCard({
             </div>
 
             {/* Name and Stats */}
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate">{displayName}</p>
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-sm font-medium">{displayName}</p>
               <div className="flex items-center gap-2 text-xs text-muted-foreground">
                 {dossier.stats.pending_tasks_count > 0 && (
                   <span className="flex items-center gap-0.5">
@@ -191,8 +191,8 @@ export function DossierQuickStatsCard({
     >
       <CardContent className="p-4">
         {/* Header */}
-        <div className="flex items-start justify-between gap-3 mb-3">
-          <div className="flex items-center gap-3 min-w-0">
+        <div className="mb-3 flex items-start justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-3">
             {/* Type Icon */}
             <div
               className={cn(
@@ -205,7 +205,7 @@ export function DossierQuickStatsCard({
 
             {/* Name and Type */}
             <div className="min-w-0">
-              <h3 className="font-semibold text-sm leading-tight truncate">{displayName}</h3>
+              <h3 className="truncate text-sm font-semibold leading-tight">{displayName}</h3>
               <p className="text-xs text-muted-foreground">
                 {t(`dossierType.${dossier.type}`, dossier.type)}
               </p>
@@ -213,15 +213,15 @@ export function DossierQuickStatsCard({
           </div>
 
           {/* Badges */}
-          <div className="flex flex-col gap-1 shrink-0">
+          <div className="flex shrink-0 flex-col gap-1">
             {dossier.stats.new_items_count > 0 && (
-              <Badge variant="default" className="text-xs flex items-center gap-1">
+              <Badge variant="default" className="flex items-center gap-1 text-xs">
                 <Sparkles className="size-3" />
                 {dossier.stats.new_items_count} {t('stats.new', 'new')}
               </Badge>
             )}
             {dossier.stats.has_overdue && (
-              <Badge variant="destructive" className="text-xs flex items-center gap-1">
+              <Badge variant="destructive" className="flex items-center gap-1 text-xs">
                 <AlertTriangle className="size-3" />
                 {dossier.stats.overdue_count} {t('stats.overdue', 'overdue')}
               </Badge>
@@ -232,15 +232,15 @@ export function DossierQuickStatsCard({
         {/* Stats Grid */}
         <div className="grid grid-cols-3 gap-2">
           {/* Tasks */}
-          <div className="flex flex-col items-center p-2 rounded-lg bg-muted/50">
-            <CheckSquare className="size-4 text-blue-500 mb-1" />
+          <div className="flex flex-col items-center rounded-lg bg-muted/50 p-2">
+            <CheckSquare className="mb-1 size-4 text-blue-500" />
             <span className="text-lg font-bold">{dossier.stats.pending_tasks_count}</span>
             <span className="text-xs text-muted-foreground">{t('stats.tasks', 'Tasks')}</span>
           </div>
 
           {/* Commitments */}
-          <div className="flex flex-col items-center p-2 rounded-lg bg-muted/50">
-            <FileCheck className="size-4 text-purple-500 mb-1" />
+          <div className="flex flex-col items-center rounded-lg bg-muted/50 p-2">
+            <FileCheck className="mb-1 size-4 text-purple-500" />
             <span className="text-lg font-bold">{dossier.stats.active_commitments_count}</span>
             <span className="text-xs text-muted-foreground">
               {t('stats.commitments', 'Commits')}
@@ -248,8 +248,8 @@ export function DossierQuickStatsCard({
           </div>
 
           {/* Intakes */}
-          <div className="flex flex-col items-center p-2 rounded-lg bg-muted/50">
-            <ClipboardList className="size-4 text-green-500 mb-1" />
+          <div className="flex flex-col items-center rounded-lg bg-muted/50 p-2">
+            <ClipboardList className="mb-1 size-4 text-green-500" />
             <span className="text-lg font-bold">{dossier.stats.open_intakes_count}</span>
             <span className="text-xs text-muted-foreground">{t('stats.intakes', 'Intakes')}</span>
           </div>
@@ -257,7 +257,7 @@ export function DossierQuickStatsCard({
 
         {/* Last Activity */}
         {dossier.stats.last_activity_at && (
-          <div className="mt-3 pt-3 border-t border-border">
+          <div className="mt-3 border-t border-border pt-3">
             <p className="text-xs text-muted-foreground">
               {t('stats.lastActivity', 'Last activity')}:{' '}
               <span className="font-medium">

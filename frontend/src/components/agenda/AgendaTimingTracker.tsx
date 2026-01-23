@@ -122,7 +122,7 @@ export function AgendaTimingTracker({
       <CardHeader className="pb-3">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-            <Timer className="h-5 w-5" />
+            <Timer className="size-5" />
             {t('meetingTiming')}
           </CardTitle>
 
@@ -136,9 +136,9 @@ export function AgendaTimingTracker({
               isAheadOfSchedule && 'border-blue-500 bg-blue-50 text-blue-700',
             )}
           >
-            {isRunningLate && <AlertTriangle className="h-3.5 w-3.5" />}
-            {isOnTrack && <CheckCircle className="h-3.5 w-3.5" />}
-            {isAheadOfSchedule && <TrendingDown className="h-3.5 w-3.5" />}
+            {isRunningLate && <AlertTriangle className="size-3.5" />}
+            {isOnTrack && <CheckCircle className="size-3.5" />}
+            {isAheadOfSchedule && <TrendingDown className="size-3.5" />}
             {isRunningLate && t('runningLate')}
             {isOnTrack && t('onTrack')}
             {isAheadOfSchedule && t('aheadOfSchedule')}
@@ -221,14 +221,14 @@ export function AgendaTimingTracker({
         {currentItem && inMeeting && (
           <div className="rounded-lg border border-blue-200 bg-blue-50/50 p-3 dark:border-blue-800 dark:bg-blue-900/20">
             <div className="flex items-center gap-2 text-sm font-medium text-blue-700 dark:text-blue-300">
-              <Play className="h-4 w-4" />
+              <Play className="size-4" />
               {t('currentItem')}
             </div>
             <div className="mt-2 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
               <p className="font-medium">{currentItem.title_en}</p>
               <div className="flex items-center gap-2">
                 <Badge variant="outline" className="gap-1">
-                  <Clock className="h-3.5 w-3.5" />
+                  <Clock className="size-3.5" />
                   {formatDuration(currentItem.planned_minutes)}
                 </Badge>
                 {currentItem.actual_minutes !== undefined && (

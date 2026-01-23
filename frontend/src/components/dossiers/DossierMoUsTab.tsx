@@ -93,7 +93,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  {[1, 2, 3].map((i) => (
  <div
  key={i}
- className="h-40 bg-gray-200 dark:bg-gray-700 rounded-lg animate-pulse"
+ className="h-40 animate-pulse rounded-lg bg-gray-200 dark:bg-gray-700"
  />
  ))}
  </div>
@@ -104,7 +104,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  if (error) {
  return (
  <div
- className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-6 text-center"
+ className="rounded-lg border border-red-200 bg-red-50 p-6 text-center dark:border-red-800 dark:bg-red-900/20"
  role="alert"
  >
  <p className="text-red-800 dark:text-red-200">
@@ -120,8 +120,8 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  // Empty state
  if (!mous || mous.length === 0) {
  return (
- <div className="text-center py-12">
- <FileText className="mx-auto h-12 w-12 text-gray-400 dark:text-gray-600" />
+ <div className="py-12 text-center">
+ <FileText className="mx-auto size-12 text-gray-400 dark:text-gray-600" />
  <h3 className="mt-2 text-sm font-medium text-gray-900 dark:text-white">
  {t('mous.no_mous')}
  </h3>
@@ -138,18 +138,18 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  {mous.map((mou) => (
  <Card
  key={mou.id}
- className="cursor-pointer hover:shadow-lg transition-shadow duration-200"
+ className="cursor-pointer transition-shadow duration-200 hover:shadow-lg"
  onClick={() => {
  // TODO: Navigate to MoU detail page or open modal
  }}
  >
  <CardContent className="p-4 sm:p-6">
- <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
+ <div className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
  {/* MoU Info */}
- <div className="flex-1 min-w-0">
+ <div className="min-w-0 flex-1">
  {/* Title */}
  <h4
- className={`text-base sm:text-lg font-medium text-gray-900 dark:text-white truncate ${
+ className={`truncate text-base font-medium text-gray-900 dark:text-white sm:text-lg ${
  isRTL ? 'text-end' : 'text-start'
  }`}
  >
@@ -159,7 +159,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  {/* Summary */}
  {mou.description && (
  <p
- className={`mt-1 text-sm text-gray-600 dark:text-gray-400 line-clamp-2 ${
+ className={`mt-1 line-clamp-2 text-sm text-gray-600 dark:text-gray-400 ${
  isRTL ? 'text-end' : 'text-start'
  }`}
  >
@@ -172,7 +172,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  {/* Signed Date */}
  {mou.dates?.signed && (
  <div className="flex items-center gap-1">
- <FileText className="h-4 w-4" />
+ <FileText className="size-4" />
  <span>
  {t('mous.signed')}: {format(new Date(mou.dates.signed), 'dd MMM yyyy')}
  </span>
@@ -182,7 +182,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  {/* Expiry Date */}
  {(mou.expiry_date || mou.dates?.expiry) && (
  <div className="flex items-center gap-1">
- <Clock className="h-4 w-4" />
+ <Clock className="size-4" />
  <span>
  {t('mous.expires')}: {format(new Date(mou.expiry_date || mou.dates?.expiry!), 'dd MMM yyyy')}
  </span>
@@ -192,7 +192,7 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  {/* Effective Date */}
  {(mou.effective_date || mou.dates?.effective) && (
  <div className="flex items-center gap-1">
- <Calendar className="h-4 w-4" />
+ <Calendar className="size-4" />
  <span>
  {t('mous.effective')}: {format(new Date(mou.effective_date || mou.dates?.effective!), 'dd MMM yyyy')}
  </span>
@@ -202,10 +202,10 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  </div>
 
  {/* Status & Alerts */}
- <div className="flex flex-col gap-2 items-start sm:items-end">
+ <div className="flex flex-col items-start gap-2 sm:items-end">
  {/* Status Badge */}
  <span
- className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(
+ className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-medium ${getStatusColor(
  mou.lifecycle_state
  )}`}
  >
@@ -214,8 +214,8 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
 
  {/* Renewal Alert */}
  {isApproachingRenewal(mou) && (
- <div className="flex items-center gap-1 text-yellow-600 dark:text-yellow-400 text-sm">
- <AlertCircle className="h-4 w-4" />
+ <div className="flex items-center gap-1 text-sm text-yellow-600 dark:text-yellow-400">
+ <AlertCircle className="size-4" />
  <span>{t('mous.renewal_required')}</span>
  </div>
  )}

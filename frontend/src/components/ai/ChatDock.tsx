@@ -79,10 +79,10 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
           dir={isRTL ? 'rtl' : 'ltr'}
         >
           {/* Header */}
-          <CardHeader className="py-3 px-4 border-b shrink-0">
+          <CardHeader className="shrink-0 border-b px-4 py-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Sparkles className="h-5 w-5 text-primary" />
+                <Sparkles className="size-5 text-primary" />
                 <CardTitle className="text-base font-semibold">
                   {t('title', 'AI Assistant')}
                 </CardTitle>
@@ -91,33 +91,33 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8"
+                  className="size-8"
                   onClick={clearMessages}
                   title={t('clearChat', 'Clear chat')}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="size-4" />
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8"
+                  className="size-8"
                   onClick={toggleExpanded}
                   title={isExpanded ? t('minimize', 'Minimize') : t('expand', 'Expand')}
                 >
                   {isExpanded ? (
-                    <Minimize2 className="h-4 w-4" />
+                    <Minimize2 className="size-4" />
                   ) : (
-                    <Maximize2 className="h-4 w-4" />
+                    <Maximize2 className="size-4" />
                   )}
                 </Button>
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8"
+                  className="size-8"
                   onClick={toggleOpen}
                   title={t('close', 'Close')}
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               </div>
             </div>
@@ -127,18 +127,18 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
           <ScrollArea className="flex-1" ref={scrollRef}>
             <div className="min-h-full">
               {messages.length === 0 && !isLoading ? (
-                <div className="flex flex-col items-center justify-center h-full py-12 px-4 text-center">
-                  <Sparkles className="h-12 w-12 text-muted-foreground/50 mb-4" />
-                  <h3 className="text-lg font-medium text-muted-foreground mb-2">
+                <div className="flex h-full flex-col items-center justify-center px-4 py-12 text-center">
+                  <Sparkles className="mb-4 size-12 text-muted-foreground/50" />
+                  <h3 className="mb-2 text-lg font-medium text-muted-foreground">
                     {t('welcomeTitle', 'How can I help you?')}
                   </h3>
-                  <p className="text-sm text-muted-foreground max-w-[250px]">
+                  <p className="max-w-[250px] text-sm text-muted-foreground">
                     {t(
                       'welcomeMessage',
                       'Ask me about dossiers, commitments, engagements, or any other information in the system.',
                     )}
                   </p>
-                  <div className="mt-6 space-y-2 w-full max-w-[280px]">
+                  <div className="mt-6 w-full max-w-[280px] space-y-2">
                     <SuggestionButton
                       onClick={() => handleSend('What are our active commitments?')}
                       isRTL={isRTL}
@@ -206,7 +206,7 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
           isOpen && 'bg-muted text-muted-foreground hover:bg-muted',
         )}
       >
-        {isOpen ? <X className="h-6 w-6" /> : <MessageCircle className="h-6 w-6" />}
+        {isOpen ? <X className="size-6" /> : <MessageCircle className="size-6" />}
       </Button>
     </div>
   )

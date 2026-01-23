@@ -136,16 +136,16 @@ export function ContactsDirectory() {
  };
 
  return (
- <div className="min-h-screen flex flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="flex min-h-screen flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
  {/* Header */}
  <div className="border-b bg-background">
- <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+ <div className="container mx-auto p-4 sm:p-6 lg:px-8">
  <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
  <div>
- <h1 className="text-2xl sm:text-3xl font-bold text-start">
+ <h1 className="text-start text-2xl font-bold sm:text-3xl">
  {t('contactDirectory.title')}
  </h1>
- <p className="text-sm sm:text-base text-muted-foreground mt-1 text-start">
+ <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
  {t('contactDirectory.subtitle')}
  </p>
  </div>
@@ -159,7 +159,7 @@ export function ContactsDirectory() {
  disabled={isExporting || (searchResults?.total || 0) === 0}
  className="px-4"
  >
- <Download className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Download className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('contactDirectory.buttons.export')}
  </Button>
  </DropdownMenuTrigger>
@@ -173,7 +173,7 @@ export function ContactsDirectory() {
  disabled={isExporting}
  className=""
  >
- <FileText className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <FileText className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('contactDirectory.export.csv')}
  <span className="ms-auto text-xs text-muted-foreground">
  Excel {t('contactDirectory.export.compatible')}
@@ -184,7 +184,7 @@ export function ContactsDirectory() {
  disabled={isExporting}
  className=""
  >
- <CreditCard className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <CreditCard className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('contactDirectory.export.vcard')}
  <span className="ms-auto text-xs text-muted-foreground">
  Outlook {t('contactDirectory.export.compatible')}
@@ -205,7 +205,7 @@ export function ContactsDirectory() {
  disabled={isExporting}
  className=""
  >
- <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Check className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('contactDirectory.export.selectedCsv')}
  </DropdownMenuItem>
  <DropdownMenuItem
@@ -213,7 +213,7 @@ export function ContactsDirectory() {
  disabled={isExporting}
  className=""
  >
- <Check className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Check className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('contactDirectory.export.selectedVCard')}
  </DropdownMenuItem>
  </>
@@ -226,7 +226,7 @@ export function ContactsDirectory() {
  onClick={handleCreateContact}
  className="px-4 sm:px-6"
  >
- <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('contactDirectory.buttons.createContact')}
  </Button>
  </div>
@@ -246,7 +246,7 @@ export function ContactsDirectory() {
  </div>
 
  {/* Contact List */}
- <div className="flex-1 container mx-auto py-6">
+ <div className="container mx-auto flex-1 py-6">
  <ContactList
  contacts={searchResults?.contacts || []}
  tags={searchResults?.tags || []}

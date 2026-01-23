@@ -139,9 +139,9 @@ function CommitmentsPage() {
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Page Header */}
-      <div className="bg-white dark:bg-gray-800 border-b border-gray-200 dark:border-gray-700">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
-          <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+      <div className="border-b border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800">
+        <div className="mx-auto max-w-7xl p-4 sm:p-6 lg:px-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
             {/* Navigation */}
             <div className="flex items-center gap-2">
               {searchParams.dossierId ? (
@@ -171,11 +171,11 @@ function CommitmentsPage() {
 
             {/* Title */}
             <div className="flex-1">
-              <h1 className="text-2xl sm:text-3xl font-bold text-foreground text-start">
+              <h1 className="text-start text-2xl font-bold text-foreground sm:text-3xl">
                 {t('title')}
               </h1>
               {searchParams.dossierId && (
-                <p className="mt-1 text-sm text-muted-foreground text-start">{t('subtitle')}</p>
+                <p className="mt-1 text-start text-sm text-muted-foreground">{t('subtitle')}</p>
               )}
             </div>
           </div>
@@ -183,7 +183,7 @@ function CommitmentsPage() {
       </div>
 
       {/* Main Content */}
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="mx-auto max-w-7xl px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
         <CommitmentsList
           dossierId={searchParams.dossierId}
           status={statusArray}

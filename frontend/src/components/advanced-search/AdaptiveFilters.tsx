@@ -118,7 +118,7 @@ function FilterOption({ option, isSelected, onClick, isRTL, isLoading }: FilterO
     >
       {/* Checkbox indicator */}
       {isSelected ? (
-        <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
+        <CheckCircle2 className="size-4 shrink-0 text-primary" />
       ) : (
         <Circle className={cn('h-4 w-4 flex-shrink-0', option.count === 0 && 'opacity-50')} />
       )}
@@ -172,7 +172,7 @@ function FilterSection({
       <CollapsibleTrigger asChild>
         <Button
           variant="ghost"
-          className="w-full justify-between px-3 min-h-11 hover:bg-gray-100 dark:hover:bg-gray-800"
+          className="min-h-11 w-full justify-between px-3 hover:bg-gray-100 dark:hover:bg-gray-800"
         >
           <span className="flex items-center gap-2">
             {icon}
@@ -183,11 +183,11 @@ function FilterSection({
               </Badge>
             )}
           </span>
-          <ChevronDown className="h-4 w-4 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
+          <ChevronDown className="size-4 transition-transform duration-200 [[data-state=open]>&]:rotate-180" />
         </Button>
       </CollapsibleTrigger>
 
-      <CollapsibleContent className="ps-2 pt-1 pb-2 space-y-0.5">
+      <CollapsibleContent className="space-y-0.5 pb-2 ps-2 pt-1">
         {options.map((option) => (
           <FilterOption
             key={option.value}
@@ -279,12 +279,12 @@ export function AdaptiveFilters({
       {/* Header with Clear All */}
       <div className="flex items-center justify-between px-3 py-2">
         <div className="flex items-center gap-2">
-          <Filter className="h-4 w-4 text-muted-foreground" />
-          <span className="font-medium text-sm">{t('filters.adaptive.title')}</span>
-          {isLoading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground" />}
+          <Filter className="size-4 text-muted-foreground" />
+          <span className="text-sm font-medium">{t('filters.adaptive.title')}</span>
+          {isLoading && <Loader2 className="size-4 animate-spin text-muted-foreground" />}
         </div>
         {totalActiveFilters > 0 && (
-          <Button variant="ghost" size="sm" onClick={handleClearAll} className="text-xs h-7 px-2">
+          <Button variant="ghost" size="sm" onClick={handleClearAll} className="h-7 px-2 text-xs">
             {t('filters.adaptive.clearAll')}
           </Button>
         )}
@@ -296,7 +296,7 @@ export function AdaptiveFilters({
         <FilterSection
           type="status"
           title={t('filters.adaptive.status')}
-          icon={<CheckCircle2 className="h-4 w-4 text-muted-foreground" />}
+          icon={<CheckCircle2 className="size-4 text-muted-foreground" />}
           options={statusOptions}
           selectedValues={selectedFilters.status || []}
           onChange={(values) => onFilterChange('status', values)}
@@ -308,7 +308,7 @@ export function AdaptiveFilters({
         <FilterSection
           type="type"
           title={t('filters.adaptive.type')}
-          icon={<Tag className="h-4 w-4 text-muted-foreground" />}
+          icon={<Tag className="size-4 text-muted-foreground" />}
           options={typeOptions}
           selectedValues={selectedFilters.type || []}
           onChange={(values) => onFilterChange('type', values)}
@@ -320,7 +320,7 @@ export function AdaptiveFilters({
         <FilterSection
           type="date_range"
           title={t('filters.adaptive.dateRange')}
-          icon={<Calendar className="h-4 w-4 text-muted-foreground" />}
+          icon={<Calendar className="size-4 text-muted-foreground" />}
           options={dateRangeOptions}
           selectedValues={selectedFilters.date_range || []}
           onChange={(values) => onFilterChange('date_range', values)}
@@ -332,7 +332,7 @@ export function AdaptiveFilters({
         <FilterSection
           type="sensitivity_level"
           title={t('filters.adaptive.sensitivity')}
-          icon={<Shield className="h-4 w-4 text-muted-foreground" />}
+          icon={<Shield className="size-4 text-muted-foreground" />}
           options={sensitivityOptions}
           selectedValues={selectedFilters.sensitivity_level || []}
           onChange={(values) => onFilterChange('sensitivity_level', values)}
@@ -343,7 +343,7 @@ export function AdaptiveFilters({
 
       {/* Active Filters Summary */}
       {totalActiveFilters > 0 && (
-        <div className="px-3 py-2 bg-muted/50 rounded-lg mt-2">
+        <div className="mt-2 rounded-lg bg-muted/50 px-3 py-2">
           <div className="text-xs text-muted-foreground">
             {t('filters.adaptive.activeCount', { count: totalActiveFilters })}
           </div>

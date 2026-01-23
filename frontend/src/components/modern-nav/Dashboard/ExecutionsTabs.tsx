@@ -38,13 +38,13 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
 
  return (
  <Card className={cn('overflow-hidden', className)}>
- <CardHeader className="border-b border-content-border pb-0">
- <CardTitle className="text-base font-semibold text-content-text mb-4">
+ <CardHeader className="border-content-border border-b pb-0">
+ <CardTitle className="text-content-text mb-4 text-base font-semibold">
  {title || t('navigation.executions', 'Executions')}
  </CardTitle>
 
  <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
- <TabsList className="grid w-full grid-cols-3 h-auto p-0 bg-transparent border-b-0">
+ <TabsList className="grid h-auto w-full grid-cols-3 border-b-0 bg-transparent p-0">
  <TabsTrigger
  value="workflows"
  className={cn(
@@ -97,7 +97,7 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
  <CardContent className="p-6">
  {/* Search Input */}
  <div className="relative mb-4">
- <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-content-text-muted" />
+ <Search className="text-content-text-muted absolute start-3 top-1/2 size-4 -translate-y-1/2" />
  <Input
  type="search"
  placeholder={t('common.search', 'Search')}
@@ -116,10 +116,10 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
  <Tabs value={activeTab}>
  <TabsContent value="workflows" className="mt-0">
  <div className="flex flex-col items-center justify-center py-8 text-center">
- <p className="text-sm text-content-text-muted">
+ <p className="text-content-text-muted text-sm">
  {t('executions.noWorkflows', 'No workflows found')}
  </p>
- <p className="text-xs text-content-text-muted mt-1">
+ <p className="text-content-text-muted mt-1 text-xs">
  {t('executions.tryDifferentSearch', 'Try a different search term')}
  </p>
  </div>
@@ -127,10 +127,10 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
 
  <TabsContent value="permissions" className="mt-0">
  <div className="flex flex-col items-center justify-center py-8 text-center">
- <p className="text-sm text-content-text-muted">
+ <p className="text-content-text-muted text-sm">
  {t('executions.noPermissions', 'No permissions found')}
  </p>
- <p className="text-xs text-content-text-muted mt-1">
+ <p className="text-content-text-muted mt-1 text-xs">
  {t('executions.tryDifferentSearch', 'Try a different search term')}
  </p>
  </div>
@@ -138,10 +138,10 @@ export function ExecutionsTabs({ title, className }: ExecutionsTabsProps) {
 
  <TabsContent value="members" className="mt-0">
  <div className="flex flex-col items-center justify-center py-8 text-center">
- <p className="text-sm text-content-text-muted">
+ <p className="text-content-text-muted text-sm">
  {t('executions.noMembers', 'No members found')}
  </p>
- <p className="text-xs text-content-text-muted mt-1">
+ <p className="text-content-text-muted mt-1 text-xs">
  {t('executions.tryDifferentSearch', 'Try a different search term')}
  </p>
  </div>

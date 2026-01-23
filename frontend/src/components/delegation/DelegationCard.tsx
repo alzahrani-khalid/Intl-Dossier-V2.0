@@ -81,22 +81,22 @@ export function DelegationCard({
       }`}
     >
       <CardHeader className="pb-3">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex flex-col justify-between gap-3 sm:flex-row sm:items-center">
           {/* User Info */}
           <div className="flex items-center gap-3">
-            <Avatar className="h-10 w-10">
+            <Avatar className="size-10">
               <AvatarFallback>{getInitials(displayUser)}</AvatarFallback>
             </Avatar>
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
                 <span className="text-sm text-muted-foreground">
                   {type === 'granted' ? t('card.to') : t('card.from')}
                 </span>
                 <ArrowRight
-                  className={`h-3 w-3 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
+                  className={`size-3 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
                 />
               </div>
-              <p className="font-medium truncate">{displayUser}</p>
+              <p className="truncate font-medium">{displayUser}</p>
             </div>
           </div>
 
@@ -105,21 +105,21 @@ export function DelegationCard({
             <Badge variant={status.variant} className="min-h-6">
               {status.label}
             </Badge>
-            {isExpiringSoon && !isRevoked && <AlertTriangle className="h-4 w-4 text-yellow-500" />}
+            {isExpiringSoon && !isRevoked && <AlertTriangle className="size-4 text-yellow-500" />}
           </div>
         </div>
       </CardHeader>
 
       <CardContent className="space-y-4">
         {/* Dates */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <div className="flex items-center gap-2 text-sm">
-            <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <Calendar className="size-4 shrink-0 text-muted-foreground" />
             <span className="text-muted-foreground">{t('card.validFrom')}:</span>
             <span className="font-medium">{format(startsAt, 'PP', { locale: dateLocale })}</span>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <Calendar className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <Calendar className="size-4 shrink-0 text-muted-foreground" />
             <span className="text-muted-foreground">{t('card.validUntil')}:</span>
             <span className="font-medium">{format(expiresAt, 'PP', { locale: dateLocale })}</span>
           </div>
@@ -136,7 +136,7 @@ export function DelegationCard({
                   : 'text-muted-foreground'
             }`}
           >
-            <Clock className="h-4 w-4 flex-shrink-0" />
+            <Clock className="size-4 shrink-0" />
             <span>{getExpiryText()}</span>
           </div>
         )}
@@ -144,7 +144,7 @@ export function DelegationCard({
         {/* Reason */}
         {delegation.reason && (
           <div className="flex items-start gap-2 text-sm">
-            <FileText className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-0.5" />
+            <FileText className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
             <div>
               <span className="text-muted-foreground">{t('card.reason')}: </span>
               <span>{delegation.reason}</span>
@@ -155,7 +155,7 @@ export function DelegationCard({
         {/* Resource scope */}
         {(delegation.resource_type || delegation.resource_id) && (
           <div className="flex items-center gap-2 text-sm">
-            <User className="h-4 w-4 text-muted-foreground flex-shrink-0" />
+            <User className="size-4 shrink-0 text-muted-foreground" />
             <span className="text-muted-foreground">{t('card.resourceType')}: </span>
             <Badge variant="outline" className="text-xs">
               {delegation.resource_type
@@ -167,9 +167,9 @@ export function DelegationCard({
 
         {/* Revocation info */}
         {isRevoked && delegation.revoked_at && (
-          <div className="pt-3 border-t space-y-2">
+          <div className="space-y-2 border-t pt-3">
             <div className="flex items-center gap-2 text-sm text-destructive">
-              <XCircle className="h-4 w-4 flex-shrink-0" />
+              <XCircle className="size-4 shrink-0" />
               <span>{t('card.revokedAt')}: </span>
               <span className="font-medium">
                 {format(new Date(delegation.revoked_at), 'PP', { locale: dateLocale })}
@@ -180,17 +180,17 @@ export function DelegationCard({
 
         {/* Actions */}
         {type === 'granted' && !isRevoked && !isExpired && onRevoke && (
-          <div className="pt-3 border-t">
+          <div className="border-t pt-3">
             <Button
               variant="outline"
               size="sm"
               onClick={() => onRevoke(delegation.id)}
               disabled={isRevoking}
-              className={`w-full sm:w-auto min-h-9 text-destructive hover:text-destructive ${
+              className={`min-h-9 w-full text-destructive hover:text-destructive sm:w-auto ${
                 isRTL ? 'flex-row-reverse' : ''
               }`}
             >
-              <XCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+              <XCircle className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
               {isRevoking ? t('common:common.loading') : t('actions.revoke')}
             </Button>
           </div>

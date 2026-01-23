@@ -37,23 +37,23 @@ export function Timeline({ events, getUserName }: TimelineProps): React.JSX.Elem
   const getEventIcon = (eventType: string): React.JSX.Element => {
     switch (eventType) {
       case 'created':
-        return <CheckCircle2 className="h-4 w-4" />
+        return <CheckCircle2 className="size-4" />
       case 'status_changed':
-        return <ArrowRight className="h-4 w-4" />
+        return <ArrowRight className="size-4" />
       case 'escalated':
-        return <AlertCircle className="h-4 w-4" />
+        return <AlertCircle className="size-4" />
       case 'completed':
-        return <CheckCircle2 className="h-4 w-4" />
+        return <CheckCircle2 className="size-4" />
       case 'commented':
-        return <MessageSquare className="h-4 w-4" />
+        return <MessageSquare className="size-4" />
       case 'checklist_updated':
-        return <ListChecks className="h-4 w-4" />
+        return <ListChecks className="size-4" />
       case 'observer_added':
-        return <User className="h-4 w-4" />
+        return <User className="size-4" />
       case 'reassigned':
-        return <ArrowRight className="h-4 w-4" />
+        return <ArrowRight className="size-4" />
       default:
-        return <Clock className="h-4 w-4" />
+        return <Clock className="size-4" />
     }
   }
 
@@ -125,7 +125,7 @@ export function Timeline({ events, getUserName }: TimelineProps): React.JSX.Elem
     <Card dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Clock className="h-5 w-5" />
+          <Clock className="size-5" />
           {t('timeline.title')}
         </CardTitle>
       </CardHeader>
@@ -137,14 +137,14 @@ export function Timeline({ events, getUserName }: TimelineProps): React.JSX.Elem
           aria-live="polite"
         >
           {sortedEvents.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">{t('timeline.empty')}</div>
+            <div className="py-8 text-center text-muted-foreground">{t('timeline.empty')}</div>
           ) : (
             <div className="relative space-y-4">
               {/* Timeline Line */}
               <div
                 className={`absolute ${
                   isRTL ? 'end-[19px]' : 'start-[19px]'
-                } top-0 bottom-0 w-px bg-border`}
+                } inset-y-0 w-px bg-border`}
               />
 
               {/* Events */}
@@ -158,7 +158,7 @@ export function Timeline({ events, getUserName }: TimelineProps): React.JSX.Elem
                 >
                   {/* Event Icon */}
                   <div
-                    className={`relative flex-shrink-0 w-10 h-10 rounded-full flex items-center justify-center ${getEventColor(
+                    className={`relative flex size-10 shrink-0 items-center justify-center rounded-full ${getEventColor(
                       event.event_type,
                     )} ${isCriticalEvent(event.event_type) ? 'ring-2 ring-offset-2' : ''}`}
                   >

@@ -174,17 +174,17 @@ export function MilestoneCard({
                 typeColors[milestone.milestone_type],
               )}
             >
-              <TypeIcon className="w-5 h-5 sm:w-6 sm:h-6" />
+              <TypeIcon className="size-5 sm:size-6" />
             </div>
 
             {/* Content */}
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <div className="flex items-start justify-between gap-2">
-                <div className="flex-1 min-w-0">
-                  <h4 className="text-sm sm:text-base font-semibold text-foreground truncate">
+                <div className="min-w-0 flex-1">
+                  <h4 className="truncate text-sm font-semibold text-foreground sm:text-base">
                     {title}
                   </h4>
-                  <p className="text-xs sm:text-sm text-muted-foreground mt-0.5">
+                  <p className="mt-0.5 text-xs text-muted-foreground sm:text-sm">
                     {t(`types.${milestone.milestone_type}`)}
                   </p>
                 </div>
@@ -192,8 +192,8 @@ export function MilestoneCard({
                 {/* Actions Menu */}
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                      <MoreVertical className="h-4 w-4" />
+                    <Button variant="ghost" size="sm" className="size-8 p-0">
+                      <MoreVertical className="size-4" />
                       <span className="sr-only">{t('actions.viewDetails')}</span>
                     </Button>
                   </DropdownMenuTrigger>
@@ -225,7 +225,7 @@ export function MilestoneCard({
               </div>
 
               {/* Badges Row */}
-              <div className="flex flex-wrap items-center gap-1.5 mt-2">
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
                 <Badge
                   variant="secondary"
                   className={cn('text-xs', priorityColors[milestone.priority])}
@@ -239,22 +239,22 @@ export function MilestoneCard({
                   {t(`status.${milestone.status}`)}
                 </Badge>
                 {activeReminders.length > 0 && (
-                  <Badge variant="outline" className="text-xs gap-1">
-                    <Bell className="h-3 w-3" />
+                  <Badge variant="outline" className="gap-1 text-xs">
+                    <Bell className="size-3" />
                     {activeReminders.length}
                   </Badge>
                 )}
               </div>
 
               {/* Date and Due Info */}
-              <div className="flex flex-wrap items-center gap-3 mt-3 text-xs sm:text-sm text-muted-foreground">
+              <div className="mt-3 flex flex-wrap items-center gap-3 text-xs text-muted-foreground sm:text-sm">
                 <span className="flex items-center gap-1">
-                  <Calendar className="h-3.5 w-3.5" />
+                  <Calendar className="size-3.5" />
                   {formatDate(milestone.target_date, i18n.language)}
                 </span>
                 {milestone.target_time && (
                   <span className="flex items-center gap-1">
-                    <Clock className="h-3.5 w-3.5" />
+                    <Clock className="size-3.5" />
                     {milestone.target_time}
                   </span>
                 )}
@@ -271,7 +271,7 @@ export function MilestoneCard({
 
               {/* Description (always show if exists) */}
               {description && (
-                <p className="text-xs sm:text-sm text-muted-foreground mt-2 line-clamp-2">
+                <p className="mt-2 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
                   {description}
                 </p>
               )}
@@ -287,12 +287,12 @@ export function MilestoneCard({
                   >
                     {isExpanded ? (
                       <>
-                        <ChevronUp className="h-3.5 w-3.5 me-1" />
+                        <ChevronUp className="me-1 size-3.5" />
                         {t('common:showLess', 'Show less')}
                       </>
                     ) : (
                       <>
-                        <ChevronDown className="h-3.5 w-3.5 me-1" />
+                        <ChevronDown className="me-1 size-3.5" />
                         {t('common:showMore', 'Show more')}
                       </>
                     )}
@@ -306,19 +306,19 @@ export function MilestoneCard({
                       className="mt-3 space-y-3"
                     >
                       {notes && (
-                        <div className="bg-muted/50 rounded-md p-3">
-                          <p className="text-xs font-medium text-muted-foreground mb-1">
+                        <div className="rounded-md bg-muted/50 p-3">
+                          <p className="mb-1 text-xs font-medium text-muted-foreground">
                             {t('form.notesEn', 'Notes')}
                           </p>
-                          <p className="text-xs sm:text-sm text-foreground">{notes}</p>
+                          <p className="text-xs text-foreground sm:text-sm">{notes}</p>
                         </div>
                       )}
                       {expectedOutcome && (
-                        <div className="bg-muted/50 rounded-md p-3">
-                          <p className="text-xs font-medium text-muted-foreground mb-1">
+                        <div className="rounded-md bg-muted/50 p-3">
+                          <p className="mb-1 text-xs font-medium text-muted-foreground">
                             {t('form.expectedOutcomeEn', 'Expected Outcome')}
                           </p>
-                          <p className="text-xs sm:text-sm text-foreground">{expectedOutcome}</p>
+                          <p className="text-xs text-foreground sm:text-sm">{expectedOutcome}</p>
                         </div>
                       )}
                     </motion.div>

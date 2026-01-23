@@ -60,7 +60,7 @@ export function ChatMessage({
       {/* Avatar */}
       <Avatar className={cn('h-8 w-8 shrink-0', isUser ? 'bg-primary' : 'bg-muted')}>
         <AvatarFallback className={isUser ? 'text-primary-foreground' : ''}>
-          {isUser ? <User className="h-4 w-4" /> : <Bot className="h-4 w-4" />}
+          {isUser ? <User className="size-4" /> : <Bot className="size-4" />}
         </AvatarFallback>
       </Avatar>
 
@@ -92,14 +92,14 @@ export function ChatMessage({
           <p className={cn('text-sm whitespace-pre-wrap', isStreaming && 'animate-pulse')}>
             {content}
             {isStreaming && (
-              <span className="inline-block w-1.5 h-4 ms-1 bg-current animate-pulse" />
+              <span className="ms-1 inline-block h-4 w-1.5 animate-pulse bg-current" />
             )}
           </p>
         </div>
 
         {/* Citations */}
         {!isUser && citations.length > 0 && (
-          <div className="flex flex-wrap gap-1.5 mt-2">
+          <div className="mt-2 flex flex-wrap gap-1.5">
             {citations.map((citation, index) => (
               <Badge
                 key={index}
@@ -111,7 +111,7 @@ export function ChatMessage({
                 onClick={() => onCitationClick?.(citation.type, citation.id)}
               >
                 <span className="capitalize">{citation.type}</span>
-                <ExternalLink className="h-3 w-3" />
+                <ExternalLink className="size-3" />
               </Badge>
             ))}
           </div>

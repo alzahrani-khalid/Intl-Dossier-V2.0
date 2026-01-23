@@ -141,14 +141,14 @@ function StepIndicator({
         )}
       >
         {isCompleted ? (
-          <Check className="h-3 w-3" />
+          <Check className="size-3" />
         ) : Icon ? (
-          <Icon className="h-3 w-3" />
+          <Icon className="size-3" />
         ) : (
           index + 1
         )}
       </span>
-      <span className="hidden sm:inline truncate">
+      <span className="hidden truncate sm:inline">
         {isRTL && step.titleAr ? step.titleAr : step.title}
       </span>
     </button>
@@ -241,7 +241,7 @@ export function FormWizard({
         {/* Progress bar */}
         {showProgress && (
           <div className="space-y-2">
-            <div className="flex items-center justify-between text-xs sm:text-sm text-muted-foreground">
+            <div className="flex items-center justify-between text-xs text-muted-foreground sm:text-sm">
               <span>{t('stepOf', { current: currentStep + 1, total: totalSteps })}</span>
               <span>{Math.round(progressPercent)}%</span>
             </div>
@@ -251,7 +251,7 @@ export function FormWizard({
 
         {/* Step indicators */}
         {showStepNumbers && (
-          <div className="flex items-center justify-between gap-1 sm:gap-2 overflow-x-auto pb-2 -mx-1 px-1">
+          <div className="-mx-1 flex items-center justify-between gap-1 overflow-x-auto px-1 pb-2 sm:gap-2">
             {steps.map((step, index) => (
               <React.Fragment key={step.id}>
                 <StepIndicator
@@ -263,7 +263,7 @@ export function FormWizard({
                   allowNavigation={allowStepNavigation}
                 />
                 {index < steps.length - 1 && (
-                  <div className="hidden sm:block h-px w-4 lg:w-8 bg-border shrink-0" />
+                  <div className="hidden h-px w-4 shrink-0 bg-border sm:block lg:w-8" />
                 )}
               </React.Fragment>
             ))}
@@ -273,13 +273,13 @@ export function FormWizard({
         {/* Current step description */}
         {steps[currentStep] && (
           <div className="text-center sm:text-start">
-            <h2 className="text-lg sm:text-xl font-semibold">
+            <h2 className="text-lg font-semibold sm:text-xl">
               {isRTL && steps[currentStep].titleAr
                 ? steps[currentStep].titleAr
                 : steps[currentStep].title}
             </h2>
             {(steps[currentStep].description || steps[currentStep].descriptionAr) && (
-              <p className="text-sm text-muted-foreground mt-1">
+              <p className="mt-1 text-sm text-muted-foreground">
                 {isRTL && steps[currentStep].descriptionAr
                   ? steps[currentStep].descriptionAr
                   : steps[currentStep].description}
@@ -290,8 +290,8 @@ export function FormWizard({
 
         {/* Draft indicator */}
         {hasDraft && (
-          <div className="flex items-center gap-2 p-3 bg-amber-500/10 border border-amber-500/20 rounded-lg text-sm">
-            <AlertCircle className="h-4 w-4 text-amber-600 shrink-0" />
+          <div className="flex items-center gap-2 rounded-lg border border-amber-500/20 bg-amber-500/10 p-3 text-sm">
+            <AlertCircle className="size-4 shrink-0 text-amber-600" />
             <span className="text-amber-700 dark:text-amber-400">{t('draftRestored')}</span>
           </div>
         )}
@@ -331,7 +331,7 @@ export function FormWizard({
           )}
         >
           {/* Left side buttons */}
-          <div className="flex flex-col-reverse sm:flex-row gap-2">
+          <div className="flex flex-col-reverse gap-2 sm:flex-row">
             {onCancel && (
               <Button
                 type="button"
@@ -352,9 +352,9 @@ export function FormWizard({
                 className="min-h-11 w-full sm:w-auto"
               >
                 {isRTL ? (
-                  <ChevronRight className="h-4 w-4 me-2" />
+                  <ChevronRight className="me-2 size-4" />
                 ) : (
-                  <ChevronLeft className="h-4 w-4 me-2" />
+                  <ChevronLeft className="me-2 size-4" />
                 )}
                 {t('back')}
               </Button>
@@ -362,7 +362,7 @@ export function FormWizard({
           </div>
 
           {/* Right side buttons */}
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             {onSaveDraft && (
               <Button
                 type="button"
@@ -372,9 +372,9 @@ export function FormWizard({
                 className="min-h-11 w-full sm:w-auto"
               >
                 {isDraftSaving ? (
-                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                  <Loader2 className="me-2 size-4 animate-spin" />
                 ) : (
-                  <Save className="h-4 w-4 me-2" />
+                  <Save className="me-2 size-4" />
                 )}
                 {isDraftSaving ? t('saving') : t('saveDraft')}
               </Button>
@@ -388,9 +388,9 @@ export function FormWizard({
                 className="min-h-11 w-full sm:w-auto"
               >
                 {isLoading ? (
-                  <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                  <Loader2 className="me-2 size-4 animate-spin" />
                 ) : (
-                  <Check className="h-4 w-4 me-2" />
+                  <Check className="me-2 size-4" />
                 )}
                 {isRTL ? completeButtonTextAr : completeButtonText}
               </Button>
@@ -401,12 +401,12 @@ export function FormWizard({
                 disabled={isLoading || isValidating}
                 className="min-h-11 w-full sm:w-auto"
               >
-                {isValidating ? <Loader2 className="h-4 w-4 me-2 animate-spin" /> : null}
+                {isValidating ? <Loader2 className="me-2 size-4 animate-spin" /> : null}
                 {t('next')}
                 {isRTL ? (
-                  <ChevronLeft className="h-4 w-4 ms-2" />
+                  <ChevronLeft className="ms-2 size-4" />
                 ) : (
-                  <ChevronRight className="h-4 w-4 ms-2" />
+                  <ChevronRight className="ms-2 size-4" />
                 )}
               </Button>
             )}

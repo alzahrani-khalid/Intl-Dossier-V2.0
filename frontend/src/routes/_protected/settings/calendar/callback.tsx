@@ -103,14 +103,14 @@ function CalendarOAuthCallback() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-12 flex items-center justify-center min-h-[60vh]"
+      className="container mx-auto flex min-h-[60vh] items-center justify-center px-4 py-12 sm:px-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <Card className="w-full max-w-md">
-        <CardContent className="p-6 text-center space-y-4">
+        <CardContent className="space-y-4 p-6 text-center">
           {status === 'loading' && (
             <>
-              <Loader2 className="h-12 w-12 mx-auto animate-spin text-primary" />
+              <Loader2 className="mx-auto size-12 animate-spin text-primary" />
               <h2 className="text-xl font-semibold">{t('oauth.connecting')}</h2>
               <p className="text-muted-foreground">{t('oauth.pleaseWait')}</p>
             </>
@@ -118,7 +118,7 @@ function CalendarOAuthCallback() {
 
           {status === 'success' && (
             <>
-              <CheckCircle className="h-12 w-12 mx-auto text-green-500" />
+              <CheckCircle className="mx-auto size-12 text-green-500" />
               <h2 className="text-xl font-semibold text-green-600">{t('oauth.success')}</h2>
               <p className="text-muted-foreground">{t('oauth.redirecting')}</p>
             </>
@@ -126,7 +126,7 @@ function CalendarOAuthCallback() {
 
           {status === 'error' && (
             <>
-              <XCircle className="h-12 w-12 mx-auto text-destructive" />
+              <XCircle className="mx-auto size-12 text-destructive" />
               <h2 className="text-xl font-semibold text-destructive">{t('oauth.error')}</h2>
               <p className="text-muted-foreground">{errorMessage}</p>
               <Button

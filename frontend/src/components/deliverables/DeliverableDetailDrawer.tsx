@@ -100,7 +100,7 @@ export function DeliverableDetailDrawer({
     <Sheet open={open} onOpenChange={onOpenChange}>
       <SheetContent
         side={isRTL ? 'left' : 'right'}
-        className="w-full sm:max-w-lg overflow-y-auto"
+        className="w-full overflow-y-auto sm:max-w-lg"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <SheetHeader className="space-y-4">
@@ -178,10 +178,10 @@ export function DeliverableDetailDrawer({
               )}
 
               {/* Info Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 gap-4 text-sm sm:grid-cols-2">
                 {/* Due Date */}
                 <div className="flex items-center gap-2">
-                  <Calendar className="size-4 text-muted-foreground shrink-0" />
+                  <Calendar className="size-4 shrink-0 text-muted-foreground" />
                   <div>
                     <p className="text-xs text-muted-foreground">{t('dueDate')}</p>
                     <p className="font-medium">
@@ -193,9 +193,9 @@ export function DeliverableDetailDrawer({
                 {/* Responsible Party */}
                 <div className="flex items-center gap-2">
                   {deliverable.responsible_party_type === 'internal' ? (
-                    <User className="size-4 text-muted-foreground shrink-0" />
+                    <User className="size-4 shrink-0 text-muted-foreground" />
                   ) : (
-                    <Building2 className="size-4 text-muted-foreground shrink-0" />
+                    <Building2 className="size-4 shrink-0 text-muted-foreground" />
                   )}
                   <div>
                     <p className="text-xs text-muted-foreground">{t('responsible')}</p>
@@ -205,7 +205,7 @@ export function DeliverableDetailDrawer({
 
                 {/* Created */}
                 <div className="flex items-center gap-2">
-                  <Clock className="size-4 text-muted-foreground shrink-0" />
+                  <Clock className="size-4 shrink-0 text-muted-foreground" />
                   <div>
                     <p className="text-xs text-muted-foreground">{t('created')}</p>
                     <p className="font-medium">
@@ -217,7 +217,7 @@ export function DeliverableDetailDrawer({
                 {/* Completed */}
                 {deliverable.completed_at && (
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="size-4 text-green-600 shrink-0" />
+                    <CheckCircle2 className="size-4 shrink-0 text-green-600" />
                     <div>
                       <p className="text-xs text-muted-foreground">{t('completed')}</p>
                       <p className="font-medium">
@@ -230,7 +230,7 @@ export function DeliverableDetailDrawer({
 
               {/* Tabs for Milestones, History, Documents */}
               <Tabs defaultValue="milestones" className="mt-6">
-                <TabsList className="w-full grid grid-cols-3">
+                <TabsList className="grid w-full grid-cols-3">
                   <TabsTrigger value="milestones" className="gap-1">
                     <Target className="size-4" />
                     <span className="hidden sm:inline">{t('milestones.title')}</span>
@@ -261,16 +261,16 @@ export function DeliverableDetailDrawer({
                         )}
                       >
                         {milestone.status === 'completed' ? (
-                          <CheckCircle2 className="size-5 text-green-600 shrink-0" />
+                          <CheckCircle2 className="size-5 shrink-0 text-green-600" />
                         ) : milestone.status === 'in_progress' ? (
-                          <Clock className="size-5 text-blue-600 shrink-0" />
+                          <Clock className="size-5 shrink-0 text-blue-600" />
                         ) : milestone.status === 'skipped' ? (
-                          <AlertTriangle className="size-5 text-gray-400 shrink-0" />
+                          <AlertTriangle className="size-5 shrink-0 text-gray-400" />
                         ) : (
-                          <div className="size-5 rounded-full border-2 border-gray-300 shrink-0" />
+                          <div className="size-5 shrink-0 rounded-full border-2 border-gray-300" />
                         )}
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-medium">
                             {isRTL ? milestone.title_ar : milestone.title_en}
                           </p>
                           {milestone.due_date && (
@@ -287,7 +287,7 @@ export function DeliverableDetailDrawer({
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-muted-foreground text-center py-4">
+                    <p className="py-4 text-center text-sm text-muted-foreground">
                       {t('milestones.empty')}
                     </p>
                   )}
@@ -304,10 +304,10 @@ export function DeliverableDetailDrawer({
                     history.map((entry) => (
                       <div
                         key={entry.id}
-                        className="flex items-start gap-3 p-3 bg-muted/50 rounded-lg text-sm"
+                        className="flex items-start gap-3 rounded-lg bg-muted/50 p-3 text-sm"
                       >
-                        <History className="size-4 text-muted-foreground shrink-0 mt-0.5" />
-                        <div className="flex-1 min-w-0">
+                        <History className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+                        <div className="min-w-0 flex-1">
                           <p className="font-medium">
                             {entry.old_status
                               ? t('history.statusChanged', {
@@ -317,9 +317,9 @@ export function DeliverableDetailDrawer({
                               : t('history.statusSet', { status: t(`status.${entry.new_status}`) })}
                           </p>
                           {entry.notes && (
-                            <p className="text-muted-foreground mt-1">{entry.notes}</p>
+                            <p className="mt-1 text-muted-foreground">{entry.notes}</p>
                           )}
-                          <p className="text-xs text-muted-foreground mt-1">
+                          <p className="mt-1 text-xs text-muted-foreground">
                             {entry.changed_by_name || t('unknown')} -{' '}
                             {format(new Date(entry.changed_at), 'PPp', { locale: dateLocale })}
                           </p>
@@ -327,7 +327,7 @@ export function DeliverableDetailDrawer({
                       </div>
                     ))
                   ) : (
-                    <p className="text-sm text-muted-foreground text-center py-4">
+                    <p className="py-4 text-center text-sm text-muted-foreground">
                       {t('history.empty')}
                     </p>
                   )}
@@ -347,11 +347,11 @@ export function DeliverableDetailDrawer({
                         href={doc.document_url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center gap-3 p-3 bg-muted/50 rounded-lg text-sm hover:bg-muted transition-colors"
+                        className="flex items-center gap-3 rounded-lg bg-muted/50 p-3 text-sm transition-colors hover:bg-muted"
                       >
-                        <FileText className="size-5 text-muted-foreground shrink-0" />
-                        <div className="flex-1 min-w-0">
-                          <p className="font-medium truncate">{doc.document_name}</p>
+                        <FileText className="size-5 shrink-0 text-muted-foreground" />
+                        <div className="min-w-0 flex-1">
+                          <p className="truncate font-medium">{doc.document_name}</p>
                           <p className="text-xs text-muted-foreground">
                             {(doc.file_size_bytes / 1024).toFixed(1)} KB -{' '}
                             {format(new Date(doc.uploaded_at), 'PP', { locale: dateLocale })}
@@ -360,7 +360,7 @@ export function DeliverableDetailDrawer({
                       </a>
                     ))
                   ) : (
-                    <p className="text-sm text-muted-foreground text-center py-4">
+                    <p className="py-4 text-center text-sm text-muted-foreground">
                       {t('documents.empty')}
                     </p>
                   )}
@@ -369,16 +369,16 @@ export function DeliverableDetailDrawer({
 
               {/* Notes */}
               {deliverable.notes && (
-                <div className="pt-4 border-t">
-                  <h4 className="text-sm font-medium mb-2">{t('notes')}</h4>
+                <div className="border-t pt-4">
+                  <h4 className="mb-2 text-sm font-medium">{t('notes')}</h4>
                   <p className="text-sm text-muted-foreground">{deliverable.notes}</p>
                 </div>
               )}
 
               {/* Completion Notes */}
               {deliverable.completion_notes && (
-                <div className="pt-4 border-t">
-                  <h4 className="text-sm font-medium mb-2">{t('completionNotes')}</h4>
+                <div className="border-t pt-4">
+                  <h4 className="mb-2 text-sm font-medium">{t('completionNotes')}</h4>
                   <p className="text-sm text-muted-foreground">{deliverable.completion_notes}</p>
                 </div>
               )}

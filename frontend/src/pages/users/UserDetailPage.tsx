@@ -161,8 +161,8 @@ export function UserDetailPage() {
 
  if (isLoadingUser) {
  return (
- <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6" dir={isRTL ? 'rtl' : 'ltr'}>
- <div className="text-center py-12 text-muted-foreground">
+ <div className="container mx-auto p-4 sm:p-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="py-12 text-center text-muted-foreground">
  {t('common:common.loading')}
  </div>
  </div>
@@ -171,8 +171,8 @@ export function UserDetailPage() {
 
  if (!user) {
  return (
- <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6" dir={isRTL ? 'rtl' : 'ltr'}>
- <div className="text-center py-12 text-muted-foreground">
+ <div className="container mx-auto p-4 sm:p-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="py-12 text-center text-muted-foreground">
  {t('errors.userNotFound')}
  </div>
  </div>
@@ -180,39 +180,39 @@ export function UserDetailPage() {
  }
 
  return (
- <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+ <div className="container mx-auto p-4 sm:p-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
  {/* Header */}
- <div className="flex flex-col gap-4 mb-6">
+ <div className="mb-6 flex flex-col gap-4">
  <Button
  variant="ghost"
  onClick={() => navigate({ to: '/users' })}
  className={`w-fit ${isRTL ? 'flex-row-reverse' : ''}`}
  >
- <ArrowLeft className={`h-4 w-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
+ <ArrowLeft className={`size-4 ${isRTL ? 'ms-2 rotate-180' : 'me-2'}`} />
  {t('common:common.back')}
  </Button>
 
  {/* User Header Card */}
  <Card>
  <CardContent className="pt-6">
- <div className="flex flex-col sm:flex-row gap-4 sm:gap-6">
+ <div className="flex flex-col gap-4 sm:flex-row sm:gap-6">
  {/* Avatar */}
- <Avatar className="h-20 w-20 sm:h-24 sm:w-24">
+ <Avatar className="size-20 sm:size-24">
  <AvatarImage src={user.avatar_url} alt={user.full_name} />
  <AvatarFallback className="text-xl">{getInitials(user.full_name)}</AvatarFallback>
  </Avatar>
 
  {/* User Info */}
  <div className="flex-1">
- <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
+ <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
  <div>
- <h1 className="text-2xl sm:text-3xl font-bold text-start flex flex-row items-center gap-2">
+ <h1 className="flex flex-row items-center gap-2 text-start text-2xl font-bold sm:text-3xl">
  {user.full_name}
  {user.mfa_enabled && (
- <CheckCircle className="h-5 w-5 text-green-600" title={t('userProfile.mfaEnabled')} />
+ <CheckCircle className="size-5 text-green-600" title={t('userProfile.mfaEnabled')} />
  )}
  </h1>
- <p className="text-base text-muted-foreground text-start mt-1">
+ <p className="mt-1 text-start text-base text-muted-foreground">
  @{user.username}
  </p>
  </div>
@@ -230,20 +230,20 @@ export function UserDetailPage() {
  <Separator className="my-4" />
 
  {/* Quick Info Grid */}
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+ <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
  <div className={`flex flex-row items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
- <Mail className="h-4 w-4 text-muted-foreground" />
+ <Mail className="size-4 text-muted-foreground" />
  <span className="text-sm">{user.email}</span>
  </div>
 
  <div className={`flex flex-row items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
- <Shield className="h-4 w-4 text-muted-foreground" />
+ <Shield className="size-4 text-muted-foreground" />
  <span className="text-sm">{t(`roles.${user.role}`)}</span>
  </div>
 
  {user.last_login_at && (
  <div className={`flex flex-row items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
- <Clock className="h-4 w-4 text-muted-foreground" />
+ <Clock className="size-4 text-muted-foreground" />
  <span className="text-sm">
  {new Date(user.last_login_at).toLocaleString(isRTL ? 'ar' : 'en')}
  </span>
@@ -252,14 +252,14 @@ export function UserDetailPage() {
 
  {user.preferences?.language && (
  <div className={`flex flex-row items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
- <Globe className="h-4 w-4 text-muted-foreground" />
+ <Globe className="size-4 text-muted-foreground" />
  <span className="text-sm">{user.preferences.language.toUpperCase()}</span>
  </div>
  )}
 
  {user.expires_at && (
  <div className={`flex flex-row items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}>
- <AlertTriangle className="h-4 w-4 text-orange-600" />
+ <AlertTriangle className="size-4 text-orange-600" />
  <span className="text-sm text-orange-600">
  {t('userProfile.expiresAt')}: {new Date(user.expires_at).toLocaleDateString(isRTL ? 'ar' : 'en')}
  </span>
@@ -282,12 +282,12 @@ export function UserDetailPage() {
 
  {/* Permissions Tab */}
  <TabsContent value="permissions" className="mt-6">
- <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
  {/* Role Permissions */}
  <Card>
  <CardHeader>
- <CardTitle className="text-start flex flex-row items-center gap-2">
- <Shield className="h-5 w-5" />
+ <CardTitle className="flex flex-row items-center gap-2 text-start">
+ <Shield className="size-5" />
  {t('userDetail.rolePermissions')}
  </CardTitle>
  <CardDescription className="text-start">
@@ -296,14 +296,14 @@ export function UserDetailPage() {
  </CardHeader>
  <CardContent>
  {isLoadingPermissions ? (
- <div className="text-center py-4 text-muted-foreground">
+ <div className="py-4 text-center text-muted-foreground">
  {t('common:common.loading')}
  </div>
  ) : (
  <div className="space-y-3">
  {permissions?.role_permissions?.map((permission: Permission, index: number) => (
- <div key={index} className="border rounded-lg p-3">
- <div className="font-medium text-sm mb-1">{permission.resource}</div>
+ <div key={index} className="rounded-lg border p-3">
+ <div className="mb-1 text-sm font-medium">{permission.resource}</div>
  <div className="flex flex-wrap gap-1">
  {permission.actions.map((action) => (
  <Badge key={action} variant="secondary" className="text-xs">
@@ -321,8 +321,8 @@ export function UserDetailPage() {
  {/* Delegated Permissions */}
  <Card>
  <CardHeader>
- <CardTitle className="text-start flex flex-row items-center gap-2">
- <User className="h-5 w-5" />
+ <CardTitle className="flex flex-row items-center gap-2 text-start">
+ <User className="size-5" />
  {t('userDetail.delegatedPermissions')}
  </CardTitle>
  <CardDescription className="text-start">
@@ -331,15 +331,15 @@ export function UserDetailPage() {
  </CardHeader>
  <CardContent>
  {isLoadingPermissions ? (
- <div className="text-center py-4 text-muted-foreground">
+ <div className="py-4 text-center text-muted-foreground">
  {t('common:common.loading')}
  </div>
  ) : (
  <div className="space-y-3">
  {permissions?.delegated_permissions?.map((permission: Permission, index: number) => (
- <div key={index} className="border rounded-lg p-3">
- <div className="font-medium text-sm mb-1">{permission.resource}</div>
- <div className="flex flex-wrap gap-1 mb-2">
+ <div key={index} className="rounded-lg border p-3">
+ <div className="mb-1 text-sm font-medium">{permission.resource}</div>
+ <div className="mb-2 flex flex-wrap gap-1">
  {permission.actions.map((action) => (
  <Badge key={action} variant="secondary" className="text-xs">
  {action}
@@ -372,8 +372,8 @@ export function UserDetailPage() {
  <TabsContent value="activity" className="mt-6">
  <Card>
  <CardHeader>
- <CardTitle className="text-start flex flex-row items-center gap-2">
- <Activity className="h-5 w-5" />
+ <CardTitle className="flex flex-row items-center gap-2 text-start">
+ <Activity className="size-5" />
  {t('userDetail.activityHistory')}
  </CardTitle>
  <CardDescription className="text-start">
@@ -383,9 +383,9 @@ export function UserDetailPage() {
  <CardContent>
  <div className="space-y-4">
  {user.last_login_at && (
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-3 border rounded-lg">
+ <div className="flex flex-col rounded-lg border p-3 sm:flex-row sm:items-center sm:justify-between">
  <div>
- <div className="font-medium text-sm">{t('userProfile.lastLoginAt')}</div>
+ <div className="text-sm font-medium">{t('userProfile.lastLoginAt')}</div>
  <div className="text-sm text-muted-foreground">
  {new Date(user.last_login_at).toLocaleString(isRTL ? 'ar' : 'en')}
  </div>
@@ -396,7 +396,7 @@ export function UserDetailPage() {
  </div>
  )}
  {!user.last_login_at && (
- <div className="text-center py-8 text-muted-foreground">
+ <div className="py-8 text-center text-muted-foreground">
  {t('common:common.noData')}
  </div>
  )}
@@ -409,8 +409,8 @@ export function UserDetailPage() {
  <TabsContent value="sessions" className="mt-6">
  <Card>
  <CardHeader>
- <CardTitle className="text-start flex flex-row items-center gap-2">
- <Lock className="h-5 w-5" />
+ <CardTitle className="flex flex-row items-center gap-2 text-start">
+ <Lock className="size-5" />
  {t('userDetail.sessions')}
  </CardTitle>
  <CardDescription className="text-start">
@@ -419,21 +419,21 @@ export function UserDetailPage() {
  </CardHeader>
  <CardContent>
  {isLoadingSessions ? (
- <div className="text-center py-4 text-muted-foreground">
+ <div className="py-4 text-center text-muted-foreground">
  {t('common:common.loading')}
  </div>
  ) : sessions && sessions.length > 0 ? (
  <div className="space-y-3">
  {sessions.map((session) => (
- <div key={session.id} className="border rounded-lg p-4">
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+ <div key={session.id} className="rounded-lg border p-4">
+ <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
  <div className="flex-1">
- <div className="font-medium text-sm">{session.ip_address}</div>
- <div className="text-xs text-muted-foreground mt-1 line-clamp-1">
+ <div className="text-sm font-medium">{session.ip_address}</div>
+ <div className="mt-1 line-clamp-1 text-xs text-muted-foreground">
  {session.user_agent}
  </div>
  </div>
- <div className="flex flex-col items-start sm:items-end gap-1">
+ <div className="flex flex-col items-start gap-1 sm:items-end">
  <div className="text-xs text-muted-foreground">
  {t('userProfile.lastLoginAt')}
  </div>
@@ -446,7 +446,7 @@ export function UserDetailPage() {
  ))}
  </div>
  ) : (
- <div className="text-center py-8 text-muted-foreground">
+ <div className="py-8 text-center text-muted-foreground">
  {t('userDetail.noActiveSessions')}
  </div>
  )}

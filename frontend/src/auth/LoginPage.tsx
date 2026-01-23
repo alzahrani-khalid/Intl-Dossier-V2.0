@@ -148,7 +148,7 @@ export function LoginPage() {
                     const event = { target: { name: 'rememberMe', value: checked } }
                   }}
                 />
-                <label htmlFor="rememberMe" className="text-sm text-foreground cursor-pointer">
+                <label htmlFor="rememberMe" className="cursor-pointer text-sm text-foreground">
                   {t('auth.rememberMe')}
                 </label>
               </div>

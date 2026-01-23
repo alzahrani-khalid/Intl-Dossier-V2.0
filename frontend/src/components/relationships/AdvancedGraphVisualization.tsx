@@ -342,7 +342,7 @@ const AdvancedDossierNode = memo(
 
         {/* Type icon/indicator */}
         <div
-          className="absolute inset-0 flex items-center justify-center font-bold text-xs"
+          className="absolute inset-0 flex items-center justify-center text-xs font-bold"
           style={{ color: data.isOnPath ? '#b45309' : nodeColor }}
         >
           {data.type?.[0]?.toUpperCase() || '?'}
@@ -350,23 +350,23 @@ const AdvancedDossierNode = memo(
 
         {/* Degree badge */}
         {data.degree > 0 && (
-          <div className="absolute -top-1 -end-1 bg-background rounded-full px-1 text-[10px] border shadow-sm">
+          <div className="absolute -end-1 -top-1 rounded-full border bg-background px-1 text-[10px] shadow-sm">
             {data.degree}°
           </div>
         )}
 
         {/* Connection count badge */}
         {(data.connectionCount || 0) > 2 && (
-          <div className="absolute -bottom-1 -end-1 bg-primary text-primary-foreground rounded-full px-1.5 text-[10px] shadow-sm">
+          <div className="absolute -bottom-1 -end-1 rounded-full bg-primary px-1.5 text-[10px] text-primary-foreground shadow-sm">
             {data.connectionCount}
           </div>
         )}
 
         {/* Influence score indicator */}
         {data.showInfluence && data.influenceScore && data.influenceScore > 0.5 && (
-          <div className="absolute -top-2 -start-2">
+          <div className="absolute -start-2 -top-2">
             <Star
-              className="h-4 w-4 text-amber-500 fill-amber-500"
+              className="size-4 fill-amber-500 text-amber-500"
               style={{ opacity: data.influenceScore }}
             />
           </div>
@@ -413,17 +413,17 @@ const ClusterNode = memo(
         onClick={data.onExpand}
       >
         <div
-          className="flex flex-col items-center justify-center rounded-xl border-2 shadow-lg p-4 min-w-[100px]"
+          className="flex min-w-[100px] flex-col items-center justify-center rounded-xl border-2 p-4 shadow-lg"
           style={{
             backgroundColor: `${data.color}15`,
             borderColor: data.color,
           }}
         >
-          <Layers className="h-6 w-6 mb-1" style={{ color: data.color }} />
+          <Layers className="mb-1 size-6" style={{ color: data.color }} />
           <span className="text-sm font-semibold" style={{ color: data.color }}>
             {data.count}
           </span>
-          <span className="text-xs text-muted-foreground capitalize">
+          <span className="text-xs capitalize text-muted-foreground">
             {t(data.clusterType, data.clusterType)}
           </span>
           <Button
@@ -435,7 +435,7 @@ const ClusterNode = memo(
               data.onExpand()
             }}
           >
-            <Expand className="h-3 w-3 me-1" />
+            <Expand className="me-1 size-3" />
             {t('expand', 'Expand')}
           </Button>
         </div>
@@ -655,8 +655,8 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
   return (
     <Card className="w-full">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm flex items-center gap-2">
-          <Route className="h-4 w-4" />
+        <CardTitle className="flex items-center gap-2 text-sm">
+          <Route className="size-4" />
           {t('pathFinding.title', 'Path Finding')}
         </CardTitle>
         <CardDescription className="text-xs">
@@ -675,7 +675,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
                 <SelectItem key={node.id} value={node.id} className="text-xs">
                   <div className="flex items-center gap-2">
                     <div
-                      className="h-2 w-2 rounded-full"
+                      className="size-2 rounded-full"
                       style={{
                         backgroundColor: NODE_COLORS[node.type] || '#6b7280',
                       }}
@@ -705,7 +705,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
                   <SelectItem key={node.id} value={node.id} className="text-xs">
                     <div className="flex items-center gap-2">
                       <div
-                        className="h-2 w-2 rounded-full"
+                        className="size-2 rounded-full"
                         style={{
                           backgroundColor: NODE_COLORS[node.type] || '#6b7280',
                         }}
@@ -721,11 +721,11 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
         <div className="flex gap-2">
           <Button
             size="sm"
-            className="flex-1 h-8"
+            className="h-8 flex-1"
             onClick={handleFindPath}
             disabled={!sourceId || !targetId || isSearching}
           >
-            <Search className="h-3 w-3 me-1" />
+            <Search className="me-1 size-3" />
             {t('pathFinding.find', 'Find Path')}
           </Button>
           <Button
@@ -735,7 +735,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
             onClick={handleClear}
             disabled={!pathResult}
           >
-            <X className="h-3 w-3" />
+            <X className="size-3" />
           </Button>
         </div>
 
@@ -750,7 +750,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
           >
             {pathResult.found ? (
               <div className="flex items-center gap-2">
-                <Route className="h-3 w-3" />
+                <Route className="size-3" />
                 {t('pathFinding.pathLength', {
                   count: pathResult.pathLength,
                   defaultValue: '{{count}} hop(s)',
@@ -758,7 +758,7 @@ function PathFindingPanel({ nodes, edges, onPathFound, onClearPath }: PathFindin
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <X className="h-3 w-3" />
+                <X className="size-3" />
                 {t('pathFinding.noPath', 'No connection found')}
               </div>
             )}
@@ -860,8 +860,8 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
   return (
     <Card className="w-full">
       <CardHeader className="pb-3">
-        <CardTitle className="text-sm flex items-center gap-2">
-          <Clock className="h-4 w-4" />
+        <CardTitle className="flex items-center gap-2 text-sm">
+          <Clock className="size-4" />
           {t('timeAnimation.title', 'Timeline')}
         </CardTitle>
         <CardDescription className="text-xs">
@@ -873,34 +873,34 @@ function TimeAnimationPanel({ edges, onTimeChange }: TimeAnimationPanelProps) {
           <Button
             size="icon"
             variant="ghost"
-            className="h-8 w-8"
+            className="size-8"
             onClick={() => {
               setCurrentDate(dateRange.min)
               setIsPlaying(false)
             }}
           >
-            <SkipBack className="h-4 w-4" />
+            <SkipBack className="size-4" />
           </Button>
 
           <Button
             size="icon"
             variant={isPlaying ? 'secondary' : 'default'}
-            className="h-8 w-8"
+            className="size-8"
             onClick={() => setIsPlaying(!isPlaying)}
           >
-            {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
+            {isPlaying ? <Pause className="size-4" /> : <Play className="size-4" />}
           </Button>
 
           <Button
             size="icon"
             variant="ghost"
-            className="h-8 w-8"
+            className="size-8"
             onClick={() => {
               setCurrentDate(dateRange.max)
               setIsPlaying(false)
             }}
           >
-            <SkipForward className="h-4 w-4" />
+            <SkipForward className="size-4" />
           </Button>
 
           <Button size="sm" variant="outline" className="h-8" onClick={handleReset}>
@@ -1022,11 +1022,11 @@ function ExportPanel({ reactFlowRef }: ExportPanelProps) {
             <Button
               size="icon"
               variant="outline"
-              className="h-8 w-8"
+              className="size-8"
               onClick={() => handleExport('png')}
               disabled={isExporting}
             >
-              <Image className="h-4 w-4" />
+              <Image className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>{t('export.png', 'Export as PNG')}</TooltipContent>
@@ -1039,11 +1039,11 @@ function ExportPanel({ reactFlowRef }: ExportPanelProps) {
             <Button
               size="icon"
               variant="outline"
-              className="h-8 w-8"
+              className="size-8"
               onClick={() => handleExport('svg')}
               disabled={isExporting}
             >
-              <FileImage className="h-4 w-4" />
+              <FileImage className="size-4" />
             </Button>
           </TooltipTrigger>
           <TooltipContent>{t('export.svg', 'Export as SVG')}</TooltipContent>
@@ -1448,7 +1448,7 @@ function AdvancedGraphVisualizationInner({
   return (
     <div
       ref={reactFlowRef}
-      className="relative w-full rounded-lg border bg-background overflow-hidden"
+      className="relative w-full overflow-hidden rounded-lg border bg-background"
       style={{ height }}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
@@ -1481,12 +1481,12 @@ function AdvancedGraphVisualizationInner({
         {/* Layout & Controls Panel */}
         <Panel
           position={isRTL ? 'top-left' : 'top-right'}
-          className="flex flex-col gap-2 max-w-[280px]"
+          className="flex max-w-[280px] flex-col gap-2"
         >
           {/* Layout Selector */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
-            <div className="text-xs font-semibold mb-2 flex items-center gap-2">
-              <GitBranch className="h-3.5 w-3.5" />
+          <div className="rounded-lg border bg-background/95 p-3 shadow-sm">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold">
+              <GitBranch className="size-3.5" />
               {t('layout.title', 'Layout')}
             </div>
             <Select value={layout} onValueChange={(v) => setLayout(v as LayoutType)}>
@@ -1496,25 +1496,25 @@ function AdvancedGraphVisualizationInner({
               <SelectContent>
                 <SelectItem value="circular" className="text-xs">
                   <div className="flex items-center gap-2">
-                    <Circle className="h-3 w-3" />
+                    <Circle className="size-3" />
                     {t('layout.circular', 'Circular')}
                   </div>
                 </SelectItem>
                 <SelectItem value="clustered" className="text-xs">
                   <div className="flex items-center gap-2">
-                    <Layers className="h-3 w-3" />
+                    <Layers className="size-3" />
                     {t('layout.clustered', 'Clustered')}
                   </div>
                 </SelectItem>
                 <SelectItem value="hierarchical" className="text-xs">
                   <div className="flex items-center gap-2">
-                    <Network className="h-3 w-3" />
+                    <Network className="size-3" />
                     {t('layout.hierarchical', 'Hierarchical')}
                   </div>
                 </SelectItem>
                 <SelectItem value="radial" className="text-xs">
                   <div className="flex items-center gap-2">
-                    <Activity className="h-3 w-3" />
+                    <Activity className="size-3" />
                     {t('layout.radial', 'Radial')}
                   </div>
                 </SelectItem>
@@ -1523,9 +1523,9 @@ function AdvancedGraphVisualizationInner({
           </div>
 
           {/* Filters */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
-            <div className="text-xs font-semibold mb-2 flex items-center gap-2">
-              <Filter className="h-3.5 w-3.5" />
+          <div className="rounded-lg border bg-background/95 p-3 shadow-sm">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold">
+              <Filter className="size-3.5" />
               {t('filters', 'Filters')}
             </div>
 
@@ -1562,7 +1562,7 @@ function AdvancedGraphVisualizationInner({
               <div className="space-y-1.5">
                 <div className="flex items-center justify-between">
                   <Label className="text-xs">{t('degreeFilter', 'Max Degrees')}</Label>
-                  <Badge variant="secondary" className="text-[10px] h-5">
+                  <Badge variant="secondary" className="h-5 text-[10px]">
                     {maxDegreeFilter}°
                   </Badge>
                 </div>
@@ -1579,10 +1579,10 @@ function AdvancedGraphVisualizationInner({
           </div>
 
           {/* Cluster Controls */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
-            <div className="text-xs font-semibold mb-2 flex items-center justify-between">
+          <div className="rounded-lg border bg-background/95 p-3 shadow-sm">
+            <div className="mb-2 flex items-center justify-between text-xs font-semibold">
               <span className="flex items-center gap-2">
-                <Layers className="h-3.5 w-3.5" />
+                <Layers className="size-3.5" />
                 {t('clusters', 'Clusters')}
               </span>
               <div className="flex gap-1">
@@ -1592,10 +1592,10 @@ function AdvancedGraphVisualizationInner({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6"
+                        className="size-6"
                         onClick={collapseAllClusters}
                       >
-                        <Shrink className="h-3 w-3" />
+                        <Shrink className="size-3" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">
@@ -1609,10 +1609,10 @@ function AdvancedGraphVisualizationInner({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6"
+                        className="size-6"
                         onClick={expandAllClusters}
                       >
-                        <Expand className="h-3 w-3" />
+                        <Expand className="size-3" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">{t('expandAll', 'Expand All')}</TooltipContent>
@@ -1621,29 +1621,29 @@ function AdvancedGraphVisualizationInner({
               </div>
             </div>
 
-            <div className="space-y-1 max-h-[150px] overflow-y-auto">
+            <div className="max-h-[150px] space-y-1 overflow-y-auto">
               {Object.entries(clusters).map(([type, cluster]) => (
                 <button
                   key={type}
-                  className="flex items-center justify-between w-full text-xs py-1 px-2 rounded hover:bg-muted transition-colors"
+                  className="flex w-full items-center justify-between rounded px-2 py-1 text-xs transition-colors hover:bg-muted"
                   onClick={() => toggleCluster(type)}
                 >
                   <span className="flex items-center gap-2">
                     <div
-                      className="h-2.5 w-2.5 rounded-full"
+                      className="size-2.5 rounded-full"
                       style={{
                         backgroundColor: NODE_COLORS[type] || '#6b7280',
                       }}
                     />
                     <span className="capitalize">{t(`type.${type}`, type)}</span>
-                    <Badge variant="secondary" className="text-[10px] h-4 px-1">
+                    <Badge variant="secondary" className="h-4 px-1 text-[10px]">
                       {cluster.count}
                     </Badge>
                   </span>
                   {cluster.collapsed ? (
-                    <ChevronRight className="h-3 w-3" />
+                    <ChevronRight className="size-3" />
                   ) : (
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown className="size-3" />
                   )}
                 </button>
               ))}
@@ -1651,28 +1651,28 @@ function AdvancedGraphVisualizationInner({
           </div>
 
           {/* Advanced Features Toggle */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm space-y-2">
-            <div className="text-xs font-semibold mb-2">{t('advanced.title', 'Advanced')}</div>
+          <div className="space-y-2 rounded-lg border bg-background/95 p-3 shadow-sm">
+            <div className="mb-2 text-xs font-semibold">{t('advanced.title', 'Advanced')}</div>
 
             <div className="flex items-center justify-between">
-              <Label className="text-xs flex items-center gap-2">
-                <Route className="h-3 w-3" />
+              <Label className="flex items-center gap-2 text-xs">
+                <Route className="size-3" />
                 {t('pathFinding.toggle', 'Path Finding')}
               </Label>
               <Switch checked={showPathPanel} onCheckedChange={setShowPathPanel} />
             </div>
 
             <div className="flex items-center justify-between">
-              <Label className="text-xs flex items-center gap-2">
-                <Clock className="h-3 w-3" />
+              <Label className="flex items-center gap-2 text-xs">
+                <Clock className="size-3" />
                 {t('timeAnimation.toggle', 'Timeline')}
               </Label>
               <Switch checked={showTimePanel} onCheckedChange={setShowTimePanel} />
             </div>
 
             <div className="flex items-center justify-between">
-              <Label className="text-xs flex items-center gap-2">
-                <Star className="h-3 w-3" />
+              <Label className="flex items-center gap-2 text-xs">
+                <Star className="size-3" />
                 {t('influence.toggle', 'Influence')}
               </Label>
               <Switch checked={showInfluence} onCheckedChange={setShowInfluence} />
@@ -1680,11 +1680,11 @@ function AdvancedGraphVisualizationInner({
           </div>
 
           {/* Stats */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm text-xs text-muted-foreground">
+          <div className="rounded-lg border bg-background/95 p-3 text-xs text-muted-foreground shadow-sm">
             {filteredNodes.length} {t('nodesShown', 'nodes')} · {filteredEdges.length}{' '}
             {t('edgesShown', 'edges')}
             {highlightedPath.length > 0 && (
-              <span className="text-amber-600 ms-2">· {t('pathActive', 'Path highlighted')}</span>
+              <span className="ms-2 text-amber-600">· {t('pathActive', 'Path highlighted')}</span>
             )}
           </div>
         </Panel>
@@ -1712,7 +1712,7 @@ function AdvancedGraphVisualizationInner({
         {/* Time Animation Panel */}
         <AnimatePresence>
           {showTimePanel && (
-            <Panel position={isRTL ? 'bottom-right' : 'bottom-left'} className="w-72 mb-16">
+            <Panel position={isRTL ? 'bottom-right' : 'bottom-left'} className="mb-16 w-72">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
@@ -1729,59 +1729,59 @@ function AdvancedGraphVisualizationInner({
           position={isRTL ? 'bottom-right' : 'bottom-left'}
           className={cn('flex gap-2', showTimePanel && 'mb-72')}
         >
-          <div className="bg-background/95 p-2 rounded-lg border shadow-sm flex gap-1">
+          <div className="flex gap-1 rounded-lg border bg-background/95 p-2 shadow-sm">
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8"
+              className="size-8"
               onClick={() => zoomIn()}
               title={t('zoomIn', 'Zoom In')}
             >
-              <ZoomIn className="h-4 w-4" />
+              <ZoomIn className="size-4" />
             </Button>
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8"
+              className="size-8"
               onClick={() => zoomOut()}
               title={t('zoomOut', 'Zoom Out')}
             >
-              <ZoomOut className="h-4 w-4" />
+              <ZoomOut className="size-4" />
             </Button>
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8"
+              className="size-8"
               onClick={() => fitView()}
               title={t('fitView', 'Fit View')}
             >
-              <Maximize2 className="h-4 w-4" />
+              <Maximize2 className="size-4" />
             </Button>
           </div>
 
           {/* Export Controls */}
-          <div className="bg-background/95 p-2 rounded-lg border shadow-sm">
+          <div className="rounded-lg border bg-background/95 p-2 shadow-sm">
             <ExportPanel reactFlowRef={reactFlowRef} />
           </div>
 
           {/* Settings Popover */}
           <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
             <PopoverTrigger asChild>
-              <Button size="icon" variant="outline" className="h-8 w-8 bg-background/95">
-                <Settings2 className="h-4 w-4" />
+              <Button size="icon" variant="outline" className="size-8 bg-background/95">
+                <Settings2 className="size-4" />
               </Button>
             </PopoverTrigger>
             <PopoverContent side={isRTL ? 'left' : 'right'} className="w-64" align="start">
               <div className="space-y-4">
-                <h4 className="font-medium text-sm">{t('settings.title', 'Display Settings')}</h4>
+                <h4 className="text-sm font-medium">{t('settings.title', 'Display Settings')}</h4>
 
                 {/* Show Labels */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm flex items-center gap-2">
+                  <Label className="flex items-center gap-2 text-sm">
                     {showLabels ? (
-                      <Eye className="h-3.5 w-3.5" />
+                      <Eye className="size-3.5" />
                     ) : (
-                      <EyeOff className="h-3.5 w-3.5" />
+                      <EyeOff className="size-3.5" />
                     )}
                     {t('settings.showLabels', 'Show Labels')}
                   </Label>
@@ -1796,8 +1796,8 @@ function AdvancedGraphVisualizationInner({
 
                 {/* Highlight Connections */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm flex items-center gap-2">
-                    <Focus className="h-3.5 w-3.5" />
+                  <Label className="flex items-center gap-2 text-sm">
+                    <Focus className="size-3.5" />
                     {t('settings.highlightConnections', 'Focus Mode')}
                   </Label>
                   <Switch
@@ -1831,39 +1831,39 @@ function AdvancedGraphVisualizationInner({
             (showPathPanel || showTimePanel) && 'hidden sm:block',
           )}
         >
-          <div className="text-xs font-semibold mb-2">{t('legend', 'Legend')}</div>
+          <div className="mb-2 text-xs font-semibold">{t('legend', 'Legend')}</div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
             {Object.entries(NODE_COLORS)
               .slice(0, 6)
               .map(([type, color]) => (
                 <div key={type} className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }} />
+                  <div className="size-3 rounded-full" style={{ backgroundColor: color }} />
                   <span className="capitalize">{t(`type.${type}`, type)}</span>
                 </div>
               ))}
           </div>
 
           {highlightedPath.length > 0 && (
-            <div className="mt-3 pt-2 border-t">
+            <div className="mt-3 border-t pt-2">
               <div className="flex items-center gap-2 text-xs text-amber-600">
-                <Route className="h-3 w-3" />
+                <Route className="size-3" />
                 {t('pathHighlighted', 'Path highlighted')}
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-5 text-xs px-1"
+                  className="h-5 px-1 text-xs"
                   onClick={handleClearPath}
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </Button>
               </div>
             </div>
           )}
 
           {focusedNodeId && !highlightedPath.length && (
-            <div className="mt-3 pt-2 border-t">
-              <div className="text-xs text-muted-foreground flex items-center gap-2">
-                <Focus className="h-3 w-3" />
+            <div className="mt-3 border-t pt-2">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Focus className="size-3" />
                 {t('focusedNode', 'Click background to clear focus')}
               </div>
             </div>

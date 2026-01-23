@@ -186,7 +186,7 @@ export function TemplateSelector({
             onClick={() => setShowShortcuts(!showShortcuts)}
             className="h-8 gap-1"
           >
-            <Keyboard className="h-4 w-4" />
+            <Keyboard className="size-4" />
             <span className="hidden sm:inline">{t('action.shortcuts')}</span>
           </Button>
           {onSkip && (
@@ -240,7 +240,7 @@ export function TemplateSelector({
             className={cn('absolute top-1/2 h-6 w-6 -translate-y-1/2', isRTL ? 'start-2' : 'end-2')}
             onClick={() => setSearchQuery('')}
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </Button>
         )}
       </div>
@@ -257,7 +257,7 @@ export function TemplateSelector({
       {/* Empty state */}
       {!isLoading && filteredTemplates.length === 0 && (
         <div className="flex flex-col items-center justify-center py-8 text-center">
-          <Sparkles className="h-12 w-12 text-muted-foreground/50" />
+          <Sparkles className="size-12 text-muted-foreground/50" />
           <p className="mt-2 text-muted-foreground">
             {searchQuery ? t('empty.noResults') : t('empty.noTemplates')}
           </p>
@@ -276,7 +276,7 @@ export function TemplateSelector({
           {favorites.length > 0 && (
             <div>
               <h3 className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                <Star className="h-4 w-4" />
+                <Star className="size-4" />
                 {t('section.favorites')}
               </h3>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -298,7 +298,7 @@ export function TemplateSelector({
           {recent.length > 0 && (
             <div>
               <h3 className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                <Clock className="h-4 w-4" />
+                <Clock className="size-4" />
                 {t('section.recent')}
               </h3>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -320,7 +320,7 @@ export function TemplateSelector({
           {other.length > 0 && (
             <div>
               <h3 className="mb-2 flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                <Sparkles className="h-4 w-4" />
+                <Sparkles className="size-4" />
                 {t('section.all')}
               </h3>
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">

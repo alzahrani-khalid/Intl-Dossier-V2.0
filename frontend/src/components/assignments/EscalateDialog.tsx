@@ -53,7 +53,7 @@ export function EscalateDialog({
       <DialogContent dir={isRTL ? 'rtl' : 'ltr'} className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <AlertTriangle className="h-5 w-5 text-yellow-600" />
+            <AlertTriangle className="size-5 text-yellow-600" />
             {t('escalate.title')}
           </DialogTitle>
           <DialogDescription>
@@ -84,11 +84,11 @@ export function EscalateDialog({
           </div>
 
           {/* Warning */}
-          <div className="flex gap-2 p-3 rounded-lg bg-yellow-50 dark:bg-yellow-950 text-yellow-900 dark:text-yellow-100 text-sm">
-            <AlertTriangle className="h-5 w-5 flex-shrink-0 mt-0.5" />
+          <div className="flex gap-2 rounded-lg bg-yellow-50 p-3 text-sm text-yellow-900 dark:bg-yellow-950 dark:text-yellow-100">
+            <AlertTriangle className="mt-0.5 size-5 shrink-0" />
             <div>
               <p className="font-medium">{t('escalate.warningTitle')}</p>
-              <p className="text-xs mt-1">{t('escalate.warningDescription')}</p>
+              <p className="mt-1 text-xs">{t('escalate.warningDescription')}</p>
             </div>
           </div>
         </div>

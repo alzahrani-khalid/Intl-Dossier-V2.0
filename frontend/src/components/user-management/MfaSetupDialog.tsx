@@ -181,7 +181,7 @@ export function MfaSetupDialog({ open, onOpenChange, userId }: MfaSetupDialogPro
 
  {error && (
  <Alert variant="destructive" className="my-2 sm:my-4">
- <AlertCircle className="h-4 w-4" />
+ <AlertCircle className="size-4" />
  <AlertDescription className="text-sm">{error}</AlertDescription>
  </Alert>
  )}
@@ -189,7 +189,7 @@ export function MfaSetupDialog({ open, onOpenChange, userId }: MfaSetupDialogPro
  {/* Step 1: Setup - Show QR Code */}
  {step === 'setup' && (
  <div className="flex flex-col gap-4 py-2 sm:py-4">
- <p className="text-sm text-muted-foreground text-start">
+ <p className="text-start text-sm text-muted-foreground">
  {t('userManagement.mfa.scanInstructions')}
  </p>
  <Button
@@ -210,7 +210,7 @@ export function MfaSetupDialog({ open, onOpenChange, userId }: MfaSetupDialogPro
  <img
  src={setupData.qrCodeUrl}
  alt="MFA QR Code"
- className="w-48 h-48 sm:w-56 sm:h-56"
+ className="size-48 sm:size-56"
  />
  </div>
 
@@ -231,7 +231,7 @@ export function MfaSetupDialog({ open, onOpenChange, userId }: MfaSetupDialogPro
  onClick={handleCopySecret}
  className=" "
  >
- <Copy className="h-4 w-4" />
+ <Copy className="size-4" />
  </Button>
  </div>
  </div>
@@ -251,7 +251,7 @@ export function MfaSetupDialog({ open, onOpenChange, userId }: MfaSetupDialogPro
  setTotpCode(value);
  setError(null);
  }}
- className="font-mono text-center text-lg sm:text-xl tracking-widest"
+ className="text-center font-mono text-lg tracking-widest sm:text-xl"
  maxLength={6}
  />
  </div>
@@ -269,8 +269,8 @@ export function MfaSetupDialog({ open, onOpenChange, userId }: MfaSetupDialogPro
  {/* Step 3: Backup Codes */}
  {step === 'backup' && setupData?.backupCodes && (
  <div className="flex flex-col gap-4 py-2 sm:py-4">
- <Alert className="bg-green-50 border-green-200">
- <CheckCircle2 className="h-4 w-4 text-green-600" />
+ <Alert className="border-green-200 bg-green-50">
+ <CheckCircle2 className="size-4 text-green-600" />
  <AlertDescription className="text-sm text-green-800">
  {t('userManagement.mfa.mfaEnabled')}
  </AlertDescription>
@@ -280,11 +280,11 @@ export function MfaSetupDialog({ open, onOpenChange, userId }: MfaSetupDialogPro
  <Label className="text-start text-sm font-semibold">
  {t('userManagement.mfa.backupCodesLabel')}
  </Label>
- <p className="text-xs sm:text-sm text-muted-foreground text-start">
+ <p className="text-start text-xs text-muted-foreground sm:text-sm">
  {t('userManagement.mfa.backupCodesWarning')}
  </p>
 
- <div className="grid grid-cols-2 gap-2 p-3 sm:p-4 bg-muted rounded-lg font-mono text-xs sm:text-sm">
+ <div className="grid grid-cols-2 gap-2 rounded-lg bg-muted p-3 font-mono text-xs sm:p-4 sm:text-sm">
  {setupData.backupCodes.map((code, index) => (
  <div key={index} className="text-center">
  {code}
@@ -297,7 +297,7 @@ export function MfaSetupDialog({ open, onOpenChange, userId }: MfaSetupDialogPro
  variant="outline"
  className="w-full gap-2"
  >
- <Download className="h-4 w-4" />
+ <Download className="size-4" />
  {t('userManagement.mfa.downloadBackupCodes')}
  </Button>
  </div>

@@ -203,10 +203,10 @@ export function ActivityTimelineItem({
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0 space-y-1">
+        <div className="min-w-0 flex-1 space-y-1">
           {/* Title Row */}
           <div className="flex items-start justify-between gap-2">
-            <h4 className="font-medium text-sm leading-tight truncate">
+            <h4 className="truncate text-sm font-medium leading-tight">
               {activity.activity_title || t('timeline.noTitle', 'Untitled')}
             </h4>
             <ChevronRight
@@ -256,7 +256,7 @@ export function ActivityTimelineItem({
 
           {/* Inheritance Info */}
           {activity.inheritance_source !== 'direct' && (
-            <p className="text-xs text-muted-foreground italic">
+            <p className="text-xs italic text-muted-foreground">
               {t('timeline.inheritedVia', 'via')}{' '}
               {t(
                 `timeline.inheritanceSource.${activity.inheritance_source}`,

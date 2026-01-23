@@ -102,7 +102,7 @@ function TrendIndicator({
           bgColors[direction],
         )}
       >
-        <TrendIcon className="h-3 w-3" />
+        <TrendIcon className="size-3" />
         <span>{percentage.toFixed(1)}%</span>
       </span>
       <span className="text-xs text-muted-foreground">
@@ -128,7 +128,7 @@ function TargetProgress({
     <div className="space-y-1.5">
       <div className="flex items-center justify-between text-xs text-muted-foreground">
         <div className="flex items-center gap-1">
-          <Target className="h-3 w-3" />
+          <Target className="size-3" />
           <span>
             {current.toLocaleString()} / {target.toLocaleString()}
           </span>
@@ -164,10 +164,10 @@ export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
   // Loading skeleton
   if (isLoading || !data) {
     return (
-      <div className="h-full flex flex-col justify-center animate-pulse">
-        <div className="h-3 w-24 bg-muted rounded mb-2" />
-        <div className="h-8 w-32 bg-muted rounded mb-3" />
-        <div className="h-3 w-20 bg-muted rounded" />
+      <div className="flex h-full animate-pulse flex-col justify-center">
+        <div className="mb-2 h-3 w-24 rounded bg-muted" />
+        <div className="mb-3 h-8 w-32 rounded bg-muted" />
+        <div className="h-3 w-20 rounded bg-muted" />
       </div>
     )
   }
@@ -183,12 +183,12 @@ export function KpiWidget({ config, data, isLoading }: KpiWidgetProps) {
         : 'rgb(156, 163, 175)'
 
   return (
-    <div className="h-full flex flex-col justify-between">
+    <div className="flex h-full flex-col justify-between">
       {/* Metric Label */}
-      <p className="text-xs sm:text-sm text-muted-foreground mb-1">{metricLabel}</p>
+      <p className="mb-1 text-xs text-muted-foreground sm:text-sm">{metricLabel}</p>
 
       {/* Main Value */}
-      <div className="flex-1 flex flex-col justify-center">
+      <div className="flex flex-1 flex-col justify-center">
         <p
           className={cn(
             'text-2xl sm:text-3xl lg:text-4xl font-bold tracking-tight',

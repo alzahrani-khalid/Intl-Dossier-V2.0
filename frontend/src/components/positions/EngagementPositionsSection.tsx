@@ -61,7 +61,7 @@ export function EngagementPositionsSection({
  <div className="flex items-center justify-between">
  <div>
  <CardTitle className="flex items-center gap-2">
- <FileText className="h-5 w-5" />
+ <FileText className="size-5" />
  {t('positions:engagement_section.title')}
  </CardTitle>
  <CardDescription>
@@ -73,7 +73,7 @@ export function EngagementPositionsSection({
  size="sm"
  className="gap-2"
  >
- <Plus className="h-4 w-4" />
+ <Plus className="size-4" />
  {t('positions:engagement_section.attach_position')}
  </Button>
  </div>
@@ -91,7 +91,7 @@ export function EngagementPositionsSection({
  )}
  </TabsTrigger>
  <TabsTrigger value="suggestions" className="gap-2">
- <Sparkles className="h-4 w-4" />
+ <Sparkles className="size-4" />
  {t('positions:engagement_section.suggestions_tab')}
  {suggestionsCount > 0 && (
  <span className="ms-1 rounded-full bg-primary/20 px-2 py-0.5 text-xs font-medium">
@@ -112,7 +112,7 @@ export function EngagementPositionsSection({
  <TabsContent value="attached" className="mt-6">
  {attachedError ? (
  <div
- className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center"
+ className="rounded-lg border border-red-200 bg-red-50 p-4 text-center dark:border-red-800 dark:bg-red-900/20"
  role="alert"
  >
  <p className="text-sm text-red-700 dark:text-red-300">
@@ -137,7 +137,7 @@ export function EngagementPositionsSection({
  <TabsContent value="suggestions" className="mt-6">
  {suggestionsError ? (
  <div
- className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 text-center"
+ className="rounded-lg border border-red-200 bg-red-50 p-4 text-center dark:border-red-800 dark:bg-red-900/20"
  role="alert"
  >
  <p className="text-sm text-red-700 dark:text-red-300">
@@ -159,8 +159,8 @@ export function EngagementPositionsSection({
  {/* Briefing Pack Tab */}
  <TabsContent value="briefing" className="mt-6">
  {attachedCount === 0 ? (
- <div className="text-center py-12">
- <FileText className="h-12 w-12 mx-auto text-gray-400 mb-4" />
+ <div className="py-12 text-center">
+ <FileText className="mx-auto mb-4 size-12 text-gray-400" />
  <p className="text-sm text-gray-500 dark:text-gray-400">
  {t('positions:engagement_section.no_positions_for_briefing')}
  </p>

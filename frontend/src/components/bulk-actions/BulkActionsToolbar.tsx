@@ -56,18 +56,18 @@ export interface BulkActionsToolbarProps<T extends BulkSelectableItem = BulkSele
  * Icon mapping for action types
  */
 const ACTION_ICONS: Record<string, React.ReactNode> = {
-  'update-status': <RefreshCw className="h-4 w-4" />,
-  assign: <UserPlus className="h-4 w-4" />,
-  unassign: <UserPlus className="h-4 w-4" />,
-  'add-tags': <Tags className="h-4 w-4" />,
-  'remove-tags': <Tags className="h-4 w-4" />,
-  export: <Download className="h-4 w-4" />,
-  delete: <Trash2 className="h-4 w-4" />,
-  archive: <Archive className="h-4 w-4" />,
-  restore: <RotateCcw className="h-4 w-4" />,
-  'send-reminder': <Bell className="h-4 w-4" />,
-  escalate: <AlertTriangle className="h-4 w-4" />,
-  'change-priority': <ArrowUpCircle className="h-4 w-4" />,
+  'update-status': <RefreshCw className="size-4" />,
+  assign: <UserPlus className="size-4" />,
+  unassign: <UserPlus className="size-4" />,
+  'add-tags': <Tags className="size-4" />,
+  'remove-tags': <Tags className="size-4" />,
+  export: <Download className="size-4" />,
+  delete: <Trash2 className="size-4" />,
+  archive: <Archive className="size-4" />,
+  restore: <RotateCcw className="size-4" />,
+  'send-reminder': <Bell className="size-4" />,
+  escalate: <AlertTriangle className="size-4" />,
+  'change-priority': <ArrowUpCircle className="size-4" />,
 }
 
 /**
@@ -168,7 +168,7 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
             aria-label={t(`actions.${action.id.replace(/-/g, '')}`)}
           >
             <span className={cn('me-0 sm:me-2', isRTL && 'rotate-0')}>
-              {ACTION_ICONS[action.id] || <MoreHorizontal className="h-4 w-4" />}
+              {ACTION_ICONS[action.id] || <MoreHorizontal className="size-4" />}
             </span>
             <span className="hidden sm:inline">{t(`actions.${action.id.replace(/-/g, '')}`)}</span>
           </Button>
@@ -185,7 +185,7 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
                 className="h-10 min-w-10 px-3 sm:h-11 sm:px-4"
                 aria-label={t('actions.moreActions')}
               >
-                <MoreHorizontal className="h-4 w-4 me-0 sm:me-2" />
+                <MoreHorizontal className="me-0 size-4 sm:me-2" />
                 <span className="hidden sm:inline">{t('actions.moreActions')}</span>
                 <ChevronDown className={cn('h-4 w-4 ms-1', isRTL && 'rotate-180')} />
               </Button>
@@ -202,7 +202,7 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
                       action.isDestructive && 'text-red-600 dark:text-red-400 focus:text-red-600',
                     )}
                   >
-                    {ACTION_ICONS[action.id] || <MoreHorizontal className="h-4 w-4" />}
+                    {ACTION_ICONS[action.id] || <MoreHorizontal className="size-4" />}
                     <span>{t(`actions.${action.id.replace(/-/g, '')}`)}</span>
                   </DropdownMenuItem>
                 </div>
@@ -217,11 +217,11 @@ export function BulkActionsToolbar<T extends BulkSelectableItem = BulkSelectable
           variant="ghost"
           size="sm"
           disabled={isProcessing}
-          className="h-10 min-w-10 px-3 sm:h-11 sm:px-4 text-gray-600 dark:text-gray-400"
+          className="h-10 min-w-10 px-3 text-gray-600 dark:text-gray-400 sm:h-11 sm:px-4"
           aria-label={t('selection.clearSelection')}
         >
-          <X className="h-4 w-4" />
-          <span className="hidden sm:inline ms-2">{t('selection.clearSelection')}</span>
+          <X className="size-4" />
+          <span className="ms-2 hidden sm:inline">{t('selection.clearSelection')}</span>
         </Button>
       </div>
     </div>

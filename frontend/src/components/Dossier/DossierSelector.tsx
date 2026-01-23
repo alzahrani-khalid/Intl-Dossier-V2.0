@@ -268,20 +268,20 @@ export function DossierSelector({
       {label && (
         <Label className="text-sm font-medium">
           {label}
-          {required && <span className="text-destructive ms-1">*</span>}
+          {required && <span className="ms-1 text-destructive">*</span>}
         </Label>
       )}
 
       {/* Selected dossiers display */}
       {selectedDossiers.length > 0 && (
-        <div className="flex flex-wrap gap-2 p-2 rounded-md border bg-muted/30">
+        <div className="flex flex-wrap gap-2 rounded-md border bg-muted/30 p-2">
           {selectedDossiers.map((dossier) => {
             const Icon = dossierTypeIcons[dossier.type] || FileText
             return (
               <Badge
                 key={dossier.id}
                 variant="secondary"
-                className="flex items-center gap-1.5 py-1 ps-2 pe-1"
+                className="flex items-center gap-1.5 py-1 pe-1 ps-2"
               >
                 <Icon className="size-3" />
                 <span className="max-w-[150px] truncate">{getDisplayName(dossier)}</span>
@@ -289,7 +289,7 @@ export function DossierSelector({
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="size-5 p-0 ms-1 hover:bg-destructive/20"
+                  className="ms-1 size-5 p-0 hover:bg-destructive/20"
                   onClick={() => handleRemove(dossier.id)}
                   disabled={disabled}
                   aria-label={t('actions.remove_dossier', 'Remove Dossier')}
@@ -331,7 +331,7 @@ export function DossierSelector({
             )}
             disabled={disabled}
           >
-            <Search className="size-4 text-muted-foreground shrink-0" />
+            <Search className="size-4 shrink-0 text-muted-foreground" />
             <span className="text-muted-foreground">
               {selectedDossiers.length > 0
                 ? multiple
@@ -355,7 +355,7 @@ export function DossierSelector({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 onKeyDown={handleKeyDown}
-                className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground border-0 focus-visible:ring-0"
+                className="flex h-11 w-full rounded-md border-0 bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-0"
               />
               {searchQuery && (
                 <Button
@@ -404,9 +404,9 @@ export function DossierSelector({
                         >
                           {selected && <Check className="size-3" />}
                         </div>
-                        <Icon className="size-4 text-muted-foreground me-2 shrink-0" />
+                        <Icon className="me-2 size-4 shrink-0 text-muted-foreground" />
                         <span className="flex-1 truncate">{getDisplayName(dossier)}</span>
-                        <Badge variant="outline" className="text-xs ms-2">
+                        <Badge variant="outline" className="ms-2 text-xs">
                           {t(`type.${dossier.type}`, dossier.type)}
                         </Badge>
                       </CommandItem>

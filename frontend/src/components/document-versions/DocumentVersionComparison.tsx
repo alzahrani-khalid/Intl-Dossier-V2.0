@@ -106,7 +106,7 @@ const DiffLineComponent = memo(function DiffLineComponent({
   return (
     <div className={cn('flex font-mono text-xs sm:text-sm', bgColor)}>
       {showLineNumbers && (
-        <div className="flex-shrink-0 w-8 sm:w-12 text-muted-foreground text-end pe-2 select-none border-e bg-muted/30">
+        <div className="w-8 shrink-0 select-none border-e bg-muted/30 pe-2 text-end text-muted-foreground sm:w-12">
           {line.lineNumberOld || line.lineNumberNew || ''}
         </div>
       )}
@@ -131,7 +131,7 @@ const DiffHunkComponent = memo(function DiffHunkComponent({
   const { t } = useTranslation('document-versions')
 
   return (
-    <div className="border rounded-md overflow-hidden mb-4">
+    <div className="mb-4 overflow-hidden rounded-md border">
       <div className="bg-muted px-3 py-1.5 text-xs text-muted-foreground">
         {t('diff.hunkHeader', 'Changes at lines {{oldStart}}-{{oldEnd}}', {
           oldStart: hunk.oldStart,
@@ -163,7 +163,7 @@ const SideBySideDiff = memo(function SideBySideDiff({
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
       {/* Version A (Old) */}
       <div className="space-y-2">
         <div className="flex items-center gap-2 text-sm font-medium">
@@ -175,7 +175,7 @@ const SideBySideDiff = memo(function SideBySideDiff({
           </Badge>
           <span className="text-muted-foreground">{t('diff.oldVersion', 'Old Version')}</span>
         </div>
-        <ScrollArea className="h-[400px] border rounded-md">
+        <ScrollArea className="h-[400px] rounded-md border">
           <div className="p-2">
             {hunks.map((hunk, index) => (
               <div key={index} className="mb-2">
@@ -201,7 +201,7 @@ const SideBySideDiff = memo(function SideBySideDiff({
           </Badge>
           <span className="text-muted-foreground">{t('diff.newVersion', 'New Version')}</span>
         </div>
-        <ScrollArea className="h-[400px] border rounded-md">
+        <ScrollArea className="h-[400px] rounded-md border">
           <div className="p-2">
             {hunks.map((hunk, index) => (
               <div key={index} className="mb-2">
@@ -224,13 +224,13 @@ const SideBySideDiff = memo(function SideBySideDiff({
  */
 const InlineDiff = memo(function InlineDiff({ hunks }: { hunks: DiffHunk[] }) {
   return (
-    <ScrollArea className="h-[500px] border rounded-md">
+    <ScrollArea className="h-[500px] rounded-md border">
       <div className="p-2">
         {hunks.map((hunk, index) => (
           <DiffHunkComponent key={index} hunk={hunk} index={index} />
         ))}
         {hunks.length === 0 && (
-          <div className="text-center text-muted-foreground py-8">No text differences found</div>
+          <div className="py-8 text-center text-muted-foreground">No text differences found</div>
         )}
       </div>
     </ScrollArea>
@@ -269,25 +269,25 @@ const VersionMetadataCard = memo(function VersionMetadataCard({
       </CardHeader>
       <CardContent className="space-y-2 text-sm">
         <div className="flex items-center gap-2 text-muted-foreground">
-          <FileText className="h-4 w-4 flex-shrink-0" />
+          <FileText className="size-4 shrink-0" />
           <span className="truncate">{version.file_name}</span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
-          <Hash className="h-4 w-4 flex-shrink-0" />
+          <Hash className="size-4 shrink-0" />
           <span>{formatFileSize(version.size_bytes)}</span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
-          <User className="h-4 w-4 flex-shrink-0" />
+          <User className="size-4 shrink-0" />
           <span className="truncate">
             {version.created_by_name || t('common.unknown', 'Unknown')}
           </span>
         </div>
         <div className="flex items-center gap-2 text-muted-foreground">
-          <Calendar className="h-4 w-4 flex-shrink-0" />
+          <Calendar className="size-4 shrink-0" />
           <span>{formatDate(version.created_at, isRTL ? 'ar-SA' : 'en-US')}</span>
         </div>
         {version.change_summary && (
-          <div className="pt-2 border-t">
+          <div className="border-t pt-2">
             <p className="text-xs text-muted-foreground">{version.change_summary}</p>
           </div>
         )}
@@ -303,17 +303,17 @@ const DiffStatsComponent = memo(function DiffStatsComponent({ stats }: { stats: 
   const { t } = useTranslation('document-versions')
 
   return (
-    <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm">
+    <div className="flex flex-wrap items-center gap-3 text-sm sm:gap-4">
       <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
-        <Plus className="h-4 w-4" />
+        <Plus className="size-4" />
         <span>{t('stats.additions', '{{count}} additions', { count: stats.additions })}</span>
       </div>
       <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
-        <Minus className="h-4 w-4" />
+        <Minus className="size-4" />
         <span>{t('stats.deletions', '{{count}} deletions', { count: stats.deletions })}</span>
       </div>
       <div className="flex items-center gap-1.5 text-muted-foreground">
-        <ArrowLeftRight className="h-4 w-4" />
+        <ArrowLeftRight className="size-4" />
         <span>{t('stats.similarity', '{{percent}}% similar', { percent: stats.similarity })}</span>
       </div>
     </div>
@@ -352,7 +352,7 @@ export const DocumentVersionComparison = memo(function DocumentVersionComparison
   return (
     <div className={cn('space-y-4 sm:space-y-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold">{t('comparison.title', 'Version Comparison')}</h3>
           <p className="text-sm text-muted-foreground">
@@ -365,14 +365,14 @@ export const DocumentVersionComparison = memo(function DocumentVersionComparison
         <div className="flex items-center gap-2">
           {/* View mode toggle */}
           {canCompareText && onViewModeChange && (
-            <div className="flex items-center border rounded-md">
+            <div className="flex items-center rounded-md border">
               <Button
                 variant={viewMode === 'inline' ? 'secondary' : 'ghost'}
                 size="sm"
                 onClick={() => onViewModeChange('inline')}
                 className="rounded-e-none"
               >
-                <Rows className="h-4 w-4 me-1" />
+                <Rows className="me-1 size-4" />
                 <span className="hidden sm:inline">{t('viewMode.inline', 'Inline')}</span>
               </Button>
               <Button
@@ -381,28 +381,28 @@ export const DocumentVersionComparison = memo(function DocumentVersionComparison
                 onClick={() => onViewModeChange('side_by_side')}
                 className="rounded-s-none"
               >
-                <Columns className="h-4 w-4 me-1" />
+                <Columns className="me-1 size-4" />
                 <span className="hidden sm:inline">{t('viewMode.sideBySide', 'Side by Side')}</span>
               </Button>
             </div>
           )}
           {onClose && (
             <Button variant="ghost" size="sm" onClick={onClose}>
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
           )}
         </div>
       </div>
 
       {/* Version metadata cards */}
-      <div className="flex flex-col sm:flex-row gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row">
         <VersionMetadataCard
           version={versionA}
           label={t('diff.oldVersion', 'Old Version')}
           variant="old"
         />
-        <div className="hidden sm:flex items-center justify-center">
-          <ArrowLeftRight className="h-6 w-6 text-muted-foreground" />
+        <div className="hidden items-center justify-center sm:flex">
+          <ArrowLeftRight className="size-6 text-muted-foreground" />
         </div>
         <VersionMetadataCard
           version={versionB}
@@ -423,8 +423,8 @@ export const DocumentVersionComparison = memo(function DocumentVersionComparison
                 : 'outline'
           }
         >
-          {sizeDiff.direction === 'increased' && <ArrowUp className="h-3 w-3 me-1" />}
-          {sizeDiff.direction === 'decreased' && <ArrowDown className="h-3 w-3 me-1" />}
+          {sizeDiff.direction === 'increased' && <ArrowUp className="me-1 size-3" />}
+          {sizeDiff.direction === 'decreased' && <ArrowDown className="me-1 size-3" />}
           {sizeDiff.direction === 'unchanged'
             ? t('comparison.noChange', 'No change')
             : `${sizeDiff.percentage}%`}
@@ -453,14 +453,14 @@ export const DocumentVersionComparison = memo(function DocumentVersionComparison
           </Tabs>
         </>
       ) : (
-        <div className="text-center py-8 sm:py-12 border rounded-lg bg-muted/30">
-          <FileText className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h4 className="text-base font-medium mb-2">
+        <div className="rounded-lg border bg-muted/30 py-8 text-center sm:py-12">
+          <FileText className="mx-auto mb-4 size-12 text-muted-foreground" />
+          <h4 className="mb-2 text-base font-medium">
             {canCompareText
               ? t('comparison.noTextDiff', 'No text differences found')
               : t('comparison.binaryFile', 'Binary file comparison')}
           </h4>
-          <p className="text-sm text-muted-foreground max-w-md mx-auto">
+          <p className="mx-auto max-w-md text-sm text-muted-foreground">
             {canCompareText
               ? t('comparison.noTextDiffDesc', 'The text content of these versions is identical.')
               : t(
@@ -469,15 +469,15 @@ export const DocumentVersionComparison = memo(function DocumentVersionComparison
                 )}
           </p>
           {onDownloadVersion && (
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 mt-6">
+            <div className="mt-6 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Button variant="outline" size="sm" onClick={() => onDownloadVersion(versionA)}>
-                <Download className="h-4 w-4 me-2" />
+                <Download className="me-2 size-4" />
                 {t('actions.downloadVersionA', 'Download v{{version}}', {
                   version: versionA.version_number,
                 })}
               </Button>
               <Button variant="outline" size="sm" onClick={() => onDownloadVersion(versionB)}>
-                <Download className="h-4 w-4 me-2" />
+                <Download className="me-2 size-4" />
                 {t('actions.downloadVersionB', 'Download v{{version}}', {
                   version: versionB.version_number,
                 })}

@@ -255,12 +255,12 @@ export function AddMilestoneDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-h-[90vh] max-w-lg sm:max-w-xl overflow-y-auto"
+        className="max-h-[90vh] max-w-lg overflow-y-auto sm:max-w-xl"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <TypeIcon className="h-5 w-5" />
+            <TypeIcon className="size-5" />
             {editMilestone ? t('form.editMilestone') : t('form.addMilestone')}
           </DialogTitle>
           <DialogDescription>
@@ -292,7 +292,7 @@ export function AddMilestoneDialog({
                     return (
                       <SelectItem key={type} value={type}>
                         <div className="flex items-center gap-2">
-                          <Icon className="h-4 w-4" />
+                          <Icon className="size-4" />
                           {t(`types.${type}`)}
                         </div>
                       </SelectItem>
@@ -338,7 +338,7 @@ export function AddMilestoneDialog({
           </div>
 
           {/* Date and Time Row */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="space-y-2">
               <Label htmlFor="target_date">
                 {t('form.targetDate')} <span className="text-destructive">*</span>
@@ -439,8 +439,8 @@ export function AddMilestoneDialog({
           {/* Reminders Section */}
           <div className="space-y-4">
             <div className="flex items-center justify-between">
-              <Label className="text-base font-medium flex items-center gap-2">
-                <Bell className="h-4 w-4" />
+              <Label className="flex items-center gap-2 text-base font-medium">
+                <Bell className="size-4" />
                 {t('reminders.title')}
               </Label>
               <Button type="button" variant="outline" size="sm" onClick={addReminder}>
@@ -450,7 +450,7 @@ export function AddMilestoneDialog({
             </div>
 
             {formData.reminders.length === 0 ? (
-              <p className="text-sm text-muted-foreground text-center py-4">
+              <p className="py-4 text-center text-sm text-muted-foreground">
                 {t(
                   'reminders.noReminders',
                   'No reminders set. Add a reminder to get notified before the milestone.',
@@ -461,7 +461,7 @@ export function AddMilestoneDialog({
                 {formData.reminders.map((reminder, index) => (
                   <div
                     key={reminder.id}
-                    className="p-3 sm:p-4 border rounded-lg space-y-3 bg-muted/30"
+                    className="space-y-3 rounded-lg border bg-muted/30 p-3 sm:p-4"
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -477,14 +477,14 @@ export function AddMilestoneDialog({
                         type="button"
                         variant="ghost"
                         size="sm"
-                        className="h-8 w-8 p-0 text-destructive hover:text-destructive"
+                        className="size-8 p-0 text-destructive hover:text-destructive"
                         onClick={() => removeReminder(index)}
                       >
-                        <Trash2 className="h-4 w-4" />
+                        <Trash2 className="size-4" />
                       </Button>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <div className="space-y-1">
                         <Label className="text-xs">{t('reminders.daysBefore')}</Label>
                         <Input
@@ -545,7 +545,7 @@ export function AddMilestoneDialog({
             )}
           </div>
 
-          <DialogFooter className="flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
             <Button
               type="button"
               variant="outline"

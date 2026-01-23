@@ -147,22 +147,22 @@ export function ConditionsManager({ scheduleId }: ConditionsManagerProps) {
 
   return (
     <div className="space-y-4">
-      <div className="flex justify-between items-center">
+      <div className="flex items-center justify-between">
         <div>
           <h3 className="font-medium">{t('conditions.title')}</h3>
           <p className="text-sm text-muted-foreground">{t('conditions.description')}</p>
         </div>
         <Button variant="outline" size="sm" onClick={() => setAddDialogOpen(true)}>
-          <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+          <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
           {t('conditions.addCondition')}
         </Button>
       </div>
 
       {/* Empty State */}
       {conditions?.length === 0 && (
-        <Card className="text-center py-8">
+        <Card className="py-8 text-center">
           <CardContent>
-            <Filter className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+            <Filter className="mx-auto mb-2 size-8 text-muted-foreground" />
             <p className="font-medium">{t('conditions.noConditions')}</p>
             <p className="text-sm text-muted-foreground">
               {t('conditions.noConditionsDescription')}
@@ -175,27 +175,27 @@ export function ConditionsManager({ scheduleId }: ConditionsManagerProps) {
       <div className="space-y-2">
         {conditions?.map((condition, index) => (
           <Card key={condition.id}>
-            <CardContent className="flex items-center justify-between py-3 px-4">
+            <CardContent className="flex items-center justify-between px-4 py-3">
               <div className="flex items-center gap-3">
-                <div className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-sm font-medium">
+                <div className="flex size-8 items-center justify-center rounded-full bg-muted text-sm font-medium">
                   {index + 1}
                 </div>
                 <div>
                   <div className="flex items-center gap-2">
-                    <code className="text-sm bg-muted px-2 py-0.5 rounded">
+                    <code className="rounded bg-muted px-2 py-0.5 text-sm">
                       {condition.field_path}
                     </code>
                     <span className="text-sm text-muted-foreground">
                       {getOperatorLabel(condition.operator)}
                     </span>
                     {condition.value && (
-                      <code className="text-sm bg-muted px-2 py-0.5 rounded">
+                      <code className="rounded bg-muted px-2 py-0.5 text-sm">
                         {condition.value}
                       </code>
                     )}
                   </div>
                   {condition.fail_message && (
-                    <p className="text-xs text-muted-foreground mt-1">
+                    <p className="mt-1 text-xs text-muted-foreground">
                       {isRTL && condition.fail_message_ar
                         ? condition.fail_message_ar
                         : condition.fail_message}
@@ -213,7 +213,7 @@ export function ConditionsManager({ scheduleId }: ConditionsManagerProps) {
                   onClick={() => handleRemove(condition)}
                   disabled={removeCondition.isPending}
                 >
-                  <Trash2 className="h-4 w-4 text-destructive" />
+                  <Trash2 className="size-4 text-destructive" />
                 </Button>
               </div>
             </CardContent>

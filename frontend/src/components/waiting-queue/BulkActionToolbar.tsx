@@ -40,7 +40,7 @@ export function BulkActionToolbar({
 
  return (
  <div
- className="sticky top-0 z-10 flex flex-col gap-2 p-4 bg-blue-50 border-b border-blue-200 dark:bg-blue-950 dark:border-blue-800 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
+ className="sticky top-0 z-10 flex flex-col gap-2 border-b border-blue-200 bg-blue-50 p-4 dark:border-blue-800 dark:bg-blue-950 sm:flex-row sm:items-center sm:justify-between sm:gap-4"
  dir={isRTL ? 'rtl' : 'ltr'}
  role="toolbar"
  aria-label={t('waitingQueue.bulkActions.toolbar')}
@@ -60,7 +60,7 @@ export function BulkActionToolbar({
  <Button
  onClick={onSendReminders}
  disabled={isProcessing}
- className="flex-1 h-11 px-4 text-sm sm:flex-initial sm:px-6 sm:text-base"
+ className="h-11 flex-1 px-4 text-sm sm:flex-initial sm:px-6 sm:text-base"
  aria-label={t('waitingQueue.bulkActions.sendReminders')}
  >
  {isProcessing
@@ -75,8 +75,8 @@ export function BulkActionToolbar({
  className="h-11 px-3 sm:px-4"
  aria-label={t('waitingQueue.bulkActions.clearSelection')}
  >
- <X className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
- <span className="hidden sm:inline ms-2">
+ <X className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
+ <span className="ms-2 hidden sm:inline">
  {t('waitingQueue.bulkActions.clear')}
  </span>
  </Button>

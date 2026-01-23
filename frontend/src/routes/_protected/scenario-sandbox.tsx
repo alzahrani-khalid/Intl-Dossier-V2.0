@@ -167,26 +167,26 @@ function ScenarioSandboxPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('subtitle')}</p>
+          <h1 className="text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+          <p className="mt-1 text-muted-foreground">{t('subtitle')}</p>
         </div>
         <Button onClick={() => setIsFormOpen(true)} className="shrink-0">
-          <Plus className="h-4 w-4 me-2" />
+          <Plus className="me-2 size-4" />
           {t('scenario.create')}
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
+      <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-4">
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
-                <Target className="h-5 w-5" />
+              <div className="flex size-10 items-center justify-center rounded-lg bg-primary/10 text-primary">
+                <Target className="size-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.total}</p>
@@ -198,8 +198,8 @@ function ScenarioSandboxPage() {
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
-                <Variable className="h-5 w-5" />
+              <div className="flex size-10 items-center justify-center rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
+                <Variable className="size-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.active}</p>
@@ -211,8 +211,8 @@ function ScenarioSandboxPage() {
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
-                <TrendingUp className="h-5 w-5" />
+              <div className="flex size-10 items-center justify-center rounded-lg bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400">
+                <TrendingUp className="size-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.completed}</p>
@@ -224,8 +224,8 @@ function ScenarioSandboxPage() {
         <Card>
           <CardContent className="pt-4">
             <div className="flex items-center gap-3">
-              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
-                <TrendingDown className="h-5 w-5" />
+              <div className="flex size-10 items-center justify-center rounded-lg bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-400">
+                <TrendingDown className="size-5" />
               </div>
               <div>
                 <p className="text-2xl font-bold">{stats.draft}</p>
@@ -238,7 +238,7 @@ function ScenarioSandboxPage() {
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <TabsList>
             <TabsTrigger value="scenarios">{t('tabs.scenarios')}</TabsTrigger>
             <TabsTrigger value="compare">
@@ -252,14 +252,14 @@ function ScenarioSandboxPage() {
           </TabsList>
 
           {activeTab === 'scenarios' && (
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <div className="relative">
-                <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
                 <Input
                   placeholder={t('filters.search')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="ps-9 w-full sm:w-[200px]"
+                  className="w-full ps-9 sm:w-[200px]"
                 />
               </div>
               <Select
@@ -304,16 +304,16 @@ function ScenarioSandboxPage() {
         <TabsContent value="scenarios" className="mt-0">
           {isLoading ? (
             <div className="flex items-center justify-center py-12">
-              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <Loader2 className="size-8 animate-spin text-primary" />
             </div>
           ) : isError ? (
             <Alert variant="destructive">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertTitle>{t('errors.loadFailed')}</AlertTitle>
               <AlertDescription>
                 {error?.message || 'Unknown error'}
                 <Button variant="outline" size="sm" className="ms-4" onClick={() => refetch()}>
-                  <RefreshCw className="h-4 w-4 me-2" />
+                  <RefreshCw className="me-2 size-4" />
                   Retry
                 </Button>
               </AlertDescription>
@@ -322,13 +322,13 @@ function ScenarioSandboxPage() {
             <Card>
               <CardContent className="py-12">
                 <div className="text-center">
-                  <Target className="h-12 w-12 mx-auto mb-4 text-muted-foreground opacity-40" />
-                  <h3 className="font-semibold text-lg mb-2">{t('empty.title')}</h3>
-                  <p className="text-muted-foreground mb-4 max-w-md mx-auto">
+                  <Target className="mx-auto mb-4 size-12 text-muted-foreground opacity-40" />
+                  <h3 className="mb-2 text-lg font-semibold">{t('empty.title')}</h3>
+                  <p className="mx-auto mb-4 max-w-md text-muted-foreground">
                     {t('empty.description')}
                   </p>
                   <Button onClick={() => setIsFormOpen(true)}>
-                    <Plus className="h-4 w-4 me-2" />
+                    <Plus className="me-2 size-4" />
                     {t('empty.action')}
                   </Button>
                 </div>
@@ -339,7 +339,7 @@ function ScenarioSandboxPage() {
               {/* Comparison Selection Bar */}
               {selectedForComparison.length > 0 && (
                 <Alert>
-                  <GitCompare className="h-4 w-4" />
+                  <GitCompare className="size-4" />
                   <AlertTitle>{t('comparison.selectScenarios')}</AlertTitle>
                   <AlertDescription className="flex items-center justify-between">
                     <span>
@@ -359,7 +359,7 @@ function ScenarioSandboxPage() {
                         onClick={() => setActiveTab('compare')}
                         disabled={selectedForComparison.length < 2}
                       >
-                        <GitCompare className="h-4 w-4 me-2" />
+                        <GitCompare className="me-2 size-4" />
                         {t('actions.compare')}
                       </Button>
                     </div>
@@ -368,10 +368,10 @@ function ScenarioSandboxPage() {
               )}
 
               {/* Scenarios Grid */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {scenarios.map((scenario) => (
                   <div key={scenario.id} className="relative">
-                    <div className="absolute top-3 start-3 z-10">
+                    <div className="absolute start-3 top-3 z-10">
                       <Checkbox
                         checked={selectedForComparison.includes(scenario.id)}
                         onCheckedChange={() => toggleComparisonSelection(scenario.id)}

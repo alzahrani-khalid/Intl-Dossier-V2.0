@@ -311,11 +311,11 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
         dir={isRTL ? 'rtl' : 'ltr'}
         data-testid={`${testId}-empty`}
       >
-        <p className="text-sm sm:text-base text-muted-foreground">
+        <p className="text-sm text-muted-foreground sm:text-base">
           {emptyMessage || t('carousel.empty', 'No items to display')}
         </p>
         {emptyDescription && (
-          <p className="text-xs sm:text-sm text-muted-foreground/70 mt-1">{emptyDescription}</p>
+          <p className="mt-1 text-xs text-muted-foreground/70 sm:text-sm">{emptyDescription}</p>
         )}
       </div>
     )
@@ -325,15 +325,15 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
     <div className={cn('relative', className)} dir={isRTL ? 'rtl' : 'ltr'} data-testid={testId}>
       {/* Header with title and navigation */}
       {(title || showNavigation) && (
-        <div className="flex items-center justify-between gap-4 mb-3 sm:mb-4">
-          <div className="flex-1 min-w-0">
+        <div className="mb-3 flex items-center justify-between gap-4 sm:mb-4">
+          <div className="min-w-0 flex-1">
             {title && (
-              <h3 className="text-sm sm:text-base font-semibold text-foreground truncate">
+              <h3 className="truncate text-sm font-semibold text-foreground sm:text-base">
                 {title}
               </h3>
             )}
             {description && (
-              <p className="text-xs sm:text-sm text-muted-foreground truncate mt-0.5">
+              <p className="mt-0.5 truncate text-xs text-muted-foreground sm:text-sm">
                 {description}
               </p>
             )}
@@ -341,7 +341,7 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
 
           {/* Desktop navigation arrows */}
           {showNavigation && items.length > visibleCount && (
-            <div className="hidden sm:flex items-center gap-2">
+            <div className="hidden items-center gap-2 sm:flex">
               <NavigationButton
                 direction="prev"
                 onClick={scrollPrev}
@@ -360,7 +360,7 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
       )}
 
       {/* Scroll container with fade indicators */}
-      <div className="relative group">
+      <div className="group relative">
         {/* Start fade gradient */}
         <div
           className={cn(
@@ -427,7 +427,7 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
       {/* Position indicators */}
       {showIndicators && totalPages > 1 && (
         <div
-          className="flex items-center justify-center gap-1.5 sm:gap-2 mt-3 sm:mt-4"
+          className="mt-3 flex items-center justify-center gap-1.5 sm:mt-4 sm:gap-2"
           role="tablist"
           aria-label={t('carousel.pagination', 'Carousel pagination')}
           data-testid={`${testId}-indicators`}
@@ -445,7 +445,7 @@ function RelatedEntityCarouselInner<T extends CarouselItem>({
       )}
 
       {/* Item count indicator */}
-      <div className="flex justify-center mt-2">
+      <div className="mt-2 flex justify-center">
         <span className="text-xs text-muted-foreground">
           {t('carousel.itemCount', '{{current}} of {{total}}', {
             current: Math.min(activeIndex + visibleCount, items.length),

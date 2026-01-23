@@ -137,7 +137,7 @@ export function ConditionBuilder({
           <RadioGroup
             value={conditionLogic}
             onValueChange={(value) => onLogicChange(value as ConditionLogic)}
-            className="flex flex-col sm:flex-row gap-4"
+            className="flex flex-col gap-4 sm:flex-row"
           >
             <div className="flex items-center space-x-2">
               <RadioGroupItem value="all" id="logic-all" />
@@ -158,7 +158,7 @@ export function ConditionBuilder({
       {/* No Conditions Alert */}
       {conditions.length === 0 && (
         <Alert>
-          <Info className="h-4 w-4" />
+          <Info className="size-4" />
           <AlertDescription>{t('builder.noConditions')}</AlertDescription>
         </Alert>
       )}
@@ -227,7 +227,7 @@ export function ConditionBuilder({
                   onClick={() => removeCondition(index)}
                   className="shrink-0 text-destructive hover:text-destructive"
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="size-4" />
                 </Button>
               </div>
             </CardContent>
@@ -237,7 +237,7 @@ export function ConditionBuilder({
 
       {/* Add Condition Button */}
       <Button variant="outline" onClick={addCondition} className="w-full sm:w-auto">
-        <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+        <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
         {t('actions.addCondition')}
       </Button>
     </div>

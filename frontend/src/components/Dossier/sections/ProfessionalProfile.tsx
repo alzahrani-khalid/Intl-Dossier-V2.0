@@ -29,21 +29,21 @@ export function ProfessionalProfile({ dossier }: ProfessionalProfileProps) {
           <img
             src={photoUrl}
             alt={isRTL ? dossier.name_ar : dossier.name_en}
-            className="h-32 w-32 sm:h-40 sm:w-40 rounded-full object-cover border-4 border-primary/10"
+            className="size-32 rounded-full border-4 border-primary/10 object-cover sm:size-40"
           />
         </div>
       )}
 
       {/* Title */}
       {title && (
-        <div className="p-3 sm:p-4 rounded-lg border bg-card">
+        <div className="rounded-lg border bg-card p-3 sm:p-4">
           <div className="flex items-start gap-3">
-            <Briefcase className="h-4 w-4 sm:h-5 sm:w-5 text-primary mt-0.5" />
+            <Briefcase className="mt-0.5 size-4 text-primary sm:size-5" />
             <div>
-              <p className="text-xs sm:text-sm font-medium text-muted-foreground">
+              <p className="text-xs font-medium text-muted-foreground sm:text-sm">
                 {t('form.person.titleEn')}
               </p>
-              <p className="text-sm sm:text-base font-semibold">{title}</p>
+              <p className="text-sm font-semibold sm:text-base">{title}</p>
             </div>
           </div>
         </div>
@@ -51,11 +51,11 @@ export function ProfessionalProfile({ dossier }: ProfessionalProfileProps) {
 
       {/* Biography */}
       {biography && (
-        <div className="p-3 sm:p-4 rounded-lg border bg-card">
-          <h4 className="text-sm sm:text-base font-semibold mb-2">
+        <div className="rounded-lg border bg-card p-3 sm:p-4">
+          <h4 className="mb-2 text-sm font-semibold sm:text-base">
             {t('form.person.biographyEn')}
           </h4>
-          <p className="text-sm sm:text-base text-muted-foreground whitespace-pre-wrap">
+          <p className="whitespace-pre-wrap text-sm text-muted-foreground sm:text-base">
             {biography}
           </p>
         </div>

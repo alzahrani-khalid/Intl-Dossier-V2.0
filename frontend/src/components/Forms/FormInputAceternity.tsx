@@ -97,7 +97,7 @@ export function FormInputAceternity({
       >
         {label}
         {required && (
-          <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+          <span className="ms-1 text-red-500" aria-label={t('validation.required')}>
             *
           </span>
         )}
@@ -143,7 +143,7 @@ export function FormInputAceternity({
 
         {/* Rotating placeholder animation for aceternity variant */}
         {variant === 'aceternity' && placeholders.length > 0 && !rest.value && (
-          <div className="absolute inset-0 flex items-center pointer-events-none px-4 sm:px-10">
+          <div className="pointer-events-none absolute inset-0 flex items-center px-4 sm:px-10">
             <AnimatePresence mode="wait">
               <motion.p
                 key={`placeholder-${currentPlaceholder}`}
@@ -169,7 +169,7 @@ export function FormInputAceternity({
       {helpText && !error && (
         <motion.p
           id={`${name}-help`}
-          className="text-sm text-gray-600 dark:text-gray-400 text-start"
+          className="text-start text-sm text-gray-600 dark:text-gray-400"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.2, delay: 0.15 }}
@@ -183,7 +183,7 @@ export function FormInputAceternity({
         {error && (
           <motion.p
             id={`${name}-error`}
-            className="text-sm text-red-600 dark:text-red-400 text-start"
+            className="text-start text-sm text-red-600 dark:text-red-400"
             initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -5 }}

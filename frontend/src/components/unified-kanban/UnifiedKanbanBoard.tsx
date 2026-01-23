@@ -201,7 +201,7 @@ export function UnifiedKanbanBoard({
   const renderOverlay = useCallback((activeItem: WorkItem | null) => {
     if (!activeItem) return null
     return (
-      <div className="rounded-lg border bg-card p-3 shadow-lg cursor-grabbing min-w-[280px]">
+      <div className="min-w-[280px] cursor-grabbing rounded-lg border bg-card p-3 shadow-lg">
         <UnifiedKanbanCardContent item={activeItem} />
       </div>
     )
@@ -210,9 +210,9 @@ export function UnifiedKanbanBoard({
   // Error state
   if (isError) {
     return (
-      <div className="flex flex-col items-center justify-center h-96 text-center">
-        <p className="text-lg text-muted-foreground mb-4">{t('errors.loadFailed')}</p>
-        <p className="text-sm text-muted-foreground mb-4">{t('errors.loadFailedDescription')}</p>
+      <div className="flex h-96 flex-col items-center justify-center text-center">
+        <p className="mb-4 text-lg text-muted-foreground">{t('errors.loadFailed')}</p>
+        <p className="mb-4 text-sm text-muted-foreground">{t('errors.loadFailedDescription')}</p>
         {onRefresh && (
           <button onClick={onRefresh} className="text-primary hover:underline">
             {t('actions.retry')}
@@ -253,13 +253,13 @@ export function UnifiedKanbanBoard({
             {[1, 2, 3, 4].map((i) => (
               <div
                 key={i}
-                className="flex flex-col rounded-lg border bg-muted/30 w-full sm:w-[300px] sm:min-w-[300px] h-[500px]"
+                className="flex h-[500px] w-full flex-col rounded-lg border bg-muted/30 sm:w-[300px] sm:min-w-[300px]"
               >
-                <div className="flex items-center justify-between p-3 border-b bg-muted/50">
-                  <div className="h-5 w-20 bg-muted rounded animate-pulse" />
-                  <div className="h-5 w-6 bg-muted rounded-full animate-pulse" />
+                <div className="flex items-center justify-between border-b bg-muted/50 p-3">
+                  <div className="h-5 w-20 animate-pulse rounded bg-muted" />
+                  <div className="h-5 w-6 animate-pulse rounded-full bg-muted" />
                 </div>
-                <div className="flex-1 p-2 space-y-2">
+                <div className="flex-1 space-y-2 p-2">
                   <UnifiedKanbanCardSkeleton />
                   <UnifiedKanbanCardSkeleton />
                   <UnifiedKanbanCardSkeleton />
@@ -320,9 +320,9 @@ export function UnifiedKanbanBoard({
 
       {/* Empty state */}
       {!isLoading && filteredItems.length === 0 && (
-        <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-          <div className="text-center p-8">
-            <p className="text-lg font-medium text-muted-foreground mb-2">{t('empty.noItems')}</p>
+        <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center">
+          <div className="p-8 text-center">
+            <p className="mb-2 text-lg font-medium text-muted-foreground">{t('empty.noItems')}</p>
             <p className="text-sm text-muted-foreground">{t('empty.noItemsDescription')}</p>
           </div>
         </div>

@@ -179,7 +179,7 @@ export function CommitmentForm({
           name="title"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('form.title')} *
               </FormLabel>
               <FormControl>
@@ -203,7 +203,7 @@ export function CommitmentForm({
           name="description"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('form.description')} *
               </FormLabel>
               <FormControl>
@@ -273,14 +273,14 @@ export function CommitmentForm({
         />
 
         {/* Priority and Owner Type Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Priority */}
           <FormField
             control={form.control}
             name="priority"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start block">
+                <FormLabel className="block text-start">
                   {t('form.priority')}
                 </FormLabel>
                 <Select
@@ -310,7 +310,7 @@ export function CommitmentForm({
             name="owner_type"
             render={({ field }) => (
               <FormItem>
-                <FormLabel className="text-start block">
+                <FormLabel className="block text-start">
                   {t('form.ownerType')}
                 </FormLabel>
                 <Select
@@ -339,7 +339,7 @@ export function CommitmentForm({
           name={watchOwnerType === 'internal' ? 'owner_user_id' : 'owner_contact_id'}
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('form.owner')}
               </FormLabel>
               <FormControl>
@@ -366,7 +366,7 @@ export function CommitmentForm({
           name="tracking_mode"
           render={({ field }) => (
             <FormItem>
-              <FormLabel className="text-start block">
+              <FormLabel className="block text-start">
                 {t('form.trackingMode')}
               </FormLabel>
               <Select
@@ -394,8 +394,8 @@ export function CommitmentForm({
           name="proof_required"
           render={({ field }) => (
             <FormItem className="flex flex-row items-center justify-between rounded-lg border p-4">
-              <div className="space-y-0.5 flex-1">
-                <FormLabel className="text-base text-start block">
+              <div className="flex-1 space-y-0.5">
+                <FormLabel className="block text-start text-base">
                   {t('form.proofRequired')}
                 </FormLabel>
                 <FormDescription className="text-start">
@@ -414,7 +414,7 @@ export function CommitmentForm({
         />
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse gap-3 border-t pt-4 sm:flex-row">
           <Button
             type="button"
             variant="outline"

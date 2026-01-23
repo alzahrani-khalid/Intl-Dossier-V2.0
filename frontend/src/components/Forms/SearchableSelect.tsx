@@ -362,10 +362,10 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
                 : 'border-muted-foreground/30',
             )}
           >
-            {isSelected && <Check className="h-3 w-3" />}
+            {isSelected && <Check className="size-3" />}
           </div>
-          {option.icon && <span className="flex-shrink-0">{option.icon}</span>}
-          <div className="flex-1 min-w-0">
+          {option.icon && <span className="shrink-0">{option.icon}</span>}
+          <div className="min-w-0 flex-1">
             <div className="truncate font-medium">{option.label}</div>
             {option.description && (
               <div className="truncate text-xs text-muted-foreground">{option.description}</div>
@@ -415,7 +415,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
           >
             {label}
             {required && (
-              <span className="text-red-500 ms-1" aria-label={t('common:validation.required')}>
+              <span className="ms-1 text-red-500" aria-label={t('common:validation.required')}>
                 *
               </span>
             )}
@@ -440,16 +440,16 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
               className={cn(triggerClasses, className)}
             >
               <span className="flex-1 truncate text-start">{renderSelectedValue()}</span>
-              <div className="flex items-center gap-1 ms-2">
+              <div className="ms-2 flex items-center gap-1">
                 {/* Clear button */}
                 {selectedValues.length > 0 && !disabled && (
                   <span
                     role="button"
                     aria-label={t('smart-input:select.clear')}
                     onClick={handleClear}
-                    className="p-0.5 hover:bg-muted rounded-sm"
+                    className="rounded-sm p-0.5 hover:bg-muted"
                   >
-                    <X className="h-4 w-4 text-muted-foreground" />
+                    <X className="size-4 text-muted-foreground" />
                   </span>
                 )}
                 {/* Chevron */}
@@ -472,7 +472,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
             <Command shouldFilter={false}>
               {/* Search input */}
               <div className="flex items-center border-b px-3">
-                <Search className="h-4 w-4 text-muted-foreground me-2 shrink-0" />
+                <Search className="me-2 size-4 shrink-0 text-muted-foreground" />
                 <CommandInput
                   ref={inputRef}
                   placeholder={searchPlaceholder || t('smart-input:select.search')}
@@ -480,7 +480,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
                   onValueChange={handleSearchChange}
                   className="flex h-11 w-full rounded-md bg-transparent py-3 text-sm outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50"
                 />
-                {loading && <Loader2 className="h-4 w-4 animate-spin text-muted-foreground ms-2" />}
+                {loading && <Loader2 className="ms-2 size-4 animate-spin text-muted-foreground" />}
               </div>
 
               <CommandList className="max-h-[300px] overflow-y-auto">
@@ -496,7 +496,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
                   <CommandGroup>
                     <CommandItem
                       onSelect={handleCreate}
-                      className="flex items-center gap-2 cursor-pointer min-h-11 sm:min-h-10"
+                      className="flex min-h-11 cursor-pointer items-center gap-2 sm:min-h-10"
                     >
                       <span className="text-primary">+</span>
                       <span>
@@ -520,7 +520,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
 
                 {/* Show count if options were truncated */}
                 {options.length > maxDisplayed && (
-                  <div className="px-2 py-2 text-xs text-muted-foreground text-center border-t">
+                  <div className="border-t p-2 text-center text-xs text-muted-foreground">
                     {t('smart-input:select.showingCount', {
                       shown: Math.min(filteredOptions.length, maxDisplayed),
                       total: options.length,
@@ -538,7 +538,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
             <motion.p
               id={helpId}
               key="help-text"
-              className="text-sm text-gray-600 dark:text-gray-400 text-start"
+              className="text-start text-sm text-gray-600 dark:text-gray-400"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -553,7 +553,7 @@ export const SearchableSelect = forwardRef<HTMLButtonElement, SearchableSelectPr
             <motion.p
               id={errorId}
               key="error"
-              className="text-sm text-red-600 dark:text-red-400 text-start"
+              className="text-start text-sm text-red-600 dark:text-red-400"
               initial={{ opacity: 0, height: 0 }}
               animate={{ opacity: 1, height: 'auto' }}
               exit={{ opacity: 0, height: 0 }}

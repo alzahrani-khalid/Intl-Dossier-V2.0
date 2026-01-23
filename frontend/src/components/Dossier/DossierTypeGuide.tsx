@@ -169,7 +169,7 @@ function GuideContent({
   // Tooltip variant - compact
   if (variant === 'tooltip') {
     return (
-      <div className="space-y-2 max-w-xs" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="max-w-xs space-y-2" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="flex items-center gap-2">
           {getTypeIcon(type, cn('h-4 w-4', colors.text))}
           <span className="font-semibold">{t(`type.${type}`)}</span>
@@ -177,7 +177,7 @@ function GuideContent({
         <p className="text-xs text-muted-foreground">{t(`typeDescription.${type}`)}</p>
         {whenToUse && (
           <p className="text-xs">
-            <Lightbulb className="inline h-3 w-3 me-1" />
+            <Lightbulb className="me-1 inline size-3" />
             {whenToUse}
           </p>
         )}
@@ -206,9 +206,9 @@ function GuideContent({
         <div className={cn('p-2 rounded-lg', colors.bg)}>
           {getTypeIcon(type, cn('h-5 w-5', colors.text))}
         </div>
-        <div className="flex-1 min-w-0">
-          <h4 className="font-semibold text-base">{t(`type.${type}`)}</h4>
-          <p className="text-sm text-muted-foreground mt-0.5">{t(`typeDescription.${type}`)}</p>
+        <div className="min-w-0 flex-1">
+          <h4 className="text-base font-semibold">{t(`type.${type}`)}</h4>
+          <p className="mt-0.5 text-sm text-muted-foreground">{t(`typeDescription.${type}`)}</p>
         </div>
       </div>
 
@@ -219,7 +219,7 @@ function GuideContent({
             <Lightbulb className={cn('h-4 w-4', colors.text)} />
             <span>{isRTL ? 'متى تستخدم' : 'When to Use'}</span>
           </div>
-          <p className="text-sm text-muted-foreground ps-6">{whenToUse}</p>
+          <p className="ps-6 text-sm text-muted-foreground">{whenToUse}</p>
         </div>
       )}
 
@@ -227,7 +227,7 @@ function GuideContent({
       {Array.isArray(examples) && examples.length > 0 && (
         <div className="space-y-1.5">
           <div className="flex items-center gap-2 text-sm font-medium">
-            <Check className="h-4 w-4 text-green-500" />
+            <Check className="size-4 text-green-500" />
             <span>{isRTL ? 'أمثلة' : 'Examples'}</span>
           </div>
           <div className="flex flex-wrap gap-1.5 ps-6">
@@ -247,7 +247,7 @@ function GuideContent({
             <Link2 className={cn('h-4 w-4', colors.text)} />
             <span>{isRTL ? 'روابط شائعة' : 'Common Links'}</span>
           </div>
-          <ul className="text-sm text-muted-foreground ps-6 space-y-0.5">
+          <ul className="space-y-0.5 ps-6 text-sm text-muted-foreground">
             {commonLinks.slice(0, 4).map((link, idx) => (
               <li key={idx} className="flex items-center gap-1.5">
                 <ArrowRight className={cn('h-3 w-3 shrink-0', isRTL && 'rotate-180')} />
@@ -264,10 +264,10 @@ function GuideContent({
           <Separator />
           <div className="space-y-1.5">
             <div className="flex items-center gap-2 text-sm font-medium text-amber-600 dark:text-amber-400">
-              <X className="h-4 w-4" />
+              <X className="size-4" />
               <span>{isRTL ? 'لا تستخدم لـ' : 'Not For'}</span>
             </div>
-            <p className="text-sm text-muted-foreground ps-6">{notFor}</p>
+            <p className="ps-6 text-sm text-muted-foreground">{notFor}</p>
           </div>
         </>
       )}
@@ -327,7 +327,7 @@ export function DossierTypeGuide({
       )}
       aria-label={t('typeGuide.learnMore', 'Learn more about this dossier type')}
     >
-      <HelpCircle className="h-4 w-4" />
+      <HelpCircle className="size-4" />
     </button>
   )
 
@@ -423,9 +423,9 @@ export function DossierTypeGuideGrid({
               <div className={cn('p-2 rounded-lg', colors.bg)}>
                 {getTypeIcon(type, cn('h-5 w-5', colors.text))}
               </div>
-              <div className="flex-1 min-w-0">
-                <h4 className="font-semibold text-sm">{t(`type.${type}`)}</h4>
-                <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+              <div className="min-w-0 flex-1">
+                <h4 className="text-sm font-semibold">{t(`type.${type}`)}</h4>
+                <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
                   {t(`typeDescription.${type}`)}
                 </p>
               </div>
@@ -439,8 +439,8 @@ export function DossierTypeGuideGrid({
               transition={{ duration: 0.2 }}
               className="overflow-hidden"
             >
-              <p className="text-xs text-muted-foreground mt-3 pt-3 border-t">
-                <Lightbulb className="inline h-3 w-3 me-1" />
+              <p className="mt-3 border-t pt-3 text-xs text-muted-foreground">
+                <Lightbulb className="me-1 inline size-3" />
                 {t(`typeGuide.${type}.whenToUse`, '')}
               </p>
             </motion.div>

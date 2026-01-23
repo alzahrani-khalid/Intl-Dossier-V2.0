@@ -297,9 +297,9 @@ export function withTenantContext<P extends object>(
 
     if (isLoading) {
       return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex min-h-screen items-center justify-center">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4" />
+            <div className="mx-auto mb-4 size-8 animate-spin rounded-full border-b-2 border-primary" />
             <p className="text-muted-foreground">Loading organization context...</p>
           </div>
         </div>
@@ -308,10 +308,10 @@ export function withTenantContext<P extends object>(
 
     if (error) {
       return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex min-h-screen items-center justify-center">
           <div className="text-center text-destructive">
             <p className="font-semibold">Failed to load organization</p>
-            <p className="text-sm mt-2">{error}</p>
+            <p className="mt-2 text-sm">{error}</p>
           </div>
         </div>
       )
@@ -319,10 +319,10 @@ export function withTenantContext<P extends object>(
 
     if (!currentTenantId) {
       return (
-        <div className="flex items-center justify-center min-h-screen">
+        <div className="flex min-h-screen items-center justify-center">
           <div className="text-center">
             <p className="font-semibold">No Organization Access</p>
-            <p className="text-sm text-muted-foreground mt-2">
+            <p className="mt-2 text-sm text-muted-foreground">
               You are not a member of any organization.
             </p>
           </div>

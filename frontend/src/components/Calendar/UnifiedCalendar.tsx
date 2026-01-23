@@ -189,17 +189,17 @@ export function UnifiedCalendar({
     <div className="flex flex-col gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header & Controls */}
       <Card className="p-4">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-          <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+          <div className="flex w-full items-center gap-2 sm:w-auto">
             <Button
               variant="outline"
               size="sm"
               onClick={handlePreviousMonth}
               className={isRTL ? 'rotate-180' : ''}
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="size-4" />
             </Button>
-            <h2 className="text-base sm:text-lg font-semibold flex-1 text-center">
+            <h2 className="flex-1 text-center text-base font-semibold sm:text-lg">
               {format(currentMonth, 'MMMM yyyy')}
             </h2>
             <Button
@@ -208,11 +208,11 @@ export function UnifiedCalendar({
               onClick={handleNextMonth}
               className={isRTL ? 'rotate-180' : ''}
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="size-4" />
             </Button>
           </div>
 
-          <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+          <div className="flex w-full flex-col gap-2 sm:w-auto sm:flex-row">
             <Button variant="outline" size="sm" onClick={handleToday} className="w-full sm:w-auto">
               {t('today')}
             </Button>
@@ -223,7 +223,7 @@ export function UnifiedCalendar({
               onClick={() => setShowCreateForm(true)}
               className="w-full sm:w-auto"
             >
-              <Plus className="h-4 w-4 me-1" />
+              <Plus className="me-1 size-4" />
               {t('form.create_event')}
             </Button>
 
@@ -252,11 +252,11 @@ export function UnifiedCalendar({
       {/* Calendar Grid */}
       <Card className="p-2 sm:p-4">
         {/* Weekday Headers */}
-        <div className="grid grid-cols-7 gap-1 sm:gap-2 mb-2">
+        <div className="mb-2 grid grid-cols-7 gap-1 sm:gap-2">
           {[0, 1, 2, 3, 4, 5, 6].map((day) => (
             <div
               key={day}
-              className="text-center text-xs sm:text-sm font-medium text-muted-foreground py-2"
+              className="py-2 text-center text-xs font-medium text-muted-foreground sm:text-sm"
             >
               {format(new Date(2024, 0, day + 1), 'EEE')}
             </div>
@@ -274,27 +274,27 @@ export function UnifiedCalendar({
               <div
                 key={dateKey}
                 className={`
- min-h-16 sm:min-h-24 p-1 sm:p-2 border rounded-lg
+ min-h-16 rounded-lg border p-1 sm:min-h-24 sm:p-2
  ${!isSameMonth(day, currentMonth) ? 'opacity-40' : ''}
  ${isToday ? 'border-primary bg-primary/5' : 'border-border'}
  `}
               >
-                <div className="flex flex-col h-full">
+                <div className="flex h-full flex-col">
                   <div
                     className={`
- text-xs sm:text-sm font-medium mb-1
+ mb-1 text-xs font-medium sm:text-sm
  ${isToday ? 'text-primary' : 'text-foreground'}
  `}
                   >
                     {format(day, 'd')}
                   </div>
 
-                  <div className="flex-1 overflow-y-auto space-y-1">
+                  <div className="flex-1 space-y-1 overflow-y-auto">
                     {dayEvents.slice(0, 3).map((event) => (
                       <button
                         key={event.id}
                         type="button"
-                        className="w-full text-start text-xs px-1 py-0.5 rounded bg-accent hover:bg-accent/80 cursor-pointer truncate"
+                        className="w-full cursor-pointer truncate rounded bg-accent px-1 py-0.5 text-start text-xs hover:bg-accent/80"
                         title={
                           isRTL
                             ? event.title_ar || event.title_en
@@ -303,7 +303,7 @@ export function UnifiedCalendar({
                         onClick={() => onEventClick?.(event)}
                       >
                         <div className="flex items-center gap-1">
-                          <Clock className="h-2 w-2 sm:h-3 sm:w-3 shrink-0" />
+                          <Clock className="size-2 shrink-0 sm:size-3" />
                           <span className="truncate">
                             {isRTL
                               ? event.title_ar || event.title_en
@@ -313,7 +313,7 @@ export function UnifiedCalendar({
                       </button>
                     ))}
                     {dayEvents.length > 3 && (
-                      <div className="text-xs text-muted-foreground ps-1">
+                      <div className="ps-1 text-xs text-muted-foreground">
                         +{dayEvents.length - 3} {t('more')}
                       </div>
                     )}
@@ -327,17 +327,17 @@ export function UnifiedCalendar({
 
       {/* Events List (Mobile-friendly alternative view) */}
       <div className="sm:hidden">
-        <h3 className="text-sm font-semibold mb-2">{t('upcoming_events')}</h3>
+        <h3 className="mb-2 text-sm font-semibold">{t('upcoming_events')}</h3>
         <div className="flex flex-col gap-2">
           {events.slice(0, 5).map((event) => (
             <Card
               key={event.id}
-              className="p-3 cursor-pointer hover:bg-muted/50 transition-colors"
+              className="cursor-pointer p-3 transition-colors hover:bg-muted/50"
               onClick={() => onEventClick?.(event)}
             >
-              <div className="flex justify-between items-start gap-2">
-                <div className="flex-1 min-w-0">
-                  <h4 className="font-medium text-sm truncate">
+              <div className="flex items-start justify-between gap-2">
+                <div className="min-w-0 flex-1">
+                  <h4 className="truncate text-sm font-medium">
                     {isRTL ? event.title_ar || event.title_en : event.title_en || event.title_ar}
                   </h4>
                   <p className="text-xs text-muted-foreground">

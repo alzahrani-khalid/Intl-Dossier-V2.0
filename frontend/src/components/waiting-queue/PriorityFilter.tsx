@@ -44,7 +44,7 @@ export function PriorityFilter({ value = [], onChange, disabled = false }: Prior
  {priorities.map((priority) => (
  <div
  key={priority.value}
- className="flex items-center gap-2 rounded-sm hover:bg-accent/50 transition-colors px-1 py-1"
+ className="flex items-center gap-2 rounded-sm p-1 transition-colors hover:bg-accent/50"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <Checkbox
@@ -52,7 +52,7 @@ export function PriorityFilter({ value = [], onChange, disabled = false }: Prior
  checked={value.includes(priority.value)}
  onCheckedChange={() => handleToggle(priority.value)}
  disabled={disabled}
- className="h-4 w-4"
+ className="size-4"
  />
  <Label
  htmlFor={`priority-${priority.value}`}

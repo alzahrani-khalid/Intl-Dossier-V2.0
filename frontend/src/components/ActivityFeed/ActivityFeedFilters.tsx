@@ -414,34 +414,34 @@ export function ActivityFeedFilters({
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         {/* Search */}
         {showSearch && (
-          <div className="relative flex-1 max-w-sm">
-            <Search className="absolute start-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+          <div className="relative max-w-sm flex-1">
+            <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
               placeholder={isRTL ? 'بحث في النشاطات...' : 'Search activities...'}
               value={searchValue}
               onChange={(e) => handleSearchChange(e.target.value)}
-              className="ps-10 pe-4 h-10"
+              className="h-10 pe-4 ps-10"
             />
             {searchValue && (
               <Button
                 variant="ghost"
                 size="sm"
-                className="absolute end-1 top-1/2 h-7 w-7 -translate-y-1/2 p-0"
+                className="absolute end-1 top-1/2 size-7 -translate-y-1/2 p-0"
                 onClick={() => handleSearchChange('')}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             )}
           </div>
         )}
 
         {/* Quick Actions */}
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-wrap items-center gap-2">
           {/* Followed Only Toggle */}
-          <div className="flex items-center gap-2 bg-muted/50 rounded-lg px-3 py-2">
-            <Bell className="h-4 w-4 text-muted-foreground" />
-            <Label htmlFor="followed-only" className="text-sm cursor-pointer">
+          <div className="flex items-center gap-2 rounded-lg bg-muted/50 px-3 py-2">
+            <Bell className="size-4 text-muted-foreground" />
+            <Label htmlFor="followed-only" className="cursor-pointer text-sm">
               {isRTL ? 'المتابعة فقط' : 'Following only'}
             </Label>
             <Switch
@@ -459,7 +459,7 @@ export function ActivityFeedFilters({
               onClick={onClearFilters}
               className="text-muted-foreground hover:text-foreground"
             >
-              <X className="h-4 w-4 me-1" />
+              <X className="me-1 size-4" />
               {isRTL ? 'مسح' : 'Clear'}
               <Badge variant="secondary" className="ms-1">
                 {activeFilterCount}
@@ -476,14 +476,14 @@ export function ActivityFeedFilters({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm" className="h-9">
-                <Globe className="h-4 w-4 me-2" />
+                <Globe className="me-2 size-4" />
                 {isRTL ? 'نوع الكيان' : 'Entity Type'}
                 {filters.entity_types?.length ? (
                   <Badge variant="secondary" className="ms-2">
                     {filters.entity_types.length}
                   </Badge>
                 ) : (
-                  <ChevronDown className="h-4 w-4 ms-2" />
+                  <ChevronDown className="ms-2 size-4" />
                 )}
               </Button>
             </PopoverTrigger>
@@ -517,14 +517,14 @@ export function ActivityFeedFilters({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm" className="h-9">
-                <Filter className="h-4 w-4 me-2" />
+                <Filter className="me-2 size-4" />
                 {isRTL ? 'نوع الإجراء' : 'Action Type'}
                 {filters.action_types?.length ? (
                   <Badge variant="secondary" className="ms-2">
                     {filters.action_types.length}
                   </Badge>
                 ) : (
-                  <ChevronDown className="h-4 w-4 ms-2" />
+                  <ChevronDown className="ms-2 size-4" />
                 )}
               </Button>
             </PopoverTrigger>
@@ -558,7 +558,7 @@ export function ActivityFeedFilters({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm" className="h-9">
-                <Calendar className="h-4 w-4 me-2" />
+                <Calendar className="me-2 size-4" />
                 {isRTL ? 'الفترة الزمنية' : 'Date Range'}
                 {(filters.date_from || filters.date_to) && (
                   <Badge variant="secondary" className="ms-2">
@@ -648,7 +648,7 @@ export function ActivityFeedFilters({
           <Popover>
             <PopoverTrigger asChild>
               <Button variant="outline" size="sm" className="h-9">
-                <User className="h-4 w-4 me-2" />
+                <User className="me-2 size-4" />
                 {isRTL ? 'المستخدم' : 'User'}
                 {filters.actor_id && (
                   <Badge variant="secondary" className="ms-2">
@@ -696,7 +696,7 @@ export function ActivityFeedFilters({
         filters.action_types?.length ||
         filters.date_from ||
         filters.actor_id) && (
-        <div className="flex flex-wrap gap-2 pt-2 border-t">
+        <div className="flex flex-wrap gap-2 border-t pt-2">
           {filters.entity_types?.map((type) => {
             const config = ENTITY_TYPE_CONFIG[type]
             const Icon = config.icon
@@ -707,10 +707,10 @@ export function ActivityFeedFilters({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-4 w-4 p-0 ms-1 hover:bg-transparent"
+                  className="ms-1 size-4 p-0 hover:bg-transparent"
                   onClick={() => toggleEntityType(type)}
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </Button>
               </Badge>
             )
@@ -725,24 +725,24 @@ export function ActivityFeedFilters({
                 <Button
                   variant="ghost"
                   size="sm"
-                  className="h-4 w-4 p-0 ms-1 hover:bg-transparent"
+                  className="ms-1 size-4 p-0 hover:bg-transparent"
                   onClick={() => toggleActionType(type)}
                 >
-                  <X className="h-3 w-3" />
+                  <X className="size-3" />
                 </Button>
               </Badge>
             )
           })}
           {filters.date_from && (
             <Badge variant="secondary" className="gap-1 px-2 py-1">
-              <Calendar className="h-3 w-3" />
+              <Calendar className="size-3" />
               {new Date(filters.date_from).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
               {filters.date_to &&
                 ` - ${new Date(filters.date_to).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}`}
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-4 w-4 p-0 ms-1 hover:bg-transparent"
+                className="ms-1 size-4 p-0 hover:bg-transparent"
                 onClick={() =>
                   onFiltersChange({
                     ...filters,
@@ -751,7 +751,7 @@ export function ActivityFeedFilters({
                   })
                 }
               >
-                <X className="h-3 w-3" />
+                <X className="size-3" />
               </Button>
             </Badge>
           )}

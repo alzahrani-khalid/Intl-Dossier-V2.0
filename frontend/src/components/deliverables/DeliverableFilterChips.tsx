@@ -86,12 +86,12 @@ export function DeliverableFilterChips({
   if (chips.length === 0) return null
 
   return (
-    <div className="flex flex-wrap items-center gap-2 px-1 mb-3" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="mb-3 flex flex-wrap items-center gap-2 px-1" dir={isRTL ? 'rtl' : 'ltr'}>
       {chips.map((chip, index) => (
         <Badge
           key={`${chip.key}-${chip.value}-${index}`}
           variant="secondary"
-          className="ps-2 pe-1 py-1 gap-1 text-xs"
+          className="gap-1 py-1 pe-1 ps-2 text-xs"
         >
           <span>{chip.label}</span>
           <button

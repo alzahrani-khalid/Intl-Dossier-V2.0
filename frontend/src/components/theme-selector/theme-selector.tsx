@@ -70,9 +70,9 @@ export function ThemeSelector() {
         {/* Theme Dropdown - shows when multiple themes available */}
         {singleTheme ? (
           // Single theme: just display the name with the primary color indicator
-          <div className="flex items-center gap-1.5 px-2 py-1 rounded-md border border-border bg-background">
+          <div className="flex items-center gap-1.5 rounded-md border border-border bg-background px-2 py-1">
             <div
-              className="w-3 h-3 rounded-full"
+              className="size-3 rounded-full"
               style={{ backgroundColor: currentTheme.preview.primary }}
               aria-hidden="true"
             />
@@ -83,15 +83,15 @@ export function ThemeSelector() {
           <div className="relative">
             <button
               onClick={() => setIsOpen(!isOpen)}
-              className="flex items-center gap-1 px-2 py-1 rounded-md border border-border bg-background hover:bg-accent transition-colors"
+              className="flex items-center gap-1 rounded-md border border-border bg-background px-2 py-1 transition-colors hover:bg-accent"
               aria-label={language === 'en' ? 'Select theme' : 'اختر السمة'}
               aria-expanded={isOpen}
               aria-haspopup="true"
             >
-              <Palette className="w-3.5 h-3.5" aria-hidden="true" />
+              <Palette className="size-3.5" aria-hidden="true" />
               <span className="text-xs font-medium">{currentTheme.name[language]}</span>
               <ChevronDown
-                className={`w-3 h-3 transition-transform ${isOpen ? 'rotate-180' : ''}`}
+                className={`size-3 transition-transform ${isOpen ? 'rotate-180' : ''}`}
                 aria-hidden="true"
               />
             </button>
@@ -107,7 +107,7 @@ export function ThemeSelector() {
 
                 {/* Dropdown Menu */}
                 <div
-                  className="absolute top-full mt-2 start-0 z-20 w-56 rounded-lg border border-border bg-popover shadow-lg"
+                  className="absolute start-0 top-full z-20 mt-2 w-56 rounded-lg border border-border bg-popover shadow-lg"
                   role="menu"
                   aria-orientation="vertical"
                 >
@@ -115,7 +115,7 @@ export function ThemeSelector() {
                     <button
                       key={themeOption.id}
                       onClick={() => handleThemeSelect(themeOption.id)}
-                      className="w-full px-3 py-2 flex items-center justify-between hover:bg-accent transition-colors first:rounded-t-lg last:rounded-b-lg"
+                      className="flex w-full items-center justify-between px-3 py-2 transition-colors first:rounded-t-lg last:rounded-b-lg hover:bg-accent"
                       role="menuitem"
                       aria-selected={theme === themeOption.id}
                     >
@@ -123,15 +123,15 @@ export function ThemeSelector() {
                         {/* Theme Preview */}
                         <div className="flex gap-0.5" aria-hidden="true">
                           <div
-                            className="w-3 h-3 rounded-full"
+                            className="size-3 rounded-full"
                             style={{ backgroundColor: themeOption.preview.primary }}
                           />
                           <div
-                            className="w-3 h-3 rounded-full"
+                            className="size-3 rounded-full"
                             style={{ backgroundColor: themeOption.preview.secondary }}
                           />
                           <div
-                            className="w-3 h-3 rounded-full"
+                            className="size-3 rounded-full"
                             style={{ backgroundColor: themeOption.preview.accent }}
                           />
                         </div>
@@ -142,7 +142,7 @@ export function ThemeSelector() {
 
                       {/* Selected Indicator */}
                       {theme === themeOption.id && (
-                        <Check className="w-3.5 h-3.5 text-primary" aria-label="Selected" />
+                        <Check className="size-3.5 text-primary" aria-label="Selected" />
                       )}
                     </button>
                   ))}
@@ -155,7 +155,7 @@ export function ThemeSelector() {
         {/* Color Mode Toggle */}
         <button
           onClick={toggleColorMode}
-          className="p-1.5 rounded-md border border-border bg-background hover:bg-accent transition-colors"
+          className="rounded-md border border-border bg-background p-1.5 transition-colors hover:bg-accent"
           aria-label={
             colorMode === 'light'
               ? language === 'en'
@@ -167,9 +167,9 @@ export function ThemeSelector() {
           }
         >
           {colorMode === 'light' ? (
-            <Moon className="w-3.5 h-3.5" aria-hidden="true" />
+            <Moon className="size-3.5" aria-hidden="true" />
           ) : (
-            <Sun className="w-3.5 h-3.5" aria-hidden="true" />
+            <Sun className="size-3.5" aria-hidden="true" />
           )}
         </button>
       </div>

@@ -127,12 +127,12 @@ export function AvailabilityPollingPage() {
       >
         <CardHeader className={cn(viewMode === 'list' && 'flex-1 py-3')}>
           <div className="flex items-start justify-between gap-2">
-            <div className="flex-1 min-w-0">
-              <CardTitle className="text-base sm:text-lg truncate">
+            <div className="min-w-0 flex-1">
+              <CardTitle className="truncate text-base sm:text-lg">
                 {isRTL ? poll.meeting_title_ar || poll.meeting_title_en : poll.meeting_title_en}
               </CardTitle>
               {viewMode === 'grid' && (poll.description_en || poll.description_ar) && (
-                <CardDescription className="line-clamp-2 mt-1">
+                <CardDescription className="mt-1 line-clamp-2">
                   {isRTL ? poll.description_ar || poll.description_en : poll.description_en}
                 </CardDescription>
               )}
@@ -157,18 +157,18 @@ export function AvailabilityPollingPage() {
             )}
           >
             {/* Meta info */}
-            <div className="flex items-center gap-4 flex-wrap">
+            <div className="flex flex-wrap items-center gap-4">
               <span className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
+                <Clock className="size-4" />
                 {poll.meeting_duration_minutes} {t('form.minutes')}
               </span>
               <span className="flex items-center gap-1">
-                <Calendar className="h-4 w-4" />
+                <Calendar className="size-4" />
                 {format(parseISO(poll.deadline), 'PP', { locale: dateLocale })}
               </span>
               {poll.slots && (
                 <span className="flex items-center gap-1">
-                  <LayoutGrid className="h-4 w-4" />
+                  <LayoutGrid className="size-4" />
                   {poll.slots.length} {t('slots.title')}
                 </span>
               )}
@@ -186,7 +186,7 @@ export function AvailabilityPollingPage() {
                     handleOpenVote(poll.id)
                   }}
                 >
-                  <Vote className="h-4 w-4" />
+                  <Vote className="size-4" />
                   {t('voting.vote')}
                 </Button>
               )}
@@ -201,7 +201,7 @@ export function AvailabilityPollingPage() {
               >
                 {isMyPoll ? (
                   <>
-                    <Users className="h-4 w-4" />
+                    <Users className="size-4" />
                     {t('results.manage')}
                   </>
                 ) : (
@@ -220,24 +220,24 @@ export function AvailabilityPollingPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6"
+      className="container mx-auto space-y-6 p-4 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-          <p className="text-muted-foreground mt-1">{t('description')}</p>
+          <h1 className="text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+          <p className="mt-1 text-muted-foreground">{t('description')}</p>
         </div>
 
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="gap-2 w-full sm:w-auto">
-              <Plus className="h-4 w-4" />
+            <Button className="w-full gap-2 sm:w-auto">
+              <Plus className="size-4" />
               {t('create.title')}
             </Button>
           </DialogTrigger>
-          <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogContent className="max-h-[90vh] max-w-2xl overflow-y-auto">
             <DialogHeader>
               <DialogTitle>{t('create.title')}</DialogTitle>
             </DialogHeader>
@@ -247,19 +247,19 @@ export function AvailabilityPollingPage() {
       </div>
 
       {/* Tabs and View Toggle */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as TabValue)}>
           <TabsList className="grid w-full grid-cols-3 sm:w-auto">
             <TabsTrigger value="my-polls" className="gap-1">
-              <Users className="h-4 w-4 hidden sm:inline" />
+              <Users className="hidden size-4 sm:inline" />
               {t('tabs.myPolls')}
             </TabsTrigger>
             <TabsTrigger value="invited" className="gap-1">
-              <Vote className="h-4 w-4 hidden sm:inline" />
+              <Vote className="hidden size-4 sm:inline" />
               {t('tabs.invited')}
             </TabsTrigger>
             <TabsTrigger value="all" className="gap-1">
-              <LayoutGrid className="h-4 w-4 hidden sm:inline" />
+              <LayoutGrid className="hidden size-4 sm:inline" />
               {t('tabs.all')}
             </TabsTrigger>
           </TabsList>
@@ -270,17 +270,17 @@ export function AvailabilityPollingPage() {
             variant={viewMode === 'grid' ? 'default' : 'outline'}
             size="icon"
             onClick={() => setViewMode('grid')}
-            className="h-9 w-9"
+            className="size-9"
           >
-            <LayoutGrid className="h-4 w-4" />
+            <LayoutGrid className="size-4" />
           </Button>
           <Button
             variant={viewMode === 'list' ? 'default' : 'outline'}
             size="icon"
             onClick={() => setViewMode('list')}
-            className="h-9 w-9"
+            className="size-9"
           >
-            <List className="h-4 w-4" />
+            <List className="size-4" />
           </Button>
         </div>
       </div>
@@ -299,11 +299,11 @@ export function AvailabilityPollingPage() {
             <Card key={i}>
               <CardHeader>
                 <Skeleton className="h-6 w-3/4" />
-                <Skeleton className="h-4 w-1/2 mt-2" />
+                <Skeleton className="mt-2 h-4 w-1/2" />
               </CardHeader>
               <CardContent>
                 <Skeleton className="h-4 w-full" />
-                <Skeleton className="h-8 w-24 mt-3" />
+                <Skeleton className="mt-3 h-8 w-24" />
               </CardContent>
             </Card>
           ))}
@@ -311,12 +311,12 @@ export function AvailabilityPollingPage() {
       ) : displayPolls.length === 0 ? (
         <Card className="py-12">
           <CardContent className="flex flex-col items-center justify-center text-center">
-            <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
-            <h3 className="text-lg font-semibold mb-2">{t('empty.title')}</h3>
-            <p className="text-muted-foreground mb-4">{t('empty.description')}</p>
+            <Calendar className="mb-4 size-12 text-muted-foreground" />
+            <h3 className="mb-2 text-lg font-semibold">{t('empty.title')}</h3>
+            <p className="mb-4 text-muted-foreground">{t('empty.description')}</p>
             {activeTab === 'my-polls' && (
               <Button onClick={() => setIsCreateDialogOpen(true)} className="gap-2">
-                <Plus className="h-4 w-4" />
+                <Plus className="size-4" />
                 {t('create.title')}
               </Button>
             )}
@@ -339,7 +339,7 @@ export function AvailabilityPollingPage() {
       <Sheet open={isVoteSheetOpen} onOpenChange={setIsVoteSheetOpen}>
         <SheetContent
           side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-lg overflow-y-auto"
+          className="w-full overflow-y-auto sm:max-w-lg"
         >
           <SheetHeader>
             <SheetTitle>{t('voting.title')}</SheetTitle>
@@ -356,7 +356,7 @@ export function AvailabilityPollingPage() {
       <Sheet open={isResultsSheetOpen} onOpenChange={setIsResultsSheetOpen}>
         <SheetContent
           side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-2xl overflow-y-auto"
+          className="w-full overflow-y-auto sm:max-w-2xl"
         >
           <SheetHeader>
             <SheetTitle>{t('results.title')}</SheetTitle>

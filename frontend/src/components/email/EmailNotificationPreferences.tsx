@@ -153,20 +153,20 @@ export function EmailNotificationPreferences() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        <div className="size-8 animate-spin rounded-full border-b-2 border-primary" />
       </div>
     )
   }
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-4xl" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto max-w-4xl px-4 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
           {/* Main Toggle */}
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-start">
-                <Mail className={`h-5 w-5 ${isRTL ? 'ms-0 me-2' : ''}`} />
+                <Mail className={`size-5 ${isRTL ? 'me-2 ms-0' : ''}`} />
                 {t('preferences.emailNotifications')}
               </CardTitle>
               <CardDescription className="text-start">
@@ -196,7 +196,7 @@ export function EmailNotificationPreferences() {
                 render={({ field }) => (
                   <FormItem className="mt-4">
                     <FormLabel className="flex items-center gap-2">
-                      <Globe className="h-4 w-4" />
+                      <Globe className="size-4" />
                       {t('preferences.language')}
                     </FormLabel>
                     <Select onValueChange={field.onChange} value={field.value}>
@@ -221,7 +221,7 @@ export function EmailNotificationPreferences() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-start">
-                <Bell className={`h-5 w-5 ${isRTL ? 'ms-0 me-2' : ''}`} />
+                <Bell className={`size-5 ${isRTL ? 'me-2 ms-0' : ''}`} />
                 {t('preferences.notificationTypes')}
               </CardTitle>
               <CardDescription className="text-start">
@@ -231,7 +231,7 @@ export function EmailNotificationPreferences() {
             <CardContent className="space-y-4">
               {/* Ticket notifications */}
               <div className="space-y-3">
-                <h4 className="font-medium text-sm text-muted-foreground text-start">
+                <h4 className="text-start text-sm font-medium text-muted-foreground">
                   {t('preferences.ticketNotifications')}
                 </h4>
 
@@ -259,8 +259,8 @@ export function EmailNotificationPreferences() {
               </div>
 
               {/* Comment notifications */}
-              <div className="space-y-3 pt-4 border-t">
-                <h4 className="font-medium text-sm text-muted-foreground text-start">
+              <div className="space-y-3 border-t pt-4">
+                <h4 className="text-start text-sm font-medium text-muted-foreground">
                   {t('preferences.commentNotifications')}
                 </h4>
 
@@ -285,8 +285,8 @@ export function EmailNotificationPreferences() {
               </div>
 
               {/* Status notifications */}
-              <div className="space-y-3 pt-4 border-t">
-                <h4 className="font-medium text-sm text-muted-foreground text-start">
+              <div className="space-y-3 border-t pt-4">
+                <h4 className="text-start text-sm font-medium text-muted-foreground">
                   {t('preferences.statusNotifications')}
                 </h4>
 
@@ -318,7 +318,7 @@ export function EmailNotificationPreferences() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-start">
-                <Clock className={`h-5 w-5 ${isRTL ? 'ms-0 me-2' : ''}`} />
+                <Clock className={`size-5 ${isRTL ? 'me-2 ms-0' : ''}`} />
                 {t('preferences.digestSettings')}
               </CardTitle>
               <CardDescription className="text-start">
@@ -414,7 +414,7 @@ export function EmailNotificationPreferences() {
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-start">
-                <Moon className={`h-5 w-5 ${isRTL ? 'ms-0 me-2' : ''}`} />
+                <Moon className={`size-5 ${isRTL ? 'me-2 ms-0' : ''}`} />
                 {t('preferences.quietHours')}
               </CardTitle>
               <CardDescription className="text-start">
@@ -443,7 +443,7 @@ export function EmailNotificationPreferences() {
               />
 
               {form.watch('quiet_hours_enabled') && (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 ms-4">
+                <div className="ms-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="quiet_hours_start"

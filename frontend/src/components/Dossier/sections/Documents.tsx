@@ -161,17 +161,17 @@ function getFileTypeIcon(mimeType: string): React.ReactNode {
   const fileType = getFileTypeFromMime(mimeType)
   switch (fileType) {
     case 'image':
-      return <ImageIcon className="h-4 w-4 text-blue-500" />
+      return <ImageIcon className="size-4 text-blue-500" />
     case 'pdf':
-      return <FileText className="h-4 w-4 text-red-500" />
+      return <FileText className="size-4 text-red-500" />
     case 'word':
-      return <FileText className="h-4 w-4 text-blue-600" />
+      return <FileText className="size-4 text-blue-600" />
     case 'excel':
-      return <FileSpreadsheet className="h-4 w-4 text-green-600" />
+      return <FileSpreadsheet className="size-4 text-green-600" />
     case 'text':
-      return <FileType className="h-4 w-4 text-gray-500" />
+      return <FileType className="size-4 text-gray-500" />
     default:
-      return <FileText className="h-4 w-4 text-muted-foreground" />
+      return <FileText className="size-4 text-muted-foreground" />
   }
 }
 
@@ -223,18 +223,18 @@ const DocumentCard = memo(
         : canAccessClassification(userClearance, classification)
 
     return (
-      <Card className="hover:shadow-md transition-shadow">
+      <Card className="transition-shadow hover:shadow-md">
         <CardContent className="p-4 sm:p-6">
-          <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+          <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
             <div className="flex-1 space-y-2">
               <div className="flex items-start gap-2">
                 {getFileTypeIcon(doc.mime_type)}
-                <h4 className="text-sm sm:text-base font-semibold text-foreground break-all">
+                <h4 className="break-all text-sm font-semibold text-foreground sm:text-base">
                   {doc.file_name}
                 </h4>
               </div>
 
-              <div className="flex flex-wrap items-center gap-2 text-xs sm:text-sm text-muted-foreground">
+              <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground sm:text-sm">
                 <Badge variant="outline" className="text-xs">
                   {formatFileSize(doc.size_bytes)}
                 </Badge>
@@ -258,8 +258,8 @@ const DocumentCard = memo(
                 {!canDownload && (
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Badge variant="destructive" className="text-xs flex items-center gap-1">
-                        <Lock className="h-3 w-3" />
+                      <Badge variant="destructive" className="flex items-center gap-1 text-xs">
+                        <Lock className="size-3" />
                         {tClassification('documentCard.accessRestricted', 'Restricted')}
                       </Badge>
                     </TooltipTrigger>
@@ -273,21 +273,21 @@ const DocumentCard = memo(
                 )}
 
                 <span className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <Calendar className="size-3 sm:size-4" />
                   {formatDate(doc.uploaded_at, locale)}
                 </span>
               </div>
 
               {/* Handling instructions for authorized users */}
               {doc.handling_instructions && canDownload && (
-                <p className="text-xs text-amber-600 dark:text-amber-400 flex items-center gap-1">
-                  <Shield className="h-3 w-3" />
+                <p className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-400">
+                  <Shield className="size-3" />
                   {doc.handling_instructions}
                 </p>
               )}
             </div>
 
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex flex-wrap items-center gap-2">
               {/* Classification change button */}
               {allowClassificationChange && userClearance >= 2 && (
                 <Button
@@ -300,7 +300,7 @@ const DocumentCard = memo(
                     'Change Classification',
                   )}
                 >
-                  <Shield className="h-4 w-4" />
+                  <Shield className="size-4" />
                   <span className="hidden sm:inline">
                     {tClassification('documentCard.changeClassification', 'Classify')}
                   </span>
@@ -315,7 +315,7 @@ const DocumentCard = memo(
                   className="flex items-center gap-2"
                   title={tVersions('history.title', 'Version History')}
                 >
-                  <History className="h-4 w-4" />
+                  <History className="size-4" />
                   <span className="hidden sm:inline">{tVersions('history.title', 'History')}</span>
                 </Button>
               )}
@@ -327,7 +327,7 @@ const DocumentCard = memo(
                   className="flex items-center gap-2"
                   title={t('actions.preview', 'Preview')}
                 >
-                  <Eye className="h-4 w-4" />
+                  <Eye className="size-4" />
                   <span className="hidden sm:inline">{t('actions.preview', 'Preview')}</span>
                 </Button>
               )}
@@ -343,7 +343,7 @@ const DocumentCard = memo(
                     : tClassification('documentCard.accessRestricted', 'Restricted')
                 }
               >
-                <Download className="h-4 w-4" />
+                <Download className="size-4" />
                 <span className="hidden sm:inline">{t('actions.download', 'Download')}</span>
               </Button>
               {allowDelete && (
@@ -354,7 +354,7 @@ const DocumentCard = memo(
                   className="text-destructive hover:bg-destructive hover:text-destructive-foreground"
                   title={t('actions.delete', 'Delete')}
                 >
-                  <Trash2 className="h-4 w-4" />
+                  <Trash2 className="size-4" />
                 </Button>
               )}
             </div>
@@ -569,8 +569,8 @@ export function Documents({
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="text-center">
-          <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
-          <p className="text-sm sm:text-base text-muted-foreground">{t('common.loading')}</p>
+          <div className="mx-auto mb-4 size-12 animate-spin rounded-full border-4 border-primary border-t-transparent sm:size-16" />
+          <p className="text-sm text-muted-foreground sm:text-base">{t('common.loading')}</p>
         </div>
       </div>
     )
@@ -585,31 +585,31 @@ export function Documents({
   if (!documents || documents.length === 0) {
     return (
       <div
-        className={`flex flex-col items-center justify-center py-8 sm:py-12 text-center ${className}`}
+        className={`flex flex-col items-center justify-center py-8 text-center sm:py-12 ${className}`}
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="mb-4 sm:mb-6">
-          <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
-            <FileText className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+          <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+            <FileText className="size-8 text-primary sm:size-10" />
           </div>
         </div>
 
-        <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
+        <h3 className="mb-2 text-base font-semibold text-foreground sm:text-lg">
           {t('section.documentsEmpty')}
         </h3>
 
-        <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 px-4">
+        <p className="mb-6 max-w-md px-4 text-sm text-muted-foreground sm:text-base">
           {t('section.documentsEmptyDescription')}
         </p>
 
         {allowUpload && (
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 mb-6">
+          <div className="mb-6 flex flex-col gap-2 sm:flex-row sm:gap-3">
             <Button variant="outline" size="sm">
-              <Upload className="h-4 w-4 me-2" />
+              <Upload className="me-2 size-4" />
               {t('actions.uploadDocument')}
             </Button>
             <Button variant="secondary" size="sm" onClick={() => setTemplateDialogOpen(true)}>
-              <FilePlus className="h-4 w-4 me-2" />
+              <FilePlus className="me-2 size-4" />
               {tTemplates('actions.createFromTemplate', 'Create from Template')}
             </Button>
           </div>
@@ -641,9 +641,9 @@ export function Documents({
     <div className={className} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Upload and Template buttons */}
       {allowUpload && (
-        <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row gap-2 sm:gap-3">
+        <div className="mb-4 flex flex-col gap-2 sm:mb-6 sm:flex-row sm:gap-3">
           <Button variant="outline" size="sm" className="w-full sm:w-auto">
-            <Upload className="h-4 w-4 me-2" />
+            <Upload className="me-2 size-4" />
             {t('actions.uploadDocument')}
           </Button>
           <Button
@@ -652,7 +652,7 @@ export function Documents({
             className="w-full sm:w-auto"
             onClick={() => setTemplateDialogOpen(true)}
           >
-            <FilePlus className="h-4 w-4 me-2" />
+            <FilePlus className="me-2 size-4" />
             {tTemplates('actions.createFromTemplate', 'Create from Template')}
           </Button>
         </div>

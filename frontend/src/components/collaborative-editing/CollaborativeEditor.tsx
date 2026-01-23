@@ -157,25 +157,25 @@ export function CollaborativeEditor({
   return (
     <div className={cn('flex flex-col h-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Toolbar */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 p-2 sm:p-3 border-b bg-muted/30">
+      <div className="flex flex-col gap-2 border-b bg-muted/30 p-2 sm:flex-row sm:items-center sm:justify-between sm:p-3">
         {/* Left side - Active editors */}
         <div className="flex items-center gap-3">
           <ActiveEditorAvatars editors={activeEditors} maxVisible={4} size="sm" />
           {isConnected ? (
             <Badge variant="outline" className="gap-1 text-xs">
-              <span className="h-2 w-2 rounded-full bg-green-500" />
+              <span className="size-2 rounded-full bg-green-500" />
               {t('status.connected')}
             </Badge>
           ) : (
             <Badge variant="outline" className="gap-1 text-xs text-muted-foreground">
-              <span className="h-2 w-2 rounded-full bg-gray-400" />
+              <span className="size-2 rounded-full bg-gray-400" />
               {t('status.disconnected')}
             </Badge>
           )}
 
           {summary?.isLocked && (
             <Badge variant="destructive" className="gap-1 text-xs">
-              <Lock className="h-3 w-3" />
+              <Lock className="size-3" />
               {t('status.locked')}
             </Badge>
           )}
@@ -215,9 +215,9 @@ export function CollaborativeEditor({
           {onSave && !readOnly && (
             <Button size="sm" onClick={handleSave} disabled={isSaving} className="gap-1">
               {isSaving ? (
-                <RefreshCw className="h-4 w-4 animate-spin" />
+                <RefreshCw className="size-4 animate-spin" />
               ) : (
-                <Save className="h-4 w-4" />
+                <Save className="size-4" />
               )}
               <span className="hidden sm:inline">{t('toolbar.save')}</span>
             </Button>
@@ -226,8 +226,8 @@ export function CollaborativeEditor({
           {/* Settings sheet */}
           <Sheet>
             <SheetTrigger asChild>
-              <Button variant="outline" size="icon" className="h-8 w-8">
-                <Settings className="h-4 w-4" />
+              <Button variant="outline" size="icon" className="size-8">
+                <Settings className="size-4" />
               </Button>
             </SheetTrigger>
             <SheetContent side={isRTL ? 'left' : 'right'}>
@@ -285,7 +285,7 @@ export function CollaborativeEditor({
                       onClick={() => unlockDocument()}
                       className="w-full gap-2"
                     >
-                      <Unlock className="h-4 w-4" />
+                      <Unlock className="size-4" />
                       {t('settings.unlockDocument')}
                     </Button>
                   ) : (
@@ -295,7 +295,7 @@ export function CollaborativeEditor({
                       className="w-full gap-2"
                       disabled={readOnly}
                     >
-                      <Lock className="h-4 w-4" />
+                      <Lock className="size-4" />
                       {t('settings.lockDocument')}
                     </Button>
                   )}
@@ -308,26 +308,26 @@ export function CollaborativeEditor({
           <Button
             variant="outline"
             size="icon"
-            className="h-8 w-8"
+            className="size-8"
             onClick={() => setIsPanelOpen(!isPanelOpen)}
           >
             {isPanelOpen ? (
               isRTL ? (
-                <ChevronLeft className="h-4 w-4" />
+                <ChevronLeft className="size-4" />
               ) : (
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="size-4" />
               )
             ) : isRTL ? (
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="size-4" />
             ) : (
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="size-4" />
             )}
           </Button>
         </div>
       </div>
 
       {/* Main content area */}
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex flex-1 overflow-hidden">
         {/* Editor area */}
         <div className={cn('flex-1 flex flex-col', isPanelOpen && 'hidden sm:flex')}>
           <ScrollArea className="flex-1">
@@ -355,21 +355,21 @@ export function CollaborativeEditor({
             )}
           >
             {/* Mobile close button */}
-            <div className="flex sm:hidden items-center justify-between p-2 border-b">
+            <div className="flex items-center justify-between border-b p-2 sm:hidden">
               <span className="font-medium">{t('panel.title')}</span>
               <Button variant="ghost" size="icon" onClick={() => setIsPanelOpen(false)}>
-                <X className="h-4 w-4" />
+                <X className="size-4" />
               </Button>
             </div>
 
             <Tabs
               value={activeTab}
               onValueChange={(v) => setActiveTab(v as typeof activeTab)}
-              className="flex-1 flex flex-col"
+              className="flex flex-1 flex-col"
             >
-              <TabsList className="grid w-full grid-cols-3 mx-2 mt-2">
+              <TabsList className="mx-2 mt-2 grid w-full grid-cols-3">
                 <TabsTrigger value="suggestions" className="gap-1 text-xs sm:text-sm">
-                  <Lightbulb className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <Lightbulb className="size-3 sm:size-4" />
                   <span className="hidden sm:inline">{t('tabs.suggestions')}</span>
                   {pendingSuggestions.length > 0 && (
                     <Badge variant="secondary" className="h-4 px-1 text-xs">
@@ -378,7 +378,7 @@ export function CollaborativeEditor({
                   )}
                 </TabsTrigger>
                 <TabsTrigger value="changes" className="gap-1 text-xs sm:text-sm">
-                  <History className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <History className="size-3 sm:size-4" />
                   <span className="hidden sm:inline">{t('tabs.changes')}</span>
                   {pendingChanges.length > 0 && (
                     <Badge variant="secondary" className="h-4 px-1 text-xs">
@@ -387,7 +387,7 @@ export function CollaborativeEditor({
                   )}
                 </TabsTrigger>
                 <TabsTrigger value="comments" className="gap-1 text-xs sm:text-sm">
-                  <MessageSquare className="h-3 w-3 sm:h-4 sm:w-4" />
+                  <MessageSquare className="size-3 sm:size-4" />
                   <span className="hidden sm:inline">{t('tabs.comments')}</span>
                   {openComments.length > 0 && (
                     <Badge variant="secondary" className="h-4 px-1 text-xs">
@@ -397,7 +397,7 @@ export function CollaborativeEditor({
                 </TabsTrigger>
               </TabsList>
 
-              <TabsContent value="suggestions" className="flex-1 mt-0 p-2">
+              <TabsContent value="suggestions" className="mt-0 flex-1 p-2">
                 <SuggestionPanel
                   suggestions={suggestions}
                   onAccept={handleAcceptSuggestion}
@@ -408,7 +408,7 @@ export function CollaborativeEditor({
                 />
               </TabsContent>
 
-              <TabsContent value="changes" className="flex-1 mt-0 p-2">
+              <TabsContent value="changes" className="mt-0 flex-1 p-2">
                 <ScrollArea className="h-full">
                   <TrackChangesOverlay
                     changes={trackChanges}
@@ -421,13 +421,13 @@ export function CollaborativeEditor({
                 </ScrollArea>
               </TabsContent>
 
-              <TabsContent value="comments" className="flex-1 mt-0 p-2">
+              <TabsContent value="comments" className="mt-0 flex-1 p-2">
                 <ScrollArea className="h-full">
                   <div className="space-y-3">
                     {inlineComments.length === 0 ? (
                       <Card>
-                        <CardContent className="flex flex-col items-center justify-center h-40 text-center text-muted-foreground">
-                          <MessageSquare className="h-8 w-8 mb-2 opacity-50" />
+                        <CardContent className="flex h-40 flex-col items-center justify-center text-center text-muted-foreground">
+                          <MessageSquare className="mb-2 size-8 opacity-50" />
                           <p>{t('comments.empty')}</p>
                         </CardContent>
                       </Card>
@@ -440,7 +440,7 @@ export function CollaborativeEditor({
                               <div className="flex items-start justify-between">
                                 <div className="flex items-center gap-2">
                                   <div
-                                    className="h-8 w-8 rounded-full bg-muted flex items-center justify-center text-xs font-medium"
+                                    className="flex size-8 items-center justify-center rounded-full bg-muted text-xs font-medium"
                                     style={{
                                       backgroundColor: '#' + comment.authorId.slice(0, 6),
                                       color: '#fff',
@@ -470,12 +470,12 @@ export function CollaborativeEditor({
                             <CardContent className="p-3 pt-0">
                               <p className="text-sm">{comment.content}</p>
                               {comment.replyCount > 0 && (
-                                <p className="text-xs text-muted-foreground mt-2">
+                                <p className="mt-2 text-xs text-muted-foreground">
                                   {t('comments.replyCount', { count: comment.replyCount })}
                                 </p>
                               )}
                               {comment.status === 'open' && !readOnly && (
-                                <div className="flex gap-2 mt-2">
+                                <div className="mt-2 flex gap-2">
                                   <Button
                                     size="sm"
                                     variant="outline"

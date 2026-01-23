@@ -257,7 +257,7 @@ export function SaveSearchDialog({
                     <div className="flex items-center gap-2">
                       {(() => {
                         const IconComp = ICON_OPTIONS.find((o) => o.value === icon)?.icon || Search
-                        return <IconComp className="h-4 w-4" />
+                        return <IconComp className="size-4" />
                       })()}
                       <span>{ICON_OPTIONS.find((o) => o.value === icon)?.label}</span>
                     </div>
@@ -267,7 +267,7 @@ export function SaveSearchDialog({
                   {ICON_OPTIONS.map((option) => (
                     <SelectItem key={option.value} value={option.value}>
                       <div className="flex items-center gap-2">
-                        <option.icon className="h-4 w-4" />
+                        <option.icon className="size-4" />
                         <span>{option.label}</span>
                       </div>
                     </SelectItem>
@@ -349,8 +349,8 @@ export function SaveSearchDialog({
           </div>
 
           {/* Search preview */}
-          <div className="rounded-lg border bg-gray-50 dark:bg-gray-900 p-3">
-            <Label className="text-xs text-gray-500 dark:text-gray-400 mb-2 block">
+          <div className="rounded-lg border bg-gray-50 p-3 dark:bg-gray-900">
+            <Label className="mb-2 block text-xs text-gray-500 dark:text-gray-400">
               {t('dialog.searchPreview')}
             </Label>
             <div className="flex items-center gap-3">
@@ -362,17 +362,17 @@ export function SaveSearchDialog({
                   )
                 })()}
               </div>
-              <div className="flex-1 min-w-0">
-                <p className="text-sm font-medium truncate">
+              <div className="min-w-0 flex-1">
+                <p className="truncate text-sm font-medium">
                   {(isRTL ? nameAr : nameEn) || t('dialog.untitled')}
                 </p>
                 {searchDefinition.query && (
-                  <p className="text-xs text-gray-500 truncate">
+                  <p className="truncate text-xs text-gray-500">
                     {t('dialog.queryPrefix')}: {searchDefinition.query}
                   </p>
                 )}
                 {searchDefinition.entity_types && searchDefinition.entity_types.length > 0 && (
-                  <p className="text-xs text-gray-500 truncate">
+                  <p className="truncate text-xs text-gray-500">
                     {t('dialog.entityTypes')}: {searchDefinition.entity_types.join(', ')}
                   </p>
                 )}

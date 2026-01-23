@@ -130,26 +130,26 @@ function TypeVisualExample({
   const Icon = ICON_MAP[metadata.icon] || Link
 
   return (
-    <div className="flex items-center gap-2 text-xs text-muted-foreground py-1">
-      <div className="flex items-center gap-1 min-w-0 shrink-0">
-        <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center">
+    <div className="flex items-center gap-2 py-1 text-xs text-muted-foreground">
+      <div className="flex min-w-0 shrink-0 items-center gap-1">
+        <div className="flex size-6 items-center justify-center rounded-full bg-primary/10">
           <span className="text-[10px] font-medium text-primary">A</span>
         </div>
-        <span className="truncate max-w-[60px]">{sourceName}</span>
+        <span className="max-w-[60px] truncate">{sourceName}</span>
       </div>
       <div className={cn('flex items-center gap-1', isRTL && 'flex-row-reverse')}>
         <div className="h-px w-4 bg-border" />
-        <Icon className="h-3 w-3 text-primary shrink-0" />
+        <Icon className="size-3 shrink-0 text-primary" />
         <div className="h-px w-4 bg-border" />
         {!metadata.isSymmetric && (
           <ArrowRight className={cn('h-3 w-3 text-primary shrink-0', isRTL && 'rotate-180')} />
         )}
       </div>
-      <div className="flex items-center gap-1 min-w-0 shrink-0">
-        <div className="w-6 h-6 rounded-full bg-secondary/50 flex items-center justify-center">
+      <div className="flex min-w-0 shrink-0 items-center gap-1">
+        <div className="flex size-6 items-center justify-center rounded-full bg-secondary/50">
           <span className="text-[10px] font-medium text-secondary-foreground">B</span>
         </div>
-        <span className="truncate max-w-[60px]">{targetName}</span>
+        <span className="max-w-[60px] truncate">{targetName}</span>
       </div>
     </div>
   )
@@ -187,7 +187,7 @@ function TypeCard({
         isSelected && 'bg-primary/5',
       )}
     >
-      <div className="flex items-center justify-between w-full">
+      <div className="flex w-full items-center justify-between">
         <div className="flex items-center gap-2">
           <div
             className={cn(
@@ -195,13 +195,13 @@ function TypeCard({
               isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted',
             )}
           >
-            <Icon className="h-4 w-4" />
+            <Icon className="size-4" />
           </div>
           <div className="flex flex-col">
-            <span className="font-medium text-sm">{t(metadata.labelKey)}</span>
+            <span className="text-sm font-medium">{t(metadata.labelKey)}</span>
             {isRecommended && (
               <div className="flex items-center gap-1 text-xs text-amber-600 dark:text-amber-500">
-                <Sparkles className="h-3 w-3" />
+                <Sparkles className="size-3" />
                 <span>{t('guidance.recommended')}</span>
               </div>
             )}
@@ -209,19 +209,19 @@ function TypeCard({
         </div>
         <div className="flex items-center gap-2">
           {metadata.isSymmetric && (
-            <Badge variant="outline" className="text-[10px] px-1.5">
+            <Badge variant="outline" className="px-1.5 text-[10px]">
               {t('guidance.symmetric')}
             </Badge>
           )}
-          {isSelected && <Check className="h-4 w-4 text-primary" />}
+          {isSelected && <Check className="size-4 text-primary" />}
         </div>
       </div>
 
-      <p className="text-xs text-muted-foreground ps-10 line-clamp-2">
+      <p className="line-clamp-2 ps-10 text-xs text-muted-foreground">
         {t(metadata.descriptionKey)}
       </p>
 
-      <div className="ps-10 w-full">
+      <div className="w-full ps-10">
         <TypeVisualExample
           metadata={metadata}
           sourceName={sourceName}
@@ -231,8 +231,8 @@ function TypeCard({
       </div>
 
       {metadata.usageTipKey && (
-        <div className="ps-10 flex items-start gap-1 text-xs text-blue-600 dark:text-blue-400">
-          <HelpCircle className="h-3 w-3 mt-0.5 shrink-0" />
+        <div className="flex items-start gap-1 ps-10 text-xs text-blue-600 dark:text-blue-400">
+          <HelpCircle className="mt-0.5 size-3 shrink-0" />
           <span>{t(metadata.usageTipKey)}</span>
         </div>
       )}
@@ -250,13 +250,13 @@ function CategoryHeader({ category, isRTL }: CategoryHeaderProps) {
   const Icon = ICON_MAP[category.icon] || Link
 
   return (
-    <div className="flex items-center gap-2 px-2 py-2">
-      <Icon className="h-4 w-4 text-muted-foreground" />
+    <div className="flex items-center gap-2 p-2">
+      <Icon className="size-4 text-muted-foreground" />
       <span className="text-sm font-semibold text-foreground">{t(category.labelKey)}</span>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger asChild>
-            <HelpCircle className="h-3 w-3 text-muted-foreground cursor-help" />
+            <HelpCircle className="size-3 cursor-help text-muted-foreground" />
           </TooltipTrigger>
           <TooltipContent side={isRTL ? 'left' : 'right'} className="max-w-[250px]">
             <p className="text-xs">{t(category.descriptionKey)}</p>
@@ -357,16 +357,16 @@ export function RelationshipTypeSelector({
           >
             <div className="flex items-center gap-2">
               {selectedMetadata && SelectedIconComponent && (
-                <SelectedIconComponent className="h-4 w-4 shrink-0" />
+                <SelectedIconComponent className="size-4 shrink-0" />
               )}
               <span className="truncate">
                 {selectedMetadata ? t(selectedMetadata.labelKey) : t('form.selectType')}
               </span>
               {selectedMetadata && recommendedTypes.includes(selectedMetadata.type) && (
-                <Sparkles className="h-3 w-3 text-amber-500" />
+                <Sparkles className="size-3 text-amber-500" />
               )}
             </div>
-            <ChevronDown className="h-4 w-4 opacity-50 ms-2 shrink-0" />
+            <ChevronDown className="ms-2 size-4 shrink-0 opacity-50" />
           </Button>
         </PopoverTrigger>
         <PopoverContent
@@ -387,8 +387,8 @@ export function RelationshipTypeSelector({
                 {/* Recommended types section */}
                 {recommendedTypes.length > 0 && !search && (
                   <>
-                    <div className="flex items-center gap-2 px-2 py-2 bg-amber-50 dark:bg-amber-950/30">
-                      <Sparkles className="h-4 w-4 text-amber-600 dark:text-amber-500" />
+                    <div className="flex items-center gap-2 bg-amber-50 p-2 dark:bg-amber-950/30">
+                      <Sparkles className="size-4 text-amber-600 dark:text-amber-500" />
                       <span className="text-sm font-semibold text-amber-700 dark:text-amber-400">
                         {t('guidance.recommendedSection')}
                       </span>
@@ -459,8 +459,8 @@ export function RelationshipTypeSelector({
 
       {/* Validation warning */}
       {validation && !validation.isValid && (
-        <div className="flex items-start gap-2 text-xs text-amber-600 dark:text-amber-500 bg-amber-50 dark:bg-amber-950/30 p-2 rounded-md">
-          <AlertTriangle className="h-4 w-4 shrink-0 mt-0.5" />
+        <div className="flex items-start gap-2 rounded-md bg-amber-50 p-2 text-xs text-amber-600 dark:bg-amber-950/30 dark:text-amber-500">
+          <AlertTriangle className="mt-0.5 size-4 shrink-0" />
           <div className="flex flex-col gap-1">
             <span>{validation.warningKey && t(validation.warningKey)}</span>
             {validation.suggestedTypes && validation.suggestedTypes.length > 0 && (

@@ -110,7 +110,7 @@ export function WorkloadDistributionChart({
           <CardDescription>{t('workload.description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-64 flex items-center justify-center text-muted-foreground">
+          <div className="flex h-64 items-center justify-center text-muted-foreground">
             {t('errors.noData')}
           </div>
         </CardContent>
@@ -121,11 +121,11 @@ export function WorkloadDistributionChart({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
-          <p className="font-medium mb-2">{label}</p>
+        <div className="rounded-lg border bg-background p-3 shadow-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+          <p className="mb-2 font-medium">{label}</p>
           {payload.map((entry: any, index: number) => (
             <div key={index} className="flex items-center gap-2 text-sm">
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
+              <div className="size-3 rounded-full" style={{ backgroundColor: entry.color }} />
               <span className="text-muted-foreground">{entry.name}:</span>
               <span className="font-medium">
                 {entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
@@ -142,12 +142,12 @@ export function WorkloadDistributionChart({
     if (active && payload && payload.length) {
       const item = payload[0]
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="rounded-lg border bg-background p-3 shadow-lg" dir={isRTL ? 'rtl' : 'ltr'}>
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
+            <div className="size-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
             <span className="font-medium">{item.name}</span>
           </div>
-          <div className="text-sm text-muted-foreground mt-1">
+          <div className="mt-1 text-sm text-muted-foreground">
             {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
             {item.payload.percentage?.toFixed(1)}%)
           </div>
@@ -165,7 +165,7 @@ export function WorkloadDistributionChart({
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="users" className="w-full">
-          <TabsList className="mb-4 w-full sm:w-auto flex flex-wrap">
+          <TabsList className="mb-4 flex w-full flex-wrap sm:w-auto">
             <TabsTrigger value="users" className="flex-1 sm:flex-none">
               {t('workload.tabs.byUser')}
             </TabsTrigger>
@@ -214,7 +214,7 @@ export function WorkloadDistributionChart({
                 </BarChart>
               </ResponsiveContainer>
             ) : (
-              <div className="h-full flex items-center justify-center text-muted-foreground">
+              <div className="flex h-full items-center justify-center text-muted-foreground">
                 {t('errors.noData')}
               </div>
             )}
@@ -272,55 +272,55 @@ export function WorkloadDistributionChart({
         </Tabs>
 
         {/* Summary stats */}
-        <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 text-center">
-          <div className="p-2 sm:p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20">
-            <div className="text-lg sm:text-xl font-bold text-blue-600 dark:text-blue-400">
+        <div className="mt-4 grid grid-cols-2 gap-2 text-center sm:grid-cols-4 sm:gap-4">
+          <div className="rounded-lg bg-blue-50 p-2 dark:bg-blue-900/20 sm:p-3">
+            <div className="text-lg font-bold text-blue-600 dark:text-blue-400 sm:text-xl">
               {data.totalActiveItems}
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
+            <div className="text-xs text-muted-foreground sm:text-sm">
               {t('workload.totalActive')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-violet-50 dark:bg-violet-900/20">
-            <div className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
+          <div className="rounded-lg bg-violet-50 p-2 dark:bg-violet-900/20 sm:p-3">
+            <div className="text-lg font-bold text-violet-600 dark:text-violet-400 sm:text-xl">
               {data.avgItemsPerUser.toFixed(1)}
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
+            <div className="text-xs text-muted-foreground sm:text-sm">
               {t('workload.avgPerUser')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-red-50 dark:bg-red-900/20">
-            <div className="text-lg sm:text-xl font-bold text-red-600 dark:text-red-400">
+          <div className="rounded-lg bg-red-50 p-2 dark:bg-red-900/20 sm:p-3">
+            <div className="text-lg font-bold text-red-600 dark:text-red-400 sm:text-xl">
               {data.overloadedUsers}
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">
+            <div className="text-xs text-muted-foreground sm:text-sm">
               {t('workload.overloaded')}
             </div>
           </div>
-          <div className="p-2 sm:p-3 rounded-lg bg-gray-50 dark:bg-gray-800">
-            <div className="text-lg sm:text-xl font-bold text-gray-600 dark:text-gray-400">
+          <div className="rounded-lg bg-gray-50 p-2 dark:bg-gray-800 sm:p-3">
+            <div className="text-lg font-bold text-gray-600 dark:text-gray-400 sm:text-xl">
               {data.idleUsers}
             </div>
-            <div className="text-xs sm:text-sm text-muted-foreground">{t('workload.idle')}</div>
+            <div className="text-xs text-muted-foreground sm:text-sm">{t('workload.idle')}</div>
           </div>
         </div>
 
         {/* Top users list (mobile-friendly) */}
         {userWorkloadData.length > 0 && (
           <div className="mt-4 block sm:hidden">
-            <h4 className="text-sm font-medium mb-2">{t('workload.topUsers')}</h4>
+            <h4 className="mb-2 text-sm font-medium">{t('workload.topUsers')}</h4>
             <div className="space-y-2">
               {userWorkloadData.slice(0, 5).map((user) => (
                 <div
                   key={user.userId}
-                  className="flex items-center justify-between p-2 rounded-lg bg-muted/50"
+                  className="flex items-center justify-between rounded-lg bg-muted/50 p-2"
                 >
                   <div className="flex items-center gap-2">
-                    <Avatar className="h-8 w-8">
+                    <Avatar className="size-8">
                       <AvatarImage src={user.avatarUrl || undefined} />
                       <AvatarFallback className="text-xs">{user.shortName}</AvatarFallback>
                     </Avatar>
-                    <span className="text-sm font-medium truncate max-w-[120px]">{user.name}</span>
+                    <span className="max-w-[120px] truncate text-sm font-medium">{user.name}</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm">
                     <span className="font-medium">{user.totalItems}</span>

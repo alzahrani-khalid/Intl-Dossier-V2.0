@@ -76,9 +76,9 @@ export function ConflictResolutionPanel({
   if (isLoading) {
     return (
       <Card className={cn('p-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
-        <div className="flex items-center gap-2 animate-pulse">
-          <div className="h-5 w-5 bg-muted rounded-full" />
-          <div className="h-4 w-32 bg-muted rounded" />
+        <div className="flex animate-pulse items-center gap-2">
+          <div className="size-5 rounded-full bg-muted" />
+          <div className="h-4 w-32 rounded bg-muted" />
         </div>
       </Card>
     )
@@ -103,7 +103,7 @@ export function ConflictResolutionPanel({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="flex items-center justify-between p-3 sm:p-4 border-b bg-background/50">
+      <div className="flex items-center justify-between border-b bg-background/50 p-3 sm:p-4">
         <div className="flex items-center gap-2">
           <AlertTriangle
             className={cn(
@@ -112,7 +112,7 @@ export function ConflictResolutionPanel({
             )}
           />
           <div>
-            <h3 className="text-sm sm:text-base font-semibold">
+            <h3 className="text-sm font-semibold sm:text-base">
               {t('conflicts.title', { count: conflicts.total_conflicts })}
             </h3>
             <p className="text-xs text-muted-foreground">{t('conflicts.subtitle')}</p>
@@ -121,7 +121,7 @@ export function ConflictResolutionPanel({
 
         <div className="flex items-center gap-2">
           {/* Severity summary badges */}
-          <div className="hidden sm:flex items-center gap-1">
+          <div className="hidden items-center gap-1 sm:flex">
             {conflicts.severity_summary.critical > 0 && (
               <Badge variant="destructive" className="text-xs">
                 {conflicts.severity_summary.critical} {t('conflicts.severity.critical')}
@@ -135,15 +135,15 @@ export function ConflictResolutionPanel({
           </div>
 
           {onDismiss && (
-            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={onDismiss}>
-              <X className="h-4 w-4" />
+            <Button variant="ghost" size="icon" className="size-8" onClick={onDismiss}>
+              <X className="size-4" />
             </Button>
           )}
         </div>
       </div>
 
       {/* Conflicts List */}
-      <div className="divide-y max-h-[300px] overflow-y-auto">
+      <div className="max-h-[300px] divide-y overflow-y-auto">
         <AnimatePresence>
           {conflicts.conflicts.map((conflict, index) => (
             <ConflictItem
@@ -160,17 +160,17 @@ export function ConflictResolutionPanel({
 
       {/* Warnings */}
       {showWarnings && conflicts.warnings?.length > 0 && (
-        <div className="p-3 sm:p-4 bg-muted/30 border-t">
+        <div className="border-t bg-muted/30 p-3 sm:p-4">
           <div className="flex items-start gap-2">
-            <Info className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-medium text-muted-foreground mb-1">
+            <Info className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+            <div className="min-w-0 flex-1">
+              <p className="mb-1 text-xs font-medium text-muted-foreground">
                 {t('conflicts.warnings')}
               </p>
-              <ul className="text-xs text-muted-foreground space-y-0.5">
+              <ul className="space-y-0.5 text-xs text-muted-foreground">
                 {conflicts.warnings.map((warning, idx) => (
                   <li key={idx} className="flex items-center gap-1">
-                    <span className="h-1 w-1 rounded-full bg-muted-foreground shrink-0" />
+                    <span className="size-1 shrink-0 rounded-full bg-muted-foreground" />
                     {warning}
                   </li>
                 ))}
@@ -182,7 +182,7 @@ export function ConflictResolutionPanel({
 
       {/* Actions Footer */}
       {onGenerateSuggestions && conflicts.has_conflicts && (
-        <div className="p-3 sm:p-4 bg-background border-t">
+        <div className="border-t bg-background p-3 sm:p-4">
           <Button
             variant="outline"
             size="sm"
@@ -232,7 +232,7 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 10 }}
-      className="p-3 sm:p-4 hover:bg-muted/50 transition-colors"
+      className="p-3 transition-colors hover:bg-muted/50 sm:p-4"
     >
       <div className="flex items-start gap-3">
         {/* Icon */}
@@ -241,13 +241,13 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
         </div>
 
         {/* Content */}
-        <div className="flex-1 min-w-0">
-          <div className="flex items-center gap-2 flex-wrap mb-1">
+        <div className="min-w-0 flex-1">
+          <div className="mb-1 flex flex-wrap items-center gap-2">
             <Badge
               variant="outline"
               className={cn('text-xs', colors.bg, colors.text, colors.border)}
             >
-              <SeverityIcon className="h-3 w-3 me-1" />
+              <SeverityIcon className="me-1 size-3" />
               {t(`conflicts.severity.${conflict.severity}`)}
             </Badge>
             <Badge variant="secondary" className="text-xs">
@@ -255,14 +255,14 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
             </Badge>
           </div>
 
-          <p className="text-sm font-medium text-foreground mb-1 line-clamp-2">
+          <p className="mb-1 line-clamp-2 text-sm font-medium text-foreground">
             {isRTL ? conflict.message_ar || conflict.message_en : conflict.message_en}
           </p>
 
           {/* Overlap details */}
           {conflict.overlap_start && conflict.overlap_end && (
             <div className="flex items-center gap-2 text-xs text-muted-foreground">
-              <Clock className="h-3 w-3" />
+              <Clock className="size-3" />
               <span>
                 {formatDate(conflict.overlap_start)} {formatTime(conflict.overlap_start)} -{' '}
                 {formatTime(conflict.overlap_end)}
@@ -277,7 +277,7 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
 
           {/* Conflicting event */}
           {conflict.conflicting_event && (
-            <div className="mt-2 p-2 bg-muted/50 rounded text-xs">
+            <div className="mt-2 rounded bg-muted/50 p-2 text-xs">
               <p className="font-medium">
                 {isRTL
                   ? conflict.conflicting_event.title_ar || conflict.conflicting_event.title_en
@@ -293,8 +293,8 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
 
           {/* Affected participants */}
           {conflict.affected_participant_ids && conflict.affected_participant_ids.length > 0 && (
-            <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
-              <Users className="h-3 w-3" />
+            <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
+              <Users className="size-3" />
               <span>
                 {t('conflicts.affectedParticipants', {
                   count: conflict.affected_participant_ids.length,
@@ -305,7 +305,7 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
         </div>
 
         {/* Actions */}
-        <div className="flex flex-col gap-1 shrink-0">
+        <div className="flex shrink-0 flex-col gap-1">
           <TooltipProvider>
             {onGenerateSuggestions && (
               <Tooltip>
@@ -313,10 +313,10 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8"
+                    className="size-8"
                     onClick={() => onGenerateSuggestions(conflict.id)}
                   >
-                    <Sparkles className="h-4 w-4" />
+                    <Sparkles className="size-4" />
                   </Button>
                 </TooltipTrigger>
                 <TooltipContent>{t('conflicts.getSuggestions')}</TooltipContent>
@@ -329,7 +329,7 @@ function ConflictItem({ conflict, onResolve, onGenerateSuggestions, isRTL, t }: 
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8"
+                    className="size-8"
                     onClick={() => onResolve(conflict.id!)}
                   >
                     <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />

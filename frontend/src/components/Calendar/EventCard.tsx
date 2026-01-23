@@ -61,18 +61,18 @@ export function EventCard({ event, onClick, className }: EventCardProps) {
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <CardHeader className="pb-3">
- <div className="flex items-start justify-between gap-4 flex-col sm:flex-row">
- <div className="flex-1 min-w-0">
- <CardTitle className="text-base sm:text-lg mb-1 line-clamp-2">
+ <div className="flex flex-col items-start justify-between gap-4 sm:flex-row">
+ <div className="min-w-0 flex-1">
+ <CardTitle className="mb-1 line-clamp-2 text-base sm:text-lg">
  {isRTL ? (event.title_ar || event.title_en) : (event.title_en || event.title_ar)}
  </CardTitle>
  {event.description && (
- <CardDescription className="text-sm line-clamp-2">
+ <CardDescription className="line-clamp-2 text-sm">
  {isRTL ? (event.description_ar || event.description_en) : (event.description_en || event.description_ar)}
  </CardDescription>
  )}
  </div>
- <div className="flex gap-2 shrink-0">
+ <div className="flex shrink-0 gap-2">
  <Badge variant="outline" className={cn('text-xs', getEventTypeColor(event.entry_type))}>
  {t(`types.${event.entry_type}`)}
  </Badge>
@@ -89,11 +89,11 @@ export function EventCard({ event, onClick, className }: EventCardProps) {
  {/* Date and Time */}
  <div className="space-y-2">
  <div className="flex items-center gap-2 text-sm">
- <Calendar className="h-4 w-4 text-muted-foreground shrink-0" />
+ <Calendar className="size-4 shrink-0 text-muted-foreground" />
  <span className="text-muted-foreground">{startDateTime.date}</span>
  </div>
  <div className="flex items-center gap-2 text-sm">
- <Clock className="h-4 w-4 text-muted-foreground shrink-0" />
+ <Clock className="size-4 shrink-0 text-muted-foreground" />
  <span className="text-muted-foreground">
  {startDateTime.time}
  {endDateTime && <> - {endDateTime.time}</>}
@@ -104,8 +104,8 @@ export function EventCard({ event, onClick, className }: EventCardProps) {
  {/* Location */}
  {event.location && (
  <div className="flex items-center gap-2 text-sm">
- <MapPin className="h-4 w-4 text-muted-foreground shrink-0" />
- <span className="text-muted-foreground truncate">
+ <MapPin className="size-4 shrink-0 text-muted-foreground" />
+ <span className="truncate text-muted-foreground">
  {isRTL ? (event.location_ar || event.location_en) : (event.location_en || event.location_ar)}
  </span>
  </div>
@@ -114,7 +114,7 @@ export function EventCard({ event, onClick, className }: EventCardProps) {
  {/* Participants */}
  {event.participants && event.participants.length > 0 && (
  <div className="flex items-center gap-2 text-sm">
- <Users className="h-4 w-4 text-muted-foreground shrink-0" />
+ <Users className="size-4 shrink-0 text-muted-foreground" />
  <span className="text-muted-foreground">
  {t('participants_count', { count: event.participants.length })}
  </span>
@@ -124,14 +124,14 @@ export function EventCard({ event, onClick, className }: EventCardProps) {
  {/* All Day Event */}
  {event.is_all_day && (
  <div className="flex items-center gap-2 text-sm">
- <AlertCircle className="h-4 w-4 text-primary shrink-0" />
- <span className="text-primary font-medium">{t('all_day_event')}</span>
+ <AlertCircle className="size-4 shrink-0 text-primary" />
+ <span className="font-medium text-primary">{t('all_day_event')}</span>
  </div>
  )}
 
  {/* Linked Item */}
  {event.linked_item_type && event.linked_item_id && (
- <div className="pt-2 mt-2 border-t border-border">
+ <div className="mt-2 border-t border-border pt-2">
  <div className="flex items-center gap-2 text-xs text-muted-foreground">
  <span>{t('linked_to')}:</span>
  <Badge variant="secondary" className="text-xs">

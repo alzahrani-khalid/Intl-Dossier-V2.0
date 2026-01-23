@@ -139,9 +139,9 @@ export function NotificationCenter({
             t.visible ? 'animate-enter' : 'animate-leave',
           )}
         >
-          <div className="flex-1 w-0 p-4">
+          <div className="w-0 flex-1 p-4">
             <div className="flex items-start">
-              <div className="flex-shrink-0 pt-0.5">{icon}</div>
+              <div className="shrink-0 pt-0.5">{icon}</div>
               <div className="ms-3 flex-1">
                 <p className="text-sm font-medium text-gray-900">{notification.title}</p>
                 <p className="mt-1 text-sm text-gray-500">{notification.message}</p>
@@ -151,7 +151,7 @@ export function NotificationCenter({
           <div className="flex border-l border-gray-200">
             <button
               onClick={() => toast.dismiss(t.id)}
-              className="w-full border border-transparent rounded-none rounded-e-lg p-4 flex items-center justify-center text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              className="flex w-full items-center justify-center rounded-none rounded-e-lg border border-transparent p-4 text-sm font-medium text-indigo-600 hover:text-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
             >
               Close
             </button>
@@ -239,13 +239,13 @@ export function NotificationCenter({
   const getNotificationIcon = (type: Notification['type']) => {
     switch (type) {
       case 'success':
-        return <CheckCircle className="h-5 w-5 text-green-500" />
+        return <CheckCircle className="size-5 text-green-500" />
       case 'error':
-        return <XCircle className="h-5 w-5 text-red-500" />
+        return <XCircle className="size-5 text-red-500" />
       case 'warning':
-        return <AlertCircle className="h-5 w-5 text-yellow-500" />
+        return <AlertCircle className="size-5 text-yellow-500" />
       default:
-        return <Info className="h-5 w-5 text-blue-500" />
+        return <Info className="size-5 text-blue-500" />
     }
   }
 
@@ -264,11 +264,11 @@ export function NotificationCenter({
       <div className="relative">
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="relative p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 rounded-full"
+          className="relative rounded-full p-2 text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
         >
-          <Bell className="h-6 w-6" />
+          <Bell className="size-6" />
           {unreadCount > 0 && (
-            <span className="absolute top-0 end-0 block h-4 w-4 rounded-full bg-red-500 text-xs text-white text-center">
+            <span className="absolute end-0 top-0 block size-4 rounded-full bg-red-500 text-center text-xs text-white">
               {unreadCount > 9 ? '9+' : unreadCount}
             </span>
           )}
@@ -276,9 +276,9 @@ export function NotificationCenter({
 
         {/* Notification Dropdown */}
         {isOpen && (
-          <div className="absolute end-0 mt-2 w-96 bg-white rounded-lg shadow-xl z-50 max-h-[32rem] overflow-hidden">
+          <div className="absolute end-0 z-50 mt-2 max-h-[32rem] w-96 overflow-hidden rounded-lg bg-white shadow-xl">
             {/* Header */}
-            <div className="px-4 py-3 border-b border-gray-200">
+            <div className="border-b border-gray-200 px-4 py-3">
               <div className="flex items-center justify-between">
                 <h3 className="text-lg font-semibold text-gray-900">Notifications</h3>
                 <div className="flex space-x-2">
@@ -314,19 +314,19 @@ export function NotificationCenter({
                     onClick={() => autoMarkAsRead && markAsRead(notification.id)}
                   >
                     <div className="flex items-start">
-                      <div className="flex-shrink-0">{getNotificationIcon(notification.type)}</div>
+                      <div className="shrink-0">{getNotificationIcon(notification.type)}</div>
                       <div className="ms-3 flex-1">
                         <p className="text-sm font-medium text-gray-900">{notification.title}</p>
                         <p className="mt-1 text-sm text-gray-600">{notification.message}</p>
                         <div className="mt-2 flex items-center justify-between">
                           <span className="text-xs text-gray-500">
-                            <Clock className="inline h-3 w-3 me-1" />
+                            <Clock className="me-1 inline size-3" />
                             {formatDistanceToNow(notification.timestamp, { addSuffix: true })}
                           </span>
                           {notification.actionUrl && (
                             <a
                               href={notification.actionUrl}
-                              className="text-xs text-blue-600 hover:text-blue-800 font-medium"
+                              className="text-xs font-medium text-blue-600 hover:text-blue-800"
                             >
                               {notification.actionLabel || 'View'}
                             </a>
@@ -340,7 +340,7 @@ export function NotificationCenter({
                         }}
                         className="ms-2 text-gray-400 hover:text-gray-600"
                       >
-                        <X className="h-4 w-4" />
+                        <X className="size-4" />
                       </button>
                     </div>
                   </div>

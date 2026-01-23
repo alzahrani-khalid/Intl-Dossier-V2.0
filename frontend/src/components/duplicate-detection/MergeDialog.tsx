@@ -243,18 +243,18 @@ export function MergeDialog({
 
   const getEntityIcon = () => {
     return entityType === 'person' ? (
-      <User className="h-5 w-5" />
+      <User className="size-5" />
     ) : (
-      <Building2 className="h-5 w-5" />
+      <Building2 className="size-5" />
     )
   }
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className="max-h-[90vh] max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Merge className="h-5 w-5" />
+            <Merge className="size-5" />
             {t('merge_entities', 'Merge Entities')}
           </DialogTitle>
           <DialogDescription>
@@ -269,7 +269,7 @@ export function MergeDialog({
           <div className="space-y-6 py-4">
             {/* Warning Alert */}
             <Alert variant="destructive">
-              <AlertTriangle className="h-4 w-4" />
+              <AlertTriangle className="size-4" />
               <AlertTitle>{t('warning', 'Warning')}</AlertTitle>
               <AlertDescription>
                 {t(
@@ -307,7 +307,7 @@ export function MergeDialog({
                       'peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5',
                     )}
                   >
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="mb-2 flex items-center gap-2">
                       {getEntityIcon()}
                       <span className="font-medium">{t('entity_1', 'Entity 1')}</span>
                       {primaryEntityId === source.id && (
@@ -336,7 +336,7 @@ export function MergeDialog({
                       'peer-data-[state=checked]:border-primary peer-data-[state=checked]:bg-primary/5',
                     )}
                   >
-                    <div className="flex items-center gap-2 mb-2">
+                    <div className="mb-2 flex items-center gap-2">
                       {getEntityIcon()}
                       <span className="font-medium">{t('entity_2', 'Entity 2')}</span>
                       {primaryEntityId === target.id && (
@@ -363,7 +363,7 @@ export function MergeDialog({
               <AccordionItem value="fields">
                 <AccordionTrigger>
                   <div className="flex items-center gap-2">
-                    <ArrowLeftRight className="h-4 w-4" />
+                    <ArrowLeftRight className="size-4" />
                     {t('resolve_conflicts', 'Resolve Field Conflicts')}
                     <Badge variant="outline" className="ms-2">
                       {fieldComparisons.filter((f) => f.is_different).length}{' '}
@@ -376,7 +376,7 @@ export function MergeDialog({
                     {fieldComparisons
                       .filter((f) => f.is_different)
                       .map((field) => (
-                        <div key={field.field} className="rounded-lg border p-3 space-y-2">
+                        <div key={field.field} className="space-y-2 rounded-lg border p-3">
                           <Label className="text-sm font-medium">
                             {isRTL ? field.label_ar : field.label_en}
                           </Label>
@@ -396,7 +396,7 @@ export function MergeDialog({
                                 <div className="text-xs text-muted-foreground">
                                   {t('from_primary', 'From Primary')}
                                 </div>
-                                <div className="text-sm truncate">
+                                <div className="truncate text-sm">
                                   {String(
                                     primaryEntityId === source.id
                                       ? field.source_value
@@ -414,7 +414,7 @@ export function MergeDialog({
                                 <div className="text-xs text-muted-foreground">
                                   {t('from_duplicate', 'From Duplicate')}
                                 </div>
-                                <div className="text-sm truncate">
+                                <div className="truncate text-sm">
                                   {String(
                                     primaryEntityId === source.id
                                       ? field.target_value
@@ -428,8 +428,8 @@ export function MergeDialog({
                       ))}
 
                     {fieldComparisons.filter((f) => f.is_different).length === 0 && (
-                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                      <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                        <CheckCircle2 className="size-4 text-green-500" />
                         {t('no_conflicts', 'No field conflicts to resolve')}
                       </div>
                     )}
@@ -440,10 +440,10 @@ export function MergeDialog({
 
             {/* Info about what will be transferred */}
             <Alert>
-              <Info className="h-4 w-4" />
+              <Info className="size-4" />
               <AlertTitle>{t('what_transfers', 'What will be transferred')}</AlertTitle>
               <AlertDescription>
-                <ul className="list-disc list-inside text-sm mt-2 space-y-1">
+                <ul className="mt-2 list-inside list-disc space-y-1 text-sm">
                   {entityType === 'person' && (
                     <>
                       <li>{t('transfer_relationships', 'Person relationships')}</li>
@@ -479,7 +479,7 @@ export function MergeDialog({
               <>{t('merging', 'Merging...')}</>
             ) : (
               <>
-                <Merge className="h-4 w-4" />
+                <Merge className="size-4" />
                 {t('confirm_merge', 'Confirm Merge')}
               </>
             )}
@@ -489,7 +489,7 @@ export function MergeDialog({
         {/* Error display */}
         {mergeMutation.isError && (
           <Alert variant="destructive" className="mt-4">
-            <AlertCircle className="h-4 w-4" />
+            <AlertCircle className="size-4" />
             <AlertTitle>{t('error', 'Error')}</AlertTitle>
             <AlertDescription>
               {(mergeMutation.error as Error)?.message ||

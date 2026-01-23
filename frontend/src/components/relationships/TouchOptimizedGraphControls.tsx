@@ -122,11 +122,11 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 10 }}
-              className="bg-primary/90 text-primary-foreground px-3 py-2 rounded-lg shadow-lg backdrop-blur-sm flex items-center gap-2"
+              className="flex items-center gap-2 rounded-lg bg-primary/90 px-3 py-2 text-primary-foreground shadow-lg backdrop-blur-sm"
             >
               {isPinching && (
                 <>
-                  <Fingerprint className="h-4 w-4 animate-pulse" />
+                  <Fingerprint className="size-4 animate-pulse" />
                   <span className="text-sm font-medium">
                     {t('graph.gestures.pinching', 'Pinch to zoom')}
                   </span>
@@ -134,7 +134,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               )}
               {isPanning && !isPinching && (
                 <>
-                  <Move className="h-4 w-4 animate-pulse" />
+                  <Move className="size-4 animate-pulse" />
                   <span className="text-sm font-medium">
                     {t('graph.gestures.panning', 'Drag to pan')}
                   </span>
@@ -145,9 +145,9 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
         </AnimatePresence>
 
         {/* Main Control Panel */}
-        <div className="bg-card/95 backdrop-blur-md rounded-xl shadow-xl border border-border p-2 sm:p-3">
+        <div className="rounded-xl border border-border bg-card/95 p-2 shadow-xl backdrop-blur-md sm:p-3">
           {/* Zoom Level Indicator */}
-          <div className="flex items-center justify-center mb-2 pb-2 border-b border-border">
+          <div className="mb-2 flex items-center justify-center border-b border-border pb-2">
             <motion.div
               key={displayPercentage}
               initial={{ scale: 1.1 }}
@@ -157,7 +157,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               <span className="text-xs text-muted-foreground">
                 {t('graph.controls.zoom', 'Zoom')}
               </span>
-              <span className="text-lg sm:text-xl font-bold text-foreground min-w-[52px] text-center">
+              <span className="min-w-[52px] text-center text-lg font-bold text-foreground sm:text-xl">
                 {displayPercentage}
               </span>
             </motion.div>
@@ -165,15 +165,15 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
 
           {/* Zoom Slider Visual */}
           <div className="mb-3 px-1">
-            <div className="relative h-2 bg-muted rounded-full overflow-hidden">
+            <div className="relative h-2 overflow-hidden rounded-full bg-muted">
               <motion.div
-                className="absolute inset-y-0 start-0 bg-gradient-to-r from-primary to-primary/70 rounded-full"
+                className="absolute inset-y-0 start-0 rounded-full bg-gradient-to-r from-primary to-primary/70"
                 style={{ width: `${((zoomLevel - minZoom) / (maxZoom - minZoom)) * 100}%` }}
                 layout
                 transition={{ duration: 0.2 }}
               />
             </div>
-            <div className="flex justify-between mt-1 text-[10px] text-muted-foreground">
+            <div className="mt-1 flex justify-between text-[10px] text-muted-foreground">
               <span>{Math.round(minZoom * 100)}%</span>
               <span>{Math.round(maxZoom * 100)}%</span>
             </div>
@@ -194,7 +194,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               disabled={isAtMinZoom}
               aria-label={t('graph.controls.zoomOut', 'Zoom out')}
             >
-              <ZoomOut className="h-5 w-5" />
+              <ZoomOut className="size-5" />
             </Button>
 
             {/* Zoom In */}
@@ -210,7 +210,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               disabled={isAtMaxZoom}
               aria-label={t('graph.controls.zoomIn', 'Zoom in')}
             >
-              <ZoomIn className="h-5 w-5" />
+              <ZoomIn className="size-5" />
             </Button>
 
             {/* Fit View */}
@@ -225,7 +225,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               onClick={onFitView}
               aria-label={t('graph.controls.fitView', 'Fit view')}
             >
-              <Maximize2 className="h-5 w-5" />
+              <Maximize2 className="size-5" />
             </Button>
 
             {/* Reset View */}
@@ -240,7 +240,7 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
               onClick={onReset}
               aria-label={t('graph.controls.reset', 'Reset view')}
             >
-              <RotateCcw className="h-5 w-5" />
+              <RotateCcw className="size-5" />
             </Button>
           </div>
         </div>
@@ -251,18 +251,18 @@ export const TouchOptimizedGraphControls = memo(function TouchOptimizedGraphCont
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.5 }}
-            className="bg-muted/80 backdrop-blur-sm rounded-lg px-3 py-2 text-xs text-muted-foreground hidden sm:block"
+            className="hidden rounded-lg bg-muted/80 px-3 py-2 text-xs text-muted-foreground backdrop-blur-sm sm:block"
           >
-            <div className="flex items-center gap-2 mb-1">
-              <Fingerprint className="h-3.5 w-3.5" />
+            <div className="mb-1 flex items-center gap-2">
+              <Fingerprint className="size-3.5" />
               <span>{t('graph.hints.pinch', 'Pinch to zoom')}</span>
             </div>
-            <div className="flex items-center gap-2 mb-1">
-              <Move className="h-3.5 w-3.5" />
+            <div className="mb-1 flex items-center gap-2">
+              <Move className="size-3.5" />
               <span>{t('graph.hints.pan', 'Two fingers to pan')}</span>
             </div>
             <div className="flex items-center gap-2">
-              <ChevronUp className="h-3.5 w-3.5" />
+              <ChevronUp className="size-3.5" />
               <span>{t('graph.hints.doubleTap', 'Double-tap to expand')}</span>
             </div>
           </motion.div>
@@ -302,7 +302,7 @@ export const FloatingZoomIndicator = memo(function FloatingZoomIndicator({
           )}
           dir={isRTL ? 'rtl' : 'ltr'}
         >
-          <span className="text-3xl sm:text-4xl font-bold tabular-nums">
+          <span className="text-3xl font-bold tabular-nums sm:text-4xl">
             {Math.round(zoomLevel * 100)}%
           </span>
         </motion.div>
@@ -351,39 +351,39 @@ export const MobileTouchControls = memo(function MobileTouchControls({
       <Button
         variant="ghost"
         size="icon"
-        className="h-10 w-10 rounded-full"
+        className="size-10 rounded-full"
         onClick={onZoomOut}
         disabled={isAtMinZoom}
         aria-label={t('graph.controls.zoomOut', 'Zoom out')}
       >
-        <ChevronDown className="h-5 w-5" />
+        <ChevronDown className="size-5" />
       </Button>
 
-      <div className="px-2 min-w-[56px] text-center">
+      <div className="min-w-touch-lg px-2 text-center">
         <span className="text-sm font-semibold tabular-nums">{Math.round(zoomLevel * 100)}%</span>
       </div>
 
       <Button
         variant="ghost"
         size="icon"
-        className="h-10 w-10 rounded-full"
+        className="size-10 rounded-full"
         onClick={onZoomIn}
         disabled={isAtMaxZoom}
         aria-label={t('graph.controls.zoomIn', 'Zoom in')}
       >
-        <ChevronUp className="h-5 w-5" />
+        <ChevronUp className="size-5" />
       </Button>
 
-      <div className="w-px h-6 bg-border" />
+      <div className="h-6 w-px bg-border" />
 
       <Button
         variant="ghost"
         size="icon"
-        className="h-10 w-10 rounded-full"
+        className="size-10 rounded-full"
         onClick={onReset}
         aria-label={t('graph.controls.reset', 'Reset view')}
       >
-        <RotateCcw className="h-4 w-4" />
+        <RotateCcw className="size-4" />
       </Button>
     </div>
   )

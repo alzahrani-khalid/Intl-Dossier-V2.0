@@ -123,7 +123,7 @@ export function SaveReportDialog({
       <DialogContent className="sm:max-w-[500px]" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Save className="h-5 w-5" />
+            <Save className="size-5" />
             {existingReport ? t('save.updateButton') : t('save.title')}
           </DialogTitle>
           <DialogDescription>{t('save.description')}</DialogDescription>
@@ -249,7 +249,7 @@ export function SaveReportDialog({
                     />
                   </FormControl>
                   {tags.length > 0 && (
-                    <div className="flex flex-wrap gap-2 mt-2">
+                    <div className="mt-2 flex flex-wrap gap-2">
                       {tags.map((tag) => (
                         <Badge
                           key={tag}
@@ -258,7 +258,7 @@ export function SaveReportDialog({
                           onClick={() => handleRemoveTag(tag)}
                         >
                           {tag}
-                          <X className="h-3 w-3 ms-1" />
+                          <X className="ms-1 size-3" />
                         </Badge>
                       ))}
                     </div>
@@ -273,7 +273,7 @@ export function SaveReportDialog({
                 {t('savedReports.confirmDelete.cancel')}
               </Button>
               <Button type="submit" disabled={isSaving}>
-                {isSaving && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+                {isSaving && <Loader2 className="me-2 size-4 animate-spin" />}
                 {existingReport ? t('save.updateButton') : t('save.saveButton')}
               </Button>
             </DialogFooter>

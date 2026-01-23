@@ -107,16 +107,16 @@ function PluginDemoPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
+      className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-start">
+          <h1 className="text-start text-2xl font-bold sm:text-3xl">
             {isRTL ? 'عرض نظام الإضافات' : 'Plugin System Demo'}
           </h1>
-          <p className="text-muted-foreground text-start mt-1">
+          <p className="mt-1 text-start text-muted-foreground">
             {isRTL
               ? 'نظام إضافات قابل للتوسيع لإضافة أنواع كيانات جديدة بدون تعديل الكود الأساسي'
               : 'Extensible plugin architecture for adding new entity types without modifying core code'}
@@ -124,7 +124,7 @@ function PluginDemoPage() {
         </div>
         <Button onClick={handleRefresh} disabled={isLoading} className="min-h-11 min-w-11">
           <RefreshCw
-            className={`h-4 w-4 ${isRTL ? 'ms-0 me-2' : 'me-2'} ${isLoading ? 'animate-spin' : ''}`}
+            className={`size-4 ${isRTL ? 'me-2 ms-0' : 'me-2'} ${isLoading ? 'animate-spin' : ''}`}
           />
           {isRTL ? 'تحديث' : 'Refresh'}
         </Button>
@@ -133,14 +133,14 @@ function PluginDemoPage() {
       {/* Error Alert */}
       {error && (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertTitle>{isRTL ? 'خطأ' : 'Error'}</AlertTitle>
           <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
 
       {/* Status Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
             <CardTitle className="text-sm font-medium text-muted-foreground">
@@ -150,9 +150,9 @@ function PluginDemoPage() {
           <CardContent>
             <div className="flex items-center gap-2">
               {isInitialized ? (
-                <CheckCircle className="h-5 w-5 text-green-500" />
+                <CheckCircle className="size-5 text-green-500" />
               ) : (
-                <XCircle className="h-5 w-5 text-red-500" />
+                <XCircle className="size-5 text-red-500" />
               )}
               <span className="text-lg font-semibold">
                 {isInitialized
@@ -204,12 +204,12 @@ function PluginDemoPage() {
       </div>
 
       {/* Main Content */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Plugin List */}
         <Card className="lg:col-span-1">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Settings className="h-5 w-5" />
+              <Settings className="size-5" />
               {isRTL ? 'الإضافات المسجلة' : 'Registered Plugins'}
             </CardTitle>
             <CardDescription>
@@ -218,14 +218,14 @@ function PluginDemoPage() {
           </CardHeader>
           <CardContent className="space-y-2">
             {plugins.length === 0 ? (
-              <p className="text-muted-foreground text-center py-4">
+              <p className="py-4 text-center text-muted-foreground">
                 {isRTL ? 'لا توجد إضافات مسجلة' : 'No plugins registered'}
               </p>
             ) : (
               plugins.map((plugin) => (
                 <div
                   key={plugin.manifest.id}
-                  className={`p-3 rounded-lg border cursor-pointer transition-colors ${
+                  className={`cursor-pointer rounded-lg border p-3 transition-colors ${
                     selectedPlugin?.manifest.id === plugin.manifest.id
                       ? 'border-primary bg-primary/5'
                       : 'border-border hover:bg-muted/50'
@@ -234,7 +234,7 @@ function PluginDemoPage() {
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <FolderKanban className={`h-5 w-5 text-${plugin.manifest.color}-500`} />
+                      <FolderKanban className={`text- size-5${plugin.manifest.color}-500`} />
                       <span className="font-medium">
                         {isRTL ? plugin.manifest.name.ar : plugin.manifest.name.en}
                       </span>
@@ -253,7 +253,7 @@ function PluginDemoPage() {
                           : 'Disabled'}
                     </Badge>
                   </div>
-                  <p className="text-sm text-muted-foreground mt-1 text-start">
+                  <p className="mt-1 text-start text-sm text-muted-foreground">
                     {isRTL ? plugin.manifest.description.ar : plugin.manifest.description.en}
                   </p>
                 </div>
@@ -283,7 +283,7 @@ function PluginDemoPage() {
           </CardHeader>
           <CardContent>
             {!selectedPlugin ? (
-              <p className="text-muted-foreground text-center py-8">
+              <p className="py-8 text-center text-muted-foreground">
                 {isRTL ? 'اختر إضافة لعرض التفاصيل' : 'Select a plugin to view details'}
               </p>
             ) : (
@@ -321,7 +321,7 @@ function PluginDemoPage() {
                             </TableCell>
                             <TableCell>
                               {field.required ? (
-                                <CheckCircle className="h-4 w-4 text-green-500" />
+                                <CheckCircle className="size-4 text-green-500" />
                               ) : (
                                 <span className="text-muted-foreground">-</span>
                               )}
@@ -367,7 +367,7 @@ function PluginDemoPage() {
                       </TableBody>
                     </Table>
                   ) : (
-                    <p className="text-muted-foreground text-center py-4">
+                    <p className="py-4 text-center text-muted-foreground">
                       {isRTL ? 'لا توجد علاقات محددة' : 'No relationships defined'}
                     </p>
                   )}
@@ -375,40 +375,40 @@ function PluginDemoPage() {
 
                 {/* Validation Tab */}
                 <TabsContent value="validation" className="mt-4 space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div className="p-4 rounded-lg border">
-                      <h4 className="font-medium mb-2">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+                    <div className="rounded-lg border p-4">
+                      <h4 className="mb-2 font-medium">
                         {isRTL ? 'قبل الإنشاء' : 'Before Create'}
                       </h4>
                       {selectedPlugin.validation?.beforeCreate ? (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="size-5 text-green-500" />
                       ) : (
-                        <XCircle className="h-5 w-5 text-muted-foreground" />
+                        <XCircle className="size-5 text-muted-foreground" />
                       )}
                     </div>
-                    <div className="p-4 rounded-lg border">
-                      <h4 className="font-medium mb-2">
+                    <div className="rounded-lg border p-4">
+                      <h4 className="mb-2 font-medium">
                         {isRTL ? 'قبل التحديث' : 'Before Update'}
                       </h4>
                       {selectedPlugin.validation?.beforeUpdate ? (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="size-5 text-green-500" />
                       ) : (
-                        <XCircle className="h-5 w-5 text-muted-foreground" />
+                        <XCircle className="size-5 text-muted-foreground" />
                       )}
                     </div>
-                    <div className="p-4 rounded-lg border">
-                      <h4 className="font-medium mb-2">{isRTL ? 'قبل الحذف' : 'Before Delete'}</h4>
+                    <div className="rounded-lg border p-4">
+                      <h4 className="mb-2 font-medium">{isRTL ? 'قبل الحذف' : 'Before Delete'}</h4>
                       {selectedPlugin.validation?.beforeDelete ? (
-                        <CheckCircle className="h-5 w-5 text-green-500" />
+                        <CheckCircle className="size-5 text-green-500" />
                       ) : (
-                        <XCircle className="h-5 w-5 text-muted-foreground" />
+                        <XCircle className="size-5 text-muted-foreground" />
                       )}
                     </div>
                   </div>
 
                   {selectedPlugin.validation?.fieldValidators && (
                     <div>
-                      <h4 className="font-medium mb-2">
+                      <h4 className="mb-2 font-medium">
                         {isRTL ? 'مدققات الحقول' : 'Field Validators'}
                       </h4>
                       <div className="flex flex-wrap gap-2">
@@ -424,17 +424,17 @@ function PluginDemoPage() {
 
                 {/* Permissions Tab */}
                 <TabsContent value="permissions" className="mt-4 space-y-4">
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    <div className="p-4 rounded-lg border">
-                      <h4 className="font-medium mb-2">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                    <div className="rounded-lg border p-4">
+                      <h4 className="mb-2 font-medium">
                         {isRTL ? 'الحد الأدنى للعرض' : 'Min View Clearance'}
                       </h4>
                       <span className="text-2xl font-bold">
                         {selectedPlugin.permissions?.minViewClearance ?? '-'}
                       </span>
                     </div>
-                    <div className="p-4 rounded-lg border">
-                      <h4 className="font-medium mb-2">
+                    <div className="rounded-lg border p-4">
+                      <h4 className="mb-2 font-medium">
                         {isRTL ? 'الحد الأدنى للتعديل' : 'Min Edit Clearance'}
                       </h4>
                       <span className="text-2xl font-bold">
@@ -445,12 +445,12 @@ function PluginDemoPage() {
 
                   {selectedPlugin.permissions?.additionalActions && (
                     <div>
-                      <h4 className="font-medium mb-2">
+                      <h4 className="mb-2 font-medium">
                         {isRTL ? 'إجراءات إضافية' : 'Additional Actions'}
                       </h4>
                       <div className="space-y-2">
                         {selectedPlugin.permissions.additionalActions.map((action) => (
-                          <div key={action.action} className="p-3 rounded-lg border">
+                          <div key={action.action} className="rounded-lg border p-3">
                             <div className="font-medium">
                               {isRTL ? action.label.ar : action.label.en}
                             </div>
@@ -480,9 +480,9 @@ function PluginDemoPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <div className="p-4 rounded-lg border bg-muted/30">
-              <h4 className="font-semibold mb-2">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+            <div className="rounded-lg border bg-muted/30 p-4">
+              <h4 className="mb-2 font-semibold">
                 1. {isRTL ? 'تعريف الإضافة' : 'Plugin Definition'}
               </h4>
               <p className="text-sm text-muted-foreground">
@@ -491,24 +491,24 @@ function PluginDemoPage() {
                   : 'Define new entity type with fields, relationships, validation, and permissions'}
               </p>
             </div>
-            <div className="p-4 rounded-lg border bg-muted/30">
-              <h4 className="font-semibold mb-2">2. {isRTL ? 'التسجيل' : 'Registration'}</h4>
+            <div className="rounded-lg border bg-muted/30 p-4">
+              <h4 className="mb-2 font-semibold">2. {isRTL ? 'التسجيل' : 'Registration'}</h4>
               <p className="text-sm text-muted-foreground">
                 {isRTL
                   ? 'تسجيل الإضافة في السجل المركزي للنظام'
                   : 'Register plugin with the central registry'}
               </p>
             </div>
-            <div className="p-4 rounded-lg border bg-muted/30">
-              <h4 className="font-semibold mb-2">3. {isRTL ? 'الخطافات' : 'Hooks'}</h4>
+            <div className="rounded-lg border bg-muted/30 p-4">
+              <h4 className="mb-2 font-semibold">3. {isRTL ? 'الخطافات' : 'Hooks'}</h4>
               <p className="text-sm text-muted-foreground">
                 {isRTL
                   ? 'استخدام React hooks للتحقق والصلاحيات وعرض واجهة المستخدم'
                   : 'Use React hooks for validation, permissions, and UI rendering'}
               </p>
             </div>
-            <div className="p-4 rounded-lg border bg-muted/30">
-              <h4 className="font-semibold mb-2">4. {isRTL ? 'التكامل' : 'Integration'}</h4>
+            <div className="rounded-lg border bg-muted/30 p-4">
+              <h4 className="mb-2 font-semibold">4. {isRTL ? 'التكامل' : 'Integration'}</h4>
               <p className="text-sm text-muted-foreground">
                 {isRTL
                   ? 'يتكامل بسلاسة مع النظام الحالي دون تعديل الكود الأساسي'

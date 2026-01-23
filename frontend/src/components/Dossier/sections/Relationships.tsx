@@ -129,12 +129,12 @@ interface RelationshipsProps {
 // Custom node component for related dossiers (memoized for performance)
 const DossierNode = memo(
   ({ data }: { data: { label: string; type: string; relationCount: number } }) => (
-    <div className="bg-card border-2 border-primary rounded-lg px-3 py-2 sm:px-4 sm:py-3 shadow-md min-w-[80px] sm:min-w-[100px] hover:shadow-lg transition-shadow">
+    <div className="min-w-[80px] rounded-lg border-2 border-primary bg-card px-3 py-2 shadow-md transition-shadow hover:shadow-lg sm:min-w-[100px] sm:px-4 sm:py-3">
       <div className="flex flex-col items-center gap-1">
         <Badge variant="outline" className="text-xs">
           {data.type}
         </Badge>
-        <div className="text-sm sm:text-base font-semibold text-foreground text-center">
+        <div className="text-center text-sm font-semibold text-foreground sm:text-base">
           {data.label}
         </div>
         {data.relationCount > 0 && (
@@ -399,8 +399,8 @@ export function Relationships({
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="text-center">
-          <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full border-4 border-primary border-t-transparent animate-spin mx-auto mb-4" />
-          <p className="text-sm sm:text-base text-muted-foreground">{t('common.loading')}</p>
+          <div className="mx-auto mb-4 size-12 animate-spin rounded-full border-4 border-primary border-t-transparent sm:size-16" />
+          <p className="text-sm text-muted-foreground sm:text-base">{t('common.loading')}</p>
         </div>
       </div>
     )
@@ -430,18 +430,18 @@ export function Relationships({
             onCreateRelationship={handleAddRelationship}
           />
         ) : (
-          <div className="flex flex-col items-center justify-center py-8 sm:py-12 text-center">
+          <div className="flex flex-col items-center justify-center py-8 text-center sm:py-12">
             <div className="mb-4 sm:mb-6">
-              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-primary/10 flex items-center justify-center">
-                <Link2 className="h-8 w-8 sm:h-10 sm:w-10 text-primary" />
+              <div className="flex size-16 items-center justify-center rounded-full bg-primary/10 sm:size-20">
+                <Link2 className="size-8 text-primary sm:size-10" />
               </div>
             </div>
 
-            <h3 className="text-base sm:text-lg font-semibold text-foreground mb-2">
+            <h3 className="mb-2 text-base font-semibold text-foreground sm:text-lg">
               {t('section.relationshipsEmpty')}
             </h3>
 
-            <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 px-4">
+            <p className="mb-6 max-w-md px-4 text-sm text-muted-foreground sm:text-base">
               {t('section.relationshipsEmptyDescription')}
             </p>
           </div>
@@ -467,14 +467,14 @@ export function Relationships({
   return (
     <div className={className} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with Add and Export buttons */}
-      <div className="flex justify-end gap-2 mb-4">
+      <div className="mb-4 flex justify-end gap-2">
         <Button variant="outline" size="sm" onClick={handleExportGraph}>
-          <Share2 className="h-4 w-4 me-2" />
+          <Share2 className="me-2 size-4" />
           {t('actions.exportGraph')}
         </Button>
         {editable && (
           <Button variant="outline" size="sm" onClick={handleAddRelationship}>
-            <Plus className="h-4 w-4 me-2" />
+            <Plus className="me-2 size-4" />
             {t('actions.addRelationship')}
           </Button>
         )}
@@ -487,15 +487,15 @@ export function Relationships({
         >
           <TabsList className="mb-4">
             <TabsTrigger value="carousel" className="flex items-center gap-2">
-              <LayoutGrid className="h-4 w-4" />
+              <LayoutGrid className="size-4" />
               {t('views.carousel', 'Carousel')}
             </TabsTrigger>
             <TabsTrigger value="list" className="flex items-center gap-2">
-              <Rows3 className="h-4 w-4" />
+              <Rows3 className="size-4" />
               {t('views.list')}
             </TabsTrigger>
             <TabsTrigger value="graph" className="flex items-center gap-2">
-              <Network className="h-4 w-4" />
+              <Network className="size-4" />
               {t('views.graph')}
             </TabsTrigger>
           </TabsList>
@@ -576,7 +576,7 @@ export function Relationships({
             <AlertDialogTitle>{t('dialogs.deleteTitle')}</AlertDialogTitle>
             <AlertDialogDescription>{t('dialogs.deleteDescription')}</AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
+          <AlertDialogFooter className="flex flex-col-reverse gap-2 sm:flex-row">
             <AlertDialogCancel>{t('actions.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDelete}
@@ -666,10 +666,10 @@ function RelationshipsCarousel({
       const { relationship: rel, relatedDossier, isActive, relationshipLabel } = item
 
       return (
-        <Card className="h-full hover:shadow-md transition-shadow">
-          <CardContent className="p-4 sm:p-5 h-full flex flex-col">
+        <Card className="h-full transition-shadow hover:shadow-md">
+          <CardContent className="flex h-full flex-col p-4 sm:p-5">
             {/* Badges */}
-            <div className="flex items-start gap-2 flex-wrap mb-3">
+            <div className="mb-3 flex flex-wrap items-start gap-2">
               <Badge variant={isActive ? 'default' : 'secondary'} className="text-xs">
                 {relationshipLabel}
               </Badge>
@@ -681,8 +681,8 @@ function RelationshipsCarousel({
             </div>
 
             {/* Title and Type */}
-            <div className="flex-1 min-h-0">
-              <h4 className="text-sm sm:text-base font-semibold text-foreground line-clamp-2 mb-1">
+            <div className="min-h-0 flex-1">
+              <h4 className="mb-1 line-clamp-2 text-sm font-semibold text-foreground sm:text-base">
                 {isRTL ? relatedDossier.name_ar : relatedDossier.name_en}
               </h4>
               <Badge variant="outline" className="text-xs">
@@ -691,46 +691,46 @@ function RelationshipsCarousel({
             </div>
 
             {/* Date Info */}
-            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground mt-3">
+            <div className="mt-3 flex flex-wrap items-center gap-2 text-xs text-muted-foreground">
               {rel.effective_from && (
                 <div className="flex items-center gap-1">
-                  <Calendar className="h-3 w-3" />
+                  <Calendar className="size-3" />
                   <span>{formatDate(rel.effective_from, i18n.language)}</span>
                 </div>
               )}
               {rel.effective_to && (
                 <>
-                  <ArrowRight className={`h-3 w-3 ${isRTL ? 'rotate-180' : ''}`} />
+                  <ArrowRight className={`size-3 ${isRTL ? 'rotate-180' : ''}`} />
                   <span>{formatDate(rel.effective_to, i18n.language)}</span>
                 </>
               )}
             </div>
 
             {/* Actions */}
-            <div className="flex items-center gap-2 mt-4 pt-3 border-t">
-              <Button variant="outline" size="sm" className="flex-1 min-h-10">
-                <Eye className="h-4 w-4 me-2" />
+            <div className="mt-4 flex items-center gap-2 border-t pt-3">
+              <Button variant="outline" size="sm" className="min-h-10 flex-1">
+                <Eye className="me-2 size-4" />
                 {t('actions.view')}
               </Button>
 
               {editable && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="sm" className="h-10 w-10 p-0">
-                      <MoreHorizontal className="h-4 w-4" />
+                    <Button variant="ghost" size="sm" className="size-10 p-0">
+                      <MoreHorizontal className="size-4" />
                       <span className="sr-only">{t('actions.more')}</span>
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                     <DropdownMenuItem onClick={() => onEdit?.(rel)}>
-                      <Pencil className="h-4 w-4 me-2" />
+                      <Pencil className="me-2 size-4" />
                       {t('actions.edit')}
                     </DropdownMenuItem>
                     <DropdownMenuItem
                       onClick={() => onDelete?.(rel)}
                       className="text-destructive focus:text-destructive"
                     >
-                      <Trash2 className="h-4 w-4 me-2" />
+                      <Trash2 className="me-2 size-4" />
                       {t('actions.delete')}
                     </DropdownMenuItem>
                   </DropdownMenuContent>
@@ -792,11 +792,11 @@ function RelationshipsList({
           ]?.[isRTL ? 'ar' : 'en'] || rel.relationship_type
 
         return (
-          <Card key={rel.id} className="hover:shadow-md transition-shadow">
+          <Card key={rel.id} className="transition-shadow hover:shadow-md">
             <CardContent className="p-4 sm:p-6">
-              <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 sm:gap-4">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
                 <div className="flex-1 space-y-2">
-                  <div className="flex items-start gap-2 flex-wrap">
+                  <div className="flex flex-wrap items-start gap-2">
                     <Badge variant={isActive ? 'default' : 'secondary'} className="text-xs">
                       {relationshipLabel}
                     </Badge>
@@ -807,8 +807,8 @@ function RelationshipsList({
                     )}
                   </div>
 
-                  <div className="flex items-center gap-2 flex-wrap">
-                    <h4 className="text-sm sm:text-base font-semibold text-foreground">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h4 className="text-sm font-semibold text-foreground sm:text-base">
                       {isRTL ? relatedDossier.name_ar : relatedDossier.name_en}
                     </h4>
                     <Badge variant="outline" className="text-xs">
@@ -816,20 +816,20 @@ function RelationshipsList({
                     </Badge>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 text-xs sm:text-sm text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-3 text-xs text-muted-foreground sm:text-sm">
                     {rel.effective_from && (
                       <div className="flex items-center gap-1">
-                        <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+                        <Calendar className="size-3 sm:size-4" />
                         <span>{formatDate(rel.effective_from, i18n.language)}</span>
                       </div>
                     )}
                     {rel.effective_to && (
                       <>
                         <ArrowRight
-                          className={`h-3 w-3 sm:h-4 sm:w-4 ${isRTL ? 'rotate-180' : ''}`}
+                          className={`size-3 sm:size-4 ${isRTL ? 'rotate-180' : ''}`}
                         />
                         <div className="flex items-center gap-1">
-                          <Calendar className="h-3 w-3 sm:h-4 sm:w-4" />
+                          <Calendar className="size-3 sm:size-4" />
                           <span>{formatDate(rel.effective_to, i18n.language)}</span>
                         </div>
                       </>
@@ -839,28 +839,28 @@ function RelationshipsList({
 
                 <div className="flex items-center gap-2 self-start sm:self-center">
                   <Button variant="outline" size="sm" className="min-h-9">
-                    <Eye className="h-4 w-4 me-2" />
+                    <Eye className="me-2 size-4" />
                     {t('actions.view')}
                   </Button>
 
                   {editable && (
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="sm" className="h-9 w-9 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
+                        <Button variant="ghost" size="sm" className="size-9 p-0">
+                          <MoreHorizontal className="size-4" />
                           <span className="sr-only">{t('actions.more')}</span>
                         </Button>
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                         <DropdownMenuItem onClick={() => onEdit?.(rel)}>
-                          <Pencil className="h-4 w-4 me-2" />
+                          <Pencil className="me-2 size-4" />
                           {t('actions.edit')}
                         </DropdownMenuItem>
                         <DropdownMenuItem
                           onClick={() => onDelete?.(rel)}
                           className="text-destructive focus:text-destructive"
                         >
-                          <Trash2 className="h-4 w-4 me-2" />
+                          <Trash2 className="me-2 size-4" />
                           {t('actions.delete')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -893,7 +893,7 @@ function RelationshipsGraphInner({
   isRTL: boolean
 }) {
   return (
-    <div className="w-full h-[400px] sm:h-[500px] lg:h-[600px] border rounded-lg overflow-hidden">
+    <div className="h-[400px] w-full overflow-hidden rounded-lg border sm:h-[500px] lg:h-[600px]">
       <ReactFlow
         nodes={nodes}
         edges={edges}

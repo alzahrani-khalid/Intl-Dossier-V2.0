@@ -132,9 +132,9 @@ function MyWorkBoardPage() {
   }, [navigate])
 
   return (
-    <div className="flex flex-col h-full" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex h-full flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Top bar with view toggle */}
-      <div className="flex items-center justify-between px-4 sm:px-6 py-2 border-b bg-background">
+      <div className="flex items-center justify-between border-b bg-background px-4 py-2 sm:px-6">
         <div className="flex items-center gap-2">
           <h1 className="text-lg font-semibold">{t('context.personal')}</h1>
         </div>
@@ -144,7 +144,7 @@ function MyWorkBoardPage() {
           onClick={handleSwitchToList}
           className="flex items-center gap-2"
         >
-          <List className="h-4 w-4" />
+          <List className="size-4" />
           <span className="hidden sm:inline">{t('viewModes.list')}</span>
         </Button>
       </div>

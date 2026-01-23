@@ -21,19 +21,19 @@ export function StatCard({
  trend,
 }: StatCardProps) {
  return (
- <div className="bg-card rounded-lg shadow-sm border border-border p-6 hover:shadow-md transition-shadow">
- <div className="flex items-start justify-between mb-4">
+ <div className="rounded-lg border border-border bg-card p-6 shadow-sm transition-shadow hover:shadow-md">
+ <div className="mb-4 flex items-start justify-between">
  <div className="flex-1">
  <p className="text-sm font-medium text-muted-foreground">{title}</p>
- <div className="flex items-baseline gap-2 mt-1">
+ <div className="mt-1 flex items-baseline gap-2">
  <p className="text-2xl font-bold text-foreground">
  {value}
  </p>
  <div className="flex items-center gap-1">
  {changeType === 'increase' ? (
- <ArrowUpRight className="h-4 w-4 text-success" />
+ <ArrowUpRight className="text-success size-4" />
  ) : changeType === 'decrease' ? (
- <TrendingDown className="h-4 w-4 text-destructive" />
+ <TrendingDown className="size-4 text-destructive" />
  ) : null}
  <span
  className={`text-sm font-medium ${
@@ -49,12 +49,12 @@ export function StatCard({
  </div>
  </div>
  {description && (
- <p className="text-xs text-muted-foreground mt-1">
+ <p className="mt-1 text-xs text-muted-foreground">
  {description}
  </p>
  )}
  {trend && (
- <p className="text-xs font-medium text-foreground/80 mt-2">
+ <p className="mt-2 text-xs font-medium text-foreground/80">
  {trend}
  </p>
  )}

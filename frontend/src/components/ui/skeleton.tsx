@@ -26,9 +26,9 @@ function Skeleton({
  */
 function SkeletonCard() {
  return (
- <div className="space-y-3 p-4 sm:p-6 rounded-lg border border-border bg-card">
+ <div className="space-y-3 rounded-lg border border-border bg-card p-4 sm:p-6">
  <div className="flex items-start gap-3">
- <Skeleton className="h-5 w-5" />
+ <Skeleton className="size-5" />
  <div className="flex-1 space-y-2">
  <Skeleton className="h-5 w-3/4" />
  <Skeleton className="h-4 w-full" />
@@ -67,7 +67,7 @@ function SkeletonTable({ rows = 5, columns = 4 }: { rows?: number; columns?: num
  return (
  <div className="space-y-3">
  {/* Header */}
- <div className="flex gap-4 pb-3 border-b">
+ <div className="flex gap-4 border-b pb-3">
  {Array.from({ length: columns }).map((_, i) => (
  <Skeleton key={i} className="h-5 flex-1" />
  ))}

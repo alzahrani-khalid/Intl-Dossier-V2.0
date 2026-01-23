@@ -69,7 +69,7 @@ export function StatusTimeline({
       <div className="space-y-4">
         {[...Array(3)].map((_, i) => (
           <div key={i} className="flex gap-3">
-            <Skeleton className="size-8 rounded-full shrink-0" />
+            <Skeleton className="size-8 shrink-0 rounded-full" />
             <div className="flex-1 space-y-2">
               <Skeleton className="h-4 w-3/4" />
               <Skeleton className="h-3 w-1/2" />
@@ -83,7 +83,7 @@ export function StatusTimeline({
   // Error state
   if (isError) {
     return (
-      <p className="text-sm text-muted-foreground text-center py-4">
+      <p className="py-4 text-center text-sm text-muted-foreground">
         {t('detail.noHistory')}
       </p>
     );
@@ -92,7 +92,7 @@ export function StatusTimeline({
   // Empty state
   if (!history?.length && !createdAt) {
     return (
-      <p className="text-sm text-muted-foreground text-center py-4">
+      <p className="py-4 text-center text-sm text-muted-foreground">
         {t('detail.noHistory')}
       </p>
     );
@@ -116,21 +116,21 @@ export function StatusTimeline({
         <div className="flex gap-3">
           {/* Timeline connector */}
           <div className="flex flex-col items-center">
-            <div className="size-8 rounded-full bg-muted flex items-center justify-center shrink-0">
+            <div className="flex size-8 shrink-0 items-center justify-center rounded-full bg-muted">
               <FileText className="size-4 text-muted-foreground" />
             </div>
           </div>
 
           {/* Content */}
           <div className="flex-1 pb-4">
-            <p className="text-sm font-medium text-start">
+            <p className="text-start text-sm font-medium">
               {t('timeline.created')}
             </p>
-            <p className="text-xs text-muted-foreground text-start mt-0.5">
+            <p className="mt-0.5 text-start text-xs text-muted-foreground">
               {formatDateTime(createdAt)}
             </p>
             {createdBy && (
-              <p className="text-xs text-muted-foreground text-start mt-0.5 flex items-center gap-1">
+              <p className="mt-0.5 flex items-center gap-1 text-start text-xs text-muted-foreground">
                 <User className="size-3" />
                 {t('timeline.by', { user: createdBy })}
               </p>
@@ -169,19 +169,19 @@ function TimelineEntry({
       {/* Timeline connector */}
       <div className="flex flex-col items-center">
         <div
-          className={`size-8 rounded-full flex items-center justify-center shrink-0 ${newStatusColors.bg} ${newStatusColors.text}`}
+          className={`flex size-8 shrink-0 items-center justify-center rounded-full ${newStatusColors.bg} ${newStatusColors.text}`}
         >
           {entry.new_status && statusIcons[entry.new_status] ? statusIcons[entry.new_status] : <Clock className="size-4" />}
         </div>
         {/* Line to next entry */}
         {!isLast && (
-          <div className="w-0.5 flex-1 bg-muted min-h-4" />
+          <div className="min-h-4 w-0.5 flex-1 bg-muted" />
         )}
       </div>
 
       {/* Content */}
       <div className={`flex-1 ${!isLast ? 'pb-4' : ''}`}>
-        <p className="text-sm font-medium text-start">
+        <p className="text-start text-sm font-medium">
           {entry.old_status ? (
             t('timeline.statusChanged', {
               from: t(`status.${entry.old_status}`),
@@ -191,17 +191,17 @@ function TimelineEntry({
             t(`status.${entry.new_status}`)
           )}
         </p>
-        <p className="text-xs text-muted-foreground text-start mt-0.5">
+        <p className="mt-0.5 text-start text-xs text-muted-foreground">
           {formatDateTime(entry.changed_at)}
         </p>
         {entry.changed_by_name && (
-          <p className="text-xs text-muted-foreground text-start mt-0.5 flex items-center gap-1">
+          <p className="mt-0.5 flex items-center gap-1 text-start text-xs text-muted-foreground">
             <User className="size-3" />
             {t('timeline.by', { user: entry.changed_by_name })}
           </p>
         )}
         {entry.notes && (
-          <p className="text-xs text-muted-foreground text-start mt-2 italic border-s-2 border-muted ps-2">
+          <p className="mt-2 border-s-2 border-muted ps-2 text-start text-xs italic text-muted-foreground">
             {entry.notes}
           </p>
         )}

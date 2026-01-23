@@ -70,9 +70,9 @@ export function PlaceholdersAndVanishInput({
     const newData: any[] = []
 
     for (let t = 0; t < 800; t++) {
-      let i = 4 * t * 800
+      const i = 4 * t * 800
       for (let n = 0; n < 800; n++) {
-        let e = i + 4 * n
+        const e = i + 4 * n
         if (pixelData[e] !== 0 && pixelData[e + 1] !== 0 && pixelData[e + 2] !== 0) {
           newData.push({
             x: n,
@@ -200,7 +200,7 @@ export function PlaceholdersAndVanishInput({
       <button
         disabled={!value}
         type="submit"
-        className="absolute end-2 top-1/2 z-50 -translate-y-1/2 h-8 w-8 rounded-full disabled:bg-gray-100 bg-black dark:bg-zinc-900 dark:disabled:bg-zinc-800 transition duration-200 flex items-center justify-center"
+        className="absolute end-2 top-1/2 z-50 flex size-8 -translate-y-1/2 items-center justify-center rounded-full bg-black transition duration-200 disabled:bg-gray-100 dark:bg-zinc-900 dark:disabled:bg-zinc-800"
       >
         <motion.svg
           xmlns="http://www.w3.org/2000/svg"
@@ -212,7 +212,7 @@ export function PlaceholdersAndVanishInput({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
-          className="text-gray-300 h-4 w-4"
+          className="size-4 text-gray-300"
         >
           <path stroke="none" d="M0 0h24v24H0z" fill="none" />
           <motion.path
@@ -234,7 +234,7 @@ export function PlaceholdersAndVanishInput({
         </motion.svg>
       </button>
 
-      <div className="absolute inset-0 flex items-center rounded-full pointer-events-none">
+      <div className="pointer-events-none absolute inset-0 flex items-center rounded-full">
         <AnimatePresence mode="wait">
           {!value && (
             <motion.p
@@ -255,7 +255,7 @@ export function PlaceholdersAndVanishInput({
                 duration: 0.3,
                 ease: 'linear',
               }}
-              className="dark:text-zinc-500 text-sm sm:text-base font-normal text-neutral-500 ps-4 sm:ps-12 text-start w-[calc(100%-2rem)] truncate"
+              className="w-[calc(100%-2rem)] truncate ps-4 text-start text-sm font-normal text-neutral-500 dark:text-zinc-500 sm:ps-12 sm:text-base"
             >
               {placeholders[currentPlaceholder]}
             </motion.p>

@@ -135,23 +135,23 @@ export function AdvancedSearchFilters({
     >
       {/* Search Input */}
       <div className="relative">
-        <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+        <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
         <Input
           type="text"
           value={state.query}
           onChange={(e) => dispatch({ type: 'SET_QUERY', payload: e.target.value })}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           placeholder={t('search.placeholder')}
-          className="ps-10 pe-4 min-h-12 text-base"
+          className="min-h-12 pe-4 ps-10 text-base"
         />
         {state.query && (
           <button
             type="button"
             onClick={() => dispatch({ type: 'SET_QUERY', payload: '' })}
-            className="absolute end-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="absolute end-3 top-1/2 -translate-y-1/2 rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700"
             aria-label={t('search.clear')}
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </button>
         )}
       </div>
@@ -159,15 +159,15 @@ export function AdvancedSearchFilters({
       {/* Quick Templates */}
       <Collapsible open={isTemplatesExpanded} onOpenChange={setIsTemplatesExpanded}>
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" className="w-full justify-between px-3 min-h-10">
+          <Button variant="ghost" className="min-h-10 w-full justify-between px-3">
             <span className="flex items-center gap-2">
-              <Filter className="h-4 w-4" />
+              <Filter className="size-4" />
               {t('templates.title')}
             </span>
             {isTemplatesExpanded ? (
-              <ChevronUp className="h-4 w-4" />
+              <ChevronUp className="size-4" />
             ) : (
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="size-4" />
             )}
           </Button>
         </CollapsibleTrigger>
@@ -199,7 +199,7 @@ export function AdvancedSearchFilters({
                     : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary',
                 )}
               >
-                <IconComponent className="h-4 w-4" />
+                <IconComponent className="size-4" />
                 {isRTL ? labels.label_ar : labels.label_en}
               </button>
             )
@@ -210,9 +210,9 @@ export function AdvancedSearchFilters({
       {/* Filters Section */}
       <Collapsible open={isFiltersExpanded} onOpenChange={setIsFiltersExpanded}>
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" className="w-full justify-between px-3 min-h-10">
+          <Button variant="ghost" className="min-h-10 w-full justify-between px-3">
             <span className="flex items-center gap-2">
-              <Filter className="h-4 w-4" />
+              <Filter className="size-4" />
               {t('filters.title')}
               {activeFilterCount > 0 && (
                 <Badge variant="secondary" className="ms-2">
@@ -221,14 +221,14 @@ export function AdvancedSearchFilters({
               )}
             </span>
             {isFiltersExpanded ? (
-              <ChevronUp className="h-4 w-4" />
+              <ChevronUp className="size-4" />
             ) : (
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="size-4" />
             )}
           </Button>
         </CollapsibleTrigger>
 
-        <CollapsibleContent className="pt-4 space-y-6" aria-label={t('a11y.filterSection')}>
+        <CollapsibleContent className="space-y-6 pt-4" aria-label={t('a11y.filterSection')}>
           {/* Boolean Logic Builder */}
           <BooleanLogicBuilder
             conditions={state.conditions}
@@ -287,7 +287,7 @@ export function AdvancedSearchFilters({
             />
             <label
               htmlFor="include-archived"
-              className="text-sm text-gray-700 dark:text-gray-300 cursor-pointer"
+              className="cursor-pointer text-sm text-gray-700 dark:text-gray-300"
             >
               {t('options.includeArchived')}
             </label>
@@ -330,7 +330,7 @@ export function AdvancedSearchFilters({
                     },
                   })
                 }
-                className="px-3 py-1.5 rounded-full border text-sm bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary transition-all min-h-8"
+                className="min-h-8 rounded-full border border-gray-200 bg-gray-50 px-3 py-1.5 text-sm transition-all hover:border-primary dark:border-gray-700 dark:bg-gray-800"
               >
                 {state.sortOrder === 'asc' ? t('sorting.ascending') : t('sorting.descending')}
               </button>
@@ -340,26 +340,26 @@ export function AdvancedSearchFilters({
       </Collapsible>
 
       {/* Action Buttons */}
-      <div className="flex flex-col sm:flex-row gap-3 pt-4 border-t">
+      <div className="flex flex-col gap-3 border-t pt-4 sm:flex-row">
         <Button
           onClick={handleSearch}
-          className="flex-1 min-h-11"
+          className="min-h-11 flex-1"
           disabled={state.entityTypes.length === 0}
         >
-          <Search className="h-4 w-4 me-2" />
+          <Search className="me-2 size-4" />
           {t('actions.search')}
         </Button>
 
         {hasFilters && (
           <Button variant="outline" onClick={handleReset} className="min-h-11">
-            <RotateCcw className="h-4 w-4 me-2" />
+            <RotateCcw className="me-2 size-4" />
             {t('actions.reset')}
           </Button>
         )}
 
         {onSaveTemplate && hasFilters && (
           <Button variant="outline" onClick={() => onSaveTemplate(state)} className="min-h-11">
-            <Save className="h-4 w-4 me-2" />
+            <Save className="me-2 size-4" />
             {t('templates.create')}
           </Button>
         )}

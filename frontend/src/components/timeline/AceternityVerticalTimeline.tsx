@@ -41,14 +41,14 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
       {Array.from({ length: count }).map((_, index) => (
         <div key={index} className="relative flex justify-start md:gap-10">
           {/* Timeline dot skeleton */}
-          <div className="absolute start-3 md:start-8 top-4 h-10 w-10 rounded-full border-4 border-background bg-muted" />
+          <div className="absolute start-3 top-4 size-10 rounded-full border-4 border-background bg-muted md:start-8" />
 
           {/* Card skeleton */}
           <div className={cn(
             "w-full md:w-[calc(50%-2rem)]",
             index % 2 === 0 ? "md:ms-auto md:ps-12" : "md:me-auto md:ps-20"
           )}>
-            <div className="ps-16 md:ps-4 space-y-3">
+            <div className="space-y-3 ps-16 md:ps-4">
               <Skeleton className="h-6 w-3/4" />
               <Skeleton className="h-4 w-1/2" />
               <Skeleton className="h-20 w-full" />
@@ -66,12 +66,12 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
 function TimelineEmptyState({ message }: { message: string }) {
   const { t } = useTranslation('dossier');
   return (
-    <div className="flex flex-col items-center justify-center py-12 sm:py-16 lg:py-20 text-center">
-      <div className="rounded-full bg-muted p-6 sm:p-8 lg:p-10 mb-4 sm:mb-6">
-        <Calendar className="h-12 w-12 sm:h-16 sm:w-16 lg:h-20 lg:w-20 text-muted-foreground" />
+    <div className="flex flex-col items-center justify-center py-12 text-center sm:py-16 lg:py-20">
+      <div className="mb-4 rounded-full bg-muted p-6 sm:mb-6 sm:p-8 lg:p-10">
+        <Calendar className="size-12 text-muted-foreground sm:size-16 lg:size-20" />
       </div>
-      <h3 className="text-lg sm:text-xl lg:text-2xl font-semibold mb-2">{t('timeline.empty.title')}</h3>
-      <p className="text-sm sm:text-base text-muted-foreground max-w-md px-4">
+      <h3 className="mb-2 text-lg font-semibold sm:text-xl lg:text-2xl">{t('timeline.empty.title')}</h3>
+      <p className="max-w-md px-4 text-sm text-muted-foreground sm:text-base">
         {message || t('timeline.empty.description')}
       </p>
     </div>
@@ -178,7 +178,7 @@ export function AceternityVerticalTimeline({
       className={cn('w-full bg-background font-sans px-4 md:px-10', className)}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <div className="max-w-7xl mx-auto py-8 sm:py-12 lg:py-20">
+      <div className="mx-auto max-w-7xl py-8 sm:py-12 lg:py-20">
         {/* Timeline Events */}
         <div ref={lineRef} className="relative">
           {events.map((event, index) => {
@@ -218,7 +218,7 @@ export function AceternityVerticalTimeline({
           <div ref={loadMoreRef} className="flex justify-center py-6 sm:py-8 lg:py-10">
             {isFetchingNextPage ? (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
                 <span>{t('timeline.loading_more')}</span>
               </div>
             ) : (

@@ -310,7 +310,7 @@ export function DeliverableForm({ mouId, deliverable, onSuccess, onCancel }: Del
         />
 
         {/* Priority and Status Row */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           {/* Priority */}
           <FormField
             control={form.control}
@@ -473,7 +473,7 @@ export function DeliverableForm({ mouId, deliverable, onSuccess, onCancel }: Del
         />
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row gap-2 pt-4">
+        <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row">
           {onCancel && (
             <Button
               type="button"

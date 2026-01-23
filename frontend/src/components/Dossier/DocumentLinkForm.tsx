@@ -146,7 +146,7 @@ export function DocumentLinkForm({
  >
  {isSubmitting ? (
  <>
- <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+ <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('document.linking')}
  </>
  ) : (

@@ -143,22 +143,22 @@ function EventItem({ event, locale, isRTL }: { event: EventData; locale: string;
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <h4 className="text-sm font-medium truncate">{event.title}</h4>
-          <span className="text-xs text-muted-foreground whitespace-nowrap">{relativeDate}</span>
+          <h4 className="truncate text-sm font-medium">{event.title}</h4>
+          <span className="whitespace-nowrap text-xs text-muted-foreground">{relativeDate}</span>
         </div>
 
         {event.description && (
-          <p className="text-xs text-muted-foreground mt-0.5 line-clamp-1">{event.description}</p>
+          <p className="mt-0.5 line-clamp-1 text-xs text-muted-foreground">{event.description}</p>
         )}
 
-        <div className="flex items-center gap-2 mt-1.5">
+        <div className="mt-1.5 flex items-center gap-2">
           <Badge variant="secondary" className={cn('text-[10px] px-1.5 py-0', colors.badge)}>
             {t(`eventTypes.${event.type}`)}
           </Badge>
           {event.priority === 'high' && (
-            <Badge variant="destructive" className="text-[10px] px-1.5 py-0">
+            <Badge variant="destructive" className="px-1.5 py-0 text-[10px]">
               {t('settings.kpi.targetValue')}
             </Badge>
           )}
@@ -209,13 +209,13 @@ export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
   // Loading skeleton
   if (isLoading) {
     return (
-      <div className="h-full space-y-2 animate-pulse">
+      <div className="h-full animate-pulse space-y-2">
         {Array.from({ length: 3 }).map((_, i) => (
           <div key={i} className="flex items-start gap-3 p-2">
-            <div className="w-8 h-8 bg-muted rounded-lg" />
+            <div className="size-8 rounded-lg bg-muted" />
             <div className="flex-1">
-              <div className="h-4 w-3/4 bg-muted rounded mb-1" />
-              <div className="h-3 w-1/2 bg-muted rounded" />
+              <div className="mb-1 h-4 w-3/4 rounded bg-muted" />
+              <div className="h-3 w-1/2 rounded bg-muted" />
             </div>
           </div>
         ))}
@@ -226,8 +226,8 @@ export function EventsWidget({ config, data, isLoading }: EventsWidgetProps) {
   // Empty state
   if (!filteredEvents.length) {
     return (
-      <div className="h-full flex flex-col items-center justify-center text-center p-4">
-        <Calendar className="h-8 w-8 text-muted-foreground mb-2" />
+      <div className="flex h-full flex-col items-center justify-center p-4 text-center">
+        <Calendar className="mb-2 size-8 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">{t('emptyStates.noEvents')}</p>
       </div>
     )

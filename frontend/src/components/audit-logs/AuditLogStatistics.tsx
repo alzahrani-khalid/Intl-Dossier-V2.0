@@ -58,7 +58,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
       <Card className={cn('', className)}>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <BarChart3 className="h-5 w-5" />
+            <BarChart3 className="size-5" />
             {t('statistics.title')}
           </CardTitle>
         </CardHeader>
@@ -81,12 +81,12 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
       <Card className={cn('', className)}>
         <CardHeader className="pb-3">
           <CardTitle className="flex items-center gap-2 text-lg">
-            <BarChart3 className="h-5 w-5" />
+            <BarChart3 className="size-5" />
             {t('statistics.title')}
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground text-center py-4">
+          <p className="py-4 text-center text-sm text-muted-foreground">
             {t('statistics.no_data')}
           </p>
         </CardContent>
@@ -106,7 +106,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
     <Card className={cn('', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-3">
         <CardTitle className="flex items-center gap-2 text-lg">
-          <BarChart3 className="h-5 w-5" />
+          <BarChart3 className="size-5" />
           {t('statistics.title')}
         </CardTitle>
         <p className="text-sm text-muted-foreground">
@@ -117,7 +117,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Total Events */}
-        <div className="text-center p-4 bg-muted/50 rounded-lg">
+        <div className="rounded-lg bg-muted/50 p-4 text-center">
           <div className="text-3xl font-bold text-primary">
             {statistics.total_events.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
           </div>
@@ -126,7 +126,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
 
         {/* By Operation */}
         <div>
-          <h4 className="text-sm font-medium mb-3">{t('statistics.by_operation')}</h4>
+          <h4 className="mb-3 text-sm font-medium">{t('statistics.by_operation')}</h4>
           <div className="grid grid-cols-3 gap-3">
             {statistics.by_operation.map((item) => {
               const Icon = OPERATION_ICONS[item.operation] || Database
@@ -137,7 +137,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
                   key={item.operation}
                   className={cn('flex flex-col items-center p-3 rounded-lg', colorClass)}
                 >
-                  <Icon className="h-5 w-5 mb-1" />
+                  <Icon className="mb-1 size-5" />
                   <div className="text-lg font-bold">
                     {item.count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                   </div>
@@ -151,7 +151,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
         {/* By Table */}
         {topTables.length > 0 && (
           <div>
-            <h4 className="text-sm font-medium mb-3">{t('statistics.by_table')}</h4>
+            <h4 className="mb-3 text-sm font-medium">{t('statistics.by_table')}</h4>
             <div className="space-y-2">
               {topTables.map((item, index) => (
                 <div key={item.table} className="flex items-center gap-2">
@@ -161,7 +161,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
                   >
                     {t(`tables.${item.table}`, item.table)}
                   </Badge>
-                  <div className="flex-1 h-6 bg-muted rounded-full overflow-hidden">
+                  <div className="h-6 flex-1 overflow-hidden rounded-full bg-muted">
                     <div
                       className={cn(
                         'h-full rounded-full transition-all',
@@ -176,7 +176,7 @@ export function AuditLogStatistics({ dateFrom, dateTo, className }: AuditLogStat
                       }}
                     />
                   </div>
-                  <span className="text-sm font-mono min-w-[60px] text-end">
+                  <span className="min-w-[60px] text-end font-mono text-sm">
                     {item.count.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                   </span>
                 </div>

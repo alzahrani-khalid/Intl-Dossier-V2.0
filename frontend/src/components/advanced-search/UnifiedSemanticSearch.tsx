@@ -242,7 +242,7 @@ export function UnifiedSemanticSearch({
               : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary',
           )}
         >
-          <IconComponent className="h-4 w-4" />
+          <IconComponent className="size-4" />
           {getEntityLabel(type)}
         </button>
       )
@@ -281,21 +281,21 @@ export function UnifiedSemanticSearch({
                       : 'bg-gray-100 dark:bg-gray-800',
                 )}
               >
-                <IconComponent className="h-5 w-5" />
+                <IconComponent className="size-5" />
               </div>
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
-                  <h4 className="font-medium text-base truncate">
+                  <h4 className="truncate text-base font-medium">
                     {isRTL ? result.entity_title_ar : result.entity_title}
                   </h4>
                   <Badge variant="outline" className="shrink-0">
                     {Math.round(result.similarity_score * 100)}%
                   </Badge>
                 </div>
-                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
                   {isRTL ? result.description_ar : result.description_en}
                 </p>
-                <div className="flex items-center gap-2 mt-2 text-xs text-muted-foreground">
+                <div className="mt-2 flex items-center gap-2 text-xs text-muted-foreground">
                   <span className="flex items-center gap-1">
                     {getEntityLabel(result.entity_type as SemanticEntityType)}
                     {result.entity_subtype && ` • ${result.entity_subtype}`}
@@ -304,19 +304,19 @@ export function UnifiedSemanticSearch({
                   <span className="flex items-center gap-1">
                     {result.match_type === 'semantic' && (
                       <>
-                        <Sparkles className="h-3 w-3" />
+                        <Sparkles className="size-3" />
                         {t('matchType.semantic')}
                       </>
                     )}
                     {result.match_type === 'fulltext' && (
                       <>
-                        <Search className="h-3 w-3" />
+                        <Search className="size-3" />
                         {t('matchType.fulltext')}
                       </>
                     )}
                     {result.match_type === 'hybrid' && (
                       <>
-                        <TrendingUp className="h-3 w-3" />
+                        <TrendingUp className="size-3" />
                         {t('matchType.hybrid')}
                       </>
                     )}
@@ -335,9 +335,9 @@ export function UnifiedSemanticSearch({
     <div className={cn('flex flex-col gap-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Search Input */}
       <div className="relative">
-        <div className="absolute start-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
-          <Sparkles className="h-4 w-4 text-purple-500" />
-          <Search className="h-4 w-4 text-muted-foreground" />
+        <div className="absolute start-3 top-1/2 flex -translate-y-1/2 items-center gap-1">
+          <Sparkles className="size-4 text-purple-500" />
+          <Search className="size-4 text-muted-foreground" />
         </div>
         <Input
           type="text"
@@ -345,16 +345,16 @@ export function UnifiedSemanticSearch({
           onChange={(e) => setQuery(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
           placeholder={isRTL ? 'بحث دلالي بلغة طبيعية...' : 'Natural language semantic search...'}
-          className="ps-14 pe-12 min-h-12 text-base"
+          className="min-h-12 pe-12 ps-14 text-base"
         />
         {query && (
           <button
             type="button"
             onClick={() => setQuery('')}
-            className="absolute end-3 top-1/2 -translate-y-1/2 p-1 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700"
+            className="absolute end-3 top-1/2 -translate-y-1/2 rounded-full p-1 hover:bg-gray-200 dark:hover:bg-gray-700"
             aria-label={t('search.clear')}
           >
-            <X className="h-4 w-4" />
+            <X className="size-4" />
           </button>
         )}
       </div>
@@ -410,20 +410,20 @@ export function UnifiedSemanticSearch({
       {/* Advanced Options */}
       <Collapsible open={isAdvancedOpen} onOpenChange={setIsAdvancedOpen}>
         <CollapsibleTrigger asChild>
-          <Button variant="ghost" className="w-full justify-between px-3 min-h-10">
+          <Button variant="ghost" className="min-h-10 w-full justify-between px-3">
             <span className="flex items-center gap-2">
-              <Filter className="h-4 w-4" />
+              <Filter className="size-4" />
               {t('advanced.title')}
             </span>
             {isAdvancedOpen ? (
-              <ChevronUp className="h-4 w-4" />
+              <ChevronUp className="size-4" />
             ) : (
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="size-4" />
             )}
           </Button>
         </CollapsibleTrigger>
 
-        <CollapsibleContent className="pt-4 space-y-6">
+        <CollapsibleContent className="space-y-6 pt-4">
           {/* Dossier Type Filter */}
           {entityTypes.includes('dossiers') && (
             <div className="space-y-3">
@@ -446,7 +446,7 @@ export function UnifiedSemanticSearch({
                           : 'bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 hover:border-primary',
                       )}
                     >
-                      <IconComponent className="h-3.5 w-3.5" />
+                      <IconComponent className="size-3.5" />
                       {isRTL ? config.label_ar : config.label_en}
                     </button>
                   )
@@ -497,7 +497,7 @@ export function UnifiedSemanticSearch({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Info className="h-4 w-4 text-muted-foreground" />
+                      <Info className="size-4 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="max-w-xs">{t('advanced.includeFulltextHint')}</p>
@@ -518,7 +518,7 @@ export function UnifiedSemanticSearch({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <Info className="h-4 w-4 text-muted-foreground" />
+                      <Info className="size-4 text-muted-foreground" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <p className="max-w-xs">{t('advanced.includeMetadataHint')}</p>
@@ -544,12 +544,12 @@ export function UnifiedSemanticSearch({
       >
         {searchMutation.isPending ? (
           <>
-            <Loader2 className="h-4 w-4 me-2 animate-spin" />
+            <Loader2 className="me-2 size-4 animate-spin" />
             {t('search.searching')}
           </>
         ) : (
           <>
-            <Sparkles className="h-4 w-4 me-2" />
+            <Sparkles className="me-2 size-4" />
             {t('search.button')}
           </>
         )}
@@ -558,7 +558,7 @@ export function UnifiedSemanticSearch({
       {/* Error Display */}
       {searchMutation.isError && (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertDescription>
             {searchMutation.error instanceof Error
               ? searchMutation.error.message
@@ -580,7 +580,7 @@ export function UnifiedSemanticSearch({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger>
-                      <AlertCircle className="h-4 w-4 text-yellow-500" />
+                      <AlertCircle className="size-4 text-yellow-500" />
                     </TooltipTrigger>
                     <TooltipContent>
                       <ul className="text-sm">
@@ -593,8 +593,8 @@ export function UnifiedSemanticSearch({
                 </TooltipProvider>
               )}
             </div>
-            <span className="text-xs text-muted-foreground flex items-center gap-1">
-              <Clock className="h-3 w-3" />
+            <span className="flex items-center gap-1 text-xs text-muted-foreground">
+              <Clock className="size-3" />
               {searchMutation.data.performance.total_ms}ms
             </span>
           </div>
@@ -626,10 +626,10 @@ export function UnifiedSemanticSearch({
               </div>
             </ScrollArea>
           ) : (
-            <div className="text-center py-8 text-muted-foreground">
-              <Search className="h-12 w-12 mx-auto mb-3 opacity-50" />
+            <div className="py-8 text-center text-muted-foreground">
+              <Search className="mx-auto mb-3 size-12 opacity-50" />
               <p>{t('results.noResults')}</p>
-              <p className="text-sm mt-1">{t('results.noResultsHint')}</p>
+              <p className="mt-1 text-sm">{t('results.noResultsHint')}</p>
             </div>
           )}
         </div>

@@ -60,7 +60,7 @@ export function ResponsiveTable<T extends { id?: string | number }>({
  <div className={cn('space-y-4', className)}>
  {data.map((item, index) => (
  <Card key={item.id || index} className="border-[0.5px]">
- <CardContent className="p-4 space-y-2">
+ <CardContent className="space-y-2 p-4">
  {visibleColumns.map(column => (
  <div
  key={column.key}

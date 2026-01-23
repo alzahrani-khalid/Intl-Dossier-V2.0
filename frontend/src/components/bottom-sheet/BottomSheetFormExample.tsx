@@ -92,7 +92,7 @@ export function BottomSheetFormExample({ onSubmit }: BottomSheetFormExampleProps
           </BottomSheetBody>
 
           <BottomSheetFooter>
-            <div className="flex flex-col-reverse sm:flex-row gap-2 w-full">
+            <div className="flex w-full flex-col-reverse gap-2 sm:flex-row">
               <BottomSheetClose asChild>
                 <Button type="button" variant="outline" className="min-h-11 flex-1">
                   {t('common.cancel')}

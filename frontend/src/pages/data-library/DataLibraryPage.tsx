@@ -195,11 +195,11 @@ export function DataLibraryPage() {
 
  const getCategoryIcon = (category: string) => {
  switch (category) {
- case 'document': return <FileText className="h-5 w-5" />
- case 'dataset': return <Database className="h-5 w-5" />
- case 'image': return <Image className="h-5 w-5" />
- case 'video': return <Video className="h-5 w-5" />
- default: return <FileText className="h-5 w-5" />
+ case 'document': return <FileText className="size-5" />
+ case 'dataset': return <Database className="size-5" />
+ case 'image': return <Image className="size-5" />
+ case 'video': return <Video className="size-5" />
+ default: return <FileText className="size-5" />
  }
  }
 
@@ -246,7 +246,7 @@ export function DataLibraryPage() {
 
  return (
  <div className="container mx-auto py-6">
- <div className="flex justify-between items-center mb-6">
+ <div className="mb-6 flex items-center justify-between">
  <h1 className="text-3xl font-bold">{t('navigation.dataLibrary')}</h1>
  </div>
 
@@ -254,7 +254,7 @@ export function DataLibraryPage() {
  <Card className="mb-6">
  <CardContent className="p-6">
  <div
- className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+ className={`rounded-lg border-2 border-dashed p-8 text-center transition-colors ${
  dragActive ? 'border-primary bg-primary/5' : 'border-gray-300'
  }`}
  onDragEnter={handleDrag}
@@ -262,9 +262,9 @@ export function DataLibraryPage() {
  onDragOver={handleDrag}
  onDrop={handleDrop}
  >
- <Upload className="h-12 w-12 mx-auto mb-4 text-muted-foreground" />
- <p className="text-lg font-medium mb-2">{t('dataLibrary.dragDropFiles')}</p>
- <p className="text-sm text-muted-foreground mb-4">{t('dataLibrary.or')}</p>
+ <Upload className="mx-auto mb-4 size-12 text-muted-foreground" />
+ <p className="mb-2 text-lg font-medium">{t('dataLibrary.dragDropFiles')}</p>
+ <p className="mb-4 text-sm text-muted-foreground">{t('dataLibrary.or')}</p>
  <label>
  <input
  type="file"
@@ -277,7 +277,7 @@ export function DataLibraryPage() {
  <span>{t('dataLibrary.browseFiles')}</span>
  </Button>
  </label>
- <p className="text-xs text-muted-foreground mt-4">
+ <p className="mt-4 text-xs text-muted-foreground">
  {t('dataLibrary.maxFileSize')}: 50MB
  </p>
  </div>
@@ -286,10 +286,10 @@ export function DataLibraryPage() {
  {Object.keys(uploadProgress).length > 0 && (
  <div className="mt-4 space-y-2">
  {Object.entries(uploadProgress).map(([id, progress]) => (
- <div key={id} className="flex items-center gap-4 p-3 bg-gray-50 rounded">
- <FileText className="h-5 w-5 text-muted-foreground" />
+ <div key={id} className="flex items-center gap-4 rounded bg-gray-50 p-3">
+ <FileText className="size-5 text-muted-foreground" />
  <div className="flex-1">
- <div className="flex justify-between mb-1">
+ <div className="mb-1 flex justify-between">
  <span className="text-sm font-medium">{progress.fileName}</span>
  <span className="text-sm text-muted-foreground">
  {progress.status === 'uploading' && `${Math.round(progress.progress)}%`}
@@ -299,7 +299,7 @@ export function DataLibraryPage() {
  </div>
  <Progress value={progress.progress} className="h-2" />
  {progress.error && (
- <p className="text-xs text-red-600 mt-1">{progress.error}</p>
+ <p className="mt-1 text-xs text-red-600">{progress.error}</p>
  )}
  </div>
  </div>
@@ -310,11 +310,11 @@ export function DataLibraryPage() {
  </Card>
 
  {/* Stats */}
- <div className="grid gap-4 md:grid-cols-5 mb-6">
+ <div className="mb-6 grid gap-4 md:grid-cols-5">
  <Card>
  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
  <CardTitle className="text-sm font-medium">{t('dataLibrary.totalFiles')}</CardTitle>
- <FileText className="h-4 w-4 text-muted-foreground" />
+ <FileText className="size-4 text-muted-foreground" />
  </CardHeader>
  <CardContent>
  <div className="text-2xl font-bold">{items?.length || 0}</div>
@@ -353,7 +353,7 @@ export function DataLibraryPage() {
  </div>
  </div>
  <div className="flex gap-2">
- <span className="text-sm text-muted-foreground mt-2">{t('dataLibrary.category')}:</span>
+ <span className="mt-2 text-sm text-muted-foreground">{t('dataLibrary.category')}:</span>
  {categories.map(cat => (
  <Button
  key={cat}
@@ -366,7 +366,7 @@ export function DataLibraryPage() {
  ))}
  </div>
  {allTags.length > 0 && (
- <div className="flex gap-2 flex-wrap">
+ <div className="flex flex-wrap gap-2">
  <span className="text-sm text-muted-foreground">{t('dataLibrary.tags')}:</span>
  {allTags.map(tag => (
  <Button
@@ -381,7 +381,7 @@ export function DataLibraryPage() {
  }
  }}
  >
- <Tag className="h-3 w-3 me-1" />
+ <Tag className="me-1 size-3" />
  {tag}
  </Button>
  ))}
@@ -394,27 +394,27 @@ export function DataLibraryPage() {
  {/* Files Grid */}
  <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-4">
  {isLoading ? (
- <div className="col-span-full text-center py-8">{t('common.loading')}</div>
+ <div className="col-span-full py-8 text-center">{t('common.loading')}</div>
  ) : items && items.length > 0 ? (
  items.map(item => (
- <Card key={item.id} className="hover:shadow-lg transition-shadow">
+ <Card key={item.id} className="transition-shadow hover:shadow-lg">
  <CardContent className="p-4">
- <div className="flex items-start justify-between mb-3">
+ <div className="mb-3 flex items-start justify-between">
  {getCategoryIcon(item.category)}
  <div className="flex gap-1">
  <Button size="sm" variant="ghost">
- <Download className="h-4 w-4" />
+ <Download className="size-4" />
  </Button>
  <Button size="sm" variant="ghost" className="text-red-600">
- <Trash2 className="h-4 w-4" />
+ <Trash2 className="size-4" />
  </Button>
  </div>
  </div>
- <h3 className="font-medium mb-1 line-clamp-2">
+ <h3 className="mb-1 line-clamp-2 font-medium">
  {isRTL ? item.title_ar : item.title_en}
  </h3>
  {item.description_en && (
- <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+ <p className="mb-2 line-clamp-2 text-sm text-muted-foreground">
  {isRTL ? item.description_ar : item.description_en}
  </p>
  )}
@@ -427,9 +427,9 @@ export function DataLibraryPage() {
  )}
  </div>
  {item.tags.length > 0 && (
- <div className="flex flex-wrap gap-1 mt-2">
+ <div className="mt-2 flex flex-wrap gap-1">
  {item.tags.map((tag, i) => (
- <span key={i} className="inline-flex items-center px-2 py-0.5 bg-gray-100 rounded text-xs">
+ <span key={i} className="inline-flex items-center rounded bg-gray-100 px-2 py-0.5 text-xs">
  {tag}
  </span>
  ))}
@@ -439,7 +439,7 @@ export function DataLibraryPage() {
  </Card>
  ))
  ) : (
- <div className="col-span-full text-center py-8 text-muted-foreground">
+ <div className="col-span-full py-8 text-center text-muted-foreground">
  {t('common.noData')}
  </div>
  )}

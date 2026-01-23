@@ -199,11 +199,11 @@ function AdminSystemPage() {
   };
 
   return (
-    <div className="container mx-auto py-6 space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto space-y-6 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="flex items-center gap-3">
-        <div className="p-3 bg-primary/10 rounded-lg">
-          <Settings className="h-6 w-6 text-primary" />
+        <div className="rounded-lg bg-primary/10 p-3">
+          <Settings className="size-6 text-primary" />
         </div>
         <div>
           <h1 className="text-3xl font-bold">
@@ -217,12 +217,12 @@ function AdminSystemPage() {
 
       {/* Warning Banner */}
       <Alert variant="default" className="border-yellow-500 bg-yellow-50 dark:bg-yellow-900/20">
-        <AlertCircle className="h-5 w-5 text-yellow-600 dark:text-yellow-400" />
+        <AlertCircle className="size-5 text-yellow-600 dark:text-yellow-400" />
         <AlertDescription className="text-yellow-800 dark:text-yellow-200">
           <p className="font-medium">
             {t('system.warning', 'Admin Privileges Active')}
           </p>
-          <p className="text-sm mt-1">
+          <p className="mt-1 text-sm">
             {t('system.warningText', 'These operations modify system data. Use with caution.')}
           </p>
         </AlertDescription>
@@ -233,8 +233,8 @@ function AdminSystemPage() {
         <CardHeader>
           <div className="flex items-start justify-between">
             <div className="flex items-center gap-3">
-              <div className="p-2 bg-emerald-100 dark:bg-emerald-900 rounded-lg">
-                <Globe className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+              <div className="rounded-lg bg-emerald-100 p-2 dark:bg-emerald-900">
+                <Globe className="size-5 text-emerald-600 dark:text-emerald-400" />
               </div>
               <div>
                 <CardTitle className="text-xl">
@@ -254,29 +254,29 @@ function AdminSystemPage() {
             <h3 className="text-sm font-medium">
               {t('system.populateCountries.whatIsIncluded', 'What will be updated:')}
             </h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-sm text-muted-foreground">
+            <div className="grid grid-cols-1 gap-2 text-sm text-muted-foreground sm:grid-cols-2">
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="size-4 text-emerald-600" />
                 <span>{t('system.populateCountries.isoCodes', 'ISO Codes (2 & 3 letter)')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="size-4 text-emerald-600" />
                 <span>{t('system.populateCountries.capitals', 'Capital Cities')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="size-4 text-emerald-600" />
                 <span>{t('system.populateCountries.regions', 'Regions & Subregions')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="size-4 text-emerald-600" />
                 <span>{t('system.populateCountries.population', 'Population Data')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="size-4 text-emerald-600" />
                 <span>{t('system.populateCountries.area', 'Area (km²)')}</span>
               </div>
               <div className="flex items-center gap-2">
-                <CheckCircle2 className="h-4 w-4 text-emerald-600" />
+                <CheckCircle2 className="size-4 text-emerald-600" />
                 <span>{t('system.populateCountries.flags', 'Flag URLs')}</span>
               </div>
             </div>
@@ -284,12 +284,12 @@ function AdminSystemPage() {
 
           {/* Data Source Badge */}
           <div className="flex items-center gap-2">
-            <Database className="h-4 w-4 text-muted-foreground" />
+            <Database className="size-4 text-muted-foreground" />
             <span className="text-sm text-muted-foreground">
               {t('system.populateCountries.dataSource', 'Data Source:')}
             </span>
             <Badge variant="secondary" className="gap-1">
-              <Download className="h-3 w-3" />
+              <Download className="size-3" />
               REST Countries API
             </Badge>
             <span className="text-xs text-muted-foreground">
@@ -306,12 +306,12 @@ function AdminSystemPage() {
           >
             {populateMutation.isPending ? (
               <>
-                <RefreshCw className="h-4 w-4 animate-spin" />
+                <RefreshCw className="size-4 animate-spin" />
                 <span>{t('system.populateCountries.processing', 'Processing...')}</span>
               </>
             ) : (
               <>
-                <RefreshCw className="h-4 w-4" />
+                <RefreshCw className="size-4" />
                 <span>{t('system.populateCountries.updateButton', 'Update Country Data')}</span>
               </>
             )}
@@ -319,9 +319,9 @@ function AdminSystemPage() {
 
           {/* Progress Indicator with Real-time Updates */}
           {(populateMutation.isPending || progress) && !result && (
-            <div className="space-y-3 p-4 bg-muted/30 rounded-lg border">
+            <div className="space-y-3 rounded-lg border bg-muted/30 p-4">
               <div className="flex items-center justify-between text-sm">
-                <span className="text-muted-foreground font-medium">
+                <span className="font-medium text-muted-foreground">
                   {progress && progress.processed_items > 0 ? (
                     <>
                       {t('system.populateCountries.processing', 'Processing')}:{' '}
@@ -346,33 +346,33 @@ function AdminSystemPage() {
               <div className="relative">
                 <Progress 
                   value={progress?.percentage || 0} 
-                  className="w-full h-3"
+                  className="h-3 w-full"
                 />
               </div>
 
               {/* Progress Details */}
               {progress && (
                 <div className="grid grid-cols-3 gap-2 text-xs">
-                  <div className="text-center p-2 bg-background rounded">
+                  <div className="rounded bg-background p-2 text-center">
                     <div className="font-bold text-blue-600">{progress.successful_items}</div>
                     <div className="text-muted-foreground">{t('system.populateCountries.successful', 'Successful')}</div>
                   </div>
-                  <div className="text-center p-2 bg-background rounded">
+                  <div className="rounded bg-background p-2 text-center">
                     <div className="font-bold text-yellow-600">{progress.processed_items - progress.successful_items - progress.failed_items}</div>
                     <div className="text-muted-foreground">{t('system.populateCountries.pending', 'Pending')}</div>
                   </div>
-                  <div className="text-center p-2 bg-background rounded">
+                  <div className="rounded bg-background p-2 text-center">
                     <div className="font-bold text-red-600">{progress.failed_items}</div>
                     <div className="text-muted-foreground">{t('system.populateCountries.failed', 'Failed')}</div>
                   </div>
                 </div>
               )}
 
-              <p className="text-xs text-muted-foreground text-center">
+              <p className="text-center text-xs text-muted-foreground">
                 {!progress && t('system.populateCountries.estimatedTime', 'This may take 2-3 minutes')}
                 {progress && progress.percentage < 100 && (
                   <span className="flex items-center justify-center gap-1">
-                    <RefreshCw className="h-3 w-3 animate-spin inline" />
+                    <RefreshCw className="inline size-3 animate-spin" />
                     {t('system.populateCountries.inProgress', 'Operation in progress...')}
                   </span>
                 )}
@@ -387,21 +387,21 @@ function AdminSystemPage() {
               className={result.success ? 'border-emerald-500 bg-emerald-50 dark:bg-emerald-900/20' : ''}
             >
               {result.success ? (
-                <CheckCircle2 className="h-5 w-5 text-emerald-600 dark:text-emerald-400" />
+                <CheckCircle2 className="size-5 text-emerald-600 dark:text-emerald-400" />
               ) : (
-                <XCircle className="h-5 w-5" />
+                <XCircle className="size-5" />
               )}
               <AlertDescription>
                 <div className="space-y-3">
                   {/* Message */}
-                  <p className={result.success ? 'text-emerald-800 dark:text-emerald-200 font-medium' : 'font-medium'}>
+                  <p className={result.success ? 'font-medium text-emerald-800 dark:text-emerald-200' : 'font-medium'}>
                     {isRTL ? result.message_ar : result.message_en}
                   </p>
 
                   {/* Summary Stats */}
                   {result.success && result.summary && (
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
-                      <div className="text-center p-2 bg-background rounded">
+                    <div className="grid grid-cols-2 gap-3 pt-2 sm:grid-cols-4">
+                      <div className="rounded bg-background p-2 text-center">
                         <div className="text-2xl font-bold text-emerald-600">
                           {result.summary.total}
                         </div>
@@ -409,7 +409,7 @@ function AdminSystemPage() {
                           {t('system.populateCountries.total', 'Total')}
                         </div>
                       </div>
-                      <div className="text-center p-2 bg-background rounded">
+                      <div className="rounded bg-background p-2 text-center">
                         <div className="text-2xl font-bold text-blue-600">
                           {result.summary.processed}
                         </div>
@@ -417,7 +417,7 @@ function AdminSystemPage() {
                           {t('system.populateCountries.processed', 'Processed')}
                         </div>
                       </div>
-                      <div className="text-center p-2 bg-background rounded">
+                      <div className="rounded bg-background p-2 text-center">
                         <div className="text-2xl font-bold text-green-600">
                           {result.summary.successful}
                         </div>
@@ -425,7 +425,7 @@ function AdminSystemPage() {
                           {t('system.populateCountries.successful', 'Successful')}
                         </div>
                       </div>
-                      <div className="text-center p-2 bg-background rounded">
+                      <div className="rounded bg-background p-2 text-center">
                         <div className={`text-2xl font-bold ${result.summary.failed > 0 ? 'text-red-600' : 'text-gray-400'}`}>
                           {result.summary.failed}
                         </div>
@@ -442,10 +442,10 @@ function AdminSystemPage() {
                       <summary className="cursor-pointer text-muted-foreground hover:text-foreground">
                         {t('system.populateCountries.viewErrors', 'View error details')} ({result.errors.length})
                       </summary>
-                      <ul className="mt-2 space-y-1 text-xs max-h-40 overflow-y-auto">
+                      <ul className="mt-2 max-h-40 space-y-1 overflow-y-auto text-xs">
                         {result.errors.map((error, idx) => (
                           <li key={idx} className="flex items-start gap-2">
-                            <XCircle className="h-3 w-3 mt-0.5 flex-shrink-0 text-red-500" />
+                            <XCircle className="mt-0.5 size-3 shrink-0 text-red-500" />
                             <span>{error}</span>
                           </li>
                         ))}
@@ -458,7 +458,7 @@ function AdminSystemPage() {
           )}
 
           {/* Help Text */}
-          <div className="text-xs text-muted-foreground space-y-1 pt-2 border-t">
+          <div className="space-y-1 border-t pt-2 text-xs text-muted-foreground">
             <p>
               💡 {t('system.populateCountries.tip1', 'This operation is safe to run multiple times - it will update existing countries.')}
             </p>

@@ -114,9 +114,9 @@ export function CountryMapImage({
         )}
         title={alt || `Map not available for ${countryCode.toUpperCase()}`}
       >
-        <Globe className="h-16 w-16 sm:h-24 sm:w-24 text-primary/30" strokeWidth={1.5} />
+        <Globe className="size-16 text-primary/30 sm:size-24" strokeWidth={1.5} />
         {/* Optional: Show country code */}
-        <span className="absolute bottom-2 end-2 text-xs text-muted-foreground font-mono">
+        <span className="absolute bottom-2 end-2 font-mono text-xs text-muted-foreground">
           {countryCode.toUpperCase()}
         </span>
       </div>
@@ -135,14 +135,14 @@ export function CountryMapImage({
       {isLoading && showLoading && (
         <div className="absolute inset-0 flex items-center justify-center">
           <Globe
-            className="h-16 w-16 sm:h-24 sm:w-24 text-primary/20 animate-pulse"
+            className="size-16 animate-pulse text-primary/20 sm:size-24"
             strokeWidth={1.5}
           />
         </div>
       )}
 
       {/* Picture element with SVG + PNG fallbacks */}
-      <picture className="w-full h-full flex items-center justify-center">
+      <picture className="flex size-full items-center justify-center">
         {/* Prefer SVG for crisp vector rendering */}
         <source type="image/svg+xml" srcSet={svgPath} />
 
@@ -171,7 +171,7 @@ export function CountryMapImage({
       </picture>
 
       {/* Country code label (optional) */}
-      <span className="absolute bottom-2 end-2 text-xs text-muted-foreground font-mono opacity-60">
+      <span className="absolute bottom-2 end-2 font-mono text-xs text-muted-foreground opacity-60">
         {countryCode.toUpperCase()}
       </span>
     </div>

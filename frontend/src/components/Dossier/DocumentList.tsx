@@ -38,11 +38,11 @@ export function DocumentList({
  const getDocumentIcon = (type: 'position' | 'mou' | 'brief') => {
  switch (type) {
  case 'position':
- return <FileText className="h-5 w-5 sm:h-6 sm:w-6" />;
+ return <FileText className="size-5 sm:size-6" />;
  case 'mou':
- return <FileSignature className="h-5 w-5 sm:h-6 sm:w-6" />;
+ return <FileSignature className="size-5 sm:size-6" />;
  case 'brief':
- return <Shield className="h-5 w-5 sm:h-6 sm:w-6" />;
+ return <Shield className="size-5 sm:size-6" />;
  }
  };
 
@@ -61,7 +61,7 @@ export function DocumentList({
  if (isLoading) {
  return (
  <div className="flex items-center justify-center py-8">
- <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+ <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
  </div>
  );
  }
@@ -69,7 +69,7 @@ export function DocumentList({
  if (documents.length === 0) {
  return (
  <div className="flex flex-col items-center justify-center gap-2 py-8 text-center">
- <FileText className="h-12 w-12 text-muted-foreground" />
+ <FileText className="size-12 text-muted-foreground" />
  <p className="text-sm text-muted-foreground sm:text-base">
  {t('document.noLinkedDocuments')}
  </p>
@@ -89,7 +89,7 @@ export function DocumentList({
  {/* Document Info */}
  <div className="flex flex-1 gap-3 sm:gap-4">
  {/* Icon */}
- <div className="flex-shrink-0 text-muted-foreground">
+ <div className="shrink-0 text-muted-foreground">
  {getDocumentIcon(doc.type)}
  </div>
 
@@ -115,7 +115,7 @@ export function DocumentList({
  </div>
  {doc.clearance_level && (
  <div className="flex items-center gap-1">
- <Shield className="h-3 w-3" />
+ <Shield className="size-3" />
  {t('document.clearanceLevel', { level: doc.clearance_level })}
  </div>
  )}
@@ -124,7 +124,7 @@ export function DocumentList({
  </div>
 
  {/* Action Buttons */}
- <div className="flex gap-2 sm:flex-shrink-0">
+ <div className="flex gap-2 sm:shrink-0">
  {onViewDocument && (
  <Button
  variant="outline"
@@ -132,7 +132,7 @@ export function DocumentList({
  onClick={() => onViewDocument(doc.id, doc.type)}
  className="min-h-9 flex-1 sm:flex-none"
  >
- <ExternalLink className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
+ <ExternalLink className={`size-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
  <span className="sm:inline">{t('common.view')}</span>
  </Button>
  )}
@@ -143,7 +143,7 @@ export function DocumentList({
  onClick={() => onRemoveDocument(doc.id, doc.type)}
  className="min-h-9 flex-1 text-destructive hover:bg-destructive/10 hover:text-destructive sm:flex-none"
  >
- <Trash2 className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
+ <Trash2 className={`size-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
  <span className="sm:inline">{t('common.remove')}</span>
  </Button>
  )}

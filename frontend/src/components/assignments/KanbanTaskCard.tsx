@@ -46,8 +46,8 @@ export function KanbanTaskCard({ assignment }: KanbanTaskCardProps) {
  <div className="space-y-3">
  {/* Title */}
  <div className="flex items-start gap-2">
- <FileText className="h-4 w-4 mt-0.5 text-muted-foreground shrink-0" />
- <p className="text-sm font-medium line-clamp-2 text-start">
+ <FileText className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+ <p className="line-clamp-2 text-start text-sm font-medium">
  {workItemTitle}
  </p>
  </div>
@@ -60,30 +60,30 @@ export function KanbanTaskCard({ assignment }: KanbanTaskCardProps) {
  >
  {assignment.priority}
  </Badge>
- <span className="text-xs text-muted-foreground capitalize">
+ <span className="text-xs capitalize text-muted-foreground">
  {assignment.work_item_type}
  </span>
  </div>
 
  {/* Footer: Assignee and SLA */}
- <div className="flex items-center justify-between gap-2 pt-2 border-t">
+ <div className="flex items-center justify-between gap-2 border-t pt-2">
  {assignment.assignee && (
  <div className="flex items-center gap-2">
- <Avatar className="h-6 w-6">
+ <Avatar className="size-6">
  <AvatarImage src={assignment.assignee.avatar_url} />
  <AvatarFallback className="text-xs">
  {assignment.assignee.full_name?.charAt(0) || 'S'}
  </AvatarFallback>
  </Avatar>
- <span className="text-xs truncate max-w-[120px]">
+ <span className="max-w-[120px] truncate text-xs">
  {assignment.assignee.full_name || 'Staff Member'}
  </span>
  </div>
  )}
 
  {slaStatus && (
- <div className={`flex items-center gap-1 px-2 py-1 rounded-md text-xs font-medium ${slaColors[slaStatus]}`}>
- <Clock className="h-3 w-3" />
+ <div className={`flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium ${slaColors[slaStatus]}`}>
+ <Clock className="size-3" />
  <span className="capitalize">{slaStatus}</span>
  </div>
  )}

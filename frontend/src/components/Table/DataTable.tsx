@@ -133,9 +133,9 @@ export function DataTable<TData, TValue>({
 
   // Render sort icon
   const renderSortIcon = (isSorted: false | 'asc' | 'desc') => {
-    if (isSorted === 'asc') return <ArrowUp className="h-3.5 w-3.5 flex-shrink-0" />
-    if (isSorted === 'desc') return <ArrowDown className="h-3.5 w-3.5 flex-shrink-0" />
-    return <ArrowUpDown className="h-3.5 w-3.5 flex-shrink-0 opacity-50" />
+    if (isSorted === 'asc') return <ArrowUp className="size-3.5 shrink-0" />
+    if (isSorted === 'desc') return <ArrowDown className="size-3.5 shrink-0" />
+    return <ArrowUpDown className="size-3.5 shrink-0 opacity-50" />
   }
 
   // Render mobile card
@@ -160,16 +160,16 @@ export function DataTable<TData, TValue>({
         )}
         onClick={() => onRowClick?.(row.original)}
       >
-        <CardContent className="p-4 space-y-3">
+        <CardContent className="space-y-3 p-4">
           {/* Card Header */}
           {titleCell && (
             <div className="flex items-start justify-between gap-3">
-              <div className="flex-1 min-w-0">
-                <div className="font-medium text-sm sm:text-base truncate">
+              <div className="min-w-0 flex-1">
+                <div className="truncate text-sm font-medium sm:text-base">
                   {flexRender(titleCell.column.columnDef.cell, titleCell.getContext())}
                 </div>
                 {descCell && descCell !== titleCell && (
-                  <div className="text-xs sm:text-sm text-muted-foreground mt-0.5 line-clamp-2">
+                  <div className="mt-0.5 line-clamp-2 text-xs text-muted-foreground sm:text-sm">
                     {flexRender(descCell.column.columnDef.cell, descCell.getContext())}
                   </div>
                 )}
@@ -179,15 +179,15 @@ export function DataTable<TData, TValue>({
 
           {/* Card Details */}
           {displayCells.length > 0 && (
-            <div className="grid grid-cols-2 gap-x-4 gap-y-2 pt-2 border-t border-border">
+            <div className="grid grid-cols-2 gap-x-4 gap-y-2 border-t border-border pt-2">
               {displayCells.map((cell) => (
                 <div key={cell.id} className="space-y-0.5">
-                  <div className="text-[10px] sm:text-xs text-muted-foreground uppercase tracking-wide">
+                  <div className="text-[10px] uppercase tracking-wide text-muted-foreground sm:text-xs">
                     {typeof cell.column.columnDef.header === 'string'
                       ? cell.column.columnDef.header
                       : cell.column.id}
                   </div>
-                  <div className="text-xs sm:text-sm font-medium">
+                  <div className="text-xs font-medium sm:text-sm">
                     {flexRender(cell.column.columnDef.cell, cell.getContext())}
                   </div>
                 </div>
@@ -214,12 +214,12 @@ export function DataTable<TData, TValue>({
   }
 
   return (
-    <div className="space-y-2 min-w-0 w-full" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="w-full min-w-0 space-y-2" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Toolbar */}
       <div className="flex items-center justify-between gap-2">
         {/* Search */}
         {enableFiltering && (
-          <div className="relative flex-1 max-w-xs">
+          <div className="relative max-w-xs flex-1">
             <Search
               className={cn(
                 'absolute top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-muted-foreground',
@@ -244,20 +244,20 @@ export function DataTable<TData, TValue>({
               <Button
                 variant={viewMode === 'card' ? 'secondary' : 'ghost'}
                 size="sm"
-                className="h-7 w-7 p-0"
+                className="size-7 p-0"
                 onClick={() => setViewMode('card')}
                 aria-label={t('common.cardView', 'Card view')}
               >
-                <LayoutGrid className="h-3.5 w-3.5" />
+                <LayoutGrid className="size-3.5" />
               </Button>
               <Button
                 variant={viewMode === 'table' ? 'secondary' : 'ghost'}
                 size="sm"
-                className="h-7 w-7 p-0"
+                className="size-7 p-0"
                 onClick={() => setViewMode('table')}
                 aria-label={t('common.tableView', 'Table view')}
               >
-                <TableIcon className="h-3.5 w-3.5" />
+                <TableIcon className="size-3.5" />
               </Button>
             </div>
           )}
@@ -267,7 +267,7 @@ export function DataTable<TData, TValue>({
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="outline" size="sm" className="h-8 gap-1.5 text-xs">
-                  <SlidersHorizontal className="h-3.5 w-3.5" />
+                  <SlidersHorizontal className="size-3.5" />
                   <span className="hidden sm:inline">{t('common.columns', 'Columns')}</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -284,7 +284,7 @@ export function DataTable<TData, TValue>({
                       key={column.id}
                       checked={column.getIsVisible()}
                       onCheckedChange={(value) => column.toggleVisibility(!!value)}
-                      className="capitalize text-xs"
+                      className="text-xs capitalize"
                     >
                       {typeof column.columnDef.header === 'string'
                         ? column.columnDef.header
@@ -320,7 +320,7 @@ export function DataTable<TData, TValue>({
         )}
       >
         <table className="w-full table-fixed">
-          <thead className="bg-muted/40 border-b border-border">
+          <thead className="border-b border-border bg-muted/40">
             {table.getHeaderGroups().map((headerGroup) => (
               <tr key={headerGroup.id}>
                 {headerGroup.headers.map((header) => {
@@ -403,7 +403,7 @@ export function DataTable<TData, TValue>({
         <div className="flex items-center justify-between pt-1">
           {/* Results info & Page size */}
           <div className="flex items-center gap-2">
-            <p className="text-xs text-muted-foreground whitespace-nowrap">
+            <p className="whitespace-nowrap text-xs text-muted-foreground">
               {t('common.showing', 'Showing')}{' '}
               {table.getState().pagination.pageIndex * table.getState().pagination.pageSize + 1}
               {' - '}
@@ -437,33 +437,33 @@ export function DataTable<TData, TValue>({
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="size-7"
               onClick={() => table.setPageIndex(0)}
               disabled={!table.getCanPreviousPage()}
               aria-label={t('common.firstPage', 'First page')}
             >
               {isRTL ? (
-                <ChevronsRight className="h-3.5 w-3.5" />
+                <ChevronsRight className="size-3.5" />
               ) : (
-                <ChevronsLeft className="h-3.5 w-3.5" />
+                <ChevronsLeft className="size-3.5" />
               )}
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="size-7"
               onClick={() => table.previousPage()}
               disabled={!table.getCanPreviousPage()}
               aria-label={t('common.previousPage', 'Previous page')}
             >
               {isRTL ? (
-                <ChevronRight className="h-3.5 w-3.5" />
+                <ChevronRight className="size-3.5" />
               ) : (
-                <ChevronLeft className="h-3.5 w-3.5" />
+                <ChevronLeft className="size-3.5" />
               )}
             </Button>
 
-            <span className="px-1.5 text-xs text-muted-foreground whitespace-nowrap">
+            <span className="whitespace-nowrap px-1.5 text-xs text-muted-foreground">
               {t('common.page', 'Page')} {table.getState().pagination.pageIndex + 1} /{' '}
               {table.getPageCount() || 1}
             </span>
@@ -471,29 +471,29 @@ export function DataTable<TData, TValue>({
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="size-7"
               onClick={() => table.nextPage()}
               disabled={!table.getCanNextPage()}
               aria-label={t('common.nextPage', 'Next page')}
             >
               {isRTL ? (
-                <ChevronLeft className="h-3.5 w-3.5" />
+                <ChevronLeft className="size-3.5" />
               ) : (
-                <ChevronRight className="h-3.5 w-3.5" />
+                <ChevronRight className="size-3.5" />
               )}
             </Button>
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7"
+              className="size-7"
               onClick={() => table.setPageIndex(table.getPageCount() - 1)}
               disabled={!table.getCanNextPage()}
               aria-label={t('common.lastPage', 'Last page')}
             >
               {isRTL ? (
-                <ChevronsLeft className="h-3.5 w-3.5" />
+                <ChevronsLeft className="size-3.5" />
               ) : (
-                <ChevronsRight className="h-3.5 w-3.5" />
+                <ChevronsRight className="size-3.5" />
               )}
             </Button>
           </div>

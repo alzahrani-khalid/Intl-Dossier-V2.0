@@ -234,7 +234,7 @@ export function FormSection({
               transition={{ duration: 0.2 }}
               className="shrink-0 text-gray-400"
             >
-              <ChevronRight className="h-5 w-5" />
+              <ChevronRight className="size-5" />
             </motion.div>
           )}
 
@@ -245,8 +245,8 @@ export function FormSection({
           {icon && <div className="shrink-0 text-gray-500 dark:text-gray-400">{icon}</div>}
 
           {/* Title and description */}
-          <div className="flex-1 min-w-0">
-            <div className="flex items-center gap-2 flex-wrap">
+          <div className="min-w-0 flex-1">
+            <div className="flex flex-wrap items-center gap-2">
               <HeadingTag
                 id={id ? `${id}-heading` : undefined}
                 className="text-base font-semibold text-gray-900 dark:text-gray-100 sm:text-lg"
@@ -255,7 +255,7 @@ export function FormSection({
               </HeadingTag>
 
               {required && (
-                <span className="text-red-500 text-sm" aria-label={t('validation.required')}>
+                <span className="text-sm text-red-500" aria-label={t('validation.required')}>
                   *
                 </span>
               )}
@@ -264,8 +264,8 @@ export function FormSection({
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
-                      <Button variant="ghost" size="icon" className="h-5 w-5 p-0">
-                        <Info className="h-4 w-4 text-gray-400" />
+                      <Button variant="ghost" size="icon" className="size-5 p-0">
+                        <Info className="size-4 text-gray-400" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -289,9 +289,9 @@ export function FormSection({
             <motion.div
               animate={{ rotate: isExpanded ? 180 : 0 }}
               transition={{ duration: 0.2 }}
-              className="shrink-0 text-gray-400 hidden sm:block"
+              className="hidden shrink-0 text-gray-400 sm:block"
             >
-              <ChevronDown className="h-5 w-5" />
+              <ChevronDown className="size-5" />
             </motion.div>
           )}
         </div>
@@ -306,7 +306,7 @@ export function FormSection({
               transition={{ duration: 0.2, ease: 'easeInOut' }}
               className="overflow-hidden"
             >
-              <div className="px-4 py-4 sm:px-6 sm:py-5 space-y-4">{children}</div>
+              <div className="space-y-4 p-4 sm:px-6 sm:py-5">{children}</div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -318,10 +318,10 @@ export function FormSection({
               initial={{ height: 0, opacity: 0 }}
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
-              className="px-4 py-3 sm:px-6 border-t border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-950/30"
+              className="border-t border-red-200 bg-red-50 px-4 py-3 dark:border-red-800 dark:bg-red-950/30 sm:px-6"
             >
               <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
-                <AlertCircle className="h-4 w-4 shrink-0" />
+                <AlertCircle className="size-4 shrink-0" />
                 <span>{error}</span>
               </div>
             </motion.div>

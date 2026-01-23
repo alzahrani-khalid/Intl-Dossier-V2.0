@@ -54,7 +54,7 @@ export function MyDossiersSection({
 
   return (
     <Card className={cn('', className)}>
-      <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4">
+      <CardHeader className="flex flex-col gap-2 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <Folder className="size-5 text-primary" />
           <CardTitle className="text-lg">{t('myDossiers.title', 'My Dossiers')}</CardTitle>
@@ -75,7 +75,7 @@ export function MyDossiersSection({
       <CardContent className="pt-0">
         {/* Loading State */}
         {isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[...Array(maxItems)].map((_, i) => (
               <DossierCardSkeleton key={i} />
             ))}
@@ -85,7 +85,7 @@ export function MyDossiersSection({
         {/* Error State */}
         {isError && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <p className="text-sm text-destructive mb-2">
+            <p className="mb-2 text-sm text-destructive">
               {error?.message || t('myDossiers.error', 'Failed to load dossiers')}
             </p>
             <Button
@@ -102,8 +102,8 @@ export function MyDossiersSection({
         {/* Empty State */}
         {!isLoading && !isError && data?.dossiers.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Folder className="size-12 text-muted-foreground/50 mb-4" />
-            <p className="text-sm text-muted-foreground mb-2">
+            <Folder className="mb-4 size-12 text-muted-foreground/50" />
+            <p className="mb-2 text-sm text-muted-foreground">
               {t('myDossiers.empty', "You don't have any assigned dossiers yet")}
             </p>
             <Button variant="outline" size="sm" onClick={() => navigate({ to: '/dossiers' })}>
@@ -119,17 +119,17 @@ export function MyDossiersSection({
             {Object.values(data.counts_by_relation).some((count) => count > 0) && (
               <div className="mb-4">
                 <Tabs defaultValue="all" className="w-full">
-                  <TabsList className="w-full sm:w-auto flex flex-wrap h-auto gap-1">
-                    <TabsTrigger value="all" className="text-xs min-h-9">
+                  <TabsList className="flex h-auto w-full flex-wrap gap-1 sm:w-auto">
+                    <TabsTrigger value="all" className="min-h-9 text-xs">
                       {t('myDossiers.filter.all', 'All')} ({data.total_count})
                     </TabsTrigger>
                     {data.counts_by_relation.owner > 0 && (
-                      <TabsTrigger value="owner" className="text-xs min-h-9">
+                      <TabsTrigger value="owner" className="min-h-9 text-xs">
                         {t('myDossiers.filter.owner', 'Owned')} ({data.counts_by_relation.owner})
                       </TabsTrigger>
                     )}
                     {data.counts_by_relation.contributor > 0 && (
-                      <TabsTrigger value="contributor" className="text-xs min-h-9">
+                      <TabsTrigger value="contributor" className="min-h-9 text-xs">
                         {t('myDossiers.filter.contributor', 'Contributing')} (
                         {data.counts_by_relation.contributor})
                       </TabsTrigger>
@@ -173,14 +173,14 @@ function DossiersGrid({ dossiers }: { dossiers: MyDossier[] }) {
 
   if (dossiers.length === 0) {
     return (
-      <p className="text-center text-sm text-muted-foreground py-4">
+      <p className="py-4 text-center text-sm text-muted-foreground">
         {t('myDossiers.noItemsInFilter', 'No dossiers in this category')}
       </p>
     )
   }
 
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
       {dossiers.map((dossier) => (
         <DossierQuickStatsCard key={dossier.id} dossier={dossier} variant="full" />
       ))}
@@ -202,7 +202,7 @@ function DossierCardSkeleton() {
   return (
     <Card>
       <CardContent className="p-4">
-        <div className="flex items-start gap-3 mb-3">
+        <div className="mb-3 flex items-start gap-3">
           <Skeleton className="size-10 rounded-lg" />
           <div className="flex-1 space-y-2">
             <Skeleton className="h-4 w-3/4" />

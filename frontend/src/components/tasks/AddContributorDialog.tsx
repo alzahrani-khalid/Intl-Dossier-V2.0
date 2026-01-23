@@ -128,7 +128,7 @@ export function AddContributorDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]"
+        className="w-full max-w-full sm:max-w-[540px] md:max-w-screen-sm"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
@@ -156,7 +156,7 @@ export function AddContributorDialog({
                 placeholder={t('tasks.searchUserPlaceholder', 'Type name or email...')}
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
-                className={`${isRTL ? 'pe-10 ps-3' : 'ps-10 pe-3'} h-11`}
+                className={`${isRTL ? 'pe-10 ps-3' : 'pe-3 ps-10'} h-11`}
               />
               {isSearching && (
                 <Loader2
@@ -167,7 +167,7 @@ export function AddContributorDialog({
 
             {/* Search Results */}
             {searchResults.length > 0 && (
-              <div className="flex flex-col gap-1 max-h-48 overflow-y-auto rounded-md border">
+              <div className="flex max-h-48 flex-col gap-1 overflow-y-auto rounded-md border">
                 {searchResults.map((user) => (
                   <button
                     key={user.id}
@@ -177,7 +177,7 @@ export function AddContributorDialog({
                       setSearchQuery(user.name)
                       setSearchResults([])
                     }}
-                    className={`flex items-center gap-3 p-3 hover:bg-accent transition-colors text-start ${
+                    className={`flex items-center gap-3 p-3 text-start transition-colors hover:bg-accent ${
                       selectedUserId === user.id ? 'bg-accent' : ''
                     }`}
                   >
@@ -221,7 +221,7 @@ export function AddContributorDialog({
                 ))}
               </SelectContent>
             </Select>
-            <p className="text-xs text-muted-foreground text-start">
+            <p className="text-start text-xs text-muted-foreground">
               {t(`tasks.roleDescription.${selectedRole}`, getRoleDescription(selectedRole))}
             </p>
           </div>
@@ -243,7 +243,7 @@ export function AddContributorDialog({
           </div>
         </div>
 
-        <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
+        <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row">
           <Button
             variant="outline"
             onClick={handleClose}

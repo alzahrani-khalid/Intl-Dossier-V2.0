@@ -63,11 +63,11 @@ export function WorkSummaryHeader({
 
   if (isLoading) {
     return (
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
+      <div className="mb-4 grid grid-cols-2 gap-3 sm:mb-6 sm:grid-cols-4 sm:gap-4">
         {[1, 2, 3, 4].map((i) => (
           <Card key={i}>
             <CardContent className="p-3 sm:p-4">
-              <Skeleton className="h-4 w-20 mb-2" />
+              <Skeleton className="mb-2 h-4 w-20" />
               <Skeleton className="h-8 w-12" />
             </CardContent>
           </Card>
@@ -78,7 +78,7 @@ export function WorkSummaryHeader({
 
   return (
     <div
-      className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6"
+      className="mb-4 grid grid-cols-2 gap-3 sm:mb-6 sm:grid-cols-4 sm:gap-4"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {stats.map((stat) => {
@@ -97,13 +97,13 @@ export function WorkSummaryHeader({
             <CardContent className="p-3 sm:p-4">
               <div className="flex items-center gap-2 sm:gap-3">
                 <div className={cn('p-2 rounded-lg', stat.color)}>
-                  <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <Icon className="size-4 sm:size-5" />
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="text-xs sm:text-sm text-muted-foreground truncate text-start">
+                  <p className="truncate text-start text-xs text-muted-foreground sm:text-sm">
                     {stat.label}
                   </p>
-                  <p className="text-xl sm:text-2xl font-bold text-start">
+                  <p className="text-start text-xl font-bold sm:text-2xl">
                     {stat.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
                   </p>
                 </div>

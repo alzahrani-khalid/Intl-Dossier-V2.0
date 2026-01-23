@@ -99,7 +99,7 @@ export function RecentDossierActivity({
 
   return (
     <Card className={cn('', className)}>
-      <CardHeader className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between pb-4">
+      <CardHeader className="flex flex-col gap-2 pb-4 sm:flex-row sm:items-center sm:justify-between">
         <div className="flex items-center gap-2">
           <Activity className="size-5 text-primary" />
           <CardTitle className="text-lg">
@@ -136,7 +136,7 @@ export function RecentDossierActivity({
         {/* Error State */}
         {isError && (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <p className="text-sm text-destructive mb-2">
+            <p className="mb-2 text-sm text-destructive">
               {error?.message || t('recentActivity.error', 'Failed to load activity')}
             </p>
             <Button variant="outline" size="sm" onClick={() => refetch()} className="min-h-11">
@@ -148,7 +148,7 @@ export function RecentDossierActivity({
         {/* Empty State */}
         {!isLoading && !isError && data?.activities.length === 0 && (
           <div className="flex flex-col items-center justify-center py-12 text-center">
-            <Activity className="size-12 text-muted-foreground/50 mb-4" />
+            <Activity className="mb-4 size-12 text-muted-foreground/50" />
             <p className="text-sm text-muted-foreground">
               {t('recentActivity.empty', 'No recent activity across your dossiers')}
             </p>
@@ -264,7 +264,7 @@ function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: Ac
     >
       {/* Timeline connector */}
       {!isFirst && (
-        <div className="absolute top-0 start-[25px] w-px h-3 -translate-y-full bg-border" />
+        <div className="absolute start-[25px] top-0 h-3 w-px -translate-y-full bg-border" />
       )}
 
       {/* Type Icon */}
@@ -286,10 +286,10 @@ function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: Ac
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0 space-y-1">
+      <div className="min-w-0 flex-1 space-y-1">
         {/* Title Row */}
         <div className="flex items-start justify-between gap-2">
-          <h4 className="font-medium text-sm leading-tight truncate">
+          <h4 className="truncate text-sm font-medium leading-tight">
             {activity.title || t('recentActivity.untitled', 'Untitled')}
           </h4>
           <ChevronRight
@@ -306,7 +306,7 @@ function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: Ac
             {t(`status.${activity.status}`, activity.status)}
           </Badge>
           {activity.is_overdue && (
-            <Badge variant="destructive" className="text-xs flex items-center gap-1">
+            <Badge variant="destructive" className="flex items-center gap-1 text-xs">
               <AlertTriangle className="size-3" />
               {t('recentActivity.overdue', 'Overdue')}
             </Badge>
@@ -324,7 +324,7 @@ function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: Ac
             )}
           >
             <DossierIcon className="size-3 text-muted-foreground" />
-            <span className="truncate max-w-[150px]">{dossierName}</span>
+            <span className="max-w-[150px] truncate">{dossierName}</span>
           </button>
         )}
 
@@ -345,7 +345,7 @@ function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: Ac
 
       {/* Timeline connector below */}
       {!isLast && (
-        <div className="absolute bottom-0 start-[25px] w-px h-full translate-y-full bg-border" />
+        <div className="absolute bottom-0 start-[25px] h-full w-px translate-y-full bg-border" />
       )}
     </div>
   )
@@ -357,8 +357,8 @@ function ActivityItem({ activity, showDossierBadge = true, isFirst, isLast }: Ac
 
 function ActivityItemSkeleton() {
   return (
-    <div className="flex gap-3 p-3 border rounded-lg">
-      <Skeleton className="size-10 rounded-full shrink-0" />
+    <div className="flex gap-3 rounded-lg border p-3">
+      <Skeleton className="size-10 shrink-0 rounded-full" />
       <div className="flex-1 space-y-2">
         <Skeleton className="h-4 w-3/4" />
         <div className="flex gap-2">

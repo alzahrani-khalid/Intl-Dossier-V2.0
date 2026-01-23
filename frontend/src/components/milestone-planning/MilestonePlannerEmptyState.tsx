@@ -192,40 +192,40 @@ export function MilestonePlannerEmptyState({
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="flex flex-col items-center justify-center py-8 sm:py-12 text-center px-4"
+          className="flex flex-col items-center justify-center px-4 py-8 text-center sm:py-12"
         >
           {/* Hero Icon */}
           <div className="relative mb-6">
-            <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
-              <Target className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
+            <div className="flex size-20 items-center justify-center rounded-full bg-gradient-to-br from-primary/20 to-primary/5 sm:size-24">
+              <Target className="size-10 text-primary sm:size-12" />
             </div>
-            <div className="absolute -bottom-1 -end-1 sm:-bottom-2 sm:-end-2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-primary flex items-center justify-center">
-              <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
+            <div className="absolute -bottom-1 -end-1 flex size-8 items-center justify-center rounded-full bg-primary sm:-bottom-2 sm:-end-2 sm:size-10">
+              <Plus className="size-4 text-primary-foreground sm:size-5" />
             </div>
           </div>
 
           {/* Title and Description */}
-          <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground mb-2">
+          <h3 className="mb-2 text-lg font-semibold text-foreground sm:text-xl md:text-2xl">
             {t('emptyState.title')}
           </h3>
-          <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6">
+          <p className="mb-6 max-w-md text-sm text-muted-foreground sm:text-base">
             {t('emptyState.description')}
           </p>
 
           {/* Hint */}
-          <div className="flex items-start gap-2 bg-muted/50 rounded-lg p-3 sm:p-4 max-w-md mb-8">
-            <Lightbulb className="h-5 w-5 text-amber-500 flex-shrink-0 mt-0.5" />
-            <p className="text-xs sm:text-sm text-muted-foreground text-start">
+          <div className="mb-8 flex max-w-md items-start gap-2 rounded-lg bg-muted/50 p-3 sm:p-4">
+            <Lightbulb className="mt-0.5 size-5 shrink-0 text-amber-500" />
+            <p className="text-start text-xs text-muted-foreground sm:text-sm">
               {t('emptyState.hint')}
             </p>
           </div>
 
           {/* Quick Add Buttons */}
           <div className="w-full max-w-md">
-            <p className="text-sm font-medium text-muted-foreground mb-3">
+            <p className="mb-3 text-sm font-medium text-muted-foreground">
               {t('quickAdd.selectTemplate')}
             </p>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2 sm:gap-3">
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3 sm:gap-3">
               {quickAddTemplates.map((template) => {
                 const Icon = template.icon
                 return (
@@ -243,9 +243,9 @@ export function MilestonePlannerEmptyState({
                         template.color,
                       )}
                     >
-                      <Icon className="h-5 w-5" />
+                      <Icon className="size-5" />
                     </div>
-                    <span className="text-xs text-center line-clamp-2">
+                    <span className="line-clamp-2 text-center text-xs">
                       {t(`types.${template.type}`)}
                     </span>
                   </Button>
@@ -264,48 +264,48 @@ export function MilestonePlannerEmptyState({
         // Planning Canvas with Milestones
         <>
           {/* Stats Bar */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
+          <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4">
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-primary/10 flex items-center justify-center">
-                  <Target className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
+                <div className="flex size-8 items-center justify-center rounded-lg bg-primary/10 sm:size-10">
+                  <Target className="size-4 text-primary sm:size-5" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{t('stats.total')}</p>
-                  <p className="text-lg sm:text-xl font-semibold">{stats.total}</p>
+                  <p className="text-lg font-semibold sm:text-xl">{stats.total}</p>
                 </div>
               </div>
             </Card>
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center">
-                  <TrendingUp className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600 dark:text-blue-400" />
+                <div className="flex size-8 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 sm:size-10">
+                  <TrendingUp className="size-4 text-blue-600 dark:text-blue-400 sm:size-5" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{t('stats.upcoming')}</p>
-                  <p className="text-lg sm:text-xl font-semibold">{stats.upcoming}</p>
+                  <p className="text-lg font-semibold sm:text-xl">{stats.upcoming}</p>
                 </div>
               </div>
             </Card>
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-amber-100 dark:bg-amber-900/30 flex items-center justify-center">
-                  <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-amber-600 dark:text-amber-400" />
+                <div className="flex size-8 items-center justify-center rounded-lg bg-amber-100 dark:bg-amber-900/30 sm:size-10">
+                  <Calendar className="size-4 text-amber-600 dark:text-amber-400 sm:size-5" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{t('stats.thisWeek')}</p>
-                  <p className="text-lg sm:text-xl font-semibold">{stats.thisWeek}</p>
+                  <p className="text-lg font-semibold sm:text-xl">{stats.thisWeek}</p>
                 </div>
               </div>
             </Card>
             <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-2">
-                <div className="h-8 w-8 sm:h-10 sm:w-10 rounded-lg bg-red-100 dark:bg-red-900/30 flex items-center justify-center">
-                  <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-red-600 dark:text-red-400" />
+                <div className="flex size-8 items-center justify-center rounded-lg bg-red-100 dark:bg-red-900/30 sm:size-10">
+                  <AlertCircle className="size-4 text-red-600 dark:text-red-400 sm:size-5" />
                 </div>
                 <div>
                   <p className="text-xs text-muted-foreground">{t('stats.overdue')}</p>
-                  <p className="text-lg sm:text-xl font-semibold text-red-600 dark:text-red-400">
+                  <p className="text-lg font-semibold text-red-600 dark:text-red-400 sm:text-xl">
                     {stats.overdue}
                   </p>
                 </div>
@@ -316,8 +316,8 @@ export function MilestonePlannerEmptyState({
           {/* Header with Add Button */}
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="text-base sm:text-lg font-semibold text-foreground">{t('title')}</h3>
-              <p className="text-xs sm:text-sm text-muted-foreground">{t('subtitle')}</p>
+              <h3 className="text-base font-semibold text-foreground sm:text-lg">{t('title')}</h3>
+              <p className="text-xs text-muted-foreground sm:text-sm">{t('subtitle')}</p>
             </div>
             <Button onClick={() => handleOpenDialog()} size="sm">
               <Plus className={cn('h-4 w-4', isRTL ? 'ms-1' : 'me-1')} />
@@ -346,10 +346,10 @@ export function MilestonePlannerEmptyState({
           </div>
 
           {/* Quick Add Section */}
-          <Card className="bg-muted/30 border-dashed">
+          <Card className="border-dashed bg-muted/30">
             <CardContent className="p-4">
               <div className="flex flex-wrap items-center gap-2">
-                <span className="text-sm text-muted-foreground me-2">{t('quickAdd.title')}:</span>
+                <span className="me-2 text-sm text-muted-foreground">{t('quickAdd.title')}:</span>
                 {quickAddTemplates.slice(0, 4).map((template) => {
                   const Icon = template.icon
                   return (

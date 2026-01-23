@@ -49,8 +49,8 @@ export function SortingBuilder({
   return (
     <Card dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <ArrowUpDown className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <ArrowUpDown className="size-5" />
           {t('sorting.title')}
         </CardTitle>
         <CardDescription className="text-xs sm:text-sm">{t('sorting.description')}</CardDescription>
@@ -65,10 +65,10 @@ export function SortingBuilder({
                 return (
                   <div
                     key={sort.id}
-                    className="flex items-center gap-2 p-2 rounded-md border bg-background"
+                    className="flex items-center gap-2 rounded-md border bg-background p-2"
                   >
-                    <span className="text-xs text-muted-foreground w-5">{index + 1}.</span>
-                    <span className="text-sm flex-1 truncate">
+                    <span className="w-5 text-xs text-muted-foreground">{index + 1}.</span>
+                    <span className="flex-1 truncate text-sm">
                       {isRTL ? field?.nameAr : field?.name}
                     </span>
                     <Button
@@ -81,12 +81,12 @@ export function SortingBuilder({
                     >
                       {sort.direction === 'asc' ? (
                         <>
-                          <ArrowUp className="h-4 w-4 me-1" />
+                          <ArrowUp className="me-1 size-4" />
                           <span className="text-xs">{t('sorting.direction.asc')}</span>
                         </>
                       ) : (
                         <>
-                          <ArrowDown className="h-4 w-4 me-1" />
+                          <ArrowDown className="me-1 size-4" />
                           <span className="text-xs">{t('sorting.direction.desc')}</span>
                         </>
                       )}
@@ -94,10 +94,10 @@ export function SortingBuilder({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8 text-destructive hover:text-destructive"
+                      className="size-8 text-destructive hover:text-destructive"
                       onClick={() => onRemoveSort(sort.id)}
                     >
-                      <X className="h-4 w-4" />
+                      <X className="size-4" />
                     </Button>
                   </div>
                 )
@@ -105,13 +105,13 @@ export function SortingBuilder({
             </div>
           </ScrollArea>
         ) : (
-          <p className="text-sm text-muted-foreground text-center py-4">{t('sorting.empty')}</p>
+          <p className="py-4 text-center text-sm text-muted-foreground">{t('sorting.empty')}</p>
         )}
 
         {availableSortFields.length > 0 && (
           <Select onValueChange={handleAddSort}>
             <SelectTrigger className="h-9">
-              <Plus className="h-4 w-4 me-2" />
+              <Plus className="me-2 size-4" />
               <SelectValue placeholder={t('sorting.addSort')} />
             </SelectTrigger>
             <SelectContent>

@@ -83,7 +83,7 @@ export function TemplatePreviewDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-2xl max-h-[90vh] flex flex-col p-0 gap-0"
+        className="flex max-h-[90vh] max-w-2xl flex-col gap-0 p-0"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Header with gradient */}
@@ -97,14 +97,14 @@ export function TemplatePreviewDialog({
           <div className="relative z-10">
             <div className="flex items-start justify-between">
               <div className="flex items-center gap-3">
-                <div className="p-2 rounded-lg bg-white/20 backdrop-blur-sm">
-                  <Icon className="h-6 w-6 text-white" />
+                <div className="rounded-lg bg-white/20 p-2 backdrop-blur-sm">
+                  <Icon className="size-6 text-white" />
                 </div>
                 <div>
-                  <h2 className="text-lg sm:text-xl font-bold text-white text-start">
+                  <h2 className="text-start text-lg font-bold text-white sm:text-xl">
                     {isRTL ? template.name_ar : template.name_en}
                   </h2>
-                  <Badge variant="secondary" className="mt-1 bg-white/20 text-white border-0">
+                  <Badge variant="secondary" className="mt-1 border-0 bg-white/20 text-white">
                     {t(`type.${template.dossier_type}`)}
                   </Badge>
                 </div>
@@ -112,29 +112,29 @@ export function TemplatePreviewDialog({
               <Button
                 variant="ghost"
                 size="icon"
-                className="h-8 w-8 text-white hover:bg-white/20"
+                className="size-8 text-white hover:bg-white/20"
                 onClick={() => onOpenChange(false)}
               >
-                <X className="h-4 w-4" />
+                <X className="size-4" />
                 <span className="sr-only">{t('templates.preview.close')}</span>
               </Button>
             </div>
-            <p className="mt-3 text-sm text-white/90 text-start">
+            <p className="mt-3 text-start text-sm text-white/90">
               {isRTL ? template.description_ar : template.description_en}
             </p>
           </div>
         </div>
 
         {/* Content */}
-        <ScrollArea className="flex-1 min-h-0">
-          <div className="p-4 sm:p-6 space-y-6">
+        <ScrollArea className="min-h-0 flex-1">
+          <div className="space-y-6 p-4 sm:p-6">
             {/* Example Name */}
             {(template.example_name_en || template.example_name_ar) && (
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-2 text-start">
+                <h3 className="mb-2 text-start text-sm font-medium text-muted-foreground">
                   {t('templates.preview.exampleName')}
                 </h3>
-                <p className="text-sm font-medium text-start">
+                <p className="text-start text-sm font-medium">
                   {isRTL ? template.example_name_ar : template.example_name_en}
                 </p>
               </div>
@@ -143,23 +143,23 @@ export function TemplatePreviewDialog({
             {/* Required Sections */}
             {requiredSections.length > 0 && (
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-3 text-start flex items-center gap-2">
-                  <CheckCircle2 className="h-4 w-4 text-primary" />
+                <h3 className="mb-3 flex items-center gap-2 text-start text-sm font-medium text-muted-foreground">
+                  <CheckCircle2 className="size-4 text-primary" />
                   {t('templates.preview.requiredSections')} ({requiredSections.length})
                 </h3>
                 <div className="space-y-2">
                   {requiredSections.map((section) => (
                     <div
                       key={section.id}
-                      className="p-3 rounded-lg bg-primary/5 border border-primary/20"
+                      className="rounded-lg border border-primary/20 bg-primary/5 p-3"
                     >
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="h-4 w-4 text-primary flex-shrink-0" />
-                        <span className="font-medium text-sm text-start">
+                        <CheckCircle2 className="size-4 shrink-0 text-primary" />
+                        <span className="text-start text-sm font-medium">
                           {isRTL ? section.title_ar : section.title_en}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1 ms-6 text-start">
+                      <p className="ms-6 mt-1 text-start text-xs text-muted-foreground">
                         {isRTL ? section.description_ar : section.description_en}
                       </p>
                     </div>
@@ -171,23 +171,23 @@ export function TemplatePreviewDialog({
             {/* Optional Sections */}
             {optionalSections.length > 0 && (
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-3 text-start flex items-center gap-2">
-                  <Circle className="h-4 w-4" />
+                <h3 className="mb-3 flex items-center gap-2 text-start text-sm font-medium text-muted-foreground">
+                  <Circle className="size-4" />
                   {t('templates.preview.optionalSections')} ({optionalSections.length})
                 </h3>
                 <div className="space-y-2">
                   {optionalSections.map((section) => (
                     <div
                       key={section.id}
-                      className="p-3 rounded-lg bg-muted/50 border border-border"
+                      className="rounded-lg border border-border bg-muted/50 p-3"
                     >
                       <div className="flex items-center gap-2">
-                        <Circle className="h-4 w-4 text-muted-foreground flex-shrink-0" />
-                        <span className="font-medium text-sm text-start">
+                        <Circle className="size-4 shrink-0 text-muted-foreground" />
+                        <span className="text-start text-sm font-medium">
                           {isRTL ? section.title_ar : section.title_en}
                         </span>
                       </div>
-                      <p className="text-xs text-muted-foreground mt-1 ms-6 text-start">
+                      <p className="ms-6 mt-1 text-start text-xs text-muted-foreground">
                         {isRTL ? section.description_ar : section.description_en}
                       </p>
                     </div>
@@ -200,14 +200,14 @@ export function TemplatePreviewDialog({
 
             {/* Use Cases */}
             <div>
-              <h3 className="text-sm font-medium text-muted-foreground mb-3 text-start flex items-center gap-2">
-                <Lightbulb className="h-4 w-4" />
+              <h3 className="mb-3 flex items-center gap-2 text-start text-sm font-medium text-muted-foreground">
+                <Lightbulb className="size-4" />
                 {t('templates.preview.useCases')}
               </h3>
               <ul className="space-y-2">
                 {(isRTL ? template.use_cases_ar : template.use_cases_en).map((useCase, index) => (
-                  <li key={index} className="flex items-start gap-2 text-sm text-start">
-                    <span className="text-primary mt-0.5">•</span>
+                  <li key={index} className="flex items-start gap-2 text-start text-sm">
+                    <span className="mt-0.5 text-primary">•</span>
                     <span>{useCase}</span>
                   </li>
                 ))}
@@ -217,8 +217,8 @@ export function TemplatePreviewDialog({
             {/* Recommended Tags */}
             {template.recommended_tags.length > 0 && (
               <div>
-                <h3 className="text-sm font-medium text-muted-foreground mb-3 text-start flex items-center gap-2">
-                  <Tag className="h-4 w-4" />
+                <h3 className="mb-3 flex items-center gap-2 text-start text-sm font-medium text-muted-foreground">
+                  <Tag className="size-4" />
                   {t('templates.preview.recommendedTags')}
                 </h3>
                 <div className="flex flex-wrap gap-2">
@@ -234,8 +234,8 @@ export function TemplatePreviewDialog({
         </ScrollArea>
 
         {/* Footer */}
-        <div className="p-4 sm:p-6 border-t bg-muted/30">
-          <div className="flex flex-col sm:flex-row gap-3 sm:justify-end">
+        <div className="border-t bg-muted/30 p-4 sm:p-6">
+          <div className="flex flex-col gap-3 sm:flex-row sm:justify-end">
             <Button
               variant="outline"
               onClick={() => onOpenChange(false)}

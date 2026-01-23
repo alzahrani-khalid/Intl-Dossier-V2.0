@@ -196,12 +196,12 @@ export function EnhancedUndoToast({
           {/* Circular timer or success icon */}
           <div className="relative shrink-0">
             {showSuccess ? (
-              <div className="w-12 h-12 flex items-center justify-center bg-green-500/20 rounded-full">
-                <CheckCircle className="h-6 w-6 text-green-500 animate-in zoom-in-50 duration-300" />
+              <div className="flex size-12 items-center justify-center rounded-full bg-green-500/20">
+                <CheckCircle className="animate-in zoom-in-50 size-6 text-green-500 duration-300" />
               </div>
             ) : (
-              <div className="w-12 h-12 flex items-center justify-center">
-                <svg className="w-12 h-12 -rotate-90" viewBox="0 0 44 44">
+              <div className="flex size-12 items-center justify-center">
+                <svg className="size-12 -rotate-90" viewBox="0 0 44 44">
                   {/* Background circle */}
                   <circle
                     cx="22"
@@ -247,7 +247,7 @@ export function EnhancedUndoToast({
           </div>
 
           {/* Message */}
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <p className="text-sm font-medium">
               {showSuccess
                 ? t('result.success', {
@@ -259,7 +259,7 @@ export function EnhancedUndoToast({
                     count: itemCount,
                   })}
             </p>
-            <div className="flex items-center gap-2 mt-0.5">
+            <div className="mt-0.5 flex items-center gap-2">
               <p className="text-xs text-gray-400 dark:text-gray-600">
                 {showSuccess
                   ? t('undo.immediateUndo', { defaultValue: 'Click to undo' })
@@ -271,13 +271,13 @@ export function EnhancedUndoToast({
                       })}
               </p>
               {!showSuccess && !isPaused && (
-                <Clock className="h-3 w-3 text-gray-500 dark:text-gray-500" />
+                <Clock className="size-3 text-gray-500 dark:text-gray-500" />
               )}
             </div>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex shrink-0 items-center gap-2">
             <Button
               variant="default"
               size="sm"
@@ -293,12 +293,12 @@ export function EnhancedUndoToast({
             >
               {isUndoing ? (
                 <>
-                  <Loader2 className="h-4 w-4 me-1.5 animate-spin" />
+                  <Loader2 className="me-1.5 size-4 animate-spin" />
                   {t('undo.undoing')}
                 </>
               ) : (
                 <>
-                  <RotateCcw className="h-4 w-4 me-1.5" />
+                  <RotateCcw className="me-1.5 size-4" />
                   {t('undo.undo')}
                 </>
               )}
@@ -309,17 +309,17 @@ export function EnhancedUndoToast({
               size="icon"
               onClick={onDismiss}
               disabled={isUndoing}
-              className="h-9 w-9 text-gray-400 hover:text-white dark:text-gray-600 dark:hover:text-gray-900"
+              className="size-9 text-gray-400 hover:text-white dark:text-gray-600 dark:hover:text-gray-900"
               aria-label={t('accessibility.closeDialog')}
             >
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
           </div>
         </div>
 
         {/* Keyboard shortcut hint */}
         {!showSuccess && !isUndoing && (
-          <div className="px-4 pb-3 -mt-1">
+          <div className="-mt-1 px-4 pb-3">
             <p className="text-xs text-gray-500 dark:text-gray-500">
               {t('undo.keyboardHint', {
                 defaultValue: 'Press Ctrl+Z to undo',

@@ -77,7 +77,7 @@ function CountryFlag({ countryName, className }: CountryFlagProps) {
     // Fallback to Globe icon if country code not found
     return (
       <div className={cn("rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg", className)}>
-        <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
+        <Globe className="size-5 text-white sm:size-6" />
       </div>
     );
   }
@@ -90,7 +90,7 @@ function CountryFlag({ countryName, className }: CountryFlagProps) {
       <img
         src={flagPath}
         alt={countryName || 'Country flag'}
-        className="w-full h-full object-cover"
+        className="size-full object-cover"
         onError={(e) => {
           // Fallback to Globe icon if flag image fails to load
           const target = e.target as HTMLImageElement;
@@ -214,45 +214,45 @@ export function DossierAceternityCard({
             countryCode={countryCode}
             size="lg"
             showLoading={false}
-            className="absolute inset-0 opacity-20 group-hover/card:opacity-30 transition-opacity duration-300"
+            className="absolute inset-0 opacity-20 transition-opacity duration-300 group-hover/card:opacity-30"
           />
         )}
 
         {/* Hover overlay effect */}
-        <div className="absolute w-full h-full top-0 start-0 transition duration-300 group-hover/card:bg-black/20 opacity-0 group-hover/card:opacity-100"></div>
+        <div className="absolute start-0 top-0 size-full opacity-0 transition duration-300 group-hover/card:bg-black/20 group-hover/card:opacity-100"></div>
 
         {/* Header section with avatar/icon and metadata */}
-        <div className="flex flex-col gap-3 sm:gap-4 z-10">
+        <div className="z-10 flex flex-col gap-3 sm:gap-4">
           {/* Avatar or Icon with name */}
           <div className="flex items-center gap-3 sm:gap-4">
             {dossier.type === 'person' && (dossier.extension as any)?.photo_url ? (
-              <Avatar className="h-12 w-12 sm:h-14 sm:w-14 border-2 border-white/30 shadow-lg">
+              <Avatar className="size-12 border-2 border-white/30 shadow-lg sm:size-14">
                 <AvatarImage src={(dossier.extension as any).photo_url} alt={displayName || ''} />
-                <AvatarFallback className="bg-white/20 text-white text-sm sm:text-base font-bold backdrop-blur-sm">
+                <AvatarFallback className="bg-white/20 text-sm font-bold text-white backdrop-blur-sm sm:text-base">
                   {displayName ? getInitials(displayName) : 'VIP'}
                 </AvatarFallback>
               </Avatar>
             ) : dossier.type === 'country' ? (
               <CountryFlag
                 countryName={displayName}
-                className="h-12 w-12 sm:h-14 sm:w-14"
+                className="size-12 sm:size-14"
               />
             ) : (
-              <div className="h-12 w-12 sm:h-14 sm:w-14 rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg">
+              <div className="flex size-12 items-center justify-center rounded-full border-2 border-white/30 bg-white/20 shadow-lg backdrop-blur-sm sm:size-14">
                 {getTypeIcon(dossier.type)}
               </div>
             )}
 
             {/* Type and Status Badges */}
-            <div className="flex flex-col gap-1.5 sm:gap-2 flex-1 min-w-0">
+            <div className="flex min-w-0 flex-1 flex-col gap-1.5 sm:gap-2">
               <Badge
                 variant="secondary"
-                className="w-fit text-xs sm:text-sm bg-white/20 text-white border-white/30 backdrop-blur-sm"
+                className="w-fit border-white/30 bg-white/20 text-xs text-white backdrop-blur-sm sm:text-sm"
               >
                 {t(`type.${dossier.type}`)}
               </Badge>
-              <div className="flex items-center gap-2 text-xs sm:text-sm text-white/80">
-                <Clock className="h-3 w-3 sm:h-4 sm:w-4" />
+              <div className="flex items-center gap-2 text-xs text-white/80 sm:text-sm">
+                <Clock className="size-3 sm:size-4" />
                 <span>{relativeTime}</span>
               </div>
             </div>
@@ -271,23 +271,23 @@ export function DossierAceternityCard({
 
         {/* Content section */}
         <div className="text-content z-10">
-          <h1 className="font-bold text-xl sm:text-2xl md:text-3xl text-white relative line-clamp-2 text-start mb-2 sm:mb-3">
+          <h1 className="relative mb-2 line-clamp-2 text-start text-xl font-bold text-white sm:mb-3 sm:text-2xl md:text-3xl">
             {displayName || t('untitled')}
           </h1>
           {displayDescription && (
-            <p className="font-normal text-sm sm:text-base text-white/90 relative line-clamp-3 text-start">
+            <p className="relative line-clamp-3 text-start text-sm font-normal text-white/90 sm:text-base">
               {displayDescription}
             </p>
           )}
 
           {/* Tags */}
           {dossier.tags && dossier.tags.length > 0 && (
-            <div className="flex flex-wrap gap-1.5 sm:gap-2 mt-3 sm:mt-4">
+            <div className="mt-3 flex flex-wrap gap-1.5 sm:mt-4 sm:gap-2">
               {dossier.tags.slice(0, 3).map((tag, index) => (
                 <Badge
                   key={index}
                   variant="secondary"
-                  className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm"
+                  className="border-white/30 bg-white/20 text-xs text-white backdrop-blur-sm"
                 >
                   {tag}
                 </Badge>
@@ -295,7 +295,7 @@ export function DossierAceternityCard({
               {dossier.tags.length > 3 && (
                 <Badge
                   variant="secondary"
-                  className="text-xs bg-white/20 text-white border-white/30 backdrop-blur-sm"
+                  className="border-white/30 bg-white/20 text-xs text-white backdrop-blur-sm"
                 >
                   +{dossier.tags.length - 3}
                 </Badge>

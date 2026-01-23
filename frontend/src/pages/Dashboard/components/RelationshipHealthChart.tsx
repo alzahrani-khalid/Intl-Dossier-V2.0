@@ -45,14 +45,14 @@ export function RelationshipHealthChart({
   // Loading state
   if (isLoading) {
     return (
-      <div className="space-y-4 animate-pulse" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="animate-pulse space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
         {[1, 2, 3, 4, 5].map((i) => (
           <div key={i} className="space-y-2">
-            <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded" />
+            <div className="h-6 rounded bg-gray-200 dark:bg-gray-700" />
             <div className="grid grid-cols-3 gap-2">
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded" />
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded" />
-              <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded" />
+              <div className="h-4 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-4 rounded bg-gray-200 dark:bg-gray-700" />
+              <div className="h-4 rounded bg-gray-200 dark:bg-gray-700" />
             </div>
           </div>
         ))}
@@ -64,7 +64,7 @@ export function RelationshipHealthChart({
   if (isError) {
     return (
       <div
-        className="px-4 py-3 text-sm text-red-700 dark:text-red-400 bg-red-100 dark:bg-red-900/20 rounded-lg"
+        className="rounded-lg bg-red-100 px-4 py-3 text-sm text-red-700 dark:bg-red-900/20 dark:text-red-400"
         dir={isRTL ? 'rtl' : 'ltr'}
         role="alert"
         aria-live="polite"
@@ -125,7 +125,7 @@ export function RelationshipHealthChart({
       {data.aggregations.map((aggregation) => (
         <div
           key={aggregation.groupValue}
-          className="space-y-2 px-3 py-2 sm:px-4 sm:py-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:border-gray-300 dark:hover:border-gray-600 transition-colors cursor-pointer focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="cursor-pointer space-y-2 rounded-lg border border-gray-200 px-3 py-2 transition-colors hover:border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-700 dark:hover:border-gray-600 sm:px-4 sm:py-3"
           onClick={() => handleGroupClick(aggregation.groupValue)}
           onKeyDown={(e) => handleKeyDown(e, aggregation.groupValue)}
           tabIndex={0}
@@ -134,14 +134,14 @@ export function RelationshipHealthChart({
         >
           {/* Header: Group Name + Health Label */}
           <div className="flex items-center justify-between">
-            <span className="font-medium text-sm sm:text-base text-gray-900 dark:text-white">
+            <span className="text-sm font-medium text-gray-900 dark:text-white sm:text-base">
               {aggregation.groupValue}
             </span>
             <div className="flex items-center gap-2">
-              <span className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+              <span className="text-xs text-gray-600 dark:text-gray-400 sm:text-sm">
                 {getHealthScoreLabel(aggregation.averageHealthScore)}
               </span>
-              <span className={`text-xs sm:text-sm font-medium ${getHealthScoreColor(aggregation.averageHealthScore)}`}>
+              <span className={`text-xs font-medium sm:text-sm ${getHealthScoreColor(aggregation.averageHealthScore)}`}>
                 {aggregation.averageHealthScore}
               </span>
             </div>
@@ -157,7 +157,7 @@ export function RelationshipHealthChart({
                 {aggregation.dossierCount} {t('dashboard.dossiers')}
               </span>
             </div>
-            <div className="h-2 sm:h-3 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+            <div className="h-2 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700 sm:h-3">
               <div
                 className={`h-full ${getHealthBgColor(aggregation.averageHealthScore)} transition-all`}
                 style={{ width: `${aggregation.averageHealthScore}%` }}
@@ -171,27 +171,27 @@ export function RelationshipHealthChart({
           </div>
 
           {/* Health Distribution Breakdown */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-1 sm:gap-2 text-xs">
+          <div className="grid grid-cols-2 gap-1 text-xs sm:grid-cols-4 sm:gap-2">
             <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 dark:bg-green-600 rounded-full" />
+              <div className="size-2 rounded-full bg-green-500 dark:bg-green-600 sm:size-3" />
               <span className="text-gray-600 dark:text-gray-400">
                 {t('dashboard.excellent')}: {aggregation.healthDistribution.excellent}
               </span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 dark:bg-yellow-600 rounded-full" />
+              <div className="size-2 rounded-full bg-yellow-500 dark:bg-yellow-600 sm:size-3" />
               <span className="text-gray-600 dark:text-gray-400">
                 {t('dashboard.good')}: {aggregation.healthDistribution.good}
               </span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-orange-500 dark:bg-orange-600 rounded-full" />
+              <div className="size-2 rounded-full bg-orange-500 dark:bg-orange-600 sm:size-3" />
               <span className="text-gray-600 dark:text-gray-400">
                 {t('dashboard.fair')}: {aggregation.healthDistribution.fair}
               </span>
             </div>
             <div className="flex items-center gap-1 sm:gap-2">
-              <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 dark:bg-red-600 rounded-full" />
+              <div className="size-2 rounded-full bg-red-500 dark:bg-red-600 sm:size-3" />
               <span className="text-gray-600 dark:text-gray-400">
                 {t('dashboard.poor')}: {aggregation.healthDistribution.poor}
               </span>
@@ -201,28 +201,28 @@ export function RelationshipHealthChart({
       ))}
 
       {/* Legend */}
-      <div className="pt-3 sm:pt-4 border-t border-gray-200 dark:border-gray-700">
-        <div className="flex flex-wrap items-center justify-around gap-2 sm:gap-4 text-xs">
+      <div className="border-t border-gray-200 pt-3 dark:border-gray-700 sm:pt-4">
+        <div className="flex flex-wrap items-center justify-around gap-2 text-xs sm:gap-4">
           <div className="flex items-center gap-1 sm:gap-2">
-            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-green-500 dark:bg-green-600 rounded-full" />
+            <div className="size-2 rounded-full bg-green-500 dark:bg-green-600 sm:size-3" />
             <span className="text-gray-600 dark:text-gray-400">
               {t('dashboard.excellent')} (80-100)
             </span>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
-            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-yellow-500 dark:bg-yellow-600 rounded-full" />
+            <div className="size-2 rounded-full bg-yellow-500 dark:bg-yellow-600 sm:size-3" />
             <span className="text-gray-600 dark:text-gray-400">
               {t('dashboard.good')} (60-79)
             </span>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
-            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-orange-500 dark:bg-orange-600 rounded-full" />
+            <div className="size-2 rounded-full bg-orange-500 dark:bg-orange-600 sm:size-3" />
             <span className="text-gray-600 dark:text-gray-400">
               {t('dashboard.fair')} (40-59)
             </span>
           </div>
           <div className="flex items-center gap-1 sm:gap-2">
-            <div className="w-2 h-2 sm:w-3 sm:h-3 bg-red-500 dark:bg-red-600 rounded-full" />
+            <div className="size-2 rounded-full bg-red-500 dark:bg-red-600 sm:size-3" />
             <span className="text-gray-600 dark:text-gray-400">
               {t('dashboard.poor')} (0-39)
             </span>

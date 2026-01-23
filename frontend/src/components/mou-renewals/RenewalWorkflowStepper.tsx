@@ -80,9 +80,9 @@ export function RenewalWorkflowStepper({
           )}
         >
           {currentStatus === 'declined' ? (
-            <XCircle className="h-5 w-5" />
+            <XCircle className="size-5" />
           ) : (
-            <Clock className="h-5 w-5" />
+            <Clock className="size-5" />
           )}
           <span className="text-sm font-medium">{t(`renewalStatus.${currentStatus}`)}</span>
         </div>

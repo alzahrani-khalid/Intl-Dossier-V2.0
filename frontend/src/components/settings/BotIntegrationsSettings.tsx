@@ -295,9 +295,9 @@ export function BotIntegrationsSettings() {
 
   if (verifying) {
     return (
-      <div className="flex items-center justify-center min-h-[400px]" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="flex min-h-[400px] items-center justify-center" dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="text-center">
-          <Loader2 className="h-8 w-8 animate-spin mx-auto mb-4" />
+          <Loader2 className="mx-auto mb-4 size-8 animate-spin" />
           <p className="text-muted-foreground">{t('verification.verifying')}</p>
         </div>
       </div>
@@ -308,8 +308,8 @@ export function BotIntegrationsSettings() {
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-start">{t('title')}</h1>
-        <p className="text-muted-foreground text-start mt-2">{t('description')}</p>
+        <h1 className="text-start text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+        <p className="mt-2 text-start text-muted-foreground">{t('description')}</p>
       </div>
 
       {/* Connect New Integration */}
@@ -319,12 +319,12 @@ export function BotIntegrationsSettings() {
           <CardDescription className="text-start">{t('connect.description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Slack */}
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between rounded-lg border p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-[#4A154B] rounded-lg">
-                  <Slack className="h-6 w-6 text-white" />
+                <div className="rounded-lg bg-[#4A154B] p-2">
+                  <Slack className="size-6 text-white" />
                 </div>
                 <div>
                   <h3 className="font-medium">{t('platforms.slack')}</h3>
@@ -334,7 +334,7 @@ export function BotIntegrationsSettings() {
               {slackOAuthUrl ? (
                 <Button asChild size="sm">
                   <a href={slackOAuthUrl}>
-                    <Link2 className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                    <Link2 className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                     {t('connect.button')}
                   </a>
                 </Button>
@@ -344,10 +344,10 @@ export function BotIntegrationsSettings() {
             </div>
 
             {/* Teams */}
-            <div className="flex items-center justify-between p-4 border rounded-lg">
+            <div className="flex items-center justify-between rounded-lg border p-4">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-[#5558AF] rounded-lg">
-                  <MessageSquare className="h-6 w-6 text-white" />
+                <div className="rounded-lg bg-[#5558AF] p-2">
+                  <MessageSquare className="size-6 text-white" />
                 </div>
                 <div>
                   <h3 className="font-medium">{t('platforms.teams')}</h3>
@@ -369,11 +369,11 @@ export function BotIntegrationsSettings() {
         <CardContent>
           {linksLoading ? (
             <div className="flex items-center justify-center py-8">
-              <Loader2 className="h-6 w-6 animate-spin" />
+              <Loader2 className="size-6 animate-spin" />
             </div>
           ) : !botLinks || botLinks.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">
-              <Link2 className="h-12 w-12 mx-auto mb-4 opacity-50" />
+            <div className="py-8 text-center text-muted-foreground">
+              <Link2 className="mx-auto mb-4 size-12 opacity-50" />
               <p>{t('connected.empty')}</p>
             </div>
           ) : (
@@ -401,16 +401,16 @@ export function BotIntegrationsSettings() {
           <CardTitle className="text-start">{t('features.title')}</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div className="flex gap-3">
-              <Bell className="h-5 w-5 text-primary mt-0.5" />
+              <Bell className="mt-0.5 size-5 text-primary" />
               <div>
                 <h4 className="font-medium">{t('features.notifications.title')}</h4>
                 <p className="text-sm text-muted-foreground">{t('features.notifications.desc')}</p>
               </div>
             </div>
             <div className="flex gap-3">
-              <Clock className="h-5 w-5 text-primary mt-0.5" />
+              <Clock className="mt-0.5 size-5 text-primary" />
               <div>
                 <h4 className="font-medium">{t('features.briefing.title')}</h4>
                 <p className="text-sm text-muted-foreground">{t('features.briefing.desc')}</p>
@@ -444,23 +444,23 @@ function BotLinkCard({
   const platformColor = link.platform === 'slack' ? '#4A154B' : '#5558AF'
 
   return (
-    <div className="border rounded-lg p-4 space-y-4">
+    <div className="space-y-4 rounded-lg border p-4">
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="p-2 rounded-lg" style={{ backgroundColor: platformColor }}>
-            <PlatformIcon className="h-5 w-5 text-white" />
+          <div className="rounded-lg p-2" style={{ backgroundColor: platformColor }}>
+            <PlatformIcon className="size-5 text-white" />
           </div>
           <div>
             <div className="flex items-center gap-2">
               <h3 className="font-medium">{link.workspace_name}</h3>
               {link.is_verified ? (
-                <Badge variant="outline" className="text-green-600 border-green-600">
-                  <Check className="h-3 w-3 me-1" />
+                <Badge variant="outline" className="border-green-600 text-green-600">
+                  <Check className="me-1 size-3" />
                   {t('connected.verified')}
                 </Badge>
               ) : (
-                <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+                <Badge variant="outline" className="border-yellow-600 text-yellow-600">
                   {t('connected.pending')}
                 </Badge>
               )}
@@ -475,10 +475,10 @@ function BotLinkCard({
           <AlertDialogTrigger asChild>
             <Button variant="outline" size="sm" disabled={isUnlinking}>
               {isUnlinking ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
                 <>
-                  <Unlink className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Unlink className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('connected.unlink')}
                 </>
               )}
@@ -504,7 +504,7 @@ function BotLinkCard({
 
       {/* Preferences */}
       {link.is_verified && (
-        <div className="space-y-4 pt-4 border-t">
+        <div className="space-y-4 border-t pt-4">
           <div className="flex items-center justify-between">
             <div>
               <Label>{t('preferences.dmNotifications')}</Label>

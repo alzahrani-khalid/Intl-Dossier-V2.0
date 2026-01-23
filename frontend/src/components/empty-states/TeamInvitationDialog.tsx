@@ -170,10 +170,10 @@ export function TeamInvitationDialog({
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
-          <DialogTitle className="text-lg sm:text-xl font-semibold text-start">
+          <DialogTitle className="text-start text-lg font-semibold sm:text-xl">
             {t('collaboration.dialog.title')}
           </DialogTitle>
-          <DialogDescription className="text-sm text-muted-foreground text-start">
+          <DialogDescription className="text-start text-sm text-muted-foreground">
             {t('collaboration.dialog.subtitle', { entityType: entityDisplayName })}
           </DialogDescription>
         </DialogHeader>
@@ -200,17 +200,17 @@ export function TeamInvitationDialog({
                         : 'border-border',
                     )}
                   >
-                    <Avatar className="h-6 w-6 sm:h-8 sm:w-8">
+                    <Avatar className="size-6 sm:size-8">
                       <AvatarImage src={user.avatar_url || undefined} />
                       <AvatarFallback className="text-xs">
                         {getInitials(user.full_name)}
                       </AvatarFallback>
                     </Avatar>
-                    <span className="text-sm truncate max-w-[100px] sm:max-w-[150px]">
+                    <span className="max-w-[100px] truncate text-sm sm:max-w-[150px]">
                       {user.full_name}
                     </span>
                     {user.department && (
-                      <Badge variant="secondary" className="hidden sm:inline-flex text-xs">
+                      <Badge variant="secondary" className="hidden text-xs sm:inline-flex">
                         {user.department}
                       </Badge>
                     )}
@@ -303,12 +303,12 @@ export function TeamInvitationDialog({
                 onClick={() => setShowPreview(!showPreview)}
                 className="min-h-9 gap-2"
               >
-                <Eye className="h-4 w-4" />
+                <Eye className="size-4" />
                 {t('collaboration.invite.preview')}
               </Button>
 
               {showPreview && (
-                <div className="p-4 rounded-lg bg-muted/50 border text-sm whitespace-pre-wrap">
+                <div className="whitespace-pre-wrap rounded-lg border bg-muted/50 p-4 text-sm">
                   {previewMessage}
                 </div>
               )}
@@ -316,7 +316,7 @@ export function TeamInvitationDialog({
           )}
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button
             type="button"
             variant="outline"
@@ -330,16 +330,16 @@ export function TeamInvitationDialog({
             type="button"
             onClick={handleSend}
             disabled={!email || sending}
-            className="min-h-11 w-full sm:w-auto gap-2"
+            className="min-h-11 w-full gap-2 sm:w-auto"
           >
             {sending ? (
               <>
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
                 {t('collaboration.invite.sending')}
               </>
             ) : (
               <>
-                <Send className="h-4 w-4" />
+                <Send className="size-4" />
                 {t('collaboration.dialog.send')}
               </>
             )}

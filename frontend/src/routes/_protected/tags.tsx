@@ -33,28 +33,28 @@ function TagsPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8 space-y-4 sm:space-y-6"
+      className="container mx-auto space-y-4 p-4 sm:space-y-6 sm:p-6 lg:p-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <div className="flex flex-col gap-1">
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">{t('management.title')}</h1>
-        <p className="text-sm sm:text-base text-muted-foreground">{t('management.description')}</p>
+        <h1 className="text-2xl font-bold tracking-tight sm:text-3xl">{t('management.title')}</h1>
+        <p className="text-sm text-muted-foreground sm:text-base">{t('management.description')}</p>
       </div>
 
       {/* Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-3 sm:w-auto sm:inline-flex">
+        <TabsList className="grid w-full grid-cols-3 sm:inline-flex sm:w-auto">
           <TabsTrigger value="hierarchy" className="gap-2">
-            <Tag className="size-4 hidden sm:block" />
+            <Tag className="hidden size-4 sm:block" />
             {t('hierarchy.title')}
           </TabsTrigger>
           <TabsTrigger value="analytics" className="gap-2">
-            <BarChart3 className="size-4 hidden sm:block" />
+            <BarChart3 className="hidden size-4 sm:block" />
             {t('analytics.title')}
           </TabsTrigger>
           <TabsTrigger value="history" className="gap-2">
-            <History className="size-4 hidden sm:block" />
+            <History className="hidden size-4 sm:block" />
             {t('history.title')}
           </TabsTrigger>
         </TabsList>
@@ -82,7 +82,7 @@ function TagsPage() {
 
         {/* History Tab */}
         <TabsContent value="history" className="space-y-4">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
             <MergeHistoryCard isRTL={isRTL} />
             <RenameHistoryCard isRTL={isRTL} />
           </div>
@@ -108,17 +108,17 @@ function MergeHistoryCard({ isRTL }: { isRTL: boolean }) {
           {isLoading ? (
             <div className="space-y-2">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="h-16 bg-muted animate-pulse rounded-md" />
+                <div key={i} className="h-16 animate-pulse rounded-md bg-muted" />
               ))}
             </div>
           ) : !mergeHistory || mergeHistory.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
+            <p className="py-8 text-center text-sm text-muted-foreground">
               {t('history.noHistory')}
             </p>
           ) : (
             <div className="space-y-3">
               {mergeHistory.map((entry) => (
-                <div key={entry.id} className="p-3 rounded-md border bg-muted/30 space-y-1">
+                <div key={entry.id} className="space-y-1 rounded-md border bg-muted/30 p-3">
                   <p className="text-sm">
                     {t('history.mergedInto', {
                       source: isRTL ? entry.source_tag_name_ar : entry.source_tag_name_en,
@@ -139,7 +139,7 @@ function MergeHistoryCard({ isRTL }: { isRTL: boolean }) {
                     </Badge>
                   </div>
                   {entry.merge_reason && (
-                    <p className="text-xs text-muted-foreground italic">"{entry.merge_reason}"</p>
+                    <p className="text-xs italic text-muted-foreground">"{entry.merge_reason}"</p>
                   )}
                 </div>
               ))}
@@ -167,17 +167,17 @@ function RenameHistoryCard({ isRTL }: { isRTL: boolean }) {
           {isLoading ? (
             <div className="space-y-2">
               {Array.from({ length: 3 }).map((_, i) => (
-                <div key={i} className="h-16 bg-muted animate-pulse rounded-md" />
+                <div key={i} className="h-16 animate-pulse rounded-md bg-muted" />
               ))}
             </div>
           ) : !renameHistory || renameHistory.length === 0 ? (
-            <p className="text-sm text-muted-foreground text-center py-8">
+            <p className="py-8 text-center text-sm text-muted-foreground">
               {t('history.noHistory')}
             </p>
           ) : (
             <div className="space-y-3">
               {renameHistory.map((entry) => (
-                <div key={entry.id} className="p-3 rounded-md border bg-muted/30 space-y-1">
+                <div key={entry.id} className="space-y-1 rounded-md border bg-muted/30 p-3">
                   <p className="text-sm">
                     {t('history.renamedFrom', {
                       old: isRTL ? entry.old_name_ar : entry.old_name_en,
@@ -193,7 +193,7 @@ function RenameHistoryCard({ isRTL }: { isRTL: boolean }) {
                     </span>
                   </div>
                   {entry.rename_reason && (
-                    <p className="text-xs text-muted-foreground italic">"{entry.rename_reason}"</p>
+                    <p className="text-xs italic text-muted-foreground">"{entry.rename_reason}"</p>
                   )}
                 </div>
               ))}

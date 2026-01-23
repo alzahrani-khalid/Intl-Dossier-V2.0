@@ -86,7 +86,7 @@ export function MainLayoutAceternity({ children }: MainLayoutAceternityProps) {
           {/* Main Content Area */}
           <main className="flex-1 overflow-auto">
             {/* Header with sidebar trigger */}
-            <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 px-4 sm:px-6 lg:px-8">
+            <header className="sticky top-0 z-10 flex h-14 items-center gap-4 border-b bg-background/95 px-4 backdrop-blur supports-[backdrop-filter]:bg-background/60 sm:px-6 lg:px-8">
               <SidebarTrigger className="min-h-11 min-w-11" />
               <div className="flex-1" />
               {/* Additional header content can go here */}
@@ -135,14 +135,14 @@ function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
   return (
     <Sidebar collapsible="icon" className="border-e">
       {/* Sidebar Header */}
-      <SidebarHeader className="border-b px-4 py-4">
+      <SidebarHeader className="border-b p-4">
         <div className="flex items-center gap-3">
           {!isCollapsed && (
             <div className="flex flex-col">
-              <h1 className="text-lg font-semibold text-start">
+              <h1 className="text-start text-lg font-semibold">
                 {t('app.name', 'Intl Dossier')}
               </h1>
-              <p className="text-xs text-muted-foreground text-start">
+              <p className="text-start text-xs text-muted-foreground">
                 {t('app.tagline', 'International Relations Management')}
               </p>
             </div>
@@ -185,14 +185,14 @@ function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
                   size="lg"
                   className="min-h-11 data-[state=open]:bg-accent"
                 >
-                  <Avatar className="h-8 w-8">
+                  <Avatar className="size-8">
                     <AvatarImage src={user?.avatar_url} alt={user?.name} />
                     <AvatarFallback>
                       {user?.name?.charAt(0).toUpperCase() || 'U'}
                     </AvatarFallback>
                   </Avatar>
                   {!isCollapsed && (
-                    <div className="flex flex-col text-start ms-3 flex-1">
+                    <div className="ms-3 flex flex-1 flex-col text-start">
                       <span className="text-sm font-medium">
                         {user?.name || 'User'}
                       </span>
@@ -220,13 +220,13 @@ function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
                 <DropdownMenuSeparator />
                 <DropdownMenuItem className="cursor-pointer" asChild>
                   <Link to="/settings" className="flex items-center">
-                    <User className="h-4 w-4 me-2" />
+                    <User className="me-2 size-4" />
                     <span>{t('navigation.profile', 'Profile')}</span>
                   </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem className="cursor-pointer" asChild>
                   <Link to="/settings" className="flex items-center">
-                    <Settings className="h-4 w-4 me-2" />
+                    <Settings className="me-2 size-4" />
                     <span>{t('navigation.settings', 'Settings')}</span>
                   </Link>
                 </DropdownMenuItem>
@@ -235,7 +235,7 @@ function AppSidebar({ user, onLogout, navigationCategories }: AppSidebarProps) {
                   className="cursor-pointer text-destructive focus:text-destructive"
                   onClick={onLogout}
                 >
-                  <LogOut className="h-4 w-4 me-2" />
+                  <LogOut className="me-2 size-4" />
                   <span>{t('auth.logout', 'Log out')}</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>

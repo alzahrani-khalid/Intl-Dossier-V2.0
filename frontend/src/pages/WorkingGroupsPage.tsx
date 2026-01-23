@@ -248,18 +248,18 @@ export default function WorkingGroupsPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6"
+      className="container mx-auto space-y-6 p-4 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
       <header className="flex flex-col gap-2">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-4">
+        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center sm:gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-            <p className="text-sm sm:text-base text-muted-foreground">{t('subtitle')}</p>
+            <h1 className="text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+            <p className="text-sm text-muted-foreground sm:text-base">{t('subtitle')}</p>
           </div>
           <Button
-            className="w-full sm:w-auto min-h-11 gap-2"
+            className="min-h-11 w-full gap-2 sm:w-auto"
             onClick={() => setCreateDialogOpen(true)}
           >
             <Plus className="size-4" />
@@ -269,7 +269,7 @@ export default function WorkingGroupsPage() {
       </header>
 
       {/* Metrics Cards */}
-      <section className="grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+      <section className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle className="text-sm font-medium">{t('metrics.activeGroups')}</CardTitle>
@@ -324,17 +324,17 @@ export default function WorkingGroupsPage() {
           <div className="flex flex-col gap-4">
             {/* Search */}
             <div className="relative">
-              <Search className="absolute start-3 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 placeholder={t('filters.searchPlaceholder')}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="ps-10 min-h-11"
+                className="min-h-11 ps-10"
               />
             </div>
 
             {/* Filters */}
-            <div className="flex flex-col sm:flex-row gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Filter className="size-4" />
                 <span>{t('filters.title')}:</span>
@@ -345,7 +345,7 @@ export default function WorkingGroupsPage() {
                 value={filters.status || 'all'}
                 onValueChange={(value) => handleFilterChange('status', value)}
               >
-                <SelectTrigger className="w-full sm:w-40 min-h-11">
+                <SelectTrigger className="min-h-11 w-full sm:w-40">
                   <SelectValue placeholder={t('filters.allStatuses')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -361,7 +361,7 @@ export default function WorkingGroupsPage() {
                 value={filters.wg_type || 'all'}
                 onValueChange={(value) => handleFilterChange('wg_type', value)}
               >
-                <SelectTrigger className="w-full sm:w-44 min-h-11">
+                <SelectTrigger className="min-h-11 w-full sm:w-44">
                   <SelectValue placeholder={t('filters.allTypes')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -383,18 +383,18 @@ export default function WorkingGroupsPage() {
         <Card>
           <CardContent className="py-12">
             <div className="text-center">
-              <Users className="mx-auto size-12 text-muted-foreground mb-4" />
+              <Users className="mx-auto mb-4 size-12 text-muted-foreground" />
               <h3 className="text-lg font-semibold">{t('empty.title')}</h3>
-              <p className="text-sm text-muted-foreground mt-1">{t('empty.description')}</p>
+              <p className="mt-1 text-sm text-muted-foreground">{t('empty.description')}</p>
               <Button className="mt-4" onClick={() => setCreateDialogOpen(true)}>
-                <Plus className="size-4 me-2" />
+                <Plus className="me-2 size-4" />
                 {t('actions.add')}
               </Button>
             </div>
           </CardContent>
         </Card>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {workingGroups.map((wg, index) => (
             <motion.div
               key={wg.id}
@@ -402,20 +402,20 @@ export default function WorkingGroupsPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.05 }}
             >
-              <Card className="h-full hover:shadow-md transition-shadow cursor-pointer">
+              <Card className="h-full cursor-pointer transition-shadow hover:shadow-md">
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       {/* Name */}
-                      <h3 className="font-semibold text-base truncate">
+                      <h3 className="truncate text-base font-semibold">
                         {isRTL ? wg.name_ar : wg.name_en}
                       </h3>
-                      <p className="text-xs text-muted-foreground truncate">
+                      <p className="truncate text-xs text-muted-foreground">
                         {isRTL ? wg.name_en : wg.name_ar}
                       </p>
 
                       {/* Type Badge */}
-                      <div className="flex items-center gap-2 mt-2">
+                      <div className="mt-2 flex items-center gap-2">
                         <Badge variant="outline" className="text-xs">
                           {t(`types.${wg.wg_type}`)}
                         </Badge>
@@ -425,7 +425,7 @@ export default function WorkingGroupsPage() {
                       </div>
 
                       {/* Stats */}
-                      <div className="flex items-center gap-4 mt-3 text-sm text-muted-foreground">
+                      <div className="mt-3 flex items-center gap-4 text-sm text-muted-foreground">
                         <span className="flex items-center gap-1">
                           <Users className="size-3.5" />
                           {wg.active_member_count || 0}
@@ -436,7 +436,7 @@ export default function WorkingGroupsPage() {
                         </span>
                         {wg.lead_org_name_en && (
                           <span className="flex items-center gap-1 truncate">
-                            <Building2 className="size-3.5 flex-shrink-0" />
+                            <Building2 className="size-3.5 shrink-0" />
                             <span className="truncate">
                               {isRTL ? wg.lead_org_name_ar : wg.lead_org_name_en}
                             </span>
@@ -445,7 +445,7 @@ export default function WorkingGroupsPage() {
                       </div>
 
                       {/* Next meeting / Updated */}
-                      <div className="flex items-center gap-1 mt-2 text-xs text-muted-foreground">
+                      <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground">
                         <Clock className="size-3" />
                         {new Date(wg.updated_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
                       </div>
@@ -460,11 +460,11 @@ export default function WorkingGroupsPage() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                         <DropdownMenuItem onClick={() => openEditDialog(wg)}>
-                          <Edit className="size-4 me-2" />
+                          <Edit className="me-2 size-4" />
                           {t('actions.edit')}
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => openArchiveDialog(wg)}>
-                          <Archive className="size-4 me-2" />
+                          <Archive className="me-2 size-4" />
                           {t('actions.archive')}
                         </DropdownMenuItem>
                       </DropdownMenuContent>
@@ -479,7 +479,7 @@ export default function WorkingGroupsPage() {
 
       {/* Pagination */}
       {pagination && pagination.totalPages > 1 && (
-        <div className="flex items-center justify-center gap-2 mt-6">
+        <div className="mt-6 flex items-center justify-center gap-2">
           <Button
             variant="outline"
             size="sm"
@@ -489,7 +489,7 @@ export default function WorkingGroupsPage() {
           >
             <ChevronRight className={`size-4 ${isRTL ? '' : 'rotate-180'}`} />
           </Button>
-          <span className="text-sm px-4">
+          <span className="px-4 text-sm">
             {filters.page || 1} / {pagination.totalPages}
           </span>
           <Button
@@ -511,7 +511,7 @@ export default function WorkingGroupsPage() {
 
       {/* Create Dialog */}
       <Dialog open={createDialogOpen} onOpenChange={setCreateDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t('createDialog.title')}</DialogTitle>
             <DialogDescription>{t('createDialog.description')}</DialogDescription>
@@ -620,7 +620,7 @@ export default function WorkingGroupsPage() {
             </div>
           </div>
 
-          <DialogFooter className="flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
             <Button
               variant="outline"
               onClick={() => {
@@ -634,7 +634,7 @@ export default function WorkingGroupsPage() {
               onClick={handleCreateWorkingGroup}
               disabled={!formData.name_en.trim() || createMutation.isPending}
             >
-              {createMutation.isPending && <Loader2 className="size-4 me-2 animate-spin" />}
+              {createMutation.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('form.create')}
             </Button>
           </DialogFooter>
@@ -643,7 +643,7 @@ export default function WorkingGroupsPage() {
 
       {/* Edit Dialog */}
       <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-        <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+        <DialogContent className="max-h-[90vh] max-w-lg overflow-y-auto">
           <DialogHeader>
             <DialogTitle>{t('editDialog.title')}</DialogTitle>
             <DialogDescription>{t('editDialog.description')}</DialogDescription>
@@ -760,7 +760,7 @@ export default function WorkingGroupsPage() {
             </div>
           </div>
 
-          <DialogFooter className="flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
             <Button
               variant="outline"
               onClick={() => {
@@ -775,7 +775,7 @@ export default function WorkingGroupsPage() {
               onClick={handleUpdateWorkingGroup}
               disabled={!formData.name_en.trim() || updateMutation.isPending}
             >
-              {updateMutation.isPending && <Loader2 className="size-4 me-2 animate-spin" />}
+              {updateMutation.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('form.update')}
             </Button>
           </DialogFooter>
@@ -789,13 +789,13 @@ export default function WorkingGroupsPage() {
             <AlertDialogTitle>{t('confirmations.archive')}</AlertDialogTitle>
             <AlertDialogDescription>{t('confirmations.archiveDescription')}</AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+          <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
             <AlertDialogCancel>{t('form.cancel')}</AlertDialogCancel>
             <AlertDialogAction
               onClick={handleArchiveWorkingGroup}
               className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
             >
-              {deleteMutation.isPending && <Loader2 className="size-4 me-2 animate-spin" />}
+              {deleteMutation.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('actions.archive')}
             </AlertDialogAction>
           </AlertDialogFooter>

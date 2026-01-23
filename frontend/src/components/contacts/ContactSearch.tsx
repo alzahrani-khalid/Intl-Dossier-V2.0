@@ -107,7 +107,7 @@ export function ContactSearch({
       <div className="flex gap-2">
         <div className="relative flex-1">
           <Search
-            className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${
+            className={`absolute top-1/2 size-4 -translate-y-1/2 text-muted-foreground ${
               isRTL ? 'end-3' : 'start-3'
             }`}
           />
@@ -117,7 +117,7 @@ export function ContactSearch({
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSearch()}
-            className={`h-11 ${isRTL ? 'pe-10 ps-4' : 'ps-10 pe-4'} text-base sm:h-10`}
+            className={`h-11 ${isRTL ? 'pe-10 ps-4' : 'pe-4 ps-10'} text-base sm:h-10`}
             dir={isRTL ? 'rtl' : 'ltr'}
           />
         </div>
@@ -129,8 +129,8 @@ export function ContactSearch({
         {/* Mobile Filter Sheet */}
         <Sheet>
           <SheetTrigger asChild>
-            <Button variant="outline" size="icon" className="h-11 w-11 sm:h-10 sm:w-10 md:hidden">
-              <SlidersHorizontal className="h-4 w-4" />
+            <Button variant="outline" size="icon" className="size-11 sm:size-10 md:hidden">
+              <SlidersHorizontal className="size-4" />
             </Button>
           </SheetTrigger>
           <SheetContent side={isRTL ? 'left' : 'right'} className="w-full sm:max-w-md">
@@ -171,7 +171,7 @@ export function ContactSearch({
       </div>
 
       {/* Desktop Filters - Hidden on Mobile */}
-      <div className="hidden md:block space-y-4">
+      <div className="hidden space-y-4 md:block">
         <FilterContent
           organizations={organizations}
           tags={tags}
@@ -195,26 +195,26 @@ export function ContactSearch({
       {/* Active Filters Summary */}
       {hasActiveFilters && (
         <div className="flex flex-wrap items-center gap-2 text-sm">
-          <Filter className="h-4 w-4 text-muted-foreground" />
+          <Filter className="size-4 text-muted-foreground" />
           {selectedTags.map((tagId) => {
             const tag = tags.find((t) => t.id === tagId)
             return tag ? (
               <Badge key={tagId} variant="secondary" className="gap-1">
                 {tag.name}
-                <X className="h-3 w-3 cursor-pointer" onClick={() => toggleTag(tagId)} />
+                <X className="size-3 cursor-pointer" onClick={() => toggleTag(tagId)} />
               </Badge>
             ) : null
           })}
           {organizationId && (
             <Badge variant="secondary" className="gap-1">
               {organizations.find((o) => o.id === organizationId)?.name}
-              <X className="h-3 w-3 cursor-pointer" onClick={() => setOrganizationId('')} />
+              <X className="size-3 cursor-pointer" onClick={() => setOrganizationId('')} />
             </Badge>
           )}
           {sourceType && (
             <Badge variant="secondary" className="gap-1">
               {t(`contactDirectory.sourceTypes.${sourceType}`)}
-              <X className="h-3 w-3 cursor-pointer" onClick={() => setSourceType('')} />
+              <X className="size-3 cursor-pointer" onClick={() => setSourceType('')} />
             </Badge>
           )}
           <Button variant="ghost" size="sm" onClick={handleReset} className="h-7 text-xs">
@@ -365,7 +365,7 @@ function FilterContent({
           id="include-archived"
           checked={includeArchived}
           onChange={(e) => setIncludeArchived(e.target.checked)}
-          className="h-4 w-4 rounded border-gray-300"
+          className="size-4 rounded border-gray-300"
         />
         <label htmlFor="include-archived" className="text-sm">
           {t('contactDirectory.search.include_archived')}

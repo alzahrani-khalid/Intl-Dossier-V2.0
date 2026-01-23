@@ -48,11 +48,11 @@ export function ReactionPicker({
               <button
                 onClick={() => handleEmojiClick(reaction.emoji)}
                 disabled={disabled}
-                className={`inline-flex items-center gap-1 px-2 py-1 rounded-full text-sm border transition-colors ${
+                className={`inline-flex items-center gap-1 rounded-full border px-2 py-1 text-sm transition-colors ${
                   reaction.userReacted
-                    ? 'bg-primary/10 border-primary text-primary'
-                    : 'bg-muted hover:bg-muted/80 border-border'
-                } ${disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+                    ? 'border-primary bg-primary/10 text-primary'
+                    : 'border-border bg-muted hover:bg-muted/80'
+                } ${disabled ? 'cursor-not-allowed opacity-50' : 'cursor-pointer'}`}
               >
                 <span className="text-base">{reaction.emoji}</span>
                 <span className="text-xs font-medium">{reaction.count}</span>
@@ -84,7 +84,7 @@ export function ReactionPicker({
       <Popover>
         <PopoverTrigger asChild>
           <Button variant="ghost" size="sm" disabled={disabled} className="h-7 px-2">
-            <Smile className="h-4 w-4 text-muted-foreground" />
+            <Smile className="size-4 text-muted-foreground" />
           </Button>
         </PopoverTrigger>
         <PopoverContent className="w-auto p-2" align="start">
@@ -97,7 +97,7 @@ export function ReactionPicker({
                     <TooltipTrigger asChild>
                       <button
                         onClick={() => handleEmojiClick(emoji)}
-                        className={`p-2 rounded hover:bg-accent transition-colors ${
+                        className={`rounded p-2 transition-colors hover:bg-accent ${
                           existing?.userReacted ? 'bg-primary/10' : ''
                         }`}
                       >

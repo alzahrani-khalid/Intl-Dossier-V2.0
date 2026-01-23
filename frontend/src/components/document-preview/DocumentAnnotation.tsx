@@ -246,16 +246,16 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
     <div className={cn('relative', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Annotation Toolbar */}
       {!readOnly && (
-        <div className="absolute top-2 start-2 z-20 flex flex-col gap-1 bg-white dark:bg-gray-800 rounded-lg shadow-lg p-1.5 sm:p-2">
+        <div className="absolute start-2 top-2 z-20 flex flex-col gap-1 rounded-lg bg-white p-1.5 shadow-lg dark:bg-gray-800 sm:p-2">
           {/* Highlight tool */}
           <Button
             variant={activeTool === 'highlight' ? 'secondary' : 'ghost'}
             size="sm"
             onClick={() => selectTool('highlight')}
-            className="h-9 w-9 p-0"
+            className="size-9 p-0"
             title={t('tools.highlight', 'Highlight')}
           >
-            <Highlighter className="h-4 w-4" />
+            <Highlighter className="size-4" />
           </Button>
 
           {/* Comment tool */}
@@ -263,10 +263,10 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
             variant={activeTool === 'comment' ? 'secondary' : 'ghost'}
             size="sm"
             onClick={() => selectTool('comment')}
-            className="h-9 w-9 p-0"
+            className="size-9 p-0"
             title={t('tools.comment', 'Comment')}
           >
-            <MessageSquare className="h-4 w-4" />
+            <MessageSquare className="size-4" />
           </Button>
 
           {/* Drawing tool */}
@@ -276,10 +276,10 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
                 variant={activeTool === 'drawing' ? 'secondary' : 'ghost'}
                 size="sm"
                 onClick={() => selectTool('drawing')}
-                className="h-9 w-9 p-0"
+                className="size-9 p-0"
                 title={t('tools.draw', 'Draw')}
               >
-                <Pencil className="h-4 w-4" />
+                <Pencil className="size-4" />
               </Button>
             </PopoverTrigger>
             <PopoverContent side={isRTL ? 'left' : 'right'} className="w-auto p-2">
@@ -288,33 +288,33 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
                   variant={drawingTool === 'line' ? 'secondary' : 'ghost'}
                   size="sm"
                   onClick={() => setDrawingTool('line')}
-                  className="h-8 w-8 p-0"
+                  className="size-8 p-0"
                 >
-                  <Minus className="h-3 w-3" />
+                  <Minus className="size-3" />
                 </Button>
                 <Button
                   variant={drawingTool === 'rectangle' ? 'secondary' : 'ghost'}
                   size="sm"
                   onClick={() => setDrawingTool('rectangle')}
-                  className="h-8 w-8 p-0"
+                  className="size-8 p-0"
                 >
-                  <Square className="h-3 w-3" />
+                  <Square className="size-3" />
                 </Button>
                 <Button
                   variant={drawingTool === 'circle' ? 'secondary' : 'ghost'}
                   size="sm"
                   onClick={() => setDrawingTool('circle')}
-                  className="h-8 w-8 p-0"
+                  className="size-8 p-0"
                 >
-                  <Circle className="h-3 w-3" />
+                  <Circle className="size-3" />
                 </Button>
                 <Button
                   variant={drawingTool === 'freehand' ? 'secondary' : 'ghost'}
                   size="sm"
                   onClick={() => setDrawingTool('freehand')}
-                  className="h-8 w-8 p-0"
+                  className="size-8 p-0"
                 >
-                  <Pencil className="h-3 w-3" />
+                  <Pencil className="size-3" />
                 </Button>
               </div>
             </PopoverContent>
@@ -325,14 +325,14 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
             variant={activeTool === 'text' ? 'secondary' : 'ghost'}
             size="sm"
             onClick={() => selectTool('text')}
-            className="h-9 w-9 p-0"
+            className="size-9 p-0"
             title={t('tools.text', 'Text')}
           >
-            <Type className="h-4 w-4" />
+            <Type className="size-4" />
           </Button>
 
           {/* Divider */}
-          <div className="h-px bg-gray-200 dark:bg-gray-700 my-1" />
+          <div className="my-1 h-px bg-gray-200 dark:bg-gray-700" />
 
           {/* Color picker */}
           <Popover>
@@ -340,11 +340,11 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
               <Button
                 variant="ghost"
                 size="sm"
-                className="h-9 w-9 p-0"
+                className="size-9 p-0"
                 title={t('tools.color', 'Color')}
               >
                 <div
-                  className="h-5 w-5 rounded-full border-2 border-gray-300"
+                  className="size-5 rounded-full border-2 border-gray-300"
                   style={{ backgroundColor: activeColor }}
                 />
               </Button>
@@ -375,25 +375,25 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
               variant="ghost"
               size="sm"
               onClick={handleDeleteSelected}
-              className="h-9 w-9 p-0 text-destructive"
+              className="size-9 p-0 text-destructive"
               title={t('actions.delete', 'Delete')}
             >
-              <Trash2 className="h-4 w-4" />
+              <Trash2 className="size-4" />
             </Button>
           )}
 
           {/* Save button */}
           {onSave && pageAnnotations.length > 0 && (
             <>
-              <div className="h-px bg-gray-200 dark:bg-gray-700 my-1" />
+              <div className="my-1 h-px bg-gray-200 dark:bg-gray-700" />
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={onSave}
-                className="h-9 w-9 p-0 text-primary"
+                className="size-9 p-0 text-primary"
                 title={t('actions.save', 'Save')}
               >
-                <Save className="h-4 w-4" />
+                <Save className="size-4" />
               </Button>
             </>
           )}
@@ -427,7 +427,7 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
           >
             {annotation.type === 'highlight' && (
               <div
-                className="w-full h-full opacity-40"
+                className="size-full opacity-40"
                 style={{
                   backgroundColor: annotation.color || ANNOTATION_COLORS[0]?.value || '#FBBF24',
                 }}
@@ -435,18 +435,18 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
             )}
             {annotation.type === 'comment' && (
               <div
-                className="flex items-center justify-center w-6 h-6 rounded-full text-white text-xs"
+                className="flex size-6 items-center justify-center rounded-full text-xs text-white"
                 style={{
                   backgroundColor: annotation.color || ANNOTATION_COLORS[0]?.value || '#FBBF24',
                 }}
                 title={annotation.content}
               >
-                <MessageSquare className="h-3 w-3" />
+                <MessageSquare className="size-3" />
               </div>
             )}
             {annotation.type === 'text' && (
               <div
-                className="px-2 py-1 text-sm rounded"
+                className="rounded px-2 py-1 text-sm"
                 style={{
                   backgroundColor: annotation.color || ANNOTATION_COLORS[0]?.value || '#FBBF24',
                   color: '#000',
@@ -474,7 +474,7 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
       {/* Comment/Text input popover */}
       {pendingPosition && (activeTool === 'comment' || activeTool === 'text') && (
         <div
-          className="absolute z-30 bg-white dark:bg-gray-800 rounded-lg shadow-xl p-3 w-64"
+          className="absolute z-30 w-64 rounded-lg bg-white p-3 shadow-xl dark:bg-gray-800"
           style={{ left: pendingPosition.x, top: pendingPosition.y }}
         >
           <Textarea
@@ -488,7 +488,7 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
             className="min-h-[60px] text-sm"
             autoFocus
           />
-          <div className="flex justify-end gap-2 mt-2">
+          <div className="mt-2 flex justify-end gap-2">
             <Button
               variant="ghost"
               size="sm"
@@ -497,10 +497,10 @@ export const DocumentAnnotation = memo(function DocumentAnnotation({
                 setCommentText('')
               }}
             >
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
             <Button size="sm" onClick={handleSaveComment} disabled={!commentText.trim()}>
-              <Save className="h-4 w-4 me-1" />
+              <Save className="me-1 size-4" />
               {t('actions.save', 'Save')}
             </Button>
           </div>

@@ -164,18 +164,18 @@ export function IconRail({ items, className, onItemClick, activeCategory, onCate
  aria-label={t('navigation.primary', 'Primary navigation')}
  >
  {/* GASTAT Logo */}
- <div className="w-full px-3 pt-4 pb-3 flex items-center justify-center">
+ <div className="flex w-full items-center justify-center px-3 pb-3 pt-4">
  <img
  src="/GASTAT_LOGO.svg"
  alt="GASTAT Logo"
- className="w-10 h-10 object-contain"
+ className="size-10 object-contain"
  />
  </div>
 
  {/* Separator Line - Engraved Effect */}
  <div className="w-full px-3 pb-3">
  <div
- className="h-px relative"
+ className="relative h-px"
  style={{
  background: 'linear-gradient(to right, transparent, rgba(0,0,0,0.4) 50%, transparent)',
  boxShadow: '0 1px 0 rgba(255,255,255,0.1)'
@@ -184,7 +184,7 @@ export function IconRail({ items, className, onItemClick, activeCategory, onCate
  </div>
 
  {/* Navigation Items */}
- <div className="flex flex-col items-center gap-4 p-3 w-full">
+ <div className="flex w-full flex-col items-center gap-4 p-3">
  {navigationItems.map((item) => (
  <IconButton
  key={item.id}

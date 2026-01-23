@@ -229,7 +229,7 @@ export function SavedViewsManager({
 
   return (
     <div
-      className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-3"
+      className="flex flex-col items-start gap-2 sm:flex-row sm:items-center sm:gap-3"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Quick pinned views */}
@@ -282,14 +282,14 @@ export function SavedViewsManager({
           {hasUnsavedChanges && (
             <>
               <div className="px-3 py-2">
-                <p className="text-xs text-muted-foreground mb-2">
+                <p className="mb-2 text-xs text-muted-foreground">
                   {t('unsavedChanges', 'You have unsaved changes')}
                 </p>
                 <div className="flex gap-2">
                   <Button
                     size="sm"
                     variant="default"
-                    className="flex-1 h-8 text-xs"
+                    className="h-8 flex-1 text-xs"
                     onClick={handleOpenSaveDialog}
                   >
                     <Plus className={cn('h-3 w-3', isRTL ? 'ms-1' : 'me-1')} />
@@ -299,7 +299,7 @@ export function SavedViewsManager({
                     <Button
                       size="sm"
                       variant="outline"
-                      className="flex-1 h-8 text-xs"
+                      className="h-8 flex-1 text-xs"
                       onClick={handleUpdateCurrentView}
                       disabled={isSaving}
                     >
@@ -316,11 +316,11 @@ export function SavedViewsManager({
           {/* Saved views list */}
           {savedViews.length === 0 ? (
             <div className="px-3 py-4 text-center">
-              <BookmarkCheck className="h-8 w-8 mx-auto text-muted-foreground/50 mb-2" />
+              <BookmarkCheck className="mx-auto mb-2 size-8 text-muted-foreground/50" />
               <p className="text-sm text-muted-foreground">
                 {t('noSavedViews', 'No saved views yet')}
               </p>
-              <p className="text-xs text-muted-foreground/70 mt-1">
+              <p className="mt-1 text-xs text-muted-foreground/70">
                 {t(
                   'noSavedViewsHint',
                   'Save your current filters and sort settings for quick access',
@@ -341,28 +341,28 @@ export function SavedViewsManager({
                     onApplyView(view.view_config)
                   }}
                 >
-                  <div className="flex items-center gap-2 flex-1 min-w-0">
+                  <div className="flex min-w-0 flex-1 items-center gap-2">
                     {currentView?.id === view.id && (
-                      <Check className="h-4 w-4 text-primary shrink-0" />
+                      <Check className="size-4 shrink-0 text-primary" />
                     )}
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-1.5">
-                        <span className="text-sm font-medium truncate">{view.name}</span>
-                        {view.is_default && <Star className="h-3 w-3 text-amber-500 shrink-0" />}
-                        {view.is_pinned && <Pin className="h-3 w-3 text-blue-500 shrink-0" />}
+                        <span className="truncate text-sm font-medium">{view.name}</span>
+                        {view.is_default && <Star className="size-3 shrink-0 text-amber-500" />}
+                        {view.is_pinned && <Pin className="size-3 shrink-0 text-blue-500" />}
                       </div>
                       {view.description && (
-                        <p className="text-xs text-muted-foreground truncate mt-0.5">
+                        <p className="mt-0.5 truncate text-xs text-muted-foreground">
                           {view.description}
                         </p>
                       )}
                     </div>
                   </div>
-                  <div className="flex items-center gap-1 shrink-0">
+                  <div className="flex shrink-0 items-center gap-1">
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7"
+                      className="size-7"
                       onClick={(e) => {
                         e.stopPropagation()
                         onTogglePinned(view.id)
@@ -370,15 +370,15 @@ export function SavedViewsManager({
                       title={view.is_pinned ? t('unpin', 'Unpin') : t('pin', 'Pin')}
                     >
                       {view.is_pinned ? (
-                        <PinOff className="h-3.5 w-3.5" />
+                        <PinOff className="size-3.5" />
                       ) : (
-                        <Pin className="h-3.5 w-3.5" />
+                        <Pin className="size-3.5" />
                       )}
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7"
+                      className="size-7"
                       onClick={(e) => {
                         e.stopPropagation()
                         if (!view.is_default) {
@@ -393,34 +393,34 @@ export function SavedViewsManager({
                       }
                     >
                       {view.is_default ? (
-                        <Star className="h-3.5 w-3.5 fill-amber-500 text-amber-500" />
+                        <Star className="size-3.5 fill-amber-500 text-amber-500" />
                       ) : (
-                        <StarOff className="h-3.5 w-3.5" />
+                        <StarOff className="size-3.5" />
                       )}
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7"
+                      className="size-7"
                       onClick={(e) => {
                         e.stopPropagation()
                         handleOpenEditDialog(view)
                       }}
                       title={t('edit', 'Edit')}
                     >
-                      <Edit2 className="h-3.5 w-3.5" />
+                      <Edit2 className="size-3.5" />
                     </Button>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-7 w-7 text-destructive hover:text-destructive"
+                      className="size-7 text-destructive hover:text-destructive"
                       onClick={(e) => {
                         e.stopPropagation()
                         handleOpenDeleteDialog(view)
                       }}
                       title={t('delete', 'Delete')}
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash2 className="size-3.5" />
                     </Button>
                   </div>
                 </DropdownMenuItem>
@@ -435,7 +435,7 @@ export function SavedViewsManager({
             <Button
               variant="outline"
               size="sm"
-              className="w-full h-9"
+              className="h-9 w-full"
               onClick={handleOpenSaveDialog}
             >
               <Plus className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
@@ -482,28 +482,28 @@ export function SavedViewsManager({
                 rows={2}
               />
             </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <label className="flex items-center gap-2 cursor-pointer">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <label className="flex cursor-pointer items-center gap-2">
                 <input
                   type="checkbox"
                   checked={setAsDefault}
                   onChange={(e) => setSetAsDefault(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="size-4 rounded border-gray-300"
                 />
                 <span className="text-sm">{t('setAsDefault', 'Set as default')}</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex cursor-pointer items-center gap-2">
                 <input
                   type="checkbox"
                   checked={pinView}
                   onChange={(e) => setPinView(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="size-4 rounded border-gray-300"
                 />
                 <span className="text-sm">{t('pinToQuickAccess', 'Pin to quick access')}</span>
               </label>
             </div>
           </div>
-          <DialogFooter className="flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
             <Button
               variant="outline"
               onClick={() => setSaveDialogOpen(false)}
@@ -554,28 +554,28 @@ export function SavedViewsManager({
                 rows={2}
               />
             </div>
-            <div className="flex flex-col sm:flex-row gap-3">
-              <label className="flex items-center gap-2 cursor-pointer">
+            <div className="flex flex-col gap-3 sm:flex-row">
+              <label className="flex cursor-pointer items-center gap-2">
                 <input
                   type="checkbox"
                   checked={setAsDefault}
                   onChange={(e) => setSetAsDefault(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="size-4 rounded border-gray-300"
                 />
                 <span className="text-sm">{t('setAsDefault', 'Set as default')}</span>
               </label>
-              <label className="flex items-center gap-2 cursor-pointer">
+              <label className="flex cursor-pointer items-center gap-2">
                 <input
                   type="checkbox"
                   checked={pinView}
                   onChange={(e) => setPinView(e.target.checked)}
-                  className="h-4 w-4 rounded border-gray-300"
+                  className="size-4 rounded border-gray-300"
                 />
                 <span className="text-sm">{t('pinToQuickAccess', 'Pin to quick access')}</span>
               </label>
             </div>
           </div>
-          <DialogFooter className="flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
             <Button
               variant="outline"
               onClick={() => setEditDialogOpen(false)}
@@ -609,14 +609,14 @@ export function SavedViewsManager({
               )}
             </AlertDialogDescription>
           </AlertDialogHeader>
-          <AlertDialogFooter className="flex-col sm:flex-row gap-2">
+          <AlertDialogFooter className="flex-col gap-2 sm:flex-row">
             <AlertDialogCancel className="w-full sm:w-auto">
               {t('cancel', 'Cancel')}
             </AlertDialogCancel>
             <AlertDialogAction
               onClick={handleDeleteView}
               disabled={isSaving}
-              className="w-full sm:w-auto bg-destructive hover:bg-destructive/90"
+              className="w-full bg-destructive hover:bg-destructive/90 sm:w-auto"
             >
               {isSaving ? t('deleting', 'Deleting...') : t('delete', 'Delete')}
             </AlertDialogAction>

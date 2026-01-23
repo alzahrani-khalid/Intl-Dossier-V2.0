@@ -104,7 +104,7 @@ export function ClassificationBadge({
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <p className="font-medium">{label}</p>
-        <p className="text-xs text-muted-foreground mt-1">{description}</p>
+        <p className="mt-1 text-xs text-muted-foreground">{description}</p>
       </TooltipContent>
     </Tooltip>
   )

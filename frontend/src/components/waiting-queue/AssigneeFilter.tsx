@@ -37,7 +37,7 @@ export function AssigneeFilter({ value, onChange, disabled = false }: AssigneeFi
  return (
  <div className="space-y-1.5" role="group" aria-labelledby="assignee-filter-label">
  <div
- className="flex items-center gap-2 rounded-sm hover:bg-accent/50 transition-colors px-1 py-1"
+ className="flex items-center gap-2 rounded-sm p-1 transition-colors hover:bg-accent/50"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <Checkbox
@@ -47,7 +47,7 @@ export function AssigneeFilter({ value, onChange, disabled = false }: AssigneeFi
  onChange(checked ? currentUser?.id : undefined);
  }}
  disabled={disabled}
- className="h-4 w-4"
+ className="size-4"
  />
  <Label
  htmlFor="assignee-me"

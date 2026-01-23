@@ -98,10 +98,10 @@ export function WorkflowRulesList({
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold">{t('headings.list')}</h1>
-          <p className="text-muted-foreground mt-1">{t('description')}</p>
+          <p className="mt-1 text-muted-foreground">{t('description')}</p>
         </div>
         <Button onClick={onCreateNew} className="w-full sm:w-auto">
-          <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+          <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
           {t('actions.create')}
         </Button>
       </div>
@@ -112,7 +112,7 @@ export function WorkflowRulesList({
         <form onSubmit={handleSearch} className="flex-1">
           <div className="relative">
             <Search
-              className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
+              className={`absolute top-1/2 size-4 -translate-y-1/2 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
             />
             <Input
               type="search"
@@ -188,19 +188,19 @@ export function WorkflowRulesList({
           ))}
         </div>
       ) : isError ? (
-        <div className="text-center py-12">
+        <div className="py-12 text-center">
           <p className="text-destructive">{t('messages.error')}</p>
           <Button variant="outline" onClick={() => refetch()} className="mt-4">
             {t('actions.retry')}
           </Button>
         </div>
       ) : data?.data.length === 0 ? (
-        <div className="text-center py-12">
-          <Workflow className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-          <h3 className="font-semibold text-lg">{t('messages.noRules')}</h3>
-          <p className="text-muted-foreground mt-1">{t('description')}</p>
+        <div className="py-12 text-center">
+          <Workflow className="mx-auto mb-4 size-12 text-muted-foreground" />
+          <h3 className="text-lg font-semibold">{t('messages.noRules')}</h3>
+          <p className="mt-1 text-muted-foreground">{t('description')}</p>
           <Button onClick={onCreateNew} className="mt-4">
-            <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('actions.create')}
           </Button>
         </div>
@@ -223,7 +223,7 @@ export function WorkflowRulesList({
 
           {/* Pagination */}
           {data && data.pagination.total_pages > 1 && (
-            <div className="flex justify-center gap-2 mt-6">
+            <div className="mt-6 flex justify-center gap-2">
               <Button
                 variant="outline"
                 disabled={filters.page === 1}

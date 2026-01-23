@@ -45,9 +45,9 @@ export function SummaryCard({
 
   const getTrendIcon = () => {
     if (change === undefined || change === null) return null
-    if (change > 1) return <TrendingUp className="h-4 w-4" />
-    if (change < -1) return <TrendingDown className="h-4 w-4" />
-    return <Minus className="h-4 w-4" />
+    if (change > 1) return <TrendingUp className="size-4" />
+    if (change < -1) return <TrendingDown className="size-4" />
+    return <Minus className="size-4" />
   }
 
   const getTrendColor = () => {
@@ -68,7 +68,7 @@ export function SummaryCard({
       </div>
 
       <div className="flex items-end gap-2">
-        <span className="text-2xl sm:text-3xl font-bold">{formatValue(value)}</span>
+        <span className="text-2xl font-bold sm:text-3xl">{formatValue(value)}</span>
       </div>
 
       {change !== undefined && (
@@ -78,7 +78,7 @@ export function SummaryCard({
             {change > 0 ? '+' : ''}
             {change.toFixed(1)}%
           </span>
-          {changeLabel && <span className="text-muted-foreground ms-1">{changeLabel}</span>}
+          {changeLabel && <span className="ms-1 text-muted-foreground">{changeLabel}</span>}
         </div>
       )}
     </div>

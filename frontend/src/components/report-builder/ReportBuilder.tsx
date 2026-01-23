@@ -249,23 +249,23 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
   )
 
   return (
-    <div className="flex flex-col h-full min-h-0" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="flex h-full min-h-0 flex-col" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 sm:mb-6">
+      <div className="mb-4 flex flex-col items-start justify-between gap-4 sm:mb-6 sm:flex-row sm:items-center">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold">{t('title')}</h1>
+          <h1 className="text-xl font-bold sm:text-2xl">{t('title')}</h1>
           <p className="text-sm text-muted-foreground">{t('description')}</p>
         </div>
 
-        <div className="flex items-center gap-2 flex-wrap">
+        <div className="flex flex-wrap items-center gap-2">
           {isDirty && (
-            <Badge variant="outline" className="text-yellow-600 border-yellow-600">
+            <Badge variant="outline" className="border-yellow-600 text-yellow-600">
               {t('common:unsaved')}
             </Badge>
           )}
 
           <Button variant="outline" size="sm" onClick={resetConfiguration}>
-            <RotateCcw className="h-4 w-4 me-2" />
+            <RotateCcw className="me-2 size-4" />
             {t('actions.reset')}
           </Button>
 
@@ -275,7 +275,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
             onClick={handlePreview}
             disabled={configuration.entities.length === 0}
           >
-            <Play className="h-4 w-4 me-2" />
+            <Play className="me-2 size-4" />
             {t('actions.preview')}
           </Button>
 
@@ -285,13 +285,13 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
             onClick={() => setIsSaveDialogOpen(true)}
             disabled={configuration.entities.length === 0}
           >
-            <Save className="h-4 w-4 me-2" />
+            <Save className="me-2 size-4" />
             {t('actions.save')}
           </Button>
 
           {savedReportId && (
             <Button variant="outline" size="sm" onClick={() => setIsScheduleDialogOpen(true)}>
-              <Calendar className="h-4 w-4 me-2" />
+              <Calendar className="me-2 size-4" />
               {t('actions.schedule')}
             </Button>
           )}
@@ -302,34 +302,34 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
       <Tabs
         value={activeTab}
         onValueChange={(v) => setActiveTab(v as typeof activeTab)}
-        className="flex-1 flex flex-col min-h-0"
+        className="flex min-h-0 flex-1 flex-col"
       >
-        <TabsList className="w-full sm:w-auto grid grid-cols-3 sm:inline-grid sm:grid-cols-3">
+        <TabsList className="grid w-full grid-cols-3 sm:inline-grid sm:w-auto sm:grid-cols-3">
           <TabsTrigger value="builder" className="gap-2">
-            <Settings2 className="h-4 w-4" />
+            <Settings2 className="size-4" />
             <span className="hidden sm:inline">{t('tabs.builder')}</span>
           </TabsTrigger>
           <TabsTrigger value="preview" className="gap-2">
-            <LayoutDashboard className="h-4 w-4" />
+            <LayoutDashboard className="size-4" />
             <span className="hidden sm:inline">{t('tabs.preview')}</span>
           </TabsTrigger>
           <TabsTrigger value="saved" className="gap-2">
-            <FileText className="h-4 w-4" />
+            <FileText className="size-4" />
             <span className="hidden sm:inline">{t('tabs.saved')}</span>
           </TabsTrigger>
         </TabsList>
 
         {/* Builder Tab */}
-        <TabsContent value="builder" className="flex-1 mt-4 min-h-0">
+        <TabsContent value="builder" className="mt-4 min-h-0 flex-1">
           <DndContext
             sensors={sensors}
             collisionDetection={closestCorners}
             onDragStart={handleDragStart}
             onDragEnd={handleDragEnd}
           >
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 h-full">
+            <div className="grid h-full grid-cols-1 gap-4 lg:grid-cols-12">
               {/* Left Panel - Entity & Field Selection */}
-              <div className="lg:col-span-3 space-y-4">
+              <div className="space-y-4 lg:col-span-3">
                 <EntitySelector selectedEntities={selectedEntities} onToggleEntity={toggleEntity} />
                 <div className="h-[400px]">
                   <FieldList fields={availableFields} onAddColumn={addColumn} />
@@ -337,7 +337,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
               </div>
 
               {/* Middle Panel - Configuration */}
-              <div className="lg:col-span-5 space-y-4">
+              <div className="space-y-4 lg:col-span-5">
                 <div className="h-[300px]">
                   <ColumnBuilder
                     columns={configuration.columns}
@@ -358,7 +358,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
               </div>
 
               {/* Right Panel - Grouping, Sorting, Visualization */}
-              <div className="lg:col-span-4 space-y-4">
+              <div className="space-y-4 lg:col-span-4">
                 <GroupingBuilder
                   groupings={configuration.groupings}
                   aggregations={configuration.aggregations}
@@ -389,7 +389,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
             {/* Drag Overlay */}
             <DragOverlay>
               {activeDragField && (
-                <div className="p-2 rounded-md border bg-background shadow-lg">
+                <div className="rounded-md border bg-background p-2 shadow-lg">
                   <p className="text-sm font-medium">
                     {isRTL ? activeDragField.nameAr : activeDragField.name}
                   </p>
@@ -400,7 +400,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
         </TabsContent>
 
         {/* Preview Tab */}
-        <TabsContent value="preview" className="flex-1 mt-4 min-h-0">
+        <TabsContent value="preview" className="mt-4 min-h-0 flex-1">
           <ReportPreview
             configuration={configuration}
             previewData={previewMutation.data || null}
@@ -411,7 +411,7 @@ export function ReportBuilder({ initialReportId }: ReportBuilderProps) {
         </TabsContent>
 
         {/* Saved Reports Tab */}
-        <TabsContent value="saved" className="flex-1 mt-4 min-h-0">
+        <TabsContent value="saved" className="mt-4 min-h-0 flex-1">
           <SavedReportsList
             reports={reportsData?.data || []}
             isLoading={isLoadingReports}

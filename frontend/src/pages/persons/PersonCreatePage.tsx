@@ -130,14 +130,14 @@ export function PersonCreatePage() {
   return (
     <div className="min-h-screen bg-background" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+      <header className="sticky top-0 z-10 border-b bg-background">
+        <div className="container mx-auto p-4 sm:px-6 lg:px-8">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={handleBack} className="h-10 w-10">
-              <ArrowLeft className={`h-5 w-5 ${isRTL ? 'rotate-180' : ''}`} />
+            <Button variant="ghost" size="icon" onClick={handleBack} className="size-10">
+              <ArrowLeft className={`size-5 ${isRTL ? 'rotate-180' : ''}`} />
             </Button>
             <div>
-              <h1 className="text-xl sm:text-2xl font-bold">
+              <h1 className="text-xl font-bold sm:text-2xl">
                 {t('create.title', 'Add New Person')}
               </h1>
               <p className="text-sm text-muted-foreground">
@@ -149,14 +149,14 @@ export function PersonCreatePage() {
       </header>
 
       {/* Form */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6 max-w-2xl mx-auto">
+          <form onSubmit={form.handleSubmit(onSubmit)} className="mx-auto max-w-2xl space-y-6">
             {/* Basic Information */}
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <User className="h-5 w-5 text-primary" />
+                  <User className="size-5 text-primary" />
                   {t('create.sections.basicInfo', 'Basic Information')}
                 </CardTitle>
                 <CardDescription>
@@ -164,7 +164,7 @@ export function PersonCreatePage() {
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="name_en"
@@ -194,7 +194,7 @@ export function PersonCreatePage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="title_en"
@@ -230,7 +230,7 @@ export function PersonCreatePage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex items-center gap-2">
-                        <Star className="h-4 w-4" />
+                        <Star className="size-4" />
                         {t('form.importanceLevel', 'Importance Level')}
                       </FormLabel>
                       <Select
@@ -266,19 +266,19 @@ export function PersonCreatePage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <Mail className="h-5 w-5 text-primary" />
+                  <Mail className="size-5 text-primary" />
                   {t('create.sections.contactInfo', 'Contact Information')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="email"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2">
-                          <Mail className="h-4 w-4" />
+                          <Mail className="size-4" />
                           {t('form.email', 'Email')}
                         </FormLabel>
                         <FormControl>
@@ -295,7 +295,7 @@ export function PersonCreatePage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2">
-                          <Phone className="h-4 w-4" />
+                          <Phone className="size-4" />
                           {t('form.phone', 'Phone')}
                         </FormLabel>
                         <FormControl>
@@ -307,14 +307,14 @@ export function PersonCreatePage() {
                   />
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <FormField
                     control={form.control}
                     name="linkedin_url"
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2">
-                          <Globe className="h-4 w-4" />
+                          <Globe className="size-4" />
                           {t('form.linkedin', 'LinkedIn')}
                         </FormLabel>
                         <FormControl>
@@ -331,7 +331,7 @@ export function PersonCreatePage() {
                     render={({ field }) => (
                       <FormItem>
                         <FormLabel className="flex items-center gap-2">
-                          <Globe className="h-4 w-4" />
+                          <Globe className="size-4" />
                           {t('form.twitter', 'Twitter / X')}
                         </FormLabel>
                         <FormControl>
@@ -349,7 +349,7 @@ export function PersonCreatePage() {
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center gap-2 text-lg">
-                  <Briefcase className="h-5 w-5 text-primary" />
+                  <Briefcase className="size-5 text-primary" />
                   {t('create.sections.professionalDetails', 'Professional Details')}
                 </CardTitle>
               </CardHeader>
@@ -360,7 +360,7 @@ export function PersonCreatePage() {
                   render={({ field }) => (
                     <FormItem>
                       <FormLabel className="flex items-center gap-2">
-                        <Languages className="h-4 w-4" />
+                        <Languages className="size-4" />
                         {t('form.languages', 'Languages')}
                       </FormLabel>
                       <FormControl>
@@ -444,15 +444,15 @@ export function PersonCreatePage() {
             </Card>
 
             {/* Submit Buttons */}
-            <div className="flex flex-col-reverse sm:flex-row gap-3 justify-end">
+            <div className="flex flex-col-reverse justify-end gap-3 sm:flex-row">
               <Button type="button" variant="outline" onClick={handleBack}>
                 {t('actions.cancel', 'Cancel')}
               </Button>
               <Button type="submit" disabled={createPerson.isPending}>
                 {createPerson.isPending ? (
-                  <Loader2 className="h-4 w-4 animate-spin me-2" />
+                  <Loader2 className="me-2 size-4 animate-spin" />
                 ) : (
-                  <Save className="h-4 w-4 me-2" />
+                  <Save className="me-2 size-4" />
                 )}
                 {t('actions.create', 'Create Person')}
               </Button>

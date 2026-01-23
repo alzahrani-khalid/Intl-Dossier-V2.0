@@ -218,7 +218,7 @@ export function StakeholderAnnotationDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-lg max-h-[90vh] overflow-y-auto"
+        className="max-h-[90vh] overflow-y-auto sm:max-w-lg"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
@@ -230,26 +230,26 @@ export function StakeholderAnnotationDialog({
 
         <div className="space-y-6 py-4">
           {/* Event reference */}
-          <div className="p-3 rounded-lg bg-muted/50">
-            <p className="text-sm text-muted-foreground text-start">{t('annotation.annotating')}</p>
-            <p className="font-medium text-start">
+          <div className="rounded-lg bg-muted/50 p-3">
+            <p className="text-start text-sm text-muted-foreground">{t('annotation.annotating')}</p>
+            <p className="text-start font-medium">
               {isRTL && event.title_ar ? event.title_ar : event.title_en}
             </p>
           </div>
 
           {/* Annotation Type Selection */}
           <div className="space-y-3">
-            <Label className="text-start block font-medium">{t('annotation.type')}</Label>
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            <Label className="block text-start font-medium">{t('annotation.type')}</Label>
+            <div className="grid grid-cols-2 gap-2 sm:grid-cols-3">
               {annotationTypes.map(({ type: t, icon: Icon, label_en, label_ar }) => (
                 <Button
                   key={t}
                   type="button"
                   variant={annotationType === t ? 'default' : 'outline'}
-                  className="flex flex-col items-center gap-1 h-auto py-3 min-h-16"
+                  className="flex h-auto min-h-16 flex-col items-center gap-1 py-3"
                   onClick={() => setAnnotationType(t)}
                 >
-                  <Icon className="h-5 w-5" />
+                  <Icon className="size-5" />
                   <span className="text-xs">{isRTL ? label_ar : label_en}</span>
                 </Button>
               ))}
@@ -258,9 +258,9 @@ export function StakeholderAnnotationDialog({
 
           {/* Content - English */}
           <div className="space-y-2">
-            <Label htmlFor="content-en" className="text-start block">
+            <Label htmlFor="content-en" className="block text-start">
               {t('annotation.content_en')}
-              <span className="text-destructive ms-1">*</span>
+              <span className="ms-1 text-destructive">*</span>
             </Label>
             <Textarea
               id="content-en"
@@ -274,7 +274,7 @@ export function StakeholderAnnotationDialog({
 
           {/* Content - Arabic */}
           <div className="space-y-2">
-            <Label htmlFor="content-ar" className="text-start block">
+            <Label htmlFor="content-ar" className="block text-start">
               {t('annotation.content_ar')}
             </Label>
             <Textarea
@@ -289,7 +289,7 @@ export function StakeholderAnnotationDialog({
 
           {/* Color Selection */}
           <div className="space-y-3">
-            <Label className="text-start block">{t('annotation.color')}</Label>
+            <Label className="block text-start">{t('annotation.color')}</Label>
             <div className="flex flex-wrap gap-2">
               {colorOptions.map(({ color: c, class: colorClass }) => (
                 <button
@@ -309,7 +309,7 @@ export function StakeholderAnnotationDialog({
 
           {/* Visibility Selection */}
           <div className="space-y-3">
-            <Label className="text-start block">{t('annotation.visibility')}</Label>
+            <Label className="block text-start">{t('annotation.visibility')}</Label>
             <RadioGroup
               value={visibility}
               onValueChange={(v) => setVisibility(v as AnnotationVisibility)}
@@ -332,12 +332,12 @@ export function StakeholderAnnotationDialog({
                     )}
                   >
                     <RadioGroupItem value={v} id={v} className="sr-only" />
-                    <Icon className="h-5 w-5 text-muted-foreground" />
+                    <Icon className="size-5 text-muted-foreground" />
                     <div className="flex-1">
-                      <p className="text-sm font-medium text-start">
+                      <p className="text-start text-sm font-medium">
                         {isRTL ? label_ar : label_en}
                       </p>
-                      <p className="text-xs text-muted-foreground text-start">
+                      <p className="text-start text-xs text-muted-foreground">
                         {isRTL ? description_ar : description_en}
                       </p>
                     </div>
@@ -357,8 +357,8 @@ export function StakeholderAnnotationDialog({
           <div className="space-y-4">
             <div className="flex items-center justify-between">
               <div>
-                <Label className="text-start block">{t('annotation.is_key_moment')}</Label>
-                <p className="text-xs text-muted-foreground text-start">
+                <Label className="block text-start">{t('annotation.is_key_moment')}</Label>
+                <p className="text-start text-xs text-muted-foreground">
                   {t('annotation.is_key_moment_hint')}
                 </p>
               </div>
@@ -366,8 +366,8 @@ export function StakeholderAnnotationDialog({
             </div>
             <div className="flex items-center justify-between">
               <div>
-                <Label className="text-start block">{t('annotation.is_turning_point')}</Label>
-                <p className="text-xs text-muted-foreground text-start">
+                <Label className="block text-start">{t('annotation.is_turning_point')}</Label>
+                <p className="text-start text-xs text-muted-foreground">
                   {t('annotation.is_turning_point_hint')}
                 </p>
               </div>
@@ -377,7 +377,7 @@ export function StakeholderAnnotationDialog({
 
           {/* Importance Score */}
           <div className="space-y-2">
-            <Label className="text-start block">{t('annotation.importance_score')}</Label>
+            <Label className="block text-start">{t('annotation.importance_score')}</Label>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((score) => (
                 <Button
@@ -392,13 +392,13 @@ export function StakeholderAnnotationDialog({
                 </Button>
               ))}
             </div>
-            <p className="text-xs text-muted-foreground text-start">
+            <p className="text-start text-xs text-muted-foreground">
               {t('annotation.importance_score_hint')}
             </p>
           </div>
         </div>
 
-        <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
+        <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row">
           <Button
             type="button"
             variant="outline"

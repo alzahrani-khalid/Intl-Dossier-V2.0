@@ -139,18 +139,18 @@ export function AdvancedSearchPage() {
     const entityLabel = ENTITY_TYPE_LABELS[result.entity_type as SearchableEntityType]
 
     return (
-      <Card key={result.entity_id} className="hover:shadow-md transition-shadow cursor-pointer">
+      <Card key={result.entity_id} className="cursor-pointer transition-shadow hover:shadow-md">
         <CardHeader className="pb-3">
           <div className="flex items-start justify-between gap-3">
-            <div className="flex items-start gap-3 min-w-0">
-              <div className="p-2 rounded-lg bg-gray-100 dark:bg-gray-800 shrink-0">
-                <IconComponent className="h-5 w-5 text-gray-600 dark:text-gray-400" />
+            <div className="flex min-w-0 items-start gap-3">
+              <div className="shrink-0 rounded-lg bg-gray-100 p-2 dark:bg-gray-800">
+                <IconComponent className="size-5 text-gray-600 dark:text-gray-400" />
               </div>
               <div className="min-w-0">
-                <CardTitle className="text-base line-clamp-1">
+                <CardTitle className="line-clamp-1 text-base">
                   {isRTL ? result.title_ar : result.title_en}
                 </CardTitle>
-                <CardDescription className="flex items-center gap-2 mt-1">
+                <CardDescription className="mt-1 flex items-center gap-2">
                   <span>{isRTL ? entityLabel?.label_ar : entityLabel?.label_en}</span>
                   <Badge
                     variant="secondary"
@@ -172,19 +172,19 @@ export function AdvancedSearchPage() {
         {(result.snippet_en || result.snippet_ar) && (
           <CardContent className="pt-0">
             <p
-              className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
+              className="line-clamp-2 text-sm text-gray-600 dark:text-gray-400"
               dangerouslySetInnerHTML={{
                 __html: isRTL ? result.snippet_ar : result.snippet_en,
               }}
             />
-            <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
+            <div className="mt-3 flex items-center gap-4 text-xs text-gray-500">
               <span className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
+                <Clock className="size-3" />
                 {new Date(result.updated_at).toLocaleDateString()}
               </span>
               {result.rank_score && (
                 <span className="flex items-center gap-1">
-                  <Search className="h-3 w-3" />
+                  <Search className="size-3" />
                   {Math.round(result.rank_score)}% {t('sorting.relevance').toLowerCase()}
                 </span>
               )}
@@ -201,7 +201,7 @@ export function AdvancedSearchPage() {
         <Card key={i}>
           <CardHeader className="pb-3">
             <div className="flex items-start gap-3">
-              <Skeleton className="h-10 w-10 rounded-lg" />
+              <Skeleton className="size-10 rounded-lg" />
               <div className="flex-1 space-y-2">
                 <Skeleton className="h-5 w-3/4" />
                 <Skeleton className="h-4 w-1/4" />
@@ -209,7 +209,7 @@ export function AdvancedSearchPage() {
             </div>
           </CardHeader>
           <CardContent className="pt-0">
-            <Skeleton className="h-4 w-full mb-2" />
+            <Skeleton className="mb-2 h-4 w-full" />
             <Skeleton className="h-4 w-2/3" />
           </CardContent>
         </Card>
@@ -218,16 +218,16 @@ export function AdvancedSearchPage() {
   )
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-gray-100">
+        <h1 className="text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">
           {t('title')}
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 mt-1">{t('description')}</p>
+        <p className="mt-1 text-gray-600 dark:text-gray-400">{t('description')}</p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Filters Panel */}
         <div className="lg:col-span-1">
           <Card className="sticky top-20">
@@ -243,7 +243,7 @@ export function AdvancedSearchPage() {
             <CardHeader className="pb-4">
               <div className="flex items-center justify-between">
                 <CardTitle className="flex items-center gap-2">
-                  <Search className="h-5 w-5" />
+                  <Search className="size-5" />
                   {t('results.title')}
                 </CardTitle>
                 {searchMutation.data && (
@@ -262,7 +262,7 @@ export function AdvancedSearchPage() {
               {searchMutation.isPending && (
                 <div className="space-y-4">
                   <div className="flex items-center justify-center py-8">
-                    <Loader2 className="h-8 w-8 animate-spin text-primary" />
+                    <Loader2 className="size-8 animate-spin text-primary" />
                     <span className="ms-3 text-gray-600 dark:text-gray-400">
                       {t('results.loading')}
                     </span>
@@ -303,9 +303,9 @@ export function AdvancedSearchPage() {
 
               {/* Warnings */}
               {searchMutation.data?.warnings && searchMutation.data.warnings.length > 0 && (
-                <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                <div className="mt-4 rounded-lg border border-yellow-200 bg-yellow-50 p-3 dark:border-yellow-800 dark:bg-yellow-900/20">
                   <div className="flex items-start gap-2">
-                    <AlertCircle className="h-4 w-4 text-yellow-600 shrink-0 mt-0.5" />
+                    <AlertCircle className="mt-0.5 size-4 shrink-0 text-yellow-600" />
                     <div className="text-sm text-yellow-800 dark:text-yellow-200">
                       {searchMutation.data.warnings.map((warning, i) => (
                         <p key={i}>{warning}</p>
@@ -382,7 +382,7 @@ export function AdvancedSearchPage() {
             </div>
           </div>
 
-          <DialogFooter className="flex-col sm:flex-row gap-2">
+          <DialogFooter className="flex-col gap-2 sm:flex-row">
             <Button variant="outline" onClick={() => setSaveDialogOpen(false)}>
               {t('actions.cancel')}
             </Button>
@@ -390,7 +390,7 @@ export function AdvancedSearchPage() {
               onClick={handleCreateTemplate}
               disabled={!templateName.en || !templateName.ar || createTemplate.isPending}
             >
-              {createTemplate.isPending && <Loader2 className="h-4 w-4 me-2 animate-spin" />}
+              {createTemplate.isPending && <Loader2 className="me-2 size-4 animate-spin" />}
               {t('actions.save')}
             </Button>
           </DialogFooter>

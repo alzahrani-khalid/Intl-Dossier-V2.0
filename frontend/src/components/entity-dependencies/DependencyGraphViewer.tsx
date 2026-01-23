@@ -146,11 +146,11 @@ function CustomNode({ data }: { data: CustomNodeData }) {
     >
       <div className="flex items-center gap-2">
         <div className={cn('p-1 rounded', config.color)}>
-          <Icon className="h-3 w-3 sm:h-4 sm:w-4" />
+          <Icon className="size-3 sm:size-4" />
         </div>
-        <div className="flex-1 min-w-0">
-          <p className="text-xs sm:text-sm font-medium truncate">{data.label}</p>
-          <p className="text-[10px] sm:text-xs text-muted-foreground capitalize">{data.type}</p>
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-xs font-medium sm:text-sm">{data.label}</p>
+          <p className="text-[10px] capitalize text-muted-foreground sm:text-xs">{data.type}</p>
         </div>
       </div>
       {!data.isSource && (
@@ -264,28 +264,28 @@ function GraphStats({ graph }: GraphStatsProps) {
 
   return (
     <div
-      className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4"
+      className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       <Card className="p-2 sm:p-3">
-        <p className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.total')}</p>
-        <p className="text-lg sm:text-xl font-bold">{graph.total_nodes - 1}</p>
+        <p className="text-[10px] text-muted-foreground sm:text-xs">{t('stats.total')}</p>
+        <p className="text-lg font-bold sm:text-xl">{graph.total_nodes - 1}</p>
       </Card>
       <Card className="p-2 sm:p-3">
-        <p className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.direct')}</p>
-        <p className="text-lg sm:text-xl font-bold text-blue-600">
+        <p className="text-[10px] text-muted-foreground sm:text-xs">{t('stats.direct')}</p>
+        <p className="text-lg font-bold text-blue-600 sm:text-xl">
           {graph.stats.direct_dependencies}
         </p>
       </Card>
       <Card className="p-2 sm:p-3">
-        <p className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.transitive')}</p>
-        <p className="text-lg sm:text-xl font-bold text-gray-600">
+        <p className="text-[10px] text-muted-foreground sm:text-xs">{t('stats.transitive')}</p>
+        <p className="text-lg font-bold text-gray-600 sm:text-xl">
           {graph.stats.transitive_dependencies}
         </p>
       </Card>
       <Card className="p-2 sm:p-3">
-        <p className="text-[10px] sm:text-xs text-muted-foreground">{t('stats.depth')}</p>
-        <p className="text-lg sm:text-xl font-bold">{graph.actual_depth}</p>
+        <p className="text-[10px] text-muted-foreground sm:text-xs">{t('stats.depth')}</p>
+        <p className="text-lg font-bold sm:text-xl">{graph.actual_depth}</p>
       </Card>
     </div>
   )
@@ -345,12 +345,12 @@ export function DependencyGraphViewer({
           <Skeleton className="h-6 w-48" />
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4 mb-4">
+          <div className="mb-4 grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4">
             {[1, 2, 3, 4].map((i) => (
               <Skeleton key={i} className="h-16 sm:h-20" />
             ))}
           </div>
-          <Skeleton className="h-[400px] sm:h-[500px] w-full" />
+          <Skeleton className="h-[400px] w-full sm:h-[500px]" />
         </CardContent>
       </Card>
     )
@@ -360,9 +360,9 @@ export function DependencyGraphViewer({
     return (
       <Card className={cn('w-full', className)}>
         <CardContent className="p-6 text-center">
-          <p className="text-destructive mb-4">{t('errors.loadFailed')}</p>
+          <p className="mb-4 text-destructive">{t('errors.loadFailed')}</p>
           <Button onClick={() => refetch()} variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 me-2" />
+            <RefreshCw className="me-2 size-4" />
             {t('actions.retry')}
           </Button>
         </CardContent>
@@ -375,7 +375,7 @@ export function DependencyGraphViewer({
       <Card className={cn('w-full', className)}>
         <CardContent className="p-6 text-center">
           <div className="py-8">
-            <Globe className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+            <Globe className="mx-auto mb-4 size-12 text-muted-foreground" />
             <p className="text-muted-foreground">{t('empty.noDependencies')}</p>
           </div>
         </CardContent>
@@ -386,12 +386,12 @@ export function DependencyGraphViewer({
   return (
     <Card className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-2 sm:pb-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-base sm:text-lg">
             {entityName ? t('title.withName', { name: entityName }) : t('title.default')}
           </CardTitle>
           <Button onClick={() => refetch()} variant="outline" size="sm" className="h-8 sm:h-9">
-            <RefreshCw className="h-3 w-3 sm:h-4 sm:w-4 me-1.5 sm:me-2" />
+            <RefreshCw className="me-1.5 size-3 sm:me-2 sm:size-4" />
             {t('actions.refresh')}
           </Button>
         </div>
@@ -399,7 +399,7 @@ export function DependencyGraphViewer({
       <CardContent className="p-2 sm:p-4">
         <GraphStats graph={graph} />
 
-        <div className="h-[400px] sm:h-[500px] lg:h-[600px] border rounded-lg overflow-hidden">
+        <div className="h-[400px] overflow-hidden rounded-lg border sm:h-[500px] lg:h-[600px]">
           <ReactFlow
             nodes={nodes}
             edges={edges}
@@ -414,7 +414,7 @@ export function DependencyGraphViewer({
             defaultViewport={{ x: 0, y: 0, zoom: 0.8 }}
           >
             <Background color="#e5e7eb" gap={16} />
-            <Controls showInteractive={false} className="!bg-background !border !shadow-md" />
+            <Controls showInteractive={false} className="!border !bg-background !shadow-md" />
             <MiniMap
               nodeColor={(node) => {
                 const config = ENTITY_TYPE_CONFIG[node.data?.type] || ENTITY_TYPE_CONFIG.topic
@@ -433,23 +433,23 @@ export function DependencyGraphViewer({
                             : '#6b7280'
               }}
               maskColor="rgba(0,0,0,0.1)"
-              className="!bg-background !border"
+              className="!border !bg-background"
             />
           </ReactFlow>
         </div>
 
         {/* Legend */}
-        <div className="mt-4 flex flex-wrap gap-2 sm:gap-4 text-xs sm:text-sm">
+        <div className="mt-4 flex flex-wrap gap-2 text-xs sm:gap-4 sm:text-sm">
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded bg-primary/20 border-2 border-primary" />
+            <div className="size-3 rounded border-2 border-primary bg-primary/20" />
             <span>{t('legend.source')}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded bg-blue-50 border-2 border-blue-400" />
+            <div className="size-3 rounded border-2 border-blue-400 bg-blue-50" />
             <span>{t('legend.direct')}</span>
           </div>
           <div className="flex items-center gap-1.5">
-            <div className="w-3 h-3 rounded bg-gray-50 border-2 border-gray-300" />
+            <div className="size-3 rounded border-2 border-gray-300 bg-gray-50" />
             <span>{t('legend.transitive')}</span>
           </div>
         </div>

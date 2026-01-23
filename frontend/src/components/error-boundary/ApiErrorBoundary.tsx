@@ -105,20 +105,20 @@ function ApiErrorFallback({
 
   return (
     <div className="flex items-center justify-center p-8">
-      <div className="text-center max-w-md">
-        <div className="flex justify-center mb-4">
+      <div className="max-w-md text-center">
+        <div className="mb-4 flex justify-center">
           {isNetworkError ? (
-            <WifiOff className="h-12 w-12 text-orange-500" />
+            <WifiOff className="size-12 text-orange-500" />
           ) : (
-            <AlertCircle className="h-12 w-12 text-red-500" />
+            <AlertCircle className="size-12 text-red-500" />
           )}
         </div>
 
-        <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
+        <h3 className="mb-2 text-lg font-semibold text-gray-900 dark:text-white">
           {isNetworkError ? 'Connection Error' : 'API Error'}
         </h3>
 
-        <p className="text-gray-600 dark:text-gray-400 mb-4">
+        <p className="mb-4 text-gray-600 dark:text-gray-400">
           {isNetworkError
             ? 'Unable to connect to the server. Please check your internet connection.'
             : 'Something went wrong while processing your request.'}
@@ -126,13 +126,13 @@ function ApiErrorFallback({
 
         <div className="space-y-2">
           <Button onClick={onRetry} disabled={isRetrying} className="w-full">
-            <RefreshCw className={`h-4 w-4 me-2 ${isRetrying ? 'animate-spin' : ''}`} />
+            <RefreshCw className={`me-2 size-4 ${isRetrying ? 'animate-spin' : ''}`} />
             {isRetrying ? 'Retrying...' : 'Try Again'}
           </Button>
 
           {showOfflineOption && isNetworkError && (
             <Button onClick={handleQueueForLater} variant="outline" className="w-full">
-              <Wifi className="h-4 w-4 me-2" />
+              <Wifi className="me-2 size-4" />
               Queue for Later
             </Button>
           )}
@@ -143,7 +143,7 @@ function ApiErrorFallback({
             <summary className="cursor-pointer text-sm text-gray-500 hover:text-gray-700">
               Error Details
             </summary>
-            <pre className="mt-2 p-2 bg-gray-100 dark:bg-gray-700 rounded text-xs overflow-auto">
+            <pre className="mt-2 overflow-auto rounded bg-gray-100 p-2 text-xs dark:bg-gray-700">
               {error.message}
             </pre>
           </details>

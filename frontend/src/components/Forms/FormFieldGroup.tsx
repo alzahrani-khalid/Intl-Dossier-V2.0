@@ -80,7 +80,7 @@ function CompletionRing({
       className={cn('relative inline-flex items-center justify-center', className)}
       aria-label={t('completion.percentage', { percentage })}
     >
-      <svg width={size} height={size} className="transform -rotate-90">
+      <svg width={size} height={size} className="-rotate-90">
         {/* Background circle */}
         <circle
           cx={size / 2}
@@ -143,29 +143,29 @@ function GroupHeader({
   const isRTL = i18n.language === 'ar'
 
   return (
-    <div className="flex items-center gap-3 flex-wrap">
+    <div className="flex flex-wrap items-center gap-3">
       {/* Icon */}
-      <div className="flex-shrink-0">
-        {icon || <Folder className="w-5 h-5 text-gray-400 dark:text-gray-500" />}
+      <div className="shrink-0">
+        {icon || <Folder className="size-5 text-gray-400 dark:text-gray-500" />}
       </div>
 
       {/* Title and Description */}
-      <div className="flex-1 min-w-0">
-        <h3 className="font-semibold text-gray-900 dark:text-white text-start text-sm sm:text-base">
+      <div className="min-w-0 flex-1">
+        <h3 className="text-start text-sm font-semibold text-gray-900 dark:text-white sm:text-base">
           {title}
         </h3>
         {description && (
-          <p className="text-sm text-gray-500 dark:text-gray-400 text-start mt-0.5 truncate">
+          <p className="mt-0.5 truncate text-start text-sm text-gray-500 dark:text-gray-400">
             {description}
           </p>
         )}
       </div>
 
       {/* Status indicators */}
-      <div className="flex items-center gap-2 flex-shrink-0">
+      <div className="flex shrink-0 items-center gap-2">
         {/* Field count */}
         {fieldCount !== undefined && completedCount !== undefined && (
-          <span className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
+          <span className="hidden text-xs text-gray-500 dark:text-gray-400 sm:block">
             {t('group.fieldCount', { completed: completedCount, total: fieldCount })}
           </span>
         )}
@@ -177,7 +177,7 @@ function GroupHeader({
             animate={{ scale: 1 }}
             className="flex items-center text-red-500"
           >
-            <AlertCircle className="w-5 h-5" />
+            <AlertCircle className="size-5" />
           </motion.div>
         )}
 
@@ -188,7 +188,7 @@ function GroupHeader({
             animate={{ scale: 1 }}
             className="flex items-center text-emerald-500"
           >
-            <CheckCircle2 className="w-5 h-5" />
+            <CheckCircle2 className="size-5" />
           </motion.div>
         )}
 
@@ -201,9 +201,9 @@ function GroupHeader({
           <motion.div
             animate={{ rotate: isCollapsed ? (isRTL ? 90 : -90) : 0 }}
             transition={{ duration: 0.2 }}
-            className="flex-shrink-0"
+            className="shrink-0"
           >
-            <ChevronDown className="w-5 h-5 text-gray-400" />
+            <ChevronDown className="size-5 text-gray-400" />
           </motion.div>
         )}
       </div>

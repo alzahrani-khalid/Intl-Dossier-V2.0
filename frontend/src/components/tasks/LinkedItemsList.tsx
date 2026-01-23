@@ -81,7 +81,7 @@ export function LinkedItemsList({
  to={getLink(item)}
  className="group"
  >
- <Card className="h-full transition-all hover:shadow-md hover:border-primary/50">
+ <Card className="h-full transition-all hover:border-primary/50 hover:shadow-md">
  <CardContent className="flex flex-col gap-3 p-4">
  {/* Icon and type */}
  <div className="flex items-center justify-between">
@@ -97,7 +97,7 @@ export function LinkedItemsList({
  </div>
 
  {/* Title */}
- <h3 className="text-sm font-medium text-start line-clamp-2 sm:text-base">
+ <h3 className="line-clamp-2 text-start text-sm font-medium sm:text-base">
  {item.title}
  </h3>
  </CardContent>

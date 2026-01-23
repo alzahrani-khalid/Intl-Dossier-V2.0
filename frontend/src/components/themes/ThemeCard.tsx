@@ -107,7 +107,7 @@ export function ThemeCard({
     >
       <CardHeader className={cn('pb-2', compact && 'py-3')}>
         <div className="flex items-start justify-between gap-2">
-          <div className="flex items-start gap-3 flex-1 min-w-0">
+          <div className="flex min-w-0 flex-1 items-start gap-3">
             {/* Icon */}
             <div
               className={cn('p-2 rounded-lg shrink-0', 'bg-primary/10 text-primary')}
@@ -116,13 +116,13 @@ export function ThemeCard({
               }
             >
               {childrenCount > 0 ? (
-                <FolderTree className="h-5 w-5" />
+                <FolderTree className="size-5" />
               ) : (
-                <Folder className="h-5 w-5" />
+                <Folder className="size-5" />
               )}
             </div>
 
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <CardTitle
                 className={cn('text-base sm:text-lg font-semibold truncate', compact && 'text-sm')}
               >
@@ -130,12 +130,12 @@ export function ThemeCard({
               </CardTitle>
 
               {/* Category code and hierarchy level */}
-              <div className="flex items-center gap-2 mt-1 text-xs text-muted-foreground">
+              <div className="mt-1 flex items-center gap-2 text-xs text-muted-foreground">
                 <TooltipProvider>
                   <Tooltip>
                     <TooltipTrigger asChild>
                       <span className="flex items-center gap-1 font-mono">
-                        <Hash className="h-3 w-3" />
+                        <Hash className="size-3" />
                         {categoryCode}
                       </span>
                     </TooltipTrigger>
@@ -152,12 +152,12 @@ export function ThemeCard({
 
               {/* Summary */}
               {!compact && summary && (
-                <p className="text-sm text-muted-foreground line-clamp-2 mt-2">{summary}</p>
+                <p className="mt-2 line-clamp-2 text-sm text-muted-foreground">{summary}</p>
               )}
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex shrink-0 items-center gap-2">
             {/* Standard Badge */}
             {isStandard && (
               <Badge variant="secondary" className="text-xs">
@@ -179,9 +179,9 @@ export function ThemeCard({
                 <Button
                   variant="ghost"
                   size="icon"
-                  className="h-8 w-8 min-h-8 min-w-8 opacity-0 group-hover:opacity-100 transition-opacity"
+                  className="size-8 min-h-8 min-w-8 opacity-0 transition-opacity group-hover:opacity-100"
                 >
-                  <MoreVertical className="h-4 w-4" />
+                  <MoreVertical className="size-4" />
                   <span className="sr-only">{t('actions.menu')}</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -257,13 +257,13 @@ export function ThemeCard({
           {showParentInfo && parentName && (
             <div className="flex items-center gap-1">
               <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
-              <span className="truncate max-w-32">{parentName}</span>
+              <span className="max-w-32 truncate">{parentName}</span>
             </div>
           )}
 
           {/* Children Count */}
           <div className="flex items-center gap-1">
-            <FolderTree className="h-4 w-4" />
+            <FolderTree className="size-4" />
             <span>
               {childrenCount > 0
                 ? t('hierarchy.childrenCount', { count: childrenCount })
@@ -277,10 +277,10 @@ export function ThemeCard({
               href={extension.external_url}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-primary transition-colors"
+              className="flex items-center gap-1 transition-colors hover:text-primary"
               onClick={(e) => e.stopPropagation()}
             >
-              <ExternalLink className="h-4 w-4" />
+              <ExternalLink className="size-4" />
               <span className="text-xs">{t('detail.externalReference')}</span>
             </a>
           )}
@@ -288,7 +288,7 @@ export function ThemeCard({
           {/* Tags */}
           {theme.tags && theme.tags.length > 0 && (
             <div className="flex items-center gap-1">
-              <Tag className="h-4 w-4" />
+              <Tag className="size-4" />
               <span>{theme.tags.length}</span>
             </div>
           )}
@@ -296,7 +296,7 @@ export function ThemeCard({
 
         {/* Tags Display (expanded) */}
         {!compact && theme.tags && theme.tags.length > 0 && (
-          <div className="flex flex-wrap gap-1 mt-3">
+          <div className="mt-3 flex flex-wrap gap-1">
             {theme.tags.slice(0, 5).map((tag, index) => (
               <Badge key={index} variant="outline" className="text-xs">
                 {tag}

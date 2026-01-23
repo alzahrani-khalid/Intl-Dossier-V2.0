@@ -57,7 +57,7 @@ export default function FilterPanel({
  className="h-9"
  aria-label={t('waitingQueue.filters.openFilters')}
  >
- <SlidersHorizontal className="h-4 w-4 me-2" />
+ <SlidersHorizontal className="me-2 size-4" />
  {hasFilters ? `${filterCount} ${t('waitingQueue.filters.active')}` : t('waitingQueue.filters.title')}
  </Button>
  </PopoverTrigger>
@@ -67,11 +67,11 @@ export default function FilterPanel({
  side="bottom"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
- <div className="flex flex-col max-h-[520px]">
+ <div className="flex max-h-[520px] flex-col">
  {/* Compact Header */}
- <div className="flex items-center justify-between px-3 py-2.5 border-b">
+ <div className="flex items-center justify-between border-b px-3 py-2.5">
  <div className="flex items-center gap-2">
- <SlidersHorizontal className="h-4 w-4 text-muted-foreground" />
+ <SlidersHorizontal className="size-4 text-muted-foreground" />
  <h2 className="text-sm font-semibold">{t('waitingQueue.filters.title')}</h2>
  {hasFilters && (
  <span className="text-xs text-muted-foreground">({filterCount})</span>
@@ -85,7 +85,7 @@ export default function FilterPanel({
  disabled={isApplying}
  className="h-7 px-2 text-xs"
  >
- <X className="h-3 w-3 me-1" />
+ <X className="me-1 size-3" />
  {t('waitingQueue.filters.clearAll')}
  </Button>
  )}
@@ -93,7 +93,7 @@ export default function FilterPanel({
 
  {/* Result count */}
  {resultCount !== undefined && (
- <div className="px-3 py-2 bg-muted/50 text-xs text-muted-foreground">
+ <div className="bg-muted/50 px-3 py-2 text-xs text-muted-foreground">
  {t('waitingQueue.filters.showingResults', { count: resultCount })}
  </div>
  )}
@@ -104,8 +104,8 @@ export default function FilterPanel({
  <div className="space-y-3 p-3">
  {[1, 2, 3, 4].map((i) => (
  <div key={i} className="space-y-1.5" data-testid="filter-skeleton">
- <div className="h-4 w-16 bg-muted animate-pulse rounded" />
- <div className="h-7 bg-muted animate-pulse rounded" />
+ <div className="h-4 w-16 animate-pulse rounded bg-muted" />
+ <div className="h-7 animate-pulse rounded bg-muted" />
  </div>
  ))}
  </div>
@@ -113,7 +113,7 @@ export default function FilterPanel({
  <ScrollArea className="flex-1">
  <Accordion type="multiple" defaultValue={["priority", "aging", "type", "assignee"]} className="w-full">
  <AccordionItem value="priority" className="border-b-0">
- <AccordionTrigger className="px-3 py-2 hover:no-underline hover:bg-accent/50">
+ <AccordionTrigger className="px-3 py-2 hover:bg-accent/50 hover:no-underline">
  <span className="text-xs font-medium">{t('waitingQueue.filters.priority')}</span>
  </AccordionTrigger>
  <AccordionContent className="px-3 pb-3">
@@ -128,7 +128,7 @@ export default function FilterPanel({
  <Separator />
 
  <AccordionItem value="aging" className="border-b-0">
- <AccordionTrigger className="px-3 py-2 hover:no-underline hover:bg-accent/50">
+ <AccordionTrigger className="px-3 py-2 hover:bg-accent/50 hover:no-underline">
  <span className="text-xs font-medium">{t('waitingQueue.filters.aging')}</span>
  </AccordionTrigger>
  <AccordionContent className="px-3 pb-3">
@@ -143,7 +143,7 @@ export default function FilterPanel({
  <Separator />
 
  <AccordionItem value="type" className="border-b-0">
- <AccordionTrigger className="px-3 py-2 hover:no-underline hover:bg-accent/50">
+ <AccordionTrigger className="px-3 py-2 hover:bg-accent/50 hover:no-underline">
  <span className="text-xs font-medium">{t('waitingQueue.filters.type')}</span>
  </AccordionTrigger>
  <AccordionContent className="px-3 pb-3">
@@ -158,7 +158,7 @@ export default function FilterPanel({
  <Separator />
 
  <AccordionItem value="assignee" className="border-b-0">
- <AccordionTrigger className="px-3 py-2 hover:no-underline hover:bg-accent/50">
+ <AccordionTrigger className="px-3 py-2 hover:bg-accent/50 hover:no-underline">
  <span className="text-xs font-medium">{t('waitingQueue.filters.assignee')}</span>
  </AccordionTrigger>
  <AccordionContent className="px-3 pb-3">

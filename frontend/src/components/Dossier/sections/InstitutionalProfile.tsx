@@ -55,13 +55,13 @@ export function InstitutionalProfile({ dossier }: InstitutionalProfileProps) {
     const displayValue = value || t('common.notAvailable');
 
     return (
-      <div className="flex items-start gap-3 p-3 sm:p-4 rounded-lg bg-muted/30 hover:bg-muted/50 transition-colors">
-        <Icon className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
-        <div className="flex-1 min-w-0">
-          <dt className="text-xs sm:text-sm font-medium text-muted-foreground mb-1">
+      <div className="flex items-start gap-3 rounded-lg bg-muted/30 p-3 transition-colors hover:bg-muted/50 sm:p-4">
+        <Icon className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
+        <div className="min-w-0 flex-1">
+          <dt className="mb-1 text-xs font-medium text-muted-foreground sm:text-sm">
             {label}
           </dt>
-          <dd className="text-sm sm:text-base font-medium break-words">
+          <dd className="break-words text-sm font-medium sm:text-base">
             {link && value ? (
               <a
                 href={link}
@@ -83,7 +83,7 @@ export function InstitutionalProfile({ dossier }: InstitutionalProfileProps) {
   return (
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Organization Code and Type */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <ProfileField
           icon={Hash}
           label="Organization Code"
@@ -97,7 +97,7 @@ export function InstitutionalProfile({ dossier }: InstitutionalProfileProps) {
       </div>
 
       {/* Established Date and Website */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <ProfileField
           icon={Calendar}
           label="Established Date"
@@ -112,7 +112,7 @@ export function InstitutionalProfile({ dossier }: InstitutionalProfileProps) {
       </div>
 
       {/* Headcount and Parent Organization */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
+      <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4">
         <ProfileField
           icon={Users}
           label="Headcount"

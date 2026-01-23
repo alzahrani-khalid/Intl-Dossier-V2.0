@@ -154,7 +154,7 @@ export function ThemeForm({
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Name Fields */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="name_en"
@@ -185,7 +185,7 @@ export function ThemeForm({
         </div>
 
         {/* Summary Fields */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="summary_en"
@@ -228,14 +228,14 @@ export function ThemeForm({
         </div>
 
         {/* Category Code and Parent Theme */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="category_code"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex items-center gap-2">
-                  <Hash className="h-4 w-4" />
+                  <Hash className="size-4" />
                   {t('form.categoryCode')}
                 </FormLabel>
                 <FormControl>
@@ -258,7 +258,7 @@ export function ThemeForm({
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex items-center gap-2">
-                  <FolderTree className="h-4 w-4" />
+                  <FolderTree className="size-4" />
                   {t('form.parentTheme')}
                 </FormLabel>
                 <Select
@@ -286,7 +286,7 @@ export function ThemeForm({
         </div>
 
         {/* Status and Sensitivity */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormField
             control={form.control}
             name="status"
@@ -335,21 +335,21 @@ export function ThemeForm({
         </div>
 
         {/* Color and Sort Order */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
           <FormField
             control={form.control}
             name="color"
             render={({ field }) => (
               <FormItem>
                 <FormLabel className="flex items-center gap-2">
-                  <Palette className="h-4 w-4" />
+                  <Palette className="size-4" />
                   {t('form.color')}
                 </FormLabel>
                 <FormControl>
                   <div className="flex gap-2">
                     <Input
                       type="color"
-                      className="w-14 h-10 p-1 cursor-pointer"
+                      className="h-10 w-14 cursor-pointer p-1"
                       value={field.value || '#6366f1'}
                       onChange={(e) => field.onChange(e.target.value)}
                     />
@@ -413,7 +413,7 @@ export function ThemeForm({
           render={({ field }) => (
             <FormItem>
               <FormLabel className="flex items-center gap-2">
-                <LinkIcon className="h-4 w-4" />
+                <LinkIcon className="size-4" />
                 {t('form.externalUrl')}
               </FormLabel>
               <FormControl>
@@ -432,7 +432,7 @@ export function ThemeForm({
         />
 
         {/* Action Buttons */}
-        <div className="flex flex-col-reverse sm:flex-row justify-end gap-3 pt-4 border-t">
+        <div className="flex flex-col-reverse justify-end gap-3 border-t pt-4 sm:flex-row">
           <Button
             type="button"
             variant="outline"
@@ -443,7 +443,7 @@ export function ThemeForm({
             {t('actions.cancel')}
           </Button>
           <Button type="submit" disabled={isSubmitting} className="w-full sm:w-auto">
-            {isSubmitting && <Loader2 className="me-2 h-4 w-4 animate-spin" />}
+            {isSubmitting && <Loader2 className="me-2 size-4 animate-spin" />}
             {isEditing ? t('actions.update') : t('actions.save')}
           </Button>
         </div>

@@ -52,7 +52,7 @@ function MyApprovalsPage() {
 
  if (isLoading) {
  return (
- <div className="container mx-auto py-6 space-y-4">
+ <div className="container mx-auto space-y-4 py-6">
  <Skeleton className="h-8 w-64" />
  <Skeleton className="h-96" />
  </div>
@@ -60,7 +60,7 @@ function MyApprovalsPage() {
  }
 
  return (
- <div className="container mx-auto py-6 space-y-6">
+ <div className="container mx-auto space-y-6 py-6">
  {/* Header */}
  <div className="flex items-center justify-between">
  <div>
@@ -86,11 +86,11 @@ function MyApprovalsPage() {
  </div>
 
  {/* Stats Cards */}
- <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+ <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
  <Card className="p-4">
  <div className="flex items-center gap-4">
- <div className="p-3 bg-yellow-100 dark:bg-yellow-900 rounded-lg">
- <Clock className="h-6 w-6 text-yellow-600 dark:text-yellow-400" />
+ <div className="rounded-lg bg-yellow-100 p-3 dark:bg-yellow-900">
+ <Clock className="size-6 text-yellow-600 dark:text-yellow-400" />
  </div>
  <div>
  <p className="text-2xl font-bold">{positions?.length || 0}</p>
@@ -103,8 +103,8 @@ function MyApprovalsPage() {
 
  <Card className="p-4">
  <div className="flex items-center gap-4">
- <div className="p-3 bg-green-100 dark:bg-green-900 rounded-lg">
- <CheckCircle className="h-6 w-6 text-green-600 dark:text-green-400" />
+ <div className="rounded-lg bg-green-100 p-3 dark:bg-green-900">
+ <CheckCircle className="size-6 text-green-600 dark:text-green-400" />
  </div>
  <div>
  <p className="text-2xl font-bold">0</p>
@@ -117,8 +117,8 @@ function MyApprovalsPage() {
 
  <Card className="p-4">
  <div className="flex items-center gap-4">
- <div className="p-3 bg-red-100 dark:bg-red-900 rounded-lg">
- <XCircle className="h-6 w-6 text-red-600 dark:text-red-400" />
+ <div className="rounded-lg bg-red-100 p-3 dark:bg-red-900">
+ <XCircle className="size-6 text-red-600 dark:text-red-400" />
  </div>
  <div>
  <p className="text-2xl font-bold">0</p>
@@ -139,18 +139,18 @@ function MyApprovalsPage() {
  key={position.id}
  to="/positions/$id"
  params={{ id: position.id }}
- className="block p-4 border rounded-lg hover:border-primary transition-colors"
+ className="block rounded-lg border p-4 transition-colors hover:border-primary"
  >
  <div className="flex items-center justify-between">
  <div className="flex-1">
- <div className="flex items-center gap-3 mb-2">
+ <div className="mb-2 flex items-center gap-3">
  <h3 className="font-semibold">{position.title_en}</h3>
  <Badge variant="secondary">
  {t('approvals.stage', 'Stage')} {position.current_stage}
  </Badge>
  </div>
  <p className="text-sm text-muted-foreground">{position.title_ar}</p>
- <p className="text-xs text-muted-foreground mt-2">
+ <p className="mt-2 text-xs text-muted-foreground">
  {t('approvals.submittedBy', 'Submitted by')}: {position.author_id}
  </p>
  </div>
@@ -166,7 +166,7 @@ function MyApprovalsPage() {
  ))}
  </div>
  ) : (
- <div className="text-center py-12">
+ <div className="py-12 text-center">
  <p className="text-lg text-muted-foreground">
  {t('approvals.noPositions', 'No positions pending your approval')}
  </p>

@@ -231,12 +231,12 @@ export function RelationshipFormDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="max-w-lg w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto"
+        className="max-h-[90vh] w-[95vw] max-w-lg overflow-y-auto sm:w-full"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2 text-lg">
-            <Link2 className="h-5 w-5 text-primary" />
+            <Link2 className="size-5 text-primary" />
             {mode === 'create' ? t('dialog.createTitle') : t('dialog.editTitle')}
           </DialogTitle>
           <DialogDescription>
@@ -367,7 +367,7 @@ export function RelationshipFormDialog({
             />
 
             {/* Effective Dates */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormField
                 control={form.control}
                 name="effective_from"
@@ -429,7 +429,7 @@ export function RelationshipFormDialog({
                     <FormControl>
                       <Textarea
                         placeholder={t('relationships:form.notesPlaceholder')}
-                        className="resize-none min-h-[80px]"
+                        className="min-h-[80px] resize-none"
                         {...field}
                       />
                     </FormControl>
@@ -453,7 +453,7 @@ export function RelationshipFormDialog({
                     <FormControl>
                       <Textarea
                         placeholder={t('relationships:form.notesPlaceholder')}
-                        className="resize-none min-h-[80px]"
+                        className="min-h-[80px] resize-none"
                         dir="rtl"
                         {...field}
                       />
@@ -464,7 +464,7 @@ export function RelationshipFormDialog({
               />
             </div>
 
-            <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2 pt-4">
+            <DialogFooter className="flex flex-col-reverse gap-2 pt-4 sm:flex-row">
               <Button
                 type="button"
                 variant="outline"
@@ -475,7 +475,7 @@ export function RelationshipFormDialog({
                 {t('actions.cancel')}
               </Button>
               <Button type="submit" disabled={isLoading} className="min-h-11">
-                {isLoading && <Loader2 className="h-4 w-4 animate-spin me-2" />}
+                {isLoading && <Loader2 className="me-2 size-4 animate-spin" />}
                 {mode === 'create' ? t('actions.create') : t('actions.save')}
               </Button>
             </DialogFooter>

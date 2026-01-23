@@ -276,8 +276,8 @@ export function RelationshipGraph({
     return (
       <Card className="p-12 text-center">
         <div className="flex flex-col items-center gap-4">
-          <Loader2 className="h-10 w-10 animate-spin text-primary" />
-          <p className="text-muted-foreground animate-pulse">{t('loading')}</p>
+          <Loader2 className="size-10 animate-spin text-primary" />
+          <p className="animate-pulse text-muted-foreground">{t('loading')}</p>
         </div>
       </Card>
     )
@@ -285,12 +285,12 @@ export function RelationshipGraph({
 
   if (error) {
     return (
-      <Card className="p-12 text-center bg-destructive/10 border-destructive/20">
+      <Card className="border-destructive/20 bg-destructive/10 p-12 text-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-12 w-12 rounded-full bg-destructive/20 flex items-center justify-center">
+          <div className="flex size-12 items-center justify-center rounded-full bg-destructive/20">
             <span className="text-2xl">⚠️</span>
           </div>
-          <p className="text-destructive font-medium">{t('relationships.errors.loadFailed')}</p>
+          <p className="font-medium text-destructive">{t('relationships.errors.loadFailed')}</p>
         </div>
       </Card>
     )
@@ -298,12 +298,12 @@ export function RelationshipGraph({
 
   if (!relationships.length) {
     return (
-      <Card className="p-12 text-center bg-muted/30">
+      <Card className="bg-muted/30 p-12 text-center">
         <div className="flex flex-col items-center gap-3">
-          <div className="h-16 w-16 rounded-full bg-muted flex items-center justify-center">
+          <div className="flex size-16 items-center justify-center rounded-full bg-muted">
             <span className="text-3xl">🔗</span>
           </div>
-          <p className="text-muted-foreground text-lg">{t('relationships.no_relationships')}</p>
+          <p className="text-lg text-muted-foreground">{t('relationships.no_relationships')}</p>
         </div>
       </Card>
     )
@@ -312,9 +312,9 @@ export function RelationshipGraph({
   return (
     <div className="flex flex-col gap-4 sm:gap-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Filter Controls - Theme aware */}
-      <Card className="p-4 sm:p-6 bg-accent/10 border-accent/20">
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 items-start sm:items-center">
-          <label className="text-sm font-semibold text-foreground min-w-fit">
+      <Card className="border-accent/20 bg-accent/10 p-4 sm:p-6">
+        <div className="flex flex-col items-start gap-3 sm:flex-row sm:items-center sm:gap-4">
+          <label className="min-w-fit text-sm font-semibold text-foreground">
             {t('relationships.filter_by_type')}
           </label>
           <Select
@@ -323,7 +323,7 @@ export function RelationshipGraph({
               setRelationshipTypeFilter(value === 'all' ? undefined : value)
             }
           >
-            <SelectTrigger className="w-full sm:w-72 bg-card border-border focus:ring-2 focus:ring-ring">
+            <SelectTrigger className="w-full border-border bg-card focus:ring-2 focus:ring-ring sm:w-72">
               <SelectValue placeholder={t('relationships.all_types')} />
             </SelectTrigger>
             <SelectContent>
@@ -344,10 +344,10 @@ export function RelationshipGraph({
       </Card>
 
       {/* Network Graph - Enhanced Responsive with Touch Controls - Theme aware */}
-      <Card className="relative h-[700px] sm:h-[800px] md:h-[900px] overflow-hidden shadow-xl border-2 border-border">
+      <Card className="relative h-[700px] overflow-hidden border-2 border-border shadow-xl sm:h-[800px] md:h-[900px]">
         {/* Touch gesture container */}
         <div
-          className="absolute inset-0 z-10 pointer-events-none"
+          className="pointer-events-none absolute inset-0 z-10"
           {...touchHandlers}
           style={{ pointerEvents: touchState.isGestureActive ? 'auto' : 'none' }}
         />

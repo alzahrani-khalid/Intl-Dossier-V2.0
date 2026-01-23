@@ -77,17 +77,17 @@ export function GeographicVisualizationPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-4 sm:space-y-6"
+      className="container mx-auto space-y-4 p-4 sm:space-y-6 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center gap-2">
-            <Globe className="h-6 w-6 sm:h-7 sm:w-7 text-primary" />
+          <h1 className="flex items-center gap-2 text-xl font-bold sm:text-2xl lg:text-3xl">
+            <Globe className="size-6 text-primary sm:size-7" />
             {t('page.title', 'Geographic Visualization')}
           </h1>
-          <p className="text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-sm text-muted-foreground">
             {t(
               'page.description',
               'Interactive map showing country relationships and engagement activity',
@@ -102,12 +102,12 @@ export function GeographicVisualizationPage() {
           className="w-auto"
         >
           <TabsList className="h-9">
-            <TabsTrigger value="map" className="text-xs sm:text-sm gap-1.5 px-3">
-              <Map className="h-4 w-4" />
+            <TabsTrigger value="map" className="gap-1.5 px-3 text-xs sm:text-sm">
+              <Map className="size-4" />
               <span className="hidden sm:inline">{t('tabs.map', 'Map View')}</span>
             </TabsTrigger>
-            <TabsTrigger value="list" className="text-xs sm:text-sm gap-1.5 px-3">
-              <List className="h-4 w-4" />
+            <TabsTrigger value="list" className="gap-1.5 px-3 text-xs sm:text-sm">
+              <List className="size-4" />
               <span className="hidden sm:inline">{t('tabs.list', 'List View')}</span>
             </TabsTrigger>
           </TabsList>
@@ -116,7 +116,7 @@ export function GeographicVisualizationPage() {
 
       {/* Filters */}
       <Card>
-        <CardContent className="pt-4 pb-4">
+        <CardContent className="py-4">
           <MapFilterControls
             filters={filters}
             onFiltersChange={updateFilters}
@@ -138,11 +138,11 @@ export function GeographicVisualizationPage() {
       ) : (
         <div className="space-y-4">
           {/* Summary Stats for List View */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
             <Card>
               <CardContent className="p-4">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                  <Globe className="h-4 w-4" />
+                <div className="mb-1 flex items-center gap-2 text-muted-foreground">
+                  <Globe className="size-4" />
                   <span className="text-xs">{t('summary.totalCountries', 'Countries')}</span>
                 </div>
                 <p className="text-2xl font-bold">{summary?.totalCountries || 0}</p>
@@ -150,8 +150,8 @@ export function GeographicVisualizationPage() {
             </Card>
             <Card>
               <CardContent className="p-4">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                  <Activity className="h-4 w-4" />
+                <div className="mb-1 flex items-center gap-2 text-muted-foreground">
+                  <Activity className="size-4" />
                   <span className="text-xs">{t('summary.engagements', 'Engagements')}</span>
                 </div>
                 <p className="text-2xl font-bold">{summary?.totalEngagements || 0}</p>
@@ -159,8 +159,8 @@ export function GeographicVisualizationPage() {
             </Card>
             <Card>
               <CardContent className="p-4">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                  <TrendingUp className="h-4 w-4" />
+                <div className="mb-1 flex items-center gap-2 text-muted-foreground">
+                  <TrendingUp className="size-4" />
                   <span className="text-xs">{t('summary.activeCountries', 'Active')}</span>
                 </div>
                 <p className="text-2xl font-bold">{summary?.countriesWithEngagements || 0}</p>
@@ -168,8 +168,8 @@ export function GeographicVisualizationPage() {
             </Card>
             <Card>
               <CardContent className="p-4">
-                <div className="flex items-center gap-2 text-muted-foreground mb-1">
-                  <Calendar className="h-4 w-4" />
+                <div className="mb-1 flex items-center gap-2 text-muted-foreground">
+                  <Calendar className="size-4" />
                   <span className="text-xs">{t('summary.relationships', 'Relationships')}</span>
                 </div>
                 <p className="text-2xl font-bold">{connections.length}</p>
@@ -210,7 +210,7 @@ export function GeographicVisualizationPage() {
                   <TableBody>
                     {sortedCountries.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                        <TableCell colSpan={7} className="py-8 text-center text-muted-foreground">
                           {isLoading
                             ? t('list.loading', 'Loading countries...')
                             : t('list.noData', 'No countries found')}
@@ -227,7 +227,7 @@ export function GeographicVisualizationPage() {
                             <div className="flex items-center gap-2">
                               <span className={`fi fi-${country.iso_code_2.toLowerCase()}`} />
                               <div>
-                                <p className="font-medium text-sm">
+                                <p className="text-sm font-medium">
                                   {isRTL ? country.name_ar : country.name_en}
                                 </p>
                                 <p className="text-xs text-muted-foreground">
@@ -253,7 +253,7 @@ export function GeographicVisualizationPage() {
                             <span
                               className={
                                 country.recentEngagements > 0
-                                  ? 'text-green-600 font-medium'
+                                  ? 'font-medium text-green-600'
                                   : 'text-muted-foreground'
                               }
                             >
@@ -264,7 +264,7 @@ export function GeographicVisualizationPage() {
                             <span
                               className={
                                 country.upcomingEngagements > 0
-                                  ? 'text-blue-600 font-medium'
+                                  ? 'font-medium text-blue-600'
                                   : 'text-muted-foreground'
                               }
                             >
@@ -287,8 +287,8 @@ export function GeographicVisualizationPage() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <Button variant="ghost" size="icon" className="h-8 w-8">
-                              <ChevronRight className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+                            <Button variant="ghost" size="icon" className="size-8">
+                              <ChevronRight className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
                             </Button>
                           </TableCell>
                         </TableRow>

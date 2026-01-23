@@ -81,51 +81,51 @@ function ImpactSummaryWidget({ entityId }: ImpactSummaryWidgetProps) {
   if (!summary) return null
 
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="grid grid-cols-2 gap-2 sm:grid-cols-4 sm:gap-4" dir={isRTL ? 'rtl' : 'ltr'}>
       <Card className="p-3 sm:p-4">
         <div className="flex items-center gap-2">
-          <Network className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
+          <Network className="size-4 text-blue-600 sm:size-5" />
           <div>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground sm:text-xs">
               {t('widget.dependencies')}
             </p>
-            <p className="text-xl sm:text-2xl font-bold">{summary.total_dependencies}</p>
+            <p className="text-xl font-bold sm:text-2xl">{summary.total_dependencies}</p>
           </div>
         </div>
       </Card>
 
       <Card className="p-3 sm:p-4">
         <div className="flex items-center gap-2">
-          <FileWarning className="h-4 w-4 sm:h-5 sm:w-5 text-orange-600" />
+          <FileWarning className="size-4 text-orange-600 sm:size-5" />
           <div>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground sm:text-xs">
               {t('widget.pendingReviews')}
             </p>
-            <p className="text-xl sm:text-2xl font-bold">{summary.pending_reviews}</p>
+            <p className="text-xl font-bold sm:text-2xl">{summary.pending_reviews}</p>
           </div>
         </div>
       </Card>
 
       <Card className="p-3 sm:p-4">
         <div className="flex items-center gap-2">
-          <AlertTriangle className="h-4 w-4 sm:h-5 sm:w-5 text-red-600" />
+          <AlertTriangle className="size-4 text-red-600 sm:size-5" />
           <div>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground sm:text-xs">
               {t('widget.criticalImpacts')}
             </p>
-            <p className="text-xl sm:text-2xl font-bold text-red-600">{summary.critical_impacts}</p>
+            <p className="text-xl font-bold text-red-600 sm:text-2xl">{summary.critical_impacts}</p>
           </div>
         </div>
       </Card>
 
       <Card className="p-3 sm:p-4">
         <div className="flex items-center gap-2">
-          <BarChart3 className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
+          <BarChart3 className="size-4 text-green-600 sm:size-5" />
           <div>
-            <p className="text-[10px] sm:text-xs text-muted-foreground">
+            <p className="text-[10px] text-muted-foreground sm:text-xs">
               {t('widget.recentAssessments')}
             </p>
-            <p className="text-xl sm:text-2xl font-bold">
+            <p className="text-xl font-bold sm:text-2xl">
               {summary.recent_assessments?.length || 0}
             </p>
           </div>
@@ -161,8 +161,8 @@ function RecentAssessmentsList({ entityId, onSelect }: RecentAssessmentsListProp
 
   if (!data?.data?.length) {
     return (
-      <div className="text-center py-8 text-muted-foreground">
-        <FileWarning className="h-12 w-12 mx-auto mb-4 opacity-50" />
+      <div className="py-8 text-center text-muted-foreground">
+        <FileWarning className="mx-auto mb-4 size-12 opacity-50" />
         <p>{t('list.noAssessments')}</p>
       </div>
     )
@@ -175,12 +175,12 @@ function RecentAssessmentsList({ entityId, onSelect }: RecentAssessmentsListProp
         return (
           <Card
             key={assessment.id}
-            className="p-3 sm:p-4 cursor-pointer hover:bg-muted/50 transition-colors"
+            className="cursor-pointer p-3 transition-colors hover:bg-muted/50 sm:p-4"
             onClick={() => onSelect(assessment)}
           >
             <div className="flex items-center justify-between gap-2">
-              <div className="flex-1 min-w-0">
-                <div className="flex items-center gap-2 flex-wrap">
+              <div className="min-w-0 flex-1">
+                <div className="flex flex-wrap items-center gap-2">
                   <Badge
                     variant="outline"
                     className={cn(severityConfig.bgColor, severityConfig.color)}
@@ -193,12 +193,12 @@ function RecentAssessmentsList({ entityId, onSelect }: RecentAssessmentsListProp
                       : CHANGE_TYPE_LABELS[assessment.change_type].en}
                   </Badge>
                 </div>
-                <p className="text-xs sm:text-sm text-muted-foreground mt-1 truncate">
+                <p className="mt-1 truncate text-xs text-muted-foreground sm:text-sm">
                   {t('list.affectedCount', { count: assessment.total_affected_entities })}
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] sm:text-xs text-muted-foreground whitespace-nowrap">
+                <span className="whitespace-nowrap text-[10px] text-muted-foreground sm:text-xs">
                   {new Date(assessment.assessed_at).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US')}
                 </span>
                 <ChevronRight
@@ -257,7 +257,7 @@ function CreateAssessmentDialog({ entityId, entityName, onCreated }: CreateAsses
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
         <Button size="sm" className="h-8 sm:h-9">
-          <Plus className="h-3 w-3 sm:h-4 sm:w-4 me-1.5" />
+          <Plus className="me-1.5 size-3 sm:size-4" />
           {t('actions.newAssessment')}
         </Button>
       </DialogTrigger>
@@ -326,22 +326,22 @@ export function DependencyAnalysisSection({
 
       {/* Main Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-          <TabsList className="grid w-full sm:w-auto grid-cols-3 h-auto">
-            <TabsTrigger value="graph" className="text-xs sm:text-sm py-2">
-              <Network className="h-3 w-3 sm:h-4 sm:w-4 me-1.5" />
+        <div className="mb-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+          <TabsList className="grid h-auto w-full grid-cols-3 sm:w-auto">
+            <TabsTrigger value="graph" className="py-2 text-xs sm:text-sm">
+              <Network className="me-1.5 size-3 sm:size-4" />
               {t('tabs.graph')}
             </TabsTrigger>
-            <TabsTrigger value="assessments" className="text-xs sm:text-sm py-2">
-              <FileWarning className="h-3 w-3 sm:h-4 sm:w-4 me-1.5" />
+            <TabsTrigger value="assessments" className="py-2 text-xs sm:text-sm">
+              <FileWarning className="me-1.5 size-3 sm:size-4" />
               {t('tabs.assessments')}
             </TabsTrigger>
             <TabsTrigger
               value="assessment"
-              className="text-xs sm:text-sm py-2"
+              className="py-2 text-xs sm:text-sm"
               disabled={!selectedAssessment}
             >
-              <BarChart3 className="h-3 w-3 sm:h-4 sm:w-4 me-1.5" />
+              <BarChart3 className="me-1.5 size-3 sm:size-4" />
               {t('tabs.details')}
             </TabsTrigger>
           </TabsList>
@@ -384,7 +384,7 @@ export function DependencyAnalysisSection({
           ) : (
             <Card>
               <CardContent className="py-8 text-center text-muted-foreground">
-                <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
+                <BarChart3 className="mx-auto mb-4 size-12 opacity-50" />
                 <p>{t('assessment.selectPrompt')}</p>
               </CardContent>
             </Card>

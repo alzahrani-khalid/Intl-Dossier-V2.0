@@ -55,7 +55,7 @@ function StatItem({
       )}
     >
       <div className={cn('p-2 rounded-md', variantClasses[variant])}>
-        <Icon className="h-4 w-4" />
+        <Icon className="size-4" />
       </div>
       <div className="flex-1 text-start">
         <p className="text-xs text-muted-foreground">{label}</p>
@@ -84,7 +84,7 @@ function PriorityBreakdown({ workload }: { workload: WorkloadSummary }) {
       <div className="flex items-center justify-between text-xs">
         <span className="text-muted-foreground">{t('workload.byPriority')}</span>
       </div>
-      <div className="flex h-2 rounded-full overflow-hidden bg-muted">
+      <div className="flex h-2 overflow-hidden rounded-full bg-muted">
         {segments.map((segment) =>
           segment.value > 0 ? (
             <div
@@ -174,8 +174,8 @@ export function WorkloadSummaryWidget({
   return (
     <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <TrendingUp className="h-4 w-4 text-primary" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <TrendingUp className="size-4 text-primary" />
           {t('workload.title')}
         </CardTitle>
       </CardHeader>

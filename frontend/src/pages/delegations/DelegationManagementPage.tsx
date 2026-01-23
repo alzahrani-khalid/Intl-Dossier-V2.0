@@ -107,39 +107,39 @@ export function DelegationManagementPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 space-y-6"
+      className="container mx-auto space-y-6 p-4 sm:p-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Expiring Soon Banner */}
       <DelegationExpiryBanner />
 
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-start flex items-center gap-3">
-            <Shield className={`h-7 w-7 sm:h-8 sm:w-8 ${isRTL ? 'ms-0' : 'me-0'}`} />
+          <h1 className="flex items-center gap-3 text-start text-2xl font-bold sm:text-3xl">
+            <Shield className={`size-7 sm:size-8 ${isRTL ? 'ms-0' : 'me-0'}`} />
             {t('title')}
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground text-start mt-1">
+          <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
             {t('description')}
           </p>
         </div>
 
         <Button
           onClick={() => setCreateDialogOpen(true)}
-          className={`w-full sm:w-auto min-h-11 ${isRTL ? 'flex-row-reverse' : ''}`}
+          className={`min-h-11 w-full sm:w-auto ${isRTL ? 'flex-row-reverse' : ''}`}
         >
-          <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+          <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
           {t('actions.create')}
         </Button>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
         <Card>
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-2">
-              <ArrowUpFromLine className="h-4 w-4" />
+              <ArrowUpFromLine className="size-4" />
               {t('list.granted')}
             </CardDescription>
           </CardHeader>
@@ -155,7 +155,7 @@ export function DelegationManagementPage() {
         <Card>
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-2">
-              <ArrowDownToLine className="h-4 w-4" />
+              <ArrowDownToLine className="size-4" />
               {t('list.received')}
             </CardDescription>
           </CardHeader>
@@ -172,9 +172,9 @@ export function DelegationManagementPage() {
           <CardHeader className="pb-2">
             <CardDescription className="flex items-center gap-2">
               {stats.expiring > 0 ? (
-                <AlertTriangle className="h-4 w-4 text-yellow-600" />
+                <AlertTriangle className="size-4 text-yellow-600" />
               ) : (
-                <Clock className="h-4 w-4" />
+                <Clock className="size-4" />
               )}
               {t('list.showExpiring')}
             </CardDescription>
@@ -194,7 +194,7 @@ export function DelegationManagementPage() {
       {/* Main Content */}
       <Card>
         <CardHeader>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <CardTitle className="text-lg">{t('list.title')}</CardTitle>
 
             {/* Active Only Toggle */}
@@ -204,7 +204,7 @@ export function DelegationManagementPage() {
                 checked={showActiveOnly}
                 onCheckedChange={setShowActiveOnly}
               />
-              <Label htmlFor="active-only" className="text-sm cursor-pointer">
+              <Label htmlFor="active-only" className="cursor-pointer text-sm">
                 {t('list.showActiveOnly')}
               </Label>
             </div>
@@ -217,12 +217,12 @@ export function DelegationManagementPage() {
             onValueChange={(value) => setActiveTab(value as TabValue)}
             className="w-full"
           >
-            <TabsList className="grid w-full grid-cols-2 mb-6">
+            <TabsList className="mb-6 grid w-full grid-cols-2">
               <TabsTrigger
                 value="granted"
-                className={`flex items-center gap-2 min-h-10 ${isRTL ? 'flex-row-reverse' : ''}`}
+                className={`flex min-h-10 items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
               >
-                <ArrowUpFromLine className="h-4 w-4" />
+                <ArrowUpFromLine className="size-4" />
                 <span className="hidden sm:inline">{t('tabs.granted')}</span>
                 <span className="sm:hidden">{t('tabs.granted')}</span>
                 {stats.granted > 0 && (
@@ -233,9 +233,9 @@ export function DelegationManagementPage() {
               </TabsTrigger>
               <TabsTrigger
                 value="received"
-                className={`flex items-center gap-2 min-h-10 ${isRTL ? 'flex-row-reverse' : ''}`}
+                className={`flex min-h-10 items-center gap-2 ${isRTL ? 'flex-row-reverse' : ''}`}
               >
-                <ArrowDownToLine className="h-4 w-4" />
+                <ArrowDownToLine className="size-4" />
                 <span className="hidden sm:inline">{t('tabs.received')}</span>
                 <span className="sm:hidden">{t('tabs.received')}</span>
                 {stats.received > 0 && (

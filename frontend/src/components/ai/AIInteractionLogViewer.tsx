@@ -281,7 +281,7 @@ export const AIInteractionLogViewer: React.FC<AIInteractionLogViewerProps> = ({
                       {getInteractionIcon(interaction.interaction_type)}
                     </div>
 
-                    <div className="flex-1 min-w-0">
+                    <div className="min-w-0 flex-1">
                       <div className="flex flex-wrap items-center gap-2">
                         <span className="font-medium text-gray-900">
                           {t(`type.${interaction.interaction_type}`, interaction.interaction_type)}
@@ -570,7 +570,7 @@ const InteractionDetailView: React.FC<InteractionDetailViewProps> = ({
             ))}
           </div>
         ) : interaction ? (
-          <div className="p-6 space-y-6">
+          <div className="space-y-6 p-6">
             {/* Overview */}
             <div className="rounded-lg border border-gray-200 p-4">
               <h3 className="mb-3 font-medium text-gray-900">{t('detail.overview', 'Overview')}</h3>

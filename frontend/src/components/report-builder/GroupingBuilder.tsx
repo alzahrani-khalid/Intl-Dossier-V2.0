@@ -92,8 +92,8 @@ export function GroupingBuilder({
   return (
     <Card dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="pb-3">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <Layers className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <Layers className="size-5" />
           {t('groupings.title')}
         </CardTitle>
         <CardDescription className="text-xs sm:text-sm">
@@ -104,7 +104,7 @@ export function GroupingBuilder({
       <CardContent className="space-y-4">
         {/* Groupings */}
         <div>
-          <h4 className="text-sm font-medium mb-2">{t('groupings.title')}</h4>
+          <h4 className="mb-2 text-sm font-medium">{t('groupings.title')}</h4>
           <div
             ref={setNodeRef}
             className={cn(
@@ -118,16 +118,16 @@ export function GroupingBuilder({
                 {groupings.map((grouping, index) => {
                   const field = availableFields.find((f) => f.id === grouping.fieldId)
                   return (
-                    <Badge key={grouping.id} variant="secondary" className="h-8 px-3 gap-2">
-                      <span className="text-xs text-muted-foreground me-1">{index + 1}.</span>
+                    <Badge key={grouping.id} variant="secondary" className="h-8 gap-2 px-3">
+                      <span className="me-1 text-xs text-muted-foreground">{index + 1}.</span>
                       {isRTL ? field?.nameAr : field?.name}
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-4 w-4 p-0 hover:bg-transparent"
+                        className="size-4 p-0 hover:bg-transparent"
                         onClick={() => onRemoveGrouping(grouping.id)}
                       >
-                        <X className="h-3 w-3" />
+                        <X className="size-3" />
                       </Button>
                     </Badge>
                   )
@@ -142,7 +142,7 @@ export function GroupingBuilder({
             <div className="mt-2">
               <Select onValueChange={handleAddGrouping}>
                 <SelectTrigger className="h-9">
-                  <Plus className="h-4 w-4 me-2" />
+                  <Plus className="me-2 size-4" />
                   <SelectValue placeholder={t('groupings.title')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -159,7 +159,7 @@ export function GroupingBuilder({
 
         {/* Aggregations */}
         <div>
-          <h4 className="text-sm font-medium mb-2">{t('aggregations.title')}</h4>
+          <h4 className="mb-2 text-sm font-medium">{t('aggregations.title')}</h4>
           <div className="space-y-2">
             {aggregations.length > 0 ? (
               <ScrollArea className={cn(aggregations.length > 3 && 'h-[150px]')}>
@@ -169,21 +169,21 @@ export function GroupingBuilder({
                     return (
                       <div
                         key={agg.id}
-                        className="flex items-center gap-2 p-2 rounded-md border bg-background"
+                        className="flex items-center gap-2 rounded-md border bg-background p-2"
                       >
                         <Badge variant="outline" className="font-mono text-xs">
                           {t(`aggregations.functions.${agg.function}`)}
                         </Badge>
-                        <span className="text-sm flex-1">
+                        <span className="flex-1 text-sm">
                           {isRTL ? field?.nameAr : field?.name}
                         </span>
                         <Button
                           variant="ghost"
                           size="icon"
-                          className="h-6 w-6"
+                          className="size-6"
                           onClick={() => onRemoveAggregation(agg.id)}
                         >
-                          <X className="h-3 w-3" />
+                          <X className="size-3" />
                         </Button>
                       </div>
                     )
@@ -191,7 +191,7 @@ export function GroupingBuilder({
                 </div>
               </ScrollArea>
             ) : (
-              <p className="text-sm text-muted-foreground text-center py-2">
+              <p className="py-2 text-center text-sm text-muted-foreground">
                 {t('aggregations.empty')}
               </p>
             )}
@@ -199,7 +199,7 @@ export function GroupingBuilder({
             {aggregatableFields.length > 0 && (
               <div className="flex gap-2">
                 <Select>
-                  <SelectTrigger className="flex-1 h-9">
+                  <SelectTrigger className="h-9 flex-1">
                     <SelectValue placeholder={t('fields.title')} />
                   </SelectTrigger>
                   <SelectContent>
@@ -216,7 +216,7 @@ export function GroupingBuilder({
                     handleAddAggregation(fieldId, func as AggregationFunction)
                   }}
                 >
-                  <SelectTrigger className="w-[140px] h-9">
+                  <SelectTrigger className="h-9 w-[140px]">
                     <SelectValue placeholder={t('aggregations.functions.count')} />
                   </SelectTrigger>
                   <SelectContent>

@@ -47,13 +47,13 @@ export function HistoryList({
  {
  id: 'recently-edited',
  label: t('navigation.recentlyEdited', 'Recently Edited'),
- icon: <Clock className="h-4 w-4" />,
+ icon: <Clock className="size-4" />,
  path: '/history/recent',
  },
  {
  id: 'archive',
  label: t('navigation.archive', 'Archive'),
- icon: <Archive className="h-4 w-4" />,
+ icon: <Archive className="size-4" />,
  path: '/history/archive',
  },
  ];

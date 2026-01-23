@@ -35,21 +35,21 @@ export function EmptyState({
 
   return (
     <div
-      className={`flex flex-col items-center justify-center py-12 px-4 sm:py-16 sm:px-6 text-center ${className}`}
+      className={`flex flex-col items-center justify-center px-4 py-12 text-center sm:px-6 sm:py-16 ${className}`}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Icon */}
-      <div className="mb-4 sm:mb-6 flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-muted">
-        <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-muted-foreground" />
+      <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-muted sm:mb-6 sm:size-20">
+        <Icon className="size-8 text-muted-foreground sm:size-10" />
       </div>
 
       {/* Title */}
-      <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground mb-2 sm:mb-3">
+      <h3 className="mb-2 text-lg font-semibold text-foreground sm:mb-3 sm:text-xl md:text-2xl">
         {title}
       </h3>
 
       {/* Description */}
-      <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6 sm:mb-8">
+      <p className="mb-6 max-w-md text-sm text-muted-foreground sm:mb-8 sm:text-base">
         {description}
       </p>
 

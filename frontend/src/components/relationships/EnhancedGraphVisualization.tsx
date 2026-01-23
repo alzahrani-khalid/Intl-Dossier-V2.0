@@ -185,7 +185,7 @@ const EnhancedDossierNode = memo(
 
         {/* Type icon/indicator */}
         <div
-          className="absolute inset-0 flex items-center justify-center text-white font-bold text-xs"
+          className="absolute inset-0 flex items-center justify-center text-xs font-bold text-white"
           style={{ color: nodeColor }}
         >
           {data.type?.[0]?.toUpperCase() || '?'}
@@ -193,14 +193,14 @@ const EnhancedDossierNode = memo(
 
         {/* Degree badge */}
         {data.degree > 0 && (
-          <div className="absolute -top-1 -end-1 bg-background rounded-full px-1 text-[10px] border shadow-sm">
+          <div className="absolute -end-1 -top-1 rounded-full border bg-background px-1 text-[10px] shadow-sm">
             {data.degree}°
           </div>
         )}
 
         {/* Connection count badge */}
         {(data.connectionCount || 0) > 2 && (
-          <div className="absolute -bottom-1 -end-1 bg-primary text-primary-foreground rounded-full px-1.5 text-[10px] shadow-sm">
+          <div className="absolute -bottom-1 -end-1 rounded-full bg-primary px-1.5 text-[10px] text-primary-foreground shadow-sm">
             {data.connectionCount}
           </div>
         )}
@@ -246,17 +246,17 @@ const ClusterNode = memo(
         onClick={data.onExpand}
       >
         <div
-          className="flex flex-col items-center justify-center rounded-xl border-2 shadow-lg p-4 min-w-[100px]"
+          className="flex min-w-[100px] flex-col items-center justify-center rounded-xl border-2 p-4 shadow-lg"
           style={{
             backgroundColor: `${data.color}15`,
             borderColor: data.color,
           }}
         >
-          <Layers className="h-6 w-6 mb-1" style={{ color: data.color }} />
+          <Layers className="mb-1 size-6" style={{ color: data.color }} />
           <span className="text-sm font-semibold" style={{ color: data.color }}>
             {data.count}
           </span>
-          <span className="text-xs text-muted-foreground capitalize">
+          <span className="text-xs capitalize text-muted-foreground">
             {t(data.clusterType, data.clusterType)}
           </span>
           <Button
@@ -268,7 +268,7 @@ const ClusterNode = memo(
               data.onExpand()
             }}
           >
-            <Expand className="h-3 w-3 me-1" />
+            <Expand className="me-1 size-3" />
             {t('expand', 'Expand')}
           </Button>
         </div>
@@ -711,7 +711,7 @@ function EnhancedGraphVisualizationInner({
 
   return (
     <div
-      className="relative w-full rounded-lg border bg-background overflow-hidden"
+      className="relative w-full overflow-hidden rounded-lg border bg-background"
       style={{ height }}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
@@ -744,9 +744,9 @@ function EnhancedGraphVisualizationInner({
         {/* Layout & Controls Panel */}
         <Panel position={isRTL ? 'top-left' : 'top-right'} className="flex flex-col gap-2">
           {/* Layout Selector */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
-            <div className="text-xs font-semibold mb-2 flex items-center gap-2">
-              <GitBranch className="h-3.5 w-3.5" />
+          <div className="rounded-lg border bg-background/95 p-3 shadow-sm">
+            <div className="mb-2 flex items-center gap-2 text-xs font-semibold">
+              <GitBranch className="size-3.5" />
               {t('layout.title', 'Layout')}
             </div>
             <Select value={layout} onValueChange={(v) => setLayout(v as LayoutType)}>
@@ -756,19 +756,19 @@ function EnhancedGraphVisualizationInner({
               <SelectContent>
                 <SelectItem value="circular" className="text-xs">
                   <div className="flex items-center gap-2">
-                    <Circle className="h-3 w-3" />
+                    <Circle className="size-3" />
                     {t('layout.circular', 'Circular')}
                   </div>
                 </SelectItem>
                 <SelectItem value="clustered" className="text-xs">
                   <div className="flex items-center gap-2">
-                    <Layers className="h-3 w-3" />
+                    <Layers className="size-3" />
                     {t('layout.clustered', 'Clustered')}
                   </div>
                 </SelectItem>
                 <SelectItem value="hierarchical" className="text-xs">
                   <div className="flex items-center gap-2">
-                    <Network className="h-3 w-3" />
+                    <Network className="size-3" />
                     {t('layout.hierarchical', 'Hierarchical')}
                   </div>
                 </SelectItem>
@@ -777,8 +777,8 @@ function EnhancedGraphVisualizationInner({
           </div>
 
           {/* Filters */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
-            <div className="text-xs font-semibold mb-2">{t('filters', 'Filters')}</div>
+          <div className="rounded-lg border bg-background/95 p-3 shadow-sm">
+            <div className="mb-2 text-xs font-semibold">{t('filters', 'Filters')}</div>
 
             <div className="space-y-2">
               <Select value={selectedNodeType} onValueChange={setSelectedNodeType}>
@@ -812,10 +812,10 @@ function EnhancedGraphVisualizationInner({
           </div>
 
           {/* Cluster Controls */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm">
-            <div className="text-xs font-semibold mb-2 flex items-center justify-between">
+          <div className="rounded-lg border bg-background/95 p-3 shadow-sm">
+            <div className="mb-2 flex items-center justify-between text-xs font-semibold">
               <span className="flex items-center gap-2">
-                <Layers className="h-3.5 w-3.5" />
+                <Layers className="size-3.5" />
                 {t('clusters', 'Clusters')}
               </span>
               <div className="flex gap-1">
@@ -825,10 +825,10 @@ function EnhancedGraphVisualizationInner({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6"
+                        className="size-6"
                         onClick={collapseAllClusters}
                       >
-                        <Shrink className="h-3 w-3" />
+                        <Shrink className="size-3" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">
@@ -842,10 +842,10 @@ function EnhancedGraphVisualizationInner({
                       <Button
                         variant="ghost"
                         size="icon"
-                        className="h-6 w-6"
+                        className="size-6"
                         onClick={expandAllClusters}
                       >
-                        <Expand className="h-3 w-3" />
+                        <Expand className="size-3" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent side="bottom">{t('expandAll', 'Expand All')}</TooltipContent>
@@ -858,23 +858,23 @@ function EnhancedGraphVisualizationInner({
               {Object.entries(clusters).map(([type, cluster]) => (
                 <button
                   key={type}
-                  className="flex items-center justify-between w-full text-xs py-1 px-2 rounded hover:bg-muted transition-colors"
+                  className="flex w-full items-center justify-between rounded px-2 py-1 text-xs transition-colors hover:bg-muted"
                   onClick={() => toggleCluster(type)}
                 >
                   <span className="flex items-center gap-2">
                     <div
-                      className="h-2.5 w-2.5 rounded-full"
+                      className="size-2.5 rounded-full"
                       style={{ backgroundColor: NODE_COLORS[type] || '#6b7280' }}
                     />
                     <span className="capitalize">{t(type, type)}</span>
-                    <Badge variant="secondary" className="text-[10px] h-4 px-1">
+                    <Badge variant="secondary" className="h-4 px-1 text-[10px]">
                       {cluster.count}
                     </Badge>
                   </span>
                   {cluster.collapsed ? (
-                    <ChevronRight className="h-3 w-3" />
+                    <ChevronRight className="size-3" />
                   ) : (
-                    <ChevronDown className="h-3 w-3" />
+                    <ChevronDown className="size-3" />
                   )}
                 </button>
               ))}
@@ -882,7 +882,7 @@ function EnhancedGraphVisualizationInner({
           </div>
 
           {/* Stats */}
-          <div className="bg-background/95 p-3 rounded-lg border shadow-sm text-xs text-muted-foreground">
+          <div className="rounded-lg border bg-background/95 p-3 text-xs text-muted-foreground shadow-sm">
             {filteredNodes.length} {t('nodesShown', 'nodes')} · {filteredEdges.length}{' '}
             {t('edgesShown', 'edges')}
           </div>
@@ -890,54 +890,54 @@ function EnhancedGraphVisualizationInner({
 
         {/* Zoom & View Controls */}
         <Panel position={isRTL ? 'bottom-right' : 'bottom-left'} className="flex gap-2">
-          <div className="bg-background/95 p-2 rounded-lg border shadow-sm flex gap-1">
+          <div className="flex gap-1 rounded-lg border bg-background/95 p-2 shadow-sm">
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8"
+              className="size-8"
               onClick={() => zoomIn()}
               title={t('zoomIn', 'Zoom In')}
             >
-              <ZoomIn className="h-4 w-4" />
+              <ZoomIn className="size-4" />
             </Button>
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8"
+              className="size-8"
               onClick={() => zoomOut()}
               title={t('zoomOut', 'Zoom Out')}
             >
-              <ZoomOut className="h-4 w-4" />
+              <ZoomOut className="size-4" />
             </Button>
             <Button
               size="icon"
               variant="ghost"
-              className="h-8 w-8"
+              className="size-8"
               onClick={() => fitView()}
               title={t('fitView', 'Fit View')}
             >
-              <Maximize2 className="h-4 w-4" />
+              <Maximize2 className="size-4" />
             </Button>
           </div>
 
           {/* Settings Popover */}
           <Popover open={isSettingsOpen} onOpenChange={setIsSettingsOpen}>
             <PopoverTrigger asChild>
-              <Button size="icon" variant="outline" className="h-8 w-8 bg-background/95">
-                <Settings2 className="h-4 w-4" />
+              <Button size="icon" variant="outline" className="size-8 bg-background/95">
+                <Settings2 className="size-4" />
               </Button>
             </PopoverTrigger>
             <PopoverContent side={isRTL ? 'left' : 'right'} className="w-64" align="start">
               <div className="space-y-4">
-                <h4 className="font-medium text-sm">{t('settings.title', 'Display Settings')}</h4>
+                <h4 className="text-sm font-medium">{t('settings.title', 'Display Settings')}</h4>
 
                 {/* Show Labels */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm flex items-center gap-2">
+                  <Label className="flex items-center gap-2 text-sm">
                     {showLabels ? (
-                      <Eye className="h-3.5 w-3.5" />
+                      <Eye className="size-3.5" />
                     ) : (
-                      <EyeOff className="h-3.5 w-3.5" />
+                      <EyeOff className="size-3.5" />
                     )}
                     {t('settings.showLabels', 'Show Labels')}
                   </Label>
@@ -952,8 +952,8 @@ function EnhancedGraphVisualizationInner({
 
                 {/* Highlight Connections */}
                 <div className="flex items-center justify-between">
-                  <Label className="text-sm flex items-center gap-2">
-                    <Focus className="h-3.5 w-3.5" />
+                  <Label className="flex items-center gap-2 text-sm">
+                    <Focus className="size-3.5" />
                     {t('settings.highlightConnections', 'Focus Mode')}
                   </Label>
                   <Switch
@@ -982,24 +982,24 @@ function EnhancedGraphVisualizationInner({
         {/* Legend */}
         <Panel
           position={isRTL ? 'top-right' : 'top-left'}
-          className="bg-background/95 p-3 rounded-lg border shadow-sm"
+          className="rounded-lg border bg-background/95 p-3 shadow-sm"
         >
-          <div className="text-xs font-semibold mb-2">{t('legend', 'Legend')}</div>
+          <div className="mb-2 text-xs font-semibold">{t('legend', 'Legend')}</div>
           <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-xs">
             {Object.entries(NODE_COLORS)
               .slice(0, 6)
               .map(([type, color]) => (
                 <div key={type} className="flex items-center gap-2">
-                  <div className="h-3 w-3 rounded-full" style={{ backgroundColor: color }} />
+                  <div className="size-3 rounded-full" style={{ backgroundColor: color }} />
                   <span className="capitalize">{t(type, type)}</span>
                 </div>
               ))}
           </div>
 
           {focusedNodeId && (
-            <div className="mt-3 pt-2 border-t">
-              <div className="text-xs text-muted-foreground flex items-center gap-2">
-                <Focus className="h-3 w-3" />
+            <div className="mt-3 border-t pt-2">
+              <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                <Focus className="size-3" />
                 {t('focusedNode', 'Click background to clear focus')}
               </div>
             </div>

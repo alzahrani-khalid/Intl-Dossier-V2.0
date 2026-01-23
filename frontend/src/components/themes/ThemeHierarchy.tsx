@@ -103,10 +103,10 @@ function ThemeTreeItem({
               e.stopPropagation()
               onToggle(node.id)
             }}
-            className="p-1 hover:bg-background rounded shrink-0"
+            className="shrink-0 rounded p-1 hover:bg-background"
           >
             {isExpanded ? (
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="size-4" />
             ) : (
               <ChevronRight className={cn('h-4 w-4', isRTL && 'rotate-180')} />
             )}
@@ -119,21 +119,21 @@ function ThemeTreeItem({
         <span className="shrink-0" style={{ color: node.color || 'currentColor' }}>
           {hasChildren ? (
             isExpanded ? (
-              <FolderOpen className="h-5 w-5" />
+              <FolderOpen className="size-5" />
             ) : (
-              <Folder className="h-5 w-5" />
+              <Folder className="size-5" />
             )
           ) : (
-            <Folder className="h-5 w-5" />
+            <Folder className="size-5" />
           )}
         </span>
 
         {/* Theme Info */}
-        <div className="flex-1 min-w-0 flex items-center gap-2">
-          <span className="font-medium truncate">{title}</span>
-          <span className="text-xs text-muted-foreground font-mono">{node.category_code}</span>
+        <div className="flex min-w-0 flex-1 items-center gap-2">
+          <span className="truncate font-medium">{title}</span>
+          <span className="font-mono text-xs text-muted-foreground">{node.category_code}</span>
           {node.is_standard && (
-            <Badge variant="secondary" className="text-xs h-5">
+            <Badge variant="secondary" className="h-5 text-xs">
               {t('card.standard')}
             </Badge>
           )}
@@ -141,7 +141,7 @@ function ThemeTreeItem({
 
         {/* Children Count */}
         {hasChildren && (
-          <span className="text-xs text-muted-foreground shrink-0">({node.children?.length})</span>
+          <span className="shrink-0 text-xs text-muted-foreground">({node.children?.length})</span>
         )}
 
         {/* Actions Menu */}
@@ -150,9 +150,9 @@ function ThemeTreeItem({
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 opacity-0 group-hover:opacity-100 transition-opacity shrink-0"
+              className="size-7 shrink-0 opacity-0 transition-opacity group-hover:opacity-100"
             >
-              <MoreVertical className="h-4 w-4" />
+              <MoreVertical className="size-4" />
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -273,14 +273,14 @@ export function ThemeHierarchy({
   return (
     <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+      <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
         <div>
-          <h2 className="text-xl font-semibold flex items-center gap-2">
-            <FolderTree className="h-5 w-5" />
+          <h2 className="flex items-center gap-2 text-xl font-semibold">
+            <FolderTree className="size-5" />
             {t('hierarchy.title')}
           </h2>
           {data?.total !== undefined && (
-            <p className="text-sm text-muted-foreground mt-1">
+            <p className="mt-1 text-sm text-muted-foreground">
               {data.total} {t('title').toLowerCase()}
             </p>
           )}
@@ -308,7 +308,7 @@ export function ThemeHierarchy({
       {/* Error State */}
       {isError && (
         <Alert variant="destructive">
-          <AlertCircle className="h-4 w-4" />
+          <AlertCircle className="size-4" />
           <AlertTitle>{t('errors.loadFailed')}</AlertTitle>
           <AlertDescription className="flex items-center justify-between">
             <span>{error?.message || 'Unknown error'}</span>
@@ -321,16 +321,16 @@ export function ThemeHierarchy({
 
       {/* Empty State */}
       {!isLoading && !isError && treeData.length === 0 && (
-        <div className="text-center py-12 px-4 border rounded-lg bg-muted/50">
-          <FolderTree className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
+        <div className="rounded-lg border bg-muted/50 px-4 py-12 text-center">
+          <FolderTree className="mx-auto mb-4 size-12 text-muted-foreground" />
           <h3 className="text-lg font-semibold">{t('hierarchy.empty')}</h3>
-          <p className="text-sm text-muted-foreground mt-2">{t('hierarchy.emptyDescription')}</p>
+          <p className="mt-2 text-sm text-muted-foreground">{t('hierarchy.emptyDescription')}</p>
         </div>
       )}
 
       {/* Tree View */}
       {!isLoading && !isError && treeData.length > 0 && (
-        <div className="border rounded-lg p-2 bg-background">
+        <div className="rounded-lg border bg-background p-2">
           {treeData.map((node) => (
             <ThemeTreeItem
               key={node.id}

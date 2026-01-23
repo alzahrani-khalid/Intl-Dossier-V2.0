@@ -194,17 +194,17 @@ export function FormAutoSaveDemoPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-12"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-12"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
       <motion.div initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="mb-8">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-4">
+        <div className="mb-4 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
           <div>
-            <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start mb-2">
+            <h1 className="mb-2 text-start text-2xl font-bold sm:text-3xl md:text-4xl">
               {isRTL ? 'عرض الحفظ التلقائي للنموذج' : 'Form Auto-Save Demo'}
             </h1>
-            <p className="text-muted-foreground text-start">
+            <p className="text-start text-muted-foreground">
               {isRTL
                 ? 'استمر من حيث توقفت - يتم حفظ تقدمك تلقائياً'
                 : 'Continue where you left off - your progress is saved automatically'}
@@ -233,7 +233,7 @@ export function FormAutoSaveDemoPage() {
         </motion.div>
       )}
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Main Form */}
         <div className="lg:col-span-2">
           <Card>
@@ -243,7 +243,7 @@ export function FormAutoSaveDemoPage() {
                   <CardTitle className="text-start">
                     {isRTL ? 'تفاصيل المشاركة' : 'Engagement Details'}
                   </CardTitle>
-                  <CardDescription className="text-start mt-1">
+                  <CardDescription className="mt-1 text-start">
                     {isRTL
                       ? 'أكمل النموذج أدناه. سيتم حفظ تقدمك تلقائياً.'
                       : 'Fill out the form below. Your progress will be saved automatically.'}
@@ -261,7 +261,7 @@ export function FormAutoSaveDemoPage() {
                     name="title"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-start flex items-center gap-2">
+                        <FormLabel className="flex items-center gap-2 text-start">
                           <FileText className="size-4" />
                           {isRTL ? 'العنوان' : 'Title'} *
                         </FormLabel>
@@ -314,13 +314,13 @@ export function FormAutoSaveDemoPage() {
                   />
 
                   {/* Date and Location Row */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <FormField
                       control={form.control}
                       name="eventDate"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-start flex items-center gap-2">
+                          <FormLabel className="flex items-center gap-2 text-start">
                             <Calendar className="size-4" />
                             {isRTL ? 'التاريخ' : 'Date'} *
                           </FormLabel>
@@ -345,7 +345,7 @@ export function FormAutoSaveDemoPage() {
                       name="location"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="text-start flex items-center gap-2">
+                          <FormLabel className="flex items-center gap-2 text-start">
                             <MapPin className="size-4" />
                             {isRTL ? 'الموقع' : 'Location'} *
                           </FormLabel>
@@ -372,7 +372,7 @@ export function FormAutoSaveDemoPage() {
                     name="eventType"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-start flex items-center gap-2">
+                        <FormLabel className="flex items-center gap-2 text-start">
                           <Clock className="size-4" />
                           {isRTL ? 'نوع الحدث' : 'Event Type'} *
                         </FormLabel>
@@ -414,7 +414,7 @@ export function FormAutoSaveDemoPage() {
                     name="participants"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel className="text-start flex items-center gap-2">
+                        <FormLabel className="flex items-center gap-2 text-start">
                           <Users className="size-4" />
                           {isRTL ? 'المشاركون' : 'Participants'} *
                         </FormLabel>
@@ -501,7 +501,7 @@ export function FormAutoSaveDemoPage() {
                   <Separator />
 
                   {/* Action Buttons */}
-                  <div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
+                  <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row">
                     <Button
                       type="button"
                       variant="outline"
@@ -509,7 +509,7 @@ export function FormAutoSaveDemoPage() {
                       disabled={isSubmitting}
                       className="min-h-11 w-full sm:w-auto"
                     >
-                      <RotateCcw className="size-4 me-2" />
+                      <RotateCcw className="me-2 size-4" />
                       {isRTL ? 'إعادة تعيين' : 'Reset'}
                     </Button>
                     <Button
@@ -519,7 +519,7 @@ export function FormAutoSaveDemoPage() {
                       disabled={isSubmitting || !draft}
                       className="min-h-11 w-full sm:w-auto"
                     >
-                      <Trash2 className="size-4 me-2" />
+                      <Trash2 className="me-2 size-4" />
                       {isRTL ? 'مسح المسودة' : 'Clear Draft'}
                     </Button>
                     <Button
@@ -529,12 +529,12 @@ export function FormAutoSaveDemoPage() {
                     >
                       {isSubmitting ? (
                         <>
-                          <Save className="size-4 me-2 animate-pulse" />
+                          <Save className="me-2 size-4 animate-pulse" />
                           {isRTL ? 'جارٍ الإرسال...' : 'Submitting...'}
                         </>
                       ) : (
                         <>
-                          <Send className="size-4 me-2" />
+                          <Send className="me-2 size-4" />
                           {isRTL ? 'إرسال' : 'Submit'}
                         </>
                       )}
@@ -551,7 +551,7 @@ export function FormAutoSaveDemoPage() {
           {/* Progress Indicator */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-start">
+              <CardTitle className="text-start text-lg">
                 {isRTL ? 'تقدم النموذج' : 'Form Progress'}
               </CardTitle>
             </CardHeader>
@@ -567,44 +567,44 @@ export function FormAutoSaveDemoPage() {
           {/* Feature Info */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-start">
+              <CardTitle className="text-start text-lg">
                 {isRTL ? 'كيف يعمل' : 'How It Works'}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-3">
               <div className="flex items-start gap-3">
-                <Badge variant="outline" className="shrink-0 mt-0.5">
+                <Badge variant="outline" className="mt-0.5 shrink-0">
                   1
                 </Badge>
-                <p className="text-sm text-muted-foreground text-start">
+                <p className="text-start text-sm text-muted-foreground">
                   {isRTL
                     ? 'ابدأ في ملء النموذج - يتم حفظ التغييرات تلقائياً'
                     : 'Start filling the form - changes are saved automatically'}
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <Badge variant="outline" className="shrink-0 mt-0.5">
+                <Badge variant="outline" className="mt-0.5 shrink-0">
                   2
                 </Badge>
-                <p className="text-sm text-muted-foreground text-start">
+                <p className="text-start text-sm text-muted-foreground">
                   {isRTL ? 'غادر الصفحة أو أغلق المتصفح' : 'Navigate away or close the browser'}
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <Badge variant="outline" className="shrink-0 mt-0.5">
+                <Badge variant="outline" className="mt-0.5 shrink-0">
                   3
                 </Badge>
-                <p className="text-sm text-muted-foreground text-start">
+                <p className="text-start text-sm text-muted-foreground">
                   {isRTL
                     ? 'عد لاحقاً - سترى خيار استعادة تقدمك'
                     : "Come back later - you'll see an option to restore your progress"}
                 </p>
               </div>
               <div className="flex items-start gap-3">
-                <Badge variant="outline" className="shrink-0 mt-0.5">
+                <Badge variant="outline" className="mt-0.5 shrink-0">
                   4
                 </Badge>
-                <p className="text-sm text-muted-foreground text-start">
+                <p className="text-start text-sm text-muted-foreground">
                   {isRTL ? 'أكمل وأرسل النموذج' : 'Complete and submit the form'}
                 </p>
               </div>
@@ -614,7 +614,7 @@ export function FormAutoSaveDemoPage() {
           {/* Status Details */}
           <Card>
             <CardHeader className="pb-3">
-              <CardTitle className="text-lg text-start">
+              <CardTitle className="text-start text-lg">
                 {isRTL ? 'حالة الحفظ' : 'Save Status'}
               </CardTitle>
             </CardHeader>

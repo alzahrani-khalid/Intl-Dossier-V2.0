@@ -51,10 +51,10 @@ interface ComparisonExportProps {
  * Format icons mapping
  */
 const FORMAT_ICONS: Record<ComparisonExportFormat, React.ReactNode> = {
-  csv: <FileSpreadsheet className="h-4 w-4" />,
-  json: <FileJson className="h-4 w-4" />,
-  pdf: <FileText className="h-4 w-4" />,
-  xlsx: <FileSpreadsheet className="h-4 w-4" />,
+  csv: <FileSpreadsheet className="size-4" />,
+  json: <FileJson className="size-4" />,
+  pdf: <FileText className="size-4" />,
+  xlsx: <FileSpreadsheet className="size-4" />,
 }
 
 /**
@@ -260,14 +260,14 @@ export const ComparisonExport = memo(function ComparisonExport({
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogTrigger asChild>
         <Button variant="outline" className={cn('gap-2', className)}>
-          <Download className="h-4 w-4" />
+          <Download className="size-4" />
           <span className="hidden sm:inline">{t('actions.export')}</span>
         </Button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md" dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Settings2 className="h-5 w-5" />
+            <Settings2 className="size-5" />
             {t('export.title')}
           </DialogTitle>
           <DialogDescription>{t('export.subtitle')}</DialogDescription>
@@ -358,12 +358,12 @@ export const ComparisonExport = memo(function ComparisonExport({
           <Button onClick={handleExport} disabled={isExporting}>
             {isExporting ? (
               <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
                 {t('export.downloading')}
               </>
             ) : (
               <>
-                <Download className="h-4 w-4 me-2" />
+                <Download className="me-2 size-4" />
                 {t('export.exportButton')}
               </>
             )}

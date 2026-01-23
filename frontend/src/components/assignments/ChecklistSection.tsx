@@ -70,7 +70,7 @@ export function ChecklistSection({
         <CardHeader>
           <div className="flex items-center justify-between">
             <CardTitle className="flex items-center gap-2">
-              <ListChecks className="h-5 w-5" />
+              <ListChecks className="size-5" />
               {t('checklist.title')}
             </CardTitle>
             <div className="flex items-center gap-2">
@@ -80,7 +80,7 @@ export function ChecklistSection({
                 onClick={() => setShowTemplateSelector(true)}
                 disabled={disabled}
               >
-                <FileText className="h-4 w-4 me-2" />
+                <FileText className="me-2 size-4" />
                 {t('checklist.importTemplate')}
               </Button>
               <Button
@@ -89,7 +89,7 @@ export function ChecklistSection({
                 onClick={() => setShowAddItem(true)}
                 disabled={disabled}
               >
-                <Plus className="h-4 w-4 me-2" />
+                <Plus className="me-2 size-4" />
                 {t('checklist.addItem')}
               </Button>
             </div>
@@ -136,7 +136,7 @@ export function ChecklistSection({
 
           {/* Checklist Items */}
           {sortedItems.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">{t('checklist.empty')}</div>
+            <div className="py-8 text-center text-muted-foreground">{t('checklist.empty')}</div>
           ) : (
             <div className="space-y-1">
               {sortedItems.map((item) => (

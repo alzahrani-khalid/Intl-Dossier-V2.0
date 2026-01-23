@@ -86,13 +86,13 @@ export function MeetingMinutesList({
   return (
     <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-xl sm:text-2xl font-bold text-foreground">{t('title')}</h2>
-          <p className="text-sm text-muted-foreground mt-0.5">{t('subtitle')}</p>
+          <h2 className="text-xl font-bold text-foreground sm:text-2xl">{t('title')}</h2>
+          <p className="mt-0.5 text-sm text-muted-foreground">{t('subtitle')}</p>
         </div>
         {onCreateNew && (
-          <Button onClick={onCreateNew} className="w-full sm:w-auto min-h-11">
+          <Button onClick={onCreateNew} className="min-h-11 w-full sm:w-auto">
             <Plus className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
             {t('createNew')}
           </Button>
@@ -100,7 +100,7 @@ export function MeetingMinutesList({
       </div>
 
       {/* Search and Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col gap-3 sm:flex-row">
         {/* Search */}
         <div className="relative flex-1">
           <Search
@@ -126,7 +126,7 @@ export function MeetingMinutesList({
           <Filter className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
           {t('filters.title')}
           {hasActiveFilters && (
-            <span className="ms-2 px-1.5 py-0.5 text-xs bg-primary text-primary-foreground rounded-full">
+            <span className="ms-2 rounded-full bg-primary px-1.5 py-0.5 text-xs text-primary-foreground">
               !
             </span>
           )}
@@ -135,11 +135,11 @@ export function MeetingMinutesList({
 
       {/* Expanded Filters */}
       {showFilters && (
-        <div className="p-4 bg-muted/50 rounded-lg space-y-3">
-          <div className="flex flex-col sm:flex-row gap-3">
+        <div className="space-y-3 rounded-lg bg-muted/50 p-4">
+          <div className="flex flex-col gap-3 sm:flex-row">
             {/* Status Filter */}
             <div className="flex-1">
-              <label className="text-sm font-medium text-foreground mb-1.5 block">
+              <label className="mb-1.5 block text-sm font-medium text-foreground">
                 {t('filters.status')}
               </label>
               <Select value={filters.status || 'all'} onValueChange={handleStatusChange}>
@@ -159,7 +159,7 @@ export function MeetingMinutesList({
 
             {/* Date Range */}
             <div className="flex-1">
-              <label className="text-sm font-medium text-foreground mb-1.5 block">
+              <label className="mb-1.5 block text-sm font-medium text-foreground">
                 {t('filters.fromDate')}
               </label>
               <Input
@@ -173,7 +173,7 @@ export function MeetingMinutesList({
             </div>
 
             <div className="flex-1">
-              <label className="text-sm font-medium text-foreground mb-1.5 block">
+              <label className="mb-1.5 block text-sm font-medium text-foreground">
                 {t('filters.toDate')}
               </label>
               <Input
@@ -208,7 +208,7 @@ export function MeetingMinutesList({
 
       {/* Error State */}
       {error && (
-        <div className="p-6 text-center bg-destructive/10 rounded-lg">
+        <div className="rounded-lg bg-destructive/10 p-6 text-center">
           <p className="text-destructive">{t('messages.error')}</p>
         </div>
       )}
@@ -216,11 +216,11 @@ export function MeetingMinutesList({
       {/* Empty State */}
       {!isLoading && !error && (!data?.items || data.items.length === 0) && (
         <div className="py-12 text-center">
-          <div className="mx-auto w-16 h-16 rounded-full bg-muted flex items-center justify-center mb-4">
-            <FileText className="h-8 w-8 text-muted-foreground" />
+          <div className="mx-auto mb-4 flex size-16 items-center justify-center rounded-full bg-muted">
+            <FileText className="size-8 text-muted-foreground" />
           </div>
-          <h3 className="text-lg font-semibold text-foreground mb-1">{t('empty.title')}</h3>
-          <p className="text-sm text-muted-foreground mb-4 max-w-sm mx-auto">
+          <h3 className="mb-1 text-lg font-semibold text-foreground">{t('empty.title')}</h3>
+          <p className="mx-auto mb-4 max-w-sm text-sm text-muted-foreground">
             {t('empty.description')}
           </p>
           {onCreateNew && (

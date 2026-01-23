@@ -439,7 +439,7 @@ export function DossierListPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 lg:py-10"
+      className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Sample Data Banner - shows when sample data is active */}
@@ -452,12 +452,12 @@ export function DossierListPage() {
       )}
 
       {/* Page Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-8 sm:mb-10">
+      <div className="mb-8 flex flex-col gap-4 sm:mb-10 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-start tracking-tight">
+          <h1 className="text-start text-3xl font-bold tracking-tight sm:text-4xl md:text-5xl">
             {t('list.title')}
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground text-start mt-2 sm:mt-3">
+          <p className="mt-2 text-start text-sm text-muted-foreground sm:mt-3 sm:text-base">
             {t('list.subtitle')}
           </p>
         </div>
@@ -477,17 +477,17 @@ export function DossierListPage() {
 
       {/* Type Stats Header Cards */}
       <div className="mb-10">
-        <h2 className="text-xl sm:text-2xl font-bold text-start mb-4 sm:mb-6">
+        <h2 className="mb-4 text-start text-xl font-bold sm:mb-6 sm:text-2xl">
           {t('list.typeOverview')}
         </h2>
         {countsLoading ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
+          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
             {Array.from({ length: 7 }).map((_, i) => (
               <DossierTypeStatsCardSkeleton key={i} />
             ))}
           </div>
         ) : (
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7 gap-1.5 sm:gap-3 md:gap-4">
+          <div className="grid grid-cols-2 gap-1.5 sm:grid-cols-3 sm:gap-3 md:grid-cols-4 md:gap-4 lg:grid-cols-5 xl:grid-cols-6 2xl:grid-cols-7">
             {DOSSIER_TYPES.map((type) => {
               const stats = getTypeStats(type)
               return (
@@ -516,7 +516,7 @@ export function DossierListPage() {
         )}
       >
         {/* Saved Views Manager */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 pb-4 border-b border-black/5">
+        <div className="flex flex-col items-start justify-between gap-3 border-b border-black/5 pb-4 sm:flex-row sm:items-center">
           <SavedViewsManager
             savedViews={viewPreferences.savedViews}
             currentViewConfig={viewPreferences.currentViewConfig}
@@ -544,7 +544,7 @@ export function DossierListPage() {
         </div>
 
         {/* Search Bar */}
-        <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+        <div className="flex flex-col gap-3 sm:flex-row sm:gap-4">
           <div className="flex-1">
             <div className="relative">
               <Search
@@ -588,7 +588,7 @@ export function DossierListPage() {
 
         {/* Filter Controls */}
         <div className="space-y-3">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3">
             {/* Status Filter - Multiselect */}
             <div className="space-y-2">
               <Popover open={statusFilterOpen} onOpenChange={setStatusFilterOpen}>
@@ -612,7 +612,7 @@ export function DossierListPage() {
                         ? `${(Array.isArray(filters.status) ? filters.status : [filters.status]).length} status(es) selected`
                         : t('list.filterByStatus')}
                     </span>
-                    <ChevronsUpDown className="h-4 w-4 shrink-0 opacity-50" />
+                    <ChevronsUpDown className="size-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-[250px] p-0" align="start">
@@ -735,7 +735,7 @@ export function DossierListPage() {
         lastSyncTime={lastSyncTime}
         itemCount={data?.total}
         isSyncing={isLoading}
-        className="rounded-xl mb-4"
+        className="mb-4 rounded-xl"
       />
 
       {/* Pull-to-Refresh Indicator */}
@@ -750,9 +750,9 @@ export function DossierListPage() {
       {/* Results Section with Pull-to-Refresh Container */}
       <div ref={containerRef} className="overflow-auto overscroll-contain" {...pullHandlers}>
         {isLoading && (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7">
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-7">
             {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-72 sm:h-80 rounded-2xl" />
+              <Skeleton key={i} className="h-72 rounded-2xl sm:h-80" />
             ))}
           </div>
         )}
@@ -762,7 +762,7 @@ export function DossierListPage() {
             variant="destructive"
             className={cn('rounded-2xl border-destructive/20', 'bg-destructive/5')}
           >
-            <AlertCircle className="h-5 w-5" />
+            <AlertCircle className="size-5" />
             <AlertTitle className="text-base font-semibold">{t('list.errorTitle')}</AlertTitle>
             <AlertDescription className="text-sm">
               {error?.message || t('list.errorMessage')}
@@ -774,8 +774,8 @@ export function DossierListPage() {
           <>
             {/* Results Count */}
             {data.total > 0 && (
-              <div className="flex items-center justify-between mb-6">
-                <p className="text-sm font-medium text-muted-foreground text-start">
+              <div className="mb-6 flex items-center justify-between">
+                <p className="text-start text-sm font-medium text-muted-foreground">
                   {t('list.showing', {
                     from: ((filters.page || 1) - 1) * (filters.page_size || 12) + 1,
                     to: Math.min((filters.page || 1) * (filters.page_size || 12), data.total),
@@ -851,11 +851,11 @@ export function DossierListPage() {
                     'bg-white/40 border border-black/5',
                   )}
                 >
-                  <p className="text-muted-foreground text-base">{t('list.noDossiers')}</p>
+                  <p className="text-base text-muted-foreground">{t('list.noDossiers')}</p>
                 </div>
               )
             ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6 lg:gap-7 mb-10">
+              <div className="mb-10 grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 lg:grid-cols-3 lg:gap-7">
                 {data.data.map((dossier) => (
                   <ExpandableDossierCard
                     key={dossier.id}

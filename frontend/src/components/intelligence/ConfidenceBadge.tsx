@@ -66,10 +66,10 @@ export function ConfidenceBadge({
         ${config.textColor}
         ${config.borderColor}
         ${sizeClasses[size]}
-        font-medium
         inline-flex
         items-center
         gap-1
+        font-medium
         ${isRTL ? 'flex-row-reverse' : 'flex-row'}
       `}
     >

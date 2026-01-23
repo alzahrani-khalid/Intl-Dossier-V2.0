@@ -99,7 +99,7 @@ export const CustomEdge = memo((({
  }}
  className="nodrag nopan"
  >
- <div className={`${style.impactBg} ${style.impactText} px-3 py-1.5 rounded-full shadow-lg text-xs font-semibold whitespace-nowrap`}>
+ <div className={`${style.impactBg} ${style.impactText} whitespace-nowrap rounded-full px-3 py-1.5 text-xs font-semibold shadow-lg`}>
  {style.impactLabel}
  </div>
  </div>
@@ -116,8 +116,8 @@ export const CustomEdge = memo((({
  }}
  className="nodrag nopan"
  >
- <div className="bg-card border-2 border-border px-2.5 py-1 rounded-md shadow-md">
- <span className="text-xs font-medium text-card-foreground whitespace-nowrap">
+ <div className="rounded-md border-2 border-border bg-card px-2.5 py-1 shadow-md">
+ <span className="whitespace-nowrap text-xs font-medium text-card-foreground">
  {label}
  </span>
  </div>

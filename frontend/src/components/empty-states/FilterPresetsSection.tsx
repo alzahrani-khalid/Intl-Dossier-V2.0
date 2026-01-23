@@ -118,19 +118,19 @@ function FilterPresetCard({
       </div>
 
       {/* Content */}
-      <div className="flex-1 min-w-0">
-        <div className="flex items-center gap-2 flex-wrap">
-          <p className="text-sm font-medium text-foreground line-clamp-1">{name}</p>
+      <div className="min-w-0 flex-1">
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="line-clamp-1 text-sm font-medium text-foreground">{name}</p>
           {preset.is_popular && (
-            <Badge variant="secondary" className="text-xs px-1.5 py-0">
-              <TrendingUp className="h-3 w-3 me-1" />
+            <Badge variant="secondary" className="px-1.5 py-0 text-xs">
+              <TrendingUp className="me-1 size-3" />
               {language === 'ar' ? 'شائع' : 'Popular'}
             </Badge>
           )}
         </div>
-        <p className="text-xs text-muted-foreground mt-1 line-clamp-2">{description}</p>
+        <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">{description}</p>
         {preset.estimated_count !== undefined && preset.estimated_count > 0 && (
-          <p className="text-xs text-muted-foreground mt-1.5">
+          <p className="mt-1.5 text-xs text-muted-foreground">
             {t('filterPresets.resultsExpected', { count: preset.estimated_count })}
           </p>
         )}
@@ -157,14 +157,14 @@ function FilterPresetsSkeleton() {
       {[1, 2, 3].map((i) => (
         <div
           key={i}
-          className="flex items-start gap-3 p-3 sm:p-4 rounded-lg border bg-muted/30 animate-pulse"
+          className="flex animate-pulse items-start gap-3 rounded-lg border bg-muted/30 p-3 sm:p-4"
         >
-          <div className="flex-shrink-0 p-2 rounded-md bg-muted">
-            <div className="h-5 w-5 rounded" />
+          <div className="shrink-0 rounded-md bg-muted p-2">
+            <div className="size-5 rounded" />
           </div>
           <div className="flex-1 space-y-2">
-            <div className="h-4 bg-muted rounded w-3/4" />
-            <div className="h-3 bg-muted rounded w-full" />
+            <div className="h-4 w-3/4 rounded bg-muted" />
+            <div className="h-3 w-full rounded bg-muted" />
           </div>
         </div>
       ))}
@@ -195,7 +195,7 @@ export function FilterPresetsSection({
     return (
       <div className={cn('space-y-3', className)} dir={isRTL ? 'rtl' : 'ltr'}>
         <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-          <Loader2 className="h-4 w-4 animate-spin" />
+          <Loader2 className="size-4 animate-spin" />
           <span>{t('filterPresets.loading')}</span>
         </div>
         <FilterPresetsSkeleton />
@@ -228,7 +228,7 @@ export function FilterPresetsSection({
     >
       {/* Header */}
       <div className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-        <Sparkles className="h-4 w-4" />
+        <Sparkles className="size-4" />
         <span>{t('filterPresets.title')}</span>
       </div>
 
@@ -252,16 +252,16 @@ export function FilterPresetsSection({
             variant="ghost"
             size="sm"
             onClick={() => setShowAll(!showAll)}
-            className="text-muted-foreground hover:text-foreground min-h-9"
+            className="min-h-9 text-muted-foreground hover:text-foreground"
           >
             {showAll ? (
               <>
-                <ChevronUp className="h-4 w-4 me-1" />
+                <ChevronUp className="me-1 size-4" />
                 {t('filterPresets.showLess')}
               </>
             ) : (
               <>
-                <ChevronDown className="h-4 w-4 me-1" />
+                <ChevronDown className="me-1 size-4" />
                 {t('filterPresets.showMore')}
               </>
             )}

@@ -209,7 +209,7 @@ export const ImagePreview = memo(function ImagePreview({
     >
       {/* Toolbar */}
       {mergedOptions.show_controls && (
-        <div className="flex items-center justify-between gap-2 p-2 sm:p-3 bg-black/50 backdrop-blur-sm">
+        <div className="flex items-center justify-between gap-2 bg-black/50 p-2 backdrop-blur-sm sm:p-3">
           {/* Left controls */}
           <div className="flex items-center gap-1 sm:gap-2">
             {mergedOptions.enable_zoom && (
@@ -219,12 +219,12 @@ export const ImagePreview = memo(function ImagePreview({
                   size="sm"
                   onClick={handleZoomOut}
                   disabled={zoom <= mergedOptions.min_zoom!}
-                  className="h-9 w-9 sm:h-10 sm:w-10 text-white hover:bg-white/20"
+                  className="size-9 text-white hover:bg-white/20 sm:size-10"
                   title={t('actions.zoomOut', 'Zoom out')}
                 >
-                  <ZoomOut className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <ZoomOut className="size-4 sm:size-5" />
                 </Button>
-                <span className="text-xs sm:text-sm text-white/80 min-w-[3rem] text-center">
+                <span className="min-w-12 text-center text-xs text-white/80 sm:text-sm">
                   {Math.round(zoom * 100)}%
                 </span>
                 <Button
@@ -232,10 +232,10 @@ export const ImagePreview = memo(function ImagePreview({
                   size="sm"
                   onClick={handleZoomIn}
                   disabled={zoom >= mergedOptions.max_zoom!}
-                  className="h-9 w-9 sm:h-10 sm:w-10 text-white hover:bg-white/20"
+                  className="size-9 text-white hover:bg-white/20 sm:size-10"
                   title={t('actions.zoomIn', 'Zoom in')}
                 >
-                  <ZoomIn className="h-4 w-4 sm:h-5 sm:w-5" />
+                  <ZoomIn className="size-4 sm:size-5" />
                 </Button>
               </>
             )}
@@ -243,10 +243,10 @@ export const ImagePreview = memo(function ImagePreview({
               variant="ghost"
               size="sm"
               onClick={handleFitToScreen}
-              className="h-9 w-9 sm:h-10 sm:w-10 text-white hover:bg-white/20"
+              className="size-9 text-white hover:bg-white/20 sm:size-10"
               title={t('actions.fitToScreen', 'Fit to screen')}
             >
-              <Maximize2 className="h-4 w-4 sm:h-5 sm:w-5" />
+              <Maximize2 className="size-4 sm:size-5" />
             </Button>
           </div>
 
@@ -257,21 +257,21 @@ export const ImagePreview = memo(function ImagePreview({
                 variant="ghost"
                 size="sm"
                 onClick={handleRotateCounterClockwise}
-                className="h-9 w-9 sm:h-10 sm:w-10 text-white hover:bg-white/20"
+                className="size-9 text-white hover:bg-white/20 sm:size-10"
                 title={t('actions.rotateLeft', 'Rotate left')}
               >
                 <RotateCcw
                   className={cn('h-4 w-4 sm:h-5 sm:w-5', isRTL && 'transform scale-x-[-1]')}
                 />
               </Button>
-              <span className="text-xs sm:text-sm text-white/80 min-w-[3rem] text-center">
+              <span className="min-w-12 text-center text-xs text-white/80 sm:text-sm">
                 {rotation}°
               </span>
               <Button
                 variant="ghost"
                 size="sm"
                 onClick={handleRotateClockwise}
-                className="h-9 w-9 sm:h-10 sm:w-10 text-white hover:bg-white/20"
+                className="size-9 text-white hover:bg-white/20 sm:size-10"
                 title={t('actions.rotateRight', 'Rotate right')}
               >
                 <RotateCw
@@ -288,10 +288,10 @@ export const ImagePreview = memo(function ImagePreview({
                 variant="ghost"
                 size="sm"
                 onClick={onDownload}
-                className="h-9 w-9 sm:h-10 sm:w-10 text-white hover:bg-white/20"
+                className="size-9 text-white hover:bg-white/20 sm:size-10"
                 title={t('actions.download', 'Download')}
               >
-                <Download className="h-4 w-4 sm:h-5 sm:w-5" />
+                <Download className="size-4 sm:size-5" />
               </Button>
             )}
             {onClose && (
@@ -299,10 +299,10 @@ export const ImagePreview = memo(function ImagePreview({
                 variant="ghost"
                 size="sm"
                 onClick={onClose}
-                className="h-9 w-9 sm:h-10 sm:w-10 text-white hover:bg-white/20"
+                className="size-9 text-white hover:bg-white/20 sm:size-10"
                 title={t('actions.close', 'Close')}
               >
-                <X className="h-4 w-4 sm:h-5 sm:w-5" />
+                <X className="size-4 sm:size-5" />
               </Button>
             )}
           </div>
@@ -327,12 +327,12 @@ export const ImagePreview = memo(function ImagePreview({
       >
         {isLoading && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="h-12 w-12 sm:h-16 sm:w-16 rounded-full border-4 border-white/30 border-t-white animate-spin" />
+            <div className="size-12 animate-spin rounded-full border-4 border-white/30 border-t-white sm:size-16" />
           </div>
         )}
 
         {error && (
-          <div className="text-center text-white/80 p-4">
+          <div className="p-4 text-center text-white/80">
             <p className="text-base sm:text-lg">{error}</p>
           </div>
         )}
@@ -357,7 +357,7 @@ export const ImagePreview = memo(function ImagePreview({
 
       {/* Touch hint for mobile */}
       {mergedOptions.enable_pan && zoom <= 1 && (
-        <div className="sm:hidden absolute bottom-4 left-1/2 -translate-x-1/2 text-xs text-white/60 bg-black/50 px-3 py-1.5 rounded-full">
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full bg-black/50 px-3 py-1.5 text-xs text-white/60 sm:hidden">
           {t('hints.pinchToZoom', 'Pinch to zoom, drag to pan')}
         </div>
       )}

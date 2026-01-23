@@ -107,7 +107,7 @@ export function RelationshipForm({
         <div className="space-y-2">
           <Label htmlFor="to_contact_id">
             {t('contactDirectory.relationships.form.select_contact')}
-            <span className="text-destructive ms-1">*</span>
+            <span className="ms-1 text-destructive">*</span>
           </Label>
           <Select
             value={watch('to_contact_id')}
@@ -127,7 +127,7 @@ export function RelationshipForm({
             </SelectContent>
           </Select>
           {errors.to_contact_id && (
-            <p className="text-sm text-destructive text-start">
+            <p className="text-start text-sm text-destructive">
               {t('contactDirectory.relationships.form.contact_required')}
             </p>
           )}
@@ -138,7 +138,7 @@ export function RelationshipForm({
       <div className="space-y-2">
         <Label htmlFor="relationship_type">
           {t('contactDirectory.relationships.form.relationship_type')}
-          <span className="text-destructive ms-1">*</span>
+          <span className="ms-1 text-destructive">*</span>
         </Label>
         <Select
           value={selectedRelationType}
@@ -190,14 +190,14 @@ export function RelationshipForm({
       </div>
 
       {/* Actions */}
-      <div className="flex flex-col-reverse sm:flex-row gap-2 pt-4">
+      <div className="flex flex-col-reverse gap-2 pt-4 sm:flex-row">
         {onCancel && (
           <Button
             type="button"
             variant="outline"
             onClick={onCancel}
             disabled={createMutation.isPending}
-            className="flex-1 sm:flex-initial h-11 sm:h-10"
+            className="h-11 flex-1 sm:h-10 sm:flex-initial"
           >
             {t('contactDirectory.form.cancel')}
           </Button>
@@ -205,10 +205,10 @@ export function RelationshipForm({
         <Button
           type="submit"
           disabled={createMutation.isPending}
-          className="flex-1 sm:flex-initial h-11 sm:h-10"
+          className="h-11 flex-1 sm:h-10 sm:flex-initial"
         >
           {createMutation.isPending && (
-            <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
           )}
           {t('contactDirectory.relationships.form.create_relationship')}
         </Button>

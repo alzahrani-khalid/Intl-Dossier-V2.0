@@ -87,11 +87,11 @@ export function TriggerSelector({
                 isSelected ? 'bg-primary text-primary-foreground' : 'bg-muted',
               )}
             >
-              <Icon className="h-5 w-5" />
+              <Icon className="size-5" />
             </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="font-medium text-sm">{isRTL ? trigger.label_ar : trigger.label_en}</h4>
-              <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+            <div className="min-w-0 flex-1">
+              <h4 className="text-sm font-medium">{isRTL ? trigger.label_ar : trigger.label_en}</h4>
+              <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
                 {isRTL ? trigger.description_ar : trigger.description_en}
               </p>
             </div>
@@ -134,7 +134,7 @@ export function TriggerSelector({
 
       {/* Trigger-specific configuration */}
       {selectedTrigger === 'deadline_approaching' && (
-        <div className="p-4 border rounded-lg bg-muted/50 space-y-4">
+        <div className="space-y-4 rounded-lg border bg-muted/50 p-4">
           <h4 className="font-medium">{t('labels.configuration')}</h4>
           <div className="space-y-2">
             <Label htmlFor="deadline_days">{t('labels.deadline_days')}</Label>
@@ -160,7 +160,7 @@ export function TriggerSelector({
       )}
 
       {selectedTrigger === 'schedule_cron' && (
-        <div className="p-4 border rounded-lg bg-muted/50 space-y-4">
+        <div className="space-y-4 rounded-lg border bg-muted/50 p-4">
           <h4 className="font-medium">{t('labels.configuration')}</h4>
           <div className="space-y-2">
             <Label htmlFor="cron_expression">{t('labels.cron_expression')}</Label>
@@ -183,7 +183,7 @@ export function TriggerSelector({
       )}
 
       {selectedTrigger === 'field_changed' && (
-        <div className="p-4 border rounded-lg bg-muted/50 space-y-4">
+        <div className="space-y-4 rounded-lg border bg-muted/50 p-4">
           <h4 className="font-medium">{t('labels.configuration')}</h4>
           <div className="space-y-2">
             <Label htmlFor="field_name">{t('labels.field')}</Label>

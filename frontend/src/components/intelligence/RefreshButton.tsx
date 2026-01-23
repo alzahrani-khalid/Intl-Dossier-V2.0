@@ -80,7 +80,7 @@ export function RefreshButton({
         aria-busy={isLoading}
       >
         <RefreshCw
-          className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
+          className={`size-4 ${isLoading ? 'animate-spin' : ''}`}
         />
         <span className="text-sm sm:text-base">
           {isLoading ? t('intelligence.refreshing') : t('intelligence.refresh')}
@@ -102,7 +102,7 @@ export function RefreshButton({
         aria-busy={isLoading}
       >
         <RefreshCw
-          className={`h-4 w-4 ${isLoading ? 'animate-spin' : ''}`}
+          className={`size-4 ${isLoading ? 'animate-spin' : ''}`}
         />
         <span className="hidden text-sm sm:inline sm:text-base">
           {isLoading ? t('intelligence.refreshing') : t('intelligence.refreshAll')}
@@ -122,7 +122,7 @@ export function RefreshButton({
             disabled={disabled || isLoading}
             aria-label={t('intelligence.selectType')}
           >
-            <ChevronDown className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+            <ChevronDown className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align={isRTL ? 'start' : 'end'} className="w-48">
@@ -131,7 +131,7 @@ export function RefreshButton({
             disabled={isLoading}
             className="gap-2"
           >
-            <RefreshCw className="h-4 w-4" />
+            <RefreshCw className="size-4" />
             <span>{t('intelligence.refreshAll')}</span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
@@ -142,7 +142,7 @@ export function RefreshButton({
               disabled={isLoading}
               className="gap-2"
             >
-              <RefreshCw className="h-4 w-4" />
+              <RefreshCw className="size-4" />
               <span>
                 {isRTL
                   ? INTELLIGENCE_TYPE_LABELS[type].ar

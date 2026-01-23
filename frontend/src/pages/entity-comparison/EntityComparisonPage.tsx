@@ -164,20 +164,20 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+      <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <div className="flex items-center gap-3">
             {step === 2 && (
-              <Button variant="ghost" size="icon" onClick={handleBack} className="flex-shrink-0">
+              <Button variant="ghost" size="icon" onClick={handleBack} className="shrink-0">
                 <ArrowLeft className={cn('h-5 w-5', isRTL && 'rotate-180')} />
               </Button>
             )}
             <div>
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold flex items-center gap-2">
-                <GitCompare className="h-6 w-6 sm:h-7 sm:w-7" />
+              <h1 className="flex items-center gap-2 text-xl font-bold sm:text-2xl lg:text-3xl">
+                <GitCompare className="size-6 sm:size-7" />
                 {t('title')}
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground mt-1">{t('subtitle')}</p>
+              <p className="mt-1 text-sm text-muted-foreground sm:text-base">{t('subtitle')}</p>
             </div>
           </div>
         </div>
@@ -186,7 +186,7 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
         {step === 2 && comparisonResult && (
           <div className="flex items-center gap-2">
             <Button variant="outline" size="sm" onClick={handleRefresh}>
-              <RefreshCcw className="h-4 w-4 me-2" />
+              <RefreshCcw className="me-2 size-4" />
               <span className="hidden sm:inline">{t('actions.refresh')}</span>
             </Button>
             <ComparisonExport comparisonResult={comparisonResult} />
@@ -215,8 +215,8 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
           {/* Loading state */}
           {isComparing && (
             <div className="flex flex-col items-center justify-center py-12 sm:py-16">
-              <Loader2 className="h-8 w-8 animate-spin text-primary mb-4" />
-              <p className="text-sm sm:text-base text-muted-foreground">
+              <Loader2 className="mb-4 size-8 animate-spin text-primary" />
+              <p className="text-sm text-muted-foreground sm:text-base">
                 {t('loading.comparison')}
               </p>
             </div>
@@ -225,7 +225,7 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
           {/* Error state */}
           {hasComparisonError && (
             <Alert variant="destructive" className="mb-6">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertTitle>{t('errors.compareFailed')}</AlertTitle>
               <AlertDescription>
                 {errors?.[0]?.message || t('errors.networkError')}
@@ -248,7 +248,7 @@ export const EntityComparisonPage = memo(function EntityComparisonPage({
           {/* Empty state (no comparison data) */}
           {!comparisonResult && !isComparing && !hasComparisonError && (
             <Alert className="mb-6">
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertTitle>{t('errors.compareFailed')}</AlertTitle>
               <AlertDescription>{t('errors.typeMismatch')}</AlertDescription>
             </Alert>

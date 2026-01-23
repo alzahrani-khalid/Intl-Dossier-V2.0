@@ -240,30 +240,30 @@ export function EvidenceUpload({
             onDrop={handleDrop}
             onClick={() => fileInputRef.current?.click()}
             className={`
-              border-2 border-dashed rounded-lg p-6 sm:p-8 text-center cursor-pointer
-              transition-colors duration-200
+              cursor-pointer rounded-lg border-2 border-dashed p-6 text-center transition-colors
+              duration-200 sm:p-8
               ${
                 isDragging
                   ? 'border-primary bg-primary/5'
                   : 'border-muted-foreground/25 hover:border-primary/50'
               }
-              ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
+              ${disabled ? 'cursor-not-allowed opacity-50' : ''}
             `}
           >
-            <Upload className="size-10 sm:size-12 mx-auto mb-3 text-muted-foreground" />
-            <p className="text-sm sm:text-base font-medium mb-1">
+            <Upload className="mx-auto mb-3 size-10 text-muted-foreground sm:size-12" />
+            <p className="mb-1 text-sm font-medium sm:text-base">
               {t('evidence.dropzone')}
             </p>
-            <p className="text-xs sm:text-sm text-muted-foreground">
+            <p className="text-xs text-muted-foreground sm:text-sm">
               {t('evidence.allowedTypes')}
             </p>
-            <p className="text-xs text-muted-foreground mt-1">
+            <p className="mt-1 text-xs text-muted-foreground">
               {t('evidence.maxSize')}
             </p>
           </div>
 
           {/* Action Buttons */}
-          <div className="flex flex-col sm:flex-row gap-2">
+          <div className="flex flex-col gap-2 sm:flex-row">
             {/* Browse Files Button */}
             <Button
               type="button"
@@ -295,17 +295,17 @@ export function EvidenceUpload({
 
       {/* File selected - show preview and upload button */}
       {selectedFile && (
-        <div className="border rounded-lg p-4">
+        <div className="rounded-lg border p-4">
           {/* File info */}
           <div className="flex items-start gap-3">
             <div className="shrink-0">
               {fileTypeIcons[selectedFile.type] || <File className="size-6 text-gray-500" />}
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="font-medium text-sm truncate text-start">
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-start text-sm font-medium">
                 {selectedFile.name}
               </p>
-              <p className="text-xs text-muted-foreground text-start">
+              <p className="text-start text-xs text-muted-foreground">
                 {fileTypeNames[selectedFile.type] || selectedFile.type} •{' '}
                 {formatFileSize(selectedFile.size)}
               </p>
@@ -327,7 +327,7 @@ export function EvidenceUpload({
           {uploadMutation.isPending && (
             <div className="mt-4 space-y-2">
               <Progress value={uploadProgress} className="h-2" />
-              <p className="text-xs text-muted-foreground text-center">
+              <p className="text-center text-xs text-muted-foreground">
                 {t('evidence.uploading')} {uploadProgress}%
               </p>
             </div>
@@ -345,7 +345,7 @@ export function EvidenceUpload({
 
           {/* Action buttons */}
           {uploadProgress !== 100 && (
-            <div className="mt-4 flex flex-col sm:flex-row gap-2">
+            <div className="mt-4 flex flex-col gap-2 sm:flex-row">
               <Button
                 type="button"
                 variant="outline"

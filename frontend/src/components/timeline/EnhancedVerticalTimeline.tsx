@@ -39,23 +39,23 @@ interface EnhancedVerticalTimelineProps {
  */
 function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
   return (
-    <div className="space-y-8 sm:space-y-12 py-8 sm:py-12">
+    <div className="space-y-8 py-8 sm:space-y-12 sm:py-12">
       {Array.from({ length: count }).map((_, index) => (
         <div
           key={index}
-          className="relative flex items-start gap-4 sm:gap-6 animate-pulse"
+          className="relative flex animate-pulse items-start gap-4 sm:gap-6"
         >
           {/* Icon skeleton */}
-          <div className="flex-shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-muted" />
+          <div className="size-12 shrink-0 rounded-full bg-muted sm:size-14" />
 
           {/* Content skeleton */}
           <div className="flex-1 space-y-3">
-            <div className="h-5 sm:h-6 bg-muted rounded-md w-3/4" />
-            <div className="h-4 bg-muted rounded-md w-1/2" />
-            <div className="h-20 sm:h-24 bg-muted rounded-lg" />
+            <div className="h-5 w-3/4 rounded-md bg-muted sm:h-6" />
+            <div className="h-4 w-1/2 rounded-md bg-muted" />
+            <div className="h-20 rounded-lg bg-muted sm:h-24" />
             <div className="flex gap-2">
-              <div className="h-6 w-16 bg-muted rounded-full" />
-              <div className="h-6 w-20 bg-muted rounded-full" />
+              <div className="h-6 w-16 rounded-full bg-muted" />
+              <div className="h-6 w-20 rounded-full bg-muted" />
             </div>
           </div>
         </div>
@@ -70,14 +70,14 @@ function TimelineLoadingSkeleton({ count = 3 }: { count?: number }) {
 function TimelineEmptyState({ message }: { message: string }) {
   const { t } = useTranslation('dossier');
   return (
-    <div className="flex flex-col items-center justify-center py-16 sm:py-20 lg:py-24 text-center px-4">
-      <div className="rounded-full bg-muted p-8 sm:p-10 lg:p-12 mb-6 sm:mb-8">
-        <Calendar className="h-16 w-16 sm:h-20 sm:w-20 lg:h-24 lg:w-24 text-muted-foreground" />
+    <div className="flex flex-col items-center justify-center px-4 py-16 text-center sm:py-20 lg:py-24">
+      <div className="mb-6 rounded-full bg-muted p-8 sm:mb-8 sm:p-10 lg:p-12">
+        <Calendar className="size-16 text-muted-foreground sm:size-20 lg:size-24" />
       </div>
-      <h3 className="text-xl sm:text-2xl lg:text-3xl font-semibold mb-3">
+      <h3 className="mb-3 text-xl font-semibold sm:text-2xl lg:text-3xl">
         {t('timeline.empty.title')}
       </h3>
-      <p className="text-sm sm:text-base text-muted-foreground max-w-md">
+      <p className="max-w-md text-sm text-muted-foreground sm:text-base">
         {message || t('timeline.empty.description')}
       </p>
     </div>
@@ -90,7 +90,7 @@ function TimelineEmptyState({ message }: { message: string }) {
 function TimelineErrorState({ error }: { error: Error }) {
   const { t } = useTranslation('dossier');
   return (
-    <Alert variant="destructive" className="mb-6 mx-4">
+    <Alert variant="destructive" className="mx-4 mb-6">
       <AlertTitle>{t('timeline.error.title')}</AlertTitle>
       <AlertDescription className="text-start">
         {error.message || t('timeline.error.description')}
@@ -163,7 +163,7 @@ export function EnhancedVerticalTimeline({
       className={cn('w-full bg-background font-sans', className)}
       dir={isRTL ? 'rtl' : 'ltr'}
     >
-      <div className="max-w-7xl mx-auto">
+      <div className="mx-auto max-w-7xl">
         {/* Vertical Timeline */}
         <VerticalTimeline
           animate={true}
@@ -188,18 +188,18 @@ export function EnhancedVerticalTimeline({
         {hasNextPage && (
           <div
             ref={loadMoreRef}
-            className="flex justify-center py-8 sm:py-10 lg:py-12 px-4"
+            className="flex justify-center px-4 py-8 sm:py-10 lg:py-12"
           >
             {isFetchingNextPage ? (
-              <div className="flex items-center gap-3 text-sm sm:text-base text-muted-foreground">
-                <Loader2 className="h-5 w-5 sm:h-6 sm:w-6 animate-spin" />
+              <div className="flex items-center gap-3 text-sm text-muted-foreground sm:text-base">
+                <Loader2 className="size-5 animate-spin sm:size-6" />
                 <span>{t('timeline.loading_more')}</span>
               </div>
             ) : (
               <Button
                 variant="outline"
                 onClick={onLoadMore}
-                className="min-h-11 sm:min-h-10 px-6 sm:px-8"
+                className="min-h-11 px-6 sm:min-h-10 sm:px-8"
                 size="lg"
               >
                 {t('timeline.load_more')}
@@ -210,10 +210,10 @@ export function EnhancedVerticalTimeline({
 
         {/* End of Timeline Indicator */}
         {!hasNextPage && events.length > 0 && (
-          <div className="flex justify-center py-8 sm:py-10 lg:py-12 px-4">
+          <div className="flex justify-center px-4 py-8 sm:py-10 lg:py-12">
             <div className="flex flex-col items-center gap-2 text-center">
               <div className="h-px w-24 bg-border" />
-              <p className="text-xs sm:text-sm text-muted-foreground font-medium">
+              <p className="text-xs font-medium text-muted-foreground sm:text-sm">
                 {t('timeline.end')}
               </p>
               <div className="h-px w-24 bg-border" />

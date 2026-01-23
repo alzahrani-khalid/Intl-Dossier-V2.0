@@ -24,7 +24,7 @@ function AfterActionFormPage() {
 
  if (loadingEngagement) {
  return (
- <div className="container mx-auto p-6 space-y-6">
+ <div className="container mx-auto space-y-6 p-6">
  <Skeleton className="h-8 w-64" />
  <Skeleton className="h-screen w-full" />
  </div>
@@ -64,7 +64,7 @@ function AfterActionFormPage() {
  };
 
  return (
- <div className={`container mx-auto p-6 space-y-6 ${isRTL ? 'rtl' : 'ltr'}`}>
+ <div className={`container mx-auto space-y-6 p-6 ${isRTL ? 'rtl' : 'ltr'}`}>
  {/* Header */}
  <div className="flex items-center gap-4">
  <Button variant="ghost" size="icon" asChild>
@@ -72,7 +72,7 @@ function AfterActionFormPage() {
  to="/engagements/$engagementId"
  params={{ engagementId }}
  >
- <ArrowLeft className={`h-4 w-4 ${isRTL ? 'rotate-180' : ''}`} />
+ <ArrowLeft className={`size-4 ${isRTL ? 'rotate-180' : ''}`} />
  </Link>
  </Button>
  <div>

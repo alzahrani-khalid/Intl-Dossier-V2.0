@@ -129,7 +129,7 @@ export function AttendeesList({
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base sm:text-lg font-semibold text-foreground">
+          <h3 className="text-base font-semibold text-foreground sm:text-lg">
             {t('attendees.title')}
           </h3>
           {totalCount > 0 && (
@@ -159,24 +159,24 @@ export function AttendeesList({
           return (
             <div
               key={attendee.id}
-              className="flex items-center gap-3 p-3 rounded-lg border bg-card hover:bg-accent/50 transition-colors"
+              className="flex items-center gap-3 rounded-lg border bg-card p-3 transition-colors hover:bg-accent/50"
             >
               {/* Avatar */}
-              <Avatar className="h-10 w-10 shrink-0">
+              <Avatar className="size-10 shrink-0">
                 <AvatarFallback className="text-sm">{getInitials(displayName)}</AvatarFallback>
               </Avatar>
 
               {/* Info */}
-              <div className="flex-1 min-w-0">
+              <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <span className="font-medium text-sm sm:text-base text-foreground truncate">
+                  <span className="truncate text-sm font-medium text-foreground sm:text-base">
                     {displayName || t('attendees.name')}
                   </span>
                   {/* Role Icon */}
-                  <RoleIcon className="h-4 w-4 text-muted-foreground shrink-0" />
+                  <RoleIcon className="size-4 shrink-0 text-muted-foreground" />
                 </div>
 
-                <div className="flex flex-wrap items-center gap-2 mt-0.5">
+                <div className="mt-0.5 flex flex-wrap items-center gap-2">
                   {/* Role Badge */}
                   <Badge variant="secondary" className="text-xs">
                     {t(`attendees.roles.${attendee.role}`)}
@@ -193,8 +193,8 @@ export function AttendeesList({
                   {/* Organization */}
                   {(attendee.organization_name_en || attendee.organization_name_ar) && (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Building2 className="h-3 w-3" />
-                      <span className="truncate max-w-[120px]">
+                      <Building2 className="size-3" />
+                      <span className="max-w-[120px] truncate">
                         {isRTL
                           ? attendee.organization_name_ar || attendee.organization_name_en
                           : attendee.organization_name_en}
@@ -205,8 +205,8 @@ export function AttendeesList({
                   {/* Email */}
                   {attendee.email && (
                     <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                      <Mail className="h-3 w-3" />
-                      <span className="truncate max-w-[150px]">{attendee.email}</span>
+                      <Mail className="size-3" />
+                      <span className="max-w-[150px] truncate">{attendee.email}</span>
                     </span>
                   )}
                 </div>
@@ -216,8 +216,8 @@ export function AttendeesList({
               {(onEditAttendee || onRemoveAttendee || onUpdateAttendance) && (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 shrink-0">
-                      <MoreVertical className="h-4 w-4" />
+                    <Button variant="ghost" size="icon" className="size-8 shrink-0">
+                      <MoreVertical className="size-4" />
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -280,9 +280,9 @@ export function AttendeesList({
 
       {/* Empty State with Add Button */}
       {attendees.length === 0 && onAddAttendee && (
-        <div className="text-center py-8 border-2 border-dashed rounded-lg">
-          <Users className="h-10 w-10 mx-auto text-muted-foreground mb-2" />
-          <p className="text-sm text-muted-foreground mb-3">{t('attendees.noAttendees')}</p>
+        <div className="rounded-lg border-2 border-dashed py-8 text-center">
+          <Users className="mx-auto mb-2 size-10 text-muted-foreground" />
+          <p className="mb-3 text-sm text-muted-foreground">{t('attendees.noAttendees')}</p>
           <Button variant="outline" size="sm" onClick={onAddAttendee} className="min-h-9">
             <Plus className={cn('h-4 w-4', isRTL ? 'ms-1' : 'me-1')} />
             {t('attendees.addAttendee')}

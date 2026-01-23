@@ -72,7 +72,7 @@ function TemplateCard({
       transition={{ duration: 0.2 }}
     >
       <Card
-        className="group cursor-pointer h-full transition-all duration-300 hover:shadow-lg hover:border-primary/50 overflow-hidden"
+        className="group h-full cursor-pointer overflow-hidden transition-all duration-300 hover:border-primary/50 hover:shadow-lg"
         onClick={onClick}
         role="button"
         tabIndex={0}
@@ -92,19 +92,19 @@ function TemplateCard({
           )}
         >
           <div className="absolute inset-0 bg-black/10" />
-          <Icon className="absolute end-3 bottom-3 h-10 w-10 sm:h-12 sm:w-12 text-white/30 group-hover:text-white/50 transition-colors" />
+          <Icon className="absolute bottom-3 end-3 size-10 text-white/30 transition-colors group-hover:text-white/50 sm:size-12" />
           {/* Section count badge */}
           <Badge
             variant="secondary"
-            className="absolute top-3 start-3 bg-white/90 text-foreground text-xs"
+            className="absolute start-3 top-3 bg-white/90 text-xs text-foreground"
           >
             {t('templates.card.sectionsCount', { count: template.sections.length })}
           </Badge>
         </div>
 
-        <CardHeader className="p-3 sm:p-4 pb-2">
+        <CardHeader className="p-3 pb-2 sm:p-4">
           <div className="flex items-start justify-between gap-2">
-            <CardTitle className="text-sm sm:text-base font-semibold line-clamp-1 text-start">
+            <CardTitle className="line-clamp-1 text-start text-sm font-semibold sm:text-base">
               {isRTL ? template.name_ar : template.name_en}
             </CardTitle>
             <ChevronRight
@@ -114,15 +114,15 @@ function TemplateCard({
               )}
             />
           </div>
-          <CardDescription className="text-xs sm:text-sm line-clamp-2 text-start mt-1">
+          <CardDescription className="mt-1 line-clamp-2 text-start text-xs sm:text-sm">
             {isRTL ? template.description_ar : template.description_en}
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="p-3 sm:p-4 pt-0">
+        <CardContent className="p-3 pt-0 sm:p-4">
           {/* Required sections indicator */}
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <Layers className="h-3 w-3" />
+            <Layers className="size-3" />
             <span>
               {requiredCount} {t('templates.card.required')}
             </span>
@@ -148,7 +148,7 @@ function StartFromScratchCard({ onClick, isRTL }: { onClick: () => void; isRTL: 
       transition={{ duration: 0.2 }}
     >
       <Card
-        className="group cursor-pointer h-full transition-all duration-300 hover:shadow-lg hover:border-primary/50 border-dashed"
+        className="group h-full cursor-pointer border-dashed transition-all duration-300 hover:border-primary/50 hover:shadow-lg"
         onClick={onClick}
         role="button"
         tabIndex={0}
@@ -161,13 +161,13 @@ function StartFromScratchCard({ onClick, isRTL }: { onClick: () => void; isRTL: 
         aria-label={t('templates.gallery.startFromScratch')}
       >
         {/* Placeholder header */}
-        <div className="h-20 sm:h-24 relative overflow-hidden bg-muted/50 flex items-center justify-center">
-          <Plus className="h-10 w-10 sm:h-12 sm:w-12 text-muted-foreground/50 group-hover:text-primary/50 transition-colors" />
+        <div className="relative flex h-20 items-center justify-center overflow-hidden bg-muted/50 sm:h-24">
+          <Plus className="size-10 text-muted-foreground/50 transition-colors group-hover:text-primary/50 sm:size-12" />
         </div>
 
-        <CardHeader className="p-3 sm:p-4 pb-2">
+        <CardHeader className="p-3 pb-2 sm:p-4">
           <div className="flex items-start justify-between gap-2">
-            <CardTitle className="text-sm sm:text-base font-semibold text-start">
+            <CardTitle className="text-start text-sm font-semibold sm:text-base">
               {t('templates.gallery.startFromScratch')}
             </CardTitle>
             <ChevronRight
@@ -177,14 +177,14 @@ function StartFromScratchCard({ onClick, isRTL }: { onClick: () => void; isRTL: 
               )}
             />
           </div>
-          <CardDescription className="text-xs sm:text-sm text-start mt-1">
+          <CardDescription className="mt-1 text-start text-xs sm:text-sm">
             {t('templates.gallery.startFromScratchDescription')}
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="p-3 sm:p-4 pt-0">
+        <CardContent className="p-3 pt-0 sm:p-4">
           <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
-            <FileText className="h-3 w-3" />
+            <FileText className="size-3" />
             <span>{t('create.selectTypeTitle')}</span>
           </div>
         </CardContent>
@@ -224,10 +224,10 @@ export function DossierTemplateGallery({
     <div className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
       <div className="mb-4 sm:mb-6">
-        <h2 className="text-lg sm:text-xl font-semibold text-start">
+        <h2 className="text-start text-lg font-semibold sm:text-xl">
           {t('templates.gallery.title')}
         </h2>
-        <p className="text-sm text-muted-foreground text-start mt-1">
+        <p className="mt-1 text-start text-sm text-muted-foreground">
           {t('templates.gallery.description')}
         </p>
       </div>
@@ -238,12 +238,12 @@ export function DossierTemplateGallery({
         onValueChange={(v) => setSelectedCategory(v as TemplateCategory | 'all')}
         className="mb-4 sm:mb-6"
       >
-        <TabsList className="h-auto flex-wrap gap-1 bg-transparent p-0 justify-start">
+        <TabsList className="h-auto flex-wrap justify-start gap-1 bg-transparent p-0">
           {categories.map((cat) => (
             <TabsTrigger
               key={cat.value}
               value={cat.value}
-              className="min-h-9 sm:min-h-10 px-3 sm:px-4 text-xs sm:text-sm data-[state=active]:bg-primary data-[state=active]:text-primary-foreground rounded-full"
+              className="min-h-9 rounded-full px-3 text-xs data-[state=active]:bg-primary data-[state=active]:text-primary-foreground sm:min-h-10 sm:px-4 sm:text-sm"
             >
               {cat.label}
             </TabsTrigger>
@@ -253,7 +253,7 @@ export function DossierTemplateGallery({
 
       {/* Template Grid */}
       <div
-        className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4"
+        className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-3"
         data-testid="template-gallery-grid"
       >
         {/* Start from scratch option */}
@@ -274,10 +274,10 @@ export function DossierTemplateGallery({
 
       {/* Empty state */}
       {filteredTemplates.length === 0 && (
-        <div className="text-center py-8 sm:py-12">
-          <FileText className="h-12 w-12 mx-auto text-muted-foreground/50 mb-4" />
+        <div className="py-8 text-center sm:py-12">
+          <FileText className="mx-auto mb-4 size-12 text-muted-foreground/50" />
           <p className="text-muted-foreground">{t('templates.empty.title')}</p>
-          <p className="text-sm text-muted-foreground mt-1">{t('templates.empty.description')}</p>
+          <p className="mt-1 text-sm text-muted-foreground">{t('templates.empty.description')}</p>
         </div>
       )}
     </div>

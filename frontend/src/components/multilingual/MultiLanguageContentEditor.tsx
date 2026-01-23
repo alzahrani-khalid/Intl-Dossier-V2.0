@@ -116,12 +116,12 @@ function FieldEditor({
                   size="sm"
                   onClick={onTranslate}
                   disabled={disabled || isTranslating}
-                  className="h-7 px-2 text-xs gap-1"
+                  className="h-7 gap-1 px-2 text-xs"
                 >
                   {isTranslating ? (
-                    <Loader2 className="h-3 w-3 animate-spin" />
+                    <Loader2 className="size-3 animate-spin" />
                   ) : (
-                    <Sparkles className="h-3 w-3" />
+                    <Sparkles className="size-3" />
                   )}
                   <span>{t('translate')}</span>
                 </Button>
@@ -319,7 +319,7 @@ export function MultiLanguageContentEditor({
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+        <Loader2 className="size-6 animate-spin text-muted-foreground" />
       </div>
     )
   }
@@ -327,10 +327,10 @@ export function MultiLanguageContentEditor({
   return (
     <Card className={cn('w-full', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader className="space-y-4">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <div>
             <CardTitle className="flex items-center gap-2">
-              <Globe className="h-5 w-5" />
+              <Globe className="size-5" />
               <span>{t('multiLanguageContent')}</span>
             </CardTitle>
             <CardDescription>{t('multiLanguageContentDescription')}</CardDescription>
@@ -338,9 +338,9 @@ export function MultiLanguageContentEditor({
           {!readOnly && hasUnsavedChanges && (
             <Button onClick={handleSave} disabled={isUpdating} size="sm">
               {isUpdating ? (
-                <Loader2 className="h-4 w-4 animate-spin me-2" />
+                <Loader2 className="me-2 size-4 animate-spin" />
               ) : (
-                <Check className="h-4 w-4 me-2" />
+                <Check className="me-2 size-4" />
               )}
               {t('saveChanges')}
             </Button>
@@ -358,8 +358,8 @@ export function MultiLanguageContentEditor({
 
         {/* Error display */}
         {error && (
-          <div className="flex items-center gap-2 text-destructive text-sm">
-            <AlertCircle className="h-4 w-4" />
+          <div className="flex items-center gap-2 text-sm text-destructive">
+            <AlertCircle className="size-4" />
             <span>{error}</span>
           </div>
         )}
@@ -367,7 +367,7 @@ export function MultiLanguageContentEditor({
 
       <CardContent className="space-y-6">
         {/* Language tabs */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="flex flex-col justify-between gap-4 sm:flex-row sm:items-center">
           <ContentLanguageTabs
             value={selectedLanguage}
             onChange={setSelectedLanguage}
@@ -389,7 +389,7 @@ export function MultiLanguageContentEditor({
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
                     <Button variant="ghost" size="sm" className="text-destructive">
-                      <Trash2 className="h-4 w-4" />
+                      <Trash2 className="size-4" />
                     </Button>
                   </AlertDialogTrigger>
                   <AlertDialogContent dir={isRTL ? 'rtl' : 'ltr'}>
@@ -424,7 +424,7 @@ export function MultiLanguageContentEditor({
                         size="sm"
                         onClick={() => setPrimaryLanguage(selectedLanguage)}
                       >
-                        <Star className="h-4 w-4" />
+                        <Star className="size-4" />
                       </Button>
                     </TooltipTrigger>
                     <TooltipContent>
@@ -440,7 +440,7 @@ export function MultiLanguageContentEditor({
         {/* Primary language indicator */}
         {settings?.primary_language === selectedLanguage && (
           <Badge variant="secondary" className="gap-1">
-            <Star className="h-3 w-3" />
+            <Star className="size-3" />
             {t('primaryLanguage')}
           </Badge>
         )}
@@ -475,7 +475,7 @@ export function MultiLanguageContentEditor({
 
         {/* Quick translate all button */}
         {showTranslateButtons && !readOnly && (
-          <div className="pt-4 border-t">
+          <div className="border-t pt-4">
             <Button
               variant="outline"
               size="sm"
@@ -490,9 +490,9 @@ export function MultiLanguageContentEditor({
               className="gap-2"
             >
               {isTranslating ? (
-                <Loader2 className="h-4 w-4 animate-spin" />
+                <Loader2 className="size-4 animate-spin" />
               ) : (
-                <Languages className="h-4 w-4" />
+                <Languages className="size-4" />
               )}
               {t('translateAllMissing')}
             </Button>

@@ -67,18 +67,18 @@ interface AgendaDocumentsListProps {
 
 // File type icons
 const FILE_ICONS: Record<string, React.ReactNode> = {
-  pdf: <FileText className="h-5 w-5 text-red-500" />,
-  doc: <FileText className="h-5 w-5 text-blue-500" />,
-  docx: <FileText className="h-5 w-5 text-blue-500" />,
-  xls: <FileSpreadsheet className="h-5 w-5 text-green-500" />,
-  xlsx: <FileSpreadsheet className="h-5 w-5 text-green-500" />,
-  ppt: <Presentation className="h-5 w-5 text-orange-500" />,
-  pptx: <Presentation className="h-5 w-5 text-orange-500" />,
-  jpg: <Image className="h-5 w-5 text-purple-500" />,
-  jpeg: <Image className="h-5 w-5 text-purple-500" />,
-  png: <Image className="h-5 w-5 text-purple-500" />,
-  gif: <Image className="h-5 w-5 text-purple-500" />,
-  default: <File className="h-5 w-5 text-gray-500" />,
+  pdf: <FileText className="size-5 text-red-500" />,
+  doc: <FileText className="size-5 text-blue-500" />,
+  docx: <FileText className="size-5 text-blue-500" />,
+  xls: <FileSpreadsheet className="size-5 text-green-500" />,
+  xlsx: <FileSpreadsheet className="size-5 text-green-500" />,
+  ppt: <Presentation className="size-5 text-orange-500" />,
+  pptx: <Presentation className="size-5 text-orange-500" />,
+  jpg: <Image className="size-5 text-purple-500" />,
+  jpeg: <Image className="size-5 text-purple-500" />,
+  png: <Image className="size-5 text-purple-500" />,
+  gif: <Image className="size-5 text-purple-500" />,
+  default: <File className="size-5 text-gray-500" />,
 }
 
 // Document type colors
@@ -225,7 +225,7 @@ export function AgendaDocumentsList({
         className="flex items-center gap-3 rounded-lg border p-3 transition-colors hover:bg-muted/50"
       >
         {/* Icon */}
-        <div className="flex-shrink-0">{icon}</div>
+        <div className="shrink-0">{icon}</div>
 
         {/* Info */}
         <div className="min-w-0 flex-1">
@@ -257,7 +257,7 @@ export function AgendaDocumentsList({
               window.open(doc.storage_path, '_blank')
             }}
           >
-            <Eye className="h-4 w-4" />
+            <Eye className="size-4" />
           </Button>
 
           <Button
@@ -272,14 +272,14 @@ export function AgendaDocumentsList({
               link.click()
             }}
           >
-            <Download className="h-4 w-4" />
+            <Download className="size-4" />
           </Button>
 
           {canEdit && (
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="sm" className="min-h-9 min-w-9">
-                  <MoreHorizontal className="h-4 w-4" />
+                  <MoreHorizontal className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -303,7 +303,7 @@ export function AgendaDocumentsList({
       <CardHeader className="pb-3">
         <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="flex items-center gap-2 text-base">
-            <Paperclip className="h-5 w-5" />
+            <Paperclip className="size-5" />
             {t('documents')}
             <Badge variant="secondary">{documents.length}</Badge>
           </CardTitle>
@@ -335,7 +335,7 @@ export function AgendaDocumentsList({
             )}
           >
             <input {...getInputProps()} />
-            <Upload className="mx-auto h-8 w-8 text-muted-foreground" />
+            <Upload className="mx-auto size-8 text-muted-foreground" />
             <p className="mt-2 text-sm text-muted-foreground">
               {isDragActive ? t('dropFileHere') : t('dragOrClickToUpload')}
             </p>
@@ -345,7 +345,7 @@ export function AgendaDocumentsList({
 
         {documents.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-8 text-center">
-            <FileText className="h-12 w-12 text-muted-foreground/50" />
+            <FileText className="size-12 text-muted-foreground/50" />
             <p className="mt-4 text-muted-foreground">{t('noDocuments')}</p>
           </div>
         ) : (
@@ -366,7 +366,7 @@ export function AgendaDocumentsList({
               .map(([itemId, docs]) => (
                 <div key={itemId} className="space-y-2">
                   <h4 className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
-                    <Link className="h-4 w-4" />
+                    <Link className="size-4" />
                     {getItemTitle(itemId)}
                   </h4>
                   <div className="space-y-2">{docs.map(renderDocument)}</div>

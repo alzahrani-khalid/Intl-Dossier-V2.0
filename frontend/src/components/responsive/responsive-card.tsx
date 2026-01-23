@@ -86,14 +86,14 @@ export function ResponsiveCard({
  )}
  {shouldEnableCollapse && (
  <button
- className="p-1 hover:bg-accent rounded-md transition-colors"
+ className="rounded-md p-1 transition-colors hover:bg-accent"
  aria-expanded={!isCollapsed}
  aria-label={isCollapsed ? 'Expand' : 'Collapse'}
  >
  {isCollapsed ? (
- <ChevronDown className="h-4 w-4" />
+ <ChevronDown className="size-4" />
  ) : (
- <ChevronUp className="h-4 w-4" />
+ <ChevronUp className="size-4" />
  )}
  </button>
  )}

@@ -43,7 +43,7 @@ export function CapacityPanel({ staffId, unitId, className, compact = false }: C
  <Card className={cn('capacity-panel', className)}>
  <CardContent className="pt-6">
  <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
- <AlertCircle className="w-5 h-5" />
+ <AlertCircle className="size-5" />
  <p className="text-sm">{t('assignments:capacity.error.noIdProvided')}</p>
  </div>
  </CardContent>
@@ -78,14 +78,14 @@ export function CapacityPanel({ staffId, unitId, className, compact = false }: C
  <div className={cn('capacity-panel-compact space-y-2', className)}>
  {isLoading && (
  <div className="flex items-center gap-2 text-sm text-gray-500">
- <Loader2 className="w-4 h-4 animate-spin" />
+ <Loader2 className="size-4 animate-spin" />
  {t('common:loading')}...
  </div>
  )}
 
  {isError && (
  <div className="flex items-center gap-2 text-sm text-red-600 dark:text-red-400">
- <AlertCircle className="w-4 h-4" />
+ <AlertCircle className="size-4" />
  {error?.message}
  </div>
  )}
@@ -94,7 +94,7 @@ export function CapacityPanel({ staffId, unitId, className, compact = false }: C
  <>
  <div className="flex items-center justify-between">
  <div className="flex items-center gap-2">
- {staffId ? <User className="w-4 h-4" /> : <Users className="w-4 h-4" />}
+ {staffId ? <User className="size-4" /> : <Users className="size-4" />}
  <span className="text-sm font-medium">
  {data.wip_current}/{data.wip_limit}
  </span>
@@ -118,7 +118,7 @@ export function CapacityPanel({ staffId, unitId, className, compact = false }: C
  <Card className={cn('capacity-panel', className)}>
  <CardHeader>
  <CardTitle className="flex items-center gap-2 text-lg">
- {staffId ? <User className="w-5 h-5" /> : <Users className="w-5 h-5" />}
+ {staffId ? <User className="size-5" /> : <Users className="size-5" />}
  {t('assignments:capacity.title')}
  </CardTitle>
  <CardDescription>
@@ -131,14 +131,14 @@ export function CapacityPanel({ staffId, unitId, className, compact = false }: C
  <CardContent className="space-y-4">
  {isLoading && (
  <div className="flex items-center gap-2 text-gray-500">
- <Loader2 className="w-5 h-5 animate-spin" />
+ <Loader2 className="size-5 animate-spin" />
  {t('common:loading')}...
  </div>
  )}
 
  {isError && (
  <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
- <AlertCircle className="w-5 h-5" />
+ <AlertCircle className="size-5" />
  <div>
  <p className="font-medium">{t('assignments:capacity.error.title')}</p>
  <p className="text-sm">{error?.message}</p>
@@ -159,7 +159,7 @@ export function CapacityPanel({ staffId, unitId, className, compact = false }: C
  {t('assignments:capacity.currentAssignments')}
  </p>
  </div>
- <Badge variant={getStatusBadgeVariant(data.utilization_pct)} className="text-lg px-3 py-1">
+ <Badge variant={getStatusBadgeVariant(data.utilization_pct)} className="px-3 py-1 text-lg">
  {data.utilization_pct.toFixed(1)}%
  </Badge>
  </div>
@@ -179,7 +179,7 @@ export function CapacityPanel({ staffId, unitId, className, compact = false }: C
  </div>
 
  {/* Capacity Breakdown */}
- <div className="grid grid-cols-2 gap-4 pt-2 border-t">
+ <div className="grid grid-cols-2 gap-4 border-t pt-2">
  <div>
  <p className="text-sm text-gray-500 dark:text-gray-400">
  {t('assignments:capacity.available')}

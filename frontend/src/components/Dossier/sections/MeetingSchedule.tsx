@@ -35,11 +35,11 @@ export function MeetingSchedule({
     <div className="space-y-4" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Next Meeting Highlight */}
       {nextMeetingDate && (
-        <div className="p-4 rounded-lg bg-primary/10 border border-primary/20">
+        <div className="rounded-lg border border-primary/20 bg-primary/10 p-4">
           <div className="flex items-start gap-3">
-            <CalendarDays className="h-5 w-5 text-primary shrink-0 mt-0.5" />
+            <CalendarDays className="mt-0.5 size-5 shrink-0 text-primary" />
             <div className="flex-1">
-              <h4 className="text-sm font-medium text-primary mb-1">
+              <h4 className="mb-1 text-sm font-medium text-primary">
                 Next Meeting
               </h4>
               <p className="text-xs text-muted-foreground">
@@ -56,11 +56,11 @@ export function MeetingSchedule({
 
       {/* Meeting Frequency Info (for Forums) */}
       {dossier.type === 'forum' && dossier.extension.meeting_frequency && (
-        <div className="p-4 rounded-lg bg-muted/30">
+        <div className="rounded-lg bg-muted/30 p-4">
           <div className="flex items-start gap-3">
-            <Clock className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
+            <Clock className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
             <div className="flex-1">
-              <h4 className="text-sm font-medium mb-1">Meeting Frequency</h4>
+              <h4 className="mb-1 text-sm font-medium">Meeting Frequency</h4>
               <p className="text-xs text-muted-foreground">
                 {dossier.extension.meeting_frequency}
               </p>
@@ -71,9 +71,9 @@ export function MeetingSchedule({
 
       {/* Upcoming Meetings List (Placeholder) */}
       {meetings.length === 0 && (
-        <div className="text-center py-6 sm:py-8">
-          <CalendarDays className="h-8 w-8 sm:h-10 sm:w-10 text-muted-foreground mx-auto mb-3" />
-          <p className="text-xs sm:text-sm text-muted-foreground">
+        <div className="py-6 text-center sm:py-8">
+          <CalendarDays className="mx-auto mb-3 size-8 text-muted-foreground sm:size-10" />
+          <p className="text-xs text-muted-foreground sm:text-sm">
             Calendar integration pending. Meetings will appear here.
           </p>
         </div>

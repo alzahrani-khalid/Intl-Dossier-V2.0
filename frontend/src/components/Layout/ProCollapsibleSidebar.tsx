@@ -105,7 +105,7 @@ export function ProCollapsibleSidebar({
           {isActive && (
             <motion.div
               layoutId="active-sidebar-link"
-              className="absolute inset-0 bg-sidebar-accent rounded-lg z-10"
+              className="absolute inset-0 z-10 rounded-lg bg-sidebar-accent"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
@@ -136,7 +136,7 @@ export function ProCollapsibleSidebar({
             )}
           />
           <motion.span
-            className="text-sm whitespace-pre"
+            className="whitespace-pre text-sm"
             animate={{
               display: effectiveIsOpen ? 'inline-block' : 'none',
               opacity: effectiveIsOpen ? 1 : 0,
@@ -175,7 +175,7 @@ export function ProCollapsibleSidebar({
           <TooltipContent side={isRTL ? 'left' : 'right'} className="flex items-center gap-2">
             {labelText}
             {item.badgeCount !== undefined && item.badgeCount > 0 && (
-              <span className="flex h-5 min-w-5 items-center justify-center rounded-md px-1 bg-primary text-primary-foreground text-xs font-medium">
+              <span className="flex h-5 min-w-5 items-center justify-center rounded-md bg-primary px-1 text-xs font-medium text-primary-foreground">
                 {item.badgeCount > 99 ? '99+' : item.badgeCount}
               </span>
             )}
@@ -231,12 +231,12 @@ export function ProCollapsibleSidebar({
                 : t('sidebar.expand', 'Expand sidebar')
             }
           >
-            <IconArrowNarrowLeft className="h-5 w-5 sm:h-4 sm:w-4 text-sidebar-foreground/80 hover:text-sidebar-foreground" />
+            <IconArrowNarrowLeft className="size-5 text-sidebar-foreground/80 hover:text-sidebar-foreground sm:size-4" />
           </button>
         )}
 
         {/* Header */}
-        <div className="px-4 py-4">
+        <div className="p-4">
           <Link
             to="/dashboard"
             className="flex items-center gap-3 transition-transform hover:scale-[1.02] active:scale-[0.98]"
@@ -277,7 +277,7 @@ export function ProCollapsibleSidebar({
                 compact={true}
               />
             </div>
-            <Separator className="my-2 mx-3" />
+            <Separator className="mx-3 my-2" />
           </>
         )}
 
@@ -296,7 +296,7 @@ export function ProCollapsibleSidebar({
               }
             >
               {effectiveIsOpen && (
-                <h3 className="px-2 mb-2 sm:mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
+                <h3 className="mb-2 px-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground sm:mb-2">
                   {t(section.label, section.label)}
                 </h3>
               )}
@@ -322,9 +322,9 @@ export function ProCollapsibleSidebar({
         </div>
 
         {/* Footer */}
-        <div className="px-4 py-4 border-t border-sidebar-border">
+        <div className="border-t border-sidebar-border p-4">
           {/* Settings & Help */}
-          <div className="space-y-1 mb-4">
+          <div className="mb-4 space-y-1">
             {bottomNavigationItems.map((item) => (
               <SidebarLink
                 key={item.id}
@@ -337,7 +337,7 @@ export function ProCollapsibleSidebar({
 
           {/* Theme, Language & Notifications Controls */}
           {effectiveIsOpen && (
-            <div className="flex items-center justify-center gap-2 mb-4">
+            <div className="mb-4 flex items-center justify-center gap-2">
               <LanguageToggle compact />
               <ThemeSelector />
               <NotificationPanel />
@@ -345,13 +345,13 @@ export function ProCollapsibleSidebar({
           )}
 
           {/* User Profile */}
-          <div className="flex items-center gap-3 px-2 py-2 rounded-lg hover:bg-sidebar-accent/50 transition-colors">
+          <div className="flex items-center gap-3 rounded-lg p-2 transition-colors hover:bg-sidebar-accent/50">
             <div className="flex aspect-square size-8 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-sm">
               <span className="text-sm font-bold">{userInitials}</span>
             </div>
             {effectiveIsOpen && (
               <>
-                <div className="grid flex-1 text-start text-sm leading-tight min-w-0">
+                <div className="grid min-w-0 flex-1 text-start text-sm leading-tight">
                   <span className="truncate font-semibold text-sidebar-foreground">
                     {user?.name ?? user?.email}
                   </span>
@@ -368,7 +368,7 @@ export function ProCollapsibleSidebar({
                   )}
                   aria-label={t('common.logout', 'Sign out')}
                 >
-                  <LogOut className="h-4 w-4" />
+                  <LogOut className="size-4" />
                 </button>
               </>
             )}
@@ -414,14 +414,14 @@ export function ProCollapsibleSidebarWrapper({ children }: { children: React.Rea
             )}
             aria-label={t('sidebar.openMenu', 'Open menu')}
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="size-5" />
           </Button>
         </SheetTrigger>
 
         {/* Mobile Sheet Content */}
         <SheetContent
           side={isRTL ? 'right' : 'left'}
-          className="w-[300px] p-0 bg-sidebar border-sidebar-border"
+          className="w-[300px] border-sidebar-border bg-sidebar p-0"
         >
           {/* Accessibility: Required for screen readers, visually hidden */}
           <SheetHeader className="sr-only">

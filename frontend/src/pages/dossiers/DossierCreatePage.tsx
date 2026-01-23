@@ -119,16 +119,16 @@ export function DossierCreatePage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8"
+      className="container mx-auto p-4 sm:p-6 lg:p-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Header */}
-      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-6 sm:mb-8">
+      <div className="mb-6 flex flex-col gap-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start">
+          <h1 className="text-start text-2xl font-bold sm:text-3xl md:text-4xl">
             {t('create.title')}
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground text-start mt-1 sm:mt-2">
+          <p className="mt-1 text-start text-sm text-muted-foreground sm:mt-2 sm:text-base">
             {createMode === 'gallery'
               ? t('templates.subtitle')
               : createMode === 'ai-wizard'
@@ -148,7 +148,7 @@ export function DossierCreatePage() {
           onClick={handleBack}
           variant="ghost"
           size="sm"
-          className="self-start sm:self-center min-h-11"
+          className="min-h-11 self-start sm:self-center"
         >
           <ArrowLeft className={cn('h-4 w-4', isRTL ? 'ms-2 rotate-180' : 'me-2')} />
           {createMode === 'wizard' || createMode === 'ai-wizard'
@@ -160,24 +160,24 @@ export function DossierCreatePage() {
       {/* Main Content */}
       {createMode === 'gallery' ? (
         // Template Gallery View with AI Option
-        <div className="max-w-5xl mx-auto space-y-6">
+        <div className="mx-auto max-w-5xl space-y-6">
           {/* AI-Assisted Creation Card */}
           <Card className="border-primary/20 bg-gradient-to-br from-primary/5 to-transparent">
             <CardHeader className="p-4 sm:p-6">
               <div className="flex items-center gap-3">
-                <div className="p-2 bg-gradient-to-br from-primary/20 to-primary/5 rounded-lg">
-                  <Sparkles className="h-6 w-6 text-primary" />
+                <div className="rounded-lg bg-gradient-to-br from-primary/20 to-primary/5 p-2">
+                  <Sparkles className="size-6 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <CardTitle className="text-lg sm:text-xl text-start flex items-center gap-2">
+                  <CardTitle className="flex items-center gap-2 text-start text-lg sm:text-xl">
                     {isRTL
                       ? 'إنشاء موجز سياسي بمساعدة الذكاء الاصطناعي'
                       : 'AI-Assisted Policy Brief Creation'}
-                    <span className="text-xs bg-primary/10 text-primary px-2 py-0.5 rounded-full font-normal">
+                    <span className="rounded-full bg-primary/10 px-2 py-0.5 text-xs font-normal text-primary">
                       {isRTL ? 'جديد' : 'New'}
                     </span>
                   </CardTitle>
-                  <CardDescription className="text-sm sm:text-base text-start mt-1">
+                  <CardDescription className="mt-1 text-start text-sm sm:text-base">
                     {isRTL
                       ? 'أجب على 3-4 أسئلة بسيطة واحصل على مخطط موجز سياسي منظم مع أقسام مقترحة ومحتوى قابل للتعديل'
                       : 'Answer 3-4 simple questions and get a structured policy brief outline with suggested sections and editable content'}
@@ -185,9 +185,9 @@ export function DossierCreatePage() {
                 </div>
               </div>
             </CardHeader>
-            <CardContent className="p-4 sm:p-6 pt-0">
-              <Button onClick={handleStartAIWizard} className="w-full sm:w-auto min-h-11" size="lg">
-                <Wand2 className="h-4 w-4 me-2" />
+            <CardContent className="p-4 pt-0 sm:p-6">
+              <Button onClick={handleStartAIWizard} className="min-h-11 w-full sm:w-auto" size="lg">
+                <Wand2 className="me-2 size-4" />
                 {isRTL ? 'ابدأ مع مساعد الذكاء الاصطناعي' : 'Start with AI Assistant'}
               </Button>
             </CardContent>
@@ -197,12 +197,12 @@ export function DossierCreatePage() {
           <Card>
             <CardHeader className="p-4 sm:p-6">
               <div className="flex items-center gap-2">
-                <LayoutTemplate className="h-5 w-5 text-primary" />
-                <CardTitle className="text-lg sm:text-xl text-start">
+                <LayoutTemplate className="size-5 text-primary" />
+                <CardTitle className="text-start text-lg sm:text-xl">
                   {t('templates.gallery.title')}
                 </CardTitle>
               </div>
-              <CardDescription className="text-sm sm:text-base text-start">
+              <CardDescription className="text-start text-sm sm:text-base">
                 {t('templates.gallery.description')}
               </CardDescription>
             </CardHeader>
@@ -216,22 +216,22 @@ export function DossierCreatePage() {
         </div>
       ) : createMode === 'ai-wizard' ? (
         // AI Wizard View
-        <Card className="max-w-4xl mx-auto">
+        <Card className="mx-auto max-w-4xl">
           <CardContent className="p-4 sm:p-6">
             <AIPolicyBriefWizard onComplete={handleAIOutlineComplete} onCancel={handleBack} />
           </CardContent>
         </Card>
       ) : (
         // Standard Wizard View
-        <Card className="max-w-4xl mx-auto">
+        <Card className="mx-auto max-w-4xl">
           <CardHeader className="p-4 sm:p-6">
             <div className="flex items-center gap-2">
               {aiGeneratedSections ? (
-                <Sparkles className="h-5 w-5 text-primary" />
+                <Sparkles className="size-5 text-primary" />
               ) : (
-                <FileText className="h-5 w-5 text-primary" />
+                <FileText className="size-5 text-primary" />
               )}
-              <CardTitle className="text-lg sm:text-xl text-start">
+              <CardTitle className="text-start text-lg sm:text-xl">
                 {selectedTemplate
                   ? isRTL
                     ? selectedTemplate.name_ar
@@ -243,7 +243,7 @@ export function DossierCreatePage() {
                     : t('create.selectTypeTitle')}
               </CardTitle>
             </div>
-            <CardDescription className="text-sm sm:text-base text-start">
+            <CardDescription className="text-start text-sm sm:text-base">
               {selectedTemplate
                 ? isRTL
                   ? selectedTemplate.description_ar
@@ -268,8 +268,8 @@ export function DossierCreatePage() {
       )}
 
       {/* Help Text */}
-      <div className="max-w-5xl mx-auto mt-4 sm:mt-6 p-4 bg-muted rounded-lg">
-        <p className="text-xs sm:text-sm text-muted-foreground text-start">
+      <div className="mx-auto mt-4 max-w-5xl rounded-lg bg-muted p-4 sm:mt-6">
+        <p className="text-start text-xs text-muted-foreground sm:text-sm">
           <strong>{t('create.helpTitle')}:</strong>{' '}
           {createMode === 'gallery' ? t('templates.gallery.description') : t('create.helpText')}
         </p>

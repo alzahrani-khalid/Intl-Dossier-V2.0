@@ -41,11 +41,11 @@ interface ImportValidationResultsProps {
 }
 
 const STATUS_ICONS: Record<string, React.ReactNode> = {
-  valid: <CheckCircle2 className="h-4 w-4 text-green-500" />,
-  invalid: <XCircle className="h-4 w-4 text-red-500" />,
-  warning: <AlertTriangle className="h-4 w-4 text-yellow-500" />,
-  conflict: <AlertCircle className="h-4 w-4 text-blue-500" />,
-  pending: <AlertCircle className="h-4 w-4 text-muted-foreground" />,
+  valid: <CheckCircle2 className="size-4 text-green-500" />,
+  invalid: <XCircle className="size-4 text-red-500" />,
+  warning: <AlertTriangle className="size-4 text-yellow-500" />,
+  conflict: <AlertCircle className="size-4 text-blue-500" />,
+  pending: <AlertCircle className="size-4 text-muted-foreground" />,
 }
 
 const STATUS_BADGES: Record<
@@ -125,26 +125,26 @@ export function ImportValidationResults({
   return (
     <div className={cn('space-y-4', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Summary Cards */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="rounded-lg border p-3 bg-card">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+        <div className="rounded-lg border bg-card p-3">
           <div className="text-2xl font-bold">{result.totalRows}</div>
           <div className="text-xs text-muted-foreground">
             {t('import.validation.summary.totalRows')}
           </div>
         </div>
-        <div className="rounded-lg border p-3 bg-green-50 dark:bg-green-900/20">
+        <div className="rounded-lg border bg-green-50 p-3 dark:bg-green-900/20">
           <div className="text-2xl font-bold text-green-600">{result.validRows}</div>
           <div className="text-xs text-green-700 dark:text-green-400">
             {t('import.validation.summary.validRows')}
           </div>
         </div>
-        <div className="rounded-lg border p-3 bg-red-50 dark:bg-red-900/20">
+        <div className="rounded-lg border bg-red-50 p-3 dark:bg-red-900/20">
           <div className="text-2xl font-bold text-red-600">{result.invalidRows}</div>
           <div className="text-xs text-red-700 dark:text-red-400">
             {t('import.validation.summary.invalidRows')}
           </div>
         </div>
-        <div className="rounded-lg border p-3 bg-yellow-50 dark:bg-yellow-900/20">
+        <div className="rounded-lg border bg-yellow-50 p-3 dark:bg-yellow-900/20">
           <div className="text-2xl font-bold text-yellow-600">{result.warningRows}</div>
           <div className="text-xs text-yellow-700 dark:text-yellow-400">
             {t('import.validation.summary.warningRows')}
@@ -154,9 +154,9 @@ export function ImportValidationResults({
 
       {/* Missing Columns Warning */}
       {result.missingRequiredColumns && result.missingRequiredColumns.length > 0 && (
-        <div className="rounded-lg border border-red-200 bg-red-50 dark:bg-red-900/20 p-4">
+        <div className="rounded-lg border border-red-200 bg-red-50 p-4 dark:bg-red-900/20">
           <div className="flex items-center gap-2 text-red-700 dark:text-red-400">
-            <XCircle className="h-5 w-5" />
+            <XCircle className="size-5" />
             <span className="font-medium">
               {t('import.error.missingColumns', {
                 columns: result.missingRequiredColumns.join(', '),
@@ -168,9 +168,9 @@ export function ImportValidationResults({
 
       {/* Unmapped Columns Info */}
       {result.unmappedColumns && result.unmappedColumns.length > 0 && (
-        <div className="rounded-lg border border-yellow-200 bg-yellow-50 dark:bg-yellow-900/20 p-4">
+        <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4 dark:bg-yellow-900/20">
           <div className="flex items-center gap-2 text-yellow-700 dark:text-yellow-400">
-            <AlertTriangle className="h-5 w-5" />
+            <AlertTriangle className="size-5" />
             <span>Unmapped columns will be ignored: {result.unmappedColumns.join(', ')}</span>
           </div>
         </div>
@@ -182,17 +182,17 @@ export function ImportValidationResults({
           <CollapsibleTrigger asChild>
             <Button variant="outline" className="w-full justify-between">
               <span className="flex items-center gap-2">
-                <AlertCircle className="h-4 w-4" />
+                <AlertCircle className="size-4" />
                 {t('import.validation.errors.title')}
                 <Badge variant="secondary">
                   {Object.values(errorsByType).reduce((a, b) => a + b, 0)}
                 </Badge>
               </span>
-              <ChevronDown className="h-4 w-4" />
+              <ChevronDown className="size-4" />
             </Button>
           </CollapsibleTrigger>
           <CollapsibleContent className="mt-2">
-            <div className="rounded-lg border p-3 space-y-2">
+            <div className="space-y-2 rounded-lg border p-3">
               {Object.entries(errorsByType).map(([code, count]) => (
                 <div key={code} className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">{t(`errors.${code}`)}</span>
@@ -210,12 +210,12 @@ export function ImportValidationResults({
           <Button variant="ghost" size="sm" onClick={() => setShowAllErrors(!showAllErrors)}>
             {showAllErrors ? (
               <>
-                <EyeOff className="h-4 w-4 me-2" />
+                <EyeOff className="me-2 size-4" />
                 {t('import.validation.errors.hideErrors')}
               </>
             ) : (
               <>
-                <Eye className="h-4 w-4 me-2" />
+                <Eye className="me-2 size-4" />
                 {t('import.validation.errors.showAll')}
               </>
             )}
@@ -306,13 +306,13 @@ export function ImportValidationResults({
                     <div className="text-sm text-blue-600">
                       {t('errors.conflict_detected')}
                       {row.existingId && (
-                        <span className="text-muted-foreground ms-2">
+                        <span className="ms-2 text-muted-foreground">
                           (ID: {row.existingId.slice(0, 8)}...)
                         </span>
                       )}
                     </div>
                   ) : row.data ? (
-                    <div className="text-sm text-muted-foreground truncate max-w-[300px]">
+                    <div className="max-w-[300px] truncate text-sm text-muted-foreground">
                       {Object.entries(row.data)
                         .filter(([k, v]) => v && !k.includes('_at'))
                         .slice(0, 3)
@@ -326,13 +326,13 @@ export function ImportValidationResults({
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8"
+                      className="size-8"
                       onClick={() => toggleRowExpanded(row.row)}
                     >
                       {expandedRows.has(row.row) ? (
-                        <ChevronUp className="h-4 w-4" />
+                        <ChevronUp className="size-4" />
                       ) : (
-                        <ChevronDown className="h-4 w-4" />
+                        <ChevronDown className="size-4" />
                       )}
                     </Button>
                   )}
@@ -344,7 +344,7 @@ export function ImportValidationResults({
       </ScrollArea>
 
       {displayedRows.length < result.rows.length && (
-        <p className="text-sm text-muted-foreground text-center">
+        <p className="text-center text-sm text-muted-foreground">
           {t('import.preview.showingRows', {
             shown: displayedRows.length,
             total: result.rows.length,
@@ -363,12 +363,12 @@ export function ImportValidationResults({
       >
         {result.invalidRows === 0 ? (
           <div className="flex items-center justify-center gap-2">
-            <CheckCircle2 className="h-5 w-5" />
+            <CheckCircle2 className="size-5" />
             {t('import.validation.noErrors')}
           </div>
         ) : (
           <div className="flex items-center justify-center gap-2">
-            <XCircle className="h-5 w-5" />
+            <XCircle className="size-5" />
             {t('import.validation.hasErrors')}
           </div>
         )}

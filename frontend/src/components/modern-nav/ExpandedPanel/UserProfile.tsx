@@ -98,19 +98,19 @@ export function UserProfile({
  aria-label={t('navigation.userMenu', 'User menu')}
  >
  {/* Avatar */}
- <Avatar className="h-8 w-8 shrink-0">
+ <Avatar className="size-8 shrink-0">
  <AvatarImage src={avatarUrl} alt={name} />
- <AvatarFallback className="bg-icon-rail-active-indicator text-white text-xs font-semibold">
+ <AvatarFallback className="bg-icon-rail-active-indicator text-xs font-semibold text-white">
  {avatarUrl ? null : getInitials(name)}
  </AvatarFallback>
  </Avatar>
 
  {/* User Info */}
- <div className="flex-1 min-w-0 text-start">
- <p className="text-sm font-semibold text-panel-text truncate">
+ <div className="min-w-0 flex-1 text-start">
+ <p className="text-panel-text truncate text-sm font-semibold">
  {name}
  </p>
- <p className="text-xs text-panel-text-muted truncate">
+ <p className="text-panel-text-muted truncate text-xs">
  {email}
  </p>
  </div>
@@ -144,14 +144,14 @@ export function UserProfile({
 
  {onProfile && (
  <DropdownMenuItem onClick={onProfile}>
- <User className="me-2 h-4 w-4" />
+ <User className="me-2 size-4" />
  <span>{t('navigation.profile', 'Profile')}</span>
  </DropdownMenuItem>
  )}
 
  {onSettings && (
  <DropdownMenuItem onClick={onSettings}>
- <User className="me-2 h-4 w-4" />
+ <User className="me-2 size-4" />
  <span>{t('navigation.settings', 'Settings')}</span>
  </DropdownMenuItem>
  )}
@@ -160,7 +160,7 @@ export function UserProfile({
 
  {onLogout && (
  <DropdownMenuItem onClick={onLogout} className="text-destructive focus:text-destructive">
- <User className="me-2 h-4 w-4" />
+ <User className="me-2 size-4" />
  <span>{t('navigation.logout', 'Logout')}</span>
  </DropdownMenuItem>
  )}

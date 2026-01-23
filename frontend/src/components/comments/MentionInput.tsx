@@ -275,18 +275,18 @@ export const MentionInput = forwardRef<HTMLTextAreaElement, MentionInputProps>(
                     onClick={() => insertMention(user)}
                     data-testid="mention-option"
                   >
-                    <Avatar className="h-6 w-6">
+                    <Avatar className="size-6">
                       <AvatarImage src={user.avatar_url || undefined} alt={user.full_name || ''} />
                       <AvatarFallback className="text-xs">
                         {(user.full_name || user.email)?.[0]?.toUpperCase()}
                       </AvatarFallback>
                     </Avatar>
-                    <div className="flex-1 min-w-0">
-                      <div className="text-sm font-medium truncate">
+                    <div className="min-w-0 flex-1">
+                      <div className="truncate text-sm font-medium">
                         {user.full_name || user.username || user.email.split('@')[0]}
                       </div>
                       {user.username && (
-                        <div className="text-xs text-muted-foreground truncate">
+                        <div className="truncate text-xs text-muted-foreground">
                           @{user.username}
                         </div>
                       )}

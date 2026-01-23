@@ -345,8 +345,8 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
 
       case 'delete':
         return (
-          <div className="flex items-start gap-3 p-3 bg-red-50 dark:bg-red-950 rounded-md">
-            <AlertTriangle className="h-5 w-5 text-red-600 dark:text-red-400 shrink-0 mt-0.5" />
+          <div className="flex items-start gap-3 rounded-md bg-red-50 p-3 dark:bg-red-950">
+            <AlertTriangle className="mt-0.5 size-5 shrink-0 text-red-600 dark:text-red-400" />
             <div className="space-y-1">
               <p className="text-sm text-red-800 dark:text-red-200">
                 {t('confirmation.delete.warning')}
@@ -360,7 +360,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
 
       case 'archive':
         return (
-          <div className="p-3 bg-blue-50 dark:bg-blue-950 rounded-md">
+          <div className="rounded-md bg-blue-50 p-3 dark:bg-blue-950">
             <p className="text-sm text-blue-800 dark:text-blue-200">
               {t('confirmation.archive.note')}
             </p>
@@ -401,10 +401,10 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
         {renderActionContent()}
 
         {/* Preview Section */}
-        <div className="space-y-3 flex-1 min-h-0">
+        <div className="min-h-0 flex-1 space-y-3">
           {/* Stats and controls */}
           <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-            <div className="flex items-center gap-2 flex-wrap">
+            <div className="flex flex-wrap items-center gap-2">
               <Badge variant="secondary" className="text-xs">
                 {t('preview.includedCount', {
                   count: includedCount,
@@ -431,7 +431,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                 className="h-7 px-2 text-xs"
                 title={t('preview.includeAll', { defaultValue: 'Include all' })}
               >
-                <CheckSquare className="h-3.5 w-3.5 me-1" />
+                <CheckSquare className="me-1 size-3.5" />
                 {t('preview.includeAll', { defaultValue: 'All' })}
               </Button>
               <Button
@@ -442,7 +442,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                 className="h-7 px-2 text-xs"
                 title={t('preview.excludeAll', { defaultValue: 'Exclude all' })}
               >
-                <Square className="h-3.5 w-3.5 me-1" />
+                <Square className="me-1 size-3.5" />
                 {t('preview.excludeAll', { defaultValue: 'None' })}
               </Button>
               {excludedCount > 0 && (
@@ -454,9 +454,9 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                   title={t('preview.showExcluded', { defaultValue: 'Show excluded only' })}
                 >
                   {showExcludedOnly ? (
-                    <Eye className="h-3.5 w-3.5" />
+                    <Eye className="size-3.5" />
                   ) : (
-                    <EyeOff className="h-3.5 w-3.5" />
+                    <EyeOff className="size-3.5" />
                   )}
                 </Button>
               )}
@@ -465,13 +465,13 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
 
           {/* Search */}
           <div className="relative">
-            <Search className="absolute start-2.5 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Search className="absolute start-2.5 top-1/2 size-4 -translate-y-1/2 text-muted-foreground" />
             <Input
               type="text"
               placeholder={t('preview.searchPlaceholder', { defaultValue: 'Search items...' })}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="ps-8 pe-8 h-9"
+              className="h-9 pe-8 ps-8"
               disabled={isProcessing}
             />
             {searchQuery && (
@@ -479,18 +479,18 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                 variant="ghost"
                 size="icon"
                 onClick={() => setSearchQuery('')}
-                className="absolute end-1 top-1/2 -translate-y-1/2 h-6 w-6"
+                className="absolute end-1 top-1/2 size-6 -translate-y-1/2"
               >
-                <X className="h-3.5 w-3.5" />
+                <X className="size-3.5" />
               </Button>
             )}
           </div>
 
           {/* Item list */}
-          <ScrollArea className="h-[200px] sm:h-[250px] border rounded-md">
-            <div className="p-2 space-y-1">
+          <ScrollArea className="h-[200px] rounded-md border sm:h-[250px]">
+            <div className="space-y-1 p-2">
               {filteredItems.length === 0 ? (
-                <p className="text-center text-sm text-muted-foreground py-8">
+                <p className="py-8 text-center text-sm text-muted-foreground">
                   {searchQuery
                     ? t('preview.noResults', { defaultValue: 'No items match your search' })
                     : t('preview.noItems', { defaultValue: 'No items to preview' })}
@@ -524,7 +524,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                               })
                         }
                       />
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         {renderItem ? (
                           renderItem(item)
                         ) : (
@@ -537,7 +537,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                             >
                               {getItemDisplayName(item)}
                             </span>
-                            <div className="flex items-center gap-1.5 flex-wrap">
+                            <div className="flex flex-wrap items-center gap-1.5">
                               {item.status && (
                                 <Badge
                                   variant="secondary"
@@ -585,7 +585,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
                                 </Badge>
                               )}
                               {item.assignee && (
-                                <span className="text-xs text-muted-foreground truncate max-w-[100px] hidden sm:inline">
+                                <span className="hidden max-w-[100px] truncate text-xs text-muted-foreground sm:inline">
                                   {item.assignee}
                                 </span>
                               )}
@@ -603,15 +603,15 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
 
         {/* Undo availability notice */}
         {action.supportsUndo && !action.isDestructive && (
-          <p className="text-xs text-muted-foreground mt-2">
+          <p className="mt-2 text-xs text-muted-foreground">
             {t('confirmation.undoAvailable', { seconds: undoSeconds })}
           </p>
         )}
 
         {/* Warning if no items included */}
         {includedCount === 0 && (
-          <div className="flex items-center gap-2 p-2 bg-yellow-50 dark:bg-yellow-950 rounded-md mt-2">
-            <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-400 shrink-0" />
+          <div className="mt-2 flex items-center gap-2 rounded-md bg-yellow-50 p-2 dark:bg-yellow-950">
+            <AlertTriangle className="size-4 shrink-0 text-yellow-600 dark:text-yellow-400" />
             <p className="text-xs text-yellow-800 dark:text-yellow-200">
               {t('preview.noItemsWarning', {
                 defaultValue: 'No items selected. Please include at least one item.',
@@ -620,7 +620,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
           </div>
         )}
 
-        <AlertDialogFooter className="flex-col-reverse gap-2 sm:flex-row sm:gap-0 mt-4">
+        <AlertDialogFooter className="mt-4 flex-col-reverse gap-2 sm:flex-row sm:gap-0">
           <AlertDialogCancel onClick={handleCancel} disabled={isProcessing} className="mt-0">
             {t('confirmation.cancel')}
           </AlertDialogCancel>
@@ -631,7 +631,7 @@ export function BulkActionPreviewDialog<T extends PreviewItem = PreviewItem>({
           >
             {isProcessing ? (
               <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
                 {t('confirmation.processing')}
               </>
             ) : (

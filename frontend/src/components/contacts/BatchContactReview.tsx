@@ -229,7 +229,7 @@ export function BatchContactReview({
               {t('contactDirectory.documentExtraction.review_contacts')}
             </CardTitle>
             <Badge variant="secondary" className="text-sm">
-              <Users className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
+              <Users className={`size-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
               {selectedContacts.length} / {contacts.length}
             </Badge>
           </div>
@@ -240,7 +240,7 @@ export function BatchContactReview({
 
         <CardContent className="space-y-4">
           {/* Select All / Deselect All */}
-          <div className="flex items-center justify-between gap-4 pb-4 border-b">
+          <div className="flex items-center justify-between gap-4 border-b pb-4">
             <div className="flex items-center gap-2">
               <Checkbox
                 id="select-all"
@@ -249,7 +249,7 @@ export function BatchContactReview({
                 className="data-[state=indeterminate]:bg-primary"
                 {...(someSelected ? { 'data-state': 'indeterminate' } : {})}
               />
-              <Label htmlFor="select-all" className="text-sm font-medium cursor-pointer">
+              <Label htmlFor="select-all" className="cursor-pointer text-sm font-medium">
                 {allSelected
                   ? t('contactDirectory.documentExtraction.deselect_all')
                   : t('contactDirectory.documentExtraction.select_all')}
@@ -257,9 +257,9 @@ export function BatchContactReview({
             </div>
             <Button variant="ghost" size="sm" onClick={handleToggleAll} className="text-xs">
               {allSelected ? (
-                <Square className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
+                <Square className={`size-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
               ) : (
-                <CheckSquare className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
+                <CheckSquare className={`size-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
               )}
               {allSelected
                 ? t('contactDirectory.documentExtraction.deselect_all')
@@ -268,7 +268,7 @@ export function BatchContactReview({
           </div>
 
           {/* Contacts List */}
-          <div className="space-y-4 max-h-[600px] overflow-y-auto">
+          <div className="max-h-[600px] space-y-4 overflow-y-auto">
             {contacts.map((contact) => (
               <Card
                 key={contact.id}
@@ -276,7 +276,7 @@ export function BatchContactReview({
                   contact.selected ? 'border-primary bg-primary/5' : 'border-border'
                 }`}
               >
-                <CardContent className="p-4 space-y-3">
+                <CardContent className="space-y-3 p-4">
                   {/* Contact Header */}
                   <div className="flex items-start gap-3">
                     <Checkbox
@@ -287,8 +287,8 @@ export function BatchContactReview({
                     <div className="flex-1 space-y-3">
                       {/* Full Name */}
                       <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <Label className="text-xs text-muted-foreground text-start">
+                        <div className="mb-1 flex items-center gap-2">
+                          <Label className="text-start text-xs text-muted-foreground">
                             {t('contactDirectory.form.full_name')}
                           </Label>
                           {contact.ocr_confidence && (
@@ -311,7 +311,7 @@ export function BatchContactReview({
 
                       {/* Position */}
                       <div>
-                        <Label className="text-xs text-muted-foreground mb-1 block text-start">
+                        <Label className="mb-1 block text-start text-xs text-muted-foreground">
                           {t('contactDirectory.form.position')}
                         </Label>
                         <Input
@@ -326,7 +326,7 @@ export function BatchContactReview({
 
                       {/* Email Addresses */}
                       <div>
-                        <Label className="text-xs text-muted-foreground mb-1 block text-start">
+                        <Label className="mb-1 block text-start text-xs text-muted-foreground">
                           {t('contactDirectory.form.email_addresses')}
                         </Label>
                         <div className="space-y-2">
@@ -347,9 +347,9 @@ export function BatchContactReview({
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleRemoveEmail(contact.id, index)}
-                                  className="flex-shrink-0 min-h-9 min-w-9"
+                                  className="min-h-9 min-w-9 shrink-0"
                                 >
-                                  <Trash2 className="h-3 w-3" />
+                                  <Trash2 className="size-3" />
                                 </Button>
                               )}
                             </div>
@@ -359,7 +359,7 @@ export function BatchContactReview({
                             variant="outline"
                             size="sm"
                             onClick={() => handleAddEmail(contact.id)}
-                            className="w-full h-8 text-xs"
+                            className="h-8 w-full text-xs"
                           >
                             {t('contactDirectory.form.add_email')}
                           </Button>
@@ -368,7 +368,7 @@ export function BatchContactReview({
 
                       {/* Phone Numbers */}
                       <div>
-                        <Label className="text-xs text-muted-foreground mb-1 block text-start">
+                        <Label className="mb-1 block text-start text-xs text-muted-foreground">
                           {t('contactDirectory.form.phone_numbers')}
                         </Label>
                         <div className="space-y-2">
@@ -389,9 +389,9 @@ export function BatchContactReview({
                                   variant="ghost"
                                   size="icon"
                                   onClick={() => handleRemovePhone(contact.id, index)}
-                                  className="flex-shrink-0 min-h-9 min-w-9"
+                                  className="min-h-9 min-w-9 shrink-0"
                                 >
-                                  <Trash2 className="h-3 w-3" />
+                                  <Trash2 className="size-3" />
                                 </Button>
                               )}
                             </div>
@@ -401,7 +401,7 @@ export function BatchContactReview({
                             variant="outline"
                             size="sm"
                             onClick={() => handleAddPhone(contact.id)}
-                            className="w-full h-8 text-xs"
+                            className="h-8 w-full text-xs"
                           >
                             {t('contactDirectory.form.add_phone')}
                           </Button>
@@ -415,9 +415,9 @@ export function BatchContactReview({
                       variant="ghost"
                       size="icon"
                       onClick={() => handleRemoveContact(contact.id)}
-                      className="flex-shrink-0 min-h-9 min-w-9"
+                      className="min-h-9 min-w-9 shrink-0"
                     >
-                      <Trash2 className="h-4 w-4 text-destructive" />
+                      <Trash2 className="size-4 text-destructive" />
                     </Button>
                   </div>
                 </CardContent>
@@ -428,7 +428,7 @@ export function BatchContactReview({
           {/* No Contacts */}
           {contacts.length === 0 && (
             <Alert>
-              <AlertCircle className="h-4 w-4" />
+              <AlertCircle className="size-4" />
               <AlertDescription className="text-start">
                 {t('contactDirectory.documentExtraction.no_contacts_to_review')}
               </AlertDescription>
@@ -436,7 +436,7 @@ export function BatchContactReview({
           )}
 
           {/* Action Buttons */}
-          <div className="flex flex-col-reverse sm:flex-row gap-2 pt-4 border-t">
+          <div className="flex flex-col-reverse gap-2 border-t pt-4 sm:flex-row">
             <Button
               type="button"
               variant="outline"
@@ -450,12 +450,12 @@ export function BatchContactReview({
               type="button"
               onClick={handleImportClick}
               disabled={selectedContacts.length === 0 || isImporting}
-              className="h-11 sm:h-10 flex-1"
+              className="h-11 flex-1 sm:h-10"
             >
               {isImporting ? (
                 <>
                   <div
-                    className={`animate-spin h-4 w-4 border-2 border-current border-t-transparent rounded-full ${isRTL ? 'ms-2' : 'me-2'}`}
+                    className={`size-4 animate-spin rounded-full border-2 border-current border-t-transparent ${isRTL ? 'ms-2' : 'me-2'}`}
                   />
                   {t('contactDirectory.documentExtraction.importing')}
                 </>

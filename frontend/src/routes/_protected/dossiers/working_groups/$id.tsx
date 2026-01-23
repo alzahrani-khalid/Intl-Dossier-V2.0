@@ -57,8 +57,8 @@ function WorkingGroupDossierDetailRoute() {
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <div className="flex flex-col items-center gap-3">
-          <Loader2 className="h-8 w-8 sm:h-10 sm:w-10 animate-spin text-primary" />
-          <p className="text-sm sm:text-base text-muted-foreground">
+          <Loader2 className="size-8 animate-spin text-primary sm:size-10" />
+          <p className="text-sm text-muted-foreground sm:text-base">
             {t('detail.loading')}
           </p>
         </div>
@@ -70,18 +70,18 @@ function WorkingGroupDossierDetailRoute() {
   if (error || !dossier) {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
+        className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="max-w-2xl mx-auto">
+        <div className="mx-auto max-w-2xl">
           <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-6 sm:p-8">
             <div className="flex items-start gap-4">
-              <AlertCircle className="h-5 w-5 sm:h-6 sm:w-6 text-destructive shrink-0 mt-1" />
+              <AlertCircle className="mt-1 size-5 shrink-0 text-destructive sm:size-6" />
               <div className="flex-1">
-                <h2 className="text-lg sm:text-xl font-semibold text-destructive mb-2">
+                <h2 className="mb-2 text-lg font-semibold text-destructive sm:text-xl">
                   {t('detail.error')}
                 </h2>
-                <p className="text-sm sm:text-base text-destructive/90 mb-4">
+                <p className="mb-4 text-sm text-destructive/90 sm:text-base">
                   {error?.message || t('detail.errorGeneric')}
                 </p>
                 <Button asChild variant="outline">
@@ -101,15 +101,15 @@ function WorkingGroupDossierDetailRoute() {
   if (dossier.type !== 'working_group') {
     return (
       <div
-        className="container mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12"
+        className="container mx-auto px-4 py-8 sm:px-6 sm:py-12 lg:px-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="max-w-2xl mx-auto">
-          <div className="rounded-lg border border-warning/20 bg-warning/10 p-6 sm:p-8">
-            <h2 className="text-lg sm:text-xl font-semibold mb-2">
+        <div className="mx-auto max-w-2xl">
+          <div className="border-warning/20 bg-warning/10 rounded-lg border p-6 sm:p-8">
+            <h2 className="mb-2 text-lg font-semibold sm:text-xl">
               {t('detail.wrongType')}
             </h2>
-            <p className="text-sm sm:text-base text-muted-foreground mb-4">
+            <p className="mb-4 text-sm text-muted-foreground sm:text-base">
               {t('detail.wrongTypeDescription', {
                 actualType: t(`type.${dossier.type}`),
                 expectedType: t('type.working_group'),

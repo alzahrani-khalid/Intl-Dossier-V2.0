@@ -74,10 +74,10 @@ export function SampleDataTemplateSelector({
     <div className="space-y-4">
       {isLoading ? (
         <div className="flex items-center justify-center py-12">
-          <Loader2 className="h-8 w-8 animate-spin text-muted-foreground" />
+          <Loader2 className="size-8 animate-spin text-muted-foreground" />
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           {templates.map((template) => {
             const Icon = iconMap[template.icon] || Package
             const isSelected = selectedTemplate === template.slug
@@ -101,14 +101,14 @@ export function SampleDataTemplateSelector({
               >
                 {/* Selected indicator */}
                 {isSelected && (
-                  <div className="absolute top-2 end-2">
+                  <div className="absolute end-2 top-2">
                     <div
                       className={cn(
                         'h-5 w-5 rounded-full flex items-center justify-center',
                         iconColorClass.replace('text-', 'bg-').replace('-600', '-500'),
                       )}
                     >
-                      <Check className="h-3 w-3 text-white" />
+                      <Check className="size-3 text-white" />
                     </div>
                   </div>
                 )}
@@ -124,10 +124,10 @@ export function SampleDataTemplateSelector({
                 </div>
 
                 {/* Text */}
-                <h3 className="font-semibold text-sm sm:text-base mb-1">
+                <h3 className="mb-1 text-sm font-semibold sm:text-base">
                   {isRTL ? template.name_ar : template.name_en}
                 </h3>
-                <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2">
+                <p className="line-clamp-2 text-xs text-muted-foreground sm:text-sm">
                   {isRTL ? template.description_ar : template.description_en}
                 </p>
               </button>
@@ -139,7 +139,7 @@ export function SampleDataTemplateSelector({
   )
 
   const footer = (
-    <div className="flex flex-col-reverse sm:flex-row gap-2 sm:justify-end">
+    <div className="flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
       <Button
         variant="outline"
         onClick={() => onOpenChange(false)}
@@ -174,7 +174,7 @@ export function SampleDataTemplateSelector({
             <SheetTitle>{t('templates.title')}</SheetTitle>
             <SheetDescription>{t('templates.description')}</SheetDescription>
           </SheetHeader>
-          <div className="mt-4 overflow-y-auto flex-1">{content}</div>
+          <div className="mt-4 flex-1 overflow-y-auto">{content}</div>
           <SheetFooter className="mt-4">{footer}</SheetFooter>
         </SheetContent>
       </Sheet>

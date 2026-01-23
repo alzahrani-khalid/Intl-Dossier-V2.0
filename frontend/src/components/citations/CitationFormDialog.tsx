@@ -234,7 +234,7 @@ export function CitationFormDialog({
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent
-        className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto"
+        className="max-h-[90vh] overflow-y-auto sm:max-w-[500px]"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
@@ -272,7 +272,7 @@ export function CitationFormDialog({
               </TabsList>
 
               {/* Internal Citation Fields */}
-              <TabsContent value="internal" className="space-y-4 mt-4">
+              <TabsContent value="internal" className="mt-4 space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="cited_entity_type">
                     {t('form.fields.entityType', 'Reference Type')}
@@ -318,7 +318,7 @@ export function CitationFormDialog({
               </TabsContent>
 
               {/* External Citation Fields */}
-              <TabsContent value="external" className="space-y-4 mt-4">
+              <TabsContent value="external" className="mt-4 space-y-4">
                 <div className="space-y-2">
                   <Label htmlFor="cited_entity_type">
                     {t('form.fields.sourceType', 'Source Type')}
@@ -445,7 +445,7 @@ export function CitationFormDialog({
           </div>
         </form>
 
-        <DialogFooter className="flex flex-col-reverse sm:flex-row gap-2">
+        <DialogFooter className="flex flex-col-reverse gap-2 sm:flex-row">
           <Button variant="outline" onClick={() => onOpenChange(false)} disabled={isLoading}>
             {t('actions.cancel', 'Cancel')}
           </Button>

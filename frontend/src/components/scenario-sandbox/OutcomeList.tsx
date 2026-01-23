@@ -61,16 +61,16 @@ export function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: Ou
           <div className="flex items-center justify-between">
             <CardTitle className="text-lg">{t('outcome.outcomes')}</CardTitle>
             <Button size="sm" onClick={onAdd} disabled={isLoading}>
-              <Plus className="h-4 w-4 me-2" />
+              <Plus className="me-2 size-4" />
               {t('outcome.add')}
             </Button>
           </div>
         </CardHeader>
         <CardContent>
-          <div className="text-center py-8 text-muted-foreground">
-            <Target className="h-12 w-12 mx-auto mb-4 opacity-40" />
+          <div className="py-8 text-center text-muted-foreground">
+            <Target className="mx-auto mb-4 size-12 opacity-40" />
             <p className="font-medium">{t('outcome.noOutcomes')}</p>
-            <p className="text-sm mt-1">{t('outcome.noOutcomesDesc')}</p>
+            <p className="mt-1 text-sm">{t('outcome.noOutcomesDesc')}</p>
           </div>
         </CardContent>
       </Card>
@@ -87,20 +87,20 @@ export function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: Ou
               <div className="flex items-center gap-3 text-sm">
                 {positiveOutcomes.length > 0 && (
                   <div className="flex items-center gap-1.5 text-green-600 dark:text-green-400">
-                    <TrendingUp className="h-4 w-4" />
+                    <TrendingUp className="size-4" />
                     <span>{positiveOutcomes.length}</span>
                   </div>
                 )}
                 {negativeOutcomes.length > 0 && (
                   <div className="flex items-center gap-1.5 text-red-600 dark:text-red-400">
-                    <TrendingDown className="h-4 w-4" />
+                    <TrendingDown className="size-4" />
                     <span>{negativeOutcomes.length}</span>
                   </div>
                 )}
               </div>
             </div>
             <Button size="sm" onClick={onAdd} disabled={isLoading}>
-              <Plus className="h-4 w-4 me-2" />
+              <Plus className="me-2 size-4" />
               {t('outcome.add')}
             </Button>
           </div>
@@ -114,24 +114,24 @@ export function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: Ou
             return (
               <div
                 key={outcome.id}
-                className="group flex items-start gap-3 p-3 rounded-lg border bg-card hover:bg-muted/50 transition-colors"
+                className="group flex items-start gap-3 rounded-lg border bg-card p-3 transition-colors hover:bg-muted/50"
               >
                 <div
-                  className={`flex h-9 w-9 items-center justify-center rounded-md shrink-0 ${
+                  className={`flex size-9 shrink-0 items-center justify-center rounded-md ${
                     outcome.is_positive
                       ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
                       : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
                   }`}
                 >
                   {outcome.is_positive ? (
-                    <TrendingUp className="h-4 w-4" />
+                    <TrendingUp className="size-4" />
                   ) : (
-                    <TrendingDown className="h-4 w-4" />
+                    <TrendingDown className="size-4" />
                   )}
                 </div>
 
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 flex-wrap">
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-center gap-2">
                     <span className="font-medium">{title}</span>
                     <Badge
                       variant="outline"
@@ -152,15 +152,15 @@ export function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: Ou
                   </div>
 
                   {description && (
-                    <p className="text-sm text-muted-foreground mt-1 line-clamp-2">{description}</p>
+                    <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{description}</p>
                   )}
 
                   {outcome.probability_score !== null && (
-                    <div className="flex items-center gap-2 mt-2">
+                    <div className="mt-2 flex items-center gap-2">
                       <span className="text-xs text-muted-foreground">
                         {t('outcome.fields.probability')}:
                       </span>
-                      <div className="flex-1 max-w-[120px]">
+                      <div className="max-w-[120px] flex-1">
                         <Progress value={outcome.probability_score} className="h-2" />
                       </div>
                       <span
@@ -172,25 +172,25 @@ export function OutcomeList({ outcomes, onAdd, onEdit, onDelete, isLoading }: Ou
                   )}
                 </div>
 
-                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                <div className="flex shrink-0 items-center gap-1 opacity-0 transition-opacity group-hover:opacity-100">
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8"
+                    className="size-8"
                     onClick={() => onEdit(outcome)}
                     disabled={isLoading}
                   >
-                    <Edit className="h-4 w-4" />
+                    <Edit className="size-4" />
                     <span className="sr-only">{t('outcome.edit')}</span>
                   </Button>
                   <Button
                     variant="ghost"
                     size="icon"
-                    className="h-8 w-8 text-destructive hover:text-destructive"
+                    className="size-8 text-destructive hover:text-destructive"
                     onClick={() => setDeleteId(outcome.id)}
                     disabled={isLoading}
                   >
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="size-4" />
                     <span className="sr-only">{t('outcome.delete')}</span>
                   </Button>
                 </div>

@@ -26,27 +26,27 @@ export function Header() {
   }
 
   return (
-    <header className="sticky top-0 z-40 bg-card border-b border-border">
+    <header className="sticky top-0 z-40 border-b border-border bg-card">
       <div className="flex h-16 items-center justify-between px-4">
         {/* Left section */}
         <div className="flex items-center gap-4">
           <button
             onClick={toggleSidebar}
-            className="p-2 rounded-lg hover:bg-accent transition-colors"
+            className="rounded-lg p-2 transition-colors hover:bg-accent"
             aria-label="Toggle sidebar"
           >
-            <Menu className="h-5 w-5" />
+            <Menu className="size-5" />
           </button>
 
           {/* Search bar with keyboard shortcut hint */}
           <button
             onClick={() => keyboardContext?.openCommandPalette()}
-            className="hidden md:flex relative w-80 items-center gap-2 ps-10 pe-3 py-2 rounded-lg bg-muted border-0 hover:bg-accent/50 transition-colors text-muted-foreground"
+            className="relative hidden w-80 items-center gap-2 rounded-lg border-0 bg-muted py-2 pe-3 ps-10 text-muted-foreground transition-colors hover:bg-accent/50 md:flex"
             aria-label={t('keyboard-shortcuts:quickActions.title', 'Quick Actions')}
           >
-            <Search className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4" />
+            <Search className="absolute start-3 top-1/2 size-4 -translate-y-1/2" />
             <span className="flex-1 text-start text-sm">{t('search.searchPlaceholder')}</span>
-            <kbd className="hidden lg:inline-flex items-center gap-0.5 rounded border bg-background px-1.5 py-0.5 font-mono text-[10px] font-medium">
+            <kbd className="hidden items-center gap-0.5 rounded border bg-background px-1.5 py-0.5 font-mono text-[10px] font-medium lg:inline-flex">
               {cmdKey}K
             </kbd>
           </button>
@@ -54,10 +54,10 @@ export function Header() {
           {/* Mobile search button */}
           <button
             onClick={() => keyboardContext?.openCommandPalette()}
-            className="md:hidden p-2 rounded-lg hover:bg-accent transition-colors"
+            className="rounded-lg p-2 transition-colors hover:bg-accent md:hidden"
             aria-label={t('keyboard-shortcuts:quickActions.title', 'Quick Actions')}
           >
-            <Search className="h-5 w-5" />
+            <Search className="size-5" />
           </button>
         </div>
 
@@ -76,37 +76,37 @@ export function Header() {
           <div className="relative">
             <button
               onClick={() => setUserMenuOpen(!userMenuOpen)}
-              className="flex items-center gap-2 p-2 rounded-lg hover:bg-accent transition-colors"
+              className="flex items-center gap-2 rounded-lg p-2 transition-colors hover:bg-accent"
             >
-              <div className="h-8 w-8 rounded-full bg-primary flex items-center justify-center text-primary-foreground">
-                {user?.name ? user.name[0].toUpperCase() : <User className="h-4 w-4" />}
+              <div className="flex size-8 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                {user?.name ? user.name[0].toUpperCase() : <User className="size-4" />}
               </div>
-              <span className="hidden md:block text-sm font-medium">
+              <span className="hidden text-sm font-medium md:block">
                 {user?.name || user?.email}
               </span>
-              <ChevronDown className="h-4 w-4 hidden md:block" />
+              <ChevronDown className="hidden size-4 md:block" />
             </button>
 
             {userMenuOpen && (
-              <div className="absolute end-0 mt-2 w-56 rounded-lg bg-popover shadow-lg border border-border">
-                <div className="px-4 py-3 border-b border-border">
+              <div className="absolute end-0 mt-2 w-56 rounded-lg border border-border bg-popover shadow-lg">
+                <div className="border-b border-border px-4 py-3">
                   <p className="text-sm font-medium">{user?.name}</p>
                   <p className="text-xs text-muted-foreground">{user?.email}</p>
                 </div>
-                <button className="w-full px-4 py-2 text-start hover:bg-accent flex items-center gap-2">
-                  <User className="h-4 w-4" />
+                <button className="flex w-full items-center gap-2 px-4 py-2 text-start hover:bg-accent">
+                  <User className="size-4" />
                   {t('navigation.profile')}
                 </button>
-                <button className="w-full px-4 py-2 text-start hover:bg-accent flex items-center gap-2">
-                  <Settings className="h-4 w-4" />
+                <button className="flex w-full items-center gap-2 px-4 py-2 text-start hover:bg-accent">
+                  <Settings className="size-4" />
                   {t('navigation.settings')}
                 </button>
                 <div className="border-t border-border">
                   <button
                     onClick={handleLogout}
-                    className="w-full px-4 py-2 text-start hover:bg-accent flex items-center gap-2 text-destructive"
+                    className="flex w-full items-center gap-2 px-4 py-2 text-start text-destructive hover:bg-accent"
                   >
-                    <LogOut className="h-4 w-4" />
+                    <LogOut className="size-4" />
                     {t('common.logout')}
                   </button>
                 </div>

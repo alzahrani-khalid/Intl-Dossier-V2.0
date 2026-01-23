@@ -44,32 +44,32 @@ const ENTITY_OPTIONS: Array<{
     value: 'dossier',
     label: 'Dossiers',
     labelAr: 'الملفات',
-    icon: <Building2 className="h-4 w-4" />,
+    icon: <Building2 className="size-4" />,
   },
-  { value: 'person', label: 'Persons', labelAr: 'الأشخاص', icon: <Users className="h-4 w-4" /> },
+  { value: 'person', label: 'Persons', labelAr: 'الأشخاص', icon: <Users className="size-4" /> },
   {
     value: 'engagement',
     label: 'Engagements',
     labelAr: 'الارتباطات',
-    icon: <Calendar className="h-4 w-4" />,
+    icon: <Calendar className="size-4" />,
   },
   {
     value: 'working-group',
     label: 'Working Groups',
     labelAr: 'مجموعات العمل',
-    icon: <Briefcase className="h-4 w-4" />,
+    icon: <Briefcase className="size-4" />,
   },
   {
     value: 'commitment',
     label: 'Commitments',
     labelAr: 'الالتزامات',
-    icon: <Target className="h-4 w-4" />,
+    icon: <Target className="size-4" />,
   },
   {
     value: 'deliverable',
     label: 'Deliverables',
     labelAr: 'المخرجات',
-    icon: <ClipboardList className="h-4 w-4" />,
+    icon: <ClipboardList className="size-4" />,
   },
 ]
 
@@ -84,10 +84,10 @@ export function ExportImportPage() {
   const selectedEntity = ENTITY_OPTIONS.find((e) => e.value === entityType)
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div className="container mx-auto px-4 py-6 sm:px-6 lg:px-8" dir={isRTL ? 'rtl' : 'ltr'}>
       <div className="mb-6">
-        <h1 className="text-2xl sm:text-3xl font-bold">{t('title')}</h1>
-        <p className="text-muted-foreground mt-1">
+        <h1 className="text-2xl font-bold sm:text-3xl">{t('title')}</h1>
+        <p className="mt-1 text-muted-foreground">
           {t('export.description')} / {t('import.description')}
         </p>
       </div>
@@ -97,7 +97,7 @@ export function ExportImportPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Download className="h-5 w-5" />
+              <Download className="size-5" />
               {t('export.title')}
             </CardTitle>
             <CardDescription>{t('export.description')}</CardDescription>
@@ -126,7 +126,7 @@ export function ExportImportPage() {
             </div>
 
             <div className="rounded-lg border bg-muted/50 p-4">
-              <div className="flex items-center gap-3 mb-3">
+              <div className="mb-3 flex items-center gap-3">
                 {selectedEntity?.icon}
                 <div>
                   <p className="font-medium">
@@ -137,7 +137,7 @@ export function ExportImportPage() {
               </div>
               <div className="flex flex-wrap gap-2">
                 <Badge variant="outline">
-                  <FileSpreadsheet className="h-3 w-3 me-1" />
+                  <FileSpreadsheet className="me-1 size-3" />
                   XLSX
                 </Badge>
                 <Badge variant="outline">CSV</Badge>
@@ -146,7 +146,7 @@ export function ExportImportPage() {
             </div>
 
             <Button onClick={() => setExportDialogOpen(true)} className="w-full">
-              <Download className="h-4 w-4 me-2" />
+              <Download className="me-2 size-4" />
               {t('export.button')}
             </Button>
           </CardContent>
@@ -156,7 +156,7 @@ export function ExportImportPage() {
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
-              <Upload className="h-5 w-5" />
+              <Upload className="size-5" />
               {t('import.title')}
             </CardTitle>
             <CardDescription>{t('import.description')}</CardDescription>
@@ -185,7 +185,7 @@ export function ExportImportPage() {
             </div>
 
             <div className="rounded-lg border bg-muted/50 p-4">
-              <div className="flex items-center gap-3 mb-3">
+              <div className="mb-3 flex items-center gap-3">
                 {selectedEntity?.icon}
                 <div>
                   <p className="font-medium">
@@ -201,7 +201,7 @@ export function ExportImportPage() {
             </div>
 
             <Button onClick={() => setImportDialogOpen(true)} className="w-full">
-              <Upload className="h-4 w-4 me-2" />
+              <Upload className="me-2 size-4" />
               {t('import.button')}
             </Button>
           </CardContent>

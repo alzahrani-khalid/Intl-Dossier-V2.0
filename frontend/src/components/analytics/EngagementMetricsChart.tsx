@@ -116,7 +116,7 @@ export function EngagementMetricsChart({
           <CardDescription>{t('engagements.description')}</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="h-64 flex items-center justify-center text-muted-foreground">
+          <div className="flex h-64 items-center justify-center text-muted-foreground">
             {t('errors.noData')}
           </div>
         </CardContent>
@@ -127,11 +127,11 @@ export function EngagementMetricsChart({
   const CustomTooltip = ({ active, payload, label }: any) => {
     if (active && payload && payload.length) {
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
-          <p className="font-medium mb-2">{label}</p>
+        <div className="rounded-lg border bg-background p-3 shadow-lg" dir={isRTL ? 'rtl' : 'ltr'}>
+          <p className="mb-2 font-medium">{label}</p>
           {payload.map((entry: any, index: number) => (
             <div key={index} className="flex items-center gap-2 text-sm">
-              <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
+              <div className="size-3 rounded-full" style={{ backgroundColor: entry.color }} />
               <span className="text-muted-foreground">{entry.name}:</span>
               <span className="font-medium">
                 {entry.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
@@ -148,12 +148,12 @@ export function EngagementMetricsChart({
     if (active && payload && payload.length) {
       const item = payload[0]
       return (
-        <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
+        <div className="rounded-lg border bg-background p-3 shadow-lg" dir={isRTL ? 'rtl' : 'ltr'}>
           <div className="flex items-center gap-2">
-            <div className="h-3 w-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
+            <div className="size-3 rounded-full" style={{ backgroundColor: item.payload.fill }} />
             <span className="font-medium">{item.name}</span>
           </div>
-          <div className="text-sm text-muted-foreground mt-1">
+          <div className="mt-1 text-sm text-muted-foreground">
             {item.value.toLocaleString(isRTL ? 'ar-SA' : 'en-US')} (
             {item.payload.percentage?.toFixed(1)}%)
           </div>
@@ -171,7 +171,7 @@ export function EngagementMetricsChart({
       </CardHeader>
       <CardContent>
         <Tabs defaultValue="trend" className="w-full">
-          <TabsList className="mb-4 w-full sm:w-auto flex flex-wrap">
+          <TabsList className="mb-4 flex w-full flex-wrap sm:w-auto">
             <TabsTrigger value="trend" className="flex-1 sm:flex-none">
               {t('engagements.tabs.trend')}
             </TabsTrigger>

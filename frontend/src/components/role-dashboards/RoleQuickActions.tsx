@@ -75,9 +75,9 @@ function ActionButton({
           action.color || 'bg-muted',
         )}
       >
-        <Icon className="h-4 w-4 sm:h-5 sm:w-5" />
+        <Icon className="size-4 sm:size-5" />
       </div>
-      <span className="text-[10px] sm:text-xs font-medium text-center line-clamp-1">{label}</span>
+      <span className="line-clamp-1 text-center text-[10px] font-medium sm:text-xs">{label}</span>
     </div>
   )
 

@@ -235,7 +235,7 @@ export function QuickEntryDialog({
       >
         <DialogHeader className="border-b px-4 py-3">
           <DialogTitle className="flex items-center gap-2 text-base">
-            <Command className="h-4 w-4" />
+            <Command className="size-4" />
             {t('quickEntry.title')}
           </DialogTitle>
         </DialogHeader>
@@ -317,14 +317,14 @@ export function QuickEntryDialog({
                           : getColorClass(template),
                       )}
                     >
-                      <IconComponent className="h-4 w-4" />
+                      <IconComponent className="size-4" />
                     </div>
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2">
                         <span className="truncate font-medium">{name}</span>
                         {template.is_favorite && (
-                          <Star className="h-3 w-3 shrink-0 fill-yellow-400 text-yellow-400" />
+                          <Star className="size-3 shrink-0 fill-yellow-400 text-yellow-400" />
                         )}
                       </div>
                       <div className="flex items-center gap-1 text-xs opacity-75">

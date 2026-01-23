@@ -224,7 +224,7 @@ export function SelectableDataTable<T extends BulkSelectableItem>({
 
       {/* Selection info footer */}
       {selectedCount > 0 && (
-        <div className="flex items-center justify-between p-3 border-t bg-muted/30 text-sm">
+        <div className="flex items-center justify-between border-t bg-muted/30 p-3 text-sm">
           <span className="text-muted-foreground">
             {t('selection.selected', { count: selectedCount })} / {data.length}
           </span>

@@ -228,7 +228,7 @@ export function EntityLinkSuggestions({
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Link2 className="h-5 w-5 text-primary" />
+            <Link2 className="size-5 text-primary" />
             <CardTitle className="text-lg">{t('title', 'Entity Links')}</CardTitle>
           </div>
           <Button
@@ -238,7 +238,7 @@ export function EntityLinkSuggestions({
             disabled={isGenerating || generateMutation.isPending}
           >
             {isGenerating || generateMutation.isPending ? (
-              <Loader2 className="h-4 w-4 me-1 animate-spin" />
+              <Loader2 className="me-1 size-4 animate-spin" />
             ) : (
               <Sparkles className={cn('h-4 w-4 me-1', isRTL && 'rotate-180')} />
             )}
@@ -261,8 +261,8 @@ export function EntityLinkSuggestions({
             {/* Pending Proposals */}
             {hasProposals && (
               <div className="space-y-3">
-                <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Sparkles className="h-4 w-4" />
+                <h4 className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                  <Sparkles className="size-4" />
                   {t('pendingProposals', 'AI Suggestions')} ({pendingProposals.length})
                 </h4>
                 {pendingProposals.map((proposal) => (
@@ -285,8 +285,8 @@ export function EntityLinkSuggestions({
             {/* Approved Links */}
             {hasLinks && (
               <div className="space-y-3">
-                <h4 className="text-sm font-medium text-muted-foreground flex items-center gap-2">
-                  <Check className="h-4 w-4" />
+                <h4 className="flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                  <Check className="size-4" />
                   {t('linkedEntities', 'Linked Entities')} ({links?.length})
                 </h4>
                 {links?.map((link) => (
@@ -303,10 +303,10 @@ export function EntityLinkSuggestions({
 
             {/* Empty State */}
             {!hasProposals && !hasLinks && (
-              <div className="text-center py-8 text-muted-foreground">
-                <Link2 className="h-12 w-12 mx-auto mb-3 opacity-50" />
+              <div className="py-8 text-center text-muted-foreground">
+                <Link2 className="mx-auto mb-3 size-12 opacity-50" />
                 <p className="text-sm">{t('noLinks', 'No linked entities yet')}</p>
-                <p className="text-xs mt-1">
+                <p className="mt-1 text-xs">
                   {t('noLinksHint', 'Click "Suggest Links" to get AI recommendations')}
                 </p>
               </div>
@@ -318,7 +318,7 @@ export function EntityLinkSuggestions({
                 <AlertDescription className="flex items-center justify-between">
                   <span>{t('errors.generateFailed', 'Failed to generate suggestions')}</span>
                   <Button variant="ghost" size="sm" onClick={handleGenerate}>
-                    <RefreshCw className="h-4 w-4 me-1" />
+                    <RefreshCw className="me-1 size-4" />
                     {t('retry', 'Retry')}
                   </Button>
                 </AlertDescription>
@@ -359,13 +359,13 @@ function ProposalCard({
   const Icon = ENTITY_ICONS[proposal.entity_type] || FileText
 
   return (
-    <div className="border rounded-lg p-3 bg-muted/30 space-y-2">
+    <div className="space-y-2 rounded-lg border bg-muted/30 p-3">
       <div className="flex items-start justify-between gap-2">
-        <div className="flex items-start gap-2 flex-1">
-          <div className="p-1.5 rounded bg-primary/10">
-            <Icon className="h-4 w-4 text-primary" />
+        <div className="flex flex-1 items-start gap-2">
+          <div className="rounded bg-primary/10 p-1.5">
+            <Icon className="size-4 text-primary" />
           </div>
-          <div className="flex-1 min-w-0">
+          <div className="min-w-0 flex-1">
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="text-xs capitalize">
                 {proposal.entity_type}
@@ -390,33 +390,33 @@ function ProposalCard({
                 </Tooltip>
               </TooltipProvider>
             </div>
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+            <p className="mt-1 line-clamp-2 text-xs text-muted-foreground">
               {proposal.justification}
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-1 shrink-0">
+        <div className="flex shrink-0 items-center gap-1">
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-100"
+            className="size-8 text-green-600 hover:bg-green-100 hover:text-green-700"
             onClick={onApprove}
             disabled={isApproving || isRejecting}
           >
             {isApproving ? (
-              <Loader2 className="h-4 w-4 animate-spin" />
+              <Loader2 className="size-4 animate-spin" />
             ) : (
-              <Check className="h-4 w-4" />
+              <Check className="size-4" />
             )}
           </Button>
           <Button
             variant="ghost"
             size="icon"
-            className="h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-100"
+            className="size-8 text-red-600 hover:bg-red-100 hover:text-red-700"
             onClick={onReject}
             disabled={isApproving || isRejecting}
           >
-            {isRejecting ? <Loader2 className="h-4 w-4 animate-spin" /> : <X className="h-4 w-4" />}
+            {isRejecting ? <Loader2 className="size-4 animate-spin" /> : <X className="size-4" />}
           </Button>
         </div>
       </div>
@@ -435,14 +435,14 @@ function LinkCard({ link, onDelete, onClick, isDeleting }: LinkCardProps) {
   const Icon = ENTITY_ICONS[link.entity_type] || FileText
 
   return (
-    <div className="border rounded-lg p-3 flex items-center justify-between gap-2 hover:bg-muted/30 transition-colors">
-      <div className="flex items-center gap-2 flex-1 cursor-pointer" onClick={onClick}>
-        <div className="p-1.5 rounded bg-primary/10">
-          <Icon className="h-4 w-4 text-primary" />
+    <div className="flex items-center justify-between gap-2 rounded-lg border p-3 transition-colors hover:bg-muted/30">
+      <div className="flex flex-1 cursor-pointer items-center gap-2" onClick={onClick}>
+        <div className="rounded bg-primary/10 p-1.5">
+          <Icon className="size-4 text-primary" />
         </div>
-        <div className="flex-1 min-w-0">
+        <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">
-            <span className="text-sm font-medium truncate">
+            <span className="truncate text-sm font-medium">
               {link.entity_name || link.entity_id.substring(0, 8)}
             </span>
             <Badge variant="outline" className="text-xs capitalize">
@@ -450,25 +450,25 @@ function LinkCard({ link, onDelete, onClick, isDeleting }: LinkCardProps) {
             </Badge>
             {link.is_ai_suggested && (
               <Badge variant="secondary" className="text-xs">
-                <Sparkles className="h-3 w-3 me-1" />
+                <Sparkles className="me-1 size-3" />
                 AI
               </Badge>
             )}
           </div>
         </div>
-        {onClick && <ExternalLink className="h-4 w-4 text-muted-foreground" />}
+        {onClick && <ExternalLink className="size-4 text-muted-foreground" />}
       </div>
       <Button
         variant="ghost"
         size="icon"
-        className="h-8 w-8 text-muted-foreground hover:text-destructive"
+        className="size-8 text-muted-foreground hover:text-destructive"
         onClick={(e) => {
           e.stopPropagation()
           onDelete()
         }}
         disabled={isDeleting}
       >
-        {isDeleting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Trash2 className="h-4 w-4" />}
+        {isDeleting ? <Loader2 className="size-4 animate-spin" /> : <Trash2 className="size-4" />}
       </Button>
     </div>
   )

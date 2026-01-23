@@ -123,18 +123,18 @@ export function InlineCommentMarker({
               getStatusColor(comment.status),
             )}
           >
-            <MessageSquare className="h-2 w-2 text-white" />
+            <MessageSquare className="size-2 text-white" />
           </span>
         </span>
       </PopoverTrigger>
 
-      <PopoverContent side={isRTL ? 'left' : 'right'} align="start" className="w-80 sm:w-96 p-0">
+      <PopoverContent side={isRTL ? 'left' : 'right'} align="start" className="w-80 p-0 sm:w-96">
         <div dir={isRTL ? 'rtl' : 'ltr'}>
           {/* Header */}
-          <div className="flex items-center justify-between p-3 border-b bg-muted/50">
+          <div className="flex items-center justify-between border-b bg-muted/50 p-3">
             <div className="flex items-center gap-2">
-              <MessageSquare className="h-4 w-4" />
-              <span className="font-medium text-sm">{t('comments.thread')}</span>
+              <MessageSquare className="size-4" />
+              <span className="text-sm font-medium">{t('comments.thread')}</span>
               {comment.status !== 'open' && (
                 <Badge
                   variant="secondary"
@@ -154,20 +154,20 @@ export function InlineCommentMarker({
             {/* Actions menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-7 w-7">
-                  <MoreHorizontal className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="size-7">
+                  <MoreHorizontal className="size-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
                 {comment.status === 'open' && canResolve && (
                   <DropdownMenuItem onClick={onResolve} className="gap-2">
-                    <CheckCircle className="h-4 w-4 text-green-500" />
+                    <CheckCircle className="size-4 text-green-500" />
                     {t('comments.resolve')}
                   </DropdownMenuItem>
                 )}
                 {comment.status === 'resolved' && onReopen && (
                   <DropdownMenuItem onClick={onReopen} className="gap-2">
-                    <MessageSquare className="h-4 w-4" />
+                    <MessageSquare className="size-4" />
                     {t('comments.reopen')}
                   </DropdownMenuItem>
                 )}
@@ -175,14 +175,14 @@ export function InlineCommentMarker({
                   <>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => setIsEditing(true)} className="gap-2">
-                      <Edit className="h-4 w-4" />
+                      <Edit className="size-4" />
                       {t('comments.edit')}
                     </DropdownMenuItem>
                   </>
                 )}
                 {isAuthor && onDelete && (
                   <DropdownMenuItem onClick={onDelete} className="gap-2 text-red-600">
-                    <Trash2 className="h-4 w-4" />
+                    <Trash2 className="size-4" />
                     {t('comments.delete')}
                   </DropdownMenuItem>
                 )}
@@ -192,11 +192,11 @@ export function InlineCommentMarker({
 
           {/* Comments thread */}
           <ScrollArea className="max-h-[300px]">
-            <div className="p-3 space-y-3">
+            <div className="space-y-3 p-3">
               {/* Original comment */}
               <div className="space-y-2">
                 <div className="flex items-start gap-2">
-                  <Avatar className="h-7 w-7 flex-shrink-0">
+                  <Avatar className="size-7 shrink-0">
                     <AvatarImage src={comment.author?.avatarUrl} alt={comment.author?.name} />
                     <AvatarFallback className="text-xs">
                       {comment.author?.name?.slice(0, 2).toUpperCase() ||
@@ -204,8 +204,8 @@ export function InlineCommentMarker({
                     </AvatarFallback>
                   </Avatar>
 
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
+                  <div className="min-w-0 flex-1">
+                    <div className="flex flex-wrap items-center gap-2">
                       <span className="text-sm font-medium">
                         {comment.author?.name || comment.author?.email}
                       </span>
@@ -246,7 +246,7 @@ export function InlineCommentMarker({
                         </div>
                       </div>
                     ) : (
-                      <p className="text-sm mt-1 whitespace-pre-wrap">{comment.content}</p>
+                      <p className="mt-1 whitespace-pre-wrap text-sm">{comment.content}</p>
                     )}
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export function InlineCommentMarker({
                 <div className={cn('space-y-3', isRTL ? 'pe-4' : 'ps-4')}>
                   {replies.map((reply) => (
                     <div key={reply.id} className="flex items-start gap-2">
-                      <Avatar className="h-6 w-6 flex-shrink-0">
+                      <Avatar className="size-6 shrink-0">
                         <AvatarImage src={reply.author?.avatarUrl} alt={reply.author?.name} />
                         <AvatarFallback className="text-xs">
                           {reply.author?.name?.slice(0, 2).toUpperCase() ||
@@ -265,8 +265,8 @@ export function InlineCommentMarker({
                         </AvatarFallback>
                       </Avatar>
 
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
+                      <div className="min-w-0 flex-1">
+                        <div className="flex flex-wrap items-center gap-2">
                           <span className="text-sm font-medium">
                             {reply.author?.name || reply.author?.email}
                           </span>
@@ -277,7 +277,7 @@ export function InlineCommentMarker({
                             })}
                           </span>
                         </div>
-                        <p className="text-sm mt-0.5 whitespace-pre-wrap">{reply.content}</p>
+                        <p className="mt-0.5 whitespace-pre-wrap text-sm">{reply.content}</p>
                       </div>
                     </div>
                   ))}
@@ -288,7 +288,7 @@ export function InlineCommentMarker({
 
           {/* Reply input */}
           {comment.status === 'open' && (
-            <div className="p-3 border-t bg-muted/30">
+            <div className="border-t bg-muted/30 p-3">
               {isReplying ? (
                 <div className="space-y-2">
                   <Textarea
@@ -321,7 +321,7 @@ export function InlineCommentMarker({
                   className="w-full gap-2"
                   onClick={() => setIsReplying(true)}
                 >
-                  <Reply className="h-4 w-4" />
+                  <Reply className="size-4" />
                   {t('comments.addReply')}
                 </Button>
               )}
@@ -359,7 +359,7 @@ export function CommentIndicator({
         className,
       )}
     >
-      <MessageSquare className="h-3 w-3" />
+      <MessageSquare className="size-3" />
       {count}
     </Badge>
   )

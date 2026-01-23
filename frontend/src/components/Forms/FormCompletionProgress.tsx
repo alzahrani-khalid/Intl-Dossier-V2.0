@@ -97,14 +97,14 @@ function StatItem({ icon, label, completed, total, colorClass }: StatItemProps) 
   return (
     <div className="flex items-center gap-2 sm:gap-3">
       <div className={cn('flex-shrink-0', colorClass)}>{icon}</div>
-      <div className="flex-1 min-w-0">
+      <div className="min-w-0 flex-1">
         <div className="flex items-center justify-between">
           <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{label}</span>
           <span className="text-sm text-gray-500 dark:text-gray-400">
             {completed}/{total}
           </span>
         </div>
-        <div className="mt-1 h-1.5 bg-gray-200 dark:bg-gray-700 rounded-full overflow-hidden">
+        <div className="mt-1 h-1.5 overflow-hidden rounded-full bg-gray-200 dark:bg-gray-700">
           <motion.div
             className={cn('h-full rounded-full', colorClass.replace('text-', 'bg-'))}
             initial={{ width: 0 }}
@@ -166,15 +166,15 @@ export function FormCompletionProgress({
   // Status icon
   const getStatusIcon = () => {
     if (canSubmit) {
-      return <CheckCircle2 className="w-5 h-5 text-emerald-500" />
+      return <CheckCircle2 className="size-5 text-emerald-500" />
     }
     if (fieldsWithErrors.length > 0) {
-      return <AlertCircle className="w-5 h-5 text-red-500" />
+      return <AlertCircle className="size-5 text-red-500" />
     }
     if (emptyRequiredFields.length > 0) {
-      return <AlertTriangle className="w-5 h-5 text-amber-500" />
+      return <AlertTriangle className="size-5 text-amber-500" />
     }
-    return <CircleDot className="w-5 h-5 text-blue-500" />
+    return <CircleDot className="size-5 text-blue-500" />
   }
 
   // Minimal variant
@@ -200,7 +200,7 @@ export function FormCompletionProgress({
         <div className="flex-1">
           <ProgressBar percentage={requiredPercentage} variant="required" />
         </div>
-        <span className="text-sm font-medium text-gray-700 dark:text-gray-300 flex-shrink-0">
+        <span className="shrink-0 text-sm font-medium text-gray-700 dark:text-gray-300">
           {requiredPercentage}%
         </span>
       </div>
@@ -226,14 +226,14 @@ export function FormCompletionProgress({
       {/* Main Progress Section */}
       <div className="p-4 sm:p-5">
         {/* Header */}
-        <div className="flex items-center justify-between mb-3">
+        <div className="mb-3 flex items-center justify-between">
           <div className="flex items-center gap-2">
             {getStatusIcon()}
-            <span className="font-medium text-gray-900 dark:text-white text-sm sm:text-base">
+            <span className="text-sm font-medium text-gray-900 dark:text-white sm:text-base">
               {getStatusMessage()}
             </span>
           </div>
-          <span className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white">
+          <span className="text-lg font-bold text-gray-900 dark:text-white sm:text-xl">
             {overallPercentage}%
           </span>
         </div>
@@ -242,7 +242,7 @@ export function FormCompletionProgress({
         <ProgressBar percentage={overallPercentage} />
 
         {/* Field Count Summary */}
-        <div className="mt-3 flex flex-wrap items-center gap-3 sm:gap-4 text-sm text-gray-500 dark:text-gray-400">
+        <div className="mt-3 flex flex-wrap items-center gap-3 text-sm text-gray-500 dark:text-gray-400 sm:gap-4">
           <span>
             {t('progress.fieldsCompleted', {
               completed: completedFields,
@@ -286,7 +286,7 @@ export function FormCompletionProgress({
           >
             <span>{t('progress.viewDetails')}</span>
             <motion.div animate={{ rotate: isExpanded ? 180 : 0 }} transition={{ duration: 0.2 }}>
-              <ChevronDown className="w-4 h-4" />
+              <ChevronDown className="size-4" />
             </motion.div>
           </button>
 
@@ -297,12 +297,12 @@ export function FormCompletionProgress({
               animate={{ height: 'auto', opacity: 1 }}
               exit={{ height: 0, opacity: 0 }}
               transition={{ duration: 0.3 }}
-              className="px-4 pb-4 sm:px-5 sm:pb-5 space-y-3 sm:space-y-4 bg-gray-50 dark:bg-gray-900/50"
+              className="space-y-3 bg-gray-50 px-4 pb-4 dark:bg-gray-900/50 sm:space-y-4 sm:px-5 sm:pb-5"
             >
               {/* Required Fields */}
               {requiredFields > 0 && (
                 <StatItem
-                  icon={<AlertCircle className="w-4 h-4" />}
+                  icon={<AlertCircle className="size-4" />}
                   label={t('importance.required')}
                   completed={completedRequiredFields}
                   total={requiredFields}
@@ -313,7 +313,7 @@ export function FormCompletionProgress({
               {/* Recommended Fields */}
               {recommendedFields > 0 && (
                 <StatItem
-                  icon={<CircleDot className="w-4 h-4" />}
+                  icon={<CircleDot className="size-4" />}
                   label={t('importance.recommended')}
                   completed={completedRecommendedFields}
                   total={recommendedFields}
@@ -324,7 +324,7 @@ export function FormCompletionProgress({
               {/* Optional Fields */}
               {optionalFields > 0 && (
                 <StatItem
-                  icon={<Info className="w-4 h-4" />}
+                  icon={<Info className="size-4" />}
                   label={t('importance.optional')}
                   completed={completedOptionalFields}
                   total={optionalFields}
@@ -338,12 +338,12 @@ export function FormCompletionProgress({
 
       {/* Warnings Section */}
       {showWarnings && (emptyRequiredFields.length > 0 || fieldsWithErrors.length > 0) && (
-        <div className="px-4 pb-4 sm:px-5 sm:pb-5 space-y-2 border-t border-gray-200 dark:border-gray-700 bg-amber-50/50 dark:bg-amber-900/10">
+        <div className="space-y-2 border-t border-gray-200 bg-amber-50/50 px-4 pb-4 dark:border-gray-700 dark:bg-amber-900/10 sm:px-5 sm:pb-5">
           <div className="pt-3 sm:pt-4">
             {/* Empty Required Fields Warning */}
             {emptyRequiredFields.length > 0 && (
               <div className="flex items-start gap-2 text-sm text-amber-700 dark:text-amber-400">
-                <AlertTriangle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                <AlertTriangle className="mt-0.5 size-4 shrink-0" />
                 <span>
                   {t('progress.emptyRequiredWarning', {
                     count: emptyRequiredFields.length,
@@ -354,8 +354,8 @@ export function FormCompletionProgress({
 
             {/* Fields with Errors Warning */}
             {fieldsWithErrors.length > 0 && (
-              <div className="flex items-start gap-2 text-sm text-red-700 dark:text-red-400 mt-2">
-                <AlertCircle className="w-4 h-4 flex-shrink-0 mt-0.5" />
+              <div className="mt-2 flex items-start gap-2 text-sm text-red-700 dark:text-red-400">
+                <AlertCircle className="mt-0.5 size-4 shrink-0" />
                 <span>
                   {t('progress.errorsWarning', {
                     count: fieldsWithErrors.length,

@@ -119,15 +119,15 @@ export function ConsistencyCheckPanel({
   const getRiskIcon = (riskLevel: RiskLevel) => {
     switch (riskLevel) {
       case 'low':
-        return <ShieldCheck className="h-5 w-5 text-green-600" />
+        return <ShieldCheck className="size-5 text-green-600" />
       case 'medium':
-        return <Shield className="h-5 w-5 text-yellow-600" />
+        return <Shield className="size-5 text-yellow-600" />
       case 'high':
-        return <ShieldAlert className="h-5 w-5 text-orange-600" />
+        return <ShieldAlert className="size-5 text-orange-600" />
       case 'critical':
-        return <AlertCircle className="h-5 w-5 text-red-600" />
+        return <AlertCircle className="size-5 text-red-600" />
       default:
-        return <Shield className="h-5 w-5 text-gray-600" />
+        return <Shield className="size-5 text-gray-600" />
     }
   }
 
@@ -135,7 +135,7 @@ export function ConsistencyCheckPanel({
     return (
       <Card className={cn('animate-pulse', className)}>
         <CardContent className="flex items-center justify-center py-8">
-          <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+          <Loader2 className="size-6 animate-spin text-muted-foreground" />
           <span className="ms-2 text-muted-foreground">
             {t('consistency.loading', 'Loading consistency check...')}
           </span>
@@ -149,7 +149,7 @@ export function ConsistencyCheckPanel({
       <CardHeader className="px-4 py-3 sm:px-6 sm:py-4">
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
-            <FileWarning className="h-5 w-5" />
+            <FileWarning className="size-5" />
             {t('consistency.title', 'Consistency Analysis')}
           </CardTitle>
           <Button
@@ -160,9 +160,9 @@ export function ConsistencyCheckPanel({
             className="min-h-10 min-w-10 sm:min-h-9"
           >
             {runCheck.isPending ? (
-              <Loader2 className="h-4 w-4 animate-spin me-2" />
+              <Loader2 className="me-2 size-4 animate-spin" />
             ) : (
-              <RefreshCw className="h-4 w-4 me-2" />
+              <RefreshCw className="me-2 size-4" />
             )}
             {t('consistency.runCheck', 'Run Check')}
           </Button>
@@ -171,12 +171,12 @@ export function ConsistencyCheckPanel({
 
       <CardContent className="px-4 pb-4 sm:px-6 sm:pb-6">
         {!latestCheck ? (
-          <div className="text-center py-8">
-            <FileWarning className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-            <p className="text-muted-foreground text-sm sm:text-base">
+          <div className="py-8 text-center">
+            <FileWarning className="mx-auto mb-4 size-12 text-muted-foreground" />
+            <p className="text-sm text-muted-foreground sm:text-base">
               {t('consistency.noCheck', 'No consistency check has been run yet.')}
             </p>
-            <p className="text-muted-foreground text-xs sm:text-sm mt-1">
+            <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
               {t(
                 'consistency.noCheckHint',
                 'Run a check to analyze this position against the existing repository.',
@@ -189,7 +189,7 @@ export function ConsistencyCheckPanel({
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               {/* Overall Score */}
               <div className="rounded-lg border p-4">
-                <div className="flex items-center justify-between mb-2">
+                <div className="mb-2 flex items-center justify-between">
                   <span className="text-sm font-medium text-muted-foreground">
                     {t('consistency.overallScore', 'Overall Score')}
                   </span>
@@ -230,19 +230,19 @@ export function ConsistencyCheckPanel({
                 <div className="mt-3 flex flex-wrap gap-2">
                   {latestCheck.requires_human_review && (
                     <Badge variant="outline\" className="text-xs">
-                      <AlertTriangle className="h-3 w-3 me-1" />
+                      <AlertTriangle className="me-1 size-3" />
                       {t('consistency.humanReviewRequired', 'Review Required')}
                     </Badge>
                   )}
                   {latestCheck.auto_approved && (
                     <Badge variant="outline" className="text-xs text-green-600">
-                      <CheckCircle className="h-3 w-3 me-1" />
+                      <CheckCircle className="me-1 size-3" />
                       {t('consistency.autoApproved', 'Auto-Approved')}
                     </Badge>
                   )}
                   {!latestCheck.ai_service_available && (
                     <Badge variant="outline" className="text-xs text-yellow-600">
-                      <AlertTriangle className="h-3 w-3 me-1" />
+                      <AlertTriangle className="me-1 size-3" />
                       {t('consistency.aiUnavailable', 'AI Unavailable')}
                     </Badge>
                   )}
@@ -252,10 +252,10 @@ export function ConsistencyCheckPanel({
 
             {/* Conflicts Section */}
             <Collapsible open={isConflictsOpen} onOpenChange={setIsConflictsOpen}>
-              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border p-3 sm:p-4 hover:bg-muted/50 transition-colors">
+              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-muted/50 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <AlertCircle className="h-4 w-4 sm:h-5 sm:w-5 text-orange-600" />
-                  <span className="font-medium text-sm sm:text-base">
+                  <AlertCircle className="size-4 text-orange-600 sm:size-5" />
+                  <span className="text-sm font-medium sm:text-base">
                     {t('consistency.conflicts', 'Conflicts')}
                   </span>
                   <Badge variant="secondary" className="text-xs">
@@ -263,15 +263,15 @@ export function ConsistencyCheckPanel({
                   </Badge>
                 </div>
                 {isConflictsOpen ? (
-                  <ChevronUp className="h-4 w-4" />
+                  <ChevronUp className="size-4" />
                 ) : (
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="size-4" />
                 )}
               </CollapsibleTrigger>
               <CollapsibleContent className="pt-2">
                 {latestCheck.conflicts.length === 0 ? (
                   <div className="rounded-lg bg-green-50 p-4 text-center">
-                    <CheckCircle className="h-6 w-6 mx-auto text-green-600 mb-2" />
+                    <CheckCircle className="mx-auto mb-2 size-6 text-green-600" />
                     <p className="text-sm text-green-700">
                       {t('consistency.noConflicts', 'No conflicts detected')}
                     </p>
@@ -288,10 +288,10 @@ export function ConsistencyCheckPanel({
 
             {/* Similar Positions Section */}
             <Collapsible open={isSimilarOpen} onOpenChange={setIsSimilarOpen}>
-              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border p-3 sm:p-4 hover:bg-muted/50 transition-colors">
+              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-muted/50 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <GitMerge className="h-4 w-4 sm:h-5 sm:w-5 text-blue-600" />
-                  <span className="font-medium text-sm sm:text-base">
+                  <GitMerge className="size-4 text-blue-600 sm:size-5" />
+                  <span className="text-sm font-medium sm:text-base">
                     {t('consistency.similarPositions', 'Similar Positions')}
                   </span>
                   <Badge variant="secondary" className="text-xs">
@@ -299,9 +299,9 @@ export function ConsistencyCheckPanel({
                   </Badge>
                 </div>
                 {isSimilarOpen ? (
-                  <ChevronUp className="h-4 w-4" />
+                  <ChevronUp className="size-4" />
                 ) : (
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="size-4" />
                 )}
               </CollapsibleTrigger>
               <CollapsibleContent className="pt-2">
@@ -327,10 +327,10 @@ export function ConsistencyCheckPanel({
 
             {/* Recommendations Section */}
             <Collapsible open={isRecommendationsOpen} onOpenChange={setIsRecommendationsOpen}>
-              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border p-3 sm:p-4 hover:bg-muted/50 transition-colors">
+              <CollapsibleTrigger className="flex w-full items-center justify-between rounded-lg border p-3 transition-colors hover:bg-muted/50 sm:p-4">
                 <div className="flex items-center gap-2">
-                  <CheckCircle className="h-4 w-4 sm:h-5 sm:w-5 text-green-600" />
-                  <span className="font-medium text-sm sm:text-base">
+                  <CheckCircle className="size-4 text-green-600 sm:size-5" />
+                  <span className="text-sm font-medium sm:text-base">
                     {t('consistency.recommendations', 'Recommendations')}
                   </span>
                   <Badge variant="secondary" className="text-xs">
@@ -338,13 +338,13 @@ export function ConsistencyCheckPanel({
                   </Badge>
                 </div>
                 {isRecommendationsOpen ? (
-                  <ChevronUp className="h-4 w-4" />
+                  <ChevronUp className="size-4" />
                 ) : (
-                  <ChevronDown className="h-4 w-4" />
+                  <ChevronDown className="size-4" />
                 )}
               </CollapsibleTrigger>
               <CollapsibleContent className="pt-2">
-                <div className="rounded-lg bg-muted/50 p-4 mb-3">
+                <div className="mb-3 rounded-lg bg-muted/50 p-4">
                   <p className="text-sm">
                     {isRTL
                       ? latestCheck.recommendations.summary_ar
@@ -363,8 +363,8 @@ export function ConsistencyCheckPanel({
             {latestCheck.requires_human_review &&
               latestCheck.review_status === 'pending_review' && (
                 <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-4">
-                  <h4 className="font-medium text-yellow-800 mb-3 flex items-center gap-2">
-                    <AlertTriangle className="h-4 w-4" />
+                  <h4 className="mb-3 flex items-center gap-2 font-medium text-yellow-800">
+                    <AlertTriangle className="size-4" />
                     {t('consistency.reviewRequired', 'Human Review Required')}
                   </h4>
                   <Textarea
@@ -379,29 +379,29 @@ export function ConsistencyCheckPanel({
                   <div className="flex flex-col gap-2 sm:flex-row">
                     <Button
                       variant="default"
-                      className="flex-1 min-h-11 bg-green-600 hover:bg-green-700"
+                      className="min-h-11 flex-1 bg-green-600 hover:bg-green-700"
                       onClick={() => handleReviewDecision('approved')}
                       disabled={submitReview.isPending}
                     >
-                      <CheckCircle className="h-4 w-4 me-2" />
+                      <CheckCircle className="me-2 size-4" />
                       {t('consistency.approve', 'Approve')}
                     </Button>
                     <Button
                       variant="outline"
-                      className="flex-1 min-h-11 border-yellow-600 text-yellow-600"
+                      className="min-h-11 flex-1 border-yellow-600 text-yellow-600"
                       onClick={() => handleReviewDecision('revision_required')}
                       disabled={submitReview.isPending}
                     >
-                      <AlertTriangle className="h-4 w-4 me-2" />
+                      <AlertTriangle className="me-2 size-4" />
                       {t('consistency.requestRevision', 'Request Revision')}
                     </Button>
                     <Button
                       variant="destructive"
-                      className="flex-1 min-h-11"
+                      className="min-h-11 flex-1"
                       onClick={() => handleReviewDecision('rejected')}
                       disabled={submitReview.isPending}
                     >
-                      <XCircle className="h-4 w-4 me-2" />
+                      <XCircle className="me-2 size-4" />
                       {t('consistency.reject', 'Reject')}
                     </Button>
                   </div>
@@ -409,9 +409,9 @@ export function ConsistencyCheckPanel({
               )}
 
             {/* Metadata */}
-            <div className="flex flex-wrap items-center gap-2 text-xs text-muted-foreground pt-2 border-t">
+            <div className="flex flex-wrap items-center gap-2 border-t pt-2 text-xs text-muted-foreground">
               <div className="flex items-center gap-1">
-                <Clock className="h-3 w-3" />
+                <Clock className="size-3" />
                 {new Date(latestCheck.analyzed_at).toLocaleString(isRTL ? 'ar-SA' : 'en-US')}
               </div>
               {latestCheck.processing_time_ms && <span>({latestCheck.processing_time_ms}ms)</span>}
@@ -437,7 +437,7 @@ function ConflictCard({ conflict, isRTL }: { conflict: ConflictResult; isRTL: bo
     <div className="rounded-lg border p-3 sm:p-4">
       <div className="flex flex-col gap-2 sm:flex-row sm:items-start sm:justify-between">
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="mb-1 flex items-center gap-2">
             <Badge
               className={cn('text-xs', consistencyCheckUtils.getSeverityColor(conflict.severity))}
             >
@@ -447,12 +447,12 @@ function ConflictCard({ conflict, isRTL }: { conflict: ConflictResult; isRTL: bo
               {consistencyCheckUtils.formatConflictType(conflict.conflict_type)}
             </Badge>
           </div>
-          <h5 className="font-medium text-sm sm:text-base">
+          <h5 className="text-sm font-medium sm:text-base">
             {isRTL
               ? conflict.conflicting_position_title_ar
               : conflict.conflicting_position_title_en}
           </h5>
-          <p className="text-xs sm:text-sm text-muted-foreground mt-1">
+          <p className="mt-1 text-xs text-muted-foreground sm:text-sm">
             {isRTL ? conflict.description_ar : conflict.description_en}
           </p>
           {(conflict.suggested_resolution_en || conflict.suggested_resolution_ar) && (
@@ -475,11 +475,11 @@ function SimilarPositionCard({ position, isRTL }: { position: SimilarPosition; i
   return (
     <div className="rounded-lg border p-3 sm:p-4">
       <div className="flex items-center justify-between gap-2">
-        <div className="flex-1 min-w-0">
-          <h5 className="font-medium text-sm sm:text-base truncate">
+        <div className="min-w-0 flex-1">
+          <h5 className="truncate text-sm font-medium sm:text-base">
             {isRTL ? position.title_ar : position.title_en}
           </h5>
-          <div className="flex items-center gap-2 mt-1">
+          <div className="mt-1 flex items-center gap-2">
             <Badge variant="outline" className="text-xs">
               {position.status}
             </Badge>
@@ -518,19 +518,19 @@ function RecommendationCard({
   const getTypeIcon = () => {
     switch (recommendation.type) {
       case 'approve':
-        return <CheckCircle className="h-4 w-4 text-green-600" />
+        return <CheckCircle className="size-4 text-green-600" />
       case 'reject':
-        return <XCircle className="h-4 w-4 text-red-600" />
+        return <XCircle className="size-4 text-red-600" />
       case 'merge':
-        return <GitMerge className="h-4 w-4 text-blue-600" />
+        return <GitMerge className="size-4 text-blue-600" />
       case 'update':
-        return <RefreshCw className="h-4 w-4 text-yellow-600" />
+        return <RefreshCw className="size-4 text-yellow-600" />
       case 'deprecate':
-        return <AlertTriangle className="h-4 w-4 text-orange-600" />
+        return <AlertTriangle className="size-4 text-orange-600" />
       case 'review':
-        return <AlertCircle className="h-4 w-4 text-purple-600" />
+        return <AlertCircle className="size-4 text-purple-600" />
       default:
-        return <AlertCircle className="h-4 w-4" />
+        return <AlertCircle className="size-4" />
     }
   }
 
@@ -552,7 +552,7 @@ function RecommendationCard({
       <div className="flex items-start gap-2">
         {getTypeIcon()}
         <div className="flex-1">
-          <div className="flex items-center gap-2 mb-1">
+          <div className="mb-1 flex items-center gap-2">
             <Badge variant="outline" className="text-xs capitalize">
               {recommendation.type}
             </Badge>
@@ -568,7 +568,7 @@ function RecommendationCard({
           </p>
           {((isRTL && recommendation.action_items_ar?.length) ||
             (!isRTL && recommendation.action_items_en?.length)) && (
-            <ul className="mt-2 list-disc list-inside text-xs text-muted-foreground">
+            <ul className="mt-2 list-inside list-disc text-xs text-muted-foreground">
               {(isRTL ? recommendation.action_items_ar : recommendation.action_items_en)?.map(
                 (item, idx) => (
                   <li key={idx}>{item}</li>

@@ -43,7 +43,7 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
       <Card>
         <CardContent className="py-12">
           <div className="flex items-center justify-center">
-            <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+            <div className="size-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
           </div>
         </CardContent>
       </Card>
@@ -55,9 +55,9 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
       <Card>
         <CardContent className="py-12">
           <div className="text-center text-muted-foreground">
-            <GitCompare className="h-12 w-12 mx-auto mb-4 opacity-40" />
+            <GitCompare className="mx-auto mb-4 size-12 opacity-40" />
             <p className="font-medium">{t('comparison.selectScenarios')}</p>
-            <p className="text-sm mt-1">{t('comparison.minScenarios')}</p>
+            <p className="mt-1 text-sm">{t('comparison.minScenarios')}</p>
           </div>
         </CardContent>
       </Card>
@@ -76,7 +76,7 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
     <Card>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <GitCompare className="h-5 w-5" />
+          <GitCompare className="size-5" />
           {t('comparison.sideBySide')}
         </CardTitle>
         <CardDescription>
@@ -88,11 +88,11 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
           <table className="w-full">
             <thead>
               <tr className="border-b">
-                <th className="text-start py-3 px-4 font-medium text-muted-foreground">
+                <th className="px-4 py-3 text-start font-medium text-muted-foreground">
                   {t('analysis.metrics')}
                 </th>
                 {scenarios.map((scenario) => (
-                  <th key={scenario.id} className="text-start py-3 px-4 min-w-[200px]">
+                  <th key={scenario.id} className="min-w-[200px] px-4 py-3 text-start">
                     <div className="font-semibold">
                       {isRTL ? scenario.title_ar : scenario.title_en}
                     </div>
@@ -108,9 +108,9 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
             <tbody>
               {/* Scenario Type */}
               <tr className="border-b">
-                <td className="py-3 px-4 text-muted-foreground">{t('scenario.fields.type')}</td>
+                <td className="px-4 py-3 text-muted-foreground">{t('scenario.fields.type')}</td>
                 {scenarios.map((scenario) => (
-                  <td key={scenario.id} className="py-3 px-4">
+                  <td key={scenario.id} className="px-4 py-3">
                     <Badge variant="secondary">
                       {isRTL
                         ? SCENARIO_TYPE_LABELS[scenario.type].ar
@@ -122,14 +122,14 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
 
               {/* Variables */}
               <tr className="border-b">
-                <td className="py-3 px-4">
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Variable className="h-4 w-4" />
+                    <Variable className="size-4" />
                     {t('analysis.stats.totalVariables')}
                   </div>
                 </td>
                 {scenarios.map((scenario) => (
-                  <td key={scenario.id} className="py-3 px-4">
+                  <td key={scenario.id} className="px-4 py-3">
                     <span
                       className={
                         scenario.variable_count === maxVariables ? 'font-semibold text-primary' : ''
@@ -143,14 +143,14 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
 
               {/* Total Outcomes */}
               <tr className="border-b">
-                <td className="py-3 px-4">
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Target className="h-4 w-4" />
+                    <Target className="size-4" />
                     {t('analysis.stats.totalOutcomes')}
                   </div>
                 </td>
                 {scenarios.map((scenario) => (
-                  <td key={scenario.id} className="py-3 px-4">
+                  <td key={scenario.id} className="px-4 py-3">
                     {scenario.outcome_count}
                   </td>
                 ))}
@@ -158,14 +158,14 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
 
               {/* Positive Outcomes */}
               <tr className="border-b">
-                <td className="py-3 px-4">
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
-                    <TrendingUp className="h-4 w-4" />
+                    <TrendingUp className="size-4" />
                     {t('analysis.stats.positiveOutcomes')}
                   </div>
                 </td>
                 {scenarios.map((scenario) => (
-                  <td key={scenario.id} className="py-3 px-4">
+                  <td key={scenario.id} className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <span
                         className={
@@ -177,7 +177,7 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
                         {scenario.positive_outcomes}
                       </span>
                       {scenario.positive_outcomes === maxPositive && maxPositive > 0 && (
-                        <CheckCircle2 className="h-4 w-4 text-green-500" />
+                        <CheckCircle2 className="size-4 text-green-500" />
                       )}
                     </div>
                   </td>
@@ -186,14 +186,14 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
 
               {/* Negative Outcomes */}
               <tr className="border-b">
-                <td className="py-3 px-4">
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2 text-red-600 dark:text-red-400">
-                    <TrendingDown className="h-4 w-4" />
+                    <TrendingDown className="size-4" />
                     {t('analysis.stats.negativeOutcomes')}
                   </div>
                 </td>
                 {scenarios.map((scenario) => (
-                  <td key={scenario.id} className="py-3 px-4">
+                  <td key={scenario.id} className="px-4 py-3">
                     <div className="flex items-center gap-2">
                       <span
                         className={
@@ -208,7 +208,7 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
                       </span>
                       {scenario.negative_outcomes === minNegative &&
                         scenario.negative_outcomes < scenarios[0].negative_outcomes && (
-                          <CheckCircle2 className="h-4 w-4 text-green-500" />
+                          <CheckCircle2 className="size-4 text-green-500" />
                         )}
                     </div>
                   </td>
@@ -217,16 +217,16 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
 
               {/* Average Probability */}
               <tr className="border-b">
-                <td className="py-3 px-4">
+                <td className="px-4 py-3">
                   <div className="flex items-center gap-2 text-muted-foreground">
-                    <Percent className="h-4 w-4" />
+                    <Percent className="size-4" />
                     {t('analysis.stats.avgProbability')}
                   </div>
                 </td>
                 {scenarios.map((scenario) => {
                   const probability = scenario.avg_probability || 0
                   return (
-                    <td key={scenario.id} className="py-3 px-4">
+                    <td key={scenario.id} className="px-4 py-3">
                       <div className="space-y-1">
                         <div className="flex items-center gap-2">
                           <span
@@ -248,7 +248,7 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
 
               {/* Outcome Ratio */}
               <tr>
-                <td className="py-3 px-4 text-muted-foreground">
+                <td className="px-4 py-3 text-muted-foreground">
                   {t('outcome.positive')} / {t('outcome.negative')}
                 </td>
                 {scenarios.map((scenario) => {
@@ -256,12 +256,12 @@ export function ScenarioComparison({ data, isLoading }: ScenarioComparisonProps)
                   const ratio = total > 0 ? (scenario.positive_outcomes / total) * 100 : 0
 
                   return (
-                    <td key={scenario.id} className="py-3 px-4">
+                    <td key={scenario.id} className="px-4 py-3">
                       {total > 0 ? (
                         <div className="flex items-center gap-2">
-                          <div className="flex-1 max-w-[120px] h-2 rounded-full bg-red-200 dark:bg-red-900/30 overflow-hidden">
+                          <div className="h-2 max-w-[120px] flex-1 overflow-hidden rounded-full bg-red-200 dark:bg-red-900/30">
                             <div
-                              className="h-full bg-green-500 rounded-full"
+                              className="h-full rounded-full bg-green-500"
                               style={{ width: `${ratio}%` }}
                             />
                           </div>

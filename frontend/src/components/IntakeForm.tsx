@@ -308,7 +308,7 @@ export const IntakeForm: React.FC<IntakeFormProps> = ({
             />
             {/* Show selected dossier badge */}
             {selectedDossiers.length > 0 && selectedDossiers[0] && (
-              <div className="mt-2 flex items-center gap-2 p-2 rounded-md bg-gray-50 text-sm">
+              <div className="mt-2 flex items-center gap-2 rounded-md bg-gray-50 p-2 text-sm">
                 <span className="text-gray-500">{t('form.dossier.linkedTo', 'Linked to')}:</span>
                 <DossierContextBadge
                   dossierId={selectedDossiers[0].id}

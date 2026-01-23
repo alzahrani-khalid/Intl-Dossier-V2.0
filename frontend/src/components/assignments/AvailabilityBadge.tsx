@@ -119,7 +119,7 @@ export function AvailabilityBadge({
  <TooltipProvider>
  <Tooltip>
  <TooltipTrigger asChild>
- <div className="inline-flex items-center gap-1 cursor-help">
+ <div className="inline-flex cursor-help items-center gap-1">
  {badgeContent}
  <Info className={cn('text-gray-400', size === 'sm' ? 'w-3 h-3' : 'w-4 h-4')} />
  </div>
@@ -128,7 +128,7 @@ export function AvailabilityBadge({
  className="max-w-xs"
  dir={i18n.language === 'ar' ? 'rtl' : 'ltr'}
  >
- <p className="font-medium mb-1">{t('assignments:availability.reason')}:</p>
+ <p className="mb-1 font-medium">{t('assignments:availability.reason')}:</p>
  <p className="text-sm">{reason}</p>
  </TooltipContent>
  </Tooltip>

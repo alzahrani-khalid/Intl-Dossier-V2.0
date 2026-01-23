@@ -449,7 +449,7 @@ export function IntakeQueuePage() {
         {!isLoading && tickets && tickets.length > 0 && (
           <div
             ref={containerRef}
-            className="space-y-3 overflow-auto overscroll-contain max-h-[calc(100vh-350px)]"
+            className="max-h-[calc(100vh-350px)] space-y-3 overflow-auto overscroll-contain"
             {...pullHandlers}
           >
             {tickets.map((ticket) => {

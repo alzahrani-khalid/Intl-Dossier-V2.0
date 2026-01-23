@@ -150,44 +150,44 @@ export function DossierDetailLayout({
   )
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6 lg:py-8">
+    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
       {/* Breadcrumbs */}
       <nav
-        className="flex items-center gap-2 text-sm sm:text-base mb-4 sm:mb-6"
+        className="mb-4 flex items-center gap-2 text-sm sm:mb-6 sm:text-base"
         aria-label="Breadcrumb"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <Link
           to="/dossiers"
-          className="flex items-center gap-1 sm:gap-2 text-muted-foreground hover:text-foreground transition-colors"
+          className="flex items-center gap-1 text-muted-foreground transition-colors hover:text-foreground sm:gap-2"
         >
-          <Home className="h-4 w-4" />
+          <Home className="size-4" />
           <span>{t('hub.title')}</span>
         </Link>
-        <ChevronRight className={`h-4 w-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`} />
-        <span className="text-foreground font-medium">
+        <ChevronRight className={`size-4 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`} />
+        <span className="font-medium text-foreground">
           {isRTL ? dossier.name_ar : dossier.name_en}
         </span>
       </nav>
 
       {/* Header */}
       <header
-        className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 sm:gap-6 mb-6 sm:mb-8 pb-4 sm:pb-6 border-b"
+        className="mb-6 flex flex-col gap-4 border-b pb-4 sm:mb-8 sm:flex-row sm:items-center sm:justify-between sm:gap-6 sm:pb-6"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        <div className="flex-1 min-w-0">
-          <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold mb-2 truncate">
+        <div className="min-w-0 flex-1">
+          <h1 className="mb-2 truncate text-2xl font-bold sm:text-3xl md:text-4xl">
             {isRTL ? dossier.name_ar : dossier.name_en}
           </h1>
           {(dossier.description_en || dossier.description_ar) && (
-            <p className="text-muted-foreground text-sm sm:text-base line-clamp-2">
+            <p className="line-clamp-2 text-sm text-muted-foreground sm:text-base">
               {isRTL ? dossier.description_ar : dossier.description_en}
             </p>
           )}
         </div>
 
         {/* Header Actions - Active Viewers + Overview + AddToDossierMenu */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+        <div className="flex shrink-0 items-center gap-2 sm:gap-3">
           {/* Active Viewers Indicator */}
           {!hideActiveViewers && viewerCount > 0 && (
             <>
@@ -214,16 +214,16 @@ export function DossierDetailLayout({
               <Tooltip>
                 <TooltipTrigger asChild>
                   <div
-                    className={`flex items-center justify-center h-6 w-6 rounded-full ${
+                    className={`flex size-6 items-center justify-center rounded-full ${
                       isConnected
                         ? 'bg-green-100 text-green-600 dark:bg-green-900/30 dark:text-green-400'
                         : 'bg-red-100 text-red-600 dark:bg-red-900/30 dark:text-red-400'
                     }`}
                   >
                     {isConnected ? (
-                      <Wifi className="h-3.5 w-3.5" />
+                      <Wifi className="size-3.5" />
                     ) : (
-                      <WifiOff className="h-3.5 w-3.5" />
+                      <WifiOff className="size-3.5" />
                     )}
                   </div>
                 </TooltipTrigger>
@@ -239,7 +239,7 @@ export function DossierDetailLayout({
           {/* Everything About button - opens comprehensive overview */}
           <Button variant="outline" size="sm" asChild className="min-h-10">
             <Link to={`/dossiers/${dossier.id}/overview` as any}>
-              <LayoutGrid className="h-4 w-4 me-2" />
+              <LayoutGrid className="me-2 size-4" />
               <span className="hidden sm:inline">
                 {t('action.everythingAbout', { defaultValue: 'Everything About' })}
               </span>
@@ -259,7 +259,7 @@ export function DossierDetailLayout({
                   className="min-h-10"
                   onClick={() => setIsExportDialogOpen(true)}
                 >
-                  <FileDown className="h-4 w-4 sm:me-2" />
+                  <FileDown className="size-4 sm:me-2" />
                   <span className="hidden sm:inline">
                     {t('action.export', { defaultValue: 'Export' })}
                   </span>
@@ -285,11 +285,11 @@ export function DossierDetailLayout({
 
       {/* Main Content with Optional Sidebar */}
       <div
-        className="flex flex-col lg:flex-row gap-4 sm:gap-6 lg:gap-8"
+        className="flex flex-col gap-4 sm:gap-6 lg:flex-row lg:gap-8"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         {/* Main Content - Type-Specific Grid Layout */}
-        <main className={`flex-1 min-w-0 grid ${gridClassName} gap-4 sm:gap-6 lg:gap-8`}>
+        <main className={`grid min-w-0 flex-1 ${gridClassName} gap-4 sm:gap-6 lg:gap-8`}>
           {children}
         </main>
 
@@ -303,14 +303,14 @@ export function DossierDetailLayout({
             `}
           >
             {/* Sidebar Toggle Button */}
-            <div className="flex justify-end mb-2">
+            <div className="mb-2 flex justify-end">
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
                     <Button
                       variant="ghost"
                       size="icon"
-                      className="h-8 w-8"
+                      className="size-8"
                       onClick={() => setIsSidebarOpen(!isSidebarOpen)}
                       aria-label={
                         isSidebarOpen
@@ -320,14 +320,14 @@ export function DossierDetailLayout({
                     >
                       {isSidebarOpen ? (
                         isRTL ? (
-                          <PanelRightOpen className="h-4 w-4" />
+                          <PanelRightOpen className="size-4" />
                         ) : (
-                          <PanelRightClose className="h-4 w-4" />
+                          <PanelRightClose className="size-4" />
                         )
                       ) : isRTL ? (
-                        <PanelRightClose className="h-4 w-4" />
+                        <PanelRightClose className="size-4" />
                       ) : (
-                        <PanelRightOpen className="h-4 w-4" />
+                        <PanelRightOpen className="size-4" />
                       )}
                     </Button>
                   </TooltipTrigger>

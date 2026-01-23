@@ -169,7 +169,7 @@ export function DossierSearchPage() {
     >
       {/* Page Header */}
       <div className="mb-6">
-        <h1 className="mb-2 text-2xl font-bold text-gray-900 sm:text-3xl dark:text-gray-100">
+        <h1 className="mb-2 text-2xl font-bold text-gray-900 dark:text-gray-100 sm:text-3xl">
           {t('page.title')}
         </h1>
         <p className="text-gray-600 dark:text-gray-400">{t('page.description')}</p>

@@ -78,8 +78,8 @@ export function AfterActionViewPage() {
  )}
  dir={isRTL ? 'rtl' : 'ltr'}
  >
- <div className="flex items-center justify-center min-h-[400px]">
- <Loader2 className="h-8 w-8 animate-spin text-primary" />
+ <div className="flex min-h-[400px] items-center justify-center">
+ <Loader2 className="size-8 animate-spin text-primary" />
  </div>
  </div>
  );
@@ -96,7 +96,7 @@ export function AfterActionViewPage() {
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <Alert variant="destructive">
- <AlertCircle className="h-4 w-4" />
+ <AlertCircle className="size-4" />
  <AlertDescription>
  {t('afterActions.view.notFound')}
  </AlertDescription>
@@ -114,10 +114,10 @@ export function AfterActionViewPage() {
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  {/* Page Header */}
- <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-6">
+ <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
  <div>
- <div className="flex items-center gap-2 mb-2">
- <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-start">
+ <div className="mb-2 flex items-center gap-2">
+ <h1 className="text-start text-2xl font-bold sm:text-3xl md:text-4xl">
  {afterAction.title}
  </h1>
  </div>
@@ -138,7 +138,7 @@ export function AfterActionViewPage() {
  variant="default"
  onClick={() => navigate({ to: `/after-actions/${id}/edit` })}
  >
- <Edit className="h-4 w-4 me-2" />
+ <Edit className="me-2 size-4" />
  {t('afterActions.view.editDraft')}
  </Button>
  )}
@@ -147,7 +147,7 @@ export function AfterActionViewPage() {
  variant="outline"
  onClick={() => navigate({ to: `/after-actions/${id}/request-edit` })}
  >
- <FileText className="h-4 w-4 me-2" />
+ <FileText className="me-2 size-4" />
  {t('afterActions.view.requestEdit')}
  </Button>
  )}
@@ -160,7 +160,7 @@ export function AfterActionViewPage() {
  <CardTitle>{t('afterActions.view.metadata')}</CardTitle>
  </CardHeader>
  <CardContent className="space-y-2 text-sm">
- <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+ <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
  <div>
  <span className="font-semibold">{t('afterActions.view.createdBy')}:</span>{' '}
  {afterAction.created_by_name}
@@ -192,7 +192,7 @@ export function AfterActionViewPage() {
  <CardTitle>{t('afterActions.view.description')}</CardTitle>
  </CardHeader>
  <CardContent>
- <p className="text-start whitespace-pre-wrap">{afterAction.description}</p>
+ <p className="whitespace-pre-wrap text-start">{afterAction.description}</p>
  </CardContent>
  </Card>
  )}
@@ -202,18 +202,18 @@ export function AfterActionViewPage() {
  <Card className="mb-6">
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <Users className="h-5 w-5" />
+ <Users className="size-5" />
  {t('afterActions.view.attendance')}
  </CardTitle>
  </CardHeader>
  <CardContent>
- <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+ <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
  {afterAction.attendance_list.map((attendee: any, index: number) => (
- <div key={index} className="p-3 border rounded-lg">
+ <div key={index} className="rounded-lg border p-3">
  <div className="font-semibold">{attendee.name}</div>
  <div className="text-sm text-muted-foreground">{attendee.role}</div>
  {attendee.organization && (
- <div className="text-xs text-muted-foreground mt-1">{attendee.organization}</div>
+ <div className="mt-1 text-xs text-muted-foreground">{attendee.organization}</div>
  )}
  </div>
  ))}
@@ -227,21 +227,21 @@ export function AfterActionViewPage() {
  <Card className="mb-6">
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <CheckCircle className="h-5 w-5" />
+ <CheckCircle className="size-5" />
  {t('afterActions.view.decisions')}
  </CardTitle>
  </CardHeader>
  <CardContent>
  <div className="space-y-4">
  {afterAction.decisions.map((decision: any) => (
- <div key={decision.id} className="p-4 border rounded-lg">
+ <div key={decision.id} className="rounded-lg border p-4">
  <div className="flex items-start justify-between gap-4">
  <div className="flex-1">
- <p className="font-medium text-start">{decision.description}</p>
+ <p className="text-start font-medium">{decision.description}</p>
  {decision.rationale && (
- <p className="text-sm text-muted-foreground mt-2 text-start">{decision.rationale}</p>
+ <p className="mt-2 text-start text-sm text-muted-foreground">{decision.rationale}</p>
  )}
- <div className="flex flex-wrap gap-2 mt-2 text-xs text-muted-foreground">
+ <div className="mt-2 flex flex-wrap gap-2 text-xs text-muted-foreground">
  <span>{decision.decision_maker}</span>
  <span>•</span>
  <span>{format(new Date(decision.decided_at), 'PPp')}</span>
@@ -265,20 +265,20 @@ export function AfterActionViewPage() {
  <Card className="mb-6">
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <ListTodo className="h-5 w-5" />
+ <ListTodo className="size-5" />
  {t('afterActions.view.commitments')} ({afterAction.commitments.length})
  </CardTitle>
  </CardHeader>
  <CardContent>
  <div className="space-y-4">
  {afterAction.commitments.map((commitment: any) => (
- <div key={commitment.id} className="p-4 border rounded-lg">
+ <div key={commitment.id} className="rounded-lg border p-4">
  <div className="flex items-start justify-between gap-4">
  <div className="flex-1">
- <p className="font-medium text-start">{commitment.description}</p>
- <div className="flex flex-wrap gap-2 mt-2 text-sm">
+ <p className="text-start font-medium">{commitment.description}</p>
+ <div className="mt-2 flex flex-wrap gap-2 text-sm">
  <Badge variant="outline">
- <Calendar className="h-3 w-3 me-1" />
+ <Calendar className="me-1 size-3" />
  {format(new Date(commitment.due_date), 'PP')}
  </Badge>
  <Badge variant={commitment.status === 'completed' ? 'default' : 'secondary'}>
@@ -307,23 +307,23 @@ export function AfterActionViewPage() {
  <Card className="mb-6">
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <AlertTriangle className="h-5 w-5" />
+ <AlertTriangle className="size-5" />
  {t('afterActions.view.risks')}
  </CardTitle>
  </CardHeader>
  <CardContent>
  <div className="space-y-4">
  {afterAction.risks.map((risk: any) => (
- <div key={risk.id} className="p-4 border rounded-lg">
+ <div key={risk.id} className="rounded-lg border p-4">
  <div className="flex items-start justify-between gap-4">
  <div className="flex-1">
- <p className="font-medium text-start">{risk.description}</p>
+ <p className="text-start font-medium">{risk.description}</p>
  {risk.mitigation_strategy && (
- <p className="text-sm text-muted-foreground mt-2 text-start">
+ <p className="mt-2 text-start text-sm text-muted-foreground">
  <strong>{t('afterActions.view.mitigation')}:</strong> {risk.mitigation_strategy}
  </p>
  )}
- <div className="flex flex-wrap gap-2 mt-2">
+ <div className="mt-2 flex flex-wrap gap-2">
  <Badge variant="destructive">
  {t(`afterActions.severity.${risk.severity}`)}
  </Badge>
@@ -369,7 +369,7 @@ export function AfterActionViewPage() {
  <Card>
  <CardHeader>
  <CardTitle className="flex items-center gap-2">
- <ListTodo className="h-5 w-5" />
+ <ListTodo className="size-5" />
  {t('afterActions.view.linkedTasks')} ({afterAction.linked_tasks.length})
  </CardTitle>
  </CardHeader>
@@ -378,13 +378,13 @@ export function AfterActionViewPage() {
  {afterAction.linked_tasks.map((task: any) => (
  <div
  key={task.id}
- className="p-3 border rounded-lg cursor-pointer hover:bg-accent transition-colors"
+ className="cursor-pointer rounded-lg border p-3 transition-colors hover:bg-accent"
  onClick={() => navigate({ to: `/tasks/${task.id}` })}
  >
  <div className="flex items-center justify-between gap-4">
  <div className="flex-1">
- <p className="font-medium text-start">{task.title}</p>
- <p className="text-sm text-muted-foreground text-start">{task.owner_name}</p>
+ <p className="text-start font-medium">{task.title}</p>
+ <p className="text-start text-sm text-muted-foreground">{task.owner_name}</p>
  </div>
  <Badge variant={task.status === 'completed' ? 'default' : 'secondary'}>
  {task.status}

@@ -49,7 +49,7 @@ function ApprovalTrackingPage() {
 
  if (isLoading) {
  return (
- <div className="container mx-auto py-6 space-y-4">
+ <div className="container mx-auto space-y-4 py-6">
  <Skeleton className="h-8 w-64" />
  <Skeleton className="h-96" />
  </div>
@@ -59,25 +59,25 @@ function ApprovalTrackingPage() {
  const getActionIcon = (action: string) => {
  switch (action) {
  case 'approve':
- return <CheckCircle className="h-4 w-4 text-green-500" />;
+ return <CheckCircle className="size-4 text-green-500" />;
  case 'request_revisions':
- return <XCircle className="h-4 w-4 text-red-500" />;
+ return <XCircle className="size-4 text-red-500" />;
  case 'delegate':
- return <UserPlus className="h-4 w-4 text-blue-500" />;
+ return <UserPlus className="size-4 text-blue-500" />;
  case 'reassign':
- return <Users className="h-4 w-4 text-orange-500" />;
+ return <Users className="size-4 text-orange-500" />;
  default:
  return null;
  }
  };
 
  return (
- <div className="container mx-auto py-6 space-y-6">
+ <div className="container mx-auto space-y-6 py-6">
  {/* Header */}
  <div className="flex items-center gap-4">
  <Link to="/positions/$id" params={{ id }}>
  <Button variant="outline" size="sm">
- <ArrowLeft className="me-2 h-4 w-4" />
+ <ArrowLeft className="me-2 size-4" />
  {t('common.back', 'Back')}
  </Button>
  </Link>
@@ -88,7 +88,7 @@ function ApprovalTrackingPage() {
 
  {/* Approval Chain Visualization */}
  <Card className="p-6">
- <h2 className="text-xl font-semibold mb-4">
+ <h2 className="mb-4 text-xl font-semibold">
  {t('positions.approvals.progress', 'Approval Progress')}
  </h2>
  <ApprovalChain
@@ -100,7 +100,7 @@ function ApprovalTrackingPage() {
 
  {/* Approval History Table */}
  <Card className="p-6">
- <h2 className="text-xl font-semibold mb-4">
+ <h2 className="mb-4 text-xl font-semibold">
  {t('positions.approvals.history', 'Approval History')}
  </h2>
 

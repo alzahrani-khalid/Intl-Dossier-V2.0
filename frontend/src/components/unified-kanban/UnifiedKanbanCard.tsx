@@ -100,7 +100,7 @@ export function UnifiedKanbanCardContent({ item, showDragHandle = true }: CardCo
             isRTL ? 'start-0' : 'end-0',
           )}
         >
-          <GripVertical className="h-4 w-4" />
+          <GripVertical className="size-4" />
         </div>
       )}
 
@@ -114,13 +114,13 @@ export function UnifiedKanbanCardContent({ item, showDragHandle = true }: CardCo
 
           {item.is_overdue && (
             <div className="flex items-center gap-1 text-red-600">
-              <AlertCircle className="h-3.5 w-3.5" />
+              <AlertCircle className="size-3.5" />
             </div>
           )}
         </div>
 
         {/* Title */}
-        <h4 className="text-sm font-medium line-clamp-2 text-start">
+        <h4 className="line-clamp-2 text-start text-sm font-medium">
           {isRTL && item.title_ar ? item.title_ar : item.title}
         </h4>
 
@@ -129,25 +129,25 @@ export function UnifiedKanbanCardContent({ item, showDragHandle = true }: CardCo
           {/* Deadline */}
           {deadlineDisplay ? (
             <div className={cn('flex items-center gap-1 text-xs', deadlineDisplay.className)}>
-              <Calendar className="h-3 w-3" />
+              <Calendar className="size-3" />
               <span>{deadlineDisplay.text}</span>
             </div>
           ) : (
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <Calendar className="h-3 w-3 opacity-50" />
+              <Calendar className="size-3 opacity-50" />
               <span>{t('card.noDueDate')}</span>
             </div>
           )}
 
           {/* Assignee */}
           {item.assignee ? (
-            <Avatar className="h-6 w-6">
+            <Avatar className="size-6">
               <AvatarImage src={item.assignee.avatar_url || undefined} alt={item.assignee.name} />
               <AvatarFallback className="text-xs">{getInitials(item.assignee.name)}</AvatarFallback>
             </Avatar>
           ) : (
             <div className="flex items-center gap-1 text-xs text-muted-foreground">
-              <User className="h-3.5 w-3.5" />
+              <User className="size-3.5" />
             </div>
           )}
         </div>
@@ -161,14 +161,14 @@ export function UnifiedKanbanCardContent({ item, showDragHandle = true }: CardCo
  */
 export function UnifiedKanbanCardSkeleton() {
   return (
-    <div className="rounded-lg border bg-card p-3 shadow-sm animate-pulse">
+    <div className="animate-pulse rounded-lg border bg-card p-3 shadow-sm">
       <div className="space-y-2">
-        <div className="h-5 w-16 bg-muted rounded" />
-        <div className="h-4 w-full bg-muted rounded" />
-        <div className="h-4 w-3/4 bg-muted rounded" />
+        <div className="h-5 w-16 rounded bg-muted" />
+        <div className="h-4 w-full rounded bg-muted" />
+        <div className="h-4 w-3/4 rounded bg-muted" />
         <div className="flex justify-between pt-1">
-          <div className="h-4 w-20 bg-muted rounded" />
-          <div className="h-6 w-6 bg-muted rounded-full" />
+          <div className="h-4 w-20 rounded bg-muted" />
+          <div className="size-6 rounded-full bg-muted" />
         </div>
       </div>
     </div>

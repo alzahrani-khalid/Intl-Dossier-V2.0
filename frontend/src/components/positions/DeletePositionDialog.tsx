@@ -99,7 +99,7 @@ export function DeletePositionDialog({ positionId, isOpen, onClose, onConfirm }:
  <DialogContent className="max-w-lg sm:max-w-2xl" dir={isRTL ? 'rtl' : 'ltr'}>
  <DialogHeader>
  <DialogTitle className="flex items-center gap-2 text-start">
- <AlertTriangle className="h-5 w-5 text-destructive" />
+ <AlertTriangle className="size-5 text-destructive" />
  {t('positions.delete.title')}
  </DialogTitle>
  <DialogDescription className="text-start">
@@ -112,7 +112,7 @@ export function DeletePositionDialog({ positionId, isOpen, onClose, onConfirm }:
  {/* Show loading state */}
  {isLoading && (
  <div className="flex items-center justify-center py-8">
- <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+ <Loader2 className="size-6 animate-spin text-muted-foreground" />
  </div>
  )}
 
@@ -120,13 +120,13 @@ export function DeletePositionDialog({ positionId, isOpen, onClose, onConfirm }:
  {!isLoading && linkedDossiers && linkCount > 0 && (
  <div className="space-y-4">
  <div className="rounded-md bg-destructive/10 p-4">
- <p className="text-sm font-medium text-destructive text-start">
+ <p className="text-start text-sm font-medium text-destructive">
  {t('positions.delete.warning')}
  </p>
  </div>
 
  <div className="space-y-2">
- <Label className="text-sm font-medium text-start block">
+ <Label className="block text-start text-sm font-medium">
  {t('positions.delete.affected_dossiers', { count: linkCount })}
  </Label>
  <ScrollArea className="h-48 rounded-md border p-4">
@@ -136,9 +136,9 @@ export function DeletePositionDialog({ positionId, isOpen, onClose, onConfirm }:
  key={link.id}
  className="flex items-start gap-2 rounded-md bg-muted/50 p-3"
  >
- <FileText className="h-4 w-4 mt-0.5 flex-shrink-0 text-muted-foreground" />
- <div className="flex-1 min-w-0">
- <p className="text-sm font-medium truncate text-start">
+ <FileText className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
+ <div className="min-w-0 flex-1">
+ <p className="truncate text-start text-sm font-medium">
  {isRTL ? link.dossier_name_ar : link.dossier_name_en}
  </p>
  <Badge variant="outline" className="mt-1 text-xs">
@@ -152,7 +152,7 @@ export function DeletePositionDialog({ positionId, isOpen, onClose, onConfirm }:
  </div>
 
  {/* Confirmation checkbox */}
- <div className="flex items-start gap-3 rounded-md border p-4 bg-background">
+ <div className="flex items-start gap-3 rounded-md border bg-background p-4">
  <Checkbox
  id="understand-delete"
  checked={understood}
@@ -161,7 +161,7 @@ export function DeletePositionDialog({ positionId, isOpen, onClose, onConfirm }:
  />
  <Label
  htmlFor="understand-delete"
- className="text-sm font-normal cursor-pointer text-start leading-normal"
+ className="cursor-pointer text-start text-sm font-normal leading-normal"
  >
  {t('positions.delete.confirmation_checkbox')}
  </Label>
@@ -172,13 +172,13 @@ export function DeletePositionDialog({ positionId, isOpen, onClose, onConfirm }:
  {/* No links case */}
  {!isLoading && linkCount === 0 && (
  <div className="py-4">
- <p className="text-sm text-muted-foreground text-center">
+ <p className="text-center text-sm text-muted-foreground">
  {t('positions.delete.no_links_message')}
  </p>
  </div>
  )}
 
- <DialogFooter className="flex-col sm:flex-row gap-2">
+ <DialogFooter className="flex-col gap-2 sm:flex-row">
  <Button
  variant="outline"
  onClick={onClose}
@@ -199,7 +199,7 @@ export function DeletePositionDialog({ positionId, isOpen, onClose, onConfirm }:
  >
  {deleteMutation.isPending ? (
  <>
- <Loader2 className="h-4 w-4 animate-spin me-2" />
+ <Loader2 className="me-2 size-4 animate-spin" />
  {t('common.deleting')}
  </>
  ) : (

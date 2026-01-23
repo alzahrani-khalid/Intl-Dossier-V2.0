@@ -137,7 +137,7 @@ export function AISuggestionPanel({
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-start">
-            <Sparkles className={`h-5 w-5 text-purple-500 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Sparkles className={`size-5 text-purple-500 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('entityLinks.aiSuggestions.title', 'AI-Powered Suggestions')}
           </CardTitle>
           <CardDescription className="text-start">
@@ -150,10 +150,10 @@ export function AISuggestionPanel({
         <CardContent>
           <Button
             onClick={handleGetSuggestions}
-            className="w-full sm:w-auto px-4"
+            className="w-full px-4 sm:w-auto"
             variant="default"
           >
-            <Sparkles className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Sparkles className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('entityLinks.aiSuggestions.getButton', 'Get AI Suggestions')}
           </Button>
         </CardContent>
@@ -168,7 +168,7 @@ export function AISuggestionPanel({
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-start">
             <RefreshCw
-              className={`h-5 w-5 animate-spin text-purple-500 ${isRTL ? 'ms-2' : 'me-2'}`}
+              className={`size-5 animate-spin text-purple-500 ${isRTL ? 'ms-2' : 'me-2'}`}
             />
             {t('entityLinks.aiSuggestions.loading', 'Analyzing intake content...')}
           </CardTitle>
@@ -177,12 +177,12 @@ export function AISuggestionPanel({
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {[1, 2, 3].map((i) => (
               <Card key={i} className="p-4">
-                <Skeleton className="h-6 w-3/4 mb-2" />
-                <Skeleton className="h-4 w-1/2 mb-4" />
-                <Skeleton className="h-16 w-full mb-2" />
+                <Skeleton className="mb-2 h-6 w-3/4" />
+                <Skeleton className="mb-4 h-4 w-1/2" />
+                <Skeleton className="mb-2 h-16 w-full" />
                 <Skeleton className="h-10 w-full" />
               </Card>
             ))}
@@ -201,7 +201,7 @@ export function AISuggestionPanel({
       <Card className="w-full">
         <CardHeader>
           <CardTitle className="flex items-center gap-2 text-start text-destructive">
-            <AlertCircle className={`h-5 w-5 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <AlertCircle className={`size-5 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('entityLinks.aiSuggestions.error', 'AI Service Unavailable')}
           </CardTitle>
         </CardHeader>
@@ -217,9 +217,9 @@ export function AISuggestionPanel({
           </Alert>
 
           {isFallbackAvailable && (
-            <div className="flex flex-col sm:flex-row gap-2">
+            <div className="flex flex-col gap-2 sm:flex-row">
               <Button onClick={handleFallbackToManualSearch} variant="default" className="flex-1 ">
-                <Search className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                <Search className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                 {t('entityLinks.aiSuggestions.manualSearch', 'Use Manual Search')}
               </Button>
 
@@ -232,7 +232,7 @@ export function AISuggestionPanel({
                   variant="outline"
                   className=""
                 >
-                  <RefreshCw className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <RefreshCw className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('entityLinks.aiSuggestions.retry', 'Retry')}
                 </Button>
               )}
@@ -266,7 +266,7 @@ export function AISuggestionPanel({
             variant="default"
             className="w-full sm:w-auto "
           >
-            <Search className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Search className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('entityLinks.aiSuggestions.manualSearch', 'Use Manual Search')}
           </Button>
         </CardContent>
@@ -278,7 +278,7 @@ export function AISuggestionPanel({
     <Card className="w-full">
       <CardHeader>
         <CardTitle className="flex items-center gap-2 text-start">
-          <CheckCircle2 className={`h-5 w-5 text-green-500 ${isRTL ? 'ms-2' : 'me-2'}`} />
+          <CheckCircle2 className={`size-5 text-green-500 ${isRTL ? 'ms-2' : 'me-2'}`} />
           {t('entityLinks.aiSuggestions.resultsTitle', 'AI Suggestions')}
         </CardTitle>
         <CardDescription className="text-start">
@@ -289,19 +289,19 @@ export function AISuggestionPanel({
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {suggestions.map((suggestion) => (
             <Card
               key={suggestion.suggestion_id}
-              className="p-4 hover:border-primary transition-colors"
+              className="p-4 transition-colors hover:border-primary"
             >
               <div className="space-y-3">
                 {/* Entity name and type */}
                 <div>
-                  <h4 className="font-semibold text-start text-sm sm:text-base line-clamp-2">
+                  <h4 className="line-clamp-2 text-start text-sm font-semibold sm:text-base">
                     {suggestion.entity_name}
                   </h4>
-                  <p className="text-xs text-muted-foreground text-start mt-1">
+                  <p className="mt-1 text-start text-xs text-muted-foreground">
                     {t(`entityTypes.${suggestion.entity_type}`, suggestion.entity_type)}
                   </p>
                 </div>
@@ -317,7 +317,7 @@ export function AISuggestionPanel({
                 </div>
 
                 {/* Reasoning */}
-                <p className="text-xs text-muted-foreground text-start line-clamp-3">
+                <p className="line-clamp-3 text-start text-xs text-muted-foreground">
                   {suggestion.reasoning}
                 </p>
 
@@ -330,7 +330,7 @@ export function AISuggestionPanel({
                 >
                   {acceptMutation.isPending ? (
                     <>
-                      <RefreshCw className={`h-3 w-3 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                      <RefreshCw className={`size-3 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
                       {t('entityLinks.aiSuggestions.accepting', 'Creating...')}
                     </>
                   ) : (
@@ -346,13 +346,13 @@ export function AISuggestionPanel({
         </div>
 
         {/* Manual search fallback */}
-        <div className="mt-4 pt-4 border-t">
+        <div className="mt-4 border-t pt-4">
           <Button
             onClick={handleFallbackToManualSearch}
             variant="outline"
             className="w-full sm:w-auto "
           >
-            <Search className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+            <Search className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
             {t('entityLinks.aiSuggestions.stillUseManualSearch', 'Or use manual search')}
           </Button>
         </div>

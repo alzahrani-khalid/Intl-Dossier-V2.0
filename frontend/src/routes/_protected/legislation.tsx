@@ -70,14 +70,14 @@ function LegislationPage() {
   )
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+    <div className="container mx-auto px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
       <LegislationList dossierId={searchParams.dossierId} onCreateClick={handleCreateClick} />
 
       {/* Create Legislation Sheet */}
       <Sheet open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <SheetContent
           side={isRTL ? 'left' : 'right'}
-          className="w-full sm:max-w-2xl overflow-y-auto"
+          className="w-full overflow-y-auto sm:max-w-2xl"
         >
           <SheetHeader>
             <SheetTitle className="text-start">{t('form.title.create')}</SheetTitle>

@@ -37,13 +37,13 @@ export function ObserversList({ observers }: ObserversListProps): React.JSX.Elem
     <Card dir={isRTL ? 'rtl' : 'ltr'}>
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
-          <Eye className="h-5 w-5" />
+          <Eye className="size-5" />
           {t('observers.title')}
         </CardTitle>
       </CardHeader>
       <CardContent>
         {observers.length === 0 ? (
-          <div className="text-center py-4 text-muted-foreground text-sm">
+          <div className="py-4 text-center text-sm text-muted-foreground">
             {t('observers.empty')}
           </div>
         ) : (
@@ -51,9 +51,9 @@ export function ObserversList({ observers }: ObserversListProps): React.JSX.Elem
             {observers.map((observer) => (
               <div
                 key={observer.id}
-                className="flex items-center gap-3 p-2 rounded-lg border bg-card"
+                className="flex items-center gap-3 rounded-lg border bg-card p-2"
               >
-                <Avatar className="h-8 w-8">
+                <Avatar className="size-8">
                   <AvatarImage src={observer.user_avatar} alt={observer.user_name || 'Observer'} />
                   <AvatarFallback>
                     {observer.user_name
@@ -64,8 +64,8 @@ export function ObserversList({ observers }: ObserversListProps): React.JSX.Elem
                   </AvatarFallback>
                 </Avatar>
 
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium truncate">
+                <div className="min-w-0 flex-1">
+                  <p className="truncate text-sm font-medium">
                     {observer.user_name || t('observers.unknownUser')}
                   </p>
                   <p className="text-xs text-muted-foreground">

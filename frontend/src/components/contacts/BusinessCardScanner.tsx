@@ -182,9 +182,9 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
           <CardContent className="p-4 sm:p-6">
             <div className="relative">
               <video ref={videoRef} autoPlay playsInline className="w-full rounded-lg" />
-              <div className="flex gap-3 mt-4 justify-center">
+              <div className="mt-4 flex justify-center gap-3">
                 <Button type="button" onClick={capturePhoto} className="h-11 px-6 sm:h-10">
-                  <Camera className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Camera className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('contactDirectory.ocr.capture_photo')}
                 </Button>
                 <Button
@@ -226,23 +226,23 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
                   variant="destructive"
                   size="icon"
                   onClick={clearFile}
-                  className="absolute top-2 end-2 min-h-8 min-w-8"
+                  className="absolute end-2 top-2 min-h-8 min-w-8"
                 >
-                  <X className="h-4 w-4" />
+                  <X className="size-4" />
                 </Button>
               </div>
             )}
 
             {/* Upload Buttons */}
             {!previewUrl && (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <Button
                   type="button"
                   variant="outline"
                   onClick={startCamera}
                   className="h-11 px-4 sm:h-10 sm:px-6"
                 >
-                  <Camera className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Camera className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('contactDirectory.ocr.take_photo')}
                 </Button>
                 <Button
@@ -251,7 +251,7 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
                   onClick={() => fileInputRef.current?.click()}
                   className="h-11 px-4 sm:h-10 sm:px-6"
                 >
-                  <Upload className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+                  <Upload className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('contactDirectory.ocr.upload_image')}
                 </Button>
               </div>
@@ -268,7 +268,7 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
 
             {/* Cloud OCR Consent */}
             {selectedFile && (
-              <div className="space-y-4 pt-4 border-t">
+              <div className="space-y-4 border-t pt-4">
                 <div className="flex items-start gap-3">
                   <Checkbox
                     id="consent-cloud-ocr"
@@ -279,11 +279,11 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
                   <div className="flex-1">
                     <Label
                       htmlFor="consent-cloud-ocr"
-                      className="text-sm font-medium cursor-pointer text-start block"
+                      className="block cursor-pointer text-start text-sm font-medium"
                     >
                       {t('contactDirectory.ocr.consent_cloud_ocr_title')}
                     </Label>
-                    <p className="text-xs text-muted-foreground mt-1 text-start">
+                    <p className="mt-1 text-start text-xs text-muted-foreground">
                       {t('contactDirectory.ocr.consent_cloud_ocr_description')}
                     </p>
                   </div>
@@ -294,10 +294,10 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
                   type="button"
                   onClick={handleProcess}
                   disabled={uploadMutation.isPending}
-                  className="w-full h-11 sm:h-10"
+                  className="h-11 w-full sm:h-10"
                 >
                   {uploadMutation.isPending && (
-                    <Loader2 className={`h-4 w-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
+                    <Loader2 className={`size-4 animate-spin ${isRTL ? 'ms-2' : 'me-2'}`} />
                   )}
                   {t('contactDirectory.ocr.process_card')}
                 </Button>
@@ -306,7 +306,7 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
                 {uploadMutation.isPending && (
                   <div className="space-y-2">
                     <Progress value={undefined} className="h-2" />
-                    <p className="text-xs text-center text-muted-foreground">
+                    <p className="text-center text-xs text-muted-foreground">
                       {t('contactDirectory.ocr.processing')}
                     </p>
                   </div>
@@ -322,7 +322,7 @@ export function BusinessCardScanner({ onExtracted, onCancel }: BusinessCardScann
 
       {/* Info Alert */}
       <Alert>
-        <AlertCircle className="h-4 w-4" />
+        <AlertCircle className="size-4" />
         <AlertDescription className="text-start text-sm">
           {t('contactDirectory.ocr.info_alert')}
         </AlertDescription>

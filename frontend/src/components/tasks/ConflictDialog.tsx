@@ -66,7 +66,7 @@ export function ConflictDialog({
  return (
  <AlertDialog open={open} onOpenChange={onOpenChange}>
  <AlertDialogContent
- className="w-full max-w-full sm:max-w-[540px] md:max-w-[640px]"
+ className="w-full max-w-full sm:max-w-[540px] md:max-w-screen-sm"
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  <AlertDialogHeader>
@@ -91,7 +91,7 @@ export function ConflictDialog({
  {/* Conflict details */}
  {conflictingFields.length > 0 && serverData && (
  <div className="my-4 rounded-lg border bg-muted/50 p-4">
- <h4 className="text-sm font-semibold mb-3 text-start">
+ <h4 className="mb-3 text-start text-sm font-semibold">
  {t('tasks.conflictingFields', 'Conflicting fields:')}
  </h4>
  <div className="flex flex-col gap-2">
@@ -100,23 +100,23 @@ export function ConflictDialog({
  key={field}
  className="flex flex-col gap-1 rounded-md bg-background p-3"
  >
- <span className="text-xs font-medium text-muted-foreground uppercase text-start">
+ <span className="text-start text-xs font-medium uppercase text-muted-foreground">
  {t(`tasks.field.${field}`, field)}
  </span>
  <div className="flex flex-col sm:flex-row sm:gap-4">
  <div className="flex-1">
- <span className="text-xs text-muted-foreground text-start block">
+ <span className="block text-start text-xs text-muted-foreground">
  {t('tasks.yourChange', 'Your change:')}
  </span>
- <span className="text-sm font-medium text-start block truncate">
+ <span className="block truncate text-start text-sm font-medium">
  {formatFieldValue(localChanges[field as keyof Task])}
  </span>
  </div>
  <div className="flex-1">
- <span className="text-xs text-muted-foreground text-start block">
+ <span className="block text-start text-xs text-muted-foreground">
  {t('tasks.theirChange', 'Their change:')}
  </span>
- <span className="text-sm font-medium text-start block truncate">
+ <span className="block truncate text-start text-sm font-medium">
  {formatFieldValue(serverData[field as keyof Task])}
  </span>
  </div>
@@ -130,12 +130,12 @@ export function ConflictDialog({
  {/* Action descriptions */}
  <div className="flex flex-col gap-3 text-sm">
  <div className="flex items-start gap-3 rounded-md border p-3">
- <RefreshCw className="size-5 mt-0.5 shrink-0 text-primary" />
+ <RefreshCw className="mt-0.5 size-5 shrink-0 text-primary" />
  <div className="flex flex-col gap-1 text-start">
  <span className="font-medium">
  {t('tasks.reloadOption', 'Reload (Recommended)')}
  </span>
- <span className="text-muted-foreground text-xs">
+ <span className="text-xs text-muted-foreground">
  {t(
  'tasks.reloadOptionDescription',
  'Discard your changes and load the latest version. You can then re-apply your changes.'
@@ -145,12 +145,12 @@ export function ConflictDialog({
  </div>
 
  <div className="flex items-start gap-3 rounded-md border p-3">
- <Save className="size-5 mt-0.5 shrink-0 text-warning" />
+ <Save className="text-warning mt-0.5 size-5 shrink-0" />
  <div className="flex flex-col gap-1 text-start">
  <span className="font-medium">
  {t('tasks.forceSaveOption', 'Force Save')}
  </span>
- <span className="text-muted-foreground text-xs">
+ <span className="text-xs text-muted-foreground">
  {t(
  'tasks.forceSaveOptionDescription',
  "Overwrite their changes with yours. Use with caution - you'll lose their updates."
@@ -160,10 +160,10 @@ export function ConflictDialog({
  </div>
 
  <div className="flex items-start gap-3 rounded-md border p-3">
- <X className="size-5 mt-0.5 shrink-0 text-muted-foreground" />
+ <X className="mt-0.5 size-5 shrink-0 text-muted-foreground" />
  <div className="flex flex-col gap-1 text-start">
  <span className="font-medium">{t('tasks.cancelOption', 'Cancel')}</span>
- <span className="text-muted-foreground text-xs">
+ <span className="text-xs text-muted-foreground">
  {t(
  'tasks.cancelOptionDescription',
  'Stay on this page and manually review the conflicts before deciding.'
@@ -173,7 +173,7 @@ export function ConflictDialog({
  </div>
  </div>
 
- <AlertDialogFooter className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+ <AlertDialogFooter className="flex flex-col gap-2 sm:flex-row sm:gap-3">
  {/* Mobile: stacked buttons, Desktop: horizontal */}
  <Button
  variant="outline"
@@ -181,7 +181,7 @@ export function ConflictDialog({
  onCancel();
  onOpenChange(false);
  }}
- className="h-11 w-full sm:w-auto order-3 sm:order-1"
+ className="order-3 h-11 w-full sm:order-1 sm:w-auto"
  >
  <X className="me-2 size-4" />
  {t('common.cancel', 'Cancel')}
@@ -193,7 +193,7 @@ export function ConflictDialog({
  onForceOverwrite();
  onOpenChange(false);
  }}
- className="h-11 w-full sm:w-auto order-2"
+ className="order-2 h-11 w-full sm:w-auto"
  >
  <Save className="me-2 size-4" />
  {t('tasks.forceSave', 'Force Save')}
@@ -204,7 +204,7 @@ export function ConflictDialog({
  onReload();
  onOpenChange(false);
  }}
- className="h-11 w-full sm:w-auto order-1 sm:order-3"
+ className="order-1 h-11 w-full sm:order-3 sm:w-auto"
  >
  <RefreshCw className="me-2 size-4" />
  {t('tasks.reload', 'Reload')}

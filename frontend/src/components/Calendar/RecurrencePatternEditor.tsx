@@ -326,10 +326,10 @@ export function RecurrencePatternEditor({
   return (
     <Card className={`p-4 ${className}`} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header with toggle */}
-      <div className="flex items-center justify-between gap-4 mb-4">
+      <div className="mb-4 flex items-center justify-between gap-4">
         <div className="flex items-center gap-2">
-          <Repeat className="h-5 w-5 text-muted-foreground" />
-          <Label htmlFor="recurrence-toggle" className="text-base font-medium cursor-pointer">
+          <Repeat className="size-5 text-muted-foreground" />
+          <Label htmlFor="recurrence-toggle" className="cursor-pointer text-base font-medium">
             {t('calendar.recurrence.title')}
           </Label>
         </div>
@@ -347,7 +347,7 @@ export function RecurrencePatternEditor({
             <Button
               type="button"
               variant="ghost"
-              className="w-full justify-between p-2 h-auto"
+              className="h-auto w-full justify-between p-2"
               disabled={disabled}
             >
               <div className="flex flex-col items-start gap-1 text-start">
@@ -358,7 +358,7 @@ export function RecurrencePatternEditor({
                   </span>
                 )}
               </div>
-              {isExpanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              {isExpanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
             </Button>
           </CollapsibleTrigger>
 
@@ -399,7 +399,7 @@ export function RecurrencePatternEditor({
             {selectedPreset === 'custom' && (
               <>
                 {/* Frequency and interval */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <div className="space-y-2">
                     <Label>{t('calendar.recurrence.interval')}</Label>
                     <div className="flex items-center gap-2">
@@ -456,7 +456,7 @@ export function RecurrencePatternEditor({
                             type="button"
                             variant={isSelected ? 'default' : 'outline'}
                             size="sm"
-                            className="min-w-11 h-11"
+                            className="h-11 min-w-11"
                             onClick={() => toggleDayOfWeek(dayIndex)}
                             disabled={disabled}
                           >
@@ -476,10 +476,10 @@ export function RecurrencePatternEditor({
                       onValueChange={(v) => setMonthlyMode(v as 'day' | 'weekday')}
                       disabled={disabled}
                     >
-                      <div className="flex items-center gap-4 p-3 border rounded-lg">
+                      <div className="flex items-center gap-4 rounded-lg border p-3">
                         <RadioGroupItem value="day" id="monthly-day" />
                         <Label htmlFor="monthly-day" className="flex-1 cursor-pointer">
-                          <div className="flex items-center gap-2 flex-wrap">
+                          <div className="flex flex-wrap items-center gap-2">
                             <span>
                               {
                                 t('calendar.recurrence.monthly.dayOfMonth', { day: '' }).split(
@@ -504,10 +504,10 @@ export function RecurrencePatternEditor({
                         </Label>
                       </div>
 
-                      <div className="flex items-center gap-4 p-3 border rounded-lg">
+                      <div className="flex items-center gap-4 rounded-lg border p-3">
                         <RadioGroupItem value="weekday" id="monthly-weekday" />
                         <Label htmlFor="monthly-weekday" className="flex-1 cursor-pointer">
-                          <div className="flex items-center gap-2 flex-wrap">
+                          <div className="flex flex-wrap items-center gap-2">
                             <Select
                               value={weekOfMonth}
                               onValueChange={(v) => setWeekOfMonth(v as MonthWeekPosition)}
@@ -557,7 +557,7 @@ export function RecurrencePatternEditor({
 
                 {/* Yearly: Month and day selection */}
                 {frequency === 'yearly' && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                     <div className="space-y-2">
                       <Label>{t('calendar.months.january').split(' ')[0]}</Label>
                       <Select
@@ -614,7 +614,7 @@ export function RecurrencePatternEditor({
                   </Label>
                 </div>
 
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex flex-wrap items-center gap-2">
                   <RadioGroupItem value="on" id="end-on" />
                   <Label htmlFor="end-on" className="cursor-pointer">
                     {t('calendar.recurrence.endOptions.on')}
@@ -628,7 +628,7 @@ export function RecurrencePatternEditor({
                   />
                 </div>
 
-                <div className="flex items-center gap-2 flex-wrap">
+                <div className="flex flex-wrap items-center gap-2">
                   <RadioGroupItem value="after" id="end-after" />
                   <Label htmlFor="end-after" className="cursor-pointer">
                     {String(t('calendar.recurrence.endOptions.after', { count: occurrenceCount }))
@@ -657,9 +657,9 @@ export function RecurrencePatternEditor({
 
             {/* Summary */}
             {summary && (
-              <div className="p-3 bg-muted rounded-lg">
+              <div className="rounded-lg bg-muted p-3">
                 <div className="flex items-start gap-2">
-                  <Info className="h-4 w-4 mt-0.5 text-muted-foreground flex-shrink-0" />
+                  <Info className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
                   <div className="flex flex-col gap-1">
                     <span className="text-sm font-medium">{t('calendar.recurrence.summary')}</span>
                     <span className="text-sm text-muted-foreground">

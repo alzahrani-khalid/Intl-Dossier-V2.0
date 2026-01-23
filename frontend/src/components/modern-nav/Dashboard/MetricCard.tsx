@@ -101,11 +101,11 @@ export function MetricCard({
  const getTrendIcon = () => {
  switch (trend?.direction) {
  case 'up':
- return <ArrowUp className="h-4 w-4" />;
+ return <ArrowUp className="size-4" />;
  case 'down':
- return <ArrowDown className="h-4 w-4" />;
+ return <ArrowDown className="size-4" />;
  case 'neutral':
- return <ArrowRight className="h-4 w-4" />;
+ return <ArrowRight className="size-4" />;
  default:
  return null;
  }
@@ -127,7 +127,7 @@ export function MetricCard({
  return (
  <Card className={cn('metric-card glass-highlight overflow-hidden', className)}>
  <CardHeader className="pb-3">
- <CardTitle className="text-base font-semibold text-content-text">
+ <CardTitle className="text-content-text text-base font-semibold">
  {label}
  </CardTitle>
  </CardHeader>

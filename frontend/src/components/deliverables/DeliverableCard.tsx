@@ -113,7 +113,7 @@ export function DeliverableCard({
     >
       <CardHeader className={cn('pb-2', compact && 'py-3')}>
         <div className="flex items-start justify-between gap-2">
-          <div className="flex items-start gap-3 flex-1 min-w-0">
+          <div className="flex min-w-0 flex-1 items-start gap-3">
             {selectable && (
               <Checkbox
                 checked={selected}
@@ -121,19 +121,19 @@ export function DeliverableCard({
                 className="mt-1 min-h-5 min-w-5"
               />
             )}
-            <div className="flex-1 min-w-0">
+            <div className="min-w-0 flex-1">
               <CardTitle
                 className={cn('text-base sm:text-lg font-semibold truncate', compact && 'text-sm')}
               >
                 {title}
               </CardTitle>
               {!compact && description && (
-                <p className="text-sm text-muted-foreground line-clamp-2 mt-1">{description}</p>
+                <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{description}</p>
               )}
             </div>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="flex shrink-0 items-center gap-2">
             {/* Priority Badge */}
             <Badge
               variant="outline"
@@ -145,8 +145,8 @@ export function DeliverableCard({
             {/* Actions Menu */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8 min-h-8 min-w-8">
-                  <MoreVertical className="h-4 w-4" />
+                <Button variant="ghost" size="icon" className="size-8 min-h-8 min-w-8">
+                  <MoreVertical className="size-4" />
                   <span className="sr-only">{t('actions.menu')}</span>
                 </Button>
               </DropdownMenuTrigger>
@@ -191,18 +191,18 @@ export function DeliverableCard({
 
       <CardContent className={cn('pt-0', compact && 'pb-3')}>
         {/* Status and Progress Row */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3 mb-3">
+        <div className="mb-3 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
           <Badge
             variant="outline"
             className={cn(statusColors.bg, statusColors.text, statusColors.border)}
           >
-            {deliverable.status === 'completed' && <CheckCircle2 className="h-3 w-3 me-1" />}
-            {deliverable.status === 'delayed' && <AlertTriangle className="h-3 w-3 me-1" />}
+            {deliverable.status === 'completed' && <CheckCircle2 className="me-1 size-3" />}
+            {deliverable.status === 'delayed' && <AlertTriangle className="me-1 size-3" />}
             {t(`status.${deliverable.status}`)}
           </Badge>
 
-          <div className="flex-1 w-full sm:w-auto">
-            <div className="flex items-center justify-between text-xs text-muted-foreground mb-1">
+          <div className="w-full flex-1 sm:w-auto">
+            <div className="mb-1 flex items-center justify-between text-xs text-muted-foreground">
               <span>{t('progress')}</span>
               <span>{deliverable.progress}%</span>
             </div>
@@ -229,7 +229,7 @@ export function DeliverableCard({
           <div
             className={cn('flex items-center gap-1', isOverdue && 'text-red-600 dark:text-red-400')}
           >
-            <Calendar className="h-4 w-4" />
+            <Calendar className="size-4" />
             <span>{format(dueDate, 'PP', { locale: dateLocale })}</span>
             {isOverdue && (
               <span className="text-xs">
@@ -246,9 +246,9 @@ export function DeliverableCard({
           {/* Responsible Party */}
           <div className="flex items-center gap-1">
             {deliverable.responsible_party_type === 'internal' ? (
-              <User className="h-4 w-4" />
+              <User className="size-4" />
             ) : (
-              <Building2 className="h-4 w-4" />
+              <Building2 className="size-4" />
             )}
             <span>{responsibleName}</span>
           </div>
@@ -256,7 +256,7 @@ export function DeliverableCard({
           {/* Milestones Count */}
           {totalMilestones > 0 && (
             <div className="flex items-center gap-1">
-              <CheckCircle2 className="h-4 w-4" />
+              <CheckCircle2 className="size-4" />
               <span>
                 {t('milestones.count', { completed: completedMilestones, total: totalMilestones })}
               </span>
@@ -266,7 +266,7 @@ export function DeliverableCard({
           {/* Documents Count */}
           {deliverable.documents && deliverable.documents.length > 0 && (
             <div className="flex items-center gap-1">
-              <FileText className="h-4 w-4" />
+              <FileText className="size-4" />
               <span>{deliverable.documents.length}</span>
             </div>
           )}
@@ -274,17 +274,17 @@ export function DeliverableCard({
 
         {/* Expandable Milestones Section */}
         {!compact && totalMilestones > 0 && (
-          <div className="mt-3 pt-3 border-t">
+          <div className="mt-3 border-t pt-3">
             <Button
               variant="ghost"
               size="sm"
               onClick={() => setExpanded(!expanded)}
-              className="w-full justify-between h-8 px-2"
+              className="h-8 w-full justify-between px-2"
             >
               <span className="text-sm font-medium">
                 {t('milestones.title')} ({completedMilestones}/{totalMilestones})
               </span>
-              {expanded ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
+              {expanded ? <ChevronUp className="size-4" /> : <ChevronDown className="size-4" />}
             </Button>
 
             {expanded && (
@@ -301,11 +301,11 @@ export function DeliverableCard({
                     )}
                   >
                     {milestone.status === 'completed' ? (
-                      <CheckCircle2 className="h-4 w-4 text-green-600 shrink-0" />
+                      <CheckCircle2 className="size-4 shrink-0 text-green-600" />
                     ) : milestone.status === 'in_progress' ? (
-                      <Clock className="h-4 w-4 text-blue-600 shrink-0" />
+                      <Clock className="size-4 shrink-0 text-blue-600" />
                     ) : (
-                      <div className="h-4 w-4 rounded-full border-2 border-gray-300 shrink-0" />
+                      <div className="size-4 shrink-0 rounded-full border-2 border-gray-300" />
                     )}
                     <span className="flex-1 truncate">
                       {isRTL ? milestone.title_ar : milestone.title_en}

@@ -165,7 +165,7 @@ export function UserTable({ users, isLoading }: UserTableProps) {
  const { icon: Icon, label, className } = variants[role];
  return (
  <Badge variant="outline" className={className}>
- <Icon className="h-3 w-3 me-1" />
+ <Icon className="me-1 size-3" />
  {label}
  </Badge>
  );
@@ -181,7 +181,7 @@ export function UserTable({ users, isLoading }: UserTableProps) {
 
  if (isLoading) {
  return (
- <div className="text-center py-8 text-sm text-muted-foreground">
+ <div className="py-8 text-center text-sm text-muted-foreground">
  {t('common.loading')}
  </div>
  );
@@ -194,11 +194,11 @@ export function UserTable({ users, isLoading }: UserTableProps) {
  <Table>
  <TableHeader>
  <TableRow>
- <TableHead className="text-start min-w-[200px]">{t('userManagement.table.user')}</TableHead>
- <TableHead className="text-start min-w-[120px]">{t('userManagement.table.role')}</TableHead>
- <TableHead className="text-start min-w-[100px]">{t('userManagement.table.status')}</TableHead>
- <TableHead className="text-start min-w-[150px]">{t('userManagement.table.lastLogin')}</TableHead>
- <TableHead className="text-end min-w-[80px]">{t('common.actions')}</TableHead>
+ <TableHead className="min-w-[200px] text-start">{t('userManagement.table.user')}</TableHead>
+ <TableHead className="min-w-[120px] text-start">{t('userManagement.table.role')}</TableHead>
+ <TableHead className="min-w-[100px] text-start">{t('userManagement.table.status')}</TableHead>
+ <TableHead className="min-w-[150px] text-start">{t('userManagement.table.lastLogin')}</TableHead>
+ <TableHead className="min-w-[80px] text-end">{t('common.actions')}</TableHead>
  </TableRow>
  </TableHeader>
  <TableBody>
@@ -206,7 +206,7 @@ export function UserTable({ users, isLoading }: UserTableProps) {
  <TableRow key={user.id}>
  <TableCell>
  <div className="flex flex-col gap-1">
- <div className="font-medium text-sm">{user.full_name}</div>
+ <div className="text-sm font-medium">{user.full_name}</div>
  <div className="text-xs text-muted-foreground">{user.email}</div>
  {getUserTypeBadge(user.user_type)}
  </div>
@@ -222,7 +222,7 @@ export function UserTable({ users, isLoading }: UserTableProps) {
  <DropdownMenu>
  <DropdownMenuTrigger asChild>
  <Button variant="ghost" size="icon" className=" ">
- <MoreVertical className="h-4 w-4" />
+ <MoreVertical className="size-4" />
  </Button>
  </DropdownMenuTrigger>
  <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -231,12 +231,12 @@ export function UserTable({ users, isLoading }: UserTableProps) {
  onClick={() => handleDeactivateClick(user)}
  className="text-destructive"
  >
- <UserX className="h-4 w-4 me-2" />
+ <UserX className="me-2 size-4" />
  {t('userManagement.actions.deactivate')}
  </DropdownMenuItem>
  ) : (
  <DropdownMenuItem onClick={() => handleReactivateClick(user)}>
- <UserCheck className="h-4 w-4 me-2" />
+ <UserCheck className="me-2 size-4" />
  {t('userManagement.actions.reactivate')}
  </DropdownMenuItem>
  )}
@@ -281,9 +281,9 @@ export function UserTable({ users, isLoading }: UserTableProps) {
  </div>
 
  {deactivateDialog.orphanedItems && (
- <div className="p-3 bg-yellow-50 border border-yellow-200 rounded-lg text-sm">
- <p className="font-semibold mb-2">{t('userManagement.deactivation.orphanedItems')}</p>
- <ul className="list-disc list-inside text-xs space-y-1">
+ <div className="rounded-lg border border-yellow-200 bg-yellow-50 p-3 text-sm">
+ <p className="mb-2 font-semibold">{t('userManagement.deactivation.orphanedItems')}</p>
+ <ul className="list-inside list-disc space-y-1 text-xs">
  <li>{t('userManagement.deactivation.dossiers', { count: deactivateDialog.orphanedItems.dossiers })}</li>
  <li>{t('userManagement.deactivation.delegations', { count: deactivateDialog.orphanedItems.delegations })}</li>
  <li>{t('userManagement.deactivation.approvals', { count: deactivateDialog.orphanedItems.approvals })}</li>

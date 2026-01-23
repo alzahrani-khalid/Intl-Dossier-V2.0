@@ -60,22 +60,22 @@ function RelatedDossierCard({ dossier, isRTL }: { dossier: RelatedDossier; isRTL
 
   return (
     <Link to={getDossierDetailPath(dossier.id, dossier.type)}>
-      <Card className="hover:shadow-md transition-shadow cursor-pointer h-full">
+      <Card className="h-full cursor-pointer transition-shadow hover:shadow-md">
         <CardContent className="p-3 sm:p-4">
           <div className="flex items-start gap-3">
-            <div className="p-2 rounded-lg bg-primary/10 shrink-0">
-              <DossierTypeIcon type={dossier.type} className="h-5 w-5" />
+            <div className="shrink-0 rounded-lg bg-primary/10 p-2">
+              <DossierTypeIcon type={dossier.type} className="size-5" />
             </div>
-            <div className="flex-1 min-w-0">
-              <h4 className="text-sm sm:text-base font-semibold line-clamp-2 mb-1">
+            <div className="min-w-0 flex-1">
+              <h4 className="mb-1 line-clamp-2 text-sm font-semibold sm:text-base">
                 {isRTL ? dossier.name_ar : dossier.name_en}
               </h4>
               <div className="flex flex-wrap items-center gap-1.5">
                 <Badge variant="outline" className="text-xs">
                   {t(`dossierType.${dossier.type}`)}
                 </Badge>
-                <Badge variant="secondary" className="text-xs flex items-center gap-1">
-                  <Icon className="h-3 w-3" />
+                <Badge variant="secondary" className="flex items-center gap-1 text-xs">
+                  <Icon className="size-3" />
                   {t(`relationshipType.${dossier.relationship_type}`)}
                 </Badge>
                 {!dossier.is_outgoing && (
@@ -85,13 +85,13 @@ function RelatedDossierCard({ dossier, isRTL }: { dossier: RelatedDossier; isRTL
                 )}
               </div>
               {dossier.notes_en && (
-                <p className="text-xs text-muted-foreground mt-2 line-clamp-1">
+                <p className="mt-2 line-clamp-1 text-xs text-muted-foreground">
                   {isRTL ? dossier.notes_ar : dossier.notes_en}
                 </p>
               )}
             </div>
             <ChevronRight
-              className={`h-5 w-5 text-muted-foreground shrink-0 ${isRTL ? 'rotate-180' : ''}`}
+              className={`size-5 shrink-0 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
             />
           </div>
         </CardContent>
@@ -107,12 +107,12 @@ function EmptyState({ isRTL }: { isRTL: boolean }) {
   const { t } = useTranslation('dossier-overview')
 
   return (
-    <div className="text-center py-8 sm:py-12" dir={isRTL ? 'rtl' : 'ltr'}>
-      <div className="p-4 rounded-full bg-muted inline-block mb-4">
-        <Network className="h-8 w-8 text-muted-foreground" />
+    <div className="py-8 text-center sm:py-12" dir={isRTL ? 'rtl' : 'ltr'}>
+      <div className="mb-4 inline-block rounded-full bg-muted p-4">
+        <Network className="size-8 text-muted-foreground" />
       </div>
-      <h3 className="text-base font-medium mb-2">{t('relatedDossiers.empty.title')}</h3>
-      <p className="text-sm text-muted-foreground max-w-md mx-auto">
+      <h3 className="mb-2 text-base font-medium">{t('relatedDossiers.empty.title')}</h3>
+      <p className="mx-auto max-w-md text-sm text-muted-foreground">
         {t('relatedDossiers.empty.description')}
       </p>
     </div>
@@ -159,7 +159,7 @@ export function RelatedDossiersSection({
         <CardContent className="p-6">
           <div className="space-y-4">
             {[...Array(3)].map((_, i) => (
-              <div key={i} className="h-20 bg-muted animate-pulse rounded-lg" />
+              <div key={i} className="h-20 animate-pulse rounded-lg bg-muted" />
             ))}
           </div>
         </CardContent>
@@ -180,9 +180,9 @@ export function RelatedDossiersSection({
   return (
     <Card className={className}>
       <CardHeader className="pb-2 sm:pb-4">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
-          <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-            <Network className="h-5 w-5" />
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+            <Network className="size-5" />
             {t('relatedDossiers.title')}
             <Badge variant="secondary">{data.total_count}</Badge>
           </CardTitle>
@@ -207,22 +207,22 @@ export function RelatedDossiersSection({
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-6 pt-0">
+      <CardContent className="p-4 pt-0 sm:p-6">
         {viewMode === 'relationship' ? (
           <div className="space-y-6">
             {activeRelationshipTypes.map(([type, dossiers]) => (
               <div key={type}>
-                <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
+                <h4 className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
                   {(() => {
                     const Icon = getRelationshipIcon(type)
-                    return <Icon className="h-4 w-4" />
+                    return <Icon className="size-4" />
                   })()}
                   {t(`relationshipType.${type}`)}
                   <Badge variant="outline" className="text-xs">
                     {dossiers.length}
                   </Badge>
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {dossiers.map((dossier) => (
                     <RelatedDossierCard
                       key={dossier.relationship_id}
@@ -238,14 +238,14 @@ export function RelatedDossiersSection({
           <div className="space-y-6">
             {activeDossierTypes.map(([type, dossiers]) => (
               <div key={type}>
-                <h4 className="text-sm font-medium text-muted-foreground mb-3 flex items-center gap-2">
-                  <DossierTypeIcon type={type} className="h-4 w-4" />
+                <h4 className="mb-3 flex items-center gap-2 text-sm font-medium text-muted-foreground">
+                  <DossierTypeIcon type={type} className="size-4" />
                   {t(`dossierType.${type}`)}
                   <Badge variant="outline" className="text-xs">
                     {dossiers.length}
                   </Badge>
                 </h4>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
                   {dossiers.map((dossier) => (
                     <RelatedDossierCard
                       key={dossier.relationship_id}

@@ -144,14 +144,14 @@ export function EmptyState({
             sizes.hint,
           )}
         >
-          <HelpCircle className="w-3 h-3 sm:w-4 sm:h-4 flex-shrink-0" />
+          <HelpCircle className="size-3 shrink-0 sm:size-4" />
           {hint}
         </p>
       )}
 
       {/* Actions */}
       {(primaryAction || secondaryActions.length > 0) && (
-        <div className="flex flex-col sm:flex-row items-center gap-2 sm:gap-3">
+        <div className="flex flex-col items-center gap-2 sm:flex-row sm:gap-3">
           {primaryAction && (
             <Button
               onClick={primaryAction.onClick}
@@ -198,20 +198,20 @@ export function EmptyState({
         dir={isRTL ? 'rtl' : 'ltr'}
         data-testid={testId}
       >
-        <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-muted-foreground flex-shrink-0" />
-        <div className="flex-1 min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">{title}</p>
-          <p className="text-xs sm:text-sm text-muted-foreground">{description}</p>
+        <Icon className="size-5 shrink-0 text-muted-foreground sm:size-6" />
+        <div className="min-w-0 flex-1">
+          <p className="truncate text-sm font-medium text-foreground">{title}</p>
+          <p className="text-xs text-muted-foreground sm:text-sm">{description}</p>
         </div>
         {primaryAction && (
           <Button
             onClick={primaryAction.onClick}
             variant={primaryAction.variant || 'outline'}
             size="sm"
-            className="min-h-9 min-w-9 flex-shrink-0"
+            className="min-h-9 min-w-9 shrink-0"
           >
-            {primaryAction.icon && <primaryAction.icon className="w-4 h-4" />}
-            <span className="hidden sm:inline ms-2">{primaryAction.label}</span>
+            {primaryAction.icon && <primaryAction.icon className="size-4" />}
+            <span className="ms-2 hidden sm:inline">{primaryAction.label}</span>
           </Button>
         )}
       </div>
@@ -225,7 +225,7 @@ export function EmptyState({
         dir={isRTL ? 'rtl' : 'ltr'}
         data-testid={testId}
       >
-        <Icon className="w-8 h-8 text-muted-foreground mb-2" />
+        <Icon className="mb-2 size-8 text-muted-foreground" />
         <p className="text-sm text-muted-foreground">{description}</p>
         {primaryAction && (
           <Button

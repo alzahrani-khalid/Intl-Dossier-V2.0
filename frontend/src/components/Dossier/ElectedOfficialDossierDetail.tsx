@@ -57,7 +57,7 @@ export function ElectedOfficialDossierDetail({ dossier }: ElectedOfficialDossier
 
   return (
     <div
-      className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-4 sm:gap-6 lg:gap-8"
+      className="grid grid-cols-1 gap-4 sm:gap-6 lg:grid-cols-[1fr_2fr] lg:gap-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Left Column: Profile & Office Info */}

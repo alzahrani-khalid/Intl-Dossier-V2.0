@@ -120,24 +120,24 @@ export function CollaborativeEmptyState({
       data-testid={testId}
     >
       {/* Main Icon */}
-      <div className="flex items-center justify-center w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-muted mb-4 sm:mb-6">
-        <Icon className="w-8 h-8 sm:w-10 sm:h-10 text-muted-foreground" />
+      <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-muted sm:mb-6 sm:size-20">
+        <Icon className="size-8 text-muted-foreground sm:size-10" />
       </div>
 
       {/* Title & Description */}
-      <h3 className="text-lg sm:text-xl md:text-2xl font-semibold text-foreground mb-2">{title}</h3>
-      <p className="text-sm sm:text-base text-muted-foreground max-w-md mb-6">{description}</p>
+      <h3 className="mb-2 text-lg font-semibold text-foreground sm:text-xl md:text-2xl">{title}</h3>
+      <p className="mb-6 max-w-md text-sm text-muted-foreground sm:text-base">{description}</p>
 
       {/* Primary Action */}
       {onPrimaryAction && primaryActionLabel && (
-        <Button onClick={onPrimaryAction} className="min-h-11 min-w-11 px-6 sm:px-8 mb-4">
+        <Button onClick={onPrimaryAction} className="mb-4 min-h-11 min-w-11 px-6 sm:px-8">
           {primaryActionLabel}
         </Button>
       )}
 
       {/* Secondary Actions */}
       {secondaryActions.length > 0 && (
-        <div className="flex flex-wrap justify-center gap-2 mb-6">
+        <div className="mb-6 flex flex-wrap justify-center gap-2">
           {secondaryActions.map((action, index) => (
             <Button
               key={index}
@@ -145,7 +145,7 @@ export function CollaborativeEmptyState({
               onClick={action.onClick}
               className="min-h-10 gap-2"
             >
-              {action.icon && <action.icon className="w-4 h-4" />}
+              {action.icon && <action.icon className="size-4" />}
               {action.label}
             </Button>
           ))}
@@ -155,15 +155,15 @@ export function CollaborativeEmptyState({
       {/* Team Collaboration Section */}
       {showCollaboration && (
         <>
-          <Separator className="w-full max-w-md my-6" />
+          <Separator className="my-6 w-full max-w-md" />
 
           {/* Loading State */}
           {statsLoading && (
             <Card className="w-full max-w-md">
               <CardContent className="p-4 sm:p-6">
-                <div className="flex items-center gap-3 mb-4">
-                  <Skeleton className="h-10 w-10 rounded-full" />
-                  <div className="space-y-2 flex-1">
+                <div className="mb-4 flex items-center gap-3">
+                  <Skeleton className="size-10 rounded-full" />
+                  <div className="flex-1 space-y-2">
                     <Skeleton className="h-4 w-3/4" />
                     <Skeleton className="h-3 w-1/2" />
                   </div>
@@ -178,15 +178,15 @@ export function CollaborativeEmptyState({
             <Card className="w-full max-w-md" data-testid={`${testId}-team-activity`}>
               <CardContent className="p-4 sm:p-6">
                 {/* Activity Header */}
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex items-center justify-center w-10 h-10 rounded-full bg-primary/10">
-                    <Sparkles className="w-5 h-5 text-primary" />
+                <div className="mb-4 flex items-center gap-3">
+                  <div className="flex size-10 items-center justify-center rounded-full bg-primary/10">
+                    <Sparkles className="size-5 text-primary" />
                   </div>
-                  <div className="text-start flex-1">
+                  <div className="flex-1 text-start">
                     <h4 className="font-semibold text-foreground">
                       {t('collaboration.teamActivity.title')}
                     </h4>
-                    <p className="text-xs sm:text-sm text-muted-foreground">
+                    <p className="text-xs text-muted-foreground sm:text-sm">
                       {t('collaboration.teamActivity.description', {
                         entityType: entityDisplayName,
                       })}
@@ -195,28 +195,28 @@ export function CollaborativeEmptyState({
                 </div>
 
                 {/* Stats Grid */}
-                <div className="grid grid-cols-3 gap-2 sm:gap-4 mb-4">
-                  <div className="text-center p-2 sm:p-3 rounded-lg bg-muted/50">
-                    <div className="text-lg sm:text-2xl font-bold text-foreground">
+                <div className="mb-4 grid grid-cols-3 gap-2 sm:gap-4">
+                  <div className="rounded-lg bg-muted/50 p-2 text-center sm:p-3">
+                    <div className="text-lg font-bold text-foreground sm:text-2xl">
                       {teamStats.stats.totalCount}
                     </div>
-                    <div className="text-xs text-muted-foreground truncate">
+                    <div className="truncate text-xs text-muted-foreground">
                       {entityDisplayName}
                     </div>
                   </div>
-                  <div className="text-center p-2 sm:p-3 rounded-lg bg-muted/50">
-                    <div className="text-lg sm:text-2xl font-bold text-foreground">
+                  <div className="rounded-lg bg-muted/50 p-2 text-center sm:p-3">
+                    <div className="text-lg font-bold text-foreground sm:text-2xl">
                       {teamStats.stats.recentCount}
                     </div>
-                    <div className="text-xs text-muted-foreground truncate">
+                    <div className="truncate text-xs text-muted-foreground">
                       {isRTL ? 'حديث' : 'Recent'}
                     </div>
                   </div>
-                  <div className="text-center p-2 sm:p-3 rounded-lg bg-muted/50">
-                    <div className="text-lg sm:text-2xl font-bold text-foreground">
+                  <div className="rounded-lg bg-muted/50 p-2 text-center sm:p-3">
+                    <div className="text-lg font-bold text-foreground sm:text-2xl">
                       {teamStats.stats.uniqueCreators}
                     </div>
-                    <div className="text-xs text-muted-foreground truncate">
+                    <div className="truncate text-xs text-muted-foreground">
                       {isRTL ? 'المساهمون' : 'Contributors'}
                     </div>
                   </div>
@@ -225,7 +225,7 @@ export function CollaborativeEmptyState({
                 {/* Top Contributors */}
                 {teamStats.topContributors && teamStats.topContributors.length > 0 && (
                   <div className="mb-4">
-                    <h5 className="text-sm font-medium text-muted-foreground mb-2 text-start">
+                    <h5 className="mb-2 text-start text-sm font-medium text-muted-foreground">
                       {t('collaboration.topContributors.title')}
                     </h5>
                     <div className="flex flex-col gap-2">
@@ -245,10 +245,10 @@ export function CollaborativeEmptyState({
                 <Button
                   variant="outline"
                   onClick={() => setInviteDialogOpen(true)}
-                  className="w-full min-h-11 gap-2"
+                  className="min-h-11 w-full gap-2"
                   data-testid={`${testId}-invite-button`}
                 >
-                  <UserPlus className="w-4 h-4" />
+                  <UserPlus className="size-4" />
                   {t('collaboration.invite.buttonLabel')}
                 </Button>
               </CardContent>
@@ -258,14 +258,14 @@ export function CollaborativeEmptyState({
           {/* No Team Activity - Encouragement */}
           {!statsLoading && !statsError && !hasTeamActivity && (
             <Card className="w-full max-w-md" data-testid={`${testId}-empty-team`}>
-              <CardContent className="p-4 sm:p-6 text-center">
-                <div className="flex items-center justify-center w-12 h-12 rounded-full bg-primary/10 mx-auto mb-3">
-                  <TrendingUp className="w-6 h-6 text-primary" />
+              <CardContent className="p-4 text-center sm:p-6">
+                <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-full bg-primary/10">
+                  <TrendingUp className="size-6 text-primary" />
                 </div>
-                <h4 className="font-semibold text-foreground mb-1">
+                <h4 className="mb-1 font-semibold text-foreground">
                   {t('collaboration.emptyTeam.title')}
                 </h4>
-                <p className="text-sm text-muted-foreground mb-4">
+                <p className="mb-4 text-sm text-muted-foreground">
                   {t('collaboration.emptyTeam.description', {
                     entityType: entityDisplayName,
                   })}
@@ -275,7 +275,7 @@ export function CollaborativeEmptyState({
                   onClick={() => setInviteDialogOpen(true)}
                   className="min-h-11 gap-2"
                 >
-                  <UserPlus className="w-4 h-4" />
+                  <UserPlus className="size-4" />
                   {t('collaboration.invite.buttonLabel')}
                 </Button>
               </CardContent>
@@ -284,8 +284,8 @@ export function CollaborativeEmptyState({
 
           {/* Encouragement Message */}
           {!statsLoading && (
-            <div className="mt-4 flex items-center gap-2 text-xs sm:text-sm text-muted-foreground">
-              <Users className="w-4 h-4 flex-shrink-0" />
+            <div className="mt-4 flex items-center gap-2 text-xs text-muted-foreground sm:text-sm">
+              <Users className="size-4 shrink-0" />
               <span>{t('collaboration.encouragement.description')}</span>
             </div>
           )}
@@ -328,19 +328,19 @@ function ContributorRow({ contributor, isRTL, t }: ContributorRowProps) {
         'text-start',
       )}
     >
-      <Avatar className="h-8 w-8">
+      <Avatar className="size-8">
         <AvatarImage src={contributor.avatar_url || undefined} />
         <AvatarFallback className="text-xs">{getInitials(contributor.full_name)}</AvatarFallback>
       </Avatar>
-      <div className="flex-1 min-w-0">
-        <div className="text-sm font-medium text-foreground truncate">{contributor.full_name}</div>
+      <div className="min-w-0 flex-1">
+        <div className="truncate text-sm font-medium text-foreground">{contributor.full_name}</div>
         <div className="text-xs text-muted-foreground">
           {t('collaboration.topContributors.contributions', {
             count: contributor.contribution_count,
           })}
         </div>
       </div>
-      <Badge variant="secondary" className="hidden sm:inline-flex text-xs">
+      <Badge variant="secondary" className="hidden text-xs sm:inline-flex">
         {contributor.contribution_count}
       </Badge>
     </div>

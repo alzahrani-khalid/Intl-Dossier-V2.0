@@ -65,16 +65,16 @@ export function FormDraftBanner({
       >
         <div className="p-4 sm:p-5">
           {/* Header with icon and dismiss button */}
-          <div className="flex items-start justify-between gap-3 mb-3">
+          <div className="mb-3 flex items-start justify-between gap-3">
             <div className="flex items-center gap-3">
-              <div className="flex-shrink-0 p-2 rounded-full bg-amber-100 dark:bg-amber-900/30">
+              <div className="shrink-0 rounded-full bg-amber-100 p-2 dark:bg-amber-900/30">
                 <FileText className="size-5 text-amber-600 dark:text-amber-400" />
               </div>
               <div>
                 <h3 className="font-medium text-amber-800 dark:text-amber-200">
                   {t('banner.title')}
                 </h3>
-                <p className="text-sm text-amber-700 dark:text-amber-300 mt-0.5">
+                <p className="mt-0.5 text-sm text-amber-700 dark:text-amber-300">
                   {t('banner.savedTime', { time: savedTimeAgo })}
                 </p>
               </div>
@@ -84,7 +84,7 @@ export function FormDraftBanner({
             <button
               type="button"
               onClick={onDismiss}
-              className="min-h-11 min-w-11 flex items-center justify-center rounded-lg hover:bg-amber-100 dark:hover:bg-amber-900/30 transition-colors"
+              className="flex min-h-11 min-w-11 items-center justify-center rounded-lg transition-colors hover:bg-amber-100 dark:hover:bg-amber-900/30"
               aria-label={t('banner.dismiss')}
             >
               <X className="size-5 text-amber-600 dark:text-amber-400" />
@@ -92,7 +92,7 @@ export function FormDraftBanner({
           </div>
 
           {/* Progress info */}
-          <div className="flex items-center gap-4 mb-4 text-sm text-amber-700 dark:text-amber-300">
+          <div className="mb-4 flex items-center gap-4 text-sm text-amber-700 dark:text-amber-300">
             <span>{t('banner.progress', { percentage: draft.progress })}</span>
             {typeof draft.currentStep === 'number' && typeof draft.totalSteps === 'number' && (
               <span>
@@ -105,18 +105,18 @@ export function FormDraftBanner({
           </div>
 
           {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row gap-2 sm:gap-3">
+          <div className="flex flex-col gap-2 sm:flex-row sm:gap-3">
             {/* Restore button - primary action */}
             <Button
               type="button"
               onClick={onRestore}
               disabled={isRestoring}
-              className="min-h-11 flex-1 bg-amber-600 hover:bg-amber-700 text-white"
+              className="min-h-11 flex-1 bg-amber-600 text-white hover:bg-amber-700"
             >
               {isRestoring ? (
-                <Loader2 className="size-4 me-2 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
               ) : (
-                <RotateCcw className="size-4 me-2" />
+                <RotateCcw className="me-2 size-4" />
               )}
               {isRestoring ? t('banner.restoring') : t('banner.restore')}
             </Button>
@@ -129,7 +129,7 @@ export function FormDraftBanner({
               disabled={isRestoring}
               className="min-h-11 border-amber-300 text-amber-700 hover:bg-amber-100 dark:border-amber-700 dark:text-amber-300 dark:hover:bg-amber-900/30"
             >
-              <Trash2 className="size-4 me-2" />
+              <Trash2 className="me-2 size-4" />
               {t('banner.discard')}
             </Button>
           </div>

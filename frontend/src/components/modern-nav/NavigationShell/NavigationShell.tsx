@@ -143,7 +143,7 @@ export function NavigationShell({
  dir={isRTL ? 'rtl' : 'ltr'}
  >
  {/* Mobile Menu Button - Only visible on mobile */}
- <div className="fixed top-0 start-0 z-50 p-4 md:hidden">
+ <div className="fixed start-0 top-0 z-50 p-4 md:hidden">
  <Button
  variant="ghost"
  size="icon"
@@ -157,9 +157,9 @@ export function NavigationShell({
  aria-label={isMobileMenuOpen ? 'Close menu' : 'Open menu'}
  >
  {isMobileMenuOpen ? (
- <X className="h-5 w-5" />
+ <X className="size-5" />
  ) : (
- <Menu className="h-5 w-5" />
+ <Menu className="size-5" />
  )}
  </Button>
  </div>
@@ -222,7 +222,7 @@ export function NavigationShell({
  userAvatar={userAvatar}
  onLogout={onLogout}
  activeCategory={activeCategory}
- className="flex md:hidden lg:flex w-full md:w-auto" />
+ className="flex w-full md:hidden md:w-auto lg:flex" />
  </div>
 
  {/* Main Content Area */}

@@ -151,30 +151,30 @@ export function PersonsListPage() {
   return (
     <div className="min-h-screen" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Header */}
-      <header className="border-b bg-background sticky top-0 z-10">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4 sm:py-6">
+      <header className="sticky top-0 z-10 border-b bg-background">
+        <div className="container mx-auto p-4 sm:p-6 lg:px-8">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
             <div>
-              <h1 className="text-2xl sm:text-3xl font-bold text-start">
+              <h1 className="text-start text-2xl font-bold sm:text-3xl">
                 {t('title', 'Key Contacts')}
               </h1>
-              <p className="text-sm sm:text-base text-muted-foreground mt-1 text-start">
+              <p className="mt-1 text-start text-sm text-muted-foreground sm:text-base">
                 {t('subtitle', 'Manage your network of key contacts and stakeholders')}
               </p>
             </div>
 
             <Button onClick={handleCreatePerson} className="w-full sm:w-auto">
-              <Plus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
+              <Plus className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
               {t('actions.createPerson', 'Add Person')}
             </Button>
           </div>
 
           {/* Search and Filters */}
-          <div className="mt-4 sm:mt-6 flex flex-col sm:flex-row gap-3">
+          <div className="mt-4 flex flex-col gap-3 sm:mt-6 sm:flex-row">
             {/* Search Input */}
             <div className="relative flex-1">
               <Search
-                className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
+                className={`absolute top-1/2 size-4 -translate-y-1/2 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
               />
               <Input
                 placeholder={t('search.placeholder', 'Search by name, title, email...')}
@@ -187,21 +187,21 @@ export function PersonsListPage() {
                   onClick={() => setSearchTerm('')}
                   className={`absolute top-1/2 -translate-y-1/2 ${isRTL ? 'start-3' : 'end-3'}`}
                 >
-                  <X className="h-4 w-4 text-muted-foreground hover:text-foreground" />
+                  <X className="size-4 text-muted-foreground hover:text-foreground" />
                 </button>
               )}
             </div>
 
             {/* Desktop Filters */}
-            <div className="hidden sm:flex gap-2">
+            <div className="hidden gap-2 sm:flex">
               <Select
                 value={importanceFilter === 'all' ? 'all' : String(importanceFilter)}
                 onValueChange={(value) =>
                   setImportanceFilter(value === 'all' ? 'all' : (Number(value) as ImportanceLevel))
                 }
               >
-                <SelectTrigger className="w-[180px] h-11">
-                  <Star className="h-4 w-4 me-2 text-muted-foreground" />
+                <SelectTrigger className="h-11 w-[180px]">
+                  <Star className="me-2 size-4 text-muted-foreground" />
                   <SelectValue placeholder={t('filters.importance', 'Importance')} />
                 </SelectTrigger>
                 <SelectContent>
@@ -218,7 +218,7 @@ export function PersonsListPage() {
 
               {hasActiveFilters && (
                 <Button variant="ghost" size="sm" onClick={clearFilters}>
-                  <X className="h-4 w-4 me-1" />
+                  <X className="me-1 size-4" />
                   {t('filters.clear', 'Clear')}
                 </Button>
               )}
@@ -228,7 +228,7 @@ export function PersonsListPage() {
             <Sheet open={isFiltersOpen} onOpenChange={setIsFiltersOpen}>
               <SheetTrigger asChild className="sm:hidden">
                 <Button variant="outline" className="h-11">
-                  <SlidersHorizontal className="h-4 w-4 me-2" />
+                  <SlidersHorizontal className="me-2 size-4" />
                   {t('filters.title', 'Filters')}
                   {hasActiveFilters && (
                     <Badge variant="secondary" className="ms-2">
@@ -243,7 +243,7 @@ export function PersonsListPage() {
                 </SheetHeader>
                 <div className="mt-6 space-y-4">
                   <div>
-                    <label className="text-sm font-medium mb-2 block">
+                    <label className="mb-2 block text-sm font-medium">
                       {t('filters.importance', 'Importance Level')}
                     </label>
                     <Select
@@ -288,27 +288,27 @@ export function PersonsListPage() {
           {/* Stats Summary */}
           <div className="mt-4 flex items-center gap-4 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
-              <Users className="h-4 w-4" />
+              <Users className="size-4" />
               {t('stats.total', '{{count}} persons', { count: totalPersons })}
             </span>
-            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
+            {isLoading && <Loader2 className="size-4 animate-spin" />}
           </div>
         </div>
       </header>
 
       {/* Persons List */}
-      <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <main className="container mx-auto px-4 py-6 sm:px-6 lg:px-8">
         {data?.data.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-16 text-center">
-            <div className="h-16 w-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
-              <Users className="h-8 w-8 text-primary" />
+            <div className="mb-4 flex size-16 items-center justify-center rounded-full bg-primary/10">
+              <Users className="size-8 text-primary" />
             </div>
-            <h3 className="text-lg font-semibold mb-2">
+            <h3 className="mb-2 text-lg font-semibold">
               {searchTerm || hasActiveFilters
                 ? t('empty.noResults', 'No persons found')
                 : t('empty.title', 'No persons yet')}
             </h3>
-            <p className="text-muted-foreground max-w-md mb-6">
+            <p className="mb-6 max-w-md text-muted-foreground">
               {searchTerm || hasActiveFilters
                 ? t('empty.noResultsDescription', 'Try adjusting your search or filters')
                 : t(
@@ -318,13 +318,13 @@ export function PersonsListPage() {
             </p>
             {!searchTerm && !hasActiveFilters && (
               <Button onClick={handleCreatePerson}>
-                <Plus className="h-4 w-4 me-2" />
+                <Plus className="me-2 size-4" />
                 {t('actions.createFirst', 'Add First Person')}
               </Button>
             )}
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {data?.data.map((person, index) => (
               <motion.div
                 key={person.id}
@@ -333,35 +333,35 @@ export function PersonsListPage() {
                 transition={{ delay: index * 0.05 }}
               >
                 <Card
-                  className="cursor-pointer hover:shadow-md transition-shadow h-full"
+                  className="h-full cursor-pointer transition-shadow hover:shadow-md"
                   onClick={() => handlePersonClick(person.id)}
                 >
                   <CardContent className="p-4">
                     <div className="flex items-start gap-3">
                       {/* Avatar */}
-                      <Avatar className="h-12 w-12 sm:h-14 sm:w-14 flex-shrink-0">
+                      <Avatar className="size-12 shrink-0 sm:size-14">
                         <AvatarImage src={person.photo_url || ''} alt={person.name_en} />
-                        <AvatarFallback className="bg-primary/10 text-primary font-medium">
+                        <AvatarFallback className="bg-primary/10 font-medium text-primary">
                           {getInitials(isRTL ? person.name_ar : person.name_en)}
                         </AvatarFallback>
                       </Avatar>
 
                       {/* Info */}
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-start justify-between gap-2">
                           <div className="min-w-0">
-                            <h3 className="font-semibold text-sm sm:text-base truncate">
+                            <h3 className="truncate text-sm font-semibold sm:text-base">
                               {isRTL ? person.name_ar : person.name_en}
                             </h3>
                             {(person.title_en || person.title_ar) && (
-                              <p className="text-xs sm:text-sm text-muted-foreground truncate">
+                              <p className="truncate text-xs text-muted-foreground sm:text-sm">
                                 {isRTL ? person.title_ar : person.title_en}
                               </p>
                             )}
                           </div>
                           <Badge
                             variant="outline"
-                            className={`text-xs flex-shrink-0 ${getImportanceColor(person.importance_level)}`}
+                            className={`shrink-0 text-xs ${getImportanceColor(person.importance_level)}`}
                           >
                             {isRTL
                               ? IMPORTANCE_LEVEL_LABELS[person.importance_level].ar
@@ -371,23 +371,23 @@ export function PersonsListPage() {
 
                         {/* Organization */}
                         {person.organization_name && (
-                          <div className="flex items-center gap-1 mt-2 text-xs sm:text-sm text-muted-foreground">
-                            <Building2 className="h-3 w-3 flex-shrink-0" />
+                          <div className="mt-2 flex items-center gap-1 text-xs text-muted-foreground sm:text-sm">
+                            <Building2 className="size-3 shrink-0" />
                             <span className="truncate">{person.organization_name}</span>
                           </div>
                         )}
 
                         {/* Contact Info */}
-                        <div className="flex flex-wrap items-center gap-3 mt-2">
+                        <div className="mt-2 flex flex-wrap items-center gap-3">
                           {person.email && (
                             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Mail className="h-3 w-3" />
-                              <span className="truncate max-w-[120px]">{person.email}</span>
+                              <Mail className="size-3" />
+                              <span className="max-w-[120px] truncate">{person.email}</span>
                             </span>
                           )}
                           {person.phone && (
                             <span className="flex items-center gap-1 text-xs text-muted-foreground">
-                              <Phone className="h-3 w-3" />
+                              <Phone className="size-3" />
                               <span dir="ltr">{person.phone}</span>
                             </span>
                           )}
@@ -396,7 +396,7 @@ export function PersonsListPage() {
 
                       {/* Arrow */}
                       <ChevronRight
-                        className={`h-5 w-5 text-muted-foreground flex-shrink-0 ${isRTL ? 'rotate-180' : ''}`}
+                        className={`size-5 shrink-0 text-muted-foreground ${isRTL ? 'rotate-180' : ''}`}
                       />
                     </div>
                   </CardContent>
@@ -408,9 +408,9 @@ export function PersonsListPage() {
 
         {/* Load More */}
         {data?.pagination.has_more && (
-          <div className="flex justify-center mt-8">
+          <div className="mt-8 flex justify-center">
             <Button variant="outline" disabled={isLoading}>
-              {isLoading ? <Loader2 className="h-4 w-4 animate-spin me-2" /> : null}
+              {isLoading ? <Loader2 className="me-2 size-4 animate-spin" /> : null}
               {t('actions.loadMore', 'Load More')}
             </Button>
           </div>

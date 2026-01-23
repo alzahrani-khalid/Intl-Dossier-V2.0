@@ -45,25 +45,25 @@ function FieldHistoryDemoPage() {
 
   return (
     <div
-      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6"
+      className="container mx-auto space-y-6 px-4 py-6 sm:px-6 lg:px-8"
       dir={isRTL ? 'rtl' : 'ltr'}
     >
       {/* Page Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h1 className="text-2xl sm:text-3xl font-bold flex items-center gap-2">
-            <History className="h-7 w-7" />
+          <h1 className="flex items-center gap-2 text-2xl font-bold sm:text-3xl">
+            <History className="size-7" />
             {t('title')}
           </h1>
-          <p className="text-muted-foreground mt-1">{t('description')}</p>
+          <p className="mt-1 text-muted-foreground">{t('description')}</p>
         </div>
       </div>
 
       {/* Entity Selector */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-lg flex items-center gap-2">
-            <Search className="h-5 w-5" />
+          <CardTitle className="flex items-center gap-2 text-lg">
+            <Search className="size-5" />
             Select Entity
           </CardTitle>
           <CardDescription>
@@ -72,7 +72,7 @@ function FieldHistoryDemoPage() {
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="entityType">Entity Type</Label>
                 <Select
@@ -110,7 +110,7 @@ function FieldHistoryDemoPage() {
             </div>
 
             <Button type="submit" disabled={!entityType || !entityId} className="w-full sm:w-auto">
-              <ArrowLeftRight className="h-4 w-4 me-2" />
+              <ArrowLeftRight className="me-2 size-4" />
               View Field History
             </Button>
           </form>
@@ -135,7 +135,7 @@ function FieldHistoryDemoPage() {
         <CardHeader>
           <CardTitle className="text-lg">Feature Information</CardTitle>
         </CardHeader>
-        <CardContent className="prose prose-sm dark:prose-invert max-w-none">
+        <CardContent className="prose prose-sm max-w-none dark:prose-invert">
           <p>
             This feature tracks changes to individual fields within entities, showing who changed
             what and when. Key capabilities include:

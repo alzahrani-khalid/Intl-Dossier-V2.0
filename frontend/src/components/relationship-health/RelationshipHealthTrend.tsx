@@ -58,10 +58,10 @@ function MiniChart({ data, height = 60, color = 'currentColor' }: MiniChartProps
   if (data.length < 2) {
     return (
       <div
-        className="flex items-center justify-center text-muted-foreground text-sm"
+        className="flex items-center justify-center text-sm text-muted-foreground"
         style={{ height }}
       >
-        <BarChart3 className="h-5 w-5 me-2" />
+        <BarChart3 className="me-2 size-5" />
         <span>Not enough data</span>
       </div>
     )
@@ -125,7 +125,7 @@ function ComponentTrend({ component, current, previous }: ComponentTrendProps) {
   const Icon = trend === 'improving' ? TrendingUp : trend === 'declining' ? TrendingDown : Minus
 
   return (
-    <div className="flex items-center justify-between py-2 border-b last:border-b-0">
+    <div className="flex items-center justify-between border-b py-2 last:border-b-0">
       <span className="text-sm text-muted-foreground">
         {COMPONENT_LABELS[component][isRTL ? 'ar' : 'en']}
       </span>
@@ -158,7 +158,7 @@ function DateRange({ start, end }: { start: string; end: string }) {
 
   return (
     <div className="flex items-center gap-1 text-xs text-muted-foreground">
-      <Calendar className="h-3 w-3" />
+      <Calendar className="size-3" />
       <span>{formatDate(start)}</span>
       <span>-</span>
       <span>{formatDate(end)}</span>
@@ -176,7 +176,7 @@ function RelationshipHealthTrendSkeleton() {
       <CardHeader className="p-4 sm:p-6">
         <Skeleton className="h-5 w-1/3" />
       </CardHeader>
-      <CardContent className="p-4 sm:p-6 pt-0 space-y-4">
+      <CardContent className="space-y-4 p-4 pt-0 sm:p-6">
         <Skeleton className="h-16 w-full" />
         <div className="space-y-2">
           {[1, 2, 3, 4, 5].map((i) => (
@@ -246,7 +246,7 @@ export function RelationshipHealthTrend({
     return (
       <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
         <CardContent className="p-6 text-center">
-          <BarChart3 className="h-12 w-12 mx-auto text-muted-foreground mb-3" />
+          <BarChart3 className="mx-auto mb-3 size-12 text-muted-foreground" />
           <p className="text-muted-foreground">{t('trend.noHistory')}</p>
         </CardContent>
       </Card>
@@ -255,8 +255,8 @@ export function RelationshipHealthTrend({
 
   return (
     <Card className={className} dir={isRTL ? 'rtl' : 'ltr'}>
-      <CardHeader className="p-4 sm:p-6 pb-2">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
+      <CardHeader className="p-4 pb-2 sm:p-6">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <CardTitle className="text-sm sm:text-base">{t('trend.title')}</CardTitle>
           {sortedHistory.length > 0 &&
             (() => {
@@ -270,7 +270,7 @@ export function RelationshipHealthTrend({
         </div>
       </CardHeader>
 
-      <CardContent className="p-4 sm:p-6 pt-2 space-y-4">
+      <CardContent className="space-y-4 p-4 pt-2 sm:p-6">
         {/* Overall score chart */}
         <div className="space-y-2">
           <div className="flex items-center justify-between">
@@ -282,14 +282,14 @@ export function RelationshipHealthTrend({
               {overallTrend === 'declining' && (
                 <TrendingDown className={cn('h-4 w-4', isRTL && 'rotate-180')} />
               )}
-              {overallTrend === 'stable' && <Minus className="h-4 w-4" />}
+              {overallTrend === 'stable' && <Minus className="size-4" />}
             </div>
           </div>
           <div className="rounded-lg bg-muted/30 p-2">
             <MiniChart data={overallScores} height={chartHeight} color={chartColor} />
           </div>
           {/* Score labels */}
-          <div className="flex justify-between text-xs text-muted-foreground px-1">
+          <div className="flex justify-between px-1 text-xs text-muted-foreground">
             <span>{overallScores[0]}</span>
             <span>{current?.overall_score}</span>
           </div>
@@ -298,7 +298,7 @@ export function RelationshipHealthTrend({
         {/* Component trends */}
         {current && (
           <div className="space-y-1">
-            <h4 className="text-sm font-medium mb-2">{t('trend.componentTrends')}</h4>
+            <h4 className="mb-2 text-sm font-medium">{t('trend.componentTrends')}</h4>
             {(Object.keys(current.components) as (keyof HealthScoreComponents)[]).map(
               (component) => (
                 <ComponentTrend
@@ -313,17 +313,17 @@ export function RelationshipHealthTrend({
         )}
 
         {/* Summary stats */}
-        <div className="grid grid-cols-3 gap-2 pt-2 border-t">
+        <div className="grid grid-cols-3 gap-2 border-t pt-2">
           <div className="text-center">
-            <div className="text-lg sm:text-xl font-bold">{history.length}</div>
+            <div className="text-lg font-bold sm:text-xl">{history.length}</div>
             <div className="text-xs text-muted-foreground">{t('trend.dataPoints')}</div>
           </div>
           <div className="text-center">
-            <div className="text-lg sm:text-xl font-bold">{Math.max(...overallScores)}</div>
+            <div className="text-lg font-bold sm:text-xl">{Math.max(...overallScores)}</div>
             <div className="text-xs text-muted-foreground">{t('trend.highScore')}</div>
           </div>
           <div className="text-center">
-            <div className="text-lg sm:text-xl font-bold">{Math.min(...overallScores)}</div>
+            <div className="text-lg font-bold sm:text-xl">{Math.min(...overallScores)}</div>
             <div className="text-xs text-muted-foreground">{t('trend.lowScore')}</div>
           </div>
         </div>

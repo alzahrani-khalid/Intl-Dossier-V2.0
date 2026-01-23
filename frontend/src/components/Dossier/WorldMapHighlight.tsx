@@ -104,7 +104,7 @@ export function WorldMapHighlight({ countryCode, className }: WorldMapHighlightP
           className
         )}
       >
-        <Globe className="h-24 w-24 sm:h-32 sm:w-32 text-primary/30" />
+        <Globe className="size-24 text-primary/30 sm:size-32" />
       </div>
     );
   }
@@ -131,7 +131,7 @@ export function WorldMapHighlight({ countryCode, className }: WorldMapHighlightP
       {/* Loading state */}
       {!mapLoaded && !mapError && (
         <div className="absolute inset-0 flex items-center justify-center">
-          <Globe className="h-24 w-24 sm:h-32 sm:w-32 text-primary/20 animate-pulse" />
+          <Globe className="size-24 animate-pulse text-primary/20 sm:size-32" />
         </div>
       )}
     </div>

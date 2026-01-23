@@ -115,10 +115,10 @@ export function SavedReportsList({
   }
 
   return (
-    <Card dir={isRTL ? 'rtl' : 'ltr'} className="h-full flex flex-col">
+    <Card dir={isRTL ? 'rtl' : 'ltr'} className="flex h-full flex-col">
       <CardHeader className="pb-3">
-        <CardTitle className="text-base sm:text-lg flex items-center gap-2">
-          <FileText className="h-5 w-5" />
+        <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
+          <FileText className="size-5" />
           {t('savedReports.title')}
         </CardTitle>
         <CardDescription className="text-xs sm:text-sm">
@@ -126,7 +126,7 @@ export function SavedReportsList({
         </CardDescription>
       </CardHeader>
 
-      <CardContent className="flex-1 flex flex-col min-h-0 space-y-4">
+      <CardContent className="flex min-h-0 flex-1 flex-col space-y-4">
         {/* Search */}
         <div className="relative">
           <Search
@@ -145,7 +145,7 @@ export function SavedReportsList({
 
         {/* Filter Tabs */}
         <Tabs value={filter} onValueChange={(v) => setFilter(v as typeof filter)}>
-          <TabsList className="w-full grid grid-cols-4">
+          <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="all" className="text-xs">
               {t('savedReports.filters.all')}
             </TabsTrigger>
@@ -162,7 +162,7 @@ export function SavedReportsList({
         </Tabs>
 
         {/* Reports List */}
-        <ScrollArea className="flex-1 -mx-2 px-2">
+        <ScrollArea className="-mx-2 flex-1 px-2">
           {isLoading ? (
             <div className="space-y-3">
               {[...Array(5)].map((_, i) => (
@@ -171,7 +171,7 @@ export function SavedReportsList({
             </div>
           ) : filteredReports.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-12 text-muted-foreground">
-              <FileText className="h-12 w-12 mb-4" />
+              <FileText className="mb-4 size-12" />
               <p className="font-medium">{t('savedReports.empty')}</p>
               <p className="text-sm">{t('savedReports.emptyDescription')}</p>
             </div>
@@ -192,27 +192,27 @@ export function SavedReportsList({
                     onClick={() => onSelectReport(report)}
                   >
                     <div className="flex items-start gap-3">
-                      <div className="flex-1 min-w-0">
+                      <div className="min-w-0 flex-1">
                         <div className="flex items-center gap-2">
-                          <h4 className="font-medium truncate">
+                          <h4 className="truncate font-medium">
                             {isRTL ? report.nameAr || report.name : report.name}
                           </h4>
                           {report.isFavorite && (
-                            <Star className="h-4 w-4 text-yellow-500 fill-yellow-500 flex-shrink-0" />
+                            <Star className="size-4 shrink-0 fill-yellow-500 text-yellow-500" />
                           )}
                         </div>
 
                         {report.description && (
-                          <p className="text-sm text-muted-foreground line-clamp-2 mt-1">
+                          <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">
                             {isRTL
                               ? report.descriptionAr || report.description
                               : report.description}
                           </p>
                         )}
 
-                        <div className="flex items-center gap-2 mt-2 flex-wrap">
+                        <div className="mt-2 flex flex-wrap items-center gap-2">
                           <Badge variant="outline" className="text-xs">
-                            <AccessIcon className="h-3 w-3 me-1" />
+                            <AccessIcon className="me-1 size-3" />
                             {t(`save.accessLevels.${report.accessLevel}`)}
                           </Badge>
                           {report.tags?.slice(0, 2).map((tag) => (
@@ -227,7 +227,7 @@ export function SavedReportsList({
                           )}
                         </div>
 
-                        <p className="text-xs text-muted-foreground mt-2">
+                        <p className="mt-2 text-xs text-muted-foreground">
                           {format(new Date(report.updatedAt), 'PPp')}
                         </p>
                       </div>
@@ -237,10 +237,10 @@ export function SavedReportsList({
                           <Button
                             variant="ghost"
                             size="icon"
-                            className="h-8 w-8 flex-shrink-0"
+                            className="size-8 shrink-0"
                             onClick={(e) => e.stopPropagation()}
                           >
-                            <MoreVertical className="h-4 w-4" />
+                            <MoreVertical className="size-4" />
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align={isRTL ? 'start' : 'end'}>
@@ -250,7 +250,7 @@ export function SavedReportsList({
                               onSelectReport(report)
                             }}
                           >
-                            <Eye className="h-4 w-4 me-2" />
+                            <Eye className="me-2 size-4" />
                             {t('savedReports.actions.open')}
                           </DropdownMenuItem>
 
@@ -262,12 +262,12 @@ export function SavedReportsList({
                           >
                             {report.isFavorite ? (
                               <>
-                                <StarOff className="h-4 w-4 me-2" />
+                                <StarOff className="me-2 size-4" />
                                 {t('savedReports.actions.unfavorite')}
                               </>
                             ) : (
                               <>
-                                <Star className="h-4 w-4 me-2" />
+                                <Star className="me-2 size-4" />
                                 {t('savedReports.actions.favorite')}
                               </>
                             )}
@@ -280,7 +280,7 @@ export function SavedReportsList({
                                 onDuplicateReport(report)
                               }}
                             >
-                              <Copy className="h-4 w-4 me-2" />
+                              <Copy className="me-2 size-4" />
                               {t('savedReports.actions.duplicate')}
                             </DropdownMenuItem>
                           )}
@@ -292,7 +292,7 @@ export function SavedReportsList({
                                 onShareReport(report)
                               }}
                             >
-                              <Share2 className="h-4 w-4 me-2" />
+                              <Share2 className="me-2 size-4" />
                               {t('savedReports.actions.share')}
                             </DropdownMenuItem>
                           )}
@@ -304,7 +304,7 @@ export function SavedReportsList({
                                 onScheduleReport(report)
                               }}
                             >
-                              <Calendar className="h-4 w-4 me-2" />
+                              <Calendar className="me-2 size-4" />
                               {t('savedReports.actions.schedule')}
                             </DropdownMenuItem>
                           )}
@@ -316,7 +316,7 @@ export function SavedReportsList({
                                 onExportReport(report)
                               }}
                             >
-                              <Download className="h-4 w-4 me-2" />
+                              <Download className="me-2 size-4" />
                               {t('savedReports.actions.export')}
                             </DropdownMenuItem>
                           )}
@@ -330,7 +330,7 @@ export function SavedReportsList({
                               setReportToDelete(report.id)
                             }}
                           >
-                            <Trash2 className="h-4 w-4 me-2" />
+                            <Trash2 className="me-2 size-4" />
                             {t('savedReports.actions.delete')}
                           </DropdownMenuItem>
                         </DropdownMenuContent>

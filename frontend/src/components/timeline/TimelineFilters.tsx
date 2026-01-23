@@ -200,7 +200,7 @@ export function TimelineFilters({
   return (
     <div className={cn('space-y-4 mb-6', className)} dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Filter Toggle & Search Bar */}
-      <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+      <div className="flex flex-col gap-2 sm:flex-row sm:gap-4">
         {/* Search Input */}
         <div className="relative flex-1">
           <Search className={cn('absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground', isRTL ? 'end-3' : 'start-3')} />
@@ -218,7 +218,7 @@ export function TimelineFilters({
               onClick={() => handleSearch('')}
               className={cn('absolute top-1/2 -translate-y-1/2 h-7 w-7 p-0', isRTL ? 'start-1' : 'end-1')}
             >
-              <X className="h-4 w-4" />
+              <X className="size-4" />
             </Button>
           )}
         </div>
@@ -227,10 +227,10 @@ export function TimelineFilters({
         <Button
           variant="outline"
           onClick={onToggleFilters}
-          className="min-h-11 sm:min-h-10 justify-between"
+          className="min-h-11 justify-between sm:min-h-10"
         >
           <div className="flex items-center gap-2">
-            <Filter className="h-4 w-4" />
+            <Filter className="size-4" />
             <span>{t('timeline.filters')}</span>
             {activeFiltersCount > 0 && (
               <Badge variant="secondary" className="h-5 min-w-5 rounded-full px-1.5">
@@ -252,17 +252,17 @@ export function TimelineFilters({
           onClick={onRefresh}
           className="min-h-11 min-w-11 sm:min-h-10 sm:min-w-10"
         >
-          <RotateCcw className="h-4 w-4" />
+          <RotateCcw className="size-4" />
         </Button>
       </div>
 
       {/* Expandable Filter Panel */}
       {showFilters && (
-        <div className="rounded-lg border bg-card p-4 sm:p-6 space-y-4 sm:space-y-6">
+        <div className="space-y-4 rounded-lg border bg-card p-4 sm:space-y-6 sm:p-6">
           {/* Event Types */}
           <div className="space-y-3">
-            <Label className="text-start block">{t('timeline.event_types')}</Label>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+            <Label className="block text-start">{t('timeline.event_types')}</Label>
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {availableEventTypes.map((eventType) => (
                 <div key={eventType} className="flex items-center gap-2">
                   <Checkbox
@@ -272,7 +272,7 @@ export function TimelineFilters({
                   />
                   <Label
                     htmlFor={`event-type-${eventType}`}
-                    className="text-sm font-normal cursor-pointer text-start"
+                    className="cursor-pointer text-start text-sm font-normal"
                   >
                     {isRTL ? eventTypeLabels[eventType].ar : eventTypeLabels[eventType].en}
                   </Label>
@@ -284,10 +284,10 @@ export function TimelineFilters({
           <Separator />
 
           {/* Priority & Status Filters */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {/* Priority Filter */}
             <div className="space-y-2">
-              <Label className="text-start block">{t('timeline.priority_filter')}</Label>
+              <Label className="block text-start">{t('timeline.priority_filter')}</Label>
               <Select
                 value={filters.priority?.[0] || 'all'}
                 onValueChange={(value) => handlePriorityChange(value as TimelinePriority | 'all')}
@@ -306,7 +306,7 @@ export function TimelineFilters({
 
             {/* Status Filter */}
             <div className="space-y-2">
-              <Label className="text-start block">{t('timeline.status_filter')}</Label>
+              <Label className="block text-start">{t('timeline.status_filter')}</Label>
               <Select
                 value={filters.status?.[0] || 'all'}
                 onValueChange={(value) => handleStatusChange(value as TimelineEventStatus | 'all')}
@@ -330,7 +330,7 @@ export function TimelineFilters({
 
           {/* Date Range Filter */}
           <div className="space-y-3">
-            <Label className="text-start block">{t('timeline.date_range')}</Label>
+            <Label className="block text-start">{t('timeline.date_range')}</Label>
 
             {/* Preset Options */}
             <div className="flex flex-wrap gap-2">
@@ -365,7 +365,7 @@ export function TimelineFilters({
                   </Button>
                 </PopoverTrigger>
                 <PopoverContent className="w-auto p-0" align="start">
-                  <div className="p-4 space-y-4">
+                  <div className="space-y-4 p-4">
                     <div className="space-y-2">
                       <Label>{t('timeline.from_date')}</Label>
                       <Calendar
@@ -404,7 +404,7 @@ export function TimelineFilters({
               <Button
                 variant="outline"
                 onClick={handleResetFilters}
-                className="w-full min-h-11 sm:min-h-10"
+                className="min-h-11 w-full sm:min-h-10"
               >
                 <X className={cn('h-4 w-4', isRTL ? 'ms-2' : 'me-2')} />
                 {t('timeline.reset_filters')}

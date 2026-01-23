@@ -155,9 +155,9 @@ export function GraphExportDialog({
   }, [])
 
   const formatIcons: Record<GraphExportFormat, React.ReactNode> = {
-    rdf: <FileCode className="h-4 w-4" />,
-    graphml: <Network className="h-4 w-4" />,
-    'json-ld': <FileJson className="h-4 w-4" />,
+    rdf: <FileCode className="size-4" />,
+    graphml: <Network className="size-4" />,
+    'json-ld': <FileJson className="size-4" />,
   }
 
   const formatDescriptions: Record<GraphExportFormat, { en: string; ar: string }> = {
@@ -178,12 +178,12 @@ export function GraphExportDialog({
   return (
     <Dialog open={open} onOpenChange={handleClose}>
       <DialogContent
-        className="sm:max-w-[560px] max-h-[90vh] overflow-y-auto"
+        className="max-h-[90vh] overflow-y-auto sm:max-w-[560px]"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
-            <Share2 className="h-5 w-5" />
+            <Share2 className="size-5" />
             {t('title')}
           </DialogTitle>
           <DialogDescription>{t('description')}</DialogDescription>
@@ -196,18 +196,18 @@ export function GraphExportDialog({
             <RadioGroup
               value={format}
               onValueChange={(value) => setFormat(value as GraphExportFormat)}
-              className="grid grid-cols-1 sm:grid-cols-3 gap-2"
+              className="grid grid-cols-1 gap-2 sm:grid-cols-3"
             >
               {(['json-ld', 'rdf', 'graphml'] as GraphExportFormat[]).map((fmt) => (
                 <div key={fmt}>
                   <RadioGroupItem value={fmt} id={`format-${fmt}`} className="peer sr-only" />
                   <Label
                     htmlFor={`format-${fmt}`}
-                    className="flex flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary cursor-pointer min-h-[80px]"
+                    className="flex min-h-[80px] cursor-pointer flex-col items-center justify-between rounded-md border-2 border-muted bg-popover p-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:border-primary [&:has([data-state=checked])]:border-primary"
                   >
                     {formatIcons[fmt]}
-                    <span className="text-xs font-medium mt-1">{t(`format.${fmt}`)}</span>
-                    <span className="text-[10px] text-muted-foreground text-center mt-1">
+                    <span className="mt-1 text-xs font-medium">{t(`format.${fmt}`)}</span>
+                    <span className="mt-1 text-center text-[10px] text-muted-foreground">
                       {isRTL ? formatDescriptions[fmt].ar : formatDescriptions[fmt].en}
                     </span>
                   </Label>
@@ -246,14 +246,14 @@ export function GraphExportDialog({
             >
               <div className="flex items-center space-x-2 rtl:space-x-reverse">
                 <RadioGroupItem value="full" id="scope-full" />
-                <Label htmlFor="scope-full" className="text-sm font-normal cursor-pointer">
+                <Label htmlFor="scope-full" className="cursor-pointer text-sm font-normal">
                   {t('scope.full')}
                 </Label>
               </div>
               {startDossierId && (
                 <div className="flex items-center space-x-2 rtl:space-x-reverse">
                   <RadioGroupItem value="subgraph" id="scope-subgraph" />
-                  <Label htmlFor="scope-subgraph" className="text-sm font-normal cursor-pointer">
+                  <Label htmlFor="scope-subgraph" className="cursor-pointer text-sm font-normal">
                     {t('scope.subgraph', { name: startDossierName || startDossierId })}
                   </Label>
                 </div>
@@ -285,8 +285,8 @@ export function GraphExportDialog({
 
           {/* Language Selection */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium flex items-center gap-2">
-              <Globe className="h-4 w-4" />
+            <Label className="flex items-center gap-2 text-sm font-medium">
+              <Globe className="size-4" />
               {t('language.label')}
             </Label>
             <Select
@@ -306,8 +306,8 @@ export function GraphExportDialog({
 
           {/* Options */}
           <div className="space-y-3">
-            <Label className="text-sm font-medium flex items-center gap-2">
-              <Settings2 className="h-4 w-4" />
+            <Label className="flex items-center gap-2 text-sm font-medium">
+              <Settings2 className="size-4" />
               {t('options.label')}
             </Label>
             <div className="space-y-2">
@@ -319,9 +319,9 @@ export function GraphExportDialog({
                 />
                 <Label
                   htmlFor="include-metadata"
-                  className="text-sm font-normal cursor-pointer flex items-center gap-2"
+                  className="flex cursor-pointer items-center gap-2 text-sm font-normal"
                 >
-                  <Tag className="h-3 w-3" />
+                  <Tag className="size-3" />
                   {t('options.includeMetadata')}
                 </Label>
               </div>
@@ -333,9 +333,9 @@ export function GraphExportDialog({
                 />
                 <Label
                   htmlFor="include-temporal"
-                  className="text-sm font-normal cursor-pointer flex items-center gap-2"
+                  className="flex cursor-pointer items-center gap-2 text-sm font-normal"
                 >
-                  <Clock className="h-3 w-3" />
+                  <Clock className="size-3" />
                   {t('options.includeTemporalInfo')}
                 </Label>
               </div>
@@ -345,7 +345,7 @@ export function GraphExportDialog({
                   checked={includeInactive}
                   onCheckedChange={(checked) => setIncludeInactive(!!checked)}
                 />
-                <Label htmlFor="include-inactive" className="text-sm font-normal cursor-pointer">
+                <Label htmlFor="include-inactive" className="cursor-pointer text-sm font-normal">
                   {t('options.includeInactive')}
                 </Label>
               </div>
@@ -432,7 +432,7 @@ export function GraphExportDialog({
           )}
         </div>
 
-        <DialogFooter className="flex-col sm:flex-row gap-2">
+        <DialogFooter className="flex-col gap-2 sm:flex-row">
           <Button
             variant="outline"
             onClick={handleClose}
@@ -444,12 +444,12 @@ export function GraphExportDialog({
           <Button onClick={handleExport} disabled={isExporting} className="w-full sm:w-auto">
             {isExporting ? (
               <>
-                <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                <Loader2 className="me-2 size-4 animate-spin" />
                 {t('actions.exporting')}
               </>
             ) : (
               <>
-                <Download className="h-4 w-4 me-2" />
+                <Download className="me-2 size-4" />
                 {t('actions.export')}
               </>
             )}
