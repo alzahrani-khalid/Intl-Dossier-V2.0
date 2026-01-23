@@ -10,6 +10,17 @@
 
 Successfully added **success** (green) and **warning** (amber/yellow) variants to the toast notification system, complementing the existing **default** and **destructive** variants.
 
+### Architecture Note
+
+This application uses **react-hot-toast** as the primary toast system, NOT @radix-ui/react-toast. The `useToast()` hook is a wrapper around react-hot-toast that provides consistent variant styling:
+
+- **Success**: Uses react-hot-toast's built-in `toast.success()` (green)
+- **Destructive**: Uses react-hot-toast's built-in `toast.error()` (red)
+- **Warning**: Uses react-hot-toast's `toast()` with custom amber styling via `style` option
+- **Default**: Uses react-hot-toast's `toast()` (gray)
+
+The shadcn/ui `toast.tsx` component (which uses @radix-ui) is NOT used in this application.
+
 ### Files Modified
 
 1. **`src/hooks/use-toast.ts`**

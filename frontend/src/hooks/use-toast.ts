@@ -30,7 +30,15 @@ export function useToast() {
         toast.success(message, { duration });
         break;
       case 'warning':
-        toast(message, { duration, icon: '⚠️' });
+        toast(message, {
+          duration,
+          icon: '⚠️',
+          style: {
+            background: '#eab308', // yellow-600 (amber)
+            color: '#713f12', // yellow-950 (dark text for contrast)
+            border: '1px solid #ca8a04', // yellow-700 (border)
+          },
+        });
         break;
       default:
         toast(message, { duration });
