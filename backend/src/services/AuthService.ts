@@ -113,7 +113,7 @@ export class AuthService {
       // Get additional user data from our users table
       const { data: userData, error: userError } = await supabaseAdmin
         .from('users')
-        .select('*')
+        .select('id, email, name_en, name_ar, role, department, is_active, mfa_enabled, mfa_secret, last_login, login_count, created_at, updated_at')
         .eq('id', data.user.id)
         .single();
 
@@ -199,7 +199,7 @@ export class AuthService {
       // Get additional user data from our users table
       const { data: userData, error: userError } = await supabaseAdmin
         .from('users')
-        .select('*')
+        .select('id, email, name_en, name_ar, role, department, is_active, mfa_enabled, mfa_secret, last_login, created_at, updated_at')
         .eq('id', data.user.id)
         .single();
 
@@ -654,7 +654,7 @@ export class AuthService {
       // Get additional user data from our users table
       const { data: userData, error: userError } = await supabaseAdmin
         .from('users')
-        .select('*')
+        .select('id, email, name_en, name_ar, role, department, is_active, mfa_enabled, mfa_secret, last_login, created_at, updated_at')
         .eq('id', data.session.user.id)
         .single();
 
@@ -720,7 +720,7 @@ export class AuthService {
       // Get updated user data
       const { data: userData, error: userError } = await supabaseAdmin
         .from('users')
-        .select('*')
+        .select('id, email, name_en, name_ar, role, department, is_active, mfa_enabled, mfa_secret, last_login, created_at, updated_at')
         .eq('id', userId)
         .single();
 

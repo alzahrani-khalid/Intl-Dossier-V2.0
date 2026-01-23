@@ -178,7 +178,7 @@ export class BriefService {
 
       const { data, error } = await supabaseAdmin
         .from('briefs')
-        .select('*')
+        .select('id, type, entity_id, title_en, title_ar, content_en, content_ar, template_id, sections, key_points, recommendations, data_sources, generation_method, ai_model, ai_prompt, confidence_score, review_status, reviewed_by, reviewed_at, metadata, created_by, created_at, updated_at')
         .eq('type', type)
         .eq('entity_id', entityId)
         .order('created_at', { ascending: false });
@@ -257,6 +257,8 @@ export class BriefService {
         throw new Error(`Unknown entity type: ${type}`);
     }
 
+    // Note: Using '*' here because this fetches from multiple entity types with different schemas
+    // and is used for AI context generation where complete entity data is needed
     const { data, error } = await supabaseAdmin
       .from(table)
       .select('*')
@@ -337,7 +339,7 @@ export class BriefService {
   private async getTemplate(templateId: string): Promise<BriefTemplate> {
     const { data, error } = await supabaseAdmin
       .from('brief_templates')
-      .select('*')
+      .select('id, name, type, sections, is_active')
       .eq('id', templateId)
       .single();
 
@@ -469,7 +471,7 @@ export class BriefService {
     try {
       const { data, error } = await supabaseAdmin
         .from('briefs')
-        .select('*')
+        .select('id, type, entity_id, title_en, title_ar, content_en, content_ar, template_id, sections, key_points, recommendations, data_sources, generation_method, ai_model, ai_prompt, confidence_score, review_status, reviewed_by, reviewed_at, metadata, created_by, created_at, updated_at')
         .eq('created_by', userId)
         .order('created_at', { ascending: false });
 
@@ -488,7 +490,7 @@ export class BriefService {
     try {
       const { data, error } = await supabaseAdmin
         .from('briefs')
-        .select('*')
+        .select('id, type, entity_id, title_en, title_ar, content_en, content_ar, template_id, sections, key_points, recommendations, data_sources, generation_method, ai_model, ai_prompt, confidence_score, review_status, reviewed_by, reviewed_at, metadata, created_by, created_at, updated_at')
         .eq('id', briefId)
         .single();
 
@@ -507,7 +509,7 @@ export class BriefService {
     try {
       const { data, error } = await supabaseAdmin
         .from('brief_templates')
-        .select('*')
+        .select('id, name, type, sections, is_active')
         .eq('is_active', true)
         .order('name');
 

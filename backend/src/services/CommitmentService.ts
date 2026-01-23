@@ -33,7 +33,7 @@ export class CommitmentService {
   async getOverdueCommitments() {
     const { data, error } = await supabaseAdmin
       .from('commitments')
-      .select('*')
+      .select('id, after_action_id, dossier_id, description, priority, status, owner_type, owner_user_id, owner_contact_id, tracking_mode, due_date, completed_at, ai_confidence, created_at, updated_at')
       .eq('status', 'pending')
       .lt('due_date', new Date().toISOString())
       .order('due_date', { ascending: true });
@@ -84,7 +84,7 @@ export class CommitmentService {
   async findAll(filters?: any) {
     const { data, error } = await supabaseAdmin
       .from('commitments')
-      .select('*')
+      .select('id, after_action_id, dossier_id, description, priority, status, owner_type, owner_user_id, owner_contact_id, tracking_mode, due_date, completed_at, ai_confidence, created_at, updated_at')
       .order('created_at', { ascending: false });
 
     if (error) throw error;
