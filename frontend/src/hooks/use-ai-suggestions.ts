@@ -67,12 +67,17 @@ export function useAISuggestions(
     enabled: options.enabled !== false, // Default to enabled
     staleTime: 60 * 1000, // 1 minute (matches Redis cache TTL)
     gcTime: 5 * 60 * 1000, // 5 minutes
-    retry: (failureCount, error: any) => {
+    retry: (failureCount, error: unknown) => {
+      // Type guard for error with status property
+      const hasStatus = (err: unknown): err is { status: number } => {
+        return typeof err === 'object' && err !== null && 'status' in err
+      }
+
       // Don't retry if AI service is unavailable (503)
-      if (error.status === 503) return false
+      if (hasStatus(error) && error.status === 503) return false
 
       // Don't retry if rate limited (429)
-      if (error.status === 429) return false
+      if (hasStatus(error) && error.status === 429) return false
 
       // Retry up to 2 times for other errors
       return failureCount < 2
@@ -121,7 +126,7 @@ export function useAcceptAISuggestion(intakeId: string) {
 
       // Show success toast (handled by caller)
     },
-    onError: (_error: any) => {
+    onError: (_error: unknown) => {
       // Error handling in component (show toast)
     },
     meta: {
