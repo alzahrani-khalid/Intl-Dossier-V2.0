@@ -27,7 +27,7 @@ export class DocumentService {
           uploaded_by: userId,
           created_at: new Date().toISOString()
         })
-        .select()
+        .select('id, title, file_path, file_type, file_size, mime_type, entity_type, entity_id, uploaded_by, created_at, updated_at')
         .single();
 
       logInfo(`Document uploaded: ${file.filename}`);
@@ -44,7 +44,7 @@ export class DocumentService {
 
     const { data, error } = await supabaseAdmin
       .from('documents')
-      .select('*')
+      .select('id, title, file_path, file_type, file_size, mime_type, entity_type, entity_id, uploaded_by, created_at, updated_at')
       .eq('id', id)
       .single();
 
@@ -56,7 +56,7 @@ export class DocumentService {
   async searchDocuments(query: string, filters: any = {}) {
     const { data, error } = await supabaseAdmin
       .from('documents')
-      .select('*')
+      .select('id, title, file_path, file_type, file_size, mime_type, entity_type, entity_id, uploaded_by, created_at, updated_at')
       .textSearch('title_en', query)
       .match(filters)
       .limit(50);
@@ -69,7 +69,7 @@ export class DocumentService {
   async findAll(filters?: any) {
     const { data, error } = await supabaseAdmin
       .from('documents')
-      .select('*')
+      .select('id, title, file_path, file_type, file_size, mime_type, entity_type, entity_id, uploaded_by, created_at, updated_at')
       .order('created_at', { ascending: false });
 
     if (error) throw error;

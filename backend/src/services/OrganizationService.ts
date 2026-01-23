@@ -55,6 +55,8 @@ interface OrganizationStats {
   total_contacts: number
 }
 
+const ORGANIZATION_COLUMNS = 'id, org_code, org_type, headquarters_country_id, parent_org_id, website, email, phone, address_en, address_ar, logo_url, established_date';
+
 export class OrganizationService {
   private readonly cachePrefix = 'org:'
   private readonly cacheTTL = CACHE_TTL.organization // 5 minutes (from centralized config)
@@ -90,7 +92,7 @@ export class OrganizationService {
       }
 
       // Build query
-      let queryBuilder = supabaseAdmin.from('organizations').select('*', { count: 'exact' })
+      let queryBuilder = supabaseAdmin.from('organizations').select(ORGANIZATION_COLUMNS, { count: 'exact' })
 
       // Apply filters
       if (query) {
@@ -165,7 +167,7 @@ export class OrganizationService {
 
       const { data, error } = await supabaseAdmin
         .from('organizations')
-        .select('*')
+        .select(ORGANIZATION_COLUMNS)
         .eq('id', id)
         .single()
 
@@ -200,17 +202,17 @@ export class OrganizationService {
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString(),
         })
-        .select()
+        .select(ORGANIZATION_COLUMNS)
         .single()
 
       if (error) {
         throw error
       }
 
-      // Clear cache
-      await this.clearOrganizationCache()
+      // Invalidate cache
+      await cacheHelpers.del(`${this.cachePrefix}list:*`)
 
-      logInfo(`Created organization: ${data.name_en}`)
+      logInfo('Organization created', { organizationId: data.id })
       return data
     } catch (error) {
       logError('Error creating organization', error as Error)
@@ -230,18 +232,18 @@ export class OrganizationService {
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
-        .select()
+        .select(ORGANIZATION_COLUMNS)
         .single()
 
       if (error) {
         throw error
       }
 
-      // Clear cache
+      // Invalidate cache
       await cacheHelpers.del(`${this.cachePrefix}${id}`)
-      await this.clearOrganizationCache()
+      await cacheHelpers.del(`${this.cachePrefix}list:*`)
 
-      logInfo(`Updated organization: ${data.name_en}`)
+      logInfo('Organization updated', { organizationId: id })
       return data
     } catch (error) {
       logError(`Error updating organization ${id}`, error as Error)
@@ -260,11 +262,11 @@ export class OrganizationService {
         throw error
       }
 
-      // Clear cache
+      // Invalidate cache
       await cacheHelpers.del(`${this.cachePrefix}${id}`)
-      await this.clearOrganizationCache()
+      await cacheHelpers.del(`${this.cachePrefix}list:*`)
 
-      logInfo(`Deleted organization: ${id}`)
+      logInfo('Organization deleted', { organizationId: id })
       return true
     } catch (error) {
       logError(`Error deleting organization ${id}`, error as Error)
@@ -273,231 +275,82 @@ export class OrganizationService {
   }
 
   /**
-   * Get organization hierarchy (parent and children)
-   */
-  async getOrganizationHierarchy(id: string): Promise<{
-    organization: Organization
-    parent?: Organization
-    children: Organization[]
-  }> {
-    try {
-      const cacheKey = `${this.cachePrefix}hierarchy:${id}`
-      const cached = await cacheHelpers.get(cacheKey)
-      if (cached) {
-        return cached as any
-      }
-
-      // Get organization
-      const organization = await this.getOrganizationById(id)
-      if (!organization) {
-        throw new Error('Organization not found')
-      }
-
-      // Get parent if exists
-      let parent: Organization | undefined
-      if (organization.parent_organization_id) {
-        const parentResult = await this.getOrganizationById(organization.parent_organization_id)
-        if (parentResult) {
-          parent = parentResult
-        }
-      }
-
-      // Get children
-      const { data: children } = await supabaseAdmin
-        .from('organizations')
-        .select('*')
-        .eq('parent_organization_id', id)
-        .eq('is_active', true)
-        .order('name_en')
-
-      const result = {
-        organization,
-        parent,
-        children: children || [],
-      }
-
-      // Cache result
-      await cacheHelpers.set(cacheKey, result, this.cacheTTL)
-
-      return result
-    } catch (error) {
-      logError(`Error fetching hierarchy for organization ${id}`, error as Error)
-      throw error
-    }
-  }
-
-  /**
-   * Get organization members (countries)
-   */
-  async getOrganizationMembers(id: string): Promise<any[]> {
-    try {
-      const cacheKey = `${this.cachePrefix}members:${id}`
-      const cached = await cacheHelpers.get(cacheKey)
-      if (cached) {
-        return cached as any[]
-      }
-
-      // Get organization
-      const organization = await this.getOrganizationById(id)
-      if (!organization || !organization.member_countries) {
-        return []
-      }
-
-      // Get member countries
-      const { data, error } = await supabaseAdmin
-        .from('countries')
-        .select('id, code, name_en, name_ar, flag_url')
-        .in('id', organization.member_countries)
-
-      if (error) {
-        throw error
-      }
-
-      // Cache result
-      if (data) {
-        await cacheHelpers.set(cacheKey, data, this.cacheTTL)
-      }
-
-      return data || []
-    } catch (error) {
-      logError(`Error fetching members for organization ${id}`, error as Error)
-      throw error
-    }
-  }
-
-  /**
-   * Add member country to organization
-   */
-  async addMemberCountry(organizationId: string, countryId: string): Promise<boolean> {
-    try {
-      // Get current members
-      const organization = await this.getOrganizationById(organizationId)
-      if (!organization) {
-        throw new Error('Organization not found')
-      }
-
-      const currentMembers = organization.member_countries || []
-      if (currentMembers.includes(countryId)) {
-        return true // Already a member
-      }
-
-      // Update members
-      const updatedMembers = [...currentMembers, countryId]
-      await this.updateOrganization(organizationId, {
-        member_countries: updatedMembers,
-      })
-
-      // Clear cache
-      await cacheHelpers.del(`${this.cachePrefix}members:${organizationId}`)
-
-      logInfo(`Added country ${countryId} to organization ${organizationId}`)
-      return true
-    } catch (error) {
-      logError('Error adding member country', error as Error)
-      throw error
-    }
-  }
-
-  /**
-   * Remove member country from organization
-   */
-  async removeMemberCountry(organizationId: string, countryId: string): Promise<boolean> {
-    try {
-      // Get current members
-      const organization = await this.getOrganizationById(organizationId)
-      if (!organization) {
-        throw new Error('Organization not found')
-      }
-
-      const currentMembers = organization.member_countries || []
-      const updatedMembers = currentMembers.filter((id) => id !== countryId)
-
-      if (currentMembers.length === updatedMembers.length) {
-        return true // Country was not a member
-      }
-
-      // Update members
-      await this.updateOrganization(organizationId, {
-        member_countries: updatedMembers,
-      })
-
-      // Clear cache
-      await cacheHelpers.del(`${this.cachePrefix}members:${organizationId}`)
-
-      logInfo(`Removed country ${countryId} from organization ${organizationId}`)
-      return true
-    } catch (error) {
-      logError('Error removing member country', error as Error)
-      throw error
-    }
-  }
-
-  /**
    * Get organization statistics
    */
-  async getOrganizationStatistics(organizationId: string): Promise<OrganizationStats> {
+  async getOrganizationStats(id: string): Promise<OrganizationStats> {
     try {
-      const cacheKey = `${this.cachePrefix}stats:${organizationId}`
+      // Check cache
+      const cacheKey = `${this.cachePrefix}stats:${id}`
       const cached = await cacheHelpers.get<OrganizationStats>(cacheKey)
       if (cached) {
         return cached
       }
 
-      // Get organization
-      const organization = await this.getOrganizationById(organizationId)
-      if (!organization) {
-        throw new Error('Organization not found')
-      }
-
-      // Fetch statistics
-      const [mous, events, documents, contacts] = await Promise.all([
+      // Fetch all stats in parallel
+      const [membersResult, mousResult, activeMousResult, eventsResult, upcomingEventsResult, documentsResult, contactsResult] = await Promise.all([
+        supabaseAdmin
+          .from('organization_members')
+          .select('id', { count: 'exact', head: true })
+          .eq('organization_id', id),
         supabaseAdmin
           .from('mous')
-          .select('id, status')
-          .contains('parties', [{ organization_id: organizationId }]),
-
-        supabaseAdmin.from('events').select('id, start_date').eq('organization_id', organizationId),
-
-        supabaseAdmin.from('documents').select('id').eq('organization_id', organizationId),
-
-        supabaseAdmin.from('contacts').select('id').eq('organization_id', organizationId),
+          .select('id', { count: 'exact', head: true })
+          .or(`primary_party_id.eq.${id},secondary_party_id.eq.${id}`),
+        supabaseAdmin
+          .from('mous')
+          .select('id', { count: 'exact', head: true })
+          .or(`primary_party_id.eq.${id},secondary_party_id.eq.${id}`)
+          .eq('workflow_state', 'active'),
+        supabaseAdmin
+          .from('events')
+          .select('id', { count: 'exact', head: true })
+          .eq('organizer_id', id),
+        supabaseAdmin
+          .from('events')
+          .select('id', { count: 'exact', head: true })
+          .eq('organizer_id', id)
+          .gte('start_datetime', new Date().toISOString()),
+        supabaseAdmin
+          .from('documents')
+          .select('id', { count: 'exact', head: true })
+          .eq('entity_type', 'organization')
+          .eq('entity_id', id),
+        supabaseAdmin
+          .from('contacts')
+          .select('id', { count: 'exact', head: true })
+          .eq('organization_id', id),
       ])
 
-      const now = new Date()
       const stats: OrganizationStats = {
-        total_members: organization.member_countries?.length || 0,
-        total_mous: mous.data?.length || 0,
-        active_mous: mous.data?.filter((m) => m.status === 'active').length || 0,
-        total_events: events.data?.length || 0,
-        upcoming_events: events.data?.filter((e) => new Date(e.start_date) > now).length || 0,
-        total_documents: documents.data?.length || 0,
-        total_contacts: contacts.data?.length || 0,
+        total_members: membersResult.count || 0,
+        total_mous: mousResult.count || 0,
+        active_mous: activeMousResult.count || 0,
+        total_events: eventsResult.count || 0,
+        upcoming_events: upcomingEventsResult.count || 0,
+        total_documents: documentsResult.count || 0,
+        total_contacts: contactsResult.count || 0,
       }
 
       // Cache result
-      await cacheHelpers.set(cacheKey, stats, 1800) // 30 minutes
+      await cacheHelpers.set(cacheKey, stats, this.cacheTTL)
 
       return stats
     } catch (error) {
-      logError(`Error fetching statistics for organization ${organizationId}`, error as Error)
+      logError(`Error fetching stats for organization ${id}`, error as Error)
       throw error
     }
   }
 
   /**
-   * Search organizations
+   * Get members of organization
    */
-  async searchOrganizations(searchTerm: string, limit: number = 10): Promise<Organization[]> {
+  async getMembers(organizationId: string): Promise<any[]> {
     try {
       const { data, error } = await supabaseAdmin
-        .from('organizations')
-        .select('*')
-        .or(
-          `name_en.ilike.%${searchTerm}%,name_ar.ilike.%${searchTerm}%,` +
-            `abbreviation.ilike.%${searchTerm}%,description_en.ilike.%${searchTerm}%`,
-        )
-        .eq('is_active', true)
-        .limit(limit)
+        .from('organization_members')
+        .select('id, user_id, role, joined_date, left_date, is_active')
+        .eq('organization_id', organizationId)
+        .order('joined_date', { ascending: false })
 
       if (error) {
         throw error
@@ -505,70 +358,93 @@ export class OrganizationService {
 
       return data || []
     } catch (error) {
-      logError('Error searching organizations', error as Error)
+      logError(`Error fetching members for organization ${organizationId}`, error as Error)
       throw error
     }
   }
 
   /**
-   * Get organizations by type
+   * Add member to organization
    */
-  async getOrganizationsByType(type: Organization['type']): Promise<Organization[]> {
+  async addMember(organizationId: string, memberData: any): Promise<any> {
     try {
-      const cacheKey = `${this.cachePrefix}type:${type}`
-      const cached = await cacheHelpers.get<Organization[]>(cacheKey)
-      if (cached) {
-        return cached
-      }
-
       const { data, error } = await supabaseAdmin
-        .from('organizations')
-        .select('*')
-        .eq('type', type)
-        .eq('is_active', true)
-        .order('name_en')
+        .from('organization_members')
+        .insert({
+          organization_id: organizationId,
+          ...memberData,
+          joined_date: new Date().toISOString(),
+        })
+        .select('id, user_id, role, joined_date, left_date, is_active')
+        .single()
 
       if (error) {
         throw error
       }
 
-      if (data) {
-        await cacheHelpers.set(cacheKey, data, this.cacheTTL)
-      }
+      // Invalidate stats cache
+      await cacheHelpers.del(`${this.cachePrefix}stats:${organizationId}`)
 
-      return data || []
+      logInfo('Member added to organization', { organizationId, memberId: data.id })
+      return data
     } catch (error) {
-      logError(`Error fetching organizations by type ${type}`, error as Error)
+      logError('Error adding member to organization', error as Error)
       throw error
     }
   }
 
   /**
-   * Clear organization cache
+   * Remove member from organization
    */
-  private async clearOrganizationCache(): Promise<void> {
-    await cacheHelpers.clearPattern(`${this.cachePrefix}list:*`)
+  async removeMember(organizationId: string, memberId: string): Promise<boolean> {
+    try {
+      const { error } = await supabaseAdmin
+        .from('organization_members')
+        .update({
+          left_date: new Date().toISOString(),
+          is_active: false,
+        })
+        .eq('organization_id', organizationId)
+        .eq('id', memberId)
+
+      if (error) {
+        throw error
+      }
+
+      // Invalidate stats cache
+      await cacheHelpers.del(`${this.cachePrefix}stats:${organizationId}`)
+
+      logInfo('Member removed from organization', { organizationId, memberId })
+      return true
+    } catch (error) {
+      logError('Error removing member from organization', error as Error)
+      throw error
+    }
   }
 
-  // Missing methods for API endpoints
-  async findAll(filters?: any) {
-    return this.searchOrganizations(filters || {})
+  // Methods for API compatibility
+  async findAll(params?: OrganizationSearchParams) {
+    return this.getOrganizations(params)
   }
 
   async findById(id: string) {
     return this.getOrganizationById(id)
   }
 
-  async create(organization: any) {
+  async create(organization: Partial<Organization>) {
     return this.createOrganization(organization)
   }
 
-  async update(id: string, updates: any) {
+  async update(id: string, updates: Partial<Organization>) {
     return this.updateOrganization(id, updates)
   }
 
   async delete(id: string) {
     return this.deleteOrganization(id)
+  }
+
+  async getStatistics(id: string) {
+    return this.getOrganizationStats(id)
   }
 }
 

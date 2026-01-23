@@ -60,6 +60,8 @@ export interface EventSearchParams {
   order?: 'asc' | 'desc';
 }
 
+const EVENT_COLUMNS = 'id, title_en, title_ar, description_en, description_ar, type, start_datetime, end_datetime, timezone, location_en, location_ar, venue_en, venue_ar, is_virtual, virtual_link, country_id, organizer_id, max_participants, registration_required, registration_deadline, status, created_by, created_at, updated_at';
+
 export class EventService {
   private readonly cachePrefix = 'event:';
   private readonly cacheTTL = 1800; // 30 minutes
@@ -75,7 +77,7 @@ export class EventService {
 
       let query = supabaseAdmin
         .from('event_details')
-        .select('*');
+        .select(EVENT_COLUMNS);
 
       // Apply filters
       if (params.type) {
@@ -139,7 +141,7 @@ export class EventService {
 
       const { data, error } = await supabaseAdmin
         .from('event_details')
-        .select('*')
+        .select(EVENT_COLUMNS)
         .eq('id', id)
         .single();
 
@@ -179,7 +181,7 @@ export class EventService {
           virtual_link: eventData.virtual_link || null,
           created_by: createdBy
         })
-        .select('*')
+        .select(EVENT_COLUMNS)
         .single();
 
       if (error) throw error;
@@ -200,34 +202,18 @@ export class EventService {
    */
   async update(id: string, updates: UpdateEventDto, updatedBy: string): Promise<Event> {
     try {
-      const title = (updates as any).title_en ?? (updates as any).title;
-      const start = (updates as any).start_datetime ?? (updates as any).start_date;
-      const end = (updates as any).end_datetime ?? (updates as any).end_date;
-      const location = (updates as any).venue_en || (updates as any).location_en || (updates as any).location;
-
       const { data, error } = await supabaseAdmin
         .from('events')
-        .update({
-          title,
-          description: null,
-          type: updates.type,
-          start_time: start,
-          end_time: end,
-          location,
-          virtual_link: updates.virtual_link || null,
-          updated_at: new Date().toISOString()
-        })
+        .update(updates)
         .eq('id', id)
-        .select('*')
+        .select(EVENT_COLUMNS)
         .single();
 
       if (error) throw error;
 
       // Invalidate cache
-      await cacheHelpers.del([
-        `${this.cachePrefix}${id}`,
-        `${this.cachePrefix}list:*`
-      ]);
+      await cacheHelpers.del(`${this.cachePrefix}${id}`);
+      await cacheHelpers.del(`${this.cachePrefix}list:*`);
 
       logInfo('Event updated', { eventId: id, updatedBy });
       return data;
@@ -250,10 +236,8 @@ export class EventService {
       if (error) throw error;
 
       // Invalidate cache
-      await cacheHelpers.del([
-        `${this.cachePrefix}${id}`,
-        `${this.cachePrefix}list:*`
-      ]);
+      await cacheHelpers.del(`${this.cachePrefix}${id}`);
+      await cacheHelpers.del(`${this.cachePrefix}list:*`);
 
       logInfo('Event deleted', { eventId: id, deletedBy });
       return true;
@@ -264,113 +248,24 @@ export class EventService {
   }
 
   /**
-   * Add attendee to event
+   * Get events for calendar view
    */
-  async addAttendee(
-    eventId: string,
-    attendee: {
-      type: 'country' | 'organization' | 'contact';
-      id: string;
-      role: 'host' | 'participant' | 'observer' | 'speaker';
-      confirmed?: boolean;
-    },
-    addedBy: string
-  ): Promise<Event> {
+  async getCalendarEvents(startDate: string, endDate: string): Promise<CalendarEvent[]> {
     try {
+      const cacheKey = `${this.cachePrefix}calendar:${startDate}:${endDate}`;
+      const cached = await cacheHelpers.get<CalendarEvent[]>(cacheKey);
+      if (cached) return cached;
+
       const { data, error } = await supabaseAdmin
-        .from('event_attendees')
-        .insert({
-          event_id: eventId,
-          type: attendee.type,
-          entity_id: attendee.id,
-          role: attendee.role,
-          confirmed: attendee.confirmed || false,
-          added_by: addedBy,
-          created_at: new Date().toISOString()
-        })
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      // Invalidate cache
-      await cacheHelpers.del([
-        `${this.cachePrefix}${eventId}`,
-        `${this.cachePrefix}list:*`
-      ]);
-
-      // Return updated event
-      const updatedEvent = await this.findById(eventId);
-      if (!updatedEvent) throw new Error('Event not found after adding attendee');
-
-      logInfo('Attendee added to event', { eventId, attendee, addedBy });
-      return updatedEvent;
-    } catch (error) {
-      logError('EventService.addAttendee error', error as Error);
-      throw error;
-    }
-  }
-
-  /**
-   * Remove attendee from event
-   */
-  async removeAttendee(
-    eventId: string,
-    attendeeId: string,
-    removedBy: string
-  ): Promise<Event> {
-    try {
-      const { error } = await supabaseAdmin
-        .from('event_attendees')
-        .delete()
-        .eq('event_id', eventId)
-        .eq('entity_id', attendeeId);
-
-      if (error) throw error;
-
-      // Invalidate cache
-      await cacheHelpers.del([
-        `${this.cachePrefix}${eventId}`,
-        `${this.cachePrefix}list:*`
-      ]);
-
-      // Return updated event
-      const updatedEvent = await this.findById(eventId);
-      if (!updatedEvent) throw new Error('Event not found after removing attendee');
-
-      logInfo('Attendee removed from event', { eventId, attendeeId, removedBy });
-      return updatedEvent;
-    } catch (error) {
-      logError('EventService.removeAttendee error', error as Error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get events in calendar format
-   */
-  async getCalendarEvents(
-    startDate: string,
-    endDate: string,
-    userId?: string
-  ): Promise<CalendarEvent[]> {
-    try {
-      let query = supabaseAdmin
         .from('event_details')
-        .select('*')
+        .select('id, title_en, title_ar, start_datetime, end_datetime, type, venue_en, venue_ar, is_virtual')
         .gte('start_datetime', startDate)
-        .lte('end_datetime', endDate);
-
-      if (userId) {
-        query = query.or(`
-          created_by.eq.${userId},
-          attendees.entity_id.eq.${userId}
-        `);
-      }
-
-      const { data, error } = await query.order('start_datetime', { ascending: true });
+        .lte('start_datetime', endDate)
+        .order('start_datetime');
 
       if (error) throw error;
+
+      await cacheHelpers.set(cacheKey, data || [], this.cacheTTL);
       return data || [];
     } catch (error) {
       logError('EventService.getCalendarEvents error', error as Error);
@@ -379,128 +274,23 @@ export class EventService {
   }
 
   /**
-   * Get upcoming events
-   */
-  async getUpcomingEvents(limit: number = 10): Promise<Event[]> {
-    try {
-      const { data, error } = await supabaseAdmin
-        .from('event_details')
-        .select('*')
-        .gte('start_datetime', new Date().toISOString())
-        .order('start_datetime', { ascending: true })
-        .limit(limit);
-
-      if (error) throw error;
-      return data || [];
-    } catch (error) {
-      logError('EventService.getUpcomingEvents error', error as Error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get events by country
-   */
-  async findByCountry(countryId: string): Promise<Event[]> {
-    try {
-      const { data, error } = await supabaseAdmin
-        .from('event_details')
-        .select('*')
-        .eq('country_id', countryId)
-        .order('start_datetime', { ascending: false });
-
-      if (error) throw error;
-      return data || [];
-    } catch (error) {
-      logError('EventService.findByCountry error', error as Error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get events by organization
-   */
-  async findByOrganization(organizationId: string): Promise<Event[]> {
-    try {
-      const { data, error } = await supabaseAdmin
-        .from('event_details')
-        .select('*')
-        .eq('organizer_id', organizationId)
-        .order('start_datetime', { ascending: false });
-
-      if (error) throw error;
-      return data || [];
-    } catch (error) {
-      logError('EventService.findByOrganization error', error as Error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get event statistics
-   */
-  async getStatistics(): Promise<{
-    total: number;
-    upcoming: number;
-    past: number;
-    by_type: Record<string, number>;
-    by_visibility: Record<string, number>;
-    total_attendees: number;
-  }> {
-    try {
-      const { data, error } = await supabaseAdmin
-        .from('event_details')
-        .select('id, type, status, start_datetime, end_datetime');
-
-      if (error) throw error;
-
-      const events = (data || []) as any[];
-      const now = new Date().toISOString();
-      const upcoming = events.filter(e => e.start_datetime >= now).length;
-      const past = events.filter(e => e.end_datetime < now).length;
-
-      const byType: Record<string, number> = {};
-      const byVisibility: Record<string, number> = {};
-
-      events.forEach((event: any) => {
-        byType[event.type] = (byType[event.type] || 0) + 1;
-        byVisibility[event.status] = (byVisibility[event.status] || 0) + 1;
-      });
-
-      // Get total attendees count
-      const attendeesCount = 0;
-
-      return {
-        total: events.length,
-        upcoming,
-        past,
-        by_type: byType,
-        by_visibility: byVisibility,
-        total_attendees: attendeesCount || 0
-      };
-    } catch (error) {
-      logError('EventService.getStatistics error', error as Error);
-      throw error;
-    }
-  }
-
-  /**
    * Check for event conflicts
    */
   async checkConflicts(
-    startDate: string,
-    endDate: string,
+    venueEn: string,
+    venueAr: string,
+    startDatetime: string,
+    endDatetime: string,
     excludeEventId?: string
   ): Promise<Event[]> {
     try {
       let query = supabaseAdmin
-        .from('events')
-        .select('*')
-        .or(`
-          and(start_time.lte.${startDate},end_time.gte.${startDate}),
-          and(start_time.lte.${endDate},end_time.gte.${endDate}),
-          and(start_time.gte.${startDate},end_time.lte.${endDate})
-        `);
+        .from('event_details')
+        .select(EVENT_COLUMNS)
+        .in('status', ['scheduled', 'ongoing'])
+        .or(`venue_en.eq.${venueEn},venue_ar.eq.${venueAr}`)
+        .gte('end_datetime', startDatetime)
+        .lte('start_datetime', endDatetime);
 
       if (excludeEventId) {
         query = query.neq('id', excludeEventId);
@@ -512,6 +302,107 @@ export class EventService {
       return data || [];
     } catch (error) {
       logError('EventService.checkConflicts error', error as Error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get upcoming events
+   */
+  async getUpcoming(limit: number = 10): Promise<Event[]> {
+    try {
+      const cacheKey = `${this.cachePrefix}upcoming:${limit}`;
+      const cached = await cacheHelpers.get<Event[]>(cacheKey);
+      if (cached) return cached;
+
+      const { data, error } = await supabaseAdmin
+        .from('event_details')
+        .select(EVENT_COLUMNS)
+        .gte('start_datetime', new Date().toISOString())
+        .in('status', ['scheduled', 'draft'])
+        .order('start_datetime')
+        .limit(limit);
+
+      if (error) throw error;
+
+      await cacheHelpers.set(cacheKey, data || [], 300); // 5 minutes cache
+      return data || [];
+    } catch (error) {
+      logError('EventService.getUpcoming error', error as Error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get event statistics
+   */
+  async getStatistics(): Promise<{
+    total: number;
+    upcoming: number;
+    ongoing: number;
+    completed: number;
+  }> {
+    try {
+      const cacheKey = `${this.cachePrefix}statistics`;
+      const cached = await cacheHelpers.get(cacheKey);
+      if (cached) return cached;
+
+      const now = new Date().toISOString();
+
+      const [totalResult, upcomingResult, ongoingResult, completedResult] = await Promise.all([
+        supabaseAdmin.from('events').select('id', { count: 'exact', head: true }),
+        supabaseAdmin
+          .from('events')
+          .select('id', { count: 'exact', head: true })
+          .gte('start_datetime', now)
+          .eq('status', 'scheduled'),
+        supabaseAdmin
+          .from('events')
+          .select('id', { count: 'exact', head: true })
+          .eq('status', 'ongoing'),
+        supabaseAdmin
+          .from('events')
+          .select('id', { count: 'exact', head: true })
+          .eq('status', 'completed')
+      ]);
+
+      const stats = {
+        total: totalResult.count || 0,
+        upcoming: upcomingResult.count || 0,
+        ongoing: ongoingResult.count || 0,
+        completed: completedResult.count || 0
+      };
+
+      await cacheHelpers.set(cacheKey, stats, 300); // 5 minutes cache
+      return stats;
+    } catch (error) {
+      logError('EventService.getStatistics error', error as Error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get events by entity
+   */
+  async getByEntity(entityType: string, entityId: string): Promise<Event[]> {
+    try {
+      const cacheKey = `${this.cachePrefix}entity:${entityType}:${entityId}`;
+      const cached = await cacheHelpers.get<Event[]>(cacheKey);
+      if (cached) return cached;
+
+      // This assumes there's a linking table or a field that relates events to entities
+      const { data, error } = await supabaseAdmin
+        .from('event_details')
+        .select(EVENT_COLUMNS)
+        .eq(`${entityType}_id`, entityId)
+        .order('start_datetime', { ascending: false });
+
+      if (error) throw error;
+
+      await cacheHelpers.set(cacheKey, data || [], this.cacheTTL);
+      return data || [];
+    } catch (error) {
+      logError('EventService.getByEntity error', error as Error);
       throw error;
     }
   }

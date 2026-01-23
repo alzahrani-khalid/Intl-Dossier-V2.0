@@ -10,7 +10,7 @@ export class CountryService {
 
       const { data, error, count } = await supabaseAdmin
         .from('countries')
-        .select('*', { count: 'exact' })
+        .select('id, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion, population, area_sq_km, flag_url', { count: 'exact' })
         .range(offset, offset + limit - 1)
         .order('name_en');
 
@@ -32,7 +32,7 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('countries')
-        .select('*')
+        .select('id, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion, population, area_sq_km, flag_url')
         .eq('id', id)
         .single();
 
@@ -49,7 +49,7 @@ export class CountryService {
       const { data, error } = await supabaseAdmin
         .from('countries')
         .insert(countryData)
-        .select()
+        .select('id, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion, population, area_sq_km, flag_url')
         .single();
 
       if (error) throw error;
@@ -66,7 +66,7 @@ export class CountryService {
         .from('countries')
         .update(updates)
         .eq('id', id)
-        .select()
+        .select('id, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion, population, area_sq_km, flag_url')
         .single();
 
       if (error) throw error;
@@ -117,7 +117,7 @@ export class CountryService {
     try {
       const { count } = await supabaseAdmin
         .from('countries')
-        .select('*', { count: 'exact', head: true });
+        .select('id', { count: 'exact', head: true });
 
       return { total_countries: count || 0 };
     } catch (error) {
@@ -131,7 +131,7 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('country_relationships')
-        .select('*')
+        .select('id, country_id, related_country_id, relationship_type, status, description, created_at, updated_at')
         .eq('country_id', countryId);
 
       if (error) throw error;
@@ -149,7 +149,7 @@ export class CountryService {
         .update({ status })
         .eq('country_id', countryId)
         .eq('id', relationshipId)
-        .select()
+        .select('id, country_id, related_country_id, relationship_type, status, description, created_at, updated_at')
         .single();
 
       if (error) throw error;
@@ -164,7 +164,7 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('mous')
-        .select('*')
+        .select('id, reference_number, title_en, title_ar, description_en, description_ar, workflow_state, primary_party_id, secondary_party_id, document_url, document_version, signing_date, effective_date, expiry_date, auto_renewal, renewal_period_months, owner_id, created_at, updated_at')
         .contains('parties', [{ country_id: countryId }]);
 
       if (error) throw error;
@@ -179,7 +179,7 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('events')
-        .select('*')
+        .select('id, title_en, title_ar, description_en, description_ar, type, start_datetime, end_datetime, timezone, location_en, location_ar, venue_en, venue_ar, is_virtual, virtual_link, country_id, organizer_id, max_participants, registration_required, registration_deadline, status, created_by, created_at, updated_at')
         .eq('country_id', countryId)
         .order('start_date', { ascending: false });
 
@@ -195,7 +195,7 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('contacts')
-        .select('*')
+        .select('id, name, email, phone, position, organization, country_id, created_at, updated_at')
         .eq('country_id', countryId);
 
       if (error) throw error;
@@ -206,74 +206,51 @@ export class CountryService {
     }
   }
 
-  async getTimeline(countryId: string) {
+  async getDocuments(countryId: string) {
     try {
       const { data, error } = await supabaseAdmin
-        .from('timeline_events')
-        .select('*')
-        .eq('country_id', countryId)
-        .order('event_date', { ascending: false });
+        .from('documents')
+        .select('id, title, file_path, file_type, file_size, entity_type, entity_id, uploaded_by, created_at, updated_at')
+        .eq('entity_type', 'country')
+        .eq('entity_id', countryId)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
       return data || [];
     } catch (error) {
-      logError(`Failed to get timeline for country ${countryId}`, error as Error);
+      logError(`Failed to get documents for country ${countryId}`, error as Error);
       throw error;
     }
   }
 
-  async addTags(countryId: string, tags: string[]) {
+  async getPositions(countryId: string) {
     try {
-      const { data: country, error: fetchError } = await supabaseAdmin
-        .from('countries')
-        .select('tags')
-        .eq('id', countryId)
-        .single();
-
-      if (fetchError) throw fetchError;
-
-      const existingTags = country?.tags || [];
-      const newTags = [...new Set([...existingTags, ...tags])];
-
       const { data, error } = await supabaseAdmin
-        .from('countries')
-        .update({ tags: newTags })
-        .eq('id', countryId)
-        .select()
-        .single();
+        .from('positions')
+        .select('id, title, description, status, country_id, created_at, updated_at')
+        .eq('country_id', countryId)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data || [];
     } catch (error) {
-      logError(`Failed to add tags to country ${countryId}`, error as Error);
+      logError(`Failed to get positions for country ${countryId}`, error as Error);
       throw error;
     }
   }
 
-  async removeTags(countryId: string, tagsToRemove: string[]) {
+  async getIntelligence(countryId: string) {
     try {
-      const { data: country, error: fetchError } = await supabaseAdmin
-        .from('countries')
-        .select('tags')
-        .eq('id', countryId)
-        .single();
-
-      if (fetchError) throw fetchError;
-
-      const existingTags = country?.tags || [];
-      const newTags = existingTags.filter((tag: string) => !tagsToRemove.includes(tag));
-
       const { data, error } = await supabaseAdmin
-        .from('countries')
-        .update({ tags: newTags })
-        .eq('id', countryId)
-        .select()
-        .single();
+        .from('intelligence')
+        .select('id, title, content, source, country_id, created_at, updated_at')
+        .eq('country_id', countryId)
+        .order('created_at', { ascending: false });
 
       if (error) throw error;
-      return data;
+      return data || [];
     } catch (error) {
-      logError(`Failed to remove tags from country ${countryId}`, error as Error);
+      logError(`Failed to get intelligence for country ${countryId}`, error as Error);
       throw error;
     }
   }

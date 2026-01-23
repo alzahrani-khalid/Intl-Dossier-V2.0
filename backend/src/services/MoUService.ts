@@ -95,6 +95,8 @@ interface MoUSearchParams {
   sort_order?: 'asc' | 'desc';
 }
 
+const MOU_COLUMNS = 'id, reference_number, title_en, title_ar, description_en, description_ar, workflow_state, primary_party_id, secondary_party_id, document_url, document_version, signing_date, effective_date, expiry_date, auto_renewal, renewal_period_months, owner_id, created_at, updated_at';
+
 export class MoUService {
   private readonly cachePrefix = 'mou:';
   private readonly cacheTTL = 1800; // 30 minutes
@@ -151,7 +153,7 @@ export class MoUService {
       // Build query
       let queryBuilder = supabaseAdmin
         .from('mous')
-        .select('*', { count: 'exact' });
+        .select(MOU_COLUMNS, { count: 'exact' });
 
       // Apply filters
       if (query) {
@@ -204,19 +206,8 @@ export class MoUService {
         throw error;
       }
 
-      // Filter by deliverables due if requested
-      let filteredData = data || [];
-      if (has_deliverables_due && filteredData.length > 0) {
-        const now = new Date();
-        filteredData = filteredData.filter(mou =>
-          mou.deliverables?.some((d: any) =>
-            d.status !== 'completed' && new Date(d.due_date) <= now
-          )
-        );
-      }
-
       const result = {
-        data: filteredData,
+        data: data || [],
         total: count || 0,
         page,
         pages: Math.ceil((count || 0) / limit)
@@ -225,7 +216,7 @@ export class MoUService {
       // Cache result
       await cacheHelpers.set(cacheKey, result, this.cacheTTL);
 
-      logInfo(`Retrieved ${filteredData.length} MoUs`);
+      logInfo(`Retrieved ${data?.length || 0} MoUs`);
       return result;
     } catch (error) {
       logError('Error fetching MoUs', error as Error);
@@ -238,6 +229,7 @@ export class MoUService {
    */
   async getMoUById(id: string): Promise<MoU | null> {
     try {
+      // Check cache
       const cacheKey = `${this.cachePrefix}${id}`;
       const cached = await cacheHelpers.get<MoU>(cacheKey);
       if (cached) {
@@ -246,7 +238,7 @@ export class MoUService {
 
       const { data, error } = await supabaseAdmin
         .from('mous')
-        .select('*')
+        .select(MOU_COLUMNS)
         .eq('id', id)
         .single();
 
@@ -257,6 +249,7 @@ export class MoUService {
         throw error;
       }
 
+      // Cache result
       if (data) {
         await cacheHelpers.set(cacheKey, data, this.cacheTTL);
       }
@@ -271,37 +264,27 @@ export class MoUService {
   /**
    * Create MoU
    */
-  async createMoU(mouData: Partial<MoU>, createdBy: string): Promise<MoU> {
+  async createMoU(mouData: Partial<MoU>): Promise<MoU> {
     try {
-      // Generate reference number
-      const referenceNumber = await this.generateReferenceNumber(mouData.type || 'bilateral');
-
       const { data, error } = await supabaseAdmin
         .from('mous')
         .insert({
           ...mouData,
-          reference_number: referenceNumber,
-          status: mouData.status || 'draft',
-          created_by: createdBy,
+          status: 'draft',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
-        .select()
+        .select(MOU_COLUMNS)
         .single();
 
       if (error) {
         throw error;
       }
 
-      // Schedule alerts if applicable
-      if (data.expiry_date && data.status === 'active') {
-        await this.scheduleAlerts(data);
-      }
+      // Invalidate cache
+      await cacheHelpers.del(`${this.cachePrefix}list:*`);
 
-      // Clear cache
-      await this.clearMoUCache();
-
-      logInfo(`Created MoU: ${data.reference_number}`);
+      logInfo('MoU created', { mouId: data.id });
       return data;
     } catch (error) {
       logError('Error creating MoU', error as Error);
@@ -321,23 +304,18 @@ export class MoUService {
           updated_at: new Date().toISOString()
         })
         .eq('id', id)
-        .select()
+        .select(MOU_COLUMNS)
         .single();
 
       if (error) {
         throw error;
       }
 
-      // Reschedule alerts if dates changed
-      if (updates.expiry_date || updates.effective_date) {
-        await this.scheduleAlerts(data);
-      }
-
-      // Clear cache
+      // Invalidate cache
       await cacheHelpers.del(`${this.cachePrefix}${id}`);
-      await this.clearMoUCache();
+      await cacheHelpers.del(`${this.cachePrefix}list:*`);
 
-      logInfo(`Updated MoU: ${data.reference_number}`);
+      logInfo('MoU updated', { mouId: id });
       return data;
     } catch (error) {
       logError(`Error updating MoU ${id}`, error as Error);
@@ -346,9 +324,49 @@ export class MoUService {
   }
 
   /**
-   * Transition MoU status with validation
+   * Delete MoU
    */
-  async transitionMoUStatus(id: string, newStatus: MoU['status'], userId: string): Promise<MoU> {
+  async deleteMoU(id: string): Promise<boolean> {
+    try {
+      const { error } = await supabaseAdmin
+        .from('mous')
+        .delete()
+        .eq('id', id);
+
+      if (error) {
+        throw error;
+      }
+
+      // Invalidate cache
+      await cacheHelpers.del(`${this.cachePrefix}${id}`);
+      await cacheHelpers.del(`${this.cachePrefix}list:*`);
+
+      logInfo('MoU deleted', { mouId: id });
+      return true;
+    } catch (error) {
+      logError(`Error deleting MoU ${id}`, error as Error);
+      throw error;
+    }
+  }
+
+  /**
+   * Validate status transition
+   */
+  validateTransition(currentStatus: MoU['status'], newStatus: MoU['status']): boolean {
+    const transition = this.stateTransitions.find(
+      t => t.from_status === currentStatus && t.to_status === newStatus
+    );
+    return transition?.allowed || false;
+  }
+
+  /**
+   * Transition MoU status
+   */
+  async transitionStatus(
+    id: string,
+    newStatus: MoU['status'],
+    notes?: string
+  ): Promise<MoU> {
     try {
       // Get current MoU
       const currentMoU = await this.getMoUById(id);
@@ -357,98 +375,35 @@ export class MoUService {
       }
 
       // Validate transition
-      const transition = this.validateStateTransition(currentMoU.status, newStatus);
-      if (!transition.allowed) {
-        throw new Error(`Invalid status transition from ${currentMoU.status} to ${newStatus}`);
-      }
-
-      // Check required fields
-      if (transition.required_fields) {
-        for (const field of transition.required_fields) {
-          if (!currentMoU[field as keyof MoU]) {
-            throw new Error(`Required field missing for transition: ${field}`);
-          }
-        }
+      if (!this.validateTransition(currentMoU.status, newStatus)) {
+        throw new Error(
+          `Invalid status transition from ${currentMoU.status} to ${newStatus}`
+        );
       }
 
       // Update status
-      const updates: Partial<MoU> = { status: newStatus };
+      const updatedMoU = await this.updateMoU(id, {
+        status: newStatus,
+        notes: notes || currentMoU.notes
+      });
 
-      // Set additional fields based on transition
-      if (newStatus === 'active' && !currentMoU.effective_date) {
-        updates.effective_date = new Date();
-      }
-
-      if (newStatus === 'expired') {
-        updates.expiry_date = new Date();
-      }
-
-      // Update MoU
-      const updatedMoU = await this.updateMoU(id, updates);
-
-      // Log state transition
-      await this.logStateTransition(id, currentMoU.status, newStatus, userId);
-
-      // Trigger notifications for important transitions
-      if (['signed', 'active', 'expired', 'terminated'].includes(newStatus)) {
-        // TODO: Trigger notifications via NotificationService
-      }
+      logInfo('MoU status transitioned', {
+        mouId: id,
+        from: currentMoU.status,
+        to: newStatus
+      });
 
       return updatedMoU;
     } catch (error) {
-      logError(`Error transitioning MoU ${id} status`, error as Error);
+      logError(`Error transitioning MoU status ${id}`, error as Error);
       throw error;
     }
   }
 
   /**
-   * Update deliverable status
+   * Get expiring MoUs
    */
-  async updateDeliverable(
-    mouId: string,
-    deliverableId: string,
-    updates: Partial<MoU['deliverables'][0]>
-  ): Promise<MoU> {
-    try {
-      const mou = await this.getMoUById(mouId);
-      if (!mou) {
-        throw new Error('MoU not found');
-      }
-
-      // Find and update deliverable
-      const deliverables = mou.deliverables || [];
-      const deliverableIndex = deliverables.findIndex(d => d.id === deliverableId);
-
-      if (deliverableIndex === -1) {
-        throw new Error('Deliverable not found');
-      }
-
-      deliverables[deliverableIndex] = {
-        ...deliverables[deliverableIndex],
-        ...updates
-      };
-
-      // Update MoU
-      const updatedMoU = await this.updateMoU(mouId, { deliverables });
-
-      // Check if all deliverables are completed
-      const allCompleted = deliverables.every(d => d.status === 'completed');
-      if (allCompleted) {
-        // TODO: Trigger notification for all deliverables completed
-      }
-
-      logInfo(`Updated deliverable ${deliverableId} for MoU ${mouId}`);
-      return updatedMoU;
-    } catch (error) {
-      logError('Error updating deliverable', error as Error);
-      throw error;
-    }
-  }
-
-  /**
-   * Get MoUs expiring soon
-   */
-  async getExpiringMoUs(days: number = 90): Promise<MoU[]> {
+  async getExpiringMoUs(days: number = 30): Promise<MoU[]> {
     try {
       const cacheKey = `${this.cachePrefix}expiring:${days}`;
       const cached = await cacheHelpers.get<MoU[]>(cacheKey);
@@ -461,20 +416,17 @@ export class MoUService {
 
       const { data, error } = await supabaseAdmin
         .from('mous')
-        .select('*')
+        .select(MOU_COLUMNS)
         .lte('expiry_date', expiryDate.toISOString())
         .gte('expiry_date', new Date().toISOString())
         .in('status', ['active', 'signed'])
-        .order('expiry_date', { ascending: true });
+        .order('expiry_date');
 
       if (error) {
         throw error;
       }
 
-      if (data) {
-        await cacheHelpers.set(cacheKey, data, 3600); // 1 hour cache
-      }
-
+      await cacheHelpers.set(cacheKey, data || [], 3600); // Cache for 1 hour
       return data || [];
     } catch (error) {
       logError('Error fetching expiring MoUs', error as Error);
@@ -483,171 +435,73 @@ export class MoUService {
   }
 
   /**
-   * Get deliverables due
+   * Get MoU statistics
    */
-  async getDeliverablesDue(days: number = 30): Promise<any[]> {
-    try {
-      const dueDate = new Date();
-      dueDate.setDate(dueDate.getDate() + days);
-
-      const { data: mous, error } = await supabaseAdmin
-        .from('mous')
-        .select('id, reference_number, title_en, deliverables')
-        .eq('status', 'active');
-
-      if (error) {
-        throw error;
-      }
-
-      const deliverablesDue: any[] = [];
-      const now = new Date();
-
-      mous?.forEach(mou => {
-        mou.deliverables?.forEach((deliverable: any) => {
-          const deliverableDueDate = new Date(deliverable.due_date);
-          if (
-            deliverable.status !== 'completed' &&
-            deliverableDueDate >= now &&
-            deliverableDueDate <= dueDate
-          ) {
-            deliverablesDue.push({
-              mou_id: mou.id,
-              mou_reference: mou.reference_number,
-              mou_title: mou.title_en,
-              ...deliverable
-            });
-          }
-        });
-      });
-
-      // Sort by due date
-      deliverablesDue.sort((a, b) =>
-        new Date(a.due_date).getTime() - new Date(b.due_date).getTime()
-      );
-
-      return deliverablesDue;
-    } catch (error) {
-      logError('Error fetching deliverables due', error as Error);
-      throw error;
-    }
-  }
-
-  /**
-   * Calculate MoU performance
-   */
-  async calculateMoUPerformance(mouId: string): Promise<{
-    deliverables_completion: number;
-    on_time_delivery: number;
-    metrics_achievement: number;
-    overall_score: number;
+  async getStatistics(): Promise<{
+    total: number;
+    draft: number;
+    active: number;
+    expired: number;
+    expiring_soon: number;
   }> {
     try {
-      const mou = await this.getMoUById(mouId);
-      if (!mou) {
-        throw new Error('MoU not found');
+      const cacheKey = `${this.cachePrefix}statistics`;
+      const cached = await cacheHelpers.get(cacheKey);
+      if (cached) {
+        return cached;
       }
 
-      // Calculate deliverables completion
-      const deliverables = mou.deliverables || [];
-      const completedDeliverables = deliverables.filter(d => d.status === 'completed');
-      const deliverables_completion = deliverables.length > 0
-        ? (completedDeliverables.length / deliverables.length) * 100
-        : 0;
+      const expiryDate = new Date();
+      expiryDate.setDate(expiryDate.getDate() + 30);
 
-      // Calculate on-time delivery
-      const completedOnTime = completedDeliverables.filter(d =>
-        d.completion_date && new Date(d.completion_date) <= new Date(d.due_date)
-      );
-      const on_time_delivery = completedDeliverables.length > 0
-        ? (completedOnTime.length / completedDeliverables.length) * 100
-        : 0;
+      const [totalResult, draftResult, activeResult, expiredResult, expiringSoonResult] = await Promise.all([
+        supabaseAdmin.from('mous').select('id', { count: 'exact', head: true }),
+        supabaseAdmin.from('mous').select('id', { count: 'exact', head: true }).eq('status', 'draft'),
+        supabaseAdmin.from('mous').select('id', { count: 'exact', head: true }).eq('status', 'active'),
+        supabaseAdmin.from('mous').select('id', { count: 'exact', head: true }).eq('status', 'expired'),
+        supabaseAdmin
+          .from('mous')
+          .select('id', { count: 'exact', head: true })
+          .lte('expiry_date', expiryDate.toISOString())
+          .gte('expiry_date', new Date().toISOString())
+          .in('status', ['active', 'signed'])
+      ]);
 
-      // Calculate metrics achievement
-      const metrics = mou.performance_metrics || [];
-      const metricsAchieved = metrics.filter(m =>
-        m.current_value >= m.target_value
-      );
-      const metrics_achievement = metrics.length > 0
-        ? (metricsAchieved.length / metrics.length) * 100
-        : 0;
-
-      // Calculate overall score
-      const overall_score = (
-        deliverables_completion * 0.4 +
-        on_time_delivery * 0.3 +
-        metrics_achievement * 0.3
-      );
-
-      return {
-        deliverables_completion,
-        on_time_delivery,
-        metrics_achievement,
-        overall_score
+      const stats = {
+        total: totalResult.count || 0,
+        draft: draftResult.count || 0,
+        active: activeResult.count || 0,
+        expired: expiredResult.count || 0,
+        expiring_soon: expiringSoonResult.count || 0
       };
+
+      await cacheHelpers.set(cacheKey, stats, 300); // Cache for 5 minutes
+      return stats;
     } catch (error) {
-      logError(`Error calculating performance for MoU ${mouId}`, error as Error);
+      logError('Error fetching MoU statistics', error as Error);
       throw error;
     }
   }
 
-  // Helper methods
-
-  private validateStateTransition(from: MoU['status'], to: MoU['status']): {
-    allowed: boolean;
-    required_fields?: string[];
-  } {
-    const transition = this.stateTransitions.find(
-      t => t.from_status === from && t.to_status === to
-    );
-
-    return {
-      allowed: transition?.allowed || false,
-      required_fields: transition?.required_fields
-    };
+  // Methods for API compatibility
+  async findAll(params?: MoUSearchParams) {
+    return this.getMoUs(params);
   }
 
-  private async generateReferenceNumber(type: MoU['type']): Promise<string> {
-    const year = new Date().getFullYear();
-    const typePrefix = type.substring(0, 3).toUpperCase();
-
-    // Get the count of MoUs this year
-    const { count } = await supabaseAdmin
-      .from('mous')
-      .select('id', { count: 'exact', head: true })
-      .gte('created_at', `${year}-01-01`);
-
-    const sequence = (count || 0) + 1;
-    return `MOU-${typePrefix}-${year}-${sequence.toString().padStart(4, '0')}`;
+  async findById(id: string) {
+    return this.getMoUById(id);
   }
 
-  private async scheduleAlerts(mou: MoU): Promise<void> {
-    // Implementation would integrate with the background job system
-    // to schedule reminder notifications
-    logInfo(`Scheduling alerts for MoU ${mou.reference_number}`);
+  async create(mou: Partial<MoU>) {
+    return this.createMoU(mou);
   }
 
-  private async logStateTransition(
-    mouId: string,
-    fromStatus: MoU['status'],
-    toStatus: MoU['status'],
-    userId: string
-  ): Promise<void> {
-    await supabaseAdmin.from('audit_logs').insert({
-      entity_type: 'mou',
-      entity_id: mouId,
-      action: 'status_change',
-      changes: {
-        from: fromStatus,
-        to: toStatus
-      },
-      user_id: userId,
-      created_at: new Date().toISOString()
-    });
+  async update(id: string, updates: Partial<MoU>) {
+    return this.updateMoU(id, updates);
   }
 
-  private async clearMoUCache(): Promise<void> {
-    await cacheHelpers.clearPattern(`${this.cachePrefix}list:*`);
-    await cacheHelpers.clearPattern(`${this.cachePrefix}expiring:*`);
+  async delete(id: string) {
+    return this.deleteMoU(id);
   }
 }
 
