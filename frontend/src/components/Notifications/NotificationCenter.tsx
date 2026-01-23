@@ -163,7 +163,9 @@ export function NotificationCenter({
       ),
       {
         duration: 5000,
-        position: position.includes('top') ? 'top-right' : 'bottom-right',
+        position: position.includes('top')
+          ? isRTL ? 'top-left' : 'top-right'
+          : isRTL ? 'bottom-left' : 'bottom-right',
       },
     )
   }
