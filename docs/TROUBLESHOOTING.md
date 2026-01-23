@@ -1931,6 +1931,726 @@ const channel = supabase
 // Check Supabase dashboard for outages
 ```
 
+### Supabase Realtime Subscription Drops
+
+Subscription drops occur when the WebSocket connection to Supabase Realtime is interrupted, resulting in missed real-time updates. This comprehensive guide covers all scenarios and solutions.
+
+#### Understanding Subscription Lifecycle
+
+Supabase Realtime subscriptions follow this lifecycle:
+
+```
+SUBSCRIBING → SUBSCRIBED → [CHANNEL_ERROR] → TIMED_OUT → CLOSED
+                    ↓
+              [UNSUBSCRIBED]
+```
+
+**Status Meanings:**
+- `SUBSCRIBING`: Initial connection attempt
+- `SUBSCRIBED`: Successfully connected, receiving updates
+- `CHANNEL_ERROR`: Temporary error, will retry
+- `TIMED_OUT`: Connection timeout (network issue)
+- `CLOSED`: Connection closed (intentional or network failure)
+- `UNSUBSCRIBED`: Explicitly unsubscribed
+
+#### Symptoms of Subscription Drops
+
+**Common Indicators:**
+- ✗ Real-time updates stop arriving after working initially
+- ✗ Status changes from `SUBSCRIBED` to `CLOSED` or `TIMED_OUT`
+- ✗ Console shows WebSocket disconnection errors
+- ✗ Data updates only appear after manual refresh
+- ✗ Subscription works for a while, then stops
+- ✗ Multiple subscriptions cause connection instability
+
+#### Root Causes & Solutions
+
+##### 1. Memory Leaks from Unclean Subscription Cleanup
+
+**Root Cause:** Channels not properly removed when component unmounts, causing memory leaks and connection saturation.
+
+**Symptoms:**
+- Multiple duplicate subscriptions in DevTools
+- Memory usage increases over time
+- Subscriptions continue firing after navigation
+- Console warning: "Channel already registered"
+
+**Debugging:**
+
+```typescript
+// Check active channels
+console.log('Active channels:', supabase.getChannels())
+
+// Monitor channel count
+setInterval(() => {
+  const channels = supabase.getChannels()
+  console.log(`Active channels: ${channels.length}`, channels.map(c => c.topic))
+}, 5000)
+```
+
+**Solution - Proper Cleanup Pattern:**
+
+```typescript
+import { useEffect, useRef } from 'react'
+import { RealtimeChannel } from '@supabase/supabase-js'
+
+function useRealtimeSubscription(dossierId: string) {
+  const channelRef = useRef<RealtimeChannel | null>(null)
+
+  useEffect(() => {
+    // 1. Create unique channel name
+    const channelName = `dossier-${dossierId}-${Date.now()}`
+
+    // 2. Initialize channel
+    const channel = supabase
+      .channel(channelName)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table: 'dossiers',
+          filter: `id=eq.${dossierId}`
+        },
+        (payload) => {
+          console.log('Realtime update:', payload)
+          queryClient.invalidateQueries({ queryKey: ['dossiers', dossierId] })
+        }
+      )
+      .subscribe((status) => {
+        console.log(`Subscription ${channelName}:`, status)
+      })
+
+    channelRef.current = channel
+
+    // 3. Cleanup function (CRITICAL)
+    return () => {
+      console.log(`Unsubscribing from ${channelName}`)
+      if (channelRef.current) {
+        supabase.removeChannel(channelRef.current)
+        channelRef.current = null
+      }
+    }
+  }, [dossierId]) // Re-subscribe if dossierId changes
+
+  return channelRef.current
+}
+```
+
+**Anti-Pattern to Avoid:**
+
+```typescript
+// ❌ BAD: Channel created outside useEffect, never cleaned up
+const channel = supabase.channel('global-channel')
+channel.on('postgres_changes', ...).subscribe()
+
+// ❌ BAD: Missing cleanup
+useEffect(() => {
+  const channel = supabase.channel('my-channel')
+  channel.subscribe()
+  // Missing return cleanup!
+}, [])
+
+// ❌ BAD: Cleanup doesn't remove channel
+useEffect(() => {
+  const channel = supabase.channel('my-channel')
+  channel.subscribe()
+  return () => {
+    channel.unsubscribe() // Not enough - use removeChannel!
+  }
+}, [])
+```
+
+##### 2. Network Interruptions & Auto-Reconnection
+
+**Root Cause:** Network instability (WiFi drops, mobile network switches) causes WebSocket disconnection without automatic reconnection.
+
+**Symptoms:**
+- Subscription drops after laptop wake from sleep
+- Loss of connection on network switch
+- Status stuck at `CLOSED` or `TIMED_OUT`
+
+**Solution - Robust Reconnection Logic:**
+
+```typescript
+import { useEffect, useRef, useState } from 'react'
+import { RealtimeChannel } from '@supabase/supabase-js'
+
+function useRobustRealtime(table: string, filter?: string) {
+  const [status, setStatus] = useState<string>('idle')
+  const channelRef = useRef<RealtimeChannel | null>(null)
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const reconnectAttemptsRef = useRef(0)
+
+  const MAX_RECONNECT_ATTEMPTS = 5
+  const INITIAL_RECONNECT_DELAY = 1000 // 1 second
+  const MAX_RECONNECT_DELAY = 30000 // 30 seconds
+
+  const cleanup = () => {
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current)
+    }
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current)
+      channelRef.current = null
+    }
+  }
+
+  const connect = () => {
+    cleanup() // Ensure clean state
+
+    const channel = supabase
+      .channel(`${table}-${Date.now()}`)
+      .on(
+        'postgres_changes',
+        {
+          event: '*',
+          schema: 'public',
+          table,
+          filter: filter || undefined
+        },
+        (payload) => {
+          console.log(`[${table}] Realtime update:`, payload)
+          queryClient.invalidateQueries({ queryKey: [table] })
+        }
+      )
+      .subscribe((newStatus) => {
+        console.log(`[${table}] Status:`, newStatus)
+        setStatus(newStatus)
+
+        if (newStatus === 'SUBSCRIBED') {
+          reconnectAttemptsRef.current = 0 // Reset on success
+        }
+
+        // Handle errors with exponential backoff
+        if (newStatus === 'CHANNEL_ERROR' || newStatus === 'TIMED_OUT' || newStatus === 'CLOSED') {
+          if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
+            const delay = Math.min(
+              INITIAL_RECONNECT_DELAY * Math.pow(2, reconnectAttemptsRef.current),
+              MAX_RECONNECT_DELAY
+            )
+
+            console.log(`[${table}] Reconnecting in ${delay}ms (attempt ${reconnectAttemptsRef.current + 1})`)
+
+            reconnectTimeoutRef.current = setTimeout(() => {
+              reconnectAttemptsRef.current++
+              connect() // Recursive reconnection
+            }, delay)
+          } else {
+            console.error(`[${table}] Max reconnection attempts reached`)
+            // Optionally show user notification
+          }
+        }
+      })
+
+    channelRef.current = channel
+  }
+
+  useEffect(() => {
+    connect()
+
+    // Listen for online/offline events
+    const handleOnline = () => {
+      console.log('Network online, reconnecting...')
+      reconnectAttemptsRef.current = 0
+      connect()
+    }
+
+    window.addEventListener('online', handleOnline)
+
+    return () => {
+      cleanup()
+      window.removeEventListener('online', handleOnline)
+    }
+  }, [table, filter])
+
+  return { status, reconnect: connect }
+}
+```
+
+##### 3. RLS Policy Changes Causing Silent Drops
+
+**Root Cause:** User loses SELECT permission due to RLS policy changes (role change, assignment removal), causing subscription to silently stop receiving updates.
+
+**Symptoms:**
+- Subscription status shows `SUBSCRIBED` but no updates arrive
+- Other users receive updates but specific user doesn't
+- Works after re-authentication
+
+**Debugging:**
+
+```typescript
+// Test if user can SELECT from table
+const { data, error } = await supabase
+  .from('dossiers')
+  .select('id')
+  .limit(1)
+
+if (error) {
+  console.error('RLS blocking SELECT:', error)
+  // User lost permission - subscription won't work
+}
+
+// Check user's current role
+const { data: { user } } = await supabase.auth.getUser()
+console.log('User role:', user?.user_metadata?.role)
+```
+
+**Solution:**
+
+```typescript
+// Periodically verify subscription health
+function useSubscriptionHealthCheck(channelName: string) {
+  useEffect(() => {
+    const healthCheck = setInterval(async () => {
+      const channel = supabase.getChannels().find(c => c.topic === channelName)
+
+      if (!channel) {
+        console.warn('Channel not found, recreating...')
+        // Recreate subscription
+        return
+      }
+
+      // Test database access
+      const { error } = await supabase
+        .from('dossiers')
+        .select('id')
+        .limit(1)
+
+      if (error?.code === 'PGRST301') {
+        console.error('RLS policy blocking access')
+        // Notify user: "You no longer have access to this resource"
+        // Clear subscription
+        supabase.removeChannel(channel)
+      }
+    }, 30000) // Check every 30 seconds
+
+    return () => clearInterval(healthCheck)
+  }, [channelName])
+}
+```
+
+##### 4. Too Many Concurrent Subscriptions
+
+**Root Cause:** Supabase free tier limits connections; exceeding limit causes drops.
+
+**Symptoms:**
+- New subscriptions fail to connect
+- Random existing subscriptions drop
+- Error: "Max connections exceeded"
+
+**Debugging:**
+
+```typescript
+// Audit all active subscriptions
+const channels = supabase.getChannels()
+console.log(`Active subscriptions: ${channels.length}`)
+channels.forEach(channel => {
+  console.log(`- ${channel.topic}:`, channel.state)
+})
+
+// Supabase limits:
+// Free tier: ~200 concurrent connections
+// Pro tier: ~500+ concurrent connections
+```
+
+**Solution - Subscription Pooling:**
+
+```typescript
+// Centralized subscription manager
+class RealtimeManager {
+  private static channels = new Map<string, RealtimeChannel>()
+  private static listeners = new Map<string, Set<Function>>()
+
+  static subscribe(table: string, callback: Function) {
+    const key = `table:${table}`
+
+    // Reuse existing channel
+    if (!this.channels.has(key)) {
+      const channel = supabase
+        .channel(key)
+        .on('postgres_changes', { event: '*', schema: 'public', table }, (payload) => {
+          // Notify all listeners
+          this.listeners.get(key)?.forEach(cb => cb(payload))
+        })
+        .subscribe()
+
+      this.channels.set(key, channel)
+      this.listeners.set(key, new Set())
+    }
+
+    // Add listener
+    this.listeners.get(key)?.add(callback)
+
+    // Return unsubscribe function
+    return () => {
+      this.listeners.get(key)?.delete(callback)
+
+      // Cleanup if no listeners
+      if (this.listeners.get(key)?.size === 0) {
+        const channel = this.channels.get(key)
+        if (channel) {
+          supabase.removeChannel(channel)
+          this.channels.delete(key)
+          this.listeners.delete(key)
+        }
+      }
+    }
+  }
+}
+
+// Usage in component
+function MyComponent() {
+  useEffect(() => {
+    const unsubscribe = RealtimeManager.subscribe('dossiers', (payload) => {
+      console.log('Update:', payload)
+    })
+
+    return unsubscribe
+  }, [])
+}
+```
+
+##### 5. Browser Tab Visibility & Connection Throttling
+
+**Root Cause:** Browsers throttle WebSocket connections when tab is hidden to save resources.
+
+**Symptoms:**
+- Subscriptions drop when tab in background
+- Resume working when tab becomes active
+
+**Solution - Visibility API Integration:**
+
+```typescript
+function useVisibilityAwareRealtime(table: string) {
+  const channelRef = useRef<RealtimeChannel | null>(null)
+
+  const connect = () => {
+    if (channelRef.current) return // Already connected
+
+    const channel = supabase
+      .channel(`${table}-${Date.now()}`)
+      .on('postgres_changes', { event: '*', schema: 'public', table }, (payload) => {
+        queryClient.invalidateQueries({ queryKey: [table] })
+      })
+      .subscribe()
+
+    channelRef.current = channel
+  }
+
+  const disconnect = () => {
+    if (channelRef.current) {
+      supabase.removeChannel(channelRef.current)
+      channelRef.current = null
+    }
+  }
+
+  useEffect(() => {
+    // Initial connection
+    if (document.visibilityState === 'visible') {
+      connect()
+    }
+
+    // Handle visibility changes
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible') {
+        console.log('Tab visible, reconnecting...')
+        connect()
+      } else {
+        console.log('Tab hidden, disconnecting to save resources')
+        disconnect()
+        // Alternatively, keep connection but reduce query invalidation frequency
+      }
+    }
+
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      disconnect()
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [table])
+}
+```
+
+#### Production-Ready Realtime Hook
+
+Combine all best practices into a single reusable hook:
+
+```typescript
+import { useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
+import { RealtimeChannel } from '@supabase/supabase-js'
+
+interface RealtimeConfig {
+  table: string
+  event?: 'INSERT' | 'UPDATE' | 'DELETE' | '*'
+  filter?: string
+  schema?: string
+  queryKey?: unknown[]
+  onPayload?: (payload: any) => void
+  enabled?: boolean
+}
+
+export function useRealtime(config: RealtimeConfig) {
+  const {
+    table,
+    event = '*',
+    filter,
+    schema = 'public',
+    queryKey,
+    onPayload,
+    enabled = true
+  } = config
+
+  const queryClient = useQueryClient()
+  const channelRef = useRef<RealtimeChannel | null>(null)
+  const [status, setStatus] = useState<string>('idle')
+  const reconnectTimeoutRef = useRef<NodeJS.Timeout | null>(null)
+  const reconnectAttemptsRef = useRef(0)
+
+  const MAX_RECONNECT_ATTEMPTS = 5
+  const INITIAL_DELAY = 1000
+  const MAX_DELAY = 30000
+
+  const cleanup = () => {
+    if (reconnectTimeoutRef.current) {
+      clearTimeout(reconnectTimeoutRef.current)
+      reconnectTimeoutRef.current = null
+    }
+    if (channelRef.current) {
+      console.log(`[Realtime] Cleaning up ${table} subscription`)
+      supabase.removeChannel(channelRef.current)
+      channelRef.current = null
+    }
+  }
+
+  const connect = () => {
+    if (!enabled) return
+
+    cleanup()
+
+    const channelName = `${table}-${filter || 'all'}-${Date.now()}`
+    console.log(`[Realtime] Subscribing to ${channelName}`)
+
+    const channel = supabase
+      .channel(channelName)
+      .on(
+        'postgres_changes',
+        { event, schema, table, filter: filter || undefined },
+        (payload) => {
+          console.log(`[Realtime] ${table} update:`, payload.eventType)
+
+          // Custom callback
+          if (onPayload) {
+            onPayload(payload)
+          }
+
+          // Auto-invalidate queries
+          if (queryKey) {
+            queryClient.invalidateQueries({ queryKey })
+          }
+        }
+      )
+      .subscribe((newStatus) => {
+        console.log(`[Realtime] ${table} status:`, newStatus)
+        setStatus(newStatus)
+
+        if (newStatus === 'SUBSCRIBED') {
+          reconnectAttemptsRef.current = 0
+        }
+
+        if (['CHANNEL_ERROR', 'TIMED_OUT', 'CLOSED'].includes(newStatus)) {
+          if (reconnectAttemptsRef.current < MAX_RECONNECT_ATTEMPTS) {
+            const delay = Math.min(
+              INITIAL_DELAY * Math.pow(2, reconnectAttemptsRef.current),
+              MAX_DELAY
+            )
+
+            console.log(`[Realtime] Reconnecting in ${delay}ms`)
+            reconnectTimeoutRef.current = setTimeout(() => {
+              reconnectAttemptsRef.current++
+              connect()
+            }, delay)
+          }
+        }
+      })
+
+    channelRef.current = channel
+  }
+
+  useEffect(() => {
+    if (!enabled) {
+      cleanup()
+      return
+    }
+
+    connect()
+
+    // Network recovery
+    const handleOnline = () => {
+      console.log('[Realtime] Network online, reconnecting...')
+      reconnectAttemptsRef.current = 0
+      connect()
+    }
+
+    // Tab visibility
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === 'visible' && status !== 'SUBSCRIBED') {
+        console.log('[Realtime] Tab visible, reconnecting...')
+        connect()
+      }
+    }
+
+    window.addEventListener('online', handleOnline)
+    document.addEventListener('visibilitychange', handleVisibilityChange)
+
+    return () => {
+      cleanup()
+      window.removeEventListener('online', handleOnline)
+      document.removeEventListener('visibilitychange', handleVisibilityChange)
+    }
+  }, [enabled, table, event, filter, schema])
+
+  return {
+    status,
+    isConnected: status === 'SUBSCRIBED',
+    reconnect: connect,
+    disconnect: cleanup
+  }
+}
+
+// Usage example
+function DossierView({ dossierId }: { dossierId: string }) {
+  const { status, isConnected } = useRealtime({
+    table: 'dossiers',
+    event: '*',
+    filter: `id=eq.${dossierId}`,
+    queryKey: ['dossiers', dossierId],
+    enabled: !!dossierId
+  })
+
+  return (
+    <div>
+      <Badge variant={isConnected ? 'success' : 'warning'}>
+        {status}
+      </Badge>
+      {/* Component content */}
+    </div>
+  )
+}
+```
+
+#### Debugging Subscription Drops
+
+##### Enable Realtime Debug Logging
+
+```typescript
+// Enable verbose logging (development only)
+import { createClient } from '@supabase/supabase-js'
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  realtime: {
+    log_level: 'debug' // 'info' | 'debug' | 'warn' | 'error'
+  }
+})
+```
+
+##### Monitor Subscription State
+
+```typescript
+// Add to browser console for debugging
+window.debugRealtime = () => {
+  const channels = supabase.getChannels()
+  console.log('=== Realtime Debug ===')
+  console.log(`Active channels: ${channels.length}`)
+
+  channels.forEach((channel, index) => {
+    console.log(`\nChannel ${index + 1}:`)
+    console.log('  Topic:', channel.topic)
+    console.log('  State:', channel.state)
+    console.log('  Listeners:', channel.bindings)
+  })
+
+  console.log('\nConnection state:', supabase.realtime.connectionState())
+  console.log('=====================')
+}
+
+// Run periodically
+setInterval(window.debugRealtime, 10000)
+```
+
+##### Test Subscription Health
+
+```bash
+# Check Supabase Realtime status
+curl https://<project-ref>.supabase.co/realtime/v1/health
+
+# Expected response:
+# {"status":"ok","postgres_cdc":"ok"}
+```
+
+##### Common Error Codes
+
+| Error Code | Meaning | Solution |
+|------------|---------|----------|
+| `CHANNEL_ERROR` | Subscription failed | Check RLS policies, verify table exists |
+| `TIMED_OUT` | Connection timeout | Network issue, implement retry |
+| `CLOSED` | Connection closed | Reconnect with exponential backoff |
+| `PGRST301` | RLS violation | User lacks SELECT permission |
+| `Max connections exceeded` | Too many subscriptions | Implement subscription pooling |
+
+#### Best Practices Checklist
+
+✅ **Always cleanup subscriptions** in `useEffect` return
+✅ **Use unique channel names** to avoid conflicts
+✅ **Implement exponential backoff** for reconnection
+✅ **Monitor subscription status** with status callbacks
+✅ **Verify RLS policies** allow SELECT for real-time updates
+✅ **Pool subscriptions** when possible to reduce connections
+✅ **Handle network events** (online/offline, visibility changes)
+✅ **Log subscription lifecycle** for debugging
+✅ **Set reasonable reconnection limits** to avoid infinite loops
+✅ **Test subscription recovery** after network interruptions
+
+#### Common Anti-Patterns
+
+❌ **Creating subscriptions outside React lifecycle**
+```typescript
+// Bad: Global subscription, never cleaned up
+const channel = supabase.channel('global').subscribe()
+```
+
+❌ **Using `unsubscribe()` instead of `removeChannel()`**
+```typescript
+// Bad: Doesn't remove channel from pool
+return () => channel.unsubscribe()
+
+// Good: Completely removes channel
+return () => supabase.removeChannel(channel)
+```
+
+❌ **Ignoring subscription status**
+```typescript
+// Bad: No error handling
+channel.subscribe()
+
+// Good: Monitor and react to status
+channel.subscribe((status) => {
+  if (status === 'CHANNEL_ERROR') handleError()
+})
+```
+
+❌ **Creating multiple subscriptions for same data**
+```typescript
+// Bad: Each component creates own subscription
+function Component1() { useRealtime('dossiers') }
+function Component2() { useRealtime('dossiers') }
+
+// Good: Share single subscription via manager
+RealtimeManager.subscribe('dossiers', callback)
+```
+
 ## Internationalization & RTL Issues
 
 ### RTL Layout Broken
