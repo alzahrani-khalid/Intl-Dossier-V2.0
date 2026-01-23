@@ -13,9 +13,9 @@
 
 import { test, expect } from '@playwright/test';
 
-// Test credentials from CLAUDE.md
-const TEST_EMAIL = 'kazahrani@stats.gov.sa';
-const TEST_PASSWORD = 'itisme';
+// Test credentials from environment variables
+const TEST_EMAIL = process.env.TEST_USER_EMAIL || '';
+const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || '';
 
 test.describe('Dossier-Centric Dashboard', () => {
   test.beforeEach(async ({ page }) => {
