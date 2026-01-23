@@ -441,6 +441,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  secrets-scan:
+    name: Secrets Scan
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for gitleaks to scan
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   security-scan:
     name: Security Scan
     runs-on: ubuntu-latest
