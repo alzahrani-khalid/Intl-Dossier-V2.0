@@ -1,0 +1,19 @@
+{
+  "category": "enhancement",
+  "description": "Add a collapsible sidebar widget showing a mini relationship graph for the current dossier. Display immediate relationships (1-degree connections) with relationship type labels (membership, bilateral, partnership). Include interactive features: click to navigate to connected dossier, hover for quick preview, and 'View Full Graph' link to the complete network visualization.\n\n**Rationale (R6):** The full relationship graph can be overwhelming. A mini graph provides quick context about immediate connections without leaving the current page.",
+  "title": "Mini Relationship Graph in Sidebar",
+  "dependencies": ["relationship-graph-traversal"],
+  "priority": 3,
+  "status": "completed",
+  "branchName": "035-dossier-context",
+  "id": "feature-1768824231588-1dzu8hs4c",
+  "descriptionHistory": [
+    {
+      "description": "Add a collapsible sidebar widget showing a mini relationship graph for the current dossier. Display immediate relationships (1-degree connections) with relationship type labels (membership, bilateral, partnership). Include interactive features: click to navigate to connected dossier, hover for quick preview, and 'View Full Graph' link to the complete network visualization.\n\n**Rationale (R6):** The full relationship graph can be overwhelming. A mini graph provides quick context about immediate connections without leaving the current page.",
+      "timestamp": "2026-01-19T12:03:51.588Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-01-19T13:41:56.595Z",
+  "updatedAt": "2026-01-19T13:56:40.166Z"
+}

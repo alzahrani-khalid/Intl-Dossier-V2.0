@@ -2,7 +2,7 @@
   "category": "enhancement",
   "description": "When entity has no documents, show large drag-drop upload area with file type icons and size limits. Display recent document templates relevant to entity type with one-click attachment.\n\n**Rationale:** Users expect intuitive file attachment but may not discover drag-drop functionality. Prominent empty state with visual affordances reduces clicks and surfaces relevant templates that standardize document management.",
   "title": "Document Attachments Empty State with Drag-Drop Zone",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768430370580-j0h7op0xb",
   "descriptionHistory": [
     {

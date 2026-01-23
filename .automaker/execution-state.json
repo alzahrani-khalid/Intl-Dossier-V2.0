@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "autoLoopWasRunning": false,
+  "maxConcurrency": 1,
+  "projectPath": "/Users/khalidalzahrani/Library/CloudStorage/OneDrive-Personal/coding/Intl-DossierV2.0",
+  "branchName": null,
+  "runningFeatureIds": [
+    "dossier-export-pack",
+    "relationship-graph-enhancements",
+    "wcag-aa-accessibility-audit"
+  ],
+  "savedAt": "2026-01-22T22:32:09.671Z"
+}

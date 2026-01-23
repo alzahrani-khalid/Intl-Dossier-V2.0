@@ -1,0 +1,18 @@
+{
+  "category": "enhancement",
+  "description": "Create a reusable widget that appears on all entity detail pages (tasks, commitments, positions, MOUs, events) showing linked dossiers. The widget displays: linked dossiers with type badges, inheritance path (how context was inherited: direct, engagement, after_action, position, mou), ability to add/remove dossier links, and navigation to linked dossier detail pages.\n\n**Rationale (R5):** Currently, dossier links are shown inconsistently across different entity types. A unified widget ensures consistent UX and makes dossier connections visible everywhere.",
+  "title": "Unified Dossier Relations Widget",
+  "dependencies": [],
+  "priority": 2,
+  "status": "in_progress",
+  "branchName": "035-dossier-context",
+  "id": "feature-1768824231587-z66hbm5xw",
+  "descriptionHistory": [
+    {
+      "description": "Create a reusable widget that appears on all entity detail pages (tasks, commitments, positions, MOUs, events) showing linked dossiers. The widget displays: linked dossiers with type badges, inheritance path (how context was inherited: direct, engagement, after_action, position, mou), ability to add/remove dossier links, and navigation to linked dossier detail pages.\n\n**Rationale (R5):** Currently, dossier links are shown inconsistently across different entity types. A unified widget ensures consistent UX and makes dossier connections visible everywhere.",
+      "timestamp": "2026-01-19T12:03:51.587Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-01-19T13:11:11.582Z"
+}

@@ -10,7 +10,8 @@
     "done": "Done",
     "startCreating": "Start Creating",
     "uploadFirst": "Upload First",
-    "generateFirst": "Generate First"
+    "generateFirst": "Generate First",
+    "letsGo": "Let's Go!"
   },
   "trigger": {
     "title": "New here? Let us show you around!",
@@ -28,6 +29,43 @@
     "resetToursDescription": "Allow tours to show again for all sections"
   },
   "tours": {
+    "onboarding": {
+      "name": "Welcome Tour",
+      "description": "Learn how everything is organized around Dossiers - your central hub for managing international relations.",
+      "welcome": {
+        "title": "Welcome to GASTAT Dossier!",
+        "description": "Let's take a quick tour to help you understand how everything is organized around Dossiers - your central hub for managing international relations."
+      },
+      "replay": "Replay onboarding tour",
+      "steps": {
+        "welcome": {
+          "title": "Everything Starts with a Dossier",
+          "content": "In this system, Dossiers are the foundation of everything. A dossier is a comprehensive file that tracks all information about an entity - whether it's a country, organization, forum, or person.",
+          "hint": "Think of dossiers as intelligent folders that connect all related activities, documents, and relationships."
+        },
+        "yourDossiers": {
+          "title": "Your Dossiers",
+          "content": "This is where you'll find all your dossiers organized by type. Each dossier type has specialized fields - countries have diplomatic details, organizations have contact info, forums track meeting schedules.",
+          "hint": "You may be assigned as the owner of specific dossiers, making you responsible for keeping them up to date."
+        },
+        "workFlows": {
+          "title": "Work Flows Through Dossiers",
+          "content": "Tasks, commitments, and meetings all connect back to dossiers. When you create a task or log an engagement, it's linked to the relevant dossier so nothing gets lost.",
+          "hint": "Your personal work queue shows all items assigned to you, organized by which dossier they belong to."
+        },
+        "relationshipGraph": {
+          "title": "See the Connections",
+          "content": "Dossiers can be connected to show relationships - like which organizations a country is a member of, or which people attended which forums. The relationship graph visualizes these connections.",
+          "hint": "Explore the network to discover hidden connections and understand how entities relate to each other."
+        },
+        "findWhatYouNeed": {
+          "title": "Dossier-First Search",
+          "content": "When you search, results are grouped by dossier. This helps you find not just a document, but the full context of what you're looking for.",
+          "hint": "Use the search bar or press ⌘K / Ctrl+K to quickly find any dossier, document, or person.",
+          "action": "Let's Go!"
+        }
+      }
+    },
     "dossier": {
       "name": "Creating Your First Dossier",
       "description": "Learn how to create and organize dossiers for countries, organizations, and more.",

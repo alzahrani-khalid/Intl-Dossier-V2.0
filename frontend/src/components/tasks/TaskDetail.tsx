@@ -38,8 +38,7 @@ import { SLAIndicator } from './SLAIndicator'
 import { WorkItemLinker } from './WorkItemLinker'
 import { LinkedItemsList } from './LinkedItemsList'
 import { useUpdateTask } from '@/hooks/use-tasks'
-import { useWorkItemDossierLinks } from '@/hooks/useWorkItemDossierLinks'
-import { DossierContextBadge } from '@/components/Dossier'
+import { DossierLinksWidget } from '@/components/Dossier'
 // import { useTaskContributors, useRemoveContributor } from '@/hooks/use-contributors';
 
 type Task = Database['public']['Tables']['tasks']['Row']
@@ -66,12 +65,6 @@ export function TaskDetail({
 
   // Mutation hook for updating work items
   const updateTask = useUpdateTask()
-
-  // Fetch dossier links for this task (T040: Visual badges)
-  const { links: dossierLinks, isLoading: isDossierLinksLoading } = useWorkItemDossierLinks(
-    'task',
-    task.id,
-  )
 
   // Contributors management - temporarily disabled for migration
   // const [isAddContributorOpen, setIsAddContributorOpen] = useState(false);
@@ -119,13 +112,13 @@ export function TaskDetail({
             <div className="flex gap-2">
               {onEdit && (
                 <Button variant="outline" size="sm" onClick={() => onEdit(task)}>
-                  <Edit className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                  <Edit className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('edit', 'Edit')}
                 </Button>
               )}
               {onDelete && task.status !== 'completed' && (
                 <Button variant="destructive" size="sm" onClick={() => onDelete(task)}>
-                  <Trash2 className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+                  <Trash2 className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
                   {t('delete', 'Delete')}
                 </Button>
               )}
@@ -146,32 +139,11 @@ export function TaskDetail({
           </Badge>
           {task.work_item_type && (
             <Badge variant="outline">
-              <LinkIcon className={`h-3 w-3 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+              <LinkIcon className={`h-3 w-3 ${isRTL ? 'ms-1' : 'me-1'}`} />
               {t(`work_item.${task.work_item_type}`, task.work_item_type)}
             </Badge>
           )}
         </div>
-
-        {/* Linked Dossiers (T040: Visual badges) */}
-        {!isDossierLinksLoading && dossierLinks.length > 0 && (
-          <div className="flex flex-wrap items-center gap-2 mt-3">
-            <span className="text-sm text-muted-foreground me-1">
-              {t('dossier-context:badge.linked_dossiers', 'Linked to:')}
-            </span>
-            {dossierLinks.map((link) => (
-              <DossierContextBadge
-                key={link.id}
-                dossierId={link.dossier_id}
-                dossierType={(link.dossier?.type as any) ?? 'country'}
-                nameEn={link.dossier?.name_en ?? ''}
-                nameAr={link.dossier?.name_ar}
-                inheritanceSource={link.inheritance_source}
-                isPrimary={link.is_primary}
-                size="sm"
-              />
-            ))}
-          </div>
-        )}
       </div>
 
       {/* SLA Status Card - T079: Using detailed SLAIndicator component */}
@@ -180,6 +152,14 @@ export function TaskDetail({
         isCompleted={isCompleted}
         completedAt={task.completed_at}
         mode="detailed"
+      />
+
+      {/* Linked Dossiers Widget - Reusable widget showing dossier context */}
+      <DossierLinksWidget
+        workItemType="task"
+        workItemId={task.id}
+        editable={isTaskOwner && !isCompleted}
+        showEmptyState={true}
       />
 
       {/* Task Details */}
@@ -369,7 +349,7 @@ export function TaskDetail({
  onClick={() => setIsAddContributorOpen(true)}
  className="h-11 "
  >
- <UserPlus className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+ <UserPlus className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
  {t('add_contributor', 'Add Contributor')}
  </Button>
  )}

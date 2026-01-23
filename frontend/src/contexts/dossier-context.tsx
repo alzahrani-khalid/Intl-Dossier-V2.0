@@ -2,9 +2,13 @@
  * DossierContextProvider
  * Feature: 035-dossier-context (Smart Dossier Context Inheritance)
  *
- * React Context for managing dossier context during work item creation.
- * Synchronizes with URL via TanStack Router useSearch.
- * Provides auto-resolution from entity relationships.
+ * Enhanced React Context for managing dossier context.
+ * Now integrates with the Zustand dossier store for:
+ * - activeDossier: Current dossier scope
+ * - recentDossiers: Last 10 viewed dossiers
+ * - pinnedDossiers: User's pinned favorites
+ *
+ * Provides smart context resolution from URL and parent entities.
  */
 
 import {
@@ -15,7 +19,7 @@ import {
   useEffect,
   type ReactNode,
 } from 'react'
-import { useSearch } from '@tanstack/react-router'
+import { useSearch, useLocation } from '@tanstack/react-router'
 import type {
   DossierContextState,
   DossierContextActions,
@@ -26,6 +30,7 @@ import type {
   ContextEntityType,
 } from '@/types/dossier-context.types'
 import { useCreationContext } from '@/components/work-creation/hooks/useCreationContext'
+import { useDossierStore, type DossierEntry, type InheritanceContext } from '@/store/dossierStore'
 
 // ============================================================================
 // Action Types
@@ -126,10 +131,46 @@ function dossierContextReducer(
 }
 
 // ============================================================================
+// Extended Context Value with Store Integration
+// ============================================================================
+
+export interface ExtendedDossierContextValue extends DossierContextValue {
+  /** Store-backed active dossier (persisted) */
+  activeDossier: DossierEntry | null
+  /** How the active dossier was resolved */
+  activeInheritance: InheritanceContext | null
+  /** Recent dossiers from store (persisted) */
+  recentDossiers: DossierEntry[]
+  /** Pinned dossiers from store (persisted) */
+  pinnedDossiers: DossierEntry[]
+  /** Store actions */
+  storeActions: {
+    setActiveDossier: (dossier: DossierEntry | null) => void
+    pinDossier: (dossier: DossierEntry) => boolean
+    unpinDossier: (dossierId: string) => void
+    togglePinned: (dossier: DossierEntry) => boolean
+    isPinned: (dossierId: string) => boolean
+    addToRecentDossiers: (dossier: DossierEntry) => void
+    resolveContextFromUrl: (
+      pathname: string,
+      searchParams?: Record<string, string>,
+    ) => {
+      entityType: ContextEntityType | null
+      entityId: string | null
+      dossierId: string | null
+    }
+    inheritContextFromParent: (
+      parentType: ContextEntityType,
+      parentId: string,
+    ) => Promise<DossierEntry[]>
+  }
+}
+
+// ============================================================================
 // Context
 // ============================================================================
 
-const DossierContext = createContext<DossierContextValue | null>(null)
+const DossierContext = createContext<ExtendedDossierContextValue | null>(null)
 
 // ============================================================================
 // Provider Props
@@ -154,6 +195,24 @@ export function DossierContextProvider({
 }: DossierContextProviderProps) {
   const [state, dispatch] = useReducer(dossierContextReducer, initialState)
   const creationContext = useCreationContext()
+  const location = useLocation()
+
+  // Get state and actions from the Zustand store
+  const {
+    activeDossier,
+    activeInheritance,
+    recentDossiers,
+    pinnedDossiers,
+    setActiveDossier: storeSetActiveDossier,
+    pinDossier,
+    unpinDossier,
+    togglePinned,
+    isPinned,
+    addToRecentDossiers,
+    resolveContextFromUrl,
+    inheritContextFromParent,
+    setResolvedContext: storeSetResolvedContext,
+  } = useDossierStore()
 
   // Try to get dossier_id from URL search params
   // This provides URL sync for direct dossier links
@@ -178,44 +237,81 @@ export function DossierContextProvider({
     dispatch({ type: 'SET_ERROR', payload: error })
   }, [])
 
-  const setResolvedContext = useCallback((context: ResolvedDossierContext[]) => {
-    dispatch({ type: 'SET_RESOLVED_CONTEXT', payload: context })
+  const setResolvedContext = useCallback(
+    (context: ResolvedDossierContext[]) => {
+      dispatch({ type: 'SET_RESOLVED_CONTEXT', payload: context })
 
-    // Auto-select resolved dossiers
-    if (context.length > 0) {
-      const dossierRefs: DossierReference[] = context.map((ctx) => ({
-        id: ctx.dossier_id,
-        name_en: ctx.dossier_name_en,
-        name_ar: ctx.dossier_name_ar,
-        type: ctx.dossier_type as DossierReference['type'],
-        status: ctx.dossier_status as DossierReference['status'],
-      }))
-      dispatch({ type: 'SET_SELECTED_DOSSIERS', payload: dossierRefs })
-      dispatch({ type: 'SET_REQUIRES_SELECTION', payload: false })
+      // Auto-select resolved dossiers
+      if (context.length > 0) {
+        const dossierRefs: DossierReference[] = context.map((ctx) => ({
+          id: ctx.dossier_id,
+          name_en: ctx.dossier_name_en,
+          name_ar: ctx.dossier_name_ar,
+          type: ctx.dossier_type as DossierReference['type'],
+          status: ctx.dossier_status as DossierReference['status'],
+        }))
+        dispatch({ type: 'SET_SELECTED_DOSSIERS', payload: dossierRefs })
+        dispatch({ type: 'SET_REQUIRES_SELECTION', payload: false })
 
-      // Set inheritance source from first resolved context
-      const firstContext = context[0]
-      if (firstContext) {
-        const source = firstContext.inheritance_source
-        dispatch({ type: 'SET_INHERITANCE_SOURCE', payload: source })
+        // Set inheritance source from first resolved context
+        const firstContext = context[0]
+        if (firstContext) {
+          const source = firstContext.inheritance_source
+          dispatch({ type: 'SET_INHERITANCE_SOURCE', payload: source })
+
+          // Also update the Zustand store with first dossier
+          const firstDossier: DossierEntry = {
+            id: firstContext.dossier_id,
+            name_en: firstContext.dossier_name_en,
+            name_ar: firstContext.dossier_name_ar,
+            type: firstContext.dossier_type as DossierReference['type'],
+            status: firstContext.dossier_status as DossierReference['status'],
+          }
+          storeSetActiveDossier(firstDossier, {
+            source: firstContext.inheritance_source,
+          })
+        }
+      } else {
+        // No dossiers resolved - require manual selection
+        dispatch({ type: 'SET_REQUIRES_SELECTION', payload: true })
       }
-    } else {
-      // No dossiers resolved - require manual selection
-      dispatch({ type: 'SET_REQUIRES_SELECTION', payload: true })
-    }
-  }, [])
+    },
+    [storeSetActiveDossier],
+  )
 
-  const selectDossier = useCallback((dossier: DossierReference) => {
-    dispatch({ type: 'ADD_DOSSIER', payload: dossier })
-  }, [])
+  const selectDossier = useCallback(
+    (dossier: DossierReference) => {
+      dispatch({ type: 'ADD_DOSSIER', payload: dossier })
+
+      // Also update the store
+      const entry: DossierEntry = {
+        ...dossier,
+        viewedAt: Date.now(),
+      }
+      storeSetActiveDossier(entry)
+    },
+    [storeSetActiveDossier],
+  )
 
   const deselectDossier = useCallback((dossierId: string) => {
     dispatch({ type: 'REMOVE_DOSSIER', payload: dossierId })
   }, [])
 
-  const setPrimaryDossier = useCallback((dossier: DossierReference | null) => {
-    dispatch({ type: 'SET_PRIMARY_DOSSIER', payload: dossier })
-  }, [])
+  const setPrimaryDossier = useCallback(
+    (dossier: DossierReference | null) => {
+      dispatch({ type: 'SET_PRIMARY_DOSSIER', payload: dossier })
+
+      // Also update the store
+      if (dossier) {
+        const entry: DossierEntry = {
+          ...dossier,
+          viewedAt: Date.now(),
+        }
+        storeSetActiveDossier(entry)
+      }
+    },
+    [storeSetActiveDossier],
+  )
 
   const reset = useCallback(() => {
     dispatch({ type: 'RESET' })
@@ -228,8 +324,12 @@ export function DossierContextProvider({
   useEffect(() => {
     if (!autoResolve) return
 
+    // Use the store's URL resolver
+    const pathname = location.pathname
+    const resolved = resolveContextFromUrl(pathname, { dossier_id: urlDossierId || '' })
+
     // Priority 1: Direct dossier from URL search param
-    if (urlDossierId) {
+    if (urlDossierId || resolved.dossierId) {
       dispatch({
         type: 'SET_INHERITANCE_SOURCE',
         payload: 'direct',
@@ -296,6 +396,8 @@ export function DossierContextProvider({
     creationContext.engagementId,
     creationContext.afterActionId,
     creationContext.positionId,
+    location.pathname,
+    resolveContextFromUrl,
   ])
 
   // ============================================================================
@@ -312,9 +414,26 @@ export function DossierContextProvider({
     reset,
   }
 
-  const value: DossierContextValue = {
+  const storeActions = {
+    setActiveDossier: storeSetActiveDossier,
+    pinDossier,
+    unpinDossier,
+    togglePinned,
+    isPinned,
+    addToRecentDossiers,
+    resolveContextFromUrl,
+    inheritContextFromParent,
+  }
+
+  const value: ExtendedDossierContextValue = {
     state,
     actions,
+    // Store-backed state
+    activeDossier,
+    activeInheritance,
+    recentDossiers,
+    pinnedDossiers,
+    storeActions,
   }
 
   return <DossierContext.Provider value={value}>{children}</DossierContext.Provider>
@@ -328,12 +447,21 @@ export function DossierContextProvider({
  * Access dossier context state and actions.
  * Must be used within a DossierContextProvider.
  */
-export function useDossierContextInternal(): DossierContextValue {
+export function useDossierContextInternal(): ExtendedDossierContextValue {
   const context = useContext(DossierContext)
   if (!context) {
     throw new Error('useDossierContextInternal must be used within a DossierContextProvider')
   }
   return context
+}
+
+/**
+ * Access dossier context state and actions.
+ * Safe version that doesn't throw if provider is missing.
+ * Returns null if used outside of provider.
+ */
+export function useDossierContextSafe(): ExtendedDossierContextValue | null {
+  return useContext(DossierContext)
 }
 
 export default DossierContextProvider

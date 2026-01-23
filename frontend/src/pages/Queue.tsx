@@ -73,7 +73,7 @@ export function Queue() {
       {/* Header */}
       <div className="mb-6 flex items-start justify-between">
         <div>
-          <h1 className="mb-2 text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="mb-2 text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
             {t('queue.title', 'Intake Queue')}
           </h1>
           <p className="text-gray-600 dark:text-gray-400">

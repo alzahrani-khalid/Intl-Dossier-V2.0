@@ -94,7 +94,7 @@ export function RenewalWorkflowStepper({
         <div
           className={cn(
             'absolute top-5 h-0.5 bg-muted',
-            isRTL ? 'right-5 left-5' : 'left-5 right-5',
+            isRTL ? 'end-5 start-5' : 'start-5 end-5',
             compact && 'top-4',
           )}
         />
@@ -103,7 +103,7 @@ export function RenewalWorkflowStepper({
         <div
           className={cn(
             'absolute top-5 h-0.5 bg-primary transition-all duration-300',
-            isRTL ? 'right-5' : 'left-5',
+            isRTL ? 'end-5' : 'start-5',
             compact && 'top-4',
             isTerminal && 'bg-muted',
           )}

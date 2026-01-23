@@ -430,7 +430,7 @@ export function InfluenceNetworkGraph({
         )}
 
         {/* Legend Panel */}
-        <Panel position="bottom-right" className={isRTL ? 'left-4 right-auto' : ''}>
+        <Panel position="bottom-right" className={isRTL ? 'start-4 end-auto' : ''}>
           <Card className="p-3 bg-background/90 backdrop-blur-sm">
             <div className="text-xs space-y-2">
               <p className="font-medium mb-2">{t('legend', 'Legend')}</p>

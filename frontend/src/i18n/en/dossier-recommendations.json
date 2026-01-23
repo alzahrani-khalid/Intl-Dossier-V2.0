@@ -1,0 +1,64 @@
+{
+  "title": "Related Dossiers",
+  "foundCount": "{{count}} similar dossiers found",
+  "foundCount_one": "{{count}} similar dossier found",
+  "relatedDossiers": "Related Dossiers",
+
+  "noRecommendations": "No Recommendations",
+  "noRecommendationsDescription": "We haven't found any similar dossiers yet. Try generating recommendations.",
+
+  "loading": "Finding similar dossiers...",
+  "errorLoading": "Failed to load recommendations",
+
+  "similarityTooltip": "Content similarity score based on AI analysis",
+  "refreshTooltip": "Generate new recommendations",
+
+  "viewDossier": "View Dossier",
+  "dismiss": "Dismiss",
+  "wasThisHelpful": "Helpful?",
+
+  "whyRecommended": "Why recommended?",
+  "contributingFactors": "Contributing Factors",
+
+  "generateRecommendations": "Find Similar Dossiers",
+  "viewAllRecommendations": "View All Recommendations",
+
+  "reason": {
+    "similar_content": "Similar Content",
+    "shared_relationships": "Shared Connections",
+    "topic_overlap": "Related Topics",
+    "recent_activity": "Recent Activity",
+    "collaboration_history": "Collaboration History",
+    "geographic_proximity": "Same Region",
+    "strategic_alignment": "Strategic Alignment"
+  },
+
+  "status": {
+    "pending": "New",
+    "viewed": "Viewed",
+    "accepted": "Opened",
+    "dismissed": "Dismissed",
+    "expired": "Expired"
+  },
+
+  "priority": {
+    "1": "Very Low",
+    "2": "Low",
+    "3": "Medium",
+    "4": "High",
+    "5": "Very High"
+  },
+
+  "feedback": {
+    "positive": "Thank you for your feedback!",
+    "negative": "Sorry to hear that. We'll improve.",
+    "submit": "Submit Feedback"
+  },
+
+  "accessibility": {
+    "similarityScore": "{{score}}% content similarity",
+    "priorityLevel": "Priority level: {{level}}",
+    "expandDetails": "Expand to see why this dossier was recommended",
+    "collapseDetails": "Collapse recommendation details"
+  }
+}

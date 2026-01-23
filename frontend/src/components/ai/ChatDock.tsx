@@ -66,7 +66,7 @@ export function ChatDock({ onCitationClick, className }: ChatDockProps) {
   }
 
   return (
-    <div className={cn('fixed z-50', isRTL ? 'left-4' : 'right-4', 'bottom-4', className)}>
+    <div className={cn('fixed z-50', isRTL ? 'start-4' : 'end-4', 'bottom-4', className)}>
       {/* Chat Panel */}
       {isOpen && (
         <Card

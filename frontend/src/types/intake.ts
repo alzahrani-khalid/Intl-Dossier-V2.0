@@ -4,6 +4,8 @@
  * TypeScript types for the Front Door Intake system
  */
 
+import type { DynamicFields, AuditChanges, JsonValue, Metadata } from './common.types'
+
 export type RequestType = 'engagement' | 'position' | 'mou_action' | 'foresight'
 
 export type Urgency = 'low' | 'medium' | 'high' | 'critical'
@@ -66,7 +68,7 @@ export interface IntakeFormData {
   descriptionAr?: string
   urgency: Urgency
   dossierId?: string
-  typeSpecificFields?: Record<string, any>
+  typeSpecificFields?: DynamicFields
   attachmentIds?: string[]
 }
 
@@ -81,7 +83,7 @@ export interface IntakeTicket {
   titleAr?: string
   description: string
   descriptionAr?: string
-  typeSpecificFields?: Record<string, any>
+  typeSpecificFields?: DynamicFields
 
   // Classification
   sensitivity: Sensitivity
@@ -119,7 +121,7 @@ export interface IntakeTicket {
 
   // Metadata
   source: 'web' | 'api' | 'email' | 'import'
-  clientMetadata?: Record<string, any>
+  clientMetadata?: Metadata
 }
 
 /**
@@ -153,7 +155,7 @@ export interface Attachment {
   mimeType: string
   storagePath: string
   scanStatus: 'pending' | 'clean' | 'infected' | 'error'
-  scanResult?: Record<string, any>
+  scanResult?: Metadata
   uploadedAt: string
   uploadedBy: string
   downloadUrl?: string
@@ -475,7 +477,7 @@ export interface TicketListResponse {
 export interface TicketDetailResponse extends TicketResponse {
   description: string
   descriptionAr?: string
-  typeSpecificFields?: Record<string, any>
+  typeSpecificFields?: DynamicFields
   sensitivity: Sensitivity
   urgency: Urgency
   dossierId?: string
@@ -491,7 +493,7 @@ export interface AuditLogEntry {
   action: string
   userId: string
   userName: string
-  changes: Record<string, any>
+  changes: AuditChanges
   mfaVerified: boolean
   createdAt: string
 }
@@ -505,7 +507,7 @@ export interface CreateTicketRequest {
   titleAr?: string
   description: string
   descriptionAr?: string
-  typeSpecificFields?: Record<string, any>
+  typeSpecificFields?: DynamicFields
   dossierId?: string
   urgency: Urgency
   attachments?: string[]
@@ -517,7 +519,7 @@ export interface UpdateTicketRequest {
   description?: string
   descriptionAr?: string
   urgency?: Urgency
-  typeSpecificFields?: Record<string, any>
+  typeSpecificFields?: DynamicFields
 }
 
 export interface ApplyTriageRequest {
@@ -538,7 +540,7 @@ export interface AssignTicketRequest {
 
 export interface ConvertTicketRequest {
   targetType: RequestType
-  additionalData?: Record<string, any>
+  additionalData?: DynamicFields
   mfaToken?: string
 }
 

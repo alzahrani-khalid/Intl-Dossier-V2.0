@@ -11,10 +11,94 @@ import multer from 'multer'
 import briefsRouter from './ai/briefs.js'
 import chatRouter from './ai/chat.js'
 import intakeLinkingRouter from './ai/intake-linking.js'
+import { getAIFeatureStatus, aiConfig } from '../ai/config.js'
+import { embeddingsService } from '../ai/embeddings-service.js'
 
 const router = Router()
 
-// Apply Supabase authentication to all AI routes
+/**
+ * @route GET /api/ai/health
+ * @desc Get AI services health status
+ * @access Public (no auth required for health check)
+ * Feature: ai-features-reenablement
+ */
+router.get('/health', async (req, res) => {
+  try {
+    const featureStatus = getAIFeatureStatus()
+    const embeddingHealth = await embeddingsService.getHealthStatus()
+    const embeddingInfo = embeddingsService.getModelInfo()
+
+    // Check AnythingLLM health
+    let anythingllmHealth = { available: false, error: 'Not configured' as string | undefined }
+    if (aiConfig.providers.anythingllm.enabled && aiConfig.providers.anythingllm.baseUrl) {
+      try {
+        const response = await fetch(`${aiConfig.providers.anythingllm.baseUrl}/health`)
+        anythingllmHealth = {
+          available: response.ok,
+          error: response.ok ? undefined : `HTTP ${response.status}`,
+        }
+      } catch (error) {
+        anythingllmHealth = {
+          available: false,
+          error: error instanceof Error ? error.message : 'Unknown error',
+        }
+      }
+    }
+
+    // Determine overall health
+    const hasEmbeddingProvider =
+      embeddingHealth.edgeFunction.available ||
+      embeddingHealth.localOnnx.available ||
+      embeddingHealth.openai.available
+
+    const hasInferenceProvider =
+      anythingllmHealth.available || !!process.env.OPENAI_API_KEY || !!process.env.ANTHROPIC_API_KEY
+
+    const isHealthy = hasEmbeddingProvider && hasInferenceProvider
+
+    res.status(isHealthy ? 200 : 503).json({
+      status: isHealthy ? 'healthy' : 'degraded',
+      timestamp: new Date().toISOString(),
+      features: featureStatus,
+      providers: {
+        embeddings: {
+          ...embeddingHealth,
+          config: embeddingInfo,
+        },
+        inference: {
+          anythingllm: anythingllmHealth,
+          openai: {
+            available: !!process.env.OPENAI_API_KEY,
+            error: !process.env.OPENAI_API_KEY ? 'Not configured' : undefined,
+          },
+          anthropic: {
+            available: !!process.env.ANTHROPIC_API_KEY,
+            error: !process.env.ANTHROPIC_API_KEY ? 'Not configured' : undefined,
+          },
+        },
+      },
+      summary: {
+        embeddingsAvailable: hasEmbeddingProvider,
+        inferenceAvailable: hasInferenceProvider,
+        productionMode: process.env.NODE_ENV === 'production',
+        embeddingProvider: embeddingInfo.useEdgeFunction
+          ? 'edge-function'
+          : embeddingInfo.useLocalOnnx
+            ? 'local-onnx'
+            : 'openai',
+      },
+    })
+  } catch (error) {
+    logError('AI health check failed', error as Error)
+    res.status(500).json({
+      status: 'error',
+      timestamp: new Date().toISOString(),
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
+  }
+})
+
+// Apply Supabase authentication to all other AI routes
 router.use(supabaseAuth)
 const briefService = new BriefService()
 const voiceService = new VoiceService()

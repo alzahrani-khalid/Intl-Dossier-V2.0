@@ -1,19 +1,19 @@
 {
-  "title": "Engagements",
+  "title": "Engagement Dossiers",
   "subtitle": "Manage bilateral meetings, missions, and delegations",
   "actions": {
-    "createEngagement": "New Engagement",
-    "createFirst": "Create First Engagement",
+    "createEngagement": "New Engagement Dossier",
+    "createFirst": "Create First Engagement Dossier",
     "edit": "Edit",
     "archive": "Archive",
     "cancel": "Cancel",
-    "create": "Create Engagement",
+    "create": "Create Engagement Dossier",
     "save": "Save Changes",
     "loadMore": "Load More",
     "backToList": "Back to List",
     "addParticipant": "Add Participant",
     "addAgendaItem": "Add Agenda Item",
-    "viewDetails": "View Details"
+    "viewDetails": "View Dossier"
   },
   "search": {
     "placeholder": "Search engagements..."

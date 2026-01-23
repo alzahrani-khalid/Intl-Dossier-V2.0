@@ -1,0 +1,19 @@
+{
+  "category": "enhancement",
+  "description": "Create a PostgreSQL materialized view (dossier_statistics) that pre-computes aggregate statistics for each dossier: task_count, commitment_count, position_count, relationship_count, event_count, document_count, and last_activity_at. Set up periodic refresh (every 5 minutes) or trigger-based refresh on related table changes. Use these stats for dashboard cards and quick stats displays.\n\n**Rationale (R13):** Computing dossier statistics on-the-fly is expensive for dashboards showing multiple dossiers. Pre-computed stats enable fast dashboard rendering.",
+  "title": "Pre-computed Dossier Statistics Materialized View",
+  "dependencies": [],
+  "priority": 2,
+  "status": "in_progress",
+  "branchName": "035-dossier-context",
+  "id": "feature-1768824231592-39s9o3hso",
+  "descriptionHistory": [
+    {
+      "description": "Create a PostgreSQL materialized view (dossier_statistics) that pre-computes aggregate statistics for each dossier: task_count, commitment_count, position_count, relationship_count, event_count, document_count, and last_activity_at. Set up periodic refresh (every 5 minutes) or trigger-based refresh on related table changes. Use these stats for dashboard cards and quick stats displays.\n\n**Rationale (R13):** Computing dossier statistics on-the-fly is expensive for dashboards showing multiple dossiers. Pre-computed stats enable fast dashboard rendering.",
+      "timestamp": "2026-01-19T12:03:51.592Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-01-19T13:32:29.589Z",
+  "updatedAt": "2026-01-19T13:32:29.732Z"
+}

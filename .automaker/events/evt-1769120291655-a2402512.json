@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769120291655-a2402512",
+  "trigger": "feature_error",
+  "timestamp": "2026-01-22T22:18:11.655Z",
+  "projectPath": "/Users/khalidalzahrani/Library/CloudStorage/OneDrive-Personal/coding/Intl-DossierV2.0",
+  "projectName": "Intl-DossierV2.0",
+  "featureId": "realtime-collaboration-indicators",
+  "featureName": "Real-Time Collaboration Indicators",
+  "error": "Claude Code process exited with code 1",
+  "errorType": "execution"
+}

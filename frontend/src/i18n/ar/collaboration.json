@@ -1,0 +1,51 @@
+{
+  "title": "التعاون في الوقت الفعلي",
+  "description": "شاهد من يعرض أو يعدل حالياً",
+
+  "status": {
+    "viewing": "يعرض",
+    "editing": "يعدل",
+    "idle": "غائب"
+  },
+
+  "activeViewersLabel": "{{count}} مستخدم يشاهد هذا الملف",
+  "activeViewersLabel_one": "مستخدم واحد يشاهد هذا الملف",
+  "viewersSummary": "{{total}} يشاهد: {{editing}} يعدل، {{viewing}} يعرض",
+  "moreViewers": "{{count}} مشاهد آخر",
+  "moreViewers_one": "مشاهد آخر",
+  "andMore": "و {{count}} آخرين",
+  "editingCount": "{{count}} يعدل",
+  "editingSection": "يعدل {{section}}",
+
+  "lockedBy": "يتم تعديله بواسطة {{name}}",
+  "sectionLockedTitle": "{{name}} يعدل حالياً",
+  "editingSectionNamed": "يعدل: {{section}}",
+  "editingThisSection": "يعدل هذا القسم",
+
+  "forceEditWarningTitle": "القسم قيد التعديل",
+  "forceEditWarningDescription": "{{name}} يعدل هذا القسم حالياً. إذا تابعت، قد تستبدل تغييراته أو تسبب تعارضات.",
+  "forceEditConfirm": "تعديل على أي حال",
+
+  "conflictDetected": "تم اكتشاف تعارض",
+  "conflictDescription": "تم تعديل هذا السجل بواسطة مستخدم آخر أثناء تعديلك. اختر كيفية حل التعارض.",
+  "conflictBannerDescription": "قام مستخدم آخر بتعديل هذا السجل. قم بالحل للمتابعة.",
+  "conflictingFields": "{{count}} حقل متعارض",
+  "conflictingFields_one": "حقل واحد متعارض",
+  "modifiedAgo": "تم التعديل {{time}}",
+  "minutesAgo": "منذ {{count}} دقيقة",
+  "minutesAgo_one": "منذ دقيقة",
+  "secondsAgo": "منذ {{count}} ثانية",
+  "secondsAgo_one": "منذ ثانية",
+  "noVisibleChanges": "لم يتم اكتشاف تغييرات مرئية في الحقول",
+
+  "yourChanges": "تغييراتك",
+  "serverState": "حالة الخادم",
+  "empty": "(فارغ)",
+
+  "chooseResolution": "اختر كيفية الحل",
+  "resolveNow": "حل الآن",
+
+  "connected": "متصل في الوقت الفعلي",
+  "disconnected": "غير متصل",
+  "reconnecting": "جارٍ إعادة الاتصال..."
+}

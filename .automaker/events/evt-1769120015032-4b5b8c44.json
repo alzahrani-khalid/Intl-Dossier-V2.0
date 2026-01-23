@@ -1,0 +1,11 @@
+{
+  "id": "evt-1769120015032-4b5b8c44",
+  "trigger": "feature_error",
+  "timestamp": "2026-01-22T22:13:35.032Z",
+  "projectPath": "/Users/khalidalzahrani/Library/CloudStorage/OneDrive-Personal/coding/Intl-DossierV2.0",
+  "projectName": "Intl-DossierV2.0",
+  "featureId": "mou-notification-hooks",
+  "featureName": "Implement Missing MoU Notification Hooks",
+  "error": "Claude Code process exited with code 1",
+  "errorType": "execution"
+}

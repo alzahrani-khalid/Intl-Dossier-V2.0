@@ -165,5 +165,22 @@
     "technical_details": "Technical details",
     "try_again": "Try Again",
     "refresh_page": "Refresh Page"
+  },
+
+  "widget": {
+    "title": "Linked Dossiers",
+    "primary": "Primary",
+    "no_links": "No dossiers linked",
+    "add_dossier": "Add Dossier",
+    "select_dossier": "Select dossier to link",
+    "view_dossier": "View Dossier",
+    "remove_link": "Remove Link",
+    "inheritance_path": "Inheritance Path",
+    "show_more": "Show {{count}} more",
+    "show_less": "Show less",
+    "confirm_remove_title": "Remove Dossier Link",
+    "confirm_remove_description": "Are you sure you want to remove this dossier link? This action cannot be undone.",
+    "loading": "Loading dossier links...",
+    "error": "Failed to load dossier links"
   }
 }

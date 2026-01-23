@@ -3,10 +3,12 @@ import { Toaster } from 'react-hot-toast'
 import { ProCollapsibleSidebarWrapper } from './ProCollapsibleSidebar'
 import { CollapsingHeader, CollapsingHeaderSpacer } from './CollapsingHeader'
 import { EntityBreadcrumbTrail } from './EntityBreadcrumbTrail'
+import { DossierContextIndicator } from '@/components/Dossier/DossierContextIndicator'
 import { useIsMobile } from '@/hooks/use-mobile'
 import { ContextAwareFAB } from '@/components/ui/context-aware-fab'
 import { useContextAwareFAB } from '@/hooks/useContextAwareFAB'
 import { useEntityHistoryStore } from '@/store/entityHistoryStore'
+import { useDossierContextSafe } from '@/contexts/dossier-context'
 
 interface MainLayoutProps {
   children: ReactNode
@@ -16,6 +18,8 @@ interface MainLayoutProps {
   showFAB?: boolean
   /** Whether to show the entity breadcrumb trail (default: true) */
   showBreadcrumbTrail?: boolean
+  /** Whether to show the dossier context indicator (default: true when context exists) */
+  showDossierContext?: boolean
 }
 
 export function MainLayout({
@@ -23,6 +27,7 @@ export function MainLayout({
   useCollapsingHeader,
   showFAB,
   showBreadcrumbTrail = true,
+  showDossierContext = true,
 }: MainLayoutProps) {
   const isMobile = useIsMobile()
   const mainRef = useRef<HTMLElement>(null)
@@ -39,6 +44,14 @@ export function MainLayout({
   // Entity breadcrumb trail - only show if enabled and has history
   const { history } = useEntityHistoryStore()
   const displayBreadcrumbTrail = showBreadcrumbTrail && history.length > 0
+
+  // Dossier context indicator - check if we have context available
+  const dossierContext = useDossierContextSafe()
+  const hasDossierContext = Boolean(
+    dossierContext?.activeDossier ||
+      (dossierContext?.state?.selectedDossiers && dossierContext.state.selectedDossiers.length > 0),
+  )
+  const displayDossierContext = showDossierContext && hasDossierContext
 
   return (
     <>
@@ -67,6 +80,14 @@ export function MainLayout({
                 maxDisplay={isMobile ? 3 : 5}
                 compact={isMobile}
                 className="sticky top-16 z-30 -mx-4 md:-mx-6 lg:-mx-8"
+              />
+            )}
+
+            {/* Dossier context indicator - shows current dossier scope */}
+            {displayDossierContext && (
+              <DossierContextIndicator
+                size={isMobile ? 'sm' : 'default'}
+                className="mt-2 sm:mt-3"
               />
             )}
 

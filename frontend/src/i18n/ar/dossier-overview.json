@@ -1,0 +1,248 @@
+{
+  "pageTitle": "كل شيء عن {{name}}",
+  "pageDescription": "عرض شامل لجميع الروابط والأنشطة المتعلقة بهذا الملف",
+
+  "nav": {
+    "dossiersHub": "مركز الملفات"
+  },
+
+  "actions": {
+    "refresh": "تحديث",
+    "export": "تصدير",
+    "exporting": "جارٍ التصدير...",
+    "retry": "إعادة المحاولة",
+    "viewAll": "عرض الكل",
+    "loadMore": "تحميل المزيد"
+  },
+
+  "export": {
+    "json": "تصدير كـ JSON",
+    "pdf": "تصدير كـ PDF",
+    "docx": "تصدير كـ Word"
+  },
+
+  "tabs": {
+    "relatedDossiers": "الملفات المرتبطة",
+    "documents": "المستندات",
+    "workItems": "عناصر العمل",
+    "calendarEvents": "التقويم",
+    "keyContacts": "جهات الاتصال",
+    "activityTimeline": "النشاط"
+  },
+
+  "stats": {
+    "relatedDossiers": "الملفات المرتبطة",
+    "documents": "المستندات",
+    "workItems": "عناصر العمل",
+    "pendingWork": "قيد الانتظار",
+    "overdueWork": "متأخر",
+    "upcomingEvents": "الأحداث القادمة"
+  },
+
+  "error": {
+    "title": "خطأ في تحميل نظرة عامة على الملف",
+    "description": "فشل تحميل نظرة عامة على الملف. يرجى المحاولة مرة أخرى."
+  },
+
+  "dossierType": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "engagement": "مشاركة",
+    "topic": "موضوع",
+    "working_group": "مجموعة عمل",
+    "person": "شخص",
+    "elected_official": "مسؤول منتخب"
+  },
+
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف",
+    "deleted": "محذوف"
+  },
+
+  "relationshipType": {
+    "parent": "أصل",
+    "child": "فرعي",
+    "bilateral": "ثنائي",
+    "member_of": "عضو في",
+    "has_member": "لديه عضو",
+    "partner": "شريك",
+    "related_to": "مرتبط بـ",
+    "predecessor": "سابق",
+    "successor": "لاحق"
+  },
+
+  "relationship": {
+    "incoming": "وارد"
+  },
+
+  "relatedDossiers": {
+    "title": "الملفات المرتبطة",
+    "groupBy": {
+      "relationship": "حسب العلاقة",
+      "type": "حسب النوع"
+    },
+    "empty": {
+      "title": "لا توجد ملفات مرتبطة",
+      "description": "هذا الملف ليس له علاقات مع ملفات أخرى بعد. أضف علاقات لربط الكيانات ذات الصلة."
+    }
+  },
+
+  "documentType": {
+    "position": "ورقة موقف",
+    "mou": "مذكرة تفاهم",
+    "brief": "إحاطة",
+    "attachment": "مرفق"
+  },
+
+  "documentStatus": {
+    "draft": "مسودة",
+    "active": "نشط",
+    "approved": "معتمد",
+    "archived": "مؤرشف",
+    "template": "قالب"
+  },
+
+  "documents": {
+    "title": "المستندات",
+    "tabs": {
+      "all": "الكل",
+      "positions": "المواقف",
+      "mous": "مذكرات التفاهم",
+      "briefs": "الإحاطات",
+      "attachments": "المرفقات"
+    },
+    "empty": {
+      "all": "لم يتم العثور على مستندات",
+      "position": "لم يتم العثور على أوراق موقف",
+      "mou": "لم يتم العثور على مذكرات تفاهم",
+      "brief": "لم يتم العثور على إحاطات",
+      "attachment": "لم يتم العثور على مرفقات"
+    }
+  },
+
+  "workItemSource": {
+    "task": "مهمة",
+    "commitment": "التزام",
+    "intake": "طلب وارد"
+  },
+
+  "workItemStatus": {
+    "pending": "قيد الانتظار",
+    "in_progress": "قيد التنفيذ",
+    "review": "قيد المراجعة",
+    "completed": "مكتمل",
+    "cancelled": "ملغى",
+    "overdue": "متأخر"
+  },
+
+  "priority": {
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "urgent": "عاجل"
+  },
+
+  "inheritanceSource": {
+    "direct": "مباشر",
+    "engagement": "من المشاركة",
+    "after_action": "من ما بعد الإجراء",
+    "position": "من الموقف",
+    "mou": "من مذكرة التفاهم"
+  },
+
+  "workItems": {
+    "title": "عناصر العمل",
+    "completion": "تقدم الإنجاز",
+    "overdue": "متأخر",
+    "more": "المزيد",
+    "urgentItems": "{{count}} عناصر عاجلة/عالية الأولوية",
+    "tabs": {
+      "all": "الكل",
+      "tasks": "المهام",
+      "commitments": "الالتزامات",
+      "intakes": "الطلبات الواردة"
+    },
+    "empty": {
+      "all": "لم يتم العثور على عناصر عمل",
+      "task": "لم يتم العثور على مهام",
+      "commitment": "لم يتم العثور على التزامات",
+      "intake": "لم يتم العثور على طلبات واردة"
+    }
+  },
+
+  "eventType": {
+    "meeting": "اجتماع",
+    "deadline": "موعد نهائي",
+    "milestone": "مرحلة هامة",
+    "reminder": "تذكير",
+    "engagement": "مشاركة",
+    "review": "مراجعة"
+  },
+
+  "calendarEvents": {
+    "title": "أحداث التقويم",
+    "today": "اليوم",
+    "allDay": "طوال اليوم",
+    "joinMeeting": "انضم للاجتماع",
+    "tabs": {
+      "today": "اليوم",
+      "upcoming": "القادمة",
+      "past": "السابقة",
+      "all": "الكل"
+    },
+    "empty": {
+      "all": "لم يتم العثور على أحداث",
+      "today": "لا توجد أحداث مجدولة لليوم",
+      "upcoming": "لا توجد أحداث قادمة",
+      "past": "لا توجد أحداث سابقة في هذه الفترة"
+    }
+  },
+
+  "keyContacts": {
+    "title": "جهات الاتصال الرئيسية",
+    "lastInteraction": "آخر تفاعل",
+    "linkedDossier": "مرتبط",
+    "viewDossier": "عرض الملف",
+    "empty": {
+      "title": "لا توجد جهات اتصال رئيسية",
+      "description": "لم تتم إضافة جهات اتصال إلى هذا الملف بعد. أضف جهات اتصال لتتبع الأشخاص المهمين."
+    }
+  },
+
+  "activityType": {
+    "task": "مهمة",
+    "commitment": "التزام",
+    "intake": "طلب وارد",
+    "position": "موقف",
+    "event": "حدث",
+    "relationship": "علاقة",
+    "document": "مستند",
+    "comment": "تعليق"
+  },
+
+  "activityAction": {
+    "created": "أنشأ",
+    "updated": "حدّث",
+    "completed": "أكمل",
+    "linked": "ربط",
+    "commented": "علّق على",
+    "status_change": "غيّر حالة",
+    "assigned": "تم تكليفه بـ"
+  },
+
+  "activityTimeline": {
+    "title": "الجدول الزمني للنشاط",
+    "loadMore": "تحميل المزيد من الأنشطة",
+    "empty": {
+      "title": "لا يوجد نشاط حديث",
+      "description": "لم يكن هناك أي نشاط على هذا الملف مؤخرًا."
+    }
+  },
+
+  "footer": {
+    "generatedAt": "تم إنشاء البيانات في: {{date}}"
+  }
+}

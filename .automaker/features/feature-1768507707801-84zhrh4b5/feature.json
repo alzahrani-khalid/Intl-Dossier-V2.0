@@ -2,7 +2,7 @@
   "category": "enhancement",
   "description": "When working group has no members, provide smart member suggestions based on related engagements, forums, and past collaboration patterns. Include role assignment wizard and invitation templates.\n\n**Rationale:** Building effective working groups requires knowing who to include. AI-powered suggestions leverage existing relationship data to recommend relevant stakeholders, reducing manual research and accelerating team formation.",
   "title": "Working Group Members Empty State with Team Builder",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768507707801-84zhrh4b5",
   "descriptionHistory": [
     {

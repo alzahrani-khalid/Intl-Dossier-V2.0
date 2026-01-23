@@ -2,6 +2,7 @@ import { create } from 'zustand'
 import { persist } from 'zustand/middleware'
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
+import { setSentryUser, clearSentryUser, addBreadcrumb } from '../lib/sentry'
 
 // Re-export supabase for backward compatibility
 export { supabase }
@@ -56,16 +57,31 @@ export const useAuthStore = create<AuthState>()(
               .eq('id', data.user.id)
               .single()
 
+            const userRole = profile?.role || 'viewer'
+
             set({
               user: {
                 id: data.user.id,
                 email: data.user.email || '',
                 name: profile?.full_name || profile?.username || data.user.email?.split('@')[0],
-                role: profile?.role || 'viewer',
+                role: userRole,
                 avatar: profile?.avatar_url,
               },
               isAuthenticated: true,
               isLoading: false,
+            })
+
+            // Set Sentry user context
+            setSentryUser({
+              id: data.user.id,
+              email: data.user.email || '',
+              role: userRole,
+              tenant: profile?.organization_id || undefined,
+            })
+
+            addBreadcrumb('User logged in', 'auth', 'info', {
+              userId: data.user.id,
+              role: userRole,
             })
           }
         } catch (error) {
@@ -86,6 +102,10 @@ export const useAuthStore = create<AuthState>()(
           if (error) {
             throw error
           }
+
+          // Clear Sentry user context
+          clearSentryUser()
+          addBreadcrumb('User logged out', 'auth', 'info')
 
           set({
             user: null,
@@ -142,6 +162,8 @@ export const useAuthStore = create<AuthState>()(
       handleAuthStateChange: (event: AuthChangeEvent, session: Session | null) => {
         // Handle auth state changes from Supabase (token refresh, sign out, etc.)
         if (event === 'SIGNED_OUT' || event === 'USER_DELETED') {
+          clearSentryUser()
+          addBreadcrumb('Auth state changed: signed out', 'auth', 'info')
           set({
             user: null,
             isAuthenticated: false,
@@ -150,12 +172,25 @@ export const useAuthStore = create<AuthState>()(
           })
         } else if (event === 'SIGNED_IN' || event === 'TOKEN_REFRESHED') {
           if (session?.user) {
+            const userRole = session.user.user_metadata?.role
+
+            // Update Sentry user context on auth state change
+            setSentryUser({
+              id: session.user.id,
+              email: session.user.email || '',
+              role: userRole,
+            })
+
+            addBreadcrumb(`Auth state changed: ${event}`, 'auth', 'info', {
+              userId: session.user.id,
+            })
+
             set({
               user: {
                 id: session.user.id,
                 email: session.user.email || '',
                 name: session.user.user_metadata?.name,
-                role: session.user.user_metadata?.role,
+                role: userRole,
                 avatar: session.user.user_metadata?.avatar_url,
               },
               isAuthenticated: true,

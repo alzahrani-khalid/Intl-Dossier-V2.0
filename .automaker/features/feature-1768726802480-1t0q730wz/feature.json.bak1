@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "Form & Data Entry Friction",
+  "title": "Form & Data Entry Friction",
+  "status": "verified",
+  "id": "feature-1768726802480-1t0q730wz",
+  "descriptionHistory": [
+    {
+      "description": "Form & Data Entry Friction",
+      "timestamp": "2026-01-18T09:00:02.480Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "035-dossier-context",
+  "startedAt": "2026-01-18T09:46:32.305Z",
+  "updatedAt": "2026-01-18T10:04:17.845Z"
+}

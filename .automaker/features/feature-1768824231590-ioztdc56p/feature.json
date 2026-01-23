@@ -1,0 +1,19 @@
+{
+  "category": "enhancement",
+  "description": "Create an interactive onboarding tour for new users that establishes the dossier mental model. Tour steps: (1) Welcome explaining that everything starts with a Dossier, (2) 'Your Dossiers' showing how users are assigned dossiers to manage, (3) 'Work Flows Through Dossiers' demonstrating how tasks/positions/meetings link to dossiers, (4) 'Relationship Graph' introducing connections between dossiers, (5) 'Find What You Need' showing dossier-first search. Include skip option and ability to replay.\n\n**Rationale (R10):** New users often struggle to understand the dossier-centric architecture. Guided onboarding establishes the mental model from day one.",
+  "title": "Dossier-Centric Onboarding Tour",
+  "dependencies": ["feature-1768200697943-aoou2akv7"],
+  "priority": 2,
+  "status": "completed",
+  "branchName": "035-dossier-context",
+  "id": "feature-1768824231590-ioztdc56p",
+  "descriptionHistory": [
+    {
+      "description": "Create an interactive onboarding tour for new users that establishes the dossier mental model. Tour steps: (1) Welcome explaining that everything starts with a Dossier, (2) 'Your Dossiers' showing how users are assigned dossiers to manage, (3) 'Work Flows Through Dossiers' demonstrating how tasks/positions/meetings link to dossiers, (4) 'Relationship Graph' introducing connections between dossiers, (5) 'Find What You Need' showing dossier-first search. Include skip option and ability to replay.\n\n**Rationale (R10):** New users often struggle to understand the dossier-centric architecture. Guided onboarding establishes the mental model from day one.",
+      "timestamp": "2026-01-19T12:03:51.590Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-01-19T13:32:14.589Z",
+  "updatedAt": "2026-01-19T13:44:34.986Z"
+}

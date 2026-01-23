@@ -4,6 +4,7 @@ import { useAuthStore, supabase } from '../store/authStore'
 import { ChatDock } from '@/components/ai/ChatDock'
 import { ChatProvider } from '@/contexts/ChatContext'
 import { getDossierDetailPath } from '@/lib/dossier-routes'
+import { OnboardingTourTrigger } from '@/components/guided-tours'
 
 export const Route = createFileRoute('/_protected')({
   beforeLoad: async () => {
@@ -52,6 +53,12 @@ function ProtectedLayout() {
       </MainLayout>
       {/* AI Chat Dock - available on all protected pages */}
       <ChatDock onCitationClick={handleCitationClick} />
+      {/* Onboarding Tour - triggers for new users */}
+      <OnboardingTourTrigger
+        autoStartDelay={1000}
+        showReplayButton={true}
+        replayButtonPosition="bottom-right"
+      />
     </ChatProvider>
   )
 }

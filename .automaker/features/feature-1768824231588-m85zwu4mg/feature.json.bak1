@@ -1,0 +1,22 @@
+{
+  "category": "enhancement",
+  "description": "Redesign the search experience to emphasize dossier discovery. Search results organized in two sections: 'DOSSIERS' showing matching dossiers with type badges and key stats, and 'RELATED WORK' showing items linked to matching dossiers. Add filters: All Types dropdown, Status (Active/Archived), My Dossiers toggle. Results show dossier context badges on related items.\n\n**Rationale (R7):** Current search treats dossiers as just another result type. Dossier-first search helps users find the right dossier context before drilling into specific items.",
+  "title": "Dossier-First Search Experience",
+  "dependencies": [
+    "semantic-search-expansion",
+    "advanced-search-filters"
+  ],
+  "priority": 1,
+  "status": "verified",
+  "branchName": "035-dossier-context",
+  "id": "feature-1768824231588-m85zwu4mg",
+  "descriptionHistory": [
+    {
+      "description": "Redesign the search experience to emphasize dossier discovery. Search results organized in two sections: 'DOSSIERS' showing matching dossiers with type badges and key stats, and 'RELATED WORK' showing items linked to matching dossiers. Add filters: All Types dropdown, Status (Active/Archived), My Dossiers toggle. Results show dossier context badges on related items.\n\n**Rationale (R7):** Current search treats dossiers as just another result type. Dossier-first search helps users find the right dossier context before drilling into specific items.",
+      "timestamp": "2026-01-19T12:03:51.588Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-01-19T12:27:32.553Z",
+  "updatedAt": "2026-01-19T12:41:23.047Z"
+}

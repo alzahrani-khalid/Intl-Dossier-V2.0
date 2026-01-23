@@ -23,6 +23,7 @@ import signaturesRouter from './signatures'
 import afterActionRouter from './after-action'
 import intakeEntityLinksRouter from './intake-entity-links'
 import entitySearchRouter from './entity-search'
+import cacheMetricsRouter from './cache-metrics'
 import { authenticateToken } from '../middleware/auth'
 import { apiLimiter } from '../middleware/rateLimiter'
 import { logApiRequest, logError } from '../utils/logger'
@@ -87,6 +88,9 @@ apiRouter.use('/after-action', afterActionRouter)
 // Intake Entity Linking routes
 apiRouter.use(intakeEntityLinksRouter)
 apiRouter.use(entitySearchRouter)
+
+// Cache metrics routes
+apiRouter.use('/cache', cacheMetricsRouter)
 
 // API 404 handler
 apiRouter.use((req, res) => {

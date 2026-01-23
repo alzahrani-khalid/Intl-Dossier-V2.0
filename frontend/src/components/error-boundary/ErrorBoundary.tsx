@@ -2,6 +2,7 @@ import React, { Component, ErrorInfo, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button } from '../ui/button'
 import { AlertTriangle, RefreshCw, Home, Bug } from 'lucide-react'
+import { captureException, addBreadcrumb, setContext, captureMessage } from '@/lib/sentry'
 
 interface Props {
   children: ReactNode
@@ -42,17 +43,31 @@ export class ErrorBoundary extends Component<Props, State> {
     })
 
     // Log error to console in development
-    if (process.env.NODE_ENV === 'development') {
+    if (import.meta.env.DEV) {
       console.error('ErrorBoundary caught an error:', error, errorInfo)
     }
 
     // Call custom error handler
     this.props.onError?.(error, errorInfo)
 
-    // Log error to external service in production
-    if (process.env.NODE_ENV === 'production') {
-      this.logErrorToService(error, errorInfo)
-    }
+    // Send to Sentry error tracking
+    addBreadcrumb('Error boundary triggered', 'error', 'error', {
+      url: window.location.href,
+    })
+
+    setContext('errorBoundary', {
+      componentStack: errorInfo.componentStack,
+    })
+
+    captureException(error, {
+      tags: {
+        errorBoundary: 'true',
+      },
+      extra: {
+        componentStack: errorInfo.componentStack,
+        url: window.location.href,
+      },
+    })
   }
 
   componentDidUpdate(prevProps: Props) {
@@ -80,16 +95,18 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   logErrorToService = (error: Error, errorInfo: ErrorInfo) => {
-    // In a real app, you would send this to an error reporting service
-    // like Sentry, LogRocket, or Bugsnag
-    console.error('Error logged to service:', {
-      error: error.message,
-      stack: error.stack,
-      componentStack: errorInfo.componentStack,
-      timestamp: new Date().toISOString(),
-      userAgent: navigator.userAgent,
-      url: window.location.href,
-    })
+    // This is now handled by Sentry in componentDidCatch
+    // Keeping this method for backwards compatibility
+    if (import.meta.env.DEV) {
+      console.error('Error logged to service:', {
+        error: error.message,
+        stack: error.stack,
+        componentStack: errorInfo.componentStack,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+      })
+    }
   }
 
   render() {
@@ -126,18 +143,16 @@ function ErrorFallback({ error, errorInfo, resetError }: ErrorFallbackProps) {
   }
 
   const handleReportError = () => {
-    // In a real app, you would open a bug report form or send to error service
-    const errorReport = {
-      message: error?.message,
-      stack: error?.stack,
+    // Send feedback event to Sentry
+    const eventId = captureMessage('User reported error via UI', 'warning', {
+      errorMessage: error?.message,
+      errorStack: error?.stack,
       componentStack: errorInfo?.componentStack,
-      timestamp: new Date().toISOString(),
       url: window.location.href,
       userAgent: navigator.userAgent,
-    }
+    })
 
-    // In production, send to error tracking service
-    alert('Error report generated. Report ID: ' + Date.now())
+    alert(t('errorBoundary.reportSubmitted') || `Error report submitted. Report ID: ${eventId}`)
   }
 
   return (

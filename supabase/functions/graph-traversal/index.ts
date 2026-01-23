@@ -17,10 +17,10 @@ serve(async (req) => {
   }
 
   if (req.method !== 'GET') {
-    return new Response(
-      JSON.stringify({ error: 'Method not allowed' }),
-      { status: 405, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-    );
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
   }
 
   try {
@@ -29,8 +29,35 @@ serve(async (req) => {
     // Get authorization header
     const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
+      return new Response(JSON.stringify({ error: 'Missing authorization header' }), {
+        status: 401,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    // Extract JWT token from Authorization header
+    const token = authHeader.replace('Bearer ', '');
+
+    // Create Supabase client with user context
+    const supabaseClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } }
+    );
+
+    // Verify user authentication (required for RLS to work properly)
+    const {
+      data: { user },
+      error: userError,
+    } = await supabaseClient.auth.getUser(token);
+
+    if (userError || !user) {
+      console.error('Auth error:', userError);
       return new Response(
-        JSON.stringify({ error: 'Missing authorization header' }),
+        JSON.stringify({
+          error: 'Invalid user session',
+          details: userError?.message,
+        }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
@@ -43,27 +70,20 @@ serve(async (req) => {
 
     // Validation
     if (!startDossierId) {
-      return new Response(
-        JSON.stringify({ error: 'Missing startDossierId parameter' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'Missing startDossierId parameter' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
     if (maxDegrees < 1 || maxDegrees > 5) {
-      return new Response(
-        JSON.stringify({ error: 'maxDegrees must be between 1 and 5' }),
-        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
+      return new Response(JSON.stringify({ error: 'maxDegrees must be between 1 and 5' }), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
     }
 
-    // Create Supabase client
-    const supabaseClient = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
-      { global: { headers: { Authorization: authHeader } } }
-    );
-
-    // Verify starting dossier exists and user has access
+    // Verify starting dossier exists and user has access (RLS automatically applies)
     const { data: startDossier, error: dossierError } = await supabaseClient
       .from('dossiers')
       .select('id, type, name_en, name_ar, status')
@@ -152,9 +172,7 @@ serve(async (req) => {
     const queryTime = Date.now() - startTime;
 
     // Performance warning if query exceeds target
-    const performanceWarning = queryTime > 2000
-      ? 'Query exceeded 2s performance target'
-      : null;
+    const performanceWarning = queryTime > 2000 ? 'Query exceeded 2s performance target' : null;
 
     return new Response(
       JSON.stringify({

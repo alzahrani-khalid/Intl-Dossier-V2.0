@@ -1,0 +1,98 @@
+{
+  "header": {
+    "title": "Dossier Dashboard",
+    "subtitle": "Your dossiers, activities, and pending work at a glance."
+  },
+  "summary": {
+    "myDossiers": "My Dossiers",
+    "activeDossiers": "Active This Week",
+    "pendingWork": "Pending Work",
+    "needsAttention": "Needs Attention",
+    "owned": "{{count}} owned",
+    "dueToday": "{{count}} due today",
+    "overdue": "{{count}} overdue"
+  },
+  "myDossiers": {
+    "title": "My Dossiers",
+    "viewAll": "View All",
+    "error": "Failed to load dossiers",
+    "empty": "You don't have any assigned dossiers yet",
+    "browse": "Browse All Dossiers",
+    "noItemsInFilter": "No dossiers in this category",
+    "filter": {
+      "all": "All",
+      "owner": "Owned",
+      "contributor": "Contributing",
+      "reviewer": "Reviewing",
+      "member": "Member"
+    }
+  },
+  "recentActivity": {
+    "title": "Recent Dossier Activity",
+    "error": "Failed to load activity",
+    "empty": "No recent activity across your dossiers",
+    "untitled": "Untitled",
+    "overdue": "Overdue"
+  },
+  "pendingWork": {
+    "title": "Pending Work by Dossier",
+    "total": "total",
+    "overdue": "overdue",
+    "error": "Failed to load pending work",
+    "empty": "No pending work across your dossiers",
+    "emptyHint": "All caught up!",
+    "pending": "pending",
+    "dueToday": "today",
+    "tasks": "tasks",
+    "urgentItems": "Most urgent",
+    "viewAllInDossier": "View all in dossier"
+  },
+  "review": {
+    "title": "Due for Review",
+    "empty": "No dossiers scheduled for review",
+    "hint": "Dossiers with review dates will appear here"
+  },
+  "stats": {
+    "new": "new",
+    "overdue": "overdue",
+    "tasks": "Tasks",
+    "commitments": "Commits",
+    "intakes": "Intakes",
+    "lastActivity": "Last activity"
+  },
+  "dossierType": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "theme": "Theme",
+    "working_group": "Working Group",
+    "person": "Person",
+    "engagement": "Engagement",
+    "topic": "Topic"
+  },
+  "workItemType": {
+    "task": "Task",
+    "commitment": "Commitment",
+    "intake": "Intake"
+  },
+  "status": {
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "todo": "To Do",
+    "review": "Review",
+    "completed": "Completed",
+    "done": "Done",
+    "cancelled": "Cancelled",
+    "open": "Open",
+    "closed": "Closed"
+  },
+  "time": {
+    "minutesAgo": "{{count}} min ago",
+    "hoursAgo": "{{count}}h ago",
+    "daysAgo": "{{count}}d ago"
+  },
+  "common": {
+    "refresh": "Refresh",
+    "retry": "Try Again"
+  }
+}

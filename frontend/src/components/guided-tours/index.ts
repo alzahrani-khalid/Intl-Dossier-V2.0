@@ -12,12 +12,14 @@ export { TourProvider, useTour, useShouldShowTour } from './TourContext'
 // Components
 export { TourOverlay } from './TourOverlay'
 export { TourTrigger, useTourTrigger } from './TourTrigger'
+export { OnboardingTourTrigger, resetOnboardingState } from './OnboardingTourTrigger'
 
 // Tour definitions
 export {
   getTour,
   getAllTours,
   tourRegistry,
+  onboardingTour,
   dossierFirstTour,
   relationshipFirstTour,
   documentFirstTour,

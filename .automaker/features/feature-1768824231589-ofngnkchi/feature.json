@@ -1,0 +1,19 @@
+{
+  "category": "enhancement",
+  "description": "Update terminology throughout the application to reinforce dossier-centric mental model. Changes include: 'GASTAT Dossier' → 'GASTAT International Dossier', use 'Dossier' instead of generic 'Entity' where appropriate, 'Create Engagement' → 'Create Engagement Dossier', 'View Details' → 'View Dossier'. Update all UI labels, tooltips, help text, and documentation to use consistent dossier terminology.\n\n**Rationale (R9):** Inconsistent terminology confuses users about the system's core concept. Consistent branding reinforces that dossiers are the central organizing principle.",
+  "title": "Dossier-Centric Branding and Terminology Update",
+  "dependencies": [],
+  "priority": 2,
+  "status": "completed",
+  "branchName": "035-dossier-context",
+  "id": "feature-1768824231589-ofngnkchi",
+  "descriptionHistory": [
+    {
+      "description": "Update terminology throughout the application to reinforce dossier-centric mental model. Changes include: 'GASTAT Dossier' → 'GASTAT International Dossier', use 'Dossier' instead of generic 'Entity' where appropriate, 'Create Engagement' → 'Create Engagement Dossier', 'View Details' → 'View Dossier'. Update all UI labels, tooltips, help text, and documentation to use consistent dossier terminology.\n\n**Rationale (R9):** Inconsistent terminology confuses users about the system's core concept. Consistent branding reinforces that dossiers are the central organizing principle.",
+      "timestamp": "2026-01-19T12:03:51.590Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-01-19T13:21:44.774Z",
+  "updatedAt": "2026-01-19T13:32:14.202Z"
+}

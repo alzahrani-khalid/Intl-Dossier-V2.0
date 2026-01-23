@@ -13,6 +13,7 @@ export const DOSSIER_TYPE_TO_ROUTE: Record<string, string> = {
   forum: 'forums',
   working_group: 'working_groups',
   topic: 'topics',
+  elected_official: 'elected_officials',
 };
 
 /**

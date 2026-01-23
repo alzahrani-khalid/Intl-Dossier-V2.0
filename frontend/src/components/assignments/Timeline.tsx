@@ -143,7 +143,7 @@ export function Timeline({ events, getUserName }: TimelineProps): React.JSX.Elem
               {/* Timeline Line */}
               <div
                 className={`absolute ${
-                  isRTL ? 'right-[19px]' : 'left-[19px]'
+                  isRTL ? 'end-[19px]' : 'start-[19px]'
                 } top-0 bottom-0 w-px bg-border`}
               />
 

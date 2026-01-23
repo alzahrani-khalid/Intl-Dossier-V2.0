@@ -1,0 +1,77 @@
+{
+  "page": {
+    "title": "Search Dossiers",
+    "description": "Find dossiers and related work items across the system"
+  },
+  "search": {
+    "placeholder": "Search for dossiers, documents, positions...",
+    "label": "Search",
+    "clear": "Clear search"
+  },
+  "filters": {
+    "allTypes": "All Types",
+    "status": "Status",
+    "myDossiers": "My Dossiers",
+    "clear": "Clear filters"
+  },
+  "types": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "engagement": "Engagement",
+    "topic": "Topic",
+    "working_group": "Working Group",
+    "person": "Person",
+    "elected_official": "Elected Official"
+  },
+  "status": {
+    "all": "All Status",
+    "active": "Active",
+    "archived": "Archived"
+  },
+  "sections": {
+    "dossiers": "DOSSIERS",
+    "relatedWork": "RELATED WORK"
+  },
+  "stats": {
+    "engagements": "engagements",
+    "documents": "documents",
+    "positions": "positions",
+    "workItems": "work items",
+    "related": "related"
+  },
+  "priority": {
+    "urgent": "Urgent",
+    "high": "High",
+    "medium": "Medium",
+    "low": "Low"
+  },
+  "inheritance": {
+    "direct": "direct",
+    "engagement": "via engagement",
+    "after_action": "via after-action",
+    "position": "via position",
+    "mou": "via MoU"
+  },
+  "results": {
+    "summary": "{{dossiers}} dossiers, {{work}} related items",
+    "time": "{{ms}}ms"
+  },
+  "loadMore": {
+    "dossiers": "Load more dossiers",
+    "relatedWork": "Load more items"
+  },
+  "empty": {
+    "title": "No results found",
+    "description": "Try adjusting your search or filters",
+    "noDossiers": "No matching dossiers found",
+    "noRelatedWork": "No related work items found",
+    "noQuery": {
+      "title": "Start your search",
+      "description": "Search for countries, organizations, forums, and other dossiers. Results will show matching dossiers and their related work items."
+    }
+  },
+  "hints": {
+    "keyboard": "Press Ctrl+K (⌘K) to focus search from anywhere"
+  }
+}

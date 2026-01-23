@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Allow administrators to define custom preview card layouts for each entity type, controlling which fields, relationships, and metadata appear in hover previews, search results, and embedded references.\n\n**Rationale:** Different organizations prioritize different information when scanning entities. Customizable previews ensure users see the most relevant context at a glance, improving efficiency and reducing unnecessary clicks.",
   "title": "Customizable Entity Card Preview Templates",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768430233058-hon81v30y",
   "descriptionHistory": [
     {

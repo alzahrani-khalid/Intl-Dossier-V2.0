@@ -3,6 +3,10 @@ import type { RealtimeChannel, RealtimePostgresChangesPayload } from '@supabase/
 import { create } from 'zustand'
 import { subscribeWithSelector } from 'zustand/middleware'
 import { supabase } from '../lib/supabase'
+import type { JsonObject, PresenceData } from '@/types/common.types'
+
+// Generic record type for realtime payloads
+type RealtimeRecord = Record<string, unknown>
 
 // Types for realtime subscriptions
 export interface RealtimeSubscription {
@@ -10,7 +14,7 @@ export interface RealtimeSubscription {
   channel: RealtimeChannel
   table: string
   event: 'INSERT' | 'UPDATE' | 'DELETE' | '*'
-  callback: (payload: RealtimePostgresChangesPayload<any>) => void
+  callback: (payload: RealtimePostgresChangesPayload<RealtimeRecord>) => void
   status: 'subscribed' | 'unsubscribed' | 'error'
 }
 
@@ -26,7 +30,7 @@ export interface RealtimeActions {
   subscribe: (config: {
     table: string
     event: 'INSERT' | 'UPDATE' | 'DELETE' | '*'
-    callback: (payload: RealtimePostgresChangesPayload<any>) => void
+    callback: (payload: RealtimePostgresChangesPayload<RealtimeRecord>) => void
     filter?: string
   }) => string
   unsubscribe: (subscriptionId: string) => void
@@ -53,14 +57,14 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
 
       try {
         const channel = supabase.channel(`${table}-${event}-${subscriptionId}`).on(
-          'postgres_changes' as any,
+          'postgres_changes' as const,
           {
             event,
             schema: 'public',
             table,
             filter,
-          } as any,
-          (payload: any) => {
+          },
+          (payload: RealtimePostgresChangesPayload<RealtimeRecord>) => {
             callback(payload)
           },
         )
@@ -135,7 +139,7 @@ export const useRealtimeStore = create<RealtimeState & RealtimeActions>()(
             const newChannel = supabase
               .channel(`${subscription.table}-${subscription.event}-${id}`)
               .on(
-                'postgres_changes' as any,
+                'postgres_changes' as const,
                 {
                   event: subscription.event,
                   schema: 'public',
@@ -288,7 +292,7 @@ export function useRealtimeSubscription() {
 }
 
 // Specific hooks for common subscriptions
-export function useTableSubscription<T extends { [key: string]: any } = any>(
+export function useTableSubscription<T extends Record<string, unknown> = RealtimeRecord>(
   table: string,
   event: 'INSERT' | 'UPDATE' | 'DELETE' | '*',
   callback: (payload: RealtimePostgresChangesPayload<T>) => void,
@@ -312,7 +316,7 @@ export function useTableSubscription<T extends { [key: string]: any } = any>(
 
 // Presence management for collaborative features
 export function usePresence(channelName: string) {
-  const [presence, setPresence] = React.useState<Map<string, any>>(new Map())
+  const [presence, setPresence] = React.useState<Map<string, PresenceData[]>>(new Map())
   const [isOnline, setIsOnline] = React.useState(false)
 
   React.useEffect(() => {
@@ -355,7 +359,7 @@ export function usePresence(channelName: string) {
   return {
     presence,
     isOnline,
-    track: (data: any) => {
+    track: (data: PresenceData) => {
       const channel = supabase.channel(channelName)
       return channel.track(data)
     },

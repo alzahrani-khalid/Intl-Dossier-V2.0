@@ -186,6 +186,7 @@ serve(async (req) => {
         topic: 'topics',
         working_group: 'working_groups',
         person: 'persons',
+        elected_official: 'elected_officials',
       };
 
       const extensionTable = extensionTableMap[dossierType];

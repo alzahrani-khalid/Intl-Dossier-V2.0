@@ -6,18 +6,18 @@
  * Features: Auto-save on unmount, auto-restore on mount, TTL for stale state
  */
 
-import { useEffect, useRef, useCallback } from 'react';
-import { useNavigate, useSearch } from '@tanstack/react-router';
+import { useEffect, useRef, useCallback, useMemo } from 'react'
+import { useNavigate, useSearch } from '@tanstack/react-router'
 
 interface NavigationState {
-  scrollPosition?: number;
-  selectedItems?: string[];
-  expandedSections?: string[];
-  activeTab?: string;
-  timestamp: number;
+  scrollPosition?: number
+  selectedItems?: string[]
+  expandedSections?: string[]
+  activeTab?: string
+  timestamp: number
 }
 
-const STATE_TTL = 30 * 60 * 1000; // 30 minutes
+const STATE_TTL = 30 * 60 * 1000 // 30 minutes
 
 /**
  * Hook to preserve and restore navigation state for a given context
@@ -26,178 +26,177 @@ const STATE_TTL = 30 * 60 * 1000; // 30 minutes
  * @param options - Configuration options
  * @returns State management utilities
  */
-export function useNavigationState<T extends Record<string, any>>(
+export function useNavigationState<T extends Record<string, unknown>>(
   contextKey: string,
   options: {
-    defaultState?: Partial<T>;
-    includeScrollPosition?: boolean;
-  } = {}
+    defaultState?: Partial<T>
+    includeScrollPosition?: boolean
+  } = {},
 ) {
-  const { defaultState = {}, includeScrollPosition = true } = options;
-  const navigate = useNavigate();
-  const searchParams = useSearch();
-  const scrollRestoredRef = useRef(false);
-  const stateKey = `nav-state:${contextKey}`;
+  const { includeScrollPosition = true } = options
+  const navigate = useNavigate()
+  const searchParams = useSearch()
+  const scrollRestoredRef = useRef(false)
+  const stateKey = `nav-state:${contextKey}`
 
   /**
    * Load state from sessionStorage
    */
   const loadState = useCallback((): NavigationState | null => {
     try {
-      const stored = sessionStorage.getItem(stateKey);
-      if (!stored) return null;
+      const stored = sessionStorage.getItem(stateKey)
+      if (!stored) return null
 
-      const state: NavigationState = JSON.parse(stored);
+      const state: NavigationState = JSON.parse(stored)
 
       // Check if state is stale (older than TTL)
-      const now = Date.now();
+      const now = Date.now()
       if (now - state.timestamp > STATE_TTL) {
-        sessionStorage.removeItem(stateKey);
-        return null;
+        sessionStorage.removeItem(stateKey)
+        return null
       }
 
-      return state;
+      return state
     } catch (error) {
-      console.error('Failed to load navigation state:', error);
-      return null;
+      console.error('Failed to load navigation state:', error)
+      return null
     }
-  }, [stateKey]);
+  }, [stateKey])
 
   /**
    * Save state to sessionStorage
    */
-  const saveState = useCallback((state: Partial<NavigationState>) => {
-    try {
-      const currentState = loadState() || { timestamp: Date.now() };
-      const newState: NavigationState = {
-        ...currentState,
-        ...state,
-        timestamp: Date.now(),
-      };
-      sessionStorage.setItem(stateKey, JSON.stringify(newState));
-    } catch (error) {
-      console.error('Failed to save navigation state:', error);
-    }
-  }, [stateKey, loadState]);
+  const saveState = useCallback(
+    (state: Partial<NavigationState>) => {
+      try {
+        const currentState = loadState() || { timestamp: Date.now() }
+        const newState: NavigationState = {
+          ...currentState,
+          ...state,
+          timestamp: Date.now(),
+        }
+        sessionStorage.setItem(stateKey, JSON.stringify(newState))
+      } catch (error) {
+        console.error('Failed to save navigation state:', error)
+      }
+    },
+    [stateKey, loadState],
+  )
 
   /**
    * Clear state from sessionStorage
    */
   const clearState = useCallback(() => {
     try {
-      sessionStorage.removeItem(stateKey);
+      sessionStorage.removeItem(stateKey)
     } catch (error) {
-      console.error('Failed to clear navigation state:', error);
+      console.error('Failed to clear navigation state:', error)
     }
-  }, [stateKey]);
+  }, [stateKey])
 
   /**
    * Get current scroll position
    */
   const getCurrentScrollPosition = useCallback(() => {
-    return window.scrollY || document.documentElement.scrollTop;
-  }, []);
+    return window.scrollY || document.documentElement.scrollTop
+  }, [])
 
   /**
    * Save scroll position
    */
   const saveScrollPosition = useCallback(() => {
-    if (!includeScrollPosition) return;
-    const scrollPosition = getCurrentScrollPosition();
-    saveState({ scrollPosition });
-  }, [includeScrollPosition, getCurrentScrollPosition, saveState]);
+    if (!includeScrollPosition) return
+    const scrollPosition = getCurrentScrollPosition()
+    saveState({ scrollPosition })
+  }, [includeScrollPosition, getCurrentScrollPosition, saveState])
 
   /**
    * Restore scroll position
    */
   const restoreScrollPosition = useCallback(() => {
-    if (!includeScrollPosition || scrollRestoredRef.current) return;
+    if (!includeScrollPosition || scrollRestoredRef.current) return
 
-    const state = loadState();
+    const state = loadState()
     if (state?.scrollPosition !== undefined) {
       // Use requestAnimationFrame to ensure DOM is ready
       requestAnimationFrame(() => {
-        window.scrollTo(0, state.scrollPosition!);
-        scrollRestoredRef.current = true;
-      });
+        window.scrollTo(0, state.scrollPosition!)
+        scrollRestoredRef.current = true
+      })
     }
-  }, [includeScrollPosition, loadState]);
+  }, [includeScrollPosition, loadState])
 
   /**
    * Update search params (for filters)
    */
   const updateSearchParams = useCallback(
     (updates: Partial<T>) => {
-      navigate({
-        search: (prev: any) => ({
-          ...prev,
+      void navigate({
+        search: (prev) => ({
+          ...(prev as Record<string, unknown>),
           ...updates,
         }),
         replace: true,
-      });
+      })
     },
-    [navigate]
-  );
+    [navigate],
+  )
 
   /**
    * Save UI state (selected items, expanded sections, etc.)
    */
   const saveUIState = useCallback(
-    (state: {
-      selectedItems?: string[];
-      expandedSections?: string[];
-      activeTab?: string;
-    }) => {
-      saveState(state);
+    (state: { selectedItems?: string[]; expandedSections?: string[]; activeTab?: string }) => {
+      saveState(state)
     },
-    [saveState]
-  );
+    [saveState],
+  )
 
   /**
    * Load UI state
    */
   const loadUIState = useCallback(() => {
-    const state = loadState();
+    const state = loadState()
     return {
       selectedItems: state?.selectedItems || [],
       expandedSections: state?.expandedSections || [],
       activeTab: state?.activeTab,
-    };
-  }, [loadState]);
+    }
+  }, [loadState])
 
   // Restore scroll position on mount
   useEffect(() => {
-    restoreScrollPosition();
-  }, [restoreScrollPosition]);
+    restoreScrollPosition()
+  }, [restoreScrollPosition])
 
   // Save scroll position on unmount
   useEffect(() => {
     return () => {
-      saveScrollPosition();
-    };
-  }, [saveScrollPosition]);
+      saveScrollPosition()
+    }
+  }, [saveScrollPosition])
 
   // Auto-save scroll position periodically
   useEffect(() => {
-    if (!includeScrollPosition) return;
+    if (!includeScrollPosition) return
 
     const handleScroll = () => {
-      saveScrollPosition();
-    };
+      saveScrollPosition()
+    }
 
     // Throttle scroll events
-    let timeoutId: NodeJS.Timeout;
+    let timeoutId: NodeJS.Timeout
     const throttledHandleScroll = () => {
-      clearTimeout(timeoutId);
-      timeoutId = setTimeout(handleScroll, 500);
-    };
+      clearTimeout(timeoutId)
+      timeoutId = setTimeout(handleScroll, 500)
+    }
 
-    window.addEventListener('scroll', throttledHandleScroll, { passive: true });
+    window.addEventListener('scroll', throttledHandleScroll, { passive: true })
     return () => {
-      window.removeEventListener('scroll', throttledHandleScroll);
-      clearTimeout(timeoutId);
-    };
-  }, [includeScrollPosition, saveScrollPosition]);
+      window.removeEventListener('scroll', throttledHandleScroll)
+      clearTimeout(timeoutId)
+    }
+  }, [includeScrollPosition, saveScrollPosition])
 
   return {
     // Search params (for filters)
@@ -212,7 +211,7 @@ export function useNavigationState<T extends Record<string, any>>(
     // Scroll position
     saveScrollPosition,
     restoreScrollPosition,
-  };
+  }
 }
 
 /**
@@ -221,42 +220,46 @@ export function useNavigationState<T extends Record<string, any>>(
  * @param defaultFilters - Default filter values
  * @returns Filter state and updater
  */
-export function useFilterState<T extends Record<string, any>>(defaultFilters: T) {
-  const navigate = useNavigate();
-  const searchParams = useSearch();
+export function useFilterState<T extends Record<string, unknown>>(defaultFilters: T) {
+  const navigate = useNavigate()
+  const searchParams = useSearch()
 
-  const filters = {
-    ...defaultFilters,
-    ...searchParams,
-  } as T;
+  const filters = useMemo(
+    () =>
+      ({
+        ...defaultFilters,
+        ...searchParams,
+      }) as T,
+    [defaultFilters, searchParams],
+  )
 
   const updateFilters = useCallback(
     (updates: Partial<T> | ((prev: T) => Partial<T>)) => {
-      const newFilters = typeof updates === 'function' ? updates(filters) : updates;
+      const newFilters = typeof updates === 'function' ? updates(filters) : updates
 
-      navigate({
-        search: (prev: any) => ({
-          ...prev,
+      void navigate({
+        search: (prev) => ({
+          ...(prev as Record<string, unknown>),
           ...newFilters,
         }),
         replace: true,
-      });
+      })
     },
-    [navigate, filters]
-  );
+    [navigate, filters],
+  )
 
   const resetFilters = useCallback(() => {
-    navigate({
-      search: defaultFilters as any,
+    void navigate({
+      search: defaultFilters,
       replace: true,
-    });
-  }, [navigate, defaultFilters]);
+    })
+  }, [navigate, defaultFilters])
 
   return {
     filters,
     updateFilters,
     resetFilters,
-  };
+  }
 }
 
 /**
@@ -268,31 +271,31 @@ export function useFilterState<T extends Record<string, any>>(defaultFilters: T)
 export function useSelectionState(contextKey: string) {
   const { saveUIState, loadUIState } = useNavigationState(contextKey, {
     includeScrollPosition: false,
-  });
+  })
 
-  const { selectedItems = [] } = loadUIState();
+  const { selectedItems = [] } = loadUIState()
 
   const setSelectedItems = useCallback(
     (items: string[] | ((prev: string[]) => string[])) => {
-      const newItems = typeof items === 'function' ? items(selectedItems) : items;
-      saveUIState({ selectedItems: newItems });
+      const newItems = typeof items === 'function' ? items(selectedItems) : items
+      saveUIState({ selectedItems: newItems })
     },
-    [selectedItems, saveUIState]
-  );
+    [selectedItems, saveUIState],
+  )
 
   const toggleItem = useCallback(
     (itemId: string) => {
       const newSelected = selectedItems.includes(itemId)
         ? selectedItems.filter((id) => id !== itemId)
-        : [...selectedItems, itemId];
-      saveUIState({ selectedItems: newSelected });
+        : [...selectedItems, itemId]
+      saveUIState({ selectedItems: newSelected })
     },
-    [selectedItems, saveUIState]
-  );
+    [selectedItems, saveUIState],
+  )
 
   const clearSelection = useCallback(() => {
-    saveUIState({ selectedItems: [] });
-  }, [saveUIState]);
+    saveUIState({ selectedItems: [] })
+  }, [saveUIState])
 
   return {
     selectedItems,
@@ -300,5 +303,5 @@ export function useSelectionState(contextKey: string) {
     toggleItem,
     clearSelection,
     isSelected: (itemId: string) => selectedItems.includes(itemId),
-  };
+  }
 }

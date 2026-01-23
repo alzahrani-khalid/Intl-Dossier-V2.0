@@ -1,12 +1,17 @@
-import { useState } from 'react';
-import { useTranslation } from 'react-i18next';
-import { Link } from '@tanstack/react-router';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
-import { Button } from '@/components/ui/button';
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Link } from '@tanstack/react-router'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Input } from '@/components/ui/input'
+import { Button } from '@/components/ui/button'
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from '@/components/ui/accordion'
+import { Badge } from '@/components/ui/badge'
+import { Separator } from '@/components/ui/separator'
 import {
   Search,
   Book,
@@ -28,7 +33,7 @@ import {
   ListTodo,
   ArrowRight,
   Sparkles,
-} from 'lucide-react';
+} from 'lucide-react'
 
 /**
  * HelpPage Component - Redesigned
@@ -42,9 +47,9 @@ import {
  * - RTL support for Arabic
  */
 export function HelpPage() {
-  const { i18n } = useTranslation();
-  const isRTL = i18n.language === 'ar';
-  const [searchQuery, setSearchQuery] = useState('');
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+  const [searchQuery, setSearchQuery] = useState('')
 
   // Feature guides configuration - easy to add new guides
   const featureGuides = [
@@ -62,9 +67,7 @@ export function HelpPage() {
     {
       id: 'dossiers',
       title: isRTL ? 'الملفات' : 'Dossiers',
-      description: isRTL
-        ? 'إدارة ملفات الدول والمنظمات'
-        : 'Manage country & organization files',
+      description: isRTL ? 'إدارة ملفات الدول والمنظمات' : 'Manage country & organization files',
       icon: FileText,
       href: '/help/dossiers',
       color: 'bg-emerald-500',
@@ -73,9 +76,7 @@ export function HelpPage() {
     {
       id: 'tasks',
       title: isRTL ? 'المهام' : 'Tasks & Workflows',
-      description: isRTL
-        ? 'إدارة المهام وسير العمل'
-        : 'Manage assignments and workflows',
+      description: isRTL ? 'إدارة المهام وسير العمل' : 'Manage assignments and workflows',
       icon: ListTodo,
       href: '/help/tasks',
       color: 'bg-orange-500',
@@ -84,9 +85,7 @@ export function HelpPage() {
     {
       id: 'calendar',
       title: isRTL ? 'التقويم' : 'Calendar',
-      description: isRTL
-        ? 'جدولة وتتبع الأحداث'
-        : 'Schedule and track events',
+      description: isRTL ? 'جدولة وتتبع الأحداث' : 'Schedule and track events',
       icon: Calendar,
       href: '/help/calendar',
       color: 'bg-purple-500',
@@ -95,9 +94,7 @@ export function HelpPage() {
     {
       id: 'contacts',
       title: isRTL ? 'جهات الاتصال' : 'Contacts',
-      description: isRTL
-        ? 'إدارة جهات الاتصال الخارجية'
-        : 'Manage external contacts',
+      description: isRTL ? 'إدارة جهات الاتصال الخارجية' : 'Manage external contacts',
       icon: Users,
       href: '/help/contacts',
       color: 'bg-pink-500',
@@ -106,15 +103,13 @@ export function HelpPage() {
     {
       id: 'analytics',
       title: isRTL ? 'التحليلات' : 'Analytics',
-      description: isRTL
-        ? 'عرض التقارير والإحصائيات'
-        : 'View reports and statistics',
+      description: isRTL ? 'عرض التقارير والإحصائيات' : 'View reports and statistics',
       icon: LayoutDashboard,
       href: '/help/analytics',
       color: 'bg-cyan-500',
       comingSoon: true,
     },
-  ];
+  ]
 
   // Quick FAQ items
   const quickFAQ = [
@@ -158,15 +153,15 @@ export function HelpPage() {
         : 'Click your profile, select "Settings", go to the "Security" tab, and click "Change Password".',
       icon: AlertCircle,
     },
-  ];
+  ]
 
   // Filter FAQ based on search
   const filteredFAQ = quickFAQ.filter(
     (item) =>
       !searchQuery ||
       item.question.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.answer.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+      item.answer.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
 
   return (
     <div
@@ -179,9 +174,7 @@ export function HelpPage() {
           <div className="max-w-3xl mx-auto text-center">
             <div className="inline-flex items-center gap-2 bg-primary/10 text-primary px-4 py-2 rounded-full mb-4">
               <Sparkles className="size-4" />
-              <span className="text-sm font-medium">
-                {isRTL ? 'مركز المساعدة' : 'Help Center'}
-              </span>
+              <span className="text-sm font-medium">{isRTL ? 'مركز المساعدة' : 'Help Center'}</span>
             </div>
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
               {isRTL ? 'كيف يمكننا مساعدتك؟' : 'How can we help you?'}
@@ -195,14 +188,14 @@ export function HelpPage() {
             {/* Search Bar */}
             <div className="relative max-w-xl mx-auto">
               <Search
-                className={`absolute top-1/2 -translate-y-1/2 size-5 text-muted-foreground ${isRTL ? 'right-4' : 'left-4'}`}
+                className={`absolute top-1/2 -translate-y-1/2 size-5 text-muted-foreground ${isRTL ? 'end-4' : 'start-4'}`}
               />
               <Input
                 type="search"
                 placeholder={isRTL ? 'ابحث عن المساعدة...' : 'Search for help...'}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={`h-14 text-lg rounded-full border-2 ${isRTL ? 'pr-12 pl-4' : 'pl-12 pr-4'}`}
+                className={`h-14 text-lg rounded-full border-2 ${isRTL ? 'pe-12 ps-4' : 'ps-12 pe-4'}`}
               />
             </div>
           </div>
@@ -219,20 +212,14 @@ export function HelpPage() {
                 {isRTL ? 'أدلة الميزات' : 'Feature Guides'}
               </h2>
               <p className="text-muted-foreground text-start">
-                {isRTL
-                  ? 'تعلم كيفية استخدام كل ميزة'
-                  : 'Learn how to use each feature'}
+                {isRTL ? 'تعلم كيفية استخدام كل ميزة' : 'Learn how to use each feature'}
               </p>
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {featureGuides.map((guide) => (
-              <FeatureGuideCard
-                key={guide.id}
-                guide={guide}
-                isRTL={isRTL}
-              />
+              <FeatureGuideCard key={guide.id} guide={guide} isRTL={isRTL} />
             ))}
           </div>
         </section>
@@ -253,9 +240,7 @@ export function HelpPage() {
             {filteredFAQ.length === 0 ? (
               <Card>
                 <CardContent className="py-12 text-center text-muted-foreground">
-                  {isRTL
-                    ? 'لم يتم العثور على نتائج'
-                    : 'No results found matching your search'}
+                  {isRTL ? 'لم يتم العثور على نتائج' : 'No results found matching your search'}
                 </CardContent>
               </Card>
             ) : (
@@ -263,7 +248,7 @@ export function HelpPage() {
                 <CardContent className="pt-6">
                   <Accordion type="single" collapsible className="w-full">
                     {filteredFAQ.map((item, index) => {
-                      const Icon = item.icon;
+                      const Icon = item.icon
                       return (
                         <AccordionItem key={item.id} value={item.id}>
                           <AccordionTrigger className="text-start hover:no-underline">
@@ -280,7 +265,7 @@ export function HelpPage() {
                             {item.answer}
                           </AccordionContent>
                         </AccordionItem>
-                      );
+                      )
                     })}
                   </Accordion>
                 </CardContent>
@@ -360,13 +345,9 @@ export function HelpPage() {
                       {isRTL ? 'ساعات العمل' : 'Support Hours'}
                     </p>
                     <p className="text-sm text-muted-foreground">
-                      {isRTL
-                        ? 'الأحد - الخميس'
-                        : 'Sunday - Thursday'}
+                      {isRTL ? 'الأحد - الخميس' : 'Sunday - Thursday'}
                     </p>
-                    <p className="text-sm text-muted-foreground">
-                      8:00 AM - 4:00 PM (GMT+3)
-                    </p>
+                    <p className="text-sm text-muted-foreground">8:00 AM - 4:00 PM (GMT+3)</p>
                   </div>
                 </CardContent>
               </Card>
@@ -405,7 +386,7 @@ export function HelpPage() {
         </section>
       </div>
     </div>
-  );
+  )
 }
 
 // Feature Guide Card Component
@@ -414,18 +395,18 @@ function FeatureGuideCard({
   isRTL,
 }: {
   guide: {
-    id: string;
-    title: string;
-    description: string;
-    icon: React.ElementType;
-    href: string;
-    color: string;
-    badge?: string;
-    comingSoon?: boolean;
-  };
-  isRTL: boolean;
+    id: string
+    title: string
+    description: string
+    icon: React.ElementType
+    href: string
+    color: string
+    badge?: string
+    comingSoon?: boolean
+  }
+  isRTL: boolean
 }) {
-  const Icon = guide.icon;
+  const Icon = guide.icon
 
   const cardContent = (
     <Card
@@ -436,7 +417,7 @@ function FeatureGuideCard({
       }`}
     >
       {/* Color accent bar */}
-      <div className={`absolute top-0 ${isRTL ? 'right-0' : 'left-0'} w-1 h-full ${guide.color}`} />
+      <div className={`absolute top-0 ${isRTL ? 'end-0' : 'start-0'} w-1 h-full ${guide.color}`} />
 
       <CardContent className="pt-6 ps-5">
         <div className="flex items-start gap-4">
@@ -473,13 +454,13 @@ function FeatureGuideCard({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 
   if (guide.comingSoon) {
-    return cardContent;
+    return cardContent
   }
 
-  return <Link to={guide.href}>{cardContent}</Link>;
+  return <Link to={guide.href}>{cardContent}</Link>
 }
 
 // Resource Card Component
@@ -489,10 +470,10 @@ function ResourceCard({
   description,
   isRTL,
 }: {
-  icon: React.ElementType;
-  title: string;
-  description: string;
-  isRTL: boolean;
+  icon: React.ElementType
+  title: string
+  description: string
+  isRTL: boolean
 }) {
   return (
     <Card className="group hover:shadow-md transition-shadow cursor-pointer">
@@ -509,5 +490,5 @@ function ResourceCard({
         </div>
       </CardContent>
     </Card>
-  );
+  )
 }

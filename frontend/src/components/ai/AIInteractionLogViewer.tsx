@@ -715,7 +715,7 @@ const InteractionDetailView: React.FC<InteractionDetailViewProps> = ({
                 <div
                   className={cn(
                     'absolute top-0 h-full w-0.5 bg-gray-200',
-                    isRTL ? 'right-2' : 'left-2',
+                    isRTL ? 'end-2' : 'start-2',
                   )}
                 />
 
@@ -726,7 +726,7 @@ const InteractionDetailView: React.FC<InteractionDetailViewProps> = ({
                       className={cn(
                         'absolute flex size-5 items-center justify-center rounded-full',
                         getEventColor(event.event_type),
-                        isRTL ? 'right-0' : 'left-0',
+                        isRTL ? 'end-0' : 'start-0',
                       )}
                     >
                       {getEventIcon(event.event_type)}

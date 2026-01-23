@@ -1,13 +1,14 @@
 import { createFileRoute } from '@tanstack/react-router'
-import { SearchPage } from '../../pages/SearchPage'
+import { DossierSearchPage } from '../../pages/DossierSearchPage'
 
 export const Route = createFileRoute('/_protected/search')({
- component: SearchPage,
- validateSearch: (search: Record<string, unknown>) => {
- return {
- q: (search.q as string) || '',
- type: search.type as string | undefined,
- includeArchived: search.includeArchived as string | undefined,
- }
- },
+  component: DossierSearchPage,
+  validateSearch: (search: Record<string, unknown>) => {
+    return {
+      q: (search.q as string) || '',
+      type: search.type as string | undefined,
+      status: search.status as string | undefined,
+      myDossiers: search.myDossiers as string | undefined,
+    }
+  },
 })

@@ -1,0 +1,98 @@
+{
+  "header": {
+    "title": "لوحة الملفات",
+    "subtitle": "ملفاتك وأنشطتك والأعمال المعلقة في لمحة واحدة."
+  },
+  "summary": {
+    "myDossiers": "ملفاتي",
+    "activeDossiers": "النشطة هذا الأسبوع",
+    "pendingWork": "الأعمال المعلقة",
+    "needsAttention": "تحتاج انتباه",
+    "owned": "{{count}} مملوكة",
+    "dueToday": "{{count}} مستحقة اليوم",
+    "overdue": "{{count}} متأخرة"
+  },
+  "myDossiers": {
+    "title": "ملفاتي",
+    "viewAll": "عرض الكل",
+    "error": "فشل في تحميل الملفات",
+    "empty": "ليس لديك أي ملفات مخصصة بعد",
+    "browse": "تصفح جميع الملفات",
+    "noItemsInFilter": "لا توجد ملفات في هذه الفئة",
+    "filter": {
+      "all": "الكل",
+      "owner": "مملوكة",
+      "contributor": "مساهم",
+      "reviewer": "مراجع",
+      "member": "عضو"
+    }
+  },
+  "recentActivity": {
+    "title": "نشاط الملفات الأخير",
+    "error": "فشل في تحميل النشاط",
+    "empty": "لا يوجد نشاط حديث عبر ملفاتك",
+    "untitled": "بدون عنوان",
+    "overdue": "متأخر"
+  },
+  "pendingWork": {
+    "title": "الأعمال المعلقة حسب الملف",
+    "total": "إجمالي",
+    "overdue": "متأخرة",
+    "error": "فشل في تحميل الأعمال المعلقة",
+    "empty": "لا توجد أعمال معلقة عبر ملفاتك",
+    "emptyHint": "كل شيء منجز!",
+    "pending": "معلق",
+    "dueToday": "اليوم",
+    "tasks": "مهام",
+    "urgentItems": "الأكثر إلحاحاً",
+    "viewAllInDossier": "عرض الكل في الملف"
+  },
+  "review": {
+    "title": "مستحقة للمراجعة",
+    "empty": "لا توجد ملفات مجدولة للمراجعة",
+    "hint": "ستظهر الملفات ذات تواريخ المراجعة هنا"
+  },
+  "stats": {
+    "new": "جديد",
+    "overdue": "متأخر",
+    "tasks": "مهام",
+    "commitments": "التزامات",
+    "intakes": "طلبات",
+    "lastActivity": "آخر نشاط"
+  },
+  "dossierType": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "theme": "موضوع",
+    "working_group": "مجموعة عمل",
+    "person": "شخص",
+    "engagement": "اجتماع",
+    "topic": "موضوع"
+  },
+  "workItemType": {
+    "task": "مهمة",
+    "commitment": "التزام",
+    "intake": "طلب"
+  },
+  "status": {
+    "pending": "معلق",
+    "in_progress": "قيد التنفيذ",
+    "todo": "للتنفيذ",
+    "review": "مراجعة",
+    "completed": "مكتمل",
+    "done": "منجز",
+    "cancelled": "ملغي",
+    "open": "مفتوح",
+    "closed": "مغلق"
+  },
+  "time": {
+    "minutesAgo": "منذ {{count}} دقيقة",
+    "hoursAgo": "منذ {{count}} ساعة",
+    "daysAgo": "منذ {{count}} يوم"
+  },
+  "common": {
+    "refresh": "تحديث",
+    "retry": "حاول مجدداً"
+  }
+}

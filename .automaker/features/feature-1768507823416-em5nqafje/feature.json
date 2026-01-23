@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Aggregate all interactions with a stakeholder (emails, meetings, document exchanges, comments) into a unified chronological timeline. Include search, filtering, and the ability to annotate key moments or turning points in the relationship.\n\n**Rationale:** Understanding stakeholder engagement history is critical for relationship management. A consolidated view helps teams maintain continuity, avoid redundant outreach, and identify engagement patterns.",
   "title": "Stakeholder Communication History Timeline",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768507823416-em5nqafje",
   "descriptionHistory": [
     {

@@ -8,6 +8,7 @@
 
 import { supabase } from '@/lib/supabase'
 import type { Database } from '../../../backend/src/types/database.types'
+import type { ApiErrorDetails, Metadata } from '@/types/common.types'
 
 // Get Supabase URL for Edge Functions
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
@@ -34,7 +35,7 @@ export interface CreateTaskRequest {
   sla_deadline?: string
   work_item_type?: 'dossier' | 'position' | 'ticket' | 'generic'
   work_item_id?: string
-  source?: Record<string, any>
+  source?: Metadata
 }
 
 export interface UpdateTaskRequest {
@@ -48,7 +49,7 @@ export interface UpdateTaskRequest {
   sla_deadline?: string
   work_item_type?: 'dossier' | 'position' | 'ticket' | 'generic'
   work_item_id?: string
-  source?: Record<string, any>
+  source?: Metadata
   completed_by?: string
   completed_at?: string
   last_known_updated_at?: string // For optimistic locking
@@ -78,20 +79,46 @@ export interface TasksListResponse {
 }
 
 /**
+ * Task engagement details
+ */
+export interface TaskEngagement {
+  id: string
+  title: string | null
+  engagement_type: string | null
+  engagement_date: string | null
+  location: string | null
+  dossier?: {
+    id: string
+    name_en: string
+    name_ar: string
+  }
+}
+
+/**
  * API Error class
  */
 export class TasksAPIError extends Error {
   code: string
   status: number
-  details?: any
+  details?: ApiErrorDetails
 
-  constructor(message: string, status: number, code: string, details?: any) {
+  constructor(message: string, status: number, code: string, details?: ApiErrorDetails) {
     super(message)
     this.name = 'TasksAPIError'
     this.code = code
     this.status = status
     this.details = details
   }
+}
+
+/**
+ * Optimistic lock conflict data from API
+ */
+interface OptimisticLockConflictData {
+  message: string
+  current_state: Task
+  client_timestamp: string
+  server_timestamp: string
 }
 
 /**
@@ -102,7 +129,7 @@ export class OptimisticLockConflictError extends TasksAPIError {
   client_timestamp: string
   server_timestamp: string
 
-  constructor(data: any) {
+  constructor(data: OptimisticLockConflictData) {
     super(data.message, 409, 'optimistic_lock_conflict')
     this.current_state = data.current_state
     this.client_timestamp = data.client_timestamp
@@ -409,7 +436,7 @@ export const tasksAPI = {
     }
 
     // Fetch engagement details if available
-    let engagement: any = undefined
+    let engagement: TaskEngagement | undefined = undefined
     if (task.engagement_id) {
       try {
         const { data: engagementData, error: engagementError } = await supabase
@@ -435,17 +462,22 @@ export const tasksAPI = {
         if (engagementError) {
           console.warn(`Failed to fetch engagement for ${task.engagement_id}:`, engagementError)
         } else if (engagementData) {
+          const dossierData = engagementData.dossiers as {
+            id: string
+            name_en: string
+            name_ar: string
+          } | null
           engagement = {
             id: engagementData.id,
             title: engagementData.title,
             engagement_type: engagementData.engagement_type,
             engagement_date: engagementData.engagement_date,
             location: engagementData.location,
-            dossier: engagementData.dossiers
+            dossier: dossierData
               ? {
-                  id: (engagementData.dossiers as any).id,
-                  name_en: (engagementData.dossiers as any).name_en,
-                  name_ar: (engagementData.dossiers as any).name_ar,
+                  id: dossierData.id,
+                  name_en: dossierData.name_en,
+                  name_ar: dossierData.name_ar,
                 }
               : undefined,
           }

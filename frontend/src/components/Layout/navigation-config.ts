@@ -12,6 +12,7 @@ import {
   Settings,
   HelpCircle,
   Folder,
+  FolderOpen,
   MessageSquare,
   ClipboardList,
   ScrollText,
@@ -32,6 +33,15 @@ import {
   Webhook,
   Workflow,
   BookOpen,
+  Globe2,
+  Building2,
+  Users2,
+  Calendar,
+  Target,
+  User,
+  Network,
+  History,
+  Vote,
 } from 'lucide-react'
 
 export interface NavigationItem {
@@ -54,6 +64,80 @@ export const createNavigationSections = (
   isAdmin: boolean,
 ): NavigationSection[] => {
   const sections: NavigationSection[] = [
+    // DOSSIERS - Primary Hub (First-class citizen)
+    {
+      id: 'dossiers-hub',
+      label: 'navigation.dossiersHub',
+      items: [
+        {
+          id: 'all-dossiers',
+          label: 'navigation.allDossiers',
+          path: '/dossiers',
+          icon: FolderOpen,
+        },
+        {
+          id: 'dossier-countries',
+          label: 'navigation.countries',
+          path: '/dossiers/countries',
+          icon: Globe2,
+        },
+        {
+          id: 'dossier-organizations',
+          label: 'navigation.organizations',
+          path: '/dossiers/organizations',
+          icon: Building2,
+        },
+        {
+          id: 'dossier-forums',
+          label: 'navigation.forums',
+          path: '/dossiers/forums',
+          icon: Users2,
+        },
+        {
+          id: 'dossier-engagements',
+          label: 'navigation.engagements',
+          path: '/dossiers/engagements',
+          icon: Calendar,
+        },
+        {
+          id: 'dossier-working-groups',
+          label: 'navigation.workingGroups',
+          path: '/dossiers/working_groups',
+          icon: Briefcase,
+        },
+        {
+          id: 'dossier-persons',
+          label: 'navigation.persons',
+          path: '/dossiers/persons',
+          icon: User,
+        },
+        {
+          id: 'dossier-topics',
+          label: 'navigation.topics',
+          path: '/dossiers/topics',
+          icon: Target,
+        },
+        {
+          id: 'dossier-elected-officials',
+          label: 'navigation.electedOfficials',
+          path: '/dossiers/elected_officials',
+          icon: Vote,
+        },
+        {
+          id: 'relationship-graph',
+          label: 'navigation.relationshipGraph',
+          path: '/relationships',
+          icon: Network,
+        },
+        {
+          id: 'recent-activity',
+          label: 'navigation.recentActivity',
+          path: '/activity',
+          icon: History,
+        },
+      ],
+    },
+    // My Work Section
     {
       id: 'my-work',
       label: 'navigation.myWork',
@@ -94,9 +178,10 @@ export const createNavigationSections = (
         },
       ],
     },
+    // Main Section (Dashboard, Approvals, etc.)
     {
       id: 'main',
-      label: 'Main',
+      label: 'navigation.main',
       items: [
         {
           id: 'dashboard',
@@ -115,12 +200,6 @@ export const createNavigationSections = (
           label: 'navigation.approvals',
           path: '/approvals',
           icon: CheckSquare,
-        },
-        {
-          id: 'dossiers',
-          label: 'navigation.dossiers',
-          path: '/dossiers',
-          icon: Folder,
         },
         {
           id: 'positions',

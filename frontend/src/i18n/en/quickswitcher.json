@@ -1,0 +1,32 @@
+{
+  "title": "Quick Switcher",
+  "open": "Open quick switcher",
+  "search": "Search...",
+  "placeholder": "Search dossiers, positions, tasks...",
+  "searching": "Searching...",
+  "recent": "Recent",
+  "start_typing": "Start typing to search...",
+  "no_results": "No results found",
+  "no_results_hint": "Try different keywords",
+  "dossiers_section": "Dossiers",
+  "related_work_section": "Related Work",
+  "navigate": "Navigate",
+  "select": "Select",
+  "close": "Close",
+  "type_badges": {
+    "country": "Country",
+    "organization": "Organization",
+    "person": "Person",
+    "engagement": "Engagement",
+    "forum": "Forum",
+    "working_group": "Working Group",
+    "topic": "Topic",
+    "elected_official": "Official",
+    "position": "Position",
+    "task": "Task",
+    "commitment": "Commitment",
+    "intake": "Request",
+    "mou": "MoU",
+    "document": "Document"
+  }
+}

@@ -46,7 +46,38 @@
     "tableView": "عرض الجدول",
     "noResults": "لم يتم العثور على نتائج.",
     "download": "تحميل",
-    "view": "عرض"
+    "view": "عرض",
+    "forms": {
+      "min_items": "الحد الأدنى {{count}}",
+      "add_item": "إضافة عنصر",
+      "remove_file": "حذف الملف",
+      "drag_drop_or_click": "اسحب وأفلت الملفات هنا أو انقر للتحميل",
+      "drop_here": "أفلت الملفات هنا",
+      "drop_rejected": "نوع الملف غير مقبول",
+      "file_constraints": "الحد الأقصى {{maxSize}} لكل ملف، حتى {{maxFiles}} ملفات",
+      "browse_files": "تصفح الملفات",
+      "files_selected": "تم تحديد {{count}} ملف(ات)",
+      "clear_all": "مسح الكل",
+      "draft_found": "تم العثور على مسودة غير محفوظة",
+      "saved_time_ago": "تم الحفظ {{time}}",
+      "complete": "مكتمل",
+      "discard_draft": "تجاهل",
+      "restore_draft": "استعادة المسودة",
+      "time_ago_days": "منذ {{count}} يوم",
+      "time_ago_hours": "منذ {{count}} ساعة",
+      "time_ago_minutes": "منذ {{count}} دقيقة",
+      "progress_label": "تقدم النموذج",
+      "fields": "حقول",
+      "time_remaining": "~{{minutes}} دقيقة متبقية",
+      "saving": "جاري الحفظ...",
+      "saved_at": "تم الحفظ في {{time}}",
+      "unsaved_changes": "تغييرات غير محفوظة",
+      "save_error": "فشل الحفظ",
+      "unsaved_changes_title": "تغييرات غير محفوظة",
+      "unsaved_changes_description": "لديك تغييرات غير محفوظة ستُفقد إذا غادرت هذه الصفحة.",
+      "stay": "البقاء في الصفحة",
+      "leave_anyway": "المغادرة"
+    }
   },
   "auth": {
     "login": "تسجيل الدخول",
@@ -63,6 +94,13 @@
     "loginSuccess": "تم تسجيل الدخول بنجاح!"
   },
   "navigation": {
+    "dossiersHub": "الدوسيهات",
+    "allDossiers": "جميع الدوسيهات",
+    "relationshipGraph": "رسم العلاقات",
+    "recentActivity": "النشاط الأخير",
+    "electedOfficials": "المسؤولون المنتخبون",
+    "topics": "المواضيع",
+    "main": "الرئيسية",
     "myWork": "عملي",
     "unifiedWork": "جميع الأعمال",
     "myAssignments": "تكليفاتي",
@@ -84,6 +122,7 @@
     "persons": "الأشخاص",
     "calendar": "التقويم",
     "briefs": "الملخصات",
+    "briefingBooks": "كتب الإحاطة",
     "intelligence": "المعلومات الاستخباراتية",
     "analytics": "التحليلات",
     "reports": "التقارير",
@@ -130,6 +169,62 @@
     "quickCreate": "إنشاء سريع",
     "delegations": "التفويضات",
     "assignments": "التكليفات",
+    "search": "بحث",
+    "back": "رجوع",
+    "backTo": "العودة إلى",
+    "breadcrumbs": "مسار التنقل"
+  },
+  "quickNav": {
+    "title": "الوصول السريع",
+    "pinned": "المثبتة",
+    "recent": "الأخيرة",
+    "pin": "تثبيت للوصول السريع",
+    "unpin": "إلغاء التثبيت",
+    "viewAll": "عرض الكل",
+    "more": "المزيد"
+  },
+  "entityTypes": {
+    "dossier": "دوسيه",
+    "country": "دولة",
+    "organization": "منظمة",
+    "person": "شخص",
+    "engagement": "مشاركة",
+    "position": "موقف",
+    "forum": "منتدى",
+    "working_group": "مجموعة عمل",
+    "topic": "موضوع"
+  },
+  "breadcrumbTrail": {
+    "recent": "الأخيرة",
+    "remove": "إزالة من السجل",
+    "clearAll": "مسح الكل",
+    "scrollLeft": "التمرير لليسار",
+    "scrollRight": "التمرير لليمين",
+    "more": "المزيد"
+  },
+  "search": {
+    "globalSearch": "البحث الشامل",
+    "searchPlaceholder": "البحث عن الدول، المنظمات، مذكرات التفاهم...",
+    "placeholder": "البحث عن الدوسيهات، الأشخاص، المواقف...",
+    "label": "البحث الشامل",
+    "filters": "الفلاتر",
+    "searchIn": "البحث في",
+    "dateRange": "النطاق الزمني",
+    "sortBy": "ترتيب حسب",
+    "relevance": "الصلة",
+    "dateModified": "تاريخ التعديل",
+    "alphabetical": "أبجدي",
+    "results": "النتائج",
+    "noResults": "لم يتم العثور على نتائج",
+    "showingResults": "عرض {{count}} نتيجة",
+    "quickSearch": "بحث سريع...",
+    "searchLabel": "البحث عن الدوسيهات، الأشخاص، المواقف...",
+    "openSearch": "فتح البحث",
+    "openCommandPalette": "فتح لوحة الأوامر",
+    "hint": "اضغط Enter للبحث أو",
+    "forCommands": "للأوامر",
+    "clear": "مسح البحث",
+    "loading": "جاري التحميل...",
     "search": "بحث"
   },
   "dashboard": {
@@ -431,6 +526,8 @@
   "search": {
     "globalSearch": "البحث الشامل",
     "searchPlaceholder": "ابحث عن الدول، المنظمات، مذكرات التفاهم...",
+    "placeholder": "البحث عن الدوسيهات، الأشخاص، المواقف...",
+    "label": "البحث الشامل",
     "filters": "المرشحات",
     "searchIn": "البحث في",
     "dateRange": "النطاق الزمني",
@@ -440,7 +537,95 @@
     "alphabetical": "أبجدي",
     "results": "النتائج",
     "noResults": "لم يتم العثور على نتائج",
-    "showingResults": "عرض {{count}} نتيجة"
+    "showingResults": "عرض {{count}} نتيجة",
+    "quickSearch": "بحث سريع...",
+    "searchLabel": "البحث عن الدوسيهات، الأشخاص، المواقف...",
+    "openSearch": "فتح البحث",
+    "openCommandPalette": "فتح لوحة الأوامر",
+    "hint": "اضغط Enter للبحث أو",
+    "forCommands": "للأوامر",
+    "clear": "مسح البحث",
+    "loading": "جاري التحميل...",
+    "search": "بحث",
+    "title": "البحث",
+    "description": "البحث في جميع الدوسيهات والأشخاص والوثائق",
+    "modes": {
+      "keyword": "كلمة مفتاحية",
+      "semantic": "دلالي"
+    },
+    "includeArchived": "تضمين المؤرشف",
+    "loadMore": "تحميل المزيد",
+    "noResults": {
+      "title": "لم يتم العثور على نتائج",
+      "description": "حاول تعديل البحث أو المرشحات",
+      "didYouMean": "هل تقصد:",
+      "tips": "نصائح البحث"
+    },
+    "sections": {
+      "exactMatches": "التطابقات الدقيقة",
+      "related": "النتائج ذات الصلة"
+    },
+    "tabs": {
+      "label": "تصفية حسب نوع الكيان",
+      "countLabel": "{{count}} نتيجة",
+      "keyboardHint": "استخدم مفاتيح الأسهم للتنقل بين علامات التبويب"
+    },
+    "entityTypes": {
+      "all": "الكل",
+      "country": "الدول",
+      "organization": "المنظمات",
+      "forum": "المنتديات",
+      "engagement": "المشاركات",
+      "theme": "المواضيع",
+      "working_group": "مجموعات العمل",
+      "person": "الأشخاص",
+      "positions": "المواقف",
+      "documents": "الوثائق",
+      "mou": "مذكرات التفاهم"
+    },
+    "entityDescriptions": {
+      "country": "ملف دولة شريكة",
+      "organization": "ملف تعريف المنظمة",
+      "forum": "منتدى أو مؤتمر",
+      "engagement": "سجل اجتماع أو فعالية",
+      "theme": "ملف موضوعي",
+      "working_group": "سجل مجموعة عمل",
+      "person": "جهة اتصال أو مندوب",
+      "position": "وثيقة موقف",
+      "document": "وثيقة مرفقة",
+      "mou": "مذكرة تفاهم"
+    },
+    "matchReasons": {
+      "title": "تطابق العنوان",
+      "description": "تطابق الوصف",
+      "content": "تطابق المحتوى",
+      "tags": "تطابق الوسم",
+      "metadata": "تطابق البيانات الوصفية",
+      "related_entity": "كيان مرتبط",
+      "parent_dossier": "الدوسيه الأم",
+      "semantic": "تطابق دلالي"
+    },
+    "filterChips": {
+      "filterBy": "تصفية:",
+      "results": "نتيجة",
+      "clearAll": "مسح الكل",
+      "loading": "جاري التحميل..."
+    },
+    "groupedView": {
+      "grouped": "مجمع",
+      "list": "قائمة",
+      "expandAll": "توسيع الكل",
+      "collapseAll": "طي الكل",
+      "resultsIn": "نتيجة في",
+      "categories": "فئات"
+    },
+    "relationships": {
+      "from": "من",
+      "linkedTo": "مرتبط بـ",
+      "andMore": "و {{count}} أخرى",
+      "relationshipPath": "مسار العلاقة",
+      "dossiers": "ملفات"
+    }
   },
   "validation": {
     "required": "هذا الحقل مطلوب",

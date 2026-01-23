@@ -1,5 +1,5 @@
-import type { Config } from 'tailwindcss';
-import rtl from 'tailwindcss-rtl';
+import type { Config } from 'tailwindcss'
+import rtl from 'tailwindcss-rtl'
 
 const config: Config = {
   darkMode: ['class'],
@@ -11,10 +11,12 @@ const config: Config = {
   ],
   theme: {
     screens: {
-      xs: '320px',
-      sm: '768px',
-      md: '1024px',
-      lg: '1440px',
+      xs: '320px', // Extra-small devices
+      sm: '640px', // Standard Tailwind: tablets
+      md: '768px', // Standard Tailwind: small laptops
+      lg: '1024px', // Standard Tailwind: desktops
+      xl: '1280px', // Standard Tailwind: large desktops
+      '2xl': '1536px', // Standard Tailwind: extra-large screens
     },
     container: {
       center: true,
@@ -90,7 +92,7 @@ const config: Config = {
           'icon-active': 'var(--icon-rail-icon-active)',
           border: 'var(--icon-rail-border)',
         },
-        'panel': {
+        panel: {
           DEFAULT: 'var(--panel-bg)',
           border: 'var(--panel-border)',
           text: 'var(--panel-text)',
@@ -99,11 +101,11 @@ const config: Config = {
           active: 'var(--panel-active)',
           'active-text': 'var(--panel-active-text)',
         },
-        'badge': {
+        badge: {
           DEFAULT: 'var(--badge-bg)',
           text: 'var(--badge-text)',
         },
-        'content': {
+        content: {
           DEFAULT: 'var(--content-bg)',
           card: 'var(--content-card-bg)',
           border: 'var(--content-border)',
@@ -127,6 +129,32 @@ const config: Config = {
         sans: ['var(--font-sans)', 'system-ui', 'sans-serif'],
         serif: ['var(--font-serif)', 'serif'],
         mono: ['var(--font-mono)', 'monospace'],
+      },
+      fontSize: {
+        '3xs': 'var(--text-3xs)', // 9px
+        '2xs': 'var(--text-2xs)', // 10px
+        xs: 'var(--text-xs)', // 11px
+        sm: 'var(--text-sm)', // 12px
+        base: 'var(--text-base)', // 13px
+        lg: 'var(--text-lg)', // 14px
+        xl: 'var(--text-xl)', // 16px
+        '2xl': 'var(--text-2xl)', // 18px
+        '3xl': 'var(--text-3xl)', // 20px
+        '4xl': 'var(--text-4xl)', // 24px
+        '5xl': 'var(--text-5xl)', // 30px
+        metric: 'var(--text-metric)', // 56px
+      },
+      lineHeight: {
+        tight: 'var(--leading-tight)',
+        snug: 'var(--leading-snug)',
+        normal: 'var(--leading-normal)',
+        relaxed: 'var(--leading-relaxed)',
+      },
+      letterSpacing: {
+        tighter: 'var(--tracking-tight)',
+        normal: 'var(--tracking-normal)',
+        wide: 'var(--tracking-wide)',
+        wider: 'var(--tracking-wider)',
       },
       keyframes: {
         'accordion-down': {
@@ -161,7 +189,8 @@ const config: Config = {
         '2xs': '0 0 0 1px hsl(var(--shadow-2xs) / 0.05)',
         xs: '0 1px 2px 0 hsl(var(--shadow-xs) / 0.05)',
         sm: '0 1px 3px 0 hsl(var(--shadow-sm) / 0.1), 0 1px 2px 0 hsl(var(--shadow-sm) / 0.06)',
-        DEFAULT: '0 4px 6px -1px hsl(var(--shadow) / 0.1), 0 2px 4px -1px hsl(var(--shadow) / 0.06)',
+        DEFAULT:
+          '0 4px 6px -1px hsl(var(--shadow) / 0.1), 0 2px 4px -1px hsl(var(--shadow) / 0.06)',
         md: '0 10px 15px -3px hsl(var(--shadow-md) / 0.1), 0 4px 6px -2px hsl(var(--shadow-md) / 0.05)',
         lg: '0 20px 25px -5px hsl(var(--shadow-lg) / 0.1), 0 10px 10px -5px hsl(var(--shadow-lg) / 0.04)',
         xl: '0 25px 50px -12px hsl(var(--shadow-xl) / 0.25)',
@@ -180,7 +209,7 @@ const config: Config = {
         '.ltr': {
           direction: 'ltr',
         },
-      });
+      })
     },
     // Logical properties utilities
     ({ addUtilities }: any) => {
@@ -223,22 +252,22 @@ const config: Config = {
         '.float-end': { float: 'inline-end' },
         '.border-s': { 'border-inline-start-width': '1px' },
         '.border-e': { 'border-inline-end-width': '1px' },
-        '.rounded-s': { 
+        '.rounded-s': {
           'border-start-start-radius': 'var(--radius)',
           'border-end-start-radius': 'var(--radius)',
         },
-        '.rounded-e': { 
+        '.rounded-e': {
           'border-start-end-radius': 'var(--radius)',
           'border-end-end-radius': 'var(--radius)',
         },
-      };
-      addUtilities(logicalUtilities);
+      }
+      addUtilities(logicalUtilities)
     },
   ],
   // Enable RTL support
   future: {
     hoverOnlyWhenSupported: true,
   },
-};
+}
 
-export default config;
+export default config

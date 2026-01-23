@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Visualize and analyze dependencies between entities (e.g., how a policy change affects stakeholders, commitments, and working groups). Provide impact assessment reports when entities are modified or relationships change.\n\n**Rationale:** Policy decisions have cascading effects across stakeholders and commitments. Understanding dependencies helps teams anticipate consequences and make informed decisions about changes.",
   "title": "Cross-Entity Dependency and Impact Analysis",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768507915309-dsdao8iv9",
   "descriptionHistory": [
     {

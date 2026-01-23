@@ -1,0 +1,13 @@
+{
+  "id": "ui-component-library-consolidation",
+  "category": "UI",
+  "title": "Consolidate UI Component Library Usage",
+  "description": "Codebase mixes Aceternity, Kibo, and shadcn/ui inconsistently. Audit 67+ UI components, replace shadcn with Aceternity equivalents, document component registry, add ESLint rule to warn on non-Aceternity imports.",
+  "status": "verified",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-22T10:00:00.000Z",
+  "updatedAt": "2026-01-22T22:31:08.982Z",
+  "branchName": "035-dossier-context"
+}

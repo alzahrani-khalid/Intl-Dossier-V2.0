@@ -6,34 +6,34 @@
  * Shows title, type, dates, status, and AI-generated significance summary.
  */
 
-import { useTranslation } from 'react-i18next';
-import { FileText, Calendar, AlertCircle, CheckCircle, Clock } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
-import { Card } from '@/components/ui/card';
-import { Link } from '@tanstack/react-router';
-import { formatDistanceToNow } from 'date-fns';
-import { ar, enUS } from 'date-fns/locale';
+import { useTranslation } from 'react-i18next'
+import { FileText, Calendar, AlertCircle, CheckCircle, Clock } from 'lucide-react'
+import { Badge } from '@/components/ui/badge'
+import { Card } from '@/components/ui/card'
+import { Link } from '@tanstack/react-router'
+import { formatDistanceToNow } from 'date-fns'
+import { ar, enUS } from 'date-fns/locale'
 
 interface BilateralAgreementCardProps {
   agreement: {
-    id: string;
-    reference_number: string;
-    title: string;
-    title_ar: string;
-    type: string;
-    mou_category: string;
-    lifecycle_state: string;
-    effective_date?: string;
-    expiry_date?: string;
-    description?: string;
+    id: string
+    reference_number: string
+    title: string
+    title_ar: string
+    type: string
+    mou_category: string
+    lifecycle_state: string
+    effective_date?: string
+    expiry_date?: string
+    description?: string
     dates?: {
-      signed?: string;
-      effective?: string;
-      expires?: string;
-    };
-  };
-  aiSummary?: string; // AI-generated significance from bilateral intelligence
-  onClick?: () => void;
+      signed?: string
+      effective?: string
+      expires?: string
+    }
+  }
+  aiSummary?: string // AI-generated significance from bilateral intelligence
+  onClick?: () => void
 }
 
 export function BilateralAgreementCard({
@@ -41,13 +41,13 @@ export function BilateralAgreementCard({
   aiSummary,
   onClick,
 }: BilateralAgreementCardProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
-  const locale = isRTL ? ar : enUS;
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
+  const locale = isRTL ? ar : enUS
 
-  const title = isRTL ? agreement.title_ar : agreement.title;
-  const effectiveDate = agreement.effective_date || agreement.dates?.effective;
-  const expiryDate = agreement.expiry_date || agreement.dates?.expires;
+  const title = isRTL ? agreement.title_ar : agreement.title
+  const effectiveDate = agreement.effective_date || agreement.dates?.effective
+  const expiryDate = agreement.expiry_date || agreement.dates?.expires
 
   // Determine status badge based on lifecycle_state
   const getStatusBadge = () => {
@@ -58,7 +58,7 @@ export function BilateralAgreementCard({
             <CheckCircle className="h-3 w-3" />
             {t('mou.status.active', 'Active')}
           </Badge>
-        );
+        )
       case 'draft':
       case 'under_negotiation':
         return (
@@ -66,28 +66,24 @@ export function BilateralAgreementCard({
             <Clock className="h-3 w-3" />
             {t('mou.status.draft', 'Draft')}
           </Badge>
-        );
+        )
       case 'expired':
         return (
           <Badge variant="destructive" className="gap-1">
             <AlertCircle className="h-3 w-3" />
             {t('mou.status.expired', 'Expired')}
           </Badge>
-        );
+        )
       case 'terminated':
         return (
           <Badge variant="outline" className="gap-1">
             {t('mou.status.terminated', 'Terminated')}
           </Badge>
-        );
+        )
       default:
-        return (
-          <Badge variant="secondary">
-            {agreement.lifecycle_state}
-          </Badge>
-        );
+        return <Badge variant="secondary">{agreement.lifecycle_state}</Badge>
     }
-  };
+  }
 
   return (
     <Card
@@ -107,14 +103,10 @@ export function BilateralAgreementCard({
             <h3 className="text-sm sm:text-base font-semibold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-1">
               {title}
             </h3>
-            <p className="text-xs sm:text-sm text-muted-foreground">
-              {agreement.reference_number}
-            </p>
+            <p className="text-xs sm:text-sm text-muted-foreground">{agreement.reference_number}</p>
           </div>
         </div>
-        <div className="flex-shrink-0">
-          {getStatusBadge()}
-        </div>
+        <div className="flex-shrink-0">{getStatusBadge()}</div>
       </div>
 
       {/* Type and Category */}
@@ -132,25 +124,27 @@ export function BilateralAgreementCard({
         <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4 mb-3 text-xs sm:text-sm text-muted-foreground">
           {effectiveDate && (
             <div className="flex items-center gap-2">
-              <Calendar className={`h-4 w-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+              <Calendar className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
               <span className="text-start">
                 {t('mou.effective_date', 'Effective')}:{' '}
-                {new Date(effectiveDate).toLocaleDateString(
-                  isRTL ? 'ar-SA' : 'en-US',
-                  { year: 'numeric', month: 'short', day: 'numeric' }
-                )}
+                {new Date(effectiveDate).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
               </span>
             </div>
           )}
           {expiryDate && (
             <div className="flex items-center gap-2">
-              <AlertCircle className={`h-4 w-4 ${isRTL ? 'ml-1' : 'mr-1'}`} />
+              <AlertCircle className={`h-4 w-4 ${isRTL ? 'ms-1' : 'me-1'}`} />
               <span className="text-start">
                 {t('mou.expiry_date', 'Expires')}:{' '}
-                {new Date(expiryDate).toLocaleDateString(
-                  isRTL ? 'ar-SA' : 'en-US',
-                  { year: 'numeric', month: 'short', day: 'numeric' }
-                )}
+                {new Date(expiryDate).toLocaleDateString(isRTL ? 'ar-SA' : 'en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric',
+                })}
               </span>
             </div>
           )}
@@ -177,9 +171,7 @@ export function BilateralAgreementCard({
               <p className="text-xs font-medium text-purple-700 dark:text-purple-300 mb-1">
                 {t('intelligence.ai_insight', 'AI Insight')}
               </p>
-              <p className="text-xs text-muted-foreground line-clamp-3 text-start">
-                {aiSummary}
-              </p>
+              <p className="text-xs text-muted-foreground line-clamp-3 text-start">{aiSummary}</p>
             </div>
           </div>
         </div>
@@ -197,5 +189,5 @@ export function BilateralAgreementCard({
         </Link>
       </div>
     </Card>
-  );
+  )
 }

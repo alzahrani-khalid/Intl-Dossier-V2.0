@@ -80,7 +80,7 @@ export function ChatInput({
           'min-h-[44px] max-h-[150px] resize-none py-3',
           'rounded-2xl border-muted-foreground/20',
           'focus-visible:ring-1 focus-visible:ring-primary',
-          isRTL && 'text-right',
+          isRTL && 'text-end',
         )}
         rows={1}
       />

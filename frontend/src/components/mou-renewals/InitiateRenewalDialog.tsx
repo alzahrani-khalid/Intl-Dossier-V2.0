@@ -137,7 +137,7 @@ export function InitiateRenewalDialog({
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className={cn('max-w-lg', isRTL && 'text-right')} dir={isRTL ? 'rtl' : 'ltr'}>
+      <DialogContent className={cn('max-w-lg', isRTL && 'text-end')} dir={isRTL ? 'rtl' : 'ltr'}>
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <RefreshCw className="h-5 w-5" />

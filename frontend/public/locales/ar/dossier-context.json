@@ -165,5 +165,22 @@
     "technical_details": "التفاصيل التقنية",
     "try_again": "حاول مرة أخرى",
     "refresh_page": "تحديث الصفحة"
+  },
+
+  "widget": {
+    "title": "الملفات المرتبطة",
+    "primary": "رئيسي",
+    "no_links": "لا توجد ملفات مرتبطة",
+    "add_dossier": "إضافة ملف",
+    "select_dossier": "اختر ملفاً للربط",
+    "view_dossier": "عرض الملف",
+    "remove_link": "إزالة الارتباط",
+    "inheritance_path": "مسار الوراثة",
+    "show_more": "عرض {{count}} المزيد",
+    "show_less": "عرض أقل",
+    "confirm_remove_title": "إزالة ارتباط الملف",
+    "confirm_remove_description": "هل أنت متأكد من إزالة ارتباط هذا الملف؟ لا يمكن التراجع عن هذا الإجراء.",
+    "loading": "جارٍ تحميل ارتباطات الملفات...",
+    "error": "فشل في تحميل ارتباطات الملفات"
   }
 }

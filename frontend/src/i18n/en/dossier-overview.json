@@ -1,0 +1,248 @@
+{
+  "pageTitle": "Everything about {{name}}",
+  "pageDescription": "Comprehensive view of all connections and activities for this dossier",
+
+  "nav": {
+    "dossiersHub": "Dossiers Hub"
+  },
+
+  "actions": {
+    "refresh": "Refresh",
+    "export": "Export",
+    "exporting": "Exporting...",
+    "retry": "Retry",
+    "viewAll": "View All",
+    "loadMore": "Load More"
+  },
+
+  "export": {
+    "json": "Export as JSON",
+    "pdf": "Export as PDF",
+    "docx": "Export as Word"
+  },
+
+  "tabs": {
+    "relatedDossiers": "Related Dossiers",
+    "documents": "Documents",
+    "workItems": "Work Items",
+    "calendarEvents": "Calendar",
+    "keyContacts": "Contacts",
+    "activityTimeline": "Activity"
+  },
+
+  "stats": {
+    "relatedDossiers": "Related Dossiers",
+    "documents": "Documents",
+    "workItems": "Work Items",
+    "pendingWork": "Pending",
+    "overdueWork": "Overdue",
+    "upcomingEvents": "Upcoming Events"
+  },
+
+  "error": {
+    "title": "Error Loading Dossier Overview",
+    "description": "Failed to load the dossier overview. Please try again."
+  },
+
+  "dossierType": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "engagement": "Engagement",
+    "topic": "Topic",
+    "working_group": "Working Group",
+    "person": "Person",
+    "elected_official": "Elected Official"
+  },
+
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived",
+    "deleted": "Deleted"
+  },
+
+  "relationshipType": {
+    "parent": "Parent",
+    "child": "Child",
+    "bilateral": "Bilateral",
+    "member_of": "Member Of",
+    "has_member": "Has Member",
+    "partner": "Partner",
+    "related_to": "Related To",
+    "predecessor": "Predecessor",
+    "successor": "Successor"
+  },
+
+  "relationship": {
+    "incoming": "Incoming"
+  },
+
+  "relatedDossiers": {
+    "title": "Related Dossiers",
+    "groupBy": {
+      "relationship": "By Relationship",
+      "type": "By Type"
+    },
+    "empty": {
+      "title": "No Related Dossiers",
+      "description": "This dossier has no relationships with other dossiers yet. Add relationships to connect related entities."
+    }
+  },
+
+  "documentType": {
+    "position": "Position Paper",
+    "mou": "MOU",
+    "brief": "Brief",
+    "attachment": "Attachment"
+  },
+
+  "documentStatus": {
+    "draft": "Draft",
+    "active": "Active",
+    "approved": "Approved",
+    "archived": "Archived",
+    "template": "Template"
+  },
+
+  "documents": {
+    "title": "Documents",
+    "tabs": {
+      "all": "All",
+      "positions": "Positions",
+      "mous": "MOUs",
+      "briefs": "Briefs",
+      "attachments": "Attachments"
+    },
+    "empty": {
+      "all": "No documents found",
+      "position": "No position papers found",
+      "mou": "No MOUs found",
+      "brief": "No briefs found",
+      "attachment": "No attachments found"
+    }
+  },
+
+  "workItemSource": {
+    "task": "Task",
+    "commitment": "Commitment",
+    "intake": "Intake"
+  },
+
+  "workItemStatus": {
+    "pending": "Pending",
+    "in_progress": "In Progress",
+    "review": "In Review",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "overdue": "Overdue"
+  },
+
+  "priority": {
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+
+  "inheritanceSource": {
+    "direct": "Direct",
+    "engagement": "From Engagement",
+    "after_action": "From After-Action",
+    "position": "From Position",
+    "mou": "From MOU"
+  },
+
+  "workItems": {
+    "title": "Work Items",
+    "completion": "Completion Progress",
+    "overdue": "Overdue",
+    "more": "more",
+    "urgentItems": "{{count}} Urgent/High Priority Items",
+    "tabs": {
+      "all": "All",
+      "tasks": "Tasks",
+      "commitments": "Commitments",
+      "intakes": "Intakes"
+    },
+    "empty": {
+      "all": "No work items found",
+      "task": "No tasks found",
+      "commitment": "No commitments found",
+      "intake": "No intake tickets found"
+    }
+  },
+
+  "eventType": {
+    "meeting": "Meeting",
+    "deadline": "Deadline",
+    "milestone": "Milestone",
+    "reminder": "Reminder",
+    "engagement": "Engagement",
+    "review": "Review"
+  },
+
+  "calendarEvents": {
+    "title": "Calendar Events",
+    "today": "Today",
+    "allDay": "All Day",
+    "joinMeeting": "Join Meeting",
+    "tabs": {
+      "today": "Today",
+      "upcoming": "Upcoming",
+      "past": "Past",
+      "all": "All"
+    },
+    "empty": {
+      "all": "No calendar events found",
+      "today": "No events scheduled for today",
+      "upcoming": "No upcoming events",
+      "past": "No past events in this period"
+    }
+  },
+
+  "keyContacts": {
+    "title": "Key Contacts",
+    "lastInteraction": "Last interaction",
+    "linkedDossier": "Linked",
+    "viewDossier": "View Dossier",
+    "empty": {
+      "title": "No Key Contacts",
+      "description": "No contacts have been added to this dossier yet. Add contacts to keep track of important people."
+    }
+  },
+
+  "activityType": {
+    "task": "Task",
+    "commitment": "Commitment",
+    "intake": "Intake",
+    "position": "Position",
+    "event": "Event",
+    "relationship": "Relationship",
+    "document": "Document",
+    "comment": "Comment"
+  },
+
+  "activityAction": {
+    "created": "created",
+    "updated": "updated",
+    "completed": "completed",
+    "linked": "linked",
+    "commented": "commented on",
+    "status_change": "changed status of",
+    "assigned": "was assigned to"
+  },
+
+  "activityTimeline": {
+    "title": "Activity Timeline",
+    "loadMore": "Load More Activities",
+    "empty": {
+      "title": "No Recent Activity",
+      "description": "There hasn't been any activity on this dossier recently."
+    }
+  },
+
+  "footer": {
+    "generatedAt": "Data generated at: {{date}}"
+  }
+}

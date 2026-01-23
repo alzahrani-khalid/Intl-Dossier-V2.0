@@ -8,6 +8,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import type { ApiErrorDetails } from '@/types/common.types'
 
 // Get Supabase URL for Edge Functions
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
@@ -147,9 +148,9 @@ export interface RelationshipsListResponse {
 export class RelationshipAPIError extends Error {
   code: string
   status: number
-  details?: any
+  details?: ApiErrorDetails
 
-  constructor(message: string, status: number, code: string, details?: any) {
+  constructor(message: string, status: number, code: string, details?: ApiErrorDetails) {
     super(message)
     this.name = 'RelationshipAPIError'
     this.code = code
@@ -176,14 +177,20 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
   }
 }
 
+interface ApiErrorResponse {
+  message?: string
+  code?: string
+  details?: ApiErrorDetails
+}
+
 /**
  * Helper function to handle API responses
  */
 async function handleResponse<T>(response: Response): Promise<T> {
   if (!response.ok) {
-    let error: any
+    let error: ApiErrorResponse
     try {
-      error = await response.json()
+      error = (await response.json()) as ApiErrorResponse
     } catch {
       error = { message: response.statusText }
     }

@@ -300,7 +300,7 @@ function ChecklistItem({
       {/* Hint tooltip */}
       {item.hintKey && !isCompleted && !isLocked && (
         <div className="mt-2 sm:mt-3 pt-2 sm:pt-3 border-t border-dashed">
-          <p className="text-[10px] sm:text-xs text-muted-foreground/70 italic">
+          <p className="text-[10px] sm:text-xs text-muted-foreground italic">
             💡 {t(item.hintKey)}
           </p>
         </div>

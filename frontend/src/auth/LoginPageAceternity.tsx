@@ -66,12 +66,8 @@ export function LoginPageAceternity() {
             <div className="mb-4 inline-flex size-16 items-center justify-center rounded-full bg-primary/10">
               <Globe className="size-8 text-primary" />
             </div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {t('common.appTitle')}
-            </h1>
-            <p className="mt-2 text-muted-foreground">
-              {t('auth.signIn')}
-            </p>
+            <h1 className="text-2xl font-bold text-foreground">{t('common.appTitle')}</h1>
+            <p className="mt-2 text-muted-foreground">{t('auth.signIn')}</p>
           </div>
 
           {/* Login form */}
@@ -94,7 +90,9 @@ export function LoginPageAceternity() {
             <div className="space-y-2">
               <label className="block text-sm sm:text-base font-medium text-gray-700 dark:text-gray-300 text-start">
                 {t('auth.password')}
-                <span className="text-red-500 ms-1" aria-label={t('validation.required')}>*</span>
+                <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+                  *
+                </span>
               </label>
               <div className="relative">
                 <Lock className="absolute start-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
@@ -109,11 +107,13 @@ export function LoginPageAceternity() {
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
                   className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  aria-label={showPassword ? t('auth.hidePassword') : t('auth.showPassword')}
+                  aria-pressed={showPassword}
                 >
                   {showPassword ? (
-                    <EyeOff className="size-5" />
+                    <EyeOff className="size-5" aria-hidden="true" />
                   ) : (
-                    <Eye className="size-5" />
+                    <Eye className="size-5" aria-hidden="true" />
                   )}
                 </button>
               </div>
@@ -148,10 +148,7 @@ export function LoginPageAceternity() {
                 onCheckedChange={(checked) => setRememberMe(checked === true)}
                 variant="aceternity"
               />
-              <a
-                href="#"
-                className="text-sm text-primary hover:text-primary/80"
-              >
+              <a href="#" className="text-sm text-primary hover:text-primary/80">
                 {t('auth.forgotPassword')}
               </a>
             </div>
@@ -159,9 +156,7 @@ export function LoginPageAceternity() {
             {/* Error message */}
             {error && (
               <div className="rounded-lg border border-destructive/20 bg-destructive/10 p-3">
-                <p className="text-sm text-destructive">
-                  {error}
-                </p>
+                <p className="text-sm text-destructive">{error}</p>
               </div>
             )}
 
