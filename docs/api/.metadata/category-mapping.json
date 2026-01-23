@@ -1,0 +1,591 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "version": "1.0.0",
+  "description": "Category mapping for all 285 Edge Functions in the Intl-Dossier system",
+  "lastUpdated": "2026-01-24T02:00:00.000Z",
+  "totalFunctions": 285,
+  "categories": [
+    {
+      "id": "positions",
+      "name": "Positions Management",
+      "description": "Position papers, talking points, approval workflows, versioning, and analytics",
+      "priority": 1,
+      "functions": [
+        "positions-approve",
+        "positions-consistency-check",
+        "positions-consistency-reconcile",
+        "positions-create",
+        "positions-delegate",
+        "positions-dossiers-create",
+        "positions-dossiers-delete",
+        "positions-dossiers-get",
+        "positions-emergency-correct",
+        "positions-get",
+        "positions-list",
+        "positions-publish",
+        "positions-request-revisions",
+        "positions-submit",
+        "positions-unpublish",
+        "positions-update",
+        "positions-versions-compare",
+        "positions-versions-list",
+        "positions-versions-restore",
+        "position-analytics-get",
+        "position-analytics-top",
+        "position-suggestions-get",
+        "position-suggestions-update"
+      ],
+      "count": 23
+    },
+    {
+      "id": "intake",
+      "name": "Service Intake & Tickets",
+      "description": "Intake ticket management, triage, SLA tracking, AI classification, and linking",
+      "priority": 2,
+      "functions": [
+        "intake-ai-health",
+        "intake-audit-logs",
+        "intake-classification",
+        "intake-health",
+        "intake-links-batch",
+        "intake-links-create",
+        "intake-links-get",
+        "intake-links-suggestions",
+        "intake-links-update",
+        "intake-tickets-assign",
+        "intake-tickets-attachments",
+        "intake-tickets-convert",
+        "intake-tickets-create",
+        "intake-tickets-duplicates",
+        "intake-tickets-get",
+        "intake-tickets-list",
+        "intake-tickets-merge",
+        "intake-tickets-triage",
+        "intake-tickets-update"
+      ],
+      "count": 19
+    },
+    {
+      "id": "assignments",
+      "name": "Assignments & Tasks",
+      "description": "Task assignments, checklists, comments, workflow stages, and auto-assignment",
+      "priority": 3,
+      "functions": [
+        "assignments-auto-assign",
+        "assignments-checklist-create-item",
+        "assignments-checklist-import-template",
+        "assignments-checklist-toggle-item",
+        "assignments-comments-create",
+        "assignments-comments-reactions-toggle",
+        "assignments-complete",
+        "assignments-escalate",
+        "assignments-get",
+        "assignments-manual-override",
+        "assignments-my-assignments",
+        "assignments-observer-action",
+        "assignments-queue",
+        "assignments-related-get",
+        "assignments-workflow-stage-update",
+        "tasks-create",
+        "tasks-get",
+        "tasks-update"
+      ],
+      "count": 18
+    },
+    {
+      "id": "dossiers",
+      "name": "Dossiers (Countries, Organizations, Forums)",
+      "description": "Unified dossier management for countries, organizations, forums, persons, and working groups",
+      "priority": 4,
+      "functions": [
+        "countries",
+        "dossier-activity-timeline",
+        "dossier-dashboard",
+        "dossier-export-pack",
+        "dossier-recommendations",
+        "dossier-relationships",
+        "dossier-stats",
+        "dossier-unified-activity",
+        "dossiers",
+        "dossiers-archive",
+        "dossiers-briefs-generate",
+        "dossiers-create",
+        "dossiers-get",
+        "dossiers-list",
+        "dossiers-relationships-create",
+        "dossiers-relationships-delete",
+        "dossiers-relationships-get",
+        "dossiers-timeline",
+        "dossiers-timeline-test",
+        "dossiers-update",
+        "forums",
+        "organizations",
+        "organizations-create",
+        "organizations-list",
+        "persons",
+        "populate-countries",
+        "populate-countries-v2",
+        "resolve-dossier-context",
+        "working-groups"
+      ],
+      "count": 29
+    },
+    {
+      "id": "after-actions",
+      "name": "After Action Records (AARs)",
+      "description": "After action record creation, approval workflows, versioning, and publishing",
+      "priority": 5,
+      "functions": [
+        "after-actions-approve-edit",
+        "after-actions-create",
+        "after-actions-get",
+        "after-actions-list",
+        "after-actions-publish",
+        "after-actions-reject-edit",
+        "after-actions-request-edit",
+        "after-actions-update",
+        "after-actions-versions"
+      ],
+      "count": 9
+    },
+    {
+      "id": "engagements",
+      "name": "Engagements & Meetings",
+      "description": "Diplomatic engagements, briefings, meeting agendas, minutes, and position attachment",
+      "priority": 6,
+      "functions": [
+        "engagement-briefs",
+        "engagement-dossiers",
+        "engagement-recommendations",
+        "engagements",
+        "engagements-kanban-get",
+        "engagements-positions-attach",
+        "engagements-positions-detach",
+        "engagements-positions-list",
+        "meeting-agendas",
+        "meeting-minutes",
+        "availability-polling",
+        "briefing-books",
+        "briefing-pack-job-status",
+        "briefing-packs-generate",
+        "briefing-packs-list"
+      ],
+      "count": 15
+    },
+    {
+      "id": "documents",
+      "name": "Document Management",
+      "description": "Document creation, versioning, templates, OCR, annotations, and preview",
+      "priority": 7,
+      "functions": [
+        "document-annotations",
+        "document-classification",
+        "document-content-search",
+        "document-ocr-process",
+        "document-preview",
+        "document-templates",
+        "document-versions",
+        "documents-create",
+        "documents-delete",
+        "documents-get",
+        "ocr-extract",
+        "pdf-generate"
+      ],
+      "count": 12
+    },
+    {
+      "id": "attachments",
+      "name": "File Attachments",
+      "description": "File upload, download, listing, and deletion",
+      "priority": 8,
+      "functions": [
+        "attachments",
+        "attachments-delete",
+        "attachments-download",
+        "attachments-list",
+        "attachments-upload"
+      ],
+      "count": 5
+    },
+    {
+      "id": "calendar",
+      "name": "Calendar & Scheduling",
+      "description": "Calendar events, conflict resolution, recurring patterns, and sync",
+      "priority": 9,
+      "functions": [
+        "calendar-conflicts",
+        "calendar-create",
+        "calendar-get",
+        "calendar-sync",
+        "calendar-update",
+        "events",
+        "recurring-events",
+        "staff-availability"
+      ],
+      "count": 8
+    },
+    {
+      "id": "intelligence",
+      "name": "Intelligence & Signals",
+      "description": "Country intelligence signals, batch updates, and refresh operations",
+      "priority": 10,
+      "functions": [
+        "intelligence",
+        "intelligence-batch-update",
+        "intelligence-get",
+        "intelligence-refresh",
+        "intelligence-refresh-v2"
+      ],
+      "count": 5
+    },
+    {
+      "id": "search",
+      "name": "Search & Discovery",
+      "description": "Full-text search, semantic search, saved searches, quick switcher, and suggestions",
+      "priority": 11,
+      "functions": [
+        "advanced-search",
+        "entities-search",
+        "quickswitcher-search",
+        "saved-searches",
+        "search",
+        "search-semantic",
+        "search-suggest",
+        "search-suggestions",
+        "search-templates",
+        "semantic-search-unified"
+      ],
+      "count": 10
+    },
+    {
+      "id": "ai-ml",
+      "name": "AI & Machine Learning",
+      "description": "AI extraction, summarization, embeddings, recommendations, and interaction logging",
+      "priority": 12,
+      "functions": [
+        "ai-extract",
+        "ai-extract-status",
+        "ai-interaction-logs",
+        "ai-summary-generate",
+        "contextual-suggestions",
+        "embeddings-generate",
+        "relationship-suggestions",
+        "smart-import-suggestions",
+        "word-assistant",
+        "voice-memos",
+        "voice-memos-transcribe",
+        "translate-content",
+        "policy-brief-outline"
+      ],
+      "count": 13
+    },
+    {
+      "id": "authentication",
+      "name": "Authentication & MFA",
+      "description": "Multi-factor authentication, biometric setup, step-up auth, and token refresh",
+      "priority": 13,
+      "functions": [
+        "activate-account",
+        "auth-biometric-setup",
+        "auth-refresh-token",
+        "auth-step-up-complete",
+        "auth-step-up-initiate",
+        "auth-verify-step-up",
+        "initiate-password-reset",
+        "reset-password",
+        "setup-mfa",
+        "verify-mfa-setup"
+      ],
+      "count": 10
+    },
+    {
+      "id": "security-access",
+      "name": "Security & Access Control",
+      "description": "Access requests, reviews, permissions, delegation, and field-level security",
+      "priority": 14,
+      "functions": [
+        "access-requests",
+        "access-review-detail",
+        "certify-user-access",
+        "complete-access-review",
+        "delegate-permissions",
+        "field-permissions",
+        "generate-access-review",
+        "my-delegations",
+        "revoke-delegation",
+        "schedule-access-review",
+        "user-permissions",
+        "validate-delegation"
+      ],
+      "count": 12
+    },
+    {
+      "id": "user-management",
+      "name": "User Management",
+      "description": "User creation, deactivation, role management, onboarding, and profile management",
+      "priority": 15,
+      "functions": [
+        "approve-role-change",
+        "assign-role",
+        "create-user",
+        "deactivate-user",
+        "inactive-users",
+        "onboarding-progress",
+        "reactivate-user",
+        "view-preferences"
+      ],
+      "count": 8
+    },
+    {
+      "id": "notifications",
+      "name": "Notifications & Messaging",
+      "description": "Push notifications, email, digests, device registration, and notification center",
+      "priority": 16,
+      "functions": [
+        "bot-notification-dispatcher",
+        "email-inbound",
+        "email-send",
+        "mou-notifications",
+        "notifications-center",
+        "notifications-digest",
+        "notifications-register-device",
+        "push-device-register",
+        "push-notification",
+        "push-notification-send"
+      ],
+      "count": 10
+    },
+    {
+      "id": "analytics-reporting",
+      "name": "Analytics & Reporting",
+      "description": "Analytics dashboards, custom reports, scheduled reports, and organizational benchmarks",
+      "priority": 17,
+      "functions": [
+        "analytics-dashboard",
+        "custom-reports",
+        "escalations-report",
+        "organization-benchmarks",
+        "reports",
+        "scheduled-report-processor"
+      ],
+      "count": 6
+    },
+    {
+      "id": "workflow-automation",
+      "name": "Workflow & Automation",
+      "description": "Workflow execution, rules engine, queue processing, and SLA monitoring",
+      "priority": 18,
+      "functions": [
+        "queue-processor",
+        "sla-monitoring",
+        "waiting-queue-escalation",
+        "waiting-queue-filters",
+        "waiting-queue-reminder",
+        "workflow-executor",
+        "workflow-rules"
+      ],
+      "count": 7
+    },
+    {
+      "id": "commitments",
+      "name": "Commitments & Deliverables",
+      "description": "Commitment tracking, deliverables, status updates, and health monitoring",
+      "priority": 19,
+      "functions": [
+        "commitments-update-status",
+        "deliverables",
+        "detect-overdue-commitments",
+        "refresh-commitment-stats",
+        "update-aging-buckets"
+      ],
+      "count": 5
+    },
+    {
+      "id": "mous",
+      "name": "MOUs & Agreements",
+      "description": "Memoranda of Understanding management, renewals, and notifications",
+      "priority": 20,
+      "functions": [
+        "mou-renewals",
+        "mous"
+      ],
+      "count": 2
+    },
+    {
+      "id": "relationships",
+      "name": "Relationship Management",
+      "description": "Relationship CRUD, health scoring, graph traversal, and stakeholder analysis",
+      "priority": 21,
+      "functions": [
+        "calculate-health-score",
+        "graph-export",
+        "graph-traversal",
+        "graph-traversal-advanced",
+        "relationship-health",
+        "relationships-manage",
+        "stakeholder-influence",
+        "stakeholder-timeline",
+        "trigger-health-recalculation"
+      ],
+      "count": 9
+    },
+    {
+      "id": "collaboration",
+      "name": "Collaboration & Communication",
+      "description": "Team collaboration, Slack/Teams bots, comments, and interactive notes",
+      "priority": 22,
+      "functions": [
+        "collaborative-editing",
+        "contributors-add",
+        "contributors-remove",
+        "entity-comments",
+        "interaction-notes-create",
+        "interaction-notes-list",
+        "interaction-notes-search",
+        "slack-bot",
+        "team-collaboration",
+        "teams-bot"
+      ],
+      "count": 10
+    },
+    {
+      "id": "data-management",
+      "name": "Data Management",
+      "description": "Data import/export, libraries, templates, retention, and sample data",
+      "priority": 23,
+      "functions": [
+        "content-expiration",
+        "content-expiration-processor",
+        "data-export",
+        "data-import",
+        "data-library",
+        "data-retention",
+        "entity-templates",
+        "retention-processor",
+        "sample-data"
+      ],
+      "count": 9
+    },
+    {
+      "id": "administration",
+      "name": "System Administration",
+      "description": "Audit logs, compliance, webhooks, field history, and system utilities",
+      "priority": 24,
+      "functions": [
+        "audit-logs-viewer",
+        "compliance",
+        "field-history",
+        "webhook-delivery",
+        "webhooks"
+      ],
+      "count": 5
+    },
+    {
+      "id": "unified-work",
+      "name": "Unified Work Management",
+      "description": "Consolidated view of commitments, tasks, and intake tickets with unified timeline",
+      "priority": 25,
+      "functions": [
+        "unified-timeline",
+        "unified-work-list",
+        "work-item-dossiers"
+      ],
+      "count": 3
+    },
+    {
+      "id": "mobile-sync",
+      "name": "Mobile Sync",
+      "description": "Offline-first mobile synchronization with incremental sync support",
+      "priority": 26,
+      "functions": [
+        "sync-incremental",
+        "sync-pull",
+        "sync-push"
+      ],
+      "count": 3
+    },
+    {
+      "id": "utilities",
+      "name": "Utilities & Support",
+      "description": "Miscellaneous utilities, CQRS, event store, monitoring, and helper functions",
+      "priority": 27,
+      "functions": [
+        "activity-feed",
+        "approvals-reassign",
+        "capacity-check",
+        "citation-tracking",
+        "cqrs-commands",
+        "cqrs-queries",
+        "entities-intakes-reverse-lookup",
+        "entity-dependencies",
+        "entity-duplicates",
+        "event-store",
+        "geographic-visualization",
+        "milestone-planning",
+        "multilang-content",
+        "operation-progress",
+        "progressive-disclosure",
+        "scenario-sandbox",
+        "tag-hierarchy",
+        "tags-manage",
+        "themes",
+        "watchlist"
+      ],
+      "count": 20
+    }
+  ],
+  "metadata": {
+    "categoriesCount": 27,
+    "functionsCount": 285,
+    "uncategorizedFunctions": [],
+    "categoryPriorities": {
+      "tier1": [
+        "positions",
+        "intake",
+        "assignments",
+        "dossiers"
+      ],
+      "tier2": [
+        "after-actions",
+        "engagements",
+        "documents",
+        "attachments"
+      ],
+      "tier3": [
+        "calendar",
+        "intelligence",
+        "search",
+        "ai-ml"
+      ],
+      "tier4": [
+        "authentication",
+        "security-access",
+        "user-management",
+        "notifications"
+      ],
+      "tier5": [
+        "analytics-reporting",
+        "workflow-automation",
+        "commitments",
+        "mous",
+        "relationships"
+      ],
+      "tier6": [
+        "collaboration",
+        "data-management",
+        "administration",
+        "unified-work",
+        "mobile-sync",
+        "utilities"
+      ]
+    },
+    "documentationNotes": {
+      "tier1": "Core business functionality - highest documentation priority",
+      "tier2": "Essential features - high documentation priority",
+      "tier3": "Supporting features - medium documentation priority",
+      "tier4": "Infrastructure & security - medium documentation priority",
+      "tier5": "Specialized features - lower documentation priority",
+      "tier6": "Utilities & support - lowest documentation priority"
+    }
+  }
+}
