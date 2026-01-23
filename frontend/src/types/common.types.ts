@@ -188,3 +188,67 @@ export type TypeSpecificFieldsMap = {
   mou_action: MouActionSpecificFields
   foresight: ForesightSpecificFields
 }
+
+/**
+ * Error handling types
+ * Use instead of `any` in catch blocks and error callbacks
+ * @example
+ * // ❌ Bad: catch (error: any)
+ * // ✅ Good: catch (error: ErrorLike)
+ */
+export type ErrorLike = Error | unknown
+
+/**
+ * Type guard to check if an unknown error is an Error instance
+ */
+export function isError(error: unknown): error is Error {
+  return error instanceof Error
+}
+
+/**
+ * Safe error message extraction
+ * Returns error message for Error instances, stringified value otherwise
+ */
+export function getErrorMessage(error: unknown): string {
+  if (isError(error)) {
+    return error.message
+  }
+  return String(error)
+}
+
+/**
+ * Array item callback type
+ * Use instead of `(item: any) => T` for array methods
+ * @example
+ * // ❌ Bad: items.filter((item: any) => item.active)
+ * // ✅ Good: items.filter((item: Item) => item.active)
+ * // ✅ Good: const callback: ArrayCallback<Item, boolean> = (item) => item.active
+ */
+export type ArrayCallback<TItem, TReturn = void> = (
+  item: TItem,
+  index: number,
+  array: TItem[]
+) => TReturn
+
+/**
+ * Generic event callback type
+ * Use instead of `(event: string, payload: any) => void`
+ * @example
+ * // ❌ Bad: onBroadcast?: (event: string, payload: any) => void
+ * // ✅ Good: onBroadcast?: EventCallback
+ * // ✅ Good: onBroadcast?: EventCallback<CustomPayload>
+ */
+export type EventCallback<TPayload = JsonObject> = (
+  event: string,
+  payload: TPayload
+) => void
+
+/**
+ * Generic data handler type
+ * Use instead of `(data: any) => void`
+ * @example
+ * // ❌ Bad: onData: (data: any) => void
+ * // ✅ Good: onData: DataHandler
+ * // ✅ Good: onData: DataHandler<UserData>
+ */
+export type DataHandler<TData = JsonObject> = (data: TData) => void | Promise<void>
