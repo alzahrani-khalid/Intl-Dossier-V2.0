@@ -28,6 +28,36 @@ supabase/         # Migrations, seed data, Edge Functions
 - **Test**: `pnpm test`, `pnpm lint`, `pnpm typecheck`
 - **DB**: `pnpm db:migrate`, `pnpm db:seed`, `pnpm db:reset`
 
+## Code Conventions
+
+### Hook Naming Convention (MANDATORY)
+
+All custom React hooks **MUST** use camelCase for both the hook name and file name:
+
+- ✅ **Correct**: `useAuth.ts`, `useEntityLinks.ts`, `useIsMobile.tsx`
+- ❌ **Incorrect**: `use-auth.ts`, `use-entity-links.ts`, `use-mobile.tsx`
+
+**Rationale**: This follows React's built-in hook conventions (`useState`, `useEffect`, `useMemo`) and matches the broader React ecosystem standard. Consistent naming improves code discoverability, enables predictable auto-imports, and prevents confusion on case-sensitive file systems.
+
+**File naming pattern**:
+```
+frontend/src/hooks/
+  ✅ useAuth.ts
+  ✅ useEntityLinks.ts
+  ✅ useIsMobile.tsx
+  ❌ use-auth.ts
+  ❌ use-entity-links.ts
+  ❌ use-mobile.tsx
+```
+
+**Import pattern**:
+```typescript
+// Always use camelCase in imports
+import { useAuth } from '@/hooks/useAuth';
+import { useEntityLinks } from '@/hooks/useEntityLinks';
+import { useIsMobile } from '@/hooks/useIsMobile';
+```
+
 ## Mobile-First & Responsive Design (MANDATORY)
 
 ### Core Principles
