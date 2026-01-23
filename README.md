@@ -1,5 +1,7 @@
 # International Dossier Management System v2.0
 
+[![Security](https://img.shields.io/badge/security-gitleaks-blue)](SECURITY.md)
+
 A comprehensive system for managing international dossiers, policy briefs, and diplomatic relationships with offline-first mobile capabilities.
 
 ## Overview
@@ -411,6 +413,10 @@ EXPO_PUBLIC_API_URL=http://localhost:3000
 
 ## Security
 
+This project implements comprehensive security measures to protect sensitive data and credentials.
+
+### Security Features
+
 - JWT-based authentication
 - Row-Level Security (RLS) on all tables
 - HTTPS/TLS for all connections
@@ -418,6 +424,28 @@ EXPO_PUBLIC_API_URL=http://localhost:3000
 - Biometric authentication support
 - OWASP security best practices
 - Regular dependency updates
+
+### Secrets Scanning
+
+This project uses [gitleaks](https://github.com/gitleaks/gitleaks) to prevent secrets from being committed to version control.
+
+**Scan for secrets before committing:**
+
+```bash
+# Scan staged changes
+pnpm run security:scan-secrets
+
+# Generate detailed report
+pnpm run security:scan-secrets:report
+```
+
+**Automated Protection:**
+
+- Pre-commit hooks automatically scan staged files
+- CI/CD pipeline runs security scans on all pushes
+- Custom rules detect Supabase keys, API keys, database credentials, and more
+
+For detailed security policies, vulnerability reporting, and incident response procedures, see [SECURITY.md](SECURITY.md).
 
 ## Accessibility
 
