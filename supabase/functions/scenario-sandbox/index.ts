@@ -193,7 +193,7 @@ async function createScenario(supabase: SupabaseClient, body: ScenarioRequest): 
       ...body,
       created_by: user.id,
     })
-    .select()
+    .select('id, title_en, title_ar, description_en, description_ar, type, status, base_date, projection_period_days, tags, created_by, created_at, updated_at')
     .single();
 
   if (error) {
@@ -220,7 +220,7 @@ async function updateScenario(
     .from('scenarios')
     .update(body)
     .eq('id', id)
-    .select()
+    .select('id, title_en, title_ar, description_en, description_ar, type, status, base_date, projection_period_days, tags, created_by, created_at, updated_at')
     .single();
 
   if (error) {
@@ -321,7 +321,7 @@ async function createVariable(
       ...body,
       scenario_id: scenarioId,
     })
-    .select()
+    .select('id, scenario_id, name_en, name_ar, change_type, target_entity_type, target_entity_id, original_value, modified_value, sort_order, created_at, updated_at')
     .single();
 
   if (error) {
@@ -348,7 +348,7 @@ async function updateVariable(
     .from('scenario_variables')
     .update(body)
     .eq('id', id)
-    .select()
+    .select('id, scenario_id, name_en, name_ar, change_type, target_entity_type, target_entity_id, original_value, modified_value, sort_order, created_at, updated_at')
     .single();
 
   if (error) {
@@ -416,7 +416,7 @@ async function createOutcome(
       ...body,
       scenario_id: scenarioId,
     })
-    .select()
+    .select('id, scenario_id, title_en, title_ar, description_en, description_ar, impact_level, probability_score, affected_entity_type, affected_entity_id, projected_metrics, is_positive, created_at, updated_at')
     .single();
 
   if (error) {
@@ -443,7 +443,7 @@ async function updateOutcome(
     .from('scenario_outcomes')
     .update(body)
     .eq('id', id)
-    .select()
+    .select('id, scenario_id, title_en, title_ar, description_en, description_ar, impact_level, probability_score, affected_entity_type, affected_entity_id, projected_metrics, is_positive, created_at, updated_at')
     .single();
 
   if (error) {
@@ -517,7 +517,7 @@ async function createComparison(
       ...body,
       created_by: user.id,
     })
-    .select()
+    .select('id, title_en, title_ar, description_en, description_ar, scenario_ids, comparison_metrics, created_by, created_at, updated_at')
     .single();
 
   if (error) {
@@ -590,7 +590,7 @@ async function addCollaborator(
       user_id: body.user_id,
       role: body.role,
     })
-    .select()
+    .select('id, scenario_id, user_id, role, created_at, updated_at')
     .single();
 
   if (error) {
