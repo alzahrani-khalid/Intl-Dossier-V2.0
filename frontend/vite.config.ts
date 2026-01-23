@@ -117,7 +117,7 @@ export default defineConfig({
               return 'tanstack-vendor'
             }
             // Framer Motion - animation library
-            if (id.includes('framer-motion') || id.includes('motion')) {
+            if (id.includes('framer-motion')) {
               return 'motion-vendor'
             }
             // Radix UI - headless components
