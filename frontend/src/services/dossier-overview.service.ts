@@ -81,7 +81,13 @@ async function getAuthHeaders(): Promise<Headers> {
 // =============================================================================
 
 async function fetchDossierCore(dossierId: string): Promise<DossierOverviewCore> {
-  const { data, error } = await supabase.from('dossiers').select('*').eq('id', dossierId).single()
+  const { data, error } = await supabase
+    .from('dossiers')
+    .select(
+      'id, name_en, name_ar, type, status, description_en, description_ar, sensitivity_level, tags, created_at, updated_at, metadata',
+    )
+    .eq('id', dossierId)
+    .single()
 
   if (error) {
     throw new DossierOverviewAPIError(
@@ -426,7 +432,9 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
   if (commitmentIds.length > 0) {
     const { data: commitments } = await supabase
       .from('commitments')
-      .select('*')
+      .select(
+        'id, title_en, title, title_ar, description_en, description, description_ar, status, priority, deadline, responsible_user_id, created_at, updated_at',
+      )
       .in('id', commitmentIds)
       .limit(limit)
 
@@ -528,7 +536,9 @@ async function fetchCalendarEvents(
 
   const { data: events } = await supabase
     .from('calendar_events')
-    .select('*')
+    .select(
+      'id, title_en, title, title_ar, event_type, start_datetime, end_datetime, is_all_day, location_en, location, location_ar, is_virtual, meeting_link, description_en, description, description_ar, created_at',
+    )
     .eq('dossier_id', dossierId)
     .gte('start_datetime', startDate.toISOString())
     .lte('start_datetime', endDate.toISOString())
@@ -573,7 +583,9 @@ async function fetchCalendarEvents(
 async function fetchKeyContacts(dossierId: string): Promise<KeyContactsSection> {
   const { data: contacts } = await supabase
     .from('key_contacts')
-    .select('*')
+    .select(
+      'id, name, name_ar, role, title_en, title_ar, organization, organization_ar, email, phone, photo_url, last_interaction_date, notes, linked_person_dossier_id',
+    )
     .eq('dossier_id', dossierId)
     .order('name', { ascending: true })
 
