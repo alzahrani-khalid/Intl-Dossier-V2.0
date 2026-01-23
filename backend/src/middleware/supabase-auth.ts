@@ -10,9 +10,6 @@ import { Request, Response, NextFunction } from 'express'
 import { supabaseAdmin } from '../config/supabase.js'
 import logger from '../utils/logger.js'
 
-// Default organization ID for single-tenant setup (existing org from database)
-const DEFAULT_ORGANIZATION_ID = '4d931519-07f6-4568-8043-7af6fde581a6'
-
 // Extend Express Request type for Supabase user
 declare global {
   namespace Express {
@@ -28,6 +25,79 @@ declare global {
         permissions?: string[]
       }
     }
+  }
+}
+
+/**
+ * Resolve user's organization from database
+ * Returns the user's default organization or first active membership
+ * Returns null if user has no organization memberships
+ *
+ * @param userId - User ID to resolve organization for
+ * @returns Organization ID or null
+ */
+async function resolveUserOrganization(userId: string): Promise<string | null> {
+  try {
+    // Get user's active organization memberships
+    const { data: memberships, error: membershipError } = await supabaseAdmin
+      .from('organization_members')
+      .select('organization_id, joined_at')
+      .eq('user_id', userId)
+      .is('left_at', null)
+      .order('joined_at', { ascending: true })
+
+    if (membershipError) {
+      logger.error('Failed to fetch user organization memberships', {
+        userId,
+        error: membershipError.message,
+      })
+      return null
+    }
+
+    if (!memberships || memberships.length === 0) {
+      logger.warn('User has no active organization memberships', { userId })
+      return null
+    }
+
+    // Get user's default organization preference
+    const { data: userProfile, error: profileError } = await supabaseAdmin
+      .from('users')
+      .select('default_organization_id')
+      .eq('id', userId)
+      .single()
+
+    if (profileError) {
+      logger.warn('Failed to fetch user default organization', {
+        userId,
+        error: profileError.message,
+      })
+      // Fall back to first membership if we can't get default
+      return memberships[0].organization_id
+    }
+
+    // Check if default organization is in active memberships
+    const defaultOrgId = userProfile?.default_organization_id
+    if (defaultOrgId) {
+      const hasDefaultMembership = memberships.some(
+        (m) => m.organization_id === defaultOrgId,
+      )
+      if (hasDefaultMembership) {
+        return defaultOrgId
+      }
+      logger.info('User default organization not in active memberships, using first membership', {
+        userId,
+        defaultOrgId,
+      })
+    }
+
+    // Fall back to first joined organization
+    return memberships[0].organization_id
+  } catch (error) {
+    logger.error('Error resolving user organization', {
+      userId,
+      error: error instanceof Error ? error.message : 'Unknown error',
+    })
+    return null
   }
 }
 
