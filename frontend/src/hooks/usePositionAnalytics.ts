@@ -1,11 +1,36 @@
 /**
- * TanStack Query Hook: usePositionAnalytics (T042)
- * Fetches usage analytics for a position
+ * Position Analytics Query Hooks
+ * @module hooks/usePositionAnalytics
+ * @feature T042
+ *
+ * TanStack Query hooks for fetching position usage analytics and trending data.
+ *
+ * @description
+ * This module provides React hooks for position analytics and metrics:
+ * - Query hook for position-specific analytics (views, attachments, briefings)
+ * - Query hook for top positions by various metrics
+ * - Trend data with daily/weekly/monthly breakdowns
+ * - Popularity scoring and ranking
+ * - Automatic caching with 10-minute stale time
+ *
+ * @example
+ * // Fetch analytics for a position
+ * const { analytics } = usePositionAnalytics({ positionId: 'uuid' });
+ *
+ * @example
+ * // Fetch top positions by popularity
+ * const { topPositions } = useTopPositions({ metric: 'popularity', limit: 10 });
  */
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
+/**
+ * Position analytics data structure
+ *
+ * @description
+ * Contains comprehensive usage metrics and trend data for a position.
+ */
 export interface PositionAnalytics {
   position_id: string;
   view_count: number;
@@ -28,6 +53,18 @@ export interface UsePositionAnalyticsOptions {
   enabled?: boolean;
 }
 
+/**
+ * Fetches position analytics from the Edge Function
+ *
+ * @description
+ * Internal function that calls the positions analytics Edge Function to retrieve
+ * usage metrics and trend data for a specific position.
+ *
+ * @param positionId - The unique identifier of the position
+ * @returns Promise resolving to PositionAnalytics data
+ * @throws Error if authentication fails or position not found
+ * @private
+ */
 async function fetchPositionAnalytics(
   positionId: string
 ): Promise<PositionAnalytics> {
@@ -58,6 +95,35 @@ async function fetchPositionAnalytics(
   return await response.json();
 }
 
+/**
+ * Hook to fetch usage analytics for a position
+ *
+ * @description
+ * Fetches comprehensive usage analytics including view counts, attachment counts,
+ * briefing pack usage, trend data, and popularity rankings. Analytics data is
+ * cached for 10 minutes as it doesn't change frequently.
+ *
+ * @param options - Configuration options
+ * @param options.positionId - The unique identifier of the position
+ * @param options.enabled - Whether to enable the query (defaults to true)
+ * @returns Object containing analytics data, loading state, and error state
+ *
+ * @example
+ * // Basic usage
+ * const { analytics, isLoading } = usePositionAnalytics({ positionId: 'uuid' });
+ *
+ * @example
+ * // Conditional fetching
+ * const { analytics } = usePositionAnalytics({
+ *   positionId: 'uuid',
+ *   enabled: !!currentUser,
+ * });
+ *
+ * @example
+ * // Access trend data
+ * const { analytics } = usePositionAnalytics({ positionId: 'uuid' });
+ * const dailyTrends = analytics?.trend_data?.daily || [];
+ */
 export function usePositionAnalytics(
   options: UsePositionAnalyticsOptions
 ) {
@@ -90,7 +156,10 @@ export function usePositionAnalytics(
 }
 
 /**
- * Hook to fetch top positions by various metrics
+ * Options for fetching top positions query
+ *
+ * @description
+ * Configuration for filtering and sorting top positions by various metrics.
  */
 export interface TopPositionsOptions {
   metric?: 'views' | 'attachments' | 'briefings' | 'popularity';
@@ -108,6 +177,18 @@ export interface TopPosition {
   trend: 'up' | 'down' | 'stable';
 }
 
+/**
+ * Fetches top positions from the Edge Function
+ *
+ * @description
+ * Internal function that calls the positions analytics Edge Function to retrieve
+ * top-performing positions ranked by various metrics.
+ *
+ * @param options - Query options (metric, timeRange, limit)
+ * @returns Promise resolving to array of TopPosition data
+ * @throws Error if authentication fails or request fails
+ * @private
+ */
 async function fetchTopPositions(
   options: TopPositionsOptions
 ): Promise<TopPosition[]> {
@@ -141,6 +222,40 @@ async function fetchTopPositions(
   return result.data || [];
 }
 
+/**
+ * Hook to fetch top positions by various metrics
+ *
+ * @description
+ * Fetches a ranked list of top-performing positions filtered by metric
+ * (views, attachments, briefings, or popularity) and time range. Results
+ * are cached for 15 minutes.
+ *
+ * @param options - Configuration options
+ * @param options.metric - Metric to rank by (defaults to 'popularity')
+ * @param options.timeRange - Time window for metrics (defaults to '30d')
+ * @param options.limit - Maximum number of positions to return (defaults to 10)
+ * @param options.enabled - Whether to enable the query (defaults to true)
+ * @returns Object containing top positions array, loading state, and error state
+ *
+ * @example
+ * // Fetch top 10 positions by popularity in last 30 days
+ * const { topPositions, isLoading } = useTopPositions();
+ *
+ * @example
+ * // Fetch top 20 by views in last 7 days
+ * const { topPositions } = useTopPositions({
+ *   metric: 'views',
+ *   timeRange: '7d',
+ *   limit: 20,
+ * });
+ *
+ * @example
+ * // Fetch top briefing positions of all time
+ * const { topPositions } = useTopPositions({
+ *   metric: 'briefings',
+ *   timeRange: 'all',
+ * });
+ */
 export function useTopPositions(
   options: TopPositionsOptions = {}
 ) {

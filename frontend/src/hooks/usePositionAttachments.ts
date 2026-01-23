@@ -1,7 +1,42 @@
+/**
+ * Position Attachments Hooks
+ * @module hooks/usePositionAttachments
+ *
+ * TanStack Query hooks for managing position file attachments with validation,
+ * optimistic updates, and automatic cache management.
+ *
+ * @description
+ * This module provides React hooks for position attachment operations:
+ * - Query hook for fetching attachment lists
+ * - Mutation hook for uploading attachments with client-side validation
+ * - Mutation hook for deleting attachments with optimistic updates
+ * - Helper functions for file size formatting and icon selection
+ * - File type and size validation (50MB limit, PDF/DOCX/XLSX/PNG/JPG only)
+ *
+ * @example
+ * // Fetch attachments for a position
+ * const { data: attachments } = usePositionAttachments('position-uuid');
+ *
+ * @example
+ * // Upload a new attachment
+ * const { mutate: upload } = useUploadPositionAttachment('position-uuid');
+ * upload(file);
+ *
+ * @example
+ * // Delete an attachment
+ * const { mutate: deleteAttachment } = useDeletePositionAttachment('position-uuid');
+ * deleteAttachment('attachment-uuid');
+ */
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
-// Types based on API spec for positions attachments
+/**
+ * Position attachment metadata structure
+ *
+ * @description
+ * Contains file metadata and storage information for position attachments.
+ */
 export interface PositionAttachment {
   id: string;
   position_id: string;
@@ -23,7 +58,34 @@ export const ALLOWED_MIME_TYPES = [
 
 export const MAX_FILE_SIZE = 50 * 1024 * 1024; // 50MB in bytes
 
-// Fetch attachments list for a position
+/**
+ * Hook to fetch attachments list for a position
+ *
+ * @description
+ * Fetches all file attachments associated with a position. Results are cached
+ * and automatically updated when attachments are uploaded or deleted.
+ *
+ * @param positionId - The unique identifier of the position (optional for conditional queries)
+ * @returns TanStack Query result with array of PositionAttachment objects
+ *
+ * @example
+ * // Basic usage
+ * const { data: attachments, isLoading } = usePositionAttachments('uuid');
+ *
+ * @example
+ * // Conditional fetching
+ * const { data } = usePositionAttachments(positionId);
+ * // Only fetches when positionId is defined
+ *
+ * @example
+ * // Display attachments
+ * const { data: attachments } = usePositionAttachments('uuid');
+ * attachments?.map(att => (
+ *   <div key={att.id}>
+ *     {getFileIcon(att.file_type)} {att.file_name} ({formatFileSize(att.file_size)})
+ *   </div>
+ * ));
+ */
 export function usePositionAttachments(positionId: string | undefined) {
   return useQuery({
     queryKey: ['position-attachments', positionId],
@@ -44,7 +106,41 @@ export function usePositionAttachments(positionId: string | undefined) {
   });
 }
 
-// Upload attachment mutation
+/**
+ * Hook to upload a new attachment to a position
+ *
+ * @description
+ * Uploads a file attachment to a position with client-side validation for file type
+ * and size. Implements optimistic updates to cache. Validates against allowed MIME
+ * types (PDF, DOCX, XLSX, PNG, JPG) and 50MB size limit.
+ *
+ * @param positionId - The unique identifier of the position
+ * @returns TanStack Mutation result with mutate function accepting File object
+ *
+ * @example
+ * // Basic usage
+ * const { mutate: upload, isPending } = useUploadPositionAttachment('uuid');
+ * upload(file);
+ *
+ * @example
+ * // With error handling
+ * const { mutate, error } = useUploadPositionAttachment('uuid');
+ * if (error) {
+ *   if (error.message.includes('50MB')) {
+ *     console.error('File too large');
+ *   } else if (error.message.includes('not allowed')) {
+ *     console.error('Invalid file type');
+ *   }
+ * }
+ *
+ * @example
+ * // Upload with callbacks
+ * const { mutate } = useUploadPositionAttachment('uuid');
+ * mutate(file, {
+ *   onSuccess: (attachment) => toast.success('Uploaded successfully'),
+ *   onError: (error) => toast.error(error.message),
+ * });
+ */
 export function useUploadPositionAttachment(positionId: string) {
   const queryClient = useQueryClient();
 
@@ -95,7 +191,38 @@ export function useUploadPositionAttachment(positionId: string) {
   });
 }
 
-// Delete attachment mutation
+/**
+ * Hook to delete an attachment from a position
+ *
+ * @description
+ * Deletes a file attachment from a position with optimistic updates and automatic
+ * rollback on error. Validates user permissions before deletion.
+ *
+ * @param positionId - The unique identifier of the position
+ * @returns TanStack Mutation result with mutate function accepting attachment ID
+ *
+ * @example
+ * // Basic usage
+ * const { mutate: deleteAttachment } = useDeletePositionAttachment('position-uuid');
+ * deleteAttachment('attachment-uuid');
+ *
+ * @example
+ * // With permission error handling
+ * const { mutate, error } = useDeletePositionAttachment('uuid');
+ * if (error?.message.includes('permission')) {
+ *   console.error('You cannot delete this attachment');
+ * }
+ *
+ * @example
+ * // Delete with confirmation
+ * const { mutate } = useDeletePositionAttachment('uuid');
+ * if (confirm('Delete this attachment?')) {
+ *   mutate(attachmentId, {
+ *     onSuccess: () => toast.success('Deleted'),
+ *     onError: (err) => toast.error(err.message),
+ *   });
+ * }
+ */
 export function useDeletePositionAttachment(positionId: string) {
   const queryClient = useQueryClient();
 
@@ -151,7 +278,20 @@ export function useDeletePositionAttachment(positionId: string) {
   });
 }
 
-// Helper to format file size for display
+/**
+ * Helper function to format file size for display
+ *
+ * @description
+ * Converts byte count to human-readable format (Bytes, KB, MB, GB).
+ *
+ * @param bytes - File size in bytes
+ * @returns Formatted string with appropriate unit (e.g., "2.5 MB")
+ *
+ * @example
+ * formatFileSize(1024); // "1 KB"
+ * formatFileSize(1536000); // "1.46 MB"
+ * formatFileSize(52428800); // "50 MB"
+ */
 export function formatFileSize(bytes: number): string {
   if (bytes === 0) return '0 Bytes';
 
@@ -162,7 +302,20 @@ export function formatFileSize(bytes: number): string {
   return `${parseFloat((bytes / Math.pow(k, i)).toFixed(2))} ${sizes[i]}`;
 }
 
-// Helper to get file icon based on MIME type
+/**
+ * Helper function to get file icon emoji based on MIME type
+ *
+ * @description
+ * Returns an appropriate emoji icon for displaying file types visually.
+ *
+ * @param mimeType - The MIME type of the file
+ * @returns Emoji string representing the file type
+ *
+ * @example
+ * getFileIcon('application/pdf'); // "📄"
+ * getFileIcon('image/png'); // "🖼️"
+ * getFileIcon('application/vnd.openxmlformats-officedocument.wordprocessingml.document'); // "📝"
+ */
 export function getFileIcon(mimeType: string): string {
   if (mimeType === 'application/pdf') return '📄';
   if (

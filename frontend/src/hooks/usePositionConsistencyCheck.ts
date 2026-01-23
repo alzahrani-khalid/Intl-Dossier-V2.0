@@ -1,14 +1,33 @@
 /**
- * TanStack Query hooks for Position Consistency Check
- * Feature: position-consistency-checker
+ * Position Consistency Check Hooks
+ * @module hooks/usePositionConsistencyCheck
+ * @feature position-consistency-checker
  *
- * Provides hooks for:
- * - Running consistency checks on positions
- * - Fetching consistency check history
- * - Submitting review decisions
+ * TanStack Query hooks for position consistency checking with AI-powered conflict detection,
+ * automated review workflows, and comprehensive history tracking.
  *
- * Query keys: ['position-consistency-check', positionId]
- * Cache: staleTime 60s, gcTime 5min
+ * @description
+ * This module provides a comprehensive set of React hooks for managing position consistency:
+ * - Mutation hooks for running consistency checks with AI analysis
+ * - Query hooks for fetching consistency check history and latest results
+ * - Review workflow hooks for submitting approval/rejection decisions
+ * - Utility functions for risk level assessment and conflict severity classification
+ * - Auto-approval detection based on consistency scores
+ * - Pending review queue management for reviewers
+ *
+ * @example
+ * // Run a consistency check on a position
+ * const { mutate: runCheck, isPending } = useRunConsistencyCheck();
+ * runCheck({ position_id: 'uuid-here', analysis_type: 'pre_approval' });
+ *
+ * @example
+ * // Fetch the latest consistency check result
+ * const { data: latestCheck, isLoading } = useLatestConsistencyCheck('position-uuid');
+ *
+ * @example
+ * // Submit a review decision
+ * const { mutate: submitDecision } = useSubmitReviewDecision();
+ * submitDecision({ check_id: 'uuid', decision: 'approved', notes: 'Looks good' });
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -146,7 +165,25 @@ export interface ReviewDecisionRequest {
   notes?: string
 }
 
-// Query keys
+/**
+ * Query Keys Factory for position consistency check queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation of consistency checks.
+ *
+ * @example
+ * // Invalidate all consistency check queries
+ * queryClient.invalidateQueries({ queryKey: consistencyCheckKeys.all });
+ *
+ * @example
+ * // Invalidate specific position's history
+ * queryClient.invalidateQueries({ queryKey: consistencyCheckKeys.history('uuid') });
+ *
+ * @example
+ * // Invalidate latest check for a position
+ * queryClient.invalidateQueries({ queryKey: consistencyCheckKeys.latest('uuid') });
+ */
 export const consistencyCheckKeys = {
   all: ['position-consistency-check'] as const,
   check: (positionId: string) => [...consistencyCheckKeys.all, 'check', positionId] as const,
@@ -154,7 +191,13 @@ export const consistencyCheckKeys = {
   latest: (positionId: string) => [...consistencyCheckKeys.all, 'latest', positionId] as const,
 }
 
-// Helper to get auth headers
+/**
+ * Helper to get authentication headers for API requests
+ *
+ * @private
+ * @returns Promise resolving to headers object with auth token
+ * @throws Error if session is not available
+ */
 const getAuthHeaders = async () => {
   const {
     data: { session },
@@ -167,6 +210,46 @@ const getAuthHeaders = async () => {
 
 /**
  * Hook to run a consistency check on a position
+ *
+ * @description
+ * Executes an AI-powered consistency check that analyzes a position for conflicts,
+ * redundancies, gaps, and semantic issues. Automatically invalidates related queries
+ * on success and updates the position's consistency score.
+ *
+ * The check includes:
+ * - Conflict detection (contradictions, redundancies, semantic conflicts)
+ * - Similar position identification with similarity scores
+ * - Gap analysis for missing topics or coverage
+ * - Automated recommendations for resolution
+ * - Risk assessment and auto-approval eligibility
+ *
+ * @returns TanStack Mutation result with mutate function accepting ConsistencyCheckRequest
+ *
+ * @example
+ * const { mutate: runCheck, isPending, isError } = useRunConsistencyCheck();
+ *
+ * // Run a pre-approval check
+ * runCheck({
+ *   position_id: 'uuid-123',
+ *   analysis_type: 'pre_approval',
+ *   similarity_threshold: 0.8,
+ *   include_recommendations: true,
+ * });
+ *
+ * @example
+ * // Run a manual check with custom threshold
+ * const handleRunCheck = () => {
+ *   runCheck({
+ *     position_id: positionId,
+ *     analysis_type: 'manual',
+ *     similarity_threshold: 0.7,
+ *   });
+ * };
+ *
+ * @example
+ * // Handle errors and loading states
+ * if (isPending) return <Spinner />;
+ * if (isError) return <ErrorAlert message="Check failed" />;
  */
 export const useRunConsistencyCheck = () => {
   const queryClient = useQueryClient()
@@ -207,6 +290,40 @@ export const useRunConsistencyCheck = () => {
 
 /**
  * Hook to fetch the latest consistency check for a position
+ *
+ * @description
+ * Fetches the most recent consistency check result for a position from the database.
+ * Returns null if no checks have been run. Automatically enabled only when positionId
+ * is provided. Results are cached for 1 minute to reduce database load.
+ *
+ * @param positionId - The unique identifier (UUID) of the position, or undefined
+ * @returns TanStack Query result with data typed as ConsistencyCheckHistoryItem | null
+ *
+ * @example
+ * // Basic usage
+ * const { data: latestCheck, isLoading } = useLatestConsistencyCheck('uuid-123');
+ *
+ * if (isLoading) return <Skeleton />;
+ * if (!latestCheck) return <NoChecksMessage />;
+ *
+ * // Display risk level and score
+ * return (
+ *   <div>
+ *     <Badge variant={latestCheck.risk_level}>{latestCheck.risk_level}</Badge>
+ *     <ScoreDisplay score={latestCheck.overall_score} />
+ *   </div>
+ * );
+ *
+ * @example
+ * // Conditional fetching with optional positionId
+ * const { data, isLoading } = useLatestConsistencyCheck(
+ *   isEditMode ? positionId : undefined
+ * );
+ *
+ * @example
+ * // Check if position requires human review
+ * const { data: latestCheck } = useLatestConsistencyCheck(positionId);
+ * const needsReview = latestCheck?.requires_human_review;
  */
 export const useLatestConsistencyCheck = (positionId: string | undefined) => {
   return useQuery({
@@ -240,6 +357,45 @@ export const useLatestConsistencyCheck = (positionId: string | undefined) => {
 
 /**
  * Hook to fetch consistency check history for a position
+ *
+ * @description
+ * Fetches a paginated list of all consistency checks run on a position, ordered by
+ * analyzed_at timestamp (most recent first). Useful for displaying audit trails and
+ * tracking score changes over time. Results are cached for 1 minute.
+ *
+ * @param positionId - The unique identifier (UUID) of the position, or undefined
+ * @param limit - Maximum number of history items to fetch (defaults to 10)
+ * @returns TanStack Query result with array of ConsistencyCheckHistoryItem
+ *
+ * @example
+ * // Basic usage with default limit
+ * const { data: history, isLoading } = useConsistencyCheckHistory('uuid-123');
+ *
+ * @example
+ * // Custom limit for pagination
+ * const { data: history } = useConsistencyCheckHistory('uuid-123', 20);
+ *
+ * @example
+ * // Display history timeline
+ * const { data: history, isLoading } = useConsistencyCheckHistory(positionId);
+ *
+ * return (
+ *   <Timeline>
+ *     {history?.map(check => (
+ *       <TimelineItem key={check.id}>
+ *         <Badge>{check.overall_score}</Badge>
+ *         <Text>{formatDate(check.analyzed_at)}</Text>
+ *         <Badge variant={check.risk_level}>{check.risk_level}</Badge>
+ *       </TimelineItem>
+ *     ))}
+ *   </Timeline>
+ * );
+ *
+ * @example
+ * // Track score improvements over time
+ * const { data: history } = useConsistencyCheckHistory(positionId, 50);
+ * const scores = history?.map(h => h.overall_score) || [];
+ * const isImproving = scores[0] > scores[scores.length - 1];
  */
 export const useConsistencyCheckHistory = (positionId: string | undefined, limit = 10) => {
   return useQuery({
@@ -268,6 +424,53 @@ export const useConsistencyCheckHistory = (positionId: string | undefined, limit
 
 /**
  * Hook to submit a review decision for a consistency check
+ *
+ * @description
+ * Allows authorized reviewers to submit approval/rejection decisions for consistency
+ * checks that require human review. Updates the check's review status, records the
+ * reviewer and timestamp, and optionally adds review notes. Automatically invalidates
+ * related queries on success.
+ *
+ * @returns TanStack Mutation result with mutate function accepting ReviewDecisionRequest
+ *
+ * @example
+ * const { mutate: submitDecision, isPending } = useSubmitReviewDecision();
+ *
+ * // Approve with notes
+ * submitDecision({
+ *   check_id: 'uuid-123',
+ *   decision: 'approved',
+ *   notes: 'All conflicts addressed, cleared for approval',
+ * });
+ *
+ * @example
+ * // Reject and request revision
+ * const handleReject = () => {
+ *   submitDecision({
+ *     check_id: checkId,
+ *     decision: 'revision_required',
+ *     notes: 'Please address the high-severity conflicts before resubmitting',
+ *   });
+ * };
+ *
+ * @example
+ * // Simple approval without notes
+ * <Button
+ *   onClick={() => submitDecision({ check_id: id, decision: 'approved' })}
+ *   disabled={isPending}
+ * >
+ *   Approve
+ * </Button>
+ *
+ * @example
+ * // Handle submission with toast notifications
+ * const { mutate, isPending, isError, error } = useSubmitReviewDecision();
+ *
+ * useEffect(() => {
+ *   if (isError) {
+ *     toast.error(`Failed to submit decision: ${error.message}`);
+ *   }
+ * }, [isError, error]);
  */
 export const useSubmitReviewDecision = () => {
   const queryClient = useQueryClient()
@@ -317,6 +520,47 @@ export const useSubmitReviewDecision = () => {
 
 /**
  * Hook to check if a position can be auto-approved
+ *
+ * @description
+ * Queries the database to determine if a position meets the criteria for automatic
+ * approval based on its consistency score and risk level. Uses a stored procedure
+ * for efficient server-side evaluation. Results are cached for 30 seconds.
+ *
+ * @param positionId - The unique identifier (UUID) of the position, or undefined
+ * @returns TanStack Query result with boolean indicating auto-approval eligibility
+ *
+ * @example
+ * const { data: canAutoApprove, isLoading } = useCanAutoApprove('uuid-123');
+ *
+ * if (canAutoApprove) {
+ *   return <Badge variant="success">Auto-Approval Eligible</Badge>;
+ * }
+ *
+ * @example
+ * // Conditionally show approval button based on eligibility
+ * const { data: canAutoApprove } = useCanAutoApprove(positionId);
+ *
+ * return (
+ *   <div>
+ *     {canAutoApprove ? (
+ *       <Button onClick={handleAutoApprove}>Auto-Approve</Button>
+ *     ) : (
+ *       <Button onClick={handleManualReview}>Send for Review</Button>
+ *     )}
+ *   </div>
+ * );
+ *
+ * @example
+ * // Display approval workflow based on eligibility
+ * const { data: canAutoApprove, isLoading } = useCanAutoApprove(positionId);
+ *
+ * if (isLoading) return <Skeleton />;
+ *
+ * return (
+ *   <Card>
+ *     <Text>Approval Status: {canAutoApprove ? 'Fast-Track' : 'Standard Review'}</Text>
+ *   </Card>
+ * );
  */
 export const useCanAutoApprove = (positionId: string | undefined) => {
   return useQuery({
@@ -343,6 +587,49 @@ export const useCanAutoApprove = (positionId: string | undefined) => {
 
 /**
  * Hook to fetch pending review checks (for reviewers)
+ *
+ * @description
+ * Fetches a paginated list of consistency checks that are pending human review,
+ * ordered by analyzed_at timestamp. Includes related position metadata for context.
+ * Used primarily by reviewer dashboards to display pending approval queues.
+ * Results are cached for 30 seconds.
+ *
+ * @param limit - Maximum number of pending checks to fetch (defaults to 20)
+ * @returns TanStack Query result with array of ConsistencyCheckHistoryItem
+ *
+ * @example
+ * // Basic usage for reviewer dashboard
+ * const { data: pendingChecks, isLoading } = usePendingReviewChecks();
+ *
+ * return (
+ *   <ReviewQueue>
+ *     {pendingChecks?.map(check => (
+ *       <ReviewCard key={check.id} check={check} />
+ *     ))}
+ *   </ReviewQueue>
+ * );
+ *
+ * @example
+ * // Custom limit for pagination
+ * const { data: pendingChecks } = usePendingReviewChecks(50);
+ *
+ * @example
+ * // Display pending count badge
+ * const { data: pendingChecks, isLoading } = usePendingReviewChecks();
+ * const count = pendingChecks?.length || 0;
+ *
+ * return (
+ *   <NavItem>
+ *     Reviews
+ *     {count > 0 && <Badge variant="danger">{count}</Badge>}
+ *   </NavItem>
+ * );
+ *
+ * @example
+ * // Filter by risk level
+ * const { data: allPending } = usePendingReviewChecks(100);
+ * const criticalChecks = allPending?.filter(c => c.risk_level === 'critical');
+ * const highChecks = allPending?.filter(c => c.risk_level === 'high');
  */
 export const usePendingReviewChecks = (limit = 20) => {
   return useQuery({
@@ -380,10 +667,21 @@ export const usePendingReviewChecks = (limit = 20) => {
 
 /**
  * Utility functions for consistency check results
+ *
+ * @description
+ * Collection of helper functions for formatting and displaying consistency check data.
+ * Provides color coding, formatting, and assessment utilities for UI components.
  */
 export const consistencyCheckUtils = {
   /**
    * Get color class based on risk level
+   *
+   * @param riskLevel - The risk level to get color for
+   * @returns Tailwind CSS color classes for text and background
+   *
+   * @example
+   * const colors = consistencyCheckUtils.getRiskLevelColor('critical');
+   * // Returns: 'text-red-600 bg-red-100'
    */
   getRiskLevelColor: (riskLevel: RiskLevel): string => {
     switch (riskLevel) {
@@ -402,6 +700,13 @@ export const consistencyCheckUtils = {
 
   /**
    * Get color class based on severity
+   *
+   * @param severity - The conflict severity level
+   * @returns Tailwind CSS color classes for text and background
+   *
+   * @example
+   * const colors = consistencyCheckUtils.getSeverityColor('high');
+   * // Returns: 'text-orange-600 bg-orange-100'
    */
   getSeverityColor: (severity: ConflictSeverity): string => {
     switch (severity) {
@@ -420,6 +725,13 @@ export const consistencyCheckUtils = {
 
   /**
    * Get color class based on overall score
+   *
+   * @param score - The consistency score (0-100)
+   * @returns Tailwind CSS text color class
+   *
+   * @example
+   * const color = consistencyCheckUtils.getScoreColor(85);
+   * // Returns: 'text-green-600'
    */
   getScoreColor: (score: number): string => {
     if (score >= 80) return 'text-green-600'
@@ -430,6 +742,13 @@ export const consistencyCheckUtils = {
 
   /**
    * Get progress bar color based on score
+   *
+   * @param score - The consistency score (0-100)
+   * @returns Tailwind CSS background color class
+   *
+   * @example
+   * const bgColor = consistencyCheckUtils.getScoreProgressColor(75);
+   * // Returns: 'bg-yellow-500'
    */
   getScoreProgressColor: (score: number): string => {
     if (score >= 80) return 'bg-green-500'
@@ -440,6 +759,13 @@ export const consistencyCheckUtils = {
 
   /**
    * Format conflict type for display
+   *
+   * @param type - The conflict type enum value
+   * @returns Human-readable formatted string
+   *
+   * @example
+   * const formatted = consistencyCheckUtils.formatConflictType('semantic_conflict');
+   * // Returns: 'Semantic Conflict'
    */
   formatConflictType: (type: ConflictType): string => {
     return type
@@ -450,6 +776,13 @@ export const consistencyCheckUtils = {
 
   /**
    * Check if consistency check is outdated (older than 24 hours)
+   *
+   * @param analyzedAt - ISO timestamp of when the check was analyzed
+   * @returns True if the check is older than 24 hours
+   *
+   * @example
+   * const isOld = consistencyCheckUtils.isOutdated('2026-01-20T10:00:00Z');
+   * // Returns: true (if current date is 2026-01-24)
    */
   isOutdated: (analyzedAt: string): boolean => {
     const checkDate = new Date(analyzedAt)
@@ -460,6 +793,13 @@ export const consistencyCheckUtils = {
 
   /**
    * Get recommendation type icon
+   *
+   * @param type - The recommendation type
+   * @returns Icon name for UI rendering
+   *
+   * @example
+   * const icon = consistencyCheckUtils.getRecommendationIcon('approve');
+   * // Returns: 'check'
    */
   getRecommendationIcon: (
     type: RecommendationType,

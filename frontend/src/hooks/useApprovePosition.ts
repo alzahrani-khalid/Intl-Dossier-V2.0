@@ -1,8 +1,35 @@
 /**
- * TanStack Query mutation for approving a position
+ * Approve Position Hook
+ * @module hooks/useApprovePosition
+ * @feature position-approval-workflow
  *
- * Requires elevated token from step-up authentication
- * Invalidates position and approvals on success
+ * TanStack Query mutation hook for approving positions with step-up authentication
+ * and automatic cache invalidation.
+ *
+ * @description
+ * This module provides a React hook for approving position documents:
+ * - Mutation hook for approving positions at their current workflow stage
+ * - Step-up authentication requirement for security (elevated token)
+ * - Automatic cache invalidation of positions and approvals on success
+ * - Authorization checks for approval stage eligibility
+ * - Optional approval comments/notes
+ * - Integration with approval workflow state machine
+ *
+ * @example
+ * // Approve a position with elevated token
+ * const { mutate: approvePosition, isPending } = useApprovePosition();
+ * approvePosition({
+ *   id: 'uuid-123',
+ *   elevatedToken: token,
+ *   comments: 'Approved after review',
+ * });
+ *
+ * @example
+ * // Handle step-up auth requirement
+ * const { mutate, error } = useApprovePosition();
+ * if (error?.message.includes('Step-up authentication required')) {
+ *   // Prompt user to re-authenticate
+ * }
  */
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -12,7 +39,13 @@ import type { Position } from '../types/position';
 // API base URL
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1';
 
-// Helper to get auth headers with optional elevated token
+/**
+ * Helper to get authentication headers with optional elevated token
+ *
+ * @private
+ * @param elevatedToken - Optional elevated token from step-up auth
+ * @returns Promise resolving to headers object with auth token
+ */
 const getAuthHeaders = async (elevatedToken?: string) => {
   const headers: HeadersInit = {
     'Content-Type': 'application/json',
@@ -28,15 +61,90 @@ const getAuthHeaders = async (elevatedToken?: string) => {
   return headers;
 };
 
+/**
+ * Approve position mutation variables
+ */
 interface ApprovePositionVariables {
+  /** Position UUID to approve */
   id: string;
+  /** Optional approval comments/notes */
   comments?: string;
-  elevatedToken: string; // Required elevated token from step-up
+  /** Required elevated token from step-up authentication */
+  elevatedToken: string;
 }
 
 /**
  * Hook to approve a position at current stage
- * Requires elevated token from step-up authentication
+ *
+ * @description
+ * Approves a position at its current workflow stage, advancing it to the next stage
+ * in the approval workflow. Requires an elevated authentication token obtained via
+ * step-up authentication for security. Automatically invalidates position and approval
+ * queries on success. Validates that the user is authorized for the current approval stage.
+ *
+ * @returns TanStack Mutation result with mutate function accepting ApprovePositionVariables
+ *
+ * @example
+ * const { mutate: approvePosition, isPending } = useApprovePosition();
+ *
+ * // Approve with step-up token
+ * const handleApprove = async () => {
+ *   const elevatedToken = await performStepUpAuth();
+ *   approvePosition({
+ *     id: 'uuid-123',
+ *     elevatedToken,
+ *     comments: 'Reviewed and approved. Ready for next stage.',
+ *   });
+ * };
+ *
+ * @example
+ * // Handle approval with loading state
+ * const { mutate, isPending, isError, error } = useApprovePosition();
+ *
+ * const handleApproveClick = async () => {
+ *   try {
+ *     const token = await requestStepUpAuth();
+ *     mutate(
+ *       { id: positionId, elevatedToken: token, comments: reviewNotes },
+ *       {
+ *         onSuccess: () => {
+ *           toast.success('Position approved successfully');
+ *           navigate('/approvals/pending');
+ *         },
+ *       }
+ *     );
+ *   } catch (err) {
+ *     toast.error('Step-up authentication failed');
+ *   }
+ * };
+ *
+ * @example
+ * // Handle authorization errors
+ * const { mutate, error, isError } = useApprovePosition();
+ *
+ * useEffect(() => {
+ *   if (isError && error.message.includes('not authorized')) {
+ *     showAlert({
+ *       title: 'Not Authorized',
+ *       message: 'You are not authorized to approve at this stage.',
+ *     });
+ *   }
+ * }, [isError, error]);
+ *
+ * @example
+ * // Approve with confirmation dialog
+ * const { mutate, isPending } = useApprovePosition();
+ *
+ * const confirmAndApprove = () => {
+ *   showConfirmDialog({
+ *     title: 'Approve Position',
+ *     message: 'Are you sure you want to approve this position?',
+ *     onConfirm: async () => {
+ *       const token = await getElevatedToken();
+ *       mutate({ id: positionId, elevatedToken: token });
+ *     },
+ *   });
+ * };
  */
 export const useApprovePosition = () => {
   const queryClient = useQueryClient();
