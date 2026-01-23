@@ -17,7 +17,13 @@ export function CountryDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading country dossier"
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -75,7 +81,13 @@ export function EngagementDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading engagement details"
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -123,7 +135,13 @@ export function PersonDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading person dossier"
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -179,7 +197,13 @@ export function OrganizationDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading organization dossier"
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -226,7 +250,13 @@ export function ForumDossierSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading forum dossier"
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8 space-y-3">
         <Skeleton className="h-8 sm:h-10 w-2/3" />
@@ -284,7 +314,13 @@ export function DossiersHubSkeleton() {
   const isRTL = i18n.language === 'ar';
 
   return (
-    <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8" dir={isRTL ? 'rtl' : 'ltr'}>
+    <div
+      role="status"
+      aria-busy="true"
+      aria-label="Loading dossiers hub"
+      className="container mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8"
+      dir={isRTL ? 'rtl' : 'ltr'}
+    >
       {/* Header */}
       <div className="mb-6 sm:mb-8">
         <Skeleton className="h-8 sm:h-10 w-1/2 mb-3" />
