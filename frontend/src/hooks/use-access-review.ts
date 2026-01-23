@@ -12,6 +12,7 @@ import {
   type CertifyUserAccessParams,
   type CompleteAccessReviewParams,
   type ScheduleAccessReviewParams,
+  type ReviewFinding,
 } from '@/services/user-management-api';
 
 /**
@@ -186,16 +187,16 @@ export function useAccessReviewSummary(reviewId: string | null) {
 
   return {
     totalFindings: reviewDetail?.findings?.length || 0,
-    inactiveUsers: reviewDetail?.findings?.filter((f: any) =>
+    inactiveUsers: reviewDetail?.findings?.filter((f: ReviewFinding) =>
       f.issues?.includes('inactive_90_days')
     ).length || 0,
-    excessivePermissions: reviewDetail?.findings?.filter((f: any) =>
+    excessivePermissions: reviewDetail?.findings?.filter((f: ReviewFinding) =>
       f.issues?.includes('excessive_permissions')
     ).length || 0,
-    expiringGuests: reviewDetail?.findings?.filter((f: any) =>
+    expiringGuests: reviewDetail?.findings?.filter((f: ReviewFinding) =>
       f.issues?.includes('guest_expiring_soon')
     ).length || 0,
-    certifiedUsers: reviewDetail?.findings?.filter((f: any) =>
+    certifiedUsers: reviewDetail?.findings?.filter((f: ReviewFinding) =>
       f.certified_by && f.certified_at
     ).length || 0,
   };
