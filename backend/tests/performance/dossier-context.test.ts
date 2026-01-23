@@ -84,8 +84,8 @@ describe('Dossier Context Performance Tests', () => {
 
       // Sign in with test credentials to get auth token
       const { data: authData } = await supabaseClient.auth.signInWithPassword({
-        email: 'kazahrani@stats.gov.sa',
-        password: 'itisme',
+        email: process.env.TEST_USER_EMAIL || 'test@example.com',
+        password: process.env.TEST_USER_PASSWORD || 'test-password',
       })
 
       if (authData?.session?.access_token) {

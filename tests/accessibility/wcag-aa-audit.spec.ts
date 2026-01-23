@@ -5,8 +5,8 @@ import AxeBuilder from '@axe-core/playwright';
 test.describe('WCAG AA Accessibility Audit', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5173');
-    await page.fill('[name="email"]', 'kazahrani@stats.gov.sa');
-    await page.fill('[name="password"]', 'itisme');
+    await page.fill('[name="email"]', process.env.TEST_USER_EMAIL || 'test@example.com');
+    await page.fill('[name="password"]', process.env.TEST_USER_PASSWORD || 'test-password');
     await page.click('button[type="submit"]');
     await expect(page).toHaveURL(/dashboard/, { timeout: 5000 });
   });

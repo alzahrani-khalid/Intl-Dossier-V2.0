@@ -24,8 +24,8 @@ export async function getAuthenticatedClient(): Promise<SupabaseClient> {
   }
 
   // Use real user credentials for testing
-  const testEmail = process.env.TEST_USER_EMAIL || 'kazahrani@stats.gov.sa';
-  const testPassword = process.env.TEST_USER_PASSWORD || 'itisme';
+  const testEmail = process.env.TEST_USER_EMAIL || 'test@example.com';
+  const testPassword = process.env.TEST_USER_PASSWORD || 'test-password';
 
   try {
     // Create client

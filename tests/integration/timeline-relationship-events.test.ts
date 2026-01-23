@@ -19,8 +19,8 @@ describe('Timeline Aggregation with Relationships', () => {
     supabase = createClient(supabaseUrl, supabaseAnonKey);
 
     const { data: authData } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL || 'test@example.com',
+      password: process.env.TEST_USER_PASSWORD || 'test-password',
     });
 
     authToken = authData?.session?.access_token || '';

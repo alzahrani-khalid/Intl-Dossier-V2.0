@@ -25,8 +25,8 @@ describe('Tasks Migration Integrity Tests', () => {
   beforeAll(async () => {
     // Authenticate as test user
     const { data: authData, error: authError } = await supabase.auth.signInWithPassword({
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itisme',
+      email: process.env.TEST_USER_EMAIL || 'test@example.com',
+      password: process.env.TEST_USER_PASSWORD || 'test-password',
     });
 
     if (authError || !authData.session) {

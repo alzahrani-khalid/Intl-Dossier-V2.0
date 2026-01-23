@@ -5,8 +5,8 @@ import { test, expect } from '@playwright/test';
 
 test.describe('Reminder Workflow E2E Tests', () => {
   const TEST_USER = {
-    email: 'kazahrani@stats.gov.sa',
-    password: 'itisme',
+    email: process.env.TEST_USER_EMAIL || 'test@example.com',
+    password: process.env.TEST_USER_PASSWORD || 'test-password',
   };
 
   test.beforeEach(async ({ page }) => {

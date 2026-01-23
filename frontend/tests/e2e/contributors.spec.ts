@@ -10,15 +10,15 @@ import type { Page } from '@playwright/test';
  * - T054: Contributor viewing task in "Tasks I Contributed To" filter
  *
  * Prerequisites:
- * - Multiple users must exist (kazahrani@stats.gov.sa + test contributor)
+ * - Multiple users must exist (configured via TEST_USER_EMAIL env var + test contributor)
  * - Frontend dev server running on http://localhost:5173
  * - Backend API running on http://localhost:3001
  */
 
 // Test credentials (from CLAUDE.md)
 const TEST_USER = {
-  email: 'kazahrani@stats.gov.sa',
-  password: 'itisme'
+  email: process.env.TEST_USER_EMAIL || 'test@example.com',
+  password: process.env.TEST_USER_PASSWORD || 'test-password'
 };
 
 // Helper: Login to application

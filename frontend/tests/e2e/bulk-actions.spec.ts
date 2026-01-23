@@ -7,8 +7,8 @@ test.describe('Bulk Reminder Actions - E2E (T042)', () => {
   test.beforeEach(async ({ page }) => {
     // Login with test user
     await page.goto('/login');
-    await page.fill('input[name="email"]', 'kazahrani@stats.gov.sa');
-    await page.fill('input[name="password"]', 'itisme');
+    await page.fill('input[name="email"]', process.env.TEST_USER_EMAIL || 'test@example.com');
+    await page.fill('input[name="password"]', process.env.TEST_USER_PASSWORD || 'test-password');
     await page.click('button[type="submit"]');
 
     // Wait for redirect to dashboard

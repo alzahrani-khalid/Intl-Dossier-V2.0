@@ -9,15 +9,15 @@ import type { Page } from '@playwright/test';
  * - T039: Title validation (empty title rejection, max length enforcement)
  *
  * Prerequisites:
- * - User must be logged in (kazahrani@stats.gov.sa)
+ * - User must be logged in (configured via TEST_USER_EMAIL env var)
  * - Frontend dev server running on http://localhost:5173
  * - Backend API running on http://localhost:3001
  */
 
 // Test credentials (from CLAUDE.md)
 const TEST_USER = {
-  email: 'kazahrani@stats.gov.sa',
-  password: 'itisme'
+  email: process.env.TEST_USER_EMAIL || 'test@example.com',
+  password: process.env.TEST_USER_PASSWORD || 'test-password'
 };
 
 // Helper: Login to application

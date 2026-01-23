@@ -10,8 +10,8 @@ test.describe('AI Chat Interface', () => {
   test.beforeEach(async ({ page }) => {
     // Login first
     await page.goto('http://localhost:5175/login');
-    await page.fill('input[id="email"]', 'kazahrani@stats.gov.sa');
-    await page.fill('input[id="password"]', 'itisme');
+    await page.fill('input[id="email"]', process.env.TEST_USER_EMAIL || 'test@example.com');
+    await page.fill('input[id="password"]', process.env.TEST_USER_PASSWORD || 'test-password');
     await page.locator('button[type="submit"]').click();
 
     // Wait for dashboard to load
@@ -249,8 +249,8 @@ test.describe('AI Chat Interface', () => {
 test.describe('AI Brief Generation', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5175/login');
-    await page.fill('input[id="email"]', 'kazahrani@stats.gov.sa');
-    await page.fill('input[id="password"]', 'itisme');
+    await page.fill('input[id="email"]', process.env.TEST_USER_EMAIL || 'test@example.com');
+    await page.fill('input[id="password"]', process.env.TEST_USER_PASSWORD || 'test-password');
     await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/dashboard/, { timeout: 15000 });
   });
@@ -284,8 +284,8 @@ test.describe('AI Brief Generation', () => {
 test.describe('AI Entity Linking', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:5175/login');
-    await page.fill('input[id="email"]', 'kazahrani@stats.gov.sa');
-    await page.fill('input[id="password"]', 'itisme');
+    await page.fill('input[id="email"]', process.env.TEST_USER_EMAIL || 'test@example.com');
+    await page.fill('input[id="password"]', process.env.TEST_USER_PASSWORD || 'test-password');
     await page.locator('button[type="submit"]').click();
     await expect(page).toHaveURL(/\/dashboard/, { timeout: 15000 });
   });

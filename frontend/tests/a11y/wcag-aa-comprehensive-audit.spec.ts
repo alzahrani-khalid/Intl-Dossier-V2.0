@@ -15,8 +15,8 @@ import AxeBuilder from '@axe-core/playwright'
  */
 
 // Test credentials
-const TEST_EMAIL = 'kazahrani@stats.gov.sa'
-const TEST_PASSWORD = 'itisme'
+const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com'
+const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'test-password'
 
 // All protected routes to audit
 const PROTECTED_ROUTES = [

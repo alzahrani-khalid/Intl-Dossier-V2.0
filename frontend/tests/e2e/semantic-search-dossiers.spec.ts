@@ -15,8 +15,8 @@ test.describe('Semantic Search - Dossiers Expansion', () => {
   test.beforeEach(async ({ page }) => {
     // Setup: Login as authenticated user
     await page.goto('/login')
-    await page.fill('[data-testid="email-input"], input[type="email"]', 'kazahrani@stats.gov.sa')
-    await page.fill('[data-testid="password-input"], input[type="password"]', 'itisme')
+    await page.fill('[data-testid="email-input"], input[type="email"]', process.env.TEST_USER_EMAIL || 'test@example.com')
+    await page.fill('[data-testid="password-input"], input[type="password"]', process.env.TEST_USER_PASSWORD || 'test-password')
     await page.click('[data-testid="login-button"], button[type="submit"]')
     await expect(page).toHaveURL(/\/(dashboard|dossiers)/, { timeout: 10000 })
   })

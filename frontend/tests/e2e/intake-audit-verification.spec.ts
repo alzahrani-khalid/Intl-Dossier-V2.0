@@ -8,8 +8,8 @@
 import { test, expect } from '@playwright/test'
 
 // Test credentials from CLAUDE.md
-const TEST_EMAIL = 'kazahrani@stats.gov.sa'
-const TEST_PASSWORD = 'itisme'
+const TEST_EMAIL = process.env.TEST_USER_EMAIL || 'test@example.com'
+const TEST_PASSWORD = process.env.TEST_USER_PASSWORD || 'test-password'
 
 test.describe('Intake Ticket System Audit', () => {
   test.beforeEach(async ({ page }) => {

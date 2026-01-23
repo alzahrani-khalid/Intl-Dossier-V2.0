@@ -25,8 +25,8 @@ async function login(page: Page) {
   await page.waitForLoadState('networkidle')
 
   // Fill in credentials from CLAUDE.md
-  await page.fill('input[type="email"]', 'kazahrani@stats.gov.sa')
-  await page.fill('input[type="password"]', 'itisme')
+  await page.fill('input[type="email"]', process.env.TEST_USER_EMAIL || 'test@example.com')
+  await page.fill('input[type="password"]', process.env.TEST_USER_PASSWORD || 'test-password')
 
   // Click sign in
   await page.click('button[type="submit"]')
