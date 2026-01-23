@@ -6,8 +6,7 @@
  * via the work-item-dossiers Edge Function.
  */
 
-import { useMutation, useQueryClient } from '@tanstack/react-query'
-import { supabase } from '@/lib/supabase'
+import { createMutation } from '@/lib/mutation-factory'
 import type {
   WorkItemType,
   InheritanceSource,
@@ -35,32 +34,6 @@ export interface CreateWorkItemDossierLinksResponse {
 }
 
 // ============================================================================
-// API Call
-// ============================================================================
-
-async function createWorkItemDossierLinks(
-  request: CreateWorkItemDossierLinksRequest,
-): Promise<CreateWorkItemDossierLinksResponse> {
-  const { data, error } = await supabase.functions.invoke<CreateWorkItemDossierLinksResponse>(
-    'work-item-dossiers',
-    {
-      body: request,
-    },
-  )
-
-  if (error) {
-    console.error('Error creating work item dossier links:', error)
-    throw new Error(error.message || 'Failed to create dossier links')
-  }
-
-  if (!data) {
-    throw new Error('No data returned from work-item-dossiers')
-  }
-
-  return data
-}
-
-// ============================================================================
 // Query Keys
 // ============================================================================
 
@@ -73,21 +46,6 @@ export const workItemDossierKeys = {
 }
 
 // ============================================================================
-// Hook Options
-// ============================================================================
-
-export interface UseCreateWorkItemDossierLinksOptions {
-  /**
-   * Callback when links are created successfully.
-   */
-  onSuccess?: (data: CreateWorkItemDossierLinksResponse) => void
-  /**
-   * Callback when link creation fails.
-   */
-  onError?: (error: Error) => void
-}
-
-// ============================================================================
 // Hook Implementation
 // ============================================================================
 
@@ -97,7 +55,7 @@ export interface UseCreateWorkItemDossierLinksOptions {
  * @example
  * ```tsx
  * const { mutateAsync: createDossierLinks } = useCreateWorkItemDossierLinks({
- *   onSuccess: (data) => {
+ *   onSuccess: (data, variables) => {
  *     console.log(`Created ${data.created_count} dossier links`);
  *   },
  * });
@@ -112,37 +70,32 @@ export interface UseCreateWorkItemDossierLinksOptions {
  * });
  * ```
  */
-export function useCreateWorkItemDossierLinks(options: UseCreateWorkItemDossierLinksOptions = {}) {
-  const { onSuccess, onError } = options
-  const queryClient = useQueryClient()
+export const useCreateWorkItemDossierLinks = createMutation<
+  CreateWorkItemDossierLinksRequest,
+  CreateWorkItemDossierLinksResponse
+>({
+  method: 'POST',
+  url: {
+    endpoint: 'work-item-dossiers',
+  },
+  invalidation: {
+    queryKeys: (variables, data) => {
+      // Build array of query keys to invalidate
+      const keys = [
+        // Invalidate the specific work item's dossier links
+        workItemDossierKeys.list(variables.work_item_type, variables.work_item_id),
+        // Invalidate general dossier activity timeline
+        ['dossier-activity-timeline'],
+      ]
 
-  return useMutation({
-    mutationFn: createWorkItemDossierLinks,
-    onSuccess: (data, variables) => {
-      // Invalidate relevant queries
-      queryClient.invalidateQueries({
-        queryKey: workItemDossierKeys.list(variables.work_item_type, variables.work_item_id),
-      })
-
-      // Invalidate timeline for each linked dossier
+      // Add timeline query keys for each linked dossier
       variables.dossier_ids.forEach((dossierId) => {
-        queryClient.invalidateQueries({
-          queryKey: workItemDossierKeys.timeline(dossierId),
-        })
+        keys.push(workItemDossierKeys.timeline(dossierId))
       })
 
-      // Also invalidate general dossier queries
-      queryClient.invalidateQueries({
-        queryKey: ['dossier-activity-timeline'],
-      })
-
-      onSuccess?.(data)
+      return keys
     },
-    onError: (error: Error) => {
-      console.error('Failed to create work item dossier links:', error)
-      onError?.(error)
-    },
-  })
-}
+  },
+})
 
 export default useCreateWorkItemDossierLinks
