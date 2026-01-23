@@ -216,7 +216,7 @@ serve(async (req) => {
         override_reason: body.override_reason,
         is_manual_override: true,
       })
-      .select()
+      .select('id, work_item_id, work_item_type, assignee_id, assigned_at, assigned_by, sla_deadline, priority, status, override_reason, is_manual_override, completed_at, created_at, updated_at')
       .single();
 
     if (assignmentError) {

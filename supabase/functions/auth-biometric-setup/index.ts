@@ -58,7 +58,7 @@ async function storeBiometricCredentials(
           updated_at: new Date().toISOString()
         })
         .eq('id', existing.id)
-        .select()
+        .select('id, user_id, device_id, device_name, platform, biometric_type, public_key, device_model, os_version, status, expires_at, created_at, updated_at')
         .single()
 
       if (error) throw error
@@ -82,7 +82,7 @@ async function storeBiometricCredentials(
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       })
-      .select()
+      .select('id, user_id, device_id, device_name, platform, biometric_type, public_key, device_model, os_version, status, expires_at, created_at, updated_at')
       .single()
 
     if (error) throw error

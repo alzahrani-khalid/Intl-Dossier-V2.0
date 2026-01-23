@@ -103,7 +103,7 @@ serve(async (req) => {
         location_ar: location,
         status: 'planned',
       })
-      .select()
+      .select('id, dossier_id, event_type, title_en, title_ar, description_en, description_ar, start_datetime, end_datetime, location_en, location_ar, status, created_at, updated_at')
       .single();
 
     if (insertError) {

@@ -123,7 +123,7 @@ serve(async (req) => {
     const { data, error } = await supabaseClient
       .from('cd_organizations')
       .insert(orgData)
-      .select()
+      .select('id, name, short_name, org_type, parent_organization_id, website, primary_address, phone, email, established_date, description, is_archived, created_at, updated_at, created_by')
       .single();
 
     if (error) {

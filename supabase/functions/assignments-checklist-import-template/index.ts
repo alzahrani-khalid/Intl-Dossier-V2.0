@@ -107,7 +107,7 @@ serve(async (req) => {
     const { data: insertedItems, error: insertError } = await supabaseClient
       .from("assignment_checklist_items")
       .insert(itemsToInsert)
-      .select();
+      .select('id, assignment_id, text, sequence, is_completed, completed_by, completed_at, created_at, updated_at');
 
     if (insertError) {
       console.error("Insert error:", insertError);

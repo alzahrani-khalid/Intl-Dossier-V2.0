@@ -133,7 +133,7 @@ Deno.serve(async (req: Request) => {
             requested_duration_days: payload.requestedDuration || null,
             granter_notified: false,
           })
-          .select()
+          .select('id, requester_id, granter_id, resource_type, resource_id, resource_name, requested_permission, reason, urgency, requested_duration_days, status, granter_notified, created_at, updated_at')
           .single();
 
         if (createError) {
@@ -284,7 +284,7 @@ Deno.serve(async (req: Request) => {
             requester_notified: false,
           })
           .eq('id', payload.requestId)
-          .select()
+          .select('id, requester_id, granter_id, resource_type, resource_id, resource_name, requested_permission, reason, urgency, status, response_message, responded_by, responded_at, access_expires_at, requester_notified, created_at, updated_at')
           .single();
 
         if (updateError) {
@@ -346,7 +346,7 @@ Deno.serve(async (req: Request) => {
           .eq('id', payload.requestId)
           .eq('requester_id', user.id)
           .eq('status', 'pending')
-          .select()
+          .select('id, requester_id, granter_id, resource_type, resource_id, resource_name, requested_permission, reason, status, created_at, updated_at')
           .single();
 
         if (cancelError || !cancelledRequest) {

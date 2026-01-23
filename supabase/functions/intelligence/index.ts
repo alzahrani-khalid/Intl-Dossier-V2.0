@@ -285,7 +285,7 @@ serve(async (req: Request) => {
             .from('intelligence_reports')
             .update(updateData)
             .eq('id', id)
-            .select()
+            .select('id, report_number, title_en, title_ar, executive_summary_en, executive_summary_ar, analysis_en, analysis_ar, data_sources, confidence_level, classification, analysis_type, key_findings, recommendations, related_countries, related_organizations, status, author_id, reviewed_by, approved_by, published_at, created_at, updated_at')
             .single();
 
           if (error) throw error;
@@ -342,7 +342,7 @@ serve(async (req: Request) => {
         const { data, error } = await supabaseClient
           .from('intelligence_reports')
           .insert(reportData)
-          .select()
+          .select('id, report_number, title_en, title_ar, executive_summary_en, executive_summary_ar, analysis_en, analysis_ar, data_sources, confidence_level, classification, analysis_type, key_findings, recommendations, related_countries, related_organizations, status, author_id, reviewed_by, approved_by, published_at, created_at, updated_at')
           .single();
 
         if (error) {
@@ -394,7 +394,7 @@ serve(async (req: Request) => {
           .from('intelligence_reports')
           .update(body)
           .eq('id', id)
-          .select()
+          .select('id, report_number, title_en, title_ar, executive_summary_en, executive_summary_ar, analysis_en, analysis_ar, data_sources, confidence_level, classification, analysis_type, key_findings, recommendations, related_countries, related_organizations, status, author_id, reviewed_by, approved_by, published_at, created_at, updated_at')
           .single();
 
         if (error) throw error;

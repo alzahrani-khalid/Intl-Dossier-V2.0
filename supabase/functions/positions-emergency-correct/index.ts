@@ -145,7 +145,7 @@ serve(async (req: Request) => {
         superseded: false,
         retention_until: new Date(Date.now() + 7 * 365 * 24 * 60 * 60 * 1000).toISOString() // 7 years
       })
-      .select()
+      .select('id, position_id, version_number, version_content, author_id, superseded, retention_until, created_at, updated_at')
       .single();
 
     if (versionError || !newVersion) {
@@ -176,7 +176,7 @@ serve(async (req: Request) => {
         version: position.version + 1
       })
       .eq('id', position_id)
-      .select()
+      .select('id, title_en, title_ar, key_messages_en, key_messages_ar, status, topic, emergency_correction, corrected_at, corrected_by, correction_reason, corrected_version_id, version, created_at, updated_at')
       .single();
 
     if (updateError || !updatedPosition) {

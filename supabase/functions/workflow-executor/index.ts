@@ -602,7 +602,7 @@ async function executeCreateTask(
     },
   };
 
-  const { data, error } = await supabase.from('tasks').insert(taskData).select().single();
+  const { data, error } = await supabase.from('tasks').insert(taskData).select('id, title, description, status, priority, assignee_id, source, source_entity_type, source_entity_id, metadata, created_at, updated_at').single();
 
   if (error) {
     throw new Error(`Failed to create task: ${error.message}`);
@@ -634,7 +634,7 @@ async function executeCreateComment(
         rule_id: execution.rule_id,
       },
     })
-    .select()
+    .select('id, entity_type, entity_id, content, is_system, metadata, created_at, updated_at, created_by')
     .single();
 
   if (error) {
@@ -908,7 +908,7 @@ async function retryExecution(
     })
     .eq('execution_id', execution_id)
     .eq('status', 'failed')
-    .select();
+    .select('id, execution_id, action_type, action_config, status, retry_count, scheduled_for, error_message, created_at, updated_at');
 
   if (resetError) {
     return errorResponse(

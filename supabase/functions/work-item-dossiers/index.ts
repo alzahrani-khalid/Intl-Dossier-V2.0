@@ -249,7 +249,7 @@ async function handleCreate(supabase: any, req: Request, userId: string): Promis
     updated_by: userId,
   }));
 
-  const { data, error } = await supabase.from('work_item_dossiers').insert(linksToInsert).select();
+  const { data, error } = await supabase.from('work_item_dossiers').insert(linksToInsert).select('id, work_item_id, dossier_id, link_source, inheritance_source, inheritance_path, display_order, is_primary, created_at, updated_at, created_by, updated_by');
 
   if (error) {
     console.error('Insert error:', error);

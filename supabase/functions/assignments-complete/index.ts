@@ -94,7 +94,7 @@ serve(async (req) => {
         completed_by: user.id,
       })
       .eq("id", assignment_id)
-      .select()
+      .select('id, work_item_id, work_item_type, assignee_id, assigned_at, assigned_by, sla_deadline, priority, status, completed_at, completed_by, created_at, updated_at')
       .single();
 
     if (updateError) {

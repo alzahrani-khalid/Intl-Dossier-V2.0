@@ -204,7 +204,7 @@ serve(async (req: Request) => {
         storage_path: uploadData.path,
         uploader_id: user.id,
       })
-      .select()
+      .select('id, position_id, file_name, file_size, file_type, storage_path, uploader_id, created_at, updated_at')
       .single();
 
     if (insertError) {

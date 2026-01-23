@@ -177,7 +177,7 @@ Deno.serve(async (req) => {
         removed_by: user.id,
       })
       .eq('id', contributor.id)
-      .select()
+      .select('id, task_id, user_id, role, added_at, added_by, removed_at, removed_by, created_at, updated_at')
       .single();
 
     if (removeError) {

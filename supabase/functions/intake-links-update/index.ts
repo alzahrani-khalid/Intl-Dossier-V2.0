@@ -290,7 +290,7 @@ serve(async (req) => {
       .from("intake_entity_links")
       .update(updateData)
       .eq("id", linkId)
-      .select()
+      .select('id, ticket_id, entity_type, entity_id, link_type, link_strength, link_order, notes, created_at, updated_at, created_by, updated_by')
       .single();
 
     if (updateError) {

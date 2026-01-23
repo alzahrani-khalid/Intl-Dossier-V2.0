@@ -164,7 +164,7 @@ serve(async (req) => {
         executed_by: user.id,
         execution_params: config,
       })
-      .select()
+      .select('id, execution_type, started_at, completed_at, entity_type, executed_by, execution_params, warnings_sent, entities_archived, entities_deleted, errors, created_at')
       .single();
 
     if (logError) {

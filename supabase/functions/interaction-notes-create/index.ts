@@ -154,7 +154,7 @@ serve(async (req) => {
     const { data, error } = await supabaseClient
       .from('cd_interaction_notes')
       .insert(noteToInsert)
-      .select()
+      .select('id, contact_id, date, type, details, attachments, location, participants, follow_up_required, follow_up_date, tags, created_by, created_at, updated_at')
       .single();
 
     if (error) {

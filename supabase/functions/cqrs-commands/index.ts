@@ -239,7 +239,7 @@ async function handleCreateDossier(
       visibility: command.visibility || 'internal',
       created_by: userId,
     })
-    .select()
+    .select('id, type, name_en, name_ar, summary_en, summary_ar, description_en, description_ar, status, visibility, sensitivity_level, tags, metadata, version, created_at, updated_at, created_by, updated_by')
     .single();
 
   if (insertError) {
@@ -310,7 +310,7 @@ async function handleUpdateDossier(
       updated_by: userId,
     })
     .eq('id', command.id)
-    .select()
+    .select('id, type, name_en, name_ar, summary_en, summary_ar, description_en, description_ar, status, visibility, sensitivity_level, tags, metadata, version, created_at, updated_at, created_by, updated_by')
     .single();
 
   if (updateError) {
@@ -366,7 +366,7 @@ async function handleArchiveDossier(
       archive_reason: command.reason,
     })
     .eq('id', command.id)
-    .select()
+    .select('id, type, name_en, name_ar, status, archived_at, archived_by, archive_reason, created_at, updated_at')
     .single();
 
   if (updateError) {
@@ -420,7 +420,7 @@ async function handleCreateRelationship(
       metadata: command.metadata || {},
       created_by: userId,
     })
-    .select()
+    .select('id, source_dossier_id, target_dossier_id, relationship_type, relationship_subtype, strength, is_bidirectional, metadata, created_at, updated_at, created_by')
     .single();
 
   if (insertError) {
@@ -541,7 +541,7 @@ async function handleCreateCalendar(
       status: command.status || 'scheduled',
       created_by: userId,
     })
-    .select()
+    .select('id, dossier_id, entry_type, title_en, title_ar, description_en, description_ar, event_date, event_time, duration_minutes, all_day, location, is_virtual, meeting_link, status, created_at, updated_at, created_by')
     .single();
 
   if (insertError) {
@@ -575,7 +575,7 @@ async function handleUpdateCalendar(
       updated_by: userId,
     })
     .eq('id', command.id)
-    .select()
+    .select('id, dossier_id, entry_type, title_en, title_ar, description_en, description_ar, event_date, event_time, duration_minutes, all_day, location, is_virtual, meeting_link, status, created_at, updated_at, created_by, updated_by')
     .single();
 
   if (updateError) {

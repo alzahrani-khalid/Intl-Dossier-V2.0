@@ -136,7 +136,7 @@ serve(async (req) => {
       .from('aa_commitments')
       .update(updateData)
       .eq('id', commitmentId)
-      .select()
+      .select('id, after_action_id, commitment_text_en, commitment_text_ar, assigned_to, status, priority, due_date, completed_at, completion_notes, evidence_urls, created_at, updated_at')
       .single();
 
     if (updateError) {

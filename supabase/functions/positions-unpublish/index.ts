@@ -147,7 +147,7 @@ serve(async (req: Request) => {
         version: position.version + 1,
       })
       .eq('id', body.position_id)
-      .select()
+      .select('id, title_en, title_ar, key_messages_en, key_messages_ar, status, current_stage, topic, version, created_at, updated_at')
       .single();
 
     if (updateError) {

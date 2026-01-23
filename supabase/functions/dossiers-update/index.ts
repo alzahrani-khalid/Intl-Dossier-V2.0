@@ -211,7 +211,7 @@ serve(async (req) => {
       .update(updateData)
       .eq("id", dossierId)
       .eq("version", body.version) // Double-check version in query
-      .select()
+      .select('id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, summary_en, summary_ar, tags, metadata, review_cadence, last_review_date, version, created_at, updated_at, created_by, updated_by')
       .single();
 
     if (updateError) {

@@ -244,7 +244,7 @@ serve(async (req) => {
         processing_status: processOCR ? 'processing' : 'pending',
         ocr_language: 'en,ar', // Both English and Arabic
       })
-      .select()
+      .select('id, file_name, file_type, file_format, file_size_bytes, storage_path, uploaded_by, upload_date, processing_status, ocr_language, ocr_text, created_at, updated_at')
       .single();
 
     if (docError) {

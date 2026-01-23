@@ -331,7 +331,7 @@ async function createPoll(ctx: RequestContext, req: Request): Promise<Response> 
       dossier_id,
       status: 'draft',
     })
-    .select()
+    .select('id, created_by, meeting_title_en, meeting_title_ar, description_en, description_ar, deadline, voting_rule, min_participants_required, meeting_duration_minutes, location_en, location_ar, is_virtual, virtual_link, organizer_notes, dossier_id, status, selected_slot_id, created_at, updated_at')
     .single();
 
   if (pollError) throw pollError;
@@ -417,7 +417,7 @@ async function activatePoll(ctx: RequestContext, pollId: string): Promise<Respon
     .from('availability_polls')
     .update({ status: 'active' })
     .eq('id', pollId)
-    .select()
+    .select('id, created_by, meeting_title_en, meeting_title_ar, description_en, description_ar, deadline, voting_rule, status, selected_slot_id, created_at, updated_at')
     .single();
 
   if (updateError) throw updateError;
@@ -471,7 +471,7 @@ async function closePoll(ctx: RequestContext, pollId: string, req: Request): Pro
       selected_slot_id: selectedSlotId,
     })
     .eq('id', pollId)
-    .select()
+    .select('id, created_by, meeting_title_en, meeting_title_ar, status, selected_slot_id, deadline, created_at, updated_at')
     .single();
 
   if (updateError) throw updateError;
@@ -542,7 +542,7 @@ async function submitVotes(ctx: RequestContext, pollId: string, req: Request): P
         response,
         notes,
       })
-      .select()
+      .select('id, poll_id, slot_id, participant_id, respondent_user_id, response, notes, created_at, updated_at')
       .single();
 
     if (responseError) {
@@ -639,7 +639,7 @@ async function autoSchedule(ctx: RequestContext, pollId: string, req: Request): 
       timezone: slot.timezone,
       status: 'planned',
     })
-    .select()
+    .select('id, dossier_id, event_type, title_en, title_ar, description_en, description_ar, start_datetime, end_datetime, location_en, location_ar, is_virtual, virtual_link, timezone, status, created_at, updated_at')
     .single();
 
   if (eventError) throw eventError;
@@ -723,7 +723,7 @@ async function addSlots(ctx: RequestContext, pollId: string, req: Request): Prom
   const { data: insertedSlots, error: insertError } = await supabase
     .from('poll_slots')
     .insert(slotsToInsert)
-    .select();
+    .select('id, poll_id, slot_start, slot_end, timezone, venue_suggestion_en, venue_suggestion_ar, organizer_preference_score, position, created_at, updated_at');
 
   if (insertError) throw insertError;
 
@@ -772,7 +772,7 @@ async function addParticipants(
   const { data: insertedParticipants, error: insertError } = await supabase
     .from('poll_participants')
     .insert(participantsToInsert)
-    .select();
+    .select('id, poll_id, participant_type, participant_id, is_required, created_at, updated_at');
 
   if (insertError) throw insertError;
 
@@ -848,7 +848,7 @@ async function updatePoll(ctx: RequestContext, pollId: string, req: Request): Pr
     .from('availability_polls')
     .update(updates)
     .eq('id', pollId)
-    .select()
+    .select('id, created_by, meeting_title_en, meeting_title_ar, description_en, description_ar, deadline, voting_rule, status, location_en, location_ar, created_at, updated_at')
     .single();
 
   if (updateError) throw updateError;

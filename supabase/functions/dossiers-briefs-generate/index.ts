@@ -295,7 +295,7 @@ Return JSON with this exact structure:
         }
 
         // Insert brief into database
-        const { data: brief, error: insertError } = await supabaseClient
+        const { data: brief, error: insertError} = await supabaseClient
           .from('briefs')
           .insert({
             dossier_id: dossierId,
@@ -306,7 +306,7 @@ Return JSON with this exact structure:
             generated_by: 'ai',
             generated_by_user_id: user.id,
           })
-          .select()
+          .select('id, dossier_id, content_en, content_ar, date_range_start, date_range_end, generated_by, generated_by_user_id, created_at, updated_at')
           .single();
 
         if (insertError) {

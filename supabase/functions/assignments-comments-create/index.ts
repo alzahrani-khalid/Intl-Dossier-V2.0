@@ -161,7 +161,7 @@ serve(async (req) => {
         user_id: user.id,
         text,
       })
-      .select()
+      .select('id, assignment_id, user_id, text, created_at, updated_at')
       .single();
 
     if (insertError) {

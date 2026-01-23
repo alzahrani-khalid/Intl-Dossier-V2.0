@@ -208,7 +208,7 @@ Deno.serve(async (req) => {
     const { data: task, error: insertError } = await supabase
       .from('tasks')
       .insert(taskData)
-      .select()
+      .select('id, title, description, assignee_id, engagement_id, priority, workflow_stage, status, sla_deadline, work_item_type, work_item_id, source, assignment, timeline, created_by, last_modified_by, updated_by, tenant_id, type, version, created_at, updated_at')
       .single();
 
     if (insertError) {

@@ -138,7 +138,7 @@ serve(async (req: Request) => {
         author_id: user.id,
         version: 1,
       })
-      .select()
+      .select('id, position_type_id, title_en, title_ar, content_en, content_ar, rationale_en, rationale_ar, alignment_notes_en, alignment_notes_ar, thematic_category, status, current_stage, approval_chain_config, consistency_score, author_id, version, created_at, updated_at')
       .single();
 
     if (createError) {

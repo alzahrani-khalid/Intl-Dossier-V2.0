@@ -509,7 +509,7 @@ async function handlePut(supabase: any, path: string | undefined, body: any, use
           updated_at: new Date().toISOString(),
         })
         .eq('id', id)
-        .select()
+        .select('id, entity_type, retention_period_days, action_on_expiry, is_active, notification_days_before, auto_archive, created_by, updated_by, created_at, updated_at')
         .single();
 
       if (error) throw error;

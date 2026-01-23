@@ -435,7 +435,7 @@ async function handleGenerateBrief(
             date_range_end: body.date_range_end,
           },
         })
-        .select()
+        .select('id, organization_id, created_by, engagement_dossier_id, title, executive_summary, background, key_participants, relevant_positions, active_commitments, historical_context, talking_points, recommendations, full_content, citations, status, completed_at, generation_params, created_at, updated_at')
         .single();
 
       if (insertError) {

@@ -185,7 +185,7 @@ serve(async (req: Request) => {
         expires_at: body.expires_at || null,
         status: 'active',
       })
-      .select()
+      .select('id, position_id, delegator_id, delegate_id, reason, expires_at, status, created_at, updated_at')
       .single();
 
     if (delegationError) {
@@ -208,7 +208,7 @@ serve(async (req: Request) => {
           .from('positions')
           .update({ delegates: newDelegates })
           .eq('id', body.position_id)
-          .select()
+          .select('id, title_en, title_ar, key_messages_en, key_messages_ar, status, topic, delegates, version, created_at, updated_at')
           .single();
 
         if (updateError) {
