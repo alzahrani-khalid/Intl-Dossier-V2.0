@@ -948,6 +948,8 @@ psql $DATABASE_URL -c "CREATE INDEX idx_column_name ON table_name(column_name);"
 - User logged out unexpectedly
 - 401 Unauthorized errors after timeout
 - "Failed to refresh access token" in logs
+- `TokenRefreshError` or `AuthApiError` exceptions
+- Session expires before expected time
 
 **Solution:**
 
@@ -955,6 +957,7 @@ psql $DATABASE_URL -c "CREATE INDEX idx_column_name ON table_name(column_name);"
 // 1. Check token expiry configuration
 // In Supabase dashboard: Authentication > Settings
 // Access token expiry: 3600 (1 hour recommended)
+// Refresh token expiry: 604800 (7 days recommended)
 
 // 2. Verify refresh token handling
 // frontend/src/lib/supabase.ts
@@ -964,12 +967,20 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
     autoRefreshToken: true,
     persistSession: true,
-    detectSessionInUrl: true
+    detectSessionInUrl: true,
+    // Refresh token before expiry (5 minutes buffer)
+    tokenRefreshMargin: 300
   }
 })
 
 // 3. Manual refresh if needed
 const { data, error } = await supabase.auth.refreshSession()
+if (error) {
+  console.error('Token refresh failed:', error.message)
+  // Force re-authentication
+  await supabase.auth.signOut()
+  window.location.href = '/login'
+}
 
 // 4. Listen for auth state changes
 supabase.auth.onAuthStateChange((event, session) => {
@@ -978,9 +989,93 @@ supabase.auth.onAuthStateChange((event, session) => {
   }
   if (event === 'SIGNED_OUT') {
     // Redirect to login
+    window.location.href = '/login'
+  }
+  if (event === 'USER_UPDATED') {
+    console.log('User session updated')
   }
 })
+
+// 5. Debug token expiry
+const session = await supabase.auth.getSession()
+if (session.data.session) {
+  const expiresAt = session.data.session.expires_at
+  const now = Math.floor(Date.now() / 1000)
+  const timeUntilExpiry = expiresAt - now
+  console.log(`Token expires in ${timeUntilExpiry} seconds`)
+}
 ```
+
+**JWT Token Debugging:**
+
+```bash
+# Decode JWT token to inspect claims (requires jq)
+echo "YOUR_JWT_TOKEN" | cut -d. -f2 | base64 -d | jq
+
+# Check token expiry time
+echo "YOUR_JWT_TOKEN" | cut -d. -f2 | base64 -d | jq '.exp' | xargs -I {} date -r {}
+
+# Verify JWT signature (using jwt.io or JWT debugger)
+# Paste token at https://jwt.io to inspect header, payload, and verify signature
+```
+
+**Common JWT Issues:**
+
+1. **JWT Secret Mismatch**
+   ```bash
+   # Verify SUPABASE_JWT_SECRET matches Supabase dashboard
+   # Settings > API > JWT Settings > JWT Secret
+   echo $SUPABASE_JWT_SECRET
+   ```
+
+2. **Expired Refresh Token**
+   ```javascript
+   // Refresh tokens expire after 7 days (default)
+   // User must re-authenticate if refresh token is expired
+   const { data, error } = await supabase.auth.refreshSession()
+   if (error?.message.includes('refresh_token')) {
+     // Redirect to login
+     await supabase.auth.signOut()
+   }
+   ```
+
+3. **Clock Skew Issues**
+   ```bash
+   # Ensure server time is synchronized
+   timedatectl status
+
+   # If out of sync, enable NTP
+   sudo timedatectl set-ntp true
+   ```
+
+4. **Token Storage Issues**
+   ```javascript
+   // Check if tokens are being stored correctly
+   const storageKey = `sb-${SUPABASE_PROJECT_REF}-auth-token`
+   const storedSession = localStorage.getItem(storageKey)
+   console.log('Stored session:', storedSession ? 'Found' : 'Missing')
+
+   // Clear corrupted session
+   if (storedSession && JSON.parse(storedSession).error) {
+     localStorage.removeItem(storageKey)
+     await supabase.auth.signOut()
+   }
+   ```
+
+5. **Network Connectivity During Refresh**
+   ```javascript
+   // Retry logic for token refresh
+   async function refreshWithRetry(maxRetries = 3) {
+     for (let i = 0; i < maxRetries; i++) {
+       const { data, error } = await supabase.auth.refreshSession()
+       if (!error) return data
+
+       console.warn(`Refresh attempt ${i + 1} failed:`, error.message)
+       await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1)))
+     }
+     throw new Error('Token refresh failed after retries')
+   }
+   ```
 
 ### Session Not Persisting
 
