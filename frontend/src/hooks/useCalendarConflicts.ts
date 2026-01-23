@@ -317,14 +317,14 @@ export function useApplyScenario() {
   const queryClient = useQueryClient()
 
   return useMutation({
-    mutationFn: async (scenarioId: string): Promise<{ success: boolean; results: any[] }> => {
+    mutationFn: async (scenarioId: string): Promise<{ success: boolean; results: Array<{ event_id: string; success: boolean; error?: string }> }> => {
       const headers = await getAuthHeaders()
       const response = await fetch(`${CONFLICTS_BASE_URL}/apply-scenario`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ scenario_id: scenarioId }),
       })
-      return handleResponse<{ success: boolean; results: any[] }>(response)
+      return handleResponse<{ success: boolean; results: Array<{ event_id: string; success: boolean; error?: string }> }>(response)
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['what-if-scenarios'] })

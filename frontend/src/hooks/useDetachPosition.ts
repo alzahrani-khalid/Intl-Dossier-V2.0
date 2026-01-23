@@ -26,8 +26,13 @@ async function detachPosition(params: DetachPositionParams): Promise<void> {
   }
 }
 
+interface EngagementPositionsData {
+  positions: Array<{ position_id: string; [key: string]: unknown }>;
+  total: number;
+}
+
 interface OptimisticContext {
-  previousData: any;
+  previousData: Array<[unknown, unknown]>;
 }
 
 export function useDetachPosition() {
@@ -51,13 +56,13 @@ export function useDetachPosition() {
       });
 
       // Optimistically update by removing the position
-      queryClient.setQueriesData(
+      queryClient.setQueriesData<EngagementPositionsData>(
         { queryKey: ['engagement-positions', engagementId] },
-        (old: any) => {
+        (old) => {
           if (!old) return old;
 
           const filteredPositions = (old.positions || []).filter(
-            (ep: any) => ep.position_id !== positionId
+            (ep) => ep.position_id !== positionId
           );
 
           return {
@@ -75,7 +80,7 @@ export function useDetachPosition() {
     // On error, rollback
     onError: (err, params, context) => {
       if (context?.previousData) {
-        context.previousData.forEach(([queryKey, data]: [any, any]) => {
+        context.previousData.forEach(([queryKey, data]) => {
           queryClient.setQueryData(queryKey, data);
         });
       }

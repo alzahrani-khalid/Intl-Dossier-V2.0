@@ -191,7 +191,7 @@ export function useCreateTask() {
       })
     },
 
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: t('tasks.create_failed'),
         description: error.message,
@@ -436,7 +436,7 @@ export function useDeleteTask() {
       })
     },
 
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: t('tasks.delete_failed'),
         description: error.message,

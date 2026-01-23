@@ -55,7 +55,7 @@ const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
 const serializeFilters = (filters?: DossierFilters) => {
   if (!filters) return undefined
   // Sort keys to ensure consistent serialization
-  const sorted: Record<string, any> = {}
+  const sorted: Record<string, unknown> = {}
   Object.keys(filters)
     .sort()
     .forEach((key) => {
@@ -93,7 +93,7 @@ export const dossierKeys = {
   /** Key for specific dossier detail */
   detail: (id: string, includes?: string[]) => [...dossierKeys.details(), id, includes] as const,
   /** Key for dossier timeline queries */
-  timeline: (id: string, filters?: any) => [...dossierKeys.all, 'timeline', id, filters] as const,
+  timeline: (id: string, filters?: Record<string, unknown>) => [...dossierKeys.all, 'timeline', id, filters] as const,
   /** Key for dossier briefs queries */
   briefs: (id: string) => [...dossierKeys.all, 'briefs', id] as const,
 }

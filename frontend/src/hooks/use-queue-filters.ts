@@ -82,7 +82,7 @@ export function useQueueFilters() {
   /**
    * Update specific filter
    */
-  const updateFilter = useCallback((key: keyof FilterCriteria, value: any) => {
+  const updateFilter = useCallback((key: keyof FilterCriteria, value: FilterCriteria[keyof FilterCriteria]) => {
     setFilters(prev => ({
       ...prev,
       [key]: value

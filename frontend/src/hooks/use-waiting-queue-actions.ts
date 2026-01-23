@@ -82,7 +82,17 @@ export function useAssignmentDetails(assignmentId: string | null) {
 
         if (task) {
           // Extract linked entity IDs from task source
-          const linkedEntities: any[] = [];
+          interface LinkedEntity {
+            type: string;
+            id: string;
+            name_en?: string;
+            name_ar?: string;
+            title_en?: string;
+            title_ar?: string;
+            ticket_number?: string;
+            status: string;
+          }
+          const linkedEntities: LinkedEntity[] = [];
 
           // Fetch linked dossiers
           if (task.source?.dossier_ids && Array.isArray(task.source.dossier_ids)) {
@@ -92,7 +102,7 @@ export function useAssignmentDetails(assignmentId: string | null) {
               .in('id', task.source.dossier_ids);
 
             if (dossiers) {
-              linkedEntities.push(...dossiers.map((d: any) => ({
+              linkedEntities.push(...dossiers.map((d) => ({
                 type: 'dossier',
                 id: d.id,
                 name_en: d.name_en,
@@ -110,7 +120,7 @@ export function useAssignmentDetails(assignmentId: string | null) {
               .in('id', task.source.position_ids);
 
             if (positions) {
-              linkedEntities.push(...positions.map((p: any) => ({
+              linkedEntities.push(...positions.map((p) => ({
                 type: 'position',
                 id: p.id,
                 title_en: p.title_en,
@@ -128,7 +138,7 @@ export function useAssignmentDetails(assignmentId: string | null) {
               .in('id', task.source.ticket_ids);
 
             if (tickets) {
-              linkedEntities.push(...tickets.map((t: any) => ({
+              linkedEntities.push(...tickets.map((t) => ({
                 type: 'ticket',
                 id: t.id,
                 ticket_number: t.ticket_number,
@@ -290,7 +300,7 @@ export function useReminderAction() {
       const previousAssignment = queryClient.getQueryData(['assignment', assignmentId]);
 
       // Optimistically update the cache
-      queryClient.setQueryData(['assignment', assignmentId], (old: any) => {
+      queryClient.setQueryData<Assignment>(['assignment', assignmentId], (old) => {
         if (!old) return old;
         return {
           ...old,
@@ -315,7 +325,7 @@ export function useReminderAction() {
         queryKey: ['waiting-queue'],
       });
     },
-    onError: (error: ReminderAPIError, variables, context: any) => {
+    onError: (error: ReminderAPIError, variables, context) => {
       // Rollback optimistic update on error
       if (context?.previousAssignment) {
         queryClient.setQueryData(['assignment', variables.assignmentId], context.previousAssignment);

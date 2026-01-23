@@ -7,6 +7,7 @@
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
+import type { JsonValue } from '@/types/common.types';
 
 export interface BilateralAgreement {
   id: string;
@@ -24,7 +25,7 @@ export interface BilateralAgreement {
     effective?: string;
     expires?: string;
   };
-  parties?: any;
+  parties?: JsonValue;
   country_id?: string;
   organization_id?: string;
 }

@@ -63,8 +63,13 @@ async function attachPosition(
   return data as AttachPositionResult;
 }
 
+interface EngagementPositionsData {
+  positions: Array<Partial<EngagementPosition>>;
+  total: number;
+}
+
 interface OptimisticContext {
-  previousData: any;
+  previousData: Array<[unknown, unknown]>;
 }
 
 export function useAttachPosition() {
@@ -93,9 +98,9 @@ export function useAttachPosition() {
       });
 
       // Optimistically update to the new value
-      queryClient.setQueriesData(
+      queryClient.setQueriesData<EngagementPositionsData>(
         { queryKey: ['engagement-positions', engagementId] },
-        (old: any) => {
+        (old) => {
           if (!old) return old;
 
           // Create optimistic position entry
@@ -123,7 +128,7 @@ export function useAttachPosition() {
     // On error, rollback
     onError: (err, params, context) => {
       if (context?.previousData) {
-        context.previousData.forEach(([queryKey, data]: [any, any]) => {
+        context.previousData.forEach(([queryKey, data]) => {
           queryClient.setQueryData(queryKey, data);
         });
       }

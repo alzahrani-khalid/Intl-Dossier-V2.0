@@ -50,17 +50,17 @@ export function usePresence(options: UsePresenceOptions): UsePresenceReturn {
   const transformPresenceState = useCallback((state: RealtimePresenceState): PresenceUser[] => {
     const usersList: PresenceUser[] = []
     Object.entries(state).forEach(([_, presences]) => {
-      presences.forEach((presence: any) => {
+      presences.forEach((presence: Record<string, unknown>) => {
         usersList.push({
-          id: presence.id,
-          email: presence.email,
-          name: presence.name,
-          avatar: presence.avatar,
-          color: presence.color,
-          cursor: presence.cursor,
-          selection: presence.selection,
-          status: presence.status || 'online',
-          lastSeen: presence.lastSeen ? new Date(presence.lastSeen) : new Date(),
+          id: presence.id as string,
+          email: presence.email as string,
+          name: presence.name as string,
+          avatar: presence.avatar as string | undefined,
+          color: presence.color as string,
+          cursor: presence.cursor as { x: number; y: number } | undefined,
+          selection: presence.selection as string | undefined,
+          status: (presence.status as PresenceUser['status']) || 'online',
+          lastSeen: presence.lastSeen ? new Date(presence.lastSeen as string) : new Date(),
         })
       })
     })

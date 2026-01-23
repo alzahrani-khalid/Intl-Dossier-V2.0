@@ -109,7 +109,7 @@ async function fetchDossierFirstSearch(
  * This creates mock dossier stats and groups related work by dossier context
  */
 function transformToDelowFirstFormat(
-  standardResponse: any,
+  standardResponse: { results?: unknown[]; counts?: { dossiers?: number; total?: number } },
   query: string,
 ): DossierFirstSearchResponse {
   const results = standardResponse.results || []
@@ -129,7 +129,7 @@ function transformToDelowFirstFormat(
   const dossiers: DossierSearchResult[] = []
   const relatedWork: RelatedWorkItem[] = []
 
-  results.forEach((result: any) => {
+  results.forEach((result: Record<string, unknown>) => {
     const type = result.type || result.entity_type
 
     if (dossierTypes.includes(type)) {

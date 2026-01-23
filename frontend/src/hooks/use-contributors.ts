@@ -212,7 +212,7 @@ export function useAddMultipleContributors(taskId: string) {
       });
     },
 
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: t('contributors.add_failed'),
         description: error.message,
@@ -312,7 +312,7 @@ export function useRemoveMultipleContributors(taskId: string) {
       });
     },
 
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast({
         title: t('contributors.remove_failed'),
         description: error.message,

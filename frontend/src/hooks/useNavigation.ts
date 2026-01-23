@@ -6,7 +6,7 @@ export function useNavigation() {
   const router = useRouter()
 
   const goTo = useCallback(
-    (to: string, options?: { replace?: boolean; state?: any }) => {
+    (to: string, options?: { replace?: boolean; state?: unknown }) => {
       navigate({ to, replace: options?.replace })
     },
     [navigate]

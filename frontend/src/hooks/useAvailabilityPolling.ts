@@ -267,14 +267,14 @@ export function useSubmitVotes() {
     }: {
       pollId: string
       votes: SubmitVoteRequest[]
-    }): Promise<{ success: boolean; results: any[] }> => {
+    }): Promise<{ success: boolean; results: PollResponse[] }> => {
       const headers = await getAuthHeaders()
       const response = await fetch(`${POLLING_BASE_URL}/${pollId}/vote`, {
         method: 'POST',
         headers,
         body: JSON.stringify({ votes }),
       })
-      return handleResponse<{ success: boolean; results: any[] }>(response)
+      return handleResponse<{ success: boolean; results: PollResponse[] }>(response)
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: pollingQueryKeys.detail(variables.pollId) })

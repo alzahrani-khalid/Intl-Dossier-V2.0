@@ -7,7 +7,7 @@
  * Provides caching, automatic retry, and request cancellation
  */
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, QueryClient } from '@tanstack/react-query';
 import { supabase } from '../lib/supabase';
 
 export type EntityType = 'dossiers' | 'people' | 'engagements' | 'positions' | 'documents' | 'all';
@@ -179,7 +179,7 @@ export function useSearch(options: SearchOptions) {
  * @param options - Search options
  */
 export async function prefetchSearch(
-  queryClient: any,
+  queryClient: QueryClient,
   options: SearchOptions
 ) {
   await queryClient.prefetchQuery({

@@ -30,7 +30,7 @@ const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
 export const intakeKeys = {
   all: ['intake'] as const,
   tickets: () => [...intakeKeys.all, 'tickets'] as const,
-  ticketList: (filters?: any) => [...intakeKeys.tickets(), 'list', filters] as const,
+  ticketList: (filters?: Record<string, unknown>) => [...intakeKeys.tickets(), 'list', filters] as const,
   ticket: (id: string) => [...intakeKeys.tickets(), 'detail', id] as const,
   triage: (id: string) => [...intakeKeys.tickets(), 'triage', id] as const,
   duplicates: (id: string) => [...intakeKeys.tickets(), 'duplicates', id] as const,

@@ -71,11 +71,12 @@ export function useRoleAssignment() {
         queryClient.invalidateQueries({ queryKey: ['pending-approvals'] });
       }
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       // Show error toast with details
-      const errorMessage = error.error || error.message || 'Failed to assign role';
-      const errorCode = error.code || '';
-      const errorDetails = error.details?.join(', ') || '';
+      const err = error as { error?: string; message?: string; code?: string; details?: string[] };
+      const errorMessage = err.error || err.message || 'Failed to assign role';
+      const errorCode = err.code || '';
+      const errorDetails = err.details?.join(', ') || '';
 
       let description = errorMessage;
       if (errorCode === 'SAME_ROLE') {
@@ -154,11 +155,12 @@ export function useRoleApproval() {
         });
       }
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       // Show error toast with details
-      const errorMessage = error.error || error.message || 'Failed to process approval';
-      const errorCode = error.code || '';
-      const errorDetails = error.details?.join(', ') || '';
+      const err = error as { error?: string; message?: string; code?: string; details?: string[] };
+      const errorMessage = err.error || err.message || 'Failed to process approval';
+      const errorCode = err.code || '';
+      const errorDetails = err.details?.join(', ') || '';
 
       let description = errorMessage;
       if (errorCode === 'ALREADY_APPROVED') {
@@ -213,8 +215,9 @@ export function usePendingApprovals(params?: {
     queryKey: ['pending-approvals', params],
     queryFn: () => getPendingApprovals(params),
     refetchInterval: 30000, // Refetch every 30 seconds
-    onError: (error: any) => {
-      const errorMessage = error.error || error.message || 'Failed to fetch pending approvals';
+    onError: (error: unknown) => {
+      const err = error as { error?: string; message?: string };
+      const errorMessage = err.error || err.message || 'Failed to fetch pending approvals';
       toast({
         title: 'Failed to load approvals',
         description: errorMessage,
@@ -249,8 +252,9 @@ export function useUserPermissions(userId: string) {
     queryFn: () => getUserPermissions(userId),
     enabled: !!userId, // Only fetch if userId is provided
     staleTime: 60000, // Consider data fresh for 1 minute
-    onError: (error: any) => {
-      const errorMessage = error.error || error.message || 'Failed to fetch user permissions';
+    onError: (error: unknown) => {
+      const err = error as { error?: string; message?: string };
+      const errorMessage = err.error || err.message || 'Failed to fetch user permissions';
       toast({
         title: 'Failed to load permissions',
         description: errorMessage,

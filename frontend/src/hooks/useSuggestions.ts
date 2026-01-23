@@ -7,7 +7,7 @@
  * Includes debouncing, caching, and automatic request cancellation
  */
 
-import { useQuery } from '@tanstack/react-query';
+import { useQuery, QueryClient } from '@tanstack/react-query';
 import { useMemo } from 'react';
 import { supabase } from '../lib/supabase';
 import { useDebouncedValue } from './useDebouncedValue';
@@ -170,7 +170,7 @@ export function useSuggestions(options: SuggestionsOptions) {
  * @param options - Suggestion options
  */
 export async function prefetchSuggestions(
-  queryClient: any,
+  queryClient: QueryClient,
   options: SuggestionsOptions
 ) {
   const { prefix, entityType = 'all', limit = 10, language } = options;
@@ -216,7 +216,7 @@ export async function prefetchSuggestions(
  * @param prefix - Optional prefix to invalidate (invalidates all if not provided)
  */
 export function invalidateSuggestions(
-  queryClient: any,
+  queryClient: QueryClient,
   prefix?: string
 ) {
   if (prefix) {

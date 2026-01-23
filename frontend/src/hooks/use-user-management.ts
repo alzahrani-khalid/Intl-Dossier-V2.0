@@ -47,10 +47,11 @@ export function useCreateUser() {
         variant: 'success',
       });
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       // Show error toast with details
-      const errorMessage = error.error || error.message || 'Failed to create user';
-      const errorDetails = error.details?.join(', ') || '';
+      const err = error as { error?: string; message?: string; details?: string[] };
+      const errorMessage = err.error || err.message || 'Failed to create user';
+      const errorDetails = err.details?.join(', ') || '';
 
       toast({
         title: 'Failed to create user',
@@ -102,10 +103,11 @@ export function useActivateAccount() {
         window.location.href = '/login';
       }, 2000);
     },
-    onError: (error: any) => {
+    onError: (error: unknown) => {
       // Show error toast with details
-      const errorMessage = error.error || error.message || 'Failed to activate account';
-      const errorDetails = error.details?.join(', ') || '';
+      const err = error as { error?: string; message?: string; details?: string[] };
+      const errorMessage = err.error || err.message || 'Failed to activate account';
+      const errorDetails = err.details?.join(', ') || '';
 
       toast({
         title: 'Activation failed',
