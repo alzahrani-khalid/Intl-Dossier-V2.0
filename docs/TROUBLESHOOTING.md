@@ -4113,6 +4113,200 @@ docker ps | grep <service>
 
 **Fix:** See [React 19 Hydration Mismatch](#react-19-hydration-mismatch)
 
+## Error Codes Reference
+
+This section provides a comprehensive reference for all error codes you may encounter in the GASTAT International Dossier System.
+
+### HTTP Status Codes
+
+#### 2xx Success
+
+| Code | Name | Description | Action Required |
+|------|------|-------------|-----------------|
+| `200` | OK | Request succeeded | None - success response |
+| `201` | Created | Resource created successfully | None - success response |
+| `204` | No Content | Request succeeded, no content returned | None - success response |
+
+#### 4xx Client Errors
+
+| Code | Name | Description | Action Required |
+|------|------|-------------|-----------------|
+| `400` | Bad Request | Invalid request format or parameters | Check request payload, validate input data |
+| `401` | Unauthorized | Missing or invalid authentication token | Sign in again, refresh session token |
+| `403` | Forbidden | Authenticated but not authorized to access resource | Check RLS policies, verify user permissions |
+| `404` | Not Found | Requested resource doesn't exist | Verify resource ID, check if resource was deleted |
+| `409` | Conflict | Request conflicts with current state (e.g., duplicate) | Check for existing records, resolve conflicts |
+| `422` | Unprocessable Entity | Request valid but cannot be processed (validation error) | Fix validation errors in request payload |
+| `429` | Too Many Requests | Rate limit exceeded | Wait and retry with exponential backoff |
+
+#### 5xx Server Errors
+
+| Code | Name | Description | Action Required |
+|------|------|-------------|-----------------|
+| `500` | Internal Server Error | Unexpected server error | Check server logs, retry request, report if persists |
+| `502` | Bad Gateway | Upstream server error (e.g., Supabase unavailable) | Wait and retry, check service status |
+| `503` | Service Unavailable | Server temporarily unavailable (maintenance/overload) | Wait and retry, check status page |
+| `504` | Gateway Timeout | Upstream server didn't respond in time | Retry request, check for slow queries |
+
+### Application-Specific Error Codes
+
+#### AI Generation Errors
+
+| Code | Description | Retryable | Action Required |
+|------|-------------|-----------|-----------------|
+| `RATE_LIMIT_EXCEEDED` | Too many AI requests in short period | ✅ Yes | Wait 60s and retry, reduce request frequency |
+| `SPEND_CAP_REACHED` | AI usage limit reached for organization | ❌ No | Contact administrator to increase quota |
+| `PROVIDER_UNAVAILABLE` | AI provider service is down | ✅ Yes | Wait and retry, check provider status |
+| `MODEL_UNAVAILABLE` | Requested AI model not accessible | ❌ No | Use different model, contact support |
+| `GENERATION_FAILED` | AI generation failed unexpectedly | ✅ Yes | Retry request, simplify input |
+| `CONTEXT_TOO_LONG` | Input exceeds model's context window | ❌ No | Reduce input size, summarize content |
+| `CONTENT_FILTERED` | Content violates AI policy | ❌ No | Revise input to comply with policies |
+| `TIMEOUT` | AI generation took too long | ✅ Yes | Retry with simpler request |
+| `FEATURE_DISABLED` | AI feature disabled for organization | ❌ No | Contact administrator to enable feature |
+| `BRIEF_FETCH_FAILED` | Generated brief couldn't be retrieved | ✅ Yes | Retry request, check database connection |
+
+#### Authentication Errors
+
+| Code | Description | Action Required |
+|------|-------------|-----------------|
+| `INVALID_CREDENTIALS` | Email or password incorrect | Re-enter credentials, use password reset |
+| `SESSION_EXPIRED` | User session has expired | Sign in again to get new session |
+| `TOKEN_INVALID` | JWT token is malformed or tampered | Clear local storage, sign in again |
+| `TOKEN_EXPIRED` | JWT token has passed expiration time | Refresh token or sign in again |
+| `USER_NOT_FOUND` | User account doesn't exist | Verify email, contact administrator |
+| `USER_DISABLED` | User account has been disabled | Contact administrator |
+| `EMAIL_NOT_CONFIRMED` | Email verification pending | Check inbox for verification email |
+| `MFA_REQUIRED` | Multi-factor authentication required | Complete MFA challenge |
+
+#### Database Errors
+
+| Code | Description | Action Required |
+|------|-------------|-----------------|
+| `23505` | Unique constraint violation | Resource already exists, use different value |
+| `23503` | Foreign key constraint violation | Referenced resource doesn't exist |
+| `23502` | Not null constraint violation | Required field is missing |
+| `42P01` | Undefined table | Run migrations, verify schema |
+| `42703` | Undefined column | Check column name, run migrations |
+| `22P02` | Invalid text representation | Check data types match schema |
+| `53300` | Too many connections | Reduce connection pool size, check for leaks |
+| `57014` | Query cancelled | Query took too long, optimize query |
+
+#### Network Errors
+
+| Code | Description | Retryable | Action Required |
+|------|-------------|-----------|-----------------|
+| `NETWORK_ERROR` | Network request failed | ✅ Yes | Check internet connection, retry |
+| `TIMEOUT_ERROR` | Request exceeded timeout | ✅ Yes | Retry request, check network speed |
+| `CORS_ERROR` | Cross-origin request blocked | ❌ No | Verify CORS configuration on server |
+| `DNS_ERROR` | Domain name resolution failed | ✅ Yes | Check DNS settings, verify domain |
+| `SSL_ERROR` | SSL/TLS certificate error | ❌ No | Verify certificate validity, check system time |
+| `CONNECTION_REFUSED` | Server refused connection | ✅ Yes | Verify service is running, check port |
+| `CONNECTION_RESET` | Connection reset by peer | ✅ Yes | Retry request, check network stability |
+
+#### Real-time Subscription Errors
+
+| Code | Description | Action Required |
+|------|-------------|-----------------|
+| `SUBSCRIPTION_FAILED` | Failed to establish subscription | Check RLS policies, verify channel name |
+| `SUBSCRIPTION_TIMED_OUT` | Subscription handshake timed out | Check network connection, retry |
+| `SUBSCRIPTION_CLOSED` | Subscription closed unexpectedly | Reconnect subscription, check auth state |
+| `CHANNEL_NOT_FOUND` | Subscription channel doesn't exist | Verify channel name, check table exists |
+| `BROADCAST_FAILED` | Failed to broadcast message | Check connection state, retry broadcast |
+
+### Error Response Format
+
+All API errors follow this standard format:
+
+```typescript
+{
+  "code": "ERROR_CODE",           // Machine-readable error code
+  "message": "Human readable",     // User-friendly error message
+  "details": "Additional context", // Optional technical details
+  "retryable": true,              // Whether request can be retried
+  "retryAfter": 60                // Seconds to wait before retry (optional)
+}
+```
+
+### Handling Errors in Code
+
+#### Frontend (React/TypeScript)
+
+```typescript
+import { parseAIError, getErrorMessage } from '@/utils/ai-errors'
+import { useTranslation } from 'react-i18next'
+
+function handleError(error: unknown) {
+  const { t } = useTranslation()
+  const aiError = parseAIError(error)
+
+  // Get user-friendly message
+  const message = getErrorMessage(aiError, t)
+
+  // Show error to user
+  toast.error(message)
+
+  // Retry if applicable
+  if (aiError.retryable) {
+    const delay = aiError.retryAfter ? aiError.retryAfter * 1000 : 3000
+    setTimeout(() => retryRequest(), delay)
+  }
+}
+```
+
+#### Backend (Node.js/TypeScript)
+
+```typescript
+import { SupabaseClient } from '@supabase/supabase-js'
+
+async function handleDatabaseError(error: any) {
+  // Check for specific PostgreSQL error codes
+  if (error.code === '23505') {
+    throw new Error('Resource already exists')
+  }
+
+  if (error.code === '23503') {
+    throw new Error('Referenced resource not found')
+  }
+
+  // Log unexpected errors
+  console.error('Database error:', error)
+  throw new Error('Database operation failed')
+}
+```
+
+#### TanStack Query Error Handling
+
+```typescript
+const { data, error, isError } = useQuery({
+  queryKey: ['dossiers'],
+  queryFn: fetchDossiers,
+  retry: (failureCount, error) => {
+    // Don't retry on 4xx errors (client errors)
+    if (error.status >= 400 && error.status < 500) {
+      return false
+    }
+    // Retry up to 3 times for 5xx errors
+    return failureCount < 3
+  },
+  retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000)
+})
+
+if (isError) {
+  // Handle error with user-friendly message
+  return <ErrorState error={error} />
+}
+```
+
+### Quick Error Lookup
+
+**Can't access resource:** Check `403` (RLS policy) or `401` (authentication)
+**Resource not found:** Check `404` (wrong ID) or `42P01` (table missing)
+**Duplicate entry:** Check `409` (conflict) or `23505` (unique constraint)
+**Request fails immediately:** Check `400` (bad request) or `422` (validation)
+**Request times out:** Check `504` (gateway timeout) or network issues
+**AI generation fails:** Check `RATE_LIMIT_EXCEEDED`, `CONTEXT_TOO_LONG`, or `PROVIDER_UNAVAILABLE`
+**Real-time not working:** Check `SUBSCRIPTION_FAILED` or `401` (auth expired)
+
 ## FAQ
 
 ### Q: How do I reset the development database?
