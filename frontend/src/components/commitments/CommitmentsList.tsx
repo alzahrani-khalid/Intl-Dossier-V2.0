@@ -1,6 +1,6 @@
 /**
- * CommitmentsList Component v1.1
- * Feature: 031-commitments-management
+ * CommitmentsList Component v1.2
+ * Feature: 031-commitments-management, 023-list-virtualization
  * Tasks: T025, T026, T043, T044, T061, T064, T065, T066
  *
  * Displays a list of commitments with:
@@ -10,11 +10,13 @@
  * - Empty state when no results match filters (T044)
  * - Detail drawer on card tap (T061)
  * - Infinite scroll pagination (T064, T065, T066)
+ * - List virtualization using react-window VariableSizeList
  * - Mobile-first, RTL-compatible, accessible
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { VariableSizeList } from 'react-window'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
@@ -88,6 +90,32 @@ export function CommitmentsList({
 
   // T064: Ref for scroll detection
   const loadMoreRef = useRef<HTMLDivElement>(null)
+
+  // Ref for VariableSizeList to manage dynamic item heights
+  const listRef = useRef<VariableSizeList>(null)
+
+  // Calculate list height based on viewport
+  const [listHeight, setListHeight] = useState(600)
+
+  useEffect(() => {
+    const updateHeight = () => {
+      // Use viewport height minus header/footer space (approx 300px)
+      const height = Math.max(400, window.innerHeight - 300)
+      setListHeight(height)
+    }
+
+    updateHeight()
+    window.addEventListener('resize', updateHeight)
+    return () => window.removeEventListener('resize', updateHeight)
+  }, [])
+
+  // Item size estimator for VariableSizeList (estimated average card height)
+  const getItemSize = useCallback((index: number) => {
+    // Default estimated height for commitment cards
+    // Actual height varies based on content, but 140px is a reasonable estimate
+    // Includes card height + gap (4 * 4px = 16px)
+    return 156
+  }, [])
 
   // Fetch commitments with infinite scroll pagination
   const {
@@ -423,15 +451,33 @@ export function CommitmentsList({
         />
       )}
 
-      {/* Commitments Grid - Mobile First with Pull-to-Refresh */}
+      {/* Commitments List - Mobile First with Pull-to-Refresh and Virtualization */}
       <div
         ref={containerRef}
-        className="grid grid-cols-1 gap-4 overflow-auto overscroll-contain"
+        className="relative"
         {...pullHandlers}
       >
-        {allCommitments.map((commitment) => (
-          <CommitmentCard key={commitment.id} commitment={commitment} onEdit={handleEdit} />
-        ))}
+        <VariableSizeList
+          ref={listRef}
+          height={listHeight}
+          itemCount={allCommitments.length}
+          itemSize={getItemSize}
+          width="100%"
+          overscanCount={3}
+          className="overscroll-contain"
+        >
+          {({ index, style }) => {
+            const commitment = allCommitments[index]
+
+            return (
+              <div key={commitment.id} style={style} className="px-1">
+                <div className="pb-4">
+                  <CommitmentCard commitment={commitment} onEdit={handleEdit} />
+                </div>
+              </div>
+            )
+          }}
+        </VariableSizeList>
       </div>
 
       {/* T064: Scroll detection trigger and T065: Loading indicator */}
