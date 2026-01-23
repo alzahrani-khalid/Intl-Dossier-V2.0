@@ -1,6 +1,5 @@
 // T067: useCreatePositionDossierLink mutation hook
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { createMutation } from '@/lib/mutation-factory';
 
 export interface CreatePositionDossierLinkInput {
   dossier_id: string;
@@ -9,37 +8,14 @@ export interface CreatePositionDossierLinkInput {
 }
 
 export function useCreatePositionDossierLink(positionId: string) {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (input: CreatePositionDossierLinkInput) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw new Error('Not authenticated');
-      }
-
-      const response = await fetch(
-        `${supabase.supabaseUrl}/functions/v1/positions-dossiers-create?positionId=${positionId}`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(input),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create position-dossier link');
-      }
-
-      return await response.json();
+  return createMutation<CreatePositionDossierLinkInput>({
+    method: 'POST',
+    url: {
+      endpoint: 'positions-dossiers-create',
+      queryParams: { positionId },
     },
-    onSuccess: () => {
-      // Invalidate position-dossier links query to refetch
-      queryClient.invalidateQueries({ queryKey: ['position-dossier-links', positionId] });
+    invalidation: {
+      queryKeys: [['position-dossier-links', positionId]],
     },
-  });
+  })();
 }
