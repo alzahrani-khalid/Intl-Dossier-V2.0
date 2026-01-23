@@ -12,7 +12,7 @@ import { createClient } from '@/lib/supabase-client';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 import { Database } from '@/types/database';
-import { EngagementKanbanResponse } from './useEngagementKanban';
+import { EngagementKanbanResponse, KanbanAssignment } from './useEngagementKanban';
 import { AssignmentDetailResponse } from './useAssignmentDetail';
 
 const supabase = createClient();
@@ -88,7 +88,7 @@ export function useUpdateWorkflowStage() {
             if (!old) return old;
 
             // Find and move assignment to new column
-            let assignmentToMove: any = null;
+            let assignmentToMove: KanbanAssignment | null = null;
             const newColumns = { ...old.columns };
 
             // Find assignment in all columns

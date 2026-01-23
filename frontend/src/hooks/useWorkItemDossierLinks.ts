@@ -15,6 +15,29 @@ import { workItemDossierKeys } from './useCreateWorkItemDossierLinks'
 // API Types
 // ============================================================================
 
+/**
+ * Supabase query result type for work_item_dossiers with dossier join
+ */
+interface WorkItemDossierRow {
+  id: string
+  work_item_type: string
+  work_item_id: string
+  dossier_id: string
+  is_primary: boolean
+  inheritance_source: string
+  inherited_from_type: string | null
+  inherited_from_id: string | null
+  created_at: string
+  created_by: string
+  dossiers: {
+    id: string
+    name_en: string
+    name_ar: string
+    type: string
+    status: string
+  } | null
+}
+
 export interface WorkItemDossierLinksResponse {
   links: WorkItemDossierLink[]
   total_count: number
@@ -62,7 +85,7 @@ async function fetchWorkItemDossierLinks(
   }
 
   // Transform the response to include dossier info
-  const links: WorkItemDossierLink[] = (data ?? []).map((item: any) => ({
+  const links: WorkItemDossierLink[] = (data ?? []).map((item: WorkItemDossierRow) => ({
     id: item.id,
     work_item_type: item.work_item_type,
     work_item_id: item.work_item_id,
