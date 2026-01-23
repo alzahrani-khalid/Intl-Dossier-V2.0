@@ -9,8 +9,8 @@ import { test, expect } from '@playwright/test';
 async function getAuthToken(request: any): Promise<string | null> {
   const loginResponse = await request.post('http://localhost:5001/api/auth/login', {
     data: {
-      email: 'kazahrani@stats.gov.sa',
-      password: 'itismeitisme', // Password must be 8+ chars
+      email: process.env.TEST_USER_EMAIL,
+      password: process.env.TEST_USER_PASSWORD,
     },
   });
 
