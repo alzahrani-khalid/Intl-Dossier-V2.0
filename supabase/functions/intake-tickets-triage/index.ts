@@ -71,13 +71,13 @@ async function generateMLClassification(
     // Get keyword patterns from database
     const { data: patterns } = await supabaseAdmin
       .from('ml_keyword_patterns')
-      .select('*')
+      .select('id, pattern, pattern_ar, pattern_type, indicates_type, indicates_sensitivity, indicates_urgency, indicates_unit, weight, is_active, match_count, accuracy_when_matched, created_at, created_by, updated_at')
       .eq('is_active', true);
 
     // Get active ML model
     const { data: activeModel } = await supabaseAdmin
       .from('ml_classification_models')
-      .select('*')
+      .select('id, model_name, model_version, model_type, status, is_active, training_samples, validation_samples, accuracy_metrics, config, hyperparameters, training_started_at, training_completed_at, activated_at, deprecated_at, created_at, created_by')
       .eq('is_active', true)
       .eq('status', 'active')
       .single();
@@ -490,7 +490,7 @@ serve(async (req) => {
     // Fetch ticket
     const { data: ticket, error: ticketError } = await supabaseAdmin
       .from('intake_tickets')
-      .select('*')
+      .select('id, ticket_number, request_type, title, title_ar, description, description_ar, type_specific_fields, sensitivity, urgency, priority, dossier_id, parent_ticket_id, converted_to_type, converted_to_id, assigned_to, assigned_unit, status, resolution, resolution_ar, created_at, created_by, updated_at, updated_by, submitted_at, triaged_at, assigned_at, resolved_at, closed_at, source, client_metadata')
       .eq('id', ticketId)
       .single();
 
@@ -506,7 +506,7 @@ serve(async (req) => {
       // Check if we have recent cached suggestions
       const { data: recentSuggestion } = await supabaseAdmin
         .from('triage_decisions')
-        .select('*')
+        .select('id, ticket_id, decision_type, suggested_type, suggested_sensitivity, suggested_urgency, suggested_assignee, suggested_unit, final_type, final_sensitivity, final_urgency, final_assignee, final_unit, model_name, model_version, confidence_score, override_reason, override_reason_ar, created_at, created_by, accepted_at, accepted_by')
         .eq('ticket_id', ticketId)
         .eq('decision_type', 'ai_suggestion')
         .order('created_at', { ascending: false })
@@ -600,7 +600,7 @@ serve(async (req) => {
       // Get the latest AI suggestion
       const { data: latestSuggestion } = await supabaseAdmin
         .from('triage_decisions')
-        .select('*')
+        .select('id, ticket_id, decision_type, suggested_type, suggested_sensitivity, suggested_urgency, suggested_assignee, suggested_unit, final_type, final_sensitivity, final_urgency, final_assignee, final_unit, model_name, model_version, confidence_score, override_reason, override_reason_ar, created_at, created_by, accepted_at, accepted_by')
         .eq('ticket_id', ticketId)
         .eq('decision_type', 'ai_suggestion')
         .order('created_at', { ascending: false })

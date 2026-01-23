@@ -93,7 +93,7 @@ serve(async (req) => {
     // Check dossier access via RLS
     const { data: dossierAccess } = await supabaseClient
       .from('dossier_owners')
-      .select('*')
+      .select('dossier_id, user_id, assigned_at, role_type')
       .eq('dossier_id', engagement.dossier_id)
       .eq('user_id', user.user.id)
       .single();

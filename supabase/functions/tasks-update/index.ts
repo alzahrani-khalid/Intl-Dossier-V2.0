@@ -108,7 +108,7 @@ Deno.serve(async (req) => {
     // Fetch current task for optimistic locking check
     const { data: currentTask, error: fetchError } = await supabase
       .from('tasks')
-      .select('*')
+      .select('id, title, description, assignee_id, engagement_id, status, workflow_stage, priority, sla_deadline, work_item_type, work_item_id, source, created_by, updated_by, completed_by, created_at, updated_at, completed_at, is_deleted')
       .eq('id', taskId)
       .eq('is_deleted', false)
       .single();
