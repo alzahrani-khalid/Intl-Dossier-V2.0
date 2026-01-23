@@ -35,6 +35,7 @@ import {
 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getDossierRouteSegment } from '@/lib/dossier-routes'
+import { sanitizeHighlightedText } from '@/lib/sanitize'
 import type { DossierType } from '@/lib/dossier-type-guards'
 import type {
   DossierSearchResult,
@@ -285,7 +286,7 @@ function DossierCard({ dossier, searchQuery, onClick }: DossierCardProps) {
           <h3
             className="mb-1 text-lg font-semibold text-gray-900 dark:text-gray-100"
             dangerouslySetInnerHTML={{
-              __html: highlightText(name, searchQuery),
+              __html: sanitizeHighlightedText(highlightText(name, searchQuery)),
             }}
           />
 
@@ -445,7 +446,7 @@ function WorkItemCard({ item, searchQuery, onClick }: WorkItemCardProps) {
           <h4
             className="mb-1 font-medium text-gray-900 dark:text-gray-100"
             dangerouslySetInnerHTML={{
-              __html: highlightText(title, searchQuery),
+              __html: sanitizeHighlightedText(highlightText(title, searchQuery)),
             }}
           />
 
