@@ -30,11 +30,11 @@ export function FormInput({
  {/* Label */}
  <label
  htmlFor={name}
- className="block text-sm font-medium text-gray-700 dark:text-gray-300"
+ className="block text-sm font-medium text-foreground"
  >
  {label}
  {required && (
- <span className="text-red-500 ms-1" aria-label={t('validation.required')}>
+ <span className="text-destructive ms-1" aria-label={t('validation.required')}>
  *
  </span>
  )}
@@ -43,7 +43,7 @@ export function FormInput({
  {/* Input field */}
  <div className="relative">
  {icon && (
- <div className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-1/2 -translate-y-1/2 text-gray-400`}>
+ <div className={`absolute ${isRTL ? 'end-3' : 'start-3'} top-1/2 -translate-y-1/2 text-muted-foreground`}>
  {icon}
  </div>
  )}
@@ -54,10 +54,10 @@ export function FormInput({
  className={`
  w-full px-4 py-2
  ${icon ? (isRTL ? 'pe-12' : 'ps-12') : ''}
- border ${error ? 'border-red-500' : 'border-gray-300 dark:border-gray-600'}
+ border ${error ? 'border-destructive' : 'border-input'}
  rounded-lg
- focus:ring-2 focus:ring-primary-500 focus:border-transparent
- dark:bg-gray-700 dark:text-white
+ focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+ bg-transparent
  disabled:opacity-50 disabled:cursor-not-allowed
  transition-colors
  `}
@@ -71,14 +71,14 @@ export function FormInput({
 
  {/* Help text */}
  {helpText && !error && (
- <p id={`${name}-help`} className="text-sm text-gray-600 dark:text-gray-400">
+ <p id={`${name}-help`} className="text-sm text-muted-foreground">
  {helpText}
  </p>
  )}
 
  {/* Error message */}
  {error && (
- <p id={`${name}-error`} className="text-sm text-red-600 dark:text-red-400">
+ <p id={`${name}-error`} className="text-sm text-destructive">
  {t(error.message || 'validation.required')}
  </p>
  )}
