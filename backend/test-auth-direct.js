@@ -5,10 +5,12 @@ import { createClient } from '@supabase/supabase-js';
 async function testAuth() {
   const supabaseUrl = process.env.SUPABASE_URL;
   const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+  const testEmail = process.env.TEST_USER_EMAIL;
+  const testPassword = process.env.TEST_USER_PASSWORD;
 
   console.log('🔍 Testing Authentication Flow\n');
   console.log('Supabase URL:', supabaseUrl);
-  console.log('Using credentials: kazahrani@stats.gov.sa / itisme\n');
+  console.log('Using credentials from environment variables\n');
 
   // Create client
   const supabase = createClient(supabaseUrl, supabaseAnonKey);
@@ -16,8 +18,8 @@ async function testAuth() {
   // Sign in
   console.log('1️⃣ Signing in...');
   const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({
-    email: 'kazahrani@stats.gov.sa',
-    password: 'itisme'
+    email: testEmail,
+    password: testPassword
   });
 
   if (signInError) {
