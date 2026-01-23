@@ -1,6 +1,5 @@
 // T072: useUpdateCalendarEvent mutation hook
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+import { createMutation } from '@/lib/mutation-factory';
 
 export interface UpdateCalendarEventInput {
   entryId: string;
@@ -20,38 +19,14 @@ export interface UpdateCalendarEventInput {
   reminder_minutes?: number;
 }
 
-export function useUpdateCalendarEvent() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async ({ entryId, ...updates }: UpdateCalendarEventInput) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw new Error('Not authenticated');
-      }
-
-      const response = await fetch(
-        `${supabase.supabaseUrl}/functions/v1/calendar-update?entryId=${entryId}`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(updates),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to update calendar event');
-      }
-
-      return await response.json();
-    },
-    onSuccess: () => {
-      // Invalidate calendar events query to refetch
-      queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
-    },
-  });
-}
+export const useUpdateCalendarEvent = createMutation<UpdateCalendarEventInput, unknown>({
+  method: 'PATCH',
+  url: {
+    endpoint: 'calendar-update',
+    queryParams: (input) => ({ entryId: input.entryId }),
+  },
+  invalidation: {
+    queryKeys: [['calendar-events']],
+  },
+  transformBody: ({ entryId, ...updates }) => updates,
+});
