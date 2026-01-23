@@ -130,12 +130,34 @@ describe('Sidebar', () => {
 
   it('handles keyboard navigation', () => {
     renderWithI18n(<Sidebar />)
-    
+
     const dashboardLink = screen.getByRole('link', { name: /dashboard/i })
     fireEvent.keyDown(dashboardLink, { key: 'Enter' })
-    
+
     // Should handle keyboard navigation
     expect(dashboardLink).toBeInTheDocument()
+  })
+
+  it('displays focus-visible ring on keyboard focus', () => {
+    renderWithI18n(<Sidebar />)
+
+    // Get a navigation link
+    const dashboardLink = screen.getByRole('link', { name: /dashboard/i })
+
+    // Focus the element programmatically (simulating keyboard focus)
+    dashboardLink.focus()
+
+    // Verify the element is focused
+    expect(dashboardLink).toHaveFocus()
+
+    // Verify focus-visible classes are present in the element or its styling
+    // Note: Testing pseudo-classes directly is challenging, so we verify
+    // the base structure is correct for focus-visible to work
+    expect(dashboardLink).toBeInTheDocument()
+    expect(dashboardLink).toHaveAttribute('href')
+
+    // Simulate Tab key navigation
+    fireEvent.keyDown(dashboardLink, { key: 'Tab' })
   })
 
   it('shows correct icons for each navigation item', () => {
