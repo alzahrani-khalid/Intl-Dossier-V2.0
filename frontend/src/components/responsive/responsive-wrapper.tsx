@@ -1,6 +1,6 @@
 import React from 'react'
-import { useResponsive } from '../../hooks/use-responsive'
-import { useTextDirection } from '../../hooks/use-theme'
+import { useResponsive } from '@/hooks/useResponsive'
+import { useTextDirection } from '@/hooks/useTheme'
 import { cn } from '../../lib/utils'
 
 type ElementType = keyof JSX.IntrinsicElements

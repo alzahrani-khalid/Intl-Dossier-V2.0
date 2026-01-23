@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useLanguage } from '../../hooks/use-language';
+import { useLanguage } from '@/hooks/useLanguage';
 import { Globe, ChevronDown, Check } from 'lucide-react';
 
 interface LanguageOption {

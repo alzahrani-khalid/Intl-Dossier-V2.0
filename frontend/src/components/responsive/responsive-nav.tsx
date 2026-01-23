@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList } from '../ui/navigation-menu';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '../ui/sheet';
 import { Button } from '../ui/button';
-import { useResponsive } from '../../hooks/use-responsive';
-import { useDirection } from '../../hooks/use-theme';
+import { useResponsive } from '@/hooks/useResponsive';
+import { useDirection } from '@/hooks/useTheme';
 import { cn } from '../../lib/utils';
 import { Menu, X } from 'lucide-react';
 

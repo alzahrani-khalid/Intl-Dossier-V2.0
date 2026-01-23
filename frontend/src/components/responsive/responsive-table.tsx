@@ -1,8 +1,8 @@
 import React from 'react';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '../ui/table';
 import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
-import { useResponsive } from '../../hooks/use-responsive';
-import { useDirection } from '../../hooks/use-theme';
+import { useResponsive } from '@/hooks/useResponsive';
+import { useDirection } from '@/hooks/useTheme';
 import { cn } from '../../lib/utils';
 
 export interface ResponsiveTableColumn<T> {
