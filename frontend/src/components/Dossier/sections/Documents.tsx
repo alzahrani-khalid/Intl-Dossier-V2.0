@@ -411,7 +411,9 @@ export function Documents({
     queryFn: async () => {
       let query = supabase
         .from('documents')
-        .select('*')
+        .select(
+          'id, entity_type, entity_id, file_name, file_path, mime_type, size_bytes, uploaded_at, uploaded_by, classification, classification_label, can_download, handling_instructions, declassification_date',
+        )
         .eq('entity_type', entityType)
         .eq('entity_id', entityId)
 

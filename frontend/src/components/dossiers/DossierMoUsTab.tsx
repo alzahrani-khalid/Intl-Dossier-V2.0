@@ -48,7 +48,9 @@ export function DossierMoUsTab({ dossierId }: DossierMoUsTabProps) {
  // Query MoUs where this dossier is either signatory
  const { data, error } = await supabase
  .from('mous')
- .select('*')
+ .select(
+ 'id, country_id, organization_id, title, title_ar, description, dates, effective_date, expiry_date, lifecycle_state, document_path, created_at',
+ )
  .or(`signatory_1_dossier_id.eq.${dossierId},signatory_2_dossier_id.eq.${dossierId}`)
  .order('created_at', { ascending: false });
 
