@@ -14,6 +14,9 @@ function Skeleton({
 }: React.HTMLAttributes<HTMLDivElement>) {
  return (
  <div
+ role="status"
+ aria-busy="true"
+ aria-label="Loading"
  className={cn("animate-pulse rounded-md bg-muted", className)}
  {...props}
  />
@@ -26,7 +29,12 @@ function Skeleton({
  */
 function SkeletonCard() {
  return (
- <div className="space-y-3 p-4 sm:p-6 rounded-lg border border-border bg-card">
+ <div
+ role="status"
+ aria-busy="true"
+ aria-label="Loading"
+ className="space-y-3 p-4 sm:p-6 rounded-lg border border-border bg-card"
+ >
  <div className="flex items-start gap-3">
  <Skeleton className="h-5 w-5" />
  <div className="flex-1 space-y-2">
@@ -45,7 +53,12 @@ function SkeletonCard() {
  */
 function SkeletonText({ lines = 3 }: { lines?: number }) {
  return (
- <div className="space-y-2">
+ <div
+ role="status"
+ aria-busy="true"
+ aria-label="Loading"
+ className="space-y-2"
+ >
  {Array.from({ length: lines }).map((_, i) => (
  <Skeleton
  key={i}
@@ -65,7 +78,12 @@ function SkeletonText({ lines = 3 }: { lines?: number }) {
  */
 function SkeletonTable({ rows = 5, columns = 4 }: { rows?: number; columns?: number }) {
  return (
- <div className="space-y-3">
+ <div
+ role="status"
+ aria-busy="true"
+ aria-label="Loading"
+ className="space-y-3"
+ >
  {/* Header */}
  <div className="flex gap-4 pb-3 border-b">
  {Array.from({ length: columns }).map((_, i) => (
