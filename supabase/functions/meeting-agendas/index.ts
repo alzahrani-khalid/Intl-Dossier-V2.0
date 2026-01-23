@@ -191,7 +191,7 @@ serve(async (req) => {
             shared_with_participants: shared_with_participants ?? true,
             created_by: user.id,
           })
-          .select()
+          .select('id, organization_id, calendar_event_id, dossier_id, title_en, title_ar, description_en, description_ar, meeting_date, meeting_end_date, location_en, location_ar, is_virtual, meeting_url, planned_start_time, planned_end_time, actual_start_time, actual_end_time, timezone, status, is_template, template_name, template_description, is_public, shared_with_participants, created_by, updated_by, created_at, updated_at, deleted_at')
           .single();
 
         if (error) throw error;
@@ -218,7 +218,7 @@ serve(async (req) => {
           .from('meeting_agendas')
           .update(updateData)
           .eq('id', id)
-          .select()
+          .select('id, organization_id, calendar_event_id, dossier_id, title_en, title_ar, description_en, description_ar, meeting_date, meeting_end_date, location_en, location_ar, is_virtual, meeting_url, planned_start_time, planned_end_time, actual_start_time, actual_end_time, timezone, status, is_template, template_name, template_description, is_public, shared_with_participants, created_by, updated_by, created_at, updated_at, deleted_at')
           .single();
 
         if (error) throw error;
@@ -426,7 +426,7 @@ serve(async (req) => {
             linked_entity_type,
             linked_entity_id,
           })
-          .select()
+          .select('id, agenda_id, title_en, title_ar, description_en, description_ar, sort_order, parent_item_id, indent_level, planned_duration_minutes, planned_start_time, planned_end_time, actual_start_time, actual_end_time, item_type, status, presenter_type, presenter_user_id, presenter_person_id, presenter_org_id, presenter_name_en, presenter_name_ar, presenter_title_en, presenter_title_ar, outcome_en, outcome_ar, decision_made, linked_dossier_id, linked_commitment_id, linked_entity_type, linked_entity_id, created_at, updated_at')
           .single();
 
         if (error) throw error;
@@ -452,7 +452,7 @@ serve(async (req) => {
           .from('agenda_items')
           .update(updateItemData)
           .eq('id', item_id)
-          .select()
+          .select('id, agenda_id, title_en, title_ar, description_en, description_ar, sort_order, parent_item_id, indent_level, planned_duration_minutes, planned_start_time, planned_end_time, actual_start_time, actual_end_time, item_type, status, presenter_type, presenter_user_id, presenter_person_id, presenter_org_id, presenter_name_en, presenter_name_ar, presenter_title_en, presenter_title_ar, outcome_en, outcome_ar, decision_made, linked_dossier_id, linked_commitment_id, linked_entity_type, linked_entity_id, created_at, updated_at')
           .single();
 
         if (error) throw error;
@@ -615,7 +615,7 @@ serve(async (req) => {
             notify_on_changes: notify_on_changes ?? true,
             notify_before_meeting: notify_before_meeting ?? true,
           })
-          .select()
+          .select('id, agenda_id, participant_type, user_id, person_dossier_id, organization_id, name_en, name_ar, email, title_en, title_ar, organization_name_en, organization_name_ar, role, rsvp_status, rsvp_at, rsvp_notes, notify_on_changes, notify_before_meeting, created_at, updated_at')
           .single();
 
         if (error) throw error;
@@ -642,7 +642,7 @@ serve(async (req) => {
             rsvp_at: new Date().toISOString(),
           })
           .eq('id', participant_id)
-          .select()
+          .select('id, agenda_id, participant_type, user_id, person_dossier_id, organization_id, name_en, name_ar, email, title_en, title_ar, organization_name_en, organization_name_ar, role, rsvp_status, rsvp_at, rsvp_notes, notify_on_changes, notify_before_meeting, created_at, updated_at')
           .single();
 
         if (error) throw error;
@@ -726,7 +726,7 @@ serve(async (req) => {
             shared_before_meeting: shared_before_meeting ?? true,
             uploaded_by: user.id,
           })
-          .select()
+          .select('id, agenda_id, agenda_item_id, title_en, title_ar, description_en, description_ar, storage_path, file_name, file_type, file_size_bytes, mime_type, document_type, is_public, shared_before_meeting, uploaded_by, uploaded_at, created_at, updated_at')
           .single();
 
         if (error) throw error;
@@ -807,7 +807,7 @@ serve(async (req) => {
             updated_by: user.id,
           })
           .eq('id', id)
-          .select()
+          .select('id, organization_id, calendar_event_id, dossier_id, title_en, title_ar, description_en, description_ar, meeting_date, meeting_end_date, location_en, location_ar, is_virtual, meeting_url, planned_start_time, planned_end_time, actual_start_time, actual_end_time, timezone, status, is_template, template_name, template_description, is_public, shared_with_participants, created_by, updated_by, created_at, updated_at, deleted_at')
           .single();
 
         if (error) throw error;

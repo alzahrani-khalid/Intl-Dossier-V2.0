@@ -366,7 +366,7 @@ async function handleCreateInteraction(
       followup_notes: body.followup_notes,
       created_by: userId,
     })
-    .select()
+    .select('id, stakeholder_id, interaction_type, interaction_date, outcome_en, outcome_ar, impact_score, requires_followup, followup_date, followup_notes, created_by, created_at, updated_at')
     .single();
 
   if (error) {
@@ -420,7 +420,7 @@ async function handleCreateAnnotation(
       tags: body.tags || [],
       created_by: userId,
     })
-    .select()
+    .select('id, timeline_event_id, timeline_source_type, annotation_type, annotation_text_en, annotation_text_ar, stakeholder_mentions, related_dossier_ids, importance_score, color, visibility, is_key_moment, is_turning_point, tags, created_by, created_at, updated_at')
     .single();
 
   if (error) {
@@ -467,7 +467,7 @@ async function handleUpdateAnnotation(
     .from('timeline_annotations')
     .update(updateData)
     .eq('id', annotationId)
-    .select()
+    .select('id, timeline_event_id, timeline_source_type, annotation_type, annotation_text_en, annotation_text_ar, stakeholder_mentions, related_dossier_ids, importance_score, tags, created_by, created_at, updated_at')
     .single();
 
   if (error) {

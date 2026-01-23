@@ -513,7 +513,7 @@ serve(async (req: Request) => {
             change_type: body.change_type,
             comment: body.comment,
           })
-          .select()
+          .select('id, document_id, document_version_id, author_id, start_position, end_position, original_text, suggested_text, change_type, comment, status, resolved_by, resolved_at, resolution_comment, created_at, updated_at')
           .single();
         if (error) throw error;
         result = data;
@@ -566,7 +566,7 @@ serve(async (req: Request) => {
             change_group_id: body.change_group_id,
             sequence_number: body.sequence_number,
           })
-          .select()
+          .select('id, document_id, document_version_id, author_id, session_id, start_position, end_position, original_text, new_text, change_type, change_group_id, sequence_number, is_accepted, accepted_by, accepted_at, created_at, updated_at')
           .single();
         if (error) throw error;
         result = data;
@@ -605,7 +605,7 @@ serve(async (req: Request) => {
           })
           .eq('document_id', params.documentId)
           .is('is_accepted', null)
-          .select();
+          .select('id, document_id, is_accepted, accepted_by, accepted_at');
         if (error) throw error;
         result = { affected_count: data?.length || 0 };
         break;
@@ -621,7 +621,7 @@ serve(async (req: Request) => {
           })
           .eq('document_id', params.documentId)
           .is('is_accepted', null)
-          .select();
+          .select('id, document_id, is_accepted, accepted_by, accepted_at');
         if (error) throw error;
         result = { affected_count: data?.length || 0 };
         break;
@@ -660,7 +660,7 @@ serve(async (req: Request) => {
             parent_id: body.parent_id,
             mentioned_users: body.mentioned_users || [],
           })
-          .select()
+          .select('id, document_id, document_version_id, author_id, anchor_start, anchor_end, highlighted_text, content, content_html, parent_id, thread_root_id, mentioned_users, status, is_edited, edited_at, edit_count, is_deleted, deleted_at, deleted_by, created_at, updated_at')
           .single();
         if (error) throw error;
         result = data;
@@ -683,7 +683,7 @@ serve(async (req: Request) => {
           })
           .eq('id', params.commentId)
           .eq('author_id', user.id)
-          .select()
+          .select('id, document_id, document_version_id, author_id, anchor_start, anchor_end, highlighted_text, content, content_html, parent_id, thread_root_id, mentioned_users, status, is_edited, edited_at, edit_count, is_deleted, deleted_at, deleted_by, created_at, updated_at')
           .single();
         if (error) throw error;
         result = data;
@@ -711,7 +711,7 @@ serve(async (req: Request) => {
           })
           .eq('id', params.commentId)
           .eq('author_id', user.id)
-          .select()
+          .select('id, is_deleted, deleted_at, deleted_by')
           .single();
         if (error) throw error;
         result = { success: true };
@@ -759,7 +759,7 @@ serve(async (req: Request) => {
             invited_by: user.id,
             expires_at: body.expires_at,
           })
-          .select()
+          .select('id, document_id, user_id, can_edit, can_suggest, can_comment, can_resolve, can_manage, invited_by, invited_at, expires_at, is_active, created_at, updated_at')
           .single();
         if (error) throw error;
         result = data;
@@ -781,7 +781,7 @@ serve(async (req: Request) => {
           .from('document_collaborators')
           .update(updateData)
           .eq('id', params.collaboratorId)
-          .select()
+          .select('id, document_id, user_id, can_edit, can_suggest, can_comment, can_resolve, can_manage, invited_by, invited_at, expires_at, is_active, created_at, updated_at')
           .single();
         if (error) throw error;
         result = data;
@@ -817,7 +817,7 @@ serve(async (req: Request) => {
               onConflict: 'document_id',
             }
           )
-          .select()
+          .select('id, document_id, is_locked, locked_by, locked_at, lock_reason, track_changes_enabled, suggestions_enabled, created_at, updated_at')
           .single();
         if (error) throw error;
         result = data;

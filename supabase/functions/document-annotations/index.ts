@@ -190,7 +190,7 @@ serve(async (req) => {
         const { data: annotations, error } = await supabaseClient
           .from('document_annotations')
           .insert(annotationsToCreate)
-          .select();
+          .select('id, document_id, annotation_type, content, position, created_by, is_synced, created_at, updated_at');
 
         if (error) {
           return new Response(JSON.stringify({ error: error.message }), {
@@ -225,7 +225,7 @@ serve(async (req) => {
           ...annotationRecord,
           is_synced: true,
         })
-        .select()
+        .select('id, organization_id, document_id, page_number, annotation_type, tool, color, stroke_width, opacity, x, y, width, height, rotation, layer_index, group_id, created_by, created_on_device, local_id, tags, metadata, path_data, stroke_points, text_content, font_size, font_family, highlighted_text, text_range, stamp_type, stamp_image_url, signature_data, signer_name, signed_at, is_synced, created_at, updated_at, deleted_at')
         .single();
 
       if (error) {
@@ -291,7 +291,7 @@ serve(async (req) => {
         .eq('id', annotationId)
         .eq('created_by', user.id)
         .is('deleted_at', null)
-        .select()
+        .select('id, organization_id, document_id, page_number, annotation_type, tool, color, stroke_width, opacity, x, y, width, height, rotation, layer_index, group_id, created_by, created_on_device, local_id, tags, metadata, path_data, stroke_points, text_content, font_size, font_family, highlighted_text, text_range, stamp_type, stamp_image_url, signature_data, signer_name, signed_at, is_synced, created_at, updated_at, deleted_at')
         .single();
 
       if (error) {

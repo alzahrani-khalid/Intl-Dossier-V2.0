@@ -180,7 +180,7 @@ Deno.serve(async (req: Request) => {
               user_id: user.id,
               session_id: sessionId,
             })
-            .select()
+            .select('id, user_id, session_id, hints_shown, hints_dismissed, hints_expanded, session_started_at, last_hint_at, created_at, updated_at')
             .single();
 
           if (createError) {
@@ -388,7 +388,7 @@ Deno.serve(async (req: Request) => {
         .from('user_disclosure_preferences')
         .update(updates)
         .eq('user_id', user.id)
-        .select()
+        .select('id, user_id, verbosity_level, show_onboarding_hints, show_feature_discovery, show_data_insights, experience_level, experience_level_auto_calculated, created_at, updated_at')
         .single();
 
       if (updateError) {
