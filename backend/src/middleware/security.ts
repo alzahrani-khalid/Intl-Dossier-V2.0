@@ -38,8 +38,17 @@ const isLocalNetworkOrigin = (origin: string): boolean => {
 // CORS configuration
 export const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
-    // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true)
+    // Reject requests with no origin header for security
+    // Note: Health endpoints and server-to-server requests should either:
+    // 1. Be mounted before CORS middleware in the application setup, OR
+    // 2. Include proper Origin headers or API key authentication
+    if (!origin) {
+      logSecurityEvent('CORS: No Origin header', 'medium', {
+        message: 'Request rejected due to missing Origin header',
+        userAgent: 'Not available in CORS preflight',
+      })
+      return callback(new Error('Origin header required'))
+    }
 
     // In development, allow localhost and local network IPs
     if (NODE_ENV === 'development') {
