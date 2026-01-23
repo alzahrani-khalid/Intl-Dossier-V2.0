@@ -92,7 +92,9 @@ function AIUsageDashboard() {
       // Fetch runs data from ai_runs table
       const { data: runs, error } = await supabase
         .from('ai_runs')
-        .select('*')
+        .select(
+          'id, organization_id, user_id, feature, provider, model, status, input_tokens, output_tokens, total_tokens, estimated_cost_usd, latency_ms, started_at, completed_at, request_metadata, error_message, created_at'
+        )
         .gte('created_at', startDate.toISOString())
         .order('created_at', { ascending: false })
 

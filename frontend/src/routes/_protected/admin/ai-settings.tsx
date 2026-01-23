@@ -132,7 +132,9 @@ function AISettingsPage() {
 
       const { data, error } = await supabase
         .from('organization_llm_policies')
-        .select('*')
+        .select(
+          'id, organization_id, default_provider, default_model, arabic_provider, arabic_model, allow_cloud_for_confidential, private_provider, private_model, private_endpoint_url, monthly_spend_cap_usd, alert_threshold_percent, brief_generation_enabled, chat_enabled, entity_linking_enabled, created_at, updated_at'
+        )
         .eq('organization_id', orgId)
         .single()
 
@@ -148,7 +150,9 @@ function AISettingsPage() {
     queryFn: async (): Promise<AIModelPricing[]> => {
       const { data, error } = await supabase
         .from('ai_model_pricing')
-        .select('*')
+        .select(
+          'id, provider, model, input_price_per_1m_tokens, output_price_per_1m_tokens, effective_date, is_active, created_at'
+        )
         .eq('is_active', true)
         .order('provider')
 
