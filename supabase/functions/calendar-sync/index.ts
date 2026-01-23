@@ -284,7 +284,7 @@ async function handleConnections(req: Request, supabase: any, userId: string, ro
       .update(updates)
       .eq('id', route.id)
       .eq('user_id', userId)
-      .select()
+      .select('id, user_id, provider, sync_status, sync_direction, conflict_strategy, sync_enabled, auto_sync_interval_minutes, sync_past_days, sync_future_days, access_token, refresh_token, token_expires_at, provider_email, provider_name, provider_account_id, sync_cursor, last_sync_at, created_at, updated_at')
       .single();
 
     if (error) throw error;
@@ -432,7 +432,7 @@ async function handleOAuth(req: Request, supabase: any, userId: string, route: R
       sync_cursor: null, // Clear state token
     })
     .eq('id', connection.id)
-    .select()
+    .select('id, user_id, provider, sync_status, sync_direction, conflict_strategy, sync_enabled, auto_sync_interval_minutes, sync_past_days, sync_future_days, access_token, refresh_token, token_expires_at, provider_email, provider_name, provider_account_id, sync_cursor, last_sync_at, created_at, updated_at')
     .single();
 
   if (updateError) throw updateError;
@@ -537,7 +537,7 @@ async function handleCalendars(req: Request, supabase: any, userId: string, rout
       .from('external_calendars')
       .update(updates)
       .eq('id', route.id)
-      .select()
+      .select('id, connection_id, external_calendar_id, name, description, color, timezone, is_primary, is_owner, access_role, sync_enabled, import_events, export_events, created_at, updated_at')
       .single();
 
     if (error) throw error;
@@ -599,7 +599,7 @@ async function handleSync(req: Request, supabase: any, userId: string) {
       direction: connection.sync_direction,
       status: 'in_progress',
     })
-    .select()
+    .select('id, connection_id, sync_type, direction, status, sync_started_at, sync_completed_at, events_imported, events_exported, events_updated, events_deleted, conflicts_detected, errors, error_message, created_at')
     .single();
 
   if (logError) throw logError;
@@ -672,7 +672,7 @@ async function handleSync(req: Request, supabase: any, userId: string) {
       errors: totalErrors,
     })
     .eq('id', syncLog.id)
-    .select()
+    .select('id, connection_id, sync_type, direction, status, sync_started_at, sync_completed_at, events_imported, events_exported, events_updated, events_deleted, conflicts_detected, errors, error_message, created_at')
     .single();
 
   if (updateError) throw updateError;
@@ -943,7 +943,7 @@ async function importExternalEvents(
               location_en: normalizedEvent.location,
               status: 'planned',
             })
-            .select()
+            .select('id, dossier_id, event_type, title_en, title_ar, description_en, description_ar, start_datetime, end_datetime, location_en, location_ar, status, created_at, updated_at')
             .single();
 
           if (newEvent) {
@@ -1285,7 +1285,7 @@ async function handleConflicts(req: Request, supabase: any, userId: string, rout
                 : 'ignored',
       })
       .eq('id', route.id)
-      .select()
+      .select('id, mapping_id, conflict_type, internal_snapshot, external_snapshot, conflicting_fields, status, resolved_at, resolved_by, resolution, detected_at, created_at, updated_at')
       .single();
 
     if (updateError) throw updateError;
@@ -1354,7 +1354,7 @@ async function handleIcal(req: Request, supabase: any, userId: string, route: Ro
         color: color || '#3B82F6',
         refresh_interval_minutes: refresh_interval_minutes || 60,
       })
-      .select()
+      .select('id, user_id, feed_url, feed_name, description, color, sync_enabled, refresh_interval_minutes, last_refresh_at, last_refresh_error, content_hash, event_count, created_at, updated_at')
       .single();
 
     if (error) throw error;
@@ -1391,7 +1391,7 @@ async function handleIcal(req: Request, supabase: any, userId: string, route: Ro
       .update(updates)
       .eq('id', route.id)
       .eq('user_id', userId)
-      .select()
+      .select('id, user_id, feed_url, feed_name, description, color, sync_enabled, refresh_interval_minutes, last_refresh_at, last_refresh_error, content_hash, event_count, created_at, updated_at')
       .single();
 
     if (error) throw error;

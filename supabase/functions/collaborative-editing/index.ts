@@ -834,7 +834,7 @@ serve(async (req: Request) => {
             lock_reason: null,
           })
           .eq('document_id', params.documentId)
-          .select()
+          .select('id, document_id, is_locked, locked_by, locked_at, lock_reason, track_changes_enabled, suggestions_enabled, created_at, updated_at')
           .single();
         if (error) throw error;
         result = data;
@@ -863,7 +863,7 @@ serve(async (req: Request) => {
               onConflict: 'document_id',
             }
           )
-          .select()
+          .select('id, document_id, is_locked, locked_by, locked_at, lock_reason, track_changes_enabled, suggestions_enabled, created_at, updated_at')
           .single();
         if (error) throw error;
         result = data;
