@@ -415,6 +415,16 @@ export function EnhancedKanbanBoard({
     [onStatusChange, filteredItems, isRTL, toast, t, kanbanColumns, enableWipWarnings, wipLimits],
   )
 
+  // Check if a card is currently focused
+  const isFocusedCard = useCallback(
+    (item: WorkItem): boolean => {
+      if (focusedCardIndex === -1 || focusedCardIndex >= visibleCardsList.length) return false
+      const focusedCard = visibleCardsList[focusedCardIndex]
+      return focusedCard?.id === item.id
+    },
+    [focusedCardIndex, visibleCardsList],
+  )
+
   // Handle item click
   const handleItemClick = useCallback(
     (item: WorkItem) => {
@@ -677,6 +687,7 @@ export function EnhancedKanbanBoard({
                               'rounded-lg border bg-background p-2 cursor-pointer',
                               'hover:shadow-sm transition-shadow',
                               bulkOps.isSelected(item.id) && 'ring-2 ring-primary',
+                              isFocusedCard(item) && 'ring-2 ring-blue-500 ring-offset-2',
                             )}
                           >
                             {bulkOps.selectionState.isSelecting && (
@@ -805,6 +816,7 @@ export function EnhancedKanbanBoard({
                           className={cn(
                             item.is_overdue ? 'border-red-200 bg-red-50/50' : '',
                             bulkOps.isSelected(item.id) && 'ring-2 ring-primary',
+                            isFocusedCard(item) && 'ring-2 ring-blue-500 ring-offset-2',
                           )}
                         >
                           {bulkOps.selectionState.isSelecting && (
