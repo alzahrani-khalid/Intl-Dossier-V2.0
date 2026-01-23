@@ -114,7 +114,7 @@ serve(async (req: Request) => {
           const parentId = url.searchParams.get('parent_id');
           let query = supabaseClient
             .from('themes')
-            .select('*')
+            .select('id, parent_theme_id, category_code, hierarchy_level, icon, color, attributes, sort_order, is_standard, external_url')
             .order('sort_order')
             .order('category_code');
 
@@ -137,7 +137,7 @@ serve(async (req: Request) => {
           const themeIds = themeExts.map((t) => t.id);
           const { data: dossiers } = await supabaseClient
             .from('dossiers')
-            .select('*')
+            .select('id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at')
             .in('id', themeIds)
             .eq('type', 'theme')
             .neq('status', 'archived');
@@ -164,7 +164,7 @@ serve(async (req: Request) => {
           // Get single theme with extension data using view
           const { data: themeDetails, error } = await supabaseClient
             .from('theme_details')
-            .select('*')
+            .select('id, parent_theme_id, category_code, hierarchy_level, icon, color, attributes, sort_order, is_standard, external_url')
             .eq('id', id)
             .single();
 
@@ -184,7 +184,7 @@ serve(async (req: Request) => {
           // Get base dossier
           const { data: dossier } = await supabaseClient
             .from('dossiers')
-            .select('*')
+            .select('id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by')
             .eq('id', id)
             .single();
 
@@ -248,7 +248,7 @@ serve(async (req: Request) => {
           let extensions: Record<string, ThemeExtension> = {};
 
           if (themeIds.length > 0) {
-            let extQuery = supabaseClient.from('themes').select('*').in('id', themeIds);
+            let extQuery = supabaseClient.from('themes').select('id, parent_theme_id, category_code, hierarchy_level, icon, color, attributes, sort_order, is_standard, external_url').in('id', themeIds);
 
             if (parentThemeId !== null) {
               if (parentThemeId === 'null') {
@@ -502,7 +502,7 @@ serve(async (req: Request) => {
           // Fetch existing extension
           const { data: existingExt } = await supabaseClient
             .from('themes')
-            .select('*')
+            .select('id, parent_theme_id, category_code, hierarchy_level, icon, color, attributes, sort_order, is_standard, external_url')
             .eq('id', id)
             .single();
           themeExt = existingExt;

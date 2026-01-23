@@ -188,7 +188,7 @@ async function processQueue(supabase: SupabaseClient): Promise<Response> {
     // Get and lock pending actions
     const { data: actions, error } = await supabase
       .from('workflow_action_queue')
-      .select('*')
+      .select('id, execution_id, execution_created_at, action_index, action_type, action_config, status, retry_count, max_retries, scheduled_for, error_message')
       .eq('status', 'pending')
       .lte('scheduled_for', new Date().toISOString())
       .is('locked_at', null)
@@ -324,7 +324,7 @@ async function getExecutionContext(
   const tableName = getTableName(execution.entity_type);
   const { data: entityData } = await supabase
     .from(tableName)
-    .select('*')
+    .select('id, title, name_en, name_ar, subject, status, priority, assignee_id, tags, created_at, updated_at')
     .eq('id', execution.entity_id)
     .single();
 
@@ -412,7 +412,7 @@ async function executeNotifyUser(
   // Get notification template
   const { data: template } = await supabase
     .from('workflow_notification_templates')
-    .select('*')
+    .select('code, subject_en, subject_ar, body_en, body_ar, channel')
     .eq('code', templateCode)
     .single();
 
@@ -696,7 +696,7 @@ async function executeCallWebhook(
   // Get webhook configuration
   const { data: webhook, error: webhookError } = await supabase
     .from('webhooks')
-    .select('*')
+    .select('id, url, auth_type, auth_secret')
     .eq('id', webhookId)
     .single();
 
@@ -767,7 +767,7 @@ async function executeSendEmail(
   // Get email template
   const { data: template } = await supabase
     .from('workflow_notification_templates')
-    .select('*')
+    .select('code, subject_en, subject_ar, body_en, body_ar, channel')
     .eq('code', templateCode)
     .eq('channel', 'email')
     .single();
@@ -829,7 +829,7 @@ async function triggerWorkflow(
   const tableName = getTableName(entity_type);
   const { data: entityData, error: entityError } = await supabaseAdmin
     .from(tableName)
-    .select('*')
+    .select('id, title, name_en, name_ar, subject, status, priority, assignee_id, tags, created_at, updated_at')
     .eq('id', entity_id)
     .single();
 

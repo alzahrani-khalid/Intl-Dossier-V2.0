@@ -175,7 +175,7 @@ Deno.serve(async (req: Request) => {
           .from('access_requests')
           .select(
             `
-            *,
+            id, requester_id, granter_id, resource_type, resource_id, resource_name, requested_permission, reason, urgency, requested_duration_days, granter_notified, status, response_message, responded_by, responded_at, access_expires_at, requester_notified, created_at,
             requester:users!access_requests_requester_id_fkey(id, full_name, email),
             granter:users!access_requests_granter_id_fkey(id, full_name, email)
           `
@@ -230,7 +230,7 @@ Deno.serve(async (req: Request) => {
         // Verify user is the granter
         const { data: existingRequest, error: fetchError } = await supabase
           .from('access_requests')
-          .select('*')
+          .select('id, requester_id, granter_id, resource_type, resource_id, resource_name, requested_permission, reason, urgency, requested_duration_days, granter_notified, status, response_message, responded_by, responded_at, access_expires_at, requester_notified, created_at')
           .eq('id', payload.requestId)
           .single();
 

@@ -322,7 +322,7 @@ serve(async (req: Request) => {
     if (body.saved_filter_id) {
       const { data: filter, error: filterError } = await supabase
         .from('search_filters')
-        .select('*')
+        .select('id, name_en, name_ar, filter_criteria, created_at, updated_at, created_by')
         .eq('id', body.saved_filter_id)
         .single();
 
@@ -536,7 +536,7 @@ async function searchDossiers(
     offset: number;
   }
 ): Promise<SearchResult[]> {
-  let query = supabase.from('dossiers').select('*');
+  let query = supabase.from('dossiers').select('id, type, name_en, name_ar, title_en, title_ar, summary_en, summary_ar, description_en, description_ar, status, tags, sensitivity_level, archived, created_at, updated_at');
 
   // Apply text search
   if (options.hasTextQuery) {
@@ -640,7 +640,7 @@ async function searchEngagements(
     offset: number;
   }
 ): Promise<SearchResult[]> {
-  let query = supabase.from('engagements').select('*');
+  let query = supabase.from('engagements').select('id, title_en, title_ar, description_en, description_ar, status, start_date, end_date, location, created_at, updated_at');
 
   if (options.hasTextQuery) {
     const terms = options.query.split(/\s+/).filter(Boolean);
@@ -702,7 +702,7 @@ async function searchPositions(
     offset: number;
   }
 ): Promise<SearchResult[]> {
-  let query = supabase.from('positions').select('*').eq('status', 'published');
+  let query = supabase.from('positions').select('id, title_en, title_ar, key_messages_en, key_messages_ar, status, topic, version, created_at, updated_at').eq('status', 'published');
 
   if (options.hasTextQuery) {
     const terms = options.query.split(/\s+/).filter(Boolean);
@@ -758,7 +758,7 @@ async function searchDocuments(
     offset: number;
   }
 ): Promise<SearchResult[]> {
-  let query = supabase.from('attachments').select('*').is('deleted_at', null);
+  let query = supabase.from('attachments').select('id, file_name, description_en, description_ar, file_type, file_size, created_at, updated_at, deleted_at').is('deleted_at', null);
 
   if (options.hasTextQuery) {
     const terms = options.query.split(/\s+/).filter(Boolean);
@@ -816,7 +816,7 @@ async function searchPeople(
   }
 ): Promise<SearchResult[]> {
   // Search in staff_profiles first
-  let staffQuery = supabase.from('staff_profiles').select('*');
+  let staffQuery = supabase.from('staff_profiles').select('id, full_name_en, full_name_ar, title_en, title_ar, email, department, created_at, updated_at');
 
   if (options.hasTextQuery) {
     const terms = options.query.split(/\s+/).filter(Boolean);
@@ -856,7 +856,7 @@ async function searchPeople(
   }));
 
   // Also search in external_contacts
-  let contactsQuery = supabase.from('external_contacts').select('*');
+  let contactsQuery = supabase.from('external_contacts').select('id, full_name_en, full_name_ar, title_en, title_ar, email, organization, created_at, updated_at');
 
   if (options.hasTextQuery) {
     const terms = options.query.split(/\s+/).filter(Boolean);

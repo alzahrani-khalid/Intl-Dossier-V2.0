@@ -67,7 +67,7 @@ async function validateRefreshToken(
     // Validate against stored refresh tokens
     const { data: storedToken, error } = await supabase
       .from('refresh_tokens')
-      .select('*')
+      .select('token_hash, user_id, is_active, expires_at')
       .eq('token_hash', hashToken(refreshToken))
       .eq('user_id', decoded.sub)
       .eq('is_active', true)

@@ -246,7 +246,7 @@ async function getWatchlist(
   // Build query
   let query = supabase
     .from('user_watchlist')
-    .select('*')
+    .select('id, user_id, entity_type, entity_id, priority, notes, is_active, created_at, updated_at')
     .eq('user_id', userId)
     .order('priority', { ascending: false })
     .order('created_at', { ascending: false })
@@ -631,7 +631,7 @@ async function checkIfWatched(
   if (data) {
     const { data: watch } = await supabase
       .from('user_watchlist')
-      .select('*')
+      .select('id, user_id, entity_type, entity_id, priority, notes, is_active, created_at, updated_at')
       .eq('user_id', userId)
       .eq('entity_type', entityType)
       .eq('entity_id', entityId)
@@ -658,7 +658,7 @@ async function getTemplates(supabase: ReturnType<typeof createClient>, userId: s
   // Get templates applicable to user's role
   const { data: templates, error } = await supabase
     .from('watchlist_templates')
-    .select('*')
+    .select('id, name_en, name_ar, description_en, description_ar, filter_criteria, is_system_template, applicable_roles, created_by, created_at')
     .or(`applicable_roles.cs.{${userRole}},created_by.eq.${userId}`)
     .order('is_system_template', { ascending: false })
     .order('name_en');
@@ -750,7 +750,7 @@ async function getWatchEvents(
 
   let query = supabase
     .from('watchlist_events')
-    .select('*')
+    .select('id, watch_id, event_type, event_title, event_details, metadata, created_at')
     .eq('watch_id', watchId)
     .order('created_at', { ascending: false })
     .limit(limit);

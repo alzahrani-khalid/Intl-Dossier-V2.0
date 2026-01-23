@@ -249,7 +249,7 @@ const handler = createHandler(async (req: Request): Promise<Response> => {
     // Get credential details for response
     const { data: credential, error } = await supabase
       .from('biometric_credentials')
-      .select('*')
+      .select('id, device_id, status, expires_at')
       .eq('id', credentialId)
       .single()
 

@@ -181,7 +181,7 @@ async function handleGetPreferences(
   // Fetch default preferences
   const { data: preferences, error: prefError } = await supabase
     .from('user_view_preferences')
-    .select('*')
+    .select('id, user_id, entity_type, visible_columns, column_order, filters, sort_by, group_by, card_size, theme_preference, density, created_at, updated_at')
     .eq('user_id', userId)
     .eq('entity_type', entityType)
     .single();
@@ -194,7 +194,7 @@ async function handleGetPreferences(
   // Fetch saved views
   const { data: savedViews, error: viewsError } = await supabase
     .from('user_saved_views')
-    .select('*')
+    .select('id, user_id, entity_type, name, description, view_config, is_pinned, is_default, is_public, created_at, updated_at')
     .eq('user_id', userId)
     .eq('entity_type', entityType)
     .order('is_pinned', { ascending: false })

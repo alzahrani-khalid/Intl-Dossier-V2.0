@@ -62,7 +62,7 @@ serve(async (req) => {
     // Fetch job from database
     const { data: job, error: fetchError } = await supabase
       .from('ai_extraction_jobs')
-      .select('*')
+      .select('id, status, progress, result, error, created_at')
       .eq('id', jobId)
       .single();
 

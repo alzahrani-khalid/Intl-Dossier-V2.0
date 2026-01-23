@@ -95,7 +95,7 @@ export class RateLimiter {
       // Get current count for this key
       const { data: existing, error: fetchError } = await this.supabase
         .from("rate_limits")
-        .select("*")
+        .select("key, count, window_start, expires_at")
         .eq("key", key)
         .gte("window_start", windowStart.toISOString())
         .single();
@@ -177,7 +177,7 @@ export class RateLimiter {
       // Get current global count
       const { data: existing, error: fetchError } = await this.supabase
         .from("rate_limits")
-        .select("*")
+        .select("key, count, window_start, expires_at")
         .eq("key", key)
         .gte("window_start", windowStart.toISOString())
         .single();

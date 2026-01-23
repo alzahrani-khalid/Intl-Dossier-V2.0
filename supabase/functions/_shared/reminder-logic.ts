@@ -79,7 +79,7 @@ export async function validateAssignment(
 ): Promise<Assignment> {
   const { data: assignment, error } = await supabase
     .from('assignments')
-    .select('*')
+    .select('id, work_item_id, work_item_type, assignee_id, status, priority, last_reminder_sent_at, _version')
     .eq('id', assignmentId)
     .single();
 
