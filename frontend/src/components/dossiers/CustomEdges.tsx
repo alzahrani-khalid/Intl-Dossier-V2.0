@@ -1,6 +1,6 @@
 // Enhanced Custom React Flow Edges with Dotted Lines and Impact Badges
 import { memo } from 'react';
-import { EdgeProps, getBezierPath, EdgeLabelRenderer, BaseEdge } from 'reactflow';
+import { EdgeProps, getBezierPath, EdgeLabelRenderer, BaseEdge } from '@xyflow/react';
 
 interface CustomEdgeData {
  label?: string;
