@@ -21,8 +21,8 @@ import ReactFlow, {
   OnEdgesChange,
   NodeTypes,
   Position,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
+} from '@xyflow/react';
+import '@xyflow/react/dist/style.css';
 import { hierarchy, tree } from 'd3-hierarchy';
 import { supabase } from '@/lib/supabase-client';
 import type { OrganizationDossier } from '@/lib/dossier-type-guards';

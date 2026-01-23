@@ -13,8 +13,8 @@ import ReactFlow, {
   Position,
   BackgroundVariant,
   ReactFlowInstance,
-} from 'reactflow'
-import 'reactflow/dist/style.css'
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 
 import { useRelationshipsForDossier } from '@/hooks/useRelationships'
 import { useTouchGraphControls } from '@/hooks/useTouchGraphControls'

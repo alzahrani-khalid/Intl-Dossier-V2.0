@@ -41,8 +41,8 @@ import ReactFlow, {
   OnEdgesChange,
   NodeTypes,
   ReactFlowProvider,
-} from 'reactflow'
-import 'reactflow/dist/style.css'
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force'
 import { supabase } from '@/lib/supabase-client'
 import { Badge } from '@/components/ui/badge'
