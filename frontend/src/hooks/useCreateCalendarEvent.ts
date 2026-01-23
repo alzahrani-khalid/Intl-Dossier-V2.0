@@ -1,6 +1,13 @@
-// T071: useCreateCalendarEvent mutation hook
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+/**
+ * Calendar Event Creation Hook
+ *
+ * Mutation hook for creating calendar events using the mutation factory pattern.
+ * Handles authentication, request execution, and automatic query invalidation.
+ *
+ * @module hooks/useCreateCalendarEvent
+ */
+
+import { mutationHelpers } from '@/lib/mutation-factory';
 
 export interface CreateCalendarEventInput {
   entry_type: 'internal_meeting' | 'deadline' | 'reminder' | 'holiday' | 'training' | 'review' | 'other';
@@ -19,38 +26,12 @@ export interface CreateCalendarEventInput {
   reminder_minutes?: number;
 }
 
-export function useCreateCalendarEvent() {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: async (input: CreateCalendarEventInput) => {
-      const { data: { session } } = await supabase.auth.getSession();
-      if (!session) {
-        throw new Error('Not authenticated');
-      }
-
-      const response = await fetch(
-        `${supabase.supabaseUrl}/functions/v1/calendar-create`,
-        {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(input),
-        }
-      );
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to create calendar event');
-      }
-
-      return await response.json();
-    },
-    onSuccess: () => {
-      // Invalidate calendar events query to refetch
-      queryClient.invalidateQueries({ queryKey: ['calendar-events'] });
-    },
-  });
-}
+/**
+ * Create calendar event mutation hook
+ *
+ * Invalidates 'calendar-events' query on success to trigger refetch
+ */
+export const useCreateCalendarEvent = mutationHelpers.create<CreateCalendarEventInput>(
+  'calendar-create',
+  [['calendar-events']]
+);
