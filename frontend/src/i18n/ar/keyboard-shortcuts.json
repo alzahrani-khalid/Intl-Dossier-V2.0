@@ -79,7 +79,14 @@
     "submit": "إرسال",
     "cancel": "إلغاء",
     "search": "التركيز على البحث",
-    "escape": "إلغاء / إغلاق"
+    "escape": "إلغاء / إغلاق",
+    "navigateDown": "البطاقة التالية",
+    "navigateUp": "البطاقة السابقة",
+    "openCard": "فتح البطاقة",
+    "moveToTodo": "نقل إلى للتنفيذ",
+    "moveToInProgress": "نقل إلى قيد التنفيذ",
+    "moveToReview": "نقل إلى مراجعة",
+    "moveToDone": "نقل إلى مكتمل"
   },
 
   "footer": {

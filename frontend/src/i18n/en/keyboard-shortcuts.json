@@ -79,7 +79,14 @@
     "submit": "Submit",
     "cancel": "Cancel",
     "search": "Focus Search",
-    "escape": "Cancel / Close"
+    "escape": "Cancel / Close",
+    "navigateDown": "Next Card",
+    "navigateUp": "Previous Card",
+    "openCard": "Open Card",
+    "moveToTodo": "Move to To Do",
+    "moveToInProgress": "Move to In Progress",
+    "moveToReview": "Move to Review",
+    "moveToDone": "Move to Done"
   },
 
   "footer": {
