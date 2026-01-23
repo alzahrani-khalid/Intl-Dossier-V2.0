@@ -48,7 +48,10 @@ export const relationshipRepository = {
 
     let query = supabase
       .from('relationships')
-      .select('*', { count: 'exact' })
+      .select(
+        'id, relationship_type, source_module, source_entity_type, source_entity_id, source_display_name_en, source_display_name_ar, target_module, target_entity_type, target_entity_id, target_display_name_en, target_display_name_ar, strength, status, direction, notes, metadata, created_by, updated_by, created_at, updated_at',
+        { count: 'exact' },
+      )
       .order(sortBy, { ascending: sortDirection === 'asc' })
       .range(offset, offset + limit - 1)
 
@@ -117,7 +120,13 @@ export const relationshipRepository = {
    * Get a relationship by ID
    */
   async getById(id: string): Promise<Relationship> {
-    const { data, error } = await supabase.from('relationships').select('*').eq('id', id).single()
+    const { data, error } = await supabase
+      .from('relationships')
+      .select(
+        'id, relationship_type, source_module, source_entity_type, source_entity_id, source_display_name_en, source_display_name_ar, target_module, target_entity_type, target_entity_id, target_display_name_en, target_display_name_ar, strength, status, direction, notes, metadata, created_by, updated_by, created_at, updated_at',
+      )
+      .eq('id', id)
+      .single()
 
     if (error) {
       throw new Error(`Relationship not found: ${error.message}`)
@@ -136,7 +145,9 @@ export const relationshipRepository = {
   ): Promise<Relationship[]> {
     const { data, error } = await supabase
       .from('relationships')
-      .select('*')
+      .select(
+        'id, relationship_type, source_module, source_entity_type, source_entity_id, source_display_name_en, source_display_name_ar, target_module, target_entity_type, target_entity_id, target_display_name_en, target_display_name_ar, strength, status, direction, notes, metadata, created_by, updated_by, created_at, updated_at',
+      )
       .or(
         `and(source_module.eq.${moduleId},source_entity_type.eq.${entityType},source_entity_id.eq.${entityId}),and(target_module.eq.${moduleId},target_entity_type.eq.${entityType},target_entity_id.eq.${entityId})`,
       )
@@ -222,7 +233,9 @@ export const relationshipRepository = {
   async getHealthScore(relationshipId: string): Promise<RelationshipHealth | null> {
     const { data, error } = await supabase
       .from('relationship_health_scores')
-      .select('*')
+      .select(
+        'id, relationship_id, overall_score, health_level, trend, factors, alerts, last_interaction, next_scheduled_interaction, calculated_at',
+      )
       .eq('relationship_id', relationshipId)
       .single()
 
@@ -359,7 +372,9 @@ export const relationshipRepository = {
       // Get relationships for this entity
       let query = supabase
         .from('relationships')
-        .select('*')
+        .select(
+          'id, relationship_type, source_module, source_entity_type, source_entity_id, source_display_name_en, source_display_name_ar, target_module, target_entity_type, target_entity_id, target_display_name_en, target_display_name_ar, strength, status, direction, notes, metadata, created_by, updated_by, created_at, updated_at',
+        )
         .eq('status', 'active')
         .or(`source_entity_id.eq.${entityId},target_entity_id.eq.${entityId}`)
 

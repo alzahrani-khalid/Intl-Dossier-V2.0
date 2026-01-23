@@ -49,7 +49,10 @@ export const documentRepository = {
 
     let query = supabase
       .from('documents')
-      .select('*', { count: 'exact' })
+      .select(
+        'id, name_en, name_ar, description_en, description_ar, document_type, mime_type, file_size, file_path, storage_bucket, classification, version_number, is_latest_version, parent_document_id, checksum, tags, metadata, created_by, updated_by, created_at, updated_at, deleted_at',
+        { count: 'exact' },
+      )
       .order(sortBy, { ascending: sortDirection === 'asc' })
       .range(offset, offset + limit - 1)
 
@@ -140,7 +143,9 @@ export const documentRepository = {
   async getById(id: string): Promise<Document> {
     const { data, error } = await supabase
       .from('documents')
-      .select('*')
+      .select(
+        'id, name_en, name_ar, description_en, description_ar, document_type, mime_type, file_size, file_path, storage_bucket, classification, version_number, is_latest_version, parent_document_id, checksum, tags, metadata, created_by, updated_by, created_at, updated_at, deleted_at',
+      )
       .eq('id', id)
       .is('deleted_at', null)
       .single()
@@ -303,7 +308,9 @@ export const documentRepository = {
   async getVersions(documentId: string): Promise<DocumentVersion[]> {
     const { data, error } = await supabase
       .from('document_versions')
-      .select('*')
+      .select(
+        'id, document_id, version_number, file_path, file_size, checksum, change_summary, created_by, created_at',
+      )
       .eq('document_id', documentId)
       .order('version_number', { ascending: false })
 
@@ -320,7 +327,9 @@ export const documentRepository = {
   async getLinks(documentId: string): Promise<DocumentLink[]> {
     const { data, error } = await supabase
       .from('document_links')
-      .select('*')
+      .select(
+        'id, document_id, linked_module, linked_entity_type, linked_entity_id, link_type, notes, created_by, created_at',
+      )
       .eq('document_id', documentId)
 
     if (error) {
@@ -355,7 +364,9 @@ export const documentRepository = {
 
     const { data, error } = await supabase
       .from('documents')
-      .select('*')
+      .select(
+        'id, name_en, name_ar, description_en, description_ar, document_type, mime_type, file_size, file_path, storage_bucket, classification, version_number, is_latest_version, parent_document_id, checksum, tags, metadata, created_by, updated_by, created_at, updated_at, deleted_at',
+      )
       .in(
         'id',
         links.map((l) => l.document_id),
