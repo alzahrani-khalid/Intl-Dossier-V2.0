@@ -1,11 +1,40 @@
 /**
- * useCommitments Hooks v1.1
- * Feature: 031-commitments-management
+ * Commitment Management Hooks
+ * @module hooks/useCommitments
+ * @feature 031-commitments-management
  *
- * TanStack Query hooks for full commitment CRUD operations with:
- * - Infinite scroll pagination
+ * TanStack Query hooks for commitment CRUD operations with:
+ * - Standard and infinite scroll pagination
  * - Optimistic updates for status changes
  * - Cache invalidation on mutations
+ * - Evidence file uploads
+ * - Status history tracking
+ *
+ * @description
+ * This module provides React hooks for managing after-action commitments:
+ * - Query hooks for fetching commitments with filters and pagination
+ * - Mutation hooks for create, update, status changes, and cancellation
+ * - Status history tracking hooks
+ * - Evidence upload hooks with automatic cache updates
+ * - Infinite scroll support for lists
+ *
+ * @example
+ * // Fetch commitments with filters
+ * const { data } = useCommitments({
+ *   status: ['pending', 'in_progress'],
+ *   owner_user_id: userId
+ * });
+ *
+ * @example
+ * // Infinite scroll
+ * const { data, fetchNextPage } = useInfiniteCommitments({
+ *   status: ['pending']
+ * });
+ *
+ * @example
+ * // Update commitment status
+ * const { mutate } = useUpdateCommitmentStatus();
+ * mutate({ commitmentId: id, status: 'completed' });
  */
 
 import {
@@ -61,8 +90,34 @@ export interface UseCommitmentOptions {
 /**
  * Hook to fetch commitments list with standard pagination
  *
- * @param options - Hook options with filters
- * @returns TanStack Query result
+ * @description
+ * Fetches a paginated list of commitments with optional filtering by status,
+ * owner, dossier, and other criteria. Includes automatic refetch on window focus
+ * and periodic refresh every 2 minutes.
+ *
+ * @param options - Hook options with filters and enabled flag
+ * @param options.status - Filter by commitment status array
+ * @param options.owner_user_id - Filter by owner user ID
+ * @param options.dossier_id - Filter by dossier ID
+ * @param options.enabled - Whether to enable the query (default: true)
+ * @returns TanStack Query result with CommitmentsListResponse
+ *
+ * @example
+ * // Fetch all commitments
+ * const { data, isLoading } = useCommitments();
+ *
+ * @example
+ * // Filter by status
+ * const { data } = useCommitments({
+ *   status: ['pending', 'in_progress']
+ * });
+ *
+ * @example
+ * // User's commitments
+ * const { data } = useCommitments({
+ *   owner_user_id: userId,
+ *   enabled: !!userId
+ * });
  */
 export function useCommitments(options?: UseCommitmentsOptions) {
   const { enabled = true, ...filters } = options ?? {};
@@ -85,8 +140,30 @@ export function useCommitments(options?: UseCommitmentsOptions) {
 /**
  * Hook to fetch commitments with infinite scroll pagination
  *
- * @param options - Hook options with filters
- * @returns TanStack Infinite Query result
+ * @description
+ * Fetches commitments with cursor-based pagination for infinite scrolling.
+ * Automatically manages page params and provides fetchNextPage functionality.
+ * Uses 20 items per page by default.
+ *
+ * @param options - Hook options with filters and enabled flag
+ * @returns TanStack Infinite Query result with fetchNextPage and hasNextPage
+ *
+ * @example
+ * // Infinite scroll list
+ * const {
+ *   data,
+ *   fetchNextPage,
+ *   hasNextPage,
+ *   isFetchingNextPage
+ * } = useInfiniteCommitments();
+ *
+ * @example
+ * // With filters
+ * const { data, fetchNextPage } = useInfiniteCommitments({
+ *   status: ['pending'],
+ *   dossier_id: dossierId
+ * });
+ * // Call fetchNextPage() when scrolling near bottom
  */
 export function useInfiniteCommitments(options?: UseCommitmentsOptions) {
   const { enabled = true, ...filters } = options ?? {};

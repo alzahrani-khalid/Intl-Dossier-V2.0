@@ -1,8 +1,29 @@
 /**
- * useDeleteWorkItemDossierLink Hook
- * Feature: 035-dossier-context (Smart Dossier Context Inheritance)
+ * Work Item Dossier Link Deletion Hook
+ * @module hooks/useDeleteWorkItemDossierLink
+ * @feature 035-dossier-context
  *
- * TanStack Query mutation for deleting work item dossier links.
+ * TanStack Query mutation for deleting work item dossier links with:
+ * - Single link deletion
+ * - Automatic cache invalidation
+ * - Timeline update triggers
+ *
+ * @description
+ * Mutation hook for removing dossier links from work items. Automatically
+ * invalidates relevant caches including the work item's links and the
+ * dossier's timeline.
+ *
+ * @example
+ * // Delete a dossier link
+ * const { mutate } = useDeleteWorkItemDossierLink({
+ *   onSuccess: () => toast.success('Link removed')
+ * });
+ * mutate({
+ *   linkId: link.id,
+ *   workItemType: 'task',
+ *   workItemId: taskId,
+ *   dossierId: dossierId
+ * });
  */
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'

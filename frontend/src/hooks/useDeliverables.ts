@@ -1,6 +1,7 @@
 /**
- * useDeliverables Hooks
- * Feature: commitment-deliverables
+ * MoU Deliverables Hooks
+ * @module hooks/useDeliverables
+ * @feature commitment-deliverables
  *
  * TanStack Query hooks for MoU deliverable CRUD operations with:
  * - Pagination support
@@ -8,6 +9,29 @@
  * - Bulk operations
  * - Milestone management
  * - Health score tracking
+ *
+ * @description
+ * This module provides React hooks for managing MoU (Memorandum of Understanding)
+ * deliverables and milestones:
+ * - Query hooks for fetching deliverables with pagination
+ * - Mutation hooks for CRUD operations and bulk updates
+ * - Milestone management for tracking deliverable progress
+ * - Health score calculation for MoU compliance
+ * - Document attachment management
+ *
+ * @example
+ * // Fetch deliverables for MoU
+ * const { data } = useDeliverables({ mouId });
+ *
+ * @example
+ * // Create deliverable
+ * const { mutate } = useCreateDeliverable();
+ * mutate({ mou_id, title, deadline });
+ *
+ * @example
+ * // Bulk status update
+ * const { mutate } = useBulkUpdateDeliverableStatus();
+ * mutate({ deliverableIds: [id1, id2], status: 'completed' });
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'

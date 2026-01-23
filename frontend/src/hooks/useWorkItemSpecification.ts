@@ -1,10 +1,39 @@
 /**
- * Work Item Specification Hook
- *
- * Provides a React hook for building and using work item specifications
- * with TanStack Query integration.
- *
+ * Work Item Specification Hooks
  * @module hooks/useWorkItemSpecification
+ * @feature specification-pattern
+ *
+ * React hooks for building and using work item specifications with:
+ * - TanStack Query integration
+ * - Fluent specification builder API
+ * - Client-side and server-side filtering
+ * - Preset specifications for common views
+ *
+ * @description
+ * This module provides React hooks for applying the Specification pattern
+ * to work item queries:
+ * - Main hook for fetching work items with specification-based filtering
+ * - Builder hook for constructing complex filter specifications
+ * - Preset specifications for common views (My Tasks, Overdue Items, etc.)
+ * - Automatic conversion between filters and Supabase queries
+ * - Support for both client-side and server-side filtering
+ *
+ * @example
+ * // Use specification for filtering
+ * const { items, specification } = useWorkItemSpecification({
+ *   sources: ['task'],
+ *   isOverdue: true
+ * });
+ *
+ * @example
+ * // Build specification fluently
+ * const { specification, addFilter } = useWorkItemSpecificationBuilder();
+ * addFilter('source', ['task']);
+ * addFilter('priority', ['urgent']);
+ *
+ * @example
+ * // Use preset specification
+ * const { items } = useMyTasksSpecification(userId);
  */
 
 import { useMemo, useCallback, useState } from 'react'

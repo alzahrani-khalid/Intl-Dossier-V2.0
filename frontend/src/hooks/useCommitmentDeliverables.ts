@@ -1,11 +1,37 @@
 /**
- * useCommitmentDeliverables Hooks
- * Feature: Interactive timeline for breaking commitments into trackable milestones
+ * Commitment Deliverables Hooks
+ * @module hooks/useCommitmentDeliverables
+ * @feature 031-commitments-management
  *
  * TanStack Query hooks for commitment deliverables with:
  * - List queries with automatic refresh
  * - CRUD mutations with cache invalidation
  * - Optimistic updates for status/progress changes
+ * - Bulk operations for batch creation
+ * - Progress tracking and summary statistics
+ *
+ * @description
+ * This module provides React hooks for breaking commitments into trackable
+ * milestones (deliverables):
+ * - Query hooks for fetching deliverables and progress
+ * - Mutation hooks for create, update, delete, reorder
+ * - Bulk creation for AI-generated or template-based deliverables
+ * - Status and progress update hooks with optimistic UI
+ * - Summary statistics for commitment completion tracking
+ *
+ * @example
+ * // Fetch deliverables for commitment
+ * const { data: deliverables } = useCommitmentDeliverables(commitmentId);
+ *
+ * @example
+ * // Create deliverable
+ * const { mutate } = useCreateDeliverable();
+ * mutate({ commitment_id, title, due_date });
+ *
+ * @example
+ * // Update progress
+ * const { mutate } = useUpdateDeliverableProgress();
+ * mutate({ deliverableId, progress: 75 });
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'

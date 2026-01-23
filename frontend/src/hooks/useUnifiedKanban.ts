@@ -1,15 +1,50 @@
 /**
- * useUnifiedKanban - Hook for fetching and managing Kanban data
- * Feature: 034-unified-kanban
+ * Unified Kanban Hooks
+ * @module hooks/useUnifiedKanban
+ * @feature 034-unified-kanban
  *
- * Provides:
- * - Fetch work items grouped by column
+ * TanStack Query hooks for unified Kanban board management with:
+ * - Context-aware work item fetching (by dossier, engagement, or global)
+ * - Column grouping by status or workflow stage
  * - Status update mutations with optimistic updates
- * - Real-time subscriptions
+ * - Real-time subscriptions for live updates
+ * - Drag-and-drop support with cache updates
  *
- * IMPORTANT: Status values written to the database must match enum definitions:
+ * @description
+ * This module provides React hooks for managing work items in a Kanban board view:
+ * - Query hooks for fetching work items grouped by columns
+ * - Mutation hooks for status updates with optimistic UI
+ * - Realtime subscription hooks for live board updates
+ * - Cache invalidation and column-specific data management
+ *
+ * @important
+ * Status values written to the database must match enum definitions:
  * - ticket_status: draft, submitted, triaged, assigned, in_progress, converted, closed, merged
  * - task_status: pending, in_progress, completed, cancelled
+ *
+ * @example
+ * // Dossier-specific Kanban
+ * const { data, isLoading } = useUnifiedKanban({
+ *   contextType: 'dossier',
+ *   contextId: dossierId,
+ *   columnMode: 'status'
+ * });
+ *
+ * @example
+ * // Global Kanban with source filter
+ * const { data } = useUnifiedKanban({
+ *   contextType: 'global',
+ *   sourceFilter: ['task', 'commitment']
+ * });
+ *
+ * @example
+ * // Update work item status
+ * const { mutate } = useUpdateWorkItemStatus();
+ * mutate({
+ *   workItemId: item.id,
+ *   source: item.source,
+ *   newStatus: 'in_progress'
+ * });
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -95,6 +130,23 @@ interface KanbanRpcRow {
 // Query Keys
 // ============================================
 
+/**
+ * Query Keys Factory for unified Kanban queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys include context, filters, and column mode for granular invalidation.
+ *
+ * @example
+ * // Invalidate all Kanban queries
+ * queryClient.invalidateQueries({ queryKey: kanbanKeys.all });
+ *
+ * @example
+ * // Invalidate specific context
+ * queryClient.invalidateQueries({
+ *   queryKey: kanbanKeys.list({ contextType: 'dossier', contextId: 'uuid' })
+ * });
+ */
 export const kanbanKeys = {
   all: ['unified-kanban'] as const,
   list: (params: UseUnifiedKanbanOptions) => [...kanbanKeys.all, 'list', params] as const,
@@ -154,6 +206,47 @@ function groupItemsByColumn(items: WorkItem[]): Record<string, WorkItem[]> {
 // Main Hook
 // ============================================
 
+/**
+ * Hook to fetch and manage Kanban board data
+ *
+ * @description
+ * Fetches work items grouped by columns with context-aware filtering. Supports
+ * multiple column modes (status, workflow stage) and source filtering. Data is
+ * cached and automatically refetched on window focus.
+ *
+ * @param options - Configuration options
+ * @param options.contextType - Context for filtering ('global', 'dossier', 'engagement', 'user')
+ * @param options.contextId - ID of the context entity (required for non-global contexts)
+ * @param options.columnMode - How to group columns ('status' or 'workflow_stage')
+ * @param options.sourceFilter - Filter by work sources (['task', 'commitment', 'intake'])
+ * @param options.limitPerColumn - Max items per column (default: 50)
+ * @param options.enabled - Whether to enable the query (default: true)
+ * @returns TanStack Query result with KanbanData
+ *
+ * @example
+ * // Dossier-specific Kanban
+ * const { data, isLoading } = useUnifiedKanban({
+ *   contextType: 'dossier',
+ *   contextId: dossierId,
+ *   columnMode: 'status'
+ * });
+ *
+ * @example
+ * // Global Kanban with filters
+ * const { data } = useUnifiedKanban({
+ *   contextType: 'global',
+ *   sourceFilter: ['task'],
+ *   limitPerColumn: 100
+ * });
+ *
+ * @example
+ * // User's personal Kanban
+ * const { data } = useUnifiedKanban({
+ *   contextType: 'user',
+ *   contextId: userId,
+ *   columnMode: 'workflow_stage'
+ * });
+ */
 export function useUnifiedKanban(options: UseUnifiedKanbanOptions) {
   const {
     contextType,
@@ -254,6 +347,39 @@ function mapToValidIntakeStatus(columnKeyOrStatus: string): TicketStatus {
   }
 }
 
+/**
+ * Hook to update work item status in Kanban board
+ *
+ * @description
+ * Mutation hook for updating work item status with source-specific logic.
+ * Handles validation, status mapping for intake tickets, and cache invalidation.
+ * Shows toast notifications on success/error.
+ *
+ * @returns TanStack Mutation result
+ *
+ * @example
+ * // Update task status
+ * const { mutate } = useUnifiedKanbanStatusUpdate();
+ * mutate({
+ *   itemId: task.id,
+ *   source: 'task',
+ *   newStatus: 'in_progress',
+ *   newWorkflowStage: 'doing'
+ * });
+ *
+ * @example
+ * // Update intake ticket status (auto-mapped to valid enum)
+ * mutate({
+ *   itemId: ticket.id,
+ *   source: 'intake',
+ *   newStatus: 'done' // Mapped to 'converted'
+ * });
+ *
+ * @example
+ * // With optimistic updates
+ * const { mutate, isPending } = useUnifiedKanbanStatusUpdate();
+ * // UI can show loading state with isPending
+ */
 export function useUnifiedKanbanStatusUpdate() {
   const queryClient = useQueryClient()
   const { toast } = useToast()
@@ -405,6 +531,36 @@ export function useUnifiedKanbanStatusUpdate() {
 // Realtime Subscription Hook
 // ============================================
 
+/**
+ * Hook to subscribe to realtime Kanban board updates
+ *
+ * @description
+ * Subscribes to Postgres changes on tasks, aa_commitments, and intake_tickets tables
+ * and automatically invalidates Kanban queries with 300ms debouncing. Context-aware
+ * filtering ensures only relevant updates trigger refetches.
+ *
+ * @param contextType - Context for filtering ('global', 'dossier', 'engagement', 'user')
+ * @param contextId - ID of the context entity (null for global)
+ * @param userId - Current user ID for filtering user-specific updates
+ * @param enabled - Whether to enable the subscription (default: true)
+ *
+ * @example
+ * // Subscribe to dossier-specific board updates
+ * useUnifiedKanbanRealtime('dossier', dossierId, userId);
+ *
+ * @example
+ * // Conditional subscription
+ * useUnifiedKanbanRealtime(
+ *   'global',
+ *   null,
+ *   userId,
+ *   isOnline && shouldSync
+ * );
+ *
+ * @example
+ * // User's personal board updates
+ * useUnifiedKanbanRealtime('user', userId, userId);
+ */
 export function useUnifiedKanbanRealtime(
   contextType: KanbanContextType,
   contextId: string | null,

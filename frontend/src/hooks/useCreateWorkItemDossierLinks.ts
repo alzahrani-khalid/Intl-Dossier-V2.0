@@ -1,9 +1,38 @@
 /**
- * useCreateWorkItemDossierLinks Hook
- * Feature: 035-dossier-context (Smart Dossier Context Inheritance)
+ * Work Item Dossier Links Creation Hook
+ * @module hooks/useCreateWorkItemDossierLinks
+ * @feature 035-dossier-context
  *
- * TanStack Query mutation for creating work item dossier links
- * via the work-item-dossiers Edge Function.
+ * TanStack Query mutation for creating work item dossier links with:
+ * - Batch creation support
+ * - Inheritance source tracking
+ * - Primary link designation
+ * - Automatic cache invalidation
+ *
+ * @description
+ * Mutation hook for creating dossier links for work items after creation.
+ * Links work items to dossiers with full inheritance metadata tracking.
+ * Automatically invalidates relevant caches including timeline queries.
+ *
+ * @example
+ * // Create links after task creation
+ * const { mutateAsync } = useCreateWorkItemDossierLinks();
+ * await mutateAsync({
+ *   work_item_type: 'task',
+ *   work_item_id: taskId,
+ *   dossier_ids: [dossierId],
+ *   inheritance_source: 'direct'
+ * });
+ *
+ * @example
+ * // Create inherited links from engagement
+ * mutateAsync({
+ *   work_item_type: 'commitment',
+ *   work_item_id: commitmentId,
+ *   dossier_ids: engagementDossierIds,
+ *   inheritance_source: 'engagement',
+ *   inherited_from_id: engagementId
+ * });
  */
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'

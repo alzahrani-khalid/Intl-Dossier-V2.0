@@ -1,3 +1,36 @@
+/**
+ * After-Action Record Hooks
+ * @module hooks/useAfterAction
+ * @feature 022-after-action-structured
+ *
+ * TanStack Query hooks for after-action record operations with:
+ * - CRUD operations for after-action records
+ * - Decisions, commitments, risks, and follow-up actions management
+ * - Publishing and editing workflows
+ * - Version history tracking
+ *
+ * @description
+ * This module provides React hooks for managing after-action records and their
+ * associated entities (decisions, commitments, risks, follow-ups):
+ * - Query hooks for fetching records and lists
+ * - Mutation hooks for create, update, publish, and edit operations
+ * - Automatic cache invalidation and optimistic updates
+ *
+ * @example
+ * // Fetch after-action record
+ * const { data } = useAfterAction(id);
+ *
+ * @example
+ * // Create new record
+ * const { mutate } = useCreateAfterAction();
+ * mutate({ engagement_id, notes, decisions });
+ *
+ * @example
+ * // Publish record
+ * const { mutate } = usePublishAfterAction();
+ * mutate({ id, version });
+ */
+
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 

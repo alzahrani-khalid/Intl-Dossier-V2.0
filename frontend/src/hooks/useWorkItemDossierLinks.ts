@@ -1,9 +1,27 @@
 /**
- * useWorkItemDossierLinks Hook
- * Feature: 035-dossier-context (Smart Dossier Context Inheritance)
+ * Work Item Dossier Links Query Hook
+ * @module hooks/useWorkItemDossierLinks
+ * @feature 035-dossier-context
  *
- * TanStack Query hook for fetching work item dossier links.
- * Used to display inherited dossier context in detail views.
+ * TanStack Query hook for fetching work item dossier links with:
+ * - Automatic dossier info inclusion
+ * - Inheritance source tracking
+ * - Primary link identification
+ *
+ * @description
+ * Query hook for fetching dossier links associated with a work item.
+ * Used to display inherited dossier context in detail views with full
+ * dossier information and inheritance metadata.
+ *
+ * @example
+ * // Fetch links for a task
+ * const { links } = useWorkItemDossierLinks('task', taskId);
+ *
+ * @example
+ * // Conditional fetching
+ * const { links, isLoading } = useWorkItemDossierLinks('commitment', id, {
+ *   enabled: !!id
+ * });
  */
 
 import { useQuery, type UseQueryOptions } from '@tanstack/react-query'

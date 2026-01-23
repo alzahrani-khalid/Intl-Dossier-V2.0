@@ -1,26 +1,91 @@
-// Feature 032: Unified Work Management Realtime Subscription Hook
+/**
+ * Unified Work Realtime Subscription Hook
+ * @module hooks/useUnifiedWorkRealtime
+ * @feature 032-unified-work-management
+ *
+ * Realtime subscription hooks for unified work management with:
+ * - Automatic cache invalidation on data changes
+ * - Debounced invalidation to prevent excessive refetches
+ * - User-specific filtering
+ * - Multi-table listening (tasks, commitments, intake tickets)
+ *
+ * @description
+ * This module provides React hooks for subscribing to real-time updates across
+ * all work item sources:
+ * - Listens to Postgres changes on tasks, aa_commitments, and intake_tickets
+ * - Automatically invalidates relevant queries with 300ms debouncing
+ * - Supports user-specific filtering for personalized updates
+ * - Provides manual invalidation trigger
+ * - Includes helper hook for getting current user ID
+ *
+ * @example
+ * // Subscribe to all work item changes for current user
+ * const userId = useCurrentUserId();
+ * useUnifiedWorkRealtime({ userId });
+ *
+ * @example
+ * // Subscribe with custom debounce
+ * useUnifiedWorkRealtime({ userId, debounceMs: 500 });
+ *
+ * @example
+ * // Manual invalidation
+ * const { forceInvalidate } = useUnifiedWorkRealtime({ userId });
+ * // Later: forceInvalidate();
+ */
+
 import { useEffect, useRef, useCallback, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
 import { unifiedWorkKeys, useInvalidateUnifiedWork } from './useUnifiedWork'
 import type { RealtimeChannel } from '@supabase/supabase-js'
 
-// Debounce time to prevent excessive invalidations (300ms as per spec)
+/**
+ * Default debounce time to prevent excessive invalidations (300ms as per spec)
+ */
 const DEBOUNCE_MS = 300
 
+/**
+ * Options for useUnifiedWorkRealtime hook
+ */
 interface UseUnifiedWorkRealtimeOptions {
-  /** User ID to filter events for */
+  /** User ID to filter events for (optional, omit to listen to all events) */
   userId?: string
-  /** Whether to enable the subscription */
+  /** Whether to enable the subscription (default: true) */
   enabled?: boolean
-  /** Custom debounce time in ms */
+  /** Custom debounce time in milliseconds (default: 300ms) */
   debounceMs?: number
 }
 
 /**
  * Hook to subscribe to realtime updates for work items
- * Listens to changes on aa_commitments, tasks, and intake_tickets tables
- * and invalidates relevant queries with debouncing
+ *
+ * @description
+ * Subscribes to Postgres changes on tasks, aa_commitments, and intake_tickets tables
+ * and automatically invalidates relevant TanStack Query caches. Uses debouncing to
+ * prevent excessive refetches when multiple changes occur in rapid succession.
+ *
+ * @param options - Configuration options
+ * @param options.userId - User ID to filter events for (optional)
+ * @param options.enabled - Whether to enable the subscription (default: true)
+ * @param options.debounceMs - Custom debounce time in ms (default: 300)
+ * @returns Object with forceInvalidate method
+ *
+ * @example
+ * // Basic usage - subscribe to all user's work items
+ * const userId = useCurrentUserId();
+ * useUnifiedWorkRealtime({ userId });
+ *
+ * @example
+ * // Conditional subscription
+ * useUnifiedWorkRealtime({
+ *   userId,
+ *   enabled: isOnline && shouldSync
+ * });
+ *
+ * @example
+ * // Force invalidation on demand
+ * const { forceInvalidate } = useUnifiedWorkRealtime({ userId });
+ * // Later: forceInvalidate();
  */
 export function useUnifiedWorkRealtime({
   userId,
@@ -147,9 +212,24 @@ export function useUnifiedWorkRealtime({
 }
 
 /**
- * Hook to get the current user ID for realtime filtering
- * Uses state instead of ref to trigger re-renders and ensure
- * the subscription is created with the correct userId filter
+ * Hook to get the current authenticated user ID
+ *
+ * @description
+ * Fetches and tracks the current authenticated user's ID with automatic updates
+ * on auth state changes. Uses state instead of ref to trigger re-renders and
+ * ensure subscriptions are created with the correct userId filter.
+ *
+ * @returns The current user's ID or undefined if not authenticated
+ *
+ * @example
+ * // Get current user ID for realtime filtering
+ * const userId = useCurrentUserId();
+ * useUnifiedWorkRealtime({ userId });
+ *
+ * @example
+ * // Use for conditional rendering
+ * const userId = useCurrentUserId();
+ * if (!userId) return <LoginPrompt />;
  */
 export function useCurrentUserId() {
   const [userId, setUserId] = useState<string | undefined>()

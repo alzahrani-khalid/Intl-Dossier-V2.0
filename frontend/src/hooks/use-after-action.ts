@@ -1,8 +1,35 @@
 /**
- * TanStack Query Hooks for After-Action Operations
- * Feature: 022-after-action-structured
+ * After-Action Operations Hooks (Alternative API)
+ * @module hooks/use-after-action
+ * @feature 022-after-action-structured
  *
- * Custom hooks for managing after-action data with caching, optimistic updates, and error handling.
+ * TanStack Query hooks for after-action operations with:
+ * - Optimistic updates and rollback on error
+ * - Publishing workflow with notification support
+ * - Edit request and approval system
+ * - Version history tracking
+ *
+ * @description
+ * This module provides an alternative set of React hooks for managing after-action
+ * records using the after-action-api service layer:
+ * - Query hooks with granular cache control
+ * - Mutation hooks with optimistic updates
+ * - Publishing and edit approval workflows
+ * - Automatic cache invalidation strategies
+ *
+ * @example
+ * // Fetch after-action list
+ * const { data } = useAfterActionList({ dossier_id: dossierId });
+ *
+ * @example
+ * // Update with optimistic UI
+ * const { mutate } = useUpdateAfterAction();
+ * mutate({ id, data: { notes: 'Updated' } });
+ *
+ * @example
+ * // Publish with notifications
+ * const { mutate } = usePublishAfterAction();
+ * mutate({ id, version, sendNotifications: true });
  */
 
 import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
