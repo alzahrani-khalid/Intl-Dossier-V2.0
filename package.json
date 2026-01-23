@@ -5,7 +5,7 @@
   "private": true,
   "packageManager": "pnpm@10.18.3",
   "engines": {
-    "node": ">=18.0.0",
+    "node": ">=20.19.0",
     "pnpm": ">=10.0.0",
     "npm": "please-use-pnpm",
     "yarn": "please-use-pnpm"
@@ -21,11 +21,12 @@
     "build": "turbo run build",
     "test": "turbo run test",
     "test:coverage": "turbo run test:coverage",
+    "test:e2e": "turbo run test:e2e",
     "lint": "turbo run lint",
-    "typecheck": "turbo run typecheck",
+    "typecheck": "turbo run type-check",
     "prepare": "husky",
     "db:setup": "pnpm run db:migrate && pnpm run db:seed",
-    "db:migrate": "cd backend && pnpm run migrate:up",
+    "db:migrate": "cd backend && pnpm run migrate",
     "db:rollback": "cd backend && pnpm run migrate:down",
     "db:seed": "cd backend && pnpm run seed",
     "db:reset": "pnpm run db:rollback && pnpm run db:migrate && pnpm run db:seed",

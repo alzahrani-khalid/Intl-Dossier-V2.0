@@ -199,7 +199,7 @@ export function MilestonePlannerEmptyState({
             <div className="h-20 w-20 sm:h-24 sm:w-24 rounded-full bg-gradient-to-br from-primary/20 to-primary/5 flex items-center justify-center">
               <Target className="h-10 w-10 sm:h-12 sm:w-12 text-primary" />
             </div>
-            <div className="absolute -bottom-1 -right-1 sm:-bottom-2 sm:-right-2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-primary flex items-center justify-center">
+            <div className="absolute -bottom-1 -end-1 sm:-bottom-2 sm:-end-2 h-8 w-8 sm:h-10 sm:w-10 rounded-full bg-primary flex items-center justify-center">
               <Plus className="h-4 w-4 sm:h-5 sm:w-5 text-primary-foreground" />
             </div>
           </div>
