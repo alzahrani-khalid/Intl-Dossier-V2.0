@@ -2655,43 +2655,543 @@ RealtimeManager.subscribe('dossiers', callback)
 
 ### RTL Layout Broken
 
-**Symptoms:**
-- Arabic text displays left-aligned
-- Icons not flipped
-- Margins/padding incorrect
+Arabic RTL (Right-to-Left) layout issues are common when using directional CSS properties instead of logical properties. This comprehensive guide covers detection, debugging, and fixing RTL layout bugs.
 
-**Solution:**
+#### Understanding RTL Layout Requirements
+
+**Core Principle:** Use **logical properties** that adapt to text direction automatically, never use directional properties.
+
+**Why Logical Properties?**
+- Directional properties (`left`, `right`, `ml-*`, `mr-*`) are hardcoded and don't flip in RTL
+- Logical properties (`start`, `end`, `ms-*`, `me-*`) automatically adapt based on `dir` attribute
+- Ensures consistent layout across LTR (English) and RTL (Arabic) languages
+
+#### Symptoms of RTL Layout Bugs
+
+**Visual Indicators:**
+- ✗ Arabic text displays left-aligned instead of right-aligned
+- ✗ Icons (arrows, chevrons) point wrong direction in Arabic
+- ✗ Margins/padding appear on wrong side (e.g., left padding instead of right)
+- ✗ Navigation menus start from left instead of right
+- ✗ Modal/dialog close buttons on wrong side
+- ✗ Form labels misaligned with inputs
+- ✗ Border radius on wrong corners
+- ✗ Dropdowns/tooltips positioned incorrectly
+- ✗ Flexbox/grid items in wrong order
+
+#### Root Cause Analysis
+
+**Common Causes:**
+1. Using directional Tailwind classes (`ml-*`, `mr-*`, `pl-*`, `pr-*`)
+2. Missing `dir` attribute on containers
+3. Hard-coded CSS with `left`/`right` properties
+4. Icons not flipped for RTL context
+5. Third-party components without RTL support
+6. Absolute positioning with `left`/`right` instead of `start`/`end`
+
+#### RTL-Safe Tailwind Classes Reference
+
+**MANDATORY:** Always use logical properties. Never use directional properties.
+
+| ❌ Avoid       | ✅ Use Instead  | Description              |
+|---------------|----------------|--------------------------|
+| `ml-*`        | `ms-*`         | Margin start             |
+| `mr-*`        | `me-*`         | Margin end               |
+| `pl-*`        | `ps-*`         | Padding start            |
+| `pr-*`        | `pe-*`         | Padding end              |
+| `left-*`      | `start-*`      | Position start           |
+| `right-*`     | `end-*`        | Position end             |
+| `text-left`   | `text-start`   | Text align start         |
+| `text-right`  | `text-end`     | Text align end           |
+| `rounded-l-*` | `rounded-s-*`  | Border radius start      |
+| `rounded-r-*` | `rounded-e-*`  | Border radius end        |
+| `border-l-*`  | `border-s-*`   | Border start             |
+| `border-r-*`  | `border-e-*`   | Border end               |
+| `divide-x`    | Use flexbox    | Dividers (no RTL support)|
+
+#### Debugging Procedure
+
+**Step 1: Enable Arabic Language**
+
+```typescript
+// In browser console
+localStorage.setItem('i18nextLng', 'ar')
+location.reload()
+
+// Or use language switcher in UI
+```
+
+**Step 2: Inspect Layout Issues**
+
+```bash
+# Check for directional classes in codebase
+grep -r "ml-\|mr-\|pl-\|pr-\|text-left\|text-right" frontend/src/
+
+# Check for hardcoded CSS
+grep -r "margin-left\|margin-right\|padding-left\|padding-right" frontend/src/
+
+# Look for missing dir attributes
+grep -r "className=" frontend/src/ | grep -v "dir="
+```
+
+**Step 3: Verify RTL Context Detection**
 
 ```tsx
-// 1. Use logical properties (ALWAYS)
-// Bad:
-<div className="ml-4 text-left">
-
-// Good:
-<div className="ms-4 text-start">
-
-// 2. Flip directional icons
+// In component
 import { useTranslation } from 'react-i18next'
 
 const { i18n } = useTranslation()
-const isRTL = i18n.language === 'ar'
+console.log('Current language:', i18n.language)
+console.log('Is RTL:', i18n.language === 'ar')
 
-<ChevronRight className={isRTL ? 'rotate-180' : ''} />
+// Check HTML dir attribute
+console.log('Document dir:', document.documentElement.dir) // Should be 'rtl'
+```
 
-// 3. Set dir attribute
-<div dir={isRTL ? 'rtl' : 'ltr'}>
-  {content}
+**Step 4: Test Logical Properties**
+
+```tsx
+// Create test component
+function RTLTest() {
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  return (
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="p-4">
+      <div className="ms-8 bg-blue-500 text-white p-4">
+        Margin start (should be right in RTL)
+      </div>
+      <div className="me-8 bg-green-500 text-white p-4">
+        Margin end (should be left in RTL)
+      </div>
+    </div>
+  )
+}
+```
+
+#### Comprehensive Solutions
+
+##### Solution 1: Convert Directional to Logical Properties
+
+**Bad (Directional):**
+```tsx
+// ❌ Will break in RTL
+<div className="ml-4 mr-2 pl-6 pr-3 text-left border-l-2 rounded-l-lg">
+  <button className="absolute right-4">Close</button>
 </div>
+```
 
-// 4. Check Tailwind config
+**Good (Logical):**
+```tsx
+// ✅ RTL-safe
+<div className="ms-4 me-2 ps-6 pe-3 text-start border-s-2 rounded-s-lg">
+  <button className="absolute end-4">Close</button>
+</div>
+```
+
+##### Solution 2: Flip Directional Icons
+
+**Icons that must flip in RTL:**
+- Arrows: `→` `←` `↗` `↖` `↘` `↙`
+- Chevrons: `<` `>` `«` `»`
+- Navigation: Back, Forward, Next, Previous
+- Directional indicators: Sort arrows, expand/collapse
+
+**Implementation:**
+
+```tsx
+import { useTranslation } from 'react-i18next'
+import { ChevronRight, ArrowRight, ChevronLeft, ArrowLeft } from 'lucide-react'
+
+function NavigationButton() {
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  return (
+    <button className="flex items-center gap-2">
+      {/* Flip icon in RTL */}
+      <ChevronRight className={isRTL ? 'rotate-180' : ''} />
+      <span>Next</span>
+    </button>
+  )
+}
+
+// Better: Use conditional icons
+function BetterNavigationButton() {
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  const NextIcon = isRTL ? ChevronLeft : ChevronRight
+  const BackIcon = isRTL ? ChevronRight : ChevronLeft
+
+  return (
+    <>
+      <button>
+        <BackIcon /> {t('back')}
+      </button>
+      <button>
+        {t('next')} <NextIcon />
+      </button>
+    </>
+  )
+}
+```
+
+##### Solution 3: Set dir Attribute Correctly
+
+**Global dir Setting:**
+
+```tsx
+// App.tsx or _app.tsx
+import { useEffect } from 'react'
+import { useTranslation } from 'react-i18next'
+
+function App() {
+  const { i18n } = useTranslation()
+
+  useEffect(() => {
+    // Set dir on document root
+    const direction = i18n.language === 'ar' ? 'rtl' : 'ltr'
+    document.documentElement.dir = direction
+    document.documentElement.lang = i18n.language
+  }, [i18n.language])
+
+  return <RouterProvider />
+}
+```
+
+**Component-Level dir:**
+
+```tsx
+// For isolated RTL components (modals, dialogs)
+function Modal({ children }) {
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  return (
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="modal">
+      {children}
+    </div>
+  )
+}
+```
+
+##### Solution 4: Fix Tailwind Configuration
+
+**Enable RTL Support:**
+
+```javascript
 // tailwind.config.js
 module.exports = {
-  // Enable RTL support
+  content: ['./src/**/*.{js,jsx,ts,tsx}'],
+  theme: {
+    extend: {},
+  },
   plugins: [
+    // Option 1: Use tailwindcss-rtl plugin
     require('tailwindcss-rtl'),
+
+    // Option 2: Use tailwindcss-logical plugin (recommended)
+    require('tailwindcss-logical'),
   ],
 }
 ```
+
+**Install Plugin:**
+
+```bash
+# Option 1: tailwindcss-rtl
+pnpm add -D tailwindcss-rtl
+
+# Option 2: tailwindcss-logical (better support for logical properties)
+pnpm add -D tailwindcss-logical
+```
+
+##### Solution 5: Handle Third-Party Components
+
+**Components without RTL support:**
+
+```tsx
+// Wrap with dir override
+import { DatePicker } from 'third-party-library'
+
+function RTLDatePicker(props) {
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  return (
+    <div dir={isRTL ? 'rtl' : 'ltr'}>
+      <DatePicker
+        {...props}
+        locale={isRTL ? 'ar' : 'en'}
+        // Override positioning
+        popoverProps={{
+          align: isRTL ? 'end' : 'start'
+        }}
+      />
+    </div>
+  )
+}
+```
+
+##### Solution 6: RTL-Safe Flexbox & Grid
+
+**Flexbox Direction:**
+
+```tsx
+// ❌ Bad: Hardcoded flex direction
+<div className="flex flex-row">
+  <div>First</div>
+  <div>Second</div>
+</div>
+
+// ✅ Good: Uses logical order (automatically reverses in RTL)
+<div className="flex flex-row" dir={isRTL ? 'rtl' : 'ltr'}>
+  <div>First</div>
+  <div>Second</div>
+</div>
+
+// ✅ Better: Use flex-row-reverse conditionally if needed
+<div className={`flex ${isRTL ? 'flex-row-reverse' : 'flex-row'}`}>
+  <div>First</div>
+  <div>Second</div>
+</div>
+```
+
+**Grid Template Areas:**
+
+```tsx
+// ❌ Bad: Hardcoded positions
+<div className="grid grid-cols-[200px_1fr]">
+  <aside>Sidebar</aside>
+  <main>Content</main>
+</div>
+
+// ✅ Good: Reverse in RTL
+<div className={`grid ${isRTL ? 'grid-cols-[1fr_200px]' : 'grid-cols-[200px_1fr]'}`}>
+  <aside className={isRTL ? 'order-2' : 'order-1'}>Sidebar</aside>
+  <main className={isRTL ? 'order-1' : 'order-2'}>Content</main>
+</div>
+```
+
+#### Common RTL Layout Patterns
+
+##### Pattern 1: Navigation Menu
+
+```tsx
+function NavMenu() {
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  return (
+    <nav dir={isRTL ? 'rtl' : 'ltr'} className="flex gap-4">
+      {/* Links automatically order correctly with dir */}
+      <a href="/" className="px-4">{t('home')}</a>
+      <a href="/about" className="px-4">{t('about')}</a>
+      <a href="/contact" className="px-4">{t('contact')}</a>
+    </nav>
+  )
+}
+```
+
+##### Pattern 2: Form Layout
+
+```tsx
+function FormField({ label, children }) {
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  return (
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="flex flex-col gap-2">
+      <label className="text-start text-sm font-medium">
+        {label}
+      </label>
+      {children}
+    </div>
+  )
+}
+```
+
+##### Pattern 3: Modal with Close Button
+
+```tsx
+function Modal({ title, onClose, children }) {
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  return (
+    <div dir={isRTL ? 'rtl' : 'ltr'} className="modal">
+      <div className="modal-header flex justify-between items-center p-4">
+        <h2 className="text-start">{title}</h2>
+        <button
+          onClick={onClose}
+          className="absolute top-4 end-4" // end-4, not right-4
+        >
+          <X />
+        </button>
+      </div>
+      <div className="modal-body p-4">{children}</div>
+    </div>
+  )
+}
+```
+
+##### Pattern 4: List with Icons
+
+```tsx
+function ListItem({ icon: Icon, text }) {
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
+
+  return (
+    <li className="flex items-center gap-3" dir={isRTL ? 'rtl' : 'ltr'}>
+      <Icon className="shrink-0" />
+      <span className="text-start">{text}</span>
+    </li>
+  )
+}
+```
+
+#### Testing RTL Layouts
+
+**Manual Testing Checklist:**
+
+```bash
+# 1. Switch to Arabic
+# 2. Check each of these elements:
+
+✅ Text alignment (right-aligned in RTL)
+✅ Margins and padding (flipped correctly)
+✅ Icons (directional icons flipped)
+✅ Navigation (menus flow right-to-left)
+✅ Forms (labels aligned correctly)
+✅ Modals (close button on correct side)
+✅ Dropdowns (positioned correctly)
+✅ Tooltips (positioned correctly)
+✅ Scrollbars (on left side in RTL)
+✅ Tabs (order correct)
+```
+
+**Automated Testing:**
+
+```typescript
+// RTL layout test
+import { render } from '@testing-library/react'
+import { I18nextProvider } from 'react-i18next'
+import i18n from '@/i18n/config'
+
+describe('RTL Layout', () => {
+  beforeEach(() => {
+    i18n.changeLanguage('ar')
+  })
+
+  it('sets dir=rtl on container', () => {
+    const { container } = render(<MyComponent />)
+    expect(container.firstChild).toHaveAttribute('dir', 'rtl')
+  })
+
+  it('uses logical properties for margins', () => {
+    const { container } = render(<MyComponent />)
+    const element = container.querySelector('.my-element')
+    expect(element).toHaveClass('ms-4') // Not ml-4
+  })
+
+  it('flips directional icons', () => {
+    const { container } = render(<NavigationButton />)
+    const icon = container.querySelector('svg')
+    expect(icon).toHaveClass('rotate-180')
+  })
+})
+```
+
+#### Performance Considerations
+
+**Avoid Runtime Direction Checks:**
+
+```tsx
+// ❌ Bad: Recalculates on every render
+function Component() {
+  const { i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar' // Runs every render
+
+  return <div className={isRTL ? 'flex-row-reverse' : 'flex-row'} />
+}
+
+// ✅ Good: Use memo or context
+const RTLContext = createContext(false)
+
+function RTLProvider({ children }) {
+  const { i18n } = useTranslation()
+  const isRTL = useMemo(() => i18n.language === 'ar', [i18n.language])
+
+  return <RTLContext.Provider value={isRTL}>{children}</RTLContext.Provider>
+}
+
+function Component() {
+  const isRTL = useContext(RTLContext)
+  return <div className={isRTL ? 'flex-row-reverse' : 'flex-row'} />
+}
+```
+
+#### Common Mistakes & Anti-Patterns
+
+❌ **Mistake 1: Using directional properties**
+```tsx
+<div className="ml-4 text-left"> {/* ❌ Will break in RTL */}
+<div className="ms-4 text-start"> {/* ✅ RTL-safe */}
+```
+
+❌ **Mistake 2: Forgetting dir attribute**
+```tsx
+<div className="modal"> {/* ❌ No dir attribute */}
+<div dir={isRTL ? 'rtl' : 'ltr'} className="modal"> {/* ✅ Has dir */}
+```
+
+❌ **Mistake 3: Not flipping icons**
+```tsx
+<ChevronRight /> {/* ❌ Always points right */}
+<ChevronRight className={isRTL ? 'rotate-180' : ''} /> {/* ✅ Flips in RTL */}
+```
+
+❌ **Mistake 4: Hardcoded absolute positioning**
+```tsx
+<button className="absolute right-4"> {/* ❌ Always on right */}
+<button className="absolute end-4"> {/* ✅ Adapts to direction */}
+```
+
+❌ **Mistake 5: Using transform without RTL consideration**
+```tsx
+<div className="transform translate-x-4"> {/* ❌ Always translates right */}
+<div className={`transform ${isRTL ? '-translate-x-4' : 'translate-x-4'}`}> {/* ✅ Conditional */}
+```
+
+#### Quick Fix Script
+
+```bash
+# Find and replace directional classes
+# (Manual review required - don't blindly replace!)
+
+# Replace margin classes
+find frontend/src -type f -name "*.tsx" -o -name "*.jsx" | xargs sed -i '' 's/\bml-/ms-/g'
+find frontend/src -type f -name "*.tsx" -o -name "*.jsx" | xargs sed -i '' 's/\bmr-/me-/g'
+
+# Replace padding classes
+find frontend/src -type f -name "*.tsx" -o -name "*.jsx" | xargs sed -i '' 's/\bpl-/ps-/g'
+find frontend/src -type f -name "*.tsx" -o -name "*.jsx" | xargs sed -i '' 's/\bpr-/pe-/g'
+
+# Replace text alignment
+find frontend/src -type f -name "*.tsx" -o -name "*.jsx" | xargs sed -i '' 's/\btext-left\b/text-start/g'
+find frontend/src -type f -name "*.tsx" -o -name "*.jsx" | xargs sed -i '' 's/\btext-right\b/text-end/g'
+
+# WARNING: Review all changes manually before committing!
+```
+
+#### Resources
+
+- **CLAUDE.md RTL Guidelines:** Comprehensive RTL development guide
+- **Tailwind CSS Logical Properties:** https://tailwindcss.com/docs/padding#logical-properties
+- **MDN Web Docs - CSS Logical Properties:** https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_Logical_Properties
+- **i18next Documentation:** https://www.i18next.com/
 
 ### Translations Not Loading
 
