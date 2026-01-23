@@ -68,6 +68,7 @@ import {
   getUpdatePayload,
 } from './utils/status-transitions'
 import { useBulkKanbanOperations } from '@/hooks/useBulkKanbanOperations'
+import { useKanbanKeyboardShortcuts } from '@/hooks/useKanbanKeyboardShortcuts'
 import type {
   WorkItem,
   KanbanColumnMode,
@@ -77,6 +78,7 @@ import type {
   WipLimits,
   Swimlane,
   Priority,
+  WorkflowStage,
 } from '@/types/work-item.types'
 
 interface EnhancedBoardProps {
@@ -140,6 +142,7 @@ export function EnhancedKanbanBoard({
   const [sourceFilter, setSourceFilter] = useState<WorkSource[]>(initialSourceFilter)
   const [swimlaneMode, setSwimlaneMode] = useState<SwimlaneMode>(initialSwimlaneMode)
   const [collapsedSwimlanes, setCollapsedSwimlanes] = useState<Set<string>>(new Set())
+  const [focusedCardIndex, setFocusedCardIndex] = useState<number>(-1)
 
   // Bulk operations
   const bulkOps = useBulkKanbanOperations(items)
@@ -194,6 +197,123 @@ export function EnhancedKanbanBoard({
   // Calculate counts
   const totalCount = filteredItems.length
   const overdueCount = filteredItems.filter((item) => item.is_overdue).length
+
+  // Calculate flat list of visible cards for keyboard navigation
+  // Respects column order and swimlanes
+  const visibleCardsList = useMemo(() => {
+    const cards: WorkItem[] = []
+
+    if (swimlanes && swimlanes.length > 0) {
+      // In swimlane view, iterate through swimlanes then columns
+      swimlanes.forEach((swimlane) => {
+        if (!collapsedSwimlanes.has(swimlane.id)) {
+          columnOrder.forEach((columnKey) => {
+            const columnItems = swimlane.items.filter(
+              (item) => mapColumnKey(item.column_key || 'todo') === columnKey,
+            )
+            cards.push(...columnItems)
+          })
+        }
+      })
+    } else {
+      // In standard view, iterate through columns
+      columnOrder.forEach((columnKey) => {
+        const columnItems = filteredItems.filter(
+          (item) => mapColumnKey(item.column_key || 'todo') === columnKey,
+        )
+        cards.push(...columnItems)
+      })
+    }
+
+    return cards
+  }, [filteredItems, columnOrder, swimlanes, collapsedSwimlanes])
+
+  // Keyboard navigation handlers
+  const handleNavigateDown = useCallback(() => {
+    if (visibleCardsList.length === 0) return
+
+    setFocusedCardIndex((prev) => {
+      if (prev === -1) return 0 // Start at first card
+      return (prev + 1) % visibleCardsList.length // Wrap to beginning
+    })
+  }, [visibleCardsList.length])
+
+  const handleNavigateUp = useCallback(() => {
+    if (visibleCardsList.length === 0) return
+
+    setFocusedCardIndex((prev) => {
+      if (prev === -1) return visibleCardsList.length - 1 // Start at last card
+      return (prev - 1 + visibleCardsList.length) % visibleCardsList.length // Wrap to end
+    })
+  }, [visibleCardsList.length])
+
+  const handleOpenCard = useCallback(() => {
+    if (focusedCardIndex === -1 || focusedCardIndex >= visibleCardsList.length) return
+
+    const focusedCard = visibleCardsList[focusedCardIndex]
+    if (focusedCard && onItemClick) {
+      onItemClick(focusedCard)
+    }
+  }, [focusedCardIndex, visibleCardsList, onItemClick])
+
+  const handleMoveCardToStatus = useCallback(
+    async (targetStage: WorkflowStage) => {
+      if (focusedCardIndex === -1 || focusedCardIndex >= visibleCardsList.length) return
+      if (!onStatusChange) return
+
+      const focusedCard = visibleCardsList[focusedCardIndex]
+      if (!focusedCard) return
+
+      // Validate the transition
+      const canDrop = canDropInColumn(
+        focusedCard.source,
+        focusedCard.status,
+        focusedCard.workflow_stage,
+        targetStage,
+      )
+
+      if (!canDrop) {
+        const errorMsg = getTransitionErrorMessage(
+          focusedCard.source,
+          focusedCard.column_key,
+          targetStage,
+          isRTL ? 'ar' : 'en',
+        )
+
+        toast({
+          title: t('errors.invalidTransition', { column: targetStage }),
+          description: errorMsg,
+          variant: 'destructive',
+        })
+        return
+      }
+
+      const { status, workflow_stage } = getUpdatePayload(focusedCard.source, targetStage)
+
+      try {
+        await onStatusChange(focusedCard.id, focusedCard.source, status!, workflow_stage)
+        toast({
+          title: t('success.statusUpdated'),
+          description: t('success.statusUpdatedDescription'),
+        })
+      } catch (error) {
+        toast({
+          title: t('errors.updateFailed'),
+          description: t('errors.updateFailedDescription'),
+          variant: 'destructive',
+        })
+      }
+    },
+    [focusedCardIndex, visibleCardsList, onStatusChange, isRTL, toast, t],
+  )
+
+  // Register keyboard shortcuts (disabled during bulk selection)
+  useKanbanKeyboardShortcuts({
+    onNavigateDown: !bulkOps.selectionState.isSelecting ? handleNavigateDown : undefined,
+    onNavigateUp: !bulkOps.selectionState.isSelecting ? handleNavigateUp : undefined,
+    onOpenCard: !bulkOps.selectionState.isSelecting ? handleOpenCard : undefined,
+    onMoveToStatus: !bulkOps.selectionState.isSelecting ? handleMoveCardToStatus : undefined,
+  })
 
   // Handle swimlane toggle
   const toggleSwimlane = useCallback((swimlaneId: string) => {
