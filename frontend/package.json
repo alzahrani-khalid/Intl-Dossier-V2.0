@@ -15,7 +15,10 @@
     "lint": "eslint src/**/*.{ts,tsx}",
     "format": "prettier --write src/**/*.{ts,tsx}",
     "type-check": "tsc --noEmit",
-    "add:component": "./scripts/add-component.sh"
+    "add:component": "./scripts/add-component.sh",
+    "analyze": "ANALYZE=true vite build",
+    "analyze:json": "ANALYZE=true vite build && node -e \"const fs=require('fs');const h=fs.readFileSync('dist/stats.html','utf8');const m=h.match(/window\\.chartData\\s*=\\s*(\\{[\\s\\S]*?\\});/);if(m){const d=JSON.parse(m[1]);fs.writeFileSync('dist/bundle-stats.json',JSON.stringify(d,null,2));}\"",
+    "build:ci": "vite build && node scripts/check-bundle-size.js"
   },
   "dependencies": {
     "@dnd-kit/core": "^6.3.1",
@@ -49,6 +52,8 @@
     "@radix-ui/react-tooltip": "^1.2.8",
     "@radix-ui/react-visually-hidden": "^1.2.4",
     "@react-pdf/renderer": "^3.4.0",
+    "@sentry/react": "^10.36.0",
+    "@sentry/vite-plugin": "^4.7.0",
     "@supabase/supabase-js": "^2.45.0",
     "@tabler/icons-react": "^3.35.0",
     "@tailwindcss/forms": "^0.5.10",
@@ -78,6 +83,7 @@
     "flag-icons": "^7.5.0",
     "framer-motion": "^12.23.24",
     "geist": "^1.5.1",
+    "html-to-image": "^1.11.13",
     "i18next": "^23.12.0",
     "i18next-browser-languagedetector": "^8.2.0",
     "i18next-http-backend": "^3.0.2",
@@ -142,6 +148,7 @@
     "jest-axe": "^10.0.0",
     "postcss": "^8.4.0",
     "prettier": "^3.3.0",
+    "rollup-plugin-visualizer": "^6.0.5",
     "shadcn": "^3.5.0",
     "tailwindcss": "^3.4.0",
     "typescript": "^5.5.0",

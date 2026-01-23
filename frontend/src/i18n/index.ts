@@ -210,7 +210,23 @@ import enEntityDependencies from './en/entity-dependencies.json'
 import arEntityDependencies from './ar/entity-dependencies.json'
 import enScheduledReports from './en/scheduled-reports.json'
 import arScheduledReports from './ar/scheduled-reports.json'
-// Force reload - updated 2026-01-16 - v98 - Added scheduled-reports namespace
+import enLegislation from './en/legislation.json'
+import arLegislation from './ar/legislation.json'
+import enDossierSearch from './en/dossier-search.json'
+import arDossierSearch from './ar/dossier-search.json'
+import enDossierOverview from './en/dossier-overview.json'
+import arDossierOverview from './ar/dossier-overview.json'
+import enQuickswitcher from './en/quickswitcher.json'
+import arQuickswitcher from './ar/quickswitcher.json'
+import enDossierRecommendations from './en/dossier-recommendations.json'
+import arDossierRecommendations from './ar/dossier-recommendations.json'
+import enMouNotifications from './en/mou-notifications.json'
+import arMouNotifications from './ar/mou-notifications.json'
+import enCollaboration from './en/collaboration.json'
+import arCollaboration from './ar/collaboration.json'
+import enDossierExport from './en/dossier-export.json'
+import arDossierExport from './ar/dossier-export.json'
+// Force reload - updated 2026-01-23 - v106 - Added dossier-export namespace for briefing pack export
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -321,6 +337,14 @@ const resources = {
     'stakeholder-interactions': enStakeholderInteractions,
     'entity-dependencies': enEntityDependencies,
     'scheduled-reports': enScheduledReports,
+    legislation: enLegislation,
+    'dossier-search': enDossierSearch,
+    'dossier-overview': enDossierOverview,
+    quickswitcher: enQuickswitcher,
+    'dossier-recommendations': enDossierRecommendations,
+    'mou-notifications': enMouNotifications,
+    collaboration: enCollaboration,
+    'dossier-export': enDossierExport,
   },
   ar: {
     translation: arCommon,
@@ -427,6 +451,14 @@ const resources = {
     'stakeholder-interactions': arStakeholderInteractions,
     'entity-dependencies': arEntityDependencies,
     'scheduled-reports': arScheduledReports,
+    legislation: arLegislation,
+    'dossier-search': arDossierSearch,
+    'dossier-overview': arDossierOverview,
+    quickswitcher: arQuickswitcher,
+    'dossier-recommendations': arDossierRecommendations,
+    'mou-notifications': arMouNotifications,
+    collaboration: arCollaboration,
+    'dossier-export': arDossierExport,
   },
 }
 

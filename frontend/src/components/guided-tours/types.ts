@@ -11,6 +11,7 @@ import { LucideIcon } from 'lucide-react'
  * Unique identifier for different tour types
  */
 export type TourId =
+  | 'onboarding'
   | 'dossier-first'
   | 'relationship-first'
   | 'document-first'

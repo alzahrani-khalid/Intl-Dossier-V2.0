@@ -1,5 +1,5 @@
 {
-  "title": "Keyboard Shortcuts",
+  "title": "Command Palette",
   "searchPlaceholder": "Type a command or search...",
   "noResults": "No results found.",
   "tryDifferentSearch": "Try a different search term.",
@@ -12,15 +12,44 @@
     "help": "Help"
   },
 
+  "createActions": {
+    "title": "Create New",
+    "newTask": "Create New Task",
+    "newIntake": "Create New Intake Request",
+    "newDossier": "Create New Dossier",
+    "newCommitment": "Create New Commitment",
+    "newPosition": "Create New Position",
+    "newCountry": "Create New Country Dossier",
+    "newOrganization": "Create New Organization Dossier",
+    "newForum": "Create New Forum Dossier",
+    "newEngagement": "Create New Engagement",
+    "newPerson": "Create New Person Dossier",
+    "newTopic": "Create New Topic Dossier",
+    "newWorkingGroup": "Create New Working Group",
+    "newElectedOfficial": "Create New Elected Official"
+  },
+
+  "contextSuggestions": {
+    "title": "Suggested",
+    "suggested": "Suggested"
+  },
+
   "quickActions": {
-    "title": "Quick Actions",
+    "title": "Quick Navigation",
     "dashboard": "Go to Dashboard",
     "myWork": "Go to My Work",
     "dossiers": "Go to Dossiers",
     "calendar": "Go to Calendar",
     "tasks": "Go to Tasks",
     "analytics": "Go to Analytics",
-    "settings": "Go to Settings"
+    "settings": "Go to Settings",
+    "relationships": "View Relationship Graph",
+    "recentActivity": "Recent Activity",
+    "briefs": "Go to Briefs",
+    "briefingBooks": "Go to Briefing Books",
+    "intelligence": "Go to Intelligence",
+    "reports": "Go to Reports",
+    "slaMonitoring": "SLA Monitoring"
   },
 
   "shortcuts": {

@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Implement granular permissions allowing administrators to control visibility and editability of specific fields within entities based on user roles. Include inherited permissions from entity relationships and field-level audit trails.\n\n**Rationale:** Different team members need access to different types of information. Field-level controls enable fine-grained security without creating duplicate entity types or complex workarounds.",
   "title": "Field-Level Permissions and Data Access Controls",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768507813587-vbmw227rm",
   "descriptionHistory": [
     {

@@ -18,8 +18,78 @@ import {
   Target,
   Info,
   Sparkles,
+  Network,
+  Search,
+  ClipboardList,
+  Home,
 } from 'lucide-react'
 import type { Tour, TourId } from './types'
+
+/**
+ * Onboarding tour for new users
+ * Establishes the dossier-centric mental model
+ */
+export const onboardingTour: Tour = {
+  id: 'onboarding',
+  name: 'tours.onboarding.name',
+  description: 'tours.onboarding.description',
+  entityType: 'system',
+  icon: Home,
+  estimatedTime: 3,
+  steps: [
+    {
+      id: 'welcome',
+      title: 'tours.onboarding.steps.welcome.title',
+      content: 'tours.onboarding.steps.welcome.content',
+      hint: 'tours.onboarding.steps.welcome.hint',
+      placement: 'center',
+      icon: Sparkles,
+      highlightTarget: false,
+      disableBackdropClick: true,
+    },
+    {
+      id: 'your-dossiers',
+      target: '[data-tour="my-dossiers"]',
+      title: 'tours.onboarding.steps.yourDossiers.title',
+      content: 'tours.onboarding.steps.yourDossiers.content',
+      hint: 'tours.onboarding.steps.yourDossiers.hint',
+      placement: 'right',
+      icon: FolderOpen,
+      highlightTarget: true,
+    },
+    {
+      id: 'work-flows',
+      target: '[data-tour="work-queue"]',
+      title: 'tours.onboarding.steps.workFlows.title',
+      content: 'tours.onboarding.steps.workFlows.content',
+      hint: 'tours.onboarding.steps.workFlows.hint',
+      placement: 'right',
+      icon: ClipboardList,
+      highlightTarget: true,
+    },
+    {
+      id: 'relationship-graph',
+      target: '[data-tour="relationships"]',
+      title: 'tours.onboarding.steps.relationshipGraph.title',
+      content: 'tours.onboarding.steps.relationshipGraph.content',
+      hint: 'tours.onboarding.steps.relationshipGraph.hint',
+      placement: 'right',
+      icon: Network,
+      highlightTarget: true,
+    },
+    {
+      id: 'find-what-you-need',
+      target: '[data-tour="sidebar-search"]',
+      title: 'tours.onboarding.steps.findWhatYouNeed.title',
+      content: 'tours.onboarding.steps.findWhatYouNeed.content',
+      hint: 'tours.onboarding.steps.findWhatYouNeed.hint',
+      placement: 'right',
+      icon: Search,
+      highlightTarget: true,
+      actionText: 'tours.onboarding.steps.findWhatYouNeed.action',
+    },
+  ],
+}
 
 /**
  * Tour for creating first dossier
@@ -450,6 +520,7 @@ export const commitmentFirstTour: Tour = {
  * All tours registry
  */
 export const tourRegistry: Record<TourId, Tour> = {
+  onboarding: onboardingTour,
   'dossier-first': dossierFirstTour,
   'relationship-first': relationshipFirstTour,
   'document-first': documentFirstTour,

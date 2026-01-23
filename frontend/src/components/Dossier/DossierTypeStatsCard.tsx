@@ -9,13 +9,14 @@
  * - Click to filter dossiers by type
  * - Loading and error states
  * - Animated statistics
+ * - Contextual entity type guidance on hover
  */
 
-import { useTranslation } from 'react-i18next';
-import { motion } from 'framer-motion';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Skeleton } from '@/components/ui/skeleton';
+import { useTranslation } from 'react-i18next'
+import { motion } from 'framer-motion'
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Badge } from '@/components/ui/badge'
+import { Skeleton } from '@/components/ui/skeleton'
 import {
   Globe,
   Building2,
@@ -24,49 +25,52 @@ import {
   Target,
   Briefcase,
   User,
+  UserCheck,
   TrendingUp,
   TrendingDown,
   Minus,
-} from 'lucide-react';
-import { cn } from '@/lib/utils';
-import type { DossierType, DossierStatus } from '@/services/dossier-api';
+  HelpCircle,
+} from 'lucide-react'
+import { cn } from '@/lib/utils'
+import { DossierTypeGuide } from './DossierTypeGuide'
+import type { DossierType, DossierStatus } from '@/services/dossier-api'
 
 interface DossierTypeStatsCardProps {
-  type: DossierType;
-  totalCount: number;
-  activeCount: number;
-  inactiveCount: number;
-  percentage: number;
-  trend?: 'up' | 'down' | 'stable';
-  trendValue?: number;
-  isSelected?: boolean;
-  onClick?: () => void;
-  className?: string;
+  type: DossierType
+  totalCount: number
+  activeCount: number
+  inactiveCount: number
+  percentage: number
+  trend?: 'up' | 'down' | 'stable'
+  trendValue?: number
+  isSelected?: boolean
+  onClick?: () => void
+  className?: string
 }
 
 /**
  * Get type-specific icon component
  */
 function getTypeIcon(type: DossierType, className?: string) {
-  const iconProps = { className: className || 'h-5 w-5' };
+  const iconProps = { className: className || 'h-5 w-5' }
 
   switch (type) {
     case 'country':
-      return <Globe {...iconProps} />;
+      return <Globe {...iconProps} />
     case 'organization':
-      return <Building2 {...iconProps} />;
+      return <Building2 {...iconProps} />
     case 'forum':
-      return <Users {...iconProps} />;
+      return <Users {...iconProps} />
     case 'engagement':
-      return <Calendar {...iconProps} />;
+      return <Calendar {...iconProps} />
     case 'topic':
-      return <Target {...iconProps} />;
+      return <Target {...iconProps} />
     case 'working_group':
-      return <Briefcase {...iconProps} />;
+      return <Briefcase {...iconProps} />
     case 'person':
-      return <User {...iconProps} />;
+      return <User {...iconProps} />
     default:
-      return <Globe {...iconProps} />;
+      return <Globe {...iconProps} />
   }
 }
 
@@ -76,21 +80,21 @@ function getTypeIcon(type: DossierType, className?: string) {
 function getTypeGradient(type: DossierType): string {
   switch (type) {
     case 'country':
-      return 'from-blue-500 to-blue-600';
+      return 'from-blue-500 to-blue-600'
     case 'organization':
-      return 'from-purple-500 to-purple-600';
+      return 'from-purple-500 to-purple-600'
     case 'forum':
-      return 'from-green-500 to-green-600';
+      return 'from-green-500 to-green-600'
     case 'engagement':
-      return 'from-orange-500 to-orange-600';
+      return 'from-orange-500 to-orange-600'
     case 'topic':
-      return 'from-pink-500 to-pink-600';
+      return 'from-pink-500 to-pink-600'
     case 'working_group':
-      return 'from-indigo-500 to-indigo-600';
+      return 'from-indigo-500 to-indigo-600'
     case 'person':
-      return 'from-teal-500 to-teal-600';
+      return 'from-teal-500 to-teal-600'
     default:
-      return 'from-gray-500 to-gray-600';
+      return 'from-gray-500 to-gray-600'
   }
 }
 
@@ -100,21 +104,21 @@ function getTypeGradient(type: DossierType): string {
 function getTypeHoverGradient(type: DossierType): string {
   switch (type) {
     case 'country':
-      return 'hover:from-blue-600 hover:to-blue-700';
+      return 'hover:from-blue-600 hover:to-blue-700'
     case 'organization':
-      return 'hover:from-purple-600 hover:to-purple-700';
+      return 'hover:from-purple-600 hover:to-purple-700'
     case 'forum':
-      return 'hover:from-green-600 hover:to-green-700';
+      return 'hover:from-green-600 hover:to-green-700'
     case 'engagement':
-      return 'hover:from-orange-600 hover:to-orange-700';
+      return 'hover:from-orange-600 hover:to-orange-700'
     case 'topic':
-      return 'hover:from-pink-600 hover:to-pink-700';
+      return 'hover:from-pink-600 hover:to-pink-700'
     case 'working_group':
-      return 'hover:from-indigo-600 hover:to-indigo-700';
+      return 'hover:from-indigo-600 hover:to-indigo-700'
     case 'person':
-      return 'hover:from-teal-600 hover:to-teal-700';
+      return 'hover:from-teal-600 hover:to-teal-700'
     default:
-      return 'hover:from-gray-600 hover:to-gray-700';
+      return 'hover:from-gray-600 hover:to-gray-700'
   }
 }
 
@@ -122,17 +126,17 @@ function getTypeHoverGradient(type: DossierType): string {
  * Get trend icon
  */
 function getTrendIcon(trend?: 'up' | 'down' | 'stable') {
-  const iconProps = { className: 'h-4 w-4' };
+  const iconProps = { className: 'h-4 w-4' }
 
   switch (trend) {
     case 'up':
-      return <TrendingUp {...iconProps} />;
+      return <TrendingUp {...iconProps} />
     case 'down':
-      return <TrendingDown {...iconProps} />;
+      return <TrendingDown {...iconProps} />
     case 'stable':
-      return <Minus {...iconProps} />;
+      return <Minus {...iconProps} />
     default:
-      return null;
+      return null
   }
 }
 
@@ -148,8 +152,8 @@ export function DossierTypeStatsCard({
   onClick,
   className,
 }: DossierTypeStatsCardProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   return (
     <motion.div
@@ -164,7 +168,7 @@ export function DossierTypeStatsCard({
           'transition-all duration-300',
           'hover:shadow-lg',
           isSelected && 'ring-2 ring-offset-2',
-          className
+          className,
         )}
         onClick={onClick}
         dir={isRTL ? 'rtl' : 'ltr'}
@@ -178,7 +182,7 @@ export function DossierTypeStatsCard({
             'text-white',
             'p-1.5 sm:p-3',
             'transition-all duration-300',
-            'flex-shrink-0'
+            'flex-shrink-0',
           )}
         >
           <div className="flex items-center justify-between mb-0.5 sm:mb-1">
@@ -187,19 +191,44 @@ export function DossierTypeStatsCard({
               {getTypeIcon(type, 'h-2.5 w-2.5 sm:h-4 sm:w-4')}
             </div>
 
-            {/* Count - Moved to the right side */}
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.3 }}
-              className={cn(
-                "inline-block px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded",
-                "bg-white/25 backdrop-blur-sm",
-                "text-[10px] sm:text-base font-bold leading-none"
-              )}
-            >
-              {totalCount}
-            </motion.div>
+            {/* Count and Help Icon */}
+            <div className="flex items-center gap-1">
+              {/* Help Icon with DossierTypeGuide */}
+              <DossierTypeGuide
+                type={type}
+                variant="popover"
+                trigger={
+                  <button
+                    onClick={(e) => e.stopPropagation()}
+                    className={cn(
+                      'hidden sm:inline-flex items-center justify-center',
+                      'min-h-5 min-w-5 p-0.5',
+                      'rounded-full',
+                      'bg-white/20 hover:bg-white/30',
+                      'text-white/80 hover:text-white',
+                      'transition-colors duration-150',
+                      'focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-1',
+                    )}
+                    aria-label={t('typeGuide.learnMore', 'Learn more about this type')}
+                  >
+                    <HelpCircle className="h-3 w-3" />
+                  </button>
+                }
+              />
+              {/* Count */}
+              <motion.div
+                initial={{ scale: 0.9, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.3 }}
+                className={cn(
+                  'inline-block px-1.5 py-0.5 sm:px-2 sm:py-0.5 rounded',
+                  'bg-white/25 backdrop-blur-sm',
+                  'text-[10px] sm:text-base font-bold leading-none',
+                )}
+              >
+                {totalCount}
+              </motion.div>
+            </div>
           </div>
 
           {/* Type Title */}
@@ -256,7 +285,7 @@ export function DossierTypeStatsCard({
         </CardContent>
       </Card>
     </motion.div>
-  );
+  )
 }
 
 /**
@@ -292,5 +321,5 @@ export function DossierTypeStatsCardSkeleton({ className }: { className?: string
         </CardContent>
       </Card>
     </div>
-  );
+  )
 }

@@ -73,7 +73,7 @@ export function SampleDataEmptyState({
         </p>
 
         {/* Hint */}
-        <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground/80 mb-6 bg-muted/50 px-3 py-2 rounded-full">
+        <div className="flex items-center gap-2 text-xs sm:text-sm text-muted-foreground mb-6 bg-muted/50 px-3 py-2 rounded-full">
           <Lightbulb className="h-4 w-4 flex-shrink-0" />
           <span>{t('emptyState.hint')}</span>
         </div>

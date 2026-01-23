@@ -1,0 +1,51 @@
+{
+  "title": "Real-time Collaboration",
+  "description": "See who else is viewing or editing",
+
+  "status": {
+    "viewing": "Viewing",
+    "editing": "Editing",
+    "idle": "Away"
+  },
+
+  "activeViewersLabel": "{{count}} users viewing this dossier",
+  "activeViewersLabel_one": "{{count}} user viewing this dossier",
+  "viewersSummary": "{{total}} viewing: {{editing}} editing, {{viewing}} viewing",
+  "moreViewers": "{{count}} more viewers",
+  "moreViewers_one": "{{count}} more viewer",
+  "andMore": "and {{count}} more",
+  "editingCount": "{{count}} editing",
+  "editingSection": "editing {{section}}",
+
+  "lockedBy": "Being edited by {{name}}",
+  "sectionLockedTitle": "{{name}} is editing",
+  "editingSectionNamed": "Editing: {{section}}",
+  "editingThisSection": "Editing this section",
+
+  "forceEditWarningTitle": "Section Being Edited",
+  "forceEditWarningDescription": "{{name}} is currently editing this section. If you proceed, you may overwrite their changes or cause conflicts.",
+  "forceEditConfirm": "Edit Anyway",
+
+  "conflictDetected": "Conflict Detected",
+  "conflictDescription": "This record was modified by another user while you were editing. Choose how to resolve the conflict.",
+  "conflictBannerDescription": "Another user modified this record. Resolve to continue.",
+  "conflictingFields": "{{count}} conflicting fields",
+  "conflictingFields_one": "{{count}} conflicting field",
+  "modifiedAgo": "Modified {{time}}",
+  "minutesAgo": "{{count}} minutes ago",
+  "minutesAgo_one": "{{count}} minute ago",
+  "secondsAgo": "{{count}} seconds ago",
+  "secondsAgo_one": "{{count}} second ago",
+  "noVisibleChanges": "No visible field changes detected",
+
+  "yourChanges": "Your Changes",
+  "serverState": "Server State",
+  "empty": "(empty)",
+
+  "chooseResolution": "Choose how to resolve",
+  "resolveNow": "Resolve Now",
+
+  "connected": "Real-time connected",
+  "disconnected": "Real-time disconnected",
+  "reconnecting": "Reconnecting..."
+}

@@ -6,7 +6,7 @@
  * invalidation, and graph traversal support.
  */
 
-import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query'
 import {
   createRelationship,
   getRelationship,
@@ -22,9 +22,10 @@ import {
   type RelationshipsListResponse,
   type RelationshipType,
   RelationshipAPIError,
-} from '@/services/relationship-api';
-import { toast } from 'sonner';
-import { useTranslation } from 'react-i18next';
+} from '@/services/relationship-api'
+import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 
 /**
  * Query Keys Factory
@@ -39,20 +40,23 @@ export const relationshipKeys = {
     [...relationshipKeys.all, 'dossier', dossierId, { page, page_size }] as const,
   byType: (dossierId: string, type: RelationshipType, page?: number, page_size?: number) =>
     [...relationshipKeys.all, 'dossier', dossierId, 'type', type, { page, page_size }] as const,
-};
+}
 
 /**
  * Hook to fetch a single relationship by ID
  */
 export function useRelationship(
   id: string,
-  options?: Omit<UseQueryOptions<RelationshipWithDossiers, RelationshipAPIError>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<RelationshipWithDossiers, RelationshipAPIError>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
   return useQuery({
     queryKey: relationshipKeys.detail(id),
     queryFn: () => getRelationship(id),
     ...options,
-  });
+  })
 }
 
 /**
@@ -60,13 +64,16 @@ export function useRelationship(
  */
 export function useRelationships(
   filters?: RelationshipFilters,
-  options?: Omit<UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
   return useQuery({
     queryKey: relationshipKeys.list(filters),
     queryFn: () => listRelationships(filters),
     ...options,
-  });
+  })
 }
 
 /**
@@ -76,13 +83,16 @@ export function useRelationshipsForDossier(
   dossierId: string,
   page?: number,
   page_size?: number,
-  options?: Omit<UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
   return useQuery({
     queryKey: relationshipKeys.forDossier(dossierId, page, page_size),
     queryFn: () => getRelationshipsForDossier(dossierId, page, page_size),
     ...options,
-  });
+  })
 }
 
 /**
@@ -93,65 +103,68 @@ export function useRelationshipsByType(
   relationshipType: RelationshipType,
   page?: number,
   page_size?: number,
-  options?: Omit<UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>, 'queryKey' | 'queryFn'>
+  options?: Omit<
+    UseQueryOptions<RelationshipsListResponse, RelationshipAPIError>,
+    'queryKey' | 'queryFn'
+  >,
 ) {
   return useQuery({
     queryKey: relationshipKeys.byType(dossierId, relationshipType, page, page_size),
     queryFn: () => getRelationshipsByType(dossierId, relationshipType, page, page_size),
     ...options,
-  });
+  })
 }
 
 /**
  * Hook to create a new relationship
  */
 export function useCreateRelationship() {
-  const queryClient = useQueryClient();
-  const { t } = useTranslation();
+  const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   return useMutation({
     mutationFn: (request: CreateRelationshipRequest) => createRelationship(request),
     onSuccess: (data) => {
       // Invalidate all relationship lists
-      queryClient.invalidateQueries({ queryKey: relationshipKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: relationshipKeys.lists() })
 
       // Invalidate relationships for both source and target dossiers
       queryClient.invalidateQueries({
         queryKey: relationshipKeys.forDossier(data.source_dossier_id),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: relationshipKeys.forDossier(data.target_dossier_id),
-      });
+      })
 
       // Set the new relationship in the cache
-      queryClient.setQueryData(relationshipKeys.detail(data.id), data);
+      queryClient.setQueryData(relationshipKeys.detail(data.id), data)
 
-      toast.success(t('relationship.create.success'));
+      toast.success(t('relationship.create.success'))
     },
     onError: (error: RelationshipAPIError) => {
-      toast.error(t('relationship.create.error', { message: error.message }));
+      toast.error(t('relationship.create.error', { message: error.message }))
     },
-  });
+  })
 }
 
 /**
  * Hook to update a relationship
  */
 export function useUpdateRelationship() {
-  const queryClient = useQueryClient();
-  const { t } = useTranslation();
+  const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   return useMutation({
     mutationFn: ({ id, request }: { id: string; request: UpdateRelationshipRequest }) =>
       updateRelationship(id, request),
     onMutate: async ({ id, request }) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: relationshipKeys.detail(id) });
+      await queryClient.cancelQueries({ queryKey: relationshipKeys.detail(id) })
 
       // Snapshot the previous value
       const previousRelationship = queryClient.getQueryData<RelationshipWithDossiers>(
-        relationshipKeys.detail(id)
-      );
+        relationshipKeys.detail(id),
+      )
 
       // Optimistically update the cache
       if (previousRelationship) {
@@ -159,111 +172,111 @@ export function useUpdateRelationship() {
           ...previousRelationship,
           ...request,
           updated_at: new Date().toISOString(),
-        });
+        })
       }
 
-      return { previousRelationship };
+      return { previousRelationship }
     },
     onSuccess: (data, { id }) => {
       // Update the cache with server response
-      queryClient.setQueryData(relationshipKeys.detail(id), data);
+      queryClient.setQueryData(relationshipKeys.detail(id), data)
 
       // Invalidate lists to refetch
-      queryClient.invalidateQueries({ queryKey: relationshipKeys.lists() });
+      queryClient.invalidateQueries({ queryKey: relationshipKeys.lists() })
       queryClient.invalidateQueries({
         queryKey: relationshipKeys.forDossier(data.source_dossier_id),
-      });
+      })
       queryClient.invalidateQueries({
         queryKey: relationshipKeys.forDossier(data.target_dossier_id),
-      });
+      })
 
-      toast.success(t('relationship.update.success'));
+      toast.success(t('relationship.update.success'))
     },
     onError: (error: RelationshipAPIError, { id }, context) => {
       // Rollback optimistic update on error
       if (context?.previousRelationship) {
-        queryClient.setQueryData(relationshipKeys.detail(id), context.previousRelationship);
+        queryClient.setQueryData(relationshipKeys.detail(id), context.previousRelationship)
       }
 
-      toast.error(t('relationship.update.error', { message: error.message }));
+      toast.error(t('relationship.update.error', { message: error.message }))
     },
-  });
+  })
 }
 
 /**
  * Hook to delete a relationship
  */
 export function useDeleteRelationship() {
-  const queryClient = useQueryClient();
-  const { t } = useTranslation();
+  const queryClient = useQueryClient()
+  const { t } = useTranslation()
 
   return useMutation({
     mutationFn: (id: string) => deleteRelationship(id),
     onMutate: async (id) => {
       // Cancel any outgoing refetches
-      await queryClient.cancelQueries({ queryKey: relationshipKeys.detail(id) });
+      await queryClient.cancelQueries({ queryKey: relationshipKeys.detail(id) })
 
       // Snapshot the previous value
       const previousRelationship = queryClient.getQueryData<RelationshipWithDossiers>(
-        relationshipKeys.detail(id)
-      );
+        relationshipKeys.detail(id),
+      )
 
       // Optimistically remove from cache
-      queryClient.removeQueries({ queryKey: relationshipKeys.detail(id) });
+      queryClient.removeQueries({ queryKey: relationshipKeys.detail(id) })
 
-      return { previousRelationship };
+      return { previousRelationship }
     },
     onSuccess: (_, id, context) => {
       // Invalidate all lists to refetch without deleted item
-      queryClient.invalidateQueries({ queryKey: relationshipKeys.lists() });
-      queryClient.invalidateQueries({ queryKey: relationshipKeys.all });
+      queryClient.invalidateQueries({ queryKey: relationshipKeys.lists() })
+      queryClient.invalidateQueries({ queryKey: relationshipKeys.all })
 
       // Invalidate relationships for both dossiers if we have the previous data
       if (context?.previousRelationship) {
         queryClient.invalidateQueries({
           queryKey: relationshipKeys.forDossier(context.previousRelationship.source_dossier_id),
-        });
+        })
         queryClient.invalidateQueries({
           queryKey: relationshipKeys.forDossier(context.previousRelationship.target_dossier_id),
-        });
+        })
       }
 
-      toast.success(t('relationship.delete.success'));
+      toast.success(t('relationship.delete.success'))
     },
     onError: (error: RelationshipAPIError, id, context) => {
       // Restore the previous value on error
       if (context?.previousRelationship) {
-        queryClient.setQueryData(relationshipKeys.detail(id), context.previousRelationship);
+        queryClient.setQueryData(relationshipKeys.detail(id), context.previousRelationship)
       }
 
-      toast.error(t('relationship.delete.error', { message: error.message }));
+      toast.error(t('relationship.delete.error', { message: error.message }))
     },
-  });
+  })
 }
 
 /**
  * Hook to prefetch relationships for a dossier (useful for hover effects, navigation hints)
  */
 export function usePrefetchRelationshipsForDossier() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return (dossierId: string) => {
     queryClient.prefetchQuery({
       queryKey: relationshipKeys.forDossier(dossierId),
       queryFn: () => getRelationshipsForDossier(dossierId),
-    });
-  };
+    })
+  }
 }
 
 /**
  * Hook to invalidate relationship queries (useful after bulk operations)
  */
 export function useInvalidateRelationships() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return () => {
-    queryClient.invalidateQueries({ queryKey: relationshipKeys.all });
-  };
+    queryClient.invalidateQueries({ queryKey: relationshipKeys.all })
+  }
 }
 
 /**
@@ -271,48 +284,48 @@ export function useInvalidateRelationships() {
  * Fetches relationship graph from starting dossier up to N degrees of separation
  */
 export interface GraphNode {
-  id: string;
-  type: string;
-  name_en: string;
-  name_ar: string;
-  status: string;
-  degree: number;
-  path: string[];
+  id: string
+  type: string
+  name_en: string
+  name_ar: string
+  status: string
+  degree: number
+  path: string[]
 }
 
 export interface GraphEdge {
-  source_id: string;
-  target_id: string;
-  relationship_type: string;
+  source_id: string
+  target_id: string
+  relationship_type: string
 }
 
 export interface GraphData {
-  start_dossier_id: string;
+  start_dossier_id: string
   start_dossier: {
-    id: string;
-    type: string;
-    name_en: string;
-    name_ar: string;
-    status: string;
-  };
-  max_degrees: number;
-  relationship_type_filter: string;
-  nodes: GraphNode[];
-  edges: GraphEdge[];
+    id: string
+    type: string
+    name_en: string
+    name_ar: string
+    status: string
+  }
+  max_degrees: number
+  relationship_type_filter: string
+  nodes: GraphNode[]
+  edges: GraphEdge[]
   stats: {
-    node_count: number;
-    edge_count: number;
-    max_degree: number;
-    query_time_ms: number;
-    performance_warning: string | null;
-  };
+    node_count: number
+    edge_count: number
+    max_degree: number
+    query_time_ms: number
+    performance_warning: string | null
+  }
 }
 
 export const graphKeys = {
   all: ['graph'] as const,
   traversal: (startDossierId: string, maxDegrees: number, relationshipType?: string) =>
     [...graphKeys.all, 'traversal', startDossierId, maxDegrees, relationshipType || 'all'] as const,
-};
+}
 
 /**
  * Fetch graph traversal data from Edge Function
@@ -320,44 +333,53 @@ export const graphKeys = {
 async function fetchGraphData(
   startDossierId: string,
   maxDegrees: number = 2,
-  relationshipType?: string
+  relationshipType?: string,
 ): Promise<GraphData> {
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-  const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 
-  if (!supabaseUrl || !supabaseAnonKey) {
-    throw new Error('Supabase configuration missing');
+  if (!supabaseUrl) {
+    throw new Error('Supabase configuration missing')
+  }
+
+  // Get user's auth session for proper authentication
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
+
+  if (!session) {
+    throw new RelationshipAPIError('Not authenticated', 401, 'AUTH_REQUIRED')
   }
 
   // Build query params
   const params = new URLSearchParams({
     startDossierId,
     maxDegrees: maxDegrees.toString(),
-  });
+  })
 
   if (relationshipType) {
-    params.append('relationshipType', relationshipType);
+    params.append('relationshipType', relationshipType)
   }
 
-  const url = `${supabaseUrl}/functions/v1/graph-traversal?${params.toString()}`;
+  const url = `${supabaseUrl}/functions/v1/graph-traversal?${params.toString()}`
 
   const response = await fetch(url, {
     method: 'GET',
     headers: {
-      Authorization: `Bearer ${supabaseAnonKey}`,
+      Authorization: `Bearer ${session.access_token}`,
       'Content-Type': 'application/json',
     },
-  });
+  })
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+    const errorData = await response.json().catch(() => ({ error: 'Unknown error' }))
     throw new RelationshipAPIError(
       errorData.error || 'Failed to fetch graph data',
-      response.status
-    );
+      response.status,
+      errorData.code || 'GRAPH_ERROR',
+    )
   }
 
-  return response.json();
+  return response.json()
 }
 
 /**
@@ -377,9 +399,9 @@ export function useGraphData(
   startDossierId: string,
   maxDegrees: number = 2,
   relationshipType?: string,
-  options?: Omit<UseQueryOptions<GraphData, RelationshipAPIError>, 'queryKey' | 'queryFn'>
+  options?: Omit<UseQueryOptions<GraphData, RelationshipAPIError>, 'queryKey' | 'queryFn'>,
 ) {
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
   return useQuery({
     queryKey: graphKeys.traversal(startDossierId, maxDegrees, relationshipType),
@@ -390,20 +412,20 @@ export function useGraphData(
     meta: {
       errorMessage: t('graph.fetchError', 'Failed to load graph data'),
     },
-  });
+  })
 }
 
 /**
  * Hook to prefetch graph data (useful for hover effects, navigation hints)
  */
 export function usePrefetchGraphData() {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   return (startDossierId: string, maxDegrees: number = 2, relationshipType?: string) => {
     queryClient.prefetchQuery({
       queryKey: graphKeys.traversal(startDossierId, maxDegrees, relationshipType),
       queryFn: () => fetchGraphData(startDossierId, maxDegrees, relationshipType),
       staleTime: 5 * 60 * 1000,
-    });
-  };
+    })
+  }
 }

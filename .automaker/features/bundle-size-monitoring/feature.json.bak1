@@ -1,0 +1,13 @@
+{
+  "id": "bundle-size-monitoring",
+  "category": "Core",
+  "title": "Add Bundle Size Monitoring",
+  "description": "No bundle size tracking exists. Add rollup-plugin-visualizer to Vite, configure bundlesize in CI with thresholds (main: 500KB, vendor: 300KB), add pnpm analyze script, set up GitHub Action to comment bundle diff on PRs.",
+  "status": "in_progress",
+  "priority": 2,
+  "complexity": "simple",
+  "createdAt": "2026-01-22T10:00:00.000Z",
+  "updatedAt": "2026-01-22T21:09:28.473Z",
+  "branchName": "035-dossier-context",
+  "descriptionHistory": []
+}

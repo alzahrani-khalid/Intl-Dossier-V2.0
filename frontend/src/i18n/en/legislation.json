@@ -1,0 +1,375 @@
+{
+  "title": "Legislation Tracker",
+  "subtitle": "Track and manage legislation, regulatory proposals, and policy issues",
+  "pageTitle": "Legislation",
+  "description": "Monitor legislation and regulatory developments through their lifecycle",
+
+  "actions": {
+    "create": "Add Legislation",
+    "edit": "Edit",
+    "delete": "Delete",
+    "view": "View Details",
+    "watch": "Watch",
+    "unwatch": "Unwatch",
+    "addDeadline": "Add Deadline",
+    "addAmendment": "Add Amendment",
+    "addSponsor": "Add Sponsor",
+    "addRelated": "Link Related",
+    "updateStatus": "Update Status",
+    "export": "Export",
+    "filter": "Filter",
+    "clearFilters": "Clear Filters",
+    "search": "Search legislation...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "close": "Close"
+  },
+
+  "tabs": {
+    "overview": "Overview",
+    "amendments": "Amendments",
+    "deadlines": "Deadlines",
+    "sponsors": "Sponsors",
+    "related": "Related",
+    "history": "History",
+    "comments": "Comment Period"
+  },
+
+  "type": {
+    "law": "Law",
+    "regulation": "Regulation",
+    "directive": "Directive",
+    "policy": "Policy",
+    "resolution": "Resolution",
+    "treaty": "Treaty",
+    "amendment": "Amendment",
+    "proposal": "Proposal",
+    "executive_order": "Executive Order",
+    "decree": "Decree",
+    "other": "Other"
+  },
+
+  "status": {
+    "draft": "Draft",
+    "proposed": "Proposed",
+    "under_review": "Under Review",
+    "in_committee": "In Committee",
+    "pending_vote": "Pending Vote",
+    "passed": "Passed",
+    "enacted": "Enacted",
+    "implemented": "Implemented",
+    "superseded": "Superseded",
+    "repealed": "Repealed",
+    "expired": "Expired",
+    "withdrawn": "Withdrawn"
+  },
+
+  "priority": {
+    "label": "Priority",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "critical": "Critical"
+  },
+
+  "impact": {
+    "label": "Impact Level",
+    "minimal": "Minimal",
+    "low": "Low",
+    "medium": "Medium",
+    "high": "High",
+    "transformational": "Transformational"
+  },
+
+  "commentPeriod": {
+    "title": "Comment Period",
+    "status": "Status",
+    "not_started": "Not Started",
+    "open": "Open",
+    "closed": "Closed",
+    "extended": "Extended",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "daysRemaining": "{{count}} day remaining",
+    "daysRemaining_plural": "{{count}} days remaining",
+    "instructions": "Comment Instructions",
+    "submitUrl": "Submission URL",
+    "openCommentPeriods": "Open Comment Periods",
+    "noOpenPeriods": "No open comment periods"
+  },
+
+  "form": {
+    "title": {
+      "create": "Create Legislation",
+      "edit": "Edit Legislation"
+    },
+    "sections": {
+      "basic": "Basic Information",
+      "classification": "Classification",
+      "dates": "Key Dates",
+      "commentPeriod": "Comment Period",
+      "links": "Links & References",
+      "dossier": "Related Dossier"
+    },
+    "fields": {
+      "titleEn": "Title (English)",
+      "titleAr": "Title (Arabic)",
+      "shortTitleEn": "Short Title (English)",
+      "shortTitleAr": "Short Title (Arabic)",
+      "summaryEn": "Summary (English)",
+      "summaryAr": "Summary (Arabic)",
+      "descriptionEn": "Description (English)",
+      "descriptionAr": "Description (Arabic)",
+      "type": "Type",
+      "status": "Status",
+      "referenceNumber": "Reference Number",
+      "jurisdiction": "Jurisdiction",
+      "issuingBody": "Issuing Body",
+      "issuingBodyAr": "Issuing Body (Arabic)",
+      "priority": "Priority",
+      "impactLevel": "Impact Level",
+      "impactSummaryEn": "Impact Summary (English)",
+      "impactSummaryAr": "Impact Summary (Arabic)",
+      "introducedDate": "Introduced Date",
+      "effectiveDate": "Effective Date",
+      "expirationDate": "Expiration Date",
+      "sourceUrl": "Source URL",
+      "officialTextUrl": "Official Text URL",
+      "tags": "Tags",
+      "sectors": "Affected Sectors",
+      "keywords": "Keywords",
+      "dossier": "Link to Dossier",
+      "parentLegislation": "Parent Legislation"
+    },
+    "placeholders": {
+      "titleEn": "Enter legislation title",
+      "referenceNumber": "e.g., H.R. 1234, EU Directive 2025/123",
+      "jurisdiction": "e.g., Saudi Arabia, European Union",
+      "issuingBody": "e.g., Ministry of Commerce",
+      "sourceUrl": "https://...",
+      "tags": "Add tags...",
+      "sectors": "Add affected sectors...",
+      "keywords": "Add keywords..."
+    },
+    "validation": {
+      "titleRequired": "Title is required",
+      "typeRequired": "Type is required"
+    }
+  },
+
+  "sponsors": {
+    "title": "Sponsors",
+    "primarySponsor": "Primary Sponsor",
+    "coSponsors": "Co-Sponsors",
+    "supporters": "Supporters",
+    "opponents": "Opponents",
+    "noSponsors": "No sponsors added",
+    "added": "Sponsor added successfully",
+    "removed": "Sponsor removed successfully",
+    "type": {
+      "primary": "Primary",
+      "co_sponsor": "Co-Sponsor",
+      "supporter": "Supporter",
+      "opponent": "Opponent"
+    },
+    "form": {
+      "name": "Name",
+      "title": "Title/Position",
+      "affiliation": "Affiliation",
+      "type": "Role",
+      "joinedDate": "Joined Date",
+      "notes": "Notes",
+      "linkPerson": "Link to Person Dossier",
+      "linkOrganization": "Link to Organization Dossier"
+    }
+  },
+
+  "amendments": {
+    "title": "Amendments",
+    "noAmendments": "No amendments",
+    "created": "Amendment created successfully",
+    "updated": "Amendment updated successfully",
+    "status": {
+      "proposed": "Proposed",
+      "under_review": "Under Review",
+      "approved": "Approved",
+      "rejected": "Rejected",
+      "incorporated": "Incorporated",
+      "withdrawn": "Withdrawn"
+    },
+    "form": {
+      "number": "Amendment Number",
+      "title": "Title",
+      "description": "Description",
+      "status": "Status",
+      "proposedDate": "Proposed Date",
+      "affectedSections": "Affected Sections",
+      "originalText": "Original Text",
+      "proposedText": "Proposed Text",
+      "proposedBy": "Proposed By"
+    }
+  },
+
+  "deadlines": {
+    "title": "Deadlines",
+    "upcoming": "Upcoming Deadlines",
+    "noDeadlines": "No deadlines",
+    "noUpcoming": "No upcoming deadlines",
+    "created": "Deadline created successfully",
+    "updated": "Deadline updated successfully",
+    "completed": "Deadline marked as completed",
+    "deleted": "Deadline deleted successfully",
+    "daysRemaining": "{{count}} day remaining",
+    "daysRemaining_plural": "{{count}} days remaining",
+    "overdue": "Overdue",
+    "today": "Today",
+    "type": {
+      "comment_period_start": "Comment Period Start",
+      "comment_period_end": "Comment Period End",
+      "review_deadline": "Review Deadline",
+      "vote_date": "Vote Date",
+      "effective_date": "Effective Date",
+      "implementation_deadline": "Implementation Deadline",
+      "reporting_deadline": "Reporting Deadline",
+      "compliance_deadline": "Compliance Deadline",
+      "expiration_date": "Expiration Date",
+      "other": "Other"
+    },
+    "form": {
+      "title": "Title",
+      "description": "Description",
+      "type": "Type",
+      "date": "Date",
+      "time": "Time",
+      "timezone": "Timezone",
+      "priority": "Priority",
+      "alertDaysBefore": "Alert Days Before",
+      "alertEnabled": "Enable Alerts"
+    }
+  },
+
+  "related": {
+    "title": "Related Legislation",
+    "noRelated": "No related legislation",
+    "added": "Related legislation linked successfully",
+    "removed": "Related legislation unlinked successfully",
+    "type": {
+      "related": "Related",
+      "supersedes": "Supersedes",
+      "superseded_by": "Superseded By",
+      "implements": "Implements",
+      "implemented_by": "Implemented By",
+      "amends": "Amends",
+      "amended_by": "Amended By",
+      "replaces": "Replaces",
+      "replaced_by": "Replaced By",
+      "references": "References",
+      "referenced_by": "Referenced By"
+    },
+    "form": {
+      "legislation": "Select Legislation",
+      "type": "Relationship Type",
+      "notes": "Notes"
+    }
+  },
+
+  "history": {
+    "title": "Status History",
+    "noHistory": "No status changes recorded",
+    "changedFrom": "Changed from",
+    "changedTo": "to",
+    "by": "by",
+    "reason": "Reason"
+  },
+
+  "watchers": {
+    "title": "Watching",
+    "watching": "Now watching this legislation",
+    "unwatched": "Stopped watching this legislation",
+    "preferencesUpdated": "Watch preferences updated",
+    "preferences": {
+      "title": "Notification Preferences",
+      "statusChange": "Status changes",
+      "amendments": "New amendments",
+      "deadlines": "Upcoming deadlines",
+      "commentPeriod": "Comment period updates",
+      "notificationType": "Notification Type",
+      "email": "Email",
+      "inApp": "In-App",
+      "both": "Both"
+    }
+  },
+
+  "filters": {
+    "type": "Type",
+    "status": "Status",
+    "priority": "Priority",
+    "impact": "Impact Level",
+    "jurisdiction": "Jurisdiction",
+    "sectors": "Sectors",
+    "tags": "Tags",
+    "commentPeriod": "Comment Period",
+    "introducedFrom": "Introduced From",
+    "introducedTo": "Introduced To",
+    "effectiveFrom": "Effective From",
+    "effectiveTo": "Effective To",
+    "hasOpenCommentPeriod": "Has Open Comment Period",
+    "hasUpcomingDeadlines": "Has Upcoming Deadlines",
+    "watching": "Watching Only"
+  },
+
+  "detail": {
+    "version": "Version",
+    "lastUpdated": "Last Updated",
+    "createdAt": "Created",
+    "introducedDate": "Introduced",
+    "effectiveDate": "Effective Date",
+    "expirationDate": "Expiration Date",
+    "lastActionDate": "Last Action",
+    "referenceNumber": "Reference",
+    "jurisdiction": "Jurisdiction",
+    "issuingBody": "Issuing Body",
+    "linkedDossier": "Linked Dossier",
+    "parentLegislation": "Parent Legislation",
+    "sources": "Sources",
+    "sourceUrl": "Source",
+    "officialText": "Official Text"
+  },
+
+  "list": {
+    "empty": "No legislation found",
+    "emptyFiltered": "No legislation matches your filters",
+    "loading": "Loading legislation...",
+    "loadMore": "Load More",
+    "showingCount": "Showing {{count}} of {{total}} legislation items"
+  },
+
+  "messages": {
+    "created": "Legislation created successfully",
+    "updated": "Legislation updated successfully",
+    "deleted": "Legislation deleted successfully",
+    "statusUpdated": "Status updated successfully",
+    "confirmDelete": "Are you sure you want to delete this legislation?",
+    "deleteWarning": "This action cannot be undone."
+  },
+
+  "errors": {
+    "loadFailed": "Failed to load legislation",
+    "createFailed": "Failed to create legislation",
+    "updateFailed": "Failed to update legislation",
+    "deleteFailed": "Failed to delete legislation",
+    "notFound": "Legislation not found"
+  },
+
+  "dashboard": {
+    "title": "Legislation Dashboard",
+    "openCommentPeriods": "Open Comment Periods",
+    "upcomingDeadlines": "Upcoming Deadlines",
+    "watchedLegislation": "Watched Legislation",
+    "recentUpdates": "Recent Updates",
+    "byStatus": "By Status",
+    "byType": "By Type",
+    "byPriority": "By Priority"
+  }
+}

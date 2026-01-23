@@ -1,17 +1,17 @@
 /**
  * Dashboard Route
  *
- * Role-specific landing page that surfaces relevant entities,
- * pending actions, and shortcuts based on user role.
+ * Dossier-centric landing page that shows user's dossiers,
+ * recent activity, and pending work grouped by dossier.
  */
 
 import { createFileRoute } from '@tanstack/react-router'
-import { RoleDashboard } from '@/components/role-dashboards'
+import { DashboardPage } from '@/pages/Dashboard/DashboardPage'
 
 export const Route = createFileRoute('/_protected/dashboard')({
-  component: RoleDashboardPage,
+  component: DossierDashboardPage,
 })
 
-function RoleDashboardPage() {
-  return <RoleDashboard />
+function DossierDashboardPage() {
+  return <DashboardPage />
 }

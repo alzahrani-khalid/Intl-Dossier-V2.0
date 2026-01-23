@@ -63,7 +63,7 @@ export function MouVersionTimeline({
         <div className="relative">
           {/* Timeline line */}
           <div
-            className={cn('absolute top-0 bottom-0 w-0.5 bg-border', isRTL ? 'right-3' : 'left-3')}
+            className={cn('absolute top-0 bottom-0 w-0.5 bg-border', isRTL ? 'end-3' : 'start-3')}
           />
 
           {/* Version entries */}
@@ -81,7 +81,7 @@ export function MouVersionTimeline({
                   <div
                     className={cn(
                       'absolute top-1 flex h-6 w-6 items-center justify-center rounded-full border-2',
-                      isRTL ? 'right-0' : 'left-0',
+                      isRTL ? 'end-0' : 'start-0',
                       isCurrent
                         ? 'border-primary bg-primary text-primary-foreground'
                         : 'border-muted bg-background text-muted-foreground',

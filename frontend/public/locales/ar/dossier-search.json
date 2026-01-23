@@ -1,0 +1,77 @@
+{
+  "page": {
+    "title": "البحث في الملفات",
+    "description": "ابحث عن الملفات وعناصر العمل المرتبطة في النظام"
+  },
+  "search": {
+    "placeholder": "ابحث عن ملفات، وثائق، مواقف...",
+    "label": "بحث",
+    "clear": "مسح البحث"
+  },
+  "filters": {
+    "allTypes": "جميع الأنواع",
+    "status": "الحالة",
+    "myDossiers": "ملفاتي",
+    "clear": "مسح الفلاتر"
+  },
+  "types": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "engagement": "مشاركة",
+    "topic": "موضوع",
+    "working_group": "مجموعة عمل",
+    "person": "شخص",
+    "elected_official": "مسؤول منتخب"
+  },
+  "status": {
+    "all": "جميع الحالات",
+    "active": "نشط",
+    "archived": "مؤرشف"
+  },
+  "sections": {
+    "dossiers": "الملفات",
+    "relatedWork": "العمل المرتبط"
+  },
+  "stats": {
+    "engagements": "مشاركات",
+    "documents": "وثائق",
+    "positions": "مواقف",
+    "workItems": "عناصر عمل",
+    "related": "مرتبط"
+  },
+  "priority": {
+    "urgent": "عاجل",
+    "high": "عالي",
+    "medium": "متوسط",
+    "low": "منخفض"
+  },
+  "inheritance": {
+    "direct": "مباشر",
+    "engagement": "عبر المشاركة",
+    "after_action": "عبر محضر الاجتماع",
+    "position": "عبر الموقف",
+    "mou": "عبر مذكرة التفاهم"
+  },
+  "results": {
+    "summary": "{{dossiers}} ملفات، {{work}} عناصر مرتبطة",
+    "time": "{{ms}} مللي ثانية"
+  },
+  "loadMore": {
+    "dossiers": "تحميل المزيد من الملفات",
+    "relatedWork": "تحميل المزيد من العناصر"
+  },
+  "empty": {
+    "title": "لم يتم العثور على نتائج",
+    "description": "حاول تعديل البحث أو الفلاتر",
+    "noDossiers": "لم يتم العثور على ملفات مطابقة",
+    "noRelatedWork": "لم يتم العثور على عناصر عمل مرتبطة",
+    "noQuery": {
+      "title": "ابدأ البحث",
+      "description": "ابحث عن الدول والمنظمات والمنتديات والملفات الأخرى. ستظهر النتائج الملفات المطابقة وعناصر العمل المرتبطة بها."
+    }
+  },
+  "hints": {
+    "keyboard": "اضغط Ctrl+K (⌘K) للتركيز على البحث من أي مكان"
+  }
+}

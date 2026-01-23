@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "When calendar has no events, show interactive wizard to create first meeting or commitment. Include templates for common event types (stakeholder meetings, deadlines, forums) with smart defaults based on user role.\n\n**Rationale:** Calendar is a core coordination tool but empty calendars provide no guidance on how to start. A wizard reduces friction for new users and demonstrates relationship between events and other entities like persons and engagements.",
+  "title": "Calendar View Empty State with Scheduling Wizard",
+  "status": "verified",
+  "id": "feature-1768507551095-stat1ipwj",
+  "descriptionHistory": [
+    {
+      "description": "When calendar has no events, show interactive wizard to create first meeting or commitment. Include templates for common event types (stakeholder meetings, deadlines, forums) with smart defaults based on user role.\n\n**Rationale:** Calendar is a core coordination tool but empty calendars provide no guidance on how to start. A wizard reduces friction for new users and demonstrates relationship between events and other entities like persons and engagements.",
+      "timestamp": "2026-01-15T20:05:51.095Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-15T20:12:26.164Z",
+  "updatedAt": "2026-01-15T20:27:35.758Z"
+}

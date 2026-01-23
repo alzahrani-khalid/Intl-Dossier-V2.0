@@ -7,6 +7,8 @@ on:
 
 env:
   NODE_VERSION: '20.19.0'
+  # pnpm version must match packageManager field in package.json
+  PNPM_VERSION: '10.18.3'
 
 jobs:
   deploy-staging:
@@ -18,17 +20,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build application
-        run: npm run build
+        run: pnpm run build
 
       - name: Deploy to staging server
         env:
@@ -46,7 +53,7 @@ jobs:
         run: |
           ssh -i deploy_key -o StrictHostKeyChecking=no \
             ${DEPLOY_USER}@${DEPLOY_HOST} \
-            "cd /var/www/staging && npm run migrate:up"
+            "cd /var/www/staging && pnpm run migrate:up"
 
   deploy-production:
     name: Deploy to Production
@@ -58,17 +65,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci --production
+        run: pnpm install --frozen-lockfile --prod
 
       - name: Build application
-        run: npm run build
+        run: pnpm run build
         env:
           NODE_ENV: production
 
@@ -76,7 +88,7 @@ jobs:
         env:
           DATABASE_URL: ${{ secrets.PROD_DATABASE_URL }}
         run: |
-          npm run db:backup
+          pnpm run db:backup
 
       - name: Deploy with Docker
         env:

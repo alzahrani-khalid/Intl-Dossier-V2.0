@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import React, { useEffect, useId, useRef, useState } from "react";
-import { AnimatePresence, motion } from "framer-motion";
-import { useOutsideClick } from "@/hooks/use-outside-click";
+import React, { useEffect, useId, useRef, useState } from 'react'
+import { AnimatePresence, motion } from 'framer-motion'
+import { useOutsideClick } from '@/hooks/use-outside-click'
 
 export function CloseIcon() {
   return (
@@ -34,50 +34,48 @@ export function CloseIcon() {
       <path d="M18 6l-12 12" />
       <path d="M6 6l12 12" />
     </motion.svg>
-  );
+  )
 }
 
 interface ExpandableCardProps {
   cards: Array<{
-    title: string;
-    description: string;
-    src: string;
-    ctaText: string;
-    ctaLink: string;
-    content: () => React.ReactNode;
-  }>;
+    title: string
+    description: string
+    src: string
+    ctaText: string
+    ctaLink: string
+    content: () => React.ReactNode
+  }>
 }
 
 export function ExpandableCard({ cards }: ExpandableCardProps) {
-  const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(
-    null
-  );
-  const id = useId();
-  const ref = useRef<HTMLDivElement>(null);
+  const [active, setActive] = useState<(typeof cards)[number] | boolean | null>(null)
+  const id = useId()
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     function onKeyDown(event: KeyboardEvent) {
-      if (event.key === "Escape") {
-        setActive(false);
+      if (event.key === 'Escape') {
+        setActive(false)
       }
     }
 
-    if (active && typeof active === "object") {
-      document.body.style.overflow = "hidden";
+    if (active && typeof active === 'object') {
+      document.body.style.overflow = 'hidden'
     } else {
-      document.body.style.overflow = "auto";
+      document.body.style.overflow = 'auto'
     }
 
-    window.addEventListener("keydown", onKeyDown);
-    return () => window.removeEventListener("keydown", onKeyDown);
-  }, [active]);
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [active])
 
-  useOutsideClick(ref, () => setActive(null));
+  useOutsideClick(ref, () => setActive(null))
 
   return (
     <>
       <AnimatePresence>
-        {active && typeof active === "object" && (
+        {active && typeof active === 'object' && (
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
@@ -87,7 +85,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
         )}
       </AnimatePresence>
       <AnimatePresence>
-        {active && typeof active === "object" ? (
+        {active && typeof active === 'object' ? (
           <div className="fixed inset-0  grid place-items-center z-[100]">
             <motion.button
               key={`button-${active.title}-${id}`}
@@ -104,7 +102,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
                   duration: 0.05,
                 },
               }}
-              className="flex absolute top-2 right-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
+              className="flex absolute top-2 end-2 lg:hidden items-center justify-center bg-white rounded-full h-6 w-6"
               onClick={() => setActive(null)}
             >
               <CloseIcon />
@@ -161,9 +159,7 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
                     exit={{ opacity: 0 }}
                     className="text-neutral-600 text-xs md:text-sm lg:text-base h-40 md:h-fit pb-10 flex flex-col items-start gap-4 overflow-auto dark:text-neutral-400 [mask:linear-gradient(to_bottom,white,white,transparent)] [scrollbar-width:none] [-ms-overflow-style:none] [-webkit-overflow-scrolling:touch]"
                   >
-                    {typeof active.content === "function"
-                      ? active.content()
-                      : active.content}
+                    {typeof active.content === 'function' ? active.content() : active.content}
                   </motion.div>
                 </div>
               </div>
@@ -192,13 +188,13 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
               <div className="flex justify-center items-center flex-col">
                 <motion.h3
                   layoutId={`title-${card.title}-${id}`}
-                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-left text-base"
+                  className="font-medium text-neutral-800 dark:text-neutral-200 text-center md:text-start text-base"
                 >
                   {card.title}
                 </motion.h3>
                 <motion.p
                   layoutId={`description-${card.description}-${id}`}
-                  className="text-neutral-600 dark:text-neutral-400 text-center md:text-left text-base"
+                  className="text-neutral-600 dark:text-neutral-400 text-center md:text-start text-base"
                 >
                   {card.description}
                 </motion.p>
@@ -208,5 +204,5 @@ export function ExpandableCard({ cards }: ExpandableCardProps) {
         ))}
       </ul>
     </>
-  );
+  )
 }

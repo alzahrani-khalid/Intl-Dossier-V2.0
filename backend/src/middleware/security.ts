@@ -9,13 +9,38 @@ const NODE_ENV = process.env.NODE_ENV || 'development'
 const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000'
 // const API_PORT = process.env.PORT || 5000; // Uncomment if needed
 
+// Helper to check if origin is a local network IP
+const isLocalNetworkOrigin = (origin: string): boolean => {
+  try {
+    const url = new URL(origin)
+    const hostname = url.hostname
+    // Check for localhost variants
+    if (hostname === 'localhost' || hostname === '127.0.0.1') return true
+    // Check for private IPv4 ranges: 192.168.x.x, 10.x.x.x, 172.16-31.x.x
+    const ipv4Regex = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/
+    const match = hostname.match(ipv4Regex)
+    if (match) {
+      const [, a, b] = match.map(Number)
+      // 10.0.0.0 - 10.255.255.255
+      if (a === 10) return true
+      // 172.16.0.0 - 172.31.255.255
+      if (a === 172 && b >= 16 && b <= 31) return true
+      // 192.168.0.0 - 192.168.255.255
+      if (a === 192 && b === 168) return true
+    }
+    return false
+  } catch {
+    return false
+  }
+}
+
 // CORS configuration
 export const corsOptions: cors.CorsOptions = {
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true)
 
-    // In development, allow localhost on different ports
+    // In development, allow localhost and local network IPs
     if (NODE_ENV === 'development') {
       const allowedOrigins = [
         'http://localhost:3000',
@@ -27,7 +52,12 @@ export const corsOptions: cors.CorsOptions = {
         FRONTEND_URL,
       ]
 
-      if (allowedOrigins.includes(origin) || origin?.startsWith('http://localhost:')) {
+      // Allow explicit origins, localhost variants, and local network IPs
+      if (
+        allowedOrigins.includes(origin) ||
+        origin?.startsWith('http://localhost:') ||
+        isLocalNetworkOrigin(origin)
+      ) {
         return callback(null, true)
       }
     }

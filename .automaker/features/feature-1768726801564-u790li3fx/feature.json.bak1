@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "Entity Type Confusion - With 10+ entity types (Persons, Engagements, Forums, Themes, Working Groups, etc.), users may struggle to understand which entity to use when, especially if they're new to the system or the terminology is domain-specific.",
+  "title": "Entity Type Confusion - With 10+ entity types (Persons, Engagements, Forums, Themes, Working Groups, etc.), users may struggle to understand which entity to use when, especially if they're new to the system or the terminology is domain-specific.",
+  "status": "verified",
+  "id": "feature-1768726801564-u790li3fx",
+  "descriptionHistory": [
+    {
+      "description": "Entity Type Confusion - With 10+ entity types (Persons, Engagements, Forums, Themes, Working Groups, etc.), users may struggle to understand which entity to use when, especially if they're new to the system or the terminology is domain-specific.",
+      "timestamp": "2026-01-18T09:00:01.565Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "035-dossier-context",
+  "startedAt": "2026-01-18T09:22:47.337Z",
+  "updatedAt": "2026-01-18T09:37:54.717Z"
+}

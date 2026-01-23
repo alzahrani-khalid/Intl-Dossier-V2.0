@@ -1,0 +1,64 @@
+{
+  "title": "ملفات ذات صلة",
+  "foundCount": "تم العثور على {{count}} ملفات مشابهة",
+  "foundCount_one": "تم العثور على ملف مشابه واحد",
+  "relatedDossiers": "ملفات ذات صلة",
+
+  "noRecommendations": "لا توجد توصيات",
+  "noRecommendationsDescription": "لم نعثر على ملفات مشابهة بعد. جرب إنشاء توصيات جديدة.",
+
+  "loading": "جارٍ البحث عن ملفات مشابهة...",
+  "errorLoading": "فشل تحميل التوصيات",
+
+  "similarityTooltip": "درجة تشابه المحتوى بناءً على تحليل الذكاء الاصطناعي",
+  "refreshTooltip": "إنشاء توصيات جديدة",
+
+  "viewDossier": "عرض الملف",
+  "dismiss": "تجاهل",
+  "wasThisHelpful": "هل كان مفيدًا؟",
+
+  "whyRecommended": "لماذا تم التوصية؟",
+  "contributingFactors": "العوامل المساهمة",
+
+  "generateRecommendations": "البحث عن ملفات مشابهة",
+  "viewAllRecommendations": "عرض جميع التوصيات",
+
+  "reason": {
+    "similar_content": "محتوى مشابه",
+    "shared_relationships": "اتصالات مشتركة",
+    "topic_overlap": "مواضيع متعلقة",
+    "recent_activity": "نشاط حديث",
+    "collaboration_history": "تاريخ التعاون",
+    "geographic_proximity": "نفس المنطقة",
+    "strategic_alignment": "توافق استراتيجي"
+  },
+
+  "status": {
+    "pending": "جديد",
+    "viewed": "تمت المشاهدة",
+    "accepted": "تم الفتح",
+    "dismissed": "تم التجاهل",
+    "expired": "منتهي الصلاحية"
+  },
+
+  "priority": {
+    "1": "منخفض جدًا",
+    "2": "منخفض",
+    "3": "متوسط",
+    "4": "مرتفع",
+    "5": "مرتفع جدًا"
+  },
+
+  "feedback": {
+    "positive": "شكرًا على ملاحظاتك!",
+    "negative": "نعتذر عن ذلك. سنعمل على التحسين.",
+    "submit": "إرسال الملاحظات"
+  },
+
+  "accessibility": {
+    "similarityScore": "نسبة تشابه المحتوى {{score}}%",
+    "priorityLevel": "مستوى الأولوية: {{level}}",
+    "expandDetails": "انقر لمعرفة سبب التوصية بهذا الملف",
+    "collapseDetails": "إخفاء تفاصيل التوصية"
+  }
+}

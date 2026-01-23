@@ -267,6 +267,256 @@
         <location>supabase/migrations/028_create_rate_limit_policies.sql</location>
       </file_locations>
     </feature>
+    <feature>
+      <name>Navigation &amp; Discovery Friction</name>
+      <description>Navigation &amp; Discovery Friction</description>
+    </feature>
+    <feature>
+      <name>Legislator/Official Contact Database</name>
+      <description>Create a dedicated entity type for elected officials and government contacts with fields for office, district, party affiliation, committee assignments, and contact preferences. Include automated data refresh from official sources.
+
+**Rationale:** Public affairs applications typically require robust tracking of government officials and their evolving roles. This is a core need for lobbying, advocacy, and government relations teams that appears missing from the current entity types.</description>
+    </feature>
+    <feature>
+      <name>Issue/Bill Tracking Module</name>
+      <description>Build a dedicated entity for tracking legislation, regulatory proposals, and policy issues through their lifecycle. Include status tracking, sponsor information, amendment history, and deadline alerts for comment periods.
+
+**Rationale:** Policy professionals need to monitor and respond to legislative and regulatory developments. This is a fundamental capability for public affairs, compliance, and advocacy work that doesn&apos;t appear to exist in current entities.</description>
+    </feature>
+    <feature>
+      <name>Entity Type Confusion - With 10+ entity types (Persons, Engagements, Forums, Themes, Working Groups, etc.), users may struggle to understand which entity to use when, especially if they&apos;re new to the system or the terminology is domain-specific.</name>
+      <description>Entity Type Confusion - With 10+ entity types (Persons, Engagements, Forums, Themes, Working Groups, etc.), users may struggle to understand which entity to use when, especially if they&apos;re new to the system or the terminology is domain-specific.</description>
+    </feature>
+    <feature>
+      <name>Relationship Graph Overwhelm - While there&apos;s a relationship graph feature, visualizing complex interconnected entities (person → engagement → forum → working group) can become visually overwhelming, especially for power users with extensive networks.</name>
+      <description>Relationship Graph Overwhelm - While there&apos;s a relationship graph feature, visualizing complex interconnected entities (person → engagement → forum → working group) can become visually overwhelming, especially for power users with extensive networks.</description>
+    </feature>
+    <feature>
+      <name>Cross-Entity Search Ambiguity - When searching across multiple entity types simultaneously, results may be unclear about which entity type matched, why it matched, or how to narrow down results effectively.</name>
+      <description>Cross-Entity Search Ambiguity - When searching across multiple entity types simultaneously, results may be unclear about which entity type matched, why it matched, or how to narrow down results effectively.</description>
+    </feature>
+    <feature>
+      <name>Form &amp; Data Entry Friction</name>
+      <description>Form &amp; Data Entry Friction</description>
+    </feature>
+    <feature>
+      <name>Elevated Dossier Navigation Structure</name>
+      <description>Restructure main navigation to make Dossiers the first-class citizen with a dedicated navigation section. Replace the current flat &apos;Main &gt; Dossiers&apos; structure with a hierarchical &apos;Dossiers (Primary Hub)&apos; section containing: All Dossiers, By Type (Countries, Organizations, Forums, Engagements, Working Groups, Persons, Topics, Elected Officials), Relationship Graph, and Recent Activity. This emphasizes that all work flows through dossiers.
+
+**Rationale (R1):** The current navigation buries dossiers as one item among many. Elevating it reinforces the mental model that dossiers are the central organizing concept of the entire system.</description>
+    </feature>
+    <feature>
+      <name>Contextual &apos;Add to Dossier&apos; Action Menu</name>
+      <description>Standardize &apos;Add to Dossier&apos; as the primary mental model for creating work items. Implement a contextual action menu on all dossier detail pages with options: New Intake, New Task, New Commitment, New Position, Schedule Event, Add Relationship, Generate Brief, Upload Document. All created items automatically inherit the dossier context with proper inheritance_source tracking.
+
+**Rationale (R3):** Scattered creation entry points confuse users about how items relate to dossiers. This standardizes the workflow and ensures proper context inheritance.</description>
+    </feature>
+    <feature>
+      <name>Dossier-First Search Experience</name>
+      <description>Redesign the search experience to emphasize dossier discovery. Search results organized in two sections: &apos;DOSSIERS&apos; showing matching dossiers with type badges and key stats, and &apos;RELATED WORK&apos; showing items linked to matching dossiers. Add filters: All Types dropdown, Status (Active/Archived), My Dossiers toggle. Results show dossier context badges on related items.
+
+**Rationale (R7):** Current search treats dossiers as just another result type. Dossier-first search helps users find the right dossier context before drilling into specific items.</description>
+    </feature>
+    <feature>
+      <name>Dossier-Centric Dashboard</name>
+      <description>Redesign the main dashboard to organize around dossier activity instead of generic metrics. Include: &apos;My Dossiers&apos; section showing dossiers the user owns/contributes to with activity badges, &apos;Recent Dossier Activity&apos; timeline aggregating all changes across user&apos;s dossiers, and &apos;Pending Work by Dossier&apos; grouping tasks/commitments/intakes by their linked dossiers. Each dossier card shows quick stats (new items, pending tasks, active commitments).
+
+**Rationale (R2):** Current dashboard shows disconnected metrics. A dossier-organized dashboard helps users immediately see which entities need attention and provides context for their work.</description>
+    </feature>
+    <feature>
+      <name>Enhanced Dossier Context Provider</name>
+      <description>Extend the React context provider for better dossier state management. New capabilities: activeDossier (current dossier scope), recentDossiers (last 10 viewed), pinnedDossiers (user&apos;s pinned favorites), actions (setActiveDossier, pinDossier, unpinDossier), smart context resolution (resolveContextFromUrl, inheritContextFromParent). Persist pinned dossiers and recent history to user preferences.
+
+**Rationale (R11):** Current context management is basic. Enhanced provider enables consistent dossier context across all components and improves navigation UX.</description>
+    </feature>
+    <feature>
+      <name>Persistent Dossier Context Indicator</name>
+      <description>Add a persistent context indicator in page headers showing the current dossier scope when viewing related items (tasks, positions, events, etc.). Display format: &apos;📁 Viewing in context of: [Dossier Name] [Type Badge] [Change] [Clear]&apos;. The indicator helps users understand which dossier&apos;s context they&apos;re working within and allows quick context switching or clearing.
+
+**Rationale (R4):** Users lose track of which dossier context they&apos;re in when navigating between related items. Persistent indication prevents confusion and accidental context loss.</description>
+    </feature>
+    <feature>
+      <name>Unified Dossier Activity Feed API</name>
+      <description>Create a unified API endpoint (GET /api/dossiers/:id/activity) that aggregates all activity related to a dossier. Returns activities from: tasks, commitments, intakes, positions, events, relationships, documents, and comments. Each activity includes: type, action (created/updated/completed/linked), title, timestamp, actor, and inheritanceSource. Supports cursor pagination, filtering by activity type, and date range queries.
+
+**Rationale (R12):** Activity data is currently scattered across multiple endpoints. A unified feed enables consistent activity timelines across all dossier views.</description>
+    </feature>
+    <feature>
+      <name>Unified Dossier Relations Widget</name>
+      <description>Create a reusable widget that appears on all entity detail pages (tasks, commitments, positions, MOUs, events) showing linked dossiers. The widget displays: linked dossiers with type badges, inheritance path (how context was inherited: direct, engagement, after_action, position, mou), ability to add/remove dossier links, and navigation to linked dossier detail pages.
+
+**Rationale (R5):** Currently, dossier links are shown inconsistently across different entity types. A unified widget ensures consistent UX and makes dossier connections visible everywhere.</description>
+    </feature>
+    <feature>
+      <name>Dossier-Centric Branding and Terminology Update</name>
+      <description>Update terminology throughout the application to reinforce dossier-centric mental model. Changes include: &apos;GASTAT Dossier&apos; → &apos;GASTAT International Dossier&apos;, use &apos;Dossier&apos; instead of generic &apos;Entity&apos; where appropriate, &apos;Create Engagement&apos; → &apos;Create Engagement Dossier&apos;, &apos;View Details&apos; → &apos;View Dossier&apos;. Update all UI labels, tooltips, help text, and documentation to use consistent dossier terminology.
+
+**Rationale (R9):** Inconsistent terminology confuses users about the system&apos;s core concept. Consistent branding reinforces that dossiers are the central organizing principle.</description>
+    </feature>
+    <feature>
+      <name>Everything About X Dossier Query</name>
+      <description>Implement a one-click &apos;Everything about [Dossier]&apos; view that aggregates all connections to a dossier in a structured summary. Sections include: Related Dossiers (by relationship type), Documents (positions, MOUs, briefs), Work Items (tasks, commitments, intakes with status breakdown), Calendar Events, Key Contacts, and Activity Timeline. Include export capability for the complete dossier profile.
+
+**Rationale (R8):** Users need a comprehensive view of all connections to a dossier without manually navigating multiple tabs. This provides executive-level overview for briefings and handoffs.</description>
+    </feature>
+    <feature>
+      <name>Pre-computed Dossier Statistics Materialized View</name>
+      <description>Create a PostgreSQL materialized view (dossier_statistics) that pre-computes aggregate statistics for each dossier: task_count, commitment_count, position_count, relationship_count, event_count, document_count, and last_activity_at. Set up periodic refresh (every 5 minutes) or trigger-based refresh on related table changes. Use these stats for dashboard cards and quick stats displays.
+
+**Rationale (R13):** Computing dossier statistics on-the-fly is expensive for dashboards showing multiple dossiers. Pre-computed stats enable fast dashboard rendering.</description>
+    </feature>
+    <feature>
+      <name>Dossier-Centric Onboarding Tour</name>
+      <description>Create an interactive onboarding tour for new users that establishes the dossier mental model. Tour steps: (1) Welcome explaining that everything starts with a Dossier, (2) &apos;Your Dossiers&apos; showing how users are assigned dossiers to manage, (3) &apos;Work Flows Through Dossiers&apos; demonstrating how tasks/positions/meetings link to dossiers, (4) &apos;Relationship Graph&apos; introducing connections between dossiers, (5) &apos;Find What You Need&apos; showing dossier-first search. Include skip option and ability to replay.
+
+**Rationale (R10):** New users often struggle to understand the dossier-centric architecture. Guided onboarding establishes the mental model from day one.</description>
+    </feature>
+    <feature>
+      <name>Mini Relationship Graph in Sidebar</name>
+      <description>Add a collapsible sidebar widget showing a mini relationship graph for the current dossier. Display immediate relationships (1-degree connections) with relationship type labels (membership, bilateral, partnership). Include interactive features: click to navigate to connected dossier, hover for quick preview, and &apos;View Full Graph&apos; link to the complete network visualization.
+
+**Rationale (R6):** The full relationship graph can be overwhelming. A mini graph provides quick context about immediate connections without leaving the current page.</description>
+    </feature>
+    <feature>
+      <name>Meeting Agenda Builder with Time Allocation</name>
+      <description>Create a dedicated tool for building meeting agendas with time-boxed topics, assigned presenters, linked entities, and document attachments. Generate agenda PDFs and track actual vs planned timing during meetings.
+
+**Rationale:** Policy meetings require careful planning and time management. A structured agenda tool ensures productive meetings and creates a clear record linked to relevant entities and commitments.</description>
+    </feature>
+    <feature>
+      <name>Cross-Entity Dependency and Impact Analysis</name>
+      <description>Visualize and analyze dependencies between entities (e.g., how a policy change affects stakeholders, commitments, and working groups). Provide impact assessment reports when entities are modified or relationships change.
+
+**Rationale:** Policy decisions have cascading effects across stakeholders and commitments. Understanding dependencies helps teams anticipate consequences and make informed decisions about changes.</description>
+    </feature>
+    <feature>
+      <name>Scheduled Automated Report Distribution</name>
+      <description>Enable users to schedule recurring reports (daily, weekly, monthly) with automatic generation and distribution via email or integrated channels. Include customizable report templates and recipient lists with conditional delivery rules.
+
+**Rationale:** Policy teams need regular status updates and briefings without manual effort. Automated reporting ensures stakeholders stay informed and reduces administrative burden on staff.</description>
+    </feature>
+    <feature>
+      <name>Customizable Entity Card Preview Templates</name>
+      <description>Allow administrators to define custom preview card layouts for each entity type, controlling which fields, relationships, and metadata appear in hover previews, search results, and embedded references.
+
+**Rationale:** Different organizations prioritize different information when scanning entities. Customizable previews ensure users see the most relevant context at a glance, improving efficiency and reducing unnecessary clicks.</description>
+    </feature>
+    <feature>
+      <name>Document Attachments Empty State with Drag-Drop Zone</name>
+      <description>When entity has no documents, show large drag-drop upload area with file type icons and size limits. Display recent document templates relevant to entity type with one-click attachment.
+
+**Rationale:** Users expect intuitive file attachment but may not discover drag-drop functionality. Prominent empty state with visual affordances reduces clicks and surfaces relevant templates that standardize document management.</description>
+    </feature>
+    <feature>
+      <name>Stakeholder Network Empty State with Connection Discovery</name>
+      <description>When person has no documented relationships, show AI-powered suggestions based on co-attendance at events, shared engagements, and organizational hierarchy. Provide bulk relationship creation with context notes.
+
+**Rationale:** Relationship mapping is tedious manual work. AI can surface hidden connections from existing data, dramatically accelerating network documentation while ensuring important stakeholder relationships aren&apos;t overlooked.</description>
+    </feature>
+    <feature>
+      <name>Calendar View Empty State with Scheduling Wizard</name>
+      <description>When calendar has no events, show interactive wizard to create first meeting or commitment. Include templates for common event types (stakeholder meetings, deadlines, forums) with smart defaults based on user role.
+
+**Rationale:** Calendar is a core coordination tool but empty calendars provide no guidance on how to start. A wizard reduces friction for new users and demonstrates relationship between events and other entities like persons and engagements.</description>
+    </feature>
+    <feature>
+      <name>Working Group Members Empty State with Team Builder</name>
+      <description>When working group has no members, provide smart member suggestions based on related engagements, forums, and past collaboration patterns. Include role assignment wizard and invitation templates.
+
+**Rationale:** Building effective working groups requires knowing who to include. AI-powered suggestions leverage existing relationship data to recommend relevant stakeholders, reducing manual research and accelerating team formation.</description>
+    </feature>
+    <feature>
+      <name>Commitment Deliverables Empty State with Milestone Planner</name>
+      <description>When commitment has no deliverables defined, show interactive timeline tool to break commitment into trackable milestones. Include templates for common deliverable types with suggested due dates.
+
+**Rationale:** Commitments without deliverables are hard to track and often fall through cracks. Structured empty state encourages users to define concrete outcomes immediately, improving accountability and project management.</description>
+    </feature>
+    <feature>
+      <name>Field-Level Permissions and Data Access Controls</name>
+      <description>Implement granular permissions allowing administrators to control visibility and editability of specific fields within entities based on user roles. Include inherited permissions from entity relationships and field-level audit trails.
+
+**Rationale:** Different team members need access to different types of information. Field-level controls enable fine-grained security without creating duplicate entity types or complex workarounds.</description>
+    </feature>
+    <feature>
+      <name>Fix CI Pipeline Package Manager Mismatch</name>
+      <description>Update GitHub Actions CI workflow to use pnpm instead of npm. The project enforces pnpm via package.json preinstall hook (only-allow pnpm) and packageManager field (pnpm@10.18.3), but CI uses npm ci commands. Changes: Add pnpm/action-setup@v4, change cache to pnpm, replace npm ci with pnpm install --frozen-lockfile.</description>
+    </feature>
+    <feature>
+      <name>Complete Stubbed Edge Functions Returning 501</name>
+      <description>Implement 9 Edge Functions currently returning 501. Functions: positions-versions-compare, positions-versions-list, positions-versions-restore, positions-delegate, positions-unpublish, attachments-list, attachments-upload, attachments-download, attachments-delete. These block production features for positions and attachments management.</description>
+    </feature>
+    <feature>
+      <name>Enforce RTL Logical Properties via Linting</name>
+      <description>Replace directional CSS classes with RTL-compatible logical properties across all UI components. Currently 20+ components use pl-*, pr-*, ml-*, mr-*, left-*, right-* instead of ps-*, pe-*, ms-*, me-*, start-*, end-*. Add ESLint rule to prevent regression. Mandatory for Arabic RTL support.</description>
+    </feature>
+    <feature>
+      <name>Re-enable Production-Disabled AI Features</name>
+      <description>AI/search/voice features are disabled in backend production due to Alpine/ONNX issues. Decouple AI operations from main API by moving embeddings to external service, using AnythingLLM API for inference, and making embedding generation async with queue processing.</description>
+    </feature>
+    <feature>
+      <name>Dossier-Centric Dashboard Redesign</name>
+      <description>Redesign main dashboard around dossier activity. Include My Dossiers section with activity badges, Recent Dossier Activity timeline, Pending Work by Dossier grouping. Each dossier card shows quick stats. Reinforces mental model that everything flows through dossiers.</description>
+    </feature>
+    <feature>
+      <name>Add Bundle Size Monitoring</name>
+      <description>No bundle size tracking exists. Add rollup-plugin-visualizer to Vite, configure bundlesize in CI with thresholds (main: 500KB, vendor: 300KB), add pnpm analyze script, set up GitHub Action to comment bundle diff on PRs.</description>
+    </feature>
+    <feature>
+      <name>Optimize Dossier List Queries (N+1 Prevention)</name>
+      <description>Fix N+1 query pattern in listDossiers(). Currently fetches base dossiers then makes separate queries for type-specific data. Solution: Create dossier_list_view materialized view, add refresh trigger, implement Redis caching with 5-minute TTL, add cursor-based pagination.</description>
+    </feature>
+    <feature>
+      <name>Remove TypeScript any Types from Codebase</name>
+      <description>Despite strict mode, 232 instances of &apos;: any&apos; exist in frontend. Replace Record&lt;string, any&gt; with specific interfaces, add Zod validation for external data, configure ESLint @typescript-eslint/no-explicit-any as error.</description>
+    </feature>
+    <feature>
+      <name>Implement Query Result Caching Strategy</name>
+      <description>Redis caching exists but is applied inconsistently. Implement @Cacheable decorator, cache invalidation on writes, TTL configuration per entity type (dossiers: 5min, users: 15min, static: 1hr), and cache hit/miss metrics.</description>
+    </feature>
+    <feature>
+      <name>Wire Up Global Search (QuickSwitcher)</name>
+      <description>Connect QuickSwitcher.tsx to Redis-cached typeahead, search across all dossier types, add Cmd+K shortcut, show recent items and suggestions, support fuzzy matching. Results show DOSSIERS and RELATED WORK sections with type badges.</description>
+    </feature>
+    <feature>
+      <name>Organize Root Directory Documentation</name>
+      <description>Move 46 root markdown files to organized structure. Feature docs to docs/features/, migration guides to docs/migrations/, archive completed specs to .archive/. Keep only README.md, CONTRIBUTING.md, CHANGELOG.md at root.</description>
+    </feature>
+    <feature>
+      <name>Implement Command Palette</name>
+      <description>Build comprehensive command palette for power users. Features: global entity search, quick navigation shortcuts, action shortcuts (create task, new intake), recent items, context-aware suggestions. Integrates with existing keyboard shortcuts.</description>
+    </feature>
+    <feature>
+      <name>AI-Powered Dossier Recommendations</name>
+      <description>Implement proactive dossier recommendations using pgvector embeddings. Create Edge Function with similarity search, add RecommendationsPanel to dossier pages, track interactions, include Why recommended explainability.</description>
+    </feature>
+    <feature>
+      <name>Implement Missing MoU Notification Hooks</name>
+      <description>Wire up notifications for MoU deliverable due dates, commitment expiration warnings, renewal reminders, milestone completions, and workflow state changes. Add notification preferences and batching.</description>
+    </feature>
+    <feature>
+      <name>Consolidate UI Component Library Usage</name>
+      <description>Codebase mixes Aceternity, Kibo, and shadcn/ui inconsistently. Audit 67+ UI components, replace shadcn with Aceternity equivalents, document component registry, add ESLint rule to warn on non-Aceternity imports.</description>
+    </feature>
+    <feature>
+      <name>Integrate Sentry Error Tracking</name>
+      <description>Add Sentry SDK to frontend and backend. Configure source maps upload, update error boundaries to report to Sentry, add user context (role, tenant), set up Slack alerts for critical errors.</description>
+    </feature>
+    <feature>
+      <name>Real-Time Collaboration Indicators</name>
+      <description>Add visual indication of who else is viewing/editing a dossier. Enable Supabase Realtime presence, create ActiveViewers avatar stack, add Currently editing lock indicator, implement optimistic locking with conflict resolution.</description>
+    </feature>
+    <feature>
+      <name>WCAG AA Accessibility Compliance Audit</name>
+      <description>Run axe-playwright on all routes, fix color contrast issues, add ARIA labels, ensure keyboard navigation, add screen reader testing. Government systems require accessibility compliance.</description>
+    </feature>
+    <feature>
+      <name>Advanced Relationship Graph Features</name>
+      <description>Enhance graph visualization with clustering by relationship type, time-based animation, path finding (How is X connected to Y?), influence mapping, N-degree filtering. Export as PNG/SVG.</description>
+    </feature>
+    <feature>
+      <name>Everything About X - Dossier Export Pack</name>
+      <description>One-click export bundling all dossier information into briefing packet. Includes timeline, relationships, documents, commitments, positions, events, contacts. Export as PDF or Word with bilingual support.</description>
+    </feature>
   </implemented_features>
 
   <additional_requirements>
@@ -343,4 +593,4 @@
       <description>Foresight, predictive analytics, expanded automation - AI recommendations, relationship health analytics, proactive alerts, mobile offline sync</description>
     </phase>
   </implementation_roadmap>
-</project_specification>
+</project_specification>cification>

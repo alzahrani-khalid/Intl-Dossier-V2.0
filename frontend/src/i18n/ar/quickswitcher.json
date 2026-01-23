@@ -1,0 +1,32 @@
+{
+  "title": "التبديل السريع",
+  "open": "فتح التبديل السريع",
+  "search": "بحث...",
+  "placeholder": "البحث في الملفات والمواقف والمهام...",
+  "searching": "جارٍ البحث...",
+  "recent": "الأخيرة",
+  "start_typing": "ابدأ الكتابة للبحث...",
+  "no_results": "لم يتم العثور على نتائج",
+  "no_results_hint": "جرب كلمات مختلفة",
+  "dossiers_section": "الملفات",
+  "related_work_section": "الأعمال المرتبطة",
+  "navigate": "تنقل",
+  "select": "تحديد",
+  "close": "إغلاق",
+  "type_badges": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "person": "شخص",
+    "engagement": "مشاركة",
+    "forum": "منتدى",
+    "working_group": "مجموعة عمل",
+    "topic": "موضوع",
+    "elected_official": "مسؤول",
+    "position": "موقف",
+    "task": "مهمة",
+    "commitment": "التزام",
+    "intake": "طلب",
+    "mou": "مذكرة تفاهم",
+    "document": "وثيقة"
+  }
+}

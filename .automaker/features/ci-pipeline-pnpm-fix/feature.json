@@ -1,0 +1,13 @@
+{
+  "id": "ci-pipeline-pnpm-fix",
+  "category": "Core",
+  "title": "Fix CI Pipeline Package Manager Mismatch",
+  "description": "Update GitHub Actions CI workflow to use pnpm instead of npm. The project enforces pnpm via package.json preinstall hook (only-allow pnpm) and packageManager field (pnpm@10.18.3), but CI uses npm ci commands. Changes: Add pnpm/action-setup@v4, change cache to pnpm, replace npm ci with pnpm install --frozen-lockfile.",
+  "status": "verified",
+  "priority": 1,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-22T10:00:00.000Z",
+  "updatedAt": "2026-01-22T20:56:09.680Z",
+  "branchName": "035-dossier-context"
+}

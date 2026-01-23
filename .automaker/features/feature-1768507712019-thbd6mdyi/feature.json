@@ -2,7 +2,7 @@
   "category": "enhancement",
   "description": "When commitment has no deliverables defined, show interactive timeline tool to break commitment into trackable milestones. Include templates for common deliverable types with suggested due dates.\n\n**Rationale:** Commitments without deliverables are hard to track and often fall through cracks. Structured empty state encourages users to define concrete outcomes immediately, improving accountability and project management.",
   "title": "Commitment Deliverables Empty State with Milestone Planner",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768507712019-thbd6mdyi",
   "descriptionHistory": [
     {

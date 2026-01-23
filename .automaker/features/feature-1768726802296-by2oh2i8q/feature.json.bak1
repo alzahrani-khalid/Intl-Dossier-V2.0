@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "Cross-Entity Search Ambiguity - When searching across multiple entity types simultaneously, results may be unclear about which entity type matched, why it matched, or how to narrow down results effectively.",
+  "title": "Cross-Entity Search Ambiguity - When searching across multiple entity types simultaneously, results may be unclear about which entity type matched, why it matched, or how to narrow down results effectively.",
+  "status": "verified",
+  "id": "feature-1768726802296-by2oh2i8q",
+  "descriptionHistory": [
+    {
+      "description": "Cross-Entity Search Ambiguity - When searching across multiple entity types simultaneously, results may be unclear about which entity type matched, why it matched, or how to narrow down results effectively.",
+      "timestamp": "2026-01-18T09:00:02.296Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "035-dossier-context",
+  "startedAt": "2026-01-18T09:37:56.352Z",
+  "updatedAt": "2026-01-18T09:49:09.441Z"
+}

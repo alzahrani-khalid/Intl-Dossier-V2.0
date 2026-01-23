@@ -1,0 +1,19 @@
+{
+  "category": "enhancement",
+  "description": "Redesign the main dashboard to organize around dossier activity instead of generic metrics. Include: 'My Dossiers' section showing dossiers the user owns/contributes to with activity badges, 'Recent Dossier Activity' timeline aggregating all changes across user's dossiers, and 'Pending Work by Dossier' grouping tasks/commitments/intakes by their linked dossiers. Each dossier card shows quick stats (new items, pending tasks, active commitments).\n\n**Rationale (R2):** Current dashboard shows disconnected metrics. A dossier-organized dashboard helps users immediately see which entities need attention and provides context for their work.",
+  "title": "Dossier-Centric Dashboard",
+  "dependencies": ["analytics-dashboard"],
+  "priority": 1,
+  "status": "completed",
+  "branchName": "035-dossier-context",
+  "id": "feature-1768824231585-uy8d2w1zq",
+  "descriptionHistory": [
+    {
+      "description": "Redesign the main dashboard to organize around dossier activity instead of generic metrics. Include: 'My Dossiers' section showing dossiers the user owns/contributes to with activity badges, 'Recent Dossier Activity' timeline aggregating all changes across user's dossiers, and 'Pending Work by Dossier' grouping tasks/commitments/intakes by their linked dossiers. Each dossier card shows quick stats (new items, pending tasks, active commitments).\n\n**Rationale (R2):** Current dashboard shows disconnected metrics. A dossier-organized dashboard helps users immediately see which entities need attention and provides context for their work.",
+      "timestamp": "2026-01-19T12:03:51.585Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-01-19T12:03:56.626Z",
+  "updatedAt": "2026-01-19T12:46:46.002Z"
+}

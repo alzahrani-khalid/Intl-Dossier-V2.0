@@ -37,6 +37,7 @@ export type DossierType =
   | 'forum'
   | 'working_group'
   | 'topic'
+  | 'elected_official'
 
 /**
  * Extension schema for country dossiers
@@ -212,6 +213,114 @@ export interface TopicExtension {
 }
 
 /**
+ * Office types for elected officials
+ */
+export type OfficeType =
+  | 'head_of_state'
+  | 'head_of_government'
+  | 'cabinet_minister'
+  | 'legislature_upper'
+  | 'legislature_lower'
+  | 'regional_executive'
+  | 'regional_legislature'
+  | 'local_executive'
+  | 'local_legislature'
+  | 'judiciary'
+  | 'ambassador'
+  | 'international_org'
+  | 'other'
+
+/**
+ * Extension schema for elected official dossiers
+ *
+ * @description
+ * Contains elected official-specific metadata including office details,
+ * political affiliation, committee assignments, and contact preferences.
+ *
+ * @property title_en - Professional title in English (e.g., "Senator")
+ * @property title_ar - Professional title in Arabic
+ * @property office_name_en - Name of office in English
+ * @property office_type - Type of governmental office
+ * @property district_en - Electoral district in English
+ * @property party_en - Political party name
+ * @property term_start - Current term start date
+ * @property committee_assignments - JSONB array of committee assignments
+ * @property contact_preferences - JSONB with preferred contact methods
+ * @property staff_contacts - JSONB array of key staff members
+ * @property importance_level - 1=Regular, 2=Important, 3=Key, 4=VIP, 5=Critical
+ */
+export interface ElectedOfficialExtension {
+  title_en?: string
+  title_ar?: string
+  photo_url?: string
+  office_name_en: string
+  office_name_ar?: string
+  office_type: OfficeType
+  district_en?: string
+  district_ar?: string
+  party_en?: string
+  party_ar?: string
+  party_abbreviation?: string
+  party_ideology?:
+    | 'conservative'
+    | 'liberal'
+    | 'centrist'
+    | 'socialist'
+    | 'green'
+    | 'nationalist'
+    | 'libertarian'
+    | 'independent'
+    | 'other'
+  term_start?: string
+  term_end?: string
+  is_current_term?: boolean
+  term_number?: number
+  committee_assignments?: Array<{
+    name_en: string
+    name_ar?: string
+    role: 'chair' | 'vice_chair' | 'member'
+    is_active: boolean
+  }>
+  contact_preferences?: {
+    preferred_channel?: 'email' | 'phone' | 'in_person' | 'formal_letter'
+    best_time?: 'morning' | 'afternoon' | 'evening'
+    scheduling_notes_en?: string
+    scheduling_notes_ar?: string
+    protocol_notes_en?: string
+    protocol_notes_ar?: string
+  }
+  email_official?: string
+  email_personal?: string
+  phone_office?: string
+  phone_mobile?: string
+  address_office_en?: string
+  address_office_ar?: string
+  website_official?: string
+  website_campaign?: string
+  social_media?: Record<string, string>
+  staff_contacts?: Array<{
+    name: string
+    role: 'chief_of_staff' | 'scheduler' | 'policy_advisor' | 'press_secretary' | 'other'
+    email?: string
+    phone?: string
+    notes?: string
+  }>
+  country_id?: string
+  organization_id?: string
+  biography_en?: string
+  biography_ar?: string
+  policy_priorities?: string[]
+  notes_en?: string
+  notes_ar?: string
+  data_source?: 'official_website' | 'api_gov' | 'manual'
+  data_source_url?: string
+  last_verified_at?: string
+  last_refresh_at?: string
+  refresh_frequency_days?: number
+  importance_level?: 1 | 2 | 3 | 4 | 5
+}
+
+/**
  * Base dossier interface shared by all dossier types
  *
  * @description
@@ -311,6 +420,16 @@ export interface TopicDossier extends BaseDossier {
 }
 
 /**
+ * Elected official dossier type with elected official-specific extension
+ *
+ * @see ElectedOfficialExtension for type-specific fields
+ */
+export interface ElectedOfficialDossier extends BaseDossier {
+  type: 'elected_official'
+  extension: ElectedOfficialExtension
+}
+
+/**
  * Discriminated union type for all dossier types
  *
  * @description
@@ -335,6 +454,7 @@ export type Dossier =
   | ForumDossier
   | WorkingGroupDossier
   | TopicDossier
+  | ElectedOfficialDossier
 
 // =============================================================================
 // TYPE GUARD FUNCTIONS
@@ -417,6 +537,16 @@ export function isTopicDossier(dossier: Dossier): dossier is TopicDossier {
   return dossier.type === 'topic'
 }
 
+/**
+ * Type guard for elected official dossiers
+ *
+ * @param dossier - Dossier to check
+ * @returns True if the dossier is an elected official dossier
+ */
+export function isElectedOfficialDossier(dossier: Dossier): dossier is ElectedOfficialDossier {
+  return dossier.type === 'elected_official'
+}
+
 // =============================================================================
 // HELPER FUNCTIONS
 // =============================================================================
@@ -470,6 +600,8 @@ export function getTypeGuard(type: DossierType): (dossier: Dossier) => boolean {
       return isWorkingGroupDossier
     case 'topic':
       return isTopicDossier
+    case 'elected_official':
+      return isElectedOfficialDossier
     default:
       throw new Error(`Unknown dossier type: ${type}`)
   }
@@ -528,6 +660,7 @@ export function getDossierTypeLabel(type: DossierType, language: 'en' | 'ar'): s
     forum: { en: 'Forum', ar: 'منتدى' },
     working_group: { en: 'Working Group', ar: 'مجموعة عمل' },
     topic: { en: 'Topic', ar: 'موضوع' },
+    elected_official: { en: 'Elected Official', ar: 'مسؤول منتخب' },
   }
 
   return labels[type][language]
@@ -547,5 +680,14 @@ export function getDossierTypeLabel(type: DossierType, language: 'en' | 'ar'): s
  * ```
  */
 export function getAllDossierTypes(): DossierType[] {
-  return ['country', 'organization', 'person', 'engagement', 'forum', 'working_group', 'topic']
+  return [
+    'country',
+    'organization',
+    'person',
+    'engagement',
+    'forum',
+    'working_group',
+    'topic',
+    'elected_official',
+  ]
 }

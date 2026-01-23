@@ -2,7 +2,7 @@
   "category": "ui",
   "description": "Create a dedicated tool for building meeting agendas with time-boxed topics, assigned presenters, linked entities, and document attachments. Generate agenda PDFs and track actual vs planned timing during meetings.\n\n**Rationale:** Policy meetings require careful planning and time management. A structured agenda tool ensures productive meetings and creates a clear record linked to relevant entities and commitments.",
   "title": "Meeting Agenda Builder with Time Allocation",
-  "status": "verified",
+  "status": "completed",
   "id": "feature-1768507817861-kgar66g9a",
   "descriptionHistory": [
     {

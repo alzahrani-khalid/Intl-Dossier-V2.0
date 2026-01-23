@@ -457,7 +457,7 @@ export function DossierListPage() {
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-start tracking-tight">
             {t('list.title')}
           </h1>
-          <p className="text-sm sm:text-base text-muted-foreground/80 text-start mt-2 sm:mt-3">
+          <p className="text-sm sm:text-base text-muted-foreground text-start mt-2 sm:mt-3">
             {t('list.subtitle')}
           </p>
         </div>
@@ -775,7 +775,7 @@ export function DossierListPage() {
             {/* Results Count */}
             {data.total > 0 && (
               <div className="flex items-center justify-between mb-6">
-                <p className="text-sm font-medium text-muted-foreground/70 text-start">
+                <p className="text-sm font-medium text-muted-foreground text-start">
                   {t('list.showing', {
                     from: ((filters.page || 1) - 1) * (filters.page_size || 12) + 1,
                     to: Math.min((filters.page || 1) * (filters.page_size || 12), data.total),
@@ -880,7 +880,7 @@ export function DossierListPage() {
                   'border-t border-black/5',
                 )}
               >
-                <p className="text-sm font-medium text-muted-foreground/70">
+                <p className="text-sm font-medium text-muted-foreground">
                   {t('list.page', { current: filters.page || 1, total: totalPages })}
                 </p>
                 <div className="flex items-center gap-2">

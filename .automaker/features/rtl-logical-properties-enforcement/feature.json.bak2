@@ -1,0 +1,13 @@
+{
+  "id": "rtl-logical-properties-enforcement",
+  "category": "UI",
+  "title": "Enforce RTL Logical Properties via Linting",
+  "description": "Replace directional CSS classes with RTL-compatible logical properties across all UI components. Currently 20+ components use pl-*, pr-*, ml-*, mr-*, left-*, right-* instead of ps-*, pe-*, ms-*, me-*, start-*, end-*. Add ESLint rule to prevent regression. Mandatory for Arabic RTL support.",
+  "status": "pending",
+  "priority": 1,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-22T10:00:00.000Z",
+  "updatedAt": "2026-01-22T10:00:00.000Z",
+  "branchName": "035-dossier-context"
+}

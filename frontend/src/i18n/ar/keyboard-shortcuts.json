@@ -1,5 +1,5 @@
 {
-  "title": "اختصارات لوحة المفاتيح",
+  "title": "لوحة الأوامر",
   "searchPlaceholder": "اكتب أمرًا أو ابحث...",
   "noResults": "لم يتم العثور على نتائج.",
   "tryDifferentSearch": "جرب مصطلح بحث مختلف.",
@@ -12,15 +12,44 @@
     "help": "المساعدة"
   },
 
+  "createActions": {
+    "title": "إنشاء جديد",
+    "newTask": "إنشاء مهمة جديدة",
+    "newIntake": "إنشاء طلب استقبال جديد",
+    "newDossier": "إنشاء ملف جديد",
+    "newCommitment": "إنشاء التزام جديد",
+    "newPosition": "إنشاء موقف جديد",
+    "newCountry": "إنشاء ملف دولة جديد",
+    "newOrganization": "إنشاء ملف منظمة جديد",
+    "newForum": "إنشاء ملف منتدى جديد",
+    "newEngagement": "إنشاء مشاركة جديدة",
+    "newPerson": "إنشاء ملف شخص جديد",
+    "newTopic": "إنشاء ملف موضوع جديد",
+    "newWorkingGroup": "إنشاء مجموعة عمل جديدة",
+    "newElectedOfficial": "إنشاء ملف مسؤول منتخب جديد"
+  },
+
+  "contextSuggestions": {
+    "title": "مقترحات",
+    "suggested": "مقترح"
+  },
+
   "quickActions": {
-    "title": "إجراءات سريعة",
+    "title": "التنقل السريع",
     "dashboard": "الانتقال إلى لوحة المعلومات",
     "myWork": "الانتقال إلى أعمالي",
     "dossiers": "الانتقال إلى الملفات",
     "calendar": "الانتقال إلى التقويم",
     "tasks": "الانتقال إلى المهام",
     "analytics": "الانتقال إلى التحليلات",
-    "settings": "الانتقال إلى الإعدادات"
+    "settings": "الانتقال إلى الإعدادات",
+    "relationships": "عرض رسم العلاقات",
+    "recentActivity": "النشاط الأخير",
+    "briefs": "الانتقال إلى الموجزات",
+    "briefingBooks": "الانتقال إلى كتب الإحاطة",
+    "intelligence": "الانتقال إلى الاستخبارات",
+    "reports": "الانتقال إلى التقارير",
+    "slaMonitoring": "مراقبة اتفاقية مستوى الخدمة"
   },
 
   "shortcuts": {

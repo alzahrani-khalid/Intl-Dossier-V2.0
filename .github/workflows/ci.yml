@@ -10,6 +10,8 @@ env:
   # Vite 7+ and @vitejs/plugin-react 5 require Node >= 20.19.0.
   # Backend uses ts-node ESM features as well.
   NODE_VERSION: '20.19.0'
+  # pnpm version must match packageManager field in package.json
+  PNPM_VERSION: '10.18.3'
 
 jobs:
   lint:
@@ -18,20 +20,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run linting
-        run: npm run lint
+        run: pnpm run lint
 
       - name: Check TypeScript
-        run: npm run typecheck
+        run: pnpm run typecheck
 
   test-unit:
     name: Unit Tests
@@ -39,17 +46,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Run unit tests
-        run: npm run test -- --coverage
+        run: pnpm run test -- --coverage
 
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
@@ -79,20 +91,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps
+        run: pnpm exec playwright install --with-deps
 
       - name: Run E2E tests
-        run: npm run test:e2e
+        run: pnpm run test:e2e
         env:
           DATABASE_URL: postgresql://postgres:postgres@localhost:5432/test_db
 
@@ -111,20 +128,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Run RTL + Mobile tests
-        run: npx playwright test frontend/tests/e2e/dossier-rtl-mobile.spec.ts --reporter=html
+        run: pnpm exec playwright test frontend/tests/e2e/dossier-rtl-mobile.spec.ts --reporter=html
         working-directory: ./frontend
 
       - name: Upload RTL + Mobile test report
@@ -142,20 +164,25 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Install Playwright Browsers
-        run: npx playwright install --with-deps chromium
+        run: pnpm exec playwright install --with-deps chromium
 
       - name: Run Accessibility tests
-        run: npx playwright test frontend/tests/a11y/ --reporter=html
+        run: pnpm exec playwright test frontend/tests/a11y/ --reporter=html
         working-directory: ./frontend
 
       - name: Upload Accessibility test report
@@ -177,17 +204,22 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: 'pnpm'
 
       - name: Install dependencies
-        run: npm ci
+        run: pnpm install --frozen-lockfile
 
       - name: Build ${{ matrix.package }}
-        run: npm run build --workspace=${{ matrix.package }}
+        run: pnpm run build --filter=${{ matrix.package }}
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
@@ -195,6 +227,178 @@ jobs:
           name: build-${{ matrix.package }}
           path: ${{ matrix.package }}/dist/
           retention-days: 7
+
+  bundle-size-check:
+    name: Bundle Size Check
+    runs-on: ubuntu-latest
+    needs: [lint]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: ${{ env.PNPM_VERSION }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build frontend with size check
+        run: pnpm run build:ci
+        working-directory: ./frontend
+
+      - name: Upload bundle stats
+        uses: actions/upload-artifact@v4
+        with:
+          name: bundle-stats
+          path: frontend/dist/bundle-stats.json
+          retention-days: 30
+
+      # Download baseline from main branch (if exists) for comparison
+      - name: Download baseline bundle stats
+        if: github.event_name == 'pull_request'
+        uses: dawidd6/action-download-artifact@v3
+        with:
+          workflow: ci.yml
+          branch: main
+          name: bundle-stats
+          path: baseline-stats
+        continue-on-error: true
+
+      - name: Compare bundle sizes
+        if: github.event_name == 'pull_request'
+        id: bundle-compare
+        run: |
+          node frontend/scripts/compare-bundle-sizes.js
+        continue-on-error: true
+
+      - name: Comment bundle size diff on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // Read current stats
+            const currentStatsPath = 'frontend/dist/bundle-stats.json';
+            if (!fs.existsSync(currentStatsPath)) {
+              console.log('No bundle stats found, skipping comment');
+              return;
+            }
+
+            const currentStats = JSON.parse(fs.readFileSync(currentStatsPath, 'utf8'));
+
+            // Try to read baseline stats
+            let baselineStats = null;
+            const baselinePath = 'baseline-stats/bundle-stats.json';
+            if (fs.existsSync(baselinePath)) {
+              baselineStats = JSON.parse(fs.readFileSync(baselinePath, 'utf8'));
+            }
+
+            // Format bytes helper
+            const formatBytes = (bytes) => {
+              if (bytes < 1024) return `${bytes} B`;
+              if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(2)} KB`;
+              return `${(bytes / (1024 * 1024)).toFixed(2)} MB`;
+            };
+
+            // Format diff helper
+            const formatDiff = (current, baseline) => {
+              if (!baseline) return 'N/A';
+              const diff = current - baseline;
+              const percent = ((diff / baseline) * 100).toFixed(1);
+              const sign = diff >= 0 ? '+' : '';
+              const emoji = diff > 0 ? (diff > 10240 ? '🔴' : '🟡') : '🟢';
+              return `${sign}${formatBytes(diff)} (${sign}${percent}%) ${emoji}`;
+            };
+
+            // Build comment body
+            let body = '## 📦 Bundle Size Report\n\n';
+
+            // Current sizes table
+            body += '### Current Build\n\n';
+            body += '| Metric | Size (gzip) | Threshold | Status |\n';
+            body += '|--------|-------------|-----------|--------|\n';
+
+            const jsSize = currentStats.totals.js.gzip;
+            const cssSize = currentStats.totals.css.gzip;
+            const jsThreshold = currentStats.thresholds.total;
+            const cssThreshold = currentStats.thresholds.css;
+
+            const jsStatus = jsSize <= jsThreshold ? '✅ Pass' : '❌ Over';
+            const cssStatus = cssSize <= cssThreshold ? '✅ Pass' : '❌ Over';
+
+            body += `| JavaScript | ${formatBytes(jsSize)} | ${formatBytes(jsThreshold)} | ${jsStatus} |\n`;
+            body += `| CSS | ${formatBytes(cssSize)} | ${formatBytes(cssThreshold)} | ${cssStatus} |\n`;
+
+            // Comparison with baseline (if available)
+            if (baselineStats) {
+              body += '\n### Comparison with `main`\n\n';
+              body += '| Metric | Current | Baseline | Diff |\n';
+              body += '|--------|---------|----------|------|\n';
+
+              const baselineJs = baselineStats.totals.js.gzip;
+              const baselineCss = baselineStats.totals.css.gzip;
+
+              body += `| JavaScript | ${formatBytes(jsSize)} | ${formatBytes(baselineJs)} | ${formatDiff(jsSize, baselineJs)} |\n`;
+              body += `| CSS | ${formatBytes(cssSize)} | ${formatBytes(baselineCss)} | ${formatDiff(cssSize, baselineCss)} |\n`;
+            } else {
+              body += '\n> ℹ️ No baseline found for comparison (first run or baseline unavailable)\n';
+            }
+
+            // Chunks breakdown
+            body += '\n<details>\n<summary>📊 Chunk Breakdown</summary>\n\n';
+            body += '| Chunk | Size (gzip) | Size (raw) |\n';
+            body += '|-------|-------------|------------|\n';
+
+            currentStats.chunks
+              .filter(c => c.name.endsWith('.js') || c.name.endsWith('.css'))
+              .sort((a, b) => b.gzip - a.gzip)
+              .slice(0, 10) // Top 10 chunks
+              .forEach(chunk => {
+                body += `| ${chunk.name} | ${formatBytes(chunk.gzip)} | ${formatBytes(chunk.raw)} |\n`;
+              });
+
+            body += '\n</details>\n';
+
+            // Footer
+            body += '\n---\n';
+            body += '_Run `pnpm analyze` locally to visualize the bundle composition._\n';
+
+            // Find existing comment to update
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const botComment = comments.find(comment =>
+              comment.user.type === 'Bot' &&
+              comment.body.includes('Bundle Size Report')
+            );
+
+            if (botComment) {
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: botComment.id,
+                body: body,
+              });
+            } else {
+              await github.rest.issues.createComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                issue_number: context.issue.number,
+                body: body,
+              });
+            }
 
   docker-build:
     name: Docker Build

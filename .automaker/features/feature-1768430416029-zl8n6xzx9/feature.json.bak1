@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "When person has no documented relationships, show AI-powered suggestions based on co-attendance at events, shared engagements, and organizational hierarchy. Provide bulk relationship creation with context notes.\n\n**Rationale:** Relationship mapping is tedious manual work. AI can surface hidden connections from existing data, dramatically accelerating network documentation while ensuring important stakeholder relationships aren't overlooked.",
+  "title": "Stakeholder Network Empty State with Connection Discovery",
+  "status": "verified",
+  "id": "feature-1768430416029-zl8n6xzx9",
+  "descriptionHistory": [
+    {
+      "description": "When person has no documented relationships, show AI-powered suggestions based on co-attendance at events, shared engagements, and organizational hierarchy. Provide bulk relationship creation with context notes.\n\n**Rationale:** Relationship mapping is tedious manual work. AI can surface hidden connections from existing data, dramatically accelerating network documentation while ensuring important stakeholder relationships aren't overlooked.",
+      "timestamp": "2026-01-14T22:40:16.029Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "main",
+  "startedAt": "2026-01-15T19:51:29.944Z",
+  "updatedAt": "2026-01-15T20:04:57.825Z"
+}

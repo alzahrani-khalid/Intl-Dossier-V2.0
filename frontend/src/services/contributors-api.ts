@@ -6,62 +6,62 @@
  * Handles authentication, error handling, and response parsing.
  */
 
-import { createClient } from '@supabase/supabase-js';
-import type { Database } from '../../../backend/src/types/database.types';
+import { createClient } from '@supabase/supabase-js'
+import type { Database } from '../../../backend/src/types/database.types'
+import type { ApiErrorDetails } from '@/types/common.types'
 
 // Initialize Supabase client
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
+const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  throw new Error('Missing Supabase environment variables');
+  throw new Error('Missing Supabase environment variables')
 }
 
-export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey);
+export const supabase = createClient<Database>(supabaseUrl, supabaseAnonKey)
 
-type TaskContributor = Database['public']['Tables']['task_contributors']['Row'];
+type TaskContributor = Database['public']['Tables']['task_contributors']['Row']
 
 /**
  * API Request types
  */
 export interface AddContributorRequest {
-  user_id: string;
-  role?: string;
+  user_id: string
+  role?: string
 }
 
 export interface AddMultipleContributorsRequest {
-  user_ids: string[];
-  role?: string;
+  user_ids: string[]
+  role?: string
 }
 
 /**
  * API Error class
  */
 export class ContributorsAPIError extends Error {
-  code: string;
-  status: number;
-  details?: any;
+  code: string
+  status: number
+  details?: ApiErrorDetails
 
-  constructor(message: string, status: number, code: string, details?: any) {
-    super(message);
-    this.name = 'ContributorsAPIError';
-    this.code = code;
-    this.status = status;
-    this.details = details;
+  constructor(message: string, status: number, code: string, details?: ApiErrorDetails) {
+    super(message)
+    this.name = 'ContributorsAPIError'
+    this.code = code
+    this.status = status
+    this.details = details
   }
 }
 
 /**
  * Helper function to make authenticated requests
  */
-async function fetchWithAuth<T>(
-  url: string,
-  options: RequestInit = {}
-): Promise<T> {
-  const { data: { session } } = await supabase.auth.getSession();
+async function fetchWithAuth<T>(url: string, options: RequestInit = {}): Promise<T> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession()
 
   if (!session) {
-    throw new ContributorsAPIError('Not authenticated', 401, 'UNAUTHORIZED');
+    throw new ContributorsAPIError('Not authenticated', 401, 'UNAUTHORIZED')
   }
 
   const response = await fetch(url, {
@@ -71,20 +71,20 @@ async function fetchWithAuth<T>(
       'Content-Type': 'application/json',
       Authorization: `Bearer ${session.access_token}`,
     },
-  });
+  })
 
   if (!response.ok) {
-    const error = await response.json().catch(() => ({ error: 'Unknown error' }));
+    const error = await response.json().catch(() => ({ error: 'Unknown error' }))
 
     throw new ContributorsAPIError(
       error.message || error.error || 'Request failed',
       response.status,
       error.code || 'UNKNOWN_ERROR',
-      error
-    );
+      error,
+    )
   }
 
-  return response.json();
+  return response.json()
 }
 
 /**
@@ -100,13 +100,13 @@ export const contributorsAPI = {
       .select('*')
       .eq('task_id', taskId)
       .is('removed_at', null)
-      .order('added_at', { ascending: false });
+      .order('added_at', { ascending: false })
 
     if (error) {
-      throw new ContributorsAPIError(error.message, 500, error.code);
+      throw new ContributorsAPIError(error.message, 500, error.code)
     }
 
-    return data || [];
+    return data || []
   },
 
   /**
@@ -117,13 +117,13 @@ export const contributorsAPI = {
       .from('task_contributors')
       .select('*')
       .eq('task_id', taskId)
-      .order('added_at', { ascending: false });
+      .order('added_at', { ascending: false })
 
     if (error) {
-      throw new ContributorsAPIError(error.message, 500, error.code);
+      throw new ContributorsAPIError(error.message, 500, error.code)
     }
 
-    return data || [];
+    return data || []
   },
 
   /**
@@ -135,28 +135,28 @@ export const contributorsAPI = {
       .select('*')
       .eq('user_id', userId)
       .is('removed_at', null)
-      .order('added_at', { ascending: false });
+      .order('added_at', { ascending: false })
 
     if (error) {
-      throw new ContributorsAPIError(error.message, 500, error.code);
+      throw new ContributorsAPIError(error.message, 500, error.code)
     }
 
-    return data || [];
+    return data || []
   },
 
   /**
    * Add a contributor to a task
    */
   async addContributor(taskId: string, request: AddContributorRequest): Promise<TaskContributor> {
-    const url = `${supabaseUrl}/functions/v1/contributors-add`;
+    const url = `${supabaseUrl}/functions/v1/contributors-add`
     const response = await fetchWithAuth<{ contributor: TaskContributor }>(url, {
       method: 'POST',
       body: JSON.stringify({
         task_id: taskId,
         ...request,
       }),
-    });
-    return response.contributor;
+    })
+    return response.contributor
   },
 
   /**
@@ -164,33 +164,33 @@ export const contributorsAPI = {
    */
   async addMultipleContributors(
     taskId: string,
-    request: AddMultipleContributorsRequest
+    request: AddMultipleContributorsRequest,
   ): Promise<TaskContributor[]> {
-    const contributors: TaskContributor[] = [];
+    const contributors: TaskContributor[] = []
 
     for (const userId of request.user_ids) {
       const contributor = await contributorsAPI.addContributor(taskId, {
         user_id: userId,
         role: request.role,
-      });
-      contributors.push(contributor);
+      })
+      contributors.push(contributor)
     }
 
-    return contributors;
+    return contributors
   },
 
   /**
    * Remove a contributor from a task
    */
   async removeContributor(taskId: string, userId: string): Promise<void> {
-    const url = `${supabaseUrl}/functions/v1/contributors-remove`;
+    const url = `${supabaseUrl}/functions/v1/contributors-remove`
     await fetchWithAuth<{ success: boolean }>(url, {
       method: 'POST',
       body: JSON.stringify({
         task_id: taskId,
         user_id: userId,
       }),
-    });
+    })
   },
 
   /**
@@ -198,7 +198,7 @@ export const contributorsAPI = {
    */
   async removeMultipleContributors(taskId: string, userIds: string[]): Promise<void> {
     for (const userId of userIds) {
-      await contributorsAPI.removeContributor(taskId, userId);
+      await contributorsAPI.removeContributor(taskId, userId)
     }
   },
 
@@ -212,9 +212,9 @@ export const contributorsAPI = {
       .eq('task_id', taskId)
       .eq('user_id', userId)
       .is('removed_at', null)
-      .maybeSingle();
+      .maybeSingle()
 
-    return !!data;
+    return !!data
   },
 
   /**
@@ -225,14 +225,14 @@ export const contributorsAPI = {
       .from('task_contributors')
       .select('*', { count: 'exact', head: true })
       .eq('task_id', taskId)
-      .is('removed_at', null);
+      .is('removed_at', null)
 
     if (error) {
-      throw new ContributorsAPIError(error.message, 500, error.code);
+      throw new ContributorsAPIError(error.message, 500, error.code)
     }
 
-    return count || 0;
+    return count || 0
   },
-};
+}
 
-export default contributorsAPI;
+export default contributorsAPI

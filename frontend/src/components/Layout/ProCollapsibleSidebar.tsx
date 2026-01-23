@@ -21,12 +21,15 @@ import {
 } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
+import { Separator } from '@/components/ui/separator'
 import {
   createNavigationSections,
   bottomNavigationItems,
   type NavigationItem,
   type NavigationSection,
 } from './navigation-config'
+import { QuickNavigationMenu } from './QuickNavigationMenu'
+import { SidebarSearch } from './SidebarSearch'
 
 interface ProCollapsibleSidebarProps {
   className?: string
@@ -257,10 +260,41 @@ export function ProCollapsibleSidebar({
           </Link>
         </div>
 
+        {/* Search - Quick access to search */}
+        <div className="px-2 pb-2">
+          <SidebarSearch isExpanded={effectiveIsOpen} compact={!effectiveIsOpen} />
+        </div>
+
+        {/* Quick Navigation - Pinned & Recent Entities */}
+        {effectiveIsOpen && (
+          <>
+            <div className="px-3">
+              <QuickNavigationMenu
+                isExpanded={effectiveIsOpen}
+                maxRecent={3}
+                maxPinned={3}
+                onLinkClick={onLinkClick}
+                compact={true}
+              />
+            </div>
+            <Separator className="my-2 mx-3" />
+          </>
+        )}
+
         {/* Navigation Content - Mobile-first spacing */}
         <div className="flex-1 overflow-y-auto px-3 sm:px-4">
           {navigationSections.map((section) => (
-            <div key={section.id} className="mb-4 sm:mb-6">
+            <div
+              key={section.id}
+              className="mb-4 sm:mb-6"
+              data-tour={
+                section.id === 'dossiers-hub'
+                  ? 'my-dossiers'
+                  : section.id === 'my-work'
+                    ? 'work-queue'
+                    : undefined
+              }
+            >
               {effectiveIsOpen && (
                 <h3 className="px-2 mb-2 sm:mb-2 text-xs font-semibold text-muted-foreground uppercase tracking-wider">
                   {t(section.label, section.label)}
@@ -268,15 +302,19 @@ export function ProCollapsibleSidebar({
               )}
               <div className="space-y-1 sm:space-y-1">
                 {section.items.map((item) => (
-                  <SidebarLink
+                  <div
                     key={item.id}
-                    item={item}
-                    isActive={
-                      location.pathname === item.path ||
-                      location.pathname.startsWith(`${item.path}/`)
-                    }
-                    isRTL={isRTL}
-                  />
+                    data-tour={item.id === 'relationship-graph' ? 'relationships' : undefined}
+                  >
+                    <SidebarLink
+                      item={item}
+                      isActive={
+                        location.pathname === item.path ||
+                        location.pathname.startsWith(`${item.path}/`)
+                      }
+                      isRTL={isRTL}
+                    />
+                  </div>
                 ))}
               </div>
             </div>
@@ -367,7 +405,7 @@ export function ProCollapsibleSidebarWrapper({ children }: { children: React.Rea
             className={cn(
               // Show only on mobile
               'fixed top-4 z-50',
-              isRTL ? 'right-4' : 'left-4',
+              isRTL ? 'end-4' : 'start-4',
               'md:hidden', // Hide on desktop (sidebar is always visible)
               // Touch-friendly size
               'min-h-11 min-w-11',

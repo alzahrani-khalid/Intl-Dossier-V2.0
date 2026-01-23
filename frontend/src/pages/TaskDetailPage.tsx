@@ -88,7 +88,7 @@ export function TaskDetailPage() {
               className="mb-4"
             >
               <ChevronRight
-                className={`size-4 ${isRTL ? '' : 'rotate-180'} ${isRTL ? 'ml-2' : 'mr-2'}`}
+                className={`size-4 ${isRTL ? '' : 'rotate-180'} ${isRTL ? 'ms-2' : 'me-2'}`}
               />
               {t('back_to_tasks', 'Back to Tasks')}
             </Button>

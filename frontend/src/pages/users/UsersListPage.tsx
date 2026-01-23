@@ -258,14 +258,14 @@ export function UsersListPage() {
             <div className="sm:col-span-2 lg:col-span-1">
               <div className="relative">
                 <Search
-                  className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'right-3' : 'left-3'}`}
+                  className={`absolute top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground ${isRTL ? 'end-3' : 'start-3'}`}
                 />
                 <Input
                   type="search"
                   placeholder={t('usersList.searchPlaceholder')}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className={`min-h-11 ${isRTL ? 'pr-10' : 'pl-10'}`}
+                  className={`min-h-11 ${isRTL ? 'pe-10' : 'ps-10'}`}
                 />
               </div>
             </div>

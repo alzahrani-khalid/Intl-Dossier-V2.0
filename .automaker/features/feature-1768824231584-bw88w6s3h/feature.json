@@ -1,0 +1,19 @@
+{
+  "category": "enhancement",
+  "description": "Restructure main navigation to make Dossiers the first-class citizen with a dedicated navigation section. Replace the current flat 'Main > Dossiers' structure with a hierarchical 'Dossiers (Primary Hub)' section containing: All Dossiers, By Type (Countries, Organizations, Forums, Engagements, Working Groups, Persons, Topics, Elected Officials), Relationship Graph, and Recent Activity. This emphasizes that all work flows through dossiers.\n\n**Rationale (R1):** The current navigation buries dossiers as one item among many. Elevating it reinforces the mental model that dossiers are the central organizing concept of the entire system.",
+  "title": "Elevated Dossier Navigation Structure",
+  "dependencies": [],
+  "priority": 1,
+  "status": "completed",
+  "branchName": "035-dossier-context",
+  "id": "feature-1768824231584-bw88w6s3h",
+  "descriptionHistory": [
+    {
+      "description": "Restructure main navigation to make Dossiers the first-class citizen with a dedicated navigation section. Replace the current flat 'Main > Dossiers' structure with a hierarchical 'Dossiers (Primary Hub)' section containing: All Dossiers, By Type (Countries, Organizations, Forums, Engagements, Working Groups, Persons, Topics, Elected Officials), Relationship Graph, and Recent Activity. This emphasizes that all work flows through dossiers.\n\n**Rationale (R1):** The current navigation buries dossiers as one item among many. Elevating it reinforces the mental model that dossiers are the central organizing concept of the entire system.",
+      "timestamp": "2026-01-19T12:03:51.584Z",
+      "source": "initial"
+    }
+  ],
+  "startedAt": "2026-01-19T12:03:56.526Z",
+  "updatedAt": "2026-01-19T12:16:09.664Z"
+}

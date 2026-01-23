@@ -1,0 +1,63 @@
+{
+  "title": "Export Briefing Pack",
+  "description": "Export all dossier information as a formatted briefing packet.",
+  "format": {
+    "label": "Export Format",
+    "pdf": "PDF Document",
+    "docx": "Word Document"
+  },
+  "language": {
+    "label": "Language",
+    "en": "English",
+    "ar": "Arabic",
+    "both": "Bilingual"
+  },
+  "options": {
+    "coverPage": "Include cover page",
+    "tableOfContents": "Include table of contents",
+    "pageNumbers": "Include page numbers"
+  },
+  "sections": {
+    "label": "Include Sections",
+    "executive_summary": "Executive Summary",
+    "overview": "Dossier Overview",
+    "relationships": "Relationships",
+    "positions": "Positions & Talking Points",
+    "mous": "MoU Agreements",
+    "commitments": "Commitments & Deliverables",
+    "timeline": "Activity Timeline",
+    "events": "Upcoming Events",
+    "contacts": "Key Contacts",
+    "documents": "Related Documents"
+  },
+  "advanced": {
+    "label": "Advanced Options",
+    "dateRange": "Date Range",
+    "from": "From",
+    "to": "To"
+  },
+  "progress": {
+    "preparing": "Preparing export...",
+    "fetching": "Fetching dossier data...",
+    "generating": "Generating document...",
+    "uploading": "Finalizing export...",
+    "ready": "Export complete!"
+  },
+  "success": "Export complete! Download starting...",
+  "error": "Export failed. Please try again.",
+  "export": "Export",
+  "exporting": "Exporting...",
+  "cancel": "Cancel",
+  "quickExport": "Quick Export",
+  "quickExportTooltip": "Export with default settings",
+  "type": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "engagement": "Engagement",
+    "topic": "Topic",
+    "working_group": "Working Group",
+    "person": "Person",
+    "elected_official": "Elected Official"
+  }
+}

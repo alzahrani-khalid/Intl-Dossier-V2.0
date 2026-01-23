@@ -117,7 +117,7 @@ export function TourTrigger({
                   </h3>
                   <p className="text-sm text-muted-foreground text-start">{t(tour.description)}</p>
                   {tour.estimatedTime && (
-                    <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground/70">
+                    <div className="flex items-center gap-1.5 mt-2 text-xs text-muted-foreground">
                       <Clock className="w-3.5 h-3.5" />
                       <span>{t('trigger.estimatedTime', { minutes: tour.estimatedTime })}</span>
                     </div>
@@ -227,7 +227,7 @@ export function TourTrigger({
 
               {/* Estimated time */}
               {tour.estimatedTime && (
-                <div className="flex items-center gap-1.5 mb-4 text-xs text-muted-foreground/70">
+                <div className="flex items-center gap-1.5 mb-4 text-xs text-muted-foreground">
                   <Clock className="w-3.5 h-3.5" />
                   <span>{t('trigger.estimatedTime', { minutes: tour.estimatedTime })}</span>
                 </div>

@@ -1,0 +1,17 @@
+{
+  "category": "enhancement",
+  "description": "Navigation & Discovery Friction",
+  "title": "Navigation & Discovery Friction",
+  "status": "in_progress",
+  "id": "feature-1768726797305-zaezks7vw",
+  "descriptionHistory": [
+    {
+      "description": "Navigation & Discovery Friction",
+      "timestamp": "2026-01-18T08:59:57.305Z",
+      "source": "initial"
+    }
+  ],
+  "branchName": "035-dossier-context",
+  "startedAt": "2026-01-18T09:00:11.532Z",
+  "updatedAt": "2026-01-18T09:00:11.608Z"
+}

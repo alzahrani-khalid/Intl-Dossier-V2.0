@@ -40,6 +40,7 @@ import ReactFlow, {
   OnNodesChange,
   OnEdgesChange,
   NodeTypes,
+  ReactFlowProvider,
 } from 'reactflow'
 import 'reactflow/dist/style.css'
 import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force'
@@ -526,7 +527,6 @@ export function Relationships({
               edges={edges}
               onNodesChange={onNodesChange}
               onEdgesChange={onEdgesChange}
-              nodeTypes={nodeTypes}
               isRTL={isRTL}
             />
           </TabsContent>
@@ -554,7 +554,6 @@ export function Relationships({
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          nodeTypes={nodeTypes}
           isRTL={isRTL}
         />
       )}
@@ -878,21 +877,19 @@ function RelationshipsList({
 }
 
 /**
- * Graph view of relationships using React Flow
+ * Inner graph component (used inside ReactFlowProvider)
  */
-function RelationshipsGraph({
+function RelationshipsGraphInner({
   nodes,
   edges,
   onNodesChange,
   onEdgesChange,
-  nodeTypes,
   isRTL,
 }: {
   nodes: Node[]
   edges: Edge[]
   onNodesChange: OnNodesChange
   onEdgesChange: OnEdgesChange
-  nodeTypes: NodeTypes
   isRTL: boolean
 }) {
   return (
@@ -922,5 +919,34 @@ function RelationshipsGraph({
         />
       </ReactFlow>
     </div>
+  )
+}
+
+/**
+ * Graph view of relationships using React Flow (with provider wrapper)
+ */
+function RelationshipsGraph({
+  nodes,
+  edges,
+  onNodesChange,
+  onEdgesChange,
+  isRTL,
+}: {
+  nodes: Node[]
+  edges: Edge[]
+  onNodesChange: OnNodesChange
+  onEdgesChange: OnEdgesChange
+  isRTL: boolean
+}) {
+  return (
+    <ReactFlowProvider>
+      <RelationshipsGraphInner
+        nodes={nodes}
+        edges={edges}
+        onNodesChange={onNodesChange}
+        onEdgesChange={onEdgesChange}
+        isRTL={isRTL}
+      />
+    </ReactFlowProvider>
   )
 }

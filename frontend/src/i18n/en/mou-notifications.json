@@ -1,0 +1,161 @@
+{
+  "title": "MoU Notification Settings",
+  "description": "Configure how and when you receive notifications about MoU-related events",
+
+  "global": {
+    "title": "MoU Notifications",
+    "description": "Receive notifications about MoU-related events"
+  },
+
+  "deliverables": {
+    "title": "Deliverable Notifications",
+    "description": "Get notified about deliverable due dates and completions",
+    "dueSoon": "Deliverable Due Soon",
+    "overdue": "Deliverable Overdue",
+    "completed": "Deliverable Completed",
+    "milestoneCompleted": "Milestone Completed"
+  },
+
+  "renewal": {
+    "title": "Expiration & Renewal",
+    "description": "Get notified about MoU expiration and renewal events",
+    "expirationWarning": "Expiration Warning",
+    "expired": "MoU Expired",
+    "initiated": "Renewal Initiated",
+    "approved": "Renewal Approved",
+    "completed": "Renewal Completed"
+  },
+
+  "workflow": {
+    "title": "Workflow & Health",
+    "description": "Get notified about workflow changes and health score drops",
+    "stateChange": "Workflow State Change",
+    "assignmentChange": "Assignment Change",
+    "healthScoreDrop": "Health Score Drop",
+    "healthThreshold": "Alert when health score drops by {{value}}% or more"
+  },
+
+  "channels": {
+    "title": "Notification Channels",
+    "description": "Choose how you want to receive notifications",
+    "email": "Email Notifications",
+    "push": "Push Notifications",
+    "inApp": "In-App Notifications"
+  },
+
+  "timing": {
+    "title": "Timing & Batching",
+    "description": "Configure when and how notifications are delivered",
+    "batchNotifications": "Batch Notifications",
+    "frequency": "Batch Frequency",
+    "immediate": "Immediate",
+    "hourly": "Hourly",
+    "daily": "Daily",
+    "weekly": "Weekly",
+    "deliveryTime": "Delivery Time",
+    "deliveryDay": "Delivery Day",
+    "quietHours": "Quiet Hours",
+    "from": "From",
+    "to": "To"
+  },
+
+  "weekdays": {
+    "0": "Sunday",
+    "1": "Monday",
+    "2": "Tuesday",
+    "3": "Wednesday",
+    "4": "Thursday",
+    "5": "Friday",
+    "6": "Saturday"
+  },
+
+  "days": {
+    "1": "1 day",
+    "3": "3 days",
+    "7": "1 week",
+    "14": "2 weeks",
+    "30": "1 month",
+    "60": "2 months",
+    "90": "3 months"
+  },
+
+  "notificationTypes": {
+    "deliverable_due_soon": "Deliverable Due Soon",
+    "deliverable_overdue": "Deliverable Overdue",
+    "deliverable_completed": "Deliverable Completed",
+    "milestone_completed": "Milestone Completed",
+    "expiration_warning": "Expiration Warning",
+    "mou_expired": "MoU Expired",
+    "renewal_initiated": "Renewal Initiated",
+    "renewal_approved": "Renewal Approved",
+    "renewal_completed": "Renewal Completed",
+    "workflow_state_change": "Workflow State Change",
+    "health_score_drop": "Health Score Drop",
+    "assignment_change": "Assignment Change"
+  },
+
+  "status": {
+    "pending": "Pending",
+    "batched": "Batched",
+    "sent": "Sent",
+    "failed": "Failed",
+    "cancelled": "Cancelled"
+  },
+
+  "priority": {
+    "low": "Low",
+    "normal": "Normal",
+    "high": "High",
+    "urgent": "Urgent"
+  },
+
+  "summary": {
+    "title": "Notification Summary",
+    "pendingNotifications": "Pending Notifications",
+    "unreadNotifications": "Unread Notifications",
+    "notificationsToday": "Today",
+    "notificationsThisWeek": "This Week",
+    "deliverablesDueSoon": "Deliverables Due Soon",
+    "overdueDeliverables": "Overdue Deliverables"
+  },
+
+  "queue": {
+    "title": "Notification Queue",
+    "empty": "No queued notifications",
+    "scheduledFor": "Scheduled for {{date}}"
+  },
+
+  "history": {
+    "title": "Notification History",
+    "empty": "No notification history",
+    "sentAt": "Sent {{date}}",
+    "channels": "Sent via: {{channels}}"
+  },
+
+  "actions": {
+    "save": "Save Preferences",
+    "saving": "Saving...",
+    "cancel": "Cancel",
+    "reset": "Reset to Defaults",
+    "testNotification": "Send Test Notification"
+  },
+
+  "success": {
+    "saved": "Notification preferences saved successfully",
+    "testSent": "Test notification sent"
+  },
+
+  "error": {
+    "loadFailed": "Failed to load notification preferences",
+    "saveFailed": "Failed to save notification preferences",
+    "testFailed": "Failed to send test notification"
+  },
+
+  "tooltips": {
+    "deliverableDueDays": "Select which days before due date you want to be notified",
+    "expirationWarningDays": "Select which days before expiration you want to be notified",
+    "healthScoreThreshold": "You'll be notified when health score drops by this percentage or more",
+    "batchFrequency": "How often batched notifications should be delivered",
+    "quietHours": "Notifications will be held until quiet hours end"
+  }
+}

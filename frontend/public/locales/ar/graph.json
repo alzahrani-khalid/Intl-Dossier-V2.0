@@ -7,9 +7,12 @@
   "degrees": "درجات",
   "relationshipType": "نوع العلاقة",
   "allTypes": "جميع الأنواع",
+  "allRelationships": "جميع العلاقات",
   "refresh": "تحديث",
   "nodes": "الكيانات",
+  "nodesShown": "عقدة",
   "edges": "العلاقات",
+  "edgesShown": "رابط",
   "maxDegree": "الحد الأقصى للدرجة",
   "queryTime": "وقت الاستعلام",
   "error": "فشل تحميل بيانات المخطط",
@@ -19,5 +22,132 @@
   "country": "دولة",
   "organization": "منظمة",
   "individual": "فرد",
-  "forum": "منتدى"
+  "forum": "منتدى",
+  "engagement": "ارتباط",
+  "mou": "مذكرة تفاهم",
+  "position": "منصب",
+  "zoomIn": "تكبير",
+  "zoomOut": "تصغير",
+  "fitView": "ملاءمة العرض",
+  "filters": "الفلاتر",
+  "nodeType": "نوع العقدة",
+  "enhancedMode": "الوضع المحسّن",
+  "advancedMode": "الوضع المتقدم",
+  "basicMode": "الوضع الأساسي",
+  "layout": {
+    "title": "التخطيط",
+    "circular": "دائري",
+    "clustered": "مجمع",
+    "hierarchical": "هرمي",
+    "force": "موجه بالقوة",
+    "radial": "شعاعي"
+  },
+  "clusters": "المجموعات",
+  "collapseAll": "طي الكل",
+  "expandAll": "توسيع الكل",
+  "expand": "توسيع",
+  "collapse": "طي",
+  "focusedNode": "انقر على الخلفية لإلغاء التركيز",
+  "settings": {
+    "title": "إعدادات العرض",
+    "showLabels": "إظهار التسميات",
+    "showEdgeLabels": "تسميات الروابط",
+    "highlightConnections": "وضع التركيز",
+    "nodeSize": "حجم العقدة"
+  },
+  "complexity": {
+    "label": "التعقيد",
+    "simple": "بسيط",
+    "moderate": "متوسط",
+    "complex": "معقد",
+    "tip": "استخدم التخطيط المجمع للمخططات المعقدة"
+  },
+  "tips": {
+    "singleClick": "انقر على عقدة للتركيز على اتصالاتها",
+    "doubleClick": "انقر مرتين للانتقال إلى الكيان",
+    "collapse": "اطوِ المجموعات لتقليل الضوضاء البصرية",
+    "filter": "قم بالتصفية حسب النوع للتركيز على كيانات محددة"
+  },
+  "miniGraph": {
+    "title": "العلاقات",
+    "connections": "اتصالات",
+    "noConnections": "لا توجد علاقات",
+    "viewFullGraph": "عرض المخطط الكامل",
+    "clickToNavigate": "انقر لعرض الملف",
+    "moreConnections": "+{{count}} أخرى",
+    "loading": "جاري تحميل العلاقات...",
+    "retry": "إعادة المحاولة"
+  },
+  "type": {
+    "country": "دولة",
+    "organization": "منظمة",
+    "forum": "منتدى",
+    "person": "شخص",
+    "engagement": "ارتباط",
+    "working_group": "مجموعة عمل",
+    "topic": "موضوع",
+    "elected_official": "مسؤول منتخب"
+  },
+  "status": {
+    "active": "نشط",
+    "inactive": "غير نشط",
+    "archived": "مؤرشف"
+  },
+  "relationship": {
+    "member_of": "عضو في",
+    "participates_in": "يشارك في",
+    "cooperates_with": "يتعاون مع",
+    "bilateral_relation": "علاقة ثنائية",
+    "partnership": "شراكة",
+    "parent_of": "الشركة الأم لـ",
+    "subsidiary_of": "تابع لـ",
+    "related_to": "مرتبط بـ",
+    "represents": "يمثل",
+    "hosted_by": "يستضيفه",
+    "sponsored_by": "برعاية",
+    "involves": "يتضمن",
+    "discusses": "يناقش",
+    "participant_in": "مشارك في",
+    "observer_of": "مراقب لـ",
+    "affiliate_of": "منتسب لـ",
+    "successor_of": "خلف لـ",
+    "predecessor_of": "سابق لـ"
+  },
+  "degreeFilter": "الحد الأقصى للدرجات",
+  "pathActive": "المسار مميز",
+  "pathHighlighted": "المسار مميز",
+  "advanced": {
+    "title": "الميزات المتقدمة"
+  },
+  "pathFinding": {
+    "title": "البحث عن المسار",
+    "description": "اكتشف كيفية اتصال كيانين",
+    "toggle": "البحث عن المسار",
+    "from": "من",
+    "to": "إلى",
+    "selectEntity": "اختر كيان",
+    "find": "ابحث عن المسار",
+    "found": "تم العثور على مسار بـ {{count}} خطوة",
+    "notFound": "لم يتم العثور على مسار بين الكيانات",
+    "noPath": "لم يتم العثور على اتصال",
+    "pathLength": "{{count}} خطوة"
+  },
+  "timeAnimation": {
+    "title": "الجدول الزمني",
+    "description": "عرض العلاقات عبر الزمن",
+    "toggle": "الجدول الزمني",
+    "speed": "السرعة",
+    "reset": "إعادة تعيين"
+  },
+  "influence": {
+    "toggle": "خريطة التأثير",
+    "title": "درجة التأثير",
+    "description": "يعرض أهمية الكيان بناءً على موقعه في الشبكة"
+  },
+  "export": {
+    "png": "تصدير كـ PNG",
+    "svg": "تصدير كـ SVG",
+    "success": "تم تصدير المخطط كـ {{format}}",
+    "error": "فشل تصدير المخطط"
+  }
 }

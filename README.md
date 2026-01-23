@@ -5,6 +5,7 @@ A comprehensive system for managing international dossiers, policy briefs, and d
 ## Overview
 
 The International Dossier System is a full-stack application that enables organizations to:
+
 - Manage international dossiers and policy briefs
 - Track relationships between countries, organizations, and positions
 - Process intake requests and assignments
@@ -12,9 +13,31 @@ The International Dossier System is a full-stack application that enables organi
 - Collaborate in real-time with notifications
 - Access data offline on mobile devices
 
+## Core Concept: The Dossier
+
+**Everything in Intl-Dossier revolves around dossiers** - comprehensive digital profiles for diplomatic entities. The system supports 8 dossier types:
+
+| Type               | Description                                   |
+| ------------------ | --------------------------------------------- |
+| `country`          | Nation states with diplomatic relations       |
+| `organization`     | International bodies, agencies, ministries    |
+| `forum`            | Multi-party conferences and summits           |
+| `engagement`       | Diplomatic meetings, consultations, visits    |
+| `topic`            | Policy areas and strategic initiatives        |
+| `working_group`    | Committees and task forces                    |
+| `person`           | VIPs requiring tracking                       |
+| `elected_official` | Government contacts with office/term metadata |
+
+All operational work (tasks, commitments, intakes), documents (positions, MOUs, briefs), intelligence, and calendar events connect back to dossiers, making them the single source of truth for international relations management.
+
+**Key principle**: _"If it matters to international relations, it lives in a dossier."_
+
+See [Dossier-Centric Architecture](./docs/DOSSIER_CENTRIC_ARCHITECTURE.md) for comprehensive documentation.
+
 ## Architecture
 
 ### Web Application
+
 - **Frontend**: React 19 + TypeScript 5.8+ + Vite
 - **UI**: shadcn/ui + Tailwind CSS (Mobile-first, RTL-ready)
 - **Backend**: Node.js 18+ LTS + Express
@@ -23,6 +46,7 @@ The International Dossier System is a full-stack application that enables organi
 - **State Management**: TanStack Query v5
 
 ### Mobile Application
+
 - **Framework**: React Native 0.81+ + Expo SDK 52+
 - **UI**: React Native Paper 5.12+ (Material Design 3)
 - **Database**: WatermelonDB 0.28+ (offline-first)
@@ -71,6 +95,7 @@ pnpm dev
 ```
 
 The web app will be available at:
+
 - Frontend: http://localhost:5173
 - Backend: http://localhost:3000
 
@@ -175,6 +200,7 @@ Intl-DossierV2.0/
 ## Technology Stack
 
 ### Frontend Technologies
+
 - React 19 + TypeScript 5.8+
 - Vite (build tool)
 - TanStack Router + Query v5
@@ -184,6 +210,7 @@ Intl-DossierV2.0/
 - Zod (validation)
 
 ### Mobile Technologies
+
 - React Native 0.81+ + Expo SDK 52+
 - TypeScript 5.8+ (strict mode)
 - React Native Paper 5.12+ (Material Design 3)
@@ -193,6 +220,7 @@ Intl-DossierV2.0/
 - expo-notifications (push)
 
 ### Backend Technologies
+
 - Node.js 18+ LTS
 - Express
 - Supabase (PostgreSQL 15+)
@@ -201,6 +229,7 @@ Intl-DossierV2.0/
 - Supabase Realtime (WebSockets)
 
 ### Database
+
 - PostgreSQL 15+
 - pgvector (vector search)
 - pg_trgm (fuzzy search)
@@ -208,6 +237,7 @@ Intl-DossierV2.0/
 - Row-Level Security (RLS)
 
 ### DevOps
+
 - Docker (containerization)
 - GitHub Actions (CI/CD)
 - Jest (testing)
@@ -366,12 +396,14 @@ EXPO_PUBLIC_API_URL=http://localhost:3000
 ## Performance
 
 ### Web Application
+
 - **Lighthouse Score**: 95+
 - **First Contentful Paint**: <1.5s
 - **Time to Interactive**: <3.5s
 - **Bundle Size**: <500KB (gzipped)
 
 ### Mobile Application
+
 - **Cold Start**: <3s
 - **Screen Navigation**: <300ms
 - **60fps Scrolling**: Maintained on all lists
@@ -426,6 +458,7 @@ Copyright © 2025 General Authority for Statistics (GASTAT). All rights reserved
 ## Support
 
 For issues, questions, or contributions:
+
 1. Check [mobile/README.md](./mobile/README.md) for mobile-specific docs
 2. Search existing GitHub issues
 3. Create a new issue with reproduction steps

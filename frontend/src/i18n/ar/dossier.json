@@ -30,7 +30,7 @@
   },
   "action": {
     "view": "عرض",
-    "viewDetails": "عرض التفاصيل",
+    "viewDetails": "عرض الدوسيه",
     "edit": "تحرير",
     "delete": "حذف",
     "create": "إنشاء دوسيه",
@@ -44,7 +44,11 @@
     "backToList": "العودة إلى القائمة",
     "viewCorrectType": "عرض كـ {{type}}",
     "exportGraph": "تصدير الرسم البياني",
-    "addRelationship": "إضافة علاقة"
+    "addRelationship": "إضافة علاقة",
+    "everythingAbout": "كل شيء عن",
+    "overview": "نظرة عامة",
+    "export": "تصدير",
+    "exportTooltip": "تصدير حزمة الإحاطة"
   },
   "filter": {
     "all": "جميع الأنواع",
@@ -169,7 +173,39 @@
   "stats": {
     "ofTotal": "من الإجمالي",
     "clickToFilter": "انقر للتصفية حسب هذا النوع",
-    "clickToShowAll": "انقر لعرض جميع الأنواع"
+    "clickToShowAll": "انقر لعرض جميع الأنواع",
+    "title": "إحصائيات الدوسيه",
+    "refreshedAt": "آخر تحديث",
+    "lastActivity": "آخر نشاط",
+    "totalWorkItems": "إجمالي عناصر العمل",
+    "pendingWork": "العمل المعلق",
+    "overdue": "المتأخر",
+    "tasks": "المهام",
+    "pendingTasks": "المهام المعلقة",
+    "overdueTasks": "المهام المتأخرة",
+    "commitments": "الالتزامات",
+    "pendingCommitments": "الالتزامات المعلقة",
+    "overdueCommitments": "الالتزامات المتأخرة",
+    "intakes": "الطلبات الواردة",
+    "pendingIntakes": "الطلبات المعلقة",
+    "positions": "المواقف",
+    "publishedPositions": "المواقف المنشورة",
+    "relationships": "العلاقات",
+    "activeRelationships": "العلاقات النشطة",
+    "events": "الفعاليات",
+    "upcomingEvents": "الفعاليات القادمة",
+    "documents": "المستندات",
+    "engagements": "الارتباطات",
+    "mous": "مذكرات التفاهم",
+    "activeMous": "مذكرات التفاهم النشطة",
+    "dossiersWithPending": "الدوسيهات ذات العمل المعلق",
+    "dossiersWithOverdue": "الدوسيهات ذات العناصر المتأخرة",
+    "byType": "حسب النوع",
+    "noData": "لا توجد إحصائيات متاحة",
+    "loading": "جارٍ تحميل الإحصائيات...",
+    "error": "فشل تحميل الإحصائيات",
+    "viewDetails": "عرض التفاصيل",
+    "summary": "ملخص"
   },
   "detail": {
     "title": "تفاصيل الدوسيه",
@@ -447,7 +483,13 @@
     "loading": "جاري تحميل المعلومات...",
     "error": "فشل تحميل المعلومات",
     "empty": "لا توجد معلومات متاحة لهذا الكيان",
-    "retry": "إعادة المحاولة"
+    "retry": "إعادة المحاولة",
+    "refresh": "تحديث",
+    "refreshAll": "تحديث الكل",
+    "refreshing": "جاري التحديث...",
+    "refreshButtonLabel": "تحديث بيانات المعلومات الاستخبارية",
+    "refreshAllLabel": "تحديث جميع أنواع المعلومات",
+    "selectType": "اختر النوع للتحديث"
   },
   "timeline": {
     "title": "الجدول الزمني التفاعلي",
@@ -492,7 +534,7 @@
     "confidence": "الثقة",
     "show_more": "عرض المزيد",
     "show_less": "عرض أقل",
-    "view_details": "عرض التفاصيل",
+    "view_details": "عرض الدوسيه الكامل",
     "error": {
       "title": "خطأ",
       "description": "فشل تحميل الجدول الزمني"
@@ -576,6 +618,126 @@
     "carousel": "عرض دوار",
     "list": "قائمة",
     "graph": "شبكة"
+  },
+  "addToDossier": {
+    "title": "إضافة إلى الملف",
+    "close": "إغلاق القائمة",
+    "subtitle": "إضافة عنصر إلى {{name}}",
+    "groups": {
+      "workItems": "عناصر العمل",
+      "content": "المحتوى والمعلومات"
+    },
+    "actions": {
+      "intake": {
+        "label": "طلب جديد",
+        "description": "إنشاء طلب خدمة جديد مرتبط بهذا الملف"
+      },
+      "task": {
+        "label": "مهمة جديدة",
+        "description": "إنشاء مهمة داخلية لهذا الملف"
+      },
+      "commitment": {
+        "label": "التزام جديد",
+        "description": "تسجيل التزام أو وعد"
+      },
+      "position": {
+        "label": "موقف جديد",
+        "description": "إضافة موقف أو دور"
+      },
+      "event": {
+        "label": "جدولة حدث",
+        "description": "جدولة اجتماع أو حدث"
+      },
+      "relationship": {
+        "label": "إضافة علاقة",
+        "description": "الربط بملف آخر"
+      },
+      "brief": {
+        "label": "إنشاء موجز",
+        "description": "إنشاء إحاطة بواسطة الذكاء الاصطناعي"
+      },
+      "document": {
+        "label": "رفع مستند",
+        "description": "إرفاق ملف بهذا الملف"
+      }
+    },
+    "dialogs": {
+      "intake": {
+        "title": "طلب جديد",
+        "description": "إنشاء طلب جديد مرتبط بهذا الملف"
+      },
+      "task": {
+        "title": "مهمة جديدة",
+        "description": "إنشاء مهمة جديدة مرتبطة بهذا الملف"
+      },
+      "commitment": {
+        "title": "التزام جديد",
+        "description": "تسجيل التزام جديد لهذا الملف"
+      },
+      "position": {
+        "title": "موقف جديد",
+        "description": "إضافة موقف جديد لهذا الملف"
+      },
+      "event": {
+        "title": "جدولة حدث",
+        "description": "جدولة حدث جديد لهذا الملف"
+      },
+      "relationship": {
+        "title": "إضافة علاقة",
+        "description": "ربط هذا الملف بكيان آخر"
+      },
+      "brief": {
+        "title": "إنشاء موجز",
+        "description": "إنشاء إحاطة بالذكاء الاصطناعي لهذا الملف"
+      },
+      "document": {
+        "title": "رفع مستند",
+        "description": "رفع مستند إلى هذا الملف"
+      }
+    },
+    "context": {
+      "linkedTo": "سيتم ربطه بـ",
+      "inheritanceSource": "مصدر الوراثة",
+      "direct": "مباشر"
+    },
+    "success": {
+      "intake": "تم إنشاء الطلب بنجاح",
+      "task": "تم إنشاء المهمة بنجاح",
+      "commitment": "تم تسجيل الالتزام بنجاح",
+      "position": "تمت إضافة الموقف بنجاح",
+      "event": "تمت جدولة الحدث بنجاح",
+      "relationship": "تمت إضافة العلاقة بنجاح",
+      "brief": "بدأ إنشاء الموجز",
+      "document": "تم رفع المستند بنجاح"
+    },
+    "error": {
+      "intake": "فشل في إنشاء الطلب",
+      "task": "فشل في إنشاء المهمة",
+      "commitment": "فشل في تسجيل الالتزام",
+      "position": "فشل في إضافة الموقف",
+      "event": "فشل في جدولة الحدث",
+      "relationship": "فشل في إضافة العلاقة",
+      "brief": "فشل في إنشاء الموجز",
+      "document": "فشل في رفع المستند"
+    }
+  },
+  "contextIndicator": {
+    "viewingInContext": "العرض في سياق:",
+    "noContext": "لم يتم تحديد سياق دوسيه",
+    "select": "اختيار",
+    "selectDossier": "اختر دوسيه...",
+    "change": "تغيير الدوسيه",
+    "changeDossier": "تغيير سياق الدوسيه",
+    "changeDescription": "اختر دوسيه مختلف للعمل ضمنه",
+    "searchDossiers": "البحث في الدوسيهات...",
+    "clear": "مسح السياق",
+    "clickToView": "انقر لعرض الدوسيه",
+    "inheritedFrom": {
+      "engagement": "عبر الارتباط",
+      "afterAction": "عبر ما بعد الإجراء",
+      "position": "عبر الموقف",
+      "mou": "عبر مذكرة التفاهم"
+    }
   },
   "templates": {
     "title": "قوالب الدوسيهات",

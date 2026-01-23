@@ -7,9 +7,12 @@
   "degrees": "degrees",
   "relationshipType": "Relationship Type",
   "allTypes": "All Types",
+  "allRelationships": "All Relationships",
   "refresh": "Refresh",
   "nodes": "Entities",
+  "nodesShown": "nodes",
   "edges": "Relationships",
+  "edgesShown": "edges",
   "maxDegree": "Max Degree",
   "queryTime": "Query Time",
   "error": "Failed to load graph data",
@@ -19,5 +22,132 @@
   "country": "Country",
   "organization": "Organization",
   "individual": "Individual",
-  "forum": "Forum"
+  "forum": "Forum",
+  "engagement": "Engagement",
+  "mou": "MOU",
+  "position": "Position",
+  "zoomIn": "Zoom In",
+  "zoomOut": "Zoom Out",
+  "fitView": "Fit View",
+  "filters": "Filters",
+  "nodeType": "Node Type",
+  "enhancedMode": "Enhanced Mode",
+  "advancedMode": "Advanced Mode",
+  "basicMode": "Basic Mode",
+  "layout": {
+    "title": "Layout",
+    "circular": "Circular",
+    "clustered": "Clustered",
+    "hierarchical": "Hierarchical",
+    "force": "Force-Directed",
+    "radial": "Radial"
+  },
+  "clusters": "Clusters",
+  "collapseAll": "Collapse All",
+  "expandAll": "Expand All",
+  "expand": "Expand",
+  "collapse": "Collapse",
+  "focusedNode": "Click background to clear focus",
+  "settings": {
+    "title": "Display Settings",
+    "showLabels": "Show Labels",
+    "showEdgeLabels": "Edge Labels",
+    "highlightConnections": "Focus Mode",
+    "nodeSize": "Node Size"
+  },
+  "complexity": {
+    "label": "Complexity",
+    "simple": "Simple",
+    "moderate": "Moderate",
+    "complex": "Complex",
+    "tip": "Use clustered layout for complex graphs"
+  },
+  "tips": {
+    "singleClick": "Click a node to focus on its connections",
+    "doubleClick": "Double-click to navigate to entity",
+    "collapse": "Collapse clusters to reduce visual noise",
+    "filter": "Filter by type to focus on specific entities"
+  },
+  "miniGraph": {
+    "title": "Relationships",
+    "connections": "connections",
+    "noConnections": "No relationships found",
+    "viewFullGraph": "View Full Graph",
+    "clickToNavigate": "Click to view dossier",
+    "moreConnections": "+{{count}} more",
+    "loading": "Loading relationships...",
+    "retry": "Retry"
+  },
+  "type": {
+    "country": "Country",
+    "organization": "Organization",
+    "forum": "Forum",
+    "person": "Person",
+    "engagement": "Engagement",
+    "working_group": "Working Group",
+    "topic": "Topic",
+    "elected_official": "Elected Official"
+  },
+  "status": {
+    "active": "Active",
+    "inactive": "Inactive",
+    "archived": "Archived"
+  },
+  "relationship": {
+    "member_of": "Member of",
+    "participates_in": "Participates in",
+    "cooperates_with": "Cooperates with",
+    "bilateral_relation": "Bilateral relation",
+    "partnership": "Partnership",
+    "parent_of": "Parent of",
+    "subsidiary_of": "Subsidiary of",
+    "related_to": "Related to",
+    "represents": "Represents",
+    "hosted_by": "Hosted by",
+    "sponsored_by": "Sponsored by",
+    "involves": "Involves",
+    "discusses": "Discusses",
+    "participant_in": "Participant in",
+    "observer_of": "Observer of",
+    "affiliate_of": "Affiliate of",
+    "successor_of": "Successor of",
+    "predecessor_of": "Predecessor of"
+  },
+  "degreeFilter": "Max Degrees",
+  "pathActive": "Path highlighted",
+  "pathHighlighted": "Path highlighted",
+  "advanced": {
+    "title": "Advanced Features"
+  },
+  "pathFinding": {
+    "title": "Path Finding",
+    "description": "Find how two entities are connected",
+    "toggle": "Path Finding",
+    "from": "From",
+    "to": "To",
+    "selectEntity": "Select entity",
+    "find": "Find Path",
+    "found": "Path found with {{count}} hop(s)",
+    "notFound": "No path found between entities",
+    "noPath": "No connection found",
+    "pathLength": "{{count}} hop(s)"
+  },
+  "timeAnimation": {
+    "title": "Timeline",
+    "description": "View relationships over time",
+    "toggle": "Timeline",
+    "speed": "Speed",
+    "reset": "Reset"
+  },
+  "influence": {
+    "toggle": "Influence Mapping",
+    "title": "Influence Score",
+    "description": "Shows entity importance based on network position"
+  },
+  "export": {
+    "png": "Export as PNG",
+    "svg": "Export as SVG",
+    "success": "Graph exported as {{format}}",
+    "error": "Failed to export graph"
+  }
 }

@@ -30,7 +30,7 @@
   },
   "action": {
     "view": "View",
-    "viewDetails": "View Details",
+    "viewDetails": "View Dossier",
     "edit": "Edit",
     "delete": "Delete",
     "create": "Create Dossier",
@@ -44,7 +44,11 @@
     "backToList": "Back to List",
     "viewCorrectType": "View as {{type}}",
     "exportGraph": "Export Graph",
-    "addRelationship": "Add Relationship"
+    "addRelationship": "Add Relationship",
+    "everythingAbout": "Everything About",
+    "overview": "Overview",
+    "export": "Export",
+    "exportTooltip": "Export briefing pack"
   },
   "filter": {
     "all": "All Types",
@@ -169,7 +173,39 @@
   "stats": {
     "ofTotal": "of Total",
     "clickToFilter": "Click to filter by this type",
-    "clickToShowAll": "Click to show all types"
+    "clickToShowAll": "Click to show all types",
+    "title": "Dossier Statistics",
+    "refreshedAt": "Last refreshed",
+    "lastActivity": "Last activity",
+    "totalWorkItems": "Total Work Items",
+    "pendingWork": "Pending Work",
+    "overdue": "Overdue",
+    "tasks": "Tasks",
+    "pendingTasks": "Pending Tasks",
+    "overdueTasks": "Overdue Tasks",
+    "commitments": "Commitments",
+    "pendingCommitments": "Pending Commitments",
+    "overdueCommitments": "Overdue Commitments",
+    "intakes": "Intakes",
+    "pendingIntakes": "Pending Intakes",
+    "positions": "Positions",
+    "publishedPositions": "Published Positions",
+    "relationships": "Relationships",
+    "activeRelationships": "Active Relationships",
+    "events": "Events",
+    "upcomingEvents": "Upcoming Events",
+    "documents": "Documents",
+    "engagements": "Engagements",
+    "mous": "MOUs",
+    "activeMous": "Active MOUs",
+    "dossiersWithPending": "Dossiers with Pending Work",
+    "dossiersWithOverdue": "Dossiers with Overdue Items",
+    "byType": "By Type",
+    "noData": "No statistics available",
+    "loading": "Loading statistics...",
+    "error": "Failed to load statistics",
+    "viewDetails": "View Details",
+    "summary": "Summary"
   },
   "detail": {
     "title": "Dossier Details",
@@ -447,7 +483,13 @@
     "loading": "Loading intelligence...",
     "error": "Failed to load intelligence",
     "empty": "No intelligence available for this entity",
-    "retry": "Retry"
+    "retry": "Retry",
+    "refresh": "Refresh",
+    "refreshAll": "Refresh All",
+    "refreshing": "Refreshing...",
+    "refreshButtonLabel": "Refresh intelligence data",
+    "refreshAllLabel": "Refresh all intelligence types",
+    "selectType": "Select type to refresh"
   },
   "timeline": {
     "title": "Interactive Timeline",
@@ -492,7 +534,7 @@
     "confidence": "Confidence",
     "show_more": "Show More",
     "show_less": "Show Less",
-    "view_details": "View Details",
+    "view_details": "View Dossier",
     "error": {
       "title": "Error",
       "description": "Failed to load timeline"
@@ -576,6 +618,126 @@
     "carousel": "Carousel",
     "list": "List",
     "graph": "Network"
+  },
+  "addToDossier": {
+    "title": "Add to Dossier",
+    "close": "Close menu",
+    "subtitle": "Add item to {{name}}",
+    "groups": {
+      "workItems": "Work Items",
+      "content": "Content & Info"
+    },
+    "actions": {
+      "intake": {
+        "label": "New Intake",
+        "description": "Create a new service request linked to this dossier"
+      },
+      "task": {
+        "label": "New Task",
+        "description": "Create an internal task for this dossier"
+      },
+      "commitment": {
+        "label": "New Commitment",
+        "description": "Record a commitment or promise"
+      },
+      "position": {
+        "label": "New Position",
+        "description": "Add a position or role"
+      },
+      "event": {
+        "label": "Schedule Event",
+        "description": "Schedule a meeting or event"
+      },
+      "relationship": {
+        "label": "Add Relationship",
+        "description": "Link to another dossier"
+      },
+      "brief": {
+        "label": "Generate Brief",
+        "description": "Create an AI-generated briefing"
+      },
+      "document": {
+        "label": "Upload Document",
+        "description": "Attach a file to this dossier"
+      }
+    },
+    "dialogs": {
+      "intake": {
+        "title": "New Intake Request",
+        "description": "Create a new intake request linked to this dossier"
+      },
+      "task": {
+        "title": "New Task",
+        "description": "Create a new task linked to this dossier"
+      },
+      "commitment": {
+        "title": "New Commitment",
+        "description": "Record a new commitment for this dossier"
+      },
+      "position": {
+        "title": "New Position",
+        "description": "Add a new position to this dossier"
+      },
+      "event": {
+        "title": "Schedule Event",
+        "description": "Schedule a new event for this dossier"
+      },
+      "relationship": {
+        "title": "Add Relationship",
+        "description": "Link this dossier to another entity"
+      },
+      "brief": {
+        "title": "Generate Brief",
+        "description": "Generate an AI-powered briefing for this dossier"
+      },
+      "document": {
+        "title": "Upload Document",
+        "description": "Upload a document to this dossier"
+      }
+    },
+    "context": {
+      "linkedTo": "Will be linked to",
+      "inheritanceSource": "Inheritance",
+      "direct": "Direct"
+    },
+    "success": {
+      "intake": "Intake request created successfully",
+      "task": "Task created successfully",
+      "commitment": "Commitment recorded successfully",
+      "position": "Position added successfully",
+      "event": "Event scheduled successfully",
+      "relationship": "Relationship added successfully",
+      "brief": "Brief generation started",
+      "document": "Document uploaded successfully"
+    },
+    "error": {
+      "intake": "Failed to create intake request",
+      "task": "Failed to create task",
+      "commitment": "Failed to record commitment",
+      "position": "Failed to add position",
+      "event": "Failed to schedule event",
+      "relationship": "Failed to add relationship",
+      "brief": "Failed to generate brief",
+      "document": "Failed to upload document"
+    }
+  },
+  "contextIndicator": {
+    "viewingInContext": "Viewing in context of:",
+    "noContext": "No dossier context selected",
+    "select": "Select",
+    "selectDossier": "Select a dossier...",
+    "change": "Change dossier",
+    "changeDossier": "Change Dossier Context",
+    "changeDescription": "Select a different dossier to work within",
+    "searchDossiers": "Search dossiers...",
+    "clear": "Clear context",
+    "clickToView": "Click to view dossier",
+    "inheritedFrom": {
+      "engagement": "via Engagement",
+      "afterAction": "via After-Action",
+      "position": "via Position",
+      "mou": "via MOU"
+    }
   },
   "templates": {
     "title": "Dossier Templates",

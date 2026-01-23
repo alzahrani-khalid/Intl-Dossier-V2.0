@@ -1,0 +1,375 @@
+{
+  "title": "متتبع التشريعات",
+  "subtitle": "تتبع وإدارة التشريعات والمقترحات التنظيمية وقضايا السياسات",
+  "pageTitle": "التشريعات",
+  "description": "متابعة التشريعات والتطورات التنظيمية خلال دورة حياتها",
+
+  "actions": {
+    "create": "إضافة تشريع",
+    "edit": "تعديل",
+    "delete": "حذف",
+    "view": "عرض التفاصيل",
+    "watch": "متابعة",
+    "unwatch": "إلغاء المتابعة",
+    "addDeadline": "إضافة موعد نهائي",
+    "addAmendment": "إضافة تعديل",
+    "addSponsor": "إضافة راعي",
+    "addRelated": "ربط تشريع ذي صلة",
+    "updateStatus": "تحديث الحالة",
+    "export": "تصدير",
+    "filter": "تصفية",
+    "clearFilters": "مسح الفلاتر",
+    "search": "البحث في التشريعات...",
+    "save": "حفظ",
+    "cancel": "إلغاء",
+    "confirm": "تأكيد",
+    "close": "إغلاق"
+  },
+
+  "tabs": {
+    "overview": "نظرة عامة",
+    "amendments": "التعديلات",
+    "deadlines": "المواعيد النهائية",
+    "sponsors": "الرعاة",
+    "related": "ذات صلة",
+    "history": "السجل",
+    "comments": "فترة التعليقات"
+  },
+
+  "type": {
+    "law": "قانون",
+    "regulation": "لائحة",
+    "directive": "توجيه",
+    "policy": "سياسة",
+    "resolution": "قرار",
+    "treaty": "معاهدة",
+    "amendment": "تعديل",
+    "proposal": "مقترح",
+    "executive_order": "أمر تنفيذي",
+    "decree": "مرسوم",
+    "other": "أخرى"
+  },
+
+  "status": {
+    "draft": "مسودة",
+    "proposed": "مقترح",
+    "under_review": "قيد المراجعة",
+    "in_committee": "في اللجنة",
+    "pending_vote": "في انتظار التصويت",
+    "passed": "تمت الموافقة",
+    "enacted": "صادر",
+    "implemented": "مُطبق",
+    "superseded": "مُستبدل",
+    "repealed": "ملغى",
+    "expired": "منتهي الصلاحية",
+    "withdrawn": "مسحوب"
+  },
+
+  "priority": {
+    "label": "الأولوية",
+    "low": "منخفضة",
+    "medium": "متوسطة",
+    "high": "عالية",
+    "critical": "حرجة"
+  },
+
+  "impact": {
+    "label": "مستوى التأثير",
+    "minimal": "ضئيل",
+    "low": "منخفض",
+    "medium": "متوسط",
+    "high": "عالي",
+    "transformational": "تحويلي"
+  },
+
+  "commentPeriod": {
+    "title": "فترة التعليقات",
+    "status": "الحالة",
+    "not_started": "لم تبدأ",
+    "open": "مفتوحة",
+    "closed": "مغلقة",
+    "extended": "ممددة",
+    "startDate": "تاريخ البدء",
+    "endDate": "تاريخ الانتهاء",
+    "daysRemaining": "{{count}} يوم متبقي",
+    "daysRemaining_plural": "{{count}} أيام متبقية",
+    "instructions": "تعليمات التقديم",
+    "submitUrl": "رابط التقديم",
+    "openCommentPeriods": "فترات التعليقات المفتوحة",
+    "noOpenPeriods": "لا توجد فترات تعليقات مفتوحة"
+  },
+
+  "form": {
+    "title": {
+      "create": "إنشاء تشريع",
+      "edit": "تعديل تشريع"
+    },
+    "sections": {
+      "basic": "المعلومات الأساسية",
+      "classification": "التصنيف",
+      "dates": "التواريخ الرئيسية",
+      "commentPeriod": "فترة التعليقات",
+      "links": "الروابط والمراجع",
+      "dossier": "الملف المرتبط"
+    },
+    "fields": {
+      "titleEn": "العنوان (الإنجليزية)",
+      "titleAr": "العنوان (العربية)",
+      "shortTitleEn": "العنوان المختصر (الإنجليزية)",
+      "shortTitleAr": "العنوان المختصر (العربية)",
+      "summaryEn": "الملخص (الإنجليزية)",
+      "summaryAr": "الملخص (العربية)",
+      "descriptionEn": "الوصف (الإنجليزية)",
+      "descriptionAr": "الوصف (العربية)",
+      "type": "النوع",
+      "status": "الحالة",
+      "referenceNumber": "رقم المرجع",
+      "jurisdiction": "الاختصاص القضائي",
+      "issuingBody": "الجهة المصدرة",
+      "issuingBodyAr": "الجهة المصدرة (العربية)",
+      "priority": "الأولوية",
+      "impactLevel": "مستوى التأثير",
+      "impactSummaryEn": "ملخص التأثير (الإنجليزية)",
+      "impactSummaryAr": "ملخص التأثير (العربية)",
+      "introducedDate": "تاريخ التقديم",
+      "effectiveDate": "تاريخ النفاذ",
+      "expirationDate": "تاريخ الانتهاء",
+      "sourceUrl": "رابط المصدر",
+      "officialTextUrl": "رابط النص الرسمي",
+      "tags": "الوسوم",
+      "sectors": "القطاعات المتأثرة",
+      "keywords": "الكلمات المفتاحية",
+      "dossier": "ربط بملف",
+      "parentLegislation": "التشريع الأصلي"
+    },
+    "placeholders": {
+      "titleEn": "أدخل عنوان التشريع",
+      "referenceNumber": "مثال: H.R. 1234، توجيه الاتحاد الأوروبي 2025/123",
+      "jurisdiction": "مثال: المملكة العربية السعودية، الاتحاد الأوروبي",
+      "issuingBody": "مثال: وزارة التجارة",
+      "sourceUrl": "https://...",
+      "tags": "إضافة وسوم...",
+      "sectors": "إضافة القطاعات المتأثرة...",
+      "keywords": "إضافة كلمات مفتاحية..."
+    },
+    "validation": {
+      "titleRequired": "العنوان مطلوب",
+      "typeRequired": "النوع مطلوب"
+    }
+  },
+
+  "sponsors": {
+    "title": "الرعاة",
+    "primarySponsor": "الراعي الرئيسي",
+    "coSponsors": "الرعاة المشاركون",
+    "supporters": "المؤيدون",
+    "opponents": "المعارضون",
+    "noSponsors": "لا يوجد رعاة",
+    "added": "تمت إضافة الراعي بنجاح",
+    "removed": "تمت إزالة الراعي بنجاح",
+    "type": {
+      "primary": "رئيسي",
+      "co_sponsor": "مشارك",
+      "supporter": "مؤيد",
+      "opponent": "معارض"
+    },
+    "form": {
+      "name": "الاسم",
+      "title": "المنصب/اللقب",
+      "affiliation": "الانتماء",
+      "type": "الدور",
+      "joinedDate": "تاريخ الانضمام",
+      "notes": "ملاحظات",
+      "linkPerson": "ربط بملف شخص",
+      "linkOrganization": "ربط بملف منظمة"
+    }
+  },
+
+  "amendments": {
+    "title": "التعديلات",
+    "noAmendments": "لا توجد تعديلات",
+    "created": "تم إنشاء التعديل بنجاح",
+    "updated": "تم تحديث التعديل بنجاح",
+    "status": {
+      "proposed": "مقترح",
+      "under_review": "قيد المراجعة",
+      "approved": "موافق عليه",
+      "rejected": "مرفوض",
+      "incorporated": "مدمج",
+      "withdrawn": "مسحوب"
+    },
+    "form": {
+      "number": "رقم التعديل",
+      "title": "العنوان",
+      "description": "الوصف",
+      "status": "الحالة",
+      "proposedDate": "تاريخ الاقتراح",
+      "affectedSections": "الأقسام المتأثرة",
+      "originalText": "النص الأصلي",
+      "proposedText": "النص المقترح",
+      "proposedBy": "مقدم من"
+    }
+  },
+
+  "deadlines": {
+    "title": "المواعيد النهائية",
+    "upcoming": "المواعيد القادمة",
+    "noDeadlines": "لا توجد مواعيد نهائية",
+    "noUpcoming": "لا توجد مواعيد قادمة",
+    "created": "تم إنشاء الموعد النهائي بنجاح",
+    "updated": "تم تحديث الموعد النهائي بنجاح",
+    "completed": "تم وضع علامة مكتمل على الموعد",
+    "deleted": "تم حذف الموعد النهائي بنجاح",
+    "daysRemaining": "{{count}} يوم متبقي",
+    "daysRemaining_plural": "{{count}} أيام متبقية",
+    "overdue": "متأخر",
+    "today": "اليوم",
+    "type": {
+      "comment_period_start": "بداية فترة التعليقات",
+      "comment_period_end": "نهاية فترة التعليقات",
+      "review_deadline": "موعد المراجعة",
+      "vote_date": "تاريخ التصويت",
+      "effective_date": "تاريخ النفاذ",
+      "implementation_deadline": "موعد التنفيذ",
+      "reporting_deadline": "موعد التقرير",
+      "compliance_deadline": "موعد الامتثال",
+      "expiration_date": "تاريخ الانتهاء",
+      "other": "أخرى"
+    },
+    "form": {
+      "title": "العنوان",
+      "description": "الوصف",
+      "type": "النوع",
+      "date": "التاريخ",
+      "time": "الوقت",
+      "timezone": "المنطقة الزمنية",
+      "priority": "الأولوية",
+      "alertDaysBefore": "التنبيه قبل (أيام)",
+      "alertEnabled": "تفعيل التنبيهات"
+    }
+  },
+
+  "related": {
+    "title": "التشريعات ذات الصلة",
+    "noRelated": "لا توجد تشريعات ذات صلة",
+    "added": "تم ربط التشريع ذي الصلة بنجاح",
+    "removed": "تم إلغاء ربط التشريع ذي الصلة بنجاح",
+    "type": {
+      "related": "ذو صلة",
+      "supersedes": "يحل محل",
+      "superseded_by": "محلول محله بواسطة",
+      "implements": "ينفذ",
+      "implemented_by": "منفذ بواسطة",
+      "amends": "يعدل",
+      "amended_by": "معدل بواسطة",
+      "replaces": "يستبدل",
+      "replaced_by": "مستبدل بواسطة",
+      "references": "يشير إلى",
+      "referenced_by": "مشار إليه بواسطة"
+    },
+    "form": {
+      "legislation": "اختر التشريع",
+      "type": "نوع العلاقة",
+      "notes": "ملاحظات"
+    }
+  },
+
+  "history": {
+    "title": "سجل الحالة",
+    "noHistory": "لا توجد تغييرات مسجلة",
+    "changedFrom": "تم التغيير من",
+    "changedTo": "إلى",
+    "by": "بواسطة",
+    "reason": "السبب"
+  },
+
+  "watchers": {
+    "title": "المتابعة",
+    "watching": "أنت الآن تتابع هذا التشريع",
+    "unwatched": "تم إيقاف متابعة هذا التشريع",
+    "preferencesUpdated": "تم تحديث تفضيلات المتابعة",
+    "preferences": {
+      "title": "تفضيلات الإشعارات",
+      "statusChange": "تغييرات الحالة",
+      "amendments": "التعديلات الجديدة",
+      "deadlines": "المواعيد القادمة",
+      "commentPeriod": "تحديثات فترة التعليقات",
+      "notificationType": "نوع الإشعار",
+      "email": "بريد إلكتروني",
+      "inApp": "داخل التطبيق",
+      "both": "كلاهما"
+    }
+  },
+
+  "filters": {
+    "type": "النوع",
+    "status": "الحالة",
+    "priority": "الأولوية",
+    "impact": "مستوى التأثير",
+    "jurisdiction": "الاختصاص القضائي",
+    "sectors": "القطاعات",
+    "tags": "الوسوم",
+    "commentPeriod": "فترة التعليقات",
+    "introducedFrom": "تاريخ التقديم من",
+    "introducedTo": "تاريخ التقديم إلى",
+    "effectiveFrom": "تاريخ النفاذ من",
+    "effectiveTo": "تاريخ النفاذ إلى",
+    "hasOpenCommentPeriod": "لديه فترة تعليقات مفتوحة",
+    "hasUpcomingDeadlines": "لديه مواعيد قادمة",
+    "watching": "المتابعة فقط"
+  },
+
+  "detail": {
+    "version": "الإصدار",
+    "lastUpdated": "آخر تحديث",
+    "createdAt": "تاريخ الإنشاء",
+    "introducedDate": "تاريخ التقديم",
+    "effectiveDate": "تاريخ النفاذ",
+    "expirationDate": "تاريخ الانتهاء",
+    "lastActionDate": "آخر إجراء",
+    "referenceNumber": "المرجع",
+    "jurisdiction": "الاختصاص القضائي",
+    "issuingBody": "الجهة المصدرة",
+    "linkedDossier": "الملف المرتبط",
+    "parentLegislation": "التشريع الأصلي",
+    "sources": "المصادر",
+    "sourceUrl": "المصدر",
+    "officialText": "النص الرسمي"
+  },
+
+  "list": {
+    "empty": "لا توجد تشريعات",
+    "emptyFiltered": "لا توجد تشريعات تطابق الفلاتر",
+    "loading": "جاري تحميل التشريعات...",
+    "loadMore": "تحميل المزيد",
+    "showingCount": "عرض {{count}} من {{total}} تشريع"
+  },
+
+  "messages": {
+    "created": "تم إنشاء التشريع بنجاح",
+    "updated": "تم تحديث التشريع بنجاح",
+    "deleted": "تم حذف التشريع بنجاح",
+    "statusUpdated": "تم تحديث الحالة بنجاح",
+    "confirmDelete": "هل أنت متأكد من حذف هذا التشريع؟",
+    "deleteWarning": "لا يمكن التراجع عن هذا الإجراء."
+  },
+
+  "errors": {
+    "loadFailed": "فشل تحميل التشريع",
+    "createFailed": "فشل إنشاء التشريع",
+    "updateFailed": "فشل تحديث التشريع",
+    "deleteFailed": "فشل حذف التشريع",
+    "notFound": "التشريع غير موجود"
+  },
+
+  "dashboard": {
+    "title": "لوحة التشريعات",
+    "openCommentPeriods": "فترات التعليقات المفتوحة",
+    "upcomingDeadlines": "المواعيد القادمة",
+    "watchedLegislation": "التشريعات المتابعة",
+    "recentUpdates": "التحديثات الأخيرة",
+    "byStatus": "حسب الحالة",
+    "byType": "حسب النوع",
+    "byPriority": "حسب الأولوية"
+  }
+}

@@ -7,42 +7,35 @@
  * Integrates with AnythingLLM-generated intelligence reports
  */
 
-import { useTranslation } from 'react-i18next';
-import { useAllIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence';
-import { IntelligenceCard } from '@/components/intelligence/IntelligenceCard';
-import { RefreshButton } from '@/components/intelligence/RefreshButton';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { AlertCircle, Lightbulb } from 'lucide-react';
-import { toast } from 'sonner';
-import type { IntelligenceType } from '@/types/intelligence-reports.types';
+import { useTranslation } from 'react-i18next'
+import { useAllIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence'
+import { IntelligenceCard } from '@/components/intelligence/IntelligenceCard'
+import { RefreshButton } from '@/components/intelligence/RefreshButton'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Alert, AlertDescription } from '@/components/ui/alert'
+import { AlertCircle, Lightbulb } from 'lucide-react'
+import { toast } from 'sonner'
+import type { IntelligenceType } from '@/types/intelligence-reports.types'
 
 interface DossierIntelligenceTabProps {
-  dossierId: string;
+  dossierId: string
 }
 
 export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
-  const {
-    data: intelligenceData,
-    isLoading,
-    isError,
-    error,
-  } = useAllIntelligence(dossierId);
+  const { data: intelligenceData, isLoading, isError, error } = useAllIntelligence(dossierId)
 
   const { mutate: refreshIntelligence, isPending: isRefreshing } = useRefreshIntelligence({
     onSuccess: (data) => {
       // Show success toast
       const typeLabels = data.data
         .map((r) => t(`intelligence.types.${r.intelligence_type}`))
-        .join(', ');
+        .join(', ')
       toast.success(
-        isRTL
-          ? `تم تحديث التقارير بنجاح: ${typeLabels}`
-          : `Successfully refreshed: ${typeLabels}`
-      );
+        isRTL ? `تم تحديث التقارير بنجاح: ${typeLabels}` : `Successfully refreshed: ${typeLabels}`,
+      )
     },
     onError: (error) => {
       // Handle specific error codes
@@ -50,31 +43,31 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
         toast.warning(
           isRTL
             ? 'تحديث جاري بالفعل. يرجى الانتظار حتى يكتمل.'
-            : 'Refresh already in progress. Please wait until it completes.'
-        );
+            : 'Refresh already in progress. Please wait until it completes.',
+        )
       } else if (error.code === 'SERVICE_UNAVAILABLE') {
         toast.error(
           isRTL
             ? 'خدمة AnythingLLM غير متاحة. سيتم عرض البيانات المخزنة مؤقتاً.'
-            : 'AnythingLLM service unavailable. Showing cached data.'
-        );
+            : 'AnythingLLM service unavailable. Showing cached data.',
+        )
       } else {
         toast.error(
           isRTL
             ? `فشل التحديث: ${error.message_ar || error.message_en}`
-            : `Refresh failed: ${error.message_en}`
-        );
+            : `Refresh failed: ${error.message_en}`,
+        )
       }
     },
-  });
+  })
 
   const handleRefresh = (types: IntelligenceType[]) => {
     refreshIntelligence({
       entity_id: dossierId,
       intelligence_types: types,
       priority: 'normal',
-    });
-  };
+    })
+  }
 
   // Loading state
   if (isLoading) {
@@ -86,21 +79,21 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
           ))}
         </div>
       </div>
-    );
+    )
   }
 
   // Error state
   if (isError) {
     return (
       <Alert variant="destructive" dir={isRTL ? 'rtl' : 'ltr'}>
-        <AlertCircle className={`h-4 w-4 ${isRTL ? 'ml-2' : 'mr-2'}`} />
+        <AlertCircle className={`h-4 w-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
         <AlertDescription>
           {error instanceof Error
             ? error.message
             : t('intelligence.error', 'Failed to load intelligence')}
         </AlertDescription>
       </Alert>
-    );
+    )
   }
 
   // Empty state
@@ -114,18 +107,18 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
         <p className="mt-1 text-sm text-gray-500 dark:text-gray-400">
           {t(
             'intelligence.emptyDescription',
-            'No intelligence reports have been generated for this entity yet'
+            'No intelligence reports have been generated for this entity yet',
           )}
         </p>
       </div>
-    );
+    )
   }
 
   // Sort intelligence by type: economic, political, security, bilateral
-  const typeOrder = ['economic', 'political', 'security', 'bilateral'];
+  const typeOrder = ['economic', 'political', 'security', 'bilateral']
   const sortedIntelligence = [...intelligenceData.data].sort((a, b) => {
-    return typeOrder.indexOf(a.intelligence_type) - typeOrder.indexOf(b.intelligence_type);
-  });
+    return typeOrder.indexOf(a.intelligence_type) - typeOrder.indexOf(b.intelligence_type)
+  })
 
   return (
     <div className="space-y-6" dir={isRTL ? 'rtl' : 'ltr'}>
@@ -136,7 +129,10 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
             {t('intelligence.title', 'Intelligence Reports')}
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            {t('intelligence.description', 'AI-generated intelligence insights from credible sources')}
+            {t(
+              'intelligence.description',
+              'AI-generated intelligence insights from credible sources',
+            )}
           </p>
         </div>
         <RefreshButton
@@ -177,5 +173,5 @@ export function DossierIntelligenceTab({ dossierId }: DossierIntelligenceTabProp
         </div>
       )}
     </div>
-  );
+  )
 }

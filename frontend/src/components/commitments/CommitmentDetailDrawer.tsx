@@ -14,7 +14,6 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useNavigate } from '@tanstack/react-router'
 import { Sheet, SheetContent, SheetHeader, SheetTitle } from '@/components/ui/sheet'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -34,8 +33,6 @@ import {
 } from 'lucide-react'
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { useCommitment } from '@/hooks/useCommitments'
-import { useDossier } from '@/hooks/useDossier'
-import { useWorkItemDossierLinks } from '@/hooks/useWorkItemDossierLinks'
 import { getEvidenceUrl } from '@/services/commitments.service'
 import { type Commitment, PRIORITY_COLORS, STATUS_COLORS } from '@/types/commitment.types'
 import { isCommitmentOverdue, getDaysUntilDue } from '@/services/commitments.service'
@@ -44,7 +41,7 @@ import { StatusTimeline } from './StatusTimeline'
 import { CommitmentForm } from './CommitmentForm'
 import { EvidenceUpload } from './EvidenceUpload'
 import { DeliverablesTimeline } from './deliverables'
-import { DossierContextBadge } from '@/components/Dossier'
+import { DossierLinksWidget } from '@/components/Dossier'
 
 export interface CommitmentDetailDrawerProps {
   commitmentId: string | null
@@ -58,7 +55,6 @@ export function CommitmentDetailDrawer({
   onOpenChange,
 }: CommitmentDetailDrawerProps) {
   const { t, i18n } = useTranslation('commitments')
-  const navigate = useNavigate()
   const isRTL = i18n.language === 'ar'
 
   // State
@@ -73,50 +69,12 @@ export function CommitmentDetailDrawer({
     isError,
   } = useCommitment(commitmentId ?? '', { enabled: !!commitmentId && open })
 
-  // Fetch dossier details for displaying name
-  const { data: dossier } = useDossier(commitment?.dossier_id ?? '', undefined, {
-    enabled: !!commitment?.dossier_id,
-  })
-
-  // Fetch dossier links to show inheritance info (T025)
-  const { links: dossierLinks } = useWorkItemDossierLinks('commitment', commitmentId ?? '', {
-    enabled: !!commitmentId && open,
-  })
-
-  // Get dossier display name based on language
-  const dossierDisplayName = dossier
-    ? isRTL
-      ? dossier.name_ar || dossier.name_en
-      : dossier.name_en
-    : commitment?.dossier_id
-
   // Reset edit mode when drawer closes
   const handleOpenChange = (newOpen: boolean) => {
     if (!newOpen) {
       setIsEditing(false)
     }
     onOpenChange(newOpen)
-  }
-
-  // T059: Navigate to dossier (using type-specific routes)
-  const handleNavigateToDossier = () => {
-    if (commitment?.dossier_id && dossier?.type) {
-      onOpenChange(false)
-      // Map dossier type to route segment (pluralize for route)
-      const typeToRoute: Record<string, string> = {
-        country: 'countries',
-        organization: 'organizations',
-        person: 'persons',
-        engagement: 'engagements',
-        forum: 'forums',
-        working_group: 'working_groups',
-      }
-      const routeSegment = typeToRoute[dossier.type] || 'countries'
-      navigate({
-        to: `/dossiers/${routeSegment}/$id`,
-        params: { id: commitment.dossier_id },
-      })
-    }
   }
 
   // Handle evidence download
@@ -310,47 +268,19 @@ export function CommitmentDetailDrawer({
 
                     <Separator />
 
-                    {/* T059, T025, T041: Dossier Link with Inheritance Info using DossierContextBadge */}
-                    {commitment.dossier_id && (
-                      <>
-                        <div className="space-y-2">
-                          <p className="text-xs text-muted-foreground text-start">
-                            {t('detail.dossier')}
-                          </p>
-                          {/* Use DossierContextBadge for consistent visual */}
-                          {dossierLinks.length > 0 ? (
-                            <div className="flex flex-wrap gap-2">
-                              {dossierLinks.map((link) => (
-                                <DossierContextBadge
-                                  key={link.id}
-                                  dossierId={link.dossier_id}
-                                  dossierType={(link.dossier?.type as any) ?? 'country'}
-                                  nameEn={link.dossier?.name_en ?? dossierDisplayName ?? ''}
-                                  nameAr={link.dossier?.name_ar}
-                                  inheritanceSource={link.inheritance_source}
-                                  isPrimary={link.is_primary}
-                                  size="default"
-                                />
-                              ))}
-                            </div>
-                          ) : (
-                            /* Fallback to button if no links loaded yet */
-                            <Button
-                              variant="outline"
-                              onClick={handleNavigateToDossier}
-                              className="min-h-11 w-full justify-start"
-                            >
-                              <FileText className={`size-4 ${isRTL ? 'ms-2' : 'me-2'}`} />
-                              <span className="truncate flex-1 text-start">
-                                {dossierDisplayName}
-                              </span>
-                              <ExternalLink className="size-4 shrink-0" />
-                            </Button>
-                          )}
-                        </div>
-                        <Separator />
-                      </>
-                    )}
+                    {/* Linked Dossiers Widget - Reusable widget showing dossier context */}
+                    <DossierLinksWidget
+                      workItemType="commitment"
+                      workItemId={commitment.id}
+                      editable={
+                        commitment.status !== 'cancelled' && commitment.status !== 'completed'
+                      }
+                      showCard={false}
+                      compact
+                      showEmptyState={true}
+                    />
+
+                    <Separator />
 
                     {/* Deliverables Timeline - Interactive milestone tracking */}
                     {commitment.status !== 'cancelled' && (
