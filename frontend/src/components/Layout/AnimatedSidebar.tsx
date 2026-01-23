@@ -314,7 +314,7 @@ export function AnimatedSidebar() {
  <SidebarMenuItem>
  <SidebarMenuButton
  asChild
- className="group/header transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+ className="group/header transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:scale-100"
  >
  <Link to="/dashboard">
  <div className="flex aspect-square size-8 items-center justify-center rounded-lg bg-primary text-primary-foreground transition-transform duration-200 group-hover/header:scale-110">
@@ -357,7 +357,7 @@ export function AnimatedSidebar() {
  asChild
  isActive={isActive}
  tooltip={item.label}
- className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+ className="group/item transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:scale-100"
  >
  <Link to={item.path}>
  <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
@@ -392,7 +392,7 @@ export function AnimatedSidebar() {
  asChild
  isActive={isActive}
  tooltip={item.label}
- className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+ className="group/item transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:scale-100"
  >
  <Link to={item.path}>
  <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
@@ -421,7 +421,7 @@ export function AnimatedSidebar() {
  asChild
  isActive={isActive}
  tooltip={item.label}
- className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+ className="group/item transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:scale-100"
  >
  <Link to={item.path}>
  <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
@@ -450,7 +450,7 @@ export function AnimatedSidebar() {
  asChild
  isActive={isActive}
  tooltip={item.label}
- className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+ className="group/item transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:scale-100"
  >
  <Link to={item.path}>
  <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
@@ -479,7 +479,7 @@ export function AnimatedSidebar() {
  asChild
  isActive={isActive}
  tooltip={item.label}
- className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+ className="group/item transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:scale-100"
  >
  <Link to={item.path}>
  <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
@@ -509,7 +509,7 @@ export function AnimatedSidebar() {
  asChild
  isActive={isActive}
  tooltip={item.label}
- className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+ className="group/item transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:scale-100"
  >
  <Link to={item.path}>
  <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
@@ -538,7 +538,7 @@ export function AnimatedSidebar() {
  asChild
  isActive={isActive}
  tooltip={item.label}
- className="group/item transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]"
+ className="group/item transition-transform duration-200 hover:scale-[1.02] active:scale-[0.98] focus-visible:scale-100"
  >
  <Link to={item.path}>
  <Icon className="transition-transform duration-200 group-hover/item:scale-110" />
@@ -580,8 +580,9 @@ export function AnimatedSidebar() {
  <button
  onClick={handleLogout}
  className={cn(
- 'rounded-md p-1.5 hover:bg-sidebar-accent text-muted-foreground hover:text-sidebar-foreground transition-all',
- 'hover:scale-105 active:scale-95',
+ 'rounded-md p-1.5 hover:bg-sidebar-accent text-muted-foreground hover:text-sidebar-foreground transition-transform transition-colors',
+ 'hover:scale-105 active:scale-95 focus-visible:scale-100',
+ 'outline-none ring-sidebar-ring focus-visible:ring-2 focus-visible:ring-offset-2',
  isRTL && 'me-auto ms-0'
  )}
  aria-label={t('common.logout', 'Sign out')}
