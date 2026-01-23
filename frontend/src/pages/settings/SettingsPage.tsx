@@ -57,7 +57,13 @@ export function SettingsPage() {
   const { data: settings, isLoading } = useQuery({
     queryKey: ['user-settings', user?.id],
     queryFn: async () => {
-      const { data, error } = await supabase.from('users').select('*').eq('id', user?.id).single()
+      const { data, error } = await supabase
+        .from('users')
+        .select(
+          'id, language_preference, timezone, theme, notifications_email, notifications_push, notifications_mou_expiry, notifications_event_reminders, notifications_report_generation, mfa_enabled, session_timeout',
+        )
+        .eq('id', user?.id)
+        .single()
 
       if (error) throw error
 

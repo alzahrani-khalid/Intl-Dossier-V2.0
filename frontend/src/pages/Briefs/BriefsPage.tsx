@@ -110,10 +110,15 @@ export function BriefsPage() {
     queryFn: async () => {
       // Fetch from both briefs and ai_briefs tables
       const [briefsResult, aiBriefsResult] = await Promise.all([
-        supabase.from('briefs').select('*').order('created_at', { ascending: false }),
+        supabase
+          .from('briefs')
+          .select(
+            'id, reference_number, title, title_en, title_ar, summary, summary_en, summary_ar, status, is_published, created_at, createdAt, published_date, published_at, category, tags, author:created_by(full_name), author_name, created_by',
+          )
+          .order('created_at', { ascending: false }),
         supabase
           .from('ai_briefs')
-          .select('*')
+          .select('id, title, executive_summary, status, created_at, completed_at, created_by')
           .eq('status', 'completed')
           .order('created_at', { ascending: false }),
       ])

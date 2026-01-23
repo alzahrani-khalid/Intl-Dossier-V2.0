@@ -45,7 +45,9 @@ export function EventsPage() {
  queryFn: async () => {
  let query = supabase
  .from('event_details')
- .select('*')
+ .select(
+ 'id, title_en, title_ar, type, start_datetime, end_datetime, location_en, location_ar, venue_en, venue_ar, is_virtual, virtual_link, max_participants, status, organizer_id, organizer_name_en, organizer_name_ar, country_id, country_name_en, country_name_ar',
+ )
  .gte('start_datetime', startOfMonth(selectedDate).toISOString())
  .lte('start_datetime', endOfMonth(selectedDate).toISOString())
  .order('start_datetime', { ascending: true })

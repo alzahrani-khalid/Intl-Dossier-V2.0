@@ -131,7 +131,9 @@ export function IntakeQueuePage() {
     queryFn: async (): Promise<Ticket[]> => {
       let query = supabase
         .from('intake_tickets')
-        .select('*')
+        .select(
+          'id, ticket_number, title, title_ar, description, description_ar, source, request_type, priority, status, urgency, created_at, submitted_at, triaged_at, assigned_to, assigned_unit, ai_suggestion',
+        )
         .order('created_at', { ascending: true })
 
       // Apply status filter based on category

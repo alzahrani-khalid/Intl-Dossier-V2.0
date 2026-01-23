@@ -89,7 +89,9 @@ export function IntelligencePage() {
     queryFn: async () => {
       const { data, error } = await supabase
         .from('intelligence_reports')
-        .select('*')
+        .select(
+          'id, report_number, title, title_en, title_ar, executive_summary_en, executive_summary_ar, summary_en, summary_ar, summary, confidence_level, confidence, classification, analysis_type, analysis_types, key_findings, findings, recommendations, status, author:created_by(full_name), author_name, created_by, reviewed_by:reviewed_by(full_name), reviewed_by_name, approved_by:approved_by(full_name), approved_by_name, created_at, createdAt, published_at',
+        )
         .order('created_at', { ascending: false })
 
       if (error) {

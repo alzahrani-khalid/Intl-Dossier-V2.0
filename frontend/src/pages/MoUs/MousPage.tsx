@@ -55,7 +55,9 @@ export function MousPage() {
     queryFn: async () => {
       let query = supabase
         .from('mous_frontend')
-        .select('*')
+        .select(
+          'id, reference_number, title_en, title_ar, workflow_state, signing_date, effective_date, expiry_date, primary_party, secondary_party',
+        )
         .order('created_at', { ascending: false })
 
       if (searchTerm) {
