@@ -44,6 +44,9 @@ Thumbs.db
 .cache/
 .parcel-cache/
 
+# Corrupted/temporary files
+.!*
+
 # Database
 *.db
 *.sqlite
