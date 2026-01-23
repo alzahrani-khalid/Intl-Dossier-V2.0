@@ -28,6 +28,222 @@ supabase/         # Migrations, seed data, Edge Functions
 - **Test**: `pnpm test`, `pnpm lint`, `pnpm typecheck`
 - **DB**: `pnpm db:migrate`, `pnpm db:seed`, `pnpm db:reset`
 
+## TypeScript Type Safety Guidelines (MANDATORY)
+
+### Core Principle
+
+**NEVER use `any` type** - TypeScript strict mode is enabled project-wide. Always use type-safe alternatives from `@/types/common.types.ts`.
+
+### Type-Safe Alternatives to `any`
+
+The project provides comprehensive type-safe alternatives in `frontend/src/types/common.types.ts` (frontend) and `backend/src/types/database.types.ts` (backend).
+
+#### JSON & Dynamic Data
+
+| ❌ Avoid                   | ✅ Use Instead   | Use Case                                    |
+| -------------------------- | ---------------- | ------------------------------------------- |
+| `any`                      | `JsonValue`      | JSON-serializable values                    |
+| `Record<string, any>`      | `JsonObject`     | JSON objects with dynamic keys              |
+| `any[]`                    | `JsonArray`      | JSON arrays                                 |
+| `Record<string, any>`      | `Metadata`       | Metadata fields                             |
+| `Record<string, any>`      | `DynamicFields`  | Type-specific form fields                   |
+| `data?: any`               | `data?: Json`    | Backend database JSON columns (Supabase)    |
+
+#### Error Handling
+
+| ❌ Avoid             | ✅ Use Instead            | Use Case                          |
+| -------------------- | ------------------------- | --------------------------------- |
+| `catch (e: any)`     | `catch (e: unknown)`      | Standard catch blocks             |
+| `error: any`         | `error: ErrorLike`        | Error parameters/variables        |
+| N/A                  | `isError(error)`          | Type guard for Error instances    |
+| N/A                  | `getErrorMessage(error)`  | Safe error message extraction     |
+
+#### Callbacks & Handlers
+
+| ❌ Avoid                            | ✅ Use Instead                  | Use Case                          |
+| ----------------------------------- | ------------------------------- | --------------------------------- |
+| `(item: any) => void`               | `ArrayCallback<Item>`           | Array method callbacks            |
+| `(event: string, payload: any)`    | `EventCallback<PayloadType>`    | Event handlers                    |
+| `(data: any) => void`               | `DataHandler<DataType>`         | Data processing functions         |
+| `event: any`                        | `React.MouseEvent<T>`           | React event handlers              |
+
+#### Database & API
+
+| ❌ Avoid                   | ✅ Use Instead                           | Use Case                          |
+| -------------------------- | ---------------------------------------- | --------------------------------- |
+| `row: any`                 | `Database['public']['Tables'][T]['Row']`| Supabase query results            |
+| `data: any`                | `Database['public']['Tables'][T]['Insert']`| Insert operations               |
+| `updates: any`             | `Database['public']['Tables'][T]['Update']`| Update operations               |
+| `params: any`              | `Record<string, Json>`                   | API request parameters            |
+
+#### React & UI
+
+| ❌ Avoid                   | ✅ Use Instead                           | Use Case                          |
+| -------------------------- | ---------------------------------------- | --------------------------------- |
+| `props: any`               | `React.ComponentProps<typeof Component>` | Component props                   |
+| `ref: any`                 | `React.RefObject<HTMLElement>`           | React refs                        |
+| `t: any`                   | `TFunction` (from i18next)               | Translation functions             |
+| `[key: string]: any`       | `React.HTMLAttributes<T>`                | HTML element props                |
+
+### Common Patterns
+
+#### Pattern 1: Error Handling
+
+```tsx
+// ❌ Bad
+try {
+  await doSomething();
+} catch (error: any) {
+  console.error(error.message);
+}
+
+// ✅ Good
+import { getErrorMessage } from '@/types/common.types';
+
+try {
+  await doSomething();
+} catch (error: unknown) {
+  console.error(getErrorMessage(error));
+}
+```
+
+#### Pattern 2: JSON Data from API
+
+```tsx
+// ❌ Bad
+interface User {
+  metadata: Record<string, any>;
+  preferences: any;
+}
+
+// ✅ Good
+import type { Metadata, JsonObject } from '@/types/common.types';
+
+interface User {
+  metadata: Metadata;
+  preferences: JsonObject;
+}
+```
+
+#### Pattern 3: Array Callbacks
+
+```tsx
+// ❌ Bad
+const activeItems = items.filter((item: any) => item.status === 'active');
+
+// ✅ Good
+const activeItems = items.filter((item: Item) => item.status === 'active');
+
+// ✅ Good (explicit callback type)
+import type { ArrayCallback } from '@/types/common.types';
+
+const isActive: ArrayCallback<Item, boolean> = (item) => item.status === 'active';
+const activeItems = items.filter(isActive);
+```
+
+#### Pattern 4: Database Query Results (Backend)
+
+```tsx
+// ❌ Bad
+async function getCountry(id: string): Promise<any> {
+  const { data } = await supabase
+    .from('countries')
+    .select('*')
+    .eq('id', id)
+    .single();
+  return data;
+}
+
+// ✅ Good
+import type { Database } from '@/types/database.types';
+
+type CountryRow = Database['public']['Tables']['countries']['Row'];
+
+async function getCountry(id: string): Promise<CountryRow | null> {
+  const { data } = await supabase
+    .from('countries')
+    .select('*')
+    .eq('id', id)
+    .single();
+  return data;
+}
+```
+
+#### Pattern 5: Type Guards for Safe Access
+
+```tsx
+// ❌ Bad
+function processData(data: any) {
+  return data.nested.property; // Runtime error if undefined
+}
+
+// ✅ Good
+import { isJsonObject } from '@/types/common.types';
+
+function processData(data: JsonValue) {
+  if (isJsonObject(data) && isJsonObject(data.nested)) {
+    return data.nested.property;
+  }
+  return undefined;
+}
+```
+
+### Available Type Guards
+
+Use these type guards from `common.types.ts` for safe type narrowing:
+
+- `isJsonObject(value)` - Check if value is a JSON object
+- `isJsonArray(value)` - Check if value is a JSON array
+- `isJsonPrimitive(value)` - Check if value is a JSON primitive
+- `isJsonValue(value)` - Check if value is valid JSON
+- `isError(error)` - Check if error is an Error instance
+- `toJsonValue(value)` - Safe conversion to JsonValue
+
+### ESLint Configuration
+
+Add these rules to your ESLint config to enforce type safety:
+
+```json
+{
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "error",
+    "@typescript-eslint/no-unsafe-assignment": "error",
+    "@typescript-eslint/no-unsafe-call": "error",
+    "@typescript-eslint/no-unsafe-member-access": "error",
+    "@typescript-eslint/no-unsafe-return": "error"
+  }
+}
+```
+
+### Pre-Commit Hook
+
+Add a pre-commit hook to catch `any` usage:
+
+```bash
+#!/bin/bash
+# .git/hooks/pre-commit
+
+if git diff --cached --name-only | grep -q '\.tsx\?$'; then
+  if git diff --cached | grep -q ': any'; then
+    echo "❌ Error: Found 'any' type usage. Use type-safe alternatives from @/types/common.types.ts"
+    exit 1
+  fi
+fi
+```
+
+### Quick Reference
+
+When you're tempted to use `any`, ask:
+
+1. **Is it JSON data?** → Use `JsonValue`, `JsonObject`, or `JsonArray`
+2. **Is it an error?** → Use `unknown` in catch blocks, `ErrorLike` for parameters
+3. **Is it a callback?** → Use `ArrayCallback<T>`, `EventCallback<T>`, or `DataHandler<T>`
+4. **Is it from the database?** → Use `Database['public']['Tables'][T]['Row']`
+5. **Is it dynamic metadata?** → Use `Metadata` or `DynamicFields`
+6. **Is it a React prop?** → Use `React.ComponentProps<typeof Component>`
+
+**Still stuck?** Use `unknown` as a last resort and narrow with type guards.
+
 ## Mobile-First & Responsive Design (MANDATORY)
 
 ### Core Principles
