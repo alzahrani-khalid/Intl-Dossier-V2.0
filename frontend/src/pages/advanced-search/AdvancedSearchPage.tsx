@@ -38,6 +38,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Switch } from '@/components/ui/switch'
 import { cn } from '@/lib/utils'
+import { sanitizeHighlightedText } from '@/lib/sanitize'
 import { AdvancedSearchFilters } from '@/components/advanced-search'
 import { SearchEmptyState } from '@/components/empty-states'
 import {
@@ -174,7 +175,7 @@ export function AdvancedSearchPage() {
             <p
               className="text-sm text-gray-600 dark:text-gray-400 line-clamp-2"
               dangerouslySetInnerHTML={{
-                __html: isRTL ? result.snippet_ar : result.snippet_en,
+                __html: sanitizeHighlightedText(isRTL ? result.snippet_ar : result.snippet_en),
               }}
             />
             <div className="flex items-center gap-4 mt-3 text-xs text-gray-500">
