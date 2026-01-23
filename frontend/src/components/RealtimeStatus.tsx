@@ -6,86 +6,80 @@ import { Button } from './ui/button'
 import { Wifi, WifiOff, RefreshCw, AlertCircle } from 'lucide-react'
 
 export function RealtimeStatus() {
- const { t } = useTranslation()
- const auth = useAuth()
- const { connectionStatus, isConnected, reconnect, lastError } = useRealtimeStore()
+  const { t } = useTranslation()
+  const auth = useAuth()
+  const { connectionStatus, isConnected, reconnect, lastError } = useRealtimeStore()
 
- // Don't show on login page or when not authenticated
- if (!auth?.session) {
- return null
- }
+  // Don't show on login page or when not authenticated
+  if (!auth?.session) {
+    return null
+  }
 
- const getStatusIcon = () => {
- switch (connectionStatus) {
- case 'connected':
- return <Wifi className="size-4 text-green-500" />
- case 'disconnected':
- return <WifiOff className="size-4 text-gray-500" />
- case 'reconnecting':
- return <RefreshCw className="size-4 animate-spin text-yellow-500" />
- case 'error':
- return <AlertCircle className="size-4 text-red-500" />
- default:
- return <WifiOff className="size-4 text-gray-500" />
- }
- }
+  const getStatusIcon = () => {
+    switch (connectionStatus) {
+      case 'connected':
+        return <Wifi className="size-4 text-green-500" />
+      case 'disconnected':
+        return <WifiOff className="size-4 text-gray-500" />
+      case 'reconnecting':
+        return <RefreshCw className="size-4 animate-spin text-yellow-500" />
+      case 'error':
+        return <AlertCircle className="size-4 text-red-500" />
+      default:
+        return <WifiOff className="size-4 text-gray-500" />
+    }
+  }
 
- const getStatusText = () => {
- switch (connectionStatus) {
- case 'connected':
- return t('realtime.connected', 'Connected')
- case 'disconnected':
- return t('realtime.disconnected', 'Disconnected')
- case 'reconnecting':
- return t('realtime.reconnecting', 'Reconnecting...')
- case 'error':
- return t('realtime.connectionLost', 'Connection Lost')
- default:
- return t('realtime.disconnected', 'Disconnected')
- }
- }
+  const getStatusText = () => {
+    switch (connectionStatus) {
+      case 'connected':
+        return t('realtime.connected', 'Connected')
+      case 'disconnected':
+        return t('realtime.disconnected', 'Disconnected')
+      case 'reconnecting':
+        return t('realtime.reconnecting', 'Reconnecting...')
+      case 'error':
+        return t('realtime.connectionLost', 'Connection Lost')
+      default:
+        return t('realtime.disconnected', 'Disconnected')
+    }
+  }
 
- const getStatusVariant = () => {
- switch (connectionStatus) {
- case 'connected':
- return 'default'
- case 'disconnected':
- return 'secondary'
- case 'reconnecting':
- return 'outline'
- case 'error':
- return 'destructive'
- default:
- return 'secondary'
- }
- }
+  const getStatusVariant = () => {
+    switch (connectionStatus) {
+      case 'connected':
+        return 'default'
+      case 'disconnected':
+        return 'secondary'
+      case 'reconnecting':
+        return 'outline'
+      case 'error':
+        return 'destructive'
+      default:
+        return 'secondary'
+    }
+  }
 
- // Only show if not connected or there's an error
- if (connectionStatus === 'connected') {
- return null
- }
+  // Only show if not connected or there's an error
+  if (connectionStatus === 'connected') {
+    return null
+  }
 
- return (
- <div className="fixed bottom-4 left-4 z-50 flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
- <Badge variant={getStatusVariant()} className="gap-1">
- {getStatusIcon()}
- <span>{getStatusText()}</span>
- </Badge>
+  return (
+    <div className="fixed bottom-4 start-4 z-50 flex items-center gap-2 rounded-lg border border-gray-200 bg-white p-3 shadow-lg dark:border-gray-700 dark:bg-gray-800">
+      <Badge variant={getStatusVariant()} className="gap-1">
+        {getStatusIcon()}
+        <span>{getStatusText()}</span>
+      </Badge>
 
- {connectionStatus === 'error' && (
- <Button
- size="sm"
- variant="outline"
- onClick={reconnect}
- className="h-6 px-2 text-xs"
- >
- <RefreshCw className="me-1 size-3" />
- Retry
- </Button>
- )}
- </div>
- )
+      {connectionStatus === 'error' && (
+        <Button size="sm" variant="outline" onClick={reconnect} className="h-6 px-2 text-xs">
+          <RefreshCw className="me-1 size-3" />
+          Retry
+        </Button>
+      )}
+    </div>
+  )
 }
 
 export default RealtimeStatus
-

@@ -85,7 +85,7 @@ export const DesktopSidebar = ({
       <button
         onClick={() => setOpen(!open)}
         className={cn(
-          'absolute -right-2 top-4 z-40 hidden h-5 w-5 transform items-center justify-center rounded-sm border border-neutral-200 bg-white transition duration-200 group-hover/sidebar-btn:flex dark:border-neutral-700 dark:bg-neutral-900',
+          'absolute -end-2 top-4 z-40 hidden h-5 w-5 transform items-center justify-center rounded-sm border border-neutral-200 bg-white transition duration-200 group-hover/sidebar-btn:flex dark:border-neutral-700 dark:bg-neutral-900',
           open ? 'rotate-0' : 'rotate-180',
         )}
       >
@@ -128,7 +128,7 @@ export const MobileSidebar = ({
             )}
           >
             <div
-              className="absolute right-10 top-10 z-50 text-neutral-800 dark:text-neutral-200"
+              className="absolute end-10 top-10 z-50 text-neutral-800 dark:text-neutral-200"
               onClick={() => setOpen(!open)}
             >
               <IconX />

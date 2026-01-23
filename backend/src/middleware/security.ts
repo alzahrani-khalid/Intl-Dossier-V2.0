@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express'
 import helmet from 'helmet'
 import cors from 'cors'
-import rateLimit from 'express-rate-limit'
 import { logSecurityEvent, logWarn } from '../utils/logger'
+// Import consolidated rate limiters from single source of truth
+import { apiLimiter, authLimiter, uploadLimiter, aiLimiter, dynamicLimiter } from './rateLimiter'
 
 // Environment variables with defaults
 const NODE_ENV = process.env.NODE_ENV || 'development'
@@ -147,58 +148,12 @@ export const helmetConfig = helmet({
   },
 })
 
-// Rate limiting configuration
-export const createRateLimiter = (windowMs: number, max: number, message?: string) => {
-  return rateLimit({
-    windowMs,
-    max,
-    message: message || 'Too many requests from this IP, please try again later.',
-    standardHeaders: true,
-    legacyHeaders: false,
-    handler: (req: Request, res: Response) => {
-      logSecurityEvent('Rate limit exceeded', 'medium', {
-        ip: req.ip,
-        userAgent: req.get('User-Agent'),
-        path: req.path,
-        method: req.method,
-      })
-
-      res.status(429).json({
-        error: 'Too Many Requests',
-        message: 'Rate limit exceeded. Please try again later.',
-        retryAfter: Math.round(windowMs / 1000),
-      })
-    },
-    skip: (req: Request) => {
-      // Skip rate limiting for health checks
-      return req.path === '/health' || req.path === '/api/health'
-    },
-  })
-}
-
-// General API rate limiter (100 requests per 15 minutes)
-export const generalRateLimit = createRateLimiter(15 * 60 * 1000, 100)
-
-// Strict rate limiter for authentication endpoints (5 requests per 15 minutes)
-export const authRateLimit = createRateLimiter(
-  15 * 60 * 1000,
-  5,
-  'Too many authentication attempts from this IP, please try again after 15 minutes.',
-)
-
-// Upload rate limiter (10 requests per hour)
-export const uploadRateLimit = createRateLimiter(
-  60 * 60 * 1000,
-  10,
-  'Too many file uploads from this IP, please try again later.',
-)
-
-// Password reset rate limiter (3 requests per hour)
-export const passwordResetRateLimit = createRateLimiter(
-  60 * 60 * 1000,
-  3,
-  'Too many password reset attempts from this IP, please try again later.',
-)
+// Rate limiting - consolidated in rateLimiter.ts
+// Re-export for backward compatibility
+export const generalRateLimit = apiLimiter
+export const authRateLimit = authLimiter
+export const uploadRateLimit = uploadLimiter
+export { aiLimiter, dynamicLimiter }
 
 // IP whitelist middleware (for admin endpoints)
 export const ipWhitelist = (allowedIPs: string[]) => {
@@ -369,7 +324,8 @@ export const securityMiddleware = {
   generalRateLimit,
   authRateLimit,
   uploadRateLimit,
-  passwordResetRateLimit,
+  aiLimiter,
+  dynamicLimiter,
   securityHeaders,
   httpsRedirect,
   requestLogger,

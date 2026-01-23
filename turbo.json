@@ -18,9 +18,19 @@
     "lint": {
       "outputs": []
     },
-    "typecheck": {
+    "type-check": {
       "dependsOn": ["build"],
       "outputs": []
+    },
+    "test:e2e": {
+      "dependsOn": ["build"],
+      "outputs": ["playwright-report/**"],
+      "cache": false
+    },
+    "test:coverage": {
+      "dependsOn": ["build"],
+      "outputs": ["coverage/**"],
+      "cache": false
     }
   }
 }

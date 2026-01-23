@@ -104,10 +104,48 @@ export default defineConfig({
     chunkSizeWarningLimit: 1500,
     rollupOptions: {
       output: {
-        // Simplified chunking strategy to avoid React dependency resolution issues
-        // All node_modules go into a single vendor chunk to ensure proper load order
+        // Strategic chunk splitting for better caching and load performance
+        // Split vendor bundles by category to optimize cache invalidation
         manualChunks: (id) => {
           if (id.includes('node_modules')) {
+            // React core - rarely changes, cache well
+            if (id.includes('react') || id.includes('react-dom') || id.includes('scheduler')) {
+              return 'react-vendor'
+            }
+            // TanStack ecosystem - routing, query, table
+            if (id.includes('@tanstack')) {
+              return 'tanstack-vendor'
+            }
+            // Framer Motion - animation library
+            if (id.includes('framer-motion') || id.includes('motion')) {
+              return 'motion-vendor'
+            }
+            // Radix UI - headless components
+            if (id.includes('@radix-ui')) {
+              return 'radix-vendor'
+            }
+            // Charts and visualization
+            if (
+              id.includes('recharts') ||
+              id.includes('d3-') ||
+              id.includes('@xyflow') ||
+              id.includes('reactflow')
+            ) {
+              return 'charts-vendor'
+            }
+            // i18n
+            if (id.includes('i18next') || id.includes('react-i18next')) {
+              return 'i18n-vendor'
+            }
+            // Supabase client
+            if (id.includes('@supabase')) {
+              return 'supabase-vendor'
+            }
+            // Form handling
+            if (id.includes('react-hook-form') || id.includes('@hookform') || id.includes('zod')) {
+              return 'forms-vendor'
+            }
+            // All other dependencies
             return 'vendor'
           }
         },
