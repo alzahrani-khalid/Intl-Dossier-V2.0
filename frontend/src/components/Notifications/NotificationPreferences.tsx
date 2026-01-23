@@ -14,7 +14,7 @@ import {
 } from '@/hooks/useNotificationCenter'
 import { useEmailPreferences } from '@/hooks/useEmailNotifications'
 import { cn } from '@/lib/utils'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 
 const CATEGORIES: NotificationCategory[] = [
   'assignments',

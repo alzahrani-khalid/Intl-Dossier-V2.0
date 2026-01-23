@@ -12,7 +12,7 @@ import {
   type AssignRoleRequest,
   type ApproveRoleChangeRequest,
 } from '@/services/user-management-api';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/useToast';
 
 // ============================================================================
 // Assign Role Hook

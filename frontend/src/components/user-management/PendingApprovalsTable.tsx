@@ -15,7 +15,7 @@ import { useTranslation } from 'react-i18next';
 import { ColumnDef } from '@tanstack/react-table';
 import { formatDistanceToNow } from 'date-fns';
 import { CheckCircle, XCircle, Clock, User, Shield } from 'lucide-react';
-import { usePendingApprovals, useRoleApproval } from '@/hooks/use-role-assignment';
+import { usePendingApprovals, useRoleApproval } from '@/hooks/useRoleAssignment';
 import { DataTable } from '@/components/Table/DataTable';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';

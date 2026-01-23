@@ -29,8 +29,8 @@ import { Button } from '@/components/ui/button'
 import { Textarea } from '@/components/ui/textarea'
 import { Label } from '@/components/ui/label'
 import { Loader2, XCircle, AlertTriangle } from 'lucide-react'
-import { useRevokeDelegation } from '@/hooks/use-delegation'
-import { useToast } from '@/hooks/use-toast'
+import { useRevokeDelegation } from '@/hooks/useDelegation'
+import { useToast } from '@/hooks/useToast'
 
 interface RevokeDelegationDialogProps {
   open: boolean

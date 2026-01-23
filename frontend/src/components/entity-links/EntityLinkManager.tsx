@@ -25,7 +25,7 @@ import {
   useCreateBatchEntityLinks,
   useDeleteEntityLink,
   useRestoreEntityLink,
-} from '@/hooks/use-entity-links'
+} from '@/hooks/useEntityLinks'
 import { intakeEntityLinksAPI } from '@/services/entity-links-api'
 import type {
   EntitySearchResult,

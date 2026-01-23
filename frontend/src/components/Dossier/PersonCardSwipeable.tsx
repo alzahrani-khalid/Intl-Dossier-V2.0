@@ -10,7 +10,7 @@ import { useTranslation } from 'react-i18next'
 import { Star, Archive, Trash2, Eye, Edit, Share2 } from 'lucide-react'
 import { PersonCard } from './PersonCard'
 import { SwipeableCard, type ContextMenuItem } from '@/components/ui/swipeable-card'
-import { toast } from '@/hooks/use-toast'
+import { toast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
 import type { DossierWithExtension } from '@/services/dossier-api'
 

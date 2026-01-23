@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useGenerateAccessReview, useAccessReviewsList, useAccessReviewSummary } from '@/hooks/use-access-review';
+import { useGenerateAccessReview, useAccessReviewsList, useAccessReviewSummary } from '@/hooks/useAccessReview';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';

@@ -40,7 +40,7 @@ import {
 } from '@/components/ui/command'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'
 import { ScrollArea } from '@/components/ui/scroll-area'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 import { useTagSearch, useEntityTagging, useTagsFlat } from '@/hooks/useTagHierarchy'
 import type {
   TagCategory,

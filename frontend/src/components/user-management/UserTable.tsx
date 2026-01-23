@@ -28,7 +28,7 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { MoreVertical, UserX, UserCheck, Shield, User as UserIcon } from 'lucide-react';
-import { useDeactivateUser, useReactivateUser } from '@/hooks/use-user-deactivation';
+import { useDeactivateUser, useReactivateUser } from '@/hooks/useUserDeactivation';
 import { OrphanedItemsSummary } from '@/services/user-management-api';
 
 interface User {

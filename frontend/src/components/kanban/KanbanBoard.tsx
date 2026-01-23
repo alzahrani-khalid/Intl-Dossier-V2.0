@@ -27,7 +27,7 @@ import { Badge } from '../ui/badge';
 import { ScrollArea } from '../ui/scroll-area';
 import { SLAIndicator } from '../tasks/SLAIndicator';
 import { Clock, AlertCircle, Loader2 } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/useToast';
 import type { Database } from '../../../../backend/src/types/database.types';
 
 type Task = Database['public']['Tables']['tasks']['Row'];

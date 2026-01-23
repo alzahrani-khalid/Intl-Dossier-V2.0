@@ -12,7 +12,7 @@ import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { X, AlertTriangle, ChevronRight, Clock } from 'lucide-react'
-import { useDelegationsExpiringSoon } from '@/hooks/use-delegation'
+import { useDelegationsExpiringSoon } from '@/hooks/useDelegation'
 
 interface DelegationExpiryBannerProps {
   className?: string

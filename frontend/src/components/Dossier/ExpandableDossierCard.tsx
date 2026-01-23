@@ -18,7 +18,7 @@ import { AnimatePresence, motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { useOutsideClick } from '@/hooks/use-outside-click';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 import {
   Globe,
   Building2,

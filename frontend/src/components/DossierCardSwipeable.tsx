@@ -24,7 +24,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from './ui/badge'
 import { Calendar, Tag, Star, Archive, Trash2, Eye, Edit, Pin, Share2 } from 'lucide-react'
 import { SwipeableCard, type ContextMenuItem } from './ui/swipeable-card'
-import { toast } from '@/hooks/use-toast'
+import { toast } from '@/hooks/useToast'
 import { cn } from '@/lib/utils'
 import type { Dossier } from '../types/dossier'
 import { getCountryCode } from '../lib/country-codes'

@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from '@tanstack/react-router';
 import { AfterActionForm, type AfterActionFormData } from '@/components/after-action/AfterActionForm';
-import { useCreateAfterAction, useUpdateAfterAction } from '@/hooks/use-after-action';
+import { useCreateAfterAction, useUpdateAfterAction } from '@/hooks/useAfterAction';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle2 } from 'lucide-react';
 import { cn } from '@/lib/utils';

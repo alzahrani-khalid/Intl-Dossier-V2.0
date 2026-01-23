@@ -14,7 +14,7 @@ import {
  useAfterActionDetail,
  useUpdateAfterAction,
  usePublishAfterAction,
-} from '@/hooks/use-after-action';
+} from '@/hooks/useAfterAction';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { AlertCircle, CheckCircle2, Loader2 } from 'lucide-react';
 import { cn } from '@/lib/utils';

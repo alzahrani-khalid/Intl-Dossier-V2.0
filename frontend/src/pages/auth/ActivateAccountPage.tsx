@@ -16,7 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { useTranslation } from 'react-i18next'
 import { useSearchParams } from 'react-router-dom'
-import { useActivateAccount } from '@/hooks/use-user-management'
+import { useActivateAccount } from '@/hooks/useUserManagement'
 import { Button } from '@/components/ui/button'
 import {
   Form,

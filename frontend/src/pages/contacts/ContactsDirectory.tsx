@@ -21,7 +21,7 @@ import { ContactList } from '@/components/contacts/ContactList';
 import { Plus, Download, FileText, CreditCard, Check } from 'lucide-react';
 import { useSearchPersonDossiers, type PersonSearchParams } from '@/hooks/usePersonDossiers';
 import { exportAllContacts, exportSelectedContacts } from '@/services/export-api';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/useToast';
 
 export function ContactsDirectory() {
  const { t, i18n } = useTranslation('contacts');

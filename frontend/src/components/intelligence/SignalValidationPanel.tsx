@@ -7,7 +7,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
 import { Label } from '@/components/ui/label';
 import { CheckCircle2, AlertCircle, HelpCircle, Info } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/useToast';
 
 type ConfidenceLevel = 'unconfirmed' | 'possible' | 'probable' | 'confirmed';
 

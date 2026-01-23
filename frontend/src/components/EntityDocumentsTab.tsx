@@ -26,7 +26,7 @@ import {
 } from 'lucide-react'
 import { DocumentUploader } from '@/components/documents/DocumentUploader'
 import { DocumentEmptyState } from '@/components/documents/DocumentEmptyState'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 import { useDocuments, type Document as DocumentType } from '@/hooks/useDocuments'
 import { formatBytes } from '@/lib/utils'
 import type { DocumentTemplate } from '@/types/document-template.types'

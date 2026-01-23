@@ -8,7 +8,7 @@ import { useStageTransition } from '@/hooks/useStageTransition';
 import { useKanbanRealtime } from '@/hooks/useKanbanRealtime';
 import { useAuth } from '@/hooks/useAuth';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/useToast';
 
 interface KanbanBoardProps {
  engagementId: string;

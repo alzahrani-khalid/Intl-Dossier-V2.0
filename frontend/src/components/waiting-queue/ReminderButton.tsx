@@ -2,8 +2,8 @@ import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { Button } from '@/components/ui/button';
 import { Bell, Loader2, CheckCircle2 } from 'lucide-react';
-import { useReminderAction } from '@/hooks/use-waiting-queue-actions';
-import { useToast } from '@/hooks/use-toast';
+import { useReminderAction } from '@/hooks/useWaitingQueueActions';
+import { useToast } from '@/hooks/useToast';
 
 /**
  * Reminder Button Component

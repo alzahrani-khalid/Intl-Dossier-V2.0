@@ -41,7 +41,7 @@ import {
   MessageSquare,
   Link2,
 } from 'lucide-react'
-import { useToast } from '@/hooks/use-toast'
+import { useToast } from '@/hooks/useToast'
 
 export const Route = createFileRoute('/_protected/admin/ai-settings')({
   component: AISettingsPage,

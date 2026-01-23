@@ -33,7 +33,7 @@ import {
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { useOutsideClick } from '@/hooks/use-outside-click';
+import { useOutsideClick } from '@/hooks/useOutsideClick';
 import { cn } from '@/lib/utils';
 import type { UnifiedTimelineEvent } from '@/types/timeline.types';
 

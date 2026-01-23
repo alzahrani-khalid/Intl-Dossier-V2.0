@@ -8,7 +8,7 @@
 
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useParams } from '@tanstack/react-router';
-import { useAfterActionDetail } from '@/hooks/use-after-action';
+import { useAfterActionDetail } from '@/hooks/useAfterAction';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';

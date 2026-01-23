@@ -30,7 +30,7 @@ import {
   CreateDelegationDialog,
   DelegationExpiryBanner,
 } from '@/components/delegation'
-import { useMyDelegations, useDelegationsExpiringSoon } from '@/hooks/use-delegation'
+import { useMyDelegations, useDelegationsExpiringSoon } from '@/hooks/useDelegation'
 import { supabase } from '@/lib/supabase'
 import {
   Plus,

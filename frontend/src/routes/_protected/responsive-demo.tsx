@@ -6,7 +6,7 @@ import { ResponsiveTable } from '@/components/responsive/responsive-table'
 import { ResponsiveNav, type NavItem } from '@/components/responsive/responsive-nav'
 import { ThemeSelector } from '@/components/theme-selector/theme-selector'
 import { LanguageSwitcher } from '@/components/LanguageSwitcher'
-import { useResponsive } from '@/hooks/use-responsive'
+import { useResponsive } from '@/hooks/useResponsive'
 
 function ViewInfo() {
  const r = useResponsive()

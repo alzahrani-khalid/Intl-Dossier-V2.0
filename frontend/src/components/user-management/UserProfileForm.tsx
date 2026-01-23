@@ -15,7 +15,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
 import { useTranslation } from 'react-i18next';
-import { useCreateUser } from '@/hooks/use-user-management';
+import { useCreateUser } from '@/hooks/useUserManagement';
 import { Button } from '@/components/ui/button';
 import {
  Form,

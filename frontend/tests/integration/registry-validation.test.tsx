@@ -16,7 +16,7 @@ import { render, screen, waitFor } from '@testing-library/react'
 import { DesignComplianceProvider } from '@/providers/design-compliance-provider'
 import { ThemeProvider } from '@/components/theme-provider/theme-provider'
 import { LanguageProvider } from '@/components/language-provider/language-provider'
-import { useCompliance } from '@/hooks/use-compliance'
+import { useCompliance } from '@/hooks/useCompliance'
 
 function Runner({ html, name }: { html: string; name: string }) {
   const { validateHtml, lastResult } = useCompliance()

@@ -5,7 +5,7 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { createUser, activateAccount, type CreateUserRequest, type ActivateAccountRequest } from '@/services/user-management-api';
-import { useToast } from '@/hooks/use-toast';
+import { useToast } from '@/hooks/useToast';
 
 // ============================================================================
 // Create User Hook

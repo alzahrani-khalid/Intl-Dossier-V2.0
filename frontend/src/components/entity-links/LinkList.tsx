@@ -11,7 +11,7 @@ import { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
 import { cn } from '@/lib/utils';
 import { LinkCard } from './LinkCard';
-import { useReorderEntityLinks } from '@/hooks/use-entity-links';
+import { useReorderEntityLinks } from '@/hooks/useEntityLinks';
 import type { EntityLink } from '../../../../backend/src/types/intake-entity-links.types';
 
 export interface LinkListProps {

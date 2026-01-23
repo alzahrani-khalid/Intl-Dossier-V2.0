@@ -9,7 +9,7 @@
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useNavigate, useSearchParams } from '@tanstack/react-router';
-import { useAfterActionList } from '@/hooks/use-after-action';
+import { useAfterActionList } from '@/hooks/useAfterAction';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
