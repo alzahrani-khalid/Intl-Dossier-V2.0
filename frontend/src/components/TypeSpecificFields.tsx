@@ -7,11 +7,12 @@ import {
   MouActionFields,
   ForesightFields,
 } from '../types/intake'
+import { DynamicFields, JsonValue } from '../types/common.types'
 
 interface TypeSpecificFieldsProps {
   requestType: RequestType
-  value?: Record<string, any>
-  onChange: (fields: Record<string, any>) => void
+  value?: DynamicFields
+  onChange: (fields: DynamicFields) => void
 }
 
 export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
@@ -22,7 +23,7 @@ export const TypeSpecificFields: React.FC<TypeSpecificFieldsProps> = ({
   const { t, i18n } = useTranslation('intake')
   const isRTL = i18n.language === 'ar'
 
-  const handleFieldChange = (fieldName: string, fieldValue: any) => {
+  const handleFieldChange = (fieldName: string, fieldValue: JsonValue) => {
     onChange({
       ...value,
       [fieldName]: fieldValue,

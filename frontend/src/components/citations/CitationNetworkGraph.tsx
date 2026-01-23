@@ -267,7 +267,7 @@ export function CitationNetworkGraph({
         .force(
           'link',
           forceLink(edges)
-            .id((d: any) => d.id)
+            .id((d: { id: string }) => d.id)
             .distance(150),
         )
         .force('charge', forceManyBody().strength(-400))

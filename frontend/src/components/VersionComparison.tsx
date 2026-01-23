@@ -22,6 +22,7 @@ import { Alert, AlertDescription } from '@/components/ui/alert';
 import { Loader2, AlertCircle, ArrowRight } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { supabase } from '@/lib/supabase';
+import { JsonValue } from '@/types/common.types';
 
 interface DiffItem {
  type: 'added' | 'removed' | 'unchanged';
@@ -33,7 +34,7 @@ interface VersionDiff {
  to_version: number;
  english_diff: DiffItem[];
  arabic_diff: DiffItem[];
- metadata_changes: Record<string, { old: any; new: any }>;
+ metadata_changes: Record<string, { old: JsonValue; new: JsonValue }>;
 }
 
 interface Version {
@@ -158,7 +159,7 @@ export function VersionComparison({
  );
  };
 
- const renderMetadataValue = (value: any): string => {
+ const renderMetadataValue = (value: JsonValue): string => {
  if (value === null || value === undefined) return t('common.none');
  if (typeof value === 'boolean') return value ? t('common.yes') : t('common.no');
  if (typeof value === 'object') return JSON.stringify(value);

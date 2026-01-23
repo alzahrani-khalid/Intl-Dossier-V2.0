@@ -64,7 +64,7 @@ const getEventIcon = (eventType: string): React.ElementType => {
 /**
  * Get event type color for icon background
  */
-const getEventColor = (eventType: string, metadata: any): string => {
+const getEventColor = (eventType: string, metadata: { color?: string }): string => {
   // Use metadata color if available, otherwise default colors
   if (metadata.color) {
     return metadata.color;

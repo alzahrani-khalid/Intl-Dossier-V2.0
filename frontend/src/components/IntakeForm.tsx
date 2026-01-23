@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
-import { useTranslation } from 'react-i18next'
+import { useTranslation, type TFunction } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { IntakeFormData } from '../types/intake'
 import { TypeSpecificFields } from './TypeSpecificFields'
@@ -12,7 +12,7 @@ import { DossierSelector, DossierContextBadge, type SelectedDossier } from './Do
 import type { DossierType } from '@/types/relationship.types'
 
 // Validation schema - dossierId is now required per US4
-const createIntakeSchema = (t: any, tDossier: any) =>
+const createIntakeSchema = (t: TFunction, tDossier: TFunction) =>
   z.object({
     requestType: z.enum(['engagement', 'position', 'mou_action', 'foresight'], {
       required_error: t('form.requestType.required'),

@@ -118,12 +118,12 @@ export function WorkloadDistributionChart({
     )
   }
 
-  const CustomTooltip = ({ active, payload, label }: any) => {
+  const CustomTooltip = ({ active, payload, label }: { active?: boolean; payload?: Array<{ value: number; color: string; name: string; dataKey: string }>; label?: string }) => {
     if (active && payload && payload.length) {
       return (
         <div className="bg-background border rounded-lg shadow-lg p-3" dir={isRTL ? 'rtl' : 'ltr'}>
           <p className="font-medium mb-2">{label}</p>
-          {payload.map((entry: any, index: number) => (
+          {payload.map((entry, index) => (
             <div key={index} className="flex items-center gap-2 text-sm">
               <div className="h-3 w-3 rounded-full" style={{ backgroundColor: entry.color }} />
               <span className="text-muted-foreground">{entry.name}:</span>
@@ -138,7 +138,7 @@ export function WorkloadDistributionChart({
     return null
   }
 
-  const PieTooltip = ({ active, payload }: any) => {
+  const PieTooltip = ({ active, payload }: { active?: boolean; payload?: Array<{ name: string; value: number; payload: { fill: string; percentage?: number } }> }) => {
     if (active && payload && payload.length) {
       const item = payload[0]
       return (
@@ -232,7 +232,7 @@ export function WorkloadDistributionChart({
                   paddingAngle={2}
                   dataKey="count"
                   nameKey="name"
-                  label={(props: any) => `${props.name}: ${props.percentage?.toFixed(0) ?? 0}%`}
+                  label={(props: { name?: string; percentage?: number }) => `${props.name}: ${props.percentage?.toFixed(0) ?? 0}%`}
                   labelLine={{ strokeWidth: 1 }}
                 >
                   {priorityData.map((entry, index) => (

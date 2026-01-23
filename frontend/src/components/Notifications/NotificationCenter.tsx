@@ -5,6 +5,7 @@ import { toast, Toaster } from 'react-hot-toast'
 import { realtimeManager } from '../../lib/realtime'
 import { useAuthStore } from '../../store/authStore'
 import { cn } from '../../lib/utils'
+import { Metadata, RealtimePayload } from '../../types/common.types'
 
 export interface Notification {
   id: string
@@ -16,7 +17,7 @@ export interface Notification {
   actionUrl?: string
   actionLabel?: string
   userId?: string
-  metadata?: Record<string, any>
+  metadata?: Metadata
 }
 
 interface NotificationCenterProps {
@@ -42,7 +43,7 @@ export function NotificationCenter({
     const stored = localStorage.getItem(`notifications-${user?.id}`)
     if (stored) {
       const parsed = JSON.parse(stored)
-      const notifications = parsed.map((n: any) => ({
+      const notifications = parsed.map((n: Notification & { timestamp: string }) => ({
         ...n,
         timestamp: new Date(n.timestamp),
       }))
@@ -67,23 +68,23 @@ export function NotificationCenter({
     // Store unsubscribe for cleanup
     realtimeManager.subscribe({
       channel,
-      onBroadcast: (event: string, payload: any) => {
+      onBroadcast: (event: string, payload: Partial<Notification>) => {
         if (event === 'new_notification') {
           handleNewNotification(payload)
         }
       },
-      onDatabaseChange: (payload: any) => {
+      onDatabaseChange: (payload: RealtimePayload) => {
         if (payload.table === 'notifications' && payload.new?.user_id === user.id) {
           handleNewNotification({
-            id: payload.new.id,
-            type: payload.new.type || 'info',
-            title: payload.new.title,
-            message: payload.new.message,
-            timestamp: new Date(payload.new.created_at),
+            id: payload.new.id as string,
+            type: (payload.new.type as Notification['type']) || 'info',
+            title: payload.new.title as string,
+            message: payload.new.message as string,
+            timestamp: new Date(payload.new.created_at as string),
             read: false as boolean,
-            actionUrl: payload.new.action_url,
-            actionLabel: payload.new.action_label,
-            metadata: payload.new.metadata,
+            actionUrl: payload.new.action_url as string | undefined,
+            actionLabel: payload.new.action_label as string | undefined,
+            metadata: payload.new.metadata as Metadata | undefined,
           })
         }
       },

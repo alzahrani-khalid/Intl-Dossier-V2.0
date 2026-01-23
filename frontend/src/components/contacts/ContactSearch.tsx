@@ -227,6 +227,25 @@ export function ContactSearch({
 }
 
 // Filter content component (shared between desktop and mobile)
+interface FilterContentProps {
+  organizations: Array<{ id: string; name: string }>;
+  tags: Array<{ id: string; name: string; color?: string }>;
+  organizationId: string;
+  setOrganizationId: (id: string) => void;
+  selectedTags: string[];
+  toggleTag: (tagId: string) => void;
+  sourceType: string;
+  setSourceType: (type: string) => void;
+  sortBy: string;
+  setSortBy: (sort: string) => void;
+  sortOrder: string;
+  setSortOrder: (order: string) => void;
+  includeArchived: boolean;
+  setIncludeArchived: (include: boolean) => void;
+  isRTL: boolean;
+  t: (key: string) => string;
+}
+
 function FilterContent({
   organizations,
   tags,
@@ -244,7 +263,7 @@ function FilterContent({
   setIncludeArchived,
   isRTL,
   t,
-}: any) {
+}: FilterContentProps) {
   return (
     <>
       {/* Organization Filter */}
@@ -262,7 +281,7 @@ function FilterContent({
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="all">{t('contactDirectory.search.all_organizations')}</SelectItem>
-              {organizations.map((org: any) => (
+              {organizations.map((org) => (
                 <SelectItem key={org.id} value={org.id}>
                   {org.name}
                 </SelectItem>
@@ -279,7 +298,7 @@ function FilterContent({
             {t('contactDirectory.search.filter_by_tags')}
           </label>
           <div className="flex flex-wrap gap-2">
-            {tags.map((tag: any) => {
+            {tags.map((tag) => {
               const isSelected = selectedTags.includes(tag.id)
               return (
                 <Badge

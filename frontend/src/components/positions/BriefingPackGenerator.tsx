@@ -73,9 +73,9 @@ export const BriefingPackGenerator: React.FC<BriefingPackGeneratorProps> = ({
  try {
  const result = await generateMutation.mutateAsync({ language });
  setJobId(result.job_id);
- } catch (error: any) {
+ } catch (error: unknown) {
  setStatus('failed');
- setErrorMessage(error.message || t('positions.briefing.error'));
+ setErrorMessage((error instanceof Error ? error.message : String(error)) || t('positions.briefing.error'));
  }
  };
 

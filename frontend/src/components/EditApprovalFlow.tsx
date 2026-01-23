@@ -10,6 +10,7 @@ import { CheckCircle, XCircle, Loader2, AlertCircle, Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { format } from 'date-fns';
 import * as diff from 'deep-diff';
+import { JsonObject, JsonValue } from '@/types/common.types';
 
 interface EditRequest {
  id: string;
@@ -21,8 +22,8 @@ interface EditRequest {
  };
  requested_at: Date;
  reason: string;
- proposed_changes: Record<string, any>;
- current_content: Record<string, any>;
+ proposed_changes: JsonObject;
+ current_content: JsonObject;
 }
 
 interface EditApprovalFlowProps {
@@ -38,8 +39,8 @@ type DiffKind = 'N' | 'D' | 'E' | 'A';
 interface DiffItem {
  kind: DiffKind;
  path: (string | number)[];
- lhs?: any;
- rhs?: any;
+ lhs?: JsonValue;
+ rhs?: JsonValue;
 }
 
 export function EditApprovalFlow({
@@ -100,7 +101,7 @@ export function EditApprovalFlow({
  }
  };
 
- const renderDiffValue = (value: any): string => {
+ const renderDiffValue = (value: JsonValue): string => {
  if (value === null || value === undefined) return 'null';
  if (typeof value === 'object') return JSON.stringify(value, null, 2);
  return String(value);

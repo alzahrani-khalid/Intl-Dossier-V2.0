@@ -41,7 +41,7 @@ export interface WorkCreationPaletteProps {
   defaultType?: WorkItemType
   /** Override automatic context detection */
   contextOverride?: Partial<CreationContext>
-  onSuccess?: (type: WorkItemType, item: any) => void
+  onSuccess?: (type: WorkItemType, item: { id: string }) => void
 }
 
 interface WorkTypeOption {
@@ -171,7 +171,7 @@ export function WorkCreationPalette({
   }, [step, selectedType, context.dossierId])
 
   const handleSuccess = useCallback(
-    (item: any) => {
+    (item: { id: string }) => {
       onSuccess?.(selectedType!, item)
       onOpenChange(false)
     },

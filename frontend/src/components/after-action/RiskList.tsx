@@ -60,7 +60,7 @@ export function RiskList({ risks, onChange, readOnly = false }: RiskListProps) {
  onChange(risks.filter((_, i) => i !== index));
  };
 
- const updateRisk = (index: number, field: keyof Risk, value: any) => {
+ const updateRisk = (index: number, field: keyof Risk, value: Risk[keyof Risk]) => {
  const updated = [...risks];
  updated[index] = { ...updated[index], [field]: value };
  onChange(updated);

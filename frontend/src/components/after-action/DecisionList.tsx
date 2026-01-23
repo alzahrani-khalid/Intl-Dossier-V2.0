@@ -50,7 +50,7 @@ export function DecisionList({ decisions, onChange, readOnly = false }: Decision
  onChange(decisions.filter((_, i) => i !== index));
  };
 
- const updateDecision = (index: number, field: keyof Decision, value: any) => {
+ const updateDecision = (index: number, field: keyof Decision, value: Decision[keyof Decision]) => {
  const updated = [...decisions];
  updated[index] = { ...updated[index], [field]: value };
  onChange(updated);

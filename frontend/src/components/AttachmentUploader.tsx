@@ -120,14 +120,15 @@ export const AttachmentUploader: React.FC<AttachmentUploaderProps> = ({
 
       // Update parent component with new attachment ID
       onChange([...attachmentIds, result.id])
-    } catch (error: any) {
+    } catch (error: unknown) {
+      const errorMessage = error instanceof Error ? error.message : t('error.message')
       setFiles((prev) =>
         prev.map((f) =>
           f.id === attachmentFile.id
             ? {
                 ...f,
                 status: 'error',
-                error: error.message || t('error.message'),
+                error: errorMessage,
               }
             : f,
         ),

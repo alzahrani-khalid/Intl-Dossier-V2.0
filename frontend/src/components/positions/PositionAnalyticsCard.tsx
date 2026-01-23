@@ -166,8 +166,8 @@ export const PositionAnalyticsCard: React.FC<PositionAnalyticsCardProps> = ({
  <div className="space-y-2">
  <p className="text-sm font-medium">{t('positions.analytics.usageTrend')}</p>
  <div className="flex h-32 items-end justify-between gap-1 rounded-lg border p-4">
- {trend_data.daily.slice(-7).map((day: any, i: number) => {
- const maxValue = Math.max(...trend_data.daily.map((d: any) => d.total));
+ {trend_data.daily.slice(-7).map((day: { total: number }, i: number) => {
+ const maxValue = Math.max(...trend_data.daily.map((d: { total: number }) => d.total));
  const height = (day.total / maxValue) * 100;
  return (
  <div

@@ -157,7 +157,7 @@ function ApiErrorFallback({
 export function useApiErrorHandler() {
   const { addToQueue } = useOfflineQueue()
 
-  return (error: Error, action?: { method: string; url: string; data?: any }) => {
+  return (error: Error, action?: { method: string; url: string; data?: unknown }) => {
     if (error.message.includes('fetch') || error.message.includes('network')) {
       // Queue the action for later retry
       if (action) {

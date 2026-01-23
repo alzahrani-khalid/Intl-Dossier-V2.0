@@ -74,7 +74,7 @@ export function CommitmentEditor({
  onChange(commitments.filter((_, i) => i !== index));
  };
 
- const updateCommitment = (index: number, field: keyof Commitment, value: any) => {
+ const updateCommitment = (index: number, field: keyof Commitment, value: Commitment[keyof Commitment]) => {
  const updated = [...commitments];
  updated[index] = { ...updated[index], [field]: value };
 

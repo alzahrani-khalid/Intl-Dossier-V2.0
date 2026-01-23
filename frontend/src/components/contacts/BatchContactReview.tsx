@@ -75,7 +75,7 @@ export function BatchContactReview({
 
   // Update contact field
   const handleFieldChange = useCallback(
-    (contactId: string, field: keyof ContactInsert, value: any) => {
+    (contactId: string, field: keyof ContactInsert, value: ContactInsert[keyof ContactInsert]) => {
       onContactsChange(
         contacts.map((contact) =>
           contact.id === contactId ? { ...contact, [field]: value } : contact,

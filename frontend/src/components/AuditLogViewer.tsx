@@ -24,6 +24,7 @@ import {
   XCircle,
 } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
+import { JsonValue } from '../types/common.types'
 
 interface AuditLogEntry {
   id: string
@@ -33,7 +34,7 @@ interface AuditLogEntry {
   action: string
   entity_type: string
   entity_id: string
-  changes: Record<string, { old: any; new: any }>
+  changes: Record<string, { old: JsonValue; new: JsonValue }>
   mfa_required: boolean
   mfa_verified: boolean
   mfa_method?: string

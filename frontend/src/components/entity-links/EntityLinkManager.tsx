@@ -118,7 +118,7 @@ export function EntityLinkManager({
 
     // Map entities to link format
     // Use the _shouldBePrimary flag from the dialog to determine link type
-    const linksToCreate = entities.map((entity: any) => {
+    const linksToCreate = entities.map((entity: SearchableEntity & { _shouldBePrimary?: boolean }) => {
       // Determine link type based on user's selection or fallback logic
       let linkType: LinkType = 'related' // Default to related
 
@@ -133,7 +133,7 @@ export function EntityLinkManager({
         // Fallback: if no primary exists and this is first anchor entity
         !existingPrimaryLink &&
         !shouldReplacePrimary &&
-        !entities.some((e: any) => e._shouldBePrimary) && // No explicit primary selection
+        !entities.some((e) => e._shouldBePrimary) && // No explicit primary selection
         (entity.entity_type === 'dossier' || entity.entity_type === 'position') &&
         entities.indexOf(entity) ===
           entities.findIndex((e) => e.entity_type === 'dossier' || e.entity_type === 'position')

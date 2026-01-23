@@ -71,7 +71,7 @@ export function DossierTimeline({
  // Handler to clear all filters
  const handleClearFilter = () => {
  navigate({
- search: (prev: any) => ({
+ search: (prev: Record<string, unknown>) => ({
  ...prev,
  event_type: undefined,
  }),
@@ -86,7 +86,7 @@ export function DossierTimeline({
  : [...selectedFilters, value];
 
  navigate({
- search: (prev: any) => ({
+ search: (prev: Record<string, unknown>) => ({
  ...prev,
  event_type: newFilters.length > 0 ? newFilters.join(',') : undefined,
  }),

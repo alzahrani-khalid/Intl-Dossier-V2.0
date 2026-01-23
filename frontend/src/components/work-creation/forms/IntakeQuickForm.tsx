@@ -55,7 +55,7 @@ export interface IntakeQuickFormProps {
   creationContext: CreationContext
   /** Pre-selected dossier info for display */
   selectedDossier?: { id: string; name_en: string; name_ar: string; type: string }
-  onSuccess?: (ticket: any) => void
+  onSuccess?: (ticket: { id: string }) => void
   onCancel?: () => void
 }
 
@@ -146,7 +146,7 @@ export function IntakeQuickForm({
       form.reset()
       onSuccess?.(data)
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || t('form.intakeError', 'Failed to create intake request'))
     },
   })

@@ -33,11 +33,12 @@ import {
   useAISuggestionAnalytics,
 } from '../../hooks/use-ai-suggestions'
 import type { AILinkSuggestion } from '../../types/ai-suggestions.types'
+import { JsonObject } from '../../types/common.types'
 
 interface AISuggestionPanelProps {
   intakeId: string
   onManualSearchClick: () => void
-  onSuggestionAccepted: (link: any) => void
+  onSuggestionAccepted: (link: JsonObject) => void
 }
 
 export function AISuggestionPanel({

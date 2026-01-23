@@ -9,6 +9,7 @@ import { realtimeManager } from '../../lib/realtime'
 import { useAuthStore } from '../../store/authStore'
 import { cn } from '../../lib/utils'
 import { useInView } from '../../hooks/useInView'
+import { Metadata, RealtimePayload } from '../../types/common.types'
 
 export interface Activity {
  id: string
@@ -20,7 +21,7 @@ export interface Activity {
  actorName: string
  actorAvatar?: string
  description: string
- metadata?: Record<string, any>
+ metadata?: Metadata
  timestamp: Date
  isNew?: boolean
 }
@@ -136,25 +137,25 @@ export function RealtimeActivityFeed({
  // Store subscription for cleanup
  realtimeManager.subscribe({
  channel: activityChannel,
- onBroadcast: (event: string, payload: any) => {
+ onBroadcast: (event: string, payload: Activity) => {
  if (event === 'new_activity') {
  handleNewActivity(payload)
  }
  },
- onDatabaseChange: (payload: any) => {
+ onDatabaseChange: (payload: RealtimePayload) => {
  if (payload.table === 'activities') {
  const activity: Activity = {
- id: payload.new.id,
- type: payload.new.type,
- entityType: payload.new.entity_type,
- entityId: payload.new.entity_id,
- entityName: payload.new.entity_name,
- actorId: payload.new.actor_id,
- actorName: payload.new.actor_name,
- actorAvatar: payload.new.actor_avatar,
- description: payload.new.description,
- metadata: payload.new.metadata,
- timestamp: new Date(payload.new.created_at),
+ id: payload.new.id as string,
+ type: payload.new.type as Activity['type'],
+ entityType: payload.new.entity_type as Activity['entityType'],
+ entityId: payload.new.entity_id as string,
+ entityName: payload.new.entity_name as string,
+ actorId: payload.new.actor_id as string,
+ actorName: payload.new.actor_name as string,
+ actorAvatar: payload.new.actor_avatar as string | undefined,
+ description: payload.new.description as string,
+ metadata: payload.new.metadata as Metadata | undefined,
+ timestamp: new Date(payload.new.created_at as string),
  isNew: true,
  }
  handleNewActivity(activity)
@@ -442,7 +443,7 @@ export function useActivityTracking(entityType: Activity['entityType'], entityId
  type: Activity['type'],
  entityName: string,
  description?: string,
- metadata?: Record<string, any>
+ metadata?: Metadata
  ) => {
  if (!user) return
 

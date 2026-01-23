@@ -9,7 +9,7 @@ type ExportStatus = {
  error_message?: string
 }
 
-async function postJSON<T>(url: string, body: any): Promise<T> {
+async function postJSON<T>(url: string, body: unknown): Promise<T> {
  const res = await fetch(url, { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: 'Bearer test-auth-token' }, body: JSON.stringify(body) })
  if (!res.ok) throw new Error(`Failed ${res.status}`)
  return res.json() as Promise<T>

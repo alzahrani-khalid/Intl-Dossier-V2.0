@@ -13,6 +13,19 @@ import { Badge } from '@/components/ui/badge';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Bell, AlertCircle, TrendingDown, CheckCircle } from 'lucide-react';
 import { formatDistanceToNow } from 'date-fns';
+import { JsonObject } from '@/types/common.types';
+
+interface Notification {
+  id: string;
+  title: string;
+  message: string;
+  read: boolean;
+  created_at: string;
+  metadata?: JsonObject & {
+    type?: string;
+    dossierId?: string;
+  };
+}
 
 /**
  * T191-T199: Notification bell component with dropdown
@@ -56,7 +69,7 @@ export function NotificationBell() {
     }
   };
 
-  const handleNotificationClick = (notification: any) => {
+  const handleNotificationClick = (notification: Notification) => {
     // T197: Mark notification as read
     if (!notification.read) {
       markAsRead(notification.id);

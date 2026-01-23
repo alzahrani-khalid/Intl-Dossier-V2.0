@@ -66,7 +66,7 @@ export interface TaskQuickFormProps {
   /** Pre-selected dossier info for display */
   selectedDossier?: { id: string; name_en: string; name_ar: string; type: string }
   engagementId?: string
-  onSuccess?: (task: any) => void
+  onSuccess?: (task: { id: string }) => void
   onCancel?: () => void
 }
 
@@ -174,7 +174,7 @@ export function TaskQuickForm({
       form.reset()
       onSuccess?.(data)
     },
-    onError: (error: any) => {
+    onError: (error: Error) => {
       toast.error(error.message || t('form.taskError', 'Failed to create task'))
     },
   })

@@ -15,12 +15,14 @@ import { Input } from './ui/input';
 import { AlertTriangle, Shield, Bell, Loader2 } from 'lucide-react';
 import { useAuthStore } from '../store/authStore';
 
+import { JsonObject } from '../types/common.types';
+
 interface EmergencyCorrectionDialogProps {
  open: boolean;
  positionId: string;
  positionTitle: string;
  onClose: () => void;
- onSuccess: (correctedPosition: any, newVersion: any) => void;
+ onSuccess: (correctedPosition: JsonObject, newVersion: JsonObject) => void;
  correctedContent?: {
  title_en?: string;
  title_ar?: string;
