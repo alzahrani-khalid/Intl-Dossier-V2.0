@@ -54,7 +54,7 @@ export function useKanbanKeyboardShortcuts(callbacks: KanbanKeyboardShortcutsCal
         register({
           id: 'kanban-navigate-down',
           key: 'j',
-          description: t('shortcuts.kanbanNavigateDown', 'Navigate to next card'),
+          description: t('shortcuts.navigateDown', 'Navigate to next card'),
           category: 'navigation',
           action: callbacks.onNavigateDown,
           allowInInput: false,
@@ -69,7 +69,7 @@ export function useKanbanKeyboardShortcuts(callbacks: KanbanKeyboardShortcutsCal
         register({
           id: 'kanban-navigate-up',
           key: 'k',
-          description: t('shortcuts.kanbanNavigateUp', 'Navigate to previous card'),
+          description: t('shortcuts.navigateUp', 'Navigate to previous card'),
           category: 'navigation',
           action: callbacks.onNavigateUp,
           allowInInput: false,
@@ -84,7 +84,7 @@ export function useKanbanKeyboardShortcuts(callbacks: KanbanKeyboardShortcutsCal
         register({
           id: 'kanban-open-card',
           key: 'enter',
-          description: t('shortcuts.kanbanOpenCard', 'Open card details'),
+          description: t('shortcuts.openCard', 'Open card details'),
           category: 'actions',
           action: callbacks.onOpenCard,
           allowInInput: false,
@@ -100,7 +100,7 @@ export function useKanbanKeyboardShortcuts(callbacks: KanbanKeyboardShortcutsCal
         register({
           id: 'kanban-move-to-todo',
           key: '1',
-          description: t('shortcuts.kanbanMoveToTodo', 'Move card to Todo'),
+          description: t('shortcuts.moveToTodo', 'Move card to Todo'),
           category: 'actions',
           action: () => callbacks.onMoveToStatus?.('todo'),
           allowInInput: false,
@@ -113,7 +113,7 @@ export function useKanbanKeyboardShortcuts(callbacks: KanbanKeyboardShortcutsCal
         register({
           id: 'kanban-move-to-in-progress',
           key: '2',
-          description: t('shortcuts.kanbanMoveToInProgress', 'Move card to In Progress'),
+          description: t('shortcuts.moveToInProgress', 'Move card to In Progress'),
           category: 'actions',
           action: () => callbacks.onMoveToStatus?.('in_progress'),
           allowInInput: false,
@@ -126,7 +126,7 @@ export function useKanbanKeyboardShortcuts(callbacks: KanbanKeyboardShortcutsCal
         register({
           id: 'kanban-move-to-review',
           key: '3',
-          description: t('shortcuts.kanbanMoveToReview', 'Move card to Review'),
+          description: t('shortcuts.moveToReview', 'Move card to Review'),
           category: 'actions',
           action: () => callbacks.onMoveToStatus?.('review'),
           allowInInput: false,
@@ -139,7 +139,7 @@ export function useKanbanKeyboardShortcuts(callbacks: KanbanKeyboardShortcutsCal
         register({
           id: 'kanban-move-to-done',
           key: '4',
-          description: t('shortcuts.kanbanMoveToDone', 'Move card to Done'),
+          description: t('shortcuts.moveToDone', 'Move card to Done'),
           category: 'actions',
           action: () => callbacks.onMoveToStatus?.('done'),
           allowInInput: false,

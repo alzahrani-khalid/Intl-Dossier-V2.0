@@ -307,13 +307,25 @@ export function EnhancedKanbanBoard({
     [focusedCardIndex, visibleCardsList, onStatusChange, isRTL, toast, t],
   )
 
+  // Memoize keyboard shortcuts callbacks to prevent unnecessary re-registrations
+  const keyboardCallbacks = useMemo(
+    () => ({
+      onNavigateDown: !bulkOps.selectionState.isSelecting ? handleNavigateDown : undefined,
+      onNavigateUp: !bulkOps.selectionState.isSelecting ? handleNavigateUp : undefined,
+      onOpenCard: !bulkOps.selectionState.isSelecting ? handleOpenCard : undefined,
+      onMoveToStatus: !bulkOps.selectionState.isSelecting ? handleMoveCardToStatus : undefined,
+    }),
+    [
+      bulkOps.selectionState.isSelecting,
+      handleNavigateDown,
+      handleNavigateUp,
+      handleOpenCard,
+      handleMoveCardToStatus,
+    ],
+  )
+
   // Register keyboard shortcuts (disabled during bulk selection)
-  useKanbanKeyboardShortcuts({
-    onNavigateDown: !bulkOps.selectionState.isSelecting ? handleNavigateDown : undefined,
-    onNavigateUp: !bulkOps.selectionState.isSelecting ? handleNavigateUp : undefined,
-    onOpenCard: !bulkOps.selectionState.isSelecting ? handleOpenCard : undefined,
-    onMoveToStatus: !bulkOps.selectionState.isSelecting ? handleMoveCardToStatus : undefined,
-  })
+  useKanbanKeyboardShortcuts(keyboardCallbacks)
 
   // Handle swimlane toggle
   const toggleSwimlane = useCallback((swimlaneId: string) => {
