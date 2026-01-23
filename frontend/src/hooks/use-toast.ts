@@ -7,7 +7,7 @@
 
 import toast from 'react-hot-toast';
 
-type ToastVariant = 'default' | 'destructive' | 'success';
+type ToastVariant = 'default' | 'destructive' | 'success' | 'warning';
 
 interface ToastOptions {
   title: string;
@@ -28,6 +28,9 @@ export function useToast() {
         break;
       case 'success':
         toast.success(message, { duration });
+        break;
+      case 'warning':
+        toast(message, { duration, icon: '⚠️' });
         break;
       default:
         toast(message, { duration });
