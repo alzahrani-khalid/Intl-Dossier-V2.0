@@ -1,9 +1,58 @@
 /**
- * TanStack Query Hook: useEngagementRecommendations
- * Feature: predictive-engagement-recommendations
+ * Engagement Recommendations Management Hooks
+ * @module hooks/useEngagementRecommendations
+ * @feature predictive-engagement-recommendations
+ * @feature ai-recommendations-engine
  *
- * Fetches AI-driven engagement recommendations with filtering, pagination,
- * and mutation support for accepting/dismissing recommendations.
+ * Comprehensive TanStack Query hooks for managing AI-driven engagement recommendations
+ * with automatic caching, filtering, pagination, and user feedback.
+ *
+ * @description
+ * This module provides a complete set of React hooks for engagement recommendation management:
+ * - Query hooks for fetching lists, single recommendations, and statistics
+ * - Infinite scrolling support for recommendation lists
+ * - Mutation hooks for accepting/dismissing recommendations
+ * - Feedback submission for improving AI recommendations
+ * - Recommendation generation triggers
+ * - Utility hooks for filtered views (high-priority, critical, relationship-specific)
+ * - Automatic cache invalidation and optimistic updates
+ *
+ * The recommendation system uses AI to suggest timely diplomatic engagements based on:
+ * - Historical engagement patterns
+ * - Relationship health metrics
+ * - Strategic priorities
+ * - Recent events and interactions
+ *
+ * @example
+ * // Fetch paginated recommendations
+ * const { data } = useEngagementRecommendations({
+ *   status: ['pending', 'viewed'],
+ *   min_priority: 4,
+ *   sort_by: 'priority',
+ *   sort_order: 'desc',
+ *   limit: 20,
+ * });
+ *
+ * @example
+ * // Fetch single recommendation
+ * const { data } = useEngagementRecommendation('recommendation-uuid');
+ *
+ * @example
+ * // Accept a recommendation
+ * const { mutate } = useAcceptRecommendation();
+ * mutate('recommendation-uuid', {
+ *   action_notes: 'Scheduled for next month',
+ *   resulting_engagement_id: 'engagement-uuid',
+ * });
+ *
+ * @example
+ * // Fetch high-priority pending recommendations
+ * const { data } = useHighPriorityRecommendations(5);
+ *
+ * @example
+ * // Generate new recommendations
+ * const { mutate } = useGenerateRecommendations();
+ * mutate({ min_priority: 3, urgency_threshold: 'high' });
  */
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
@@ -28,6 +77,30 @@ import type {
 // Query Key Factory
 // ============================================================================
 
+/**
+ * Query Keys Factory for engagement recommendation-related queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation for recommendation
+ * lists, details, statistics, and infinite scroll queries.
+ *
+ * @example
+ * // Invalidate all recommendation queries
+ * queryClient.invalidateQueries({ queryKey: recommendationKeys.all });
+ *
+ * @example
+ * // Invalidate only list queries
+ * queryClient.invalidateQueries({ queryKey: recommendationKeys.lists() });
+ *
+ * @example
+ * // Invalidate specific recommendation detail
+ * queryClient.invalidateQueries({ queryKey: recommendationKeys.detail('uuid') });
+ *
+ * @example
+ * // Invalidate statistics
+ * queryClient.invalidateQueries({ queryKey: recommendationKeys.stats() });
+ */
 export const recommendationKeys = {
   all: ['engagement-recommendations'] as const,
   lists: () => [...recommendationKeys.all, 'list'] as const,
@@ -43,6 +116,17 @@ export const recommendationKeys = {
 // API Functions
 // ============================================================================
 
+/**
+ * Helper function to get authentication token from Supabase session
+ *
+ * @description
+ * Retrieves the current Supabase session access token for authenticated
+ * API requests to Edge Functions. Throws error if no active session.
+ *
+ * @returns {Promise<string>} Access token
+ * @throws {Error} Throws if no active session
+ * @private
+ */
 async function getAuthToken(): Promise<string> {
   const { data: authData } = await supabase.auth.getSession()
   const token = authData.session?.access_token
@@ -52,6 +136,19 @@ async function getAuthToken(): Promise<string> {
   return token
 }
 
+/**
+ * Async function to fetch engagement recommendations from Edge Function
+ *
+ * @description
+ * Performs an authenticated API request to fetch paginated recommendations
+ * with optional filtering by status, type, urgency, priority, confidence,
+ * dossier, relationship, and more. Supports sorting and pagination.
+ *
+ * @param {RecommendationListParams} params - Query parameters
+ * @returns {Promise<RecommendationListResponse>} Recommendations list with pagination
+ * @throws {Error} Throws if API request fails or authentication required
+ * @private
+ */
 async function fetchRecommendations(
   params: RecommendationListParams,
 ): Promise<RecommendationListResponse> {
@@ -101,6 +198,18 @@ async function fetchRecommendations(
   return response.json()
 }
 
+/**
+ * Async function to fetch a single recommendation by ID
+ *
+ * @description
+ * Performs an authenticated API request to fetch a single recommendation
+ * with full details including rationale, signals, and metadata.
+ *
+ * @param {string} id - Recommendation UUID
+ * @returns {Promise<EngagementRecommendationSummary>} Full recommendation details
+ * @throws {Error} Throws if API request fails or recommendation not found
+ * @private
+ */
 async function fetchRecommendation(id: string): Promise<EngagementRecommendationSummary> {
   const token = await getAuthToken()
 
@@ -122,6 +231,17 @@ async function fetchRecommendation(id: string): Promise<EngagementRecommendation
   return response.json()
 }
 
+/**
+ * Async function to fetch recommendation statistics
+ *
+ * @description
+ * Performs an authenticated API request to fetch aggregated statistics
+ * including counts by status, type, urgency, and average confidence scores.
+ *
+ * @returns {Promise<RecommendationStats>} Statistics object
+ * @throws {Error} Throws if API request fails
+ * @private
+ */
 async function fetchRecommendationStats(): Promise<RecommendationStats> {
   const token = await getAuthToken()
 
@@ -143,6 +263,19 @@ async function fetchRecommendationStats(): Promise<RecommendationStats> {
   return response.json()
 }
 
+/**
+ * Async function to update a recommendation
+ *
+ * @description
+ * Performs an authenticated API request to update a recommendation's status,
+ * action notes, or resulting engagement. Used for accepting/dismissing recommendations.
+ *
+ * @param {string} id - Recommendation UUID
+ * @param {RecommendationUpdateParams} updates - Update parameters
+ * @returns {Promise<EngagementRecommendationSummary>} Updated recommendation
+ * @throws {Error} Throws if API request fails
+ * @private
+ */
 async function updateRecommendation(
   id: string,
   updates: RecommendationUpdateParams,
@@ -169,6 +302,19 @@ async function updateRecommendation(
   return response.json()
 }
 
+/**
+ * Async function to add user feedback to a recommendation
+ *
+ * @description
+ * Performs an authenticated API request to submit user feedback on a recommendation.
+ * Feedback is used to improve the AI recommendation engine.
+ *
+ * @param {string} recommendationId - Recommendation UUID
+ * @param {RecommendationFeedbackCreate} feedback - Feedback data
+ * @returns {Promise<RecommendationFeedback>} Created feedback record
+ * @throws {Error} Throws if API request fails
+ * @private
+ */
 async function addFeedback(
   recommendationId: string,
   feedback: RecommendationFeedbackCreate,
@@ -195,6 +341,18 @@ async function addFeedback(
   return response.json()
 }
 
+/**
+ * Async function to trigger generation of new recommendations
+ *
+ * @description
+ * Performs an authenticated API request to trigger the AI recommendation engine
+ * to generate new engagement recommendations based on current system state.
+ *
+ * @param {GenerateRecommendationsParams} [params={}] - Generation parameters
+ * @returns {Promise<GenerateRecommendationsResponse>} Generation result
+ * @throws {Error} Throws if API request fails
+ * @private
+ */
 async function generateRecommendations(
   params: GenerateRecommendationsParams = {},
 ): Promise<GenerateRecommendationsResponse> {
@@ -226,6 +384,31 @@ async function generateRecommendations(
 
 /**
  * Hook for fetching paginated engagement recommendations
+ *
+ * @description
+ * Fetches a paginated list of AI-driven engagement recommendations with optional
+ * filtering by status, type, urgency, priority, confidence, dossier, and relationship.
+ * Results are cached for 5 minutes and can be sorted by various criteria.
+ *
+ * @param {RecommendationListParams} [params={}] - Query parameters
+ * @returns {UseQueryResult<RecommendationListResponse>} TanStack Query result
+ *
+ * @example
+ * // Fetch pending high-priority recommendations
+ * const { data, isLoading } = useEngagementRecommendations({
+ *   status: ['pending', 'viewed'],
+ *   min_priority: 4,
+ *   sort_by: 'priority',
+ *   sort_order: 'desc',
+ *   limit: 20,
+ * });
+ *
+ * @example
+ * // Fetch recommendations for a specific dossier
+ * const { data } = useEngagementRecommendations({
+ *   target_dossier_id: 'country-uuid',
+ *   min_confidence: 0.7,
+ * });
  */
 export function useEngagementRecommendations(params: RecommendationListParams = {}) {
   return useQuery({
@@ -238,6 +421,26 @@ export function useEngagementRecommendations(params: RecommendationListParams = 
 
 /**
  * Hook for infinite scrolling recommendations
+ *
+ * @description
+ * Fetches recommendations with infinite scroll support using TanStack Query's
+ * useInfiniteQuery. Automatically handles pagination and "load more" functionality.
+ *
+ * @param {Omit<RecommendationListParams, 'offset'>} [params={}] - Query parameters (excluding offset)
+ * @returns {UseInfiniteQueryResult<RecommendationListResponse>} TanStack Infinite Query result
+ *
+ * @example
+ * // Infinite scroll for recommendations
+ * const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteRecommendations({
+ *   status: 'pending',
+ *   limit: 20,
+ * });
+ *
+ * @example
+ * // Load more button
+ * <button onClick={() => fetchNextPage()} disabled={!hasNextPage || isFetchingNextPage}>
+ *   {isFetchingNextPage ? 'Loading...' : hasNextPage ? 'Load More' : 'No more'}
+ * </button>
  */
 export function useInfiniteRecommendations(params: Omit<RecommendationListParams, 'offset'> = {}) {
   const pageSize = params.limit || 20
@@ -258,6 +461,22 @@ export function useInfiniteRecommendations(params: Omit<RecommendationListParams
 
 /**
  * Hook for fetching a single recommendation with full details
+ *
+ * @description
+ * Fetches a single engagement recommendation by ID with full details including
+ * rationale, AI signals, metadata, and relationship context. Useful for detail pages.
+ *
+ * @param {string} id - Recommendation UUID
+ * @param {boolean} [enabled=true] - Whether the query should run
+ * @returns {UseQueryResult<EngagementRecommendationSummary>} TanStack Query result
+ *
+ * @example
+ * // Fetch single recommendation
+ * const { data, isLoading } = useEngagementRecommendation('recommendation-uuid');
+ *
+ * @example
+ * // Conditional fetching
+ * const { data } = useEngagementRecommendation(recommendationId, !!recommendationId);
  */
 export function useEngagementRecommendation(id: string, enabled = true) {
   return useQuery({
@@ -271,6 +490,17 @@ export function useEngagementRecommendation(id: string, enabled = true) {
 
 /**
  * Hook for fetching recommendation statistics
+ *
+ * @description
+ * Fetches aggregated statistics for engagement recommendations including counts
+ * by status, type, urgency, and average confidence scores. Auto-refreshes every 5 minutes.
+ *
+ * @returns {UseQueryResult<RecommendationStats>} TanStack Query result with statistics
+ *
+ * @example
+ * const { data: stats } = useRecommendationStats();
+ * console.log(stats?.pending_count); // Number of pending recommendations
+ * console.log(stats?.average_confidence); // Average confidence score
  */
 export function useRecommendationStats() {
   return useQuery({
@@ -284,6 +514,23 @@ export function useRecommendationStats() {
 
 /**
  * Hook for updating a recommendation (accept/dismiss)
+ *
+ * @description
+ * Updates a recommendation's status, action notes, or resulting engagement.
+ * On success, updates the cache and invalidates list/stats queries.
+ *
+ * @returns {UseMutationResult} TanStack Mutation result
+ *
+ * @example
+ * const { mutate } = useUpdateRecommendation();
+ * mutate({
+ *   id: 'recommendation-uuid',
+ *   updates: {
+ *     status: 'accepted',
+ *     action_notes: 'Scheduled for Q2',
+ *     resulting_engagement_id: 'engagement-uuid',
+ *   },
+ * });
  */
 export function useUpdateRecommendation() {
   const queryClient = useQueryClient()
@@ -304,6 +551,19 @@ export function useUpdateRecommendation() {
 
 /**
  * Hook for accepting a recommendation
+ *
+ * @description
+ * Convenience hook that wraps useUpdateRecommendation to accept a recommendation
+ * with optional action notes and resulting engagement ID.
+ *
+ * @returns {Object} Mutation object with custom mutate/mutateAsync signatures
+ *
+ * @example
+ * const { mutate } = useAcceptRecommendation();
+ * mutate('recommendation-uuid', {
+ *   action_notes: 'Scheduled for June',
+ *   resulting_engagement_id: 'engagement-uuid',
+ * });
  */
 export function useAcceptRecommendation() {
   const updateMutation = useUpdateRecommendation()
@@ -334,6 +594,16 @@ export function useAcceptRecommendation() {
 
 /**
  * Hook for dismissing a recommendation
+ *
+ * @description
+ * Convenience hook that wraps useUpdateRecommendation to dismiss a recommendation
+ * with optional action notes.
+ *
+ * @returns {Object} Mutation object with custom mutate/mutateAsync signatures
+ *
+ * @example
+ * const { mutate } = useDismissRecommendation();
+ * mutate('recommendation-uuid', 'Not relevant at this time');
  */
 export function useDismissRecommendation() {
   const updateMutation = useUpdateRecommendation()
@@ -361,6 +631,23 @@ export function useDismissRecommendation() {
 
 /**
  * Hook for adding feedback to a recommendation
+ *
+ * @description
+ * Submits user feedback on a recommendation to help improve the AI recommendation engine.
+ * On success, invalidates the specific recommendation query to refresh feedback data.
+ *
+ * @returns {UseMutationResult} TanStack Mutation result
+ *
+ * @example
+ * const { mutate } = useAddRecommendationFeedback();
+ * mutate({
+ *   recommendationId: 'recommendation-uuid',
+ *   feedback: {
+ *     is_helpful: true,
+ *     feedback_text: 'Very timely and relevant suggestion',
+ *     accuracy_score: 5,
+ *   },
+ * });
  */
 export function useAddRecommendationFeedback() {
   const queryClient = useQueryClient()
@@ -384,6 +671,17 @@ export function useAddRecommendationFeedback() {
 
 /**
  * Hook for generating new recommendations
+ *
+ * @description
+ * Triggers the AI recommendation engine to generate new engagement recommendations
+ * based on current system state. On success, invalidates all recommendation queries
+ * to fetch newly generated recommendations.
+ *
+ * @returns {UseMutationResult} TanStack Mutation result
+ *
+ * @example
+ * const { mutate, isPending } = useGenerateRecommendations();
+ * mutate({ min_priority: 3, urgency_threshold: 'high' });
  */
 export function useGenerateRecommendations() {
   const queryClient = useQueryClient()
@@ -403,6 +701,17 @@ export function useGenerateRecommendations() {
 
 /**
  * Hook for fetching high-priority pending recommendations
+ *
+ * @description
+ * Convenience hook that fetches pending/viewed recommendations with minimum
+ * priority of 4, sorted by priority descending. Useful for dashboard widgets.
+ *
+ * @param {number} [limit=5] - Number of recommendations to fetch
+ * @returns {UseQueryResult<RecommendationListResponse>} TanStack Query result
+ *
+ * @example
+ * const { data } = useHighPriorityRecommendations(5);
+ * // Returns top 5 high-priority pending recommendations
  */
 export function useHighPriorityRecommendations(limit = 5) {
   return useEngagementRecommendations({
@@ -416,6 +725,17 @@ export function useHighPriorityRecommendations(limit = 5) {
 
 /**
  * Hook for fetching recommendations for a specific relationship
+ *
+ * @description
+ * Convenience hook that fetches pending/viewed recommendations for a specific
+ * dossier relationship, sorted by priority. Useful for relationship detail pages.
+ *
+ * @param {string} relationshipId - Relationship UUID
+ * @param {boolean} [enabled=true] - Whether the query should run
+ * @returns {UseQueryResult<RecommendationListResponse>} TanStack Query result
+ *
+ * @example
+ * const { data } = useRelationshipRecommendations('relationship-uuid');
  */
 export function useRelationshipRecommendations(relationshipId: string, enabled = true) {
   return useEngagementRecommendations({
@@ -428,6 +748,17 @@ export function useRelationshipRecommendations(relationshipId: string, enabled =
 
 /**
  * Hook for fetching recommendations for a specific dossier
+ *
+ * @description
+ * Convenience hook that fetches pending/viewed recommendations for a specific
+ * dossier (country, organization, etc.), sorted by priority. Useful for dossier detail pages.
+ *
+ * @param {string} dossierId - Dossier UUID
+ * @param {boolean} [enabled=true] - Whether the query should run
+ * @returns {UseQueryResult<RecommendationListResponse>} TanStack Query result
+ *
+ * @example
+ * const { data } = useDossierRecommendations('country-uuid');
  */
 export function useDossierRecommendations(dossierId: string, enabled = true) {
   return useEngagementRecommendations({
@@ -440,6 +771,17 @@ export function useDossierRecommendations(dossierId: string, enabled = true) {
 
 /**
  * Hook for fetching critical urgency recommendations
+ *
+ * @description
+ * Convenience hook that fetches pending/viewed recommendations with critical urgency,
+ * sorted by creation date descending. Useful for urgent notifications and alerts.
+ *
+ * @param {number} [limit=10] - Number of recommendations to fetch
+ * @returns {UseQueryResult<RecommendationListResponse>} TanStack Query result
+ *
+ * @example
+ * const { data } = useCriticalRecommendations(10);
+ * // Returns up to 10 critical urgency recommendations
  */
 export function useCriticalRecommendations(limit = 10) {
   return useEngagementRecommendations({

@@ -1,12 +1,53 @@
 /**
- * Engagement Briefs Hooks
- * Feature: engagement-brief-linking
+ * Engagement Briefs Management Hooks
+ * @module hooks/useEngagementBriefs
+ * @feature engagement-brief-linking
+ * @feature 033-ai-brief-generation
  *
- * TanStack Query hooks for managing briefs linked to engagement dossiers:
- * - List briefs for an engagement
- * - Generate AI briefs with context gathering
- * - Link/unlink existing briefs
- * - Get brief generation context
+ * TanStack Query hooks for managing briefs linked to engagement dossiers with automatic
+ * caching, AI brief generation, and context gathering.
+ *
+ * @description
+ * This module provides comprehensive React hooks for engagement brief management:
+ * - Query hooks for fetching lists of briefs and brief generation context
+ * - Mutation hooks for generating AI briefs with fallback to manual templates
+ * - Link/unlink operations for managing brief-engagement relationships
+ * - Support for both legacy briefs and AI-generated briefs
+ * - Automatic toast notifications for all mutation operations
+ * - Context gathering for AI brief generation (participants, agenda, positions, etc.)
+ *
+ * All hooks use Supabase Edge Functions for server-side AI integration.
+ *
+ * @example
+ * // Fetch briefs for an engagement
+ * const { data } = useEngagementBriefs('engagement-uuid', {
+ *   type: 'ai',
+ *   status: 'completed',
+ *   limit: 10,
+ * });
+ *
+ * @example
+ * // Get context for brief generation
+ * const { data: context } = useEngagementBriefContext('engagement-uuid');
+ * // context includes participants, agenda, positions, commitments, etc.
+ *
+ * @example
+ * // Generate an AI brief
+ * const { mutate } = useGenerateEngagementBrief();
+ * mutate({
+ *   engagementId: 'engagement-uuid',
+ *   language: 'en',
+ *   custom_prompt: 'Focus on bilateral relations',
+ * });
+ *
+ * @example
+ * // Link existing brief to engagement
+ * const { mutate } = useLinkBriefToEngagement();
+ * mutate({
+ *   engagementId: 'engagement-uuid',
+ *   briefId: 'brief-uuid',
+ *   brief_type: 'legacy',
+ * });
  */
 
 import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query'
@@ -142,6 +183,16 @@ const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
 // Auth Helper
 // ============================================================================
 
+/**
+ * Helper function to get authenticated headers for Edge Function requests
+ *
+ * @description
+ * Retrieves the current Supabase session and constructs headers with
+ * the access token for authenticated API requests to Edge Functions.
+ *
+ * @returns {Promise<Object>} Headers object with Content-Type and Authorization
+ * @private
+ */
 const getAuthHeaders = async () => {
   const {
     data: { session },
@@ -156,6 +207,26 @@ const getAuthHeaders = async () => {
 // Query Keys
 // ============================================================================
 
+/**
+ * Query Keys Factory for engagement brief-related queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation for brief lists
+ * and brief generation context.
+ *
+ * @example
+ * // Invalidate all brief queries
+ * queryClient.invalidateQueries({ queryKey: engagementBriefKeys.all });
+ *
+ * @example
+ * // Invalidate briefs for a specific engagement
+ * queryClient.invalidateQueries({ queryKey: engagementBriefKeys.list('uuid') });
+ *
+ * @example
+ * // Invalidate brief generation context
+ * queryClient.invalidateQueries({ queryKey: engagementBriefKeys.context('uuid') });
+ */
 export const engagementBriefKeys = {
   all: ['engagement-briefs'] as const,
   lists: () => [...engagementBriefKeys.all, 'list'] as const,
@@ -171,6 +242,33 @@ export const engagementBriefKeys = {
 
 /**
  * Hook to list briefs for an engagement dossier
+ *
+ * @description
+ * Fetches a paginated list of briefs linked to a specific engagement, with optional
+ * filtering by brief type (legacy/AI), status (completed/generating/failed), and pagination.
+ * Results are cached and automatically refreshed when brief mutations occur.
+ *
+ * @param {string} engagementId - The UUID of the engagement
+ * @param {BriefsSearchParams} [params] - Optional search and filter parameters
+ * @param {string} [params.type] - Filter by brief type: 'all', 'legacy', or 'ai'
+ * @param {BriefStatus} [params.status] - Filter by status: 'completed', 'generating', or 'failed'
+ * @param {number} [params.limit] - Number of items per page (defaults to 20)
+ * @param {number} [params.offset] - Offset for pagination (defaults to 0)
+ * @param {UseQueryOptions} [options] - Additional TanStack Query options
+ * @returns {UseQueryResult<EngagementBriefsListResponse>} TanStack Query result with briefs array and pagination
+ *
+ * @example
+ * // Fetch all briefs
+ * const { data } = useEngagementBriefs('engagement-uuid');
+ *
+ * @example
+ * // Fetch only AI briefs with pagination
+ * const { data } = useEngagementBriefs('engagement-uuid', {
+ *   type: 'ai',
+ *   status: 'completed',
+ *   limit: 10,
+ *   offset: 0,
+ * });
  */
 export function useEngagementBriefs(
   engagementId: string,
@@ -209,6 +307,25 @@ export function useEngagementBriefs(
 
 /**
  * Hook to get brief generation context for an engagement
+ *
+ * @description
+ * Fetches comprehensive context data for AI brief generation including engagement details,
+ * participants, agenda items, positions, commitments, recent interactions, and previous brief count.
+ * This context is used by the AI to generate informed, comprehensive briefing documents.
+ *
+ * @param {string} engagementId - The UUID of the engagement
+ * @param {UseQueryOptions} [options] - Additional TanStack Query options
+ * @returns {UseQueryResult<BriefGenerationContext>} TanStack Query result with context object
+ *
+ * @example
+ * // Fetch brief generation context
+ * const { data: context } = useEngagementBriefContext('engagement-uuid');
+ * if (context) {
+ *   console.log(context.participants); // Array of participants
+ *   console.log(context.agenda); // Array of agenda items
+ *   console.log(context.positions); // Related positions
+ *   console.log(context.commitments); // Active commitments
+ * }
  */
 export function useEngagementBriefContext(
   engagementId: string,
@@ -238,6 +355,33 @@ export function useEngagementBriefContext(
 
 /**
  * Hook to generate a new AI brief for an engagement
+ *
+ * @description
+ * Generates a new AI-powered brief for an engagement using the AnythingLLM integration.
+ * Gathers context from the engagement and generates a comprehensive briefing document.
+ * If AI service is unavailable, returns a fallback response with manual template suggestion.
+ * Displays success/warning/error toast notifications.
+ *
+ * @returns {UseMutationResult} TanStack Mutation result
+ *
+ * @example
+ * // Generate AI brief
+ * const { mutate, isPending } = useGenerateEngagementBrief();
+ * mutate({
+ *   engagementId: 'engagement-uuid',
+ *   language: 'en',
+ * });
+ *
+ * @example
+ * // Generate with custom prompt
+ * const { mutate } = useGenerateEngagementBrief();
+ * mutate({
+ *   engagementId: 'engagement-uuid',
+ *   language: 'ar',
+ *   custom_prompt: 'Focus on bilateral relations and trade agreements',
+ *   date_range_start: '2024-01-01',
+ *   date_range_end: '2024-12-31',
+ * });
  */
 export function useGenerateEngagementBrief() {
   const queryClient = useQueryClient()
@@ -296,6 +440,21 @@ export function useGenerateEngagementBrief() {
 
 /**
  * Hook to link an existing brief to an engagement
+ *
+ * @description
+ * Links an existing brief (legacy or AI) to an engagement, creating a relationship
+ * in the database. On success, invalidates brief list queries to reflect the change.
+ *
+ * @returns {UseMutationResult} TanStack Mutation result
+ *
+ * @example
+ * // Link a legacy brief
+ * const { mutate } = useLinkBriefToEngagement();
+ * mutate({
+ *   engagementId: 'engagement-uuid',
+ *   briefId: 'brief-uuid',
+ *   brief_type: 'legacy',
+ * });
  */
 export function useLinkBriefToEngagement() {
   const queryClient = useQueryClient()
@@ -334,6 +493,21 @@ export function useLinkBriefToEngagement() {
 
 /**
  * Hook to unlink a brief from an engagement
+ *
+ * @description
+ * Removes the link between a brief and an engagement without deleting the brief itself.
+ * On success, invalidates brief list queries to reflect the change.
+ *
+ * @returns {UseMutationResult} TanStack Mutation result
+ *
+ * @example
+ * // Unlink a brief
+ * const { mutate } = useUnlinkBriefFromEngagement();
+ * mutate({
+ *   engagementId: 'engagement-uuid',
+ *   briefId: 'brief-uuid',
+ *   brief_type: 'ai',
+ * });
  */
 export function useUnlinkBriefFromEngagement() {
   const queryClient = useQueryClient()
@@ -371,6 +545,23 @@ export function useUnlinkBriefFromEngagement() {
 
 /**
  * Hook to invalidate all engagement brief queries
+ *
+ * @description
+ * Returns a function that invalidates brief queries either for a specific engagement
+ * (including briefs list and context) or all brief queries across all engagements.
+ * Useful for manual cache refresh after external operations.
+ *
+ * @returns {Function} Function to call with optional engagementId parameter
+ *
+ * @example
+ * // Invalidate briefs for specific engagement
+ * const invalidateBriefs = useInvalidateEngagementBriefs();
+ * invalidateBriefs('engagement-uuid');
+ *
+ * @example
+ * // Invalidate all brief queries
+ * const invalidateBriefs = useInvalidateEngagementBriefs();
+ * invalidateBriefs(); // No parameter invalidates everything
  */
 export function useInvalidateEngagementBriefs() {
   const queryClient = useQueryClient()

@@ -1,7 +1,72 @@
+/**
+ * Engagement Kanban Board Hook
+ * @module hooks/useEngagementKanban
+ * @feature 032-unified-work-management
+ * @feature engagements-kanban-board
+ *
+ * TanStack Query hook for managing engagement-specific Kanban boards with automatic
+ * caching, drag-and-drop support, and workflow stage transitions.
+ *
+ * @description
+ * This module provides a React hook for managing engagement Kanban boards:
+ * - Query hook for fetching Kanban board columns organized by workflow stage
+ * - Mutation hook for updating workflow stages with drag-and-drop
+ * - Computed statistics (total items, progress percentage, counts by stage)
+ * - Flattened assignments list for easy iteration
+ * - Support for multiple sorting options (created_at, sla_deadline, priority)
+ * - Automatic cache invalidation on workflow stage changes
+ *
+ * The Kanban board displays work item assignments organized into 5 workflow stages:
+ * todo, in_progress, review, done, cancelled.
+ *
+ * @example
+ * // Fetch Kanban board for engagement
+ * const { columns, stats, handleDragEnd, isLoading } = useEngagementKanban(
+ *   'engagement-uuid',
+ *   'sla_deadline'
+ * );
+ *
+ * @example
+ * // Access column data
+ * if (columns) {
+ *   console.log(columns.todo); // Array of assignments in 'todo' stage
+ *   console.log(columns.in_progress); // Array of assignments in progress
+ *   console.log(stats.progressPercentage); // e.g., 65
+ * }
+ *
+ * @example
+ * // Handle drag-and-drop
+ * const { handleDragEnd } = useEngagementKanban('engagement-uuid');
+ * // On drop:
+ * handleDragEnd('assignment-uuid', 'in_progress');
+ */
+
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 import { useMemo, useCallback } from 'react';
 
+/**
+ * Kanban assignment entity representing a work item in the board
+ *
+ * @interface KanbanAssignment
+ * @property {string} id - Unique identifier for the assignment
+ * @property {string} work_item_id - UUID of the underlying work item (task/commitment/intake)
+ * @property {string} work_item_type - Type of work item: 'task', 'commitment', or 'intake'
+ * @property {string} assignee_id - UUID of the assigned user
+ * @property {string} workflow_stage - Current workflow stage: 'todo', 'in_progress', 'review', 'done', 'cancelled'
+ * @property {string} priority - Priority level: 'low', 'medium', 'high', 'urgent'
+ * @property {string} status - Status of the work item
+ * @property {string | null} sla_deadline - Overall SLA deadline (ISO timestamp or null)
+ * @property {string | null} overall_sla_deadline - Overall SLA deadline (ISO timestamp or null)
+ * @property {string | null} current_stage_sla_deadline - Stage-specific SLA deadline (ISO timestamp or null)
+ * @property {string} engagement_id - UUID of the engagement this assignment belongs to
+ * @property {string} created_at - ISO timestamp of creation
+ * @property {string} updated_at - ISO timestamp of last update
+ * @property {Object} [assignee] - Optional assignee details
+ * @property {string} assignee.id - Assignee user UUID
+ * @property {string} assignee.full_name - Assignee full name
+ * @property {string} [assignee.avatar_url] - Optional assignee avatar URL
+ */
 export interface KanbanAssignment {
   id: string;
   work_item_id: string;
@@ -23,6 +88,16 @@ export interface KanbanAssignment {
   };
 }
 
+/**
+ * Kanban columns organized by workflow stage
+ *
+ * @interface KanbanColumns
+ * @property {KanbanAssignment[]} todo - Assignments in 'todo' stage
+ * @property {KanbanAssignment[]} in_progress - Assignments in 'in_progress' stage
+ * @property {KanbanAssignment[]} review - Assignments in 'review' stage
+ * @property {KanbanAssignment[]} done - Assignments in 'done' stage
+ * @property {KanbanAssignment[]} cancelled - Assignments in 'cancelled' stage
+ */
 export interface KanbanColumns {
   todo: KanbanAssignment[];
   in_progress: KanbanAssignment[];
@@ -31,9 +106,64 @@ export interface KanbanColumns {
   cancelled: KanbanAssignment[];
 }
 
+/**
+ * Sort options for Kanban board
+ * @typedef {'created_at' | 'sla_deadline' | 'priority'} SortOption
+ */
 export type SortOption = 'created_at' | 'sla_deadline' | 'priority';
+
+/**
+ * Workflow stages for Kanban board
+ * @typedef {'todo' | 'in_progress' | 'review' | 'done' | 'cancelled'} WorkflowStage
+ */
 export type WorkflowStage = 'todo' | 'in_progress' | 'review' | 'done' | 'cancelled';
 
+/**
+ * Hook to fetch and manage engagement Kanban board
+ *
+ * @description
+ * Fetches Kanban board data for a specific engagement, organized by workflow stages.
+ * Provides computed statistics, flattened assignments list, and drag-and-drop handler
+ * for updating workflow stages. Data is cached and automatically refetched on mutations.
+ *
+ * Returns:
+ * - columns: Assignments organized by workflow stage (todo, in_progress, review, done, cancelled)
+ * - assignments: Flattened array of all assignments across all stages
+ * - stats: Computed statistics (total, counts by stage, progress percentage)
+ * - handleDragEnd: Callback for drag-and-drop workflow stage updates
+ * - isLoading: Loading state for initial fetch
+ * - error: Error state if fetch fails
+ *
+ * @param {string} engagementId - The UUID of the engagement
+ * @param {SortOption} [sortBy='created_at'] - Sort option: 'created_at', 'sla_deadline', or 'priority'
+ * @returns {Object} Hook result with columns, stats, handleDragEnd, isLoading, error
+ *
+ * @example
+ * // Fetch Kanban board sorted by SLA deadline
+ * const { columns, stats, handleDragEnd, isLoading } = useEngagementKanban(
+ *   'engagement-uuid',
+ *   'sla_deadline'
+ * );
+ *
+ * @example
+ * // Render columns
+ * if (isLoading) return <Spinner />;
+ * return (
+ *   <div className="kanban-board">
+ *     <Column title="To Do" assignments={columns.todo} />
+ *     <Column title="In Progress" assignments={columns.in_progress} />
+ *     <Column title="Review" assignments={columns.review} />
+ *     <Column title="Done" assignments={columns.done} />
+ *   </div>
+ * );
+ *
+ * @example
+ * // Handle drag-and-drop
+ * const { handleDragEnd } = useEngagementKanban('engagement-uuid');
+ * const onDrop = (assignmentId: string, newStage: WorkflowStage) => {
+ *   handleDragEnd(assignmentId, newStage);
+ * };
+ */
 export function useEngagementKanban(engagementId: string, sortBy: SortOption = 'created_at') {
   const queryClient = useQueryClient();
 
