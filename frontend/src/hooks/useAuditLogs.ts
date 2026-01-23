@@ -11,6 +11,7 @@
 
 import { useState, useCallback } from 'react'
 import { useQuery } from '@tanstack/react-query'
+import * as ExcelJS from 'exceljs'
 import { supabase } from '@/lib/supabase'
 import type {
   AuditLogEntry,
@@ -294,16 +295,84 @@ export function useAuditLogExport(): UseAuditLogExportReturn {
         }
       }
 
-      // Download the file
-      const blob = await response.blob()
-      const url = window.URL.createObjectURL(blob)
-      const a = document.createElement('a')
-      a.href = url
-      a.download = filename
-      document.body.appendChild(a)
-      a.click()
-      window.URL.revokeObjectURL(url)
-      document.body.removeChild(a)
+      // Handle XLSX conversion if needed
+      if (options.format === 'xlsx') {
+        // Get CSV content from backend
+        const csvContent = await response.text()
+
+        // Create workbook and worksheet
+        const workbook = new ExcelJS.Workbook()
+        const worksheet = workbook.addWorksheet('Audit Logs')
+
+        // Parse CSV content (remove BOM if present)
+        const lines = csvContent.replace(/^\uFEFF/, '').split('\r\n')
+        const headers = lines[0].split(',').map((h: string) => h.replace(/^"|"$/g, ''))
+
+        // Add headers
+        worksheet.addRow(headers)
+
+        // Style header row
+        const headerRow = worksheet.getRow(1)
+        headerRow.font = { bold: true, color: { argb: 'FFFFFFFF' } }
+        headerRow.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'FF4472C4' },
+        }
+
+        // Add data rows
+        for (let i = 1; i < lines.length; i++) {
+          if (lines[i].trim()) {
+            // Parse CSV line properly (handle quoted values)
+            const values =
+              lines[i]
+                .match(/(?:^|,)("(?:[^"]*(?:""[^"]*)*)"|[^,]*)/g)
+                ?.map((v: string) =>
+                  v.replace(/^,/, '').replace(/^"|"$/g, '').replace(/""/g, '"'),
+                ) || []
+            worksheet.addRow(values)
+          }
+        }
+
+        // Auto-fit columns
+        worksheet.columns.forEach((column) => {
+          let maxLength = 10
+          column.eachCell?.({ includeEmpty: true }, (cell) => {
+            const cellLength = cell.value ? cell.value.toString().length : 0
+            if (cellLength > maxLength) {
+              maxLength = Math.min(cellLength, 50)
+            }
+          })
+          column.width = maxLength + 2
+        })
+
+        // Generate blob
+        const buffer = await workbook.xlsx.writeBuffer()
+        const blob = new Blob([buffer], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        })
+        const url = window.URL.createObjectURL(blob)
+
+        // Download file with .xlsx extension
+        const a = document.createElement('a')
+        a.href = url
+        a.download = filename.replace('.csv', '.xlsx')
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+      } else {
+        // Download CSV or JSON directly
+        const blob = await response.blob()
+        const url = window.URL.createObjectURL(blob)
+        const a = document.createElement('a')
+        a.href = url
+        a.download = filename
+        document.body.appendChild(a)
+        a.click()
+        window.URL.revokeObjectURL(url)
+        document.body.removeChild(a)
+      }
     } catch (err) {
       setError(err instanceof Error ? err : new Error('Export failed'))
       throw err
