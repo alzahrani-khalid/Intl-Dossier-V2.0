@@ -15,7 +15,7 @@ import {
   type ChangeEvent,
   type FocusEvent,
 } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Phone, Mail, Globe, Calendar, Hash, CreditCard, DollarSign, Lock } from 'lucide-react'
 

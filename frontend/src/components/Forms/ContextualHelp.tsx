@@ -13,7 +13,7 @@
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { HelpCircle, ChevronDown, ChevronUp, ExternalLink, Lightbulb, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip'

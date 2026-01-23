@@ -6,7 +6,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useId, type ReactNode } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { CheckCircle2, AlertCircle, CircleDot, Info } from 'lucide-react'
 import type { FieldImportance, FieldStatus } from '@/types/progressive-form.types'

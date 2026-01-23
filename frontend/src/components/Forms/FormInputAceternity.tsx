@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { UseFormRegister, FieldError } from 'react-hook-form'
 import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useState, useEffect, type InputHTMLAttributes, type ReactNode } from 'react'
 
 interface FormInputAceternityProps extends InputHTMLAttributes<HTMLInputElement> {

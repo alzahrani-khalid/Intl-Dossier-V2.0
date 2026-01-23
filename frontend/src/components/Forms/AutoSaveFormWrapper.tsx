@@ -16,7 +16,7 @@
 
 import { useEffect, useCallback, useState, createContext, useContext, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useBlocker } from '@tanstack/react-router'
 import { Save, RotateCcw, X, Clock, CheckCircle2, AlertCircle, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'

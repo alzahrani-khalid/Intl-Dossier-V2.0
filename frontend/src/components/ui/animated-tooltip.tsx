@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useRef } from 'react'
-import { motion, useTransform, AnimatePresence, useMotionValue, useSpring } from 'motion/react'
+import { motion, useTransform, AnimatePresence, useMotionValue, useSpring } from 'framer-motion'
 
 export const AnimatedTooltip = ({
   items,

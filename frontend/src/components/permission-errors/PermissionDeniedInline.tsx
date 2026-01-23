@@ -5,7 +5,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { ShieldX, ChevronRight, Mail, X, Send, Clock } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'

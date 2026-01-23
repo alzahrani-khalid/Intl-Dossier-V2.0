@@ -6,7 +6,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useState, useCallback } from 'react'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { useProgressiveForm } from '@/hooks/useProgressiveForm'
 import { ProgressiveFormField } from '@/components/Forms/ProgressiveFormField'

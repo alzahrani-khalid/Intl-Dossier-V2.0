@@ -10,7 +10,7 @@
 
 import { forwardRef, memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import {
   Building2,

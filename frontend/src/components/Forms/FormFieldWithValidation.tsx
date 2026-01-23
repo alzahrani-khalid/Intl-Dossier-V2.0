@@ -12,7 +12,7 @@ import {
   type InputHTMLAttributes,
   type TextareaHTMLAttributes,
 } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { useFieldValidation, type UseFieldValidationOptions } from '@/hooks/useFieldValidation'
 import { calculatePasswordStrength } from '@/lib/validation-rules'

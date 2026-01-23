@@ -12,7 +12,7 @@
 
 import { type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { AlertCircle, AlertTriangle, Info, X, ChevronRight, Lightbulb } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'

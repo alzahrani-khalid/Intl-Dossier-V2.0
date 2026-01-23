@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import type { UseFormRegister, FieldError } from 'react-hook-form'
 import { cn } from '@/lib/utils'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useState } from 'react'
 
 interface FormTextareaAceternityProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {

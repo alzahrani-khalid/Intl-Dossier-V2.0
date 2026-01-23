@@ -17,7 +17,7 @@
 
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence, Reorder } from 'motion/react'
+import { motion, AnimatePresence, Reorder } from 'framer-motion'
 import { Plus, X, GripVertical, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'

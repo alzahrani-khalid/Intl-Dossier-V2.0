@@ -21,7 +21,7 @@
 
 import { useCallback, useState, useId } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { useDropzone, type FileRejection } from 'react-dropzone'
 import {
   Upload,

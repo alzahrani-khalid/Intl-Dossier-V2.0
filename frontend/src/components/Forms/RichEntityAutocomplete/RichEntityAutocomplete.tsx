@@ -11,7 +11,7 @@
 
 import { forwardRef, useCallback, useState, useId, useRef, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import {
   Search,

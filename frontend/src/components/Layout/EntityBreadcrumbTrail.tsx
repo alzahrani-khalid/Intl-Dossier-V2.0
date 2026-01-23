@@ -9,7 +9,7 @@
 import { useRef, useCallback } from 'react'
 import { Link, useLocation } from '@tanstack/react-router'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
   Globe,
   Building2,

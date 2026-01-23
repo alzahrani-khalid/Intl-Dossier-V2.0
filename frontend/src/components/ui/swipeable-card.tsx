@@ -24,7 +24,7 @@
 
 import { forwardRef, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { Star, Archive, Trash2, Pin, MoreVertical } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { useSwipeGesture, type SwipeGestureConfig } from '@/hooks/useSwipeGesture'

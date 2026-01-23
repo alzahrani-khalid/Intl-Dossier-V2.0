@@ -16,7 +16,7 @@
 
 import { useState, useCallback, createContext, useContext, type ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { ChevronDown, ChevronRight, CheckCircle2, AlertCircle, Info } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'

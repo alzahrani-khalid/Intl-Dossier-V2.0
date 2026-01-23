@@ -6,7 +6,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { forwardRef, useCallback, useState, useId, useMemo, useRef, useEffect } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { Check, ChevronDown, Search, X, Loader2 } from 'lucide-react'
 import {

@@ -5,7 +5,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { useState, useCallback } from 'react'
-import { motion } from 'motion/react'
+import { motion } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { FormFieldWithValidation } from '@/components/Forms/FormFieldWithValidation'
 import { ValidationSummary } from '@/components/Forms/ValidationIndicator'

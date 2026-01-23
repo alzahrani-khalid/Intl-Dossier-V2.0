@@ -11,7 +11,7 @@
 import { memo, useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link } from '@tanstack/react-router'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { FolderOpen, X, RefreshCw, ExternalLink, ChevronDown } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { getDossierDetailPath } from '@/lib/dossier-routes'

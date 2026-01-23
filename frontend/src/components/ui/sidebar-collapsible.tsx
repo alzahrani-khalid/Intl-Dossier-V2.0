@@ -1,7 +1,7 @@
 import { cn } from '@/lib/utils'
 import { Link, type LinkProps } from '@tanstack/react-router'
 import React, { useState, createContext, useContext } from 'react'
-import { AnimatePresence, motion } from 'motion/react'
+import { AnimatePresence, motion } from 'framer-motion'
 import { IconArrowNarrowLeft, IconMenu2, IconX } from '@tabler/icons-react'
 
 interface Links {

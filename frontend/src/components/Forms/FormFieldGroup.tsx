@@ -6,7 +6,7 @@
 
 import { useTranslation } from 'react-i18next'
 import { type ReactNode } from 'react'
-import { motion, AnimatePresence } from 'motion/react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { cn } from '@/lib/utils'
 import { ChevronDown, CheckCircle2, AlertCircle, Folder } from 'lucide-react'
 import * as CollapsiblePrimitive from '@radix-ui/react-collapsible'

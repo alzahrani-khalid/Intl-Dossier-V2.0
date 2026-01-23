@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback, useRef } from 'react'
-import { useScroll, useMotionValueEvent, MotionValue } from 'motion/react'
+import { useScroll, useMotionValueEvent, MotionValue } from 'framer-motion'
 
 export interface CollapsingHeaderState {
   /** Whether the header is currently visible */
