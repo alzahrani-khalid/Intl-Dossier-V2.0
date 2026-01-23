@@ -59,6 +59,7 @@
     "button": "Export",
     "format": "Format",
     "csv": "CSV",
+    "xlsx": "XLSX (Excel)",
     "json": "JSON",
     "exporting": "Exporting...",
     "success": "Audit logs exported successfully",

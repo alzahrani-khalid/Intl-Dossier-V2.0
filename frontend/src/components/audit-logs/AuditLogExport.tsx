@@ -1,14 +1,14 @@
 /**
  * Audit Log Export Component
  *
- * Export button and dialog for downloading audit logs in CSV or JSON format
+ * Export button and dialog for downloading audit logs in CSV, JSON, or XLSX format
  *
  * Mobile-first and RTL-ready
  */
 
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Download, FileJson, FileSpreadsheet, Loader2 } from 'lucide-react'
+import { Download, FileJson, FileSpreadsheet, FileText, Loader2 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import {
@@ -65,6 +65,10 @@ export function AuditLogExport({ filters, disabled = false, className }: AuditLo
         <DropdownMenuItem onClick={() => handleExport('csv')} disabled={isExporting}>
           <FileSpreadsheet className="h-4 w-4 me-2" />
           {t('export.csv')}
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleExport('xlsx')} disabled={isExporting}>
+          <FileText className="h-4 w-4 me-2" />
+          {t('export.xlsx')}
         </DropdownMenuItem>
         <DropdownMenuItem onClick={() => handleExport('json')} disabled={isExporting}>
           <FileJson className="h-4 w-4 me-2" />

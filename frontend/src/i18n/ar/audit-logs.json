@@ -59,6 +59,7 @@
     "button": "تصدير",
     "format": "الصيغة",
     "csv": "CSV",
+    "xlsx": "XLSX (Excel)",
     "json": "JSON",
     "exporting": "جارٍ التصدير...",
     "success": "تم تصدير سجلات التدقيق بنجاح",
