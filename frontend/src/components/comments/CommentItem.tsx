@@ -42,6 +42,7 @@ import { ReactionPicker } from './ReactionPicker'
 import { useCommentThread, useDeleteComment } from '@/hooks/useComments'
 import { cn } from '@/lib/utils'
 import { supabase } from '@/lib/supabase'
+import { sanitizeHtml } from '@/lib/sanitize'
 import type {
   CommentWithDetails,
   CommentReactionEmoji,
@@ -108,12 +109,12 @@ export function CommentItem({
   const renderedContent = useMemo(() => {
     const content = comment.content_html || comment.content
 
-    // If we have pre-rendered HTML, use it
+    // If we have pre-rendered HTML, use it (sanitized)
     if (comment.content_html) {
       return (
         <div
           className="prose prose-sm max-w-none dark:prose-invert"
-          dangerouslySetInnerHTML={{ __html: comment.content_html }}
+          dangerouslySetInnerHTML={{ __html: sanitizeHtml(comment.content_html) }}
         />
       )
     }
