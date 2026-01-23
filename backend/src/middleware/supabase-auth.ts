@@ -261,24 +261,45 @@ export const optionalSupabaseAuth = async (
       .single()
 
     if (userProfile && userProfile.is_active) {
+      // Resolve user's organization from memberships
+      const organizationId = await resolveUserOrganization(userProfile.id)
+
+      if (!organizationId) {
+        logger.warn('Optional auth: User has no organization membership, continuing without auth', {
+          userId: userProfile.id,
+          email: userProfile.email,
+        })
+        return next() // Continue without auth if no organization
+      }
+
       req.user = {
         id: userProfile.id,
         email: userProfile.email,
         role: userProfile.role || 'user',
-        organization_id: DEFAULT_ORGANIZATION_ID,
-        tenantId: DEFAULT_ORGANIZATION_ID,
+        organization_id: organizationId,
+        tenantId: organizationId,
         fullName: userProfile.full_name,
         department: userProfile.department,
         permissions: [],
       }
     } else if (user) {
-      // User exists in auth but not in users table - use minimal info
+      // User exists in auth but not in users table - resolve organization
+      const organizationId = await resolveUserOrganization(user.id)
+
+      if (!organizationId) {
+        logger.warn('Optional auth: User has no organization membership, continuing without auth', {
+          userId: user.id,
+          email: user.email,
+        })
+        return next() // Continue without auth if no organization
+      }
+
       req.user = {
         id: user.id,
         email: user.email || '',
         role: 'user',
-        organization_id: DEFAULT_ORGANIZATION_ID,
-        tenantId: DEFAULT_ORGANIZATION_ID,
+        organization_id: organizationId,
+        tenantId: organizationId,
         permissions: [],
       }
     }
