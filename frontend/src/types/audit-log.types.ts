@@ -132,7 +132,7 @@ export interface AuditLogStatisticsResponse {
 // EXPORT OPTIONS
 // =============================================
 
-export type ExportFormat = 'csv' | 'json'
+export type ExportFormat = 'csv' | 'json' | 'xlsx'
 
 export interface ExportOptions {
   format: ExportFormat
