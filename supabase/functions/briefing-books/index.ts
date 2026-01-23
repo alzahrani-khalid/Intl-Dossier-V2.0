@@ -896,7 +896,7 @@ Deno.serve(async (req: Request) => {
     if (method === 'GET' && pathParts[1] === 'templates') {
       const { data: templates, error } = await supabase
         .from('briefing_book_templates')
-        .select('*')
+        .select('id, name, description, sections, format_options, is_default, created_by, created_at, updated_at')
         .or(`is_default.eq.true,created_by.eq.${user.id}`)
         .order('is_default', { ascending: false })
         .order('created_at', { ascending: false });
@@ -919,7 +919,7 @@ Deno.serve(async (req: Request) => {
 
       const { data: book, error } = await supabase
         .from('briefing_books')
-        .select('*')
+        .select('id, title_en, title_ar, description_en, description_ar, entity_ids, date_range_start, date_range_end, topics, sections, format, primary_language, include_bilingual, include_table_of_contents, include_page_numbers, include_bookmarks, include_cover_page, include_executive_summary, max_sensitivity_level, header_text, footer_text, status, file_url, file_size_bytes, page_count, word_count, generated_at, expires_at, error_message, created_by, created_at, updated_at')
         .eq('id', bookId)
         .eq('created_by', user.id)
         .single();
@@ -944,7 +944,7 @@ Deno.serve(async (req: Request) => {
 
       let query = supabase
         .from('briefing_books')
-        .select('*')
+        .select('id, title_en, title_ar, description_en, description_ar, entity_ids, date_range_start, date_range_end, topics, sections, format, primary_language, include_bilingual, include_table_of_contents, include_page_numbers, include_bookmarks, include_cover_page, include_executive_summary, max_sensitivity_level, header_text, footer_text, status, file_url, file_size_bytes, page_count, word_count, generated_at, expires_at, error_message, created_by, created_at, updated_at')
         .eq('created_by', user.id)
         .order('created_at', { ascending: false })
         .limit(limit + 1);
@@ -1147,7 +1147,7 @@ Deno.serve(async (req: Request) => {
       // Get the book first to check ownership and get file path
       const { data: book, error: fetchError } = await supabase
         .from('briefing_books')
-        .select('*')
+        .select('id, file_url, created_by')
         .eq('id', bookId)
         .eq('created_by', user.id)
         .single();

@@ -287,7 +287,7 @@ async function handleGetAudit(
 
   const { data, error } = await supabase
     .from('ai_governance_audit')
-    .select('*')
+    .select('id, interaction_id, event_type, event_details, occurred_at, user_id, ip_address, user_agent')
     .eq('interaction_id', interactionId)
     .order('occurred_at', { ascending: true });
 
@@ -309,7 +309,7 @@ async function handleGetEdits(
 
   const { data, error } = await supabase
     .from('ai_user_edits')
-    .select('*')
+    .select('id, interaction_id, user_id, version_number, original_content, edited_content, change_percentage, edit_reason, edit_categories, created_at')
     .eq('interaction_id', interactionId)
     .order('version_number', { ascending: true });
 

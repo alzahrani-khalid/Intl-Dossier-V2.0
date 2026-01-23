@@ -93,7 +93,7 @@ serve(async (req) => {
     // Check dossier access via RLS
     const { data: dossierAccess } = await supabaseClient
       .from('dossier_owners')
-      .select('*')
+      .select('dossier_id, user_id')
       .eq('dossier_id', engagement.dossier_id)
       .eq('user_id', user.user.id)
       .single();
@@ -282,11 +282,21 @@ serve(async (req) => {
     const { data: completeRecord } = await supabaseClient
       .from('after_action_records')
       .select(`
-        *,
-        decisions (*),
-        aa_commitments (*),
-        aa_risks (*),
-        aa_follow_up_actions (*)
+        id,
+        engagement_id,
+        dossier_id,
+        publication_status,
+        is_confidential,
+        attendees,
+        notes,
+        created_by,
+        created_at,
+        updated_at,
+        version,
+        decisions (id, after_action_id, description, rationale, decision_maker, decision_date, created_at),
+        aa_commitments (id, after_action_id, dossier_id, description, priority, status, owner_type, owner_user_id, owner_contact_id, tracking_mode, due_date, ai_confidence, created_at, updated_at, completed_at),
+        aa_risks (id, after_action_id, description, severity, likelihood, mitigation_strategy, owner, ai_confidence, created_at),
+        aa_follow_up_actions (id, after_action_id, description, assigned_to, target_date, completed, created_at, completed_at)
       `)
       .eq('id', afterActionId)
       .single();

@@ -92,7 +92,23 @@ serve(async (req) => {
     const { data: assignment, error: assignmentError} = await supabaseClient
       .from("tasks")
       .select(`
-        *,
+        id,
+        work_item_id,
+        work_item_type,
+        assignee_id,
+        assigned_by,
+        priority,
+        status,
+        sla_deadline,
+        engagement_id,
+        escalation_recipient_id,
+        created_at,
+        updated_at,
+        completed_at,
+        completed_by,
+        required_skills,
+        work_item_title,
+        work_item_content_preview,
         engagement:engagements!left(
           id,
           title,
@@ -339,21 +355,21 @@ serve(async (req) => {
     // Fetch checklist items
     const { data: checklistItems, error: checklistError } = await supabaseClient
       .from("assignment_checklist_items")
-      .select("*")
+      .select("id, assignment_id, text, completed, completed_at, completed_by, sequence, created_at")
       .eq("assignment_id", assignmentId)
       .order("sequence", { ascending: true });
 
     // Fetch timeline events
     const { data: timelineEvents, error: timelineError } = await supabaseClient
       .from("assignment_events")
-      .select("*")
+      .select("id, assignment_id, event_type, actor_user_id, event_data, created_at")
       .eq("assignment_id", assignmentId)
       .order("created_at", { ascending: false });
 
     // Fetch observers
     const { data: observers, error: observersError } = await supabaseClient
       .from("assignment_observers")
-      .select("*")
+      .select("id, assignment_id, user_id, role, added_at, added_by")
       .eq("assignment_id", assignmentId);
 
     // Calculate checklist progress

@@ -429,7 +429,8 @@ async function fetchEntityData(
   const table = tableMap[entityType];
   if (!table) return null;
 
-  const { data, error } = await supabase.from(table).select('*').eq('id', entityId).single();
+  // Select common fields across all entity types
+  const { data, error } = await supabase.from(table).select('id, name_en, name_ar, title_en, title_ar, summary_en, summary_ar, type, created_at, updated_at').eq('id', entityId).single();
 
   if (error) {
     console.error(`Error fetching ${entityType}:`, error);
@@ -482,7 +483,7 @@ async function fetchContextData(
   if (shouldFetch('activity')) {
     let activityQuery = supabase
       .from('dossier_timeline')
-      .select('*')
+      .select('id, dossier_id, event_type, event_title_en, event_title_ar, event_description_en, event_description_ar, event_date, created_at')
       .order('event_date', { ascending: false })
       .limit(20);
 
@@ -538,7 +539,7 @@ async function fetchContextData(
   if (shouldFetch('commitments')) {
     const { data: commitments } = await supabase
       .from('commitments')
-      .select('*')
+      .select('id, dossier_id, description_en, description_ar, status, priority, deadline, created_at, updated_at')
       .eq('dossier_id', entityId)
       .order('deadline', { ascending: true })
       .limit(10);
@@ -560,7 +561,7 @@ async function fetchContextData(
   if (shouldFetch('strategic')) {
     const { data: positions } = await supabase
       .from('positions')
-      .select('*')
+      .select('id, dossier_id, title_en, title_ar, content_en, content_ar, status, created_at, updated_at')
       .eq('dossier_id', entityId)
       .eq('status', 'approved')
       .order('created_at', { ascending: false })
@@ -582,7 +583,7 @@ async function fetchContextData(
   if (shouldFetch('activity') || shouldFetch('strategic')) {
     const { data: engagements } = await supabase
       .from('engagements')
-      .select('*')
+      .select('id, dossier_id, title_en, title_ar, engagement_type, engagement_date, status, created_at, updated_at')
       .eq('dossier_id', entityId)
       .order('engagement_date', { ascending: false })
       .limit(10);

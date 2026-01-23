@@ -305,7 +305,7 @@ async function handleGenerateSuggestions(req: Request, supabase: any) {
   // Get the event details
   const { data: event, error: eventError } = await supabase
     .from('calendar_events')
-    .select('*')
+    .select('id, dossier_id, event_type, title_en, title_ar, description_en, description_ar, start_datetime, end_datetime, location_en, location_ar, room_en, room_ar, is_virtual, virtual_link, status, timezone, created_at, updated_at')
     .eq('id', params.event_id)
     .single();
 
@@ -402,7 +402,7 @@ async function handleGetSuggestions(req: Request, supabase: any) {
   const conflictId = url.searchParams.get('conflict_id');
   const eventId = url.searchParams.get('event_id');
 
-  let query = supabase.from('rescheduling_suggestions').select('*');
+  let query = supabase.from('rescheduling_suggestions').select('id, conflict_id, event_id, suggested_start, suggested_end, availability_score, priority_score, travel_feasibility_score, overall_score, reason_en, reason_ar, alternative_venue_en, alternative_venue_ar, is_accepted, accepted_by, accepted_at, created_at');
 
   if (conflictId) {
     query = query.eq('conflict_id', conflictId);
@@ -470,7 +470,7 @@ async function handleResolveConflict(req: Request, supabase: any, userId: string
   if (accepted_suggestion_id) {
     const { data: suggestion } = await supabase
       .from('rescheduling_suggestions')
-      .select('*')
+      .select('id, event_id, suggested_start, suggested_end, alternative_venue_en, alternative_venue_ar')
       .eq('id', accepted_suggestion_id)
       .single();
 
@@ -592,7 +592,7 @@ async function handleGetScenarios(req: Request, supabase: any, userId: string) {
   const url = new URL(req.url);
   const status = url.searchParams.get('status');
 
-  let query = supabase.from('what_if_scenarios').select('*').eq('created_by', userId);
+  let query = supabase.from('what_if_scenarios').select('id, created_by, name_en, name_ar, description_en, description_ar, affected_event_ids, proposed_changes, status, conflicts_before, conflicts_after, analyzed_at, impact_summary, ai_recommendation_en, ai_recommendation_ar, applied_at, created_at, updated_at').eq('created_by', userId);
 
   if (status) {
     query = query.eq('status', status);
@@ -631,7 +631,7 @@ async function handleApplyScenario(req: Request, supabase: any, userId: string) 
   // Get the scenario
   const { data: scenario, error: scenarioError } = await supabase
     .from('what_if_scenarios')
-    .select('*')
+    .select('id, proposed_changes, status, created_by')
     .eq('id', scenario_id)
     .eq('created_by', userId)
     .single();
@@ -733,7 +733,7 @@ async function handleBulkReschedule(req: Request, supabase: any, userId: string)
   // Get all events
   const { data: events, error: eventsError } = await supabase
     .from('calendar_events')
-    .select('*')
+    .select('id, start_datetime, end_datetime')
     .in('id', params.event_ids)
     .order('start_datetime', { ascending: true });
 
@@ -842,7 +842,7 @@ async function checkTravelTimeConflicts(
   // Get travel time estimate
   const { data: travelData } = await supabase
     .from('travel_logistics')
-    .select('*')
+    .select('id, from_location, to_location, estimated_travel_minutes, recommended_buffer_minutes')
     .eq('from_location', priorEvent.location_en || priorEvent.room_en)
     .eq('to_location', venue)
     .single();
