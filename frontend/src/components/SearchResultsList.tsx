@@ -23,6 +23,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Badge } from '@/components/ui/badge';
 import { ChevronRight, ChevronLeft, Network } from 'lucide-react';
+import { sanitizeHighlightedText } from '@/lib/sanitize';
 
 interface RelationshipPathSegment {
  dossier_id: string;
@@ -189,7 +190,7 @@ function ResultCard({ result, isRTL }: { result: SearchResult; isRTL: boolean })
  <div
  className="line-clamp-2 text-sm text-gray-700 dark:text-gray-300"
  dangerouslySetInnerHTML={{
- __html: isRTL ? result.snippet_ar || '' : result.snippet_en || '',
+ __html: sanitizeHighlightedText(isRTL ? result.snippet_ar || '' : result.snippet_en || ''),
  }}
  />
  )}
