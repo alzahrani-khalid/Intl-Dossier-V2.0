@@ -255,7 +255,285 @@ components:
           type: boolean
         facets:
           type: object
-          
+
+    Position:
+      type: object
+      required:
+        - id
+        - position_type_id
+        - title_en
+        - content_en
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        position_type_id:
+          type: string
+          format: uuid
+        title_en:
+          type: string
+          maxLength: 200
+        title_ar:
+          type: string
+          maxLength: 200
+        content_en:
+          type: string
+        content_ar:
+          type: string
+        rationale_en:
+          type: string
+        rationale_ar:
+          type: string
+        alignment_notes_en:
+          type: string
+        alignment_notes_ar:
+          type: string
+        status:
+          type: string
+          enum: [draft, submitted, approved, published, archived]
+        current_stage:
+          type: integer
+          minimum: 0
+        version:
+          type: integer
+          minimum: 1
+        author_id:
+          type: string
+          format: uuid
+        consistency_score:
+          type: number
+          minimum: 0
+          maximum: 1
+        thematic_category:
+          type: string
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    IntakeTicket:
+      type: object
+      required:
+        - id
+        - ticket_number
+        - request_type
+        - title
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        ticket_number:
+          type: string
+          pattern: '^TKT-\d{4}-\d{6}$'
+        request_type:
+          type: string
+          enum: [engagement, position, mou_action, foresight]
+        title:
+          type: string
+          maxLength: 200
+        title_ar:
+          type: string
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        description_ar:
+          type: string
+          maxLength: 5000
+        status:
+          type: string
+          enum: [submitted, acknowledged, assigned, in_progress, resolved, closed, cancelled]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        urgency:
+          type: string
+          enum: [low, medium, high, critical]
+        assigned_to:
+          type: string
+          format: uuid
+        assigned_unit:
+          type: string
+        dossier_id:
+          type: string
+          format: uuid
+        sla_status:
+          $ref: '#/components/schemas/SLAStatus'
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    SLAStatus:
+      type: object
+      properties:
+        acknowledgment:
+          type: object
+          properties:
+            target_minutes:
+              type: integer
+            elapsed_minutes:
+              type: integer
+            remaining_minutes:
+              type: integer
+            is_breached:
+              type: boolean
+            target_time:
+              type: string
+              format: date-time
+        resolution:
+          type: object
+          properties:
+            target_minutes:
+              type: integer
+            elapsed_minutes:
+              type: integer
+            remaining_minutes:
+              type: integer
+            is_breached:
+              type: boolean
+            target_time:
+              type: string
+              format: date-time
+
+    Assignment:
+      type: object
+      required:
+        - id
+        - title
+        - assigned_to
+        - status
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        title_ar:
+          type: string
+        description:
+          type: string
+        description_ar:
+          type: string
+        assigned_to:
+          type: string
+          format: uuid
+        assigned_by:
+          type: string
+          format: uuid
+        status:
+          type: string
+          enum: [pending, in_progress, completed, cancelled]
+        priority:
+          type: string
+          enum: [low, medium, high, urgent]
+        due_date:
+          type: string
+          format: date-time
+        dossier_id:
+          type: string
+          format: uuid
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Dossier:
+      type: object
+      required:
+        - id
+        - type
+        - name_en
+      properties:
+        id:
+          type: string
+          format: uuid
+        type:
+          type: string
+          enum: [country, organization, forum, engagement, topic, working_group, person, elected_official]
+        name_en:
+          type: string
+        name_ar:
+          type: string
+        description_en:
+          type: string
+        description_ar:
+          type: string
+        status:
+          type: string
+          enum: [active, inactive, archived]
+        metadata:
+          type: object
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    AfterAction:
+      type: object
+      required:
+        - id
+        - engagement_id
+        - title_en
+      properties:
+        id:
+          type: string
+          format: uuid
+        engagement_id:
+          type: string
+          format: uuid
+        title_en:
+          type: string
+        title_ar:
+          type: string
+        summary_en:
+          type: string
+        summary_ar:
+          type: string
+        key_outcomes:
+          type: array
+          items:
+            type: object
+            properties:
+              description_en:
+                type: string
+              description_ar:
+                type: string
+        status:
+          type: string
+          enum: [draft, submitted, approved, published]
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+
+    Pagination:
+      type: object
+      properties:
+        page:
+          type: integer
+          minimum: 1
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+        total:
+          type: integer
+        pages:
+          type: integer
+
 paths:
   /intelligence-reports:
     get:
@@ -828,6 +1106,536 @@ paths:
               schema:
                 $ref: '#/components/schemas/Error'
 
+  /positions-create:
+    post:
+      tags: [Positions]
+      summary: Create a new position
+      operationId: createPosition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - position_type_id
+                - title_en
+                - content_en
+              properties:
+                position_type_id:
+                  type: string
+                  format: uuid
+                title_en:
+                  type: string
+                  maxLength: 200
+                title_ar:
+                  type: string
+                  maxLength: 200
+                content_en:
+                  type: string
+                content_ar:
+                  type: string
+                rationale_en:
+                  type: string
+                rationale_ar:
+                  type: string
+                alignment_notes_en:
+                  type: string
+                alignment_notes_ar:
+                  type: string
+                thematic_category:
+                  type: string
+                audience_groups:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        '201':
+          description: Position created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /positions-list:
+    get:
+      tags: [Positions]
+      summary: List positions with filtering
+      operationId: listPositions
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, submitted, approved, published, archived]
+        - name: thematic_category
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: List of positions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Position'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /positions-get:
+    get:
+      tags: [Positions]
+      summary: Get position by ID
+      operationId: getPosition
+      parameters:
+        - name: position_id
+          in: query
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Position details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+        '404':
+          description: Position not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /positions-update:
+    put:
+      tags: [Positions]
+      summary: Update position
+      operationId: updatePosition
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - position_id
+              properties:
+                position_id:
+                  type: string
+                  format: uuid
+                title_en:
+                  type: string
+                title_ar:
+                  type: string
+                content_en:
+                  type: string
+                content_ar:
+                  type: string
+                rationale_en:
+                  type: string
+                rationale_ar:
+                  type: string
+      responses:
+        '200':
+          description: Position updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Position'
+        '404':
+          description: Position not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /intake-tickets-create:
+    post:
+      tags: [Intake]
+      summary: Create a new intake ticket
+      operationId: createIntakeTicket
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - request_type
+                - title
+              properties:
+                request_type:
+                  type: string
+                  enum: [engagement, position, mou_action, foresight]
+                title:
+                  type: string
+                  maxLength: 200
+                title_ar:
+                  type: string
+                  maxLength: 200
+                description:
+                  type: string
+                  maxLength: 5000
+                description_ar:
+                  type: string
+                  maxLength: 5000
+                urgency:
+                  type: string
+                  enum: [low, medium, high, critical]
+                  default: medium
+                dossier_id:
+                  type: string
+                  format: uuid
+                type_specific_fields:
+                  type: object
+                attachments:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+      responses:
+        '201':
+          description: Ticket created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/IntakeTicket'
+        '400':
+          description: Invalid request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /intake-tickets-list:
+    get:
+      tags: [Intake]
+      summary: List intake tickets
+      operationId: listIntakeTickets
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+            maximum: 100
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [submitted, acknowledged, assigned, in_progress, resolved, closed, cancelled]
+        - name: priority
+          in: query
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+        - name: request_type
+          in: query
+          schema:
+            type: string
+            enum: [engagement, position, mou_action, foresight]
+      responses:
+        '200':
+          description: List of intake tickets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/IntakeTicket'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /assignments-create:
+    post:
+      tags: [Assignments]
+      summary: Create a new assignment
+      operationId: createAssignment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - title
+                - assigned_to
+              properties:
+                title:
+                  type: string
+                title_ar:
+                  type: string
+                description:
+                  type: string
+                description_ar:
+                  type: string
+                assigned_to:
+                  type: string
+                  format: uuid
+                priority:
+                  type: string
+                  enum: [low, medium, high, urgent]
+                due_date:
+                  type: string
+                  format: date-time
+                dossier_id:
+                  type: string
+                  format: uuid
+      responses:
+        '201':
+          description: Assignment created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Assignment'
+
+  /assignments-list:
+    get:
+      tags: [Assignments]
+      summary: List assignments
+      operationId: listAssignments
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [pending, in_progress, completed, cancelled]
+        - name: assigned_to
+          in: query
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: List of assignments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Assignment'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /dossiers-create:
+    post:
+      tags: [Dossiers]
+      summary: Create a new dossier
+      operationId: createDossier
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - type
+                - name_en
+              properties:
+                type:
+                  type: string
+                  enum: [country, organization, forum, engagement, topic, working_group, person, elected_official]
+                name_en:
+                  type: string
+                name_ar:
+                  type: string
+                description_en:
+                  type: string
+                description_ar:
+                  type: string
+                metadata:
+                  type: object
+      responses:
+        '201':
+          description: Dossier created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Dossier'
+
+  /dossiers-list:
+    get:
+      tags: [Dossiers]
+      summary: List dossiers
+      operationId: listDossiers
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: type
+          in: query
+          schema:
+            type: string
+            enum: [country, organization, forum, engagement, topic, working_group, person, elected_official]
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [active, inactive, archived]
+      responses:
+        '200':
+          description: List of dossiers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Dossier'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
+  /after-actions-create:
+    post:
+      tags: [After Actions]
+      summary: Create after-action record
+      operationId: createAfterAction
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - engagement_id
+                - title_en
+              properties:
+                engagement_id:
+                  type: string
+                  format: uuid
+                title_en:
+                  type: string
+                title_ar:
+                  type: string
+                summary_en:
+                  type: string
+                summary_ar:
+                  type: string
+                key_outcomes:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      description_en:
+                        type: string
+                      description_ar:
+                        type: string
+      responses:
+        '201':
+          description: After-action created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AfterAction'
+
+  /after-actions-list:
+    get:
+      tags: [After Actions]
+      summary: List after-action records
+      operationId: listAfterActions
+      parameters:
+        - name: page
+          in: query
+          schema:
+            type: integer
+            default: 1
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+        - name: engagement_id
+          in: query
+          schema:
+            type: string
+            format: uuid
+        - name: status
+          in: query
+          schema:
+            type: string
+            enum: [draft, submitted, approved, published]
+      responses:
+        '200':
+          description: List of after-action records
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AfterAction'
+                  pagination:
+                    $ref: '#/components/schemas/Pagination'
+
 tags:
   - name: Intelligence Reports
     description: Manage intelligence reports and analysis
@@ -835,3 +1643,13 @@ tags:
     description: Configure and monitor rate limiting policies
   - name: Reporting
     description: Generate and schedule reports
+  - name: Positions
+    description: Manage bilateral policy positions with versioning and approval workflows
+  - name: Intake
+    description: Service request management with SLA tracking
+  - name: Assignments
+    description: Task assignment and tracking
+  - name: Dossiers
+    description: Dossier management for countries, organizations, forums, and other entities
+  - name: After Actions
+    description: After-action records and commitment tracking
