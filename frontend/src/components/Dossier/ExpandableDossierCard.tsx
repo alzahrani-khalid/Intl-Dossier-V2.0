@@ -12,7 +12,7 @@
  * - Outside click to close
  */
 
-import { useEffect, useId, useRef } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Badge } from '@/components/ui/badge';
@@ -78,9 +78,10 @@ function getTypeIcon(type: DossierType, className?: string) {
  * CountryFlag Component
  */
 function CountryFlag({ countryName, className }: { countryName: string | null | undefined; className?: string }) {
+  const [imageError, setImageError] = useState(false);
   const countryCode = getCountryCode(countryName);
 
-  if (!countryCode) {
+  if (!countryCode || imageError) {
     return (
       <div className={cn("rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg", className)}>
         <Globe className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
@@ -96,17 +97,7 @@ function CountryFlag({ countryName, className }: { countryName: string | null | 
         src={flagPath}
         alt={countryName || 'Country flag'}
         className="w-full h-full object-cover"
-        onError={(e) => {
-          const target = e.target as HTMLImageElement;
-          target.style.display = 'none';
-          const parent = target.parentElement;
-          if (parent) {
-            parent.className = cn("rounded-full border-2 border-white/30 bg-white/20 backdrop-blur-sm flex items-center justify-center shadow-lg", className);
-            const icon = document.createElement('div');
-            icon.innerHTML = '<svg class="h-5 w-5 sm:h-6 sm:w-6 text-white" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>';
-            parent.appendChild(icon);
-          }
-        }}
+        onError={() => setImageError(true)}
       />
     </div>
   );
