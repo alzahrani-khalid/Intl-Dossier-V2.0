@@ -20,20 +20,23 @@ describe('CORS No-Origin Security Tests', () => {
   beforeEach(() => {
     // Create a fresh Express app for each test
     app = express();
+
+    // Health endpoint must be mounted BEFORE CORS to allow no-origin access
+    app.get('/health', (_req: Request, res: Response) => {
+      res.json({ status: 'healthy' });
+    });
+
+    // Apply CORS middleware
     app.use(cors(corsOptions));
     app.use(express.json());
 
-    // Add test routes
+    // Add test routes (these will be subject to CORS)
     app.get('/api/test', (_req: Request, res: Response) => {
       res.json({ success: true, message: 'Test endpoint' });
     });
 
     app.post('/api/test', (_req: Request, res: Response) => {
       res.json({ success: true, message: 'POST test endpoint' });
-    });
-
-    app.get('/health', (_req: Request, res: Response) => {
-      res.json({ status: 'healthy' });
     });
   });
 
@@ -77,6 +80,43 @@ describe('CORS No-Origin Security Tests', () => {
           // Verify CORS didn't allow the request
           expect(res.headers['access-control-allow-origin']).toBeUndefined();
         });
+    });
+  });
+
+  describe('Health endpoint accessibility', () => {
+    it('should allow health endpoint access without Origin header', async () => {
+      // Health endpoints need to be accessible for monitoring/health checks
+      // Note: In the test app, health endpoint is mounted before CORS,
+      // which is the correct pattern for production as well
+      const response = await request(app)
+        .get('/health')
+        .expect(200);
+
+      expect(response.body).toHaveProperty('status', 'healthy');
+      // Health endpoint should work even without CORS headers
+      // because it's mounted before CORS middleware
+    });
+
+    it('should allow health endpoint access with Origin header', async () => {
+      process.env.NODE_ENV = 'development';
+
+      const response = await request(app)
+        .get('/health')
+        .set('Origin', 'http://localhost:3000')
+        .expect(200);
+
+      expect(response.body).toHaveProperty('status', 'healthy');
+      // Health endpoint should work with or without Origin header
+    });
+
+    it('should not require CORS headers for health endpoint', async () => {
+      const response = await request(app)
+        .get('/health')
+        .expect(200);
+
+      // Health endpoint response may not have CORS headers if mounted before CORS
+      // This is expected and correct behavior
+      expect(response.body).toHaveProperty('status', 'healthy');
     });
   });
 

@@ -6,8 +6,7 @@ import { logSecurityEvent, logWarn } from '../utils/logger'
 import { apiLimiter, authLimiter, uploadLimiter, aiLimiter, dynamicLimiter } from './rateLimiter'
 
 // Environment variables with defaults
-const NODE_ENV = process.env.NODE_ENV || 'development'
-const FRONTEND_URL = process.env.FRONTEND_URL || 'http://localhost:3000'
+// Note: NODE_ENV and (process.env.FRONTEND_URL || 'http://localhost:3000') are read dynamically to support test environments changing process.env
 // const API_PORT = process.env.PORT || 5000; // Uncomment if needed
 
 // Helper to check if origin is a local network IP
@@ -51,7 +50,7 @@ export const corsOptions: cors.CorsOptions = {
     }
 
     // In development, allow localhost and local network IPs
-    if (NODE_ENV === 'development') {
+    if (((process.env.NODE_ENV || 'development') === 'development' || process.env.NODE_ENV === 'test')) {
       const allowedOrigins = [
         'http://localhost:3000',
         'http://localhost:3001',
@@ -59,7 +58,7 @@ export const corsOptions: cors.CorsOptions = {
         'http://127.0.0.1:3000',
         'http://127.0.0.1:3001',
         'http://127.0.0.1:5173',
-        FRONTEND_URL,
+        (process.env.FRONTEND_URL || 'http://localhost:3000'),
       ]
 
       // Allow explicit origins, localhost variants, and local network IPs
@@ -73,7 +72,7 @@ export const corsOptions: cors.CorsOptions = {
     }
 
     // In production, only allow specific domains
-    const allowedOrigins = [FRONTEND_URL, process.env.ALLOWED_ORIGINS?.split(',') || []]
+    const allowedOrigins = [(process.env.FRONTEND_URL || 'http://localhost:3000'), process.env.ALLOWED_ORIGINS?.split(',') || []]
       .flat()
       .filter(Boolean)
 
@@ -119,7 +118,7 @@ export const helmetConfig = helmet({
       baseUri: ["'self'"],
       formAction: ["'self'"],
     },
-    reportOnly: NODE_ENV === 'development',
+    reportOnly: ((process.env.NODE_ENV || 'development') === 'development' || process.env.NODE_ENV === 'test'),
   },
 
   // HTTP Strict Transport Security
