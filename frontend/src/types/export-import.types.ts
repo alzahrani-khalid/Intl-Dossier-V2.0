@@ -11,10 +11,14 @@ import type { BulkActionEntityType, ExportFormat } from './bulk-actions.types'
 /**
  * Supported export entity types
  */
-export type ExportableEntityType = Extract<
-  BulkActionEntityType,
-  'dossier' | 'person' | 'engagement' | 'working-group' | 'commitment' | 'deliverable'
->
+export type ExportableEntityType =
+  | Extract<
+      BulkActionEntityType,
+      'dossier' | 'person' | 'engagement' | 'working-group' | 'commitment' | 'deliverable'
+    >
+  | 'audit_log'
+  | 'intake_ticket'
+  | 'calendar_event'
 
 /**
  * Import operation mode
