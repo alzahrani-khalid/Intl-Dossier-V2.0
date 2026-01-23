@@ -2,17 +2,70 @@
  * Hooks - Public API
  *
  * This module exports all custom React hooks used throughout the application.
- * Hooks are organized alphabetically for easy discovery and maintenance.
+ * Hooks are organized into 40+ categories for easy discovery and maintenance.
  *
- * Import from this module:
+ * @example Basic Hook Import
+ * ```typescript
+ * import { useAuth, useDossier, useToast } from '@/hooks'
+ *
+ * function MyComponent() {
+ *   const { user } = useAuth()
+ *   const { data: dossier } = useDossier(dossierId)
+ *   const { toast } = useToast()
+ *   // ...
+ * }
+ * ```
+ *
+ * @example Type Import (for exported types from hooks)
  * ```typescript
  * import {
  *   useAuth,
- *   useDossier,
- *   useToast,
- *   type DossierPresenceUser
+ *   type DossierPresenceUser,
+ *   type WorkItem
  * } from '@/hooks'
  * ```
+ *
+ * @example Category-Specific Imports
+ * ```typescript
+ * // Dossier operations
+ * import { useDossier, useCreateDossier, useArchiveDossier } from '@/hooks'
+ *
+ * // Calendar & Events
+ * import { useCalendar, useCreateCalendarEvent, useRecurringEvents } from '@/hooks'
+ *
+ * // AI & Intelligence
+ * import { useAIChat, useSemanticSearch, useContextualSuggestions } from '@/hooks'
+ * ```
+ *
+ * @migration Migration from Direct Imports
+ * If you're currently importing hooks directly from their files:
+ *
+ * ```typescript
+ * // ❌ Old: Direct import (deprecated)
+ * import { useAuth } from '@/hooks/useAuth'
+ * import { useDossier } from '@/hooks/useDossier'
+ * import { useToast } from '@/hooks/use-toast'
+ *
+ * // ✅ New: Import from barrel export
+ * import { useAuth, useDossier, useToast } from '@/hooks'
+ * ```
+ *
+ * Benefits of barrel exports:
+ * - Cleaner imports (single import statement)
+ * - Easier refactoring (import paths don't change if hook file moves)
+ * - Better tree-shaking with modern bundlers
+ * - Centralized public API surface
+ *
+ * @note Hook Categories
+ * This module organizes hooks into 40+ categories including:
+ * - Access & Security, After Action, AI & Intelligence
+ * - Calendar & Events, Collaboration, Commitments
+ * - Documents, Dossiers, Engagements
+ * - Forms, Health & Monitoring, Kanban
+ * - Navigation, Notifications, Relationships
+ * - Search, Tasks, Timeline, Workflows, and more
+ *
+ * Browse the categories below to discover available hooks.
  */
 
 // ============================================================================
