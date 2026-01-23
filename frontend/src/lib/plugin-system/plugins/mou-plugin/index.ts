@@ -510,6 +510,188 @@ export const mouPlugin: EntityPlugin<MouExtension> = createPlugin<MouExtension>(
   },
 
   // ============================================================================
+  // UI Configuration
+  // ============================================================================
+  ui: {
+    formSections: [
+      {
+        id: 'basic',
+        title: { en: 'Basic Information', ar: 'المعلومات الأساسية' },
+        order: 0,
+        fields: ['name_en', 'name_ar', 'reference_number', 'workflow_state'],
+      },
+      {
+        id: 'parties',
+        title: { en: 'Parties', ar: 'الأطراف' },
+        order: 1,
+        fields: ['primary_party_id', 'secondary_party_id'],
+      },
+      {
+        id: 'timeline',
+        title: { en: 'Dates & Timeline', ar: 'التواريخ والجدول الزمني' },
+        order: 2,
+        fields: [
+          'signing_date',
+          'effective_date',
+          'expiry_date',
+          'auto_renewal',
+          'renewal_period_months',
+        ],
+        collapsible: true,
+      },
+      {
+        id: 'document',
+        title: { en: 'Document', ar: 'الوثيقة' },
+        order: 3,
+        fields: ['document_url', 'document_version'],
+        collapsible: true,
+      },
+      {
+        id: 'management',
+        title: { en: 'Management', ar: 'الإدارة' },
+        order: 4,
+        fields: ['owner_id', 'sensitivity_level', 'tags'],
+        collapsible: true,
+      },
+      {
+        id: 'details',
+        title: { en: 'Details', ar: 'التفاصيل' },
+        order: 5,
+        fields: ['description_en', 'description_ar'],
+        collapsible: true,
+      },
+    ],
+
+    contextActions: [
+      {
+        id: 'submit_review',
+        label: { en: 'Submit for Review', ar: 'تقديم للمراجعة' },
+        icon: 'Send',
+        action: async (entity) => {
+          console.log('Submitting MoU for review:', entity.id)
+        },
+        isVisible: (entity) => entity.workflow_state === 'draft',
+      },
+      {
+        id: 'approve',
+        label: { en: 'Approve', ar: 'الموافقة' },
+        icon: 'CheckCircle',
+        action: async (entity) => {
+          console.log('Approving MoU:', entity.id)
+        },
+        isVisible: (entity) =>
+          entity.workflow_state === 'internal_review' || entity.workflow_state === 'external_review',
+      },
+      {
+        id: 'sign',
+        label: { en: 'Mark as Signed', ar: 'وضع علامة موقع' },
+        icon: 'FileSignature',
+        action: async (entity) => {
+          console.log('Marking MoU as signed:', entity.id)
+        },
+        isVisible: (entity) => entity.workflow_state === 'negotiation',
+        isDisabled: (entity) => !entity.signing_date,
+      },
+      {
+        id: 'activate',
+        label: { en: 'Activate', ar: 'تفعيل' },
+        icon: 'Play',
+        action: async (entity) => {
+          console.log('Activating MoU:', entity.id)
+        },
+        isVisible: (entity) => entity.workflow_state === 'signed',
+        isDisabled: (entity) => !entity.effective_date,
+      },
+      {
+        id: 'renew',
+        label: { en: 'Renew', ar: 'تجديد' },
+        icon: 'RefreshCw',
+        action: async (entity) => {
+          console.log('Renewing MoU:', entity.id)
+        },
+        isVisible: (entity) => entity.workflow_state === 'active' || entity.workflow_state === 'expired',
+      },
+      {
+        id: 'archive',
+        label: { en: 'Archive', ar: 'أرشفة' },
+        icon: 'Archive',
+        action: async (entity) => {
+          console.log('Archiving MoU:', entity.id)
+        },
+        isVisible: (entity) => entity.workflow_state === 'expired',
+      },
+    ],
+
+    badges: [
+      {
+        id: 'workflow_state',
+        position: 'top-end',
+        render: (entity) => {
+          const stateColors: Record<MouWorkflowState, string> = {
+            draft: 'bg-gray-100 text-gray-800',
+            internal_review: 'bg-blue-100 text-blue-800',
+            external_review: 'bg-purple-100 text-purple-800',
+            negotiation: 'bg-yellow-100 text-yellow-800',
+            signed: 'bg-green-100 text-green-800',
+            active: 'bg-emerald-100 text-emerald-800',
+            renewed: 'bg-teal-100 text-teal-800',
+            expired: 'bg-red-100 text-red-800',
+          }
+
+          const stateLabel = MOU_WORKFLOW_STATE_LABELS[entity.workflow_state as MouWorkflowState]
+          const colorClass = stateColors[entity.workflow_state as MouWorkflowState]
+
+          return createElement(
+            'span',
+            { className: `px-2 py-1 text-xs rounded ${colorClass}` },
+            stateLabel?.en || entity.workflow_state,
+          )
+        },
+      },
+      {
+        id: 'expiry_warning',
+        position: 'bottom-start',
+        render: (entity) => {
+          if (!entity.expiry_date || entity.workflow_state === 'expired') {
+            return null
+          }
+
+          const expiryDate = new Date(entity.expiry_date)
+          const today = new Date()
+          const daysUntilExpiry = Math.floor(
+            (expiryDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
+          )
+
+          // Show warning if expiring within 30 days
+          if (daysUntilExpiry >= 0 && daysUntilExpiry <= 30) {
+            return createElement(
+              'span',
+              { className: 'px-2 py-1 text-xs bg-orange-100 text-orange-800 rounded' },
+              `Expires in ${daysUntilExpiry} days`,
+            )
+          }
+
+          return null
+        },
+      },
+      {
+        id: 'auto_renewal',
+        position: 'bottom-end',
+        render: (entity) => {
+          if (entity.auto_renewal) {
+            return createElement(
+              'span',
+              { className: 'px-2 py-1 text-xs bg-indigo-100 text-indigo-800 rounded' },
+              'Auto-Renew',
+            )
+          }
+          return null
+        },
+      },
+    ],
+  },
+
+  // ============================================================================
   // Data Hooks
   // ============================================================================
   data: {
