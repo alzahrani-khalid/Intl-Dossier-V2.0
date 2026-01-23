@@ -93,6 +93,7 @@ expo-updates/
 *.cert
 credentials.json
 service-account.json
+.gitleaks-report.json
 
 # OCR temporary files
 ocr-temp/
