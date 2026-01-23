@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from 'react'
+import { useTranslation } from 'react-i18next'
 import { Bell, X, AlertCircle, Info, CheckCircle, XCircle, Clock } from 'lucide-react'
 import { formatDistanceToNow } from 'date-fns'
 import { toast, Toaster } from 'react-hot-toast'
@@ -32,6 +33,8 @@ export function NotificationCenter({
   autoMarkAsRead = true,
   showToast = true,
 }: NotificationCenterProps) {
+  const { t, i18n } = useTranslation()
+  const isRTL = i18n.language === 'ar'
   const { user } = useAuthStore()
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [isOpen, setIsOpen] = useState(false)
