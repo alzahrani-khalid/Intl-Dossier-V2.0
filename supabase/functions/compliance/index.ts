@@ -308,7 +308,7 @@ async function handleCreateRule(
       created_by: userId,
       is_active: true,
     })
-    .select()
+    .select('id, rule_code, rule_type, severity, title_en, title_ar, description_en, description_ar, validation_logic, applies_to_entity_types, is_active, enforcement_level, created_by, created_at, updated_at')
     .single();
 
   if (error) {
@@ -337,7 +337,7 @@ async function handleUpdateRule(
       updated_at: new Date().toISOString(),
     })
     .eq('id', ruleId)
-    .select()
+    .select('id, rule_code, rule_type, severity, title_en, title_ar, description_en, description_ar, validation_logic, applies_to_entity_types, is_active, enforcement_level, created_by, created_at, updated_at')
     .single();
 
   if (error) {
@@ -362,7 +362,7 @@ async function handleDeleteRule(supabaseClient: ReturnType<typeof createClient>,
       updated_at: new Date().toISOString(),
     })
     .eq('id', ruleId)
-    .select()
+    .select('id, rule_code, rule_type, severity, title_en, title_ar, description_en, description_ar, is_active, created_at, updated_at')
     .single();
 
   if (error) {
@@ -648,7 +648,7 @@ async function handleCreateExemption(
       granted_by: userId,
       is_active: true,
     })
-    .select()
+    .select('id, rule_id, entity_type, entity_id, exemption_reason, granted_by, expires_at, is_active, created_at, updated_at')
     .single();
 
   if (error) {

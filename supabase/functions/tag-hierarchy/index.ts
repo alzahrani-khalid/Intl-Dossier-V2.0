@@ -350,7 +350,7 @@ async function handlePost(
           sort_order: tagData.sort_order || 0,
           created_by: userId,
         })
-        .select()
+        .select('id, parent_id, name_en, name_ar, color, icon, description_en, description_ar, sort_order, created_by, created_at, updated_at')
         .single();
 
       if (error) throw error;
@@ -370,7 +370,7 @@ async function handlePost(
           synonym_ar: synonymData.synonym_ar,
           created_by: userId,
         })
-        .select()
+        .select('id, tag_id, synonym_en, synonym_ar, created_by, created_at, updated_at')
         .single();
 
       if (error) throw error;
@@ -393,7 +393,7 @@ async function handlePost(
           auto_assignment_source: assignData.auto_assignment_source,
           assigned_by: userId,
         })
-        .select()
+        .select('id, entity_type, entity_id, tag_id, confidence_score, is_auto_assigned, auto_assignment_source, assigned_by, created_at, updated_at')
         .single();
 
       if (error) throw error;
@@ -509,7 +509,7 @@ async function handlePut(
     .from('tag_categories')
     .update(updateData)
     .eq('id', tagId)
-    .select()
+    .select('id, parent_id, name_en, name_ar, color, icon, description_en, description_ar, sort_order, created_at, updated_at')
     .single();
 
   if (error) throw error;
