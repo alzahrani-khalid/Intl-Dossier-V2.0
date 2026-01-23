@@ -32,6 +32,21 @@ Authorization: Bearer <token>
 5. [Accessibility](./accessibility.md) - User accessibility preferences
 6. [Security & Audit](./security.md) - Audit logging and security features
 7. [Unified Work Management](./unified-work-management.md) - Consolidated work items (commitments, tasks, intake)
+8. [Edge Functions Reference](./edge-functions-reference.md) - Comprehensive reference for all 285 Edge Functions
+   - [Positions](./categories/positions.md) - Position paper management (23 endpoints)
+   - [Intake](./categories/intake.md) - Service request processing (19 endpoints)
+   - [Assignments](./categories/assignments.md) - Work assignment management (18 endpoints)
+   - [Dossiers](./categories/dossiers.md) - Dossier lifecycle management (29 endpoints)
+   - [After Actions](./categories/after-actions.md) - After-action records and commitments (9 endpoints)
+   - [Engagements](./categories/engagements.md) - Diplomatic engagement tracking (15 endpoints)
+   - [Documents](./categories/documents.md) - Document management and versioning (12 endpoints)
+   - [Search](./categories/search.md) - Full-text and vector search (10 endpoints)
+   - [Calendar](./categories/calendar.md) - Event and meeting scheduling (8 endpoints)
+   - [Attachments](./categories/attachments.md) - File upload and storage (5 endpoints)
+   - [AI Services](./categories/ai-services.md) - AI-powered analysis and extraction (13 endpoints)
+   - [Workflow](./categories/workflow.md) - Workflow automation (7 endpoints)
+   - [Notifications](./categories/notifications.md) - Real-time notifications (10 endpoints)
+   - [Intelligence](./categories/intelligence.md) - Intelligence signal processing (5 endpoints)
 
 ## Common Response Codes
 
