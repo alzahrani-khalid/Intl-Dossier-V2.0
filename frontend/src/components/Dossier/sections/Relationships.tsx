@@ -29,7 +29,8 @@ import {
 } from 'lucide-react'
 import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useMemo, useState, memo, useCallback } from 'react'
-import ReactFlow, {
+import {
+  ReactFlow,
   Node,
   Edge,
   Background,

@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import ReactFlow, {
+import {
+  ReactFlow,
   Background,
   Node,
   Edge,

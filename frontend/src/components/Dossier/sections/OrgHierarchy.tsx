@@ -10,7 +10,8 @@ import { useTranslation } from 'react-i18next';
 import { Network, Building2 } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useMemo, memo } from 'react';
-import ReactFlow, {
+import {
+  ReactFlow,
   Node,
   Edge,
   Background,

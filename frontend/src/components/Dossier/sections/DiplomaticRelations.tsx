@@ -15,7 +15,8 @@ import { IntelligenceInsight } from '@/components/intelligence/IntelligenceInsig
 import { useIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useMemo, useCallback, memo } from 'react';
-import ReactFlow, {
+import {
+  ReactFlow,
   Node,
   Edge,
   Background,

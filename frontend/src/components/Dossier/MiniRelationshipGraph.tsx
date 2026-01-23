@@ -14,7 +14,8 @@
 import { useState, useCallback, useMemo, memo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Link, useNavigate } from '@tanstack/react-router'
-import ReactFlow, {
+import {
+  ReactFlow,
   Node,
   Edge,
   Background,

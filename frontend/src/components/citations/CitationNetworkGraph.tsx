@@ -9,7 +9,8 @@
 
 import { useMemo, memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import ReactFlow, {
+import {
+  ReactFlow,
   Node,
   Edge,
   Background,
