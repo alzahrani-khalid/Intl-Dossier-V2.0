@@ -1,271 +1,294 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '@/lib/supabase';
+/**
+ * TanStack Query Hooks for After-Action Operations
+ * Feature: 022-after-action-structured
+ *
+ * Custom hooks for managing after-action data with caching, optimistic updates, and error handling.
+ */
 
-// Types based on API spec
-export interface Decision {
-  id: string;
-  after_action_id: string;
-  description: string;
-  rationale?: string | null;
-  decision_maker: string;
-  decision_date: string;
-  created_at: string;
-}
+import { useMutation, useQuery, useQueryClient, type UseQueryOptions } from '@tanstack/react-query';
+import type {
+  AfterActionRecord,
+  AfterActionCreateInput,
+  AfterActionUpdateInput,
+  EditRequestInput,
+  EditApprovalInput,
+} from '../../../backend/src/types/after-action.types';
+import afterActionAPI, {
+  type AfterActionListFilters,
+  type AfterActionListResponse,
+  type PublishResponse,
+  AfterActionAPIError,
+} from '../services/after-action-api';
 
-export interface CreateDecision {
-  description: string;
-  rationale?: string;
-  decision_maker: string;
-  decision_date: string;
-}
+/**
+ * Query Keys
+ */
+export const afterActionKeys = {
+  all: ['after-actions'] as const,
+  lists: () => [...afterActionKeys.all, 'list'] as const,
+  list: (filters: AfterActionListFilters) => [...afterActionKeys.lists(), filters] as const,
+  details: () => [...afterActionKeys.all, 'detail'] as const,
+  detail: (id: string) => [...afterActionKeys.details(), id] as const,
+};
 
-export interface Commitment {
-  id: string;
-  after_action_id: string;
-  dossier_id: string;
-  description: string;
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  status: 'pending' | 'in_progress' | 'completed' | 'cancelled' | 'overdue';
-  owner_type: 'internal' | 'external';
-  owner_user_id?: string | null;
-  owner_contact_id?: string | null;
-  tracking_mode: 'automatic' | 'manual';
-  due_date: string;
-  completed_at?: string | null;
-  ai_confidence?: number | null;
-}
-
-export interface CreateCommitment {
-  description: string;
-  priority: 'low' | 'medium' | 'high' | 'critical';
-  owner_type: 'internal' | 'external';
-  owner_user_id?: string;
-  owner_contact_email?: string;
-  owner_contact_name?: string;
-  due_date: string;
-  ai_confidence?: number;
-}
-
-export interface Risk {
-  id: string;
-  after_action_id: string;
-  description: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  likelihood: 'unlikely' | 'possible' | 'likely' | 'certain';
-  mitigation_strategy?: string | null;
-  owner?: string | null;
-  ai_confidence?: number | null;
-}
-
-export interface CreateRisk {
-  description: string;
-  severity: 'low' | 'medium' | 'high' | 'critical';
-  likelihood: 'unlikely' | 'possible' | 'likely' | 'certain';
-  mitigation_strategy?: string;
-  owner?: string;
-  ai_confidence?: number;
-}
-
-export interface FollowUpAction {
-  id: string;
-  after_action_id: string;
-  description: string;
-  assigned_to?: string | null;
-  target_date?: string | null;
-  completed: boolean;
-}
-
-export interface CreateFollowUpAction {
-  description: string;
-  assigned_to?: string;
-  target_date?: string;
-}
-
-export interface AfterActionRecord {
-  id: string;
-  engagement_id: string;
-  dossier_id: string;
-  publication_status: 'draft' | 'published' | 'edit_requested' | 'edit_approved' | 'edit_rejected';
-  is_confidential: boolean;
-  attendees?: string[];
-  notes?: string | null;
-  decisions?: Decision[];
-  commitments?: Commitment[];
-  risks?: Risk[];
-  follow_up_actions?: FollowUpAction[];
-  created_by: string;
-  created_at: string;
-  updated_by?: string | null;
-  updated_at: string;
-  published_by?: string | null;
-  published_at?: string | null;
-  version: number;
-}
-
-export interface CreateAfterActionRequest {
-  engagement_id: string;
-  is_confidential: boolean;
-  attendees?: string[];
-  notes?: string;
-  decisions?: CreateDecision[];
-  commitments?: CreateCommitment[];
-  risks?: CreateRisk[];
-  follow_up_actions?: CreateFollowUpAction[];
-}
-
-export interface UpdateAfterActionRequest extends CreateAfterActionRequest {
-  version: number;
-}
-
-export interface AfterActionVersion {
-  id: string;
-  after_action_id: string;
-  version_number: number;
-  publication_status: 'draft' | 'published' | 'edit_requested' | 'edit_approved' | 'edit_rejected';
-  is_confidential: boolean;
-  attendees?: string[];
-  notes?: string | null;
-  decisions?: Decision[];
-  commitments?: Commitment[];
-  risks?: Risk[];
-  follow_up_actions?: FollowUpAction[];
-  created_by: string;
-  created_at: string;
-  superseded: boolean;
-}
-
-// Fetch single after-action by ID
-export function useAfterAction(id: string | undefined) {
-  return useQuery({
-    queryKey: ['after-action', id],
-    queryFn: async () => {
-      if (!id) throw new Error('After-action ID is required');
-
-      const { data, error } = await supabase.functions.invoke('after-actions-get', {
-        body: { id },
-      });
-
-      if (error) throw error;
-      return data as AfterActionRecord;
-    },
-    enabled: !!id,
-  });
-}
-
-// Fetch after-actions list for a dossier
-export function useAfterActions(
-  dossierId: string | undefined,
-  options?: {
-    status?: 'draft' | 'published' | 'edit_requested';
-    limit?: number;
-    offset?: number;
-  }
+/**
+ * Hook: List after-actions for a dossier
+ */
+export function useAfterActionList(
+  filters: AfterActionListFilters,
+  options?: Omit<UseQueryOptions<AfterActionListResponse, AfterActionAPIError>, 'queryKey' | 'queryFn'>
 ) {
   return useQuery({
-    queryKey: ['after-actions', dossierId, options],
-    queryFn: async () => {
-      if (!dossierId) throw new Error('Dossier ID is required');
-
-      const { data, error } = await supabase.functions.invoke('after-actions-list', {
-        body: { dossier_id: dossierId, ...options },
-      });
-
-      if (error) throw error;
-      return data as { data: AfterActionRecord[]; total: number };
-    },
-    enabled: !!dossierId,
+    queryKey: afterActionKeys.list(filters),
+    queryFn: () => afterActionAPI.list(filters),
+    staleTime: 30000, // 30 seconds
+    ...options,
   });
 }
 
-// Create after-action mutation
+/**
+ * Hook: Get single after-action details
+ */
+export function useAfterActionDetail(
+  id: string,
+  includeAttachments = true,
+  includeVersionHistory = false,
+  options?: Omit<UseQueryOptions<AfterActionRecord, AfterActionAPIError>, 'queryKey' | 'queryFn'>
+) {
+  return useQuery({
+    queryKey: afterActionKeys.detail(id),
+    queryFn: () => afterActionAPI.get(id, includeAttachments, includeVersionHistory),
+    staleTime: 60000, // 1 minute
+    ...options,
+  });
+}
+
+/**
+ * Hook: Create after-action record
+ */
 export function useCreateAfterAction() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (request: CreateAfterActionRequest) => {
-      const { data, error } = await supabase.functions.invoke('after-actions-create', {
-        body: request,
+    mutationFn: (data: AfterActionCreateInput) => afterActionAPI.create(data),
+    onSuccess: (newRecord) => {
+      // Invalidate list queries for the dossier
+      queryClient.invalidateQueries({
+        queryKey: afterActionKeys.lists(),
+        predicate: (query) => {
+          const filters = query.queryKey[2] as AfterActionListFilters;
+          return filters?.dossier_id === newRecord.dossier_id;
+        },
       });
 
-      if (error) throw error;
-      return data as AfterActionRecord;
+      // Add to cache
+      queryClient.setQueryData(afterActionKeys.detail(newRecord.id!), newRecord);
     },
-    onSuccess: (data) => {
-      // Invalidate after-actions list for the dossier
-      queryClient.invalidateQueries({ queryKey: ['after-actions', data.dossier_id] });
-      // Set the single after-action in cache
-      queryClient.setQueryData(['after-action', data.id], data);
+    onError: (error: AfterActionAPIError) => {
+      console.error('Failed to create after-action:', error.message, error.details);
     },
   });
 }
 
-// Update after-action mutation with optimistic locking
-export function useUpdateAfterAction(id: string) {
+/**
+ * Hook: Update after-action draft
+ */
+export function useUpdateAfterAction() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (request: UpdateAfterActionRequest) => {
-      const { data, error } = await supabase.functions.invoke('after-actions-update', {
-        body: { id, ...request },
-      });
-
-      if (error) {
-        // Check for version conflict
-        if (error.message?.includes('version') || error.message?.includes('conflict')) {
-          throw new Error('Record was modified by another user. Please refresh.');
-        }
-        throw error;
-      }
-      return data as AfterActionRecord;
-    },
-    onMutate: async (newData) => {
+    mutationFn: ({ id, data }: { id: string; data: AfterActionUpdateInput }) =>
+      afterActionAPI.update(id, data),
+    onMutate: async ({ id, data }) => {
       // Cancel outgoing refetches
-      await queryClient.cancelQueries({ queryKey: ['after-action', id] });
+      await queryClient.cancelQueries({ queryKey: afterActionKeys.detail(id) });
 
       // Snapshot previous value
-      const previousAfterAction = queryClient.getQueryData<AfterActionRecord>(['after-action', id]);
+      const previousRecord = queryClient.getQueryData<AfterActionRecord>(
+        afterActionKeys.detail(id)
+      );
 
       // Optimistically update
-      if (previousAfterAction) {
-        queryClient.setQueryData(['after-action', id], {
-          ...previousAfterAction,
-          ...newData,
-          version: newData.version + 1,
+      if (previousRecord) {
+        queryClient.setQueryData<AfterActionRecord>(afterActionKeys.detail(id), {
+          ...previousRecord,
+          ...data,
+          _version: previousRecord._version + 1,
           updated_at: new Date().toISOString(),
         });
       }
 
-      return { previousAfterAction };
+      return { previousRecord };
     },
-    onError: (_err, _newData, context) => {
+    onError: (error, { id }, context) => {
       // Rollback on error
-      if (context?.previousAfterAction) {
-        queryClient.setQueryData(['after-action', id], context.previousAfterAction);
+      if (context?.previousRecord) {
+        queryClient.setQueryData(afterActionKeys.detail(id), context.previousRecord);
       }
+      console.error('Failed to update after-action:', error.message);
     },
-    onSuccess: (data) => {
-      // Update cache with server data
-      queryClient.setQueryData(['after-action', id], data);
-      // Invalidate list
-      queryClient.invalidateQueries({ queryKey: ['after-actions', data.dossier_id] });
+    onSuccess: (updatedRecord) => {
+      // Update cache with server response
+      queryClient.setQueryData(afterActionKeys.detail(updatedRecord.id!), updatedRecord);
+
+      // Invalidate list queries
+      queryClient.invalidateQueries({
+        queryKey: afterActionKeys.lists(),
+        predicate: (query) => {
+          const filters = query.queryKey[2] as AfterActionListFilters;
+          return filters?.dossier_id === updatedRecord.dossier_id;
+        },
+      });
     },
   });
 }
 
-// Fetch version history for an after-action
-export function useAfterActionVersions(afterActionId: string | undefined) {
-  return useQuery({
-    queryKey: ['after-action-versions', afterActionId],
-    queryFn: async () => {
-      if (!afterActionId) throw new Error('After-action ID is required');
+/**
+ * Hook: Publish after-action
+ */
+export function usePublishAfterAction() {
+  const queryClient = useQueryClient();
 
-      const { data, error } = await supabase.functions.invoke('after-actions-versions', {
-        body: { after_action_id: afterActionId },
+  return useMutation({
+    mutationFn: ({
+      id,
+      version,
+      sendNotifications = true,
+    }: {
+      id: string;
+      version: number;
+      sendNotifications?: boolean;
+    }) => afterActionAPI.publish(id, version, sendNotifications),
+    onSuccess: (response, { id }) => {
+      // Update detail cache
+      queryClient.setQueryData(afterActionKeys.detail(id), response.after_action);
+
+      // Invalidate list queries
+      queryClient.invalidateQueries({
+        queryKey: afterActionKeys.lists(),
+        predicate: (query) => {
+          const filters = query.queryKey[2] as AfterActionListFilters;
+          return filters?.dossier_id === response.after_action.dossier_id;
+        },
       });
 
-      if (error) throw error;
-      return data as AfterActionVersion[];
+      // Invalidate task lists (tasks were created)
+      queryClient.invalidateQueries({ queryKey: ['tasks'] });
     },
-    enabled: !!afterActionId,
+    onError: (error: AfterActionAPIError) => {
+      console.error('Failed to publish after-action:', error.message, error.details);
+    },
   });
 }
+
+/**
+ * Hook: Request edit for published record
+ */
+export function useRequestEdit() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: EditRequestInput }) =>
+      afterActionAPI.requestEdit(id, data),
+    onSuccess: (response, { id }) => {
+      // Update detail cache with new status
+      queryClient.setQueryData(afterActionKeys.detail(id), response.after_action);
+
+      // Invalidate list queries
+      queryClient.invalidateQueries({
+        queryKey: afterActionKeys.lists(),
+        predicate: (query) => {
+          const filters = query.queryKey[2] as AfterActionListFilters;
+          return filters?.dossier_id === response.after_action.dossier_id;
+        },
+      });
+    },
+    onError: (error: AfterActionAPIError) => {
+      console.error('Failed to request edit:', error.message);
+    },
+  });
+}
+
+/**
+ * Hook: Approve/reject edit request (supervisor)
+ */
+export function useApproveEdit() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: ({ id, data }: { id: string; data: EditApprovalInput }) =>
+      afterActionAPI.approveEdit(id, data),
+    onSuccess: (response, { id }) => {
+      // Update detail cache
+      queryClient.setQueryData(afterActionKeys.detail(id), response.after_action);
+
+      // Invalidate list queries
+      queryClient.invalidateQueries({
+        queryKey: afterActionKeys.lists(),
+        predicate: (query) => {
+          const filters = query.queryKey[2] as AfterActionListFilters;
+          return filters?.dossier_id === response.after_action.dossier_id;
+        },
+      });
+    },
+    onError: (error: AfterActionAPIError) => {
+      console.error('Failed to approve/reject edit:', error.message);
+    },
+  });
+}
+
+/**
+ * Hook: Delete after-action draft
+ */
+export function useDeleteAfterAction() {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (id: string) => afterActionAPI.delete(id),
+    onSuccess: (_data, id) => {
+      // Remove from detail cache
+      queryClient.removeQueries({ queryKey: afterActionKeys.detail(id) });
+
+      // Invalidate all list queries
+      queryClient.invalidateQueries({ queryKey: afterActionKeys.lists() });
+    },
+    onError: (error: AfterActionAPIError) => {
+      console.error('Failed to delete after-action:', error.message);
+    },
+  });
+}
+
+/**
+ * Hook: Auto-save draft (debounced)
+ */
+export function useAutoSave(id: string, debounceMs = 30000) {
+  const { mutate: updateAfterAction } = useUpdateAfterAction();
+  let timeoutId: NodeJS.Timeout | null = null;
+
+  const autoSave = (data: AfterActionUpdateInput) => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+    }
+
+    timeoutId = setTimeout(() => {
+      updateAfterAction({ id, data });
+    }, debounceMs);
+  };
+
+  return { autoSave };
+}
+
+/**
+ * Export all hooks
+ */
+export default {
+  useAfterActionList,
+  useAfterActionDetail,
+  useCreateAfterAction,
+  useUpdateAfterAction,
+  usePublishAfterAction,
+  useRequestEdit,
+  useApproveEdit,
+  useDeleteAfterAction,
+  useAutoSave,
+};
