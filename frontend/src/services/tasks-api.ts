@@ -23,6 +23,42 @@ type TaskUpdate = Database['public']['Tables']['tasks']['Update']
 type TaskContributor = Database['public']['Tables']['task_contributors']['Row']
 
 /**
+ * Explicit column selection for tasks table
+ * Prevents performance issues from selecting unnecessary columns
+ */
+const TASK_COLUMNS = `
+  id,
+  title,
+  description,
+  assignee_id,
+  engagement_id,
+  priority,
+  workflow_stage,
+  status,
+  sla_deadline,
+  work_item_type,
+  work_item_id,
+  source,
+  completed_by,
+  completed_at,
+  created_by,
+  created_at,
+  updated_at,
+  updated_by,
+  is_deleted,
+  deleted_at,
+  tenant_id,
+  type,
+  assignment,
+  dependencies,
+  escalation,
+  progress,
+  timeline,
+  last_modified_by,
+  version
+`.trim()
+
+/**
  * API Request types
  */
 export interface CreateTaskRequest {
@@ -230,7 +266,7 @@ export const tasksAPI = {
     // Fetch the task - use maybeSingle() to avoid 406 error when task not found
     const { data: task, error: taskError } = await supabase
       .from('tasks')
-      .select('*')
+      .select(TASK_COLUMNS)
       .eq('id', taskId)
       .eq('is_deleted', false)
       .maybeSingle()
@@ -598,7 +634,7 @@ export const tasksAPI = {
   ): Promise<Task[]> {
     const { data, error } = await supabase
       .from('tasks')
-      .select('*')
+      .select(TASK_COLUMNS)
       .eq('work_item_type', workItemType)
       .eq('work_item_id', workItemId)
       .eq('is_deleted', false)
@@ -617,7 +653,7 @@ export const tasksAPI = {
   async getOverdueTasks(assigneeId?: string): Promise<Task[]> {
     let query = supabase
       .from('tasks')
-      .select('*')
+      .select(TASK_COLUMNS)
       .eq('is_deleted', false)
       .lt('sla_deadline', new Date().toISOString())
       .not('status', 'in', '(completed,cancelled)')
@@ -645,7 +681,7 @@ export const tasksAPI = {
 
     let query = supabase
       .from('tasks')
-      .select('*')
+      .select(TASK_COLUMNS)
       .eq('is_deleted', false)
       .lte('sla_deadline', warningTime.toISOString())
       .gte('sla_deadline', new Date().toISOString())
