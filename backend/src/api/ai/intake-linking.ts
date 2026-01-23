@@ -117,7 +117,7 @@ router.get(
     try {
       let query = supabaseAdmin
         .from('ai_entity_link_proposals')
-        .select('*')
+        .select('id, organization_id, intake_ticket_id, run_id, entity_type, entity_id, confidence_score, justification, status, expires_at, reviewed_by, reviewed_at, rejection_reason')
         .eq('intake_ticket_id', ticketId)
         .eq('organization_id', organizationId)
         .order('confidence_score', { ascending: false })
@@ -171,7 +171,7 @@ router.post(
       // Get proposal
       const { data: proposal, error: proposalError } = await supabaseAdmin
         .from('ai_entity_link_proposals')
-        .select('*')
+        .select('id, organization_id, intake_ticket_id, run_id, entity_type, entity_id, confidence_score, justification, status, expires_at, reviewed_by, reviewed_at, rejection_reason')
         .eq('id', proposalId)
         .eq('organization_id', organizationId)
         .single()
@@ -347,7 +347,7 @@ router.get(
         // Fallback to direct query if function doesn't exist
         const { data: links, error: linksError } = await supabaseAdmin
           .from('intake_entity_links')
-          .select('*')
+          .select('id, intake_ticket_id, entity_type, entity_id, proposal_id, created_by, is_ai_suggested, created_at')
           .eq('intake_ticket_id', ticketId)
           .order('created_at', { ascending: false })
 

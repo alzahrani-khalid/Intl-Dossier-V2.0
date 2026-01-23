@@ -280,7 +280,7 @@ router.get('/:runId/messages', async (req: Request, res: Response): Promise<void
     // Get messages
     const { data: messages, error: messagesError } = await supabaseAdmin
       .from('ai_messages')
-      .select('*')
+      .select('id, run_id, role, content, tool_call_id, tool_name, tool_result, citations, sequence_number, created_at')
       .eq('run_id', runId)
       .order('sequence_number', { ascending: true })
 

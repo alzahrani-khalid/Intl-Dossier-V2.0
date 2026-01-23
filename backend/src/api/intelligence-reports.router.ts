@@ -29,7 +29,7 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
     
     let query = supabase
       .from('intelligence_reports')
-      .select('*', { count: 'exact' });
+      .select('id, title, content, analysis_type, classification, confidence_level, country_id, created_at, created_by, data_sources, deleted_at, deleted_by, organization_id, status, updated_at, vector_embedding', { count: 'exact' });
     
     if (status) {
       query = query.eq('review_status', status);
@@ -131,7 +131,7 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
     
     const { data, error } = await supabase
       .from('intelligence_reports')
-      .select('*')
+      .select('id, title, content, analysis_type, classification, confidence_level, country_id, created_at, created_by, data_sources, deleted_at, deleted_by, organization_id, status, updated_at, vector_embedding')
       .eq('id', id)
       .single();
     
@@ -155,7 +155,7 @@ router.post('/:id/embedding', async (req: Request, res: Response, next: NextFunc
     
     const { data: report, error: fetchError } = await supabase
       .from('intelligence_reports')
-      .select('*')
+      .select('id, title, content, analysis_type, classification, confidence_level, country_id, created_at, created_by, data_sources, deleted_at, deleted_by, organization_id, status, updated_at, vector_embedding')
       .eq('id', id)
       .single();
     

@@ -79,9 +79,13 @@ export function optimisticLockingMiddleware(
       if (Math.abs(serverTimestamp - clientTimestamp) > CLOCK_SKEW_MS) {
         // Timestamps don't match - resource was modified by another user
         // Fetch full current state for client to merge/retry
+        const selectColumns = table === 'tasks'
+          ? 'id, assignee_id, assignment, completed_at, completed_by, created_at, created_by, deleted_at, dependencies, description, engagement_id, escalation, is_deleted, last_modified_by, priority, progress, sla_deadline, source, status, tenant_id, timeline, title, type, updated_at, updated_by, version, work_item_id, work_item_type, workflow_stage'
+          : 'id, added_at, notes, removed_at, role, task_id, user_id, updated_at, is_deleted';
+
         const { data: fullResource } = await supabase
           .from(table)
-          .select('*')
+          .select(selectColumns)
           .eq('id', resourceId)
           .eq('is_deleted', false)
           .single();

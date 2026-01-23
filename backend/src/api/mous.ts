@@ -417,7 +417,7 @@ router.get('/:id/timeline', validate({ params: idParamSchema }), async (req, res
     // Get timeline from audit logs
     const { data: timeline, error } = await supabaseAdmin
       .from('audit_logs')
-      .select('*')
+      .select('id, action, entity_type, entity_id, user_id, user_role, old_values, new_values, created_at, ip_address, user_agent, session_id, correlation_id, mfa_verified, mfa_method, required_mfa')
       .eq('entity_type', 'mou')
       .eq('entity_id', id)
       .order('created_at', { ascending: false })

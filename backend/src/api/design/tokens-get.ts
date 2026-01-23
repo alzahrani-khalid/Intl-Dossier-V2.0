@@ -60,7 +60,7 @@ export async function getDesignTokens(req: Request, res: Response) {
     if (theme) {
       const { data: themeTokens } = await supabase
         .from('design_tokens')
-        .select('*')
+        .select('id, category, name, value, css_variable, fallback, description, deprecated, theme, created_at, updated_at')
         .eq('theme', theme);
       
       if (themeTokens) {

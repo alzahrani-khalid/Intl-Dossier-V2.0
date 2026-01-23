@@ -52,7 +52,7 @@ export async function getResponsivePreferences(req: Request, res: Response) {
     
     const { data: preferences, error } = await supabase
       .from('user_preferences')
-      .select('*')
+      .select('id, user_id, viewport_preference, theme_id, text_size, reduced_motion, high_contrast, language, direction, component_density, color_mode, theme, created_at, updated_at')
       .eq('user_id', userId)
       .single();
     

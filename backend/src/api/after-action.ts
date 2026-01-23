@@ -76,7 +76,7 @@ router.get(
 
       let query = supabase.from('after_action_records').select(
         `
-          *,
+          id, dossier_id, engagement_id, attendees, notes, publication_status, is_confidential, created_by, created_at, updated_by, updated_at, published_by, published_at, edit_requested_by, edit_requested_at, edit_request_reason, edit_approved_by, edit_approved_at, edit_rejection_reason, version,
           decisions:decisions(count),
           commitments:commitments(count),
           risks:risks(count),
@@ -180,7 +180,7 @@ router.get(
         .from('after_action_records')
         .select(
           `
-          *,
+          id, dossier_id, engagement_id, attendees, notes, publication_status, is_confidential, created_by, created_at, updated_by, updated_at, published_by, published_at, edit_requested_by, edit_requested_at, edit_request_reason, edit_approved_by, edit_approved_at, edit_rejection_reason, version,
           decisions(*),
           commitments(*),
           risks(*),
@@ -406,7 +406,7 @@ router.put(
       // Fetch current record for validation
       const { data: currentRecord, error: fetchError } = await supabase
         .from('after_action_records')
-        .select('*')
+        .select('id, dossier_id, engagement_id, attendees, notes, publication_status, is_confidential, created_by, created_at, updated_by, updated_at, published_by, published_at, edit_requested_by, edit_requested_at, edit_request_reason, edit_approved_by, edit_approved_at, edit_rejection_reason, version, status, _version')
         .eq('id', id)
         .single()
 
@@ -541,7 +541,7 @@ router.post(
         .from('after_action_records')
         .select(
           `
-          *,
+          id, dossier_id, engagement_id, attendees, notes, publication_status, is_confidential, created_by, created_at, updated_by, updated_at, published_by, published_at, edit_requested_by, edit_requested_at, edit_request_reason, edit_approved_by, edit_approved_at, edit_rejection_reason, version, status, title, _version,
           commitments(*)
         `,
         )
@@ -680,7 +680,7 @@ router.delete(
       // Fetch record to validate
       const { data: record, error: fetchError } = await supabase
         .from('after_action_records')
-        .select('*')
+        .select('id, dossier_id, engagement_id, attendees, notes, publication_status, is_confidential, created_by, created_at, updated_by, updated_at, published_by, published_at, edit_requested_by, edit_requested_at, edit_request_reason, edit_approved_by, edit_approved_at, edit_rejection_reason, version, status')
         .eq('id', id)
         .single()
 

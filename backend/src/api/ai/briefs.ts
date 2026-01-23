@@ -260,7 +260,7 @@ router.get('/:id', verifySupabaseToken, async (req: AuthenticatedRequest, res: R
   try {
     const { data, error } = await supabaseAdmin
       .from('ai_briefs')
-      .select('*')
+      .select('id, title, status, executive_summary, background, key_participants, relevant_positions, active_commitments, historical_context, talking_points, recommendations, citations, engagement_id, dossier_id, created_by, created_at, completed_at, organization_id')
       .eq('id', id)
       .eq('organization_id', organizationId)
       .single()

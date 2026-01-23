@@ -41,7 +41,7 @@ async function getRateLimitPolicies(): Promise<RateLimitPolicy[]> {
   try {
     const { data: policies, error } = await supabase
       .from('rate_limit_policies')
-      .select('*')
+      .select('id, name, requests_per_minute, burst_capacity, applies_to, role_id, endpoint_type, retry_after_seconds, enabled')
       .eq('enabled', true);
     
     if (error) {
