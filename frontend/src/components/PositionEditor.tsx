@@ -14,6 +14,7 @@ import { Save, Loader2, AlertCircle, RefreshCw } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PositionDossierLinker } from '@/components/positions/PositionDossierLinker';
 import { usePositionDossierLinks } from '@/hooks/usePositionDossierLinks';
+import type { ErrorLike } from '@/types/common.types';
 
 // Types for position data
 interface PositionEditorData {
@@ -256,17 +257,19 @@ export function PositionEditor({
  setIsDirty(false);
  setLastSaved(new Date());
  setError(null);
- } catch (err: any) {
+ } catch (err: unknown) {
  // Check for version conflict (409)
- if (err.status === 409 || err.message?.includes('version') || err.message?.includes('conflict')) {
- const serverVersion = err.serverVersion || formData.version + 1;
+ const error = err as ErrorLike & { status?: number; serverVersion?: number };
+ const errorMessage = error instanceof Error ? error.message : String(error);
+ if (error.status === 409 || errorMessage.includes('version') || errorMessage.includes('conflict')) {
+ const serverVersion = error.serverVersion || formData.version + 1;
  setConflictVersions({ current: formData.version, server: serverVersion });
  setShowConflictDialog(true);
  if (onConflict) {
  onConflict(formData.version, serverVersion);
  }
  } else {
- setError(err.message || t('editor.autoSaveError'));
+ setError(errorMessage || t('editor.autoSaveError'));
  }
  } finally {
  setAutoSaving(false);
@@ -284,16 +287,18 @@ export function PositionEditor({
  setIsDirty(false);
  setLastSaved(new Date());
  setFormData((prev) => ({ ...prev, version: prev.version + 1 }));
- } catch (err: any) {
- if (err.status === 409 || err.message?.includes('version') || err.message?.includes('conflict')) {
- const serverVersion = err.serverVersion || formData.version + 1;
+ } catch (err: unknown) {
+ const error = err as ErrorLike & { status?: number; serverVersion?: number };
+ const errorMessage = error instanceof Error ? error.message : String(error);
+ if (error.status === 409 || errorMessage.includes('version') || errorMessage.includes('conflict')) {
+ const serverVersion = error.serverVersion || formData.version + 1;
  setConflictVersions({ current: formData.version, server: serverVersion });
  setShowConflictDialog(true);
  if (onConflict) {
  onConflict(formData.version, serverVersion);
  }
  } else {
- setError(err.message || t('editor.saveError'));
+ setError(errorMessage || t('editor.saveError'));
  }
  } finally {
  setSaving(false);

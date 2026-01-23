@@ -13,6 +13,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  type DragEndEvent,
 } from '@dnd-kit/core'
 import {
   arrayMove,
@@ -137,7 +138,7 @@ export function ColumnBuilder({
     }),
   )
 
-  const handleDragEnd = (event: any) => {
+  const handleDragEnd = (event: DragEndEvent) => {
     const { active, over } = event
 
     if (over && active.id !== over.id) {
