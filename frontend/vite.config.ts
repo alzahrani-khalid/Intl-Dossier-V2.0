@@ -128,8 +128,7 @@ export default defineConfig({
             if (
               id.includes('recharts') ||
               id.includes('d3-') ||
-              id.includes('@xyflow') ||
-              id.includes('reactflow')
+              id.includes('@xyflow')
             ) {
               return 'charts-vendor'
             }
