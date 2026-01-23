@@ -14,7 +14,7 @@ export class IntelligenceService {
       // Check for increased MoU activity
       const { data: mous } = await supabaseAdmin
         .from('mous')
-        .select('*')
+        .select('id, title, version, status, organization_id, country_id, document_path, file_size, mime_type, effective_date, expiry_date, description, created_by, created_at, updated_at, deleted_at, deleted_by')
         .gte('created_at', startDate.toISOString());
 
       if (mous && mous.length > 5) {
@@ -32,7 +32,7 @@ export class IntelligenceService {
 
       const { data: expiring } = await supabaseAdmin
         .from('mous')
-        .select('*')
+        .select('id, title, version, status, organization_id, country_id, document_path, file_size, mime_type, effective_date, expiry_date, description, created_by, created_at, updated_at, deleted_at, deleted_by')
         .lte('expiry_date', expiryDate.toISOString())
         .gte('expiry_date', new Date().toISOString());
 
@@ -58,7 +58,7 @@ export class IntelligenceService {
     // Check for countries without recent engagement
     const { data: countries } = await supabaseAdmin
       .from('countries')
-      .select('*')
+      .select('id, name_en, name_ar, iso_alpha2, iso_alpha3, region, status, created_at, updated_at, deleted_at, deleted_by')
       .is('last_visit_date', null);
 
     if (countries && countries.length > 0) {
@@ -251,7 +251,7 @@ export class IntelligenceService {
           metadata: insightData.metadata || {},
           created_at: new Date().toISOString()
         })
-        .select()
+        .select('id, entity_type, entity_id, type, title, description, severity, metadata, created_at, updated_at')
         .single();
 
       if (error) throw error;
@@ -271,7 +271,7 @@ export class IntelligenceService {
       if (entityType === 'country') {
         const { data } = await supabaseAdmin
           .from('countries')
-          .select('*')
+          .select('id, name_en, name_ar, iso_alpha2, iso_alpha3, region, status, created_at, updated_at, deleted_at, deleted_by')
           .eq('id', entityId)
           .single();
         entity = data;
@@ -279,7 +279,7 @@ export class IntelligenceService {
         // Analyze country relationships
         const { data: mous } = await supabaseAdmin
           .from('mous')
-          .select('*')
+          .select('id, title, version, status, organization_id, country_id, document_path, file_size, mime_type, effective_date, expiry_date, description, created_by, created_at, updated_at, deleted_at, deleted_by')
           .contains('parties', [{ country_id: entityId }]);
 
         analysis.mou_count = mous?.length || 0;
@@ -287,7 +287,7 @@ export class IntelligenceService {
       } else if (entityType === 'organization') {
         const { data } = await supabaseAdmin
           .from('organizations')
-          .select('*')
+          .select('id, name, type, country_id, parent_organization_id, status, description, website, created_at, updated_at, deleted_at, deleted_by')
           .eq('id', entityId)
           .single();
         entity = data;
@@ -295,7 +295,7 @@ export class IntelligenceService {
         // Analyze organization engagement
         const { data: events } = await supabaseAdmin
           .from('events')
-          .select('*')
+          .select('id, title, description, start_date, end_date, location, organization_id, status, created_at, updated_at')
           .eq('organization_id', entityId);
 
         analysis.event_count = events?.length || 0;

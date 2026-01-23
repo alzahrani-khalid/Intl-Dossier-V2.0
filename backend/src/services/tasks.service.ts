@@ -135,7 +135,11 @@ export class TasksService {
       version: 1,
     }
 
-    const { data, error } = await this.supabase.from('tasks').insert(taskData).select().single()
+    const { data, error } = await this.supabase
+      .from('tasks')
+      .insert(taskData)
+      .select('id, title, description, assignee_id, engagement_id, priority, workflow_stage, status, sla_deadline, work_item_type, work_item_id, source, assignment, timeline, created_by, last_modified_by, updated_by, completed_by, completed_at, is_deleted, deleted_at, type, version, created_at, updated_at, tenant_id')
+      .single()
 
     if (error) {
       throw new Error(`Failed to create task: ${error.message}`)
@@ -150,7 +154,7 @@ export class TasksService {
   async getTaskById(taskId: string, userId: string): Promise<Task | null> {
     const { data, error } = await this.supabase
       .from('tasks')
-      .select('*')
+      .select('id, title, description, assignee_id, engagement_id, priority, workflow_stage, status, sla_deadline, work_item_type, work_item_id, source, assignment, timeline, created_by, last_modified_by, updated_by, completed_by, completed_at, is_deleted, deleted_at, type, version, created_at, updated_at, tenant_id')
       .eq('id', taskId)
       .eq('is_deleted', false)
       .single()
@@ -179,7 +183,10 @@ export class TasksService {
       sort_order = 'desc',
     } = options
 
-    let query = this.supabase.from('tasks').select('*', { count: 'exact' }).eq('is_deleted', false)
+    let query = this.supabase
+      .from('tasks')
+      .select('id, title, description, assignee_id, engagement_id, priority, workflow_stage, status, sla_deadline, work_item_type, work_item_id, source, assignment, timeline, created_by, last_modified_by, updated_by, completed_by, completed_at, is_deleted, deleted_at, type, version, created_at, updated_at, tenant_id', { count: 'exact' })
+      .eq('is_deleted', false)
 
     // Apply filters
     if (filters.assignee_id) {
@@ -286,7 +293,7 @@ export class TasksService {
   ): Promise<Task[]> {
     const { data, error } = await this.supabase
       .from('tasks')
-      .select('*')
+      .select('id, title, description, assignee_id, engagement_id, priority, workflow_stage, status, sla_deadline, work_item_type, work_item_id, source, assignment, timeline, created_by, last_modified_by, updated_by, completed_by, completed_at, is_deleted, deleted_at, type, version, created_at, updated_at, tenant_id')
       .eq('work_item_type', workItemType)
       .eq('work_item_id', workItemId)
       .eq('is_deleted', false)
@@ -333,7 +340,7 @@ export class TasksService {
       .update(updateData)
       .eq('id', taskId)
       .eq('is_deleted', false)
-      .select()
+      .select('id, title, description, assignee_id, engagement_id, priority, workflow_stage, status, sla_deadline, work_item_type, work_item_id, source, assignment, timeline, created_by, last_modified_by, updated_by, completed_by, completed_at, is_deleted, deleted_at, type, version, created_at, updated_at, tenant_id')
       .single()
 
     if (error) {
@@ -369,7 +376,7 @@ export class TasksService {
   async getOverdueTasks(assigneeId?: string): Promise<Task[]> {
     let query = this.supabase
       .from('tasks')
-      .select('*')
+      .select('id, title, description, assignee_id, engagement_id, priority, workflow_stage, status, sla_deadline, work_item_type, work_item_id, source, assignment, timeline, created_by, last_modified_by, updated_by, completed_by, completed_at, is_deleted, deleted_at, type, version, created_at, updated_at, tenant_id')
       .eq('is_deleted', false)
       .lt('sla_deadline', new Date().toISOString())
       .not('status', 'in', '(completed,cancelled)')
@@ -400,7 +407,7 @@ export class TasksService {
 
     let query = this.supabase
       .from('tasks')
-      .select('*')
+      .select('id, title, description, assignee_id, engagement_id, priority, workflow_stage, status, sla_deadline, work_item_type, work_item_id, source, assignment, timeline, created_by, last_modified_by, updated_by, completed_by, completed_at, is_deleted, deleted_at, type, version, created_at, updated_at, tenant_id')
       .eq('is_deleted', false)
       .lte('sla_deadline', warningTime.toISOString())
       .gte('sla_deadline', new Date().toISOString())

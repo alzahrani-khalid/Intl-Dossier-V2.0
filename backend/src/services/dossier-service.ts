@@ -685,7 +685,7 @@ export class DossierService {
       // Fallback: Direct query with type-based JOIN
       const { data: dossier, error: dossierError } = await this.supabase
         .from('dossiers')
-        .select('*')
+        .select('id, name_en, name_ar, type, status, sensitivity_level, summary_en, summary_ar, tags, review_cadence, last_review_date, version, created_at, updated_at, archived, description_en, description_ar, metadata')
         .eq('id', dossierId)
         .single()
 
@@ -706,6 +706,8 @@ export class DossierService {
 
       const tableName = extensionTableMap[dossier.type as DossierType]
       if (tableName) {
+        // Note: Using * here for extension tables as they have varying schemas per type
+        // This is acceptable per the pattern as extension data varies significantly by dossier type
         const { data, error } = await this.supabase
           .from(tableName as any)
           .select('*')
@@ -952,7 +954,7 @@ export class DossierService {
 
     let query = this.supabase
       .from('dossiers')
-      .select('*', { count: 'exact' })
+      .select('id, name_en, name_ar, type, status, sensitivity_level, summary_en, summary_ar, tags, review_cadence, last_review_date, version, created_at, updated_at, archived, description_en, description_ar, metadata', { count: 'exact' })
       .range(offset, offset + limit - 1)
 
     if (type) query = query.eq('type', type)

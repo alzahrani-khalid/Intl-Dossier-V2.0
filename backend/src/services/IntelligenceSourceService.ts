@@ -78,7 +78,7 @@ export class IntelligenceSourceService {
     
     const { data: source, error } = await this.supabase
       .from('intelligence_sources')
-      .select('*')
+      .select('id, name, type, url, api_config, scanning_frequency, keywords, categories, reliability_score, last_scanned_at, next_scan_at, active, error_count, created_at, updated_at')
       .eq('id', sourceId)
       .single();
 

@@ -86,7 +86,7 @@ export class TaskService {
       let query = supabaseAdmin
         .from('tasks')
         .select(`
-          *,
+          id, title, description, type, priority, status, assigned_to, assigned_by, related_entity, due_date, completed_at, dependencies, escalation_rules, comments, created_at, updated_at,
           assignee:users!assigned_to(name_en, name_ar, email),
           assigner:users!assigned_by(name_en, name_ar, email)
         `);
@@ -513,7 +513,7 @@ export class TaskService {
     by_type: Record<string, number>;
   }> {
     try {
-      let query = supabaseAdmin.from('tasks').select('*');
+      let query = supabaseAdmin.from('tasks').select('id, title, description, type, priority, status, assigned_to, assigned_by, related_entity, due_date, completed_at, dependencies, escalation_rules, comments, created_at, updated_at');
 
       if (userId) {
         query = query.eq('assigned_to', userId);

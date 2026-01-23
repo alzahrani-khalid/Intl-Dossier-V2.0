@@ -52,7 +52,7 @@ export async function sendInAppNotification(
       read: false,
       created_at: new Date().toISOString(),
     })
-    .select()
+    .select('id, user_id, title, message, metadata, read, created_at')
     .single()
 
   if (error) {
@@ -76,7 +76,7 @@ export async function getNotifications(
 ): Promise<Notification[]> {
   let query = supabase
     .from('notifications')
-    .select('*')
+    .select('id, user_id, title, message, metadata, read, created_at')
     .eq('user_id', userId)
     .order('created_at', { ascending: false })
 
@@ -104,7 +104,7 @@ export async function markNotificationAsRead(notificationId: string): Promise<No
     .from('notifications')
     .update({ read: true })
     .eq('id', notificationId)
-    .select()
+    .select('id, user_id, title, message, metadata, read, created_at')
     .single()
 
   if (error) {
