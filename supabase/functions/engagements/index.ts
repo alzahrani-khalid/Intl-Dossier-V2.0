@@ -44,7 +44,7 @@ serve(async (req) => {
       // Check dossier access
       const { data: dossierAccess } = await supabaseClient
         .from('dossier_owners')
-        .select('*')
+        .select('id')
         .eq('dossier_id', body.dossier_id)
         .eq('user_id', (await supabaseClient.auth.getUser()).data.user?.id)
         .single();
@@ -62,7 +62,7 @@ serve(async (req) => {
           ...body,
           created_by: (await supabaseClient.auth.getUser()).data.user?.id
         })
-        .select()
+        .select('id, dossier_id, title, engagement_type, engagement_date, location, description, created_by, created_at, updated_at')
         .single();
 
       if (error) throw error;
@@ -77,7 +77,7 @@ serve(async (req) => {
     if (req.method === 'GET' && engagementId && engagementId !== 'engagements') {
       const { data, error } = await supabaseClient
         .from('engagements')
-        .select('*')
+        .select('id, dossier_id, title, engagement_type, engagement_date, location, description, created_by, created_at, updated_at')
         .eq('id', engagementId)
         .single();
 
@@ -102,7 +102,7 @@ serve(async (req) => {
         .from('engagements')
         .update({ ...body, updated_at: new Date().toISOString() })
         .eq('id', engagementId)
-        .select()
+        .select('id, dossier_id, title, engagement_type, engagement_date, location, description, created_by, created_at, updated_at')
         .single();
 
       if (error) throw error;
@@ -121,7 +121,7 @@ serve(async (req) => {
 
       const { data, error, count } = await supabaseClient
         .from('engagements')
-        .select('*', { count: 'exact' })
+        .select('id, dossier_id, title, engagement_type, engagement_date, location, description, created_by, created_at, updated_at', { count: 'exact' })
         .eq('dossier_id', dossierId)
         .range(offset, offset + limit - 1)
         .order('engagement_date', { ascending: false });

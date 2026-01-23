@@ -110,7 +110,7 @@ serve(async (req) => {
             .from('working_group_members')
             .select(
               `
-              *,
+              id, working_group_id, member_type, organization_id, person_id, role, status, joined_date, left_date, representing_country_id, representing_organization_id, can_vote, can_propose, notes, created_at, updated_at, created_by,
               organization:organization_id (id),
               country:representing_country_id (id)
             `
@@ -129,7 +129,7 @@ serve(async (req) => {
         if (workingGroupId && subResource === 'deliverables') {
           const { data, error } = await supabase
             .from('working_group_deliverables')
-            .select('*')
+            .select('id, working_group_id, title_en, title_ar, description_en, description_ar, status, priority, planned_start_date, planned_end_date, actual_start_date, actual_end_date, due_date, assigned_to_member_id, assigned_to_org_id, progress_percentage, milestones, deliverable_type, document_url, related_commitment_id, notes, created_at, updated_at, created_by, updated_by')
             .eq('working_group_id', workingGroupId)
             .order('due_date', { ascending: true, nullsFirst: false })
             .order('priority', { ascending: false });
@@ -145,7 +145,7 @@ serve(async (req) => {
           const upcoming = url.searchParams.get('upcoming') === 'true';
           let query = supabase
             .from('working_group_meetings')
-            .select('*')
+            .select('id, working_group_id, title_en, title_ar, description_en, description_ar, meeting_date, end_date, location_en, location_ar, is_virtual, meeting_url, status, agenda_url, minutes_url, expected_attendees, actual_attendees, attendance_record, decisions, action_items, notes, created_at, updated_at, created_by, updated_by')
             .eq('working_group_id', workingGroupId);
 
           if (upcoming) {
@@ -207,7 +207,7 @@ serve(async (req) => {
         // Get total count
         const { count } = await supabase
           .from('dossiers')
-          .select('*', { count: 'exact', head: true })
+          .select('id', { count: 'exact', head: true })
           .eq('type', 'working_group')
           .not('status', 'in', '(archived,deleted)');
 
@@ -256,7 +256,7 @@ serve(async (req) => {
               notes: body.notes,
               created_by: user.id,
             })
-            .select()
+            .select('id, working_group_id, member_type, organization_id, person_id, role, status, joined_date, left_date, representing_country_id, representing_organization_id, can_vote, can_propose, notes, created_at, updated_at, created_by')
             .single();
 
           if (error) {
@@ -298,7 +298,7 @@ serve(async (req) => {
               created_by: user.id,
               updated_by: user.id,
             })
-            .select()
+            .select('id, working_group_id, title_en, title_ar, description_en, description_ar, status, priority, planned_start_date, planned_end_date, actual_start_date, actual_end_date, due_date, assigned_to_member_id, assigned_to_org_id, progress_percentage, milestones, deliverable_type, document_url, related_commitment_id, notes, created_at, updated_at, created_by, updated_by')
             .single();
 
           if (error) {
@@ -339,7 +339,7 @@ serve(async (req) => {
               created_by: user.id,
               updated_by: user.id,
             })
-            .select()
+            .select('id, working_group_id, title_en, title_ar, description_en, description_ar, meeting_date, end_date, location_en, location_ar, is_virtual, meeting_url, status, agenda_url, minutes_url, expected_attendees, actual_attendees, attendance_record, decisions, action_items, notes, created_at, updated_at, created_by, updated_by')
             .single();
 
           if (error) {
@@ -371,7 +371,7 @@ serve(async (req) => {
             sensitivity_level: body.sensitivity_level || 'low',
             tags: body.tags || [],
           })
-          .select()
+          .select('id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by')
           .single();
 
         if (dossierError) {
@@ -399,7 +399,7 @@ serve(async (req) => {
             created_by: user.id,
             updated_by: user.id,
           })
-          .select()
+          .select('id, mandate_en, mandate_ar, lead_org_id, wg_status, established_date, disbandment_date, parent_forum_id, description_en, description_ar, wg_type, meeting_frequency, next_meeting_date, chair_person_id, secretary_person_id, objectives, created_by, updated_by')
           .single();
 
         if (wgError) {
@@ -449,7 +449,7 @@ serve(async (req) => {
             })
             .eq('id', subResourceId)
             .eq('working_group_id', workingGroupId)
-            .select()
+            .select('id, working_group_id, member_type, organization_id, person_id, role, status, joined_date, left_date, representing_country_id, representing_organization_id, can_vote, can_propose, notes, created_at, updated_at, created_by')
             .single();
 
           if (error) {
@@ -486,7 +486,7 @@ serve(async (req) => {
             })
             .eq('id', subResourceId)
             .eq('working_group_id', workingGroupId)
-            .select()
+            .select('id, working_group_id, title_en, title_ar, description_en, description_ar, status, priority, planned_start_date, planned_end_date, actual_start_date, actual_end_date, due_date, assigned_to_member_id, assigned_to_org_id, progress_percentage, milestones, deliverable_type, document_url, related_commitment_id, notes, created_at, updated_at, created_by, updated_by')
             .single();
 
           if (error) {
@@ -523,7 +523,7 @@ serve(async (req) => {
             })
             .eq('id', subResourceId)
             .eq('working_group_id', workingGroupId)
-            .select()
+            .select('id, working_group_id, title_en, title_ar, description_en, description_ar, meeting_date, end_date, location_en, location_ar, is_virtual, meeting_url, status, agenda_url, minutes_url, expected_attendees, actual_attendees, attendance_record, decisions, action_items, notes, created_at, updated_at, created_by, updated_by')
             .single();
 
           if (error) {

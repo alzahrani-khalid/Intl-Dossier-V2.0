@@ -55,7 +55,7 @@ serve(async (req: Request) => {
     // Fetch position with RLS enforcement
     const { data: position, error } = await supabase
       .from('positions')
-      .select('*')
+      .select('id, position_type_id, title_en, title_ar, content_en, content_ar, rationale_en, rationale_ar, alignment_notes_en, alignment_notes_ar, thematic_category, status, current_stage, approval_chain_config, consistency_score, emergency_correction, corrected_at, corrected_by, correction_reason, corrected_version_id, author_id, created_at, updated_at, version')
       .eq('id', position_id)
       .single();
 

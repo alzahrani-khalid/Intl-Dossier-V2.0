@@ -85,7 +85,7 @@ serve(async (req: Request) => {
           // Get single forum with extension data
           const { data: dossier, error: dossierError } = await supabaseClient
             .from('dossiers')
-            .select('*')
+            .select('id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by')
             .eq('id', id)
             .eq('type', 'forum')
             .single();
@@ -106,7 +106,7 @@ serve(async (req: Request) => {
           // Get forum extension data
           const { data: forumExt } = await supabaseClient
             .from('forums')
-            .select('*')
+            .select('id, number_of_sessions, keynote_speakers, sponsors, registration_fee, currency, agenda_url, live_stream_url')
             .eq('id', id)
             .single();
 
@@ -129,7 +129,7 @@ serve(async (req: Request) => {
 
           let query = supabaseClient
             .from('dossiers')
-            .select('*', { count: 'exact' })
+            .select('id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by', { count: 'exact' })
             .eq('type', 'forum');
 
           if (search) {
@@ -154,7 +154,7 @@ serve(async (req: Request) => {
           if (forumIds.length > 0) {
             const { data: forumExts } = await supabaseClient
               .from('forums')
-              .select('*')
+              .select('id, number_of_sessions, keynote_speakers, sponsors, registration_fee, currency, agenda_url, live_stream_url')
               .in('id', forumIds);
 
             if (forumExts) {
@@ -223,7 +223,7 @@ serve(async (req: Request) => {
             created_by: user.id,
             updated_by: user.id,
           })
-          .select()
+          .select('id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by')
           .single();
 
         if (dossierError) {
@@ -306,7 +306,7 @@ serve(async (req: Request) => {
           .update(dossierUpdate)
           .eq('id', id)
           .eq('type', 'forum')
-          .select()
+          .select('id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by')
           .single();
 
         if (dossierError || !dossier) {
@@ -346,7 +346,7 @@ serve(async (req: Request) => {
                 live_stream_url: body.extension.live_stream_url,
               })
               .eq('id', id)
-              .select()
+              .select('id, number_of_sessions, keynote_speakers, sponsors, registration_fee, currency, agenda_url, live_stream_url')
               .single();
 
             if (!extError) forumExt = updatedExt;
@@ -364,7 +364,7 @@ serve(async (req: Request) => {
                 agenda_url: body.extension.agenda_url,
                 live_stream_url: body.extension.live_stream_url,
               })
-              .select()
+              .select('id, number_of_sessions, keynote_speakers, sponsors, registration_fee, currency, agenda_url, live_stream_url')
               .single();
 
             if (!extError) forumExt = newExt;
@@ -373,7 +373,7 @@ serve(async (req: Request) => {
           // Fetch existing extension
           const { data: existingExt } = await supabaseClient
             .from('forums')
-            .select('*')
+            .select('id, number_of_sessions, keynote_speakers, sponsors, registration_fee, currency, agenda_url, live_stream_url')
             .eq('id', id)
             .single();
           forumExt = existingExt;
