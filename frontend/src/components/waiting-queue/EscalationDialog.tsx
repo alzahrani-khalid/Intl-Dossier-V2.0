@@ -38,6 +38,7 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useEscalationAction } from '@/hooks/use-waiting-queue-actions';
 import { useToast } from '@/hooks/use-toast';
+import type { ErrorLike } from '@/types/common.types';
 
 export interface EscalationDialogProps {
  /** Assignment ID to escalate */
@@ -151,9 +152,10 @@ export function EscalationDialog({
 
  onSuccess?.();
  onClose();
- } catch (error: any) {
- const errorCode = error?.error?.code || error?.code;
- const errorMessage = error?.error?.message || error?.message || 'Failed to escalate assignment';
+ } catch (error: ErrorLike) {
+ const errorObj = error as Record<string, unknown>;
+ const errorCode = (errorObj?.error as Record<string, unknown>)?.code || errorObj?.code;
+ const errorMessage = (errorObj?.error as Record<string, unknown>)?.message || (errorObj as Error)?.message || 'Failed to escalate assignment';
 
  setLocalError(errorMessage);
 

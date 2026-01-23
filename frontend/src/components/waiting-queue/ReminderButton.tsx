@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Bell, Loader2, CheckCircle2 } from 'lucide-react';
 import { useReminderAction } from '@/hooks/use-waiting-queue-actions';
 import { useToast } from '@/hooks/use-toast';
+import type { ErrorLike } from '@/types/common.types';
 
 /**
  * Reminder Button Component
@@ -124,7 +125,7 @@ export function ReminderButton({
  // Reset success icon after 2 seconds
  setTimeout(() => setShowSuccess(false), 2000);
  },
- onError: (error: any) => {
+ onError: (error: ErrorLike) => {
  let title = t('waitingQueue.reminder.error.title', 'Failed to Send Reminder');
  let description = t(
  'waitingQueue.reminder.error.description',
@@ -132,33 +133,34 @@ export function ReminderButton({
  );
 
  // Handle specific error codes
- if (error?.error === 'COOLDOWN_ACTIVE') {
- const hoursRemaining = error?.details?.hours_remaining || 24;
+ const errorObj = error as Record<string, unknown>;
+ if (errorObj?.error === 'COOLDOWN_ACTIVE') {
+ const hoursRemaining = (errorObj?.details as Record<string, unknown>)?.hours_remaining || 24;
  title = t('waitingQueue.reminder.cooldown.title', 'Cooldown Active');
  description = t(
  'waitingQueue.reminder.cooldown.description',
  `Please wait {{hours}} more hours before sending another reminder.`,
  { hours: hoursRemaining }
  );
- } else if (error?.error === 'RATE_LIMIT_EXCEEDED') {
+ } else if (errorObj?.error === 'RATE_LIMIT_EXCEEDED') {
  title = t('waitingQueue.reminder.rateLimit.title', 'Rate Limit Exceeded');
  description = t(
  'waitingQueue.reminder.rateLimit.description',
  'You have sent too many reminders. Please wait a few minutes and try again.'
  );
- } else if (error?.error === 'NO_ASSIGNEE') {
+ } else if (errorObj?.error === 'NO_ASSIGNEE') {
  title = t('waitingQueue.reminder.noAssignee.title', 'No Assignee');
  description = t(
  'waitingQueue.reminder.noAssignee.description',
  'This assignment has no assignee. Please assign it first.'
  );
- } else if (error?.error === 'ASSIGNMENT_NOT_FOUND') {
+ } else if (errorObj?.error === 'ASSIGNMENT_NOT_FOUND') {
  title = t('waitingQueue.reminder.notFound.title', 'Assignment Not Found');
  description = t(
  'waitingQueue.reminder.notFound.description',
  'The assignment could not be found. It may have been deleted.'
  );
- } else if (error?.error === 'VERSION_CONFLICT') {
+ } else if (errorObj?.error === 'VERSION_CONFLICT') {
  title = t('waitingQueue.reminder.conflict.title', 'Assignment Changed');
  description = t(
  'waitingQueue.reminder.conflict.description',
