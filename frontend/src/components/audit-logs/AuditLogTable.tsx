@@ -14,6 +14,7 @@ import { useState, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { formatDistanceToNow, format } from 'date-fns'
 import { ar } from 'date-fns/locale'
+import { FixedSizeList } from 'react-window'
 import {
   Plus,
   Edit3,
@@ -168,6 +169,7 @@ export function AuditLogTable({
 
   return (
     <div className={cn('border rounded-lg overflow-hidden', className)}>
+      {/* Table Header */}
       <Table>
         <TableHeader>
           <TableRow>
@@ -190,196 +192,202 @@ export function AuditLogTable({
             <TableHead className="w-[60px]" />
           </TableRow>
         </TableHeader>
-        <TableBody>
-          {logs.map((log) => {
-            const isExpanded = expandedRows.has(log.id)
-            const config = OPERATION_CONFIG[log.operation]
-            const Icon = config.icon
-            const hasChanges = log.changed_fields && log.changed_fields.length > 0
+      </Table>
 
-            return (
-              <>
-                <TableRow
-                  key={log.id}
-                  className={cn('cursor-pointer hover:bg-muted/50', isExpanded && 'bg-muted/30')}
-                  onClick={() => onLogClick?.(log)}
-                >
-                  {/* Timestamp */}
-                  <TableCell className="font-mono text-sm">
-                    <TooltipProvider>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <span>{formatTimeAgo(log.timestamp)}</span>
-                        </TooltipTrigger>
-                        <TooltipContent>
-                          <p>{formatTimestamp(log.timestamp)}</p>
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </TableCell>
+      {/* Virtualized Table Body */}
+      <FixedSizeList
+        height={600}
+        itemCount={logs.length}
+        itemSize={120}
+        width="100%"
+        overscanCount={3}
+      >
+        {({ index, style }) => {
+          const log = logs[index]
+          const isExpanded = expandedRows.has(log.id)
+          const config = OPERATION_CONFIG[log.operation]
+          const Icon = config.icon
+          const hasChanges = log.changed_fields && log.changed_fields.length > 0
 
-                  {/* Table Name */}
-                  <TableCell>
-                    <Badge variant="outline" className="font-mono text-xs">
-                      {t(`tables.${log.table_name}`, log.table_name)}
-                    </Badge>
-                  </TableCell>
+          return (
+            <div key={log.id} style={style}>
+              {/* Main Row */}
+              <div
+                className={cn(
+                  'grid grid-cols-[180px_150px_100px_200px_1fr_60px] lg:grid-cols-[180px_150px_100px_200px_120px_1fr_60px] gap-4 px-4 py-2 border-b cursor-pointer hover:bg-muted/50 transition-colors',
+                  isExpanded && 'bg-muted/30',
+                )}
+                onClick={() => onLogClick?.(log)}
+              >
+                {/* Timestamp */}
+                <div className="font-mono text-sm flex items-center">
+                  <TooltipProvider>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <span>{formatTimeAgo(log.timestamp)}</span>
+                      </TooltipTrigger>
+                      <TooltipContent>
+                        <p>{formatTimestamp(log.timestamp)}</p>
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
 
-                  {/* Operation */}
-                  <TableCell>
-                    <Badge className={cn('gap-1', config.bgColor, config.color, 'border-0')}>
-                      <Icon className="h-3 w-3" />
-                      {t(`operations.${log.operation}`)}
-                    </Badge>
-                  </TableCell>
+                {/* Table Name */}
+                <div className="flex items-center">
+                  <Badge variant="outline" className="font-mono text-xs">
+                    {t(`tables.${log.table_name}`, log.table_name)}
+                  </Badge>
+                </div>
 
-                  {/* User */}
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <User className="h-4 w-4 text-muted-foreground" />
-                      <span className="text-sm truncate max-w-[150px]">
-                        {log.user_email || 'System'}
+                {/* Operation */}
+                <div className="flex items-center">
+                  <Badge className={cn('gap-1', config.bgColor, config.color, 'border-0')}>
+                    <Icon className="h-3 w-3" />
+                    {t(`operations.${log.operation}`)}
+                  </Badge>
+                </div>
+
+                {/* User */}
+                <div className="flex items-center gap-2">
+                  <User className="h-4 w-4 text-muted-foreground" />
+                  <span className="text-sm truncate max-w-[150px]">
+                    {log.user_email || 'System'}
+                  </span>
+                </div>
+
+                {/* IP Address */}
+                <div className="hidden lg:flex items-center">
+                  {log.ip_address && (
+                    <div className="flex items-center gap-1 text-xs text-muted-foreground font-mono">
+                      <Globe className="h-3 w-3" />
+                      {log.ip_address}
+                    </div>
+                  )}
+                </div>
+
+                {/* Changes Summary */}
+                <div className="flex items-center">
+                  {hasChanges ? (
+                    <span className="text-sm text-muted-foreground truncate">
+                      {log.diff_summary || log.changed_fields?.slice(0, 3).join(', ')}
+                      {(log.changed_fields?.length || 0) > 3 && (
+                        <span className="text-xs ms-1">+{(log.changed_fields?.length || 0) - 3}</span>
+                      )}
+                    </span>
+                  ) : (
+                    <span className="text-sm text-muted-foreground italic">
+                      {t('detail.no_changes')}
+                    </span>
+                  )}
+                </div>
+
+                {/* Expand Button */}
+                <div className="flex items-center justify-center">
+                  {hasChanges && (
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0"
+                      onClick={(e) => toggleExpand(log.id, e)}
+                    >
+                      {isExpanded ? (
+                        <ChevronUp className="h-4 w-4" />
+                      ) : (
+                        <ChevronDown className="h-4 w-4" />
+                      )}
+                    </Button>
+                  )}
+                </div>
+              </div>
+
+              {/* Expanded Row - Changes Detail */}
+              {isExpanded && hasChanges && (
+                <div className="bg-muted/20 p-4 border-b max-h-[400px] overflow-auto">
+                  <div className="space-y-3">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-medium text-sm">{t('detail.changed_fields')}</h4>
+                      {onLogClick && (
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            onLogClick(log)
+                          }}
+                        >
+                          <ExternalLink className="h-4 w-4 me-2" />
+                          {t('detail.view_related')}
+                        </Button>
+                      )}
+                    </div>
+
+                    <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+                      {log.changed_fields?.map((field) => {
+                        const oldValue = log.old_data?.[field]
+                        const newValue = log.new_data?.[field]
+
+                        return (
+                          <div key={field} className="rounded-md bg-background p-3 border">
+                            <div className="font-medium text-xs text-muted-foreground mb-2">
+                              {field}
+                            </div>
+                            {log.operation === 'INSERT' ? (
+                              <div className="bg-green-50 dark:bg-green-900/20 rounded px-2 py-1 text-sm text-green-800 dark:text-green-200 break-all">
+                                {JSON.stringify(newValue)}
+                              </div>
+                            ) : log.operation === 'DELETE' ? (
+                              <div className="bg-red-50 dark:bg-red-900/20 rounded px-2 py-1 text-sm text-red-800 dark:text-red-200 break-all">
+                                {JSON.stringify(oldValue)}
+                              </div>
+                            ) : (
+                              <div className="space-y-1">
+                                <div className="flex items-start gap-2">
+                                  <span className="text-xs text-muted-foreground min-w-[40px]">
+                                    {t('detail.old_value')}:
+                                  </span>
+                                  <span className="bg-red-50 dark:bg-red-900/20 rounded px-1.5 py-0.5 text-xs text-red-800 dark:text-red-200 break-all">
+                                    {JSON.stringify(oldValue)}
+                                  </span>
+                                </div>
+                                <div className="flex items-start gap-2">
+                                  <span className="text-xs text-muted-foreground min-w-[40px]">
+                                    {t('detail.new_value')}:
+                                  </span>
+                                  <span className="bg-green-50 dark:bg-green-900/20 rounded px-1.5 py-0.5 text-xs text-green-800 dark:text-green-200 break-all">
+                                    {JSON.stringify(newValue)}
+                                  </span>
+                                </div>
+                              </div>
+                            )}
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    {/* Additional metadata */}
+                    <div className="flex flex-wrap gap-4 text-xs text-muted-foreground pt-2 border-t">
+                      {log.session_id && (
+                        <span>
+                          {t('detail.session_id')}: {log.session_id.slice(0, 8)}...
+                        </span>
+                      )}
+                      {log.request_id && (
+                        <span>
+                          {t('detail.request_id')}: {log.request_id.slice(0, 8)}...
+                        </span>
+                      )}
+                      <span>
+                        {t('detail.record_id')}: {log.row_id.slice(0, 8)}...
                       </span>
                     </div>
-                  </TableCell>
-
-                  {/* IP Address */}
-                  <TableCell className="hidden lg:table-cell">
-                    {log.ip_address && (
-                      <div className="flex items-center gap-1 text-xs text-muted-foreground font-mono">
-                        <Globe className="h-3 w-3" />
-                        {log.ip_address}
-                      </div>
-                    )}
-                  </TableCell>
-
-                  {/* Changes Summary */}
-                  <TableCell>
-                    {hasChanges ? (
-                      <span className="text-sm text-muted-foreground">
-                        {log.diff_summary || log.changed_fields?.slice(0, 3).join(', ')}
-                        {(log.changed_fields?.length || 0) > 3 && (
-                          <span className="text-xs ms-1">
-                            +{(log.changed_fields?.length || 0) - 3}
-                          </span>
-                        )}
-                      </span>
-                    ) : (
-                      <span className="text-sm text-muted-foreground italic">
-                        {t('detail.no_changes')}
-                      </span>
-                    )}
-                  </TableCell>
-
-                  {/* Expand Button */}
-                  <TableCell>
-                    {hasChanges && (
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        className="h-8 w-8 p-0"
-                        onClick={(e) => toggleExpand(log.id, e)}
-                      >
-                        {isExpanded ? (
-                          <ChevronUp className="h-4 w-4" />
-                        ) : (
-                          <ChevronDown className="h-4 w-4" />
-                        )}
-                      </Button>
-                    )}
-                  </TableCell>
-                </TableRow>
-
-                {/* Expanded Row - Changes Detail */}
-                {isExpanded && hasChanges && (
-                  <TableRow key={`${log.id}-expanded`}>
-                    <TableCell colSpan={7} className="bg-muted/20 p-4">
-                      <div className="space-y-3">
-                        <div className="flex items-center justify-between">
-                          <h4 className="font-medium text-sm">{t('detail.changed_fields')}</h4>
-                          {onLogClick && (
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                onLogClick(log)
-                              }}
-                            >
-                              <ExternalLink className="h-4 w-4 me-2" />
-                              {t('detail.view_related')}
-                            </Button>
-                          )}
-                        </div>
-
-                        <div className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-                          {log.changed_fields?.map((field) => {
-                            const oldValue = log.old_data?.[field]
-                            const newValue = log.new_data?.[field]
-
-                            return (
-                              <div key={field} className="rounded-md bg-background p-3 border">
-                                <div className="font-medium text-xs text-muted-foreground mb-2">
-                                  {field}
-                                </div>
-                                {log.operation === 'INSERT' ? (
-                                  <div className="bg-green-50 dark:bg-green-900/20 rounded px-2 py-1 text-sm text-green-800 dark:text-green-200 break-all">
-                                    {JSON.stringify(newValue)}
-                                  </div>
-                                ) : log.operation === 'DELETE' ? (
-                                  <div className="bg-red-50 dark:bg-red-900/20 rounded px-2 py-1 text-sm text-red-800 dark:text-red-200 break-all">
-                                    {JSON.stringify(oldValue)}
-                                  </div>
-                                ) : (
-                                  <div className="space-y-1">
-                                    <div className="flex items-start gap-2">
-                                      <span className="text-xs text-muted-foreground min-w-[40px]">
-                                        {t('detail.old_value')}:
-                                      </span>
-                                      <span className="bg-red-50 dark:bg-red-900/20 rounded px-1.5 py-0.5 text-xs text-red-800 dark:text-red-200 break-all">
-                                        {JSON.stringify(oldValue)}
-                                      </span>
-                                    </div>
-                                    <div className="flex items-start gap-2">
-                                      <span className="text-xs text-muted-foreground min-w-[40px]">
-                                        {t('detail.new_value')}:
-                                      </span>
-                                      <span className="bg-green-50 dark:bg-green-900/20 rounded px-1.5 py-0.5 text-xs text-green-800 dark:text-green-200 break-all">
-                                        {JSON.stringify(newValue)}
-                                      </span>
-                                    </div>
-                                  </div>
-                                )}
-                              </div>
-                            )
-                          })}
-                        </div>
-
-                        {/* Additional metadata */}
-                        <div className="flex flex-wrap gap-4 text-xs text-muted-foreground pt-2 border-t">
-                          {log.session_id && (
-                            <span>
-                              {t('detail.session_id')}: {log.session_id.slice(0, 8)}...
-                            </span>
-                          )}
-                          {log.request_id && (
-                            <span>
-                              {t('detail.request_id')}: {log.request_id.slice(0, 8)}...
-                            </span>
-                          )}
-                          <span>
-                            {t('detail.record_id')}: {log.row_id.slice(0, 8)}...
-                          </span>
-                        </div>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                )}
-              </>
-            )
-          })}
-        </TableBody>
-      </Table>
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        }}
+      </FixedSizeList>
     </div>
   )
 }
