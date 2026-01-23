@@ -145,14 +145,30 @@ export const supabaseAuth = async (
       .single()
 
     if (profileError || !userProfile) {
-      // User exists in Supabase Auth but not in users table - allow with minimal info
-      logger.info('User profile not found in users table, using auth data', { userId: user.id })
+      // User exists in Supabase Auth but not in users table
+      logger.info('User profile not found in users table, resolving organization', { userId: user.id })
+
+      // Resolve user's organization from memberships
+      const organizationId = await resolveUserOrganization(user.id)
+
+      if (!organizationId) {
+        logger.warn('Security: User has no organization membership', {
+          userId: user.id,
+          email: user.email,
+        })
+        res.status(403).json({
+          error: 'Forbidden',
+          message: 'User is not a member of any organization',
+        })
+        return
+      }
+
       req.user = {
         id: user.id,
         email: user.email || '',
         role: 'user',
-        organization_id: DEFAULT_ORGANIZATION_ID,
-        tenantId: DEFAULT_ORGANIZATION_ID,
+        organization_id: organizationId,
+        tenantId: organizationId,
         permissions: [],
       }
       next()
@@ -167,13 +183,28 @@ export const supabaseAuth = async (
       return
     }
 
+    // Resolve user's organization from memberships
+    const organizationId = await resolveUserOrganization(userProfile.id)
+
+    if (!organizationId) {
+      logger.warn('Security: User has no organization membership', {
+        userId: userProfile.id,
+        email: userProfile.email,
+      })
+      res.status(403).json({
+        error: 'Forbidden',
+        message: 'User is not a member of any organization',
+      })
+      return
+    }
+
     // Populate req.user
     req.user = {
       id: userProfile.id,
       email: userProfile.email,
       role: userProfile.role || 'user',
-      organization_id: DEFAULT_ORGANIZATION_ID,
-      tenantId: DEFAULT_ORGANIZATION_ID,
+      organization_id: organizationId,
+      tenantId: organizationId,
       fullName: userProfile.full_name,
       department: userProfile.department,
       permissions: [],
@@ -183,6 +214,7 @@ export const supabaseAuth = async (
       userId: userProfile.id,
       email: userProfile.email,
       role: userProfile.role,
+      organizationId,
     })
 
     next()
