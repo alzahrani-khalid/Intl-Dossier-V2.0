@@ -1,8 +1,24 @@
 /**
- * useCompleteAssignment Hook
+ * Complete Assignment Hook
+ * @module hooks/useCompleteAssignment
+ * @feature 014-full-assignment-detail
  *
- * TanStack Query mutation for marking assignments as complete.
- * Includes optimistic locking check and status update.
+ * TanStack Query mutation for marking assignments as complete with SLA validation.
+ *
+ * @description
+ * This mutation handles assignment completion with:
+ * - Optimistic locking conflict detection (409 Conflict)
+ * - SLA met/breached status calculation
+ * - Automatic cache invalidation for assignment and my-assignments queries
+ * - User feedback via toast notifications (i18n-aware)
+ * - Completion notes/summary capture
+ *
+ * @example
+ * const { mutate, isPending } = useCompleteAssignment();
+ * mutate({
+ *   assignment_id: 'uuid',
+ *   completion_notes: 'Completed successfully',
+ * });
  *
  * @see specs/014-full-assignment-detail/contracts/api-spec.yaml#POST /assignments/complete
  */
@@ -14,11 +30,17 @@ import { useTranslation } from 'react-i18next';
 
 const supabase = createClient();
 
+/**
+ * Assignment completion request
+ */
 export interface CompleteAssignmentRequest {
   assignment_id: string;
   completion_notes?: string;
 }
 
+/**
+ * Assignment completion response with SLA status
+ */
 export interface CompleteAssignmentResponse {
   assignment_id: string;
   status: string;
@@ -27,6 +49,26 @@ export interface CompleteAssignmentResponse {
   sla_met: boolean;
 }
 
+/**
+ * Hook to mark an assignment as complete
+ *
+ * @description
+ * Completes an assignment with automatic SLA validation and cache updates.
+ * Handles optimistic locking conflicts and shows appropriate user feedback.
+ * On success, invalidates assignment detail and my-assignments queries.
+ *
+ * @returns TanStack Mutation result with mutate function
+ *
+ * @example
+ * // Basic usage
+ * const { mutate, isPending } = useCompleteAssignment();
+ * mutate({ assignment_id: 'uuid', completion_notes: 'Done' });
+ *
+ * @example
+ * // With loading state
+ * const { mutate, isPending, isError, error } = useCompleteAssignment();
+ * const handleComplete = () => mutate({ assignment_id: id });
+ */
 export function useCompleteAssignment() {
   const queryClient = useQueryClient();
   const { toast } = useToast();

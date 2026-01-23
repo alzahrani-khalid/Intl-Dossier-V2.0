@@ -1,7 +1,38 @@
 /**
- * TanStack Query hooks for Intake API
+ * Intake API Hooks
+ * @module hooks/useIntakeApi
+ * @feature 012-intake-system
  *
- * Provides React hooks for all intake-related API operations
+ * TanStack Query hooks for intake ticket management with automatic caching,
+ * cache invalidation, optimistic updates, and AI-powered triage.
+ *
+ * @description
+ * This module provides a comprehensive set of React hooks for managing intake tickets:
+ * - Query hooks for fetching ticket lists, details, and attachments
+ * - Mutation hooks for create, update, assign, convert, merge, and close operations
+ * - AI-powered triage suggestions for categorization and routing
+ * - Duplicate detection for preventing redundant tickets
+ * - SLA management with pause/resume capabilities
+ * - Health monitoring for AI service availability
+ * - Attachment management for ticket evidence and documentation
+ *
+ * @example
+ * // Fetch ticket list with filters
+ * const { data, isLoading } = useTicketList({ status: 'open', urgency: 'high' });
+ *
+ * @example
+ * // Create a new intake ticket
+ * const { mutate } = useCreateTicket();
+ * mutate({
+ *   requestType: 'inquiry',
+ *   title: 'New inquiry',
+ *   description: 'Details...',
+ *   urgency: 'normal',
+ * });
+ *
+ * @example
+ * // Get AI triage suggestions
+ * const { data: suggestions } = useTriageSuggestions('ticket-uuid');
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -26,7 +57,25 @@ import {
 // API base URL
 const API_BASE_URL = import.meta.env.VITE_SUPABASE_URL + '/functions/v1'
 
-// Query keys
+/**
+ * Query Keys Factory for intake-related queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation.
+ *
+ * @example
+ * // Invalidate all intake queries
+ * queryClient.invalidateQueries({ queryKey: intakeKeys.all });
+ *
+ * @example
+ * // Invalidate only ticket list queries
+ * queryClient.invalidateQueries({ queryKey: intakeKeys.tickets() });
+ *
+ * @example
+ * // Invalidate specific ticket detail
+ * queryClient.invalidateQueries({ queryKey: intakeKeys.ticket('uuid') });
+ */
 export const intakeKeys = {
   all: ['intake'] as const,
   tickets: () => [...intakeKeys.all, 'tickets'] as const,
@@ -56,7 +105,34 @@ const getAuthHeaders = async () => {
 }
 
 /**
- * Create Ticket
+ * Hook to create a new intake ticket
+ *
+ * @description
+ * Creates a new intake ticket with automatic triage queueing, SLA timer initiation,
+ * and cache invalidation. Transforms camelCase request to snake_case for API.
+ *
+ * @returns TanStack Mutation result with mutate function accepting CreateTicketRequest
+ *
+ * @example
+ * // Basic usage
+ * const { mutate, isPending } = useCreateTicket();
+ * mutate({
+ *   requestType: 'inquiry',
+ *   title: 'New inquiry',
+ *   description: 'Details...',
+ *   urgency: 'normal',
+ * });
+ *
+ * @example
+ * // With dossier link and attachments
+ * const { mutate } = useCreateTicket();
+ * mutate({
+ *   requestType: 'document_request',
+ *   title: 'Document request',
+ *   urgency: 'high',
+ *   dossierId: 'country-uuid',
+ *   attachments: [attachmentId1, attachmentId2],
+ * });
  */
 export const useCreateTicket = () => {
   const queryClient = useQueryClient()
@@ -98,7 +174,35 @@ export const useCreateTicket = () => {
 }
 
 /**
- * List Tickets
+ * Hook to fetch paginated list of intake tickets with filters
+ *
+ * @description
+ * Fetches a paginated list of tickets with optional filtering by status, urgency,
+ * assignment, SLA breach status, and date range. Results are cached based on filter parameters.
+ *
+ * @param filters - Optional filter criteria for tickets
+ * @param filters.status - Ticket status filter
+ * @param filters.requestType - Type of request filter
+ * @param filters.urgency - Urgency level filter
+ * @param filters.assignedTo - Filter by assigned user
+ * @param filters.slaBreached - Filter by SLA breach status
+ * @param filters.page - Page number for pagination
+ * @param filters.limit - Items per page
+ * @returns TanStack Query result with paginated ticket list
+ *
+ * @example
+ * // Fetch all tickets
+ * const { data } = useTicketList();
+ *
+ * @example
+ * // Fetch with filters
+ * const { data } = useTicketList({
+ *   status: 'open',
+ *   urgency: 'high',
+ *   slaBreached: true,
+ *   page: 1,
+ *   limit: 20,
+ * });
  */
 export const useTicketList = (filters?: {
   status?: string
@@ -142,7 +246,24 @@ export const useTicketList = (filters?: {
 }
 
 /**
- * Get Ticket Detail
+ * Hook to fetch a single ticket by ID with full details
+ *
+ * @description
+ * Fetches complete ticket details including SLA status, triage history, comments,
+ * and linked entities. Query is automatically cached and disabled if ticketId is empty.
+ *
+ * @param ticketId - The unique identifier (UUID) of the ticket to fetch
+ * @returns TanStack Query result with data typed as TicketDetailResponse
+ *
+ * @example
+ * // Basic usage
+ * const { data, isLoading, error } = useTicket('ticket-uuid');
+ *
+ * @example
+ * // Conditional fetch
+ * const { data } = useTicket(ticketId, {
+ *   enabled: !!ticketId && hasPermission,
+ * });
  */
 export const useTicket = (ticketId: string) => {
   return useQuery({
@@ -165,7 +286,18 @@ export const useTicket = (ticketId: string) => {
 }
 
 /**
- * Update Ticket
+ * Hook to update an existing ticket
+ *
+ * @description
+ * Updates ticket fields with automatic cache invalidation for both detail
+ * and list queries. Supports partial updates.
+ *
+ * @param ticketId - The UUID of the ticket to update
+ * @returns TanStack Mutation result with mutate function accepting UpdateTicketRequest
+ *
+ * @example
+ * const { mutate } = useUpdateTicket('ticket-uuid');
+ * mutate({ status: 'in_progress', notes: 'Working on it' });
  */
 export const useUpdateTicket = (ticketId: string) => {
   const queryClient = useQueryClient()
@@ -194,7 +326,21 @@ export const useUpdateTicket = (ticketId: string) => {
 }
 
 /**
- * Get Triage Suggestions
+ * Hook to fetch AI-powered triage suggestions for a ticket
+ *
+ * @description
+ * Fetches ML-based categorization suggestions including sensitivity level,
+ * urgency classification, and recommended assignment. Results are cached
+ * for 5 minutes to reduce AI service calls.
+ *
+ * @param ticketId - The UUID of the ticket to analyze
+ * @returns TanStack Query result with triage suggestions
+ *
+ * @example
+ * const { data: suggestions, isLoading } = useTriageSuggestions('ticket-uuid');
+ * if (suggestions) {
+ *   // Display suggested_sensitivity, suggested_urgency, suggested_assignee
+ * }
  */
 export const useTriageSuggestions = (ticketId: string) => {
   return useQuery({
@@ -219,7 +365,22 @@ export const useTriageSuggestions = (ticketId: string) => {
 }
 
 /**
- * Apply Triage
+ * Hook to apply triage decision to a ticket
+ *
+ * @description
+ * Applies either AI suggestions or manual override for ticket triage.
+ * Invalidates triage suggestions cache and ticket details after success.
+ *
+ * @param ticketId - The UUID of the ticket being triaged
+ * @returns TanStack Mutation result with mutate function accepting ApplyTriageRequest
+ *
+ * @example
+ * const { mutate } = useApplyTriage('ticket-uuid');
+ * mutate({
+ *   decision_type: 'ai_suggestion',
+ *   suggested_sensitivity: 'internal',
+ *   suggested_urgency: 'high',
+ * });
  */
 export const useApplyTriage = (ticketId: string) => {
   const queryClient = useQueryClient()
@@ -263,7 +424,18 @@ export const useApplyTriage = (ticketId: string) => {
 }
 
 /**
- * Assign Ticket
+ * Hook to assign a ticket to a user or unit
+ *
+ * @description
+ * Assigns ticket with automatic SLA tracking and notification triggers.
+ * Invalidates both ticket detail and list caches.
+ *
+ * @param ticketId - The UUID of the ticket to assign
+ * @returns TanStack Mutation result with mutate function accepting AssignTicketRequest
+ *
+ * @example
+ * const { mutate } = useAssignTicket('ticket-uuid');
+ * mutate({ assignedTo: 'user-uuid', assignedUnit: 'unit-uuid' });
  */
 export const useAssignTicket = (ticketId: string) => {
   const queryClient = useQueryClient()
@@ -292,7 +464,18 @@ export const useAssignTicket = (ticketId: string) => {
 }
 
 /**
- * Convert Ticket
+ * Hook to convert a ticket to another artifact type
+ *
+ * @description
+ * Converts ticket to position, MoU, commitment, or other entity type.
+ * Closes the ticket and creates the new artifact atomically.
+ *
+ * @param ticketId - The UUID of the ticket to convert
+ * @returns TanStack Mutation result with artifact ID on success
+ *
+ * @example
+ * const { mutate } = useConvertTicket('ticket-uuid');
+ * mutate({ targetType: 'position', metadata: {...} });
  */
 export const useConvertTicket = (ticketId: string) => {
   const queryClient = useQueryClient()
@@ -323,7 +506,21 @@ export const useConvertTicket = (ticketId: string) => {
 }
 
 /**
- * Get Duplicate Candidates
+ * Hook to fetch potential duplicate tickets using vector similarity
+ *
+ * @description
+ * Uses semantic search to find similar tickets based on title and description
+ * embeddings. Helps prevent duplicate ticket creation.
+ *
+ * @param ticketId - The UUID of the ticket to check for duplicates
+ * @param threshold - Similarity threshold (0.0-1.0), default 0.65
+ * @returns TanStack Query result with duplicate candidates
+ *
+ * @example
+ * const { data } = useDuplicateCandidates('ticket-uuid', 0.7);
+ * if (data && data.candidates.length > 0) {
+ *   // Show duplicate warning
+ * }
  */
 export const useDuplicateCandidates = (ticketId: string, threshold = 0.65) => {
   return useQuery({
@@ -347,7 +544,18 @@ export const useDuplicateCandidates = (ticketId: string, threshold = 0.65) => {
 }
 
 /**
- * Merge Tickets
+ * Hook to merge multiple tickets into one primary ticket
+ *
+ * @description
+ * Merges duplicate or related tickets, transferring comments, attachments,
+ * and history to the primary ticket. Marks merged tickets as closed.
+ *
+ * @param ticketId - The UUID of the primary ticket
+ * @returns TanStack Mutation result with mutate function accepting MergeTicketsRequest
+ *
+ * @example
+ * const { mutate } = useMergeTickets('primary-ticket-uuid');
+ * mutate({ ticketIds: ['dup1-uuid', 'dup2-uuid'], reason: 'Duplicates' });
  */
 export const useMergeTickets = (ticketId: string) => {
   const queryClient = useQueryClient()
@@ -375,7 +583,17 @@ export const useMergeTickets = (ticketId: string) => {
 }
 
 /**
- * Close Ticket
+ * Hook to close a ticket with resolution details
+ *
+ * @description
+ * Marks ticket as closed, records resolution notes, and finalizes SLA metrics.
+ *
+ * @param ticketId - The UUID of the ticket to close
+ * @returns TanStack Mutation result with mutate function accepting CloseTicketRequest
+ *
+ * @example
+ * const { mutate } = useCloseTicket('ticket-uuid');
+ * mutate({ resolution: 'Resolved via email', resolution_type: 'completed' });
  */
 export const useCloseTicket = (ticketId: string) => {
   const queryClient = useQueryClient()
@@ -404,7 +622,20 @@ export const useCloseTicket = (ticketId: string) => {
 }
 
 /**
- * Upload Attachment
+ * Hook to upload file attachments for tickets
+ *
+ * @description
+ * Uploads files to Supabase Storage and returns attachment metadata.
+ * Supports multiple file types with virus scanning and size validation.
+ *
+ * @returns TanStack Mutation result with mutate function accepting FormData
+ *
+ * @example
+ * const { mutate, isPending } = useUploadAttachment();
+ * const formData = new FormData();
+ * formData.append('file', file);
+ * formData.append('ticket_id', ticketId);
+ * mutate(formData);
  */
 export const useUploadAttachment = () => {
   return useMutation({
@@ -436,7 +667,16 @@ export const useUploadAttachment = () => {
 }
 
 /**
- * Delete Attachment
+ * Hook to delete a ticket attachment
+ *
+ * @description
+ * Removes attachment from storage and database. Requires appropriate permissions.
+ *
+ * @returns TanStack Mutation result with mutate function accepting attachment ID
+ *
+ * @example
+ * const { mutate } = useDeleteAttachment();
+ * mutate('attachment-uuid');
  */
 export const useDeleteAttachment = () => {
   return useMutation({
@@ -481,7 +721,23 @@ export interface SLAConfiguration {
 }
 
 /**
- * Get SLA Preview - Database-driven SLA configuration
+ * Hook to fetch SLA configuration preview for a ticket
+ *
+ * @description
+ * Retrieves SLA targets (acknowledgment, triage, assignment, resolution) based on
+ * urgency, request type, and sensitivity. Falls back to hardcoded defaults if database lookup fails.
+ * Results are cached for 5 minutes.
+ *
+ * @param urgency - Ticket urgency level (critical, high, medium, low)
+ * @param requestType - Optional request type for more specific SLA
+ * @param sensitivity - Optional sensitivity level for classification-specific SLA
+ * @returns TanStack Query result with SLA configuration
+ *
+ * @example
+ * const { data: sla } = useGetSLAPreview('high', 'inquiry', 'internal');
+ * if (sla) {
+ *   // Display resolutionHours, acknowledgmentMinutes, etc.
+ * }
  */
 export const useGetSLAPreview = (urgency: string, requestType?: string, sensitivity?: string) => {
   return useQuery({
@@ -563,7 +819,18 @@ export const useGetSLAPreview = (urgency: string, requestType?: string, sensitiv
 }
 
 /**
- * Pause SLA for a ticket
+ * Hook to pause SLA timer for a ticket
+ *
+ * @description
+ * Pauses SLA countdown for specific stage (acknowledgment, triage, assignment, resolution).
+ * Requires valid reason and respects max pause count/duration limits.
+ *
+ * @param ticketId - The UUID of the ticket
+ * @returns TanStack Mutation result accepting slaType and reason
+ *
+ * @example
+ * const { mutate } = usePauseSLA('ticket-uuid');
+ * mutate({ slaType: 'resolution', reason: 'Awaiting external input' });
  */
 export const usePauseSLA = (ticketId: string) => {
   const queryClient = useQueryClient()
@@ -595,7 +862,17 @@ export const usePauseSLA = (ticketId: string) => {
 }
 
 /**
- * Resume SLA for a ticket
+ * Hook to resume a paused SLA timer
+ *
+ * @description
+ * Resumes SLA countdown after a pause. Tracks total pause duration for reporting.
+ *
+ * @param ticketId - The UUID of the ticket
+ * @returns TanStack Mutation result accepting slaType
+ *
+ * @example
+ * const { mutate } = useResumeSLA('ticket-uuid');
+ * mutate({ slaType: 'resolution' });
  */
 export const useResumeSLA = (ticketId: string) => {
   const queryClient = useQueryClient()
@@ -624,7 +901,17 @@ export const useResumeSLA = (ticketId: string) => {
 }
 
 /**
- * Get SLA pause history for a ticket
+ * Hook to fetch SLA pause/resume history for a ticket
+ *
+ * @description
+ * Retrieves complete pause history with timestamps, reasons, and durations.
+ * Useful for audit trails and SLA reporting.
+ *
+ * @param ticketId - The UUID of the ticket
+ * @returns TanStack Query result with pause history records
+ *
+ * @example
+ * const { data: history } = useSLAPauseHistory('ticket-uuid');
  */
 export const useSLAPauseHistory = (ticketId: string) => {
   return useQuery({
@@ -647,7 +934,19 @@ export const useSLAPauseHistory = (ticketId: string) => {
 }
 
 /**
- * Health Check
+ * Hook to monitor intake system health
+ *
+ * @description
+ * Polls intake service health every 30 seconds. Monitors database connectivity,
+ * Edge Function availability, and system status.
+ *
+ * @returns TanStack Query result with health status
+ *
+ * @example
+ * const { data: health } = useHealthCheck();
+ * if (health?.status !== 'healthy') {
+ *   // Show degraded service banner
+ * }
  */
 export const useHealthCheck = () => {
   return useQuery({
@@ -664,7 +963,20 @@ export const useHealthCheck = () => {
 }
 
 /**
- * AI Health Check
+ * Hook to monitor AI triage service health
+ *
+ * @description
+ * Polls AI service health every 60 seconds. Monitors embedding model, classification
+ * model, and vector store availability. Returns degraded status instead of throwing
+ * on errors to prevent UI crashes.
+ *
+ * @returns TanStack Query result with AI service health status
+ *
+ * @example
+ * const { data: aiHealth } = useAIHealthCheck();
+ * if (aiHealth?.fallback_active) {
+ *   // Show "AI triage unavailable, using manual triage" message
+ * }
  */
 export const useAIHealthCheck = () => {
   return useQuery({

@@ -1,8 +1,24 @@
 /**
- * useEscalateAssignment Hook
+ * Escalate Assignment Hook
+ * @module hooks/useEscalateAssignment
+ * @feature 014-full-assignment-detail
  *
- * TanStack Query mutation for escalating assignments to supervisor.
- * Adds supervisor as observer and triggers notification.
+ * TanStack Query mutation for escalating assignments to supervisor with rate limiting.
+ *
+ * @description
+ * This mutation escalates an assignment to the assignee's supervisor:
+ * - Adds supervisor as observer with notification
+ * - Enforces rate limiting (max 1 escalation per hour per assignment)
+ * - Records escalation reason in timeline events
+ * - Automatically invalidates assignment, my-assignments, and escalations queries
+ * - Provides user feedback via toast notifications (i18n-aware)
+ *
+ * @example
+ * const { mutate } = useEscalateAssignment();
+ * mutate({
+ *   assignment_id: 'uuid',
+ *   reason: 'Need guidance on policy interpretation',
+ * });
  *
  * @see specs/014-full-assignment-detail/contracts/api-spec.yaml#POST /assignments/escalate
  */
@@ -14,11 +30,17 @@ import { useTranslation } from 'react-i18next';
 
 const supabase = createClient();
 
+/**
+ * Escalation request with reason
+ */
 export interface EscalateAssignmentRequest {
   assignment_id: string;
   reason: string;
 }
 
+/**
+ * Escalation response with supervisor details
+ */
 export interface EscalationResponse {
   observer_id: string;
   supervisor_id: string;
@@ -27,6 +49,28 @@ export interface EscalationResponse {
   notification_sent: boolean;
 }
 
+/**
+ * Hook to escalate an assignment to supervisor
+ *
+ * @description
+ * Escalates assignment to the assignee's supervisor by adding them as an observer
+ * and sending a notification. Enforces rate limit of 1 escalation per hour.
+ * On success, invalidates assignment, my-assignments, and escalations queries.
+ *
+ * @returns TanStack Mutation result with mutate function
+ *
+ * @example
+ * // Basic usage
+ * const { mutate, isPending } = useEscalateAssignment();
+ * mutate({ assignment_id: 'uuid', reason: 'Need help' });
+ *
+ * @example
+ * // Handle rate limit error
+ * const { mutate, error } = useEscalateAssignment();
+ * if (error?.message.includes('rate limit')) {
+ *   // Show "Already escalated in the last hour" message
+ * }
+ */
 export function useEscalateAssignment() {
   const queryClient = useQueryClient();
   const { toast } = useToast();

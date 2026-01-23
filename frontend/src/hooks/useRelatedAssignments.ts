@@ -1,8 +1,26 @@
 /**
- * useRelatedAssignments Hook
+ * Related Assignments Hook
+ * @module hooks/useRelatedAssignments
+ * @feature 014-full-assignment-detail
  *
- * TanStack Query hook with Supabase Realtime subscription for related (sibling) assignments.
- * Fetches assignments from the same engagement or dossier.
+ * TanStack Query hook with Realtime subscriptions for related (sibling) assignments.
+ *
+ * @description
+ * This hook fetches assignments that share a common context (engagement or dossier)
+ * with real-time updates:
+ * - Related assignments from the same engagement
+ * - Related assignments for the same dossier
+ * - Overall progress tracking across related assignments
+ * - Real-time subscriptions for sibling assignment changes
+ *
+ * Useful for showing collaborative work progress and team coordination.
+ *
+ * @example
+ * // Fetch related assignments
+ * const { data } = useRelatedAssignments('assignment-uuid');
+ * if (data?.context_type === 'engagement') {
+ *   // Show engagement progress percentage
+ * }
  *
  * @see specs/014-full-assignment-detail/contracts/api-spec.yaml#GET /assignments/related/{id}
  */
@@ -17,6 +35,9 @@ const supabase = createClient();
 
 type Assignment = Database['public']['Tables']['assignments']['Row'];
 
+/**
+ * Sibling assignment with basic details
+ */
 export interface RelatedAssignment {
   id: string;
   work_item_type: string;
@@ -30,6 +51,9 @@ export interface RelatedAssignment {
   assigned_at: string;
 }
 
+/**
+ * Related assignments response with progress tracking
+ */
 export interface RelatedAssignmentsResponse {
   context_type: 'engagement' | 'dossier' | 'none';
   context_id: string | null;
@@ -40,6 +64,31 @@ export interface RelatedAssignmentsResponse {
   progress_percentage: number;
 }
 
+/**
+ * Hook to fetch related assignments with real-time updates
+ *
+ * @description
+ * Fetches assignments sharing the same context (engagement or dossier) and subscribes
+ * to real-time updates. Automatically detects context type and sets up appropriate
+ * Realtime channel subscriptions. Cleanup happens on unmount.
+ *
+ * @param assignmentId - The UUID of the reference assignment
+ * @returns TanStack Query result with RelatedAssignmentsResponse data
+ *
+ * @example
+ * // Basic usage
+ * const { data, isLoading } = useRelatedAssignments('assignment-uuid');
+ * if (data) {
+ *   // Display data.related_assignments, data.progress_percentage
+ * }
+ *
+ * @example
+ * // Show engagement progress
+ * const { data } = useRelatedAssignments('assignment-uuid');
+ * if (data?.context_type === 'engagement') {
+ *   const progress = `${data.completed_count}/${data.total_count} (${data.progress_percentage}%)`;
+ * }
+ */
 export function useRelatedAssignments(assignmentId: string) {
   const queryClient = useQueryClient();
 

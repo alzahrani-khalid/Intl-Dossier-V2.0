@@ -1,9 +1,29 @@
 /**
- * useAssignmentDetail Hook
+ * Assignment Detail Hook
+ * @module hooks/useAssignmentDetail
+ * @feature 013-assignment-engine-sla
+ * @feature 014-full-assignment-detail
  *
  * TanStack Query hook with Supabase Realtime subscription for assignment detail.
- * Subscribes to assignments, comments, checklist, reactions, events, and workflow_stage changes.
- * Includes engagement context for engagement-linked assignments.
+ *
+ * @description
+ * This hook provides real-time assignment details with automatic cache updates:
+ * - Complete assignment details with SLA tracking and engagement context
+ * - Real-time subscriptions for status changes, comments, checklist items
+ * - Timeline events and observer updates
+ * - Comment reactions and workflow stage transitions
+ * - Automatic cache invalidation on related entity changes
+ *
+ * @example
+ * // Basic usage
+ * const { data, isLoading } = useAssignmentDetail('assignment-uuid');
+ *
+ * @example
+ * // Access engagement context
+ * const { data } = useAssignmentDetail('assignment-uuid');
+ * if (data?.engagement) {
+ *   // Show engagement progress percentage, total/completed assignments
+ * }
  *
  * @see specs/014-full-assignment-detail/contracts/api-spec.yaml#GET /assignments/{id}
  */
@@ -22,6 +42,9 @@ type ChecklistItem = Database['public']['Tables']['assignment_checklist_items'][
 type AssignmentObserver = Database['public']['Tables']['assignment_observers']['Row']
 type AssignmentEvent = Database['public']['Tables']['assignment_events']['Row']
 
+/**
+ * Linked entity reference for work items
+ */
 interface LinkedEntity {
   type: 'dossier' | 'position' | 'ticket'
   id: string
@@ -33,6 +56,9 @@ interface LinkedEntity {
   status?: string
 }
 
+/**
+ * Complete assignment detail response with all related data
+ */
 export interface AssignmentDetailResponse {
   assignment: Assignment & {
     assignee_name?: string
@@ -66,6 +92,37 @@ export interface AssignmentDetailResponse {
   checklist_progress: number
 }
 
+/**
+ * Hook to fetch assignment details with real-time updates
+ *
+ * @description
+ * Fetches complete assignment details and subscribes to real-time updates for:
+ * - Assignment status and workflow stage changes
+ * - New comments and reactions
+ * - Checklist item updates
+ * - Observer additions/removals
+ * - Timeline events
+ *
+ * Data is considered stale after 30 seconds and refetched on window focus.
+ * Real-time subscriptions are automatically cleaned up on unmount.
+ *
+ * @param assignmentId - The unique identifier (UUID) of the assignment
+ * @returns TanStack Query result with AssignmentDetailResponse data
+ *
+ * @example
+ * // Basic usage
+ * const { data, isLoading, error } = useAssignmentDetail('assignment-uuid');
+ * if (data) {
+ *   // Access data.assignment, data.comments, data.checklist_items, etc.
+ * }
+ *
+ * @example
+ * // Display SLA health status
+ * const { data } = useAssignmentDetail('assignment-uuid');
+ * if (data?.sla?.health_status === 'breached') {
+ *   // Show SLA breach warning
+ * }
+ */
 export function useAssignmentDetail(assignmentId: string) {
   const queryClient = useQueryClient()
 

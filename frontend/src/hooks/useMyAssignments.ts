@@ -1,8 +1,29 @@
 /**
- * useMyAssignments Hook
+ * My Assignments Hook
+ * @module hooks/useMyAssignments
+ * @feature 013-assignment-engine-sla
  *
- * TanStack Query hook for fetching current user's assignments
- * with SLA deadlines and time remaining.
+ * TanStack Query hook for fetching current user's assignments with SLA tracking.
+ *
+ * @description
+ * This hook fetches the authenticated user's assignments with:
+ * - Real-time SLA deadline and time remaining calculations
+ * - Summary statistics (active, at-risk, breached counts)
+ * - Escalation tracking and warning status
+ * - Optional filtering by status
+ *
+ * Auto-refetches every 30 seconds to keep SLA countdowns accurate.
+ *
+ * @example
+ * // Fetch all active assignments
+ * const { data } = useMyAssignments();
+ *
+ * @example
+ * // Fetch with filters
+ * const { data } = useMyAssignments({
+ *   status: 'in_progress',
+ *   include_completed: false,
+ * });
  *
  * @see specs/013-assignment-engine-sla/contracts/api-spec.yaml#GET /assignments/my-assignments
  */
@@ -12,6 +33,9 @@ import { createClient } from '@/lib/supabase-client'
 
 const supabase = createClient()
 
+/**
+ * Single assignment with SLA tracking
+ */
 export interface Assignment {
   id: string
   work_item_id: string
@@ -28,6 +52,9 @@ export interface Assignment {
   escalation_recipient_name?: string | null
 }
 
+/**
+ * My assignments response with summary statistics
+ */
 export interface MyAssignmentsResponse {
   assignments: Assignment[]
   total_count: number
@@ -38,11 +65,39 @@ export interface MyAssignmentsResponse {
   }
 }
 
+/**
+ * Filter options for my assignments query
+ */
 interface UseMyAssignmentsOptions {
   status?: string
   include_completed?: boolean
 }
 
+/**
+ * Hook to fetch current user's assignments with SLA tracking
+ *
+ * @description
+ * Fetches assignments for the authenticated user with real-time SLA calculations.
+ * Auto-refetches every 30 seconds to maintain accurate countdown timers.
+ * Includes summary statistics for dashboard widgets.
+ *
+ * @param options - Optional filter criteria
+ * @param options.status - Filter by assignment status
+ * @param options.include_completed - Whether to include completed assignments
+ * @returns TanStack Query result with MyAssignmentsResponse data
+ *
+ * @example
+ * // Basic usage
+ * const { data, isLoading } = useMyAssignments();
+ * if (data) {
+ *   // Display data.assignments, data.summary
+ * }
+ *
+ * @example
+ * // Show only at-risk assignments
+ * const { data } = useMyAssignments({ status: 'in_progress' });
+ * const atRisk = data?.assignments.filter(a => a.time_remaining_seconds < 3600);
+ */
 export function useMyAssignments(options: UseMyAssignmentsOptions = {}) {
   return useQuery<MyAssignmentsResponse>({
     queryKey: ['my-assignments', options],

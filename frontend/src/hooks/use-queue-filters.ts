@@ -1,17 +1,51 @@
 /**
- * useQueueFilters Hook
+ * Queue Filters Hook
+ * @module hooks/use-queue-filters
+ * @feature 032-unified-work-management
  *
- * Manages filter state, persists to localStorage with 7-day expiration
- * Task: T082 [P] [US5]
+ * State management hook for waiting queue filters with localStorage persistence.
+ *
+ * @description
+ * This module provides comprehensive filter management for waiting queue views:
+ * - Local state management with React hooks
+ * - Automatic localStorage persistence with 7-day expiration
+ * - Multi-criteria filtering (priority, aging, type, assignee, status)
+ * - Sorting and pagination support
+ * - TanStack Query integration for filtered data fetching
+ * - User preference loading and saving via backend API
+ * - Automatic cache invalidation on filter changes
+ *
+ * Filters are persisted locally to preserve user preferences across sessions
+ * and synced to the backend for cross-device consistency.
+ *
+ * @example
+ * // Basic usage
+ * const { filters, updateFilter, clearFilters } = useQueueFilters();
+ * updateFilter('priority', ['high', 'urgent']);
+ *
+ * @example
+ * // Fetch filtered data
+ * const { filters } = useQueueFilters();
+ * const { data } = useFilteredAssignments(filters);
+ *
+ * @example
+ * // Load user preferences from backend
+ * const { data: preferences } = useFilterPreferences();
  */
 
 import { useState, useEffect, useCallback } from 'react';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
+/** localStorage key for filter persistence */
 const STORAGE_KEY = 'waiting-queue-filters';
+
+/** Filter expiration in days */
 const EXPIRATION_DAYS = 7;
 
+/**
+ * Filter criteria for waiting queue queries
+ */
 export interface FilterCriteria {
   priority?: ('low' | 'medium' | 'high' | 'urgent')[];
   aging?: ('0-2' | '3-6' | '7+')[];
@@ -23,13 +57,22 @@ export interface FilterCriteria {
   page_size?: number;
 }
 
+/**
+ * Stored filter structure with timestamp for expiration
+ */
 interface StoredFilters {
   filters: FilterCriteria;
   timestamp: number;
 }
 
 /**
- * Load filters from localStorage with expiration check
+ * Load filters from localStorage with automatic expiration
+ *
+ * @description
+ * Retrieves filters from localStorage and validates expiration timestamp.
+ * Filters older than EXPIRATION_DAYS are automatically removed.
+ *
+ * @returns Parsed filter criteria or empty object if expired/invalid
  */
 function loadFiltersFromStorage(): FilterCriteria {
   try {
@@ -53,7 +96,13 @@ function loadFiltersFromStorage(): FilterCriteria {
 }
 
 /**
- * Save filters to localStorage with timestamp
+ * Save filters to localStorage with current timestamp
+ *
+ * @description
+ * Persists filter criteria to localStorage with a timestamp for expiration tracking.
+ * Handles errors gracefully without throwing.
+ *
+ * @param filters - Filter criteria to persist
  */
 function saveFiltersToStorage(filters: FilterCriteria): void {
   try {
@@ -68,7 +117,40 @@ function saveFiltersToStorage(filters: FilterCriteria): void {
 }
 
 /**
- * Main hook for managing queue filters
+ * Hook for managing waiting queue filter state
+ *
+ * @description
+ * Manages filter state with automatic localStorage persistence and provides
+ * helper functions for updating filters. Filters are automatically synced to
+ * localStorage on every change and loaded on mount with expiration validation.
+ *
+ * Provides:
+ * - Current filter state
+ * - updateFilter: Update single filter field
+ * - updateFilters: Update multiple filter fields
+ * - clearFilters: Reset all filters and invalidate queries
+ * - resetFilters: Set specific filter values
+ * - filterCount: Number of active filters (excluding page, page_size, sort_by)
+ * - hasFilters: Boolean indicating if any filters are active
+ *
+ * @returns Filter state and management functions
+ *
+ * @example
+ * // Basic filter management
+ * const { filters, updateFilter, hasFilters } = useQueueFilters();
+ * updateFilter('priority', ['urgent', 'high']);
+ * if (hasFilters) {
+ *   // Show "Clear filters" button
+ * }
+ *
+ * @example
+ * // Bulk update
+ * const { updateFilters } = useQueueFilters();
+ * updateFilters({
+ *   priority: ['urgent'],
+ *   type: ['ticket'],
+ *   status: 'pending',
+ * });
  */
 export function useQueueFilters() {
   const [filters, setFilters] = useState<FilterCriteria>(loadFiltersFromStorage);
@@ -141,7 +223,29 @@ export function useQueueFilters() {
 }
 
 /**
- * Fetch filtered assignments from API
+ * Hook to fetch filtered assignments from waiting queue
+ *
+ * @description
+ * Fetches assignments based on provided filter criteria via Edge Function.
+ * Handles array filter parameters correctly (multiple values for same param).
+ * Results are cached for 5 minutes to reduce server load.
+ *
+ * @param filters - Filter criteria to apply to the query
+ * @returns TanStack Query result with filtered assignments
+ *
+ * @example
+ * // Basic usage
+ * const { filters } = useQueueFilters();
+ * const { data, isLoading } = useFilteredAssignments(filters);
+ *
+ * @example
+ * // Manual filter override
+ * const { data } = useFilteredAssignments({
+ *   priority: ['urgent', 'high'],
+ *   type: ['ticket'],
+ *   page: 1,
+ *   page_size: 20,
+ * });
  */
 export function useFilteredAssignments(filters: FilterCriteria) {
   return useQuery({
@@ -186,7 +290,24 @@ export function useFilteredAssignments(filters: FilterCriteria) {
 }
 
 /**
- * Load user filter preferences from backend
+ * Hook to load user's saved filter preferences from backend
+ *
+ * @description
+ * Fetches user's saved filter preferences from the backend for cross-device
+ * synchronization. Results are cached indefinitely (staleTime: Infinity)
+ * since preferences rarely change. Used for initializing filters on login.
+ *
+ * @returns TanStack Query result with user's filter preferences
+ *
+ * @example
+ * // Load and apply saved preferences
+ * const { data: preferences } = useFilterPreferences();
+ * const { resetFilters } = useQueueFilters();
+ * useEffect(() => {
+ *   if (preferences) {
+ *     resetFilters(preferences);
+ *   }
+ * }, [preferences, resetFilters]);
  */
 export function useFilterPreferences() {
   return useQuery({
@@ -216,7 +337,28 @@ export function useFilterPreferences() {
 }
 
 /**
- * Save user filter preferences to backend
+ * Hook to save user's filter preferences to backend
+ *
+ * @description
+ * Mutation to persist user's filter preferences to the backend for cross-device
+ * synchronization. On success, invalidates the filter-preferences query to
+ * trigger a refetch. Useful for "Save preferences" button functionality.
+ *
+ * @returns TanStack Mutation result with mutate function
+ *
+ * @example
+ * // Save current filters as preferences
+ * const { filters } = useQueueFilters();
+ * const { mutate: savePreferences, isPending } = useSaveFilterPreferences();
+ * const handleSave = () => savePreferences(filters);
+ *
+ * @example
+ * // With feedback
+ * const { mutate } = useSaveFilterPreferences();
+ * mutate(filters, {
+ *   onSuccess: () => toast({ title: 'Preferences saved!' }),
+ *   onError: (error) => toast({ title: 'Failed to save', variant: 'destructive' }),
+ * });
  */
 export function useSaveFilterPreferences() {
   const queryClient = useQueryClient();

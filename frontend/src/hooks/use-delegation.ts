@@ -1,9 +1,40 @@
 /**
  * Delegation Management Hooks
- * TanStack Query hooks for delegation operations
+ * @module hooks/use-delegation
+ * @feature 019-user-management-access
  *
- * Feature: 019-user-management-access
- * Task: T053
+ * TanStack Query hooks for delegation operations with validation and expiry tracking.
+ *
+ * @description
+ * This module provides React hooks for managing permission delegations:
+ * - Create delegations with time-based expiry and scope restrictions
+ * - Revoke active delegations with audit trail
+ * - Validate delegation eligibility before creation
+ * - Query user's granted and received delegations
+ * - Track delegations expiring soon for renewal workflows
+ * - Automatic cache invalidation on delegation changes
+ *
+ * Delegations enable temporary permission transfers for:
+ * - Vacation coverage
+ * - Team collaboration
+ * - Emergency access grants
+ * - Time-bound project access
+ *
+ * @example
+ * // Create a delegation
+ * const { mutate } = useDelegatePermissions();
+ * mutate({
+ *   grantee_id: 'user-uuid',
+ *   valid_until: '2025-12-31T23:59:59Z',
+ *   reason: 'Vacation coverage',
+ * });
+ *
+ * @example
+ * // Check delegations expiring soon
+ * const { data } = useDelegationsExpiringSoon();
+ * if (data && data.total > 0) {
+ *   // Show renewal warning
+ * }
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -21,10 +52,21 @@ import {
   type MyDelegationsResponse,
 } from '@/services/user-management-api';
 
-// ============================================================================
-// Query Keys
-// ============================================================================
-
+/**
+ * Query Keys Factory for delegation-related queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation.
+ *
+ * @example
+ * // Invalidate all delegation queries
+ * queryClient.invalidateQueries({ queryKey: delegationKeys.all });
+ *
+ * @example
+ * // Invalidate only my delegations
+ * queryClient.invalidateQueries({ queryKey: delegationKeys.myDelegations() });
+ */
 export const delegationKeys = {
   all: ['delegations'] as const,
   myDelegations: (params?: {
