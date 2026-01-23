@@ -32,6 +32,7 @@ import {
   ExternalLink,
 } from 'lucide-react'
 import type { Database } from '../../../../backend/src/types/database.types'
+import type { JsonObject } from '@/types/common.types'
 import { SLAIndicator } from './SLAIndicator'
 // import { ContributorsList } from './ContributorsList';
 // import { AddContributorDialog } from './AddContributorDialog';
@@ -43,11 +44,60 @@ import { DossierLinksWidget } from '@/components/Dossier'
 
 type Task = Database['public']['Tables']['tasks']['Row']
 
+/**
+ * Extended Task type with additional properties from API joins
+ */
+interface TaskWithDetails extends Task {
+  assignee_name?: string
+  assignee_email?: string
+  created_by_name?: string
+  work_item_title_en?: string
+  work_item_title_ar?: string
+  work_items?: WorkItemLink[]
+  engagement?: TaskEngagement
+}
+
+/**
+ * Work item link from task source JSONB
+ */
+interface WorkItemLink {
+  type: string
+  id: string
+  title_en?: string
+  title_ar?: string
+}
+
+/**
+ * Engagement details from API join
+ */
+interface TaskEngagement {
+  id: string
+  title: string
+  engagement_type: string
+  engagement_date: string
+  location?: string
+  dossier?: {
+    id: string
+    name_en: string
+    name_ar: string
+  }
+}
+
+/**
+ * Task source JSONB structure
+ */
+interface TaskSource extends JsonObject {
+  type?: 'single' | 'multi'
+  dossier_ids?: string[]
+  position_ids?: string[]
+  ticket_ids?: string[]
+}
+
 interface TaskDetailProps {
-  task: Task
-  onEdit?: (task: Task) => void
-  onDelete?: (task: Task) => void
-  onStatusChange?: (task: Task, newStatus: Task['status']) => void
+  task: TaskWithDetails
+  onEdit?: (task: TaskWithDetails) => void
+  onDelete?: (task: TaskWithDetails) => void
+  onStatusChange?: (task: TaskWithDetails, newStatus: Task['status']) => void
   showActions?: boolean
   isTaskOwner?: boolean // Whether current user is assignee or creator
 }
@@ -195,14 +245,14 @@ export function TaskDetail({
             </div>
             <div className="ps-6">
               <p className="text-sm text-foreground">
-                {(task as any).assignee_name || task.assignee_id || t('unassigned', 'Unassigned')}
+                {task.assignee_name || task.assignee_id || t('unassigned', 'Unassigned')}
               </p>
-              {(task as any).assignee_email && (
+              {task.assignee_email && (
                 <a
-                  href={`mailto:${(task as any).assignee_email}`}
+                  href={`mailto:${task.assignee_email}`}
                   className="text-xs text-primary hover:underline"
                 >
-                  {(task as any).assignee_email}
+                  {task.assignee_email}
                 </a>
               )}
             </div>
@@ -259,7 +309,7 @@ export function TaskDetail({
           </div>
 
           {/* Engagement Information - if task is linked to an engagement */}
-          {(task as any).engagement && (
+          {task.engagement && (
             <>
               <Separator />
               <div className="space-y-3">
@@ -272,7 +322,7 @@ export function TaskDetail({
                 {/* Engagement Title */}
                 <div className="ps-6">
                   <p className="text-sm font-semibold text-foreground">
-                    {(task as any).engagement.title}
+                    {task.engagement.title}
                   </p>
                 </div>
 
@@ -281,13 +331,13 @@ export function TaskDetail({
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">{t('type', 'Type')}</p>
                     <Badge variant="outline" className="capitalize">
-                      {(task as any).engagement.engagement_type.replace(/_/g, ' ')}
+                      {task.engagement.engagement_type.replace(/_/g, ' ')}
                     </Badge>
                   </div>
                   <div>
                     <p className="text-xs text-muted-foreground mb-1">{t('date', 'Date')}</p>
                     <p className="text-sm">
-                      {new Date((task as any).engagement.engagement_date).toLocaleDateString(
+                      {new Date(task.engagement.engagement_date).toLocaleDateString(
                         isRTL ? 'ar-SA' : 'en-US',
                         { year: 'numeric', month: 'long', day: 'numeric' },
                       )}
@@ -296,27 +346,27 @@ export function TaskDetail({
                 </div>
 
                 {/* Location */}
-                {(task as any).engagement.location && (
+                {task.engagement.location && (
                   <div className="ps-6">
                     <p className="text-xs text-muted-foreground mb-1">
                       {t('location', 'Location')}
                     </p>
-                    <p className="text-sm text-foreground">{(task as any).engagement.location}</p>
+                    <p className="text-sm text-foreground">{task.engagement.location}</p>
                   </div>
                 )}
 
                 {/* Linked Dossier */}
-                {(task as any).engagement.dossier && (
+                {task.engagement.dossier && (
                   <div className="ps-6">
                     <p className="text-xs text-muted-foreground mb-1">
                       {t('related_dossier', 'Related Dossier')}
                     </p>
                     <Button asChild variant="outline" size="sm" className="mt-1 h-9">
-                      <a href={`/dossiers/${(task as any).engagement.dossier.id}`}>
+                      <a href={`/dossiers/${task.engagement.dossier.id}`}>
                         <ExternalLink className={`h-3.5 w-3.5 ${isRTL ? 'ms-2' : 'me-2'}`} />
                         {isRTL
-                          ? (task as any).engagement.dossier.name_ar
-                          : (task as any).engagement.dossier.name_en}
+                          ? task.engagement.dossier.name_ar
+                          : task.engagement.dossier.name_en}
                       </a>
                     </Button>
                   </div>
@@ -379,7 +429,7 @@ export function TaskDetail({
             {t('linked_work_items', 'Linked Work Items')}
             {(() => {
               // Parse source JSONB to get all linked items
-              const source = task.source as any
+              const source = task.source as TaskSource | null
               const totalLinked =
                 (source?.dossier_ids?.length || 0) +
                 (source?.position_ids?.length || 0) +
@@ -397,15 +447,14 @@ export function TaskDetail({
         <CardContent className="space-y-4">
           {/* Display linked items */}
           {(() => {
-            const taskWithWorkItems = task as any
-            const workItemsMap = new Map<string, any>()
+            const workItemsMap = new Map<string, { type: string; id: string; title: string }>()
 
             // Add single work item if exists
             if (task.work_item_id && task.work_item_type && task.work_item_type !== 'generic') {
               const key = `${task.work_item_type}-${task.work_item_id}`
               const workItemTitle = isRTL
-                ? taskWithWorkItems.work_item_title_ar || taskWithWorkItems.work_item_title_en
-                : taskWithWorkItems.work_item_title_en || taskWithWorkItems.work_item_title_ar
+                ? task.work_item_title_ar || task.work_item_title_en
+                : task.work_item_title_en || task.work_item_title_ar
 
               workItemsMap.set(key, {
                 type: task.work_item_type,
@@ -416,8 +465,8 @@ export function TaskDetail({
             }
 
             // Add multiple work items from API (fetched with titles), deduplicating
-            if (taskWithWorkItems.work_items && Array.isArray(taskWithWorkItems.work_items)) {
-              taskWithWorkItems.work_items.forEach((item: any) => {
+            if (task.work_items && Array.isArray(task.work_items)) {
+              task.work_items.forEach((item) => {
                 // Skip invalid items
                 if (!item || !item.type || !item.id) return
 
@@ -465,8 +514,7 @@ export function TaskDetail({
               </p>
               <WorkItemLinker
                 selectedItems={(() => {
-                  const taskWithWorkItems = task as any
-                  const itemsMap = new Map<string, any>()
+                  const itemsMap = new Map<string, { type: string; id: string; title: string }>()
 
                   // Add primary work item
                   if (
@@ -476,8 +524,8 @@ export function TaskDetail({
                   ) {
                     const key = `${task.work_item_type}-${task.work_item_id}`
                     const workItemTitle = isRTL
-                      ? taskWithWorkItems.work_item_title_ar || taskWithWorkItems.work_item_title_en
-                      : taskWithWorkItems.work_item_title_en || taskWithWorkItems.work_item_title_ar
+                      ? task.work_item_title_ar || task.work_item_title_en
+                      : task.work_item_title_en || task.work_item_title_ar
 
                     itemsMap.set(key, {
                       type: task.work_item_type,
@@ -489,8 +537,8 @@ export function TaskDetail({
                   }
 
                   // Add items from source JSONB, deduplicating
-                  if (taskWithWorkItems.work_items && Array.isArray(taskWithWorkItems.work_items)) {
-                    taskWithWorkItems.work_items.forEach((item: any) => {
+                  if (task.work_items && Array.isArray(task.work_items)) {
+                    task.work_items.forEach((item) => {
                       // Skip invalid items
                       if (!item || !item.type || !item.id) return
 
@@ -521,7 +569,7 @@ export function TaskDetail({
                   const additionalItems = newItems.slice(1)
 
                   // Build source JSONB
-                  const source: any = {
+                  const source: TaskSource = {
                     type: additionalItems.length > 0 ? 'multi' : 'single',
                   }
 
