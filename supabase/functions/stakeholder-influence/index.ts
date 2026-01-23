@@ -366,7 +366,7 @@ serve(async (req) => {
 
           let query = supabase
             .from('influence_reports')
-            .select('*')
+            .select('id, created_at, updated_at')
             .order('generated_at', { ascending: false });
 
           if (reportType) {
@@ -389,7 +389,7 @@ serve(async (req) => {
         if (secondPart === 'reports' && thirdPart) {
           const { data, error } = await supabase
             .from('influence_reports')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('id', thirdPart)
             .single();
 
@@ -442,7 +442,7 @@ serve(async (req) => {
           ];
           const { data: influenceData } = await supabase
             .from('stakeholder_influence_scores')
-            .select('*')
+            .select('id, created_at, updated_at')
             .in('dossier_id', nodeIds);
 
           const influenceMap = new Map(
@@ -623,7 +623,7 @@ serve(async (req) => {
         const dossierType = url.searchParams.get('type');
         const minScore = url.searchParams.get('min_score');
 
-        let query = supabase.from('stakeholder_network_summary').select('*');
+        let query = supabase.from('stakeholder_network_summary').select('id, created_at, updated_at');
 
         if (dossierType) {
           query = query.eq('dossier_type', dossierType);

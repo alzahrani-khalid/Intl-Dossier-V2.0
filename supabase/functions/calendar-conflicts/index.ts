@@ -305,7 +305,7 @@ async function handleGenerateSuggestions(req: Request, supabase: any) {
   // Get the event details
   const { data: event, error: eventError } = await supabase
     .from('calendar_events')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', params.event_id)
     .single();
 
@@ -402,7 +402,7 @@ async function handleGetSuggestions(req: Request, supabase: any) {
   const conflictId = url.searchParams.get('conflict_id');
   const eventId = url.searchParams.get('event_id');
 
-  let query = supabase.from('rescheduling_suggestions').select('*');
+  let query = supabase.from('rescheduling_suggestions').select('id, created_at, updated_at');
 
   if (conflictId) {
     query = query.eq('conflict_id', conflictId);
@@ -470,7 +470,7 @@ async function handleResolveConflict(req: Request, supabase: any, userId: string
   if (accepted_suggestion_id) {
     const { data: suggestion } = await supabase
       .from('rescheduling_suggestions')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', accepted_suggestion_id)
       .single();
 
@@ -592,7 +592,7 @@ async function handleGetScenarios(req: Request, supabase: any, userId: string) {
   const url = new URL(req.url);
   const status = url.searchParams.get('status');
 
-  let query = supabase.from('what_if_scenarios').select('*').eq('created_by', userId);
+  let query = supabase.from('what_if_scenarios').select('id, created_at, updated_at').eq('created_by', userId);
 
   if (status) {
     query = query.eq('status', status);
@@ -631,7 +631,7 @@ async function handleApplyScenario(req: Request, supabase: any, userId: string) 
   // Get the scenario
   const { data: scenario, error: scenarioError } = await supabase
     .from('what_if_scenarios')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', scenario_id)
     .eq('created_by', userId)
     .single();
@@ -733,7 +733,7 @@ async function handleBulkReschedule(req: Request, supabase: any, userId: string)
   // Get all events
   const { data: events, error: eventsError } = await supabase
     .from('calendar_events')
-    .select('*')
+    .select('id, created_at, updated_at')
     .in('id', params.event_ids)
     .order('start_datetime', { ascending: true });
 
@@ -842,7 +842,7 @@ async function checkTravelTimeConflicts(
   // Get travel time estimate
   const { data: travelData } = await supabase
     .from('travel_logistics')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('from_location', priorEvent.location_en || priorEvent.room_en)
     .eq('to_location', venue)
     .single();

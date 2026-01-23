@@ -209,7 +209,7 @@ async function getDataSourcesWithCounts(
         // Count events from external calendars
         const { count } = await supabase
           .from('external_calendar_events')
-          .select('*', { count: 'exact', head: true })
+          .select('id', { count: 'exact', head: true })
           .eq('connection_id', conn.id);
 
         dataSources.push({
@@ -225,7 +225,7 @@ async function getDataSourcesWithCounts(
   if (section === 'documents') {
     const { count } = await supabase
       .from('documents')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .neq('entity_id', entityId);
 
     dataSources.push({
@@ -239,7 +239,7 @@ async function getDataSourcesWithCounts(
   if (section === 'relationships' || section === 'contacts' || section === 'briefs') {
     const { count } = await supabase
       .from('dossiers')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .neq('id', entityId);
 
     dataSources.push({
@@ -291,7 +291,7 @@ async function generatePreview(
   if (sourceType === 'document' && sourceId === 'existing-documents') {
     const { data: documents, count } = await supabase
       .from('documents')
-      .select('*', { count: 'exact' })
+      .select('id', { count: 'exact' })
       .neq('entity_id', entityId)
       .order('uploaded_at', { ascending: false })
       .limit(limit);
@@ -404,7 +404,7 @@ async function generatePreview(
     const connectionId = sourceId.replace('calendar-', '');
     const { data: events, count } = await supabase
       .from('external_calendar_events')
-      .select('*', { count: 'exact' })
+      .select('id', { count: 'exact' })
       .eq('connection_id', connectionId)
       .order('start_time', { ascending: true })
       .limit(limit);

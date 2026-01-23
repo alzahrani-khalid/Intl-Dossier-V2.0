@@ -174,7 +174,7 @@ serve(async (req) => {
     // Get approval request
     const { data: approvalRequest, error: requestError } = await supabaseAdmin
       .from("pending_role_approvals")
-      .select("*")
+      .select("id, user_id, requested_role, requester_id, status, reason, created_at, updated_at")
       .eq("id", body.approval_request_id)
       .single();
 

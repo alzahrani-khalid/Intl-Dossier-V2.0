@@ -63,7 +63,7 @@ serve(async (req) => {
     // Verify suggestion exists
     const { data: suggestion, error: suggestionError } = await supabaseClient
       .from('position_suggestions')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', suggestion_id)
       .eq('engagement_id', engagementId)
       .single();

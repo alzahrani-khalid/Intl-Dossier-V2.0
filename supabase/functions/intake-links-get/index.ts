@@ -206,7 +206,7 @@ serve(async (req) => {
     // Fetch entity links
     let linksQuery = supabaseClient
       .from("intake_entity_links")
-      .select("*")
+      .select("id, intake_ticket_id, entity_type, entity_id, link_status, confidence_score, suggested_by, created_at, updated_at")
       .eq("intake_id", intakeId)
       .order("link_order", { ascending: true });
 

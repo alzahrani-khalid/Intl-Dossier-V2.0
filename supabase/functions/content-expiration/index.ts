@@ -183,7 +183,7 @@ async function handleGet(supabase: any, url: URL, userId: string) {
 
       let query = supabase
         .from('content_expiration_rules')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('is_active', true)
         .order('priority', { ascending: true });
 
@@ -215,7 +215,7 @@ async function handleGet(supabase: any, url: URL, userId: string) {
 
       const { data, error } = await supabase
         .from('content_expiration_history')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('entity_type', entityType)
         .eq('entity_id', entityId)
         .order('created_at', { ascending: false })

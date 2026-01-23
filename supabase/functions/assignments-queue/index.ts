@@ -126,7 +126,7 @@ serve(async (req) => {
     // Build query
     let query = supabaseClient
       .from('assignment_queue')
-      .select('*', { count: 'exact' })
+      .select('id, work_item_id, work_item_type, required_skills, target_unit_id, priority, notes, attempts, created_at, updated_at', { count: 'exact' })
       .order('priority', { ascending: false }) // Urgent first
       .order('created_at', { ascending: true }); // FIFO within priority
 

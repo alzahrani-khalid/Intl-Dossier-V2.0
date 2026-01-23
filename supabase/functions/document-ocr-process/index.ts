@@ -348,7 +348,7 @@ serve(async (req) => {
 
       const { data: textContent, error: fetchError } = await supabaseAdmin
         .from('document_text_content')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('document_id', documentId)
         .eq('document_table', documentTable)
         .single();

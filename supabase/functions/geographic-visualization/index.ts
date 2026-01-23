@@ -112,7 +112,7 @@ async function handleCountries(
   supabase: ReturnType<typeof createClient>,
   filters: GeoVisualizationFilters
 ): Promise<Response> {
-  let query = supabase.from('v_country_engagement_metrics').select('*');
+  let query = supabase.from('v_country_engagement_metrics').select('id, created_at, updated_at');
 
   // Apply region filter
   if (filters.regions?.length) {
@@ -182,7 +182,7 @@ async function handleRelationships(
   supabase: ReturnType<typeof createClient>,
   filters: GeoVisualizationFilters
 ): Promise<Response> {
-  let query = supabase.from('v_country_relationship_flows').select('*');
+  let query = supabase.from('v_country_relationship_flows').select('id, created_at, updated_at');
 
   // Apply relationship type filter
   if (filters.relationshipTypes?.length) {
@@ -245,7 +245,7 @@ async function handleSummary(
   // Get regional breakdown
   const { data: regionalData, error: regionalError } = await supabase
     .from('v_regional_engagement_summary')
-    .select('*');
+    .select('id, created_at, updated_at');
 
   if (regionalError) {
     console.error('Regional summary error:', regionalError);

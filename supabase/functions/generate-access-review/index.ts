@@ -223,7 +223,8 @@ serve(async (req) => {
     const inactiveThreshold = body.include_inactive_threshold_days || 90;
 
     // Build query to access_review_summary materialized view
-    let query = supabaseAdmin.from("access_review_summary").select("*");
+    let query = supabaseAdmin.from("access_review_summary")
+      .select("id, review_id, user_id, resource_type, resource_id, current_access, recommendation, created_at, updated_at");
 
     // Apply scope filters
     if (body.review_scope === "department") {

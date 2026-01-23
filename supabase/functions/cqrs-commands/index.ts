@@ -281,7 +281,7 @@ async function handleUpdateDossier(
   // Get current state for diff
   const { data: current, error: fetchError } = await supabase
     .from('dossiers')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', command.id)
     .single();
 
@@ -464,7 +464,7 @@ async function handleDeleteRelationship(
   // Get current state for event
   const { data: current, error: fetchError } = await supabase
     .from('dossier_relationships')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', command.id)
     .single();
 

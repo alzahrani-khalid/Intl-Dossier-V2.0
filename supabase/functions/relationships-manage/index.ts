@@ -121,7 +121,7 @@ serve(async (req) => {
       // Get outgoing relationships
       const { data: outgoing, error: outgoingError } = await supabaseClient
         .from('cd_contact_relationships')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('from_contact_id', contactId)
         .order('created_at', { ascending: false });
 
@@ -130,7 +130,7 @@ serve(async (req) => {
       // Get incoming relationships
       const { data: incoming, error: incomingError } = await supabaseClient
         .from('cd_contact_relationships')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('to_contact_id', contactId)
         .order('created_at', { ascending: false });
 

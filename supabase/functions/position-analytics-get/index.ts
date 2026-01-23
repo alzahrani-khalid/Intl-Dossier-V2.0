@@ -57,7 +57,7 @@ serve(async (req) => {
     // Get or create analytics record
     let { data: analytics, error: analyticsError } = await supabaseClient
       .from('position_usage_analytics')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('position_id', positionId)
       .single();
 

@@ -155,7 +155,7 @@ serve(async (req: Request) => {
     // Check attachment count limit
     const { count: attachmentCount } = await supabase
       .from('attachments')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .eq('position_id', position_id);
 
     if (attachmentCount && attachmentCount >= MAX_ATTACHMENTS_PER_POSITION) {

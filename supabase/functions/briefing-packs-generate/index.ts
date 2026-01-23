@@ -82,7 +82,7 @@ serve(async (req) => {
     // Get engagement
     const { data: engagement, error: engagementError } = await supabase
       .from('engagements')
-      .select('*, dossiers(id, title)')
+      .select('id, engagement_id, pack_type, requested_by, generation_status, generated_at, file_path, error_message, created_at, updated_at, dossiers(id, title)')
       .eq('id', engagementId)
       .single();
 

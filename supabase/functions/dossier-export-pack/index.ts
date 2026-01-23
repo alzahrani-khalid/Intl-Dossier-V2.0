@@ -926,7 +926,7 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
   // Fetch dossier
   const { data: dossier, error: dossierError } = await supabase
     .from('dossiers')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', dossierId)
     .single();
 
@@ -949,12 +949,12 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
     Promise.all([
       supabase
         .from('dossier_relationships')
-        .select('*, target_dossier:target_dossier_id(id, name_en, name_ar, type)')
+        .select('id, created_at, updated_at, target_dossier:target_dossier_id(id, name_en, name_ar, type)'))
         .eq('source_dossier_id', dossierId)
         .is('deleted_at', null),
       supabase
         .from('dossier_relationships')
-        .select('*, source_dossier:source_dossier_id(id, name_en, name_ar, type)')
+        .select('id, created_at, updated_at, source_dossier:source_dossier_id(id, name_en, name_ar, type)'))
         .eq('target_dossier_id', dossierId)
         .is('deleted_at', null),
     ]).then(([outgoing, incoming]) => {
@@ -1009,7 +1009,7 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
     // Calendar events
     supabase
       .from('calendar_entries')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('dossier_id', dossierId)
       .gte('start_datetime', new Date().toISOString())
       .order('start_datetime', { ascending: true })
@@ -1018,7 +1018,7 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
     // Key contacts
     supabase
       .from('key_contacts')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('dossier_id', dossierId)
       .order('name', { ascending: true })
       .limit(20),
@@ -1026,7 +1026,7 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
     // Recent activities
     supabase
       .from('audit_logs')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('entity_id', dossierId)
       .order('created_at', { ascending: false })
       .limit(20),
@@ -1034,7 +1034,7 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
     // Documents
     supabase
       .from('documents')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('entity_type', 'dossier')
       .eq('entity_id', dossierId)
       .limit(20),
@@ -1049,7 +1049,7 @@ async function fetchDossierData(supabase: any, dossierId: string): Promise<any> 
   if (commitmentIds.length > 0) {
     const { data } = await supabase
       .from('commitments')
-      .select('*, assignee:responsible_user_id(full_name)')
+      .select('id, created_at, updated_at, assignee:responsible_user_id(full_name)'))
       .in('id', commitmentIds);
     commitments = (data || []).map((c: any) => ({
       ...c,

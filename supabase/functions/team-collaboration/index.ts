@@ -146,7 +146,7 @@ async function getTemplates(
   try {
     const { data, error } = await supabase
       .from('invitation_message_templates')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('is_active', true)
       .or(`entity_type.eq.${entityType},entity_type.eq.generic`)
       .order('is_default', { ascending: false });

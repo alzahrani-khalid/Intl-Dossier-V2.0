@@ -340,7 +340,7 @@ async function handleOAuth(req: Request, supabase: any, userId: string, route: R
   // Find pending connection with matching state
   const { data: connection, error: findError } = await supabase
     .from('external_calendar_connections')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('user_id', userId)
     .eq('provider', provider)
     .eq('sync_status', 'pending')
@@ -510,7 +510,7 @@ async function handleCalendars(req: Request, supabase: any, userId: string, rout
   if (method === 'GET' && route.id) {
     const { data, error } = await supabase
       .from('external_calendars')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('connection_id', route.id)
       .order('is_primary', { ascending: false });
 
@@ -578,7 +578,7 @@ async function handleSync(req: Request, supabase: any, userId: string) {
   // Get connection
   const { data: connection, error: connError } = await supabase
     .from('external_calendar_connections')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', connection_id)
     .eq('user_id', userId)
     .single();
@@ -625,7 +625,7 @@ async function handleSync(req: Request, supabase: any, userId: string) {
   // Get calendars to sync
   let calendarsQuery = supabase
     .from('external_calendars')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('connection_id', connection_id)
     .eq('sync_enabled', true);
 
@@ -855,7 +855,7 @@ async function importExternalEvents(
       // Check if mapping exists
       const { data: existingMapping } = await supabase
         .from('calendar_event_sync_mapping')
-        .select('*, internal_event:calendar_events(*)')
+        .select('id, created_at, updated_at, internal_event:calendar_events:calendar_events(id, title, description, start_time, end_time, location, created_at, updated_at)'))
         .eq('external_calendar_id', calendar.id)
         .eq(
           'external_event_id',
@@ -983,7 +983,7 @@ async function exportInternalEvents(
   // Get internal events that need to be exported
   const { data: mappings } = await supabase
     .from('calendar_event_sync_mapping')
-    .select('*, internal_event:calendar_events(*)')
+    .select('id, created_at, updated_at, internal_event:calendar_events:calendar_events(id, title, description, start_time, end_time, location, created_at, updated_at)'))
     .eq('external_calendar_id', calendar.id)
     .eq('sync_state', 'pending_push');
 
@@ -1321,7 +1321,7 @@ async function handleIcal(req: Request, supabase: any, userId: string, route: Ro
   if (method === 'GET' && !route.id) {
     const { data, error } = await supabase
       .from('ical_feed_subscriptions')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('user_id', userId)
       .order('created_at', { ascending: false });
 
@@ -1420,7 +1420,7 @@ async function handleIcal(req: Request, supabase: any, userId: string, route: Ro
   if (method === 'POST' && route.id && route.subAction === 'refresh') {
     const { data: subscription, error: subError } = await supabase
       .from('ical_feed_subscriptions')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', route.id)
       .eq('user_id', userId)
       .single();

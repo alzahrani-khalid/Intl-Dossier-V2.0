@@ -54,7 +54,7 @@ serve(async (req) => {
     // Get briefing pack by ID (job_id is the briefing pack ID)
     const { data: briefingPack, error: packError } = await supabase
       .from('briefing_packs')
-      .select('*, engagements(dossier_id, dossiers(created_by))')
+      .select('id, engagement_id, pack_type, requested_by, generation_status, generated_at, file_path, error_message, created_at, updated_at, engagements(dossier_id, dossiers(created_by)))')
       .eq('id', jobId)
       .single();
 

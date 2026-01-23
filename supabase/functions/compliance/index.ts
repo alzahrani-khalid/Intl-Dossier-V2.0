@@ -218,7 +218,7 @@ async function handleListRules(supabaseClient: ReturnType<typeof createClient>, 
   const limit = parseInt(params.get('limit') || '20');
   const offset = (page - 1) * limit;
 
-  let query = supabaseClient.from('compliance_rules').select('*', { count: 'exact' });
+  let query = supabaseClient.from('compliance_rules').select('id', { count: 'exact' });
 
   if (is_active !== null) {
     query = query.eq('is_active', is_active === 'true');
@@ -264,7 +264,7 @@ async function handleListRules(supabaseClient: ReturnType<typeof createClient>, 
 async function handleGetRule(supabaseClient: ReturnType<typeof createClient>, ruleId: string) {
   const { data, error } = await supabaseClient
     .from('compliance_rules')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', ruleId)
     .single();
 
@@ -393,7 +393,7 @@ async function handleListViolations(supabaseClient: ReturnType<typeof createClie
 
   let query = supabaseClient
     .from('compliance_violations')
-    .select('*, rule:compliance_rules(*)', { count: 'exact' });
+    .select('id, name, description, rule_type, severity, created_at, rule:compliance_rules:compliance_rules(id, name, description, rule_type, severity, created_at)'), { count: 'exact' });
 
   if (entity_type) {
     query = query.eq('entity_type', entity_type);
@@ -450,7 +450,7 @@ async function handleGetViolation(
 ) {
   const { data: violation, error } = await supabaseClient
     .from('compliance_violations')
-    .select('*, rule:compliance_rules(*)')
+    .select('id, name, description, rule_type, severity, created_at, rule:compliance_rules:compliance_rules(id, name, description, rule_type, severity, created_at)'))
     .eq('id', violationId)
     .single();
 
@@ -464,7 +464,7 @@ async function handleGetViolation(
   // Get sign-offs for this violation
   const { data: signoffs } = await supabaseClient
     .from('compliance_signoffs')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('violation_id', violationId)
     .order('signed_at', { ascending: false });
 
@@ -603,7 +603,7 @@ async function handleGetSummary(
 async function handleListTemplates(supabaseClient: ReturnType<typeof createClient>) {
   const { data, error } = await supabaseClient
     .from('compliance_rule_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('is_active', true)
     .order('category')
     .order('template_code');

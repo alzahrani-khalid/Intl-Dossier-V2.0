@@ -393,7 +393,7 @@ Deno.serve(async (req: Request) => {
         // If function doesn't exist, create initial progress manually
         const { data: existingProgress } = await supabase
           .from('user_onboarding_progress')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('user_id', user.id)
           .single();
 
@@ -500,7 +500,7 @@ Deno.serve(async (req: Request) => {
         // Get current progress
         const { data: currentProgress } = await supabase
           .from('user_onboarding_progress')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('user_id', user.id)
           .single();
 
@@ -571,7 +571,7 @@ Deno.serve(async (req: Request) => {
 
         const { data: currentProgress } = await supabase
           .from('user_onboarding_progress')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('user_id', user.id)
           .single();
 

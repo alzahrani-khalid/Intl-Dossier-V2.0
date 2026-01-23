@@ -361,12 +361,12 @@ async function getWatchlistSummary(supabase: ReturnType<typeof createClient>, us
   // Also get total counts
   const { count: totalCount } = await supabase
     .from('user_watchlist')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
     .eq('user_id', userId);
 
   const { count: activeCount } = await supabase
     .from('user_watchlist')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
     .eq('user_id', userId)
     .eq('is_active', true);
 

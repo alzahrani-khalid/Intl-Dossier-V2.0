@@ -214,7 +214,7 @@ serve(async (req) => {
           // Get total count
           const { count } = await supabase
             .from('dossier_relationships')
-            .select('*', { count: 'exact', head: true })
+            .select('id', { count: 'exact', head: true })
             .or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`);
 
           return successResponse({

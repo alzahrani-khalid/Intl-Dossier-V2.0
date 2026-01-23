@@ -115,7 +115,7 @@ serve(async (req) => {
         include.includes("engagements")
           ? supabaseClient
               .from("dossier_engagement_stats")
-              .select("*")
+      .select("id, dossier_id, total_engagements, active_engagements, upcoming_engagements, past_engagements, created_at, updated_at")
               .eq("dossier_id", dossierId)
               .maybeSingle()
           : Promise.resolve({ data: null, error: null }),
@@ -123,7 +123,7 @@ serve(async (req) => {
         include.includes("commitments")
           ? supabaseClient
               .from("dossier_commitment_stats")
-              .select("*")
+      .select("id, dossier_id, total_commitments, pending_commitments, fulfilled_commitments, overdue_commitments, created_at, updated_at")
               .eq("dossier_id", dossierId)
               .maybeSingle()
           : Promise.resolve({ data: null, error: null }),
@@ -140,7 +140,7 @@ serve(async (req) => {
         include.includes("health")
           ? supabaseClient
               .from("health_scores")
-              .select("*")
+      .select("id, dossier_id, score, status, last_calculated_at, created_at, updated_at")
               .eq("dossier_id", dossierId)
               .maybeSingle()
           : Promise.resolve({ data: null, error: null }),
@@ -401,14 +401,14 @@ serve(async (req) => {
         includeCategories.includes("engagements")
           ? supabaseClient
               .from("dossier_engagement_stats")
-              .select("*")
+      .select("id, dossier_id, total_engagements, active_engagements, upcoming_engagements, past_engagements, created_at, updated_at")
               .in("dossier_id", dossierIds)
           : Promise.resolve({ data: [], error: null }),
 
         includeCategories.includes("commitments")
           ? supabaseClient
               .from("dossier_commitment_stats")
-              .select("*")
+      .select("id, dossier_id, total_commitments, pending_commitments, fulfilled_commitments, overdue_commitments, created_at, updated_at")
               .in("dossier_id", dossierIds)
           : Promise.resolve({ data: [], error: null }),
 
@@ -424,7 +424,7 @@ serve(async (req) => {
         includeCategories.includes("health")
           ? supabaseClient
               .from("health_scores")
-              .select("*")
+      .select("id, dossier_id, score, status, last_calculated_at, created_at, updated_at")
               .in("dossier_id", dossierIds)
           : Promise.resolve({ data: [], error: null }),
       ]);

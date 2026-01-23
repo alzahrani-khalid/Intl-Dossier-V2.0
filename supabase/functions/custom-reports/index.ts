@@ -420,7 +420,7 @@ async function listReports(
   const sortOrder = url.searchParams.get('sortOrder') || 'desc';
   const filter = url.searchParams.get('filter'); // 'mine', 'shared', 'favorites'
 
-  let query = supabase.from('custom_reports').select('*', { count: 'exact' });
+  let query = supabase.from('custom_reports').select('id', { count: 'exact' });
 
   // Apply filters
   if (search) {
@@ -474,7 +474,7 @@ async function getReport(
 ): Promise<Response> {
   const { data, error } = await supabase
     .from('custom_reports')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', reportId)
     .single();
 
@@ -593,7 +593,7 @@ async function handleSchedules(
       if (scheduleId) {
         const { data, error } = await supabase
           .from('report_schedules')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('id', scheduleId)
           .single();
 
@@ -605,7 +605,7 @@ async function handleSchedules(
 
       const { data: schedules, error: listError } = await supabase
         .from('report_schedules')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('report_id', reportId)
         .order('created_at', { ascending: false });
 
@@ -752,7 +752,7 @@ async function handleExecute(
     }
 
     const primaryEntity = config.entities[0];
-    let query = supabase.from(primaryEntity).select('*');
+    let query = supabase.from(primaryEntity).select('id, created_at, updated_at');
 
     // Apply simple filters
     for (const filter of config.filters.filters) {
@@ -863,7 +863,7 @@ async function handlePreview(
 
   try {
     const primaryEntity = config.entities[0];
-    let query = supabase.from(primaryEntity).select('*', { count: 'exact' });
+    let query = supabase.from(primaryEntity).select('id', { count: 'exact' });
 
     // Apply simple filters
     for (const filter of config.filters?.filters || []) {
@@ -928,7 +928,7 @@ async function handleShare(
     case 'GET':
       const { data: shares, error: listError } = await supabase
         .from('report_shares')
-        .select('*, shared_with_user:shared_with(id, email)')
+        .select('id, created_at, updated_at, shared_with_user:shared_with(id, email)'))
         .eq('report_id', reportId);
 
       if (listError) {

@@ -359,7 +359,7 @@ Deno.serve(async (req: Request) => {
     if (req.method === 'GET' && path[0] === 'rules') {
       const { data, error } = await supabase
         .from('dependency_rules')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('is_active', true)
         .order('priority', { ascending: false });
 

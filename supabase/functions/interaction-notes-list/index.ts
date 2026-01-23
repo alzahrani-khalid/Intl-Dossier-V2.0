@@ -96,7 +96,7 @@ serve(async (req) => {
     // Build query
     let query = supabaseClient
       .from('cd_interaction_notes')
-      .select('*, cd_contacts!inner(full_name, position, organization_id)')
+      .select('id, created_at, updated_at, cd_contacts!inner(id, full_name, position, organization_id)'))
       .order(sortBy, { ascending: sortOrder === 'asc' });
 
     // Apply filters
@@ -131,7 +131,7 @@ serve(async (req) => {
     if (url.searchParams.get('count') === 'true') {
       const countQuery = supabaseClient
         .from('cd_interaction_notes')
-        .select('*', { count: 'exact', head: true });
+        .select('id', { count: 'exact', head: true });
 
       // Apply same filters for count
       if (contactId) {

@@ -327,7 +327,7 @@ async function populateSampleData(
   // Fetch template
   const { data: template, error: templateError } = await supabaseClient
     .from('sample_data_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('slug', templateSlug)
     .eq('is_active', true)
     .single();
@@ -577,7 +577,7 @@ async function removeSampleData(
   // Get sample data instance(s) to remove
   let query = supabaseClient
     .from('sample_data_instances')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('user_id', userId)
     .is('removed_at', null);
 

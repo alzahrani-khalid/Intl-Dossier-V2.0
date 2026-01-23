@@ -107,7 +107,7 @@ serve(async (req: Request) => {
     // Get total count
     const { count: totalCount, error: countError } = await supabase
       .from('position_versions')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .eq('position_id', position_id);
 
     if (countError) {

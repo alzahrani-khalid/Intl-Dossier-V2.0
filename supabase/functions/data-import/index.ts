@@ -962,7 +962,7 @@ async function findExistingRecord(
 
     const { data, error } = await supabase
       .from(template.tableName)
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq(idField.field, value)
       .maybeSingle();
 

@@ -222,7 +222,7 @@ async function handleGet(
       // Get single policy
       const { data, error } = await supabase
         .from('data_retention_policies')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('id', resourceId)
         .single();
 
@@ -248,7 +248,7 @@ async function handleGet(
     }
 
     // List policies with filtering
-    let query = supabase.from('data_retention_policies').select('*');
+    let query = supabase.from('data_retention_policies').select('id, created_at, updated_at');
 
     const status = searchParams.get('status');
     const entityType = searchParams.get('entity_type');
@@ -289,7 +289,7 @@ async function handleGet(
       // Get single legal hold
       const { data, error } = await supabase
         .from('legal_holds')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('id', resourceId)
         .single();
 
@@ -315,7 +315,7 @@ async function handleGet(
     }
 
     // List legal holds
-    let query = supabase.from('legal_holds').select('*');
+    let query = supabase.from('legal_holds').select('id, created_at, updated_at');
 
     const status = searchParams.get('status');
     if (status) query = query.eq('status', status);
@@ -442,7 +442,7 @@ async function handleGet(
 
   if (resource === 'execution-log') {
     // Get execution log
-    let query = supabase.from('retention_execution_log').select('*');
+    let query = supabase.from('retention_execution_log').select('id, created_at, updated_at');
 
     const executionType = searchParams.get('type');
     const policyId = searchParams.get('policy_id');

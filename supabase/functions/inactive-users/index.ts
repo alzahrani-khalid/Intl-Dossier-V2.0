@@ -210,7 +210,7 @@ serve(async (req) => {
         // Count active delegations granted by this user
         const { count: activeDelegationsCount } = await supabaseAdmin
           .from("delegations")
-          .select("*", { count: "exact", head: true })
+          .select("id", { count: "exact", head: true })
           .eq("grantor_id", user.id)
           .is("revoked_at", null)
           .gt("expires_at", new Date().toISOString());
@@ -218,7 +218,7 @@ serve(async (req) => {
         // Count owned dossiers
         const { count: ownedDossiersCount } = await supabaseAdmin
           .from("dossiers")
-          .select("*", { count: "exact", head: true })
+          .select("id", { count: "exact", head: true })
           .eq("owner_id", user.id)
           .neq("status", "archived");
 

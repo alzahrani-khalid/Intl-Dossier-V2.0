@@ -339,21 +339,21 @@ serve(async (req) => {
     // Fetch checklist items
     const { data: checklistItems, error: checklistError } = await supabaseClient
       .from("assignment_checklist_items")
-      .select("*")
+      .select("id, assignment_id, description, is_completed, completed_at, completed_by, sequence, created_at, updated_at")
       .eq("assignment_id", assignmentId)
       .order("sequence", { ascending: true });
 
     // Fetch timeline events
     const { data: timelineEvents, error: timelineError } = await supabaseClient
       .from("assignment_events")
-      .select("*")
+      .select("id, assignment_id, event_type, event_data, created_at, created_by")
       .eq("assignment_id", assignmentId)
       .order("created_at", { ascending: false });
 
     // Fetch observers
     const { data: observers, error: observersError } = await supabaseClient
       .from("assignment_observers")
-      .select("*")
+      .select("id, assignment_id, observer_id, added_at, added_by")
       .eq("assignment_id", assignmentId);
 
     // Calculate checklist progress

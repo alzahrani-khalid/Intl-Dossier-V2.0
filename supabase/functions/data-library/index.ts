@@ -80,7 +80,7 @@ serve(async (req: Request) => {
         if (id && isDownload) {
           const { data: item, error } = await supabaseClient
             .from('data_library_items')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('id', id)
             .single();
 

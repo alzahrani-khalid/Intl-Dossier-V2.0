@@ -144,7 +144,7 @@ function validateFilters(filters: FilterCriteria): { valid: boolean; error?: str
 function buildFilterQuery(supabase: any, filters: FilterCriteria, userId: string) {
   let query = supabase
     .from('assignments')
-    .select('*', { count: 'exact' });
+    .select('id', { count: 'exact' });
 
   // Default to active assignments
   if (filters.status) {

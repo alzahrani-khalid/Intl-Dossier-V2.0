@@ -49,7 +49,7 @@ serve(async (req: Request) => {
 
             const { data: org, error: orgError } = await supabaseClient
               .from('organizations')
-              .select('*, country:countries(*)')
+              .select('id, code, name_en, name_ar, org_type, parent_organization_id, headquarters_country_id, website, email, phone, address_en, address_ar, logo_url, established_date, status, created_at, updated_at, country:countries:countries(id, name_en, name_ar, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion)'))
               .eq('id', orgId)
               .single();
 
@@ -91,7 +91,7 @@ serve(async (req: Request) => {
         if (id && isChildren) {
           const { data, error } = await supabaseClient
             .from('organizations')
-            .select('*, country:countries(*)')
+            .select('id, code, name_en, name_ar, org_type, parent_organization_id, headquarters_country_id, website, email, phone, address_en, address_ar, logo_url, established_date, status, created_at, updated_at, country:countries:countries(id, name_en, name_ar, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion)'))
             .eq('parent_organization_id', id);
 
           if (error) throw error;
@@ -105,7 +105,7 @@ serve(async (req: Request) => {
         if (id) {
           const { data, error } = await supabaseClient
             .from('organizations')
-            .select('*, country:countries(*), parent:parent_organization_id(name_en, name_ar)')
+            .select('id, code, name_en, name_ar, org_type, parent_organization_id, headquarters_country_id, website, email, phone, address_en, address_ar, logo_url, established_date, status, created_at, updated_at, country:countries(id, name_en, name_ar, iso_code_2, iso_code_3), parent:parent_organization_id(name_en, name_ar)')
             .eq('id', id)
             .single();
 
@@ -134,7 +134,7 @@ serve(async (req: Request) => {
 
           let query = supabaseClient
             .from('organizations')
-            .select('*, country:countries(name_en, name_ar)', { count: 'exact' });
+            .select('id, created_at, updated_at, country:countries(name_en, name_ar)'), { count: 'exact' });
 
           if (search) {
             query = query.or(`name_en.ilike.%${search}%,name_ar.ilike.%${search}%,code.ilike.%${search}%`);
@@ -208,7 +208,7 @@ serve(async (req: Request) => {
         const { data, error } = await supabaseClient
           .from('organizations')
           .insert(organizationData)
-          .select('*, country:countries(*)')
+          .select('id, code, name_en, name_ar, org_type, parent_organization_id, headquarters_country_id, website, email, phone, address_en, address_ar, logo_url, established_date, status, created_at, updated_at, country:countries:countries(id, name_en, name_ar, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion)'))
           .single();
 
         if (error) {
@@ -274,7 +274,7 @@ serve(async (req: Request) => {
           .from('organizations')
           .update(body)
           .eq('id', id)
-          .select('*, country:countries(*)')
+          .select('id, code, name_en, name_ar, org_type, parent_organization_id, headquarters_country_id, website, email, phone, address_en, address_ar, logo_url, established_date, status, created_at, updated_at, country:countries:countries(id, name_en, name_ar, iso_code_2, iso_code_3, capital_en, capital_ar, region, subregion)'))
           .single();
 
         if (error) {

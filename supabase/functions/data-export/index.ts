@@ -875,7 +875,7 @@ async function fetchEntityData(
     case 'dossier': {
       query = supabase
         .from('dossiers')
-        .select('*')
+        .select('id, created_at, updated_at')
         .order(sortBy || 'created_at', { ascending: sortDirection !== 'desc' });
 
       if (ids?.length) {
@@ -939,7 +939,7 @@ async function fetchEntityData(
     case 'working-group': {
       query = supabase
         .from('working_groups')
-        .select('*')
+        .select('id, created_at, updated_at')
         .order(sortBy || 'created_at', { ascending: sortDirection !== 'desc' });
 
       if (ids?.length) {

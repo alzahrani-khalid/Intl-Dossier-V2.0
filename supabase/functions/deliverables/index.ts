@@ -445,7 +445,7 @@ async function handleMilestones(
     case 'GET': {
       let query = supabase
         .from('deliverable_milestones')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('deliverable_id', deliverableId)
         .order('sort_order', { ascending: true });
 

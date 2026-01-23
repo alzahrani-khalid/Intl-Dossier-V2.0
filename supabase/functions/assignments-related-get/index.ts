@@ -93,7 +93,7 @@ serve(async (req) => {
       // Fetch sibling assignments
       const { data: siblings } = await supabaseClient
         .from("assignments")
-        .select("*")
+        .select("id, work_item_id, work_item_type, assignee_id, status, priority, last_reminder_sent_at, _version, created_at, updated_at")
         .eq("engagement_id", assignment.engagement_id)
         .neq("id", assignmentId);
 
@@ -122,7 +122,7 @@ serve(async (req) => {
       // Fetch related dossier assignments
       const { data: siblings } = await supabaseClient
         .from("assignments")
-        .select("*")
+        .select("id, work_item_id, work_item_type, assignee_id, status, priority, last_reminder_sent_at, _version, created_at, updated_at")
         .eq("work_item_id", assignment.work_item_id)
         .eq("work_item_type", "dossier")
         .neq("id", assignmentId);

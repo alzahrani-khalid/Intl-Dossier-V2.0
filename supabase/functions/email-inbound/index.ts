@@ -172,7 +172,7 @@ serve(async (req) => {
     // Try to find existing thread
     const { data: thread } = await supabaseClient
       .from('email_threads')
-      .select('*, intake_tickets(*)')
+      .select('id, from_email, to_email, subject, body, attachments, processed_at, created_at, updated_at, intake_tickets(id, subject, description, status, priority, assignee_id, created_at, updated_at))')
       .eq('thread_id', threadId)
       .single();
 
@@ -183,7 +183,7 @@ serve(async (req) => {
       // Try to find ticket by number
       const { data: ticket } = await supabaseClient
         .from('intake_tickets')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('ticket_number', ticketNumber)
         .single();
 
@@ -193,7 +193,7 @@ serve(async (req) => {
         // Check for existing thread linked to this ticket
         const { data: linkedThread } = await supabaseClient
           .from('email_threads')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('ticket_id', ticket.id)
           .single();
 

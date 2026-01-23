@@ -124,7 +124,7 @@ Deno.serve(async (req) => {
     // Check if contributor already exists (including soft-deleted)
     const { data: existing, error: existingError } = await supabase
       .from('task_contributors')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('task_id', body.task_id)
       .eq('user_id', body.user_id)
       .maybeSingle();

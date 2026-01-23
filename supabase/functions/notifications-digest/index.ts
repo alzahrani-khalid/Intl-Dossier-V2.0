@@ -300,7 +300,7 @@ async function getPersonalizedDigestContent(
   // Get unread notifications (always included)
   const { data: notifications } = await supabase
     .from('notifications')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('user_id', user.user_id)
     .eq('read', false)
     .eq('digest_included', false)
@@ -335,7 +335,7 @@ async function getPersonalizedDigestContent(
       const watchIds = watchlist.map((w) => w.id);
       const { data: events } = await supabase
         .from('watchlist_events')
-        .select('*')
+        .select('id, created_at, updated_at')
         .in('watch_id', watchIds)
         .gte('created_at', cutoffDate.toISOString())
         .order('created_at', { ascending: false })
@@ -426,7 +426,7 @@ async function getPersonalizedDigestContent(
   if (user.digest_include_mentions) {
     const { data: mentions } = await supabase
       .from('notifications')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('user_id', user.user_id)
       .eq('category', 'mentions')
       .gte('created_at', cutoffDate.toISOString())

@@ -51,7 +51,7 @@ serve(async (req) => {
     // Fetch current assignment
     const { data: assignment, error: assignmentError } = await supabaseClient
       .from("assignments")
-      .select("*")
+      .select("id, work_item_id, work_item_type, assignee_id, status, priority, last_reminder_sent_at, _version, created_at, updated_at")
       .eq("id", assignment_id)
       .single();
 

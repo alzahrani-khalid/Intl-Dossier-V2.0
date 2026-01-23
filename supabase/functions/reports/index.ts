@@ -114,7 +114,7 @@ serve(async (req: Request) => {
         if (type === 'countries') {
           const { data, error } = await supabaseClient
             .from('countries')
-            .select('*', { count: 'exact' })
+            .select('id', { count: 'exact' })
             .eq('status', 'active');
 
           if (error) throw error;
@@ -130,7 +130,7 @@ serve(async (req: Request) => {
         } else if (type === 'organizations') {
           const { data, error } = await supabaseClient
             .from('organizations')
-            .select('*, country:countries(name_en)', { count: 'exact' });
+            .select('id, created_at, updated_at, country:countries(name_en)'), { count: 'exact' });
 
           if (error) throw error;
 
@@ -149,7 +149,7 @@ serve(async (req: Request) => {
         } else if (type === 'mous') {
           let query = supabaseClient
             .from('mous')
-            .select('*, primary_party:primary_party_id(name_en), secondary_party:secondary_party_id(name_en)', { count: 'exact' });
+            .select('id, mou_type, primary_party_id, secondary_party_id, signing_date, expiration_date, status, created_at, updated_at, primary_party:primary_party_id(name_en), secondary_party:secondary_party_id(name_en)', { count: 'exact' });
 
           if (dateFrom) {
             query = query.gte('created_at', dateFrom);
@@ -180,7 +180,7 @@ serve(async (req: Request) => {
         } else if (type === 'events') {
           let query = supabaseClient
             .from('events')
-            .select('*, organizer:organizer_id(name_en)', { count: 'exact' });
+            .select('id, created_at, updated_at, organizer:organizer_id(name_en)'), { count: 'exact' });
 
           if (dateFrom) {
             query = query.gte('start_datetime', dateFrom);
@@ -228,11 +228,11 @@ serve(async (req: Request) => {
           };
         } else {
           const [countries, organizations, mous, events, intelligence] = await Promise.all([
-            supabaseClient.from('countries').select('*', { count: 'exact', head: true }),
-            supabaseClient.from('organizations').select('*', { count: 'exact', head: true }),
-            supabaseClient.from('mous').select('*', { count: 'exact', head: true }),
-            supabaseClient.from('events').select('*', { count: 'exact', head: true }),
-            supabaseClient.from('intelligence_reports').select('*', { count: 'exact', head: true })
+            supabaseClient.from('countries').select('id', { count: 'exact', head: true }),
+            supabaseClient.from('organizations').select('id', { count: 'exact', head: true }),
+            supabaseClient.from('mous').select('id', { count: 'exact', head: true }),
+            supabaseClient.from('events').select('id', { count: 'exact', head: true }),
+            supabaseClient.from('intelligence_reports').select('id', { count: 'exact', head: true })
           ]);
 
           reportData.summary = {

@@ -55,7 +55,7 @@ serve(async (req) => {
     // Fetch progress record (RLS will ensure user can only see their own)
     const { data: progress, error } = await supabase
       .from('operation_progress')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', progressId)
       .single();
 

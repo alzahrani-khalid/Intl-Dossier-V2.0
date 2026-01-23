@@ -226,7 +226,7 @@ serve(async (req: Request) => {
           const year = new Date().getFullYear();
           const { count } = await supabaseClient
             .from('mous')
-            .select('*', { count: 'exact', head: true })
+            .select('id', { count: 'exact', head: true })
             .like('reference_number', `MOU-${year}-%`);
           
           const nextNumber = String((count || 0) + 1).padStart(4, '0');

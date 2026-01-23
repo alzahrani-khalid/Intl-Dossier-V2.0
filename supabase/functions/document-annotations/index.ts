@@ -160,7 +160,7 @@ serve(async (req) => {
       if (includeGroups) {
         const { data: groupsData } = await supabaseClient
           .from('annotation_groups')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('document_id', documentId)
           .is('deleted_at', null);
         groups = groupsData;

@@ -312,7 +312,7 @@ async function getExecutionContext(
   // Get execution details
   const { data: execution, error: execError } = await supabase
     .from('workflow_executions')
-    .select('*, workflow_rules(name_en, name_ar, created_by)')
+    .select('id, rule_id, entity_type, entity_id, trigger_context, status, started_at, completed_at, error_details, created_at, updated_at, workflow_rules(name_en, name_ar, created_by)')
     .eq('id', action.execution_id)
     .single();
 
@@ -884,7 +884,7 @@ async function retryExecution(
   // Get execution
   const { data: execution, error: execError } = await supabaseAdmin
     .from('workflow_executions')
-    .select('*, workflow_rules(created_by)')
+    .select('id, rule_id, entity_type, entity_id, trigger_context, status, started_at, completed_at, error_details, created_at, updated_at, workflow_rules(created_by)')
     .eq('id', execution_id)
     .single();
 

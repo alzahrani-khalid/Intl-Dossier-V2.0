@@ -94,7 +94,7 @@ serve(async (req: Request) => {
     // Fetch the position to correct
     const { data: position, error: positionError } = await supabase
       .from('positions')
-      .select('*, position_audience_groups(audience_group_id)')
+      .select('id, title_en, title_ar, key_messages_en, key_messages_ar, status, topic, version, created_at, updated_at, position_audience_groups(audience_group_id)')
       .eq('id', position_id)
       .single();
 

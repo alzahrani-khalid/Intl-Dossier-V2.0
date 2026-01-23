@@ -151,7 +151,7 @@ Deno.serve(async (req: Request) => {
       // Get all interactions
       const { data: interactions, error: interactionsError } = await supabase
         .from('user_hint_interactions')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('user_id', user.id);
 
       if (interactionsError) {
@@ -167,7 +167,7 @@ Deno.serve(async (req: Request) => {
       if (sessionId) {
         const { data: existingSession, error: sessionError } = await supabase
           .from('session_hint_tracking')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('user_id', user.id)
           .eq('session_id', sessionId)
           .single();

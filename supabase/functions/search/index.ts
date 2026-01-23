@@ -137,7 +137,7 @@ serve(async (req: Request) => {
     // Build search query
     let dbQuery = supabase
       .from('dossiers')
-      .select('*', { count: 'exact' })
+      .select('id', { count: 'exact' })
       .textSearch('search_vector', tsquery, {
         type: 'websearch',
         config: 'simple',

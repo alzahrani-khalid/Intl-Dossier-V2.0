@@ -144,7 +144,7 @@ serve(async (req) => {
         if (subResource === 'settings') {
           const { data, error } = await supabase
             .from('duplicate_detection_settings')
-            .select('*')
+            .select('id, created_at, updated_at')
             .order('entity_type');
 
           if (error) {
@@ -268,7 +268,7 @@ serve(async (req) => {
         // Get total count
         let countQuery = supabase
           .from('entity_duplicate_candidates')
-          .select('*', { count: 'exact', head: true });
+          .select('id', { count: 'exact', head: true });
 
         if (status) {
           countQuery = countQuery.eq('status', status);

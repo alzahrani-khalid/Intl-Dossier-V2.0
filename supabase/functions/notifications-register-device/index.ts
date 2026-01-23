@@ -313,7 +313,7 @@ const handler = createHandler(async (req: Request): Promise<Response> => {
     // Get registered device details
     const { data: device, error } = await supabase
       .from('device_tokens')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', registrationId)
       .single()
 

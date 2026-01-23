@@ -100,7 +100,7 @@ serve(async (req: Request) => {
     // Fetch current position
     const { data: currentPosition, error: positionError } = await supabase
       .from('positions')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', body.position_id)
       .single();
 
@@ -141,7 +141,7 @@ serve(async (req: Request) => {
     // Fetch the version to restore
     const { data: versionToRestore, error: versionError } = await supabase
       .from('position_versions')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('position_id', body.position_id)
       .eq('version_number', body.version_number)
       .single();

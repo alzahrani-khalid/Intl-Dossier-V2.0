@@ -216,7 +216,7 @@ async function listTemplates(supabase: ReturnType<typeof createClient>, url: URL
   // Build query - get public templates and user's own templates
   let query = supabase
     .from('search_templates')
-    .select('*', { count: 'exact' })
+    .select('id', { count: 'exact' })
     .or(`is_public.eq.true,created_by.eq.${userId}`);
 
   // Apply category filter
@@ -284,7 +284,7 @@ async function listTemplates(supabase: ReturnType<typeof createClient>, url: URL
 async function getTemplate(supabase: ReturnType<typeof createClient>, templateId: string) {
   const { data, error } = await supabase
     .from('search_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', templateId)
     .single();
 
@@ -455,7 +455,7 @@ async function updateTemplate(
   // First check if template exists and user owns it
   const { data: existing, error: fetchError } = await supabase
     .from('search_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', templateId)
     .single();
 
@@ -612,7 +612,7 @@ async function deleteTemplate(
   // First check if template exists and user owns it
   const { data: existing, error: fetchError } = await supabase
     .from('search_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', templateId)
     .single();
 

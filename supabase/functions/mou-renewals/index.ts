@@ -437,7 +437,7 @@ serve(async (req: Request) => {
           // Fetch updated renewal
           const { data: renewal, error: refetchError } = await supabaseClient
             .from('mou_renewals')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('id', body.renewal_id)
             .single();
 

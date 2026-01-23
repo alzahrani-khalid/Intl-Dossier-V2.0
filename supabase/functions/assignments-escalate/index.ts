@@ -58,7 +58,7 @@ serve(async (req) => {
     // Verify assignment exists and user is assignee
     const { data: assignment, error: assignmentError } = await supabaseClient
       .from("assignments")
-      .select("*, organizational_unit:organizational_units(supervisor_id)")
+      .select("id, work_item_id, work_item_type, assignee_id, status, priority, last_reminder_sent_at, _version, created_at, updated_at, organizational_unit:organizational_units(supervisor_id)")
       .eq("id", assignment_id)
       .single();
 

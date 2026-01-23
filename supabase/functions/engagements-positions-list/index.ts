@@ -110,7 +110,7 @@ serve(async (req) => {
     // Get total count
     const { count: totalCount } = await supabaseClient
       .from('engagement_positions')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .eq('engagement_id', engagementId);
 
     return new Response(

@@ -58,7 +58,7 @@ serve(async (req) => {
     // Build query
     let query = supabaseClient
       .from('cd_organizations')
-      .select('*', { count: 'exact' });
+      .select('id', { count: 'exact' });
 
     // Apply filters
     if (search) {

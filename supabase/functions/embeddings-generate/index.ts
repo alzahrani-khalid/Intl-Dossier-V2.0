@@ -175,7 +175,7 @@ async function processQueueBatch(
   // Fetch items from queue
   let query = supabase
     .from('embedding_update_queue')
-    .select('*')
+    .select('id, created_at, updated_at')
     .is('processed_at', null)
     .order('priority', { ascending: true })
     .order('created_at', { ascending: true })
@@ -279,7 +279,7 @@ async function fetchEntityData(
     throw new Error(`Unknown entity type: ${entityType}`);
   }
 
-  const { data, error } = await supabase.from(tableName).select('*').eq('id', entityId).single();
+  const { data, error } = await supabase.from(tableName).select('id, created_at, updated_at').eq('id', entityId).single();
 
   if (error) {
     console.error(`Failed to fetch entity ${entityType}/${entityId}:`, error);

@@ -294,7 +294,7 @@ async function classifyTicket(
   // 1. Get keyword patterns
   const { data: patterns } = await supabase
     .from('ml_keyword_patterns')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('is_active', true);
 
   // 2. Analyze with keywords
@@ -481,7 +481,7 @@ serve(async (req) => {
     if (req.method === 'GET' && pathParts.includes('model') && pathParts.includes('metrics')) {
       const { data: activeModel } = await supabaseAdmin
         .from('ml_classification_models')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('is_active', true)
         .eq('status', 'active')
         .single();
@@ -531,7 +531,7 @@ serve(async (req) => {
     // Fetch ticket
     const { data: ticket, error: ticketError } = await supabaseAdmin
       .from('intake_tickets')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', ticketId)
       .single();
 
@@ -547,7 +547,7 @@ serve(async (req) => {
       // Check for cached recent prediction
       const { data: recentPrediction } = await supabaseAdmin
         .from('ml_classification_predictions')
-        .select('*, ml_classification_models!inner(model_name, model_version)')
+        .select('id, created_at, updated_at, ml_classification_models!inner(id, full_name, position, organization_id)'))
         .eq('ticket_id', ticketId)
         .order('created_at', { ascending: false })
         .limit(1)
@@ -597,7 +597,7 @@ serve(async (req) => {
       // Get active model
       const { data: activeModel } = await supabaseAdmin
         .from('ml_classification_models')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('is_active', true)
         .eq('status', 'active')
         .single();

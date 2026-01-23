@@ -81,7 +81,7 @@ serve(async (req) => {
     // Build query
     let query = supabaseClient
       .from("audit_logs")
-      .select("*", { count: "exact" });
+      .select("id", { count: "exact" });
 
     // Apply filters
     if (params.ticket_id) {

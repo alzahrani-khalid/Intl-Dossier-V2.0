@@ -368,7 +368,7 @@ async function handleGetOccurrences(seriesId: string, url: URL, supabase: any) {
   // Get exceptions
   const { data: exceptions } = await supabase
     .from('series_exceptions')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('series_id', seriesId);
 
   // Calculate occurrences
@@ -481,7 +481,7 @@ async function handleUpdateSeries(req: Request, seriesId: string, supabase: any,
     // Get master event as template
     const { data: masterEvent } = await supabase
       .from('calendar_events')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', series.master_event_id)
       .single();
 
@@ -525,7 +525,7 @@ async function handleUpdateSeries(req: Request, seriesId: string, supabase: any,
 
     const { data: series } = await supabase
       .from('event_series')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', seriesId)
       .single();
 
@@ -631,7 +631,7 @@ async function handleCreateException(
 
     const { data: masterEvent } = await supabase
       .from('calendar_events')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', series.master_event_id)
       .single();
 
@@ -725,7 +725,7 @@ async function handleGetNotifications(url: URL, supabase: any, userId: string) {
 
   let query = supabase
     .from('event_notifications')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('participant_id', userId)
     .eq('participant_type', 'user')
     .order('created_at', { ascending: false })
@@ -747,7 +747,7 @@ async function handleGetNotifications(url: URL, supabase: any, userId: string) {
   // Get unread count
   const { count: unreadCount } = await supabase
     .from('event_notifications')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
     .eq('participant_id', userId)
     .eq('participant_type', 'user')
     .eq('is_read', false);

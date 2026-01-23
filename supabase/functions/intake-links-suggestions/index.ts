@@ -217,7 +217,7 @@ serve(async (req) => {
     // Check for cached suggestions (less than 1 hour old)
     const { data: cachedSuggestions } = await supabaseClient
       .from("ai_link_suggestions")
-      .select("*")
+      .select("id, intake_ticket_id, entity_type, entity_id, confidence_score, reasoning, status, created_at")
       .eq("intake_id", intakeId)
       .in("entity_type", entityTypes)
       .gte("created_at", new Date(Date.now() - 60 * 60 * 1000).toISOString())

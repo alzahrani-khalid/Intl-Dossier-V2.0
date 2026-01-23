@@ -91,7 +91,7 @@ serve(async (req) => {
     // Build query with filters
     let query = supabaseClient
       .from('intelligence_reports')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('entity_id', entity_id)
       .is('deleted_at', null)
       .order('last_refreshed_at', { ascending: false });

@@ -72,7 +72,7 @@ async function getDeviceTokens(
   try {
     let query = supabase
       .from('device_tokens')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('status', 'active')
 
     if (userIds && userIds.length > 0) {

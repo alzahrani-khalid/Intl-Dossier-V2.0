@@ -116,7 +116,7 @@ serve(async (req) => {
     try {
       const { count: dossierCount } = await supabaseClient
         .from("dossiers")
-        .select("*", { count: "exact", head: true })
+        .select("id", { count: "exact", head: true })
         .eq("owner_id", userId);
       orphanedItems.dossiers = dossierCount || 0;
     } catch {
@@ -126,7 +126,7 @@ serve(async (req) => {
     // Count pending delegations granted by user
     const { count: delegationCount } = await supabaseClient
       .from("delegations")
-      .select("*", { count: "exact", head: true })
+      .select("id", { count: "exact", head: true })
       .eq("grantor_id", userId)
       .eq("status", "active");
     orphanedItems.delegations = delegationCount || 0;
@@ -134,7 +134,7 @@ serve(async (req) => {
     // Count pending role approvals
     const { count: approvalCount } = await supabaseClient
       .from("pending_role_approvals")
-      .select("*", { count: "exact", head: true })
+      .select("id", { count: "exact", head: true })
       .or(`requestor_id.eq.${userId},approver_1_id.eq.${userId},approver_2_id.eq.${userId}`)
       .eq("status", "pending");
     orphanedItems.approvals = approvalCount || 0;

@@ -58,7 +58,7 @@ serve(async (req) => {
     // Get count of rows in the materialized view
     const { count: rowsUpdated } = await supabaseClient
       .from('dossier_commitment_stats')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
 
     const executionTimeMs = Date.now() - startTime
     const refreshedAt = new Date().toISOString()

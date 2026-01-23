@@ -225,7 +225,7 @@ serve(async (req) => {
 
     const { data: pendingEmails, error: fetchError } = await supabaseClient
       .from('email_queue')
-      .select('*')
+      .select('id, created_at, updated_at')
       .in('status', ['pending', 'failed'])
       .lte('next_attempt_at', now.toISOString())
       .lt('attempts', supabaseClient.rpc('get_column', { column: 'max_attempts' }))

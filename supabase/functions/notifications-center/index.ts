@@ -151,7 +151,7 @@ async function getNotifications(
   // Build query
   let query = supabase
     .from('notifications')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('user_id', userId)
     .or('expires_at.is.null,expires_at.gt.now()')
     .order('created_at', { ascending: false })
@@ -206,7 +206,7 @@ async function getNotificationCounts(supabase: ReturnType<typeof createClient>, 
     // Fallback to simple count
     const { count: totalUnread } = await supabase
       .from('notifications')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .eq('user_id', userId)
       .eq('read', false)
       .or('expires_at.is.null,expires_at.gt.now()');
@@ -295,13 +295,13 @@ async function getPreferences(supabase: ReturnType<typeof createClient>, userId:
   // Get category preferences
   const { data: categoryPrefs, error: catError } = await supabase
     .from('notification_category_preferences')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('user_id', userId);
 
   // Get email preferences
   const { data: emailPrefs, error: emailError } = await supabase
     .from('email_notification_preferences')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('user_id', userId)
     .single();
 
@@ -358,7 +358,7 @@ async function updatePreferences(
 async function getDevices(supabase: ReturnType<typeof createClient>, userId: string) {
   const { data, error } = await supabase
     .from('push_device_tokens')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('user_id', userId)
     .eq('is_active', true)
     .order('last_used_at', { ascending: false, nullsFirst: false });

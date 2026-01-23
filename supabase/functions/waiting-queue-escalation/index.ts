@@ -218,7 +218,7 @@ async function handleEscalate(req: Request, supabase: any, userId: string) {
       status: 'pending',
       escalated_at: new Date().toISOString(),
     })
-    .select('*, escalated_to_profile:profiles!escalated_to(full_name)')
+    .select('id, entity_type, entity_id, escalated_to, escalation_reason, escalated_at, resolved_at, status, created_at, updated_at, escalated_to_profile:profiles!escalated_to(full_name)')
     .single();
 
   if (escalationError) {
@@ -318,7 +318,7 @@ async function processBulkEscalations(
       // Get assignment
       const { data: assignment } = await supabase
         .from('assignments')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('id', assignmentId)
         .single();
 
@@ -427,7 +427,7 @@ async function handleAcknowledge(req: Request, supabase: any, userId: string, es
   // Get escalation
   const { data: escalation, error: escalationError } = await supabase
     .from('escalation_records')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', escalationId)
     .single();
 
@@ -500,7 +500,7 @@ async function handleResolve(req: Request, supabase: any, userId: string, escala
   // Get escalation
   const { data: escalation, error: escalationError } = await supabase
     .from('escalation_records')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', escalationId)
     .single();
 

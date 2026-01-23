@@ -224,7 +224,7 @@ serve(async (req: Request) => {
 
           let query = supabaseClient
             .from('dossiers')
-            .select('*', { count: 'exact' })
+            .select('id', { count: 'exact' })
             .eq('type', 'theme')
             .neq('status', 'archived');
 

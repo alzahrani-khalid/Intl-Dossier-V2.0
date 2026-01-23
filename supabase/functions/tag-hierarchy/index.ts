@@ -231,7 +231,7 @@ async function handleGet(supabase: ReturnType<typeof createClient>, url: URL, ac
       // Get tag usage analytics
       const { data, error } = await supabase
         .from('mv_tag_usage_analytics')
-        .select('*')
+        .select('id, created_at, updated_at')
         .order('total_assignments', { ascending: false });
 
       if (error) throw error;
@@ -251,7 +251,7 @@ async function handleGet(supabase: ReturnType<typeof createClient>, url: URL, ac
         return jsonResponse({ error: 'tag_id is required' }, 400);
       }
 
-      const { data, error } = await supabase.from('tag_synonyms').select('*').eq('tag_id', tagId);
+      const { data, error } = await supabase.from('tag_synonyms').select('id, created_at, updated_at').eq('tag_id', tagId);
 
       if (error) throw error;
 
@@ -263,7 +263,7 @@ async function handleGet(supabase: ReturnType<typeof createClient>, url: URL, ac
       const tagId = params.get('tag_id');
       let query = supabase
         .from('tag_merge_history')
-        .select('*')
+        .select('id, created_at, updated_at')
         .order('merged_at', { ascending: false });
 
       if (tagId) {
@@ -282,7 +282,7 @@ async function handleGet(supabase: ReturnType<typeof createClient>, url: URL, ac
       const tagId = params.get('tag_id');
       let query = supabase
         .from('tag_rename_history')
-        .select('*')
+        .select('id, created_at, updated_at')
         .order('renamed_at', { ascending: false });
 
       if (tagId) {
@@ -302,7 +302,7 @@ async function handleGet(supabase: ReturnType<typeof createClient>, url: URL, ac
 
       let query = supabase
         .from('tag_categories')
-        .select('*')
+        .select('id, created_at, updated_at')
         .order('hierarchy_level')
         .order('sort_order')
         .order('name_en');

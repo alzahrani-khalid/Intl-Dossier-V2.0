@@ -61,7 +61,7 @@ serve(async (req) => {
     // Check if link already exists
     const { data: existing, error: existingError } = await supabaseClient
       .from('position_dossier_links')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('position_id', positionId)
       .eq('dossier_id', dossier_id)
       .single();

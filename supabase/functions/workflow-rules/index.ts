@@ -261,7 +261,7 @@ async function listRules(supabase: ReturnType<typeof createClient>, url: URL): P
 
   let query = supabase
     .from('workflow_rules')
-    .select('*', { count: 'exact' })
+    .select('id', { count: 'exact' })
     .is('deleted_at', null)
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
@@ -310,7 +310,7 @@ async function getRule(
 ): Promise<Response> {
   const { data, error } = await supabase
     .from('workflow_rules')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', ruleId)
     .is('deleted_at', null)
     .single();
@@ -476,7 +476,7 @@ async function getExecutions(
 
   let query = supabase
     .from('workflow_executions')
-    .select('*, workflow_rules(name_en, name_ar)', { count: 'exact' })
+    .select('id, rule_id, entity_type, entity_id, trigger_context, status, started_at, completed_at, error_details, created_at, updated_at, workflow_rules(name_en, name_ar)', { count: 'exact' })
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
 
@@ -523,7 +523,7 @@ async function getNotificationTemplates(
 ): Promise<Response> {
   const { data, error } = await supabase
     .from('workflow_notification_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .order('is_system', { ascending: false })
     .order('name_en', { ascending: true });
 
@@ -554,7 +554,7 @@ async function testRule(
   // Get the rule
   const { data: rule, error: ruleError } = await supabase
     .from('workflow_rules')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', rule_id)
     .is('deleted_at', null)
     .single();
@@ -568,7 +568,7 @@ async function testRule(
   if (entity_id) {
     const tableName = getTableName(rule.entity_type);
     if (tableName) {
-      const { data } = await supabase.from(tableName).select('*').eq('id', entity_id).single();
+      const { data } = await supabase.from(tableName).select('id, created_at, updated_at').eq('id', entity_id).single();
       entityData = data || {};
     }
   }

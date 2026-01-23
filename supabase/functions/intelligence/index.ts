@@ -324,7 +324,7 @@ serve(async (req: Request) => {
           
           const { count } = await supabaseClient
             .from('intelligence_reports')
-            .select('*', { count: 'exact', head: true })
+            .select('id', { count: 'exact', head: true })
             .like('report_number', `INT-${year}-${month}-%`);
           
           const nextNumber = String((count || 0) + 1).padStart(4, '0');

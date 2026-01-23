@@ -151,7 +151,7 @@ Deno.serve(async (req: Request) => {
     // Build query for timeline view
     let query = supabase
       .from('dossier_activity_timeline')
-      .select('*', { count: 'exact' })
+      .select('id', { count: 'exact' })
       .eq('dossier_id', dossierId)
       .order('activity_timestamp', { ascending: false })
       .limit(limit + 1); // Fetch one extra to check for next page

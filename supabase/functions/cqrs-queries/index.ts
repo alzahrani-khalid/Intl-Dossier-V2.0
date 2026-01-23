@@ -542,7 +542,7 @@ async function handleSummaryQuery(supabase: ReturnType<typeof createClient>, dos
     // Fallback to direct query
     const { data: dossier, error } = await supabase
       .from('dossiers')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', dossierId)
       .single();
 
@@ -620,7 +620,7 @@ async function handleSearchQuery(supabase: ReturnType<typeof createClient>, quer
 async function handleMetricsQuery(supabase: ReturnType<typeof createClient>, query: MetricsQuery) {
   let metricsQuery = supabase
     .from('read_models.daily_metrics')
-    .select('*')
+    .select('id, created_at, updated_at')
     .order('metric_date', { ascending: false })
     .limit(30);
 

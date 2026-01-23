@@ -187,7 +187,7 @@ async function handleFallbackQuery(
   // Build query with RLS
   let query = supabaseClient
     .from('dossiers')
-    .select('*', { count: 'exact' })
+    .select('id', { count: 'exact' })
     .neq('status', 'archived');
 
   // Apply filters

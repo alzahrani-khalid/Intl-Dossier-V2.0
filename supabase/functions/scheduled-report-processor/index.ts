@@ -113,7 +113,7 @@ async function generateReportData(
   // Fetch the custom report configuration
   const { data: report } = await supabase
     .from('custom_reports')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', schedule.report_id)
     .single();
 
@@ -144,7 +144,7 @@ async function generateReportData(
   // Fetch actual data based on configuration
   if (config.entity_types) {
     for (const entityType of config.entity_types) {
-      const { count } = await supabase.from(entityType).select('*', { count: 'exact', head: true });
+      const { count } = await supabase.from(entityType).select('id', { count: 'exact', head: true });
 
       reportData.metrics.total_count = (reportData.metrics.total_count as number) + (count || 0);
     }
@@ -266,7 +266,7 @@ async function processSchedule(
     // Fetch delivery conditions
     const { data: conditions } = await supabase
       .from('report_delivery_conditions')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('schedule_id', schedule.id)
       .eq('is_active', true)
       .order('evaluation_order');
@@ -341,7 +341,7 @@ async function processSchedule(
     // Fetch recipients (from new table and legacy array)
     const { data: recipients } = await supabase
       .from('report_schedule_recipients')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('schedule_id', schedule.id)
       .eq('is_active', true);
 
@@ -510,7 +510,7 @@ Deno.serve(async (req) => {
         // Process specific schedule
         const { data: schedule } = await supabase
           .from('report_schedules')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('id', scheduleId)
           .single();
 

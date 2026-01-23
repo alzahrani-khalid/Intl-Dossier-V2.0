@@ -45,7 +45,7 @@ serve(async (req) => {
     // Build query
     let query = supabaseClient
       .from('documents')
-      .select('*')
+      .select('id, created_at, updated_at')
       .order('created_at', { ascending: false });
 
     // Filter by owner if provided

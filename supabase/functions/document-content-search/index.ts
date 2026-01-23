@@ -220,7 +220,7 @@ serve(async (req) => {
     // Get total count for pagination
     const { count: totalCount } = await supabase
       .from('document_text_content')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .eq('ocr_status', 'completed')
       .gte('ocr_confidence', minConfidence);
 

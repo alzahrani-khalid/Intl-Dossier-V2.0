@@ -65,7 +65,7 @@ serve(async (req) => {
     // Fetch template
     const { data: template, error: templateError } = await supabaseClient
       .from("assignment_checklist_templates")
-      .select("*")
+      .select("id, name, items, created_at, updated_at")
       .eq("id", template_id)
       .single();
 

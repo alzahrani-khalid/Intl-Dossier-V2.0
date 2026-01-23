@@ -165,7 +165,7 @@ Deno.serve(async (req) => {
 async function getPreferences(supabase: ReturnType<typeof createClient>, userId: string) {
   const { data, error } = await supabase
     .from('mou_notification_preferences')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('user_id', userId)
     .single();
 
@@ -323,7 +323,7 @@ async function getQueuedNotifications(
 
   let query = supabase
     .from('mou_notification_queue')
-    .select('*', { count: 'exact' })
+    .select('id', { count: 'exact' })
     .eq('user_id', userId)
     .order('scheduled_for', { ascending: true })
     .range(offset, offset + limit - 1);
@@ -371,7 +371,7 @@ async function getNotificationHistory(
 
   let query = supabase
     .from('mou_notification_log')
-    .select('*', { count: 'exact' })
+    .select('id', { count: 'exact' })
     .eq('user_id', userId)
     .order('sent_at', { ascending: false })
     .range(offset, offset + limit - 1);

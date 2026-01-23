@@ -184,38 +184,38 @@ async function getCurrentOrganizationStats(
   // Get dossier count
   const { count: dossierCount } = await supabaseClient
     .from('dossiers')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
     .eq('archived_at', null);
 
   // Get relationship count
   const { count: relationshipCount } = await supabaseClient
     .from('dossier_relationships')
-    .select('*', { count: 'exact', head: true });
+    .select('id', { count: 'exact', head: true });
 
   // Get active briefs count (last 30 days)
   const thirtyDaysAgo = new Date();
   thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
   const { count: briefCount } = await supabaseClient
     .from('briefs')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
     .gte('created_at', thirtyDaysAgo.toISOString());
 
   // Get monthly engagements (last 30 days)
   const { count: engagementCount } = await supabaseClient
     .from('engagements')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
     .gte('date', thirtyDaysAgo.toISOString());
 
   // Get active commitments
   const { count: commitmentCount } = await supabaseClient
     .from('commitments')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
     .in('status', ['pending', 'in_progress']);
 
   // Get active MOUs
   const { count: mouCount } = await supabaseClient
     .from('mous')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
     .eq('status', 'active');
 
   return {

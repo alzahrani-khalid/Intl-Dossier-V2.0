@@ -112,7 +112,7 @@ Deno.serve(async (req: Request) => {
 
         const { data: milestones, error } = await supabase
           .from('planned_milestones')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('dossier_id', dossier_id)
           .order('target_date', { ascending: true });
 
@@ -206,7 +206,7 @@ Deno.serve(async (req: Request) => {
         // Get the milestone first
         const { data: milestone, error: fetchError } = await supabase
           .from('planned_milestones')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('id', milestone_id)
           .single();
 
@@ -284,7 +284,7 @@ Deno.serve(async (req: Request) => {
           // Fallback: calculate stats manually
           const { data: milestones } = await supabase
             .from('planned_milestones')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('dossier_id', dossier_id);
 
           const now = new Date();

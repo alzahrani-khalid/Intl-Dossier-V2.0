@@ -89,7 +89,7 @@ serve(async (req) => {
     // Fetch existing ticket
     const { data: ticket, error: ticketError } = await supabaseClient
       .from("intake_tickets")
-      .select("*")
+      .select("id, subject, description, status, priority, assignee_id, created_at, updated_at")
       .eq("id", ticketId)
       .single();
 

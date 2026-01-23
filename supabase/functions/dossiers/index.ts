@@ -56,7 +56,7 @@ serve(async (req) => {
       // Get dossier with type check
       const { data: dossier, error: dossierError } = await supabaseClient
         .from('dossiers')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('id', id)
         .single();
 
@@ -80,7 +80,7 @@ serve(async (req) => {
       if (tableName) {
         const { data: extensionData, error: extensionError } = await supabaseClient
           .from(tableName)
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('id', id)
           .single();
 
@@ -217,7 +217,7 @@ serve(async (req) => {
         // Get dossier with type check
         const { data: dossier, error: dossierError } = await supabaseClient
           .from('dossiers')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('id', id)
           .single();
 
@@ -240,7 +240,7 @@ serve(async (req) => {
         if (tableName) {
           const { data: extensionData, error: extensionError } = await supabaseClient
             .from(tableName)
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('id', id)
             .single();
 
@@ -335,7 +335,7 @@ serve(async (req) => {
         // Fetch updated dossier
         const { data: updatedDossier, error: fetchError } = await supabaseClient
           .from('dossiers')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('id', id)
           .single();
 
@@ -358,7 +358,7 @@ serve(async (req) => {
         if (tableName) {
           const { data: finalExtensionData } = await supabaseClient
             .from(tableName)
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('id', id)
             .single();
 
@@ -397,7 +397,7 @@ serve(async (req) => {
       case 'list': {
         let query = supabaseClient
           .from('dossiers')
-          .select('*', { count: 'exact' });
+          .select('id', { count: 'exact' });
 
         // Apply filters
         if (filters?.type) {
@@ -435,7 +435,7 @@ serve(async (req) => {
             if (tableName) {
               const { data: extensionData } = await supabaseClient
                 .from(tableName)
-                .select('*')
+                .select('id, created_at, updated_at')
                 .eq('id', dossier.id)
                 .single();
 

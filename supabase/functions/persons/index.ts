@@ -240,7 +240,7 @@ serve(async (req) => {
         // Get total count
         const { count } = await supabase
           .from('dossiers')
-          .select('*', { count: 'exact', head: true })
+          .select('id', { count: 'exact', head: true })
           .eq('type', 'person')
           .neq('status', 'archived');
 

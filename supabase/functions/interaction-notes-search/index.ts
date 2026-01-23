@@ -153,7 +153,7 @@ serve(async (req) => {
     if (url.searchParams.get('count') === 'true') {
       let countQuery = supabaseClient
         .from('cd_interaction_notes')
-        .select('*', { count: 'exact', head: true });
+        .select('id', { count: 'exact', head: true });
 
       // Apply same filters for count
       if (searchQuery && searchQuery.trim().length > 0) {

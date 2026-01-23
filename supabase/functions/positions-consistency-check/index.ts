@@ -224,7 +224,7 @@ serve(async (req: Request) => {
     // Fetch the target position
     const { data: position, error: positionError } = await supabaseClient
       .from('positions')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', body.position_id)
       .single();
 

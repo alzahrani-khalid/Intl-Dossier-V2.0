@@ -244,7 +244,31 @@ async function handleGetInteraction(
     .from('ai_interaction_logs')
     .select(
       `
-      *,
+      id,
+      organization_id,
+      user_id,
+      interaction_type,
+      content_type,
+      target_entity_type,
+      target_entity_id,
+      session_id,
+      model_provider,
+      model_name,
+      model_version,
+      status,
+      prompt_text,
+      response_text,
+      latency_ms,
+      prompt_tokens,
+      completion_tokens,
+      total_tokens,
+      estimated_cost_usd,
+      data_classification,
+      content_hash,
+      request_ip,
+      user_agent,
+      created_at,
+      completed_at,
       ai_user_edits (
         id,
         version_number,
@@ -287,7 +311,7 @@ async function handleGetAudit(
 
   const { data, error } = await supabase
     .from('ai_governance_audit')
-    .select('*')
+    .select('id, interaction_id, event_type, event_details, risk_indicators, occurred_at, created_at')
     .eq('interaction_id', interactionId)
     .order('occurred_at', { ascending: true });
 
@@ -309,7 +333,7 @@ async function handleGetEdits(
 
   const { data, error } = await supabase
     .from('ai_user_edits')
-    .select('*')
+    .select('id, interaction_id, user_id, version_number, original_content, edited_content, change_percentage, edit_reason, edit_categories, created_at')
     .eq('interaction_id', interactionId)
     .order('version_number', { ascending: true });
 

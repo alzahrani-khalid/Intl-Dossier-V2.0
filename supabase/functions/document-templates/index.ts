@@ -136,7 +136,7 @@ async function listTemplates(
 
   let query = supabase
     .from('document_templates')
-    .select('*', { count: 'exact' })
+    .select('id', { count: 'exact' })
     .eq('status', status)
     .order('name_en', { ascending: true })
     .range(offset, offset + limit - 1);
@@ -175,7 +175,7 @@ async function getTemplate(supabase: ReturnType<typeof createClient>, templateId
   // Get template
   const { data: template, error: templateError } = await supabase
     .from('document_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', templateId)
     .single();
 
@@ -189,7 +189,7 @@ async function getTemplate(supabase: ReturnType<typeof createClient>, templateId
   // Get sections with fields
   const { data: sections, error: sectionsError } = await supabase
     .from('document_template_sections')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('template_id', templateId)
     .order('section_order', { ascending: true });
 
@@ -204,7 +204,7 @@ async function getTemplate(supabase: ReturnType<typeof createClient>, templateId
   const sectionIds = sections?.map((s) => s.id) || [];
   const { data: fields, error: fieldsError } = await supabase
     .from('document_template_fields')
-    .select('*')
+    .select('id, created_at, updated_at')
     .in('section_id', sectionIds)
     .order('field_order', { ascending: true });
 
@@ -300,7 +300,7 @@ async function createTemplatedDocument(
   // Validate template exists
   const { data: template, error: templateError } = await supabase
     .from('document_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', template_id)
     .eq('status', 'published')
     .single();
@@ -366,7 +366,7 @@ async function updateTemplatedDocument(
   // Check ownership
   const { data: existing, error: checkError } = await supabase
     .from('templated_documents')
-    .select('*, template:document_templates(id)')
+    .select('id, created_at, updated_at, template:document_templates(id)'))
     .eq('id', id)
     .eq('created_by', userId)
     .single();
@@ -447,7 +447,7 @@ async function completeDocument(
   // Check ownership and get document
   const { data: existing, error: checkError } = await supabase
     .from('templated_documents')
-    .select('*, template:document_templates(*)')
+    .select('id, name, template_type, content, created_at, template:document_templates:document_templates(id, name, template_type, content, created_at)'))
     .eq('id', id)
     .eq('created_by', userId)
     .single();

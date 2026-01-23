@@ -110,7 +110,7 @@ serve(async (req) => {
         // Get voice memo details
         const { data: voiceMemo, error: memoError } = await supabaseClient
           .from('voice_memos')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('id', memoId)
           .single();
 

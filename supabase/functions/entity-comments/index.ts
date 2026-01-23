@@ -218,7 +218,7 @@ serve(async (req) => {
         if (commentId && !subPath) {
           const { data: comment, error } = await supabase
             .from('entity_comments_with_details')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('id', commentId)
             .single();
 
@@ -274,7 +274,7 @@ serve(async (req) => {
         // Get total count
         const { count } = await supabase
           .from('entity_comments')
-          .select('*', { count: 'exact', head: true })
+          .select('id', { count: 'exact', head: true })
           .eq('entity_type', entityType)
           .eq('entity_id', entityId)
           .eq('is_deleted', false);
@@ -413,7 +413,7 @@ serve(async (req) => {
         const oneMinuteAgo = new Date(Date.now() - 60 * 1000).toISOString();
         const { count: recentCount } = await supabase
           .from('entity_comments')
-          .select('*', { count: 'exact', head: true })
+          .select('id', { count: 'exact', head: true })
           .eq('entity_type', entity_type)
           .eq('entity_id', entity_id)
           .eq('author_id', user.id)

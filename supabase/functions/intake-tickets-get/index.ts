@@ -68,7 +68,7 @@ serve(async (req) => {
     // Fetch ticket details
     const { data: ticket, error: ticketError } = await supabaseClient
       .from("intake_tickets")
-      .select("*")
+      .select("id, subject, description, status, priority, assignee_id, created_at, updated_at")
       .eq("id", ticketId)
       .single();
 
@@ -85,21 +85,21 @@ serve(async (req) => {
     // Fetch attachments
     const { data: attachments, error: attachmentsError } = await supabaseClient
       .from("intake_attachments")
-      .select("*")
+      .select("id, intake_ticket_id, file_name, file_path, file_size, uploaded_by, created_at")
       .eq("ticket_id", ticketId)
       .is("deleted_at", null);
 
     // Fetch triage history
     const { data: triageHistory, error: triageError } = await supabaseClient
       .from("triage_decisions")
-      .select("*")
+      .select("id, intake_ticket_id, decision, reason, decided_by, decided_at, created_at")
       .eq("ticket_id", ticketId)
       .order("created_at", { ascending: false });
 
     // Fetch audit trail
     const { data: auditTrail, error: auditError } = await supabaseClient
       .from("audit_logs")
-      .select("*")
+      .select("id, table_name, record_id, action, old_values, new_values, user_id, created_at")
       .eq("entity_type", "intake_ticket")
       .eq("entity_id", ticketId)
       .order("created_at", { ascending: false })

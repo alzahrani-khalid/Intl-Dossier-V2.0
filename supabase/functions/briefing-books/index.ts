@@ -896,7 +896,7 @@ Deno.serve(async (req: Request) => {
     if (method === 'GET' && pathParts[1] === 'templates') {
       const { data: templates, error } = await supabase
         .from('briefing_book_templates')
-        .select('*')
+        .select('id, name, description, sections, is_default, created_by, created_at, updated_at')
         .or(`is_default.eq.true,created_by.eq.${user.id}`)
         .order('is_default', { ascending: false })
         .order('created_at', { ascending: false });
@@ -919,7 +919,7 @@ Deno.serve(async (req: Request) => {
 
       const { data: book, error } = await supabase
         .from('briefing_books')
-        .select('*')
+        .select('id, title, description, dossier_id, template_id, sections, status, created_by, created_at, updated_at')
         .eq('id', bookId)
         .eq('created_by', user.id)
         .single();
@@ -944,7 +944,7 @@ Deno.serve(async (req: Request) => {
 
       let query = supabase
         .from('briefing_books')
-        .select('*')
+        .select('id, title, description, dossier_id, template_id, sections, status, created_by, created_at, updated_at')
         .eq('created_by', user.id)
         .order('created_at', { ascending: false })
         .limit(limit + 1);
@@ -1147,7 +1147,7 @@ Deno.serve(async (req: Request) => {
       // Get the book first to check ownership and get file path
       const { data: book, error: fetchError } = await supabase
         .from('briefing_books')
-        .select('*')
+        .select('id, title, description, dossier_id, template_id, sections, status, created_by, created_at, updated_at')
         .eq('id', bookId)
         .eq('created_by', user.id)
         .single();

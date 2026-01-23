@@ -80,7 +80,7 @@ Deno.serve(async (req: Request) => {
       if (!functionName) {
         const { data, error } = await supabase
           .from('entity_citations')
-          .select('*')
+          .select('id, created_at, updated_at')
           .order('created_at', { ascending: false })
           .limit(100);
 
@@ -136,7 +136,7 @@ Deno.serve(async (req: Request) => {
       if (functionName === 'alerts') {
         const { data, error } = await supabase
           .from('citation_alerts')
-          .select('*, entity_citations(*)')
+          .select('id, created_at, updated_at, entity_citations(id, entity_id, entity_type, source, citation_text, created_at)')
           .eq('is_resolved', false)
           .order('created_at', { ascending: false });
 
@@ -150,7 +150,7 @@ Deno.serve(async (req: Request) => {
       // GET /citation-tracking/:id - Get single citation
       const { data, error } = await supabase
         .from('entity_citations')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('id', functionName)
         .single();
 

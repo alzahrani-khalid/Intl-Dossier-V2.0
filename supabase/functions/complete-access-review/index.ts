@@ -142,7 +142,7 @@ serve(async (req) => {
     // Fetch access review
     const { data: reviewData, error: reviewError } = await supabaseAdmin
       .from("access_reviews")
-      .select("*")
+      .select("id, review_name, status, due_date, created_by, created_at, updated_at")
       .eq("id", body.review_id)
       .single();
 

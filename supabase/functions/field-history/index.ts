@@ -148,7 +148,7 @@ async function handleGetFieldHistory(
     // Get total count for pagination
     const { count, error: countError } = await supabaseClient
       .from('field_history')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .eq('entity_type', params.entity_type)
       .eq('entity_id', params.entity_id);
 

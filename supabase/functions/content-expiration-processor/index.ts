@@ -220,7 +220,7 @@ async function triggerExpirationWorkflows(supabase: any, expiringContent: any[])
     // Find active workflow rules for content expiration triggers
     const { data: rules } = await supabase
       .from('workflow_rules')
-      .select('*')
+      .select('id, created_at, updated_at')
       .in('trigger_type', ['content_expiring', 'content_expired'])
       .eq('is_active', true)
       .is('deleted_at', null);
@@ -274,7 +274,7 @@ async function autoRefreshBriefs(supabase: any) {
     // Find rules that have auto_refresh_briefs enabled
     const { data: rules } = await supabase
       .from('content_expiration_rules')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('is_active', true)
       .eq('auto_refresh_briefs', true);
 
@@ -318,7 +318,7 @@ async function autoRefreshBriefs(supabase: any) {
         // Get the original brief details
         const { data: brief } = await supabase
           .from('ai_briefs')
-          .select('*')
+          .select('id, created_at, updated_at')
           .eq('id', content.entity_id)
           .single();
 

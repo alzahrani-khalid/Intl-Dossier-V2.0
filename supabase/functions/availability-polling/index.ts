@@ -201,7 +201,7 @@ async function getPollDetails(ctx: RequestContext, pollId: string): Promise<Resp
   // Get slots
   const { data: slots, error: slotsError } = await supabase
     .from('poll_slots')
-    .select('*')
+    .select('id, poll_id, start_time, end_time, position, created_at')
     .eq('poll_id', pollId)
     .order('position', { ascending: true });
 
@@ -210,7 +210,7 @@ async function getPollDetails(ctx: RequestContext, pollId: string): Promise<Resp
   // Get participants
   const { data: participants, error: participantsError } = await supabase
     .from('poll_participants')
-    .select('*')
+    .select('id, poll_id, user_id, response_status, responded_at, created_at')
     .eq('poll_id', pollId);
 
   if (participantsError) throw participantsError;
@@ -218,7 +218,7 @@ async function getPollDetails(ctx: RequestContext, pollId: string): Promise<Resp
   // Get my responses
   const { data: myResponses, error: responsesError } = await supabase
     .from('poll_responses')
-    .select('*')
+    .select('id, poll_id, slot_id, respondent_user_id, response, created_at, updated_at')
     .eq('poll_id', pollId)
     .eq('respondent_user_id', userId);
 
@@ -405,7 +405,7 @@ async function activatePoll(ctx: RequestContext, pollId: string): Promise<Respon
   // Check if poll has at least one slot
   const { count: slotsCount } = await supabase
     .from('poll_slots')
-    .select('*', { count: 'exact', head: true })
+    .select('id', { count: 'exact', head: true })
     .eq('poll_id', pollId);
 
   if (!slotsCount || slotsCount === 0) {
@@ -562,7 +562,7 @@ async function autoSchedule(ctx: RequestContext, pollId: string, req: Request): 
   // Get poll
   const { data: poll, error: pollError } = await supabase
     .from('availability_polls')
-    .select('*')
+    .select('id, title, description, status, created_by, dossier_id, selected_slot_id, created_at, updated_at')
     .eq('id', pollId)
     .single();
 
@@ -587,7 +587,7 @@ async function autoSchedule(ctx: RequestContext, pollId: string, req: Request): 
 
   const { data: slot, error: slotError } = await supabase
     .from('poll_slots')
-    .select('*')
+    .select('id, poll_id, start_time, end_time, position, created_at')
     .eq('id', slotId)
     .single();
 
@@ -598,7 +598,7 @@ async function autoSchedule(ctx: RequestContext, pollId: string, req: Request): 
   // Get participants
   const { data: participants } = await supabase
     .from('poll_participants')
-    .select('*')
+    .select('id, poll_id, user_id, response_status, responded_at, created_at')
     .eq('poll_id', pollId);
 
   // Create dossier if needed

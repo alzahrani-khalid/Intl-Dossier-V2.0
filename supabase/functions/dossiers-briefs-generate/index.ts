@@ -124,7 +124,7 @@ serve(async (req) => {
     // Fetch dossier data
     const { data: dossier, error: dossierError } = await supabaseClient
       .from('dossiers')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', dossierId)
       .single();
 
@@ -147,7 +147,7 @@ serve(async (req) => {
     // Fetch timeline events in date range
     let timelineQuery = supabaseClient
       .from('dossier_timeline')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('dossier_id', dossierId);
 
     if (body.date_range_start) {

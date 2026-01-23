@@ -154,7 +154,7 @@ async function processEventQueue(
   // Fetch pending events
   const { data: events, error: fetchError } = await supabase
     .from('webhook_event_queue')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('is_processed', false)
     .order('created_at', { ascending: true })
     .limit(batchSize);
@@ -230,7 +230,7 @@ async function processRetryQueue(
   // Fetch deliveries that need retry
   const { data: deliveries, error: fetchError } = await supabase
     .from('webhook_deliveries')
-    .select('*, webhooks!inner(*)')
+    .select('id, created_at, updated_at, webhooks!inner(id, full_name, position, organization_id)'))
     .eq('status', 'retrying')
     .lte('next_retry_at', new Date().toISOString())
     .limit(batchSize);

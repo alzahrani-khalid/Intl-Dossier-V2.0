@@ -122,7 +122,7 @@ serve(async (req: Request) => {
     // Fetch both versions
     const { data: versions, error: versionsError } = await supabase
       .from('position_versions')
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('position_id', position_id)
       .in('version_number', [version1, version2])
       .order('version_number', { ascending: true });

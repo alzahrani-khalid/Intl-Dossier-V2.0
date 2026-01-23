@@ -721,7 +721,7 @@ async function handleAgenda(
 async function listAgendaItems(supabaseClient: any, engagementId: string) {
   const { data, error } = await supabaseClient
     .from('engagement_agenda')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('engagement_id', engagementId)
     .order('order_number');
 

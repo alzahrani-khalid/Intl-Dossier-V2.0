@@ -51,7 +51,7 @@ async function detectConflicts(
     // Get current server version
     const { data: serverEntity, error } = await supabase
       .from(entity._entity_type)
-      .select('*')
+      .select('id, created_at, updated_at')
       .eq('id', entity.id)
       .single()
 

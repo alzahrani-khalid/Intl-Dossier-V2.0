@@ -263,7 +263,7 @@ serve(async (req) => {
 
           const { data, error } = await supabase
             .from('engagement_recommendations_summary')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('id', recommendationId)
             .single();
 
@@ -311,7 +311,7 @@ serve(async (req) => {
         const sortBy = url.searchParams.get('sort_by') || 'priority';
         const sortOrder = url.searchParams.get('sort_order') || 'desc';
 
-        let query = supabase.from('engagement_recommendations_summary').select('*');
+        let query = supabase.from('engagement_recommendations_summary').select('id, created_at, updated_at');
 
         // Apply filters
         if (statusFilter && statusFilter.length > 0) {

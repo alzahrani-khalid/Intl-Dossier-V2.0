@@ -388,7 +388,7 @@ serve(async (req) => {
           // Get total count
           const { count } = await supabase
             .from('events.domain_events')
-            .select('*', { count: 'exact', head: true })
+            .select('id', { count: 'exact', head: true })
             .eq('aggregate_type', aggregateType)
             .eq('aggregate_id', aggregateId);
 
@@ -408,7 +408,7 @@ serve(async (req) => {
             // Get stats for specific aggregate
             const { data, error } = await supabase
               .from('events.aggregate_stats')
-              .select('*')
+              .select('id, created_at, updated_at')
               .eq('aggregate_type', aggregateType)
               .eq('aggregate_id', aggregateId)
               .single();
@@ -423,7 +423,7 @@ serve(async (req) => {
           // Get event type distribution
           const { data, error } = await supabase
             .from('events.event_type_stats')
-            .select('*')
+            .select('id, created_at, updated_at')
             .order('event_count', { ascending: false })
             .limit(50);
 

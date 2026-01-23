@@ -101,7 +101,7 @@ serve(async (req) => {
       // Check dossier access
       const { data: dossierAccess } = await supabaseClient
         .from('dossier_owners')
-        .select('*')
+        .select('id, created_at, updated_at')
         .eq('dossier_id', commitment.dossier_id)
         .eq('user_id', user.user.id)
         .single();

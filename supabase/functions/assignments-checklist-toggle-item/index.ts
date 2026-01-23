@@ -51,7 +51,7 @@ serve(async (req) => {
     // Fetch current item
     const { data: item, error: itemError } = await supabaseClient
       .from("assignment_checklist_items")
-      .select("*, assignment_id")
+      .select("id, assignment_id, description, is_completed, completed_at, completed_by, created_at, updated_at")
       .eq("id", item_id)
       .single();
 

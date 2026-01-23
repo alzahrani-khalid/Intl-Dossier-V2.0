@@ -357,7 +357,7 @@ serve(async (req) => {
 
           const { data, error } = await supabase
             .from('relationship_health_history')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('relationship_id', relationshipId)
             .order('calculated_at', { ascending: false })
             .range(offset, offset + limit - 1);
@@ -397,7 +397,7 @@ serve(async (req) => {
 
           let query = supabase
             .from('relationship_health_alerts')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('relationship_id', relationshipId);
 
           if (!includeRead) {
@@ -422,7 +422,7 @@ serve(async (req) => {
 
           const { data, error } = await supabase
             .from('relationship_health_summary')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('relationship_id', relationshipId)
             .single();
 
@@ -492,7 +492,7 @@ serve(async (req) => {
         const sortBy = url.searchParams.get('sort_by') || 'overall_score';
         const sortOrder = url.searchParams.get('sort_order') || 'desc';
 
-        let query = supabase.from('relationship_health_summary').select('*');
+        let query = supabase.from('relationship_health_summary').select('id, created_at, updated_at');
 
         if (trendFilter) {
           query = query.eq('trend', trendFilter);
@@ -580,7 +580,7 @@ serve(async (req) => {
           // Get updated score
           const { data: healthData, error: fetchError } = await supabase
             .from('relationship_health_summary')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('relationship_id', relationshipId)
             .single();
 

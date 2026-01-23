@@ -97,7 +97,7 @@ Deno.serve(async (req) => {
     // Start building the query
     let query = supabase
       .from('tasks')
-      .select('*, task_contributors(user_id)', { count: 'exact' })
+      .select('id, title, description, status, priority, assignee_id, deadline, created_at, updated_at, task_contributors(user_id)', { count: 'exact' })
       .eq('is_deleted', false);
 
     // Apply filter-based access control

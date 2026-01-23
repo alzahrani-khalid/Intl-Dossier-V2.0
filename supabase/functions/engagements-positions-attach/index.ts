@@ -109,7 +109,7 @@ serve(async (req) => {
     // Check attachment limit (100 positions max)
     const { count } = await supabaseClient
       .from('engagement_positions')
-      .select('*', { count: 'exact', head: true })
+      .select('id', { count: 'exact', head: true })
       .eq('engagement_id', engagementId);
 
     if (count && count >= 100) {

@@ -128,7 +128,7 @@ async function listScenarios(supabase: SupabaseClient, params: URLSearchParams):
   const sortBy = params.get('sort_by') || 'created_at';
   const sortOrder = params.get('sort_order') || 'desc';
 
-  let query = supabase.from('scenarios').select('*', { count: 'exact' });
+  let query = supabase.from('scenarios').select('id', { count: 'exact' });
 
   if (status) query = query.eq('status', status);
   if (type) query = query.eq('type', type);
@@ -277,7 +277,7 @@ async function cloneScenario(
   // Fetch the cloned scenario
   const { data: clonedScenario } = await supabase
     .from('scenarios')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', data)
     .single();
 
@@ -294,7 +294,7 @@ async function cloneScenario(
 async function listVariables(supabase: SupabaseClient, scenarioId: string): Promise<Response> {
   const { data, error } = await supabase
     .from('scenario_variables')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('scenario_id', scenarioId)
     .order('sort_order');
 
@@ -389,7 +389,7 @@ async function deleteVariable(supabase: SupabaseClient, id: string): Promise<Res
 async function listOutcomes(supabase: SupabaseClient, scenarioId: string): Promise<Response> {
   const { data, error } = await supabase
     .from('scenario_outcomes')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('scenario_id', scenarioId)
     .order('created_at');
 
@@ -484,7 +484,7 @@ async function deleteOutcome(supabase: SupabaseClient, id: string): Promise<Resp
 async function listComparisons(supabase: SupabaseClient): Promise<Response> {
   const { data, error } = await supabase
     .from('scenario_comparisons')
-    .select('*')
+    .select('id, created_at, updated_at')
     .order('created_at', { ascending: false });
 
   if (error) {

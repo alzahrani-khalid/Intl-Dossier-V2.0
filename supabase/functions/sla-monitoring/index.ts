@@ -279,7 +279,7 @@ async function getBreachedItems(supabase: ReturnType<typeof createClient>) {
 async function listPolicies(supabase: ReturnType<typeof createClient>) {
   const { data, error } = await supabase
     .from('sla_policies')
-    .select('*')
+    .select('id, created_at, updated_at')
     .order('created_at', { ascending: false });
 
   if (error) throw error;
@@ -292,7 +292,7 @@ async function listPolicies(supabase: ReturnType<typeof createClient>) {
 async function getPolicy(supabase: ReturnType<typeof createClient>, policyId: string) {
   const { data, error } = await supabase
     .from('sla_policies')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('id', policyId)
     .single();
 
@@ -411,7 +411,7 @@ async function listEscalations(supabase: ReturnType<typeof createClient>, url: U
 
   let query = supabase
     .from('sla_escalations')
-    .select('*, policy:sla_policies(*)')
+    .select('id, created_at, updated_at, policy:sla_policies:sla_policies(id, created_at, updated_at)'))
     .order('triggered_at', { ascending: false })
     .limit(limit);
 

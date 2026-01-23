@@ -164,7 +164,7 @@ async function fetchDossierChanges(
     // Build query for all dossiers (RLS will filter based on user permissions)
     let query = supabase
       .from('dossiers')
-      .select('*')
+      .select('id, created_at, updated_at')
       .order('updated_at', { ascending: false })
       .limit(500);
 

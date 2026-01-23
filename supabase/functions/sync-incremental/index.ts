@@ -70,7 +70,7 @@ serve(async (req: Request) => {
     // Build query for dossiers (will use authenticated context for RLS)
     let query = supabase
       .from('dossiers')
-      .select('*', { count: 'exact' })
+      .select('id', { count: 'exact' })
       .eq('archived', false)
       .order('updated_at', { ascending: false })
       .range(offset, offset + limit - 1)

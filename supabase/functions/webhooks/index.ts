@@ -252,7 +252,7 @@ async function handleListWebhooks(
 
   let query = supabase
     .from('webhooks')
-    .select('*', { count: 'exact' })
+    .select('id', { count: 'exact' })
     .eq('created_by', userId)
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
@@ -307,7 +307,7 @@ async function handleListWebhooks(
 }
 
 async function handleGetWebhook(supabase: ReturnType<typeof createClient>, webhookId: string) {
-  const { data, error } = await supabase.from('webhooks').select('*').eq('id', webhookId).single();
+  const { data, error } = await supabase.from('webhooks').select('id, created_at, updated_at').eq('id', webhookId).single();
 
   if (error) {
     if (error.code === 'PGRST116') {
@@ -720,7 +720,7 @@ async function handleGetDeliveries(
 
   let query = supabase
     .from('webhook_deliveries')
-    .select('*', { count: 'exact' })
+    .select('id', { count: 'exact' })
     .eq('webhook_id', webhookId)
     .order('created_at', { ascending: false })
     .range(offset, offset + limit - 1);
@@ -794,7 +794,7 @@ async function handleGetStats(
 async function handleGetTemplates(supabase: ReturnType<typeof createClient>) {
   const { data, error } = await supabase
     .from('webhook_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('is_active', true)
     .order('name_en');
 

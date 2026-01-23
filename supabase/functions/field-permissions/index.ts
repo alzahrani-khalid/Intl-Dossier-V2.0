@@ -215,7 +215,7 @@ serve(async (req) => {
 
           let query = supabaseClient
             .from('field_definitions')
-            .select('*')
+            .select('id, created_at, updated_at')
             .order('display_order', { ascending: true });
 
           if (entityType) {
@@ -312,7 +312,7 @@ serve(async (req) => {
 
           let query = supabaseClient
             .from('field_permission_audit')
-            .select('*')
+            .select('id, created_at, updated_at')
             .order('created_at', { ascending: false })
             .range(offset, offset + limit - 1);
 
@@ -359,7 +359,7 @@ serve(async (req) => {
           // Get single permission
           const { data, error } = await supabaseClient
             .from('field_permissions')
-            .select('*')
+            .select('id, created_at, updated_at')
             .eq('id', permissionId)
             .is('deleted_at', null)
             .single();
@@ -385,7 +385,7 @@ serve(async (req) => {
 
         let query = supabaseClient
           .from('field_permissions')
-          .select('*')
+          .select('id, created_at, updated_at')
           .is('deleted_at', null)
           .order('created_at', { ascending: false });
 

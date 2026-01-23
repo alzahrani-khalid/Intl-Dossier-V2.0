@@ -1031,7 +1031,7 @@ async function deleteAlert(
 async function getSmartFilters(supabase: ReturnType<typeof createClient>) {
   const { data, error } = await supabase
     .from('search_templates')
-    .select('*')
+    .select('id, created_at, updated_at')
     .eq('is_system', true)
     .eq('is_public', true)
     .order('use_count', { ascending: false });
