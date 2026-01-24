@@ -1,8 +1,51 @@
 /**
- * useAddComment Hook
+ * Assignment Comment Hooks
+ * @module hooks/useAddComment
  *
- * TanStack Query mutation for adding comments to assignments.
- * Includes optimistic update with temp comment, onError rollback, and invalidation on success.
+ * TanStack Query mutation for adding comments to assignments with
+ * optimistic updates and automatic @mention notifications.
+ *
+ * @description
+ * This hook provides a mutation for adding comments to assignments:
+ * - Optimistic update with temporary comment for instant UI feedback
+ * - Automatic rollback on error
+ * - Cache invalidation on success to fetch server data
+ * - @mention detection and notification
+ * - Toast notifications with i18n support
+ * - Bi-directional (EN/AR) support
+ *
+ * Features:
+ * - Instant UI update before server response (<50ms perceived latency)
+ * - Error recovery with automatic cache rollback
+ * - Mention extraction and user notification
+ * - Assignment detail cache synchronization
+ *
+ * @example
+ * // Basic usage
+ * const { mutate: addComment } = useAddComment();
+ * addComment({
+ *   assignment_id: 'assignment-uuid',
+ *   text: 'Great work on this!',
+ * });
+ *
+ * @example
+ * // With @mentions
+ * const { mutate: addComment, isPending } = useAddComment();
+ * addComment({
+ *   assignment_id: 'assignment-uuid',
+ *   text: '@john.doe Please review this section',
+ * });
+ * // Toast will show: "2 users notified: john.doe, ..."
+ *
+ * @example
+ * // Handle loading state
+ * const mutation = useAddComment();
+ * <Button
+ *   onClick={() => mutation.mutate({ assignment_id: id, text })}
+ *   disabled={mutation.isPending}
+ * >
+ *   {mutation.isPending ? 'Adding...' : 'Add Comment'}
+ * </Button>
  *
  * @see specs/014-full-assignment-detail/contracts/api-spec.yaml#POST /assignments/comments/create
  */
@@ -26,6 +69,66 @@ export interface AddCommentResponse {
   mentions: string[];
 }
 
+/**
+ * Hook to add a comment to an assignment
+ *
+ * @description
+ * Creates a new comment on an assignment with optimistic UI updates.
+ * Automatically handles:
+ * - Optimistic update (comment appears instantly)
+ * - Error rollback (reverts UI if server fails)
+ * - Cache invalidation (fetches real data from server)
+ * - @mention extraction and notifications
+ * - Success/error toast messages
+ *
+ * The mutation includes full optimistic update flow:
+ * 1. onMutate: Add temp comment to cache immediately
+ * 2. mutationFn: Send request to server
+ * 3. onError: Rollback cache to previous state if failed
+ * 4. onSettled: Invalidate queries to refetch accurate data
+ * 5. onSuccess: Show toast if mentions were created
+ *
+ * @returns TanStack Mutation for adding comments
+ * @returns {Function} mutate - Trigger the mutation
+ * @returns {Function} mutateAsync - Trigger with promise
+ * @returns {boolean} isPending - Mutation in progress
+ * @returns {boolean} isSuccess - Mutation succeeded
+ * @returns {boolean} isError - Mutation failed
+ * @returns {AddCommentResponse} data - Response data with comment_id and mentions
+ * @returns {Error} error - Error object if mutation failed
+ *
+ * @example
+ * // Basic usage
+ * const { mutate } = useAddComment();
+ * mutate({
+ *   assignment_id: 'uuid-123',
+ *   text: 'Looks good!',
+ * });
+ *
+ * @example
+ * // With promise (async/await)
+ * const { mutateAsync } = useAddComment();
+ * try {
+ *   const result = await mutateAsync({
+ *     assignment_id: 'uuid-123',
+ *     text: '@alice Please check',
+ *   });
+ *   console.log('Notified:', result.mentions);
+ * } catch (error) {
+ *   console.error('Failed:', error);
+ * }
+ *
+ * @example
+ * // Track mutation state
+ * const mutation = useAddComment();
+ * <form onSubmit={(e) => {
+ *   e.preventDefault();
+ *   mutation.mutate({ assignment_id: id, text: value });
+ * }}>
+ *   <textarea disabled={mutation.isPending} />
+ *   {mutation.isError && <ErrorMessage error={mutation.error} />}
+ * </form>
+ */
 export function useAddComment() {
   const queryClient = useQueryClient();
   const { toast } = useToast();

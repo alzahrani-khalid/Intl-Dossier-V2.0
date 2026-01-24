@@ -1,12 +1,54 @@
 /**
- * useCollaborativeEditing Hook
+ * Collaborative Editing Hooks
+ * @module hooks/useCollaborativeEditing
  *
- * Provides real-time collaborative editing functionality with:
- * - Edit sessions and presence tracking
+ * TanStack Query hooks for real-time collaborative document editing with
+ * automatic caching, optimistic updates, and real-time synchronization.
+ *
+ * @description
+ * This module provides comprehensive collaborative editing functionality:
+ * - Edit session management with presence tracking
  * - Suggestions with accept/reject workflow
- * - Track changes with authorship
- * - Inline comments with threading
- * - Collaborator management
+ * - Track changes with author attribution
+ * - Inline comments with threaded discussions
+ * - Collaborator permissions and management
+ * - Real-time cursor position and viewport syncing
+ * - Document locking and collaborative state control
+ *
+ * @example
+ * // Basic usage with auto-join
+ * const {
+ *   session,
+ *   activeEditors,
+ *   suggestions,
+ *   trackChanges,
+ *   createSuggestion,
+ *   resolveSuggestion
+ * } = useCollaborativeEditing({
+ *   documentId: 'doc-uuid',
+ *   autoJoin: true,
+ * });
+ *
+ * @example
+ * // With event callbacks
+ * const collab = useCollaborativeEditing({
+ *   documentId: 'doc-uuid',
+ *   documentVersionId: 'version-uuid',
+ *   onEditorJoined: (editor) => console.log(`${editor.name} joined`),
+ *   onSuggestionCreated: (suggestion) => toast.info('New suggestion'),
+ * });
+ *
+ * @example
+ * // Creating and resolving suggestions
+ * await createSuggestion({
+ *   startPosition: { line: 10, column: 5 },
+ *   endPosition: { line: 10, column: 20 },
+ *   originalText: 'old text',
+ *   suggestedText: 'new text',
+ *   changeType: 'replace',
+ *   comment: 'Improved clarity',
+ * });
+ * await resolveSuggestion('suggestion-id', true, 'Looks good!');
  */
 
 import { useEffect, useState, useCallback, useRef, useMemo } from 'react'
@@ -37,7 +79,29 @@ import {
 
 const EDGE_FUNCTION_URL = '/functions/v1/collaborative-editing'
 
-// Query key factory
+/**
+ * Query Keys Factory for collaborative editing queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation by document and feature.
+ *
+ * @example
+ * // Invalidate all collaborative editing queries
+ * queryClient.invalidateQueries({ queryKey: collaborativeEditingKeys.all });
+ *
+ * @example
+ * // Invalidate only suggestions for a document
+ * queryClient.invalidateQueries({ queryKey: collaborativeEditingKeys.suggestions('doc-id') });
+ *
+ * @example
+ * // Invalidate all data for a specific document
+ * queryClient.invalidateQueries({
+ *   predicate: (query) =>
+ *     query.queryKey.includes('collaborative-editing') &&
+ *     query.queryKey.includes('doc-id')
+ * });
+ */
 export const collaborativeEditingKeys = {
   all: ['collaborative-editing'] as const,
   sessions: (documentId: string) =>
@@ -79,6 +143,99 @@ function debounce<T extends (...args: Parameters<T>) => void>(
   }
 }
 
+/**
+ * Hook for real-time collaborative document editing
+ *
+ * @description
+ * Provides comprehensive collaborative editing functionality with real-time synchronization:
+ * - Automatic edit session management (join/leave)
+ * - Live presence tracking of active editors with cursor positions
+ * - Suggestions workflow (create, accept, reject)
+ * - Track changes with author attribution and resolution
+ * - Inline threaded comments
+ * - Collaborator permission management
+ * - Document lock/unlock control
+ * - Real-time updates via Supabase Realtime
+ *
+ * Features:
+ * - Auto-join session on mount (configurable)
+ * - Auto-leave session on unmount
+ * - Debounced cursor updates (50ms)
+ * - Optimistic cache updates
+ * - Real-time cache invalidation on database changes
+ *
+ * @param options - Configuration options for collaborative editing
+ * @param options.documentId - The document UUID to collaborate on (required)
+ * @param options.documentVersionId - Specific version to edit (optional)
+ * @param options.autoJoin - Automatically join edit session on mount (default: true)
+ * @param options.onEditorJoined - Callback when editor joins session
+ * @param options.onEditorLeft - Callback when editor leaves session
+ * @param options.onSuggestionCreated - Callback when suggestion is created
+ * @param options.onChangeCreated - Callback when track change is created
+ * @param options.onCommentCreated - Callback when inline comment is created
+ *
+ * @returns Collaborative editing state and actions
+ * @returns {EditSession | null} session - Current user's edit session
+ * @returns {ActiveEditor[]} activeEditors - List of currently active editors
+ * @returns {SuggestionWithAuthor[]} suggestions - Document suggestions
+ * @returns {TrackChangeWithAuthor[]} trackChanges - Tracked changes
+ * @returns {InlineCommentWithAuthor[]} inlineComments - Inline comments
+ * @returns {CollaboratorWithUser[]} collaborators - Document collaborators
+ * @returns {CollaborationSummary | null} summary - Collaboration statistics
+ * @returns {boolean} isConnected - Real-time connection status
+ * @returns {boolean} isLoading - Loading state for initial data
+ * @returns {Error | null} error - Error state if any query failed
+ * @returns {Function} joinSession - Manually join edit session
+ * @returns {Function} leaveSession - Manually leave edit session
+ * @returns {Function} updateCursor - Update cursor position (debounced)
+ * @returns {Function} createSuggestion - Create new suggestion
+ * @returns {Function} resolveSuggestion - Accept or reject suggestion
+ * @returns {Function} acceptChange - Accept track change
+ * @returns {Function} rejectChange - Reject track change
+ * @returns {Function} acceptAllChanges - Accept all pending changes
+ * @returns {Function} rejectAllChanges - Reject all pending changes
+ * @returns {Function} createInlineComment - Create inline comment
+ * @returns {Function} updateInlineComment - Update inline comment content
+ * @returns {Function} resolveInlineComment - Resolve inline comment thread
+ * @returns {Function} deleteInlineComment - Delete inline comment
+ * @returns {Function} addCollaborator - Add collaborator with permissions
+ * @returns {Function} updateCollaborator - Update collaborator permissions
+ * @returns {Function} removeCollaborator - Remove collaborator access
+ * @returns {Function} toggleTrackChanges - Enable/disable track changes
+ * @returns {Function} toggleSuggestions - Enable/disable suggestions
+ * @returns {Function} lockDocument - Lock document to prevent edits
+ * @returns {Function} unlockDocument - Unlock document
+ *
+ * @example
+ * // Basic usage
+ * const { session, activeEditors, suggestions } = useCollaborativeEditing({
+ *   documentId: 'doc-123',
+ * });
+ *
+ * @example
+ * // With callbacks and manual session control
+ * const collab = useCollaborativeEditing({
+ *   documentId: 'doc-123',
+ *   autoJoin: false,
+ *   onEditorJoined: (editor) => toast.info(`${editor.name} is now editing`),
+ * });
+ * // Manually join later
+ * await collab.joinSession();
+ *
+ * @example
+ * // Working with suggestions
+ * const { createSuggestion, resolveSuggestion, suggestions } = useCollaborativeEditing({
+ *   documentId: 'doc-123',
+ * });
+ * await createSuggestion({
+ *   startPosition: { line: 5, column: 0 },
+ *   endPosition: { line: 5, column: 10 },
+ *   originalText: 'Hello',
+ *   suggestedText: 'Hi',
+ *   changeType: 'replace',
+ * });
+ * await resolveSuggestion(suggestions[0].id, true, 'Approved');
+ */
 export function useCollaborativeEditing(
   options: UseCollaborativeEditingOptions,
 ): UseCollaborativeEditingReturn {

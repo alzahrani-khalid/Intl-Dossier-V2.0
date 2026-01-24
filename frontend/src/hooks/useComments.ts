@@ -1,12 +1,68 @@
 /**
- * useComments Hook
+ * Entity Comments Hooks
+ * @module hooks/useComments
  *
- * TanStack Query hooks for the entity comments system with:
- * - Comment listing with infinite scroll
- * - Thread fetching
- * - Create/Update/Delete mutations
- * - Reaction toggling
- * - User search for @mentions
+ * TanStack Query hooks for universal entity commenting system with
+ * infinite scroll, threading, reactions, and @mentions.
+ *
+ * @description
+ * This module provides a comprehensive commenting system for any entity type:
+ * - Comment CRUD operations with optimistic updates
+ * - Infinite scroll pagination for comment lists
+ * - Threaded discussions with configurable depth
+ * - Emoji reactions with toggle functionality
+ * - User search and @mention autocomplete
+ * - Public/private/internal visibility levels
+ * - Automatic cache invalidation
+ * - Toast notifications with i18n support
+ *
+ * Supports commenting on: dossiers, documents, engagements, tasks, work items,
+ * commitments, and any entity implementing CommentableEntityType.
+ *
+ * @example
+ * // Fetch comments with infinite scroll
+ * const {
+ *   data,
+ *   fetchNextPage,
+ *   hasNextPage,
+ *   isLoading
+ * } = useComments('dossier', 'country-uuid', { pageSize: 20 });
+ *
+ * data?.pages.forEach(page => {
+ *   page.comments.forEach(comment => {
+ *     console.log(comment.content, comment.author.name);
+ *   });
+ * });
+ *
+ * @example
+ * // Create comment with mention
+ * const { mutate: createComment } = useCreateComment();
+ * createComment({
+ *   entityType: 'document',
+ *   entityId: 'doc-123',
+ *   content: 'Please review @john.doe',
+ *   visibility: 'public',
+ * });
+ *
+ * @example
+ * // Thread replies
+ * const { data: thread } = useCommentThread('root-comment-id', { maxDepth: 3 });
+ * thread?.forEach(reply => console.log('Reply:', reply.content));
+ *
+ * @example
+ * // Toggle reaction
+ * const { mutate: toggleReaction } = useToggleReaction();
+ * toggleReaction({
+ *   commentId: 'comment-id',
+ *   emoji: '👍',
+ *   entityType: 'dossier',
+ *   entityId: 'country-uuid',
+ * });
+ *
+ * @example
+ * // Search users for @mentions
+ * const { data: users } = useSearchUsersForMention('john', { enabled: query.length > 0 });
+ * users?.forEach(user => console.log(`@${user.username}`, user.name));
  */
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
@@ -44,7 +100,28 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   }
 }
 
-// Query key factory
+/**
+ * Query Keys Factory for comment-related queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation by entity, comment, and feature.
+ *
+ * @example
+ * // Invalidate all comment queries
+ * queryClient.invalidateQueries({ queryKey: commentQueryKeys.all });
+ *
+ * @example
+ * // Invalidate comments for specific entity
+ * queryClient.invalidateQueries({
+ *   queryKey: commentQueryKeys.list({ entity_type: 'dossier', entity_id: 'uuid' })
+ * });
+ *
+ * @example
+ * // Invalidate specific comment and its thread
+ * queryClient.invalidateQueries({ queryKey: commentQueryKeys.detail('comment-id') });
+ * queryClient.invalidateQueries({ queryKey: commentQueryKeys.thread('comment-id') });
+ */
 export const commentQueryKeys = {
   all: ['comments'] as const,
   lists: () => [...commentQueryKeys.all, 'list'] as const,
@@ -57,7 +134,41 @@ export const commentQueryKeys = {
 }
 
 /**
- * Fetch comments for an entity with infinite scroll support
+ * Hook to fetch comments for an entity with infinite scroll support
+ *
+ * @description
+ * Fetches paginated comments for any commentable entity with automatic cache management.
+ * Supports infinite scroll pattern with `fetchNextPage()` for loading more comments.
+ *
+ * Returns pages of comments with pagination metadata. Each page includes comments array
+ * and pagination info (has_more, total, offset, limit).
+ *
+ * @param entityType - Type of entity ('dossier', 'document', 'task', etc.)
+ * @param entityId - UUID of the entity
+ * @param options - Query options
+ * @param options.pageSize - Number of comments per page (default: 20)
+ * @param options.includeReplies - Include threaded replies in results (default: true)
+ * @param options.enabled - Enable/disable the query (default: true)
+ *
+ * @returns TanStack Infinite Query result with paginated comments
+ *
+ * @example
+ * // Basic usage
+ * const { data, fetchNextPage, hasNextPage } = useComments('dossier', 'country-uuid');
+ *
+ * @example
+ * // Custom page size and load more
+ * const query = useComments('document', 'doc-id', { pageSize: 10 });
+ * <Button onClick={() => query.fetchNextPage()} disabled={!query.hasNextPage}>
+ *   Load More
+ * </Button>
+ *
+ * @example
+ * // Conditional fetching
+ * const { data } = useComments('task', taskId, {
+ *   enabled: !!taskId && isOpen,
+ *   includeReplies: false, // Top-level comments only
+ * });
  */
 export function useComments(
   entityType: CommentableEntityType,

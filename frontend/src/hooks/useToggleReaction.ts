@@ -1,8 +1,59 @@
 /**
- * useToggleReaction Hook
+ * Comment Reaction Hooks
+ * @module hooks/useToggleReaction
  *
- * TanStack Query mutation for toggling emoji reactions on comments.
- * Includes optimistic update (add/remove reaction) and real-time sync.
+ * TanStack Query mutation for toggling emoji reactions on assignment comments
+ * with real-time synchronization.
+ *
+ * @description
+ * This hook provides mutation for toggling emoji reactions on comments:
+ * - Add reaction if user hasn't reacted with that emoji
+ * - Remove reaction if user has already reacted with that emoji
+ * - Real-time synchronization via Supabase Realtime
+ * - Automatic cache invalidation
+ * - Toast notifications on error
+ *
+ * Supported emojis: 👍 ✅ ❓ ❤️ 🎯 💡
+ *
+ * Note: Optimistic updates are handled by the real-time subscription system
+ * rather than manual cache manipulation for better consistency.
+ *
+ * @example
+ * // Toggle a reaction
+ * const { mutate: toggleReaction } = useToggleReaction();
+ * toggleReaction({
+ *   comment_id: 'comment-uuid',
+ *   emoji: '👍',
+ *   assignment_id: 'assignment-uuid', // For cache invalidation
+ * });
+ *
+ * @example
+ * // Create reaction buttons
+ * const { mutate } = useToggleReaction();
+ * const emojis = ['👍', '✅', '❓', '❤️', '🎯', '💡'] as const;
+ *
+ * emojis.map(emoji => (
+ *   <Button
+ *     key={emoji}
+ *     onClick={() => mutate({
+ *       comment_id: comment.id,
+ *       emoji,
+ *       assignment_id: assignment.id,
+ *     })}
+ *   >
+ *     {emoji}
+ *   </Button>
+ * ));
+ *
+ * @example
+ * // Handle mutation state
+ * const mutation = useToggleReaction();
+ * <button
+ *   onClick={() => mutation.mutate({ comment_id, emoji: '👍', assignment_id })}
+ *   disabled={mutation.isPending}
+ * >
+ *   {mutation.isPending ? 'Updating...' : '👍'}
+ * </button>
  *
  * @see specs/014-full-assignment-detail/contracts/api-spec.yaml#POST /assignments/comments/reactions/toggle
  */
@@ -25,6 +76,56 @@ export interface ToggleReactionResponse {
   emoji: string;
 }
 
+/**
+ * Hook to toggle emoji reaction on a comment
+ *
+ * @description
+ * Toggles an emoji reaction on a comment:
+ * - If user hasn't reacted: adds the reaction
+ * - If user has reacted: removes the reaction
+ *
+ * The mutation integrates with Supabase Realtime for instant UI updates.
+ * Cache invalidation ensures consistency with server state.
+ *
+ * @returns TanStack Mutation for toggling reactions
+ * @returns {Function} mutate - Trigger the mutation
+ * @returns {Function} mutateAsync - Trigger with promise
+ * @returns {boolean} isPending - Mutation in progress
+ * @returns {boolean} isSuccess - Mutation succeeded
+ * @returns {boolean} isError - Mutation failed
+ * @returns {ToggleReactionResponse} data - Response with action ('added' | 'removed')
+ * @returns {Error} error - Error object if mutation failed
+ *
+ * @example
+ * // Basic usage
+ * const { mutate } = useToggleReaction();
+ * mutate({
+ *   comment_id: 'comment-id',
+ *   emoji: '👍',
+ *   assignment_id: 'assignment-id',
+ * });
+ *
+ * @example
+ * // Check action result
+ * const { mutateAsync } = useToggleReaction();
+ * const result = await mutateAsync({ comment_id, emoji: '❤️', assignment_id });
+ * if (result.action === 'added') {
+ *   console.log('Reaction added');
+ * } else {
+ *   console.log('Reaction removed');
+ * }
+ *
+ * @example
+ * // With loading state
+ * const mutation = useToggleReaction();
+ * <button
+ *   onClick={() => mutation.mutate({ comment_id, emoji: '🎯', assignment_id })}
+ *   disabled={mutation.isPending}
+ *   className={mutation.isPending ? 'opacity-50' : ''}
+ * >
+ *   🎯
+ * </button>
+ */
 export function useToggleReaction() {
   const queryClient = useQueryClient();
   const { toast } = useToast();

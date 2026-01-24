@@ -1,13 +1,57 @@
 /**
- * useTeamCollaboration Hook
- * Feature: Collaborative Empty States
+ * Team Collaboration Hooks
+ * @module hooks/useTeamCollaboration
+ * @feature Collaborative Empty States
  *
- * TanStack Query hooks for team collaboration features:
- * - useTeamStats: Fetch team activity statistics for empty states
- * - useInvitationTemplates: Fetch message templates
- * - useSendInvitation: Send team collaboration invitations
- * - useMyInvitations: Fetch user's invitations
- * - useRespondToInvitation: Accept or decline invitations
+ * TanStack Query hooks for team collaboration and invitation management
+ * with automatic caching and RTL support.
+ *
+ * @description
+ * This module provides hooks for team collaboration features:
+ * - Team activity statistics for empty states
+ * - Invitation message templates
+ * - Send and manage team invitations
+ * - Accept/decline invitation workflow
+ * - Bi-directional i18n (EN/AR) with RTL support
+ *
+ * Features:
+ * - Automatic cache management with stale-time optimization
+ * - Toast notifications with RTL support
+ * - Optimistic updates for better UX
+ * - Type-safe API contracts
+ *
+ * @example
+ * // Fetch team stats for empty state
+ * const { data: stats } = useTeamStats({ entityType: 'dossier' });
+ * {stats && (
+ *   <div>
+ *     <p>{stats.totalActivity} team activities</p>
+ *     <p>Top contributors: {stats.topContributors.join(', ')}</p>
+ *   </div>
+ * )}
+ *
+ * @example
+ * // Send invitation with template
+ * const { data: templates } = useInvitationTemplates({ entityType: 'document' });
+ * const { mutate: sendInvite } = useSendInvitation();
+ *
+ * sendInvite({
+ *   inviteeEmail: 'colleague@example.com',
+ *   entityType: 'document',
+ *   entityId: 'doc-123',
+ *   messageTemplate: templates[0].id,
+ * });
+ *
+ * @example
+ * // Manage invitations
+ * const { data: invitations } = useMyInvitations();
+ * const { mutate: respond } = useRespondToInvitation();
+ *
+ * invitations?.forEach(inv => {
+ *   <Button onClick={() => respond({ invitationId: inv.id, status: 'accepted' })}>
+ *     Accept
+ *   </Button>
+ * });
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -30,6 +74,25 @@ import { useTranslation } from 'react-i18next'
 // Query Keys
 // ============================================================================
 
+/**
+ * Query Keys Factory for team collaboration queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation by entity type.
+ *
+ * @example
+ * // Invalidate all team collaboration queries
+ * queryClient.invalidateQueries({ queryKey: teamCollaborationKeys.all });
+ *
+ * @example
+ * // Invalidate only stats for dossiers
+ * queryClient.invalidateQueries({ queryKey: teamCollaborationKeys.stats('dossier') });
+ *
+ * @example
+ * // Invalidate invitations after sending/responding
+ * queryClient.invalidateQueries({ queryKey: teamCollaborationKeys.invitations() });
+ */
 export const teamCollaborationKeys = {
   all: ['teamCollaboration'] as const,
   stats: (entityType: string) => [...teamCollaborationKeys.all, 'stats', entityType] as const,
