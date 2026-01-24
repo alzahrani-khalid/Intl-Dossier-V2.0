@@ -1,6 +1,54 @@
 /**
- * useProgressiveForm Hook
- * Manages progressive disclosure forms with required/optional field distinction
+ * Progressive Form Hook
+ * @module hooks/useProgressiveForm
+ *
+ * Manages progressive disclosure forms with required/optional field distinction,
+ * conditional visibility, field groups, and intelligent completion tracking.
+ *
+ * @description
+ * This module provides sophisticated form management with:
+ * - Progressive disclosure (show/hide optional fields on demand)
+ * - Three-tier field importance: required, recommended, optional
+ * - Conditional field visibility based on other field values
+ * - Field dependency management (show field B only after field A is complete)
+ * - Collapsible field groups with completion tracking
+ * - Auto-expand groups on errors for better UX
+ * - Real-time completion percentage calculation
+ * - Validation state tracking per field
+ *
+ * @example
+ * // Basic progressive form
+ * const { completionState, showOptional, toggleOptionalFields } = useProgressiveForm({
+ *   config: {
+ *     fields: [
+ *       { name: 'title', importance: 'required' },
+ *       { name: 'description', importance: 'recommended' },
+ *       { name: 'notes', importance: 'optional' },
+ *     ],
+ *   },
+ *   values: formValues,
+ *   errors: formErrors,
+ * });
+ *
+ * @example
+ * // With conditional visibility and groups
+ * const { isFieldVisible, getFieldsByGroup, getGroupCompletion } = useProgressiveForm({
+ *   config: {
+ *     fields: [
+ *       { name: 'hasAttendees', importance: 'required' },
+ *       {
+ *         name: 'attendeeList',
+ *         importance: 'required',
+ *         showWhen: (values) => values.hasAttendees === true
+ *       },
+ *     ],
+ *     groups: [
+ *       { id: 'basic', fields: ['title', 'date'], collapsible: true },
+ *       { id: 'advanced', fields: ['notes'], collapsible: true, defaultCollapsed: true },
+ *     ],
+ *   },
+ *   values: formValues,
+ * });
  */
 
 import { useState, useCallback, useMemo } from 'react'
@@ -13,7 +61,21 @@ import type {
 } from '@/types/progressive-form.types'
 
 /**
- * Determine field status based on value and validation
+ * Determine field completion status based on value and validation
+ *
+ * @description
+ * Evaluates a field's value to determine its completion status: empty, partial,
+ * complete, or error. Uses custom validation if provided in field config.
+ *
+ * @param value - The current field value
+ * @param fieldConfig - Field configuration with optional custom validate function
+ * @param error - Optional validation error message
+ * @returns Field status: 'empty' | 'partial' | 'complete' | 'error'
+ *
+ * @example
+ * getDefaultFieldStatus('Jo', fieldConfig) // 'partial' (< 3 chars)
+ * getDefaultFieldStatus('John Doe', fieldConfig) // 'complete'
+ * getDefaultFieldStatus('', fieldConfig, 'Required field') // 'error'
  */
 function getDefaultFieldStatus(
   value: unknown,
@@ -59,6 +121,63 @@ function getDefaultFieldStatus(
 
 /**
  * Hook for managing progressive disclosure forms
+ *
+ * @description
+ * Provides comprehensive form state management with progressive disclosure,
+ * field grouping, conditional visibility, and completion tracking. Supports
+ * collapsible groups, field dependencies, and dynamic visibility rules.
+ *
+ * @param options - Configuration object with form config, values, errors, and callbacks
+ * @returns Object with completion state, visibility controls, and field utilities
+ *
+ * @example
+ * // Basic usage
+ * const {
+ *   completionState,
+ *   showOptional,
+ *   toggleOptionalFields,
+ *   isFieldVisible,
+ * } = useProgressiveForm({
+ *   config: {
+ *     fields: [
+ *       { name: 'title', importance: 'required' },
+ *       { name: 'subtitle', importance: 'optional' },
+ *     ],
+ *     showOptionalByDefault: false,
+ *   },
+ *   values: { title: 'My Title' },
+ * });
+ *
+ * @example
+ * // With groups and conditional visibility
+ * const {
+ *   getFieldsByGroup,
+ *   getGroupCompletion,
+ *   toggleGroupCollapse,
+ *   collapsedGroups,
+ * } = useProgressiveForm({
+ *   config: {
+ *     fields: [
+ *       { name: 'type', importance: 'required' },
+ *       {
+ *         name: 'details',
+ *         importance: 'required',
+ *         dependsOn: 'type', // Only show after type is selected
+ *       },
+ *     ],
+ *     groups: [
+ *       {
+ *         id: 'advanced',
+ *         fields: ['details'],
+ *         collapsible: true,
+ *         defaultCollapsed: true,
+ *       },
+ *     ],
+ *     autoExpandOnError: true,
+ *   },
+ *   values: formData,
+ *   errors: formErrors,
+ * });
  */
 export function useProgressiveForm({
   config,

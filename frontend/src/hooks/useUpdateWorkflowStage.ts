@@ -1,10 +1,49 @@
 /**
- * useUpdateWorkflowStage Hook
+ * Update Workflow Stage Hook
+ * @module hooks/useUpdateWorkflowStage
  *
- * TanStack Query mutation for updating assignment workflow_stage via kanban drag-and-drop.
- * Includes optimistic update with <100ms latency target.
+ * TanStack Query mutation for updating assignment workflow stage via kanban drag-and-drop
+ * with optimistic updates for sub-100ms perceived latency.
+ *
+ * @description
+ * This module provides a mutation hook for updating assignment workflow stages with:
+ * - Optimistic updates for instant UI feedback (<100ms target)
+ * - Automatic kanban board cache updates
+ * - Assignment detail cache synchronization
+ * - Rollback on error with toast notifications
+ * - Multi-query invalidation on success for consistency
+ *
+ * Workflow stages: todo → in_progress → review → done
  *
  * @see specs/014-full-assignment-detail/contracts/api-spec.yaml#PATCH /assignments/{id}/workflow-stage
+ *
+ * @example
+ * // Basic usage in kanban drag handler
+ * const { mutate: updateStage } = useUpdateWorkflowStage();
+ *
+ * const handleDrop = (assignmentId: string, newStage: string) => {
+ *   updateStage({
+ *     assignment_id: assignmentId,
+ *     workflow_stage: newStage,
+ *     engagement_id: engagementId,
+ *   });
+ * };
+ *
+ * @example
+ * // With error handling
+ * const { mutate: updateStage, isPending } = useUpdateWorkflowStage();
+ *
+ * updateStage(
+ *   {
+ *     assignment_id: 'uuid-123',
+ *     workflow_stage: 'in_progress',
+ *     engagement_id: 'uuid-456',
+ *   },
+ *   {
+ *     onSuccess: () => console.log('Stage updated'),
+ *     onError: (error) => console.error('Failed:', error),
+ *   }
+ * );
  */
 
 import { useMutation, useQueryClient } from '@tanstack/react-query';
@@ -36,6 +75,32 @@ interface OptimisticContext {
   previousAssignment?: AssignmentDetailResponse;
 }
 
+/**
+ * Hook to update assignment workflow stage with optimistic updates
+ *
+ * @description
+ * Provides a mutation function that updates an assignment's workflow stage
+ * with optimistic UI updates for instant feedback. Automatically handles:
+ * - Optimistic kanban column updates (move card between columns)
+ * - Optimistic assignment detail updates
+ * - Rollback on error
+ * - Cache invalidation on success
+ * - Toast notifications for errors
+ *
+ * @returns TanStack Mutation with optimistic update support
+ *
+ * @example
+ * const { mutate: updateStage } = useUpdateWorkflowStage();
+ *
+ * // Called from drag-and-drop handler
+ * const onDragEnd = (result) => {
+ *   updateStage({
+ *     assignment_id: result.draggableId,
+ *     workflow_stage: result.destination.droppableId,
+ *     engagement_id: engagementId,
+ *   });
+ * };
+ */
 export function useUpdateWorkflowStage() {
   const queryClient = useQueryClient();
   const { toast } = useToast();

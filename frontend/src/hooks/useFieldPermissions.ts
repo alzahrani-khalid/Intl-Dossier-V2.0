@@ -1,6 +1,42 @@
 /**
  * Field Permissions Hooks
- * Custom hooks for managing granular field-level permissions
+ * @module hooks/useFieldPermissions
+ *
+ * Custom hooks for managing granular field-level view/edit permissions with role-based
+ * access control, entity-specific overrides, and audit logging.
+ *
+ * @description
+ * This module provides comprehensive field-level permission management with:
+ * - Role-based field visibility and editability (global or role-specific)
+ * - Entity-specific permission overrides (per dossier, engagement, etc.)
+ * - Resolved permission calculation (combining defaults, roles, and overrides)
+ * - Bulk permission checking for multiple fields
+ * - Field definition management (field metadata and defaults)
+ * - Permission audit logging and history
+ * - Utility hooks for filtering visible/editable fields
+ *
+ * @example
+ * // Check permissions for a specific field
+ * const { can_view, can_edit, isLoading } = useFieldPermission(
+ *   'dossier',
+ *   'sensitive_notes',
+ *   'uuid-123'
+ * );
+ *
+ * @example
+ * // Get all resolved permissions for an entity
+ * const { data: permissions } = useResolvedPermissions('engagement', 'uuid-456');
+ * permissions.forEach(p => {
+ *   console.log(`${p.field_name}: view=${p.can_view}, edit=${p.can_edit}`);
+ * });
+ *
+ * @example
+ * // Filter object to show only visible fields
+ * const { visibleData, hiddenFields } = useVisibleFields(
+ *   dossierData,
+ *   'dossier',
+ *   dossierId
+ * );
  */
 
 import { useMemo, useCallback } from 'react'
@@ -22,7 +58,14 @@ import type {
   FieldWithPermission,
 } from '@/types/field-permission.types'
 
-// Query Keys
+// Query Keys Factory
+/**
+ * Query key factory for field permission queries
+ *
+ * @description
+ * Provides hierarchical cache keys for TanStack Query to enable
+ * granular cache invalidation and efficient permission query management.
+ */
 export const fieldPermissionKeys = {
   all: ['field-permissions'] as const,
   lists: () => [...fieldPermissionKeys.all, 'list'] as const,
@@ -166,7 +209,26 @@ async function fetchAuditLogs(params: GetAuditLogsParams): Promise<{
 // Hooks
 
 /**
- * Hook to list field permissions
+ * Hook to list field permissions with optional filtering
+ *
+ * @description
+ * Fetches field permission rules with optional filtering by entity type,
+ * scope type, scope value, and active status. Useful for permission management UI.
+ *
+ * @param params - Optional filters for entity type, scope, and active status
+ * @returns TanStack Query result with field permission array
+ *
+ * @example
+ * // Fetch all active permissions
+ * const { data: permissions } = useFieldPermissions({ active_only: true });
+ *
+ * @example
+ * // Fetch role-specific permissions
+ * const { data: rolePerms } = useFieldPermissions({
+ *   entity_type: 'dossier',
+ *   scope_type: 'role',
+ *   scope_value: 'analyst',
+ * });
  */
 export function useFieldPermissions(params: ListFieldPermissionsParams = {}) {
   return useQuery({
@@ -177,7 +239,21 @@ export function useFieldPermissions(params: ListFieldPermissionsParams = {}) {
 }
 
 /**
- * Hook to get field definitions
+ * Hook to get field definitions for an entity type
+ *
+ * @description
+ * Fetches field metadata including field names, labels, categories,
+ * default visibility, and default editability. Cached for 30 minutes
+ * since definitions rarely change.
+ *
+ * @param params - Optional entity type filter
+ * @returns TanStack Query result with field definition array
+ *
+ * @example
+ * const { data: fields } = useFieldDefinitions({ entity_type: 'dossier' });
+ * fields.forEach(field => {
+ *   console.log(`${field.field_name}: ${field.field_category}`);
+ * });
  */
 export function useFieldDefinitions(params: ListFieldDefinitionsParams = {}) {
   return useQuery({
@@ -190,7 +266,21 @@ export function useFieldDefinitions(params: ListFieldDefinitionsParams = {}) {
 }
 
 /**
- * Hook to get resolved permissions for the current user on an entity
+ * Hook to get resolved field permissions for the current user
+ *
+ * @description
+ * Fetches computed permissions combining defaults, role-based rules, and
+ * entity-specific overrides. Returns the final can_view and can_edit flags
+ * for each field on an entity.
+ *
+ * @param entityType - The type of entity (dossier, engagement, etc.)
+ * @param entityId - Optional entity UUID for entity-specific overrides
+ * @param enabled - Whether to enable the query (default: true)
+ * @returns TanStack Query result with resolved permission array
+ *
+ * @example
+ * const { data: permissions } = useResolvedPermissions('dossier', 'uuid-123');
+ * const canEditTitle = permissions?.find(p => p.field_name === 'title')?.can_edit;
  */
 export function useResolvedPermissions(
   entityType: FieldPermissionEntityType,
@@ -206,7 +296,24 @@ export function useResolvedPermissions(
 }
 
 /**
- * Hook to check bulk field permissions
+ * Hook to check permissions for multiple fields at once
+ *
+ * @description
+ * Efficiently checks permissions for a list of field names in a single query.
+ * Useful when you only need to check specific fields rather than all fields.
+ *
+ * @param entityType - The type of entity
+ * @param fieldNames - Array of field names to check
+ * @param entityId - Optional entity UUID for entity-specific overrides
+ * @param enabled - Whether to enable the query (default: true)
+ * @returns TanStack Query result with bulk permission check array
+ *
+ * @example
+ * const { data: checks } = useBulkPermissionCheck(
+ *   'engagement',
+ *   ['title', 'description', 'confidential_notes'],
+ *   engagementId
+ * );
  */
 export function useBulkPermissionCheck(
   entityType: FieldPermissionEntityType,
@@ -223,7 +330,25 @@ export function useBulkPermissionCheck(
 }
 
 /**
- * Hook to create a field permission
+ * Hook to create a new field permission rule
+ *
+ * @description
+ * Mutation hook for creating field permissions. Automatically invalidates
+ * all permission queries on success to refresh the UI.
+ *
+ * @returns TanStack Mutation with mutate function accepting CreateFieldPermissionRequest
+ *
+ * @example
+ * const { mutate: createPermission } = useCreateFieldPermission();
+ *
+ * createPermission({
+ *   entity_type: 'dossier',
+ *   field_name: 'classified_info',
+ *   scope_type: 'role',
+ *   scope_value: 'analyst',
+ *   can_view: false,
+ *   can_edit: false,
+ * });
  */
 export function useCreateFieldPermission() {
   const queryClient = useQueryClient()
@@ -237,7 +362,21 @@ export function useCreateFieldPermission() {
 }
 
 /**
- * Hook to update a field permission
+ * Hook to update an existing field permission rule
+ *
+ * @description
+ * Mutation hook for updating field permissions. Automatically invalidates
+ * all permission queries on success.
+ *
+ * @returns TanStack Mutation with mutate function accepting id and UpdateFieldPermissionRequest
+ *
+ * @example
+ * const { mutate: updatePermission } = useUpdateFieldPermission();
+ *
+ * updatePermission({
+ *   id: 'permission-uuid',
+ *   request: { can_view: true, can_edit: false },
+ * });
  */
 export function useUpdateFieldPermission() {
   const queryClient = useQueryClient()
@@ -252,7 +391,17 @@ export function useUpdateFieldPermission() {
 }
 
 /**
- * Hook to delete a field permission
+ * Hook to delete a field permission rule
+ *
+ * @description
+ * Mutation hook for deleting field permissions. Automatically invalidates
+ * all permission queries on success.
+ *
+ * @returns TanStack Mutation with mutate function accepting permission ID
+ *
+ * @example
+ * const { mutate: deletePermission } = useDeleteFieldPermission();
+ * deletePermission('permission-uuid');
  */
 export function useDeleteFieldPermission() {
   const queryClient = useQueryClient()
@@ -266,7 +415,21 @@ export function useDeleteFieldPermission() {
 }
 
 /**
- * Hook to fetch audit logs
+ * Hook to fetch field permission audit logs
+ *
+ * @description
+ * Retrieves audit trail of permission changes with pagination support.
+ * Useful for compliance and tracking permission modifications.
+ *
+ * @param params - Optional filters for permission_id, limit, and offset
+ * @returns TanStack Query result with audit log array and pagination metadata
+ *
+ * @example
+ * const { data } = useFieldPermissionAudit({
+ *   permission_id: 'perm-uuid',
+ *   limit: 50,
+ * });
+ * console.log(`${data.pagination.total} total audit entries`);
  */
 export function useFieldPermissionAudit(params: GetAuditLogsParams = {}) {
   return useQuery({
@@ -277,7 +440,27 @@ export function useFieldPermissionAudit(params: GetAuditLogsParams = {}) {
 }
 
 /**
- * Hook to get fields with permissions merged (definitions + resolved permissions)
+ * Hook to get field definitions merged with resolved permissions
+ *
+ * @description
+ * Combines field definitions with resolved permissions to provide a complete
+ * picture of each field's metadata and current permission state.
+ *
+ * @param entityType - The type of entity
+ * @param entityId - Optional entity UUID for entity-specific permissions
+ * @returns Object with merged field data array and loading state
+ *
+ * @example
+ * const { data: fields, isLoading } = useFieldsWithPermissions('dossier', 'uuid-123');
+ * fields.forEach(field => {
+ *   console.log(`
+ *     ${field.field_name}:
+ *     Category: ${field.field_category}
+ *     View: ${field.can_view}
+ *     Edit: ${field.can_edit}
+ *     Source: ${field.permission_source}
+ *   `);
+ * });
  */
 export function useFieldsWithPermissions(entityType: FieldPermissionEntityType, entityId?: string) {
   const { data: definitions, isLoading: definitionsLoading } = useFieldDefinitions({
@@ -312,7 +495,26 @@ export function useFieldsWithPermissions(entityType: FieldPermissionEntityType, 
 }
 
 /**
- * Hook to check if user can view/edit a specific field
+ * Hook to check permissions for a single field
+ *
+ * @description
+ * Convenience hook to check view/edit permissions for a specific field.
+ * Returns defaults (view=true, edit=true) if no permission rules exist.
+ *
+ * @param entityType - The type of entity
+ * @param fieldName - The specific field name to check
+ * @param entityId - Optional entity UUID for entity-specific permissions
+ * @returns Object with can_view, can_edit flags and loading state
+ *
+ * @example
+ * const { can_view, can_edit, isLoading } = useFieldPermission(
+ *   'engagement',
+ *   'confidential_notes',
+ *   engagementId
+ * );
+ *
+ * if (!can_view) return null; // Hide field
+ * if (!can_edit) return <ReadOnlyField />; // Show as read-only
  */
 export function useFieldPermission(
   entityType: FieldPermissionEntityType,
@@ -340,6 +542,28 @@ export function useFieldPermission(
 
 /**
  * Hook to filter visible fields from a data object
+ *
+ * @description
+ * Filters an object to only include fields the current user can view,
+ * returning both the filtered data and a list of hidden field names.
+ *
+ * @template T - Type of the data object
+ * @param data - The data object to filter
+ * @param entityType - The type of entity
+ * @param entityId - Optional entity UUID for entity-specific permissions
+ * @returns Object with visibleData, hiddenFields array, and loading state
+ *
+ * @example
+ * const { visibleData, hiddenFields } = useVisibleFields(
+ *   dossierData,
+ *   'dossier',
+ *   dossierId
+ * );
+ *
+ * // Only render visible fields
+ * Object.entries(visibleData).map(([key, value]) => (
+ *   <Field key={key} name={key} value={value} />
+ * ));
  */
 export function useVisibleFields<T extends Record<string, unknown>>(
   data: T | null | undefined,
@@ -376,7 +600,25 @@ export function useVisibleFields<T extends Record<string, unknown>>(
 }
 
 /**
- * Hook to get editable fields from a data object
+ * Hook to get a set of editable field names
+ *
+ * @description
+ * Returns a Set of field names that the current user can edit.
+ * Useful for enabling/disabling form fields based on permissions.
+ *
+ * @param entityType - The type of entity
+ * @param entityId - Optional entity UUID for entity-specific permissions
+ * @returns Object with Set of editable field names and loading state
+ *
+ * @example
+ * const { editableFields, isLoading } = useEditableFields('dossier', dossierId);
+ *
+ * const isEditable = (fieldName: string) => editableFields.has(fieldName);
+ *
+ * <Input
+ *   name="title"
+ *   disabled={!isEditable('title')}
+ * />
  */
 export function useEditableFields(
   entityType: FieldPermissionEntityType,
@@ -394,8 +636,25 @@ export function useEditableFields(
 }
 
 /**
- * Utility function to check field permission synchronously (for use in non-React contexts)
- * This requires the permissions to be pre-fetched
+ * Synchronously check field permission (non-React utility)
+ *
+ * @description
+ * Utility function to check permissions synchronously using pre-fetched permission data.
+ * Useful in callbacks, event handlers, or other non-React contexts.
+ *
+ * @param permissions - Pre-fetched resolved permissions array (or undefined)
+ * @param fieldName - The field name to check
+ * @param action - The action to check ('view' or 'edit')
+ * @returns True if action is allowed, false otherwise (defaults to true if no permissions)
+ *
+ * @example
+ * const handleSubmit = (data: FormData) => {
+ *   const canEditTitle = checkFieldPermission(permissions, 'title', 'edit');
+ *   if (!canEditTitle) {
+ *     delete data.title; // Don't include field user can't edit
+ *   }
+ *   submitForm(data);
+ * };
  */
 export function checkFieldPermission(
   permissions: ResolvedFieldPermission[] | undefined,

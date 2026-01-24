@@ -1,6 +1,56 @@
 /**
  * Workflow Automation Hooks
- * TanStack Query hooks for managing workflow automation rules and executions
+ * @module hooks/useWorkflowAutomation
+ *
+ * TanStack Query hooks for managing workflow automation rules, executions,
+ * notifications, and triggers with comprehensive CRUD operations.
+ *
+ * @description
+ * This module provides comprehensive workflow automation management with:
+ * - Rule CRUD operations (create, read, update, delete, duplicate)
+ * - Execution history tracking and retry capabilities
+ * - Manual workflow triggering
+ * - Test mode for validating rules before activation
+ * - Notification template management
+ * - Infinite scrolling support for large rule lists
+ * - Rule activation toggle (enable/disable)
+ * - Automatic cache invalidation strategies
+ *
+ * Workflow automation features:
+ * - Trigger types: onCreate, onUpdate, onDelete, onSchedule (cron)
+ * - Condition logic: AND/OR combinations with field comparisons
+ * - Action types: sendEmail, createNotification, updateField, callWebhook
+ * - Execution tracking: success, failure, retries
+ * - Rate limiting: max executions per hour, cooldown periods
+ *
+ * @example
+ * // Fetch workflow rules with filtering
+ * const { data: rules } = useWorkflowRules({
+ *   entity_type: 'engagement',
+ *   is_active: true,
+ *   search: 'notification',
+ * });
+ *
+ * @example
+ * // Create a new automation rule
+ * const { mutate: createRule } = useCreateWorkflowRule();
+ *
+ * createRule({
+ *   name_en: 'Notify on High Priority',
+ *   trigger_type: 'onCreate',
+ *   entity_type: 'engagement',
+ *   conditions: [{ field: 'priority', operator: 'equals', value: 'high' }],
+ *   actions: [{ type: 'sendEmail', config: { template: 'high_priority' } }],
+ * });
+ *
+ * @example
+ * // Test a rule before activating
+ * const { mutate: testRule } = useTestWorkflowRule();
+ *
+ * testRule({
+ *   rule_id: 'uuid-123',
+ *   test_data: { priority: 'high', title: 'Test Engagement' },
+ * });
  */
 
 import { useQuery, useMutation, useQueryClient, useInfiniteQuery } from '@tanstack/react-query'
@@ -39,9 +89,16 @@ async function getAuthHeaders(): Promise<Headers> {
 }
 
 // =============================================================================
-// Query Keys
+// Query Keys Factory
 // =============================================================================
 
+/**
+ * Query key factory for workflow automation queries
+ *
+ * @description
+ * Provides hierarchical cache keys for TanStack Query to enable
+ * granular cache invalidation and efficient workflow query management.
+ */
 export const workflowKeys = {
   all: ['workflow-automation'] as const,
   rules: () => [...workflowKeys.all, 'rules'] as const,
@@ -237,7 +294,22 @@ async function retryWorkflowExecution(
 // =============================================================================
 
 /**
- * Fetch paginated workflow rules
+ * Hook to fetch paginated workflow rules with filtering
+ *
+ * @description
+ * Fetches workflow automation rules with optional filtering by entity type,
+ * trigger type, active status, and search query. Results are paginated.
+ *
+ * @param params - Optional filters for entity type, trigger, active status, search, and pagination
+ * @returns TanStack Query result with paginated workflow rules
+ *
+ * @example
+ * const { data, isLoading } = useWorkflowRules({
+ *   entity_type: 'dossier',
+ *   is_active: true,
+ *   page: 1,
+ *   limit: 20,
+ * });
  */
 export function useWorkflowRules(params: WorkflowRulesListParams = {}) {
   return useQuery({
@@ -249,7 +321,27 @@ export function useWorkflowRules(params: WorkflowRulesListParams = {}) {
 }
 
 /**
- * Fetch infinite scrolling workflow rules
+ * Hook to fetch workflow rules with infinite scrolling
+ *
+ * @description
+ * Provides infinite scroll pagination for workflow rules. Automatically
+ * fetches the next page when scrolling reaches the bottom.
+ *
+ * @param params - Filters without page parameter (page is auto-managed)
+ * @returns TanStack InfiniteQuery result with pages of workflow rules
+ *
+ * @example
+ * const {
+ *   data,
+ *   fetchNextPage,
+ *   hasNextPage,
+ *   isFetchingNextPage,
+ * } = useInfiniteWorkflowRules({ entity_type: 'engagement' });
+ *
+ * // In scroll handler
+ * if (hasNextPage && !isFetchingNextPage) {
+ *   fetchNextPage();
+ * }
  */
 export function useInfiniteWorkflowRules(params: Omit<WorkflowRulesListParams, 'page'>) {
   return useInfiniteQuery({
@@ -268,7 +360,21 @@ export function useInfiniteWorkflowRules(params: Omit<WorkflowRulesListParams, '
 }
 
 /**
- * Fetch a single workflow rule
+ * Hook to fetch a single workflow rule by ID
+ *
+ * @description
+ * Fetches complete details of a specific workflow rule including trigger config,
+ * conditions, actions, and execution statistics.
+ *
+ * @param id - The workflow rule UUID
+ * @param enabled - Whether to enable the query (default: true)
+ * @returns TanStack Query result with workflow rule details
+ *
+ * @example
+ * const { data: rule, isLoading } = useWorkflowRule('uuid-123');
+ * if (rule) {
+ *   console.log(`${rule.name_en}: ${rule.is_active ? 'Active' : 'Inactive'}`);
+ * }
  */
 export function useWorkflowRule(id: string, enabled = true) {
   return useQuery({
@@ -280,7 +386,20 @@ export function useWorkflowRule(id: string, enabled = true) {
 }
 
 /**
- * Fetch workflow executions
+ * Hook to fetch workflow execution history with filtering
+ *
+ * @description
+ * Fetches execution logs for workflow automation with filtering by rule,
+ * entity, and execution status. Useful for monitoring and debugging.
+ *
+ * @param params - Optional filters for rule_id, entity, status, and pagination
+ * @returns TanStack Query result with paginated execution history
+ *
+ * @example
+ * const { data: executions } = useWorkflowExecutions({
+ *   status: 'failed',
+ *   limit: 50,
+ * });
  */
 export function useWorkflowExecutions(params: WorkflowExecutionsListParams = {}) {
   return useQuery({
@@ -292,7 +411,19 @@ export function useWorkflowExecutions(params: WorkflowExecutionsListParams = {})
 }
 
 /**
- * Fetch executions for a specific rule
+ * Hook to fetch execution history for a specific rule
+ *
+ * @description
+ * Retrieves execution logs for a single workflow rule, limited to 50 most recent.
+ * Useful for rule detail pages and debugging.
+ *
+ * @param ruleId - The workflow rule UUID
+ * @param enabled - Whether to enable the query (default: true)
+ * @returns TanStack Query result with rule-specific execution history
+ *
+ * @example
+ * const { data: executions } = useRuleExecutions('uuid-123');
+ * const successRate = executions.filter(e => e.status === 'success').length / executions.length;
  */
 export function useRuleExecutions(ruleId: string, enabled = true) {
   return useQuery({
@@ -304,7 +435,22 @@ export function useRuleExecutions(ruleId: string, enabled = true) {
 }
 
 /**
- * Fetch notification templates
+ * Hook to fetch available notification templates
+ *
+ * @description
+ * Retrieves all notification templates available for workflow actions.
+ * Templates include subject/body patterns with variable placeholders.
+ * Cached for 30 minutes as templates rarely change.
+ *
+ * @returns TanStack Query result with notification template array
+ *
+ * @example
+ * const { data: templates } = useNotificationTemplates();
+ * <Select>
+ *   {templates?.map(t => (
+ *     <option key={t.id} value={t.id}>{t.name_en}</option>
+ *   ))}
+ * </Select>
  */
 export function useNotificationTemplates() {
   return useQuery({
@@ -320,7 +466,25 @@ export function useNotificationTemplates() {
 // =============================================================================
 
 /**
- * Create a new workflow rule
+ * Hook to create a new workflow automation rule
+ *
+ * @description
+ * Mutation hook for creating workflow rules. Automatically invalidates
+ * all workflow rule queries on success to refresh the UI.
+ *
+ * @returns TanStack Mutation with mutate function accepting WorkflowRuleCreate
+ *
+ * @example
+ * const { mutate: createRule, isPending } = useCreateWorkflowRule();
+ *
+ * createRule({
+ *   name_en: 'High Priority Alert',
+ *   trigger_type: 'onCreate',
+ *   entity_type: 'engagement',
+ *   conditions: [{ field: 'priority', operator: 'equals', value: 'high' }],
+ *   actions: [{ type: 'sendEmail', config: { template: 'alert' } }],
+ *   is_active: true,
+ * });
  */
 export function useCreateWorkflowRule() {
   const queryClient = useQueryClient()
@@ -334,7 +498,21 @@ export function useCreateWorkflowRule() {
 }
 
 /**
- * Update a workflow rule
+ * Hook to update an existing workflow rule
+ *
+ * @description
+ * Mutation hook for updating workflow rules. Invalidates both the specific
+ * rule and all rule list queries on success.
+ *
+ * @returns TanStack Mutation with mutate function accepting id and WorkflowRuleUpdate
+ *
+ * @example
+ * const { mutate: updateRule } = useUpdateWorkflowRule();
+ *
+ * updateRule({
+ *   id: 'uuid-123',
+ *   data: { is_active: false, name_en: 'Updated Name' },
+ * });
  */
 export function useUpdateWorkflowRule() {
   const queryClient = useQueryClient()
@@ -350,7 +528,20 @@ export function useUpdateWorkflowRule() {
 }
 
 /**
- * Delete a workflow rule
+ * Hook to delete a workflow rule
+ *
+ * @description
+ * Mutation hook for deleting workflow rules. Automatically invalidates
+ * all rule queries on success.
+ *
+ * @returns TanStack Mutation with mutate function accepting rule ID
+ *
+ * @example
+ * const { mutate: deleteRule } = useDeleteWorkflowRule();
+ *
+ * deleteRule('uuid-123', {
+ *   onSuccess: () => toast.success('Rule deleted'),
+ * });
  */
 export function useDeleteWorkflowRule() {
   const queryClient = useQueryClient()
@@ -364,7 +555,18 @@ export function useDeleteWorkflowRule() {
 }
 
 /**
- * Toggle workflow rule active status
+ * Hook to toggle a workflow rule's active status
+ *
+ * @description
+ * Convenience mutation for quickly enabling/disabling rules.
+ * Invalidates affected queries on success.
+ *
+ * @returns TanStack Mutation with mutate function accepting id and is_active
+ *
+ * @example
+ * const { mutate: toggleRule } = useToggleWorkflowRule();
+ *
+ * toggleRule({ id: 'uuid-123', is_active: false });
  */
 export function useToggleWorkflowRule() {
   const queryClient = useQueryClient()
@@ -380,7 +582,22 @@ export function useToggleWorkflowRule() {
 }
 
 /**
- * Duplicate a workflow rule
+ * Hook to duplicate an existing workflow rule
+ *
+ * @description
+ * Creates a copy of a workflow rule with "(Copy)" suffix. The duplicate
+ * starts as inactive to allow configuration before activation.
+ *
+ * @returns TanStack Mutation with mutate function accepting WorkflowRule
+ *
+ * @example
+ * const { mutate: duplicateRule } = useDuplicateWorkflowRule();
+ *
+ * duplicateRule(existingRule, {
+ *   onSuccess: (newRule) => {
+ *     navigate(`/workflows/${newRule.data.id}/edit`);
+ *   },
+ * });
  */
 export function useDuplicateWorkflowRule() {
   const queryClient = useQueryClient()
@@ -414,7 +631,28 @@ export function useDuplicateWorkflowRule() {
 }
 
 /**
- * Test a workflow rule
+ * Hook to test a workflow rule with sample data
+ *
+ * @description
+ * Runs a workflow rule in test mode with provided sample data.
+ * Returns which conditions matched and which actions would execute
+ * without actually executing them.
+ *
+ * @returns TanStack Mutation with mutate function accepting WorkflowTestRequest
+ *
+ * @example
+ * const { mutate: testRule, data: testResult } = useTestWorkflowRule();
+ *
+ * testRule({
+ *   rule_id: 'uuid-123',
+ *   test_data: {
+ *     priority: 'high',
+ *     title: 'Test Engagement',
+ *     status: 'active',
+ *   },
+ * });
+ *
+ * // testResult shows which conditions matched and actions that would run
  */
 export function useTestWorkflowRule() {
   return useMutation({
@@ -423,7 +661,23 @@ export function useTestWorkflowRule() {
 }
 
 /**
- * Manually trigger a workflow
+ * Hook to manually trigger a workflow execution
+ *
+ * @description
+ * Forces execution of a workflow rule on a specific entity, bypassing
+ * normal trigger conditions. Useful for testing or manual intervention.
+ *
+ * @returns TanStack Mutation with mutate function accepting WorkflowTriggerRequest
+ *
+ * @example
+ * const { mutate: trigger } = useTriggerWorkflow();
+ *
+ * trigger({
+ *   rule_id: 'uuid-123',
+ *   entity_type: 'engagement',
+ *   entity_id: 'uuid-456',
+ *   force: true,
+ * });
  */
 export function useTriggerWorkflow() {
   const queryClient = useQueryClient()
@@ -437,7 +691,22 @@ export function useTriggerWorkflow() {
 }
 
 /**
- * Retry a failed workflow execution
+ * Hook to retry a failed workflow execution
+ *
+ * @description
+ * Resets a failed execution and retries all failed actions.
+ * Useful for recovering from transient failures (network issues, etc.).
+ *
+ * @returns TanStack Mutation with mutate function accepting execution ID
+ *
+ * @example
+ * const { mutate: retry } = useRetryWorkflowExecution();
+ *
+ * retry('execution-uuid', {
+ *   onSuccess: (result) => {
+ *     toast.success(`${result.actions_reset} actions retried`);
+ *   },
+ * });
  */
 export function useRetryWorkflowExecution() {
   const queryClient = useQueryClient()
@@ -451,9 +720,25 @@ export function useRetryWorkflowExecution() {
 }
 
 // =============================================================================
-// Invalidation Helpers
+// Cache Invalidation Helpers
 // =============================================================================
 
+/**
+ * Hook to manually invalidate workflow queries
+ *
+ * @description
+ * Provides granular cache invalidation functions for workflow queries.
+ * Useful when you need to refresh data programmatically.
+ *
+ * @returns Object with invalidation functions for all workflow query types
+ *
+ * @example
+ * const { invalidateRules, invalidateExecutions } = useInvalidateWorkflows();
+ *
+ * // After external change
+ * await invalidateRules();
+ * await invalidateExecutions();
+ */
 export function useInvalidateWorkflows() {
   const queryClient = useQueryClient()
 

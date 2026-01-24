@@ -1,15 +1,49 @@
 /**
- * useAutoSaveForm Hook
- *
- * A comprehensive hook for automatic form progress saving with:
- * - IndexedDB persistence for resilience
- * - Debounced auto-save to minimize writes
- * - Progress tracking with time estimation
- * - Draft restoration after navigation/timeout
- * - Multi-step form support
- * - TTL-based cleanup of stale drafts
- *
+ * Auto-Save Form Hook
  * @module hooks/useAutoSaveForm
+ *
+ * A comprehensive hook for automatic form progress saving with IndexedDB persistence,
+ * debounced auto-save, progress tracking, and draft restoration capabilities.
+ *
+ * @description
+ * This module provides automatic form state persistence with:
+ * - IndexedDB persistence for offline resilience and browser-tab recovery
+ * - Debounced auto-save to minimize database writes (default 1s)
+ * - Progress tracking with completion percentage and time estimation
+ * - Draft restoration after navigation, refresh, or timeout
+ * - Multi-step form support with step tracking
+ * - TTL-based cleanup of stale drafts (default 7 days)
+ * - Field-level completion tracking
+ *
+ * @example
+ * // Basic usage with auto-save
+ * const { draft, updateDraft, status, progress } = useAutoSaveForm({
+ *   formKey: 'engagement-form-123',
+ *   requiredFields: ['title', 'date', 'participants'],
+ * });
+ *
+ * @example
+ * // With draft restoration callback
+ * const { draft, updateDraft, restoreDraft } = useAutoSaveForm({
+ *   formKey: 'dossier-creation',
+ *   debounceMs: 500,
+ *   onDraftRestored: (draft) => {
+ *     form.reset(draft.data);
+ *     toast.info('Draft restored');
+ *   },
+ * });
+ *
+ * @example
+ * // Multi-step form with progress tracking
+ * const { updateDraft, progress, status } = useAutoSaveForm({
+ *   formKey: 'multi-step-form',
+ *   requiredFields: ['field1', 'field2', 'field3'],
+ * });
+ *
+ * // Update field and step
+ * updateDraft({ field1: 'value' }, 2); // step 2 of 5
+ * console.log(progress.percentage); // Completion percentage
+ * console.log(progress.estimatedMinutesRemaining); // Time estimate
  */
 
 import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
@@ -34,6 +68,13 @@ const AVG_SECONDS_PER_FIELD = 30 // Estimated 30 seconds per field
 
 /**
  * Opens a connection to IndexedDB for form drafts
+ *
+ * @description
+ * Initializes the IndexedDB database and creates the form-drafts object store
+ * with indexes on savedAt and userId if it doesn't already exist.
+ *
+ * @returns Promise resolving to the IDBDatabase instance
+ * @throws Error if database fails to open
  */
 async function openDB(): Promise<IDBDatabase> {
   return new Promise((resolve, reject) => {
@@ -60,7 +101,13 @@ async function openDB(): Promise<IDBDatabase> {
 }
 
 /**
- * Check if IndexedDB is available
+ * Check if IndexedDB is available in the current environment
+ *
+ * @description
+ * Safely detects IndexedDB support by checking for the global indexedDB object.
+ * Returns false in SSR environments or browsers without IndexedDB support.
+ *
+ * @returns True if IndexedDB is available, false otherwise
  */
 function isIndexedDBAvailable(): boolean {
   try {
@@ -71,7 +118,23 @@ function isIndexedDBAvailable(): boolean {
 }
 
 /**
- * Calculate form progress based on field values
+ * Calculate form completion progress based on field values
+ *
+ * @description
+ * Analyzes form data to determine completion percentage. A field is considered
+ * completed if it has a non-empty value (non-null, non-undefined, non-empty string/array).
+ *
+ * @template T - Type of the form data object
+ * @param data - The form data object to analyze
+ * @param requiredFields - Optional array of required field names; if not provided, all fields are checked
+ * @returns Object containing percentage, completedFields count, and totalFields count
+ *
+ * @example
+ * const progress = calculateProgress(
+ *   { name: 'John', email: '', phone: '123' },
+ *   ['name', 'email', 'phone']
+ * );
+ * // { percentage: 67, completedFields: 2, totalFields: 3 }
  */
 function calculateProgress<T extends Record<string, unknown>>(
   data: T,
@@ -98,7 +161,19 @@ function calculateProgress<T extends Record<string, unknown>>(
 }
 
 /**
- * Calculate estimated time remaining in minutes
+ * Calculate estimated time remaining to complete the form
+ *
+ * @description
+ * Estimates completion time based on the number of remaining fields and average
+ * time per field. Returns the result in minutes, rounded up.
+ *
+ * @param completedFields - Number of fields already completed
+ * @param totalFields - Total number of fields in the form
+ * @param avgSecondsPerField - Average seconds to complete one field (default: 30)
+ * @returns Estimated minutes remaining, rounded up to nearest minute
+ *
+ * @example
+ * calculateTimeRemaining(3, 10, 30) // Returns 4 minutes
  */
 function calculateTimeRemaining(
   completedFields: number,
@@ -111,24 +186,47 @@ function calculateTimeRemaining(
 }
 
 /**
- * Hook for automatic form progress saving
+ * Hook for automatic form progress saving with IndexedDB persistence
+ *
+ * @description
+ * Provides automatic form state persistence to IndexedDB with debounced saves,
+ * progress tracking, and draft restoration. Handles browser refresh, navigation,
+ * and tab closure scenarios.
+ *
+ * Features:
+ * - Auto-saves form data to IndexedDB with configurable debounce
+ * - Tracks completion progress and estimates time remaining
+ * - Restores drafts on mount if they exist and aren't expired
+ * - Warns user before leaving with unsaved changes
+ * - Supports multi-step forms with step tracking
+ * - Provides field-level completion status
+ *
+ * @template T - Type of the form data object
+ * @param config - Configuration object for auto-save behavior
+ * @returns Object with draft state, update functions, status, and progress info
  *
  * @example
- * ```tsx
+ * // Basic usage
  * const { draft, updateDraft, status, progress } = useAutoSaveForm({
  *   formKey: 'engagement-form-123',
  *   requiredFields: ['title', 'date', 'participants'],
- *   onDraftRestored: (draft) => {
- *     // Handle restored draft
- *     form.reset(draft.data);
- *   },
  * });
  *
- * // In form field onChange:
+ * // Update field on change
  * const handleChange = (field, value) => {
  *   updateDraft({ [field]: value });
  * };
- * ```
+ *
+ * @example
+ * // With callbacks and custom config
+ * const { draft, saveDraft, clearDraft } = useAutoSaveForm({
+ *   formKey: 'dossier-creation',
+ *   debounceMs: 500,
+ *   ttlMs: 24 * 60 * 60 * 1000, // 24 hours
+ *   onSaveSuccess: (draft) => console.log('Saved:', draft),
+ *   onSaveError: (error) => console.error('Save failed:', error),
+ *   onDraftRestored: (draft) => form.reset(draft.data),
+ * });
  */
 export function useAutoSaveForm<T extends Record<string, unknown>>(
   config: AutoSaveConfig,
@@ -467,7 +565,19 @@ export function useAutoSaveForm<T extends Record<string, unknown>>(
 }
 
 /**
- * Utility to clear all stale form drafts
+ * Utility to clear all stale form drafts from IndexedDB
+ *
+ * @description
+ * Scans all stored form drafts and deletes those older than the specified TTL.
+ * Useful for periodic cleanup to free up storage space.
+ *
+ * @param ttlMs - Time-to-live in milliseconds (default: 7 days)
+ * @returns Promise resolving to the number of drafts deleted
+ *
+ * @example
+ * // Clean up drafts older than 3 days
+ * const deleted = await clearStaleFormDrafts(3 * 24 * 60 * 60 * 1000);
+ * console.log(`Deleted ${deleted} stale drafts`);
  */
 export async function clearStaleFormDrafts(ttlMs: number = DEFAULT_TTL_MS): Promise<number> {
   if (!isIndexedDBAvailable()) return 0
@@ -515,7 +625,19 @@ export async function clearStaleFormDrafts(ttlMs: number = DEFAULT_TTL_MS): Prom
 }
 
 /**
- * Utility to get all form drafts for the current user
+ * Utility to get all form drafts from IndexedDB
+ *
+ * @description
+ * Retrieves all stored form drafts, useful for displaying a "restore drafts"
+ * menu or implementing draft management UI.
+ *
+ * @returns Promise resolving to an array of all form drafts
+ *
+ * @example
+ * const drafts = await getAllFormDrafts();
+ * drafts.forEach(draft => {
+ *   console.log(`${draft.formKey}: ${draft.progress}% complete`);
+ * });
  */
 export async function getAllFormDrafts(): Promise<FormDraft<unknown>[]> {
   if (!isIndexedDBAvailable()) return []

@@ -1,10 +1,43 @@
 /**
- * useFieldHistory Hook
+ * Field History Hooks
+ * @module hooks/useFieldHistory
  *
- * React Query hooks for field-level history tracking with:
- * - List and grouped history views
- * - Pagination and filtering
- * - Field rollback mutations
+ * React Query hooks for field-level audit history tracking with pagination,
+ * filtering, grouping, and rollback capabilities.
+ *
+ * @description
+ * This module provides comprehensive field-level change tracking with:
+ * - Paginated history list with field-specific filtering
+ * - Grouped history view (summary by field name)
+ * - Rollback mutations to restore previous field values
+ * - Change type tracking (create, update, delete)
+ * - User attribution (who made the change)
+ * - Rollback prevention for certain change types
+ * - Automatic cache invalidation on mutations
+ *
+ * @example
+ * // Fetch paginated history for an entity
+ * const {
+ *   entries,
+ *   nextPage,
+ *   prevPage,
+ *   setFilters,
+ *   metadata,
+ * } = useFieldHistory('dossier', 'uuid-123', {
+ *   field_name: 'title', // Optional: filter by specific field
+ * });
+ *
+ * @example
+ * // Grouped history view (all fields with change statistics)
+ * const { fields, isLoading } = useFieldHistoryGrouped('dossier', 'uuid-123');
+ * fields.forEach(field => {
+ *   console.log(`${field.field_name}: ${field.statistics.change_count} changes`);
+ * });
+ *
+ * @example
+ * // Rollback a field change
+ * const { rollback, isRollingBack } = useFieldRollback();
+ * await rollback('history-entry-id');
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -28,6 +61,18 @@ import type {
 // API FUNCTIONS
 // =============================================
 
+/**
+ * Fetch paginated field history from Supabase
+ *
+ * @description
+ * Retrieves field change history for a specific entity with optional field filtering.
+ * Uses Supabase RPC function for efficient querying with user attribution.
+ *
+ * @param filters - Entity type, entity ID, and optional field name filter
+ * @param pagination - Limit and offset for pagination
+ * @returns Promise resolving to field history entries with metadata
+ * @throws Error if RPC call fails
+ */
 async function fetchFieldHistory(
   filters: FieldHistoryFilters,
   pagination: FieldHistoryPagination,
@@ -111,6 +156,18 @@ async function fetchFieldHistory(
   }
 }
 
+/**
+ * Fetch grouped field history (summary by field name)
+ *
+ * @description
+ * Retrieves aggregated statistics for each changed field on an entity,
+ * including change count, first/last change timestamps, and current value.
+ *
+ * @param entityType - The type of entity (dossier, engagement, etc.)
+ * @param entityId - The UUID of the entity
+ * @returns Promise resolving to grouped field data with statistics
+ * @throws Error if RPC call fails
+ */
 async function fetchFieldHistoryGrouped(
   entityType: TrackableEntityType,
   entityId: string,
@@ -150,6 +207,18 @@ async function fetchFieldHistoryGrouped(
   }
 }
 
+/**
+ * Rollback a field change to its previous value
+ *
+ * @description
+ * Reverts a field to its old_value from a history entry. Creates a new
+ * history entry marked as a rollback. Cannot rollback create operations
+ * or entries that have already been rolled back.
+ *
+ * @param fieldHistoryId - The UUID of the field history entry to rollback
+ * @returns Promise resolving to rollback response with success status
+ * @throws Error if RPC call fails or rollback is not allowed
+ */
 async function rollbackFieldChange(fieldHistoryId: string): Promise<RollbackResponse> {
   const { data, error } = await supabase.rpc('rollback_field_change', {
     p_field_history_id: fieldHistoryId,
@@ -176,6 +245,13 @@ async function rollbackFieldChange(fieldHistoryId: string): Promise<RollbackResp
 // QUERY KEYS
 // =============================================
 
+/**
+ * Query key factory for field history queries
+ *
+ * @description
+ * Provides hierarchical cache keys for TanStack Query to enable
+ * granular cache invalidation and efficient query management.
+ */
 export const fieldHistoryKeys = {
   all: ['field-history'] as const,
   lists: () => [...fieldHistoryKeys.all, 'list'] as const,
@@ -191,7 +267,40 @@ export const fieldHistoryKeys = {
 // =============================================
 
 /**
- * Hook for fetching paginated field history
+ * Hook for fetching paginated field history with filtering
+ *
+ * @description
+ * Provides paginated field change history with optional field-specific filtering.
+ * Includes pagination controls, filter management, and automatic refetching.
+ *
+ * @param entityType - The type of entity to fetch history for
+ * @param entityId - The UUID of the entity
+ * @param initialFilters - Optional initial filter values (e.g., field_name)
+ * @returns Object with history entries, pagination controls, and filter management
+ *
+ * @example
+ * // Fetch all field changes with pagination
+ * const {
+ *   entries,
+ *   isLoading,
+ *   nextPage,
+ *   prevPage,
+ *   metadata,
+ * } = useFieldHistory('dossier', 'uuid-123');
+ *
+ * @example
+ * // Filter by specific field
+ * const { entries, setFilters, clearFilters } = useFieldHistory(
+ *   'engagement',
+ *   'uuid-456',
+ *   { field_name: 'title' }
+ * );
+ *
+ * // Change filter
+ * setFilters({ field_name: 'description' });
+ *
+ * // Clear filters
+ * clearFilters();
  */
 export function useFieldHistory(
   entityType: TrackableEntityType,
@@ -267,7 +376,28 @@ export function useFieldHistory(
 }
 
 /**
- * Hook for fetching grouped field history (by field name)
+ * Hook for fetching grouped field history summary
+ *
+ * @description
+ * Retrieves aggregated field change statistics grouped by field name.
+ * Useful for displaying an overview of all changed fields with their
+ * current values and change frequency.
+ *
+ * @param entityType - The type of entity to fetch grouped history for
+ * @param entityId - The UUID of the entity
+ * @returns Object with grouped field data, loading state, and refetch function
+ *
+ * @example
+ * const { fields, isLoading } = useFieldHistoryGrouped('dossier', 'uuid-123');
+ *
+ * fields.forEach(field => {
+ *   console.log(`
+ *     Field: ${field.field_name}
+ *     Changes: ${field.statistics.change_count}
+ *     Last changed: ${field.statistics.last_change_at}
+ *     Current value: ${field.current_value}
+ *   `);
+ * });
  */
 export function useFieldHistoryGrouped(
   entityType: TrackableEntityType,
@@ -293,6 +423,27 @@ export function useFieldHistoryGrouped(
 
 /**
  * Hook for rolling back field changes
+ *
+ * @description
+ * Provides a mutation function to rollback a field to its previous value.
+ * Automatically invalidates all field history queries on success to refresh
+ * the UI with the updated state.
+ *
+ * @returns Object with rollback mutation function, loading state, and error
+ *
+ * @example
+ * const { rollback, isRollingBack, error } = useFieldRollback();
+ *
+ * const handleRollback = async (historyId: string) => {
+ *   try {
+ *     const result = await rollback(historyId);
+ *     if (result.success) {
+ *       toast.success('Field rolled back successfully');
+ *     }
+ *   } catch (err) {
+ *     toast.error('Rollback failed');
+ *   }
+ * };
  */
 export function useFieldRollback(): UseFieldRollbackReturn {
   const queryClient = useQueryClient()

@@ -1,6 +1,49 @@
 /**
- * useFieldValidation Hook
- * Provides real-time field validation with debouncing and contextual feedback
+ * Field Validation Hook
+ * @module hooks/useFieldValidation
+ *
+ * Provides real-time field validation with debouncing, instant feedback for critical errors,
+ * and contextual error messages based on field type.
+ *
+ * @description
+ * This module provides comprehensive field-level validation with:
+ * - Debounced validation to reduce computation (default 300ms)
+ * - Instant feedback mode for critical errors (optional)
+ * - Context-aware error messages based on field type (email, URL, phone, etc.)
+ * - Touch and dirty state tracking
+ * - Synchronous validation option (validateNow)
+ * - Automatic cleanup on unmount
+ * - Form-level validation hook for multiple fields
+ *
+ * @example
+ * // Basic field validation
+ * const { result, validate, setTouched } = useFieldValidation({
+ *   fieldType: 'email',
+ *   required: true,
+ * });
+ *
+ * // In input onChange
+ * <input onChange={(e) => validate(e.target.value)} onBlur={setTouched} />
+ * {result && !result.isValid && <span>{result.messageKey}</span>}
+ *
+ * @example
+ * // With instant feedback for errors
+ * const { result, isValidating } = useFieldValidation({
+ *   fieldType: 'password',
+ *   minLength: 8,
+ *   required: true,
+ *   instantFeedback: true, // Show errors immediately
+ *   debounceMs: 500,
+ * });
+ *
+ * @example
+ * // Form-level validation
+ * const { fieldValidations, isFormValid, validateAll } = useFormValidation({
+ *   fields: {
+ *     email: { fieldType: 'email', required: true },
+ *     phone: { fieldType: 'phone', required: false },
+ *   },
+ * });
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react'
@@ -64,6 +107,47 @@ void _defaultValidationResult // Silence unused variable warning
 // HOOK IMPLEMENTATION
 // =============================================================================
 
+/**
+ * Hook for real-time field validation with debouncing
+ *
+ * @description
+ * Provides debounced validation with optional instant feedback for critical errors.
+ * Tracks touch and dirty state, supports custom validation rules, and provides
+ * contextual error messages based on field type.
+ *
+ * @param options - Validation configuration including field type, rules, and callbacks
+ * @returns Object with validation result, state flags, and validation functions
+ *
+ * @example
+ * // Email field with instant feedback
+ * const emailValidation = useFieldValidation({
+ *   fieldType: 'email',
+ *   required: true,
+ *   instantFeedback: true,
+ *   onValidationChange: (result) => {
+ *     if (!result.isValid) {
+ *       console.log('Email error:', result.messageKey);
+ *     }
+ *   },
+ * });
+ *
+ * // In component
+ * <input
+ *   onChange={(e) => emailValidation.validate(e.target.value)}
+ *   onBlur={emailValidation.setTouched}
+ * />
+ * {emailValidation.isTouched && emailValidation.result?.messageKey}
+ *
+ * @example
+ * // Password with custom validation
+ * const { result, validateNow } = useFieldValidation({
+ *   fieldType: 'password',
+ *   minLength: 8,
+ *   maxLength: 128,
+ *   pattern: /^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*])/,
+ *   debounceMs: 300,
+ * });
+ */
 export function useFieldValidation(
   options: UseFieldValidationOptions = {},
 ): UseFieldValidationReturn {
@@ -205,9 +289,12 @@ export function useFieldValidation(
 }
 
 // =============================================================================
-// FORM-LEVEL HOOK
+// FORM-LEVEL VALIDATION HOOK
 // =============================================================================
 
+/**
+ * Options for form-level validation hook
+ */
 export interface UseFormValidationOptions {
   /** Field configurations keyed by field name */
   fields: Record<string, UseFieldValidationOptions>
@@ -228,6 +315,37 @@ export interface UseFormValidationReturn {
   resetAll: () => void
 }
 
+/**
+ * Hook for validating multiple form fields
+ *
+ * @description
+ * Creates individual field validation hooks for multiple fields and provides
+ * form-level validation state. Useful for managing validation across an entire form.
+ *
+ * @param options - Configuration with field validation options for each field
+ * @returns Object with individual field validations and form-level state
+ *
+ * @example
+ * const formValidation = useFormValidation({
+ *   fields: {
+ *     email: { fieldType: 'email', required: true },
+ *     password: { fieldType: 'password', minLength: 8, required: true },
+ *     confirmPassword: { fieldType: 'password', required: true },
+ *   },
+ *   debounceMs: 500,
+ * });
+ *
+ * // Access individual field validation
+ * formValidation.fieldValidations.email.validate(value);
+ *
+ * // Check form-level validity
+ * if (formValidation.isFormValid) {
+ *   submitForm();
+ * }
+ *
+ * // Validate all fields at once
+ * const allValid = formValidation.validateAll(formValues);
+ */
 export function useFormValidation(options: UseFormValidationOptions): UseFormValidationReturn {
   const { fields, debounceMs = 300 } = options
 
