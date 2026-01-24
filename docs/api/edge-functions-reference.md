@@ -107,25 +107,25 @@ const supabase = createClient(
 
 | Category | Functions | Documentation | Description |
 |----------|-----------|---------------|-------------|
-| **Authentication & MFA** | 10 | *Coming soon* | Multi-factor authentication, session management, device tracking |
-| **Security & Access Control** | 12 | *Coming soon* | Access requests, permissions, audit logging, RLS enforcement |
-| **User Management** | 8 | *Coming soon* | User profiles, preferences, roles, teams |
+| **Authentication & MFA** | 10 | [authentication.md](./categories/authentication.md) | Multi-factor authentication, session management, device tracking |
+| **Security & Access Control** | 12 | [security-access.md](./categories/security-access.md) | Access requests, permissions, audit logging, RLS enforcement |
+| **User Management** | 8 | [user-management.md](./categories/user-management.md) | User profiles, preferences, roles, teams |
 
 ### Operations & Automation (Tier 6)
 
 | Category | Functions | Documentation | Description |
 |----------|-----------|---------------|-------------|
 | **Workflow & Automation** | 7 | [workflow.md](./categories/workflow.md) | Automated workflows, state machines, triggers |
-| **Analytics & Reporting** | 6 | *Coming soon* | Dashboards, metrics, data aggregation, exports |
-| **Commitments & Deliverables** | 5 | *Coming soon* | Commitment tracking, progress monitoring, reminders |
-| **MOUs & Agreements** | 2 | *Coming soon* | Memoranda of Understanding management |
-| **Relationship Management** | 9 | *Coming soon* | Network relationships, connections, mapping |
-| **Collaboration** | 10 | *Coming soon* | Comments, mentions, reactions, activity feeds |
-| **Data Management** | 9 | *Coming soon* | Data imports, exports, transformations, cleanup |
-| **System Administration** | 5 | *Coming soon* | System configuration, health checks, monitoring |
-| **Unified Work Management** | 3 | *Coming soon* | Consolidated view of tasks, commitments, and tickets |
-| **Mobile Sync** | 3 | *Coming soon* | Offline-first sync for mobile apps |
-| **Utilities & Support** | 20 | *Coming soon* | Helper functions, validation, formatting, converters |
+| **Analytics & Reporting** | 6 | [analytics-reporting.md](./categories/analytics-reporting.md) | Dashboards, metrics, data aggregation, exports |
+| **Commitments & Deliverables** | 5 | [commitments.md](./categories/commitments.md) | Commitment tracking, progress monitoring, reminders |
+| **MOUs & Agreements** | 2 | [mous.md](./categories/mous.md) | Memoranda of Understanding management |
+| **Relationship Management** | 9 | [relationships.md](./categories/relationships.md) | Network relationships, connections, mapping |
+| **Collaboration** | 10 | [collaboration.md](./categories/collaboration.md) | Comments, mentions, reactions, activity feeds |
+| **Data Management** | 9 | [data-management.md](./categories/data-management.md) | Data imports, exports, transformations, cleanup |
+| **System Administration** | 5 | [administration.md](./categories/administration.md) | System configuration, health checks, monitoring |
+| **Unified Work Management** | 3 | [unified-work.md](./categories/unified-work.md) | Consolidated view of tasks, commitments, and tickets |
+| **Mobile Sync** | 3 | [mobile-sync.md](./categories/mobile-sync.md) | Offline-first sync for mobile apps |
+| **Utilities & Support** | 20 | [utilities.md](./categories/utilities.md) | Helper functions, validation, formatting, converters |
 
 ## Quick Reference Table
 

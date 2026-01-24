@@ -47,6 +47,19 @@ Authorization: Bearer <token>
    - [Workflow](./categories/workflow.md) - Workflow automation (7 endpoints)
    - [Notifications](./categories/notifications.md) - Real-time notifications (10 endpoints)
    - [Intelligence](./categories/intelligence.md) - Intelligence signal processing (5 endpoints)
+   - [Authentication & MFA](./categories/authentication.md) - Multi-factor authentication (10 endpoints)
+   - [Security & Access](./categories/security-access.md) - Access control and permissions (12 endpoints)
+   - [User Management](./categories/user-management.md) - User profiles and roles (8 endpoints)
+   - [Analytics & Reporting](./categories/analytics-reporting.md) - Dashboards and reports (6 endpoints)
+   - [Commitments](./categories/commitments.md) - Commitment tracking (5 endpoints)
+   - [MOUs](./categories/mous.md) - MOU management (2 endpoints)
+   - [Relationships](./categories/relationships.md) - Relationship mapping (9 endpoints)
+   - [Collaboration](./categories/collaboration.md) - Team collaboration (10 endpoints)
+   - [Data Management](./categories/data-management.md) - Data operations (9 endpoints)
+   - [Administration](./categories/administration.md) - System administration (5 endpoints)
+   - [Unified Work](./categories/unified-work.md) - Work item management (3 endpoints)
+   - [Mobile Sync](./categories/mobile-sync.md) - Offline synchronization (3 endpoints)
+   - [Utilities](./categories/utilities.md) - Helper functions (20 endpoints)
 
 ## Common Response Codes
 
