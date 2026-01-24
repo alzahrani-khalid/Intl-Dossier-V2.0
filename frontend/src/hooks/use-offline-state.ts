@@ -1,21 +1,38 @@
 /**
- * use-offline-state.ts
+ * Offline State Hooks
+ * @module hooks/use-offline-state
  *
- * Hook to detect and manage offline/online state for the application.
- * Listens to navigator.onLine events and provides an offline status indicator.
+ * React hooks for detecting and managing online/offline network state with
+ * real-time updates and optional callbacks.
  *
- * Features:
- * - Detects browser online/offline state
- * - Provides reactive state for UI updates
- * - Monitors connectivity changes in real-time
- * - Supports toast notifications for connectivity changes
+ * @description
+ * This module provides hooks for monitoring browser connectivity:
+ * - Real-time network state detection via navigator.onLine
+ * - Automatic updates via online/offline window events
+ * - Timestamp tracking for last state change
+ * - Optional callbacks for connectivity changes
+ * - SSR-safe (assumes online on server)
+ * - Reactive state for UI updates (banners, toast notifications, etc.)
  *
- * Usage:
- * ```tsx
+ * @example
+ * // Basic usage with offline banner
  * const { isOnline, isOffline } = useOfflineState();
  *
  * {isOffline && <OfflineBanner />}
- * ```
+ *
+ * @example
+ * // With callbacks for toast notifications
+ * useOfflineStateWithCallback(
+ *   () => toast.success('Connection restored'),
+ *   () => toast.warning('You are offline')
+ * );
+ *
+ * @example
+ * // Access last state change timestamps
+ * const { lastOnlineAt, lastOfflineAt } = useOfflineState();
+ * if (lastOfflineAt) {
+ *   console.log('Offline since:', lastOfflineAt);
+ * }
  */
 
 import { useEffect, useState } from 'react'
@@ -34,7 +51,46 @@ export interface OfflineState {
 /**
  * Hook to detect and manage offline/online state
  *
- * @returns {OfflineState} Current offline state with connection status
+ * @description
+ * Monitors browser connectivity by listening to window online/offline events
+ * and tracking the navigator.onLine property. Automatically updates state when
+ * network connectivity changes. SSR-safe (assumes online during server rendering).
+ *
+ * The hook tracks:
+ * - Current online/offline status
+ * - Timestamp of last online event
+ * - Timestamp of last offline event
+ *
+ * Event listeners are automatically cleaned up on unmount.
+ *
+ * @returns Current offline state with connection status and timestamps
+ *   - isOnline: True if browser is currently online
+ *   - isOffline: True if browser is currently offline (inverse of isOnline)
+ *   - lastOnlineAt: Timestamp of last online event, or null
+ *   - lastOfflineAt: Timestamp of last offline event, or null
+ *
+ * @example
+ * // Show offline banner
+ * const { isOnline, isOffline } = useOfflineState();
+ *
+ * return (
+ *   <div>
+ *     {isOffline && (
+ *       <div className="bg-yellow-100 p-2 text-center">
+ *         You are currently offline
+ *       </div>
+ *     )}
+ *     <MainContent />
+ *   </div>
+ * );
+ *
+ * @example
+ * // Disable form submission when offline
+ * const { isOnline } = useOfflineState();
+ *
+ * <Button disabled={!isOnline}>
+ *   Submit
+ * </Button>
  */
 export function useOfflineState(): OfflineState {
   // Initialize with current navigator.onLine state
@@ -78,11 +134,47 @@ export function useOfflineState(): OfflineState {
 }
 
 /**
- * Hook to detect offline state with optional callback
+ * Hook to detect offline state with optional callbacks
  *
- * @param {Function} onOnline - Optional callback when connection is restored
- * @param {Function} onOffline - Optional callback when connection is lost
- * @returns {OfflineState} Current offline state
+ * @description
+ * Extends useOfflineState with callback support for connectivity changes.
+ * Callbacks are triggered when the connection state changes, useful for
+ * showing toast notifications or triggering sync operations.
+ *
+ * Callbacks are only invoked when the state actually changes (not on initial render).
+ * This prevents false triggers when the component mounts.
+ *
+ * @param onOnline - Optional callback function when connection is restored
+ * @param onOffline - Optional callback function when connection is lost
+ * @returns Current offline state with connection status and timestamps
+ *
+ * @example
+ * // Toast notifications for connectivity changes
+ * import { toast } from 'sonner';
+ *
+ * useOfflineStateWithCallback(
+ *   () => toast.success('Connection restored'),
+ *   () => toast.warning('You are offline. Changes will sync when connection is restored.')
+ * );
+ *
+ * @example
+ * // Trigger sync when online
+ * useOfflineStateWithCallback(
+ *   () => {
+ *     syncOfflineChanges();
+ *     toast.info('Syncing offline changes...');
+ *   }
+ * );
+ *
+ * @example
+ * // Save work and warn when going offline
+ * useOfflineStateWithCallback(
+ *   undefined,
+ *   () => {
+ *     autoSaveDraft();
+ *     toast.warning('Connection lost. Working in offline mode.');
+ *   }
+ * );
  */
 export function useOfflineStateWithCallback(
   onOnline?: () => void,

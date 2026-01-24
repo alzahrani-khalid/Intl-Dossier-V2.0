@@ -1,11 +1,50 @@
 /**
- * useLastSyncInfo Hook
+ * Last Sync Info Hooks
+ * @module hooks/useLastSyncInfo
  *
- * Tracks last sync timestamps and item counts for list views.
- * Persists to localStorage for persistence across sessions.
+ * React hooks for tracking synchronization state in pull-to-refresh and offline-first
+ * list views with localStorage persistence.
+ *
+ * @description
+ * This module provides hooks for managing sync metadata in list views:
+ * - Track last sync timestamp and item counts
+ * - Persist sync info to localStorage across sessions
+ * - Manage offline queue counts for pending uploads
+ * - Service worker integration for real offline sync tracking
+ * - Helper functions for incrementing/decrementing queue counts
+ * - SSR-safe with fallback for server-side rendering
+ *
+ * Used in pull-to-refresh components to display "Last synced 2 minutes ago" messages
+ * and offline queue indicators like "3 items pending upload".
  *
  * @example
- * const { lastSyncTime, itemsSynced, updateSyncInfo, offlineQueueCount } = useLastSyncInfo('my-work');
+ * // Basic usage with pull-to-refresh
+ * const { lastSyncTime, itemsSynced, updateSyncInfo } = useLastSyncInfo('my-work');
+ *
+ * const handleRefresh = async () => {
+ *   const items = await fetchWorkItems();
+ *   updateSyncInfo(items.length);
+ * };
+ *
+ * @example
+ * // With offline queue tracking
+ * const {
+ *   offlineQueueCount,
+ *   incrementOfflineQueue,
+ *   decrementOfflineQueue
+ * } = useLastSyncInfo('commitments');
+ *
+ * // When creating offline
+ * createCommitment(data);
+ * incrementOfflineQueue();
+ *
+ * // When synced
+ * syncToServer(data);
+ * decrementOfflineQueue();
+ *
+ * @example
+ * // Monitor service worker offline queue
+ * const queueCount = useOfflineQueue('my-work-queue');
  */
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
@@ -47,6 +86,74 @@ export interface UseLastSyncInfoResult {
 
 const STORAGE_PREFIX = 'pull-to-refresh-sync-'
 
+/**
+ * Hook to track last sync info with localStorage persistence
+ *
+ * @description
+ * Manages synchronization metadata for list views including last sync timestamp,
+ * number of items synced, and offline queue count. Data is persisted to localStorage
+ * for consistency across page refreshes and browser sessions.
+ *
+ * The hook:
+ * 1. Loads initial state from localStorage on mount
+ * 2. Persists sync time and item count on changes
+ * 3. Does NOT persist offline queue count (recalculated on mount)
+ * 4. Provides helper functions for common operations
+ *
+ * Storage key format: `pull-to-refresh-sync-{storageKey}`
+ *
+ * @param keyOrOptions - Either a string storage key or options object
+ *   - storageKey: Unique key for localStorage (required)
+ *   - initialOfflineQueueCount: Initial queue count (default: 0)
+ * @returns Object with sync info state and update functions
+ *   - lastSyncTime: ISO timestamp of last sync, or null
+ *   - itemsSynced: Number of items in last sync
+ *   - offlineQueueCount: Number of items in offline queue
+ *   - updateSyncInfo: Update sync timestamp and item count
+ *   - setOfflineQueueCount: Set queue count (clamped to min 0)
+ *   - incrementOfflineQueue: Add 1 to queue count
+ *   - decrementOfflineQueue: Remove N from queue count (default 1)
+ *   - clearSyncInfo: Reset all sync info and clear localStorage
+ *
+ * @example
+ * // Basic usage with pull-to-refresh
+ * const { lastSyncTime, itemsSynced, updateSyncInfo } = useLastSyncInfo('my-work');
+ *
+ * const handleRefresh = async () => {
+ *   const items = await fetchWorkItems();
+ *   updateSyncInfo(items.length); // Sets lastSyncTime to now
+ * };
+ *
+ * // Display last sync info
+ * {lastSyncTime && (
+ *   <p>Last synced: {formatDistanceToNow(new Date(lastSyncTime))} ago</p>
+ * )}
+ *
+ * @example
+ * // With options object
+ * const syncInfo = useLastSyncInfo({
+ *   storageKey: 'commitments-list',
+ *   initialOfflineQueueCount: 5
+ * });
+ *
+ * @example
+ * // Manage offline queue
+ * const { offlineQueueCount, incrementOfflineQueue, decrementOfflineQueue } =
+ *   useLastSyncInfo('my-work');
+ *
+ * // Creating item offline
+ * createItemLocally(data);
+ * incrementOfflineQueue();
+ *
+ * // Successfully synced
+ * await syncToServer(items);
+ * decrementOfflineQueue(items.length);
+ *
+ * // Display queue indicator
+ * {offlineQueueCount > 0 && (
+ *   <Badge>{offlineQueueCount} pending</Badge>
+ * )}
+ */
 export function useLastSyncInfo(
   keyOrOptions: string | UseLastSyncInfoOptions,
 ): UseLastSyncInfoResult {
@@ -164,8 +271,42 @@ export function useLastSyncInfo(
 }
 
 /**
- * Hook to track offline queue from IndexedDB or service worker
- * This is a placeholder that can be extended for real offline sync
+ * Hook to track offline queue from service worker
+ *
+ * @description
+ * Monitors the offline queue count from a service worker via message passing.
+ * Listens for OFFLINE_QUEUE_UPDATE messages and requests current count on mount.
+ * This is a foundation for real offline-first sync implementations.
+ *
+ * Note: Requires a service worker that implements the message protocol:
+ * - Responds to GET_OFFLINE_QUEUE_COUNT messages with current count
+ * - Sends OFFLINE_QUEUE_UPDATE messages when queue changes
+ *
+ * @param storageKey - Unique key to identify the offline queue
+ * @returns Current offline queue count (0 if service worker not available)
+ *
+ * @example
+ * // Monitor offline queue from service worker
+ * const queueCount = useOfflineQueue('work-items');
+ *
+ * {queueCount > 0 && (
+ *   <div className="flex items-center gap-2">
+ *     <Spinner size="sm" />
+ *     <span>{queueCount} items syncing...</span>
+ *   </div>
+ * )}
+ *
+ * @example
+ * // Combined with useLastSyncInfo
+ * const { updateSyncInfo } = useLastSyncInfo('work-items');
+ * const queueCount = useOfflineQueue('work-items');
+ *
+ * // Update sync info when queue drains
+ * useEffect(() => {
+ *   if (queueCount === 0) {
+ *     updateSyncInfo(totalItems);
+ *   }
+ * }, [queueCount]);
  */
 export function useOfflineQueue(storageKey: string) {
   const [queueCount, setQueueCount] = useState(0)

@@ -1,8 +1,41 @@
 /**
  * Filter Presets Hook
- * Feature: Smart filter presets for no-results scenarios
- * Description: Provides predefined filter presets based on common queries
- *              to help users when complex filters return empty results
+ * @module hooks/useFilterPresets
+ * @feature Smart filter presets for no-results scenarios
+ *
+ * Hook for managing and accessing predefined filter presets to help users discover
+ * content when complex filters return empty results.
+ *
+ * @description
+ * This module provides intelligent filter preset suggestions:
+ * - 8 predefined presets covering common query patterns (MENA dossiers, high-priority briefs, etc.)
+ * - Bilingual support (English/Arabic) with automatic language switching
+ * - Category-based filtering (dossier, intake, brief, engagement, workflow, geographic)
+ * - Entity type filtering to show only relevant presets
+ * - Preset ranking by popularity and estimated result count
+ * - Recommended presets based on current search context
+ * - Extensible for future personalized presets via API
+ *
+ * @example
+ * // Get all presets for dossiers
+ * const { presets } = useFilterPresets({
+ *   entityTypes: ['dossier'],
+ *   limit: 4
+ * });
+ *
+ * @example
+ * // Get recommended presets when search returns no results
+ * const { getRecommendedPresets } = useFilterPresets();
+ * const recommended = getRecommendedPresets({
+ *   hasFilters: true,
+ *   noResults: true,
+ *   entityTypes: ['dossier', 'engagement']
+ * });
+ *
+ * @example
+ * // Get presets by category
+ * const { getPresetsByCategory } = useFilterPresets();
+ * const workflowPresets = getPresetsByCategory('workflow');
  */
 
 import { useMemo } from 'react'
@@ -15,7 +48,19 @@ import type { FilterPreset, FilterPresetCategory } from '@/types/enhanced-search
 
 /**
  * Create default presets with translations
- * These are static presets that cover common query patterns
+ *
+ * @description
+ * Generates the static list of 8 predefined filter presets with bilingual labels.
+ * These presets cover common query patterns including:
+ * - Geographic filters (MENA region)
+ * - Priority filters (high-priority briefs, overdue tasks)
+ * - Status filters (unassigned intake, pending review)
+ * - Assignment filters (my assignments)
+ * - Recency filters (recent engagements)
+ * - Security filters (high-sensitivity dossiers)
+ *
+ * @param language - Current language code ('en' or 'ar')
+ * @returns Array of 8 filter presets with localized labels
  */
 function createDefaultPresets(language: string): FilterPreset[] {
   const isArabic = language === 'ar'
@@ -193,20 +238,53 @@ export interface UseFilterPresetsOptions {
 // =============================================================================
 
 /**
- * Hook for getting filter presets
+ * Hook for getting filter presets with intelligent filtering and ranking
+ *
+ * @description
+ * Provides access to predefined filter presets with options for filtering by category,
+ * entity type, and limiting results. Presets are automatically ranked by popularity
+ * and estimated result count. Supports bilingual labels via i18next.
+ *
+ * The hook returns:
+ * - Filtered presets based on options
+ * - All available presets without filtering
+ * - Presets grouped by category
+ * - Helper functions for category/ID lookup
+ * - Recommended preset generator for no-results scenarios
+ *
+ * @param options - Optional filtering and configuration options
+ *   - category: Filter by preset category ('dossier', 'intake', etc.)
+ *   - entityTypes: Filter by entity types the preset applies to
+ *   - limit: Maximum number of presets to return
+ *   - includePersonalized: Include user-specific presets (future feature)
+ *   - activeFiltersCount: Current filter count for relevance ranking
+ * @returns Object containing presets, grouped data, and helper functions
  *
  * @example
- * ```tsx
- * const { presets, getPresetsByCategory } = useFilterPresets({
- *   entityTypes: ['dossier', 'document'],
+ * // Get top 4 presets for dossier lists
+ * const { presets } = useFilterPresets({
+ *   entityTypes: ['dossier'],
  *   limit: 4,
  * });
  *
- * // Display presets when no results
+ * // Display presets when search returns no results
  * if (results.length === 0) {
  *   return <FilterPresetsSection presets={presets} onApplyPreset={handleApply} />;
  * }
- * ```
+ *
+ * @example
+ * // Get presets by category
+ * const { getPresetsByCategory } = useFilterPresets();
+ * const intakePresets = getPresetsByCategory('intake');
+ *
+ * @example
+ * // Get recommended presets based on search context
+ * const { getRecommendedPresets } = useFilterPresets();
+ * const recommended = getRecommendedPresets({
+ *   hasFilters: activeFilters.length > 0,
+ *   noResults: results.length === 0,
+ *   entityTypes: ['dossier', 'engagement']
+ * });
  */
 export function useFilterPresets(options?: UseFilterPresetsOptions) {
   const { i18n } = useTranslation()

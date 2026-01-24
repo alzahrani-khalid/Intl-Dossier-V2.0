@@ -1,8 +1,44 @@
 /**
- * useViewPreferences Hook
+ * View Preferences Hooks
+ * @module hooks/useViewPreferences
  *
- * Manages user view preferences including filters, sorts, column visibility,
- * and saved custom views with persistence across sessions.
+ * TanStack Query hooks for managing user view preferences including filters, sorts,
+ * column visibility, and saved custom views with persistence across sessions.
+ *
+ * @description
+ * This module provides comprehensive view preference management:
+ * - Fetch and cache user preferences from Edge Functions
+ * - Create, update, and delete saved views
+ * - Set default views and pin frequently used views
+ * - Automatic cache invalidation on mutations
+ * - localStorage fallback for offline/unauthenticated users
+ * - URL state synchronization helper
+ * - Support for multiple entity types (dossiers, intake, briefs, etc.)
+ *
+ * @example
+ * // Basic usage
+ * const {
+ *   currentViewConfig,
+ *   setCurrentViewConfig,
+ *   savedViews,
+ *   createSavedView
+ * } = useViewPreferences('dossier');
+ *
+ * @example
+ * // With URL synchronization
+ * const { initialized, ...prefs } = useViewPreferencesWithUrl(
+ *   'dossier',
+ *   urlConfig,
+ *   setUrlConfig
+ * );
+ *
+ * @example
+ * // Save current filters as a custom view
+ * await createSavedView({
+ *   name_en: 'My Active Dossiers',
+ *   name_ar: 'ملفاتي النشطة',
+ *   view_config: { filters: { status: ['active'] } }
+ * });
  */
 
 import { useState, useCallback, useMemo, useEffect } from 'react'
@@ -26,6 +62,14 @@ const DEBOUNCE_DELAY = 1000 // 1 second debounce for saving preferences
 
 /**
  * Fetch view preferences from Edge Function
+ *
+ * @description
+ * Calls the view-preferences Edge Function to retrieve user preferences and saved views
+ * for a specific entity type. Returns empty structure for unauthenticated users.
+ *
+ * @param entityType - Entity type to fetch preferences for ('dossier', 'intake', etc.)
+ * @returns Promise with preferences and saved views
+ * @throws Error if Edge Function call fails
  */
 async function fetchViewPreferences(entityType: EntityViewType): Promise<ViewPreferencesResponse> {
   const {
@@ -54,6 +98,13 @@ async function fetchViewPreferences(entityType: EntityViewType): Promise<ViewPre
 
 /**
  * Local storage helpers for fallback/offline support
+ *
+ * @description
+ * Retrieves view configuration from localStorage for offline access or
+ * unauthenticated users. Used as fallback when database is unavailable.
+ *
+ * @param entityType - Entity type to fetch preferences for
+ * @returns Stored ViewConfig or null if not found/error
  */
 function getLocalPreferences(entityType: EntityViewType): ViewConfig | null {
   try {
@@ -67,6 +118,16 @@ function getLocalPreferences(entityType: EntityViewType): ViewConfig | null {
   return null
 }
 
+/**
+ * Save view configuration to localStorage
+ *
+ * @description
+ * Persists view configuration to localStorage for offline access. Handles
+ * serialization errors gracefully.
+ *
+ * @param entityType - Entity type to save preferences for
+ * @param config - View configuration to persist
+ */
 function setLocalPreferences(entityType: EntityViewType, config: ViewConfig): void {
   try {
     localStorage.setItem(`${STORAGE_KEY_PREFIX}${entityType}`, JSON.stringify(config))
@@ -76,7 +137,58 @@ function setLocalPreferences(entityType: EntityViewType, config: ViewConfig): vo
 }
 
 /**
- * Hook for managing view preferences
+ * Hook for managing view preferences with TanStack Query
+ *
+ * @description
+ * Provides comprehensive view preference management including:
+ * - Query preferences and saved views from database
+ * - Create/update/delete saved views with optimistic updates
+ * - Set default views and toggle pinned status
+ * - Track unsaved changes
+ * - localStorage fallback for offline/anonymous users
+ * - Automatic cache invalidation
+ *
+ * The hook manages both "current view config" (active filters/settings) and
+ * "saved views" (named presets that can be applied).
+ *
+ * @param entityType - Entity type to manage preferences for ('dossier', 'intake', etc.)
+ * @returns Object containing preferences data, loading states, and actions
+ *   - preferences: Default user preferences
+ *   - savedViews: Array of saved custom views
+ *   - defaultView: The view marked as default (if any)
+ *   - pinnedViews: Array of pinned views
+ *   - currentViewConfig: Currently active view configuration
+ *   - setCurrentViewConfig: Update current view (marks as unsaved)
+ *   - hasUnsavedChanges: Whether current config differs from saved
+ *   - isLoading/isUpdating: Loading states
+ *   - Actions: createSavedView, updateSavedView, deleteSavedView, etc.
+ *
+ * @example
+ * // Basic usage
+ * const {
+ *   currentViewConfig,
+ *   setCurrentViewConfig,
+ *   savedViews,
+ *   createSavedView,
+ *   hasUnsavedChanges
+ * } = useViewPreferences('dossier');
+ *
+ * @example
+ * // Apply filters
+ * setCurrentViewConfig({
+ *   filters: { status: ['active'], type: ['country'] },
+ *   sort: { by: 'name_en', order: 'asc' }
+ * });
+ *
+ * @example
+ * // Save current config as a named view
+ * if (hasUnsavedChanges) {
+ *   await createSavedView({
+ *     name_en: 'Active Countries',
+ *     name_ar: 'الدول النشطة',
+ *     view_config: currentViewConfig
+ *   });
+ * }
  */
 export function useViewPreferences(entityType: EntityViewType) {
   const { user } = useAuth()
@@ -372,7 +484,34 @@ export function useViewPreferences(entityType: EntityViewType) {
 
 /**
  * Helper hook to sync view config with URL params
- * Useful for pages that want URL-based state with preference persistence
+ *
+ * @description
+ * Combines view preferences with URL-based state management. On mount, applies
+ * default preferences to URL if no URL params exist. Syncs URL changes back to
+ * current view config for unsaved change tracking.
+ *
+ * Useful for list/table pages that persist filters in URL query params while
+ * still supporting saved views.
+ *
+ * @template T - View config type extending ViewConfig
+ * @param entityType - Entity type for preferences
+ * @param urlConfig - Current URL-based configuration (from router search params)
+ * @param setUrlConfig - Function to update URL configuration
+ * @returns All useViewPreferences return values plus `initialized` flag
+ *
+ * @example
+ * // With TanStack Router
+ * const { search } = Route.useSearch();
+ * const navigate = Route.useNavigate();
+ *
+ * const { initialized, currentViewConfig, applyView } = useViewPreferencesWithUrl(
+ *   'dossier',
+ *   search,
+ *   (config) => navigate({ search: config })
+ * );
+ *
+ * // Wait for initialization before rendering
+ * if (!initialized) return <Spinner />;
  */
 export function useViewPreferencesWithUrl<T extends ViewConfig>(
   entityType: EntityViewType,
