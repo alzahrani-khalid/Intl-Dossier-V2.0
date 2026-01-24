@@ -17,6 +17,11 @@ import type { EntitySearchResult } from '../../../backend/src/types/intake-entit
 
 /**
  * Debounced value hook
+ *
+ * @param value - Value to debounce
+ * @param delay - Delay in milliseconds
+ * @returns Debounced value
+ * @internal
  */
 function useDebouncedValue<T>(value: T, delay: number): T {
   const [debouncedValue, setDebouncedValue] = useState<T>(value);
@@ -59,7 +64,30 @@ export interface UseEntitySearchOptions {
 }
 
 /**
- * Hook for entity search with debouncing
+ * Hook for entity search with debouncing and AI-powered ranking
+ *
+ * @description
+ * TanStack Query hook for searching entities with intelligent ranking:
+ * - AI confidence: 50%
+ * - Recency: 30%
+ * - Alphabetical: 20%
+ *
+ * Features debouncing (default 300ms) and minimum query length (default 2).
+ *
+ * @param filters - Entity search filters (entity_types, query, etc.)
+ * @param options - Hook options (debounceMs, minQueryLength, enabled, limit)
+ * @returns TanStack Query result with ranked entity search results
+ *
+ * @example
+ * ```typescript
+ * const { data: results, isLoading } = useEntitySearch(
+ *   {
+ *     query: 'climate',
+ *     entity_types: ['dossier', 'position']
+ *   },
+ *   { debounceMs: 300, limit: 20 }
+ * );
+ * ```
  */
 export function useEntitySearch(
   filters: Omit<EntitySearchFilters, 'limit'>,
@@ -100,7 +128,30 @@ export function useEntitySearch(
 
 /**
  * Stateful entity search hook with local state management
- * Useful for search input components
+ *
+ * @description
+ * Higher-level hook that manages search state internally.
+ * Useful for search input components that need query and filter state.
+ * Includes helper methods for clearing search and toggling entity types.
+ *
+ * @param initialFilters - Initial filter values (entity_types, organization_id, etc.)
+ * @param options - Hook options (debounceMs, minQueryLength, enabled, limit)
+ * @returns Object with query state, filter state, actions, and search results
+ *
+ * @example
+ * ```typescript
+ * const {
+ *   query,
+ *   setQuery,
+ *   selectedTypes,
+ *   toggleEntityType,
+ *   clearSearch,
+ *   data: results
+ * } = useEntitySearchState(
+ *   { entity_types: ['dossier'] },
+ *   { debounceMs: 300 }
+ * );
+ * ```
  */
 export function useEntitySearchState(
   initialFilters: Omit<EntitySearchFilters, 'query' | 'limit'> = {},
@@ -167,7 +218,24 @@ export function useEntitySearchState(
 
 /**
  * Hook to get entity intakes (reverse lookup)
- * For displaying all intake tickets linked to an entity
+ *
+ * @description
+ * TanStack Query hook for displaying all intake tickets linked to a specific entity.
+ * Useful for entity detail pages showing related intake requests.
+ *
+ * @param entityType - Type of entity (dossier, position, etc.)
+ * @param entityId - UUID of the entity
+ * @param filters - Optional filters (status, date range, pagination)
+ * @returns TanStack Query result with linked intake tickets
+ *
+ * @example
+ * ```typescript
+ * const { data: intakes, isLoading } = useEntityIntakes(
+ *   'dossier',
+ *   dossierId,
+ *   { status: ['open', 'in_progress'], limit: 10 }
+ * );
+ * ```
  */
 export function useEntityIntakes(
   entityType: string,
@@ -195,7 +263,22 @@ export function useEntityIntakes(
 }
 
 /**
- * Type guard to check if results are available
+ * Type guard to check if search results are available
+ *
+ * @description
+ * TypeScript type guard that narrows undefined | EntitySearchResult[] to EntitySearchResult[].
+ * Useful for conditional rendering of search results.
+ *
+ * @param data - Search results data from useEntitySearch
+ * @returns True if results exist and are non-empty
+ *
+ * @example
+ * ```typescript
+ * if (hasSearchResults(results)) {
+ *   // results is typed as EntitySearchResult[]
+ *   return <ResultsList results={results} />;
+ * }
+ * ```
  */
 export function hasSearchResults(
   data: EntitySearchResult[] | undefined
@@ -205,6 +288,20 @@ export function hasSearchResults(
 
 /**
  * Helper to format entity type for display
+ *
+ * @description
+ * Converts internal entity type strings to human-readable labels.
+ * Returns the original string if no mapping exists.
+ *
+ * @param entityType - Internal entity type string
+ * @returns Formatted entity type label
+ *
+ * @example
+ * ```typescript
+ * formatEntityType('dossier'); // 'Dossier'
+ * formatEntityType('mou'); // 'MOU'
+ * formatEntityType('unknown'); // 'unknown'
+ * ```
  */
 export function formatEntityType(entityType: string): string {
   const typeMap: Record<string, string> = {

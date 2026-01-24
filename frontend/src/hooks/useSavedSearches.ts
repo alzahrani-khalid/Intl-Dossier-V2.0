@@ -238,7 +238,25 @@ async function fetchSmartFilters(): Promise<{ data: SmartFilter[]; count: number
 // HOOKS
 // ============================================================================
 
-// Hook: List saved searches
+/**
+ * Hook to list saved searches with pagination
+ *
+ * @description
+ * TanStack Query hook for fetching saved searches with optional filtering by category.
+ * Includes user's own searches and optionally shared searches.
+ *
+ * @param params - List parameters (category, limit, offset, include_shared, pinned_only)
+ * @returns TanStack Query result with saved searches list
+ *
+ * @example
+ * ```typescript
+ * const { data } = useSavedSearches({
+ *   category: 'dossiers',
+ *   limit: 20,
+ *   include_shared: true
+ * });
+ * ```
+ */
 export function useSavedSearches(params?: SavedSearchListParams) {
   return useQuery({
     queryKey: savedSearchKeys.list(params || {}),
@@ -289,7 +307,21 @@ export function useSavedSearchesByCategory(category: SavedSearchCategory) {
   })
 }
 
-// Hook: Get single saved search
+/**
+ * Hook to get a single saved search by ID
+ *
+ * @description
+ * TanStack Query hook for fetching a saved search detail including filters and criteria.
+ * Automatically disabled when ID is null.
+ *
+ * @param id - Saved search ID (null to disable)
+ * @returns TanStack Query result with saved search detail
+ *
+ * @example
+ * ```typescript
+ * const { data: savedSearch } = useSavedSearch(searchId);
+ * ```
+ */
 export function useSavedSearch(id: string | null) {
   return useQuery({
     queryKey: id ? savedSearchKeys.detail(id) : ['saved-searches', 'disabled'],
@@ -308,7 +340,27 @@ export function useSmartFilters() {
   })
 }
 
-// Mutation: Create saved search
+/**
+ * Mutation hook to create a new saved search
+ *
+ * @description
+ * TanStack Mutation hook for saving search criteria for later reuse.
+ * Automatically invalidates lists and populates cache on success.
+ *
+ * @returns TanStack Mutation result with mutate function
+ *
+ * @example
+ * ```typescript
+ * const { mutate } = useCreateSavedSearch();
+ *
+ * mutate({
+ *   name: 'Active Climate Dossiers',
+ *   description: 'All active climate change dossiers',
+ *   search_criteria: { entity_types: ['dossier'], query: 'climate' },
+ *   category: 'dossiers'
+ * });
+ * ```
+ */
 export function useCreateSavedSearch() {
   const queryClient = useQueryClient()
 

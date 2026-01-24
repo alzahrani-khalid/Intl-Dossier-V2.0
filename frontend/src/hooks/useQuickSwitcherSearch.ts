@@ -145,6 +145,10 @@ async function fetchQuickSwitcherSearch(
 
 /**
  * Get URL for a work item
+ *
+ * @param item - Work item to get URL for
+ * @returns Relative URL path for the work item
+ * @internal
  */
 function getWorkItemUrl(item: QuickSwitcherWorkItem): string {
   switch (item.type) {
@@ -166,10 +170,31 @@ function getWorkItemUrl(item: QuickSwitcherWorkItem): string {
 }
 
 /**
- * useQuickSwitcherSearch hook
+ * Hook for QuickSwitcher (Cmd+K) search functionality
+ *
+ * @description
+ * TanStack Query hook for global quick switcher search with typeahead.
+ * Returns dossiers and related work items organized into sections.
+ * Includes recent items tracking and bilingual support.
  *
  * @param options - Hook configuration options
- * @returns Search state and methods
+ * @param options.debounceMs - Debounce delay in milliseconds (default: 300)
+ * @param options.limit - Maximum number of results (default: 20)
+ * @param options.enabled - Enable/disable the hook (default: true)
+ * @returns Search state and methods for QuickSwitcher UI
+ *
+ * @example
+ * ```typescript
+ * const {
+ *   query,
+ *   setQuery,
+ *   dossiers,
+ *   workItems,
+ *   recentItems,
+ *   isLoading,
+ *   addToRecentItems
+ * } = useQuickSwitcherSearch({ debounceMs: 300, limit: 20 });
+ * ```
  */
 export function useQuickSwitcherSearch(
   options: {

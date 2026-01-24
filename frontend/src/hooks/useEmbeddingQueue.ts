@@ -96,8 +96,24 @@ async function fetchQueueItems(options: {
 /**
  * Hook to get embedding queue statistics
  *
- * @param options.enabled - Whether to enable the query
- * @param options.refetchInterval - How often to refetch (default: 10 seconds)
+ * @description
+ * TanStack Query hook for monitoring async embedding generation queue.
+ * Automatically refetches every 10 seconds by default.
+ * Useful for showing progress indicators when content is being processed.
+ *
+ * @param options - Hook options
+ * @param options.enabled - Whether to enable the query (default: true)
+ * @param options.refetchInterval - How often to refetch in ms (default: 10000)
+ * @returns TanStack Query result with queue statistics
+ *
+ * @example
+ * ```typescript
+ * const { data: stats } = useEmbeddingQueueStats();
+ *
+ * if (stats?.total_pending > 0) {
+ *   return <Badge>Processing {stats.total_pending} items</Badge>;
+ * }
+ * ```
  */
 export function useEmbeddingQueueStats(options?: { enabled?: boolean; refetchInterval?: number }) {
   const { enabled = true, refetchInterval = 10000 } = options || {}
@@ -115,9 +131,23 @@ export function useEmbeddingQueueStats(options?: { enabled?: boolean; refetchInt
 /**
  * Hook to get pending embedding queue items
  *
- * @param options.limit - Maximum items to fetch
- * @param options.entityType - Filter by entity type
- * @param options.enabled - Whether to enable the query
+ * @description
+ * TanStack Query hook for fetching pending items in the embedding queue.
+ * Optionally filter by entity type and limit results.
+ *
+ * @param options - Hook options
+ * @param options.limit - Maximum items to fetch (default: 50)
+ * @param options.entityType - Filter by entity type (optional)
+ * @param options.enabled - Whether to enable the query (default: true)
+ * @returns TanStack Query result with pending queue items
+ *
+ * @example
+ * ```typescript
+ * const { data: items } = useEmbeddingQueueItems({
+ *   entityType: 'positions',
+ *   limit: 10
+ * });
+ * ```
  */
 export function useEmbeddingQueueItems(options?: {
   limit?: number

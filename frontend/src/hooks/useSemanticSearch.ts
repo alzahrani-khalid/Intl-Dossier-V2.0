@@ -124,6 +124,9 @@ export interface LegacySemanticSearchResponse {
 
 /**
  * Get the Supabase Edge Function URL for semantic search
+ *
+ * @returns The full URL to the semantic search Edge Function
+ * @internal
  */
 function getSemanticSearchUrl(): string {
   const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
@@ -349,7 +352,24 @@ export function useSemanticSearch() {
 
 /**
  * Query-based hook for unified semantic search with caching
- * Useful when you want automatic caching and background refetching
+ *
+ * @description
+ * Performs semantic vector search using TanStack Query with automatic caching
+ * and background refetching. Useful when you need the search results to persist
+ * across component re-renders and want automatic cache management.
+ *
+ * @param options - Semantic search options with enabled flag
+ * @returns TanStack Query result with semantic search response
+ *
+ * @example
+ * ```typescript
+ * const { data, isLoading } = useUnifiedSemanticSearchQuery({
+ *   query: 'climate change',
+ *   entityTypes: ['country', 'organization'],
+ *   similarityThreshold: 0.7,
+ *   enabled: true
+ * });
+ * ```
  */
 export function useUnifiedSemanticSearchQuery(
   options: SemanticSearchOptions & { enabled?: boolean },
@@ -424,6 +444,21 @@ export function useUnifiedSemanticSearchQuery(
 
 /**
  * Hook to check if semantic search is available
+ *
+ * @description
+ * Queries the semantic search Edge Function to verify availability.
+ * Useful for showing/hiding semantic search features based on backend availability.
+ *
+ * @returns TanStack Query result with boolean indicating availability
+ *
+ * @example
+ * ```typescript
+ * const { data: isAvailable } = useSemanticSearchAvailability();
+ *
+ * if (isAvailable) {
+ *   // Show semantic search UI
+ * }
+ * ```
  */
 export function useSemanticSearchAvailability() {
   return useQuery({
@@ -457,6 +492,17 @@ export function useSemanticSearchAvailability() {
 
 /**
  * Utility to check if semantic search is available (non-hook version)
+ *
+ * @description
+ * Non-hook utility for checking semantic search availability.
+ * Use this outside of React components or in server-side code.
+ *
+ * @returns Promise resolving to boolean indicating availability
+ *
+ * @example
+ * ```typescript
+ * const isAvailable = await checkSemanticSearchAvailability();
+ * ```
  */
 export async function checkSemanticSearchAvailability(): Promise<boolean> {
   try {
@@ -483,6 +529,18 @@ export async function checkSemanticSearchAvailability(): Promise<boolean> {
 
 /**
  * Get all available entity types for semantic search
+ *
+ * @description
+ * Returns a complete list of entity types supported by semantic search.
+ * Useful for building UI filters and validation.
+ *
+ * @returns Array of all supported semantic entity types
+ *
+ * @example
+ * ```typescript
+ * const types = getSemanticEntityTypes();
+ * // ['dossiers', 'country', 'organization', ...]
+ * ```
  */
 export function getSemanticEntityTypes(): SemanticEntityType[] {
   return [
@@ -499,12 +557,31 @@ export function getSemanticEntityTypes(): SemanticEntityType[] {
 
 /**
  * Get dossier-specific entity types
+ *
+ * @description
+ * Returns entity types that are dossier subtypes.
+ * Useful for filtering semantic search to dossier entities only.
+ *
+ * @returns Array of dossier subtypes
+ *
+ * @example
+ * ```typescript
+ * const dossierTypes = getDossierEntityTypes();
+ * // ['country', 'organization', 'forum', 'theme']
+ * ```
  */
 export function getDossierEntityTypes(): DossierSubtype[] {
   return ['country', 'organization', 'forum', 'theme']
 }
 
-// Legacy export for backwards compatibility
+/**
+ * Legacy export for backwards compatibility
+ *
+ * @deprecated Use useUnifiedSemanticSearchQuery instead
+ *
+ * @param options - Legacy semantic search options
+ * @returns TanStack Query result
+ */
 export function useSemanticSearchQuery(
   options: Omit<SemanticSearchOptions, 'dossierTypes' | 'includeMetadata'> & {
     includeKeywordResults?: boolean

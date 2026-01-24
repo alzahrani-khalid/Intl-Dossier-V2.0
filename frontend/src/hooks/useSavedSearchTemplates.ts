@@ -142,7 +142,24 @@ async function deleteTemplate(id: string): Promise<{ success: boolean }> {
   return response.json()
 }
 
-// Hook: List templates
+/**
+ * Hook to list search templates
+ *
+ * @description
+ * TanStack Query hook for fetching search templates with optional category filtering.
+ * Templates provide quick-start search configurations for common use cases.
+ *
+ * @param params - List parameters (category, limit, offset, enabled)
+ * @returns TanStack Query result with templates list
+ *
+ * @example
+ * ```typescript
+ * const { data } = useSearchTemplates({
+ *   category: 'dossiers',
+ *   limit: 20
+ * });
+ * ```
+ */
 export function useSearchTemplates(params?: {
   category?: TemplateCategory
   limit?: number

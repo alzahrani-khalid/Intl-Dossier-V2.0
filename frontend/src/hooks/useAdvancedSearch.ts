@@ -20,7 +20,22 @@ import type {
   SortOrder,
 } from '@/types/advanced-search.types'
 
-// Query key factory
+/**
+ * Query Keys Factory for advanced search queries
+ *
+ * @description
+ * Provides hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation.
+ *
+ * @example
+ * ```typescript
+ * // Invalidate all advanced search queries
+ * queryClient.invalidateQueries({ queryKey: advancedSearchKeys.all });
+ *
+ * // Invalidate specific search results
+ * queryClient.invalidateQueries({ queryKey: advancedSearchKeys.search(request) });
+ * ```
+ */
 export const advancedSearchKeys = {
   all: ['advanced-search'] as const,
   search: (params: AdvancedSearchRequest) =>
@@ -28,7 +43,18 @@ export const advancedSearchKeys = {
   history: () => [...advancedSearchKeys.all, 'history'] as const,
 }
 
-// API function to execute advanced search
+/**
+ * API function to execute advanced search
+ *
+ * @description
+ * Executes advanced search with complex multi-criteria filters via Edge Function.
+ * Supports entity types, conditions, groups, relationships, date ranges, and sorting.
+ *
+ * @param request - Advanced search request with filters
+ * @returns Promise resolving to search response with results
+ * @throws Error if not authenticated or if search fails
+ * @internal
+ */
 async function executeAdvancedSearch(
   request: AdvancedSearchRequest,
 ): Promise<AdvancedSearchResponse> {
@@ -58,7 +84,31 @@ async function executeAdvancedSearch(
   return response.json()
 }
 
-// Main search hook with caching
+/**
+ * Main advanced search hook with caching
+ *
+ * @description
+ * TanStack Query hook for complex multi-criteria search with automatic caching.
+ * Supports entity filtering, conditions, relationships, date ranges, and more.
+ *
+ * @param request - Advanced search request (null to disable)
+ * @param options - Query options (enabled, staleTime, refetchOnWindowFocus)
+ * @returns TanStack Query result with search results
+ *
+ * @example
+ * ```typescript
+ * const { data, isLoading } = useAdvancedSearch(
+ *   {
+ *     entity_types: ['dossier', 'position'],
+ *     query: 'climate change',
+ *     conditions: [{ field: 'status', operator: 'eq', value: 'active' }],
+ *     sort_by: 'relevance',
+ *     sort_order: 'desc'
+ *   },
+ *   { enabled: true }
+ * );
+ * ```
+ */
 export function useAdvancedSearch(
   request: AdvancedSearchRequest | null,
   options?: {
@@ -79,7 +129,26 @@ export function useAdvancedSearch(
   })
 }
 
-// Mutation-based search for on-demand execution
+/**
+ * Mutation-based search for on-demand execution
+ *
+ * @description
+ * TanStack Mutation hook for executing advanced search on-demand.
+ * Automatically caches results and adds to search history upon success.
+ *
+ * @returns TanStack Mutation result with mutate function
+ *
+ * @example
+ * ```typescript
+ * const { mutate, isPending } = useAdvancedSearchMutation();
+ *
+ * mutate({
+ *   entity_types: ['dossier'],
+ *   query: 'climate',
+ *   conditions: []
+ * });
+ * ```
+ */
 export function useAdvancedSearchMutation() {
   const queryClient = useQueryClient()
 
@@ -95,17 +164,36 @@ export function useAdvancedSearchMutation() {
   })
 }
 
-// Search history management
+/**
+ * @constant {string} SEARCH_HISTORY_KEY - LocalStorage key for advanced search history
+ */
 const SEARCH_HISTORY_KEY = 'advanced-search-history'
+
+/**
+ * @constant {number} MAX_HISTORY_ITEMS - Maximum number of search history items to store
+ */
 const MAX_HISTORY_ITEMS = 10
 
+/**
+ * Search history item stored in localStorage
+ */
 interface SearchHistoryItem {
+  /** Unique identifier */
   id: string
+  /** Search request that was executed */
   request: AdvancedSearchRequest
+  /** ISO timestamp when search was performed */
   timestamp: string
+  /** Number of results returned */
   resultCount: number
 }
 
+/**
+ * Add a search request to localStorage history
+ *
+ * @param request - Advanced search request to add
+ * @internal
+ */
 function addToSearchHistory(request: AdvancedSearchRequest): void {
   try {
     const history = getSearchHistory()
@@ -130,6 +218,16 @@ function addToSearchHistory(request: AdvancedSearchRequest): void {
   }
 }
 
+/**
+ * Get search history from localStorage
+ *
+ * @returns Array of search history items
+ *
+ * @example
+ * ```typescript
+ * const history = getSearchHistory();
+ * ```
+ */
 export function getSearchHistory(): SearchHistoryItem[] {
   try {
     const stored = localStorage.getItem(SEARCH_HISTORY_KEY)
@@ -139,11 +237,32 @@ export function getSearchHistory(): SearchHistoryItem[] {
   }
 }
 
+/**
+ * Clear all search history from localStorage
+ *
+ * @example
+ * ```typescript
+ * clearSearchHistory();
+ * ```
+ */
 export function clearSearchHistory(): void {
   localStorage.removeItem(SEARCH_HISTORY_KEY)
 }
 
-// Hook for search history
+/**
+ * Hook to get search history with automatic updates
+ *
+ * @description
+ * TanStack Query hook that retrieves search history from localStorage.
+ * Data never becomes stale (staleTime: Infinity).
+ *
+ * @returns TanStack Query result with search history
+ *
+ * @example
+ * ```typescript
+ * const { data: history } = useSearchHistory();
+ * ```
+ */
 export function useSearchHistory() {
   return useQuery({
     queryKey: advancedSearchKeys.history(),
@@ -152,7 +271,13 @@ export function useSearchHistory() {
   })
 }
 
-// Search state builder helper
+/**
+ * Search state builder helper
+ *
+ * @description
+ * Represents the complete state for advanced search UI.
+ * Use with React's useReducer or external state management.
+ */
 export interface SearchState {
   query: string
   entityTypes: SearchableEntityType[]
@@ -171,6 +296,12 @@ export interface SearchState {
   savedFilterId: string | null
 }
 
+/**
+ * Default search state with sensible defaults
+ *
+ * @description
+ * Starting state for advanced search UI. Use as initial state for useReducer.
+ */
 export const defaultSearchState: SearchState = {
   query: '',
   entityTypes: ['dossier'],
@@ -189,7 +320,22 @@ export const defaultSearchState: SearchState = {
   savedFilterId: null,
 }
 
-// Convert SearchState to AdvancedSearchRequest
+/**
+ * Convert SearchState to AdvancedSearchRequest
+ *
+ * @description
+ * Transforms UI search state into API request format.
+ * Omits empty/null values to reduce payload size.
+ *
+ * @param state - Current search state
+ * @returns API-ready search request
+ *
+ * @example
+ * ```typescript
+ * const request = buildSearchRequest(searchState);
+ * // Use with useAdvancedSearch or useAdvancedSearchMutation
+ * ```
+ */
 export function buildSearchRequest(state: SearchState): AdvancedSearchRequest {
   const request: AdvancedSearchRequest = {
     entity_types: state.entityTypes,
@@ -236,7 +382,13 @@ export function buildSearchRequest(state: SearchState): AdvancedSearchRequest {
   return request
 }
 
-// Search state reducer actions
+/**
+ * Search state reducer actions
+ *
+ * @description
+ * All available actions for modifying search state.
+ * Use with searchReducer in React's useReducer.
+ */
 export type SearchAction =
   | { type: 'SET_QUERY'; payload: string }
   | { type: 'SET_ENTITY_TYPES'; payload: SearchableEntityType[] }
@@ -261,7 +413,26 @@ export type SearchAction =
   | { type: 'LOAD_STATE'; payload: Partial<SearchState> }
   | { type: 'RESET' }
 
-// Search state reducer
+/**
+ * Search state reducer
+ *
+ * @description
+ * Reducer function for managing advanced search state.
+ * Handles all search actions and ensures state consistency.
+ * Automatically resets offset to 0 when filters change.
+ *
+ * @param state - Current search state
+ * @param action - Action to apply
+ * @returns New search state
+ *
+ * @example
+ * ```typescript
+ * const [state, dispatch] = useReducer(searchReducer, defaultSearchState);
+ *
+ * dispatch({ type: 'SET_QUERY', payload: 'climate' });
+ * dispatch({ type: 'ADD_CONDITION', payload: condition });
+ * ```
+ */
 export function searchReducer(state: SearchState, action: SearchAction): SearchState {
   switch (action.type) {
     case 'SET_QUERY':
@@ -370,7 +541,23 @@ export function searchReducer(state: SearchState, action: SearchAction): SearchS
   }
 }
 
-// Hook to check if search has any active filters
+/**
+ * Check if search has any active filters
+ *
+ * @description
+ * Returns true if any search filters are active (non-default).
+ * Useful for showing/hiding "Clear All" buttons.
+ *
+ * @param state - Current search state
+ * @returns True if filters are active
+ *
+ * @example
+ * ```typescript
+ * if (hasActiveFilters(searchState)) {
+ *   // Show "Clear All Filters" button
+ * }
+ * ```
+ */
 export function hasActiveFilters(state: SearchState): boolean {
   return (
     state.query.trim().length > 0 ||
@@ -384,7 +571,22 @@ export function hasActiveFilters(state: SearchState): boolean {
   )
 }
 
-// Count active filters
+/**
+ * Count active filters
+ *
+ * @description
+ * Returns the total number of active filters.
+ * Useful for displaying filter count badges.
+ *
+ * @param state - Current search state
+ * @returns Number of active filters
+ *
+ * @example
+ * ```typescript
+ * const count = countActiveFilters(searchState);
+ * // Show badge: "Filters (3)"
+ * ```
+ */
 export function countActiveFilters(state: SearchState): number {
   let count = 0
   if (state.query.trim()) count++

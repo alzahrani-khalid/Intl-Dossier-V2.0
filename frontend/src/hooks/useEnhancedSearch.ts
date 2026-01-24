@@ -24,6 +24,13 @@ import {
 // Query Keys
 // =============================================================================
 
+/**
+ * Query Keys Factory for enhanced search queries
+ *
+ * @description
+ * Hierarchical key structure for TanStack Query cache management of enhanced search features.
+ * Includes keys for suggestions, history, filter counts, and popular searches.
+ */
 export const enhancedSearchKeys = {
   all: ['enhanced-search'] as const,
   suggestions: (query: string, entityTypes: string[]) =>
@@ -38,6 +45,16 @@ export const enhancedSearchKeys = {
 // API Functions
 // =============================================================================
 
+/**
+ * Fetch search suggestions from Edge Function
+ *
+ * @param query - Search query string
+ * @param entityTypes - Array of entity types to search
+ * @param limit - Maximum number of suggestions (default: 10)
+ * @returns Promise resolving to categorized suggestions
+ * @throws Error if not authenticated
+ * @internal
+ */
 async function fetchSuggestions(
   query: string,
   entityTypes: string[],
@@ -208,6 +225,24 @@ async function fetchFilterCounts(
 
 /**
  * Hook for fetching search suggestions with debouncing
+ *
+ * @description
+ * TanStack Query hook for intelligent search suggestions with real-time typeahead.
+ * Includes fuzzy matching, search history, and contextual suggestions.
+ *
+ * @param query - Current search query string
+ * @param entityTypes - Array of entity types to search
+ * @param options - Hook options (enabled, debounceMs, minQueryLength)
+ * @returns TanStack Query result with categorized suggestions
+ *
+ * @example
+ * ```typescript
+ * const { data: suggestions, isLoading } = useSearchSuggestions(
+ *   searchQuery,
+ *   ['dossier', 'position'],
+ *   { minQueryLength: 2, debounceMs: 300 }
+ * );
+ * ```
  */
 export function useSearchSuggestions(
   query: string,
@@ -234,6 +269,25 @@ export function useSearchSuggestions(
 
 /**
  * Hook for managing search history
+ *
+ * @description
+ * TanStack Query hook for fetching, adding to, and clearing search history.
+ * Provides mutations for managing history with automatic cache invalidation.
+ *
+ * @param options - Hook options (enabled)
+ * @returns Object with history data, loading states, and mutation functions
+ *
+ * @example
+ * ```typescript
+ * const { history, addToHistory, clearHistory } = useSearchHistory();
+ *
+ * // Add search to history
+ * await addToHistory({
+ *   query: 'climate change',
+ *   entityTypes: ['dossier'],
+ *   resultCount: 15
+ * });
+ * ```
  */
 export function useSearchHistory(options?: { enabled?: boolean }) {
   const queryClient = useQueryClient()
@@ -284,6 +338,26 @@ export function useSearchHistory(options?: { enabled?: boolean }) {
 
 /**
  * Hook for adaptive filter counts
+ *
+ * @description
+ * TanStack Query hook for fetching result counts for each filter option.
+ * Used to show "X results" next to each filter choice, helping users make informed decisions.
+ *
+ * @param cacheKey - Unique cache key for the filter counts
+ * @param entityTypes - Array of entity types to count
+ * @param baseQuery - Optional base search query to filter by
+ * @param options - Hook options (enabled)
+ * @returns TanStack Query result with filter counts
+ *
+ * @example
+ * ```typescript
+ * const { data: counts } = useFilterCounts(
+ *   'status-counts',
+ *   ['dossier'],
+ *   'climate',
+ *   { enabled: true }
+ * );
+ * ```
  */
 export function useFilterCounts(
   cacheKey: string,
