@@ -1,9 +1,43 @@
 /**
- * Navigation State Preservation Hook (T058)
+ * Navigation State Preservation Hooks
+ * @module hooks/useNavigationState
+ * @feature T058
  *
- * Preserves UI state across cross-module navigation
- * Strategy: TanStack Router search params for filters, sessionStorage for scroll/UI state
- * Features: Auto-save on unmount, auto-restore on mount, TTL for stale state
+ * Comprehensive state preservation across navigation for seamless user experience.
+ *
+ * @description
+ * This module provides hooks for preserving and restoring various types of UI state
+ * across navigation events. State is persisted using a combination of:
+ * - TanStack Router search params for filter state (URL-based, shareable)
+ * - sessionStorage for complex UI state (scroll position, selections, expanded sections)
+ * - Automatic TTL-based cleanup (30 minutes) to prevent stale state
+ *
+ * Features:
+ * - Automatic scroll position preservation and restoration
+ * - URL-based filter state management with type safety
+ * - UI state persistence (selections, expanded sections, active tabs)
+ * - Throttled auto-save to minimize performance impact
+ * - Context-based state isolation (different states for different pages)
+ *
+ * @example
+ * // Preserve scroll and UI state for a list page
+ * const {
+ *   searchParams,
+ *   updateSearchParams,
+ *   saveUIState,
+ *   loadUIState
+ * } = useNavigationState('positions-library');
+ *
+ * @example
+ * // Simple filter state management
+ * const { filters, updateFilters, resetFilters } = useFilterState({
+ *   status: 'active',
+ *   type: 'all'
+ * });
+ *
+ * @example
+ * // Selection state preservation
+ * const { selectedItems, toggleItem, clearSelection } = useSelectionState('tasks-list');
  */
 
 import { useEffect, useRef, useCallback, useMemo } from 'react'
@@ -22,9 +56,62 @@ const STATE_TTL = 30 * 60 * 1000 // 30 minutes
 /**
  * Hook to preserve and restore navigation state for a given context
  *
- * @param contextKey - Unique key for this context (e.g., 'positions-library', 'dossier-123-positions')
+ * @description
+ * Provides comprehensive state preservation across navigation using a hybrid approach:
+ * - URL search params for filter state (shareable, bookmarkable)
+ * - sessionStorage for UI state (scroll, selections, expanded sections)
+ * - Automatic cleanup based on TTL (30 minutes)
+ * - Throttled auto-save for scroll position (500ms debounce)
+ *
+ * The hook automatically saves state on unmount and restores it on mount,
+ * ensuring a seamless user experience when navigating between pages.
+ *
+ * @template T - Type of the search params/filter state
+ * @param contextKey - Unique identifier for this context (e.g., 'positions-library', 'dossier-123-positions')
  * @param options - Configuration options
- * @returns State management utilities
+ * @param options.defaultState - Default values for state properties
+ * @param options.includeScrollPosition - Whether to track scroll position (default: true)
+ * @returns State management utilities object containing:
+ * - `searchParams`: Current URL search parameters typed as T
+ * - `updateSearchParams`: Function to update URL search parameters
+ * - `saveUIState`: Function to save UI state to sessionStorage
+ * - `loadUIState`: Function to load UI state from sessionStorage
+ * - `clearState`: Function to clear all saved state
+ * - `saveScrollPosition`: Function to manually save scroll position
+ * - `restoreScrollPosition`: Function to manually restore scroll position
+ *
+ * @example
+ * // Preserve filters and scroll for a list page
+ * interface ListFilters {
+ *   status: string;
+ *   search: string;
+ *   page: number;
+ * }
+ *
+ * function PositionsList() {
+ *   const {
+ *     searchParams,
+ *     updateSearchParams,
+ *     saveUIState,
+ *     loadUIState
+ *   } = useNavigationState<ListFilters>('positions-library');
+ *
+ *   const { selectedItems = [] } = loadUIState();
+ *
+ *   const handleFilterChange = (newFilters: Partial<ListFilters>) => {
+ *     updateSearchParams(newFilters);
+ *   };
+ *
+ *   const handleSelectionChange = (items: string[]) => {
+ *     saveUIState({ selectedItems: items });
+ *   };
+ * }
+ *
+ * @example
+ * // Without scroll position tracking
+ * const { searchParams, updateSearchParams } = useNavigationState('filters-only', {
+ *   includeScrollPosition: false
+ * });
  */
 export function useNavigationState<T extends Record<string, unknown>>(
   contextKey: string,
@@ -215,10 +302,60 @@ export function useNavigationState<T extends Record<string, unknown>>(
 }
 
 /**
- * Simple hook for managing filter state in URL
+ * Hook for managing filter state in URL search parameters
  *
- * @param defaultFilters - Default filter values
- * @returns Filter state and updater
+ * @description
+ * Provides a simplified interface for managing filter state in the URL.
+ * All filter changes are synchronized with URL search params, making filters
+ * bookmarkable and shareable. Uses TanStack Router's search param management
+ * with replace mode to avoid polluting browser history.
+ *
+ * @template T - Type of the filter state object
+ * @param defaultFilters - Default filter values to use when params are not present
+ * @returns Filter management utilities object containing:
+ * - `filters`: Current filter values (merged from defaults and URL params)
+ * - `updateFilters`: Function to update filters (accepts partial or updater function)
+ * - `resetFilters`: Function to reset all filters to default values
+ *
+ * @example
+ * // Basic filter management
+ * interface ListFilters {
+ *   status: 'all' | 'active' | 'archived';
+ *   search: string;
+ *   sortBy: string;
+ * }
+ *
+ * function FilterableList() {
+ *   const { filters, updateFilters, resetFilters } = useFilterState<ListFilters>({
+ *     status: 'all',
+ *     search: '',
+ *     sortBy: 'name'
+ *   });
+ *
+ *   return (
+ *     <div>
+ *       <input
+ *         value={filters.search}
+ *         onChange={(e) => updateFilters({ search: e.target.value })}
+ *       />
+ *       <select
+ *         value={filters.status}
+ *         onChange={(e) => updateFilters({ status: e.target.value })}
+ *       >
+ *         <option value="all">All</option>
+ *         <option value="active">Active</option>
+ *       </select>
+ *       <button onClick={resetFilters}>Reset</button>
+ *     </div>
+ *   );
+ * }
+ *
+ * @example
+ * // Using updater function
+ * updateFilters(prev => ({
+ *   ...prev,
+ *   page: prev.page + 1
+ * }));
  */
 export function useFilterState<T extends Record<string, unknown>>(defaultFilters: T) {
   const navigate = useNavigate()
@@ -265,8 +402,65 @@ export function useFilterState<T extends Record<string, unknown>>(defaultFilters
 /**
  * Hook for preserving selected items across navigation
  *
- * @param contextKey - Unique context identifier
- * @returns Selection state and management
+ * @description
+ * Manages selection state for lists with automatic persistence to sessionStorage.
+ * Selected items are preserved when navigating away and restored when returning
+ * to the same context. Useful for bulk operations, multi-select interfaces,
+ * and maintaining user selections across route changes.
+ *
+ * @param contextKey - Unique context identifier (e.g., 'tasks-list', 'dossiers-grid')
+ * @returns Selection management utilities object containing:
+ * - `selectedItems`: Array of currently selected item IDs
+ * - `setSelectedItems`: Function to set selected items (accepts array or updater function)
+ * - `toggleItem`: Function to toggle selection state of a single item
+ * - `clearSelection`: Function to clear all selections
+ * - `isSelected`: Function to check if an item ID is selected
+ *
+ * @example
+ * // Multi-select list with bulk actions
+ * function TasksList() {
+ *   const {
+ *     selectedItems,
+ *     toggleItem,
+ *     clearSelection,
+ *     isSelected
+ *   } = useSelectionState('tasks-list');
+ *
+ *   const handleBulkDelete = async () => {
+ *     await deleteMany(selectedItems);
+ *     clearSelection();
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       {selectedItems.length > 0 && (
+ *         <button onClick={handleBulkDelete}>
+ *           Delete {selectedItems.length} items
+ *         </button>
+ *       )}
+ *       {tasks.map(task => (
+ *         <div key={task.id}>
+ *           <input
+ *             type="checkbox"
+ *             checked={isSelected(task.id)}
+ *             onChange={() => toggleItem(task.id)}
+ *           />
+ *           {task.name}
+ *         </div>
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ *
+ * @example
+ * // Programmatic selection updates
+ * const { setSelectedItems } = useSelectionState('items');
+ *
+ * // Select all
+ * setSelectedItems(allItems.map(i => i.id));
+ *
+ * // Select using updater function
+ * setSelectedItems(prev => [...prev, newItemId]);
  */
 export function useSelectionState(contextKey: string) {
   const { saveUIState, loadUIState } = useNavigationState(contextKey, {

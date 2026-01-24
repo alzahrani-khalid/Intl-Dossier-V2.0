@@ -1,13 +1,62 @@
 /**
  * Keyboard Shortcuts System
- * Feature: Comprehensive keyboard shortcuts for common actions
+ * @module hooks/useKeyboardShortcuts
  *
- * Provides:
- * - Global keyboard shortcut registration
- * - Platform-aware modifier keys (Cmd on Mac, Ctrl on Windows/Linux)
- * - Shortcut conflict detection
- * - Context-aware shortcuts (disabled when in inputs)
- * - RTL-aware display of shortcut keys
+ * Comprehensive keyboard shortcut management with platform awareness and i18n support.
+ *
+ * @description
+ * This module provides a complete keyboard shortcut system with:
+ * - Global shortcut registration with conflict detection
+ * - Platform-aware modifier keys (⌘ on Mac, Ctrl on Windows/Linux)
+ * - Context-aware shortcuts (disabled when focus is in inputs)
+ * - RTL-aware display formatting for Arabic interface
+ * - Categorized shortcuts for organization
+ * - Priority-based conflict resolution
+ * - Pre-built navigation and action shortcut sets
+ *
+ * Architecture:
+ * - Singleton `ShortcutRegistry` for centralized management
+ * - Hook-based registration with automatic cleanup
+ * - Event capture for reliable interception
+ * - Translation support for shortcut descriptions
+ *
+ * @example
+ * // Register custom shortcuts
+ * function MyComponent() {
+ *   const { register } = useKeyboardShortcuts();
+ *
+ *   useEffect(() => {
+ *     const unregister = register({
+ *       id: 'save-document',
+ *       key: 's',
+ *       modifiers: isMac ? ['meta'] : ['ctrl'],
+ *       description: 'Save Document',
+ *       category: 'actions',
+ *       action: handleSave
+ *     });
+ *
+ *     return unregister;
+ *   }, [register, handleSave]);
+ * }
+ *
+ * @example
+ * // Use pre-built navigation shortcuts
+ * function App() {
+ *   useGlobalKeyboardHandler();
+ *   useNavigationShortcuts();
+ *
+ *   return <YourApp />;
+ * }
+ *
+ * @example
+ * // Custom action shortcuts
+ * function Editor() {
+ *   useActionShortcuts({
+ *     onSave: handleSave,
+ *     onDelete: handleDelete,
+ *     onRefresh: handleRefresh
+ *   });
+ * }
  */
 
 import { useCallback, useEffect, useMemo } from 'react'
@@ -111,7 +160,35 @@ class ShortcutRegistry {
 const shortcutRegistry = new ShortcutRegistry()
 
 /**
- * Get the display string for a shortcut
+ * Format a keyboard shortcut for display
+ *
+ * @description
+ * Converts a key combination into a human-readable string with platform-specific
+ * modifier symbols. Automatically handles RTL layouts by reversing the order of
+ * key parts. Uses Unicode symbols for better visual appearance.
+ *
+ * @param key - The key to press (lowercase, e.g., 's', 'enter', 'arrowup')
+ * @param modifiers - Array of modifier keys (ctrl, alt, shift, meta)
+ * @param isRTL - Whether to format for RTL display (reverses key order)
+ * @returns Formatted shortcut string (e.g., '⌘S' on Mac, 'Ctrl+S' on Windows)
+ *
+ * @example
+ * // Format save shortcut
+ * formatShortcut('s', ['meta']); // Returns '⌘S' on Mac, 'Win+S' on Windows
+ *
+ * @example
+ * // Format with multiple modifiers
+ * formatShortcut('k', ['ctrl', 'shift']); // Returns 'Ctrl+⇧K' or '⌃⇧K' on Mac
+ *
+ * @example
+ * // RTL formatting
+ * formatShortcut('s', ['ctrl'], true); // Returns 'S+Ctrl' (reversed)
+ *
+ * @example
+ * // Special keys
+ * formatShortcut('enter'); // Returns '↵'
+ * formatShortcut('escape'); // Returns 'Esc'
+ * formatShortcut('arrowup'); // Returns '↑'
  */
 export function formatShortcut(
   key: string,
@@ -186,6 +263,65 @@ function isInputFocused(): boolean {
 
 /**
  * Hook to register and manage keyboard shortcuts
+ *
+ * @description
+ * Primary hook for interacting with the keyboard shortcut system. Provides
+ * utilities for registering shortcuts, querying the registry, and formatting
+ * shortcut displays. Includes platform detection and RTL support.
+ *
+ * @returns Keyboard shortcut utilities object containing:
+ * - `register`: Function to register a single shortcut (returns unregister function)
+ * - `registerMany`: Function to register multiple shortcuts at once
+ * - `getAllShortcuts`: Function to get all registered shortcuts
+ * - `getShortcutsByCategory`: Function to get shortcuts filtered by category
+ * - `format`: Function to format shortcut for display (RTL-aware)
+ * - `navigateTo`: Helper function to navigate to a route
+ * - `isRTL`: Boolean indicating if current language is RTL
+ * - `isMac`: Boolean indicating if platform is macOS
+ *
+ * @example
+ * // Register a custom shortcut
+ * function MyComponent() {
+ *   const { register } = useKeyboardShortcuts();
+ *
+ *   useEffect(() => {
+ *     const unregister = register({
+ *       id: 'my-action',
+ *       key: 'a',
+ *       modifiers: ['ctrl'],
+ *       description: 'Perform Action',
+ *       category: 'actions',
+ *       action: () => console.log('Action triggered!'),
+ *       priority: 10
+ *     });
+ *
+ *     return unregister; // Cleanup on unmount
+ *   }, [register]);
+ * }
+ *
+ * @example
+ * // Display all shortcuts in a palette
+ * function ShortcutPalette() {
+ *   const { getAllShortcuts, format } = useKeyboardShortcuts();
+ *   const shortcuts = getAllShortcuts();
+ *
+ *   return (
+ *     <div>
+ *       {shortcuts.map(shortcut => (
+ *         <div key={shortcut.id}>
+ *           <span>{shortcut.description}</span>
+ *           <kbd>{format(shortcut.key, shortcut.modifiers)}</kbd>
+ *         </div>
+ *       ))}
+ *     </div>
+ *   );
+ * }
+ *
+ * @example
+ * // Get shortcuts by category for help menu
+ * const { getShortcutsByCategory } = useKeyboardShortcuts();
+ * const navShortcuts = getShortcutsByCategory('navigation');
+ * const actionShortcuts = getShortcutsByCategory('actions');
  */
 export function useKeyboardShortcuts() {
   const navigate = useNavigate()
@@ -257,7 +393,34 @@ export function useKeyboardShortcuts() {
 }
 
 /**
- * Hook to register shortcuts and attach the global keyboard listener
+ * Hook to attach the global keyboard event listener
+ *
+ * @description
+ * Attaches a global keydown event listener that intercepts keyboard events
+ * and triggers registered shortcuts. This hook should be called once at the
+ * app root level. It automatically:
+ * - Detects modifier keys from keyboard events
+ * - Checks if shortcuts are enabled
+ * - Respects input focus context (skips shortcuts in input fields unless allowInInput)
+ * - Prevents default browser behavior for registered shortcuts
+ * - Handles event capture for reliable interception
+ *
+ * @example
+ * // Use in app root
+ * function App() {
+ *   useGlobalKeyboardHandler();
+ *
+ *   return <RouterProvider />;
+ * }
+ *
+ * @example
+ * // Combine with navigation shortcuts
+ * function App() {
+ *   useGlobalKeyboardHandler();
+ *   useNavigationShortcuts();
+ *
+ *   return <YourApp />;
+ * }
  */
 export function useGlobalKeyboardHandler() {
   useEffect(() => {
@@ -294,6 +457,26 @@ export function useGlobalKeyboardHandler() {
 
 /**
  * Hook to subscribe to shortcut registry changes
+ *
+ * @description
+ * Subscribes to changes in the shortcut registry. Useful for building dynamic
+ * shortcut palettes or help menus that update when shortcuts are registered
+ * or unregistered.
+ *
+ * @param callback - Function to call when the registry changes
+ *
+ * @example
+ * // Update UI when shortcuts change
+ * function ShortcutList() {
+ *   const [shortcuts, setShortcuts] = useState([]);
+ *   const { getAllShortcuts } = useKeyboardShortcuts();
+ *
+ *   useShortcutRegistrySubscription(() => {
+ *     setShortcuts(getAllShortcuts());
+ *   });
+ *
+ *   return <div>{shortcuts.length} shortcuts registered</div>;
+ * }
  */
 export function useShortcutRegistrySubscription(callback: () => void) {
   useEffect(() => {
@@ -302,7 +485,52 @@ export function useShortcutRegistrySubscription(callback: () => void) {
 }
 
 /**
- * Pre-defined navigation shortcuts
+ * Pre-defined navigation shortcuts for common app routes
+ *
+ * @description
+ * Registers a standard set of keyboard shortcuts for navigating to main
+ * app sections. Uses Alt+key combinations to avoid conflicts with browser
+ * shortcuts. Automatically handles i18n for shortcut descriptions.
+ *
+ * Registered shortcuts:
+ * - Alt+D: Go to Dashboard
+ * - Alt+W: Go to My Work
+ * - Alt+O: Go to Dossiers
+ * - Alt+C: Go to Calendar
+ * - Alt+T: Go to Tasks
+ * - Alt+A: Go to Analytics
+ * - Alt+S: Go to Settings
+ * - Alt+←: Browser back
+ * - Alt+→: Browser forward
+ *
+ * @example
+ * // Use in app root
+ * function App() {
+ *   useGlobalKeyboardHandler();
+ *   useNavigationShortcuts();
+ *
+ *   return <RouterProvider />;
+ * }
+ *
+ * @example
+ * // Override specific shortcuts
+ * function CustomApp() {
+ *   useGlobalKeyboardHandler();
+ *   // Don't use useNavigationShortcuts()
+ *   // Register your own with higher priority
+ *   const { register } = useKeyboardShortcuts();
+ *   useEffect(() => {
+ *     return register({
+ *       id: 'custom-dashboard',
+ *       key: 'd',
+ *       modifiers: ['alt'],
+ *       description: 'Custom Dashboard',
+ *       category: 'navigation',
+ *       action: () => navigate('/custom-dashboard'),
+ *       priority: 10 // Higher priority than default
+ *     });
+ *   }, []);
+ * }
  */
 export function useNavigationShortcuts() {
   const { register, navigateTo } = useKeyboardShortcuts()
@@ -424,7 +652,48 @@ export function useNavigationShortcuts() {
 }
 
 /**
- * Pre-defined action shortcuts for common operations
+ * Pre-defined action shortcuts for common CRUD operations
+ *
+ * @description
+ * Registers standard keyboard shortcuts for common actions. Only registers
+ * shortcuts for callbacks that are provided. Uses platform-aware modifiers
+ * (Cmd on Mac, Ctrl on Windows/Linux) for standard actions.
+ *
+ * Registered shortcuts (if callback provided):
+ * - Ctrl/Cmd+N: Create new task
+ * - Ctrl/Cmd+S: Save (works in inputs)
+ * - Delete: Delete selected item
+ * - E: Edit selected item
+ * - Ctrl/Cmd+R: Refresh
+ *
+ * @param callbacks - Object containing optional callback functions
+ * @param callbacks.onNewTask - Called when Ctrl/Cmd+N is pressed
+ * @param callbacks.onSave - Called when Ctrl/Cmd+S is pressed
+ * @param callbacks.onDelete - Called when Delete is pressed
+ * @param callbacks.onEdit - Called when E is pressed
+ * @param callbacks.onRefresh - Called when Ctrl/Cmd+R is pressed
+ *
+ * @example
+ * // Use in editor component
+ * function DocumentEditor() {
+ *   const { mutate: save } = useSaveDocument();
+ *   const { mutate: deleteDoc } = useDeleteDocument();
+ *
+ *   useActionShortcuts({
+ *     onSave: () => save(document),
+ *     onDelete: () => deleteDoc(document.id),
+ *     onRefresh: () => refetch()
+ *   });
+ * }
+ *
+ * @example
+ * // Partial shortcuts (only save)
+ * function FormComponent() {
+ *   useActionShortcuts({
+ *     onSave: handleSubmit
+ *   });
+ *   // Only save shortcut is registered
+ * }
  */
 export function useActionShortcuts(callbacks: {
   onNewTask?: () => void
@@ -513,7 +782,55 @@ export function useActionShortcuts(callbacks: {
 }
 
 /**
- * Pre-defined list navigation shortcuts
+ * Pre-defined shortcuts for keyboard list navigation
+ *
+ * @description
+ * Registers keyboard shortcuts for navigating and interacting with lists.
+ * Supports both arrow keys and vim-style (j/k) navigation. Only registers
+ * shortcuts for callbacks that are provided.
+ *
+ * Registered shortcuts (if callback provided):
+ * - ↑ or K: Move up in list
+ * - ↓ or J: Move down in list
+ * - Enter: Select current item
+ * - Space: Toggle current item (checkbox)
+ * - Home: Jump to first item
+ * - End: Jump to last item
+ *
+ * @param callbacks - Object containing optional callback functions
+ * @param callbacks.onMoveUp - Called when moving up in the list
+ * @param callbacks.onMoveDown - Called when moving down in the list
+ * @param callbacks.onSelectItem - Called when selecting an item (Enter)
+ * @param callbacks.onToggleItem - Called when toggling an item (Space)
+ * @param callbacks.onFirstItem - Called when jumping to first item (Home)
+ * @param callbacks.onLastItem - Called when jumping to last item (End)
+ *
+ * @example
+ * // Full list navigation
+ * function TaskList() {
+ *   const [selectedIndex, setSelectedIndex] = useState(0);
+ *   const [selectedItems, setSelectedItems] = useState([]);
+ *
+ *   useListNavigationShortcuts({
+ *     onMoveUp: () => setSelectedIndex(i => Math.max(0, i - 1)),
+ *     onMoveDown: () => setSelectedIndex(i => Math.min(tasks.length - 1, i + 1)),
+ *     onSelectItem: () => handleSelect(tasks[selectedIndex]),
+ *     onToggleItem: () => toggleSelection(tasks[selectedIndex].id),
+ *     onFirstItem: () => setSelectedIndex(0),
+ *     onLastItem: () => setSelectedIndex(tasks.length - 1)
+ *   });
+ * }
+ *
+ * @example
+ * // Simple up/down navigation
+ * function SimpleList() {
+ *   const [index, setIndex] = useState(0);
+ *
+ *   useListNavigationShortcuts({
+ *     onMoveUp: () => setIndex(i => Math.max(0, i - 1)),
+ *     onMoveDown: () => setIndex(i => i + 1)
+ *   });
+ * }
  */
 export function useListNavigationShortcuts(callbacks: {
   onMoveUp?: () => void
