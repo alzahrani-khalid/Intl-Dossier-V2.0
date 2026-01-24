@@ -1,9 +1,47 @@
 /**
  * OCR Hooks
- * Part of: 027-contact-directory implementation - Phase 4 (Business Card Scanning)
+ * @module hooks/useOCR
+ * @feature 027-contact-directory
  *
- * TanStack Query hooks for OCR operations with automatic error handling
- * and optimistic updates.
+ * TanStack Query hooks for OCR operations with automatic field normalization,
+ * toast notifications, and document processing status polling.
+ *
+ * @description
+ * This module provides hooks for extracting text and data from images and documents:
+ * - Business card scanning with field extraction (name, phone, email, etc.)
+ * - Document upload with background processing
+ * - Status polling with automatic completion detection
+ * - Field normalization (cleaning phone numbers, emails, etc.)
+ * - Confidence score tracking
+ * - Multi-language support (en, ar)
+ * - Cloud OCR consent handling (GDPR compliance)
+ *
+ * OCR providers:
+ * - Tesseract.js (local, always available)
+ * - Google Vision API (cloud, requires user consent)
+ *
+ * Confidence thresholds:
+ * - High: ≥85% (reliable, auto-accept)
+ * - Medium: 70-84% (review recommended)
+ * - Low: <70% (manual verification required)
+ *
+ * @example
+ * // Upload business card
+ * const uploadMutation = useUploadBusinessCard();
+ * uploadMutation.mutate({
+ *   file: cardImageFile,
+ *   consentCloudOCR: true
+ * });
+ *
+ * @example
+ * // Upload document with status polling
+ * const uploadMutation = useUploadDocument();
+ * const [documentId, setDocumentId] = useState<string | null>(null);
+ *
+ * const { data: status } = useDocumentStatus(documentId, {
+ *   onCompleted: (data) => console.log('Processing complete!', data),
+ *   onFailed: (error) => console.error('Processing failed:', error)
+ * });
  */
 
 import { useMutation, useQuery, type UseMutationResult, type UseQueryResult } from '@tanstack/react-query';
@@ -38,7 +76,74 @@ export interface NormalizedOCRResponse extends OCRResponse {
 
 /**
  * Hook to upload and extract data from business card
- * Automatically normalizes extracted fields and shows success/error toasts
+ *
+ * @description
+ * Uploads a business card image and extracts contact information using OCR.
+ * Automatically:
+ * - Sends image to OCR service (Tesseract or Google Vision)
+ * - Extracts structured fields (name, phone, email, organization, etc.)
+ * - Normalizes fields (clean phone formatting, validate emails)
+ * - Calculates confidence score
+ * - Shows success toast with confidence and field count
+ * - Shows error toast on failure
+ *
+ * Extracted fields:
+ * - full_name, first_name, last_name
+ * - job_title, organization
+ * - email_addresses[] (array)
+ * - phone_numbers[] (array with cleaned formatting)
+ * - address, website
+ *
+ * User consent for cloud OCR:
+ * - consentCloudOCR=false → Tesseract only (local processing)
+ * - consentCloudOCR=true → Google Vision (higher accuracy, cloud processing)
+ *
+ * @returns TanStack Mutation with normalized OCR response
+ *
+ * @example
+ * const uploadMutation = useUploadBusinessCard();
+ *
+ * const handleScan = (file: File) => {
+ *   uploadMutation.mutate({
+ *     file,
+ *     consentCloudOCR: userConsented
+ *   });
+ * };
+ *
+ * useEffect(() => {
+ *   if (uploadMutation.data) {
+ *     const { normalized_fields, confidence } = uploadMutation.data;
+ *     if (confidence >= 85) {
+ *       // High confidence - auto-populate form
+ *       setFormValues(normalized_fields);
+ *     } else {
+ *       // Low confidence - show for review
+ *       setReviewFields(normalized_fields);
+ *     }
+ *   }
+ * }, [uploadMutation.data]);
+ *
+ * @example
+ * // With loading and error states
+ * const { mutate, isPending, error, data } = useUploadBusinessCard();
+ *
+ * return (
+ *   <div>
+ *     <input
+ *       type="file"
+ *       accept="image/*"
+ *       onChange={(e) => mutate({ file: e.target.files[0] })}
+ *       disabled={isPending}
+ *     />
+ *     {isPending && <Spinner />}
+ *     {data && (
+ *       <ConfidenceBadge
+ *         level={getConfidenceLevel(data.confidence)}
+ *         score={data.confidence}
+ *       />
+ *     )}
+ *   </div>
+ * );
  */
 export function useUploadBusinessCard(): UseMutationResult<
   NormalizedOCRResponse,
@@ -86,8 +191,28 @@ export function useUploadBusinessCard(): UseMutationResult<
 }
 
 /**
- * Hook to prefetch OCR capabilities (for feature detection)
- * Can be used to check if cloud OCR is available
+ * Hook to check OCR capabilities
+ *
+ * @description
+ * Returns information about available OCR providers and supported languages.
+ * Use this to conditionally show/hide cloud OCR consent checkboxes and
+ * display supported language options.
+ *
+ * @returns OCR capabilities object
+ *
+ * @example
+ * const capabilities = useOCRCapabilities();
+ *
+ * return (
+ *   <div>
+ *     {capabilities.googleVisionAvailable && (
+ *       <Checkbox>
+ *         Use cloud OCR for higher accuracy (requires consent)
+ *       </Checkbox>
+ *     )}
+ *     <LanguageSelect languages={capabilities.languagesSupported} />
+ *   </div>
+ * );
  */
 export function useOCRCapabilities() {
   // This could be expanded to check server capabilities
@@ -100,16 +225,44 @@ export function useOCRCapabilities() {
 }
 
 /**
- * Utility function to check if OCR confidence is acceptable
+ * Check if OCR confidence score is acceptable
+ *
+ * @description
+ * Returns true if confidence is ≥70% (medium or high).
+ * Use this threshold to decide whether to auto-populate fields
+ * or require manual review.
+ *
  * @param confidence - Confidence score (0-100)
  * @returns boolean indicating if confidence is acceptable
+ *
+ * @example
+ * if (isConfidenceAcceptable(ocrResult.confidence)) {
+ *   autoPopulateForm(ocrResult.normalized_fields);
+ * } else {
+ *   showReviewDialog(ocrResult.normalized_fields);
+ * }
  */
 export function isConfidenceAcceptable(confidence: number): boolean {
   return confidence >= 70; // 70% threshold for acceptable confidence
 }
 
 /**
- * Get confidence level label for UI
+ * Get confidence level label for UI display
+ *
+ * @description
+ * Maps confidence scores to human-readable levels:
+ * - High: ≥85% (reliable, auto-accept recommended)
+ * - Medium: 70-84% (review recommended)
+ * - Low: <70% (manual verification required)
+ *
+ * @param confidence - Confidence score (0-100)
+ * @returns Confidence level label
+ *
+ * @example
+ * const level = getConfidenceLevel(82);
+ * console.log(level); // 'medium'
+ *
+ * return <Badge>{level} confidence</Badge>;
  */
 export function getConfidenceLevel(
   confidence: number
@@ -120,7 +273,22 @@ export function getConfidenceLevel(
 }
 
 /**
- * Get confidence color for UI badges
+ * Get Tailwind CSS classes for confidence badge styling
+ *
+ * @description
+ * Returns color classes based on confidence level for consistent UI styling.
+ * Use these classes on badges, pills, or indicators to show confidence visually.
+ *
+ * @param confidence - Confidence score (0-100)
+ * @returns Tailwind CSS class string
+ *
+ * @example
+ * const classes = getConfidenceColor(confidence);
+ * return (
+ *   <span className={`px-2 py-1 rounded ${classes}`}>
+ *     {Math.round(confidence)}%
+ *   </span>
+ * );
  */
 export function getConfidenceColor(confidence: number): string {
   const level = getConfidenceLevel(confidence);
@@ -143,7 +311,44 @@ export interface UploadDocumentParams {
 
 /**
  * Hook to upload document for contact extraction
- * Returns document_source_id and initiates background processing
+ *
+ * @description
+ * Uploads a document (PDF, DOCX, images) for background OCR processing.
+ * Returns a document_source_id immediately and starts asynchronous processing.
+ * Use with useDocumentStatus hook to poll for completion.
+ *
+ * Background processing:
+ * - Document uploaded to storage
+ * - OCR processing queued
+ * - Text extraction and parsing
+ * - Contact information extraction
+ * - Results stored in database
+ *
+ * Automatically shows success/error toasts.
+ *
+ * @returns TanStack Mutation with document upload response
+ *
+ * @example
+ * const uploadMutation = useUploadDocument();
+ * const [documentId, setDocumentId] = useState<string | null>(null);
+ *
+ * const handleUpload = (file: File) => {
+ *   uploadMutation.mutate({ file }, {
+ *     onSuccess: (data) => {
+ *       setDocumentId(data.document_source_id);
+ *     }
+ *   });
+ * };
+ *
+ * @example
+ * // With loading state
+ * const { mutate, isPending } = useUploadDocument();
+ *
+ * return (
+ *   <button onClick={() => mutate({ file })} disabled={isPending}>
+ *     {isPending ? 'Uploading...' : 'Upload Document'}
+ *   </button>
+ * );
  */
 export function useUploadDocument(): UseMutationResult<
   DocumentUploadResponse,
@@ -170,7 +375,59 @@ export function useUploadDocument(): UseMutationResult<
 
 /**
  * Hook to check document processing status with automatic polling
- * Polls every 2 seconds while processing, stops when completed or failed
+ *
+ * @description
+ * Polls the OCR processing status of a document every 2 seconds until completion
+ * or failure. Automatically:
+ * - Starts polling when document ID is provided
+ * - Stops polling when status becomes 'completed' or 'failed'
+ * - Calls onCompleted callback with extracted contacts
+ * - Calls onFailed callback with error message
+ * - Continues polling even when browser tab is not focused
+ *
+ * Status values:
+ * - pending: Queued for processing
+ * - processing: OCR in progress
+ * - completed: Extraction finished successfully
+ * - failed: Processing encountered an error
+ *
+ * @param documentSourceId - Document ID from useUploadDocument
+ * @param options - Polling configuration options
+ * @param options.enabled - Whether to enable polling (default: true if documentSourceId exists)
+ * @param options.onCompleted - Callback when processing completes successfully
+ * @param options.onFailed - Callback when processing fails
+ * @returns TanStack Query result with document status
+ *
+ * @example
+ * const { data: status, isLoading } = useDocumentStatus(documentId, {
+ *   onCompleted: (data) => {
+ *     console.log('Extraction complete!');
+ *     console.log('Contacts found:', data.extracted_contacts?.length);
+ *   },
+ *   onFailed: (error) => {
+ *     console.error('Processing failed:', error);
+ *   }
+ * });
+ *
+ * return (
+ *   <div>
+ *     {status?.processing_status === 'processing' && (
+ *       <ProgressBar
+ *         value={status.progress_percent}
+ *         label={`Processing: ${status.current_step}`}
+ *       />
+ *     )}
+ *     {status?.processing_status === 'completed' && (
+ *       <ContactList contacts={status.extracted_contacts} />
+ *     )}
+ *   </div>
+ * );
+ *
+ * @example
+ * // Conditional polling
+ * const { data } = useDocumentStatus(documentId, {
+ *   enabled: userWantsToTrackProgress
+ * });
  */
 export function useDocumentStatus(
   documentSourceId: string | null,

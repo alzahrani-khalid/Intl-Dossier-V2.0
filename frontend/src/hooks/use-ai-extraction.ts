@@ -1,8 +1,51 @@
 /**
  * AI Extraction Hooks
+ * @module hooks/use-ai-extraction
+ * @feature ai-extraction
  *
- * TanStack Query hooks for AI extraction operations
- * Handles sync extraction, async extraction, and status polling
+ * TanStack Query hooks for AI-powered document extraction with automatic sync/async routing,
+ * status polling, and fallback handling.
+ *
+ * @description
+ * This module provides hooks for extracting structured data from documents using AI:
+ * - Synchronous extraction for small documents (<500KB, <5s processing)
+ * - Asynchronous extraction with job queuing for large documents
+ * - Automatic status polling for async jobs (every 2 seconds)
+ * - Combined hook with automatic sync/async routing based on document size
+ * - Extraction of decisions, commitments, risks, and follow-up actions
+ * - Support for text, PDF, and DOCX documents
+ * - Multi-language support (en, ar)
+ *
+ * The extraction hooks parse documents and return structured data including:
+ * - Decisions with rationale and confidence scores
+ * - Commitments with owners, due dates, and priorities
+ * - Risks with severity, likelihood, and mitigation strategies
+ * - Follow-up actions
+ *
+ * @example
+ * // Synchronous extraction for small documents
+ * const { mutate } = useExtractSync();
+ * mutate({
+ *   document_content: 'Meeting minutes text...',
+ *   document_type: 'text/plain',
+ *   language: 'en'
+ * });
+ *
+ * @example
+ * // Automatic sync/async routing
+ * const { extract, isLoading } = useAIExtraction();
+ * const result = await extract({
+ *   document_content: largeDocumentText,
+ *   document_type: 'application/pdf',
+ *   language: 'ar'
+ * });
+ *
+ * @example
+ * // Async extraction with status polling
+ * const asyncMutation = useExtractAsync();
+ * const { job_id } = await asyncMutation.mutateAsync(request);
+ * const { data: status } = useExtractionStatus(job_id);
+ * // Automatically polls every 2s until completed/failed
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -66,7 +109,51 @@ interface ExtractionStatusResponse {
 }
 
 /**
- * Hook for synchronous AI extraction (<5s, <500KB documents)
+ * Hook for synchronous AI extraction
+ *
+ * @description
+ * Performs immediate AI extraction for small documents (<500KB content, <5s processing).
+ * Returns results directly without job queuing. Best for:
+ * - Text documents
+ * - Meeting minutes
+ * - Short PDFs
+ * - Real-time extraction needs
+ *
+ * The extraction returns:
+ * - Decisions with description, rationale, decision maker, confidence
+ * - Commitments with description, owner, due date, priority, confidence
+ * - Risks with severity, likelihood, mitigation strategy, confidence
+ * - Follow-up actions with confidence scores
+ * - Processing time in milliseconds
+ *
+ * Automatically caches results by extraction_id for quick re-access.
+ *
+ * @returns TanStack Mutation for synchronous extraction
+ *
+ * @example
+ * const extractMutation = useExtractSync();
+ *
+ * const result = await extractMutation.mutateAsync({
+ *   document_content: 'Meeting minutes: Decision to increase budget by 10%...',
+ *   document_type: 'text/plain',
+ *   language: 'en',
+ *   dossier_id: 'optional-dossier-uuid'
+ * });
+ *
+ * console.log('Decisions:', result.decisions);
+ * console.log('Commitments:', result.commitments);
+ *
+ * @example
+ * // With loading and error states
+ * const { mutate, isPending, error } = useExtractSync();
+ *
+ * const handleExtract = () => {
+ *   mutate({
+ *     document_content: documentText,
+ *     document_type: 'text/plain',
+ *     language: 'en'
+ *   });
+ * };
  */
 export function useExtractSync() {
   const supabase = useSupabaseClient();
@@ -102,7 +189,50 @@ export function useExtractSync() {
 }
 
 /**
- * Hook for asynchronous AI extraction (>5s, large documents)
+ * Hook for asynchronous AI extraction with job queuing
+ *
+ * @description
+ * Queues an AI extraction job for large documents (>500KB or expected >5s processing).
+ * Returns a job_id for status polling. Best for:
+ * - Large PDFs
+ * - Multi-page documents
+ * - Complex DOCX files
+ * - Batch processing
+ *
+ * The async extraction workflow:
+ * 1. Submit extraction request
+ * 2. Receive job_id and estimated completion time
+ * 3. Poll status using useExtractionStatus hook
+ * 4. Retrieve results when job completes
+ *
+ * Automatically triggers status query invalidation to start polling.
+ *
+ * @returns TanStack Mutation for asynchronous extraction
+ *
+ * @example
+ * const extractAsyncMutation = useExtractAsync();
+ *
+ * const { job_id, estimated_time_ms } = await extractAsyncMutation.mutateAsync({
+ *   document_content: largePdfContent,
+ *   document_type: 'application/pdf',
+ *   language: 'ar',
+ *   dossier_id: 'dossier-uuid'
+ * });
+ *
+ * console.log(`Extraction queued, estimated ${estimated_time_ms}ms`);
+ *
+ * @example
+ * // Poll for completion
+ * const asyncMutation = useExtractAsync();
+ * const [jobId, setJobId] = useState<string | null>(null);
+ *
+ * const handleExtract = async () => {
+ *   const result = await asyncMutation.mutateAsync(request);
+ *   setJobId(result.job_id);
+ * };
+ *
+ * const { data: status } = useExtractionStatus(jobId);
+ * // Polls automatically until completed/failed
  */
 export function useExtractAsync() {
   const supabase = useSupabaseClient();
@@ -138,7 +268,54 @@ export function useExtractAsync() {
 }
 
 /**
- * Hook for polling extraction status (for async jobs)
+ * Hook for polling extraction job status
+ *
+ * @description
+ * Automatically polls the status of an async extraction job every 2 seconds until
+ * completion or failure. Returns:
+ * - Current status (queued, processing, completed, failed)
+ * - Progress percentage (0-100)
+ * - Current processing step
+ * - Extraction results (when completed)
+ * - Error message (when failed)
+ * - Processing time
+ *
+ * Polling stops automatically when job reaches completed or failed status.
+ * Query is disabled if jobId is null.
+ *
+ * @param jobId - The job ID from useExtractAsync
+ * @param options - Polling configuration options
+ * @param options.enabled - Whether to enable polling (default: true if jobId exists)
+ * @param options.refetchInterval - Custom polling interval in ms (default: 2000)
+ * @returns TanStack Query result with extraction status
+ *
+ * @example
+ * const { data: status, isLoading } = useExtractionStatus(jobId);
+ *
+ * if (status?.status === 'processing') {
+ *   console.log(`Progress: ${status.progress_percent}%`);
+ *   console.log(`Step: ${status.current_step}`);
+ * }
+ *
+ * if (status?.status === 'completed') {
+ *   console.log('Results:', status.result);
+ * }
+ *
+ * if (status?.status === 'failed') {
+ *   console.error('Error:', status.error);
+ * }
+ *
+ * @example
+ * // With custom polling interval
+ * const { data } = useExtractionStatus(jobId, {
+ *   refetchInterval: 5000 // Poll every 5 seconds
+ * });
+ *
+ * @example
+ * // Conditional polling
+ * const { data } = useExtractionStatus(jobId, {
+ *   enabled: userWantsToTrackProgress
+ * });
  */
 export function useExtractionStatus(jobId: string | null, options?: { enabled?: boolean; refetchInterval?: number }) {
   const supabase = useSupabaseClient();
@@ -183,7 +360,58 @@ export function useExtractionStatus(jobId: string | null, options?: { enabled?: 
 }
 
 /**
- * Combined hook for handling both sync and async extraction with automatic fallback
+ * Combined hook for automatic sync/async extraction routing
+ *
+ * @description
+ * Intelligent hook that automatically chooses between sync and async extraction
+ * based on document size and user preference:
+ * - Documents <500KB → sync extraction (immediate response)
+ * - Documents >500KB → async extraction (job queuing + polling)
+ * - Timeout fallback: If sync times out, automatically retries with async
+ *
+ * This hook provides a simple API that handles complexity internally:
+ * - Automatic size detection
+ * - Smart routing
+ * - Timeout fallback
+ * - Unified error handling
+ * - Combined loading states
+ *
+ * @returns Extraction control object with extract function and state
+ *
+ * @example
+ * const { extract, isLoading, error, reset } = useAIExtraction();
+ *
+ * const handleExtract = async () => {
+ *   const result = await extract({
+ *     document_content: documentText,
+ *     document_type: 'text/plain',
+ *     language: 'en'
+ *   });
+ *
+ *   // result is ExtractionResult for sync, AsyncExtractionResponse for async
+ *   if ('extraction_id' in result) {
+ *     // Sync extraction completed
+ *     console.log('Decisions:', result.decisions);
+ *   } else {
+ *     // Async extraction queued
+ *     console.log('Job ID:', result.job_id);
+ *   }
+ * };
+ *
+ * @example
+ * // Force async extraction
+ * const { extract } = useAIExtraction();
+ *
+ * const result = await extract(request, true); // forceAsync = true
+ *
+ * @example
+ * // With error handling
+ * const { extract, error, reset } = useAIExtraction();
+ *
+ * const handleRetry = () => {
+ *   reset(); // Clear error state
+ *   extract(request);
+ * };
  */
 export function useAIExtraction() {
   const syncMutation = useExtractSync();

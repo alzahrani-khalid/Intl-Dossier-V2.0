@@ -1,13 +1,48 @@
 /**
- * TanStack Query Hooks: AI Interaction Logging
- * Feature: ai-interaction-logging
+ * AI Interaction Logging Hooks
+ * @module hooks/useAIInteractionLogs
+ * @feature ai-interaction-logging
  *
- * Provides hooks for:
- * - Listing AI interactions
- * - Getting interaction details
- * - Logging user edits
- * - Recording approval decisions
- * - Viewing audit trails
+ * TanStack Query hooks for comprehensive AI interaction logging, governance, and audit trails.
+ *
+ * @description
+ * This module provides a complete suite of hooks for tracking and auditing AI interactions:
+ * - Query hooks for listing, filtering, and viewing AI interactions
+ * - Mutation hooks for starting, completing, and logging interactions
+ * - User edit tracking with version control and diff analysis
+ * - Approval decision recording with risk assessment
+ * - Governance audit trails with actor tracking
+ * - Session-based interaction management for component-level logging
+ *
+ * The logging system captures:
+ * - Full prompt and response data
+ * - Model provider, version, and parameters
+ * - Token usage and cost estimation
+ * - Context sources and embeddings
+ * - Data classification and PII flags
+ * - User edits with change percentage
+ * - Approval decisions with risk levels
+ * - Audit events with timestamps
+ *
+ * Use these hooks to build AI governance dashboards, track user interactions,
+ * measure AI performance, and maintain compliance audit trails.
+ *
+ * @example
+ * // List recent AI interactions
+ * const { data } = useAIInteractions({ limit: 20 });
+ *
+ * @example
+ * // Track an AI interaction in a component
+ * const session = useAIInteractionSession();
+ * await session.startInteraction({
+ *   organizationId: 'org-id',
+ *   interactionType: 'generation',
+ *   contentType: 'brief',
+ *   modelProvider: 'openai',
+ *   modelName: 'gpt-4',
+ *   userPrompt: 'Generate a brief...'
+ * });
+ * await session.completeInteraction({ status: 'completed', aiResponse: '...' });
  */
 
 import {
@@ -242,7 +277,29 @@ async function getAuthHeaders(): Promise<Record<string, string>> {
   }
 }
 
-// Query Key Factory
+/**
+ * Query Key Factory for AI interaction logging queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation by scope.
+ *
+ * @example
+ * // Invalidate all AI interaction queries
+ * queryClient.invalidateQueries({ queryKey: aiInteractionKeys.all });
+ *
+ * @example
+ * // Invalidate only list queries
+ * queryClient.invalidateQueries({ queryKey: aiInteractionKeys.lists() });
+ *
+ * @example
+ * // Invalidate specific interaction detail
+ * queryClient.invalidateQueries({ queryKey: aiInteractionKeys.detail('interaction-id') });
+ *
+ * @example
+ * // Invalidate interaction audit trail
+ * queryClient.invalidateQueries({ queryKey: aiInteractionKeys.audit('interaction-id') });
+ */
 export const aiInteractionKeys = {
   all: ['ai-interactions'] as const,
   lists: () => [...aiInteractionKeys.all, 'list'] as const,
@@ -254,10 +311,48 @@ export const aiInteractionKeys = {
   session: (sessionId: string) => [...aiInteractionKeys.all, 'session', sessionId] as const,
 }
 
-// Query Hooks
+/**
+ * Query Hooks
+ */
 
 /**
- * List AI interactions with filtering and pagination
+ * Hook to list AI interactions with filtering and pagination
+ *
+ * @description
+ * Fetches a paginated list of AI interactions with optional filtering by:
+ * - Organization ID
+ * - User ID
+ * - Interaction type (generation, suggestion, extraction, etc.)
+ * - Content type (brief, position, summary, etc.)
+ * - Status (pending, running, completed, failed, cancelled)
+ * - Date range
+ *
+ * Results are cached for 30 seconds and include metadata (total count, pagination info).
+ *
+ * @param params - Filter and pagination parameters
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with paginated interaction list and metadata
+ *
+ * @example
+ * // List all interactions
+ * const { data } = useAIInteractions();
+ *
+ * @example
+ * // Filter by user and type
+ * const { data } = useAIInteractions({
+ *   userId: 'user-uuid',
+ *   interactionType: 'generation',
+ *   limit: 50,
+ *   offset: 0
+ * });
+ *
+ * @example
+ * // Filter by date range
+ * const { data } = useAIInteractions({
+ *   startDate: '2024-01-01',
+ *   endDate: '2024-12-31',
+ *   status: 'completed'
+ * });
  */
 export function useAIInteractions(
   params: ListInteractionsParams = {},
@@ -303,7 +398,31 @@ export function useAIInteractions(
 }
 
 /**
- * Get a single AI interaction with all related data
+ * Hook to get a single AI interaction with all related data
+ *
+ * @description
+ * Fetches a complete AI interaction log including:
+ * - Full prompt and response data
+ * - Model provider and configuration
+ * - Token usage and cost
+ * - Context sources
+ * - Nested user edits
+ * - Nested approval decisions
+ * - Data classification and governance flags
+ *
+ * Results are cached for 1 minute. Query is disabled if interactionId is undefined.
+ *
+ * @param interactionId - The UUID of the interaction to fetch
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with interaction data
+ *
+ * @example
+ * const { data, isLoading } = useAIInteraction(interactionId);
+ * if (data) {
+ *   console.log('Prompt:', data.data.user_prompt);
+ *   console.log('Response:', data.data.ai_response);
+ *   console.log('Cost:', data.data.estimated_cost_usd);
+ * }
  */
 export function useAIInteraction(
   interactionId: string | undefined,
@@ -334,7 +453,27 @@ export function useAIInteraction(
 }
 
 /**
- * Get audit trail for an AI interaction
+ * Hook to get governance audit trail for an AI interaction
+ *
+ * @description
+ * Fetches the complete audit trail of governance events for an interaction, including:
+ * - Event type (creation, edit, approval, etc.)
+ * - Event data (what changed)
+ * - Actor ID and type (user, system, ai)
+ * - Timestamp
+ *
+ * Useful for compliance reporting and understanding the full history of an AI interaction.
+ * Results are cached for 1 minute.
+ *
+ * @param interactionId - The UUID of the interaction
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with audit trail events
+ *
+ * @example
+ * const { data } = useAIInteractionAudit(interactionId);
+ * data?.data.forEach(event => {
+ *   console.log(`${event.event_type} by ${event.actor_type} at ${event.occurred_at}`);
+ * });
  */
 export function useAIInteractionAudit(
   interactionId: string | undefined,
@@ -365,7 +504,29 @@ export function useAIInteractionAudit(
 }
 
 /**
- * Get user edits for an AI interaction
+ * Hook to get user edits for an AI interaction
+ *
+ * @description
+ * Fetches all user edits made to an AI-generated response, including:
+ * - Version number
+ * - Original and edited content
+ * - Diff summary
+ * - Change percentage
+ * - Edit reason and categories
+ * - Edit duration
+ *
+ * Useful for tracking how users modify AI outputs and measuring AI accuracy.
+ * Results are cached for 1 minute.
+ *
+ * @param interactionId - The UUID of the interaction
+ * @param options - Additional TanStack Query options (excluding queryKey and queryFn)
+ * @returns TanStack Query result with user edit history
+ *
+ * @example
+ * const { data } = useAIInteractionEdits(interactionId);
+ * data?.data.forEach(edit => {
+ *   console.log(`v${edit.version_number}: ${edit.change_percentage}% changed`);
+ * });
  */
 export function useAIInteractionEdits(
   interactionId: string | undefined,
@@ -395,10 +556,37 @@ export function useAIInteractionEdits(
   })
 }
 
-// Mutation Hooks
+/**
+ * Mutation Hooks
+ */
 
 /**
- * Start a new AI interaction
+ * Hook to start a new AI interaction log
+ *
+ * @description
+ * Creates a new AI interaction log record to track an AI request. Should be called
+ * at the beginning of any AI operation. Returns an interaction ID that can be used
+ * to complete the interaction or log edits/decisions.
+ *
+ * Automatically invalidates list queries on success to show the new interaction.
+ *
+ * @param options - Additional TanStack Mutation options
+ * @returns TanStack Mutation for starting interactions
+ *
+ * @example
+ * const startMutation = useStartAIInteraction();
+ *
+ * const interactionId = await startMutation.mutateAsync({
+ *   organizationId: 'org-uuid',
+ *   interactionType: 'generation',
+ *   contentType: 'brief',
+ *   modelProvider: 'openai',
+ *   modelName: 'gpt-4',
+ *   userPrompt: 'Generate a brief about...',
+ *   systemPrompt: 'You are a diplomatic brief writer...',
+ *   targetEntityType: 'dossier',
+ *   targetEntityId: 'dossier-uuid'
+ * });
  */
 export function useStartAIInteraction(
   options?: UseMutationOptions<
@@ -434,7 +622,30 @@ export function useStartAIInteraction(
 }
 
 /**
- * Complete an AI interaction
+ * Hook to complete an AI interaction log
+ *
+ * @description
+ * Finalizes an AI interaction log with the response data, token counts, latency,
+ * and cost estimation. Should be called after an AI operation completes (successfully
+ * or with error).
+ *
+ * Automatically invalidates both the specific interaction detail and list queries.
+ *
+ * @param options - Additional TanStack Mutation options
+ * @returns TanStack Mutation for completing interactions
+ *
+ * @example
+ * const completeMutation = useCompleteAIInteraction();
+ *
+ * await completeMutation.mutateAsync({
+ *   interactionId: 'interaction-uuid',
+ *   status: 'completed',
+ *   aiResponse: 'Generated brief content...',
+ *   contextTokenCount: 1500,
+ *   responseTokenCount: 800,
+ *   latencyMs: 3200,
+ *   estimatedCostUsd: 0.05
+ * });
  */
 export function useCompleteAIInteraction(
   options?: UseMutationOptions<{ success: boolean }, Error, CompleteInteractionParams>,
@@ -470,7 +681,33 @@ export function useCompleteAIInteraction(
 }
 
 /**
- * Log a user edit to AI-generated content
+ * Hook to log user edits to AI-generated content
+ *
+ * @description
+ * Records when a user modifies AI-generated content, tracking:
+ * - Version number (auto-incremented)
+ * - Original vs edited content
+ * - Change percentage (auto-calculated)
+ * - Edit reason and categories
+ * - Edit duration
+ *
+ * Useful for measuring AI accuracy and understanding common edit patterns.
+ * Automatically invalidates edits and detail queries for the interaction.
+ *
+ * @param options - Additional TanStack Mutation options
+ * @returns TanStack Mutation for logging edits
+ *
+ * @example
+ * const logEditMutation = useLogAIUserEdit();
+ *
+ * await logEditMutation.mutateAsync({
+ *   interactionId: 'interaction-uuid',
+ *   originalContent: 'Original AI response...',
+ *   editedContent: 'User-edited response...',
+ *   editReason: 'Corrected factual error',
+ *   editCategories: ['factual_correction', 'tone_adjustment'],
+ *   editDurationSeconds: 120
+ * });
  */
 export function useLogAIUserEdit(
   options?: UseMutationOptions<
@@ -513,7 +750,34 @@ export function useLogAIUserEdit(
 }
 
 /**
- * Log an approval decision
+ * Hook to log approval decisions for AI-generated content
+ *
+ * @description
+ * Records approval decisions with risk assessment and compliance checks. Supports:
+ * - Multiple decision types (approved, approved_with_edits, rejected, etc.)
+ * - Risk levels and factors
+ * - Compliance check results
+ * - Second approver requirements
+ * - Decision time tracking
+ *
+ * Useful for governance, compliance reporting, and measuring approval rates.
+ * Automatically invalidates detail, audit, and list queries.
+ *
+ * @param options - Additional TanStack Mutation options
+ * @returns TanStack Mutation for logging approval decisions
+ *
+ * @example
+ * const logDecisionMutation = useLogAIApprovalDecision();
+ *
+ * await logDecisionMutation.mutateAsync({
+ *   interactionId: 'interaction-uuid',
+ *   decision: 'approved_with_edits',
+ *   contentAtDecision: 'Final approved content...',
+ *   decisionRationale: 'Approved after minor factual corrections',
+ *   finalVersionNumber: 2,
+ *   riskLevel: 'low',
+ *   riskFactors: [{ factor: 'minor_edits', severity: 'low' }]
+ * });
  */
 export function useLogAIApprovalDecision(
   options?: UseMutationOptions<
@@ -568,7 +832,70 @@ export interface AIInteractionContext {
 
 /**
  * Hook for managing AI interaction logging within a component
- * Creates a session and provides methods for logging
+ *
+ * @description
+ * Provides a convenient session-based API for logging AI interactions within a single
+ * component or feature. Automatically manages:
+ * - Session ID generation
+ * - Current interaction tracking
+ * - Simplified method calls (no need to pass interactionId/sessionId repeatedly)
+ * - Combined loading and error states
+ *
+ * This hook is ideal for components that need to log a complete AI interaction
+ * lifecycle without manually tracking interaction IDs and session context.
+ *
+ * @returns Session context with simplified logging methods
+ *
+ * @example
+ * function BriefGenerator() {
+ *   const session = useAIInteractionSession();
+ *
+ *   const handleGenerate = async () => {
+ *     // Start logging
+ *     await session.startInteraction({
+ *       organizationId: orgId,
+ *       interactionType: 'generation',
+ *       contentType: 'brief',
+ *       modelProvider: 'openai',
+ *       modelName: 'gpt-4',
+ *       userPrompt: promptText
+ *     });
+ *
+ *     // Generate content...
+ *     const response = await generateBrief(promptText);
+ *
+ *     // Complete logging
+ *     await session.completeInteraction({
+ *       status: 'completed',
+ *       aiResponse: response,
+ *       latencyMs: 3000
+ *     });
+ *
+ *     // Log user edit (if applicable)
+ *     if (userEdited) {
+ *       await session.logEdit({
+ *         originalContent: response,
+ *         editedContent: editedResponse,
+ *         editReason: 'User refinement'
+ *       });
+ *     }
+ *
+ *     // Log approval decision
+ *     await session.logDecision({
+ *       decision: 'approved',
+ *       contentAtDecision: finalContent
+ *     });
+ *   };
+ *
+ *   return (
+ *     <div>
+ *       <button onClick={handleGenerate} disabled={session.isLoading}>
+ *         Generate Brief
+ *       </button>
+ *       {session.error && <ErrorMessage>{session.error.message}</ErrorMessage>}
+ *     </div>
+ *   );
+ * }
  */
 export function useAIInteractionSession() {
   const sessionId = crypto.randomUUID()

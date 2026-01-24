@@ -1,8 +1,42 @@
 /**
- * useAISummary Hook
- * Feature: ai-summary-generation
+ * AI Summary Hooks
+ * @module hooks/useAISummary
+ * @feature ai-summary-generation
  *
- * Hook for generating AI summaries for any entity type
+ * React hooks for AI-powered summary generation with progress tracking, history
+ * management, and fallback handling.
+ *
+ * @description
+ * This module provides hooks for generating, viewing, and managing AI summaries:
+ * - Generate summaries for any entity type (dossiers, engagements, etc.)
+ * - Track generation progress with percentage updates
+ * - Fetch summary history for entities
+ * - Retrieve specific summaries by ID
+ * - Handle fallback responses when AI is unavailable
+ * - Retry failed generation attempts
+ * - Automatic Supabase authentication
+ *
+ * The summary generation hook manages state for the entire generation lifecycle,
+ * from initial request through streaming progress updates to final summary delivery.
+ * It handles errors gracefully with fallback summaries and provides retry capability.
+ *
+ * @example
+ * // Generate a summary
+ * const { generate, summary, isGenerating, progress } = useAISummary();
+ * await generate({
+ *   entityType: 'country',
+ *   entityId: 'france-uuid',
+ *   length: 'medium',
+ *   language: 'en'
+ * });
+ *
+ * @example
+ * // View summary history
+ * const { summaries, isLoading } = useAISummaryHistory('country', 'france-uuid');
+ *
+ * @example
+ * // Load a specific summary
+ * const { summary, isLoading } = useAISummaryById('summary-uuid');
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react'
@@ -18,6 +52,74 @@ import type {
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 
+/**
+ * Hook for generating AI summaries with progress tracking
+ *
+ * @description
+ * Generates AI-powered summaries for any entity type with customizable options:
+ * - Summary length (brief, medium, comprehensive)
+ * - Focus areas (specific topics to emphasize)
+ * - Date range filtering
+ * - Language preference (en/ar)
+ *
+ * The hook manages the full generation lifecycle:
+ * - Validates authentication
+ * - Submits generation request to Edge Function
+ * - Simulates progress updates while AI processes
+ * - Handles fallback responses when AI is unavailable (503 errors)
+ * - Provides retry capability on errors
+ * - Cleanup on component unmount
+ *
+ * Progress updates from 0-85% during generation, then jumps to 100% on completion.
+ * Supports cancellation via AbortController.
+ *
+ * @returns {UseAISummaryReturn} Summary generation state and control functions
+ *
+ * @example
+ * // Generate a summary for a country dossier
+ * const { generate, summary, isGenerating, progress, error } = useAISummary();
+ *
+ * const handleGenerate = async () => {
+ *   await generate({
+ *     entityType: 'country',
+ *     entityId: 'france-uuid',
+ *     length: 'medium',
+ *     focusAreas: ['diplomatic_relations', 'trade'],
+ *     language: 'en'
+ *   });
+ * };
+ *
+ * @example
+ * // With progress indicator
+ * function SummaryGenerator() {
+ *   const { generate, isGenerating, progress, summary } = useAISummary();
+ *
+ *   return (
+ *     <div>
+ *       {isGenerating && <ProgressBar value={progress} />}
+ *       {summary && <SummaryDisplay content={summary} />}
+ *     </div>
+ *   );
+ * }
+ *
+ * @example
+ * // Error handling with retry
+ * function SummaryWithRetry() {
+ *   const { generate, error, retry, reset } = useAISummary();
+ *
+ *   return (
+ *     <div>
+ *       {error && error !== 'AI_UNAVAILABLE_FALLBACK' && (
+ *         <div>
+ *           <p>Error: {error}</p>
+ *           <button onClick={retry}>Retry</button>
+ *           <button onClick={reset}>Cancel</button>
+ *         </div>
+ *       )}
+ *     </div>
+ *   );
+ * }
+ */
 export function useAISummary(): UseAISummaryReturn {
   const [summary, setSummary] = useState<AISummary | null>(null)
   const [isGenerating, setIsGenerating] = useState(false)
@@ -151,6 +253,44 @@ export function useAISummary(): UseAISummaryReturn {
 
 /**
  * Hook to fetch summary history for an entity
+ *
+ * @description
+ * Fetches the last 10 AI-generated summaries for a specific entity, ordered by
+ * creation date (newest first). Only returns non-archived summaries. Each history
+ * item includes:
+ * - Summary ID and metadata
+ * - Executive summary preview (first 150 characters)
+ * - Highlights count
+ * - Confidence score
+ * - Creation timestamp
+ *
+ * Automatically refetches when entityType or entityId changes.
+ *
+ * @param entityType - The type of entity ('country', 'engagement', etc.)
+ * @param entityId - The UUID of the entity
+ * @returns Summary history state with summaries array, loading state, error, and refetch function
+ *
+ * @example
+ * // Display summary history
+ * const { summaries, isLoading, error } = useAISummaryHistory('country', countryId);
+ *
+ * return (
+ *   <div>
+ *     {isLoading && <Spinner />}
+ *     {summaries.map(summary => (
+ *       <SummaryCard key={summary.id} summary={summary} />
+ *     ))}
+ *   </div>
+ * );
+ *
+ * @example
+ * // With manual refetch
+ * const { summaries, refetch } = useAISummaryHistory('engagement', engagementId);
+ *
+ * const handleGenerateNew = async () => {
+ *   await generateNewSummary();
+ *   refetch(); // Refresh history to show new summary
+ * };
  */
 export function useAISummaryHistory(entityType: SummaryEntityType, entityId: string) {
   const [summaries, setSummaries] = useState<SummaryHistoryItem[]>([])
@@ -209,6 +349,32 @@ export function useAISummaryHistory(entityType: SummaryEntityType, entityId: str
 
 /**
  * Hook to fetch a specific summary by ID
+ *
+ * @description
+ * Fetches a specific AI summary by its UUID. Returns the full summary content in
+ * both English and Arabic (if available). Automatically refetches when summaryId
+ * changes. Returns null if summaryId is null.
+ *
+ * Useful for displaying previously generated summaries without regenerating them,
+ * such as when viewing summary history or sharing summaries with other users.
+ *
+ * @param summaryId - The UUID of the summary to fetch, or null to skip fetching
+ * @returns Summary state with summary content, loading state, and error
+ *
+ * @example
+ * // Display a specific summary
+ * const { summary, isLoading, error } = useAISummaryById(summaryId);
+ *
+ * if (isLoading) return <Spinner />;
+ * if (error) return <ErrorMessage>{error}</ErrorMessage>;
+ * if (!summary) return null;
+ *
+ * return <SummaryViewer summary={summary} />;
+ *
+ * @example
+ * // Load summary from URL parameter
+ * const [summaryId] = useSearchParams();
+ * const { summary } = useAISummaryById(summaryId.get('summary'));
  */
 export function useAISummaryById(summaryId: string | null) {
   const [summary, setSummary] = useState<AISummary | null>(null)
