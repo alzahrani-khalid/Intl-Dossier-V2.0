@@ -1,8 +1,41 @@
 /**
- * useTranslateContent Hook
- * Feature: translation-service
+ * Translation Service Hooks
+ * @module hooks/useTranslateContent
+ * @feature translation-service
  *
- * Hook for translating content between Arabic and English using AI
+ * Hooks for AI-powered translation between Arabic and English with progress tracking,
+ * batch operations, history management, and glossary integration.
+ *
+ * @description
+ * This module provides a comprehensive set of React hooks for content translation:
+ * - Single text translation with progress tracking and confidence scores
+ * - Batch translation for multiple text items
+ * - Translation history retrieval for entities
+ * - User translation preferences management
+ * - Translation glossary search with term suggestions
+ * - Language detection utilities
+ * - Cancelable translation operations
+ *
+ * @example
+ * // Basic translation
+ * const { translate, translatedText, isTranslating } = useTranslateContent();
+ * await translate({ text: 'Hello', direction: 'en-to-ar' });
+ *
+ * @example
+ * // Batch translation
+ * const { translate, results } = useBatchTranslateContent();
+ * await translate({
+ *   items: [
+ *     { id: '1', text: 'Hello', field_name: 'title' },
+ *     { id: '2', text: 'World', field_name: 'description' },
+ *   ],
+ *   direction: 'en-to-ar',
+ * });
+ *
+ * @example
+ * // Translation history
+ * const { history, isLoading } = useTranslationHistory('dossier', 'uuid');
+ * // Returns list of previous translations for this entity
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react'
@@ -29,7 +62,27 @@ import type {
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 
 /**
- * Detect language of text (client-side for quick checks)
+ * Detect language of text using Unicode range analysis
+ *
+ * @description
+ * Client-side language detection based on Arabic Unicode character ranges.
+ * Performs a quick check without API calls. Text is considered Arabic if more
+ * than 30% of non-whitespace characters are in Arabic Unicode ranges.
+ *
+ * @param text - The text to analyze
+ * @returns Detected language code ('ar' or 'en')
+ *
+ * @example
+ * // Detect Arabic text
+ * detectLanguage('مرحبا بك'); // Returns 'ar'
+ *
+ * @example
+ * // Detect English text
+ * detectLanguage('Hello world'); // Returns 'en'
+ *
+ * @example
+ * // Mixed text defaults to language with higher percentage
+ * detectLanguage('Hello مرحبا'); // Returns based on character count
  */
 export function detectLanguage(text: string): TranslationLanguage {
   // Arabic Unicode range detection
@@ -42,14 +95,78 @@ export function detectLanguage(text: string): TranslationLanguage {
 }
 
 /**
- * Get the opposite language
+ * Get the opposite translation language
+ *
+ * @description
+ * Utility function to get the target language for translation.
+ * Maps English to Arabic and vice versa.
+ *
+ * @param lang - The source language code
+ * @returns The opposite language code
+ *
+ * @example
+ * getOppositeLanguage('en'); // Returns 'ar'
+ * getOppositeLanguage('ar'); // Returns 'en'
  */
 export function getOppositeLanguage(lang: TranslationLanguage): TranslationLanguage {
   return lang === 'en' ? 'ar' : 'en'
 }
 
 /**
- * Hook for translating single text content
+ * Hook for AI-powered single text translation with progress tracking
+ *
+ * @description
+ * Provides stateful translation functionality with:
+ * - Real-time progress updates during translation (0-100%)
+ * - Confidence score from translation model
+ * - Source and target language detection
+ * - Cancelable operations via AbortController
+ * - Error handling with specific error codes
+ * - Automatic cleanup on unmount
+ * - Support for formatting preservation and content type hints
+ *
+ * @param initialParams - Optional initial parameters for translation
+ * @returns Object with translate function, result state, and control methods
+ *
+ * @example
+ * // Basic translation with progress
+ * const { translate, translatedText, progress, isTranslating } = useTranslateContent();
+ * await translate({
+ *   text: 'Hello World',
+ *   direction: 'en-to-ar',
+ * });
+ * console.log(translatedText); // "مرحبا بالعالم"
+ * console.log(progress); // 100
+ *
+ * @example
+ * // Translation with entity context for better accuracy
+ * const { translate, confidence } = useTranslateContent({
+ *   entityType: 'dossier',
+ *   entityId: 'country-uuid',
+ * });
+ * await translate({
+ *   text: 'Kingdom of Saudi Arabia',
+ *   direction: 'en-to-ar',
+ *   fieldName: 'official_name',
+ * });
+ * console.log(confidence); // 0.95 (95% confidence)
+ *
+ * @example
+ * // Preserve formatting in translation
+ * const { translate } = useTranslateContent();
+ * await translate({
+ *   text: '**Bold** and *italic* text',
+ *   direction: 'en-to-ar',
+ *   contentType: 'markdown',
+ *   preserveFormatting: true,
+ * });
+ *
+ * @example
+ * // Reset translation state
+ * const { translate, translatedText, reset } = useTranslateContent();
+ * await translate({ text: 'Hello', direction: 'en-to-ar' });
+ * // Later...
+ * reset(); // Clears translatedText and resets state
  */
 export function useTranslateContent(
   initialParams?: Partial<UseTranslateContentParams>,
@@ -200,7 +317,43 @@ export function useTranslateContent(
 }
 
 /**
- * Hook for batch translating multiple text items
+ * Hook for batch translating multiple text items simultaneously
+ *
+ * @description
+ * Provides batch translation functionality for translating multiple text items
+ * in a single API call. Useful for translating forms, documents, or bulk content
+ * with progress tracking and individual result status.
+ *
+ * @param initialParams - Optional initial parameters for batch translation
+ * @returns Object with translate function, results array, and state
+ *
+ * @example
+ * // Batch translate form fields
+ * const { translate, results, isTranslating } = useBatchTranslateContent();
+ * await translate({
+ *   items: [
+ *     { id: 'title', text: 'Title', field_name: 'title' },
+ *     { id: 'desc', text: 'Description', field_name: 'description' },
+ *     { id: 'notes', text: 'Notes', field_name: 'notes' },
+ *   ],
+ *   direction: 'en-to-ar',
+ *   contentType: 'plain',
+ * });
+ * console.log(results); // Array of { id, translated_text, confidence, ... }
+ *
+ * @example
+ * // Batch translate with entity context
+ * const { translate } = useBatchTranslateContent({
+ *   entityType: 'engagement',
+ *   entityId: 'meeting-uuid',
+ * });
+ * await translate({
+ *   items: [
+ *     { id: '1', text: 'Agenda', field_name: 'agenda' },
+ *     { id: '2', text: 'Minutes', field_name: 'minutes' },
+ *   ],
+ *   direction: 'en-to-ar',
+ * });
  */
 export function useBatchTranslateContent(
   initialParams?: Partial<UseBatchTranslateParams>,
@@ -333,7 +486,31 @@ export function useBatchTranslateContent(
 }
 
 /**
- * Hook for fetching translation history for an entity
+ * Hook for fetching translation history for a specific entity
+ *
+ * @description
+ * Retrieves the translation history for an entity, showing all past translations
+ * with timestamps, users, source/target languages, and confidence scores.
+ * Automatically refetches when entity changes.
+ *
+ * @param entityType - Type of entity ('dossier', 'engagement', 'position', etc.)
+ * @param entityId - Unique identifier of the entity
+ * @returns Object with history array, loading state, error, and refetch function
+ *
+ * @example
+ * // Display translation history for a dossier
+ * const { history, isLoading, error } = useTranslationHistory('dossier', dossierId);
+ * {history.map(item => (
+ *   <div key={item.id}>
+ *     {item.field_name}: {item.source_language} → {item.target_language}
+ *     (Confidence: {item.confidence})
+ *   </div>
+ * ))}
+ *
+ * @example
+ * // Show recent translations in sidebar
+ * const { history } = useTranslationHistory('engagement', engagementId);
+ * const recentTranslations = history.slice(0, 5); // Latest 5
  */
 export function useTranslationHistory(entityType: string, entityId: string) {
   const [history, setHistory] = useState<TranslationHistoryItem[]>([])
@@ -376,7 +553,36 @@ export function useTranslationHistory(entityType: string, entityId: string) {
 }
 
 /**
- * Hook for managing user translation preferences
+ * Hook for managing user-specific translation preferences
+ *
+ * @description
+ * Manages translation preferences for the authenticated user including default
+ * languages, translation quality settings, and auto-translate options.
+ * Automatically loads preferences on mount and provides update functionality.
+ *
+ * @returns Object with preferences data, loading state, update function, and refetch
+ *
+ * @example
+ * // Load and display user preferences
+ * const { preferences, isLoading } = useTranslationPreferences();
+ * console.log(preferences?.default_source_language); // 'en'
+ * console.log(preferences?.auto_translate_on_save); // true/false
+ *
+ * @example
+ * // Update user preferences
+ * const { updatePreferences } = useTranslationPreferences();
+ * await updatePreferences({
+ *   default_source_language: 'ar',
+ *   default_target_language: 'en',
+ *   auto_translate_on_save: true,
+ * });
+ *
+ * @example
+ * // Use preferences to set translation defaults
+ * const { preferences } = useTranslationPreferences();
+ * const { translate } = useTranslateContent({
+ *   direction: preferences?.default_source_language === 'ar' ? 'ar-to-en' : 'en-to-ar',
+ * });
  */
 export function useTranslationPreferences() {
   const [preferences, setPreferences] = useState<TranslationPreferences | null>(null)
@@ -462,7 +668,35 @@ export function useTranslationPreferences() {
 }
 
 /**
- * Hook for searching the translation glossary
+ * Hook for searching the translation glossary with debouncing
+ *
+ * @description
+ * Searches the translation glossary for term suggestions based on input text.
+ * Results are debounced (300ms) to avoid excessive queries. Returns prioritized
+ * terms with translations, context, and usage examples.
+ *
+ * @param searchText - Text to search for in glossary (minimum 2 characters)
+ * @param sourceLanguage - Language to search in ('en' or 'ar', default: 'en')
+ * @returns Object with terms array, loading state, error, and refetch function
+ *
+ * @example
+ * // Search glossary for translation suggestions
+ * const [search, setSearch] = useState('diplomacy');
+ * const { terms, isLoading } = useTranslationGlossary(search, 'en');
+ * // Returns: [{ term_en: 'diplomacy', term_ar: 'الدبلوماسية', priority: 10, ... }]
+ *
+ * @example
+ * // Use in autocomplete for translation assistance
+ * const { terms } = useTranslationGlossary(inputValue, 'en');
+ * <Autocomplete
+ *   options={terms}
+ *   getOptionLabel={(term) => `${term.term_en} → ${term.term_ar}`}
+ * />
+ *
+ * @example
+ * // Search Arabic terms
+ * const { terms } = useTranslationGlossary('دبلوماسي', 'ar');
+ * console.log(terms[0].term_en); // 'diplomatic'
  */
 export function useTranslationGlossary(
   searchText: string,

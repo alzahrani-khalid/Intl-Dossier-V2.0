@@ -1,8 +1,39 @@
 /**
- * useMultiLangContent Hook
- * Feature: Multi-language content authoring and storage
+ * Multi-Language Content Hooks
+ * @module hooks/useMultiLangContent
+ * @feature multilingual-content
  *
- * Hook for managing multi-language content for entities
+ * TanStack Query hooks for managing multi-language content with automatic caching,
+ * AI-powered translation, and language settings for translatable entities.
+ *
+ * @description
+ * This module provides a comprehensive set of React hooks for multi-language content management:
+ * - Query hooks for fetching translations, available languages, and language settings
+ * - Mutation hooks for upserting translations with machine translation tracking
+ * - AI-powered field translation between supported languages
+ * - Language management (add/remove languages, set primary language)
+ * - Localized content retrieval with fallback support
+ * - Bulk translation operations for multiple fields
+ *
+ * @example
+ * // Basic usage - manage entity translations
+ * const { translations, getContent, setContent } = useMultiLangContent({
+ *   entityType: 'dossier',
+ *   entityId: 'uuid-here',
+ * });
+ *
+ * @example
+ * // Translate a field using AI
+ * const { translateField, isTranslating } = useMultiLangContent({
+ *   entityType: 'dossier',
+ *   entityId: 'uuid-here',
+ * });
+ * await translateField('description', 'en', 'ar');
+ *
+ * @example
+ * // Get localized content with fallback
+ * const { data } = useLocalizedContent('dossier', 'uuid', 'name', 'ar', 'en');
+ * // Returns Arabic content or falls back to English
  */
 
 import { useState, useCallback, useEffect, useMemo } from 'react'
@@ -22,7 +53,28 @@ import type {
 
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 
-// Query keys factory
+/**
+ * Query Keys Factory for multi-language content queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation for translations,
+ * language settings, and supported languages.
+ *
+ * @example
+ * // Invalidate all multilang queries
+ * queryClient.invalidateQueries({ queryKey: multiLangContentKeys.all });
+ *
+ * @example
+ * // Invalidate entity-specific translations
+ * queryClient.invalidateQueries({
+ *   queryKey: multiLangContentKeys.entity('dossier', 'uuid-123')
+ * });
+ *
+ * @example
+ * // Invalidate supported languages cache
+ * queryClient.invalidateQueries({ queryKey: multiLangContentKeys.languages() });
+ */
 export const multiLangContentKeys = {
   all: ['multilang-content'] as const,
   entity: (entityType: TranslatableEntityType, entityId: string) =>
@@ -31,7 +83,28 @@ export const multiLangContentKeys = {
 }
 
 /**
- * Fetch supported languages from database
+ * Hook to fetch supported languages from the database
+ *
+ * @description
+ * Fetches all enabled languages with display metadata including name, native name,
+ * RTL direction, and flag emoji. Results are cached for 1 hour as language configuration
+ * changes infrequently.
+ *
+ * @returns TanStack Query result with array of supported language objects
+ *
+ * @example
+ * // Fetch supported languages for language selector
+ * const { data: languages, isLoading } = useSupportedLanguages();
+ * // data: [{ code: 'en', name_en: 'English', name_native: 'English', is_rtl: false, ... }]
+ *
+ * @example
+ * // Use in dropdown component
+ * const { data: languages } = useSupportedLanguages();
+ * languages?.map(lang => (
+ *   <option key={lang.code} value={lang.code}>
+ *     {lang.flag_emoji} {lang.name_native}
+ *   </option>
+ * ));
  */
 export function useSupportedLanguages() {
   return useQuery({
@@ -59,7 +132,55 @@ export function useSupportedLanguages() {
 }
 
 /**
- * Main hook for multi-language content management
+ * Hook for comprehensive multi-language content management
+ *
+ * @description
+ * Main hook providing complete multi-language content lifecycle management including:
+ * - Fetching translations, available languages, and settings for an entity
+ * - Getting and setting content for specific field-language combinations
+ * - AI-powered translation between languages via Edge Function
+ * - Language management (add/remove languages, set primary)
+ * - Automatic cache invalidation on mutations
+ * - Error handling and loading states
+ *
+ * @param params - Configuration object
+ * @param params.entityType - Type of entity ('dossier', 'engagement', 'position', etc.)
+ * @param params.entityId - Unique identifier of the entity
+ * @param params.enabled - Whether to enable queries (default: true)
+ * @returns Object with translations data, methods, and state flags
+ *
+ * @example
+ * // Basic usage - fetch and display translations
+ * const { translations, isLoading, getContent } = useMultiLangContent({
+ *   entityType: 'dossier',
+ *   entityId: 'country-uuid',
+ * });
+ * const arabicName = getContent('name', 'ar');
+ *
+ * @example
+ * // Set content for a field
+ * const { setContent, isUpdating } = useMultiLangContent({
+ *   entityType: 'dossier',
+ *   entityId: 'country-uuid',
+ * });
+ * await setContent('description', 'ar', 'وصف جديد');
+ *
+ * @example
+ * // AI translation between languages
+ * const { translateField, isTranslating } = useMultiLangContent({
+ *   entityType: 'engagement',
+ *   entityId: 'meeting-uuid',
+ * });
+ * await translateField('notes', 'en', 'ar'); // Translate English to Arabic
+ *
+ * @example
+ * // Language management
+ * const { addLanguage, setPrimaryLanguage } = useMultiLangContent({
+ *   entityType: 'dossier',
+ *   entityId: 'uuid',
+ * });
+ * await addLanguage('fr');
+ * await setPrimaryLanguage('ar');
  */
 export function useMultiLangContent({
   entityType,
@@ -391,7 +512,43 @@ export function useMultiLangContent({
 }
 
 /**
- * Hook for getting content in the current UI language with fallback
+ * Hook for getting localized content with automatic fallback
+ *
+ * @description
+ * Fetches content for a specific field in the current UI language with automatic
+ * fallback to a secondary language if translation is not available. Returns metadata
+ * about the translation including whether fallback was used and machine translation status.
+ *
+ * @param entityType - Type of entity ('dossier', 'engagement', 'position', etc.)
+ * @param entityId - Unique identifier of the entity
+ * @param fieldName - Name of the field to retrieve ('name', 'description', etc.)
+ * @param currentLanguage - Preferred language code (default: 'en')
+ * @param fallbackLanguage - Fallback language if preferred not available (default: 'en')
+ * @returns TanStack Query result with localized content and metadata
+ *
+ * @example
+ * // Get Arabic content with English fallback
+ * const { data } = useLocalizedContent('dossier', 'uuid', 'name', 'ar', 'en');
+ * console.log(data?.content); // "اسم" or "Name" if Arabic unavailable
+ * console.log(data?.is_fallback); // true if English was used
+ *
+ * @example
+ * // Use in component with i18n
+ * const { i18n } = useTranslation();
+ * const { data: localizedName } = useLocalizedContent(
+ *   'dossier',
+ *   dossierId,
+ *   'name',
+ *   i18n.language as ContentLanguage,
+ *   'en'
+ * );
+ *
+ * @example
+ * // Display machine translation warning
+ * const { data } = useLocalizedContent('dossier', 'uuid', 'description', 'ar');
+ * {data?.is_machine_translated && (
+ *   <Badge>Machine Translated (confidence: {data.translation_confidence})</Badge>
+ * )}
  */
 export function useLocalizedContent(
   entityType: TranslatableEntityType,
@@ -426,7 +583,38 @@ export function useLocalizedContent(
 }
 
 /**
- * Hook for bulk saving multiple translations
+ * Hook for bulk saving multiple translations in a single operation
+ *
+ * @description
+ * Creates a mutation for saving multiple field-language translations simultaneously.
+ * Useful for bulk import, form submission with multiple languages, or batch updates.
+ * Automatically invalidates cache on success.
+ *
+ * @returns TanStack Mutation result with mutate function accepting bulk translation data
+ *
+ * @example
+ * // Save multiple translations at once
+ * const { mutateAsync: bulkSave } = useBulkSaveTranslations();
+ * await bulkSave({
+ *   entityType: 'dossier',
+ *   entityId: 'uuid',
+ *   translations: [
+ *     { fieldName: 'name', language: 'en', content: 'Saudi Arabia' },
+ *     { fieldName: 'name', language: 'ar', content: 'المملكة العربية السعودية' },
+ *     { fieldName: 'description', language: 'en', content: 'Country description' },
+ *     { fieldName: 'description', language: 'ar', content: 'وصف الدولة' },
+ *   ],
+ * });
+ *
+ * @example
+ * // Import translations from CSV
+ * const { mutateAsync: bulkSave } = useBulkSaveTranslations();
+ * const translations = csvData.map(row => ({
+ *   fieldName: row.field,
+ *   language: row.lang as ContentLanguage,
+ *   content: row.value,
+ * }));
+ * await bulkSave({ entityType: 'dossier', entityId: id, translations });
  */
 export function useBulkSaveTranslations() {
   const queryClient = useQueryClient()
