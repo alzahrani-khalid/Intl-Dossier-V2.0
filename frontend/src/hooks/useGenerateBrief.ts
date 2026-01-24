@@ -1,21 +1,76 @@
 /**
- * useGenerateBrief Hook
- * Feature: 033-ai-brief-generation
- * Task: T026
+ * AI Brief Generation Hook
+ * @module hooks/useGenerateBrief
+ * @feature 033-ai-brief-generation
+ * @task T026
  *
- * Hook for generating AI briefs with SSE streaming support
+ * React hook for generating AI-powered policy briefs with Server-Sent Events (SSE) streaming support.
+ *
+ * @description
+ * This hook provides a comprehensive interface for generating AI briefs with real-time streaming updates.
+ * It connects to the backend AI service to generate briefs based on engagements, dossiers, or custom prompts.
+ *
+ * Features:
+ * - SSE streaming for real-time content updates
+ * - Progress tracking (0-100%)
+ * - Bilingual support (EN/AR)
+ * - Cancellation support via AbortController
+ * - Retry logic for failed generations
+ * - Automatic authentication token management
+ * - Citation and source tracking
+ * - Talking points extraction
+ *
+ * @example
+ * // Generate brief for an engagement
+ * const { generate, brief, streamingContent, isGenerating, progress } = useGenerateBrief();
+ * await generate({
+ *   engagementId: 'uuid-123',
+ *   language: 'en'
+ * });
+ *
+ * @example
+ * // Generate brief for a dossier
+ * const { generate } = useGenerateBrief();
+ * await generate({
+ *   dossierId: 'dossier-uuid',
+ *   language: 'ar'
+ * });
+ *
+ * @example
+ * // Cancel generation
+ * const { generate, cancel, isGenerating } = useGenerateBrief();
+ * generate({ engagementId: 'uuid' });
+ * // Later...
+ * if (isGenerating) cancel();
  */
 
 import { useState, useCallback, useRef, useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 
+/**
+ * Parameters for brief generation request
+ *
+ * @description
+ * At least one of engagementId, dossierId, or customPrompt must be provided.
+ */
 export interface BriefGenerationParams {
+  /** Engagement ID to generate brief for (optional) */
   engagementId?: string
+  /** Dossier ID to generate brief for (optional) */
   dossierId?: string
+  /** Custom prompt for brief generation (optional) */
   customPrompt?: string
+  /** Target language for generated content (default: 'en') */
   language?: 'en' | 'ar'
 }
 
+/**
+ * Generated brief content with structured sections
+ *
+ * @description
+ * Complete brief content including all sections, citations, and metadata.
+ * The structure follows diplomatic briefing best practices.
+ */
 export interface BriefContent {
   id: string
   title: string
@@ -50,20 +105,100 @@ export interface BriefContent {
   status: 'generating' | 'completed' | 'partial' | 'failed'
 }
 
+/**
+ * Return type for useGenerateBrief hook
+ *
+ * @description
+ * Provides functions and state for managing brief generation lifecycle.
+ */
 export interface UseGenerateBriefReturn {
+  /** Function to initiate brief generation */
   generate: (params: BriefGenerationParams) => Promise<void>
+  /** Final structured brief content (null until generation completes) */
   brief: BriefContent | null
+  /** Real-time streaming content as it's generated */
   streamingContent: string
+  /** Whether brief is currently being generated */
   isGenerating: boolean
+  /** Generation progress (0-100) */
   progress: number
+  /** Error message if generation failed */
   error: string | null
+  /** Cancel ongoing generation */
   cancel: () => void
+  /** Retry last failed generation */
   retry: () => void
+  /** Reset all state to initial values */
   reset: () => void
 }
 
 const API_BASE = import.meta.env.VITE_API_URL || '/api'
 
+/**
+ * Hook to generate AI-powered policy briefs with SSE streaming
+ *
+ * @description
+ * Manages the entire lifecycle of AI brief generation including authentication,
+ * SSE streaming, progress tracking, error handling, and state management.
+ *
+ * The generation process:
+ * 1. Validates authentication token
+ * 2. Initiates SSE connection to backend AI service
+ * 3. Streams content updates in real-time
+ * 4. Fetches final structured brief when complete
+ * 5. Handles errors and supports retry/cancel
+ *
+ * Error codes:
+ * - UNAUTHORIZED: No valid authentication token
+ * - CANCELLED: User cancelled generation
+ * - BRIEF_FETCH_FAILED: Brief generated but fetch failed
+ * - GENERATION_FAILED: AI generation failed
+ * - TIMEOUT: Generation exceeded time limit
+ * - UNKNOWN_ERROR: Unexpected error
+ *
+ * @returns Hook interface with generate function and state
+ *
+ * @example
+ * // Basic usage with engagement
+ * const { generate, brief, isGenerating, progress } = useGenerateBrief();
+ *
+ * const handleGenerate = async () => {
+ *   await generate({
+ *     engagementId: 'engagement-uuid',
+ *     language: 'en'
+ *   });
+ * };
+ *
+ * @example
+ * // Display streaming content and progress
+ * const { streamingContent, progress, isGenerating } = useGenerateBrief();
+ *
+ * {isGenerating && (
+ *   <>
+ *     <ProgressBar value={progress} />
+ *     <div>{streamingContent}</div>
+ *   </>
+ * )}
+ *
+ * @example
+ * // Handle errors and retry
+ * const { generate, error, retry } = useGenerateBrief();
+ *
+ * {error && (
+ *   <Alert>
+ *     <p>Error: {error}</p>
+ *     <Button onClick={retry}>Retry</Button>
+ *   </Alert>
+ * )}
+ *
+ * @example
+ * // Cancel generation
+ * const { generate, cancel, isGenerating } = useGenerateBrief();
+ *
+ * {isGenerating && (
+ *   <Button onClick={cancel}>Cancel Generation</Button>
+ * )}
+ */
 export function useGenerateBrief(): UseGenerateBriefReturn {
   const [token, setToken] = useState<string | null>(null)
   const [brief, setBrief] = useState<BriefContent | null>(null)

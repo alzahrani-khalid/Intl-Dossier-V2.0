@@ -1,11 +1,51 @@
 /**
- * TanStack Query Hook: useBriefingPackStatus (T041)
- * Polls briefing pack job status with automatic refetch until completion
+ * Briefing Pack Status Polling Hook
+ * @module hooks/useBriefingPackStatus
+ * @feature briefing-pack-generator
+ * @task T041
+ *
+ * TanStack Query hook for polling briefing pack generation job status with automatic refetch.
+ *
+ * @description
+ * This hook provides real-time status tracking for asynchronous briefing pack generation jobs.
+ * Features:
+ * - Automatic polling every 2 seconds while job is pending/generating
+ * - Stops polling when job completes or fails
+ * - Optional success/failure callbacks
+ * - Progress tracking (0-100%)
+ * - Estimated completion time
+ * - Retry count metadata
+ *
+ * @example
+ * // Basic usage with callbacks
+ * const { status, progress, briefingPack } = useBriefingPackStatus({
+ *   jobId: 'job-uuid',
+ *   onCompleted: (pack) => {
+ *     window.open(pack.file_url, '_blank');
+ *   },
+ *   onFailed: (error) => {
+ *     toast.error(`Generation failed: ${error}`);
+ *   }
+ * });
+ *
+ * @example
+ * // Conditional polling
+ * const { status, isPolling } = useBriefingPackStatus({
+ *   jobId: jobId,
+ *   enabled: !!jobId, // Only poll when jobId exists
+ * });
+ * // isPolling is true when status is 'pending' or 'generating'
  */
 
 import { useQuery } from '@tanstack/react-query';
 import { supabase } from '@/lib/supabase';
 
+/**
+ * Generated briefing pack entity
+ *
+ * @description
+ * Represents a successfully generated briefing pack with metadata and file URL.
+ */
 export interface BriefingPack {
   id: string;
   engagement_id: string;
@@ -23,24 +63,59 @@ export interface BriefingPack {
   };
 }
 
+/**
+ * Briefing pack job status response
+ *
+ * @description
+ * Status information for an ongoing or completed briefing pack generation job.
+ */
 export interface BriefingPackJobStatus {
+  /** Current job status */
   status: 'pending' | 'generating' | 'completed' | 'failed';
-  progress?: number; // 0-100
+  /** Generation progress (0-100) */
+  progress?: number;
+  /** Error message if status is 'failed' */
   error?: string;
+  /** Generated briefing pack if status is 'completed' */
   briefing_pack?: BriefingPack;
+  /** Estimated seconds until completion */
   estimated_completion_seconds?: number;
+  /** Additional metadata (retry count, etc.) */
   metadata?: {
     retry_count?: number;
   };
 }
 
+/**
+ * Hook options for useBriefingPackStatus
+ *
+ * @description
+ * Configuration options for briefing pack status polling including callbacks.
+ */
 export interface UseBriefingPackStatusOptions {
+  /** The job ID to poll for status */
   jobId: string;
+  /** Whether polling is enabled (default: true) */
   enabled?: boolean;
+  /** Callback invoked when generation completes successfully */
   onCompleted?: (briefingPack: BriefingPack) => void;
+  /** Callback invoked when generation fails */
   onFailed?: (error: string) => void;
 }
 
+/**
+ * Fetch briefing pack job status from Supabase Edge Function
+ *
+ * @description
+ * Queries the briefing-packs edge function to check the current status of a generation job.
+ * Requires authentication via Supabase session token.
+ *
+ * @param jobId - The unique job identifier returned from useGenerateBriefingPack
+ * @returns Promise resolving to job status information
+ * @throws Error if authentication fails or job not found
+ *
+ * @internal
+ */
 async function fetchBriefingPackStatus(
   jobId: string
 ): Promise<BriefingPackJobStatus> {
@@ -71,6 +146,54 @@ async function fetchBriefingPackStatus(
   return await response.json();
 }
 
+/**
+ * Hook to poll briefing pack generation job status
+ *
+ * @description
+ * Polls the briefing pack generation job status every 2 seconds while the job is
+ * pending or generating. Automatically stops polling when the job completes or fails,
+ * and invokes the appropriate callback.
+ *
+ * Features:
+ * - Automatic polling with 2-second intervals
+ * - Auto-stop polling on completion/failure
+ * - Optional callbacks for completed/failed states
+ * - Progress tracking (0-100%)
+ * - Cache management (5-minute garbage collection)
+ * - Computed state flags (isPolling, isCompleted, isFailed)
+ *
+ * @param options - Hook options with jobId, enabled flag, and callbacks
+ * @returns Status information and computed state flags
+ *
+ * @example
+ * // Basic polling with callbacks
+ * const { status, progress, briefingPack, isPolling } = useBriefingPackStatus({
+ *   jobId: 'job-uuid-123',
+ *   onCompleted: (pack) => {
+ *     console.log('Download:', pack.file_url);
+ *   },
+ *   onFailed: (error) => {
+ *     console.error('Failed:', error);
+ *   }
+ * });
+ *
+ * @example
+ * // Display progress UI
+ * const { progress, estimatedCompletionSeconds, isPolling } = useBriefingPackStatus({
+ *   jobId: jobId,
+ * });
+ * {isPolling && (
+ *   <ProgressBar value={progress} />
+ *   <p>ETA: {estimatedCompletionSeconds}s</p>
+ * )}
+ *
+ * @example
+ * // Conditional polling
+ * const { status } = useBriefingPackStatus({
+ *   jobId: jobId || '',
+ *   enabled: !!jobId, // Only poll when jobId exists
+ * });
+ */
 export function useBriefingPackStatus(
   options: UseBriefingPackStatusOptions
 ) {
