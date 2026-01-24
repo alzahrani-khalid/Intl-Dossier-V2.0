@@ -1,6 +1,46 @@
 /**
- * Document Templates Hook
- * Provides React Query hooks for document template operations
+ * Document Templates Hooks
+ * @module hooks/useDocumentTemplates
+ * @feature document-management
+ *
+ * TanStack Query hooks for document template operations with validation,
+ * section management, and templated document creation.
+ *
+ * @description
+ * This module provides hooks for working with document templates:
+ * - Query hooks for listing templates by category/entity type
+ * - Fetch template details with sections and field definitions
+ * - Create templated documents from templates
+ * - Update field values with validation
+ * - Complete and finalize templated documents
+ * - Validate field values against template rules
+ * - Manage user's templated documents
+ * - Toast notifications for mutations
+ *
+ * @example
+ * // List available templates
+ * const { data: templates } = useListTemplates({
+ *   category: 'diplomatic',
+ *   entity_type: 'dossier',
+ * });
+ *
+ * @example
+ * // Create document from template
+ * const { mutate: createDoc } = useCreateTemplatedDocument();
+ * createDoc({
+ *   template_id: 'template-uuid',
+ *   entity_type: 'dossier',
+ *   entity_id: 'dossier-uuid',
+ *   initial_values: { title: 'Meeting Notes' },
+ * });
+ *
+ * @example
+ * // Validate and complete document
+ * const { mutate: complete } = useCompleteTemplatedDocument();
+ * complete({
+ *   document_id: 'doc-uuid',
+ *   final_values: { approved_by: 'John Doe' },
+ * });
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -26,7 +66,25 @@ import { useTranslation } from 'react-i18next'
 
 const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/document-templates`
 
-// Query keys
+/**
+ * Query Keys Factory for document template queries
+ *
+ * @description
+ * Provides hierarchical key structure for TanStack Query cache management.
+ * Enables granular cache invalidation for templates and user documents.
+ *
+ * @example
+ * // Invalidate all template queries
+ * queryClient.invalidateQueries({ queryKey: documentTemplateKeys.all });
+ *
+ * @example
+ * // Invalidate specific template
+ * queryClient.invalidateQueries({ queryKey: documentTemplateKeys.detail('uuid') });
+ *
+ * @example
+ * // Invalidate user's templated documents
+ * queryClient.invalidateQueries({ queryKey: documentTemplateKeys.userDocuments() });
+ */
 export const documentTemplateKeys = {
   all: ['document-templates'] as const,
   lists: () => [...documentTemplateKeys.all, 'list'] as const,
@@ -217,7 +275,26 @@ async function deleteTemplatedDocument(documentId: string): Promise<void> {
 // React Query Hooks
 
 /**
- * Hook to list available document templates
+ * Hook to list available document templates with filtering
+ *
+ * @description
+ * Fetches a list of document templates with optional filters for category,
+ * entity type, and status. Results are cached for 5 minutes.
+ *
+ * @param params - Optional filters for category, entity_type, status, pagination
+ * @returns TanStack Query result with templates array and total count
+ *
+ * @example
+ * // List all templates
+ * const { data } = useDocumentTemplates();
+ *
+ * @example
+ * // Filter by category and entity type
+ * const { data } = useDocumentTemplates({
+ *   category: 'diplomatic',
+ *   entity_type: 'dossier',
+ *   status: 'active',
+ * });
  */
 export function useDocumentTemplates(params: ListTemplatesRequest = {}) {
   return useQuery({
@@ -229,6 +306,16 @@ export function useDocumentTemplates(params: ListTemplatesRequest = {}) {
 
 /**
  * Hook to get templates filtered by entity type
+ *
+ * @description
+ * Convenience hook for fetching templates available for a specific entity type.
+ * Useful for showing template options when creating documents for dossiers, briefs, etc.
+ *
+ * @param entityType - Entity type to filter by (e.g., 'dossier', 'brief')
+ * @returns TanStack Query result with filtered templates
+ *
+ * @example
+ * const { data: dossierTemplates } = useTemplatesForEntity('dossier');
  */
 export function useTemplatesForEntity(entityType: string) {
   return useQuery({
@@ -240,6 +327,16 @@ export function useTemplatesForEntity(entityType: string) {
 
 /**
  * Hook to get templates by category
+ *
+ * @description
+ * Fetches templates filtered by category (diplomatic, legal, administrative, etc.).
+ * Cached for 5 minutes.
+ *
+ * @param category - Template category to filter by
+ * @returns TanStack Query result with categorized templates
+ *
+ * @example
+ * const { data: diplomaticTemplates } = useTemplatesByCategory('diplomatic');
  */
 export function useTemplatesByCategory(category: DocumentTemplateCategory) {
   return useQuery({
@@ -251,6 +348,21 @@ export function useTemplatesByCategory(category: DocumentTemplateCategory) {
 
 /**
  * Hook to get a specific template with sections and fields
+ *
+ * @description
+ * Fetches complete template details including all sections and field definitions.
+ * Query is disabled if templateId is undefined. Cached for 10 minutes.
+ *
+ * @param templateId - Template UUID to fetch
+ * @returns TanStack Query result with template details including sections
+ *
+ * @example
+ * const { data: template, isLoading } = useDocumentTemplate(templateId);
+ * if (template) {
+ *   template.sections.forEach(section => {
+ *     console.log(section.title_en, section.fields);
+ *   });
+ * }
  */
 export function useDocumentTemplate(templateId: string | undefined) {
   return useQuery({

@@ -1,8 +1,50 @@
 /**
  * Citation Tracking Hooks
- * Feature: citation-tracking
+ * @module hooks/useCitations
+ * @feature citation-tracking
  *
- * TanStack Query hooks for managing citations between dossiers, briefs, and external sources.
+ * TanStack Query hooks for managing citations between dossiers, briefs,
+ * and external sources with network visualization and alert management.
+ *
+ * @description
+ * This module provides comprehensive citation management:
+ * - Query hooks for fetching citations with filtering
+ * - Entity-scoped citation retrieval (outbound/inbound citations)
+ * - Citation network graph generation for visualization
+ * - Create/update/delete citations with cache invalidation
+ * - Automatic citation detection in document content
+ * - Citation alerts for broken links and outdated references
+ * - Support for internal (dossier/brief) and external citations
+ * - Location tracking (page, paragraph, section) within documents
+ *
+ * @example
+ * // Fetch citations for an entity
+ * const { data: citations } = useEntityCitations({
+ *   entity_type: 'brief',
+ *   entity_id: briefId,
+ *   direction: 'outbound', // Citations this brief makes
+ * });
+ *
+ * @example
+ * // Create a citation
+ * const { mutate: createCitation } = useCreateCitation();
+ * createCitation({
+ *   citing_type: 'brief',
+ *   citing_id: briefId,
+ *   cited_type: 'dossier',
+ *   cited_id: dossierId,
+ *   citation_text: 'As mentioned in the France dossier...',
+ *   location: 'page 3, paragraph 2',
+ * });
+ *
+ * @example
+ * // Get citation network for visualization
+ * const { data: network } = useCitationNetwork({
+ *   entity_type: 'dossier',
+ *   entity_id: dossierId,
+ *   depth: 2, // 2 levels deep
+ * });
+ * // network contains nodes and edges for React Flow or D3
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -28,6 +70,25 @@ import type {
 // Query Keys
 // ============================================================================
 
+/**
+ * Query Keys Factory for citation queries
+ *
+ * @description
+ * Provides hierarchical key structure for TanStack Query cache management.
+ * Enables granular cache invalidation for citations, networks, and alerts.
+ *
+ * @example
+ * // Invalidate all citation queries
+ * queryClient.invalidateQueries({ queryKey: citationKeys.all });
+ *
+ * @example
+ * // Invalidate entity-specific citations
+ * queryClient.invalidateQueries({ queryKey: citationKeys.entity('dossier', dossierId) });
+ *
+ * @example
+ * // Invalidate citation network
+ * queryClient.invalidateQueries({ queryKey: citationKeys.network('brief', briefId) });
+ */
 export const citationKeys = {
   all: ['citations'] as const,
   lists: () => [...citationKeys.all, 'list'] as const,

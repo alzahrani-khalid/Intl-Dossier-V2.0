@@ -1,9 +1,48 @@
 /**
- * Document Content Search Hook
- * Feature: document-ocr-indexing
+ * Document Content Search Hooks
+ * @module hooks/useDocumentContentSearch
+ * @feature document-ocr-indexing
  *
- * Hook for searching within OCR-extracted document content
- * Supports bilingual search (Arabic and English)
+ * React hooks for full-text search within OCR-extracted document content
+ * with bilingual support (Arabic and English).
+ *
+ * @description
+ * This module provides hooks for searching document content:
+ * - Full-text search with PostgreSQL tsvector indexing
+ * - Bilingual search support (Arabic, English, or both)
+ * - Debounced query input to reduce API calls
+ * - Infinite scrolling with cursor pagination
+ * - Entity-scoped search (search within specific dossier/brief)
+ * - Confidence-based filtering (OCR accuracy threshold)
+ * - Result snippets with query highlighting
+ * - Rank scoring for relevance sorting
+ *
+ * @example
+ * // Basic content search with debouncing
+ * const { data, isLoading } = useDocumentContentSearch({
+ *   query: searchTerm,
+ *   language: 'all',
+ * });
+ *
+ * @example
+ * // Search within entity's documents
+ * const { data } = useEntityDocumentSearch(
+ *   'dossier',
+ *   dossierId,
+ *   'climate change',
+ *   { language: 'en', minConfidence: 0.8 }
+ * );
+ *
+ * @example
+ * // Infinite scroll search
+ * const {
+ *   data,
+ *   fetchNextPage,
+ *   hasNextPage,
+ * } = useInfiniteDocumentSearch({
+ *   query: 'bilateral agreement',
+ *   min_confidence: 0.7,
+ * });
  */
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query'
 import { supabase } from '@/lib/supabase'
@@ -111,6 +150,38 @@ async function searchDocuments(filters: DocumentSearchFilters): Promise<Document
 
 /**
  * Hook for searching document content with debouncing
+ *
+ * @description
+ * Full-text search within OCR-extracted document content with automatic
+ * debouncing to reduce API calls. Supports bilingual search (Arabic/English),
+ * confidence filtering, and entity scoping. Minimum query length is 2 characters.
+ *
+ * @param filters - Search filters (query, language, owner, confidence threshold)
+ * @param options - Optional configuration (enabled flag, debounce delay)
+ * @returns TanStack Query result with search results and metadata
+ *
+ * @example
+ * // Basic search with auto-debounce
+ * const { data, isLoading } = useDocumentContentSearch({
+ *   query: searchTerm,
+ *   language: 'all',
+ * }, { debounceMs: 300 });
+ *
+ * @example
+ * // Search with confidence filtering
+ * const { data } = useDocumentContentSearch({
+ *   query: 'climate policy',
+ *   language: 'en',
+ *   min_confidence: 0.8, // Only high-quality OCR
+ * });
+ *
+ * @example
+ * // Search within entity's documents
+ * const { data } = useDocumentContentSearch({
+ *   query: 'bilateral',
+ *   owner_type: 'dossier',
+ *   owner_id: dossierId,
+ * });
  */
 export function useDocumentContentSearch(
   filters: DocumentSearchFilters,
@@ -133,6 +204,37 @@ export function useDocumentContentSearch(
 
 /**
  * Hook for infinite scrolling document search
+ *
+ * @description
+ * Provides paginated search results with infinite scroll capability.
+ * Automatically manages page parameters and concatenates results.
+ * Useful for search result lists with "load more" functionality.
+ *
+ * @param filters - Search filters (excluding offset, managed by hook)
+ * @param options - Optional configuration (enabled, debounce, page size)
+ * @returns TanStack Infinite Query result with paginated results
+ *
+ * @example
+ * // Infinite scroll search
+ * const {
+ *   data,
+ *   fetchNextPage,
+ *   hasNextPage,
+ *   isFetchingNextPage,
+ * } = useInfiniteDocumentSearch({
+ *   query: 'trade agreement',
+ *   language: 'all',
+ * }, { pageSize: 20 });
+ *
+ * // Render results
+ * data?.pages.flatMap(page => page.results).map(result => (
+ *   <SearchResult key={result.document_id} {...result} />
+ * ));
+ *
+ * // Load more button
+ * <button onClick={() => fetchNextPage()} disabled={!hasNextPage}>
+ *   {isFetchingNextPage ? 'Loading...' : 'Load More'}
+ * </button>
  */
 export function useInfiniteDocumentSearch(
   filters: Omit<DocumentSearchFilters, 'offset'>,

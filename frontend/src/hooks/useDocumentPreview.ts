@@ -1,11 +1,55 @@
 /**
- * useDocumentPreview Hook
+ * Document Preview Hooks
+ * @module hooks/useDocumentPreview
+ * @feature document-management
  *
- * Provides document preview functionality including:
- * - Signed URL generation for viewing
- * - Thumbnail caching
- * - Preview state management
- * - File type detection
+ * React hooks for document preview functionality with signed URLs,
+ * thumbnail generation, zoom controls, and multi-page navigation.
+ *
+ * @description
+ * This module provides comprehensive document preview capabilities:
+ * - Signed URL generation for secure document viewing
+ * - Thumbnail caching with configurable sizes (small, medium, large)
+ * - Preview state management (idle, loading, ready, error)
+ * - File type detection and previewability checks
+ * - Zoom controls and page navigation for PDFs
+ * - Download functionality with authentication
+ * - Automatic cache management with 30-minute expiry
+ *
+ * @example
+ * // Basic document preview
+ * const {
+ *   openPreview,
+ *   closePreview,
+ *   previewUrl,
+ *   status,
+ *   isOpen,
+ * } = useDocumentPreview();
+ *
+ * openPreview({
+ *   id: 'doc-uuid',
+ *   file_path: 'documents/report.pdf',
+ *   mime_type: 'application/pdf',
+ * });
+ *
+ * @example
+ * // With thumbnail generation
+ * const { generateThumbnail, thumbnailUrl } = useDocumentPreview({
+ *   cache_thumbnails: true,
+ * });
+ *
+ * const thumbnail = await generateThumbnail('doc-id', 'path/to/doc.pdf', 'small');
+ *
+ * @example
+ * // PDF with zoom and pagination
+ * const {
+ *   previewUrl,
+ *   currentPage,
+ *   totalPages,
+ *   zoomLevel,
+ *   setCurrentPage,
+ *   setZoomLevel,
+ * } = useDocumentPreview({ initial_zoom: 1.5, initial_page: 1 });
  */
 import { useState, useCallback, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -57,6 +101,52 @@ interface UseDocumentPreviewResult {
   isOpen: boolean
 }
 
+/**
+ * Hook for document preview with zoom, pagination, and thumbnail support
+ *
+ * @description
+ * Manages document preview state including signed URL generation, thumbnail caching,
+ * zoom levels, and page navigation. Automatically detects file type and determines
+ * previewability. Supports PDF multi-page navigation and various image formats.
+ *
+ * @param options - Configuration options for preview behavior
+ * @param options.initial_zoom - Starting zoom level (default: 1)
+ * @param options.initial_page - Starting page number for PDFs (default: 1)
+ * @param options.cache_thumbnails - Whether to cache generated thumbnails (default: true)
+ * @param options.enabled - Whether to enable preview queries (default: true)
+ * @returns Preview state, URLs, controls, and action functions
+ *
+ * @example
+ * // Basic preview with default options
+ * const preview = useDocumentPreview();
+ * preview.openPreview({
+ *   id: 'doc-123',
+ *   file_path: 'uploads/report.pdf',
+ *   mime_type: 'application/pdf',
+ * });
+ *
+ * @example
+ * // PDF preview with custom zoom
+ * const { previewUrl, zoomLevel, setZoomLevel, currentPage, setCurrentPage } = useDocumentPreview({
+ *   initial_zoom: 1.5,
+ *   initial_page: 1,
+ * });
+ *
+ * @example
+ * // Generate and cache thumbnails
+ * const { generateThumbnail } = useDocumentPreview({ cache_thumbnails: true });
+ * const thumb = await generateThumbnail('doc-id', 'path/file.pdf', 'medium');
+ * // thumb.thumbnail_url contains the cached URL
+ *
+ * @example
+ * // Download document with authentication
+ * const { downloadDocument } = useDocumentPreview();
+ * await downloadDocument({
+ *   id: 'doc-id',
+ *   file_path: 'secure/confidential.pdf',
+ *   mime_type: 'application/pdf',
+ * });
+ */
 export function useDocumentPreview(
   options: UseDocumentPreviewOptions = {},
 ): UseDocumentPreviewResult {

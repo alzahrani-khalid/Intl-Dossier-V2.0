@@ -1,10 +1,48 @@
 /**
- * useDocumentVersions Hook
+ * Document Version Management Hooks
+ * @module hooks/useDocumentVersions
+ * @feature document-management
  *
- * Provides document version management functionality including:
- * - Fetching version history
- * - Comparing versions
- * - Reverting to previous versions
+ * React hooks for document version control with comparison, diff viewing,
+ * and revert capabilities.
+ *
+ * @description
+ * This module provides comprehensive version control for documents:
+ * - Fetch complete version history with metadata
+ * - Side-by-side version comparison with diff highlighting
+ * - Unified and side-by-side diff view modes
+ * - Revert to previous versions with audit trail
+ * - Version selection and comparison state management
+ * - Diff statistics (lines added, removed, changed)
+ * - Support for text-based documents (PDFs, DOC, TXT)
+ *
+ * @example
+ * // Fetch version history
+ * const { versions, totalVersions, isLoading } = useDocumentVersions({
+ *   documentId: 'doc-uuid',
+ * });
+ *
+ * @example
+ * // Compare two versions
+ * const {
+ *   selectVersionA,
+ *   selectVersionB,
+ *   compareVersions,
+ *   comparisonState,
+ * } = useDocumentVersions({ documentId: 'doc-uuid' });
+ *
+ * selectVersionA(1);
+ * selectVersionB(3);
+ * await compareVersions();
+ * // comparisonState.diffHunks contains the differences
+ *
+ * @example
+ * // Revert to previous version
+ * const { revertToVersion, isReverting } = useDocumentVersions({
+ *   documentId: 'doc-uuid',
+ * });
+ *
+ * await revertToVersion(2, 'Reverting to approved version');
  */
 
 import { useState, useCallback, useMemo } from 'react'
@@ -54,6 +92,60 @@ interface UseDocumentVersionsResult {
   isReverting: boolean
 }
 
+/**
+ * Hook for document version management with comparison and revert
+ *
+ * @description
+ * Manages document version history, comparison state, and revert operations.
+ * Fetches version list, enables side-by-side comparison with diff highlighting,
+ * and provides revert capability with audit logging.
+ *
+ * @param options - Configuration options
+ * @param options.documentId - Document UUID to fetch versions for
+ * @param options.enabled - Whether to enable version queries (default: true)
+ * @param options.limit - Maximum number of versions to fetch (default: 50)
+ * @returns Version history, comparison state, and action functions
+ *
+ * @example
+ * // List all versions
+ * const { versions, totalVersions, isLoading } = useDocumentVersions({
+ *   documentId: 'abc-123',
+ * });
+ *
+ * versions.forEach(v => {
+ *   console.log(`v${v.version_number}: ${v.change_summary}`);
+ * });
+ *
+ * @example
+ * // Compare versions with diff view
+ * const {
+ *   selectVersionA,
+ *   selectVersionB,
+ *   compareVersions,
+ *   comparisonState,
+ *   setViewMode,
+ * } = useDocumentVersions({ documentId: 'doc-id' });
+ *
+ * selectVersionA(2); // Select older version
+ * selectVersionB(5); // Select newer version
+ * await compareVersions();
+ *
+ * if (comparisonState.diffHunks) {
+ *   console.log(`Lines added: ${comparisonState.diffStats.lines_added}`);
+ *   console.log(`Lines removed: ${comparisonState.diffStats.lines_removed}`);
+ * }
+ *
+ * setViewMode('unified'); // Switch from side-by-side to unified diff
+ *
+ * @example
+ * // Revert to previous version
+ * const { revertToVersion, isReverting, refreshVersions } = useDocumentVersions({
+ *   documentId: 'doc-id',
+ * });
+ *
+ * await revertToVersion(3, 'Reverting to version approved by legal');
+ * refreshVersions(); // Fetch updated version list
+ */
 export function useDocumentVersions({
   documentId,
   enabled = true,

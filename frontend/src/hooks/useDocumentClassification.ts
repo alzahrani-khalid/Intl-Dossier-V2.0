@@ -1,11 +1,44 @@
 /**
- * Document Classification Hook
+ * Document Classification Hooks
+ * @module hooks/useDocumentClassification
+ * @feature document-management
  *
- * Provides document classification management functionality:
- * - Fetching classified documents with access control
- * - Changing document classification
- * - Approving classification changes
- * - Access audit logging
+ * React hooks for security classification management with access control,
+ * approval workflows, and audit logging.
+ *
+ * @description
+ * This module provides comprehensive security classification capabilities:
+ * - Fetch classified documents with automatic redaction based on user clearance
+ * - Change document classification with approval workflow
+ * - Approve pending classification changes (admin only)
+ * - Access audit logging for compliance
+ * - User clearance level management
+ * - Automatic cache invalidation on classification changes
+ *
+ * Classification Levels:
+ * - unclassified (level 1): Public access
+ * - internal (level 2): Internal staff only
+ * - confidential (level 3): Authorized personnel
+ * - secret (level 4): Need-to-know basis
+ *
+ * @example
+ * // Fetch classified documents for an entity
+ * const { data: documents } = useClassifiedDocuments('dossier', dossierId);
+ * // Documents are automatically redacted based on user's clearance
+ *
+ * @example
+ * // Change classification with approval
+ * const { mutate: changeClass } = useChangeClassification();
+ * changeClass({
+ *   documentId: 'doc-uuid',
+ *   newClassification: 'confidential',
+ *   reason: 'Contains sensitive diplomatic information',
+ * });
+ *
+ * @example
+ * // Approve pending classification change (admin)
+ * const { mutate: approve } = useApproveClassificationChange();
+ * approve('change-request-uuid');
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -43,6 +76,20 @@ async function callClassificationApi<T>(request: ClassificationApiRequest): Prom
 
 /**
  * Hook to fetch accessible documents for an entity with classification info
+ *
+ * @description
+ * Fetches documents for an entity with automatic access control based on user's
+ * security clearance. Documents above user's clearance are filtered out.
+ * Results are cached for 30 seconds.
+ *
+ * @param entityType - Type of entity owning the documents
+ * @param entityId - ID of the entity owning the documents
+ * @param enabled - Whether to enable the query (default: true)
+ * @returns TanStack Query result with accessible documents array
+ *
+ * @example
+ * const { data: docs, isLoading } = useClassifiedDocuments('dossier', dossierId);
+ * // Only returns documents user has clearance to view
  */
 export function useClassifiedDocuments(entityType: string, entityId: string, enabled = true) {
   return useQuery({
@@ -62,6 +109,19 @@ export function useClassifiedDocuments(entityType: string, entityId: string, ena
 
 /**
  * Hook to fetch a single document with redaction applied
+ *
+ * @description
+ * Fetches a document with automatic redaction based on user's clearance level.
+ * Sensitive content is removed if user lacks sufficient clearance.
+ * Cached for 30 seconds.
+ *
+ * @param documentId - Document UUID to fetch (nullable)
+ * @param enabled - Whether to enable the query (default: true)
+ * @returns TanStack Query result with redacted document
+ *
+ * @example
+ * const { data: doc } = useClassifiedDocument(documentId);
+ * // doc.content may be redacted based on user's clearance
  */
 export function useClassifiedDocument(documentId: string | null, enabled = true) {
   return useQuery({
