@@ -1,3 +1,61 @@
+/**
+ * Bulk Actions Hook
+ * @module hooks/useBulkActions
+ * @feature bulk-actions
+ *
+ * Comprehensive React hook for managing bulk selection and batch operations
+ * with progress tracking, undo support, and confirmation workflows.
+ *
+ * @description
+ * This module provides a complete solution for bulk operations on any selectable items:
+ * - **Selection Management**: Multi-select with 100-item limit, range selection (Shift+Click)
+ * - **Action Execution**: Custom actions with progress tracking and batch processing
+ * - **Confirmation Workflow**: User confirmation for destructive actions
+ * - **Preview & Exclusion**: Review and exclude items before executing
+ * - **Undo Support**: Time-limited undo with configurable TTL
+ * - **Cancellation**: Abort long-running operations
+ *
+ * Designed to work with any entity type that implements BulkSelectableItem interface.
+ *
+ * Action lifecycle:
+ * 1. **Select**: User selects items (toggleSelection, selectAll, selectRange)
+ * 2. **Preview** (optional): Review items, exclude unwanted ones
+ * 3. **Confirm** (optional): Show confirmation dialog for destructive actions
+ * 4. **Execute**: Run action with progress tracking
+ * 5. **Undo** (optional): Revert changes within TTL window
+ *
+ * @example
+ * // Basic usage with custom delete action
+ * const bulkActions = useBulkActions({
+ *   entityType: 'dossier',
+ *   maxSelection: 50,
+ *   onActionComplete: (result) => {
+ *     console.log(`Success: ${result.successCount}/${result.totalCount}`);
+ *   },
+ * });
+ *
+ * // Select items
+ * bulkActions.toggleSelection('item-1');
+ * bulkActions.toggleSelection('item-2');
+ *
+ * @example
+ * // Execute bulk delete with confirmation
+ * const deleteAction = {
+ *   id: 'delete',
+ *   label: 'Delete',
+ *   requiresConfirmation: true,
+ *   execute: async (items) => {
+ *     await deleteItems(items.map(i => i.id));
+ *     return { success: true, successCount: items.length };
+ *   },
+ * };
+ * await bulkActions.executeAction(deleteAction);
+ *
+ * @example
+ * // Range selection with Shift+Click
+ * bulkActions.selectRange('item-1', 'item-5', allItemIds);
+ */
+
 import { useState, useCallback, useMemo, useRef, useEffect } from 'react'
 import type {
   BulkSelectableItem,
@@ -15,18 +73,56 @@ import type {
 import { MAX_BULK_SELECTION, DEFAULT_UNDO_TTL } from '@/types/bulk-actions.types'
 
 /**
- * useBulkActions - Comprehensive hook for managing bulk selection and actions
+ * Hook for managing bulk selection and actions
  *
- * Features:
- * - Selection management with max limit (100 items)
- * - Range selection with Shift+Click
- * - Action execution with progress tracking
- * - Confirmation workflow for destructive actions
- * - Undo capability with TTL countdown
- * - Cancellation support
+ * @description
+ * Provides complete bulk operation workflow with selection, actions, undo, and confirmation.
  *
- * @param options Configuration options
- * @returns Bulk actions state and methods
+ * Selection features:
+ * - Single item toggle (click)
+ * - Range selection (Shift+Click)
+ * - Select all (respects max limit)
+ * - Clear all
+ * - Max 100 items by default (configurable)
+ *
+ * Action features:
+ * - Custom execute functions
+ * - Progress tracking (0-100%)
+ * - Batch processing simulation
+ * - Success/failure per-item results
+ * - Cancel support
+ *
+ * Undo features:
+ * - Automatic state capture
+ * - TTL-based expiration (default: 10s)
+ * - Auto-cleanup on unmount
+ *
+ * @param options - Configuration options
+ * @param options.maxSelection - Maximum items that can be selected (default: 100)
+ * @param options.entityType - Type of entity for display (e.g., 'dossier', 'person')
+ * @param options.undoTtl - Undo time-to-live in milliseconds (default: 10000)
+ * @param options.onActionComplete - Callback after action completes
+ * @param options.onActionError - Callback when action fails
+ * @param options.onUndo - Callback to handle undo (must return Promise<boolean>)
+ * @returns Bulk actions state and control methods
+ *
+ * @example
+ * // Configure with undo support
+ * const bulkActions = useBulkActions({
+ *   entityType: 'task',
+ *   onUndo: async (undoData) => {
+ *     await restoreItems(undoData.previousState);
+ *     return true;
+ *   },
+ * });
+ *
+ * @example
+ * // Check selection state
+ * const { selection } = bulkActions;
+ * console.log(`Selected: ${selection.selectedCount}`);
+ * if (selection.maxReached) {
+ *   toast.warning('Maximum selection reached');
+ * }
  */
 export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem>(
   options: UseBulkActionsOptions<T>,
@@ -81,7 +177,10 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
   // Cancellation ref
   const cancelledRef = useRef(false)
 
-  // Selection computed values
+  /**
+   * Computed selection state
+   * @description Aggregates selection metrics and provides reactive state
+   */
   const selection: BulkSelectionState = useMemo(() => {
     const selectedCount = selectedIds.size
     const maxReached = selectedCount >= maxSelection
@@ -99,10 +198,18 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     }
   }, [selectedIds, maxSelection, visibleIds])
 
-  // Check if item is selected
+  /**
+   * Check if an item is selected
+   * @param id - Item ID to check
+   * @returns True if item is in selection
+   */
   const isSelected = useCallback((id: string): boolean => selectedIds.has(id), [selectedIds])
 
-  // Toggle single item selection
+  /**
+   * Toggle single item selection
+   * @description Adds item if not selected, removes if selected. Respects max limit.
+   * @param id - Item ID to toggle
+   */
   const toggleSelection = useCallback(
     (id: string) => {
       setSelectedIds((prev) => {
@@ -122,7 +229,11 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     [maxSelection],
   )
 
-  // Select all items (respecting max limit)
+  /**
+   * Select all items from provided list
+   * @description Selects up to maxSelection items. Updates visibleIds for allSelected check.
+   * @param ids - Array of all item IDs to select
+   */
   const selectAll = useCallback(
     (ids: string[]) => {
       setVisibleIds(ids)
@@ -131,7 +242,13 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     [maxSelection],
   )
 
-  // Range selection (for Shift+Click)
+  /**
+   * Select range of items (Shift+Click support)
+   * @description Selects all items between startId and endId, respecting max limit.
+   * @param startId - Start of range
+   * @param endId - End of range
+   * @param allIds - Array of all item IDs in order
+   */
   const selectRange = useCallback(
     (startId: string, endId: string, allIds: string[]) => {
       const startIndex = allIds.indexOf(startId)
@@ -156,13 +273,23 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     [maxSelection],
   )
 
-  // Clear all selections
+  /**
+   * Clear all selections
+   * @description Resets selection to empty state
+   */
   const clearSelection = useCallback(() => {
     setSelectedIds(new Set())
     lastSelectedIdRef.current = null
   }, [])
 
-  // Execute a bulk action with specific items (for preview exclusion support)
+  /**
+   * Execute bulk action with specific items
+   * @description Used for preview workflow where user can exclude items before execution.
+   * @param action - Action definition with execute function
+   * @param items - Specific items to process (may be subset of selection)
+   * @param params - Optional parameters for action
+   * @returns Promise resolving to action result
+   */
   const executeActionWithItems = useCallback(
     async (
       action: BulkActionDefinition<T>,
@@ -292,7 +419,13 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     [entityType, undoTtl, onActionComplete, onActionError, clearSelection],
   )
 
-  // Execute a bulk action using selected IDs
+  /**
+   * Execute bulk action using current selection
+   * @description Convenience wrapper that uses selectedIds. For full item data, use executeActionWithItems.
+   * @param action - Action definition
+   * @param params - Optional action parameters
+   * @returns Promise resolving to action result
+   */
   const executeAction = useCallback(
     async (
       action: BulkActionDefinition<T>,
@@ -305,7 +438,10 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     [selectedIds, executeActionWithItems],
   )
 
-  // Cancel current action
+  /**
+   * Cancel currently executing action
+   * @description Sets cancelled flag and updates state. Action execution checks flag.
+   */
   const cancelAction = useCallback(() => {
     cancelledRef.current = true
     setActionState((prev) => ({
@@ -314,7 +450,10 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     }))
   }, [])
 
-  // Reset action state
+  /**
+   * Reset action state to idle
+   * @description Clears progress, results, and errors. Does not affect selection.
+   */
   const resetActionState = useCallback(() => {
     setActionState({
       status: 'idle',
@@ -327,7 +466,11 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     })
   }, [])
 
-  // Execute undo
+  /**
+   * Execute undo of last action
+   * @description Calls onUndo callback with saved state. Clears undo data on success.
+   * @returns Promise resolving to true if undo succeeded
+   */
   const executeUndo = useCallback(async (): Promise<boolean> => {
     if (!undoData || !onUndo) return false
 
@@ -345,7 +488,10 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     }
   }, [undoData, onUndo])
 
-  // Clear undo data
+  /**
+   * Clear undo data and cancel timer
+   * @description Manually expires undo window before TTL
+   */
   const clearUndoData = useCallback(() => {
     setUndoData(null)
     if (undoTimerRef.current) {
@@ -353,7 +499,12 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     }
   }, [])
 
-  // Request confirmation for an action
+  /**
+   * Request user confirmation before action
+   * @description Shows confirmation dialog. Store action in ref for confirmAction callback.
+   * @param action - Action requiring confirmation
+   * @param items - Items that will be affected
+   */
   const requestConfirmation = useCallback(
     (action: BulkActionDefinition<T>, items: T[]) => {
       pendingActionRef.current = { action, items }
@@ -371,7 +522,11 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     [entityType],
   )
 
-  // Confirm the pending action
+  /**
+   * Confirm and execute pending action
+   * @description Retrieves action from ref and executes it with optional params
+   * @param params - Optional parameters to pass to action
+   */
   const confirmAction = useCallback(
     (params?: BulkActionParams) => {
       const pending = pendingActionRef.current
@@ -385,13 +540,21 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     [executeAction],
   )
 
-  // Cancel confirmation
+  /**
+   * Cancel confirmation dialog
+   * @description Closes dialog and clears pending action
+   */
   const cancelConfirmation = useCallback(() => {
     setPendingConfirmation(null)
     pendingActionRef.current = null
   }, [])
 
-  // Request preview for item exclusion
+  /**
+   * Request preview/exclusion workflow
+   * @description Shows preview UI where user can exclude items before execution
+   * @param action - Action to preview
+   * @param items - Items to show in preview
+   */
   const requestPreview = useCallback((action: BulkActionDefinition<T>, items: T[]) => {
     previewActionRef.current = { action }
     setPreviewState({
@@ -401,7 +564,12 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     })
   }, [])
 
-  // Confirm preview and execute action with included items
+  /**
+   * Confirm preview and execute with included items
+   * @description Executes action only on items user included (not excluded)
+   * @param includedItems - Items to include in action (after exclusion)
+   * @param params - Optional action parameters
+   */
   const confirmPreview = useCallback(
     (includedItems: T[], params?: BulkActionParams) => {
       const pending = previewActionRef.current
@@ -419,13 +587,18 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
     [executeActionWithItems],
   )
 
-  // Cancel preview
+  /**
+   * Cancel preview dialog
+   * @description Closes preview and clears pending action
+   */
   const cancelPreview = useCallback(() => {
     setPreviewState({ open: false, action: null, items: [] })
     previewActionRef.current = null
   }, [])
 
-  // Cleanup on unmount
+  /**
+   * Cleanup effect - clear undo timer on unmount
+   */
   useEffect(() => {
     return () => {
       if (undoTimerRef.current) {
@@ -472,6 +645,21 @@ export function useBulkActions<T extends BulkSelectableItem = BulkSelectableItem
 
 /**
  * Simulate bulk action processing for demo/fallback
+ *
+ * @description
+ * Provides a fallback action executor when custom execute function is not provided.
+ * Processes items in batches with simulated delay and progress callbacks.
+ *
+ * Used for:
+ * - Testing bulk action UI without backend
+ * - Demonstration purposes
+ * - Fallback when action.execute is undefined
+ *
+ * @param _actionType - Action type (unused in simulation)
+ * @param itemIds - Array of item IDs to process
+ * @param onProgress - Callback invoked with count of processed items
+ * @returns Promise resolving to action result (always succeeds in simulation)
+ * @internal
  */
 async function simulateBulkAction(
   _actionType: string,

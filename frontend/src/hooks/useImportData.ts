@@ -1,9 +1,53 @@
 /**
- * useImportData Hook
- * Feature: export-import-templates
+ * Data Import Hooks
+ * @module hooks/useImportData
+ * @feature export-import-templates
  *
- * Hook for importing entity data from CSV or XLSX files.
- * Supports file parsing, validation, conflict detection, and import execution.
+ * React hook for importing entity data from CSV and XLSX files with validation,
+ * conflict detection, and progress tracking.
+ *
+ * @description
+ * This module provides a comprehensive data import solution with:
+ * - Multi-format file parsing (CSV, XLSX)
+ * - Client-side file validation and size checking
+ * - Backend validation via Edge Function
+ * - Row-level validation with conflict detection
+ * - Progress tracking through import stages
+ * - Cancelable operations with AbortController
+ * - Error handling and user notifications
+ *
+ * The import workflow consists of:
+ * 1. **Upload & Parse**: Parse CSV/XLSX file client-side
+ * 2. **Validate**: Send to backend for schema and business rule validation
+ * 3. **Review**: User reviews validation results and conflicts
+ * 4. **Import**: Execute import with conflict resolution strategies
+ *
+ * Supported entity types: dossier, person, engagement, working-group, commitment, deliverable
+ *
+ * @example
+ * // Basic usage with file upload
+ * const importHook = useImportData({
+ *   entityType: 'dossier',
+ *   onValidationComplete: (result) => console.log('Validated:', result),
+ *   onSuccess: (response) => console.log('Imported:', response),
+ * });
+ *
+ * // Upload and validate file
+ * await importHook.uploadFile(file);
+ *
+ * @example
+ * // Execute import after validation
+ * if (importHook.validationResult) {
+ *   await importHook.executeImport({
+ *     mode: 'upsert',
+ *     rows: importHook.validationResult.rows,
+ *     conflictResolution: 'update',
+ *   });
+ * }
+ *
+ * @example
+ * // Cancel ongoing operation
+ * importHook.cancel();
  */
 
 import { useState, useCallback, useRef } from 'react'
@@ -24,6 +68,58 @@ import type {
 const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const MAX_FILE_SIZE_MB = 10
 
+/**
+ * Hook for importing entity data from CSV or XLSX files
+ *
+ * @description
+ * Manages the complete import workflow including file upload, parsing, validation,
+ * and execution. Provides real-time progress tracking and error handling.
+ *
+ * Features:
+ * - Automatic format detection (CSV, XLSX)
+ * - File size validation (max 10MB)
+ * - Client-side parsing with papaparse (CSV) and ExcelJS (XLSX)
+ * - Backend validation via data-import Edge Function
+ * - Row-level conflict detection and resolution
+ * - Progress tracking with stage-based updates
+ * - Cancelable operations
+ * - Automatic toast notifications
+ *
+ * @param options - Configuration options for import behavior
+ * @param options.entityType - Type of entity being imported (e.g., 'dossier', 'person')
+ * @param options.defaultMode - Default import mode: 'insert' | 'update' | 'upsert' (default: 'upsert')
+ * @param options.onValidationComplete - Callback after validation completes successfully
+ * @param options.onSuccess - Callback after import completes successfully
+ * @param options.onError - Callback when validation or import fails
+ * @returns Import state and control methods
+ *
+ * @example
+ * // Configure import for dossier entities
+ * const importHook = useImportData({
+ *   entityType: 'dossier',
+ *   defaultMode: 'upsert',
+ *   onSuccess: (response) => {
+ *     console.log(`Imported ${response.successCount} dossiers`);
+ *     refetchDossiers();
+ *   },
+ * });
+ *
+ * @example
+ * // Handle file input change
+ * const handleFileSelect = async (event) => {
+ *   const file = event.target.files[0];
+ *   if (file) {
+ *     try {
+ *       const validation = await importHook.uploadFile(file);
+ *       if (validation.hasConflicts) {
+ *         // Show conflict resolution UI
+ *       }
+ *     } catch (error) {
+ *       console.error('Upload failed:', error);
+ *     }
+ *   }
+ * };
+ */
 export function useImportData(options: UseImportDataOptions): UseImportDataReturn {
   const { t } = useTranslation('export-import')
   const [validationResult, setValidationResult] = useState<ImportValidationResult | null>(null)
@@ -34,6 +130,16 @@ export function useImportData(options: UseImportDataOptions): UseImportDataRetur
   const [error, setError] = useState<Error | null>(null)
   const abortControllerRef = useRef<AbortController | null>(null)
 
+  /**
+   * Retrieve Supabase auth token from localStorage
+   *
+   * @description
+   * Extracts the access token from Supabase's localStorage entry.
+   * Handles both parsed objects and raw token strings.
+   *
+   * @returns Access token string or null if not authenticated
+   * @internal
+   */
   const getAuthToken = useCallback(() => {
     const supabaseAuthKey = `sb-${new URL(SUPABASE_URL).hostname.split('.')[0]}-auth-token`
     const authData = localStorage.getItem(supabaseAuthKey)
@@ -48,6 +154,22 @@ export function useImportData(options: UseImportDataOptions): UseImportDataRetur
     return null
   }, [])
 
+  /**
+   * Parse CSV file content using papaparse
+   *
+   * @description
+   * Converts CSV string content into structured data with headers and rows.
+   * Automatically trims headers and skips empty lines.
+   *
+   * @param content - CSV file content as string
+   * @returns Promise resolving to parsed headers and data rows
+   * @throws Error if CSV parsing fails
+   * @internal
+   *
+   * @example
+   * const parsed = await parseCSV('name_en,type\nFrance,country');
+   * // { headers: ['name_en', 'type'], data: [{ name_en: 'France', type: 'country' }] }
+   */
   const parseCSV = useCallback(
     (content: string): Promise<{ headers: string[]; data: Record<string, unknown>[] }> => {
       return new Promise((resolve, reject) => {
@@ -69,6 +191,28 @@ export function useImportData(options: UseImportDataOptions): UseImportDataRetur
     [],
   )
 
+  /**
+   * Parse XLSX file using ExcelJS
+   *
+   * @description
+   * Reads the first worksheet from an Excel file and extracts headers and data rows.
+   * Handles rich text cells and formula results automatically.
+   *
+   * Processing:
+   * - Row 1: Extracted as column headers (trimmed)
+   * - Row 2+: Extracted as data rows (empty rows skipped)
+   * - Rich text cells: Converted to plain text
+   * - Formula cells: Uses calculated result value
+   *
+   * @param file - Excel file (XLSX or XLS format)
+   * @returns Promise resolving to parsed headers and data rows
+   * @throws Error if file has no worksheets or cannot be parsed
+   * @internal
+   *
+   * @example
+   * const parsed = await parseXLSX(file);
+   * // { headers: ['name_en', 'type'], data: [{ name_en: 'France', type: 'country' }] }
+   */
   const parseXLSX = useCallback(
     async (file: File): Promise<{ headers: string[]; data: Record<string, unknown>[] }> => {
       const workbook = new ExcelJS.Workbook()
@@ -118,6 +262,40 @@ export function useImportData(options: UseImportDataOptions): UseImportDataRetur
     [],
   )
 
+  /**
+   * Upload and validate an import file
+   *
+   * @description
+   * Handles the complete file upload and validation workflow:
+   * 1. Validates file size (max 10MB)
+   * 2. Detects format and parses file (CSV or XLSX)
+   * 3. Sends data to backend validation Edge Function
+   * 4. Returns validation results with row-level feedback
+   *
+   * Progress stages: uploading → parsing → validating → complete
+   *
+   * Validation includes:
+   * - Schema validation (required fields, data types)
+   * - Business rule validation (unique constraints, references)
+   * - Conflict detection for upsert/update modes
+   *
+   * @param file - CSV or XLSX file to import
+   * @returns Promise resolving to validation result with row statuses
+   * @throws Error if file is too large, empty, invalid format, or validation fails
+   *
+   * @example
+   * // Handle file upload
+   * const validation = await importHook.uploadFile(file);
+   * console.log(`Valid rows: ${validation.validCount}`);
+   * console.log(`Conflicts: ${validation.conflictCount}`);
+   *
+   * @example
+   * // Check for validation errors
+   * if (validation.hasErrors) {
+   *   const errors = validation.rows.filter(r => r.status === 'error');
+   *   errors.forEach(row => console.log(row.errors));
+   * }
+   */
   const uploadFile = useCallback(
     async (file: File): Promise<ImportValidationResult> => {
       setIsValidating(true)
@@ -244,6 +422,50 @@ export function useImportData(options: UseImportDataOptions): UseImportDataRetur
     [getAuthToken, options, parseCSV, parseXLSX, t],
   )
 
+  /**
+   * Execute import after validation
+   *
+   * @description
+   * Imports validated rows to the database with conflict resolution.
+   * Only processes rows with status 'valid', 'warning', or 'conflict'.
+   *
+   * Import modes:
+   * - **insert**: Create new records only (fails on duplicates)
+   * - **update**: Update existing records only (fails on missing)
+   * - **upsert**: Insert new or update existing (recommended)
+   *
+   * Conflict resolution strategies:
+   * - **skip**: Skip conflicting rows
+   * - **update**: Update existing records with new data
+   * - **keep_existing**: Keep existing records, skip updates
+   *
+   * @param request - Import request configuration
+   * @param request.mode - Import mode ('insert' | 'update' | 'upsert')
+   * @param request.rows - Validated rows to import
+   * @param request.conflictResolution - How to handle conflicts
+   * @param request.conflictResolutions - Per-row conflict resolutions (optional)
+   * @param request.skipWarnings - Skip rows with warnings (default: false)
+   * @param request.dryRun - Simulate import without committing (default: false)
+   * @returns Promise resolving to import result with success/failure counts
+   * @throws Error if import fails or is cancelled
+   *
+   * @example
+   * // Execute import with upsert mode
+   * const response = await importHook.executeImport({
+   *   mode: 'upsert',
+   *   rows: validationResult.rows,
+   *   conflictResolution: 'update',
+   * });
+   * console.log(`Success: ${response.successCount}/${response.totalRows}`);
+   *
+   * @example
+   * // Dry run to preview changes
+   * const preview = await importHook.executeImport({
+   *   mode: 'upsert',
+   *   rows: validationResult.rows,
+   *   dryRun: true,
+   * });
+   */
   const executeImport = useCallback(
     async (request: ImportRequest): Promise<ImportResponse> => {
       setIsImporting(true)
@@ -357,6 +579,17 @@ export function useImportData(options: UseImportDataOptions): UseImportDataRetur
     [getAuthToken, options, t],
   )
 
+  /**
+   * Cancel ongoing upload or import operation
+   *
+   * @description
+   * Aborts the current operation using AbortController and resets loading states.
+   * Safe to call even if no operation is in progress.
+   *
+   * @example
+   * // Cancel button handler
+   * <Button onClick={importHook.cancel}>Cancel Import</Button>
+   */
   const cancel = useCallback(() => {
     if (abortControllerRef.current) {
       abortControllerRef.current.abort()
@@ -366,6 +599,18 @@ export function useImportData(options: UseImportDataOptions): UseImportDataRetur
     setProgress(null)
   }, [])
 
+  /**
+   * Reset all import state to initial values
+   *
+   * @description
+   * Clears validation results, import responses, progress, and errors.
+   * Use this to start a fresh import workflow.
+   *
+   * @example
+   * // Reset after successful import
+   * importHook.reset();
+   * fileInputRef.current.value = '';
+   */
   const reset = useCallback(() => {
     setValidationResult(null)
     setImportResponse(null)

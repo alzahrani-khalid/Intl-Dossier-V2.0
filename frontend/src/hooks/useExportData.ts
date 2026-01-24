@@ -1,9 +1,54 @@
 /**
- * useExportData Hook
- * Feature: export-import-templates
+ * Data Export Hooks
+ * @module hooks/useExportData
+ * @feature export-import-templates
  *
- * Hook for exporting entity data to CSV, XLSX, or JSON formats.
- * Supports template generation and progress tracking.
+ * React hook for exporting entity data to CSV, XLSX, or JSON formats with
+ * template generation and progress tracking.
+ *
+ * @description
+ * This module provides comprehensive data export and template download capabilities:
+ * - Multi-format export (CSV, XLSX, JSON)
+ * - Filtered data export via backend Edge Function
+ * - Template generation for data import
+ * - Bilingual header support (English, Arabic, or both)
+ * - Sample data inclusion in templates
+ * - Client-side XLSX formatting with ExcelJS
+ * - Progress tracking through export stages
+ * - Automatic file download handling
+ *
+ * Export workflow:
+ * 1. **Fetch**: Query backend for data based on filters
+ * 2. **Generate**: Convert to requested format (CSV/XLSX/JSON)
+ * 3. **Download**: Trigger browser download
+ *
+ * Template workflow:
+ * 1. **Configure**: Select entity type, format, language
+ * 2. **Generate**: Create template with headers and optional sample data
+ * 3. **Download**: Trigger browser download
+ *
+ * Supported entity types: dossier, person, engagement, working-group, commitment, deliverable
+ *
+ * @example
+ * // Export dossiers to XLSX
+ * const exportHook = useExportData({
+ *   onSuccess: (response) => console.log('Exported:', response.fileName),
+ * });
+ *
+ * await exportHook.exportData({
+ *   entityType: 'dossier',
+ *   format: 'xlsx',
+ *   filters: { type: 'country', status: 'active' },
+ * });
+ *
+ * @example
+ * // Download bilingual import template
+ * await exportHook.downloadTemplate({
+ *   entityType: 'person',
+ *   format: 'xlsx',
+ *   language: 'both',
+ *   includeSampleData: true,
+ * });
  */
 
 import { useState, useCallback } from 'react'
@@ -347,12 +392,59 @@ const ENTITY_TEMPLATES: Record<
   },
 }
 
+/**
+ * Hook for exporting entity data and downloading templates
+ *
+ * @description
+ * Manages data export operations and template downloads with progress tracking.
+ * Handles format conversion, file generation, and automatic browser downloads.
+ *
+ * Features:
+ * - Export to CSV, XLSX, or JSON
+ * - Apply filters to export query
+ * - Download import templates with sample data
+ * - Bilingual template headers (EN/AR/both)
+ * - XLSX formatting (bold headers, auto-fit columns)
+ * - Progress tracking (fetching → generating → complete)
+ * - Automatic toast notifications
+ * - UTF-8 BOM for Excel CSV compatibility
+ *
+ * @param options - Configuration options for export behavior
+ * @param options.onSuccess - Callback after export completes successfully
+ * @param options.onError - Callback when export fails
+ * @returns Export state and control methods
+ *
+ * @example
+ * // Export filtered dossiers
+ * const exportHook = useExportData({
+ *   onSuccess: () => toast.success('Export complete'),
+ * });
+ *
+ * await exportHook.exportData({
+ *   entityType: 'dossier',
+ *   format: 'xlsx',
+ *   filters: { type: 'country' },
+ * });
+ *
+ * @example
+ * // Download template with sample data
+ * await exportHook.downloadTemplate({
+ *   entityType: 'person',
+ *   format: 'xlsx',
+ *   language: 'en',
+ *   includeSampleData: true,
+ * });
+ */
 export function useExportData(options: UseExportDataOptions = {}): UseExportDataReturn {
   const { t, i18n } = useTranslation('export-import')
   const [progress, setProgress] = useState<ExportProgress | null>(null)
   const [isExporting, setIsExporting] = useState(false)
   const [error, setError] = useState<Error | null>(null)
 
+  /**
+   * Retrieve Supabase auth token from localStorage
+   * @internal
+   */
   const getAuthToken = useCallback(() => {
     const supabaseAuthKey = `sb-${new URL(SUPABASE_URL).hostname.split('.')[0]}-auth-token`
     const authData = localStorage.getItem(supabaseAuthKey)
@@ -367,6 +459,47 @@ export function useExportData(options: UseExportDataOptions = {}): UseExportData
     return null
   }, [])
 
+  /**
+   * Export entity data to file
+   *
+   * @description
+   * Fetches data from backend Edge Function and downloads as CSV, XLSX, or JSON.
+   * For XLSX format, converts CSV response to Excel format with formatting.
+   *
+   * Export process:
+   * 1. Fetch data from data-export Edge Function with filters
+   * 2. Convert to requested format (XLSX conversion done client-side)
+   * 3. Trigger browser download
+   *
+   * Progress stages: fetching → generating → complete
+   *
+   * @param request - Export request configuration
+   * @param request.entityType - Type of entity to export
+   * @param request.format - Output format ('csv' | 'xlsx' | 'json')
+   * @param request.filters - Optional filters to apply (type, status, search, etc.)
+   * @param request.columns - Optional column selection (defaults to all)
+   * @param request.language - Language for column headers ('en' | 'ar' | 'both')
+   * @returns Promise resolving to export response with metadata
+   * @throws Error if export fails or user is not authenticated
+   *
+   * @example
+   * // Export all active countries to XLSX
+   * const response = await exportHook.exportData({
+   *   entityType: 'dossier',
+   *   format: 'xlsx',
+   *   filters: { type: 'country', status: 'active' },
+   * });
+   * console.log(`Exported ${response.recordCount} records`);
+   *
+   * @example
+   * // Export specific columns to CSV
+   * await exportHook.exportData({
+   *   entityType: 'person',
+   *   format: 'csv',
+   *   columns: ['name_en', 'email', 'phone'],
+   *   language: 'en',
+   * });
+   */
   const exportData = useCallback(
     async (request: ExportRequest): Promise<ExportResponse> => {
       setIsExporting(true)
@@ -534,6 +667,49 @@ export function useExportData(options: UseExportDataOptions = {}): UseExportData
     [getAuthToken, options, t],
   )
 
+  /**
+   * Download import template file
+   *
+   * @description
+   * Generates a template file with column headers and optional sample data
+   * for use in data import. Templates are created client-side from predefined
+   * entity schemas.
+   *
+   * Template features:
+   * - Column headers in English, Arabic, or both
+   * - Required field indicators (*)
+   * - Optional sample data row
+   * - Instruction row with field requirements
+   * - XLSX: Styled headers (blue background, white text, bold)
+   * - XLSX: Auto-fit column widths
+   * - CSV: UTF-8 BOM for Excel compatibility
+   *
+   * @param request - Template download configuration
+   * @param request.entityType - Type of entity template to generate
+   * @param request.format - Template format ('csv' | 'xlsx')
+   * @param request.language - Header language ('en' | 'ar' | 'both')
+   * @param request.includeSampleData - Include example data row (default: false)
+   * @returns Promise that resolves when download completes
+   * @throws Error if entity type is unknown or download fails
+   *
+   * @example
+   * // Download bilingual XLSX template with samples
+   * await exportHook.downloadTemplate({
+   *   entityType: 'dossier',
+   *   format: 'xlsx',
+   *   language: 'both',
+   *   includeSampleData: true,
+   * });
+   *
+   * @example
+   * // Download minimal CSV template
+   * await exportHook.downloadTemplate({
+   *   entityType: 'person',
+   *   format: 'csv',
+   *   language: 'en',
+   *   includeSampleData: false,
+   * });
+   */
   const downloadTemplate = useCallback(
     async (request: TemplateDownloadRequest): Promise<void> => {
       setIsExporting(true)
@@ -656,6 +832,17 @@ export function useExportData(options: UseExportDataOptions = {}): UseExportData
     [i18n.language, t],
   )
 
+  /**
+   * Reset all export state to initial values
+   *
+   * @description
+   * Clears progress, errors, and loading states.
+   * Use this to prepare for a new export operation.
+   *
+   * @example
+   * // Reset after export completes
+   * exportHook.reset();
+   */
   const reset = useCallback(() => {
     setProgress(null)
     setError(null)

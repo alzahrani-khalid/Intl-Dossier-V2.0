@@ -1,3 +1,50 @@
+/**
+ * Bulk Selection Hook
+ * @module hooks/use-bulk-selection
+ * @feature 014-full-assignment-detail
+ *
+ * Lightweight React hook for managing multi-select state with a 100-item limit.
+ *
+ * @description
+ * Provides a simple, optimized selection state manager for any list of items.
+ * Uses Set for O(1) lookup performance and enforces a configurable maximum.
+ *
+ * Features:
+ * - Set-based storage for optimal performance
+ * - 100-item selection limit (configurable via MAX_SELECTION constant)
+ * - Selection helpers: toggle, selectAll, clear
+ * - Selection status flags: canSelectMore, maxReached
+ * - Memoized return value for stable references
+ *
+ * Use cases:
+ * - Assignment bulk operations
+ * - Document multi-select
+ * - Any list with bulk actions
+ *
+ * @example
+ * // Basic usage in assignment list
+ * const selection = useBulkSelection();
+ *
+ * const handleSelect = (id) => {
+ *   selection.toggleSelection(id);
+ * };
+ *
+ * const handleSelectAll = () => {
+ *   selection.selectAll(assignments.map(a => a.id));
+ * };
+ *
+ * @example
+ * // Prevent over-selection
+ * if (selection.maxReached) {
+ *   toast.warning('Maximum 100 items can be selected');
+ * }
+ *
+ * @example
+ * // Clear after bulk operation
+ * await performBulkAction(Array.from(selection.selectedIds));
+ * selection.clearSelection();
+ */
+
 import { useState, useCallback, useMemo } from 'react';
 
 const MAX_SELECTION = 100;
@@ -14,7 +61,11 @@ export interface UseBulkSelectionResult {
 }
 
 /**
- * useBulkSelection - Hook for managing bulk selection state
+ * Hook for managing bulk selection state
+ *
+ * @description
+ * Maintains a Set of selected item IDs with a maximum limit.
+ * Provides helper methods for common selection operations.
  *
  * Features:
  * - Maintains set of selected assignment IDs
@@ -26,7 +77,7 @@ export interface UseBulkSelectionResult {
  * - Maximum 100 items can be selected (per C-001)
  * - Selection state persists within component lifecycle only
  *
- * @returns {UseBulkSelectionResult} Selection state and methods
+ * @returns Selection state and methods
  */
 export function useBulkSelection(): UseBulkSelectionResult {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set());
@@ -37,6 +88,8 @@ export function useBulkSelection(): UseBulkSelectionResult {
 
   /**
    * Check if an item is currently selected
+   * @param id - Item ID to check
+   * @returns True if item is in selection
    */
   const isSelected = useCallback(
     (id: string): boolean => {
@@ -47,7 +100,8 @@ export function useBulkSelection(): UseBulkSelectionResult {
 
   /**
    * Toggle selection state for a single item
-   * Prevents selection if max limit reached
+   * @description Adds item if not selected, removes if selected. Prevents selection if max limit reached.
+   * @param id - Item ID to toggle
    */
   const toggleSelection = useCallback(
     (id: string) => {
@@ -77,7 +131,8 @@ export function useBulkSelection(): UseBulkSelectionResult {
 
   /**
    * Select all items from provided list
-   * Respects max limit by taking first MAX_SELECTION items
+   * @description Selects up to MAX_SELECTION items from the list. Replaces current selection.
+   * @param ids - Array of all item IDs to select
    */
   const selectAll = useCallback((ids: string[]) => {
     setSelectedIds((prev) => {
@@ -89,6 +144,7 @@ export function useBulkSelection(): UseBulkSelectionResult {
 
   /**
    * Clear all selections
+   * @description Resets selection to empty state
    */
   const clearSelection = useCallback(() => {
     setSelectedIds(new Set());

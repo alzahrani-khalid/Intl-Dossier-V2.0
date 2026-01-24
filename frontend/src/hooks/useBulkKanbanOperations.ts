@@ -1,12 +1,48 @@
 /**
- * useBulkKanbanOperations - Hook for bulk operations on Kanban items
- * Feature: kanban-task-board
+ * Bulk Kanban Operations Hooks
+ * @module hooks/useBulkKanbanOperations
+ * @feature kanban-task-board
+ * @feature 032-unified-work-management
  *
- * Provides:
- * - Multi-select functionality
- * - Bulk move operations
- * - Bulk assign operations
- * - Bulk priority updates
+ * React hooks for bulk operations on unified work items in Kanban board.
+ * Supports multi-select, bulk move, bulk assign, and bulk priority updates
+ * across all work item sources (task, commitment, intake).
+ *
+ * @description
+ * This module provides specialized bulk operations for the unified Kanban board:
+ * - **Selection**: Multi-select with range support (Shift+Click), select by column
+ * - **Bulk Move**: Move items across workflow columns with source-specific status mapping
+ * - **Bulk Assign**: Assign multiple items to a user (handles source-specific field names)
+ * - **Bulk Priority**: Update priority for multiple items
+ *
+ * Key features:
+ * - Unified interface for heterogeneous work items (tasks, commitments, intake tickets)
+ * - Source-aware database operations (different tables and field names)
+ * - Automatic cache invalidation via TanStack Query
+ * - Toast notifications with success/failure counts
+ * - Promise.allSettled for partial success handling
+ *
+ * @example
+ * // Use in Kanban board component
+ * const bulkOps = useBulkKanbanOperations(workItems);
+ *
+ * // Select items
+ * bulkOps.toggleSelection('task-123');
+ * bulkOps.selectByColumn('in_progress');
+ *
+ * // Bulk move to done column
+ * await bulkOps.moveSelected('done');
+ *
+ * @example
+ * // Range selection with Shift+Click
+ * const handleClick = (itemId, event) => {
+ *   bulkOps.toggleSelection(itemId, event.shiftKey);
+ * };
+ *
+ * @example
+ * // Bulk operations
+ * await bulkOps.assignSelected('user-uuid-123');
+ * await bulkOps.updatePrioritySelected('urgent');
  */
 
 import { useState, useCallback, useMemo } from 'react'
@@ -35,7 +71,33 @@ interface BulkPriorityParams {
 }
 
 /**
- * Hook for managing item selection state
+ * Hook for managing Kanban item selection state
+ *
+ * @description
+ * Provides selection management with support for:
+ * - Single item toggle
+ * - Range selection (Shift+Click)
+ * - Select all items
+ * - Select by column
+ * - Clear selection
+ * - Select mode toggle (for mobile UI)
+ *
+ * Tracks last selected ID for range selection behavior.
+ *
+ * @param items - Array of work items available for selection
+ * @returns Selection state and control methods
+ *
+ * @example
+ * const selection = useKanbanSelection(workItems);
+ *
+ * // Toggle with range support
+ * const handleClick = (id, event) => {
+ *   selection.toggleSelection(id, event.shiftKey);
+ * };
+ *
+ * @example
+ * // Select all items in a column
+ * selection.selectByColumn('in_progress');
  */
 export function useKanbanSelection(items: WorkItem[]) {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
@@ -132,6 +194,27 @@ export function useKanbanSelection(items: WorkItem[]) {
 
 /**
  * Hook for bulk move operations
+ *
+ * @description
+ * TanStack Query mutation for moving multiple work items to a target column.
+ * Handles source-specific table names and status mapping.
+ *
+ * Status mapping per source:
+ * - **tasks**: Updates `workflow_stage` and `status` fields
+ * - **commitments**: Updates `status` field
+ * - **intake**: Updates `status` field with different value set
+ *
+ * Uses Promise.allSettled to support partial success scenarios.
+ *
+ * @returns TanStack Query mutation with success/error handlers
+ *
+ * @example
+ * const bulkMove = useBulkMove();
+ * await bulkMove.mutateAsync({
+ *   itemIds: ['task-1', 'task-2'],
+ *   targetColumn: 'done',
+ *   items: workItems,
+ * });
  */
 export function useBulkMove() {
   const queryClient = useQueryClient()
@@ -189,6 +272,25 @@ export function useBulkMove() {
 
 /**
  * Hook for bulk assign operations
+ *
+ * @description
+ * TanStack Query mutation for assigning multiple work items to a user.
+ * Handles source-specific assignee field names:
+ * - tasks: `assignee_id`
+ * - commitments: `owner_user_id`
+ * - intake: `assigned_to`
+ *
+ * Uses Promise.allSettled to support partial success scenarios.
+ *
+ * @returns TanStack Query mutation with success/error handlers
+ *
+ * @example
+ * const bulkAssign = useBulkAssign();
+ * await bulkAssign.mutateAsync({
+ *   itemIds: ['task-1', 'commitment-2'],
+ *   assigneeId: 'user-uuid-123',
+ *   items: workItems,
+ * });
  */
 export function useBulkAssign() {
   const queryClient = useQueryClient()
@@ -252,6 +354,22 @@ export function useBulkAssign() {
 
 /**
  * Hook for bulk priority updates
+ *
+ * @description
+ * TanStack Query mutation for updating priority of multiple work items.
+ * Priority field is consistent across all sources: `priority`.
+ *
+ * Uses Promise.allSettled to support partial success scenarios.
+ *
+ * @returns TanStack Query mutation with success/error handlers
+ *
+ * @example
+ * const bulkPriority = useBulkPriority();
+ * await bulkPriority.mutateAsync({
+ *   itemIds: ['task-1', 'task-2'],
+ *   priority: 'urgent',
+ *   items: workItems,
+ * });
  */
 export function useBulkPriority() {
   const queryClient = useQueryClient()
@@ -313,7 +431,40 @@ export function useBulkPriority() {
 }
 
 /**
- * Combined hook for all bulk operations
+ * Combined hook for all Kanban bulk operations
+ *
+ * @description
+ * Aggregates selection and bulk operation hooks into a unified interface.
+ * Provides convenience methods that handle selection clearing after operations.
+ *
+ * Returns:
+ * - All selection methods from useKanbanSelection
+ * - moveSelected, assignSelected, updatePrioritySelected (with auto-clear)
+ * - isLoading flag (true when any operation is pending)
+ *
+ * This is the recommended hook to use in Kanban board components.
+ *
+ * @param items - Array of work items for the board
+ * @returns Combined selection state and bulk operation methods
+ *
+ * @example
+ * // Complete bulk operations workflow
+ * const bulkOps = useBulkKanbanOperations(workItems);
+ *
+ * // Enable select mode
+ * bulkOps.toggleSelectMode();
+ *
+ * // Select items
+ * bulkOps.toggleSelection('task-1');
+ * bulkOps.toggleSelection('task-2');
+ *
+ * // Perform bulk operation
+ * await bulkOps.moveSelected('done');
+ * // Selection is automatically cleared
+ *
+ * @example
+ * // Disable UI during operations
+ * {bulkOps.isLoading && <Spinner />}
  */
 export function useBulkKanbanOperations(items: WorkItem[]) {
   const selection = useKanbanSelection(items)
@@ -369,8 +520,26 @@ export function useBulkKanbanOperations(items: WorkItem[]) {
   }
 }
 
-// Helper functions
+/**
+ * Helper functions for source-aware database operations
+ */
 
+/**
+ * Get database table name for work source
+ *
+ * @description
+ * Maps work item source to corresponding Supabase table name.
+ *
+ * Mapping:
+ * - task → tasks
+ * - commitment → aa_commitments
+ * - intake → intake_tickets
+ *
+ * @param source - Work item source type
+ * @returns Database table name
+ * @throws Error if source is unknown
+ * @internal
+ */
 function getTableForSource(source: WorkSource): string {
   switch (source) {
     case 'task':
@@ -384,6 +553,22 @@ function getTableForSource(source: WorkSource): string {
   }
 }
 
+/**
+ * Get assignee field name for work source
+ *
+ * @description
+ * Maps work item source to corresponding assignee field name in database.
+ *
+ * Mapping:
+ * - task → assignee_id
+ * - commitment → owner_user_id
+ * - intake → assigned_to
+ *
+ * @param source - Work item source type
+ * @returns Assignee field name
+ * @throws Error if source is unknown
+ * @internal
+ */
 function getAssigneeFieldForSource(source: WorkSource): string {
   switch (source) {
     case 'task':
@@ -397,6 +582,30 @@ function getAssigneeFieldForSource(source: WorkSource): string {
   }
 }
 
+/**
+ * Get update data for moving item to target column
+ *
+ * @description
+ * Generates database update object based on source type and target column.
+ * Handles source-specific field names and status value mapping.
+ *
+ * Field mappings:
+ * - **tasks**: Updates `workflow_stage` and `status` (different values)
+ * - **commitments**: Updates `status` only
+ * - **intake**: Updates `status` only (different values than commitments)
+ *
+ * Column → Status mapping:
+ * - todo → pending
+ * - in_progress → in_progress
+ * - review → in_progress (tasks only)
+ * - done → completed (or resolved for intake)
+ * - cancelled → cancelled (or closed for intake)
+ *
+ * @param source - Work item source type
+ * @param targetColumn - Target Kanban column key
+ * @returns Update object for Supabase query
+ * @internal
+ */
 function getUpdateDataForMove(source: WorkSource, targetColumn: string): Record<string, unknown> {
   const baseUpdate = {
     updated_at: new Date().toISOString(),
