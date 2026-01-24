@@ -1,6 +1,32 @@
 /**
- * useCalendarSync Hook
- * Manages two-way sync with external calendar systems (Google Calendar, Outlook, Exchange)
+ * Calendar Sync Hooks
+ * @module hooks/useCalendarSync
+ * @feature calendar-sync
+ *
+ * TanStack Query hooks for two-way calendar synchronization with external providers.
+ *
+ * @description
+ * This module provides comprehensive React hooks for managing calendar synchronization:
+ * - OAuth connection management for Google Calendar, Outlook, Exchange
+ * - Calendar discovery and selective sync configuration
+ * - Bidirectional event synchronization with conflict resolution
+ * - iCal/WebCal feed subscriptions (read-only)
+ * - Unified calendar view combining internal and external events
+ * - Sync logs and conflict tracking
+ *
+ * All hooks handle authentication and cache invalidation automatically.
+ *
+ * @example
+ * // Connect to Google Calendar
+ * const { mutate: connect } = useConnectCalendarProvider();
+ * connect({
+ *   provider: 'google',
+ *   redirectUri: 'https://app.example.com/oauth/callback',
+ * });
+ *
+ * @example
+ * // Fetch unified calendar view
+ * const { data: events } = useUnifiedCalendarEvents('2024-01-01', '2024-01-31');
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -23,7 +49,21 @@ import type {
 
 const EDGE_FUNCTION_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/calendar-sync`
 
-// Query keys
+/**
+ * Query Keys Factory for calendar sync queries
+ *
+ * @description
+ * Provides a hierarchical key structure for TanStack Query cache management.
+ * Keys are structured to enable granular cache invalidation for calendar sync operations.
+ *
+ * @example
+ * // Invalidate all calendar sync queries
+ * queryClient.invalidateQueries({ queryKey: calendarSyncKeys.all });
+ *
+ * @example
+ * // Invalidate specific connection
+ * queryClient.invalidateQueries({ queryKey: calendarSyncKeys.connection(connectionId) });
+ */
 export const calendarSyncKeys = {
   all: ['calendar-sync'] as const,
   connections: () => [...calendarSyncKeys.all, 'connections'] as const,
@@ -37,7 +77,15 @@ export const calendarSyncKeys = {
     [...calendarSyncKeys.all, 'unified', startDate, endDate] as const,
 }
 
-// Helper to get auth headers
+/**
+ * Get auth headers for API requests
+ *
+ * @description
+ * Retrieves current session token and formats authorization headers.
+ *
+ * @returns Promise resolving to headers object
+ * @private
+ */
 async function getAuthHeaders(): Promise<HeadersInit> {
   const {
     data: { session },
@@ -48,7 +96,19 @@ async function getAuthHeaders(): Promise<HeadersInit> {
   }
 }
 
-// API helper
+/**
+ * Generic API helper for calendar sync endpoints
+ *
+ * @description
+ * Handles authenticated requests to calendar sync Edge Function with error handling.
+ *
+ * @template T - Expected response type
+ * @param endpoint - API endpoint path (e.g., '/connections')
+ * @param options - Fetch request options
+ * @returns Promise resolving to typed response data
+ * @throws {Error} If request fails with extracted error message
+ * @private
+ */
 async function fetchCalendarSync<T>(endpoint: string, options: RequestInit = {}): Promise<T> {
   const headers = await getAuthHeaders()
   const response = await fetch(`${EDGE_FUNCTION_URL}${endpoint}`, {
@@ -72,7 +132,17 @@ async function fetchCalendarSync<T>(endpoint: string, options: RequestInit = {})
 // ============================================================================
 
 /**
- * Fetch all calendar connections
+ * Hook to fetch all external calendar connections
+ *
+ * @description
+ * Fetches all active external calendar provider connections (Google Calendar,
+ * Outlook, Exchange) for the current user with their sync status and settings.
+ *
+ * @returns TanStack Query result with array of calendar connections
+ *
+ * @example
+ * // Fetch all connections
+ * const { data: connections, isLoading } = useCalendarConnections();
  */
 export function useCalendarConnections() {
   return useQuery({
@@ -82,7 +152,18 @@ export function useCalendarConnections() {
 }
 
 /**
- * Fetch a single connection
+ * Hook to fetch a single calendar connection by ID
+ *
+ * @description
+ * Fetches details for a specific external calendar connection. Query is
+ * automatically disabled if connectionId is undefined.
+ *
+ * @param connectionId - UUID of the connection (undefined disables query)
+ * @returns TanStack Query result with connection details
+ *
+ * @example
+ * // Fetch specific connection
+ * const { data: connection, isLoading } = useCalendarConnection(connectionId);
  */
 export function useCalendarConnection(connectionId: string | undefined) {
   return useQuery({
@@ -93,7 +174,33 @@ export function useCalendarConnection(connectionId: string | undefined) {
 }
 
 /**
- * Initiate OAuth connection to a calendar provider
+ * Hook to initiate OAuth connection to a calendar provider
+ *
+ * @description
+ * Starts the OAuth flow for connecting to an external calendar provider.
+ * Returns an authorization URL that the user should be redirected to.
+ * On success, invalidates the connections cache.
+ *
+ * @returns TanStack Mutation result with authorization_url and state in response
+ *
+ * @example
+ * // Connect to Google Calendar
+ * const { mutate: connect, data } = useConnectCalendarProvider();
+ *
+ * const handleConnect = () => {
+ *   connect({
+ *     provider: 'google',
+ *     redirectUri: window.location.origin + '/oauth/callback',
+ *     settings: { sync_direction: 'bidirectional' },
+ *   });
+ * };
+ *
+ * // Redirect to authorization URL
+ * useEffect(() => {
+ *   if (data?.authorization_url) {
+ *     window.location.href = data.authorization_url;
+ *   }
+ * }, [data]);
  */
 export function useConnectCalendarProvider() {
   const queryClient = useQueryClient()
@@ -126,7 +233,33 @@ export function useConnectCalendarProvider() {
 }
 
 /**
- * Complete OAuth callback
+ * Hook to complete OAuth callback and establish connection
+ *
+ * @description
+ * Completes the OAuth flow after the provider redirects back to the app.
+ * Exchanges the authorization code for access tokens and creates the connection.
+ * On success, invalidates the connections cache.
+ *
+ * @returns TanStack Mutation result with connection details
+ *
+ * @example
+ * // In OAuth callback route
+ * const { mutate: completeOAuth, isSuccess } = useCompleteOAuthCallback();
+ *
+ * useEffect(() => {
+ *   const params = new URLSearchParams(location.search);
+ *   const code = params.get('code');
+ *   const state = params.get('state');
+ *
+ *   if (code && state) {
+ *     completeOAuth({
+ *       provider: 'google',
+ *       code,
+ *       state,
+ *       redirectUri: window.location.origin + '/oauth/callback',
+ *     });
+ *   }
+ * }, []);
  */
 export function useCompleteOAuthCallback() {
   const queryClient = useQueryClient()

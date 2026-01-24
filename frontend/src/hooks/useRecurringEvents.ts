@@ -1,14 +1,43 @@
 /**
- * useRecurringEvents Hook
- * Feature: recurring-event-patterns
+ * Recurring Events Hooks
+ * @module hooks/useRecurringEvents
+ * @feature recurring-event-patterns
  *
- * React Query hooks for managing recurring calendar events:
- * - Create recurring event series
- * - Get series with occurrences
- * - Update series (with scope selection)
- * - Delete occurrences (with scope selection)
- * - Add exceptions to series
- * - Get event notifications
+ * TanStack Query hooks for managing recurring calendar events and series.
+ *
+ * @description
+ * This module provides comprehensive React hooks for recurring event management:
+ * - Create recurring event series with RFC 5545 recurrence rules
+ * - Fetch series with generated occurrences
+ * - Update series with scope selection (this, following, all)
+ * - Delete occurrences with scope selection
+ * - Add exceptions to series (cancellations, modifications)
+ * - Get event notifications for upcoming occurrences
+ *
+ * All hooks handle authentication and cache invalidation automatically.
+ *
+ * @example
+ * // Create weekly recurring meeting
+ * const { mutate: createRecurring } = useCreateRecurringEvent();
+ * createRecurring({
+ *   event_data: {
+ *     title_en: 'Weekly Team Sync',
+ *     start_datetime: '2024-01-08T09:00:00Z',
+ *     end_datetime: '2024-01-08T10:00:00Z',
+ *   },
+ *   recurrence_rule: 'FREQ=WEEKLY;BYDAY=MO',
+ *   recurrence_end_date: '2024-12-31',
+ * });
+ *
+ * @example
+ * // Update all future occurrences
+ * const { mutate: updateSeries } = useUpdateSeries();
+ * updateSeries({
+ *   series_id: 'series-uuid',
+ *   scope: 'following',
+ *   occurrence_date: '2024-02-01',
+ *   updates: { start_datetime: '2024-02-01T10:00:00Z' },
+ * });
  */
 
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
@@ -29,14 +58,28 @@ import type {
 const RECURRING_EVENTS_BASE_URL = '/functions/v1/recurring-events'
 
 /**
- * Get the base URL for API calls
+ * Get the base URL for recurring events API calls
+ *
+ * @description
+ * Constructs full Edge Function URL for recurring events endpoints.
+ *
+ * @param path - API endpoint path
+ * @returns Full URL string
+ * @private
  */
 function getApiUrl(path: string): string {
   return `${supabase.supabaseUrl}${RECURRING_EVENTS_BASE_URL}${path}`
 }
 
 /**
- * Get auth headers for API calls
+ * Get auth headers for recurring events API calls
+ *
+ * @description
+ * Retrieves current session token and formats authorization headers.
+ *
+ * @returns Promise resolving to headers object
+ * @throws {Error} If user is not authenticated
+ * @private
  */
 async function getAuthHeaders(): Promise<HeadersInit> {
   const {
@@ -56,7 +99,43 @@ async function getAuthHeaders(): Promise<HeadersInit> {
 // ==============================================================================
 
 /**
- * Create a new recurring event series
+ * Hook to create a new recurring event series
+ *
+ * @description
+ * Creates a new recurring event series with RFC 5545-compliant recurrence rules.
+ * Generates initial occurrences and stores the series metadata. On success,
+ * invalidates calendar events and series caches.
+ *
+ * @returns TanStack Mutation result with mutate function accepting CreateRecurringEventInput
+ *
+ * @example
+ * // Create daily standup for weekdays
+ * const { mutate: createRecurring, data } = useCreateRecurringEvent();
+ *
+ * createRecurring({
+ *   event_data: {
+ *     title_en: 'Daily Standup',
+ *     start_datetime: '2024-01-08T09:00:00Z',
+ *     end_datetime: '2024-01-08T09:15:00Z',
+ *     dossier_id: 'team-uuid',
+ *   },
+ *   recurrence_rule: 'FREQ=DAILY;BYDAY=MO,TU,WE,TH,FR',
+ *   recurrence_end_date: '2024-12-31',
+ *   timezone: 'UTC',
+ * });
+ *
+ * @example
+ * // Create monthly review on last Friday
+ * const { mutate } = useCreateRecurringEvent();
+ * mutate({
+ *   event_data: {
+ *     title_en: 'Monthly Review',
+ *     start_datetime: '2024-01-26T14:00:00Z',
+ *     end_datetime: '2024-01-26T16:00:00Z',
+ *   },
+ *   recurrence_rule: 'FREQ=MONTHLY;BYDAY=-1FR',
+ *   max_occurrences: 12,
+ * });
  */
 export function useCreateRecurringEvent() {
   const queryClient = useQueryClient()
@@ -89,7 +168,18 @@ export function useCreateRecurringEvent() {
 // ==============================================================================
 
 /**
- * Get an event series by ID
+ * Hook to fetch an event series by ID
+ *
+ * @description
+ * Fetches complete series metadata including recurrence rules, status, and settings.
+ * Query is automatically disabled if seriesId is undefined.
+ *
+ * @param seriesId - UUID of the series (undefined disables query)
+ * @returns TanStack Query result with series details
+ *
+ * @example
+ * // Fetch series details
+ * const { data: series, isLoading } = useEventSeries(seriesId);
  */
 export function useEventSeries(seriesId: string | undefined) {
   return useQuery({
@@ -115,7 +205,30 @@ export function useEventSeries(seriesId: string | undefined) {
 }
 
 /**
- * Get series occurrences with exceptions
+ * Hook to fetch series occurrences with exceptions
+ *
+ * @description
+ * Fetches generated occurrences for a series within an optional date range.
+ * Includes exception handling (cancelled or modified occurrences).
+ * Query is automatically disabled if seriesId is undefined.
+ *
+ * @param seriesId - UUID of the series (undefined disables query)
+ * @param options - Optional filtering options
+ * @param options.startDate - Filter occurrences starting on or after this date (ISO 8601)
+ * @param options.endDate - Filter occurrences ending on or before this date (ISO 8601)
+ * @param options.limit - Maximum number of occurrences to return
+ * @returns TanStack Query result with occurrences array
+ *
+ * @example
+ * // Fetch next 10 occurrences
+ * const { data } = useSeriesOccurrences(seriesId, { limit: 10 });
+ *
+ * @example
+ * // Fetch occurrences for a specific month
+ * const { data } = useSeriesOccurrences(seriesId, {
+ *   startDate: '2024-01-01',
+ *   endDate: '2024-01-31',
+ * });
  */
 export function useSeriesOccurrences(
   seriesId: string | undefined,
@@ -157,7 +270,40 @@ export function useSeriesOccurrences(
 // ==============================================================================
 
 /**
- * Update a recurring event series
+ * Hook to update a recurring event series with scope selection
+ *
+ * @description
+ * Updates a recurring event series with three scope options:
+ * - 'this': Update only a specific occurrence
+ * - 'following': Update this occurrence and all future occurrences
+ * - 'all': Update all occurrences in the series
+ *
+ * On success, invalidates calendar events, series, and occurrences caches.
+ *
+ * @returns TanStack Mutation result with mutate function accepting UpdateSeriesRequest
+ *
+ * @example
+ * // Update all future occurrences
+ * const { mutate: updateSeries } = useUpdateSeries();
+ *
+ * updateSeries({
+ *   series_id: 'series-uuid',
+ *   scope: 'following',
+ *   occurrence_date: '2024-02-01',
+ *   updates: {
+ *     start_datetime: '2024-02-01T10:00:00Z',
+ *     end_datetime: '2024-02-01T11:00:00Z',
+ *   },
+ * });
+ *
+ * @example
+ * // Update entire series
+ * const { mutate } = useUpdateSeries();
+ * mutate({
+ *   series_id: 'series-uuid',
+ *   scope: 'all',
+ *   updates: { title_en: 'Updated Meeting Title' },
+ * });
  */
 export function useUpdateSeries() {
   const queryClient = useQueryClient()
@@ -191,7 +337,36 @@ export function useUpdateSeries() {
 // ==============================================================================
 
 /**
- * Delete occurrence(s) from a series
+ * Hook to delete occurrence(s) from a series with scope selection
+ *
+ * @description
+ * Deletes occurrences from a recurring series with three scope options:
+ * - 'this': Delete only a specific occurrence
+ * - 'following': Delete this occurrence and all future occurrences
+ * - 'all': Delete all occurrences (effectively deletes the series)
+ *
+ * On success, invalidates calendar events, series, and occurrences caches.
+ *
+ * @returns TanStack Mutation result with mutate function accepting DeleteOccurrenceRequest
+ *
+ * @example
+ * // Cancel a single occurrence
+ * const { mutate: deleteOccurrence } = useDeleteOccurrences();
+ *
+ * deleteOccurrence({
+ *   series_id: 'series-uuid',
+ *   scope: 'this',
+ *   occurrence_date: '2024-02-01',
+ * });
+ *
+ * @example
+ * // End a series early
+ * const { mutate } = useDeleteOccurrences();
+ * mutate({
+ *   series_id: 'series-uuid',
+ *   scope: 'following',
+ *   occurrence_date: '2024-06-01',
+ * });
  */
 export function useDeleteOccurrences() {
   const queryClient = useQueryClient()
@@ -225,7 +400,38 @@ export function useDeleteOccurrences() {
 // ==============================================================================
 
 /**
- * Add an exception to a series (cancel, reschedule, or modify a single occurrence)
+ * Hook to add an exception to a recurring series
+ *
+ * @description
+ * Creates an exception to modify, cancel, or reschedule a single occurrence
+ * without affecting other occurrences in the series. Exceptions can specify
+ * new times, cancellations, or field modifications. On success, invalidates
+ * series and occurrences caches.
+ *
+ * @returns TanStack Mutation result with mutate function accepting CreateExceptionInput
+ *
+ * @example
+ * // Cancel a single occurrence
+ * const { mutate: createException } = useCreateException();
+ *
+ * createException({
+ *   series_id: 'series-uuid',
+ *   exception_date: '2024-02-15',
+ *   exception_type: 'cancelled',
+ *   reason: 'Public holiday',
+ * });
+ *
+ * @example
+ * // Reschedule a single occurrence
+ * const { mutate } = useCreateException();
+ * mutate({
+ *   series_id: 'series-uuid',
+ *   exception_date: '2024-02-20',
+ *   exception_type: 'rescheduled',
+ *   new_start_datetime: '2024-02-21T10:00:00Z',
+ *   new_end_datetime: '2024-02-21T11:00:00Z',
+ *   reason: 'Conflict with another meeting',
+ * });
  */
 export function useCreateException() {
   const queryClient = useQueryClient()
