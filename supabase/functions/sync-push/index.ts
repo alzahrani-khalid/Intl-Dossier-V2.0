@@ -41,6 +41,25 @@ interface SyncPushResponse {
 }
 
 /**
+ * Get explicit column list for each syncable entity type
+ * Replaces .select('*') for better performance and security
+ */
+function getEntityColumns(entityType: string): string {
+  const columnMaps: Record<string, string> = {
+    dossiers: 'id, type, name_en, name_ar, description_en, description_ar, status, sensitivity_level, tags, metadata, created_at, updated_at, created_by, updated_by, version',
+    positions: 'id, position_type_id, title_en, title_ar, content_en, content_ar, rationale_en, rationale_ar, alignment_notes_en, alignment_notes_ar, thematic_category, status, current_stage, approval_chain_config, consistency_score, emergency_correction, corrected_at, corrected_by, correction_reason, corrected_version_id, author_id, created_at, updated_at, version',
+    tasks: 'id, title, description, assignee_id, engagement_id, status, workflow_stage, priority, sla_deadline, work_item_type, work_item_id, source, created_by, updated_by, completed_by, created_at, updated_at, completed_at, is_deleted, version',
+    intake_tickets: 'id, ticket_number, request_type, title, title_ar, description, description_ar, type_specific_fields, sensitivity, urgency, priority, dossier_id, parent_ticket_id, converted_to_type, converted_to_id, assigned_to, assigned_unit, status, resolution, resolution_ar, created_at, created_by, updated_at, updated_by, submitted_at, triaged_at, assigned_at, resolved_at, closed_at, source, client_metadata, version',
+    documents: 'id, title, description, file_path, file_size, mime_type, created_at, updated_at, created_by, version',
+    calendar_entries: 'id, dossier_id, event_type, title_en, title_ar, description_en, description_ar, start_datetime, end_datetime, timezone, location_en, location_ar, is_virtual, virtual_link, room_en, room_ar, status, created_at, updated_at, version',
+    calendar_events: 'id, dossier_id, event_type, title_en, title_ar, description_en, description_ar, start_datetime, end_datetime, timezone, location_en, location_ar, is_virtual, virtual_link, room_en, room_ar, status, created_at, updated_at, version'
+  }
+
+  // Return explicit columns for known types, fallback to common columns for unknown types
+  return columnMaps[entityType] || 'id, created_at, updated_at, version'
+}
+
+/**
  * T147 - Detect conflicts between local and server entities
  */
 async function detectConflicts(
@@ -142,11 +161,14 @@ async function resolveTimestampConflict(
     updateData.version = conflict.server_version + 1
     updateData.updated_at = new Date().toISOString()
 
+    // Get column list for this entity type
+    const selectColumns = getEntityColumns(entity._entity_type)
+
     const { data: updatedEntity, error } = await supabase
       .from(entity._entity_type)
       .update(updateData)
       .eq('id', entity.id)
-      .select('*')
+      .select(selectColumns)
       .single()
 
     if (error) {
@@ -212,11 +234,12 @@ async function processEntityPush(
       entityData.updated_at = new Date().toISOString()
       entityData.updated_by = userId
 
+      const selectColumns = getEntityColumns(entity._entity_type)
       result = await supabase
         .from(entity._entity_type)
         .update(entityData)
         .eq('id', entity.id)
-        .select('*')
+        .select(selectColumns)
         .single()
     } else {
       // Insert new entity
@@ -226,10 +249,11 @@ async function processEntityPush(
       entityData.updated_at = entityData.created_at
       entityData.updated_by = userId
 
+      const selectColumns = getEntityColumns(entity._entity_type)
       result = await supabase
         .from(entity._entity_type)
         .insert(entityData)
-        .select('*')
+        .select(selectColumns)
         .single()
     }
 
