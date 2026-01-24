@@ -1,14 +1,71 @@
+/**
+ * Responsive Hooks
+ * @module hooks/use-responsive
+ * @feature 034-dossier-ui-polish
+ *
+ * React hooks for responsive design and breakpoint detection.
+ *
+ * @description
+ * This module provides utilities for building responsive interfaces:
+ * - Real-time viewport size and orientation tracking
+ * - Breakpoint detection (xs, sm, md, lg) from CSS variables
+ * - Device type classification (mobile, tablet, desktop, wide)
+ * - Utility functions for responsive logic (up, down, between)
+ * - Container query recommendations
+ * - Optimized with requestAnimationFrame for performance
+ *
+ * Breakpoints:
+ * - xs: 320px+ (mobile)
+ * - sm: 768px+ (tablet)
+ * - md: 1024px+ (desktop)
+ * - lg: 1440px+ (wide)
+ *
+ * @example
+ * // Basic responsive detection
+ * const { isMobile, isTablet, isDesktop } = useResponsive();
+ *
+ * @example
+ * // Breakpoint utilities
+ * const { up, down, between } = useResponsive();
+ * if (up('md')) {
+ *   // Desktop and above
+ * }
+ *
+ * @example
+ * // Viewport dimensions
+ * const { width, height, orientation } = useResponsive();
+ */
+
 import { useEffect, useMemo, useRef, useState } from 'react'
 import type { BreakpointDeviceType } from '../types/breakpoint'
 
+/**
+ * Breakpoint alias type
+ *
+ * @typedef {'xs' | 'sm' | 'md' | 'lg'} BreakpointAlias
+ */
 type BreakpointAlias = 'xs' | 'sm' | 'md' | 'lg'
 
+/**
+ * Viewport information
+ *
+ * @interface ViewportInfo
+ * @property {number} width - Current viewport width in pixels
+ * @property {number} height - Current viewport height in pixels
+ * @property {'portrait' | 'landscape'} orientation - Current screen orientation
+ */
 export interface ViewportInfo {
   width: number
   height: number
   orientation: 'portrait' | 'landscape'
 }
 
+/**
+ * Complete responsive state with breakpoint utilities
+ *
+ * @interface ResponsiveState
+ * @extends ViewportInfo
+ */
 export interface ResponsiveState extends ViewportInfo {
   alias: BreakpointAlias
   deviceType: BreakpointDeviceType
@@ -23,6 +80,16 @@ export interface ResponsiveState extends ViewportInfo {
   containerQueries: boolean
 }
 
+/**
+ * Read breakpoint value from CSS custom property
+ *
+ * @description
+ * Internal utility to parse breakpoint values from CSS variables.
+ * Extracts numeric value from px strings (e.g., "768px" → 768).
+ *
+ * @param variableName - CSS variable name (e.g., '--breakpoint-sm')
+ * @returns Numeric pixel value or undefined if not found
+ */
 function readPxVar(variableName: string): number | undefined {
   if (typeof window === 'undefined') return undefined
   const raw = getComputedStyle(document.documentElement)
@@ -33,6 +100,15 @@ function readPxVar(variableName: string): number | undefined {
   return match ? Number(match[1]) : Number(raw)
 }
 
+/**
+ * Get breakpoint values from CSS custom properties
+ *
+ * @description
+ * Reads breakpoint values from CSS variables with fallback defaults.
+ * Allows centralized breakpoint configuration in CSS.
+ *
+ * @returns Record of breakpoint aliases to pixel values
+ */
 function getBreakpoints(): Record<BreakpointAlias, number> {
   const xs = readPxVar('--breakpoint-xs') ?? 320
   const sm = readPxVar('--breakpoint-sm') ?? 768
@@ -41,6 +117,17 @@ function getBreakpoints(): Record<BreakpointAlias, number> {
   return { xs, sm, md, lg }
 }
 
+/**
+ * Determine breakpoint alias for a given width
+ *
+ * @description
+ * Maps viewport width to the appropriate breakpoint alias.
+ * Uses mobile-first logic (largest matching breakpoint).
+ *
+ * @param width - Viewport width in pixels
+ * @param bp - Breakpoint values record
+ * @returns Matching breakpoint alias
+ */
 function aliasForWidth(width: number, bp: Record<BreakpointAlias, number>): BreakpointAlias {
   if (width >= bp.lg) return 'lg'
   if (width >= bp.md) return 'md'
@@ -48,6 +135,15 @@ function aliasForWidth(width: number, bp: Record<BreakpointAlias, number>): Brea
   return 'xs'
 }
 
+/**
+ * Map breakpoint alias to device type
+ *
+ * @description
+ * Converts breakpoint alias to semantic device type for clearer component logic.
+ *
+ * @param alias - Breakpoint alias
+ * @returns Device type classification
+ */
 function deviceForAlias(alias: BreakpointAlias): BreakpointDeviceType {
   switch (alias) {
     case 'xs':
@@ -61,6 +157,40 @@ function deviceForAlias(alias: BreakpointAlias): BreakpointDeviceType {
   }
 }
 
+/**
+ * Hook for responsive design and breakpoint detection
+ *
+ * @description
+ * Provides real-time viewport information and breakpoint utilities.
+ * Uses requestAnimationFrame for optimized resize handling.
+ * Listens to both resize and orientationchange events.
+ *
+ * @returns ResponsiveState object with viewport info, device flags, and breakpoint utilities
+ *
+ * @example
+ * // Device type detection
+ * const { isMobile, isTablet, isDesktop } = useResponsive();
+ *
+ * return (
+ *   <div className={isMobile ? 'mobile-layout' : 'desktop-layout'}>
+ *     {isMobile ? <MobileNav /> : <DesktopNav />}
+ *   </div>
+ * );
+ *
+ * @example
+ * // Breakpoint utilities
+ * const { up, down, between } = useResponsive();
+ *
+ * if (up('md')) {
+ *   // Desktop and above (≥1024px)
+ * }
+ * if (down('sm')) {
+ *   // Below tablet (<768px)
+ * }
+ * if (between('sm', 'lg')) {
+ *   // Tablet to desktop (768px - 1440px)
+ * }
+ */
 export function useResponsive(): ResponsiveState {
   const breakpoints = useMemo(getBreakpoints, [])
   const [viewport, setViewport] = useState<ViewportInfo>(() => ({

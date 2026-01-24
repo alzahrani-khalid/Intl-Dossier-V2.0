@@ -1,18 +1,48 @@
 /**
- * usePullToRefresh Hook
+ * Pull-to-Refresh Hook
+ * @module hooks/usePullToRefresh
+ * @feature 034-dossier-ui-polish
  *
- * Provides pull-to-refresh gesture detection for list views.
- * Features:
+ * React hook for implementing pull-to-refresh gesture detection for list views.
+ *
+ * @description
+ * This module provides pull-to-refresh functionality for mobile-first applications:
  * - Touch gesture detection with vertical pull threshold
- * - Visual progress feedback (0-1)
- * - RTL support
- * - Haptic feedback integration
- * - Configurable thresholds
+ * - Visual progress feedback (0-1) for UI indicators
+ * - State machine (idle → pulling → ready → refreshing → complete)
+ * - RTL layout support
+ * - Haptic feedback integration at threshold crossings
+ * - Configurable pull distance, resistance, and completion delay
+ * - Automatic state management with external isRefreshing sync
+ *
+ * Integrates with TanStack Query's refetch patterns and provides smooth UX
+ * with progress tracking and haptic confirmation.
+ *
+ * Mobile-first implementation with proper RTL support.
  *
  * @example
+ * // Basic usage with TanStack Query
+ * const { refetch, isFetching } = useQuery(...);
  * const { handlers, state, containerRef } = usePullToRefresh({
  *   onRefresh: async () => await refetch(),
  *   isRefreshing: isFetching,
+ * });
+ *
+ * return (
+ *   <div ref={containerRef} {...handlers}>
+ *     {state.status === 'pulling' && <p>Pull to refresh... ({Math.round(state.progress * 100)}%)</p>}
+ *     {/* List content */}
+ *   </div>
+ * );
+ *
+ * @example
+ * // Custom thresholds and resistance
+ * const { handlers, state } = usePullToRefresh({
+ *   onRefresh: handleRefresh,
+ *   pullThreshold: 100,
+ *   maxPull: 200,
+ *   resistance: 0.6,
+ *   completeDelay: 1000,
  * });
  */
 

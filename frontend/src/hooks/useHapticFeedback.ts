@@ -1,20 +1,44 @@
 /**
- * useHapticFeedback Hook
+ * Haptic Feedback Hook
+ * @module hooks/useHapticFeedback
+ * @feature 034-dossier-ui-polish
  *
- * Provides haptic/vibration feedback for touch interactions.
- * Falls back gracefully on devices without haptic support.
+ * React hook for providing haptic/vibration feedback for touch interactions.
  *
- * Features:
+ * @description
+ * This module provides haptic feedback utilities for mobile-first applications:
  * - Multiple intensity levels (light, medium, heavy)
- * - Pattern-based vibration for complex feedback
- * - Browser vibration API with fallback
- * - Success/error feedback patterns
+ * - Pattern-based vibration for complex feedback (success, error, warning, selection, impact)
+ * - Browser Vibration API integration with graceful fallback
+ * - Support detection for feature availability
+ * - Configurable enable/disable flag
+ *
+ * Falls back gracefully on devices without haptic support.
+ * Uses the Vibration API (navigator.vibrate) which is supported on most modern mobile browsers.
+ *
+ * Mobile-first implementation with RTL support.
  *
  * @example
- * const { trigger, success, error, isSupported } = useHapticFeedback();
- * trigger('medium'); // Single vibration
- * success(); // Success pattern
- * error(); // Error pattern
+ * // Basic haptic feedback
+ * const { trigger, isSupported } = useHapticFeedback();
+ * if (isSupported) {
+ *   trigger('medium');
+ * }
+ *
+ * @example
+ * // Success/error patterns
+ * const { success, error } = useHapticFeedback();
+ * onSave().then(() => success()).catch(() => error());
+ *
+ * @example
+ * // Selection feedback for swipe threshold
+ * const { selection } = useHapticFeedback();
+ * if (swipeDistance > threshold) selection();
+ *
+ * @example
+ * // Disabled feedback
+ * const { trigger } = useHapticFeedback({ enabled: false });
+ * trigger('heavy'); // Does nothing
  */
 
 import { useCallback, useMemo } from 'react'

@@ -1,20 +1,58 @@
 /**
- * useTouchGraphControls Hook
+ * Touch Graph Controls Hook
+ * @module hooks/useTouchGraphControls
+ * @feature 034-dossier-ui-polish
  *
- * Provides touch-optimized controls for relationship graph navigation.
- * Features:
- * - Pinch-to-zoom with smooth scaling
- * - Two-finger pan gesture
- * - Tap-to-focus on nodes
- * - Double-tap to expand connections
+ * React hook for touch-optimized controls for relationship graph navigation (React Flow).
+ *
+ * @description
+ * This module provides comprehensive touch gesture support for graph visualization:
+ * - Pinch-to-zoom with smooth scaling and bounds enforcement
+ * - Two-finger pan gesture for graph navigation
+ * - Tap-to-focus on nodes with selection callbacks
+ * - Double-tap to expand node connections
+ * - Zoom controls (in, out, reset, fit view)
+ * - Node focusing with automatic viewport centering
  * - RTL-aware gesture handling
+ * - Haptic feedback integration for interactions
+ * - Integration with React Flow instance for viewport control
+ *
+ * Designed for complex network graphs (dossier relationships, org charts, etc.)
+ * with mobile-first touch interactions.
+ *
+ * Mobile-first implementation with proper RTL support.
  *
  * @example
- * const { handlers, zoomLevel, resetView } = useTouchGraphControls({
- *   onNodeFocus: (nodeId) => highlightNode(nodeId),
- *   onNodeExpand: (nodeId) => expandConnections(nodeId),
+ * // Basic touch graph controls
+ * const { handlers, state } = useTouchGraphControls({
  *   reactFlowInstance: rfInstance,
+ *   onNodeFocus: (nodeId) => setSelectedNode(nodeId),
+ *   onNodeExpand: (nodeId) => loadConnections(nodeId),
  * });
+ *
+ * return (
+ *   <div {...handlers}>
+ *     <ReactFlow ... />
+ *     <div>Zoom: {state.zoomPercentage}</div>
+ *   </div>
+ * );
+ *
+ * @example
+ * // With zoom controls
+ * const { zoomIn, zoomOut, resetView, fitView } = useTouchGraphControls({
+ *   reactFlowInstance: rfInstance,
+ *   minZoom: 0.2,
+ *   maxZoom: 3,
+ * });
+ *
+ * return (
+ *   <>
+ *     <button onClick={zoomIn}>+</button>
+ *     <button onClick={zoomOut}>-</button>
+ *     <button onClick={resetView}>Reset</button>
+ *     <button onClick={fitView}>Fit</button>
+ *   </>
+ * );
  */
 
 import { useState, useRef, useCallback, useMemo, useEffect } from 'react'

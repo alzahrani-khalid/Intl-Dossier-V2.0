@@ -1,8 +1,39 @@
 /**
- * useContextAwareFAB Hook
+ * Context-Aware FAB Hook
+ * @module hooks/useContextAwareFAB
+ * @feature 034-dossier-ui-polish
  *
- * Provides context-aware FAB configuration based on the current route.
- * Determines the primary action and speed dial actions for each screen context.
+ * Hook for configuring context-aware Floating Action Buttons (FAB) based on current route.
+ *
+ * @description
+ * This module provides intelligent FAB configuration that adapts to the current screen:
+ * - Route-based action determination (create, edit, search, etc.)
+ * - Speed dial actions for common tasks in each context
+ * - Default navigation handlers with override support
+ * - Internationalization support via react-i18next
+ * - Icon mapping using lucide-react
+ * - Visibility control per route
+ *
+ * Supported contexts: dossier list/detail, engagement list/detail, calendar, kanban,
+ * search, dashboard, persons, forums, and more.
+ *
+ * Mobile-first implementation with RTL support.
+ *
+ * @example
+ * // Basic usage
+ * const { contextActions, speedDialActions } = useContextAwareFAB();
+ *
+ * @example
+ * // With custom callbacks
+ * const fab = useContextAwareFAB({
+ *   onCreateDossier: () => navigate({ to: '/dossiers/new' }),
+ *   onEditDossier: (id) => setEditMode(true),
+ * });
+ *
+ * @example
+ * // Check if FAB should be visible
+ * const { shouldShowFAB } = useContextAwareFAB();
+ * if (!shouldShowFAB) return null;
  */
 
 import { useMemo, useCallback } from 'react'
@@ -64,6 +95,29 @@ export interface UseContextAwareFABResult {
 
 /**
  * Hook to configure context-aware FAB based on current route
+ *
+ * @description
+ * Determines the appropriate FAB action and speed dial options based on the current
+ * route pathname. Maps routes to contextual actions (e.g., "Create Dossier" on /dossiers,
+ * "Log After Action" on /engagements/:id).
+ *
+ * Provides default navigation handlers that can be overridden via config callbacks.
+ *
+ * @param config - Configuration object with optional route override and custom callbacks
+ * @returns Object containing contextActions map, speedDialActions array, defaultAction, currentRoute, and shouldShowFAB flag
+ *
+ * @example
+ * // Auto-detect route and provide actions
+ * const { contextActions, defaultAction } = useContextAwareFAB();
+ * const action = contextActions[currentRoute] || defaultAction;
+ *
+ * @example
+ * // Custom callback for creating dossiers
+ * const fab = useContextAwareFAB({
+ *   onCreateDossier: () => {
+ *     openModal('create-dossier');
+ *   },
+ * });
  */
 export function useContextAwareFAB(
   config: UseContextAwareFABConfig = {},

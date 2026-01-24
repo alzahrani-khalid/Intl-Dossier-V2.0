@@ -1,18 +1,46 @@
 /**
- * useSwipeGesture Hook
+ * Swipe Gesture Hook
+ * @module hooks/useSwipeGesture
+ * @feature 034-dossier-ui-polish
  *
- * Provides swipe gesture detection for touch-first mobile interactions.
- * Features:
- * - Left/Right swipe detection with RTL support
+ * React hook for detecting swipe gestures in touch-first mobile interfaces.
+ *
+ * @description
+ * This module provides swipe gesture detection with comprehensive mobile support:
+ * - Left/Right swipe detection with semantic RTL interpretation
  * - Long-press detection for contextual menus
- * - Velocity-based gesture recognition
- * - Configurable thresholds
+ * - Velocity-based gesture recognition for flick gestures
+ * - Progressive offset tracking with max bounds
+ * - State machine (idle → swiping → swiped, with long-pressing state)
+ * - RTL-aware direction mapping (swipe right = favorite in LTR, archive in RTL)
+ * - Both touch and mouse event support
+ * - Configurable thresholds for distance and velocity
+ *
+ * Ideal for swipeable list items (email-style archive/delete), cards, and drawers.
+ *
+ * Mobile-first implementation with proper RTL support.
  *
  * @example
+ * // Swipeable list item with archive/favorite
  * const { handlers, state } = useSwipeGesture({
- *   onSwipeLeft: () => handleArchive(),
- *   onSwipeRight: () => handleFavorite(),
- *   onLongPress: () => handleContextMenu(),
+ *   onSwipeLeft: () => handleArchive(item.id),
+ *   onSwipeRight: () => handleFavorite(item.id),
+ *   onLongPress: () => showContextMenu(),
+ * });
+ *
+ * return (
+ *   <div {...handlers} style={{ transform: `translateX(${state.offsetX}px)` }}>
+ *     {/* List item content */}
+ *   </div>
+ * );
+ *
+ * @example
+ * // Custom thresholds and velocity
+ * const { handlers, state, reset } = useSwipeGesture({
+ *   swipeThreshold: 100,
+ *   velocityThreshold: 0.5,
+ *   maxOffset: 200,
+ *   onSwipeLeft: handleDelete,
  * });
  */
 

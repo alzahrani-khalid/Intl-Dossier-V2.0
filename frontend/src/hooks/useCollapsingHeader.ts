@@ -1,3 +1,47 @@
+/**
+ * Collapsing Header Hook
+ * @module hooks/useCollapsingHeader
+ * @feature 034-dossier-ui-polish
+ *
+ * React hook for implementing collapsing/sticky headers with quick-return pattern.
+ *
+ * @description
+ * This module provides a sophisticated header collapse behavior hook with:
+ * - Auto-hide on scroll down to maximize content space
+ * - Quick-return pattern (reappear when scrolling up slightly)
+ * - Progressive collapse with animation progress tracking
+ * - Scroll direction detection
+ * - Top-of-page detection
+ * - Framer Motion integration for smooth animations
+ * - Manual show/hide controls
+ * - Container scroll support (not just window)
+ *
+ * Mobile-first implementation with proper RTL support.
+ *
+ * @example
+ * // Basic collapsing header
+ * const { isVisible, isCollapsed } = useCollapsingHeader();
+ *
+ * return (
+ *   <header className={isVisible ? 'translate-y-0' : '-translate-y-full'}>
+ *     {/* Header content */}
+ *   </header>
+ * );
+ *
+ * @example
+ * // With collapse progress for smooth transitions
+ * const { collapseProgress } = useCollapsingHeader({
+ *   collapseThreshold: 60,
+ *   collapseDistance: 100,
+ * });
+ *
+ * return (
+ *   <header style={{ height: `${96 - (48 * collapseProgress)}px` }}>
+ *     {/* Shrinking header */}
+ *   </header>
+ * );
+ */
+
 import { useState, useEffect, useCallback, useRef } from 'react'
 import { useScroll, useMotionValueEvent, MotionValue } from 'motion/react'
 

@@ -1,7 +1,41 @@
 /**
  * useThemes Hooks
+ * @module hooks/useThemes
+ * @feature 026-unified-dossier-architecture
+ * @feature 028-type-specific-dossier-pages
  *
- * TanStack Query hooks for theme entity CRUD operations with taxonomy support
+ * TanStack Query hooks for theme entity CRUD operations with hierarchical taxonomy support.
+ *
+ * @description
+ * This module provides React hooks for managing theme dossier entities (hierarchical topics/policy areas):
+ * - Query hooks for fetching theme lists, trees, and single themes with context
+ * - Mutation hooks for create, update, delete, and move operations
+ * - Tree-building utilities for hierarchical theme navigation
+ * - Ancestor/descendant context for theme relationships
+ * - Type-safe operations with Supabase integration
+ *
+ * Theme dossiers support hierarchical taxonomy with parent-child relationships,
+ * category codes (POLI, ECON, SECU, ENVI, etc.), and standard/custom themes.
+ *
+ * @example
+ * // Fetch theme list with filters
+ * const { data } = useThemes({ search: 'climate', status: 'active' });
+ *
+ * @example
+ * // Fetch theme tree for navigation
+ * const { data: tree } = useThemeTree();
+ *
+ * @example
+ * // Create a new theme
+ * const { mutate } = useCreateTheme();
+ * mutate({
+ *   name_en: 'Climate Change',
+ *   name_ar: 'تغير المناخ',
+ *   extension: {
+ *     category_code: 'ENVI',
+ *     parent_theme_id: 'parent-uuid',
+ *   },
+ * });
  */
 
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
@@ -28,6 +62,22 @@ const THEME_TREE_QUERY_KEY = 'theme-tree'
 
 /**
  * Build a tree structure from flat theme data
+ *
+ * @description
+ * Internal utility that converts a flat array of themes into a hierarchical tree structure.
+ * Performs two passes: first creates nodes, then connects children to parents.
+ * Sorts nodes by sort_order and name_en for consistent display.
+ *
+ * @param themes - Flat array of theme objects with parent_theme_id references
+ * @returns Array of root ThemeNode objects with nested children
+ *
+ * @example
+ * const themes = [
+ *   { id: '1', name_en: 'Environment', parent_theme_id: null, ... },
+ *   { id: '2', name_en: 'Climate Change', parent_theme_id: '1', ... },
+ * ];
+ * const tree = buildThemeTree(themes);
+ * // Returns: [{ ...Environment, children: [{ ...Climate Change, children: [] }] }]
  */
 function buildThemeTree(
   themes: Array<{
@@ -85,7 +135,27 @@ function buildThemeTree(
 }
 
 /**
- * Fetch paginated list of themes
+ * Hook to fetch paginated list of themes with filters
+ *
+ * @description
+ * Fetches a paginated list of theme dossiers with optional filtering by search query,
+ * status, parent theme, and standard/custom flag. Combines base dossier data with
+ * theme extension data from the themes table.
+ *
+ * @param filters - Optional filters (search, status, parent_theme_id, is_standard, page, limit)
+ * @returns TanStack Query result with paginated theme list and metadata
+ *
+ * @example
+ * // Fetch all active themes
+ * const { data } = useThemes({ status: 'active' });
+ *
+ * @example
+ * // Search themes with pagination
+ * const { data } = useThemes({ search: 'security', page: 2, limit: 10 });
+ *
+ * @example
+ * // Get child themes of a parent
+ * const { data } = useThemes({ parent_theme_id: 'parent-uuid' });
  */
 export function useThemes(filters: ThemeFilters = {}) {
   return useQuery<ThemeListResponse, Error>({
@@ -181,7 +251,26 @@ export function useThemes(filters: ThemeFilters = {}) {
 }
 
 /**
- * Fetch single theme by ID
+ * Hook to fetch a single theme by ID with full context
+ *
+ * @description
+ * Fetches a single theme dossier with extension data and contextual information
+ * including parent details and children count from the theme_details view.
+ *
+ * @param id - The unique identifier (UUID) of the theme to fetch
+ * @returns TanStack Query result with ThemeWithContext or null if not found
+ *
+ * @example
+ * // Basic usage
+ * const { data: theme, isLoading } = useTheme('uuid-123');
+ *
+ * @example
+ * // With conditional rendering
+ * const { data: theme } = useTheme(themeId);
+ * if (theme) {
+ *   console.log('Parent:', theme.parent_name_en);
+ *   console.log('Children count:', theme.children_count);
+ * }
  */
 export function useTheme(id: string | undefined) {
   return useQuery<ThemeWithContext | null, Error>({
@@ -248,7 +337,20 @@ export function useTheme(id: string | undefined) {
 }
 
 /**
- * Fetch theme tree (hierarchical structure)
+ * Hook to fetch theme tree (hierarchical structure)
+ *
+ * @description
+ * Fetches all themes and builds a hierarchical tree structure using the
+ * get_theme_tree RPC function. Ideal for navigation menus and taxonomy browsers.
+ *
+ * @returns TanStack Query result with ThemeTreeResponse containing tree data and total count
+ *
+ * @example
+ * // Build theme navigation
+ * const { data: tree } = useThemeTree();
+ * tree?.data.forEach(root => {
+ *   console.log(root.name_en, root.children);
+ * });
  */
 export function useThemeTree() {
   return useQuery<ThemeTreeResponse, Error>({
@@ -428,7 +530,21 @@ export function useThemeDescendants(id: string | undefined) {
 }
 
 /**
- * Create new theme
+ * Hook to create a new theme
+ *
+ * @description
+ * Creates a new theme dossier with extension data. Automatically invalidates
+ * theme list and tree queries, and shows success/error toasts.
+ *
+ * @returns TanStack Mutation result with mutate function accepting ThemeCreateRequest
+ *
+ * @example
+ * const { mutate, isPending } = useCreateTheme();
+ * mutate({
+ *   name_en: 'Cybersecurity',
+ *   name_ar: 'الأمن السيبراني',
+ *   extension: { category_code: 'SECU', parent_theme_id: 'security-uuid' },
+ * });
  */
 export function useCreateTheme() {
   const queryClient = useQueryClient()
@@ -504,7 +620,20 @@ export function useCreateTheme() {
 }
 
 /**
- * Update existing theme
+ * Hook to update an existing theme
+ *
+ * @description
+ * Updates a theme dossier and/or its extension data. Supports partial updates.
+ * Automatically invalidates queries and shows toast notifications.
+ *
+ * @returns TanStack Mutation result with mutate function accepting { id, data }
+ *
+ * @example
+ * const { mutate } = useUpdateTheme();
+ * mutate({
+ *   id: 'theme-uuid',
+ *   data: { name_en: 'Updated Name', extension: { color: '#FF0000' } },
+ * });
  */
 export function useUpdateTheme() {
   const queryClient = useQueryClient()
@@ -618,7 +747,17 @@ export function useUpdateTheme() {
 }
 
 /**
- * Delete theme (soft delete by changing status to archived)
+ * Hook to delete a theme (soft delete)
+ *
+ * @description
+ * Soft deletes a theme by changing its status to 'archived'. Validates that the
+ * theme has no children before deletion. Shows error if children exist.
+ *
+ * @returns TanStack Mutation result with mutate function accepting theme ID
+ *
+ * @example
+ * const { mutate } = useDeleteTheme();
+ * mutate('theme-uuid');
  */
 export function useDeleteTheme() {
   const queryClient = useQueryClient()
@@ -662,7 +801,17 @@ export function useDeleteTheme() {
 }
 
 /**
- * Move theme to a new parent (change hierarchy)
+ * Hook to move a theme to a new parent (change hierarchy)
+ *
+ * @description
+ * Changes the parent_theme_id of a theme to reorganize the hierarchy.
+ * Useful for drag-and-drop tree reorganization.
+ *
+ * @returns TanStack Mutation result with mutate function accepting { id, newParentId }
+ *
+ * @example
+ * const { mutate } = useMoveTheme();
+ * mutate({ id: 'theme-uuid', newParentId: 'new-parent-uuid' });
  */
 export function useMoveTheme() {
   const queryClient = useQueryClient()
