@@ -2,7 +2,7 @@
 // User Story 3: Traverse Entity Relationships as Graph
 // Main page for exploring dossier relationships with graph and list views
 // Enhanced with clustering, focus mode, and complexity controls to prevent graph overwhelm
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useQuery } from '@tanstack/react-query'
 import { useNavigate, useSearch } from '@tanstack/react-router'
@@ -128,6 +128,29 @@ export function RelationshipGraphPage() {
     enabled: !!startDossierId,
     staleTime: 30000, // Cache for 30 seconds
   })
+
+  // Deduplicate nodes - the start_dossier might already be in graphData.nodes
+  const deduplicatedNodes = useMemo(() => {
+    if (!graphData) return []
+
+    const nodeMap = new Map<string, (typeof graphData.nodes)[0]>()
+
+    // Add start dossier first with degree 0
+    nodeMap.set(graphData.start_dossier.id, {
+      ...graphData.start_dossier,
+      degree: 0,
+      path: [],
+    })
+
+    // Add other nodes (won't overwrite start_dossier if it exists)
+    graphData.nodes.forEach((node) => {
+      if (!nodeMap.has(node.id)) {
+        nodeMap.set(node.id, node)
+      }
+    })
+
+    return Array.from(nodeMap.values())
+  }, [graphData])
 
   const handleNodeSelect = (nodeId: string) => {
     // Navigate to the dossier detail page
@@ -372,7 +395,7 @@ export function RelationshipGraphPage() {
           <TabsContent value="graph">
             {graphMode === 'advanced' ? (
               <AdvancedGraphVisualization
-                nodes={[{ ...graphData.start_dossier, degree: 0 }, ...graphData.nodes]}
+                nodes={deduplicatedNodes}
                 edges={graphData.edges}
                 onNodeClick={handleNodeSelect}
                 height="calc(100vh - 500px)"
@@ -381,7 +404,7 @@ export function RelationshipGraphPage() {
               />
             ) : graphMode === 'enhanced' ? (
               <EnhancedGraphVisualization
-                nodes={[{ ...graphData.start_dossier, degree: 0 }, ...graphData.nodes]}
+                nodes={deduplicatedNodes}
                 edges={graphData.edges}
                 onNodeClick={handleNodeSelect}
                 height="calc(100vh - 500px)"
@@ -390,7 +413,7 @@ export function RelationshipGraphPage() {
               />
             ) : (
               <GraphVisualization
-                nodes={[{ ...graphData.start_dossier, degree: 0, path: [] }, ...graphData.nodes]}
+                nodes={deduplicatedNodes}
                 edges={graphData.edges}
                 onNodeClick={handleNodeSelect}
                 height="calc(100vh - 500px)"
@@ -402,7 +425,7 @@ export function RelationshipGraphPage() {
 
           <TabsContent value="list">
             <RelationshipNavigator
-              nodes={[{ ...graphData.start_dossier, degree: 0, path: [] }, ...graphData.nodes]}
+              nodes={deduplicatedNodes}
               startDossierId={startDossierId}
               onNodeSelect={handleNodeSelect}
             />

@@ -5,7 +5,8 @@
 // Visualizes dossier relationships as interactive network graph using React Flow
 import { useCallback, useMemo, useState, memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import ReactFlow, {
+import {
+  ReactFlow,
   Node,
   Edge,
   Controls,
@@ -19,8 +20,8 @@ import ReactFlow, {
   NodeTypes,
   useReactFlow,
   ReactFlowProvider,
-} from 'reactflow'
-import 'reactflow/dist/style.css'
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 import { Card } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

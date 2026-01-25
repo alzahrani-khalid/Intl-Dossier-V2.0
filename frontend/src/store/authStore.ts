@@ -3,6 +3,7 @@ import { persist } from 'zustand/middleware'
 import type { AuthChangeEvent, Session } from '@supabase/supabase-js'
 import { supabase } from '../lib/supabase'
 import { setSentryUser, clearSentryUser, addBreadcrumb } from '../lib/sentry'
+import { COLUMNS } from '../lib/query-columns'
 
 // Re-export supabase for backward compatibility
 export { supabase }
@@ -53,7 +54,7 @@ export const useAuthStore = create<AuthState>()(
             // Fetch user profile from database
             const { data: profile } = await supabase
               .from('users')
-              .select('*')
+              .select(COLUMNS.USERS.PROFILE)
               .eq('id', data.user.id)
               .single()
 
@@ -76,7 +77,7 @@ export const useAuthStore = create<AuthState>()(
               id: data.user.id,
               email: data.user.email || '',
               role: userRole,
-              tenant: profile?.organization_id || undefined,
+              tenant: profile?.default_organization_id || undefined,
             })
 
             addBreadcrumb('User logged in', 'auth', 'info', {

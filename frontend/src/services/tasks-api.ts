@@ -7,6 +7,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { COLUMNS } from '@/lib/query-columns'
 import type { Database } from '../../../backend/src/types/database.types'
 import type { ApiErrorDetails, Metadata } from '@/types/common.types'
 
@@ -230,7 +231,7 @@ export const tasksAPI = {
     // Fetch the task - use maybeSingle() to avoid 406 error when task not found
     const { data: task, error: taskError } = await supabase
       .from('tasks')
-      .select('*')
+      .select(COLUMNS.TASKS.DETAIL)
       .eq('id', taskId)
       .eq('is_deleted', false)
       .maybeSingle()
@@ -598,7 +599,7 @@ export const tasksAPI = {
   ): Promise<Task[]> {
     const { data, error } = await supabase
       .from('tasks')
-      .select('*')
+      .select(COLUMNS.TASKS.LIST)
       .eq('work_item_type', workItemType)
       .eq('work_item_id', workItemId)
       .eq('is_deleted', false)
@@ -617,7 +618,7 @@ export const tasksAPI = {
   async getOverdueTasks(assigneeId?: string): Promise<Task[]> {
     let query = supabase
       .from('tasks')
-      .select('*')
+      .select(COLUMNS.TASKS.LIST)
       .eq('is_deleted', false)
       .lt('sla_deadline', new Date().toISOString())
       .not('status', 'in', '(completed,cancelled)')
@@ -645,7 +646,7 @@ export const tasksAPI = {
 
     let query = supabase
       .from('tasks')
-      .select('*')
+      .select(COLUMNS.TASKS.LIST)
       .eq('is_deleted', false)
       .lte('sla_deadline', warningTime.toISOString())
       .gte('sla_deadline', new Date().toISOString())

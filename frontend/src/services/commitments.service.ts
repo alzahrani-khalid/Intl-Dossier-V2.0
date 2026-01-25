@@ -6,7 +6,8 @@
  * status management, and evidence upload capabilities.
  */
 
-import { supabase } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase'
+import { COLUMNS } from '@/lib/query-columns'
 import type {
   Commitment,
   CommitmentFilters,
@@ -22,7 +23,7 @@ import type {
   CommitmentStatus,
   CommitmentPriority,
   DEFAULT_PAGE_SIZE,
-} from '@/types/commitment.types';
+} from '@/types/commitment.types'
 
 // Re-export types for convenience
 export type {
@@ -33,7 +34,7 @@ export type {
   CreateCommitmentInput,
   UpdateCommitmentInput,
   PaginationCursor,
-};
+}
 
 /**
  * Fetch commitments with cursor-based pagination and filters
@@ -46,95 +47,90 @@ export type {
 export async function getCommitments(
   filters?: CommitmentFilters,
   cursor?: PaginationCursor,
-  limit: number = 20
+  limit: number = 20,
 ): Promise<CommitmentsListResponse> {
-  let query = supabase
-    .from('aa_commitments')
-    .select('*', { count: 'exact' });
+  let query = supabase.from('aa_commitments').select(COLUMNS.COMMITMENTS.LIST, { count: 'exact' })
 
   // Apply entity filters
   if (filters?.dossierId) {
-    query = query.eq('dossier_id', filters.dossierId);
+    query = query.eq('dossier_id', filters.dossierId)
   }
 
   if (filters?.ownerId) {
-    query = query.or(`owner_user_id.eq.${filters.ownerId},owner_contact_id.eq.${filters.ownerId}`);
+    query = query.or(`owner_user_id.eq.${filters.ownerId},owner_contact_id.eq.${filters.ownerId}`)
   }
 
   if (filters?.ownerType) {
-    query = query.eq('owner_type', filters.ownerType);
+    query = query.eq('owner_type', filters.ownerType)
   }
 
   // Apply status filters
   if (filters?.status && filters.status.length > 0) {
-    query = query.in('status', filters.status);
+    query = query.in('status', filters.status)
   }
 
   if (filters?.priority && filters.priority.length > 0) {
-    query = query.in('priority', filters.priority);
+    query = query.in('priority', filters.priority)
   }
 
   // Apply overdue filter
   if (filters?.overdue) {
-    const today = new Date().toISOString().split('T')[0];
-    query = query
-      .lt('due_date', today)
-      .not('status', 'in', '(completed,cancelled)');
+    const today = new Date().toISOString().split('T')[0]
+    query = query.lt('due_date', today).not('status', 'in', '(completed,cancelled)')
   }
 
   // Apply date range filters
   if (filters?.dueDateFrom) {
-    query = query.gte('due_date', filters.dueDateFrom);
+    query = query.gte('due_date', filters.dueDateFrom)
   }
 
   if (filters?.dueDateTo) {
-    query = query.lte('due_date', filters.dueDateTo);
+    query = query.lte('due_date', filters.dueDateTo)
   }
 
   // Apply search filter
   if (filters?.search) {
-    query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`);
+    query = query.or(`title.ilike.%${filters.search}%,description.ilike.%${filters.search}%`)
   }
 
   // Apply cursor-based pagination
   if (cursor) {
     query = query.or(
-      `due_date.gt.${cursor.due_date},and(due_date.eq.${cursor.due_date},id.gt.${cursor.id})`
-    );
+      `due_date.gt.${cursor.due_date},and(due_date.eq.${cursor.due_date},id.gt.${cursor.id})`,
+    )
   }
 
   // Order and limit
   query = query
     .order('due_date', { ascending: true })
     .order('id', { ascending: true })
-    .limit(limit + 1); // Fetch one extra to check if there are more
+    .limit(limit + 1) // Fetch one extra to check if there are more
 
-  const { data, error, count } = await query;
+  const { data, error, count } = await query
 
   if (error) {
-    throw new Error(`Failed to fetch commitments: ${error.message}`);
+    throw new Error(`Failed to fetch commitments: ${error.message}`)
   }
 
-  const commitments = data ?? [];
-  const hasMore = commitments.length > limit;
+  const commitments = data ?? []
+  const hasMore = commitments.length > limit
 
   // Remove the extra item if present
   if (hasMore) {
-    commitments.pop();
+    commitments.pop()
   }
 
   // Build next cursor from last item
-  const lastItem = commitments[commitments.length - 1];
-  const nextCursor: PaginationCursor | null = hasMore && lastItem
-    ? { due_date: lastItem.due_date, id: lastItem.id }
-    : null;
+  const lastItem = commitments[commitments.length - 1]
+  const nextCursor: PaginationCursor | null =
+    hasMore && lastItem ? { due_date: lastItem.due_date, id: lastItem.id } : null
 
   return {
     commitments,
     totalCount: count ?? 0,
     nextCursor,
     hasMore,
-  };
+  }
 }
 
 /**
@@ -146,19 +142,19 @@ export async function getCommitments(
 export async function getCommitment(commitmentId: string): Promise<Commitment> {
   const { data, error } = await supabase
     .from('aa_commitments')
-    .select('*')
+    .select(COLUMNS.COMMITMENTS.DETAIL)
     .eq('id', commitmentId)
-    .single();
+    .single()
 
   if (error) {
-    throw new Error(`Failed to fetch commitment: ${error.message}`);
+    throw new Error(`Failed to fetch commitment: ${error.message}`)
   }
 
   if (!data) {
-    throw new Error('Commitment not found');
+    throw new Error('Commitment not found')
   }
 
-  return data as Commitment;
+  return data as Commitment
 }
 
 /**
@@ -168,24 +164,26 @@ export async function getCommitment(commitmentId: string): Promise<Commitment> {
  * @returns Created commitment
  */
 export async function createCommitment(input: CreateCommitmentInput): Promise<Commitment> {
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('User must be authenticated to create a commitment');
+    throw new Error('User must be authenticated to create a commitment')
   }
 
   // Determine owner based on owner_type
   // - internal: owner_user_id = current user (or specified), owner_contact_id = null
   // - external: owner_contact_id = specified, owner_user_id = null
-  const isInternal = input.owner_type === 'internal';
-  const owner_user_id = isInternal ? (input.owner_user_id ?? user.id) : null;
-  const owner_contact_id = isInternal ? null : (input.owner_contact_id ?? null);
+  const isInternal = input.owner_type === 'internal'
+  const owner_user_id = isInternal ? (input.owner_user_id ?? user.id) : null
+  const owner_contact_id = isInternal ? null : (input.owner_contact_id ?? null)
 
   // Tracking mode is STRICTLY determined by owner type (per valid_tracking constraint)
   // - internal: MUST be 'automatic'
   // - external: MUST be 'manual'
   // Note: We override any input value to enforce the database constraint
-  const tracking_mode = isInternal ? 'automatic' : 'manual';
+  const tracking_mode = isInternal ? 'automatic' : 'manual'
 
   const { data, error } = await supabase
     .from('aa_commitments')
@@ -206,13 +204,13 @@ export async function createCommitment(input: CreateCommitmentInput): Promise<Co
       updated_by: user.id,
     })
     .select()
-    .single();
+    .single()
 
   if (error) {
-    throw new Error(`Failed to create commitment: ${error.message}`);
+    throw new Error(`Failed to create commitment: ${error.message}`)
   }
 
-  return data as Commitment;
+  return data as Commitment
 }
 
 /**
@@ -224,12 +222,14 @@ export async function createCommitment(input: CreateCommitmentInput): Promise<Co
  */
 export async function updateCommitment(
   commitmentId: string,
-  input: UpdateCommitmentInput
+  input: UpdateCommitmentInput,
 ): Promise<Commitment> {
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('User must be authenticated to update a commitment');
+    throw new Error('User must be authenticated to update a commitment')
   }
 
   const { data, error } = await supabase
@@ -241,13 +241,13 @@ export async function updateCommitment(
     })
     .eq('id', commitmentId)
     .select()
-    .single();
+    .single()
 
   if (error) {
-    throw new Error(`Failed to update commitment: ${error.message}`);
+    throw new Error(`Failed to update commitment: ${error.message}`)
   }
 
-  return data as Commitment;
+  return data as Commitment
 }
 
 /**
@@ -258,12 +258,14 @@ export async function updateCommitment(
  * @returns Updated commitment
  */
 export async function updateCommitmentStatus(
-  input: UpdateCommitmentStatusInput
+  input: UpdateCommitmentStatusInput,
 ): Promise<Commitment> {
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('User must be authenticated to update status');
+    throw new Error('User must be authenticated to update status')
   }
 
   const updateData: Record<string, unknown> = {
@@ -271,13 +273,13 @@ export async function updateCommitmentStatus(
     status_changed_at: new Date().toISOString(),
     updated_by: user.id,
     updated_at: new Date().toISOString(),
-  };
+  }
 
   // If marking as completed, set completed_at
   if (input.status === 'completed') {
-    updateData.completed_at = new Date().toISOString();
+    updateData.completed_at = new Date().toISOString()
     if (input.notes) {
-      updateData.completion_notes = input.notes;
+      updateData.completion_notes = input.notes
     }
   }
 
@@ -286,17 +288,17 @@ export async function updateCommitmentStatus(
     .update(updateData)
     .eq('id', input.id)
     .select()
-    .single();
+    .single()
 
   if (error) {
     // Check for status transition error
     if (error.message.includes('Cannot change status')) {
-      throw new Error('INVALID_STATUS_TRANSITION: ' + error.message);
+      throw new Error('INVALID_STATUS_TRANSITION: ' + error.message)
     }
-    throw new Error(`Failed to update status: ${error.message}`);
+    throw new Error(`Failed to update status: ${error.message}`)
   }
 
-  return data as Commitment;
+  return data as Commitment
 }
 
 /**
@@ -310,7 +312,7 @@ export async function cancelCommitment(input: CancelCommitmentInput): Promise<Co
     id: input.id,
     status: 'cancelled',
     notes: input.reason,
-  });
+  })
 }
 
 /**
@@ -320,19 +322,19 @@ export async function cancelCommitment(input: CancelCommitmentInput): Promise<Co
  * @returns Array of status history entries
  */
 export async function getCommitmentStatusHistory(
-  commitmentId: string
+  commitmentId: string,
 ): Promise<CommitmentStatusHistory[]> {
   const { data, error } = await supabase
     .from('commitment_status_history')
-    .select('*')
+    .select(COLUMNS.COMMITMENT_STATUS_HISTORY.LIST)
     .eq('commitment_id', commitmentId)
-    .order('changed_at', { ascending: false });
+    .order('changed_at', { ascending: false })
 
   if (error) {
-    throw new Error(`Failed to fetch status history: ${error.message}`);
+    throw new Error(`Failed to fetch status history: ${error.message}`)
   }
 
-  return (data ?? []) as CommitmentStatusHistory[];
+  return (data ?? []) as CommitmentStatusHistory[]
 }
 
 /**
@@ -344,18 +346,20 @@ export async function getCommitmentStatusHistory(
  */
 export async function uploadEvidence(
   commitmentId: string,
-  file: File
+  file: File,
 ): Promise<EvidenceUploadResponse> {
-  const { data: { user } } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser()
 
   if (!user) {
-    throw new Error('User must be authenticated to upload evidence');
+    throw new Error('User must be authenticated to upload evidence')
   }
 
   // Generate unique file path
-  const fileExt = file.name.split('.').pop();
-  const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`;
-  const filePath = `${commitmentId}/${fileName}`;
+  const fileExt = file.name.split('.').pop()
+  const fileName = `${Date.now()}-${Math.random().toString(36).substring(7)}.${fileExt}`
+  const filePath = `${commitmentId}/${fileName}`
 
   // Upload to storage bucket
   const { error: uploadError } = await supabase.storage
@@ -363,13 +367,13 @@ export async function uploadEvidence(
     .upload(filePath, file, {
       contentType: file.type,
       upsert: false,
-    });
+    })
 
   if (uploadError) {
-    throw new Error(`Failed to upload evidence: ${uploadError.message}`);
+    throw new Error(`Failed to upload evidence: ${uploadError.message}`)
   }
 
-  const evidence_submitted_at = new Date().toISOString();
+  const evidence_submitted_at = new Date().toISOString()
 
   // Update commitment with proof_url
   const { error: updateError } = await supabase
@@ -380,16 +384,16 @@ export async function uploadEvidence(
       updated_by: user.id,
       updated_at: new Date().toISOString(),
     })
-    .eq('id', commitmentId);
+    .eq('id', commitmentId)
 
   if (updateError) {
-    throw new Error(`Failed to update commitment with evidence: ${updateError.message}`);
+    throw new Error(`Failed to update commitment with evidence: ${updateError.message}`)
   }
 
   return {
     proof_url: filePath,
     evidence_submitted_at,
-  };
+  }
 }
 
 /**
@@ -401,16 +405,16 @@ export async function uploadEvidence(
 export async function getEvidenceUrl(proofUrl: string): Promise<EvidenceUrlResponse> {
   const { data, error } = await supabase.storage
     .from('commitment-evidence')
-    .createSignedUrl(proofUrl, 3600); // 1 hour expiry
+    .createSignedUrl(proofUrl, 3600) // 1 hour expiry
 
   if (error) {
-    throw new Error(`Failed to get evidence URL: ${error.message}`);
+    throw new Error(`Failed to get evidence URL: ${error.message}`)
   }
 
   return {
     signedUrl: data.signedUrl,
     expiresAt: new Date(Date.now() + 3600 * 1000).toISOString(),
-  };
+  }
 }
 
 /**
@@ -421,7 +425,7 @@ export async function getEvidenceUrl(proofUrl: string): Promise<EvidenceUrlRespo
  * @param reason - Reason for deletion/cancellation
  */
 export async function deleteCommitment(commitmentId: string, reason: string): Promise<void> {
-  await cancelCommitment({ id: commitmentId, reason });
+  await cancelCommitment({ id: commitmentId, reason })
 }
 
 // ============================================================================
@@ -434,20 +438,18 @@ export async function deleteCommitment(commitmentId: string, reason: string): Pr
  * @param status - Commitment status
  * @returns Tailwind CSS color classes
  */
-export function getCommitmentStatusColor(
-  status: CommitmentStatus
-): string {
+export function getCommitmentStatusColor(status: CommitmentStatus): string {
   switch (status) {
     case 'completed':
-      return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20';
+      return 'text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-900/20'
     case 'in_progress':
-      return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20';
+      return 'text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20'
     case 'pending':
-      return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20';
+      return 'text-yellow-600 dark:text-yellow-400 bg-yellow-50 dark:bg-yellow-900/20'
     case 'cancelled':
-      return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20';
+      return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20'
     default:
-      return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20';
+      return 'text-gray-600 dark:text-gray-400 bg-gray-50 dark:bg-gray-900/20'
   }
 }
 
@@ -457,20 +459,18 @@ export function getCommitmentStatusColor(
  * @param priority - Commitment priority
  * @returns Tailwind CSS color class
  */
-export function getCommitmentPriorityColor(
-  priority: CommitmentPriority
-): string {
+export function getCommitmentPriorityColor(priority: CommitmentPriority): string {
   switch (priority) {
     case 'critical':
-      return 'text-red-600 dark:text-red-400';
+      return 'text-red-600 dark:text-red-400'
     case 'high':
-      return 'text-orange-600 dark:text-orange-400';
+      return 'text-orange-600 dark:text-orange-400'
     case 'medium':
-      return 'text-yellow-600 dark:text-yellow-400';
+      return 'text-yellow-600 dark:text-yellow-400'
     case 'low':
-      return 'text-green-600 dark:text-green-400';
+      return 'text-green-600 dark:text-green-400'
     default:
-      return 'text-gray-600 dark:text-gray-400';
+      return 'text-gray-600 dark:text-gray-400'
   }
 }
 
@@ -481,20 +481,17 @@ export function getCommitmentPriorityColor(
  * @param status - Commitment status
  * @returns True if overdue
  */
-export function isCommitmentOverdue(
-  dueDate: string,
-  status: CommitmentStatus
-): boolean {
+export function isCommitmentOverdue(dueDate: string, status: CommitmentStatus): boolean {
   if (status === 'completed' || status === 'cancelled') {
-    return false;
+    return false
   }
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const due = new Date(dueDate);
-  due.setHours(0, 0, 0, 0);
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const due = new Date(dueDate)
+  due.setHours(0, 0, 0, 0)
 
-  return due < today;
+  return due < today
 }
 
 /**
@@ -504,11 +501,11 @@ export function isCommitmentOverdue(
  * @returns Positive for days until due, negative for days overdue
  */
 export function getDaysUntilDue(dueDate: string): number {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  const due = new Date(dueDate);
-  due.setHours(0, 0, 0, 0);
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+  const due = new Date(dueDate)
+  due.setHours(0, 0, 0, 0)
 
-  const diffTime = due.getTime() - today.getTime();
-  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  const diffTime = due.getTime() - today.getTime()
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24))
 }

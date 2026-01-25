@@ -1,38 +1,39 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { supabase } from '../lib/supabase';
-import { preferenceStorage, type StoredPreferences } from '../utils/storage/preference-storage';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
+import { supabase } from '../lib/supabase'
+import { COLUMNS } from '../lib/query-columns'
+import { preferenceStorage, type StoredPreferences } from '../utils/storage/preference-storage'
 
 interface UserPreference {
-  id?: string;
-  user_id: string;
-  theme: 'gastat' | 'blue-sky';
-  color_mode: 'light' | 'dark';
-  language: 'en' | 'ar';
-  created_at?: string;
-  updated_at?: string;
+  id?: string
+  user_id: string
+  theme: 'gastat' | 'blue-sky'
+  color_mode: 'light' | 'dark'
+  language: 'en' | 'ar'
+  created_at?: string
+  updated_at?: string
 }
 
 /**
  * Hook to sync preferences with Supabase
  */
 export function usePreferenceSync(userId?: string) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   // Fetch remote preferences
   const { data: remotePreferences, isLoading } = useQuery({
     queryKey: ['preferences', userId],
     queryFn: async () => {
-      if (!userId) return null;
+      if (!userId) return null
 
       const { data, error } = await supabase
         .from('user_preferences')
-        .select('*')
+        .select(COLUMNS.USER_PREFERENCES.ALL)
         .eq('user_id', userId)
-        .single();
+        .single()
 
       if (error && error.code !== 'PGRST116') {
-        console.error('Error fetching preferences:', error);
-        throw error;
+        console.error('Error fetching preferences:', error)
+        throw error
       }
 
       if (data) {
@@ -42,26 +43,26 @@ export function usePreferenceSync(userId?: string) {
           colorMode: data.color_mode,
           language: data.language,
           updatedAt: data.updated_at,
-        } as StoredPreferences;
+        } as StoredPreferences
       }
 
-      return null;
+      return null
     },
     enabled: !!userId,
     staleTime: 60000, // 1 minute
-  });
+  })
 
   // Mutation to save preferences
   const syncMutation = useMutation({
     mutationFn: async (preferences: StoredPreferences) => {
       if (!userId) {
         // Save locally only
-        preferenceStorage.save(preferences);
-        return preferences;
+        preferenceStorage.save(preferences)
+        return preferences
       }
 
       // Save locally first
-      preferenceStorage.save(preferences);
+      preferenceStorage.save(preferences)
 
       // Then sync to Supabase
       const upsertData: Partial<UserPreference> = {
@@ -69,7 +70,7 @@ export function usePreferenceSync(userId?: string) {
         theme: preferences.theme || 'gastat',
         color_mode: preferences.colorMode || 'light',
         language: preferences.language || 'en',
-      };
+      }
 
       const { data, error } = await supabase
         .from('user_preferences')
@@ -77,12 +78,12 @@ export function usePreferenceSync(userId?: string) {
           onConflict: 'user_id',
         })
         .select()
-        .single();
+        .single()
 
       if (error) {
-        console.error('Error syncing preferences:', error);
+        console.error('Error syncing preferences:', error)
         // Don't throw - preferences are saved locally
-        return preferences;
+        return preferences
       }
 
       return {
@@ -90,41 +91,41 @@ export function usePreferenceSync(userId?: string) {
         colorMode: data.color_mode,
         language: data.language,
         updatedAt: data.updated_at,
-      } as StoredPreferences;
+      } as StoredPreferences
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['preferences', userId] });
+      queryClient.invalidateQueries({ queryKey: ['preferences', userId] })
     },
-  });
+  })
 
   // Merge local and remote preferences
   const mergePreferences = () => {
-    const localPreferences = preferenceStorage.get();
-    
+    const localPreferences = preferenceStorage.get()
+
     if (!remotePreferences && !localPreferences) {
-      return null;
+      return null
     }
 
     if (!remotePreferences) {
-      return localPreferences;
+      return localPreferences
     }
 
     if (!localPreferences) {
-      preferenceStorage.save(remotePreferences);
-      return remotePreferences;
+      preferenceStorage.save(remotePreferences)
+      return remotePreferences
     }
 
     // Use preferenceStorage's merge logic
-    return preferenceStorage.merge(remotePreferences);
-  };
+    return preferenceStorage.merge(remotePreferences)
+  }
 
   const syncPreferences = (preferences: StoredPreferences) => {
     // Debounce sync to avoid too many requests
     if (syncMutation.isPending) {
-      return;
+      return
     }
-    syncMutation.mutate(preferences);
-  };
+    syncMutation.mutate(preferences)
+  }
 
   return {
     syncPreferences,
@@ -133,17 +134,17 @@ export function usePreferenceSync(userId?: string) {
     mergedPreferences: mergePreferences(),
     isLoading,
     fetchRemotePreferences: () => remotePreferences,
-  };
+  }
 }
 
 /**
  * Setup real-time subscription for preference changes
  */
 export function usePreferenceSubscription(userId?: string) {
-  const queryClient = useQueryClient();
+  const queryClient = useQueryClient()
 
   useEffect(() => {
-    if (!userId) return;
+    if (!userId) return
 
     const subscription = supabase
       .channel(`preferences:${userId}`)
@@ -157,27 +158,27 @@ export function usePreferenceSubscription(userId?: string) {
         },
         (payload) => {
           // Invalidate and refetch
-          queryClient.invalidateQueries({ queryKey: ['preferences', userId] });
-          
+          queryClient.invalidateQueries({ queryKey: ['preferences', userId] })
+
           // Update local storage
           if (payload.new) {
-            const newPrefs = payload.new as UserPreference;
+            const newPrefs = payload.new as UserPreference
             preferenceStorage.save({
               theme: newPrefs.theme,
               colorMode: newPrefs.color_mode,
               language: newPrefs.language,
               updatedAt: newPrefs.updated_at,
-            });
+            })
           }
-        }
+        },
       )
-      .subscribe();
+      .subscribe()
 
     return () => {
-      subscription.unsubscribe();
-    };
-  }, [userId, queryClient]);
+      subscription.unsubscribe()
+    }
+  }, [userId, queryClient])
 }
 
 // Add missing import
-import { useEffect } from 'react';
+import { useEffect } from 'react'

@@ -1,30 +1,31 @@
-import { supabaseAdmin } from '../config/supabase';
-import { logInfo, logError } from '../utils/logger';
+import { supabaseAdmin } from '../config/supabase'
+import { logInfo, logError } from '../utils/logger'
+import { COLUMNS } from '../lib/query-columns'
 
 export class CountryService {
   async getCountries(filters?: any) {
     try {
-      const page = filters?.page || 1;
-      const limit = filters?.limit || 50;
-      const offset = (page - 1) * limit;
+      const page = filters?.page || 1
+      const limit = filters?.limit || 50
+      const offset = (page - 1) * limit
 
       const { data, error, count } = await supabaseAdmin
         .from('countries')
-        .select('*', { count: 'exact' })
+        .select(COLUMNS.COUNTRIES.LIST, { count: 'exact' })
         .range(offset, offset + limit - 1)
-        .order('name_en');
+        .order('name_en')
 
-      if (error) throw error;
+      if (error) throw error
 
       return {
         data: data || [],
         page,
         pages: Math.ceil((count || 0) / limit),
-        total: count || 0
-      };
+        total: count || 0,
+      }
     } catch (error) {
-      logError('Failed to fetch countries', error as Error);
-      throw error;
+      logError('Failed to fetch countries', error as Error)
+      throw error
     }
   }
 
@@ -32,15 +33,15 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('countries')
-        .select('*')
+        .select(COLUMNS.COUNTRIES.DETAIL)
         .eq('id', id)
-        .single();
+        .single()
 
-      if (error) throw error;
-      return data;
+      if (error) throw error
+      return data
     } catch (error) {
-      logError(`Failed to fetch country ${id}`, error as Error);
-      throw error;
+      logError(`Failed to fetch country ${id}`, error as Error)
+      throw error
     }
   }
 
@@ -50,13 +51,13 @@ export class CountryService {
         .from('countries')
         .insert(countryData)
         .select()
-        .single();
+        .single()
 
-      if (error) throw error;
-      return data;
+      if (error) throw error
+      return data
     } catch (error) {
-      logError('Failed to create country', error as Error);
-      throw error;
+      logError('Failed to create country', error as Error)
+      throw error
     }
   }
 
@@ -67,62 +68,59 @@ export class CountryService {
         .update(updates)
         .eq('id', id)
         .select()
-        .single();
+        .single()
 
-      if (error) throw error;
-      return data;
+      if (error) throw error
+      return data
     } catch (error) {
-      logError(`Failed to update country ${id}`, error as Error);
-      throw error;
+      logError(`Failed to update country ${id}`, error as Error)
+      throw error
     }
   }
 
   async deleteCountry(id: string) {
     try {
-      const { error } = await supabaseAdmin
-        .from('countries')
-        .delete()
-        .eq('id', id);
+      const { error } = await supabaseAdmin.from('countries').delete().eq('id', id)
 
-      if (error) throw error;
-      return true;
+      if (error) throw error
+      return true
     } catch (error) {
-      logError(`Failed to delete country ${id}`, error as Error);
-      throw error;
+      logError(`Failed to delete country ${id}`, error as Error)
+      throw error
     }
   }
 
   // Methods for API compatibility
   async findAll(filters?: any) {
-    return this.getCountries(filters);
+    return this.getCountries(filters)
   }
 
   async findById(id: string) {
-    return this.getCountryById(id);
+    return this.getCountryById(id)
   }
 
   async create(country: any) {
-    return this.createCountry(country);
+    return this.createCountry(country)
   }
 
   async update(id: string, updates: any) {
-    return this.updateCountry(id, updates);
+    return this.updateCountry(id, updates)
   }
 
   async delete(id: string) {
-    return this.deleteCountry(id);
+    return this.deleteCountry(id)
   }
 
   async getStatistics() {
     try {
       const { count } = await supabaseAdmin
         .from('countries')
-        .select('*', { count: 'exact', head: true });
+        .select('*', { count: 'exact', head: true })
 
-      return { total_countries: count || 0 };
+      return { total_countries: count || 0 }
     } catch (error) {
-      logError('Failed to get country statistics', error as Error);
-      throw error;
+      logError('Failed to get country statistics', error as Error)
+      throw error
     }
   }
 
@@ -131,14 +129,14 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('country_relationships')
-        .select('*')
-        .eq('country_id', countryId);
+        .select(COLUMNS.COUNTRY_RELATIONSHIPS.LIST)
+        .eq('country_id', countryId)
 
-      if (error) throw error;
-      return data || [];
+      if (error) throw error
+      return data || []
     } catch (error) {
-      logError(`Failed to get relationships for country ${countryId}`, error as Error);
-      throw error;
+      logError(`Failed to get relationships for country ${countryId}`, error as Error)
+      throw error
     }
   }
 
@@ -150,13 +148,13 @@ export class CountryService {
         .eq('country_id', countryId)
         .eq('id', relationshipId)
         .select()
-        .single();
+        .single()
 
-      if (error) throw error;
-      return data;
+      if (error) throw error
+      return data
     } catch (error) {
-      logError('Failed to update relationship status', error as Error);
-      throw error;
+      logError('Failed to update relationship status', error as Error)
+      throw error
     }
   }
 
@@ -164,14 +162,14 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('mous')
-        .select('*')
-        .contains('parties', [{ country_id: countryId }]);
+        .select(COLUMNS.MOUS.LIST)
+        .contains('parties', [{ country_id: countryId }])
 
-      if (error) throw error;
-      return data || [];
+      if (error) throw error
+      return data || []
     } catch (error) {
-      logError(`Failed to get MoUs for country ${countryId}`, error as Error);
-      throw error;
+      logError(`Failed to get MoUs for country ${countryId}`, error as Error)
+      throw error
     }
   }
 
@@ -179,15 +177,15 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('events')
-        .select('*')
+        .select(COLUMNS.EVENTS.LIST)
         .eq('country_id', countryId)
-        .order('start_date', { ascending: false });
+        .order('start_date', { ascending: false })
 
-      if (error) throw error;
-      return data || [];
+      if (error) throw error
+      return data || []
     } catch (error) {
-      logError(`Failed to get events for country ${countryId}`, error as Error);
-      throw error;
+      logError(`Failed to get events for country ${countryId}`, error as Error)
+      throw error
     }
   }
 
@@ -195,14 +193,14 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('contacts')
-        .select('*')
-        .eq('country_id', countryId);
+        .select(COLUMNS.CONTACTS.LIST)
+        .eq('country_id', countryId)
 
-      if (error) throw error;
-      return data || [];
+      if (error) throw error
+      return data || []
     } catch (error) {
-      logError(`Failed to get contacts for country ${countryId}`, error as Error);
-      throw error;
+      logError(`Failed to get contacts for country ${countryId}`, error as Error)
+      throw error
     }
   }
 
@@ -210,15 +208,15 @@ export class CountryService {
     try {
       const { data, error } = await supabaseAdmin
         .from('timeline_events')
-        .select('*')
+        .select(COLUMNS.TIMELINE_EVENTS.LIST)
         .eq('country_id', countryId)
-        .order('event_date', { ascending: false });
+        .order('event_date', { ascending: false })
 
-      if (error) throw error;
-      return data || [];
+      if (error) throw error
+      return data || []
     } catch (error) {
-      logError(`Failed to get timeline for country ${countryId}`, error as Error);
-      throw error;
+      logError(`Failed to get timeline for country ${countryId}`, error as Error)
+      throw error
     }
   }
 
@@ -228,25 +226,25 @@ export class CountryService {
         .from('countries')
         .select('tags')
         .eq('id', countryId)
-        .single();
+        .single()
 
-      if (fetchError) throw fetchError;
+      if (fetchError) throw fetchError
 
-      const existingTags = country?.tags || [];
-      const newTags = [...new Set([...existingTags, ...tags])];
+      const existingTags = country?.tags || []
+      const newTags = [...new Set([...existingTags, ...tags])]
 
       const { data, error } = await supabaseAdmin
         .from('countries')
         .update({ tags: newTags })
         .eq('id', countryId)
         .select()
-        .single();
+        .single()
 
-      if (error) throw error;
-      return data;
+      if (error) throw error
+      return data
     } catch (error) {
-      logError(`Failed to add tags to country ${countryId}`, error as Error);
-      throw error;
+      logError(`Failed to add tags to country ${countryId}`, error as Error)
+      throw error
     }
   }
 
@@ -256,27 +254,27 @@ export class CountryService {
         .from('countries')
         .select('tags')
         .eq('id', countryId)
-        .single();
+        .single()
 
-      if (fetchError) throw fetchError;
+      if (fetchError) throw fetchError
 
-      const existingTags = country?.tags || [];
-      const newTags = existingTags.filter((tag: string) => !tagsToRemove.includes(tag));
+      const existingTags = country?.tags || []
+      const newTags = existingTags.filter((tag: string) => !tagsToRemove.includes(tag))
 
       const { data, error } = await supabaseAdmin
         .from('countries')
         .update({ tags: newTags })
         .eq('id', countryId)
         .select()
-        .single();
+        .single()
 
-      if (error) throw error;
-      return data;
+      if (error) throw error
+      return data
     } catch (error) {
-      logError(`Failed to remove tags from country ${countryId}`, error as Error);
-      throw error;
+      logError(`Failed to remove tags from country ${countryId}`, error as Error)
+      throw error
     }
   }
 }
 
-export default CountryService;
+export default CountryService

@@ -13,13 +13,70 @@
  * - include_keyword_results: Include exact keyword matches (optional, default false)
  */
 
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 import { corsHeaders } from '../_shared/cors.ts';
 
 // Initialize Supabase client
 const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
+const anythingLLMUrl = Deno.env.get('ANYTHINGLLM_URL') ?? '';
+const anythingLLMApiKey = Deno.env.get('ANYTHINGLLM_API_KEY') ?? '';
+
+/**
+ * Generate embedding for query text using AnythingLLM
+ * Falls back to null if embedding generation fails
+ */
+async function generateQueryEmbedding(query: string): Promise<number[] | null> {
+  if (!anythingLLMUrl || !anythingLLMApiKey) {
+    console.warn('AnythingLLM not configured, embedding generation unavailable');
+    return null;
+  }
+
+  try {
+    const response = await fetch(`${anythingLLMUrl}/api/v1/embed`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${anythingLLMApiKey}`,
+      },
+      body: JSON.stringify({ text: query }),
+    });
+
+    if (!response.ok) {
+      console.error('AnythingLLM embedding request failed:', response.status);
+      return null;
+    }
+
+    const data = await response.json();
+    if (data.embedding && Array.isArray(data.embedding)) {
+      // Normalize to 1536 dimensions if needed
+      return normalizeEmbedding(data.embedding, 1536);
+    }
+
+    return null;
+  } catch (error) {
+    console.error('AnythingLLM embedding error:', error);
+    return null;
+  }
+}
+
+/**
+ * Normalize embedding to target dimensions (pad or truncate)
+ */
+function normalizeEmbedding(embedding: number[], targetDim: number): number[] {
+  if (embedding.length === targetDim) {
+    return embedding;
+  }
+
+  if (embedding.length < targetDim) {
+    // Pad with zeros
+    return [...embedding, ...new Array(targetDim - embedding.length).fill(0)];
+  }
+
+  // Truncate
+  return embedding.slice(0, targetDim);
+}
 
 serve(async (req: Request) => {
   // Handle CORS preflight
@@ -46,12 +103,12 @@ serve(async (req: Request) => {
           message: 'Query is required and cannot be empty',
           details: {
             message: 'Query is required and cannot be empty',
-            message_ar: 'الاستعلام مطلوب ولا يمكن أن يكون فارغًا'
-          }
+            message_ar: 'الاستعلام مطلوب ولا يمكن أن يكون فارغًا',
+          },
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -64,11 +121,11 @@ serve(async (req: Request) => {
         JSON.stringify({
           error: 'bad_request',
           message: `Invalid entity types: ${invalidTypes.join(', ')}. Must be one of: positions, documents, briefs`,
-          message_ar: `أنواع كيانات غير صالحة: ${invalidTypes.join(', ')}. يجب أن تكون واحدة من: positions, documents, briefs`
+          message_ar: `أنواع كيانات غير صالحة: ${invalidTypes.join(', ')}. يجب أن تكون واحدة من: positions, documents, briefs`,
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -79,11 +136,11 @@ serve(async (req: Request) => {
         JSON.stringify({
           error: 'bad_request',
           message: 'Similarity threshold must be between 0.0 and 1.0',
-          message_ar: 'يجب أن يكون عتبة التشابه بين 0.0 و 1.0'
+          message_ar: 'يجب أن يكون عتبة التشابه بين 0.0 و 1.0',
         }),
         {
           status: 400,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -98,11 +155,11 @@ serve(async (req: Request) => {
         JSON.stringify({
           error: 'unauthorized',
           message: 'Authorization header required',
-          message_ar: 'مطلوب رأس التفويض'
+          message_ar: 'مطلوب رأس التفويض',
         }),
         {
           status: 401,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         }
       );
     }
@@ -111,17 +168,85 @@ serve(async (req: Request) => {
     const supabase = createClient(supabaseUrl, supabaseServiceKey, {
       global: {
         headers: {
-          Authorization: authHeader
-        }
-      }
+          Authorization: authHeader,
+        },
+      },
     });
 
-    // Note: In production, this would call AnythingLLM to generate the query embedding
-    // For now, we'll create a placeholder embedding (all zeros)
-    // TODO: Integrate with AnythingLLM or existing vector.service.ts
+    // SECURITY FIX: Generate real embedding using AnythingLLM
+    // Previously used placeholder zeros which returned random results
     const embeddingStartTime = Date.now();
-    const queryEmbedding = new Array(1536).fill(0); // Placeholder embedding
+    const queryEmbedding = await generateQueryEmbedding(query);
     const embeddingGenTime = Date.now() - embeddingStartTime;
+
+    // If embedding generation failed, fall back to full-text search only
+    if (!queryEmbedding) {
+      console.warn('Embedding generation failed, falling back to keyword search');
+
+      // Execute keyword search as fallback
+      const keywordResults: any[] = [];
+      for (const entityType of entityTypes) {
+        try {
+          const { data, error } = await supabase.rpc('search_entities_fulltext', {
+            p_entity_type: entityType,
+            p_query: query,
+            p_language: 'english',
+            p_limit: validatedLimit,
+            p_offset: 0,
+          });
+
+          if (!error && data && data.length > 0) {
+            const results = data.map((item: any) => ({
+              id: item.entity_id,
+              type: item.entity_type,
+              title_en: item.entity_title_en || '',
+              title_ar: item.entity_title_ar || '',
+              snippet_en: item.entity_snippet_en || '',
+              snippet_ar: item.entity_snippet_ar || '',
+              similarity_score: Math.min(1.0, item.rank_score / 10),
+              updated_at: item.updated_at,
+              match_type: 'keyword',
+            }));
+            keywordResults.push(...results);
+          }
+        } catch (err) {
+          console.error(`Error in fallback keyword search for ${entityType}:`, err);
+        }
+      }
+
+      keywordResults.sort((a, b) => b.similarity_score - a.similarity_score);
+
+      return new Response(
+        JSON.stringify({
+          results: keywordResults.slice(0, validatedLimit),
+          query: {
+            original: query,
+            entity_types: entityTypes,
+            similarity_threshold: similarityThreshold,
+          },
+          took_ms: Date.now() - startTime,
+          performance: {
+            embedding_generation_ms: embeddingGenTime,
+            fallback_to_keyword: true,
+            total_ms: Date.now() - startTime,
+          },
+          metadata: {
+            total_results: keywordResults.length,
+            types_searched: entityTypes,
+            search_mode: 'keyword_fallback',
+          },
+          warning: 'Semantic search unavailable, using keyword search fallback',
+        }),
+        {
+          status: 200,
+          headers: {
+            ...corsHeaders,
+            'Content-Type': 'application/json',
+            'X-Response-Time': `${Date.now() - startTime}ms`,
+          },
+        }
+      );
+    }
 
     // Execute semantic search for each entity type
     const results: any[] = [];
@@ -134,7 +259,7 @@ serve(async (req: Request) => {
           p_entity_type: entityType,
           p_query_embedding: `[${queryEmbedding.join(',')}]`, // Format as PostgreSQL vector
           p_similarity_threshold: similarityThreshold,
-          p_limit: validatedLimit
+          p_limit: validatedLimit,
         });
 
         if (error) {
@@ -150,7 +275,7 @@ serve(async (req: Request) => {
             title_ar: item.entity_title_ar || '',
             similarity_score: item.similarity_score,
             updated_at: item.updated_at,
-            match_type: 'semantic'
+            match_type: 'semantic',
           }));
 
           results.push(...typedResults);
@@ -171,7 +296,7 @@ serve(async (req: Request) => {
             p_query: query,
             p_language: 'english', // Auto-detect in production
             p_limit: 10, // Limit exact matches to 10
-            p_offset: 0
+            p_offset: 0,
           });
 
           if (!error && data && data.length > 0) {
@@ -184,7 +309,7 @@ serve(async (req: Request) => {
               snippet_ar: item.entity_snippet_ar || '',
               rank_score: Math.min(1.0, item.rank_score * 10),
               updated_at: item.updated_at,
-              match_type: 'exact'
+              match_type: 'exact',
             }));
 
             exactMatches.push(...keywordResults);
@@ -211,44 +336,40 @@ serve(async (req: Request) => {
       query: {
         original: query,
         entity_types: entityTypes,
-        similarity_threshold: similarityThreshold
+        similarity_threshold: similarityThreshold,
       },
       took_ms: tookMs,
       performance: {
         embedding_generation_ms: embeddingGenTime,
         semantic_search_ms: tookMs - embeddingGenTime,
-        total_ms: tookMs
+        total_ms: tookMs,
       },
       metadata: {
         total_results: results.length,
         types_searched: entityTypes,
-        hybrid_search: includeKeywordResults
-      }
+        hybrid_search: includeKeywordResults,
+      },
     };
 
-    return new Response(
-      JSON.stringify(response),
-      {
-        status: 200,
-        headers: {
-          ...corsHeaders,
-          'Content-Type': 'application/json',
-          'X-Response-Time': `${tookMs}ms`
-        }
-      }
-    );
-
+    return new Response(JSON.stringify(response), {
+      status: 200,
+      headers: {
+        ...corsHeaders,
+        'Content-Type': 'application/json',
+        'X-Response-Time': `${tookMs}ms`,
+      },
+    });
   } catch (error) {
     console.error('Semantic search error:', error);
     return new Response(
       JSON.stringify({
         error: 'internal_server_error',
         message: error instanceof Error ? error.message : 'An unexpected error occurred',
-        message_ar: 'حدث خطأ غير متوقع'
+        message_ar: 'حدث خطأ غير متوقع',
       }),
       {
         status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       }
     );
   }

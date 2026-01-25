@@ -1,6 +1,6 @@
 // Enhanced Card-Style React Flow Nodes for Relationship Graph
 import { memo } from 'react'
-import { Handle, Position, NodeProps } from 'reactflow'
+import { Handle, Position, NodeProps } from '@xyflow/react'
 import {
   Building2,
   Globe2,

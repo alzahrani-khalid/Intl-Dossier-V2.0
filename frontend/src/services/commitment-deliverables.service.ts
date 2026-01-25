@@ -7,6 +7,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { COLUMNS } from '@/lib/query-columns'
 import type {
   CommitmentDeliverable,
   CreateCommitmentDeliverableInput,
@@ -33,7 +34,7 @@ export async function getCommitmentDeliverables(
 ): Promise<CommitmentDeliverable[]> {
   const { data, error } = await supabase
     .from('commitment_deliverables')
-    .select('*')
+    .select(COLUMNS.COMMITMENT_DELIVERABLES.LIST)
     .eq('commitment_id', commitmentId)
     .order('sort_order', { ascending: true })
     .order('due_date', { ascending: true })
@@ -56,7 +57,7 @@ export async function getCommitmentDeliverable(
 ): Promise<CommitmentDeliverable> {
   const { data, error } = await supabase
     .from('commitment_deliverables')
-    .select('*')
+    .select(COLUMNS.COMMITMENT_DELIVERABLES.LIST)
     .eq('id', deliverableId)
     .single()
 

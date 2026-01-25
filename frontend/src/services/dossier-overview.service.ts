@@ -13,6 +13,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { COLUMNS } from '@/lib/query-columns'
 import type {
   DossierOverviewRequest,
   DossierOverviewResponse,
@@ -81,7 +82,11 @@ async function getAuthHeaders(): Promise<Headers> {
 // =============================================================================
 
 async function fetchDossierCore(dossierId: string): Promise<DossierOverviewCore> {
-  const { data, error } = await supabase.from('dossiers').select('*').eq('id', dossierId).single()
+  const { data, error } = await supabase
+    .from('dossiers')
+    .select(COLUMNS.DOSSIERS.OVERVIEW)
+    .eq('id', dossierId)
+    .single()
 
   if (error) {
     throw new DossierOverviewAPIError(
@@ -426,7 +431,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
   if (commitmentIds.length > 0) {
     const { data: commitments } = await supabase
       .from('commitments')
-      .select('*')
+      .select(COLUMNS.COMMITMENTS.SUMMARY)
       .in('id', commitmentIds)
       .limit(limit)
 
@@ -528,7 +533,7 @@ async function fetchCalendarEvents(
 
   const { data: events } = await supabase
     .from('calendar_events')
-    .select('*')
+    .select(COLUMNS.CALENDAR_EVENTS.LIST)
     .eq('dossier_id', dossierId)
     .gte('start_datetime', startDate.toISOString())
     .lte('start_datetime', endDate.toISOString())
@@ -573,7 +578,7 @@ async function fetchCalendarEvents(
 async function fetchKeyContacts(dossierId: string): Promise<KeyContactsSection> {
   const { data: contacts } = await supabase
     .from('key_contacts')
-    .select('*')
+    .select(COLUMNS.KEY_CONTACTS.LIST)
     .eq('dossier_id', dossierId)
     .order('name', { ascending: true })
 

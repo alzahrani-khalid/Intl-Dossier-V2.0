@@ -9,6 +9,7 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '../../../backend/src/types/database.types'
 import type { ApiErrorDetails } from '@/types/common.types'
+import { COLUMNS } from '@/lib/query-columns'
 
 // Initialize Supabase client
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
@@ -97,7 +98,7 @@ export const contributorsAPI = {
   async getTaskContributors(taskId: string): Promise<TaskContributor[]> {
     const { data, error } = await supabase
       .from('task_contributors')
-      .select('*')
+      .select(COLUMNS.TASK_CONTRIBUTORS.LIST)
       .eq('task_id', taskId)
       .is('removed_at', null)
       .order('added_at', { ascending: false })
@@ -115,7 +116,7 @@ export const contributorsAPI = {
   async getContributorHistory(taskId: string): Promise<TaskContributor[]> {
     const { data, error } = await supabase
       .from('task_contributors')
-      .select('*')
+      .select(COLUMNS.TASK_CONTRIBUTORS.LIST)
       .eq('task_id', taskId)
       .order('added_at', { ascending: false })
 
@@ -132,7 +133,7 @@ export const contributorsAPI = {
   async getUserContributorTasks(userId: string): Promise<TaskContributor[]> {
     const { data, error } = await supabase
       .from('task_contributors')
-      .select('*')
+      .select(COLUMNS.TASK_CONTRIBUTORS.LIST)
       .eq('user_id', userId)
       .is('removed_at', null)
       .order('added_at', { ascending: false })

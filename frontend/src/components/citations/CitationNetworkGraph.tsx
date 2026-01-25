@@ -9,7 +9,8 @@
 
 import { useMemo, memo, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import ReactFlow, {
+import {
+  ReactFlow,
   Node,
   Edge,
   Background,
@@ -20,8 +21,8 @@ import ReactFlow, {
   NodeTypes,
   Handle,
   Position,
-} from 'reactflow'
-import 'reactflow/dist/style.css'
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
