@@ -4,6 +4,7 @@
  */
 
 import { supabase } from '@/lib/supabase'
+import { COLUMNS } from '@/lib/query-columns'
 import type {
   Legislation,
   LegislationWithDetails,
@@ -346,7 +347,7 @@ export async function deleteLegislation(id: string): Promise<void> {
 export async function getLegislationSponsors(legislationId: string): Promise<LegislationSponsor[]> {
   const { data, error } = await supabase
     .from('legislation_sponsors')
-    .select('*')
+    .select(COLUMNS.LEGISLATION_SPONSORS.LIST)
     .eq('legislation_id', legislationId)
     .order('sponsor_type', { ascending: true })
     .order('created_at', { ascending: true })
@@ -391,7 +392,7 @@ export async function getLegislationAmendments(
 ): Promise<LegislationAmendment[]> {
   const { data, error } = await supabase
     .from('legislation_amendments')
-    .select('*')
+    .select(COLUMNS.LEGISLATION_AMENDMENTS.LIST)
     .eq('legislation_id', legislationId)
     .order('proposed_date', { ascending: false })
 
@@ -460,7 +461,7 @@ export async function getLegislationDeadlines(
 ): Promise<LegislationDeadline[]> {
   const { data, error } = await supabase
     .from('legislation_deadlines')
-    .select('*')
+    .select(COLUMNS.LEGISLATION_DEADLINES.LIST)
     .eq('legislation_id', legislationId)
     .order('deadline_date', { ascending: true })
 
@@ -591,7 +592,7 @@ export async function getLegislationStatusHistory(
 ): Promise<LegislationStatusHistory[]> {
   const { data, error } = await supabase
     .from('legislation_status_history')
-    .select('*')
+    .select(COLUMNS.LEGISLATION_STATUS_HISTORY.LIST)
     .eq('legislation_id', legislationId)
     .order('changed_at', { ascending: false })
 

@@ -15,7 +15,8 @@
 
 import { useCallback, useMemo, useState, useRef, useEffect, memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import ReactFlow, {
+import {
+  ReactFlow,
   Node,
   Edge,
   Background,
@@ -29,8 +30,8 @@ import ReactFlow, {
   useReactFlow,
   MarkerType,
   ReactFlowProvider,
-} from 'reactflow'
-import 'reactflow/dist/style.css'
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'

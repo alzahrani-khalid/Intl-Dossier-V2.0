@@ -1,16 +1,16 @@
 // Shared utilities for Edge Functions
-import { serve } from 'https://deno.land/std@0.177.0/http/server.ts'
+import { serve } from 'https://deno.land/std@0.177.0/http/server.ts';
 
 export interface ErrorResponse {
-  error: string
-  code?: string
-  details?: any
+  error: string;
+  code?: string;
+  details?: any;
 }
 
 export interface SuccessResponse<T = any> {
-  data?: T
-  message?: string
-  metadata?: any
+  data?: T;
+  message?: string;
+  metadata?: any;
 }
 
 /**
@@ -21,7 +21,7 @@ export const corsHeaders = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
   'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
   'Access-Control-Max-Age': '86400',
-}
+};
 
 /**
  * Format error response
@@ -35,19 +35,16 @@ export function errorResponse(
   const body: ErrorResponse = {
     error: message,
     ...(code && { code }),
-    ...(details && { details })
-  }
+    ...(details && { details }),
+  };
 
-  return new Response(
-    JSON.stringify(body),
-    {
-      status,
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/json'
-      }
-    }
-  )
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      ...corsHeaders,
+      'Content-Type': 'application/json',
+    },
+  });
 }
 
 /**
@@ -62,19 +59,16 @@ export function successResponse<T>(
   const body: SuccessResponse<T> = {
     ...(data !== undefined && { data }),
     ...(message && { message }),
-    ...(metadata && { metadata })
-  }
+    ...(metadata && { metadata }),
+  };
 
-  return new Response(
-    JSON.stringify(body),
-    {
-      status,
-      headers: {
-        ...corsHeaders,
-        'Content-Type': 'application/json'
-      }
-    }
-  )
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: {
+      ...corsHeaders,
+      'Content-Type': 'application/json',
+    },
+  });
 }
 
 /**
@@ -83,8 +77,8 @@ export function successResponse<T>(
 export function handleOptions(): Response {
   return new Response(null, {
     status: 204,
-    headers: corsHeaders
-  })
+    headers: corsHeaders,
+  });
 }
 
 /**
@@ -92,77 +86,82 @@ export function handleOptions(): Response {
  */
 export async function parseBody<T>(request: Request): Promise<T> {
   try {
-    const body = await request.json()
-    return body as T
+    const body = await request.json();
+    return body as T;
   } catch (error) {
-    throw new Error('Invalid JSON in request body')
+    throw new Error('Invalid JSON in request body');
   }
 }
 
 /**
  * Validate required fields in request body
  */
-export function validateRequiredFields(
-  body: Record<string, any>,
-  fields: string[]
-): void {
-  const missing = fields.filter(field => !body[field])
+export function validateRequiredFields(body: Record<string, any>, fields: string[]): void {
+  const missing = fields.filter((field) => !body[field]);
   if (missing.length > 0) {
-    throw new Error(`Missing required fields: ${missing.join(', ')}`)
+    throw new Error(`Missing required fields: ${missing.join(', ')}`);
   }
 }
 
 /**
  * Rate limiting check (basic implementation)
  */
-const requestCounts = new Map<string, { count: number; resetAt: number }>()
+const requestCounts = new Map<string, { count: number; resetAt: number }>();
 
 export function checkRateLimit(
   identifier: string,
   limit: number = 100,
   windowMs: number = 60000
 ): boolean {
-  const now = Date.now()
-  const record = requestCounts.get(identifier)
+  const now = Date.now();
+  const record = requestCounts.get(identifier);
 
   if (!record || record.resetAt < now) {
     requestCounts.set(identifier, {
       count: 1,
-      resetAt: now + windowMs
-    })
-    return true
+      resetAt: now + windowMs,
+    });
+    return true;
   }
 
   if (record.count >= limit) {
-    return false
+    return false;
   }
 
-  record.count++
-  return true
+  record.count++;
+  return true;
 }
 
 /**
  * Logger utility
  */
 export function log(level: 'info' | 'warn' | 'error', message: string, data?: any) {
-  const timestamp = new Date().toISOString()
+  const timestamp = new Date().toISOString();
   const logEntry = {
     timestamp,
     level,
     message,
-    ...(data && { data })
-  }
+    ...(data && { data }),
+  };
 
   switch (level) {
     case 'error':
-      console.error(JSON.stringify(logEntry))
-      break
+      console.error(JSON.stringify(logEntry));
+      break;
     case 'warn':
-      console.warn(JSON.stringify(logEntry))
-      break
+      console.warn(JSON.stringify(logEntry));
+      break;
     default:
-      console.log(JSON.stringify(logEntry))
+      console.log(JSON.stringify(logEntry));
   }
+}
+
+/**
+ * Check if running in development environment
+ */
+function isDevelopment(): boolean {
+  const env = Deno.env.get('ENVIRONMENT') || Deno.env.get('DENO_ENV') || 'production';
+  return env === 'development' || env === 'dev' || env === 'local';
 }
 
 /**
@@ -174,20 +173,32 @@ export function createHandler(
   return async (req: Request) => {
     // Handle CORS preflight
     if (req.method === 'OPTIONS') {
-      return handleOptions()
+      return handleOptions();
     }
 
     try {
-      return await handler(req)
+      return await handler(req);
     } catch (error) {
-      log('error', 'Unhandled error in handler', { error: error.message, stack: error.stack })
-      // Temporarily expose all errors for debugging
-      return errorResponse(
-        error.message || 'Internal server error',
-        500,
-        'INTERNAL_ERROR',
-        { error: error.message, stack: error.stack }
-      )
+      const correlationId = crypto.randomUUID();
+
+      // Always log full error details server-side for debugging
+      log('error', 'Unhandled error in handler', {
+        correlationId,
+        error: error.message,
+        stack: error.stack,
+      });
+
+      // SECURITY FIX: Only expose error details in development
+      // In production, return generic error with correlation ID for support
+      if (isDevelopment()) {
+        return errorResponse(error.message || 'Internal server error', 500, 'INTERNAL_ERROR', {
+          error: error.message,
+          stack: error.stack,
+        });
+      }
+
+      // Production: Generic error message with correlation ID
+      return errorResponse('Internal server error', 500, 'INTERNAL_ERROR', { correlationId });
     }
-  }
+  };
 }

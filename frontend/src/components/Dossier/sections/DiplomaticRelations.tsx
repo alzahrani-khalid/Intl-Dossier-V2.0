@@ -8,14 +8,15 @@
  * Includes inline bilateral intelligence widget (Feature 029 - User Story 4 - T059)
  */
 
-import { useTranslation } from 'react-i18next';
-import { Globe2 } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
-import { IntelligenceInsight } from '@/components/intelligence/IntelligenceInsight';
-import { useIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence';
-import { Skeleton } from '@/components/ui/skeleton';
-import { useMemo, useCallback, memo } from 'react';
-import ReactFlow, {
+import { useTranslation } from 'react-i18next'
+import { Globe2 } from 'lucide-react'
+import { useQuery } from '@tanstack/react-query'
+import { IntelligenceInsight } from '@/components/intelligence/IntelligenceInsight'
+import { useIntelligence, useRefreshIntelligence } from '@/hooks/useIntelligence'
+import { Skeleton } from '@/components/ui/skeleton'
+import { useMemo, useCallback, memo } from 'react'
+import {
+  ReactFlow,
   Node,
   Edge,
   Background,
@@ -26,61 +27,65 @@ import ReactFlow, {
   OnNodesChange,
   OnEdgesChange,
   NodeTypes,
-} from 'reactflow';
-import 'reactflow/dist/style.css';
-import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force';
-import { supabase } from '@/lib/supabase-client';
-import { Badge } from '@/components/ui/badge';
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
+import { forceSimulation, forceLink, forceManyBody, forceCenter, forceCollide } from 'd3-force'
+import { supabase } from '@/lib/supabase-client'
+import { Badge } from '@/components/ui/badge'
 
 interface DiplomaticRelation {
-  id: string;
-  source_dossier_id: string;
-  target_dossier_id: string;
-  relationship_type: string;
-  effective_from: string | null;
-  effective_to: string | null;
+  id: string
+  source_dossier_id: string
+  target_dossier_id: string
+  relationship_type: string
+  effective_from: string | null
+  effective_to: string | null
   metadata?: {
-    status?: 'active' | 'historical' | 'terminated';
-  };
+    status?: 'active' | 'historical' | 'terminated'
+  }
 }
 
 interface RelatedCountry {
-  id: string;
-  name_en: string;
-  name_ar: string;
+  id: string
+  name_en: string
+  name_ar: string
   extension: {
-    iso_code_2: string;
-    region: string;
-  };
+    iso_code_2: string
+    region: string
+  }
 }
 
 interface DiplomaticRelationsProps {
-  dossierId: string;
+  dossierId: string
 }
 
 // Custom node component for countries (memoized for performance)
-const CountryNode = memo(({ data }: { data: { label: string; isoCode: string; relationCount: number } }) => (
-  <div className="bg-card border-2 border-primary rounded-lg px-3 py-2 sm:px-4 sm:py-3 shadow-md min-w-[80px] sm:min-w-[100px] hover:shadow-lg transition-shadow">
-    <div className="flex flex-col items-center gap-1">
-      <div className="text-xs sm:text-sm font-mono text-muted-foreground">{data.isoCode}</div>
-      <div className="text-sm sm:text-base font-semibold text-foreground text-center">{data.label}</div>
-      {data.relationCount > 0 && (
-        <Badge variant="secondary" className="text-xs">
-          {data.relationCount}
-        </Badge>
-      )}
+const CountryNode = memo(
+  ({ data }: { data: { label: string; isoCode: string; relationCount: number } }) => (
+    <div className="bg-card border-2 border-primary rounded-lg px-3 py-2 sm:px-4 sm:py-3 shadow-md min-w-[80px] sm:min-w-[100px] hover:shadow-lg transition-shadow">
+      <div className="flex flex-col items-center gap-1">
+        <div className="text-xs sm:text-sm font-mono text-muted-foreground">{data.isoCode}</div>
+        <div className="text-sm sm:text-base font-semibold text-foreground text-center">
+          {data.label}
+        </div>
+        {data.relationCount > 0 && (
+          <Badge variant="secondary" className="text-xs">
+            {data.relationCount}
+          </Badge>
+        )}
+      </div>
     </div>
-  </div>
-));
-CountryNode.displayName = 'CountryNode';
+  ),
+)
+CountryNode.displayName = 'CountryNode'
 
 const nodeTypes: NodeTypes = {
   country: CountryNode,
-};
+}
 
 export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Fetch bilateral intelligence for inline widget (Feature 029 - User Story 4 - T059)
   const {
@@ -90,25 +95,30 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
   } = useIntelligence({
     entity_id: dossierId,
     intelligence_type: 'bilateral',
-  });
+  })
 
   // Refresh mutation for bilateral intelligence
-  const { mutate: refreshBilateral, isPending: isRefreshingBilateral } = useRefreshIntelligence();
+  const { mutate: refreshBilateral, isPending: isRefreshingBilateral } = useRefreshIntelligence()
 
   const handleBilateralRefresh = () => {
     refreshBilateral({
       entity_id: dossierId,
       intelligence_types: ['bilateral'],
-    });
-  };
+    })
+  }
 
   // Fetch diplomatic relations and related countries
-  const { data: relations, isLoading, error: relationsError } = useQuery({
+  const {
+    data: relations,
+    isLoading,
+    error: relationsError,
+  } = useQuery({
     queryKey: ['diplomatic-relations', dossierId],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('dossier_relationships')
-        .select(`
+        .select(
+          `
           id,
           source_dossier_id,
           target_dossier_id,
@@ -116,76 +126,79 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
           effective_from,
           effective_to,
           metadata:relationship_metadata
-        `)
+        `,
+        )
         .or(`source_dossier_id.eq.${dossierId},target_dossier_id.eq.${dossierId}`)
-        .order('effective_from', { ascending: false });
+        .order('effective_from', { ascending: false })
 
       if (error) {
-        console.error('Error fetching diplomatic relations:', error);
-        return [];  // Return empty array instead of throwing
+        console.error('Error fetching diplomatic relations:', error)
+        return [] // Return empty array instead of throwing
       }
-      return data as DiplomaticRelation[];
+      return data as DiplomaticRelation[]
     },
-    retry: false,  // Don't retry on permission errors
-  });
+    retry: false, // Don't retry on permission errors
+  })
 
   const { data: countries } = useQuery({
     queryKey: ['related-countries', dossierId],
     queryFn: async () => {
-      if (!relations || relations.length === 0) return [];
+      if (!relations || relations.length === 0) return []
 
-      const countryIds = new Set<string>();
+      const countryIds = new Set<string>()
       // Include the current dossier
-      countryIds.add(dossierId);
+      countryIds.add(dossierId)
       // Include all related countries
       relations.forEach((rel) => {
-        countryIds.add(rel.source_dossier_id);
-        countryIds.add(rel.target_dossier_id);
-      });
+        countryIds.add(rel.source_dossier_id)
+        countryIds.add(rel.target_dossier_id)
+      })
 
       const { data, error } = await supabase
         .from('dossiers')
-        .select(`
+        .select(
+          `
           id,
           type,
           name_en,
           name_ar,
           countries(iso_code_2, region)
-        `)
-        .in('id', Array.from(countryIds));
+        `,
+        )
+        .in('id', Array.from(countryIds))
 
-      if (error) throw error;
+      if (error) throw error
 
       // Transform the data to match RelatedCountry interface
       // For non-country dossiers, provide default values
-      return (data || []).map(d => ({
+      return (data || []).map((d) => ({
         id: d.id,
         name_en: d.name_en,
         name_ar: d.name_ar,
         extension: {
           iso_code_2: d.countries?.[0]?.iso_code_2 || d.type?.substring(0, 2).toUpperCase() || '??',
           region: d.countries?.[0]?.region || d.type || 'Other',
-        }
-      })) as RelatedCountry[];
+        },
+      })) as RelatedCountry[]
     },
     enabled: !!relations && relations.length > 0,
-  });
+  })
 
   // Generate nodes and edges using d3-force layout
   const { nodes: initialNodes, edges: initialEdges } = useMemo(() => {
     if (!relations || !countries || relations.length === 0 || countries.length === 0) {
-      return { nodes: [], edges: [] };
+      return { nodes: [], edges: [] }
     }
 
     // Create node map
-    const nodeMap = new Map<string, RelatedCountry>();
-    countries.forEach((country) => nodeMap.set(country.id, country));
+    const nodeMap = new Map<string, RelatedCountry>()
+    countries.forEach((country) => nodeMap.set(country.id, country))
 
     // Create nodes array
     const nodesData = countries.map((country) => {
       const relationCount = relations.filter(
-        (rel) => rel.source_dossier_id === country.id || rel.target_dossier_id === country.id
-      ).length;
+        (rel) => rel.source_dossier_id === country.id || rel.target_dossier_id === country.id,
+      ).length
 
       return {
         id: country.id,
@@ -196,12 +209,12 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
           isoCode: country.extension?.iso_code_2 || '',
           relationCount,
         },
-      };
-    });
+      }
+    })
 
     // Create edges array
     const edgesData = relations.map((rel) => {
-      const isActive = !rel.effective_to || new Date(rel.effective_to) > new Date();
+      const isActive = !rel.effective_to || new Date(rel.effective_to) > new Date()
 
       return {
         id: rel.id,
@@ -214,38 +227,43 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
           stroke: isActive ? 'hsl(var(--primary))' : 'hsl(var(--muted-foreground))',
           strokeWidth: 2,
         },
-      };
-    });
+      }
+    })
 
     // Apply d3-force layout (memoized calculation)
     const simulation = forceSimulation(nodesData as any)
-      .force('link', forceLink(edgesData).id((d: any) => d.id).distance(150))
+      .force(
+        'link',
+        forceLink(edgesData)
+          .id((d: any) => d.id)
+          .distance(150),
+      )
       .force('charge', forceManyBody().strength(-300))
       .force('center', forceCenter(400, 300))
       .force('collide', forceCollide(80))
-      .stop();
+      .stop()
 
     // Run simulation synchronously
-    for (let i = 0; i < 300; ++i) simulation.tick();
+    for (let i = 0; i < 300; ++i) simulation.tick()
 
     // Apply RTL position mirroring if needed
     if (isRTL) {
       nodesData.forEach((node) => {
-        node.position.x = 800 - node.position.x;
-      });
+        node.position.x = 800 - node.position.x
+      })
     }
 
-    return { nodes: nodesData, edges: edgesData };
-  }, [relations, countries, isRTL]);
+    return { nodes: nodesData, edges: edgesData }
+  }, [relations, countries, isRTL])
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
-  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)
 
   // Update nodes/edges when data changes
   useMemo(() => {
-    setNodes(initialNodes);
-    setEdges(initialEdges);
-  }, [initialNodes, initialEdges, setNodes, setEdges]);
+    setNodes(initialNodes)
+    setEdges(initialEdges)
+  }, [initialNodes, initialEdges, setNodes, setEdges])
 
   // Loading state
   if (isLoading) {
@@ -256,7 +274,7 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
           <p className="text-sm sm:text-base text-muted-foreground">{t('common.loading')}</p>
         </div>
       </div>
-    );
+    )
   }
 
   // Empty state
@@ -280,7 +298,7 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
           {t('sections.country.diplomaticRelationsEmptyDescription')}
         </p>
       </div>
-    );
+    )
   }
 
   // Network graph view + Bilateral Intelligence Widget
@@ -341,5 +359,5 @@ export function DiplomaticRelations({ dossierId }: DiplomaticRelationsProps) {
         </ReactFlow>
       </div>
     </div>
-  );
+  )
 }

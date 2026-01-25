@@ -1,5 +1,6 @@
 import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.7';
+import { COLUMNS } from '../_shared/query-columns.ts';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -44,19 +45,16 @@ serve(async (req) => {
       const id = pathParts[pathParts.length - 1];
 
       if (!id || id === 'dossiers') {
-        return new Response(
-          JSON.stringify({ error: 'Dossier ID is required for GET requests' }),
-          {
-            status: 400,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-          }
-        );
+        return new Response(JSON.stringify({ error: 'Dossier ID is required for GET requests' }), {
+          status: 400,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+        });
       }
 
       // Get dossier with type check
       const { data: dossier, error: dossierError } = await supabaseClient
         .from('dossiers')
-        .select('*')
+        .select(COLUMNS.DOSSIERS.DETAIL)
         .eq('id', id)
         .single();
 
@@ -129,7 +127,15 @@ serve(async (req) => {
         }
 
         // Validate type
-        const validTypes = ['country', 'organization', 'forum', 'engagement', 'theme', 'working_group', 'person'];
+        const validTypes = [
+          'country',
+          'organization',
+          'forum',
+          'engagement',
+          'theme',
+          'working_group',
+          'person',
+        ];
         if (!validTypes.includes(type)) {
           return new Response(
             JSON.stringify({ error: `Invalid type. Must be one of: ${validTypes.join(', ')}` }),
@@ -174,12 +180,10 @@ serve(async (req) => {
 
         const tableName = extensionTableMap[type];
         if (tableName && data.extensionData) {
-          const { error: extensionError } = await supabaseClient
-            .from(tableName)
-            .insert({
-              id: dossier.id,
-              ...data.extensionData,
-            });
+          const { error: extensionError } = await supabaseClient.from(tableName).insert({
+            id: dossier.id,
+            ...data.extensionData,
+          });
 
           if (extensionError) {
             // Rollback: delete dossier if extension insert fails
@@ -205,19 +209,16 @@ serve(async (req) => {
 
       case 'get': {
         if (!id) {
-          return new Response(
-            JSON.stringify({ error: 'ID is required for get action' }),
-            {
-              status: 400,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-          );
+          return new Response(JSON.stringify({ error: 'ID is required for get action' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
         }
 
         // Get dossier with type check
         const { data: dossier, error: dossierError } = await supabaseClient
           .from('dossiers')
-          .select('*')
+          .select(COLUMNS.DOSSIERS.DETAIL)
           .eq('id', id)
           .single();
 
@@ -283,7 +284,7 @@ serve(async (req) => {
             JSON.stringify({
               error: 'Type mismatch: Cannot change dossier type after creation',
               currentType: currentDossier.type,
-              attemptedType: data.type
+              attemptedType: data.type,
             }),
             {
               status: 400,
@@ -335,7 +336,7 @@ serve(async (req) => {
         // Fetch updated dossier
         const { data: updatedDossier, error: fetchError } = await supabaseClient
           .from('dossiers')
-          .select('*')
+          .select(COLUMNS.DOSSIERS.DETAIL)
           .eq('id', id)
           .single();
 
@@ -371,20 +372,14 @@ serve(async (req) => {
 
       case 'delete': {
         if (!id) {
-          return new Response(
-            JSON.stringify({ error: 'ID is required for delete action' }),
-            {
-              status: 400,
-              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-            }
-          );
+          return new Response(JSON.stringify({ error: 'ID is required for delete action' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          });
         }
 
         // CASCADE will automatically delete extension and relationships
-        const { error: deleteError } = await supabaseClient
-          .from('dossiers')
-          .delete()
-          .eq('id', id);
+        const { error: deleteError } = await supabaseClient.from('dossiers').delete().eq('id', id);
 
         if (deleteError) {
           throw deleteError;
@@ -397,7 +392,7 @@ serve(async (req) => {
       case 'list': {
         let query = supabaseClient
           .from('dossiers')
-          .select('*', { count: 'exact' });
+          .select(COLUMNS.DOSSIERS.LIST, { count: 'exact' });
 
         // Apply filters
         if (filters?.type) {

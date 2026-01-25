@@ -19,7 +19,7 @@
 
 import { useState, useRef, useCallback, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import type { ReactFlowInstance, Node } from 'reactflow'
+import type { ReactFlowInstance, Node } from '@xyflow/react'
 import { useHapticFeedback } from './useHapticFeedback'
 
 export interface TouchGraphControlsConfig {

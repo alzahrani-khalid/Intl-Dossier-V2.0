@@ -3,7 +3,8 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
-import ReactFlow, {
+import {
+  ReactFlow,
   Background,
   Node,
   Edge,
@@ -13,8 +14,8 @@ import ReactFlow, {
   Position,
   BackgroundVariant,
   ReactFlowInstance,
-} from 'reactflow'
-import 'reactflow/dist/style.css'
+} from '@xyflow/react'
+import '@xyflow/react/dist/style.css'
 
 import { useRelationshipsForDossier } from '@/hooks/useRelationships'
 import { useTouchGraphControls } from '@/hooks/useTouchGraphControls'

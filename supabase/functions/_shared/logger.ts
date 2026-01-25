@@ -7,7 +7,7 @@
  * Supports multiple log levels with context and metadata
  */
 
-export type LogLevel = "debug" | "info" | "warn" | "error";
+export type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
 export interface LogContext {
   function_name: string;
@@ -36,13 +36,13 @@ class EdgeLogger {
   private context: LogContext;
   private minLevel: LogLevel;
 
-  constructor(context: LogContext, minLevel: LogLevel = "info") {
+  constructor(context: LogContext, minLevel: LogLevel = 'info') {
     this.context = context;
     this.minLevel = minLevel;
   }
 
   private shouldLog(level: LogLevel): boolean {
-    const levels: LogLevel[] = ["debug", "info", "warn", "error"];
+    const levels: LogLevel[] = ['debug', 'info', 'warn', 'error'];
     const minIndex = levels.indexOf(this.minLevel);
     const currentIndex = levels.indexOf(level);
     return currentIndex >= minIndex;
@@ -77,29 +77,26 @@ class EdgeLogger {
   }
 
   debug(message: string, metadata?: Record<string, unknown>) {
-    this.log("debug", message, metadata);
+    this.log('debug', message, metadata);
   }
 
   info(message: string, metadata?: Record<string, unknown>) {
-    this.log("info", message, metadata);
+    this.log('info', message, metadata);
   }
 
   warn(message: string, metadata?: Record<string, unknown>) {
-    this.log("warn", message, metadata);
+    this.log('warn', message, metadata);
   }
 
   error(message: string, error?: Error, metadata?: Record<string, unknown>) {
-    this.log("error", message, metadata, error);
+    this.log('error', message, metadata, error);
   }
 
   /**
    * Create a child logger with additional context
    */
   child(additionalContext: Partial<LogContext>): EdgeLogger {
-    return new EdgeLogger(
-      { ...this.context, ...additionalContext },
-      this.minLevel
-    );
+    return new EdgeLogger({ ...this.context, ...additionalContext }, this.minLevel);
   }
 
   /**
@@ -116,7 +113,7 @@ class EdgeLogger {
 export function createLogger(
   functionName: string,
   req?: Request,
-  minLevel: LogLevel = "info"
+  minLevel: LogLevel = 'info'
 ): EdgeLogger {
   const context: LogContext = {
     function_name: functionName,
@@ -124,9 +121,9 @@ export function createLogger(
   };
 
   if (req) {
-    context.request_id = req.headers.get("x-request-id") || crypto.randomUUID();
+    context.request_id = req.headers.get('x-request-id') || crypto.randomUUID();
     context.ip_address = getClientIp(req);
-    context.user_agent = req.headers.get("user-agent") || "unknown";
+    context.user_agent = req.headers.get('user-agent') || 'unknown';
   }
 
   return new EdgeLogger(context, minLevel);
@@ -136,22 +133,55 @@ export function createLogger(
  * Get client IP address from request
  */
 function getClientIp(req: Request): string {
-  const forwardedFor = req.headers.get("x-forwarded-for");
+  const forwardedFor = req.headers.get('x-forwarded-for');
   if (forwardedFor) {
-    return forwardedFor.split(",")[0].trim();
+    return forwardedFor.split(',')[0].trim();
   }
 
-  const realIp = req.headers.get("x-real-ip");
+  const realIp = req.headers.get('x-real-ip');
   if (realIp) {
     return realIp.trim();
   }
 
-  const cfConnectingIp = req.headers.get("cf-connecting-ip");
+  const cfConnectingIp = req.headers.get('cf-connecting-ip');
   if (cfConnectingIp) {
     return cfConnectingIp.trim();
   }
 
-  return "0.0.0.0";
+  return '0.0.0.0';
+}
+
+/**
+ * Sensitive headers that should never be logged
+ */
+const SENSITIVE_HEADERS = [
+  'authorization',
+  'apikey',
+  'cookie',
+  'x-client-info',
+  'x-supabase-auth',
+  'x-api-key',
+  'x-access-token',
+  'x-refresh-token',
+  'set-cookie',
+];
+
+/**
+ * Redact sensitive headers from a headers object
+ */
+function redactSensitiveHeaders(headers: Headers): Record<string, string> {
+  const safeHeaders: Record<string, string> = {};
+
+  headers.forEach((value, key) => {
+    const lowerKey = key.toLowerCase();
+    if (SENSITIVE_HEADERS.includes(lowerKey)) {
+      safeHeaders[key] = '[REDACTED]';
+    } else {
+      safeHeaders[key] = value;
+    }
+  });
+
+  return safeHeaders;
 }
 
 /**
@@ -164,10 +194,11 @@ export async function withRequestLogging(
 ): Promise<Response> {
   const logger = createLogger(functionName, req);
 
-  logger.info("Request received", {
+  // SECURITY FIX: Redact sensitive headers before logging
+  logger.info('Request received', {
     method: req.method,
     url: req.url,
-    headers: Object.fromEntries(req.headers.entries()),
+    headers: redactSensitiveHeaders(req.headers),
   });
 
   const startTime = Date.now();
@@ -176,7 +207,7 @@ export async function withRequestLogging(
     const response = await handler(req, logger);
 
     const duration = Date.now() - startTime;
-    logger.info("Request completed", {
+    logger.info('Request completed', {
       status: response.status,
       duration_ms: duration,
     });
@@ -184,13 +215,9 @@ export async function withRequestLogging(
     return response;
   } catch (error) {
     const duration = Date.now() - startTime;
-    logger.error(
-      "Request failed",
-      error as Error,
-      {
-        duration_ms: duration,
-      }
-    );
+    logger.error('Request failed', error as Error, {
+      duration_ms: duration,
+    });
 
     throw error;
   }
@@ -201,39 +228,49 @@ export async function withRequestLogging(
  */
 export const logger = {
   debug: (message: string, meta?: Record<string, unknown>) => {
-    console.log(JSON.stringify({
-      timestamp: new Date().toISOString(),
-      level: "debug",
-      message,
-      metadata: meta,
-    }));
+    console.log(
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'debug',
+        message,
+        metadata: meta,
+      })
+    );
   },
   info: (message: string, meta?: Record<string, unknown>) => {
-    console.log(JSON.stringify({
-      timestamp: new Date().toISOString(),
-      level: "info",
-      message,
-      metadata: meta,
-    }));
+    console.log(
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'info',
+        message,
+        metadata: meta,
+      })
+    );
   },
   warn: (message: string, meta?: Record<string, unknown>) => {
-    console.log(JSON.stringify({
-      timestamp: new Date().toISOString(),
-      level: "warn",
-      message,
-      metadata: meta,
-    }));
+    console.log(
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'warn',
+        message,
+        metadata: meta,
+      })
+    );
   },
   error: (message: string, error?: Error, meta?: Record<string, unknown>) => {
-    console.log(JSON.stringify({
-      timestamp: new Date().toISOString(),
-      level: "error",
-      message,
-      error: error ? {
-        message: error.message,
-        stack: error.stack,
-      } : undefined,
-      metadata: meta,
-    }));
+    console.log(
+      JSON.stringify({
+        timestamp: new Date().toISOString(),
+        level: 'error',
+        message,
+        error: error
+          ? {
+              message: error.message,
+              stack: error.stack,
+            }
+          : undefined,
+        metadata: meta,
+      })
+    );
   },
 };

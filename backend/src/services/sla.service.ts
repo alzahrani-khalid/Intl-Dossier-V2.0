@@ -1,32 +1,33 @@
-import { createClient } from '@supabase/supabase-js';
-import logger from '../utils/logger';
+import { createClient } from '@supabase/supabase-js'
+import logger from '../utils/logger'
+import { COLUMNS } from '../lib/query-columns'
 
-const supabaseUrl = process.env.SUPABASE_URL!;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!;
-const supabase = createClient(supabaseUrl, supabaseServiceKey);
+const supabaseUrl = process.env.SUPABASE_URL!
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_KEY!
+const supabase = createClient(supabaseUrl, supabaseServiceKey)
 
 interface SLAStatus {
   acknowledgment: {
-    target_minutes: number;
-    elapsed_minutes: number;
-    remaining_minutes: number;
-    is_breached: boolean;
-    target_time: string;
-  };
+    target_minutes: number
+    elapsed_minutes: number
+    remaining_minutes: number
+    is_breached: boolean
+    target_time: string
+  }
   resolution: {
-    target_minutes: number;
-    elapsed_minutes: number;
-    remaining_minutes: number;
-    is_breached: boolean;
-    target_time: string;
-  };
+    target_minutes: number
+    elapsed_minutes: number
+    remaining_minutes: number
+    is_breached: boolean
+    target_time: string
+  }
 }
 
 interface SLAConfig {
-  acknowledgment_target: number; // minutes
-  resolution_target: number; // minutes
-  business_hours_only: boolean;
-  timezone: string;
+  acknowledgment_target: number // minutes
+  resolution_target: number // minutes
+  business_hours_only: boolean
+  timezone: string
 }
 
 /**
@@ -34,19 +35,19 @@ interface SLAConfig {
  * Monitors and tracks SLA compliance with Supabase Realtime integration
  */
 export class SLAService {
-  private readonly DEFAULT_ACK_MINUTES = 30;
-  private readonly DEFAULT_RESOLUTION_MINUTES = 480; // 8 hours
-  private readonly TIMEZONE = 'Asia/Riyadh';
+  private readonly DEFAULT_ACK_MINUTES = 30
+  private readonly DEFAULT_RESOLUTION_MINUTES = 480 // 8 hours
+  private readonly TIMEZONE = 'Asia/Riyadh'
 
   /**
    * Start SLA tracking for a ticket
    */
   async startSLATracking(ticketId: string, priority: string): Promise<boolean> {
     try {
-      logger.info('Starting SLA tracking', { ticketId, priority });
+      logger.info('Starting SLA tracking', { ticketId, priority })
 
       // Get applicable SLA policy
-      const policy = await this.getSLAPolicy(priority);
+      const policy = await this.getSLAPolicy(priority)
 
       // Create initial SLA event
       await this.createSLAEvent({
@@ -55,19 +56,19 @@ export class SLAService {
         eventType: 'started',
         elapsedMinutes: 0,
         remainingMinutes: policy.acknowledgment_target,
-      });
+      })
 
       // Set up triggers for breach notifications (handled by database triggers)
-      await this.scheduleBreachCheck(ticketId, policy);
+      await this.scheduleBreachCheck(ticketId, policy)
 
-      logger.info('SLA tracking started successfully', { ticketId });
-      return true;
+      logger.info('SLA tracking started successfully', { ticketId })
+      return true
     } catch (error) {
       logger.error('Failed to start SLA tracking', {
         ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return false;
+      })
+      return false
     }
   }
 
@@ -77,10 +78,10 @@ export class SLAService {
   private async getSLAPolicy(priority: string): Promise<any> {
     const { data, error } = await supabase
       .from('sla_policies')
-      .select('*')
+      .select(COLUMNS.SLA_POLICIES.LIST)
       .eq('priority', priority)
       .eq('is_active', true)
-      .single();
+      .single()
 
     if (error || !data) {
       // Return default policy
@@ -90,10 +91,10 @@ export class SLAService {
         resolution_target: this.DEFAULT_RESOLUTION_MINUTES,
         business_hours_only: false,
         timezone: this.TIMEZONE,
-      };
+      }
     }
 
-    return data;
+    return data
   }
 
   /**
@@ -105,39 +106,35 @@ export class SLAService {
         .from('intake_tickets')
         .select('created_at, submitted_at, priority, status')
         .eq('id', ticketId)
-        .single();
+        .single()
 
       if (ticketError || !ticket) {
-        return null;
+        return null
       }
 
       // Get SLA policy
-      const policy = await this.getSLAPolicy(ticket.priority);
+      const policy = await this.getSLAPolicy(ticket.priority)
 
       // Calculate elapsed time since submission
-      const startTime = new Date(ticket.submitted_at || ticket.created_at);
-      const now = new Date();
-      const elapsedMinutes = Math.floor(
-        (now.getTime() - startTime.getTime()) / (1000 * 60)
-      );
+      const startTime = new Date(ticket.submitted_at || ticket.created_at)
+      const now = new Date()
+      const elapsedMinutes = Math.floor((now.getTime() - startTime.getTime()) / (1000 * 60))
 
       // Calculate acknowledgment SLA
-      const ackTargetTime = new Date(
-        startTime.getTime() + policy.acknowledgment_target * 60 * 1000
-      );
+      const ackTargetTime = new Date(startTime.getTime() + policy.acknowledgment_target * 60 * 1000)
       const ackRemaining = Math.max(
         0,
-        Math.floor((ackTargetTime.getTime() - now.getTime()) / (1000 * 60))
-      );
+        Math.floor((ackTargetTime.getTime() - now.getTime()) / (1000 * 60)),
+      )
 
       // Calculate resolution SLA
       const resolutionTargetTime = new Date(
-        startTime.getTime() + policy.resolution_target * 60 * 1000
-      );
+        startTime.getTime() + policy.resolution_target * 60 * 1000,
+      )
       const resolutionRemaining = Math.max(
         0,
-        Math.floor((resolutionTargetTime.getTime() - now.getTime()) / (1000 * 60))
-      );
+        Math.floor((resolutionTargetTime.getTime() - now.getTime()) / (1000 * 60)),
+      )
 
       return {
         acknowledgment: {
@@ -154,13 +151,13 @@ export class SLAService {
           is_breached: resolutionRemaining === 0 && ticket.status !== 'closed',
           target_time: resolutionTargetTime.toISOString(),
         },
-      };
+      }
     } catch (error) {
       logger.error('Failed to get SLA status', {
         ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return null;
+      })
+      return null
     }
   }
 
@@ -170,9 +167,9 @@ export class SLAService {
   async pauseSLA(ticketId: string, reason: string): Promise<boolean> {
     try {
       // Get current SLA status
-      const status = await this.getSLAStatus(ticketId);
+      const status = await this.getSLAStatus(ticketId)
       if (!status) {
-        return false;
+        return false
       }
 
       // Create pause event
@@ -183,16 +180,16 @@ export class SLAService {
         elapsedMinutes: status.resolution.elapsed_minutes,
         remainingMinutes: status.resolution.remaining_minutes,
         reason,
-      });
+      })
 
-      logger.info('SLA paused', { ticketId, reason });
-      return true;
+      logger.info('SLA paused', { ticketId, reason })
+      return true
     } catch (error) {
       logger.error('Failed to pause SLA', {
         ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return false;
+      })
+      return false
     }
   }
 
@@ -201,9 +198,9 @@ export class SLAService {
    */
   async resumeSLA(ticketId: string): Promise<boolean> {
     try {
-      const status = await this.getSLAStatus(ticketId);
+      const status = await this.getSLAStatus(ticketId)
       if (!status) {
-        return false;
+        return false
       }
 
       await this.createSLAEvent({
@@ -212,16 +209,16 @@ export class SLAService {
         eventType: 'resumed',
         elapsedMinutes: status.resolution.elapsed_minutes,
         remainingMinutes: status.resolution.remaining_minutes,
-      });
+      })
 
-      logger.info('SLA resumed', { ticketId });
-      return true;
+      logger.info('SLA resumed', { ticketId })
+      return true
     } catch (error) {
       logger.error('Failed to resume SLA', {
         ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return false;
+      })
+      return false
     }
   }
 
@@ -230,12 +227,12 @@ export class SLAService {
    */
   async markSLAMet(ticketId: string, slaType: 'acknowledgment' | 'resolution'): Promise<boolean> {
     try {
-      const status = await this.getSLAStatus(ticketId);
+      const status = await this.getSLAStatus(ticketId)
       if (!status) {
-        return false;
+        return false
       }
 
-      const targetStatus = status[slaType];
+      const targetStatus = status[slaType]
 
       await this.createSLAEvent({
         ticketId,
@@ -244,16 +241,16 @@ export class SLAService {
         elapsedMinutes: targetStatus.elapsed_minutes,
         remainingMinutes: targetStatus.remaining_minutes,
         reason: `${slaType} SLA met`,
-      });
+      })
 
-      logger.info('SLA met', { ticketId, slaType });
-      return true;
+      logger.info('SLA met', { ticketId, slaType })
+      return true
     } catch (error) {
       logger.error('Failed to mark SLA met', {
         ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return false;
+      })
+      return false
     }
   }
 
@@ -262,9 +259,9 @@ export class SLAService {
    */
   async cancelSLA(ticketId: string, reason: string): Promise<boolean> {
     try {
-      const status = await this.getSLAStatus(ticketId);
+      const status = await this.getSLAStatus(ticketId)
       if (!status) {
-        return false;
+        return false
       }
 
       await this.createSLAEvent({
@@ -274,16 +271,16 @@ export class SLAService {
         elapsedMinutes: status.resolution.elapsed_minutes,
         remainingMinutes: status.resolution.remaining_minutes,
         reason,
-      });
+      })
 
-      logger.info('SLA cancelled', { ticketId, reason });
-      return true;
+      logger.info('SLA cancelled', { ticketId, reason })
+      return true
     } catch (error) {
       logger.error('Failed to cancel SLA', {
         ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return false;
+      })
+      return false
     }
   }
 
@@ -291,12 +288,12 @@ export class SLAService {
    * Create SLA event in database
    */
   private async createSLAEvent(params: {
-    ticketId: string;
-    policyId: string;
-    eventType: 'started' | 'paused' | 'resumed' | 'met' | 'breached' | 'cancelled';
-    elapsedMinutes: number;
-    remainingMinutes: number;
-    reason?: string;
+    ticketId: string
+    policyId: string
+    eventType: 'started' | 'paused' | 'resumed' | 'met' | 'breached' | 'cancelled'
+    elapsedMinutes: number
+    remainingMinutes: number
+    reason?: string
   }): Promise<void> {
     await supabase.from('sla_events').insert({
       ticket_id: params.ticketId,
@@ -308,7 +305,7 @@ export class SLAService {
       is_breached: params.remainingMinutes === 0,
       created_by: 'system',
       reason: params.reason,
-    });
+    })
 
     // Trigger Realtime update (happens automatically via Supabase)
   }
@@ -319,7 +316,7 @@ export class SLAService {
   private async scheduleBreachCheck(ticketId: string, policy: any): Promise<void> {
     // This would typically be handled by a database trigger or scheduled job
     // For now, we rely on the real-time status calculation
-    logger.debug('Breach check scheduled', { ticketId, policy: policy.id });
+    logger.debug('Breach check scheduled', { ticketId, policy: policy.id })
   }
 
   /**
@@ -329,21 +326,21 @@ export class SLAService {
     try {
       const { data, error } = await supabase
         .from('sla_events')
-        .select('*')
+        .select(COLUMNS.SLA_EVENTS.LIST)
         .eq('ticket_id', ticketId)
-        .order('event_timestamp', { ascending: true });
+        .order('event_timestamp', { ascending: true })
 
       if (error) {
-        throw error;
+        throw error
       }
 
-      return data || [];
+      return data || []
     } catch (error) {
       logger.error('Failed to get SLA history', {
         ticketId,
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return [];
+      })
+      return []
     }
   }
 
@@ -353,20 +350,20 @@ export class SLAService {
   async getBreachedTickets(): Promise<any[]> {
     try {
       // This would typically use a materialized view or cached query
-      const { data, error } = await supabase.rpc('get_sla_breached_tickets');
+      const { data, error } = await supabase.rpc('get_sla_breached_tickets')
 
       if (error) {
-        throw error;
+        throw error
       }
 
-      return data || [];
+      return data || []
     } catch (error) {
       logger.error('Failed to get breached tickets', {
         error: error instanceof Error ? error.message : 'Unknown error',
-      });
-      return [];
+      })
+      return []
     }
   }
 }
 
-export const slaService = new SLAService();
+export const slaService = new SLAService()
