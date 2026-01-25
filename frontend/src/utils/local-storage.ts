@@ -27,7 +27,9 @@
  * ```
  */
 
-import type { TaskUpdate } from '@/types/database.types'
+import type { TablesUpdate } from '@/types/database.types'
+
+type TaskUpdate = TablesUpdate<'tasks'>
 
 // IndexedDB configuration
 const DB_NAME = 'intl-dossier-offline'

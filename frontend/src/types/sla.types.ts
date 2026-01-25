@@ -401,10 +401,8 @@ export const COMPLIANCE_THRESHOLDS: ComplianceThreshold[] = [
 ]
 
 export function getComplianceThreshold(rate: number): ComplianceThreshold {
-  return (
-    COMPLIANCE_THRESHOLDS.find((t) => rate >= t.min && rate <= t.max) ||
-    COMPLIANCE_THRESHOLDS[COMPLIANCE_THRESHOLDS.length - 1]
-  )
+  const found = COMPLIANCE_THRESHOLDS.find((t) => rate >= t.min && rate <= t.max)
+  return found ?? COMPLIANCE_THRESHOLDS[COMPLIANCE_THRESHOLDS.length - 1]!
 }
 
 // ============================================

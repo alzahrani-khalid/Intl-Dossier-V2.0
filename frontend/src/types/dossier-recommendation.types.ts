@@ -6,7 +6,7 @@
  * pgvector similarity search with explainability.
  */
 
-import type { DossierType } from './dossier.types'
+import type { DossierType } from './dossier'
 
 // ============================================================================
 // Recommendation Reason Enums

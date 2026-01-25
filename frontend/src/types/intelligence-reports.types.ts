@@ -17,74 +17,69 @@
  * Maps to intelligence_reports.intelligence_type column
  */
 export type IntelligenceType =
-  | 'economic'      // Economic indicators, trade data, GDP, inflation
-  | 'political'     // Political events, diplomatic developments, leadership changes
-  | 'security'      // Security assessments, risk analysis, threat indicators
-  | 'bilateral'     // Bilateral relationship analysis, partnership strength
-  | 'general';      // General intelligence not fitting other categories
+  | 'economic' // Economic indicators, trade data, GDP, inflation
+  | 'political' // Political events, diplomatic developments, leadership changes
+  | 'security' // Security assessments, risk analysis, threat indicators
+  | 'bilateral' // Bilateral relationship analysis, partnership strength
+  | 'general' // General intelligence not fitting other categories
 
 /**
  * Cache refresh status (FR-014)
  * Maps to intelligence_reports.refresh_status column
  */
 export type RefreshStatus =
-  | 'fresh'         // Cache is valid and within TTL
-  | 'stale'         // Cache has expired (past TTL) but still usable
-  | 'refreshing'    // Currently being refreshed (lock held)
-  | 'error'         // Last refresh attempt failed
-  | 'expired';      // Cache is too old and should not be used
+  | 'fresh' // Cache is valid and within TTL
+  | 'stale' // Cache has expired (past TTL) but still usable
+  | 'refreshing' // Currently being refreshed (lock held)
+  | 'error' // Last refresh attempt failed
+  | 'expired' // Cache is too old and should not be used
 
 /**
  * How the refresh was triggered (FR-006, FR-011)
  * Maps to intelligence_reports.refresh_trigger_type column
  */
 export type RefreshTriggerType =
-  | 'manual'        // User clicked refresh button
-  | 'automatic'     // Background refresh triggered by TTL expiration
-  | 'scheduled';    // Scheduled batch refresh (cron job)
+  | 'manual' // User clicked refresh button
+  | 'automatic' // Background refresh triggered by TTL expiration
+  | 'scheduled' // Scheduled batch refresh (cron job)
 
 /**
  * Entity types that can have intelligence reports
  * Maps to dossiers.type column and intelligence_reports.entity_type
  */
-export type EntityType =
-  | 'country'
-  | 'organization'
-  | 'forum'
-  | 'topic'
-  | 'working_group';
+export type EntityType = 'country' | 'organization' | 'forum' | 'topic' | 'working_group'
 
 /**
  * Review status for intelligence reports
  * Maps to intelligence_reports.review_status column
  */
 export type ReviewStatus =
-  | 'draft'         // Initial draft state
-  | 'pending'       // Awaiting review
-  | 'approved'      // Approved for use
-  | 'archived';     // Archived (old version)
+  | 'draft' // Initial draft state
+  | 'pending' // Awaiting review
+  | 'approved' // Approved for use
+  | 'archived' // Archived (old version)
 
 /**
  * Embedding generation status
  * Maps to intelligence_reports.embedding_status column
  */
 export type EmbeddingStatus =
-  | 'pending'       // Not yet processed
-  | 'processing'    // Currently generating embeddings
-  | 'completed'     // Embeddings successfully generated
-  | 'failed';       // Embedding generation failed
+  | 'pending' // Not yet processed
+  | 'processing' // Currently generating embeddings
+  | 'completed' // Embeddings successfully generated
+  | 'failed' // Embedding generation failed
 
 /**
  * Default TTL values for each intelligence type (in hours)
  * Matches get_intelligence_ttl_hours() function
  */
 export const INTELLIGENCE_TTL_HOURS: Record<IntelligenceType, number> = {
-  economic: 24,     // 24 hours for economic data
-  political: 6,     // 6 hours for political events (fast-moving)
-  security: 12,     // 12 hours for security assessments
-  bilateral: 48,    // 48 hours for bilateral relationships (slower changes)
-  general: 24,      // 24 hours default
-} as const;
+  economic: 24, // 24 hours for economic data
+  political: 6, // 6 hours for political events (fast-moving)
+  security: 12, // 12 hours for security assessments
+  bilateral: 48, // 48 hours for bilateral relationships (slower changes)
+  general: 24, // 24 hours default
+} as const
 
 // ============================================================================
 // Data Source Metadata Types
@@ -96,22 +91,22 @@ export const INTELLIGENCE_TTL_HOURS: Record<IntelligenceType, number> = {
  */
 export interface DataSourceMetadata {
   /** Source identifier (e.g., 'world_bank_api', 'anythingllm', 'manual_entry') */
-  source: string;
+  source: string
 
   /** API endpoint or document path */
-  endpoint?: string;
+  endpoint?: string
 
   /** Timestamp when data was retrieved from this source */
-  retrieved_at: string; // ISO 8601 datetime
+  retrieved_at: string // ISO 8601 datetime
 
   /** Confidence level for this source (0-100) */
-  confidence?: number;
+  confidence?: number
 
   /** Additional metadata specific to the source */
-  metadata?: Record<string, unknown>;
+  metadata?: Record<string, unknown>
 
   /** Error message if retrieval failed */
-  error?: string;
+  error?: string
 }
 
 /**
@@ -120,28 +115,28 @@ export interface DataSourceMetadata {
  */
 export interface AnythingLLMMetadata {
   /** Model used for generation (e.g., 'gpt-4', 'claude-3-opus') */
-  model?: string;
+  model?: string
 
   /** Number of tokens in prompt */
-  prompt_tokens?: number;
+  prompt_tokens?: number
 
   /** Number of tokens in completion */
-  completion_tokens?: number;
+  completion_tokens?: number
 
   /** Total tokens used */
-  total_tokens?: number;
+  total_tokens?: number
 
   /** Documents cited in response */
-  sources_cited?: string[];
+  sources_cited?: string[]
 
   /** Confidence score from LLM */
-  confidence_score?: number;
+  confidence_score?: number
 
   /** Response time in milliseconds */
-  response_time_ms?: number;
+  response_time_ms?: number
 
   /** Temperature setting used */
-  temperature?: number;
+  temperature?: number
 }
 
 /**
@@ -150,25 +145,25 @@ export interface AnythingLLMMetadata {
  */
 export interface ThreatIndicator {
   /** Type of threat (e.g., 'political_instability', 'terrorism', 'cyber') */
-  type: string;
+  type: string
 
   /** Severity level (e.g., 'low', 'medium', 'high', 'critical') */
-  severity: 'low' | 'medium' | 'high' | 'critical';
+  severity: 'low' | 'medium' | 'high' | 'critical'
 
   /** Description of the threat */
-  description: string;
+  description: string
 
   /** Description in Arabic */
-  description_ar?: string;
+  description_ar?: string
 
   /** Confidence level (0-100) */
-  confidence: number;
+  confidence: number
 
   /** Date when threat was identified */
-  identified_at: string;
+  identified_at: string
 
   /** Expiration date for the threat indicator */
-  expires_at?: string;
+  expires_at?: string
 }
 
 /**
@@ -177,22 +172,22 @@ export interface ThreatIndicator {
  */
 export interface GeospatialTag {
   /** Location name */
-  name: string;
+  name: string
 
   /** Location name in Arabic */
-  name_ar?: string;
+  name_ar?: string
 
   /** Location type (e.g., 'city', 'region', 'country') */
-  type: string;
+  type: string
 
   /** Latitude */
-  latitude?: number;
+  latitude?: number
 
   /** Longitude */
-  longitude?: number;
+  longitude?: number
 
   /** ISO country code */
-  country_code?: string;
+  country_code?: string
 }
 
 // ============================================================================
@@ -205,76 +200,76 @@ export interface GeospatialTag {
  */
 export interface IntelligenceReport {
   // Identity
-  id: string; // UUID
+  id: string // UUID
 
   // Bilingual content
-  title: string;
-  title_ar?: string;
-  content: string;
-  content_ar?: string;
+  title: string
+  title_ar?: string
+  content: string
+  content_ar?: string
 
   // Metadata
-  confidence_score: number; // 0-100
-  data_sources: string[]; // Legacy array (kept for backwards compatibility)
-  analysis_timestamp: string; // ISO 8601 datetime
-  analyst_id: string; // UUID
-  review_status: ReviewStatus;
+  confidence_score: number // 0-100
+  data_sources: string[] // Legacy array (kept for backwards compatibility)
+  analysis_timestamp: string // ISO 8601 datetime
+  analyst_id: string // UUID
+  review_status: ReviewStatus
 
   // Threat and location data
-  threat_indicators: ThreatIndicator[];
-  geospatial_tags: GeospatialTag[];
+  threat_indicators: ThreatIndicator[]
+  geospatial_tags: GeospatialTag[]
 
   // Embedding
-  embedding_status: EmbeddingStatus;
-  embedding_error?: string;
+  embedding_status: EmbeddingStatus
+  embedding_error?: string
 
   // Relationships (legacy)
-  vector_embedding_id?: string; // UUID
-  organization_id: string; // UUID
-  dossier_id?: string; // UUID (legacy, superseded by entity_id)
+  vector_embedding_id?: string // UUID
+  organization_id: string // UUID
+  dossier_id?: string // UUID (legacy, superseded by entity_id)
 
   // NEW: Entity linking
-  entity_id?: string; // UUID - links to dossiers table
-  entity_type?: EntityType;
+  entity_id?: string // UUID - links to dossiers table
+  entity_type?: EntityType
 
   // NEW: Intelligence type classification
-  intelligence_type: IntelligenceType;
+  intelligence_type: IntelligenceType
 
   // NEW: Cache management
-  cache_expires_at?: string; // ISO 8601 datetime
-  cache_created_at: string; // ISO 8601 datetime
-  last_refreshed_at: string; // ISO 8601 datetime
-  refresh_status: RefreshStatus;
+  cache_expires_at?: string // ISO 8601 datetime
+  cache_created_at: string // ISO 8601 datetime
+  last_refreshed_at: string // ISO 8601 datetime
+  refresh_status: RefreshStatus
 
   // NEW: Data source tracking
-  data_sources_metadata: DataSourceMetadata[];
+  data_sources_metadata: DataSourceMetadata[]
 
   // NEW: Versioning
-  version: number;
-  parent_version_id?: string; // UUID
-  version_notes?: string;
+  version: number
+  parent_version_id?: string // UUID
+  version_notes?: string
 
   // NEW: AnythingLLM integration
-  anythingllm_workspace_id?: string;
-  anythingllm_query?: string;
-  anythingllm_response_metadata: AnythingLLMMetadata;
+  anythingllm_workspace_id?: string
+  anythingllm_query?: string
+  anythingllm_response_metadata: AnythingLLMMetadata
 
   // NEW: Refresh operation tracking
-  refresh_triggered_by?: string; // UUID
-  refresh_trigger_type?: RefreshTriggerType;
-  refresh_duration_ms?: number;
-  refresh_error_message?: string;
+  refresh_triggered_by?: string // UUID
+  refresh_trigger_type?: RefreshTriggerType
+  refresh_duration_ms?: number
+  refresh_error_message?: string
 
   // NEW: Structured key indicators (Feature 029 - Performance optimization)
-  metrics?: Record<string, string> | null;
+  metrics?: Record<string, string> | null
 
   // Audit fields
-  created_at: string; // ISO 8601 datetime
-  updated_at: string; // ISO 8601 datetime
-  created_by: string; // UUID
-  updated_by?: string; // UUID
-  archived_at?: string; // ISO 8601 datetime
-  retention_until: string; // ISO 8601 datetime
+  created_at: string // ISO 8601 datetime
+  updated_at: string // ISO 8601 datetime
+  created_by: string // UUID
+  updated_by?: string // UUID
+  archived_at?: string // ISO 8601 datetime
+  retention_until: string // ISO 8601 datetime
 }
 
 /**
@@ -292,16 +287,16 @@ export type IntelligenceReportInsert = Omit<
   | 'retention_until'
 > & {
   // Make some fields optional for insert
-  title_ar?: string;
-  content_ar?: string;
-  embedding_status?: EmbeddingStatus;
-  threat_indicators?: ThreatIndicator[];
-  geospatial_tags?: GeospatialTag[];
-  intelligence_type?: IntelligenceType;
-  refresh_status?: RefreshStatus;
-  data_sources_metadata?: DataSourceMetadata[];
-  anythingllm_response_metadata?: AnythingLLMMetadata;
-};
+  title_ar?: string
+  content_ar?: string
+  embedding_status?: EmbeddingStatus
+  threat_indicators?: ThreatIndicator[]
+  geospatial_tags?: GeospatialTag[]
+  intelligence_type?: IntelligenceType
+  refresh_status?: RefreshStatus
+  data_sources_metadata?: DataSourceMetadata[]
+  anythingllm_response_metadata?: AnythingLLMMetadata
+}
 
 /**
  * Type for updating intelligence reports
@@ -310,8 +305,8 @@ export type IntelligenceReportInsert = Omit<
 export type IntelligenceReportUpdate = Partial<
   Omit<IntelligenceReport, 'id' | 'created_at' | 'created_by'>
 > & {
-  id: string;
-};
+  id: string
+}
 
 // ============================================================================
 // View Types
@@ -322,21 +317,21 @@ export type IntelligenceReportUpdate = Partial<
  * Maps to intelligence_cache_status view
  */
 export interface IntelligenceCacheStatus {
-  entity_id: string; // UUID
-  entity_name: string;
-  entity_type: EntityType;
-  intelligence_type: IntelligenceType;
-  refresh_status: RefreshStatus;
-  last_refreshed_at: string; // ISO 8601 datetime
-  cache_expires_at?: string; // ISO 8601 datetime
-  is_expired: boolean;
-  hours_since_refresh: number;
-  hours_until_expiry?: number;
-  confidence_score: number;
-  refresh_triggered_by?: string; // UUID
-  refresh_trigger_type?: RefreshTriggerType;
-  refresh_duration_ms?: number;
-  triggered_by_email?: string;
+  entity_id: string // UUID
+  entity_name: string
+  entity_type: EntityType
+  intelligence_type: IntelligenceType
+  refresh_status: RefreshStatus
+  last_refreshed_at: string // ISO 8601 datetime
+  cache_expires_at?: string // ISO 8601 datetime
+  is_expired: boolean
+  hours_since_refresh: number
+  hours_until_expiry?: number
+  confidence_score: number
+  refresh_triggered_by?: string // UUID
+  refresh_trigger_type?: RefreshTriggerType
+  refresh_duration_ms?: number
+  triggered_by_email?: string
 }
 
 // ============================================================================
@@ -349,16 +344,16 @@ export interface IntelligenceCacheStatus {
  */
 export interface RefreshIntelligenceRequest {
   /** Entity (dossier) ID to refresh intelligence for */
-  entity_id: string;
+  entity_id: string
 
   /** Specific intelligence types to refresh (or all if not specified) */
-  intelligence_types?: IntelligenceType[];
+  intelligence_types?: IntelligenceType[]
 
   /** Force refresh even if cache is fresh */
-  force?: boolean;
+  force?: boolean
 
   /** Override default TTL (in hours) */
-  ttl_hours?: number;
+  ttl_hours?: number
 }
 
 /**
@@ -366,22 +361,22 @@ export interface RefreshIntelligenceRequest {
  */
 export interface RefreshIntelligenceResponse {
   /** Whether the refresh was successful */
-  success: boolean;
+  success: boolean
 
   /** Refreshed intelligence reports */
-  data?: IntelligenceReport[];
+  data?: IntelligenceReport[]
 
   /** Error message if failed */
-  error?: string;
+  error?: string
 
   /** Which intelligence types were refreshed */
-  refreshed_types: IntelligenceType[];
+  refreshed_types: IntelligenceType[]
 
   /** Which types were already fresh (skipped) */
-  skipped_types: IntelligenceType[];
+  skipped_types: IntelligenceType[]
 
   /** Total duration of refresh operation in milliseconds */
-  duration_ms: number;
+  duration_ms: number
 }
 
 /**
@@ -390,19 +385,19 @@ export interface RefreshIntelligenceResponse {
  */
 export interface GetIntelligenceRequest {
   /** Entity (dossier) ID to fetch intelligence for */
-  entity_id: string;
+  entity_id: string
 
   /** Filter by specific intelligence types */
-  intelligence_types?: IntelligenceType[];
+  intelligence_types?: IntelligenceType[]
 
   /** Include stale/expired intelligence (default: true) */
-  include_stale?: boolean;
+  include_stale?: boolean
 
   /** Maximum age in hours (filters out older intelligence) */
-  max_age_hours?: number;
+  max_age_hours?: number
 
   /** Return only the latest version */
-  latest_only?: boolean;
+  latest_only?: boolean
 }
 
 /**
@@ -410,21 +405,21 @@ export interface GetIntelligenceRequest {
  */
 export interface GetIntelligenceResponse {
   /** Whether the fetch was successful */
-  success: boolean;
+  success: boolean
 
   /** Retrieved intelligence reports */
-  data?: IntelligenceReport[];
+  data?: IntelligenceReport[]
 
   /** Error message if failed */
-  error?: string;
+  error?: string
 
   /** Cache status summary */
   cache_status: {
-    total_reports: number;
-    fresh_count: number;
-    stale_count: number;
-    expired_count: number;
-  };
+    total_reports: number
+    fresh_count: number
+    stale_count: number
+    expired_count: number
+  }
 }
 
 // ============================================================================
@@ -436,25 +431,25 @@ export interface GetIntelligenceResponse {
  */
 export interface IntelligenceWidgetProps {
   /** Entity (dossier) ID */
-  entityId: string;
+  entityId: string
 
   /** Intelligence type to display */
-  intelligenceType: IntelligenceType;
+  intelligenceType: IntelligenceType
 
   /** Whether to show refresh button */
-  showRefreshButton?: boolean;
+  showRefreshButton?: boolean
 
   /** Whether to show last updated timestamp */
-  showTimestamp?: boolean;
+  showTimestamp?: boolean
 
   /** Whether to show confidence score */
-  showConfidence?: boolean;
+  showConfidence?: boolean
 
   /** Callback when refresh is triggered */
-  onRefresh?: () => void;
+  onRefresh?: () => void
 
   /** Custom CSS classes */
-  className?: string;
+  className?: string
 }
 
 /**
@@ -462,28 +457,28 @@ export interface IntelligenceWidgetProps {
  */
 export interface IntelligenceDashboardProps {
   /** Entity (dossier) ID */
-  entityId: string;
+  entityId: string
 
   /** Which intelligence types to display (default: all) */
-  intelligenceTypes?: IntelligenceType[];
+  intelligenceTypes?: IntelligenceType[]
 
   /** Enable filtering controls */
-  showFilters?: boolean;
+  showFilters?: boolean
 
   /** Enable export functionality */
-  showExport?: boolean;
+  showExport?: boolean
 
   /** Date range filter */
   dateRange?: {
-    start: string; // ISO 8601 date
-    end: string; // ISO 8601 date
-  };
+    start: string // ISO 8601 date
+    end: string // ISO 8601 date
+  }
 
   /** Minimum confidence level filter (0-100) */
-  minConfidence?: number;
+  minConfidence?: number
 
   /** Callback when data is refreshed */
-  onRefresh?: (types: IntelligenceType[]) => void;
+  onRefresh?: (types: IntelligenceType[]) => void
 }
 
 // ============================================================================
@@ -494,22 +489,22 @@ export interface IntelligenceDashboardProps {
  * Helper type for intelligence grouped by type
  */
 export type IntelligenceByType = {
-  [K in IntelligenceType]?: IntelligenceReport[];
-};
+  [K in IntelligenceType]?: IntelligenceReport[]
+}
 
 /**
  * Helper type for cache status grouped by type
  */
 export type CacheStatusByType = {
-  [K in IntelligenceType]?: IntelligenceCacheStatus;
-};
+  [K in IntelligenceType]?: IntelligenceCacheStatus
+}
 
 /**
  * Type guard: Check if intelligence is expired
  */
 export function isIntelligenceExpired(report: IntelligenceReport): boolean {
-  if (!report.cache_expires_at) return false;
-  return new Date(report.cache_expires_at) < new Date();
+  if (!report.cache_expires_at) return false
+  return new Date(report.cache_expires_at) < new Date()
 }
 
 /**
@@ -521,14 +516,14 @@ export function isIntelligenceStale(report: IntelligenceReport): boolean {
     report.refresh_status === 'expired' ||
     report.refresh_status === 'error' ||
     isIntelligenceExpired(report)
-  );
+  )
 }
 
 /**
  * Type guard: Check if intelligence is currently refreshing
  */
 export function isIntelligenceRefreshing(report: IntelligenceReport): boolean {
-  return report.refresh_status === 'refreshing';
+  return report.refresh_status === 'refreshing'
 }
 
 /**
@@ -536,7 +531,7 @@ export function isIntelligenceRefreshing(report: IntelligenceReport): boolean {
  */
 export function getIntelligenceTypeLabel(
   type: IntelligenceType,
-  language: 'en' | 'ar' = 'en'
+  language: 'en' | 'ar' = 'en',
 ): string {
   const labels: Record<IntelligenceType, { en: string; ar: string }> = {
     economic: { en: 'Economic Indicators', ar: 'المؤشرات الاقتصادية' },
@@ -544,75 +539,44 @@ export function getIntelligenceTypeLabel(
     security: { en: 'Security Assessment', ar: 'تقييم الأمن' },
     bilateral: { en: 'Bilateral Relations', ar: 'العلاقات الثنائية' },
     general: { en: 'General Intelligence', ar: 'معلومات عامة' },
-  };
+  }
 
-  return labels[type][language];
+  return labels[type][language]
 }
 
 /**
  * Get TTL in milliseconds for intelligence type
  */
 export function getIntelligenceTTLMs(type: IntelligenceType): number {
-  return INTELLIGENCE_TTL_HOURS[type] * 60 * 60 * 1000;
+  return INTELLIGENCE_TTL_HOURS[type] * 60 * 60 * 1000
 }
 
 /**
  * Calculate time until expiry in milliseconds
  */
 export function getTimeUntilExpiry(report: IntelligenceReport): number | null {
-  if (!report.cache_expires_at) return null;
-  return new Date(report.cache_expires_at).getTime() - Date.now();
+  if (!report.cache_expires_at) return null
+  return new Date(report.cache_expires_at).getTime() - Date.now()
 }
 
 /**
  * Format time remaining as human-readable string
  */
 export function formatTimeRemaining(ms: number, language: 'en' | 'ar' = 'en'): string {
-  if (ms <= 0) return language === 'en' ? 'Expired' : 'منتهي';
+  if (ms <= 0) return language === 'en' ? 'Expired' : 'منتهي'
 
-  const hours = Math.floor(ms / (1000 * 60 * 60));
-  const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+  const hours = Math.floor(ms / (1000 * 60 * 60))
+  const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60))
 
   if (language === 'ar') {
-    if (hours > 0) return `${hours} ساعة و ${minutes} دقيقة`;
-    return `${minutes} دقيقة`;
+    if (hours > 0) return `${hours} ساعة و ${minutes} دقيقة`
+    return `${minutes} دقيقة`
   }
 
-  if (hours > 0) return `${hours}h ${minutes}m`;
-  return `${minutes}m`;
+  if (hours > 0) return `${hours}h ${minutes}m`
+  return `${minutes}m`
 }
 
 // ============================================================================
-// Export all types
+// All types are already exported at their definition site
 // ============================================================================
-
-export type {
-  // Enums
-  EntityType,
-  ReviewStatus,
-  EmbeddingStatus,
-
-  // Core types
-  DataSourceMetadata,
-  AnythingLLMMetadata,
-  ThreatIndicator,
-  GeospatialTag,
-  IntelligenceReport,
-  IntelligenceReportInsert,
-  IntelligenceReportUpdate,
-  IntelligenceCacheStatus,
-
-  // API types
-  RefreshIntelligenceRequest,
-  RefreshIntelligenceResponse,
-  GetIntelligenceRequest,
-  GetIntelligenceResponse,
-
-  // UI types
-  IntelligenceWidgetProps,
-  IntelligenceDashboardProps,
-
-  // Utility types
-  IntelligenceByType,
-  CacheStatusByType,
-};

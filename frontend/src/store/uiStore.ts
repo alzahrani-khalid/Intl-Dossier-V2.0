@@ -37,7 +37,7 @@ interface UIState {
   setGlobalLoading: (loading: boolean, message?: string) => void
 }
 
-interface Notification {
+export interface Notification {
   id: string
   type: 'info' | 'success' | 'warning' | 'error'
   title: string
@@ -45,6 +45,10 @@ interface Notification {
   timestamp: Date
   read: boolean
 }
+
+export type ModalState = Record<string, boolean>
+
+export type { SupportedLanguage } from '../i18n'
 
 export const useUIStore = create<UIState>()(
   persist(
@@ -61,17 +65,17 @@ export const useUIStore = create<UIState>()(
       loadingMessage: null,
 
       // Actions
-      toggleSidebar: () =>
-        set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
+      toggleSidebar: () => set((state) => ({ isSidebarOpen: !state.isSidebarOpen })),
 
-      setSidebarCollapsed: (collapsed) =>
-        set({ isSidebarCollapsed: collapsed }),
+      setSidebarCollapsed: (collapsed) => set({ isSidebarCollapsed: collapsed }),
 
       setTheme: (theme) => {
         set({ theme })
         // Apply theme to document
-        if (theme === 'dark' ||
-            (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        if (
+          theme === 'dark' ||
+          (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)
+        ) {
           document.documentElement.classList.add('dark')
         } else {
           document.documentElement.classList.remove('dark')
@@ -107,7 +111,7 @@ export const useUIStore = create<UIState>()(
       markNotificationAsRead: (id) =>
         set((state) => {
           const notifications = state.notifications.map((n) =>
-            n.id === id ? { ...n, read: true } : n
+            n.id === id ? { ...n, read: true } : n,
           )
           const notification = state.notifications.find((n) => n.id === id)
           const wasUnread = notification && !notification.read
@@ -140,6 +144,6 @@ export const useUIStore = create<UIState>()(
         language: state.language,
         isSidebarCollapsed: state.isSidebarCollapsed,
       }),
-    }
-  )
+    },
+  ),
 )
