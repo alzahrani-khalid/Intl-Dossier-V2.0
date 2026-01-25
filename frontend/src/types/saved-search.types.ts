@@ -4,11 +4,7 @@
  * Description: Type definitions for saved searches with sharing and alerts
  */
 
-import type {
-  TemplateDefinition,
-  SearchableEntityType,
-  FilterCondition,
-} from './advanced-search.types'
+import type { TemplateDefinition, SearchableEntityType } from './advanced-search.types'
 
 // Saved search categories
 export type SavedSearchCategory = 'personal' | 'team' | 'organization' | 'smart' | 'recent'

@@ -280,7 +280,7 @@ export interface AnnotationToolbarConfig {
 
 // Export for use in other modules
 export type {
-  DocumentAnnotation as AnnotationType,
+  DocumentAnnotation as DocumentAnnotationType,
   StrokePoint as StrokePointType,
   AnnotationGroup as AnnotationGroupType,
 }

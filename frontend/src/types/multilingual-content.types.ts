@@ -489,10 +489,11 @@ export function groupTranslationsByField(
 ): Record<string, EntityContentTranslation[]> {
   return translations.reduce(
     (acc, translation) => {
-      if (!acc[translation.field_name]) {
-        acc[translation.field_name] = []
+      const fieldName = translation.field_name
+      if (!acc[fieldName]) {
+        acc[fieldName] = []
       }
-      acc[translation.field_name].push(translation)
+      acc[fieldName]!.push(translation)
       return acc
     },
     {} as Record<string, EntityContentTranslation[]>,
