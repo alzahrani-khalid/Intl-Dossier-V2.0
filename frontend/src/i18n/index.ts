@@ -226,7 +226,9 @@ import enCollaboration from './en/collaboration.json'
 import arCollaboration from './ar/collaboration.json'
 import enDossierExport from './en/dossier-export.json'
 import arDossierExport from './ar/dossier-export.json'
-// Force reload - updated 2026-01-23 - v106 - Added dossier-export namespace for briefing pack export
+import enSettings from './en/settings.json'
+import arSettings from './ar/settings.json'
+// Force reload - updated 2026-01-25 - v107 - Added settings namespace for Settings page redesign
 
 const supportedLanguages = ['en', 'ar'] as const
 export type SupportedLanguage = (typeof supportedLanguages)[number]
@@ -345,6 +347,7 @@ const resources = {
     'mou-notifications': enMouNotifications,
     collaboration: enCollaboration,
     'dossier-export': enDossierExport,
+    settings: enSettings,
   },
   ar: {
     translation: arCommon,
@@ -459,6 +462,7 @@ const resources = {
     'mou-notifications': arMouNotifications,
     collaboration: arCollaboration,
     'dossier-export': arDossierExport,
+    settings: arSettings,
   },
 }
 

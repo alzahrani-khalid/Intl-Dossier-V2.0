@@ -5,28 +5,25 @@
  * with status indicators. Kanban-style layout, mobile-first, RTL support.
  */
 
-import { useTranslation } from 'react-i18next';
-import { CheckCircle2, Circle, Clock, Target } from 'lucide-react';
-import type { ForumDossier, WorkingGroupDossier } from '@/lib/dossier-type-guards';
-import { cn } from '@/lib/utils';
+import { useTranslation } from 'react-i18next'
+import { CheckCircle2, Circle, Clock, Target } from 'lucide-react'
+import type { ForumDossier, WorkingGroupDossier } from '@/lib/dossier-type-guards'
+import { cn } from '@/lib/utils'
 
 interface DeliverablesTrackerProps {
-  dossier: ForumDossier | WorkingGroupDossier;
-  isWorkingGroup?: boolean;
+  dossier: ForumDossier | WorkingGroupDossier
+  isWorkingGroup?: boolean
 }
 
-type DeliverableStatus = 'pending' | 'in_progress' | 'completed';
+type DeliverableStatus = 'pending' | 'in_progress' | 'completed'
 
-export function DeliverablesTracker({
-  dossier,
-  isWorkingGroup = false,
-}: DeliverablesTrackerProps) {
-  const { t, i18n } = useTranslation('dossier');
-  const isRTL = i18n.language === 'ar';
+export function DeliverablesTracker({ dossier, isWorkingGroup = false }: DeliverablesTrackerProps) {
+  const { t, i18n } = useTranslation('dossier')
+  const isRTL = i18n.language === 'ar'
 
   // Extract deliverables (only forums have this in extension)
-  const deliverables =
-    dossier.type === 'forum' ? dossier.extension.deliverables || [] : [];
+  // Use optional chaining since extension may be undefined for newly created dossiers
+  const deliverables = dossier.type === 'forum' ? dossier.extension?.deliverables || [] : []
 
   if (deliverables.length === 0) {
     return (
@@ -44,7 +41,7 @@ export function DeliverablesTracker({
           Deliverables and milestones will appear here as they are defined.
         </p>
       </div>
-    );
+    )
   }
 
   // Status configuration
@@ -67,62 +64,53 @@ export function DeliverablesTracker({
       label: 'Completed',
       className: 'text-success bg-success/10',
     },
-  };
+  }
 
   return (
-    <div
-      className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6"
-      dir={isRTL ? 'rtl' : 'ltr'}
-    >
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6" dir={isRTL ? 'rtl' : 'ltr'}>
       {/* Group deliverables by status (Kanban columns) */}
-      {(['pending', 'in_progress', 'completed'] as DeliverableStatus[]).map(
-        (status) => {
-          const config = statusConfig[status];
-          const Icon = config.icon;
-          const statusDeliverables = deliverables.filter(
-            (d) => d.status === status
-          );
+      {(['pending', 'in_progress', 'completed'] as DeliverableStatus[]).map((status) => {
+        const config = statusConfig[status]
+        const Icon = config.icon
+        const statusDeliverables = deliverables.filter((d) => d.status === status)
 
-          return (
-            <div key={status} className="space-y-3">
-              {/* Column Header */}
-              <div className="flex items-center gap-2 pb-2 border-b">
-                <Icon className={cn('h-4 w-4', config.className.split(' ')[0])} />
-                <h4 className="text-sm font-medium">{config.label}</h4>
-                <span className="ms-auto text-xs text-muted-foreground">
-                  {statusDeliverables.length}
-                </span>
-              </div>
-
-              {/* Deliverables Cards */}
-              <div className="space-y-2">
-                {statusDeliverables.map((deliverable, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      'p-3 rounded-lg border',
-                      config.className.split(' ').slice(1).join(' ')
-                    )}
-                  >
-                    <h5 className="text-sm font-medium mb-1">
-                      {deliverable.name}
-                    </h5>
-                    <p className="text-xs text-muted-foreground">
-                      Due: {new Date(deliverable.due_date).toLocaleDateString(i18n.language)}
-                    </p>
-                  </div>
-                ))}
-
-                {statusDeliverables.length === 0 && (
-                  <div className="text-center py-4 text-xs text-muted-foreground">
-                    No {config.label.toLowerCase()} items
-                  </div>
-                )}
-              </div>
+        return (
+          <div key={status} className="space-y-3">
+            {/* Column Header */}
+            <div className="flex items-center gap-2 pb-2 border-b">
+              <Icon className={cn('h-4 w-4', config.className.split(' ')[0])} />
+              <h4 className="text-sm font-medium">{config.label}</h4>
+              <span className="ms-auto text-xs text-muted-foreground">
+                {statusDeliverables.length}
+              </span>
             </div>
-          );
-        }
-      )}
+
+            {/* Deliverables Cards */}
+            <div className="space-y-2">
+              {statusDeliverables.map((deliverable, index) => (
+                <div
+                  key={index}
+                  className={cn(
+                    'p-3 rounded-lg border',
+                    config.className.split(' ').slice(1).join(' '),
+                  )}
+                >
+                  <h5 className="text-sm font-medium mb-1">{deliverable.name}</h5>
+                  <p className="text-xs text-muted-foreground">
+                    Due: {new Date(deliverable.due_date).toLocaleDateString(i18n.language)}
+                  </p>
+                </div>
+              ))}
+
+              {statusDeliverables.length === 0 && (
+                <div className="text-center py-4 text-xs text-muted-foreground">
+                  No {config.label.toLowerCase()} items
+                </div>
+              )}
+            </div>
+          </div>
+        )
+      })}
     </div>
-  );
+  )
 }

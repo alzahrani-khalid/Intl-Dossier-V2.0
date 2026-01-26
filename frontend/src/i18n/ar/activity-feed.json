@@ -4,6 +4,50 @@
   "empty": "لا توجد نشاطات لعرضها",
   "loading": "جاري تحميل النشاطات...",
   "loadMore": "تحميل المزيد",
+  "tabs": {
+    "all": "جميع النشاطات",
+    "following": "المتابعة"
+  },
+  "statistics": {
+    "title": "الإحصائيات",
+    "followingCount": "المتابعة",
+    "followingCountDescription": "الكيانات التي تتابعها",
+    "activityToday": "اليوم",
+    "activityTodayDescription": "النشاطات المسجلة اليوم",
+    "activityWeek": "هذا الأسبوع",
+    "activityWeekDescription": "النشاطات هذا الأسبوع"
+  },
+  "settings": {
+    "title": "إعدادات النشاطات",
+    "description": "تخصيص تفضيلات النشاطات الخاصة بك",
+    "notifications": {
+      "title": "الإشعارات الفورية",
+      "description": "تلقي إشعارات فورية للكيانات التي تتابعها"
+    },
+    "emailDigest": {
+      "title": "ملخص البريد الإلكتروني",
+      "description": "كم مرة تريد تلقي ملخصات البريد الإلكتروني؟",
+      "options": {
+        "never": "أبداً",
+        "daily": "يومياً",
+        "weekly": "أسبوعياً"
+      }
+    }
+  },
+  "emptyState": {
+    "all": {
+      "title": "لا توجد نشاطات بعد",
+      "description": "ستظهر النشاطات هنا عند إجراء تغييرات عبر النظام"
+    },
+    "following": {
+      "title": "لا تتابع أي شيء",
+      "description": "تابع الكيانات من سجل النشاطات أو صفحات التفاصيل لرؤية تحديثاتها هنا"
+    }
+  },
+  "buttons": {
+    "refresh": "تحديث",
+    "settings": "الإعدادات"
+  },
   "error": {
     "title": "فشل تحميل النشاطات",
     "retry": "إعادة المحاولة"

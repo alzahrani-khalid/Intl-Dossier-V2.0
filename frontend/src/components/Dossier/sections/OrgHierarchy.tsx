@@ -7,7 +7,7 @@
  */
 
 import { useTranslation } from 'react-i18next'
-import { Network, Building2 } from 'lucide-react'
+import { Network } from 'lucide-react'
 import { useQuery } from '@tanstack/react-query'
 import { useMemo, memo } from 'react'
 import {
@@ -39,15 +39,22 @@ interface OrgNode {
   name_ar: string
   extension: {
     org_code?: string
-    org_type?: string
+    org_type?: 'government' | 'ngo' | 'international' | 'private' | 'academic'
     parent_org_id?: string
-    head_count?: number
+    headquarters_country_id?: string
+    website?: string
+    email?: string
+    phone?: string
+    address_en?: string
+    address_ar?: string
+    logo_url?: string
+    established_date?: string
   }
 }
 
 // Custom node component for organizations (memoized for performance)
 const OrganizationNode = memo(
-  ({ data }: { data: { label: string; orgCode: string; orgType: string; headCount?: number } }) => (
+  ({ data }: { data: { label: string; orgCode: string; orgType: string } }) => (
     <div className="bg-card border-2 border-primary rounded-lg px-3 py-2 sm:px-4 sm:py-3 shadow-md min-w-[120px] sm:min-w-[160px] hover:shadow-lg transition-shadow">
       <div className="flex flex-col items-center gap-1">
         <Badge variant="outline" className="text-xs">
@@ -57,9 +64,6 @@ const OrganizationNode = memo(
           {data.label}
         </div>
         <div className="text-xs text-muted-foreground">{data.orgType}</div>
-        {data.headCount !== undefined && (
-          <div className="text-xs text-muted-foreground">{data.headCount} employees</div>
-        )}
       </div>
     </div>
   ),
@@ -73,20 +77,58 @@ const nodeTypes: NodeTypes = {
 export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
   const { t, i18n } = useTranslation('dossier')
   const isRTL = i18n.language === 'ar'
-  const { extension } = dossier
+  const extension = dossier.extension ?? {}
 
   // Fetch organization hierarchy (parent and children)
   const { data: hierarchyOrgs, isLoading } = useQuery({
     queryKey: ['org-hierarchy', dossier.id],
     queryFn: async () => {
-      // Fetch all organizations to build complete hierarchy
+      // Fetch all organizations with their extension data from the organizations table
+      // Note: head_count doesn't exist in organizations table, only org_code, org_type, parent_org_id
       const { data, error } = await supabase
         .from('dossiers')
-        .select('id, name_en, name_ar, extension')
+        .select(
+          `
+          id,
+          name_en,
+          name_ar,
+          organizations (
+            org_code,
+            org_type,
+            parent_org_id
+          )
+        `,
+        )
         .eq('type', 'organization')
 
       if (error) throw error
-      return data as OrgNode[]
+
+      // Transform data to match OrgNode interface
+      // Supabase returns joined tables as arrays, take first element for 1:1 relationship
+      type OrgExtension = {
+        org_code?: string
+        org_type?: string
+        parent_org_id?: string
+      }
+
+      interface SupabaseOrgResult {
+        id: string
+        name_en: string
+        name_ar: string
+        organizations: OrgExtension[] | OrgExtension | null
+      }
+
+      return (data || []).map((item: SupabaseOrgResult) => {
+        // Handle both array and object responses from Supabase
+        const orgs = item.organizations
+        const extension = Array.isArray(orgs) ? (orgs[0] ?? {}) : (orgs ?? {})
+        return {
+          id: item.id,
+          name_en: item.name_en,
+          name_ar: item.name_ar,
+          extension,
+        }
+      }) as OrgNode[]
     },
   })
 
@@ -101,7 +143,7 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
     hierarchyOrgs.forEach((org) => orgMap.set(org.id, org))
 
     // Find root nodes (organizations without parent)
-    const roots = hierarchyOrgs.filter((org) => !org.extension.parent_org_id)
+    const roots = hierarchyOrgs.filter((org) => !org.extension?.parent_org_id)
 
     // Build hierarchy tree for each root
     interface HierarchyNode {
@@ -109,7 +151,6 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
       name: string
       orgCode: string
       orgType: string
-      headCount?: number
       children: HierarchyNode[]
     }
 
@@ -118,16 +159,15 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
       if (!org) return null
 
       const children = hierarchyOrgs
-        .filter((child) => child.extension.parent_org_id === orgId)
+        .filter((child) => child.extension?.parent_org_id === orgId)
         .map((child) => buildTree(child.id))
         .filter((node): node is HierarchyNode => node !== null)
 
       return {
         id: org.id,
         name: isRTL ? org.name_ar : org.name_en,
-        orgCode: org.extension.org_code || org.id.slice(0, 8),
-        orgType: org.extension.org_type || 'organization',
-        headCount: org.extension.head_count,
+        orgCode: org.extension?.org_code || org.id.slice(0, 8),
+        orgType: org.extension?.org_type || 'organization',
         children,
       }
     }
@@ -136,19 +176,17 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
     let treeRoot: HierarchyNode | null = null
 
     // Try to find tree containing current dossier
-    if (extension.parent_org_id) {
-      // Find root of current dossier's tree
-      let currentId = dossier.id
-      let parentId = extension.parent_org_id
+    if (extension?.parent_org_id) {
+      // Find root of current dossier's tree by traversing up the hierarchy
+      let parentId: string | undefined = extension.parent_org_id
 
       while (parentId) {
         const parent = orgMap.get(parentId)
-        if (!parent || !parent.extension.parent_org_id) {
+        if (!parent || !parent.extension?.parent_org_id) {
           treeRoot = buildTree(parentId)
           break
         }
-        currentId = parentId
-        parentId = parent.extension.parent_org_id
+        parentId = parent.extension?.parent_org_id
       }
     } else {
       // Current dossier is root
@@ -156,8 +194,9 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
     }
 
     // If tree not found, use first root
-    if (!treeRoot && roots.length > 0) {
-      treeRoot = buildTree(roots[0].id)
+    const firstRoot = roots[0]
+    if (!treeRoot && firstRoot) {
+      treeRoot = buildTree(firstRoot.id)
     }
 
     if (!treeRoot) {
@@ -186,7 +225,6 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
           label: node.data.name,
           orgCode: node.data.orgCode,
           orgType: node.data.orgType,
-          headCount: node.data.headCount,
         },
         sourcePosition: isRTL ? Position.Left : Position.Right,
         targetPosition: isRTL ? Position.Right : Position.Left,
@@ -210,7 +248,7 @@ export function OrgHierarchy({ dossier }: OrgHierarchyProps) {
     })
 
     return { nodes: nodesData, edges: edgesData }
-  }, [hierarchyOrgs, dossier.id, extension.parent_org_id, isRTL])
+  }, [hierarchyOrgs, dossier.id, extension?.parent_org_id, isRTL])
 
   const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes)
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges)

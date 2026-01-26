@@ -127,50 +127,6 @@ export function Sidebar() {
       label: t('navigation.dossiers'),
       icon: Folder,
       path: '/dossiers',
-      children: [
-        {
-          id: 'countries',
-          label: t('navigation.countries'),
-          icon: Globe2,
-          path: '/countries',
-        },
-        {
-          id: 'organizations',
-          label: t('navigation.organizations'),
-          icon: Building2,
-          path: '/organizations',
-        },
-        {
-          id: 'forums',
-          label: t('navigation.forums'),
-          icon: Users,
-          path: '/forums',
-        },
-        {
-          id: 'engagements',
-          label: t('navigation.engagements'),
-          icon: Calendar,
-          path: '/engagements',
-        },
-        {
-          id: 'themes',
-          label: t('navigation.themes'),
-          icon: Target,
-          path: '/themes',
-        },
-        {
-          id: 'working-groups',
-          label: t('navigation.workingGroups'),
-          icon: Briefcase,
-          path: '/working-groups',
-        },
-        {
-          id: 'persons',
-          label: t('navigation.persons'),
-          icon: User,
-          path: '/persons',
-        },
-      ],
     },
     {
       id: 'positions',
@@ -285,9 +241,7 @@ export function Sidebar() {
     },
   ]
 
-  const [expandedItems, setExpandedItems] = React.useState<Set<string>>(
-    new Set(['my-work', 'dossiers']),
-  )
+  const [expandedItems, setExpandedItems] = React.useState<Set<string>>(new Set(['my-work']))
 
   const toggleExpand = (itemId: string) => {
     setExpandedItems((prev) => {

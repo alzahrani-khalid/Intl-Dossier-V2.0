@@ -86,9 +86,9 @@ const dossierSchema = z.object({
       'forum',
       'engagement',
       'topic',
-      'theme',
       'working_group',
       'person',
+      'elected_official',
     ])
     .optional(),
   name_en: z.string().min(2, { message: 'English name must be at least 2 characters' }),
@@ -96,7 +96,7 @@ const dossierSchema = z.object({
   description_en: z.string().optional(),
   description_ar: z.string().optional(),
   status: z.enum(['active', 'inactive', 'archived', 'deleted']).default('active'),
-  sensitivity_level: z.number().min(0).max(5).default(0),
+  sensitivity_level: z.number().min(1).max(4).default(1),
   tags: z.array(z.string()).optional(),
   // Type-specific fields
   extension_data: z
@@ -146,9 +146,31 @@ const defaultValues: DossierFormData = {
   description_en: '',
   description_ar: '',
   status: 'active',
-  sensitivity_level: 0,
+  sensitivity_level: 1,
   tags: [],
-  extension_data: {},
+  extension_data: {
+    // Person fields
+    title_en: '',
+    title_ar: '',
+    biography_en: '',
+    biography_ar: '',
+    photo_url: '',
+    // Country fields
+    iso_code_2: '',
+    iso_code_3: '',
+    capital_en: '',
+    capital_ar: '',
+    region: '',
+    // Organization fields
+    org_code: '',
+    org_type: undefined,
+    website: '',
+    // Engagement fields
+    engagement_type: undefined,
+    engagement_category: undefined,
+    location_en: '',
+    location_ar: '',
+  },
 }
 
 // Type icons (only for types that have icons defined)
@@ -160,6 +182,7 @@ const typeIcons: Partial<Record<DossierType, typeof Globe>> = {
   topic: FileText,
   working_group: Briefcase,
   person: UserCircle,
+  elected_official: UserCircle,
 }
 
 import type { TemplateSection } from '@/types/dossier-template.types'
@@ -557,7 +580,7 @@ export function DossierCreateWizard({
                         </SelectTrigger>
                       </FormControl>
                       <SelectContent>
-                        {[0, 1, 2, 3, 4, 5].map((level) => (
+                        {[1, 2, 3, 4].map((level) => (
                           <SelectItem key={level} value={String(level)}>
                             {t(`dossier:sensitivityLevel.${level}`)}
                           </SelectItem>

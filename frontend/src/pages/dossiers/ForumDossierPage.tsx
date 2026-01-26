@@ -1,41 +1,40 @@
 /**
  * Forum Dossier Page Wrapper (Feature 028 - User Story 6)
+ * Updated for: Phase 2 Tab-Based Layout with URL state persistence
  *
  * Component Library Decision:
  * - Checked: Aceternity UI > Aceternity Pro > Kibo-UI
- * - Selected: DossierDetailLayout (shared wrapper)
+ * - Selected: DossierDetailLayout (shared wrapper) + tab-based ForumDossierDetail
  * - Reason: Provides consistent header, breadcrumbs, and RTL support
  *
  * Responsive Strategy:
  * - Base: Inherits from DossierDetailLayout (px-4 sm:px-6 lg:px-8)
- * - Grid: Bento grid for collaboration-focused layout
+ * - Tabs: Horizontal scrollable tabs with fade indicators
  *
  * RTL Support:
  * - Inherited from DossierDetailLayout (dir attribute, logical properties)
  *
  * Accessibility:
  * - Semantic HTML: Uses DossierDetailLayout's semantic structure
- * - ARIA: Breadcrumbs, heading hierarchy
+ * - ARIA: Breadcrumbs, heading hierarchy, tab roles
  *
  * Performance:
- * - Will be lazy-loaded via React.lazy in polish phase (T064)
+ * - Tab content loaded on demand with Suspense
  */
 
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout';
-import { ForumDossierDetail } from '@/components/Dossier/ForumDossierDetail';
-import type { ForumDossier } from '@/lib/dossier-type-guards';
+import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
+import { ForumDossierDetail } from '@/components/Dossier/ForumDossierDetail'
+import type { ForumDossier } from '@/lib/dossier-type-guards'
 
 interface ForumDossierPageProps {
-  dossier: ForumDossier;
+  dossier: ForumDossier
+  initialTab?: string
 }
 
-export function ForumDossierPage({ dossier }: ForumDossierPageProps) {
+export function ForumDossierPage({ dossier, initialTab }: ForumDossierPageProps) {
   return (
-    <DossierDetailLayout
-      dossier={dossier}
-      gridClassName="grid-cols-1 md:grid-cols-2 lg:grid-cols-3"
-    >
-      <ForumDossierDetail dossier={dossier} />
+    <DossierDetailLayout dossier={dossier} gridClassName="grid-cols-1">
+      <ForumDossierDetail dossier={dossier} initialTab={initialTab} />
     </DossierDetailLayout>
-  );
+  )
 }
