@@ -1,0 +1,7 @@
+export { ProfileSettingsSection } from './ProfileSettingsSection'
+export { GeneralSettingsSection } from './GeneralSettingsSection'
+export { AppearanceSettingsSection } from './AppearanceSettingsSection'
+export { NotificationsSettingsSection } from './NotificationsSettingsSection'
+export { SecuritySettingsSection } from './SecuritySettingsSection'
+export { AccessibilitySettingsSection } from './AccessibilitySettingsSection'
+export { DataPrivacySettingsSection } from './DataPrivacySettingsSection'

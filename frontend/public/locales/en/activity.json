@@ -1,0 +1,48 @@
+{
+  "title": "Activity",
+  "description": "Track updates and changes across all entities",
+  "tabs": {
+    "all": "All Activity",
+    "following": "Following"
+  },
+  "statistics": {
+    "title": "Statistics",
+    "following_count": "Following",
+    "following_count_description": "Entities you're tracking",
+    "activity_today": "Today",
+    "activity_today_description": "Activities recorded today",
+    "activity_week": "This Week",
+    "activity_week_description": "Activities this week"
+  },
+  "empty": {
+    "all": {
+      "title": "No activity yet",
+      "description": "Activities will appear here as changes are made across the system"
+    },
+    "following": {
+      "title": "Not following anything",
+      "description": "Follow entities from the activity feed or their detail pages to see their updates here"
+    }
+  },
+  "settings": {
+    "title": "Activity Settings",
+    "description": "Configure your activity preferences",
+    "notifications": {
+      "title": "Push Notifications",
+      "description": "Receive push notifications for followed entities"
+    },
+    "email_digest": {
+      "title": "Email Digest",
+      "description": "How often would you like to receive email summaries?",
+      "options": {
+        "never": "Never",
+        "daily": "Daily",
+        "weekly": "Weekly"
+      }
+    }
+  },
+  "actions": {
+    "refresh": "Refresh",
+    "settings": "Settings"
+  }
+}

@@ -28,11 +28,12 @@ export function MemberOrganizations({ dossier, isWorkingGroup = false }: MemberO
   const [showSuggestions, setShowSuggestions] = useState(true)
 
   // Extract member organizations based on type
+  // Use optional chaining since extension may be undefined for newly created dossiers
   const members =
     dossier.type === 'forum'
-      ? dossier.extension.member_organizations || []
+      ? dossier.extension?.member_organizations || []
       : dossier.type === 'working_group'
-        ? dossier.extension.members || []
+        ? dossier.extension?.members || []
         : []
 
   // For working groups with no members, show AI suggestions

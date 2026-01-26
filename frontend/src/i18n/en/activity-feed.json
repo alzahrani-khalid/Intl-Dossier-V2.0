@@ -4,6 +4,50 @@
   "empty": "No activities to display",
   "loading": "Loading activities...",
   "loadMore": "Load more",
+  "tabs": {
+    "all": "All Activity",
+    "following": "Following"
+  },
+  "statistics": {
+    "title": "Statistics",
+    "followingCount": "Following",
+    "followingCountDescription": "Entities you're tracking",
+    "activityToday": "Today",
+    "activityTodayDescription": "Activities recorded today",
+    "activityWeek": "This Week",
+    "activityWeekDescription": "Activities this week"
+  },
+  "settings": {
+    "title": "Activity Settings",
+    "description": "Configure your activity preferences",
+    "notifications": {
+      "title": "Push Notifications",
+      "description": "Receive push notifications for followed entities"
+    },
+    "emailDigest": {
+      "title": "Email Digest",
+      "description": "How often would you like to receive email summaries?",
+      "options": {
+        "never": "Never",
+        "daily": "Daily",
+        "weekly": "Weekly"
+      }
+    }
+  },
+  "emptyState": {
+    "all": {
+      "title": "No activity yet",
+      "description": "Activities will appear here as changes are made across the system"
+    },
+    "following": {
+      "title": "Not following anything",
+      "description": "Follow entities from the activity feed or their detail pages to see their updates here"
+    }
+  },
+  "buttons": {
+    "refresh": "Refresh",
+    "settings": "Settings"
+  },
   "error": {
     "title": "Failed to load activities",
     "retry": "Try again"

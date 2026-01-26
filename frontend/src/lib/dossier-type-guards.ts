@@ -74,21 +74,32 @@ export interface CountryExtension {
  * @description
  * Contains organization-specific metadata including type classification,
  * hierarchy information, and basic operational data.
+ * IMPORTANT: Must match database schema in supabase/migrations/20251022000002_create_extension_tables.sql
  *
  * @property org_code - Unique internal organization code
- * @property org_type - Organization classification
+ * @property org_type - Organization classification (government, ngo, international, private, academic)
  * @property parent_org_id - Parent organization dossier ID for hierarchy
- * @property head_count - Number of employees/members
+ * @property headquarters_country_id - UUID of the country where headquarters is located
+ * @property website - Official website URL
+ * @property email - Official contact email
+ * @property phone - Official contact phone number
+ * @property address_en - Physical address in English
+ * @property address_ar - Physical address in Arabic
+ * @property logo_url - URL to organization logo image
  * @property established_date - Organization founding date (ISO 8601)
- * @property website_url - Official website URL
  */
 export interface OrganizationExtension {
-  org_code: string
-  org_type: 'government' | 'ngo' | 'international' | 'private'
+  org_code?: string
+  org_type: 'government' | 'ngo' | 'international' | 'private' | 'academic'
   parent_org_id?: string
-  head_count?: number
+  headquarters_country_id?: string
+  website?: string
+  email?: string
+  phone?: string
+  address_en?: string
+  address_ar?: string
+  logo_url?: string
   established_date?: string
-  website_url?: string
 }
 
 /**

@@ -86,7 +86,15 @@ export function TemplatePreviewDialog({
         className="max-w-2xl max-h-[90vh] flex flex-col p-0 gap-0"
         dir={isRTL ? 'rtl' : 'ltr'}
       >
-        {/* Header with gradient */}
+        {/* Visually hidden but accessible title/description for screen readers */}
+        <DialogHeader className="sr-only">
+          <DialogTitle>{isRTL ? template.name_ar : template.name_en}</DialogTitle>
+          <DialogDescription>
+            {isRTL ? template.description_ar : template.description_en}
+          </DialogDescription>
+        </DialogHeader>
+
+        {/* Visual header with gradient */}
         <div
           className={cn(
             'relative overflow-hidden bg-gradient-to-br p-4 sm:p-6',

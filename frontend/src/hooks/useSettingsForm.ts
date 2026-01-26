@@ -1,40 +1,26 @@
-import { useState, useCallback } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useForm } from 'react-hook-form'
+import { useCallback, useEffect } from 'react'
+import { useForm, UseFormReturn } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { toast } from 'sonner'
+import { useTranslation } from 'react-i18next'
 import { supabase } from '@/lib/supabase'
 import { useAuthStore } from '@/store/authStore'
 import { switchLanguage } from '@/i18n'
 import { useTheme } from '@/hooks/use-theme'
-import {
-  SettingsLayout,
-  SettingsSectionWrapper,
-  SettingsSectionSkeleton,
-  ProfileSettingsSection,
-  GeneralSettingsSection,
-  AppearanceSettingsSection,
-  NotificationsSettingsSection,
-  SecuritySettingsSection,
-  AccessibilitySettingsSection,
-  DataPrivacySettingsSection,
-} from '@/components/settings'
-import { EmailDigestSettings } from '@/components/email/EmailDigestSettings'
-import { BotIntegrationsSettings } from '@/components/settings/BotIntegrationsSettings'
-import { SettingsSectionId, defaultUserSettings } from '@/types/settings.types'
+import { defaultUserSettings } from '@/types/settings.types'
 
 /**
- * Settings form schema
+ * Combined settings schema
  */
-const settingsSchema = z.object({
+const userSettingsSchema = z.object({
   // Profile
   display_name: z.string().min(1).max(100),
-  job_title: z.string().max(100).optional().nullable(),
-  department: z.string().max(100).optional().nullable(),
-  phone: z.string().max(20).optional().nullable(),
-  bio: z.string().max(200).optional().nullable(),
+  job_title: z.string().max(100).optional(),
+  department: z.string().max(100).optional(),
+  phone: z.string().max(20).optional(),
+  bio: z.string().max(200).optional(),
   avatar_url: z.string().url().optional().nullable(),
 
   // General
@@ -71,22 +57,28 @@ const settingsSchema = z.object({
   session_timeout: z.number().min(5).max(480),
 })
 
-type SettingsFormValues = z.infer<typeof settingsSchema>
+type FormValues = z.infer<typeof userSettingsSchema>
+
+interface UseSettingsFormReturn {
+  form: UseFormReturn<FormValues>
+  isLoading: boolean
+  isSaving: boolean
+  hasChanges: boolean
+  saveSettings: () => void
+  resetForm: () => void
+  updateField: <K extends keyof FormValues>(field: K, value: FormValues[K]) => void
+}
 
 /**
- * Main Settings Page component
- * Provides a comprehensive settings management interface with multiple sections
+ * Hook for managing settings form state and persistence
  */
-export function SettingsPage() {
+export function useSettingsForm(): UseSettingsFormReturn {
   const { t } = useTranslation('settings')
   const { user } = useAuthStore()
   const { setColorMode } = useTheme()
   const queryClient = useQueryClient()
 
-  // Active section state
-  const [activeSection, setActiveSection] = useState<SettingsSectionId>('profile')
-
-  // Fetch current user settings
+  // Fetch current settings from Supabase
   const { data: settings, isLoading } = useQuery({
     queryKey: ['user-settings', user?.id],
     queryFn: async () => {
@@ -96,14 +88,14 @@ export function SettingsPage() {
 
       if (error) throw error
 
-      // Map database fields to form fields with defaults
+      // Map database fields to form fields
       return {
         // Profile
         display_name: data.display_name || data.email?.split('@')[0] || '',
-        job_title: data.job_title || null,
-        department: data.department || null,
-        phone: data.phone || null,
-        bio: data.bio || null,
+        job_title: data.job_title || undefined,
+        department: data.department || undefined,
+        phone: data.phone || undefined,
+        bio: data.bio || undefined,
         avatar_url: data.avatar_url || null,
 
         // General
@@ -138,23 +130,24 @@ export function SettingsPage() {
         // Security
         mfa_enabled: data.mfa_enabled ?? false,
         session_timeout: data.session_timeout ?? 30,
-      } as SettingsFormValues
+      } as FormValues
     },
     enabled: !!user?.id,
   })
 
-  // Initialize form with fetched settings
-  const form = useForm<SettingsFormValues>({
-    resolver: zodResolver(settingsSchema),
-    defaultValues: defaultUserSettings as SettingsFormValues,
+  // Initialize form
+  const form = useForm<FormValues>({
+    resolver: zodResolver(userSettingsSchema),
+    defaultValues: defaultUserSettings as FormValues,
     values: settings,
   })
 
+  // Track if form has unsaved changes
   const hasChanges = form.formState.isDirty
 
   // Save mutation
   const saveMutation = useMutation({
-    mutationFn: async (values: SettingsFormValues) => {
+    mutationFn: async (values: FormValues) => {
       if (!user?.id) throw new Error('Not authenticated')
 
       const { error } = await supabase
@@ -210,12 +203,12 @@ export function SettingsPage() {
       return values
     },
     onSuccess: async (values) => {
-      // Apply language change if needed
+      // Apply language change
       if (values.language_preference !== settings?.language_preference) {
         await switchLanguage(values.language_preference)
       }
 
-      // Apply color mode change
+      // Apply theme changes
       if (values.color_mode !== settings?.color_mode) {
         // Map 'system' to the actual system preference
         const effectiveMode =
@@ -230,8 +223,10 @@ export function SettingsPage() {
       // Apply accessibility settings
       applyAccessibilitySettings(values)
 
-      // Invalidate and reset form
+      // Invalidate queries
       queryClient.invalidateQueries({ queryKey: ['user-settings'] })
+
+      // Reset form dirty state
       form.reset(values)
 
       toast.success(t('savedSuccessfully'))
@@ -242,92 +237,172 @@ export function SettingsPage() {
   })
 
   // Apply accessibility settings to document
-  const applyAccessibilitySettings = useCallback((values: SettingsFormValues) => {
+  const applyAccessibilitySettings = useCallback((values: FormValues) => {
     const root = document.documentElement
 
     // High contrast
-    root.classList.toggle('high-contrast', values.high_contrast)
+    if (values.high_contrast) {
+      root.classList.add('high-contrast')
+    } else {
+      root.classList.remove('high-contrast')
+    }
 
     // Large text
-    root.classList.toggle('large-text', values.large_text)
+    if (values.large_text) {
+      root.classList.add('large-text')
+    } else {
+      root.classList.remove('large-text')
+    }
 
     // Reduce motion
-    root.classList.toggle('reduce-motion', values.reduce_motion)
+    if (values.reduce_motion) {
+      root.classList.add('reduce-motion')
+    } else {
+      root.classList.remove('reduce-motion')
+    }
 
     // Focus indicators
     root.dataset.focusIndicators = values.focus_indicators
   }, [])
 
-  // Handle save
-  const handleSave = useCallback(() => {
+  // Apply accessibility settings on load
+  useEffect(() => {
+    if (settings) {
+      applyAccessibilitySettings(settings)
+    }
+  }, [settings, applyAccessibilitySettings])
+
+  // Save handler
+  const saveSettings = useCallback(() => {
     form.handleSubmit((values) => {
       saveMutation.mutate(values)
     })()
   }, [form, saveMutation])
 
-  // Handle section change
-  const handleSectionChange = useCallback((section: SettingsSectionId) => {
-    setActiveSection(section)
-  }, [])
+  // Reset handler
+  const resetForm = useCallback(() => {
+    if (settings) {
+      form.reset(settings)
+    }
+  }, [form, settings])
 
-  return (
-    <SettingsLayout
-      activeSection={activeSection}
-      onSectionChange={handleSectionChange}
-      hasChanges={hasChanges}
-      isSaving={saveMutation.isPending}
-      onSave={handleSave}
-    >
-      {isLoading ? (
-        <SettingsSectionSkeleton />
-      ) : (
-        <>
-          {/* Profile Section */}
-          <SettingsSectionWrapper sectionId="profile" activeSection={activeSection}>
-            <ProfileSettingsSection form={form} email={user?.email} />
-          </SettingsSectionWrapper>
-
-          {/* General Section */}
-          <SettingsSectionWrapper sectionId="general" activeSection={activeSection}>
-            <GeneralSettingsSection form={form} />
-          </SettingsSectionWrapper>
-
-          {/* Appearance Section */}
-          <SettingsSectionWrapper sectionId="appearance" activeSection={activeSection}>
-            <AppearanceSettingsSection form={form} />
-          </SettingsSectionWrapper>
-
-          {/* Notifications Section */}
-          <SettingsSectionWrapper sectionId="notifications" activeSection={activeSection}>
-            <NotificationsSettingsSection form={form} />
-          </SettingsSectionWrapper>
-
-          {/* Email Digest Section - Using existing component */}
-          <SettingsSectionWrapper sectionId="email-digest" activeSection={activeSection}>
-            <EmailDigestSettings />
-          </SettingsSectionWrapper>
-
-          {/* Integrations Section - Using existing component */}
-          <SettingsSectionWrapper sectionId="integrations" activeSection={activeSection}>
-            <BotIntegrationsSettings />
-          </SettingsSectionWrapper>
-
-          {/* Accessibility Section */}
-          <SettingsSectionWrapper sectionId="accessibility" activeSection={activeSection}>
-            <AccessibilitySettingsSection form={form} />
-          </SettingsSectionWrapper>
-
-          {/* Data & Privacy Section */}
-          <SettingsSectionWrapper sectionId="data-privacy" activeSection={activeSection}>
-            <DataPrivacySettingsSection />
-          </SettingsSectionWrapper>
-
-          {/* Security Section */}
-          <SettingsSectionWrapper sectionId="security" activeSection={activeSection}>
-            <SecuritySettingsSection form={form} />
-          </SettingsSectionWrapper>
-        </>
-      )}
-    </SettingsLayout>
+  // Update single field
+  const updateField = useCallback(
+    <K extends keyof FormValues>(field: K, value: FormValues[K]) => {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      form.setValue(field, value as any, { shouldDirty: true })
+    },
+    [form],
   )
+
+  return {
+    form,
+    isLoading,
+    isSaving: saveMutation.isPending,
+    hasChanges,
+    saveSettings,
+    resetForm,
+    updateField,
+  }
+}
+
+/**
+ * Hook for profile settings section
+ */
+export function useProfileSettings() {
+  const { form, ...rest } = useSettingsForm()
+
+  const profileValues = {
+    display_name: form.watch('display_name'),
+    job_title: form.watch('job_title'),
+    department: form.watch('department'),
+    phone: form.watch('phone'),
+    bio: form.watch('bio'),
+    avatar_url: form.watch('avatar_url'),
+  }
+
+  return { form, profileValues, ...rest }
+}
+
+/**
+ * Hook for general settings section
+ */
+export function useGeneralSettings() {
+  const { form, ...rest } = useSettingsForm()
+
+  const generalValues = {
+    language_preference: form.watch('language_preference'),
+    timezone: form.watch('timezone'),
+    date_format: form.watch('date_format'),
+    start_of_week: form.watch('start_of_week'),
+  }
+
+  return { form, generalValues, ...rest }
+}
+
+/**
+ * Hook for appearance settings section
+ */
+export function useAppearanceSettings() {
+  const { form, ...rest } = useSettingsForm()
+
+  const appearanceValues = {
+    color_mode: form.watch('color_mode'),
+    theme: form.watch('theme'),
+    display_density: form.watch('display_density'),
+  }
+
+  return { form, appearanceValues, ...rest }
+}
+
+/**
+ * Hook for notification settings section
+ */
+export function useNotificationSettings() {
+  const { form, ...rest } = useSettingsForm()
+
+  const notificationValues = {
+    notifications_push: form.watch('notifications_push'),
+    notifications_email: form.watch('notifications_email'),
+    notifications_mou_expiry: form.watch('notifications_mou_expiry'),
+    notifications_event_reminders: form.watch('notifications_event_reminders'),
+    notifications_report_generation: form.watch('notifications_report_generation'),
+    notifications_assignment_updates: form.watch('notifications_assignment_updates'),
+    notifications_commitment_deadlines: form.watch('notifications_commitment_deadlines'),
+    notifications_mentions: form.watch('notifications_mentions'),
+  }
+
+  return { form, notificationValues, ...rest }
+}
+
+/**
+ * Hook for accessibility settings section
+ */
+export function useAccessibilitySettings() {
+  const { form, ...rest } = useSettingsForm()
+
+  const accessibilityValues = {
+    high_contrast: form.watch('high_contrast'),
+    large_text: form.watch('large_text'),
+    reduce_motion: form.watch('reduce_motion'),
+    keyboard_only: form.watch('keyboard_only'),
+    focus_indicators: form.watch('focus_indicators'),
+    screen_reader: form.watch('screen_reader'),
+  }
+
+  return { form, accessibilityValues, ...rest }
+}
+
+/**
+ * Hook for security settings section
+ */
+export function useSecuritySettings() {
+  const { form, ...rest } = useSettingsForm()
+
+  const securityValues = {
+    mfa_enabled: form.watch('mfa_enabled'),
+    session_timeout: form.watch('session_timeout'),
+  }
+
+  return { form, securityValues, ...rest }
 }

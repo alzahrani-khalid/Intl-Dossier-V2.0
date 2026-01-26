@@ -441,6 +441,12 @@ export function useFormDraft<T extends Record<string, unknown>>(
   const [hasDraft, setHasDraft] = React.useState(false)
   const [isDraftSaving, setIsDraftSaving] = React.useState(false)
 
+  // Use refs to avoid dependency array issues with hot reload
+  const draftKeyRef = React.useRef(draftKey)
+  React.useEffect(() => {
+    draftKeyRef.current = draftKey
+  }, [draftKey])
+
   // Initialize state from localStorage or default
   const [draft, setDraft] = React.useState<T>(() => {
     if (typeof window === 'undefined') return defaultValue
@@ -449,8 +455,55 @@ export function useFormDraft<T extends Record<string, unknown>>(
       const stored = localStorage.getItem(draftKey)
       if (stored) {
         const parsed = JSON.parse(stored)
+
+        // Check if there's meaningful content (not just type or empty strings)
+        const hasMeaningfulContent = Object.entries(parsed).some(([key, value]) => {
+          if (
+            key === '_savedAt' ||
+            key === 'type' ||
+            key === 'status' ||
+            key === 'sensitivity_level' ||
+            key === 'tags'
+          )
+            return false
+          if (typeof value === 'string' && value.trim().length > 0) return true
+          if (typeof value === 'object' && value !== null) {
+            return Object.values(value).some(
+              (v) => typeof v === 'string' && (v as string).trim().length > 0,
+            )
+          }
+          return false
+        })
+
+        // If no meaningful content, ignore the draft entirely and clear it
+        if (!hasMeaningfulContent) {
+          localStorage.removeItem(draftKey)
+          return defaultValue
+        }
+
+        // Deep merge: preserve nested objects from defaultValue
+        const merged = { ...defaultValue }
+        for (const key of Object.keys(parsed)) {
+          if (key === '_savedAt') continue // Skip metadata
+          const val = parsed[key]
+          const defVal = defaultValue[key as keyof T]
+          // Deep merge objects (like extension_data)
+          if (
+            val &&
+            typeof val === 'object' &&
+            !Array.isArray(val) &&
+            defVal &&
+            typeof defVal === 'object' &&
+            !Array.isArray(defVal)
+          ) {
+            ;(merged as Record<string, unknown>)[key] = { ...defVal, ...val }
+          } else {
+            ;(merged as Record<string, unknown>)[key] = val
+          }
+        }
+
         setHasDraft(true)
-        return { ...defaultValue, ...parsed }
+        return merged as T
       }
     } catch (error) {
       console.error('Failed to load draft:', error)
@@ -458,14 +511,20 @@ export function useFormDraft<T extends Record<string, unknown>>(
     return defaultValue
   })
 
-  // Save draft to localStorage
+  // Ref to hold the latest draft for the save function
+  const draftRef = React.useRef(draft)
+  React.useEffect(() => {
+    draftRef.current = draft
+  }, [draft])
+
+  // Save draft to localStorage - stable function using refs
   const saveDraft = React.useCallback(() => {
     setIsDraftSaving(true)
     try {
       localStorage.setItem(
-        draftKey,
+        draftKeyRef.current,
         JSON.stringify({
-          ...draft,
+          ...draftRef.current,
           _savedAt: new Date().toISOString(),
         }),
       )
@@ -475,34 +534,51 @@ export function useFormDraft<T extends Record<string, unknown>>(
     } finally {
       setTimeout(() => setIsDraftSaving(false), 500)
     }
-  }, [draft, draftKey])
+  }, []) // No dependencies - uses refs
 
-  // Clear draft from localStorage
+  // Clear draft from localStorage - stable function using refs
   const clearDraft = React.useCallback(() => {
     try {
-      localStorage.removeItem(draftKey)
+      localStorage.removeItem(draftKeyRef.current)
       setHasDraft(false)
     } catch (error) {
       console.error('Failed to clear draft:', error)
     }
-  }, [draftKey])
+  }, []) // No dependencies - uses refs
 
   // Auto-save draft on changes (debounced)
+  // Using a stable dependency array to avoid hot reload issues
   React.useEffect(() => {
-    if (!hasDraft && Object.keys(draft).length === Object.keys(defaultValue).length) {
-      // Only auto-save if there are actual changes
-      const hasChanges = Object.keys(draft).some(
-        (key) => JSON.stringify(draft[key]) !== JSON.stringify(defaultValue[key as keyof T]),
+    // Check if there's meaningful content to save (not just type/status selection)
+    const currentDraft = draftRef.current
+    const hasMeaningfulContent = Object.entries(currentDraft).some(([key, value]) => {
+      // Skip metadata and selection-only fields
+      if (
+        key === '_savedAt' ||
+        key === 'type' ||
+        key === 'status' ||
+        key === 'sensitivity_level' ||
+        key === 'tags'
       )
-      if (!hasChanges) return
-    }
+        return false
+      if (typeof value === 'string' && value.trim().length > 0) return true
+      if (typeof value === 'object' && value !== null && !Array.isArray(value)) {
+        return Object.values(value).some(
+          (v) => typeof v === 'string' && (v as string).trim().length > 0,
+        )
+      }
+      return false
+    })
+
+    // Don't auto-save if there's no meaningful content
+    if (!hasMeaningfulContent) return
 
     const timer = setTimeout(() => {
       saveDraft()
     }, 2000) // Auto-save after 2 seconds of inactivity
 
     return () => clearTimeout(timer)
-  }, [draft, defaultValue, saveDraft, hasDraft])
+  }, [draft, saveDraft]) // saveDraft is now stable (no deps)
 
   return {
     draft,

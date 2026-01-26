@@ -3,15 +3,31 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.39.0';
 import { corsHeaders } from '../_shared/cors.ts';
 import { getDossierDetailPath } from '../_shared/dossier-routes.ts';
 
+// All supported dossier types
+const VALID_DOSSIER_TYPES = [
+  'country',
+  'organization',
+  'forum',
+  'engagement',
+  'topic',
+  'working_group',
+  'person',
+  'elected_official',
+] as const;
+
+type DossierType = (typeof VALID_DOSSIER_TYPES)[number];
+
 interface DossierCreateRequest {
   name_en: string;
   name_ar: string;
-  type: 'country' | 'organization' | 'forum' | 'theme';
-  sensitivity_level?: 'low' | 'medium' | 'high';
-  summary_en?: string;
-  summary_ar?: string;
+  type: DossierType;
+  description_en?: string;
+  description_ar?: string;
+  status?: 'active' | 'inactive' | 'archived';
+  sensitivity_level?: number; // 1-4: 1=Public, 2=Internal, 3=Confidential, 4=Secret
   tags?: string[];
-  review_cadence?: string;
+  metadata?: Record<string, unknown>;
+  extensionData?: Record<string, unknown>;
 }
 
 serve(async (req) => {
@@ -55,7 +71,7 @@ serve(async (req) => {
       );
     }
 
-    // Create Supabase client with user context
+    // Create Supabase client
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -66,11 +82,12 @@ serve(async (req) => {
       }
     );
 
-    // Get current user
+    // Get current user by passing the JWT token directly
+    const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
       error: userError,
-    } = await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth.getUser(token);
 
     if (userError || !user) {
       return new Response(
@@ -100,11 +117,16 @@ serve(async (req) => {
     if (!body.name_ar || body.name_ar.length > 200) {
       validationErrors.push('name_ar is required and must be <= 200 characters');
     }
-    if (!['country', 'organization', 'forum', 'theme'].includes(body.type)) {
-      validationErrors.push('type must be one of: country, organization, forum, theme');
+    if (!VALID_DOSSIER_TYPES.includes(body.type as DossierType)) {
+      validationErrors.push(`type must be one of: ${VALID_DOSSIER_TYPES.join(', ')}`);
     }
-    if (body.sensitivity_level && !['low', 'medium', 'high'].includes(body.sensitivity_level)) {
-      validationErrors.push('sensitivity_level must be one of: low, medium, high');
+    if (
+      body.sensitivity_level !== undefined &&
+      (typeof body.sensitivity_level !== 'number' ||
+        body.sensitivity_level < 1 ||
+        body.sensitivity_level > 4)
+    ) {
+      validationErrors.push('sensitivity_level must be a number between 1 and 4');
     }
     if (body.tags && (body.tags.length > 20 || body.tags.some((tag) => tag.length > 50))) {
       validationErrors.push('tags must have max 20 items, each <= 50 characters');
@@ -134,13 +156,14 @@ serve(async (req) => {
         name_en: body.name_en,
         name_ar: body.name_ar,
         type: body.type,
-        sensitivity_level: body.sensitivity_level || 'low',
-        summary_en: body.summary_en || null,
-        summary_ar: body.summary_ar || null,
+        description_en: body.description_en || null,
+        description_ar: body.description_ar || null,
+        status: body.status || 'active',
+        sensitivity_level: body.sensitivity_level || 1, // Default: Public
         tags: body.tags || [],
-        review_cadence: body.review_cadence || null,
-        status: 'active',
-        version: 1,
+        metadata: body.metadata || {},
+        created_by: user.id,
+        updated_by: user.id,
       })
       .select()
       .single();
@@ -193,7 +216,52 @@ serve(async (req) => {
       // Non-critical error - dossier was created successfully
     }
 
-    return new Response(JSON.stringify(dossier), {
+    // Handle extension data for specific types
+    let extensionResult = null;
+    if (body.extensionData && Object.keys(body.extensionData).length > 0) {
+      const extensionTableMap: Record<string, string> = {
+        country: 'countries',
+        organization: 'organizations',
+        forum: 'forums',
+        engagement: 'engagements',
+        topic: 'topics',
+        working_group: 'working_groups',
+        person: 'persons',
+        elected_official: 'elected_officials',
+      };
+
+      const extensionTable = extensionTableMap[body.type];
+      if (extensionTable) {
+        const { data: extData, error: extError } = await supabaseClient
+          .from(extensionTable)
+          .insert({
+            id: dossier.id,
+            ...body.extensionData,
+          })
+          .select()
+          .single();
+
+        if (extError) {
+          console.warn(`Failed to insert extension data for ${body.type}:`, extError);
+          // Non-critical - base dossier was created
+        } else {
+          extensionResult = extData;
+        }
+      }
+    }
+
+    // Refresh the materialized view to include the new dossier
+    // This is non-blocking - we don't wait for it to complete
+    supabaseClient.rpc('refresh_dossier_list_mv').then(({ error }) => {
+      if (error) {
+        console.warn('Failed to refresh materialized view (non-critical):', error);
+      }
+    });
+
+    // Return dossier with extension data if available
+    const result = extensionResult ? { ...dossier, extension: extensionResult } : dossier;
+
+    return new Response(JSON.stringify(result), {
       status: 201,
       headers: {
         ...corsHeaders,

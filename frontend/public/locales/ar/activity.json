@@ -1,0 +1,48 @@
+{
+  "title": "النشاطات",
+  "description": "تتبع التحديثات والتغييرات عبر جميع الكيانات",
+  "tabs": {
+    "all": "جميع النشاطات",
+    "following": "المتابعة"
+  },
+  "statistics": {
+    "title": "الإحصائيات",
+    "following_count": "المتابعة",
+    "following_count_description": "الكيانات التي تتابعها",
+    "activity_today": "اليوم",
+    "activity_today_description": "النشاطات المسجلة اليوم",
+    "activity_week": "هذا الأسبوع",
+    "activity_week_description": "نشاطات هذا الأسبوع"
+  },
+  "empty": {
+    "all": {
+      "title": "لا توجد نشاطات بعد",
+      "description": "ستظهر النشاطات هنا عند إجراء تغييرات في النظام"
+    },
+    "following": {
+      "title": "لا تتابع شيئاً",
+      "description": "تابع الكيانات من سجل النشاطات أو صفحات التفاصيل لرؤية تحديثاتها هنا"
+    }
+  },
+  "settings": {
+    "title": "إعدادات النشاطات",
+    "description": "تكوين تفضيلات النشاطات الخاصة بك",
+    "notifications": {
+      "title": "إشعارات الدفع",
+      "description": "تلقي إشعارات فورية للكيانات المتابعة"
+    },
+    "email_digest": {
+      "title": "ملخص البريد الإلكتروني",
+      "description": "كم مرة تريد تلقي ملخصات البريد الإلكتروني؟",
+      "options": {
+        "never": "أبداً",
+        "daily": "يومياً",
+        "weekly": "أسبوعياً"
+      }
+    }
+  },
+  "actions": {
+    "refresh": "تحديث",
+    "settings": "الإعدادات"
+  }
+}

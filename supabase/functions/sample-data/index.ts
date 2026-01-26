@@ -86,11 +86,12 @@ serve(async (req) => {
       }
     );
 
-    // Get current user
+    // Get current user by passing the JWT token directly
+    const token = authHeader.replace('Bearer ', '');
     const {
       data: { user },
       error: userError,
-    } = await supabaseClient.auth.getUser();
+    } = await supabaseClient.auth.getUser(token);
 
     if (userError || !user) {
       return new Response(

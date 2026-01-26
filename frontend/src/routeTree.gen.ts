@@ -70,6 +70,7 @@ import { Route as ProtectedAvailabilityPollingRouteImport } from './routes/_prot
 import { Route as ProtectedAuditLogsRouteImport } from './routes/_protected/audit-logs'
 import { Route as ProtectedAnalyticsRouteImport } from './routes/_protected/analytics'
 import { Route as ProtectedAdvancedSearchRouteImport } from './routes/_protected/advanced-search'
+import { Route as ProtectedActivityRouteImport } from './routes/_protected/activity'
 import { Route as ProtectedActionableErrorsDemoRouteImport } from './routes/_protected/actionable-errors-demo'
 import { Route as ProtectedAccessibilityRouteImport } from './routes/_protected/accessibility'
 import { Route as ProtectedTasksIndexRouteImport } from './routes/_protected/tasks/index'
@@ -458,6 +459,11 @@ const ProtectedAnalyticsRoute = ProtectedAnalyticsRouteImport.update({
 const ProtectedAdvancedSearchRoute = ProtectedAdvancedSearchRouteImport.update({
   id: '/advanced-search',
   path: '/advanced-search',
+  getParentRoute: () => ProtectedRoute,
+} as any)
+const ProtectedActivityRoute = ProtectedActivityRouteImport.update({
+  id: '/activity',
+  path: '/activity',
   getParentRoute: () => ProtectedRoute,
 } as any)
 const ProtectedActionableErrorsDemoRoute =
@@ -874,6 +880,7 @@ export interface FileRoutesByFullPath {
   '/register': typeof RegisterRoute
   '/accessibility': typeof ProtectedAccessibilityRoute
   '/actionable-errors-demo': typeof ProtectedActionableErrorsDemoRoute
+  '/activity': typeof ProtectedActivityRoute
   '/advanced-search': typeof ProtectedAdvancedSearchRoute
   '/analytics': typeof ProtectedAnalyticsRoute
   '/audit-logs': typeof ProtectedAuditLogsRoute
@@ -1008,6 +1015,7 @@ export interface FileRoutesByTo {
   '/register': typeof RegisterRoute
   '/accessibility': typeof ProtectedAccessibilityRoute
   '/actionable-errors-demo': typeof ProtectedActionableErrorsDemoRoute
+  '/activity': typeof ProtectedActivityRoute
   '/advanced-search': typeof ProtectedAdvancedSearchRoute
   '/analytics': typeof ProtectedAnalyticsRoute
   '/audit-logs': typeof ProtectedAuditLogsRoute
@@ -1138,6 +1146,7 @@ export interface FileRoutesById {
   '/register': typeof RegisterRoute
   '/_protected/accessibility': typeof ProtectedAccessibilityRoute
   '/_protected/actionable-errors-demo': typeof ProtectedActionableErrorsDemoRoute
+  '/_protected/activity': typeof ProtectedActivityRoute
   '/_protected/advanced-search': typeof ProtectedAdvancedSearchRoute
   '/_protected/analytics': typeof ProtectedAnalyticsRoute
   '/_protected/audit-logs': typeof ProtectedAuditLogsRoute
@@ -1274,6 +1283,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/accessibility'
     | '/actionable-errors-demo'
+    | '/activity'
     | '/advanced-search'
     | '/analytics'
     | '/audit-logs'
@@ -1408,6 +1418,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/accessibility'
     | '/actionable-errors-demo'
+    | '/activity'
     | '/advanced-search'
     | '/analytics'
     | '/audit-logs'
@@ -1537,6 +1548,7 @@ export interface FileRouteTypes {
     | '/register'
     | '/_protected/accessibility'
     | '/_protected/actionable-errors-demo'
+    | '/_protected/activity'
     | '/_protected/advanced-search'
     | '/_protected/analytics'
     | '/_protected/audit-logs'
@@ -2100,6 +2112,13 @@ declare module '@tanstack/react-router' {
       path: '/advanced-search'
       fullPath: '/advanced-search'
       preLoaderRoute: typeof ProtectedAdvancedSearchRouteImport
+      parentRoute: typeof ProtectedRoute
+    }
+    '/_protected/activity': {
+      id: '/_protected/activity'
+      path: '/activity'
+      fullPath: '/activity'
+      preLoaderRoute: typeof ProtectedActivityRouteImport
       parentRoute: typeof ProtectedRoute
     }
     '/_protected/actionable-errors-demo': {
@@ -2811,6 +2830,7 @@ const ProtectedAfterActionsAfterActionIdRouteWithChildren =
 interface ProtectedRouteChildren {
   ProtectedAccessibilityRoute: typeof ProtectedAccessibilityRoute
   ProtectedActionableErrorsDemoRoute: typeof ProtectedActionableErrorsDemoRoute
+  ProtectedActivityRoute: typeof ProtectedActivityRoute
   ProtectedAdvancedSearchRoute: typeof ProtectedAdvancedSearchRoute
   ProtectedAnalyticsRoute: typeof ProtectedAnalyticsRoute
   ProtectedAuditLogsRoute: typeof ProtectedAuditLogsRoute
@@ -2907,6 +2927,7 @@ interface ProtectedRouteChildren {
 const ProtectedRouteChildren: ProtectedRouteChildren = {
   ProtectedAccessibilityRoute: ProtectedAccessibilityRoute,
   ProtectedActionableErrorsDemoRoute: ProtectedActionableErrorsDemoRoute,
+  ProtectedActivityRoute: ProtectedActivityRoute,
   ProtectedAdvancedSearchRoute: ProtectedAdvancedSearchRoute,
   ProtectedAnalyticsRoute: ProtectedAnalyticsRoute,
   ProtectedAuditLogsRoute: ProtectedAuditLogsRoute,

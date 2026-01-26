@@ -5,11 +5,13 @@
  * - Fetching activity feed with filters and pagination
  * - Following/unfollowing entities
  * - Managing user preferences
+ *
+ * Uses supabase.functions.invoke() for automatic auth handling
  */
 
-import { useCallback, useState } from 'react'
+import { useCallback, useState, useEffect } from 'react'
 import { useQuery, useInfiniteQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { createClient } from '@/lib/supabase'
+import { supabase } from '@/lib/supabase'
 import type {
   ActivityItem,
   ActivityFilters,
@@ -26,10 +28,41 @@ import type {
   ActivityEntityType,
 } from '@/types/activity-feed.types'
 
-// API Base URL
-const getApiUrl = () => {
-  const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
-  return `${supabaseUrl}/functions/v1/activity-feed`
+// Hook to track if user is authenticated (for enabling queries)
+function useIsAuthenticated() {
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
+
+  useEffect(() => {
+    // Check initial auth state
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setIsAuthenticated(!!session)
+    })
+
+    // Listen for auth changes
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setIsAuthenticated(!!session)
+    })
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  return isAuthenticated
+}
+
+/**
+ * Helper to build query string from params object
+ */
+function buildQueryString(params: Record<string, string | undefined>): string {
+  const searchParams = new URLSearchParams()
+  for (const [key, value] of Object.entries(params)) {
+    if (value !== undefined && value !== '') {
+      searchParams.set(key, value)
+    }
+  }
+  const queryString = searchParams.toString()
+  return queryString ? `?${queryString}` : ''
 }
 
 // =============================================
@@ -37,7 +70,7 @@ const getApiUrl = () => {
 // =============================================
 
 export function useActivityFeed(initialFilters?: ActivityFilters): UseActivityFeedReturn {
-  const supabase = createClient()
+  const isAuthenticated = useIsAuthenticated()
   const [filters, setFiltersState] = useState<ActivityFilters>(initialFilters || {})
 
   const queryKey = ['activity-feed', filters]
@@ -46,75 +79,36 @@ export function useActivityFeed(initialFilters?: ActivityFilters): UseActivityFe
     useInfiniteQuery<ActivityFeedResponse, Error>({
       queryKey,
       queryFn: async ({ pageParam }) => {
-        const {
-          data: { session },
-        } = await supabase.auth.getSession()
-
-        if (!session?.access_token) {
-          throw new Error('Not authenticated')
-        }
-
         // Build query params
-        const params = new URLSearchParams()
-
-        if (pageParam) {
-          params.set('cursor', pageParam as string)
-        }
-
-        params.set('limit', '20')
-
-        if (filters.entity_types?.length) {
-          params.set('entity_types', filters.entity_types.join(','))
-        }
-
-        if (filters.action_types?.length) {
-          params.set('action_types', filters.action_types.join(','))
-        }
-
-        if (filters.actor_id) {
-          params.set('actor_id', filters.actor_id)
-        }
-
-        if (filters.date_from) {
-          params.set('date_from', filters.date_from)
-        }
-
-        if (filters.date_to) {
-          params.set('date_to', filters.date_to)
-        }
-
-        if (filters.search) {
-          params.set('search', filters.search)
-        }
-
-        if (filters.followed_only) {
-          params.set('followed_only', 'true')
-        }
-
-        if (filters.related_entity_type) {
-          params.set('related_entity_type', filters.related_entity_type)
-        }
-
-        if (filters.related_entity_id) {
-          params.set('related_entity_id', filters.related_entity_id)
-        }
-
-        const response = await fetch(`${getApiUrl()}?${params.toString()}`, {
-          headers: {
-            Authorization: `Bearer ${session.access_token}`,
-            'Content-Type': 'application/json',
-          },
+        const queryParams = buildQueryString({
+          cursor: pageParam as string | undefined,
+          limit: '20',
+          entity_types: filters.entity_types?.join(','),
+          action_types: filters.action_types?.join(','),
+          actor_id: filters.actor_id,
+          date_from: filters.date_from,
+          date_to: filters.date_to,
+          search: filters.search,
+          followed_only: filters.followed_only ? 'true' : undefined,
+          related_entity_type: filters.related_entity_type,
+          related_entity_id: filters.related_entity_id,
         })
 
-        if (!response.ok) {
-          const errorData = await response.json()
-          throw new Error(errorData.error || 'Failed to fetch activities')
+        // Use supabase.functions.invoke for automatic auth handling
+        const { data, error } = await supabase.functions.invoke<ActivityFeedResponse>(
+          `activity-feed${queryParams}`,
+          { method: 'GET' },
+        )
+
+        if (error) {
+          throw new Error(error.message || 'Failed to fetch activities')
         }
 
-        return response.json()
+        return data as ActivityFeedResponse
       },
       getNextPageParam: (lastPage) => (lastPage.has_more ? lastPage.next_cursor : undefined),
       initialPageParam: undefined,
+      enabled: isAuthenticated === true, // Only run when authenticated
       staleTime: 30 * 1000, // 30 seconds
       refetchInterval: 60 * 1000, // 1 minute
     })
@@ -132,7 +126,7 @@ export function useActivityFeed(initialFilters?: ActivityFilters): UseActivityFe
 
   return {
     activities,
-    isLoading,
+    isLoading: isLoading || isAuthenticated === null,
     isFetchingNextPage,
     hasNextPage: hasNextPage || false,
     error: error || null,
@@ -149,7 +143,7 @@ export function useActivityFeed(initialFilters?: ActivityFilters): UseActivityFe
 // =============================================
 
 export function useEntityFollow(): UseEntityFollowReturn {
-  const supabase = createClient()
+  const isAuthenticated = useIsAuthenticated()
   const queryClient = useQueryClient()
 
   // Query for followed entities
@@ -160,57 +154,35 @@ export function useEntityFollow(): UseEntityFollowReturn {
   } = useQuery<FollowingResponse, Error>({
     queryKey: ['entity-following'],
     queryFn: async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
+      // Use supabase.functions.invoke for automatic auth handling
+      const { data, error } = await supabase.functions.invoke<FollowingResponse>(
+        'activity-feed/following',
+        { method: 'GET' },
+      )
 
-      if (!session?.access_token) {
-        throw new Error('Not authenticated')
+      if (error) {
+        throw new Error(error.message || 'Failed to fetch following')
       }
 
-      const response = await fetch(`${getApiUrl()}/following`, {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to fetch following')
-      }
-
-      return response.json()
+      return data as FollowingResponse
     },
+    enabled: isAuthenticated === true, // Only run when authenticated
     staleTime: 5 * 60 * 1000, // 5 minutes
   })
 
   // Follow mutation
   const followMutation = useMutation({
     mutationFn: async (request: FollowEntityRequest) => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-
-      if (!session?.access_token) {
-        throw new Error('Not authenticated')
-      }
-
-      const response = await fetch(`${getApiUrl()}/follow`, {
+      const { data, error } = await supabase.functions.invoke('activity-feed/follow', {
         method: 'POST',
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(request),
+        body: request,
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to follow entity')
+      if (error) {
+        throw new Error(error.message || 'Failed to follow entity')
       }
 
-      return response.json()
+      return data
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['entity-following'] })
@@ -221,33 +193,21 @@ export function useEntityFollow(): UseEntityFollowReturn {
   // Unfollow mutation
   const unfollowMutation = useMutation({
     mutationFn: async (request: UnfollowEntityRequest) => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-
-      if (!session?.access_token) {
-        throw new Error('Not authenticated')
-      }
-
-      const params = new URLSearchParams({
+      const queryParams = buildQueryString({
         entity_type: request.entity_type,
         entity_id: request.entity_id,
       })
 
-      const response = await fetch(`${getApiUrl()}/follow?${params.toString()}`, {
-        method: 'DELETE',
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-      })
+      const { data, error } = await supabase.functions.invoke(
+        `activity-feed/follow${queryParams}`,
+        { method: 'DELETE' },
+      )
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to unfollow entity')
+      if (error) {
+        throw new Error(error.message || 'Failed to unfollow entity')
       }
 
-      return response.json()
+      return data
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['entity-following'] })
@@ -266,7 +226,7 @@ export function useEntityFollow(): UseEntityFollowReturn {
 
   return {
     following,
-    isLoading,
+    isLoading: isLoading || isAuthenticated === null,
     error: error || null,
     followEntity: followMutation.mutateAsync,
     unfollowEntity: unfollowMutation.mutateAsync,
@@ -281,7 +241,7 @@ export function useEntityFollow(): UseEntityFollowReturn {
 // =============================================
 
 export function useActivityPreferences(): UseActivityPreferencesReturn {
-  const supabase = createClient()
+  const isAuthenticated = useIsAuthenticated()
   const queryClient = useQueryClient()
 
   // Query for preferences
@@ -292,57 +252,34 @@ export function useActivityPreferences(): UseActivityPreferencesReturn {
   } = useQuery<{ preferences: ActivityFeedPreferences }, Error>({
     queryKey: ['activity-preferences'],
     queryFn: async () => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
+      // Use supabase.functions.invoke for automatic auth handling
+      const { data, error } = await supabase.functions.invoke<{
+        preferences: ActivityFeedPreferences
+      }>('activity-feed/preferences', { method: 'GET' })
 
-      if (!session?.access_token) {
-        throw new Error('Not authenticated')
+      if (error) {
+        throw new Error(error.message || 'Failed to fetch preferences')
       }
 
-      const response = await fetch(`${getApiUrl()}/preferences`, {
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-      })
-
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to fetch preferences')
-      }
-
-      return response.json()
+      return data as { preferences: ActivityFeedPreferences }
     },
+    enabled: isAuthenticated === true, // Only run when authenticated
     staleTime: 10 * 60 * 1000, // 10 minutes
   })
 
   // Update preferences mutation
   const updateMutation = useMutation({
     mutationFn: async (request: UpdatePreferencesRequest) => {
-      const {
-        data: { session },
-      } = await supabase.auth.getSession()
-
-      if (!session?.access_token) {
-        throw new Error('Not authenticated')
-      }
-
-      const response = await fetch(`${getApiUrl()}/preferences`, {
+      const { data, error } = await supabase.functions.invoke('activity-feed/preferences', {
         method: 'PUT',
-        headers: {
-          Authorization: `Bearer ${session.access_token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(request),
+        body: request,
       })
 
-      if (!response.ok) {
-        const errorData = await response.json()
-        throw new Error(errorData.error || 'Failed to update preferences')
+      if (error) {
+        throw new Error(error.message || 'Failed to update preferences')
       }
 
-      return response.json()
+      return data
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['activity-preferences'] })
@@ -351,7 +288,7 @@ export function useActivityPreferences(): UseActivityPreferencesReturn {
 
   return {
     preferences: preferencesData?.preferences || null,
-    isLoading,
+    isLoading: isLoading || isAuthenticated === null,
     error: error || null,
     updatePreferences: updateMutation.mutateAsync,
     isUpdating: updateMutation.isPending,
