@@ -347,10 +347,31 @@
       "institutionalProfileDescription": "نظرة عامة وتفاصيل المنظمة",
       "orgHierarchy": "التسلسل الهرمي للمنظمة",
       "orgHierarchyDescription": "الهيكل التنظيمي وخطوط التقارير",
+      "showHierarchy": "عرض التسلسل الهرمي للمنظمة",
+      "hideHierarchy": "إخفاء التسلسل الهرمي للمنظمة",
       "keyContacts": "جهات الاتصال الرئيسية",
       "keyContactsDescription": "جهات الاتصال والممثلون الأساسيون",
       "activeMous": "مذكرات التفاهم النشطة",
-      "activeMousDescription": "مذكرات التفاهم والاتفاقيات"
+      "activeMousDescription": "مذكرات التفاهم والاتفاقيات",
+      "fields": {
+        "orgCode": "رمز المنظمة",
+        "orgType": "نوع المنظمة",
+        "website": "الموقع الإلكتروني",
+        "email": "البريد الإلكتروني",
+        "phone": "الهاتف",
+        "address": "العنوان",
+        "headquarters": "المقر الرئيسي",
+        "establishedDate": "تاريخ التأسيس",
+        "parentOrganization": "المنظمة الأم",
+        "logo": "الشعار"
+      },
+      "orgType": {
+        "government": "حكومية",
+        "ngo": "منظمة غير حكومية",
+        "international": "دولية",
+        "private": "قطاع خاص",
+        "academic": "أكاديمية"
+      }
     },
     "person": {
       "professionalProfile": "الملف المهني",
@@ -600,7 +621,62 @@
     "positions": "المناصب",
     "mous": "مذكرات التفاهم",
     "contacts": "جهات الاتصال",
-    "comments": "تعليقات"
+    "comments": "تعليقات",
+    "activity": "النشاط",
+    "languages": "اللغات",
+    "documents": "المستندات",
+    "organization": {
+      "overview": "نظرة عامة",
+      "relationships": "العلاقات",
+      "mous": "مذكرات التفاهم",
+      "contacts": "جهات الاتصال",
+      "activity": "النشاط",
+      "documents": "المستندات"
+    },
+    "forum": {
+      "overview": "نظرة عامة",
+      "members": "الأعضاء",
+      "schedule": "الجدول",
+      "sessions": "الجلسات",
+      "deliverables": "المخرجات",
+      "decisions": "القرارات",
+      "relationships": "العلاقات",
+      "mous": "مذكرات التفاهم",
+      "documents": "المستندات",
+      "timeline": "الجدول الزمني",
+      "activity": "النشاط",
+      "comments": "التعليقات"
+    }
+  },
+  "sessions": {
+    "title": "جلسات المنتدى",
+    "subtitle": "الإصدارات والدورات لهذا المنتدى المتكرر",
+    "addSession": "إضافة جلسة",
+    "createFirst": "إنشاء أول جلسة",
+    "empty": "لا توجد جلسات بعد",
+    "emptyDescription": "هذا المنتدى ليس له جلسات أو دورات بعد. أنشئ ملف ارتباط لتمثيل حالة معينة من هذا المنتدى.",
+    "error": "فشل تحميل الجلسات",
+    "totalCount": "{{count}} جلسة(ات) إجمالاً",
+    "dateNotSet": "التاريخ غير محدد",
+    "participants": "{{count}} مشارك",
+    "status": {
+      "upcoming": "قادمة",
+      "ongoing": "جارية",
+      "completed": "مكتملة",
+      "cancelled": "ملغاة"
+    }
+  },
+  "schedule": {
+    "nextMeeting": "الاجتماع القادم",
+    "meetingFrequency": "تكرار الاجتماعات",
+    "noSchedule": "لا تتوفر معلومات عن الجدول الزمني."
+  },
+  "documents": {
+    "noDocuments": "لا توجد مستندات",
+    "emptyDescription": "لم يتم إرفاق أي مستندات بملف المنظمة هذا بعد.",
+    "forumEmptyDescription": "لم يتم إرفاق أي مستندات بملف المنتدى هذا بعد.",
+    "upload": "رفع مستند",
+    "comingSoon": "رفع المستندات قريباً"
   },
   "carousel": {
     "previous": "السابق",

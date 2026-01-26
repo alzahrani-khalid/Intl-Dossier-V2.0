@@ -347,10 +347,31 @@
       "institutionalProfileDescription": "Organization overview and details",
       "orgHierarchy": "Organization Hierarchy",
       "orgHierarchyDescription": "Organizational structure and reporting lines",
+      "showHierarchy": "Show Organization Hierarchy",
+      "hideHierarchy": "Hide Organization Hierarchy",
       "keyContacts": "Key Contacts",
       "keyContactsDescription": "Primary contacts and representatives",
       "activeMous": "Active MoUs",
-      "activeMousDescription": "Memorandums of Understanding and agreements"
+      "activeMousDescription": "Memorandums of Understanding and agreements",
+      "fields": {
+        "orgCode": "Organization Code",
+        "orgType": "Organization Type",
+        "website": "Website",
+        "email": "Email",
+        "phone": "Phone",
+        "address": "Address",
+        "headquarters": "Headquarters",
+        "establishedDate": "Established Date",
+        "parentOrganization": "Parent Organization",
+        "logo": "Logo"
+      },
+      "orgType": {
+        "government": "Government",
+        "ngo": "NGO",
+        "international": "International",
+        "private": "Private Sector",
+        "academic": "Academic"
+      }
     },
     "person": {
       "professionalProfile": "Professional Profile",
@@ -600,7 +621,62 @@
     "positions": "Positions",
     "mous": "MoUs",
     "contacts": "Contacts",
-    "comments": "Comments"
+    "comments": "Comments",
+    "activity": "Activity",
+    "languages": "Languages",
+    "documents": "Documents",
+    "organization": {
+      "overview": "Overview",
+      "relationships": "Relationships",
+      "mous": "MoUs",
+      "contacts": "Contacts",
+      "activity": "Activity",
+      "documents": "Documents"
+    },
+    "forum": {
+      "overview": "Overview",
+      "members": "Members",
+      "schedule": "Schedule",
+      "sessions": "Sessions",
+      "deliverables": "Deliverables",
+      "decisions": "Decisions",
+      "relationships": "Relationships",
+      "mous": "MoUs",
+      "documents": "Documents",
+      "timeline": "Timeline",
+      "activity": "Activity",
+      "comments": "Comments"
+    }
+  },
+  "sessions": {
+    "title": "Forum Sessions",
+    "subtitle": "Editions and instances of this recurring forum",
+    "addSession": "Add Session",
+    "createFirst": "Create First Session",
+    "empty": "No Sessions Yet",
+    "emptyDescription": "This forum has no sessions or editions yet. Create an engagement dossier to represent a specific instance of this forum.",
+    "error": "Failed to load sessions",
+    "totalCount": "{{count}} session(s) total",
+    "dateNotSet": "Date not set",
+    "participants": "{{count}} participants",
+    "status": {
+      "upcoming": "Upcoming",
+      "ongoing": "Ongoing",
+      "completed": "Completed",
+      "cancelled": "Cancelled"
+    }
+  },
+  "schedule": {
+    "nextMeeting": "Next Meeting",
+    "meetingFrequency": "Meeting Frequency",
+    "noSchedule": "No schedule information available."
+  },
+  "documents": {
+    "noDocuments": "No Documents",
+    "emptyDescription": "No documents have been attached to this organization dossier yet.",
+    "forumEmptyDescription": "No documents have been attached to this forum dossier yet.",
+    "upload": "Upload Document",
+    "comingSoon": "Document uploads coming soon"
   },
   "carousel": {
     "previous": "Previous",
