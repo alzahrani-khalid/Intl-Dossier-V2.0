@@ -146,13 +146,13 @@ export const useOfflineQueue = create<OfflineQueueState & OfflineQueueActions>()
         id: crypto.randomUUID(),
         timestamp: Date.now(),
         retryCount: 0,
-        status: 'pending'
+        status: 'pending',
       }
 
       try {
         await dbManager.saveAction(action)
         set((state) => ({
-          actions: [...state.actions, action]
+          actions: [...state.actions, action],
         }))
       } catch (error) {
         console.error('Failed to save action to IndexedDB:', error)
@@ -163,7 +163,7 @@ export const useOfflineQueue = create<OfflineQueueState & OfflineQueueActions>()
       try {
         await dbManager.deleteAction(id)
         set((state) => ({
-          actions: state.actions.filter(action => action.id !== id)
+          actions: state.actions.filter((action) => action.id !== id),
         }))
       } catch (error) {
         console.error('Failed to delete action from IndexedDB:', error)
@@ -171,15 +171,15 @@ export const useOfflineQueue = create<OfflineQueueState & OfflineQueueActions>()
     },
 
     updateActionStatus: async (id, status, error) => {
-      const action = get().actions.find(a => a.id === id)
+      const action = get().actions.find((a) => a.id === id)
       if (!action) return
 
       const updatedAction = { ...action, status, error }
-      
+
       try {
         await dbManager.saveAction(updatedAction)
         set((state) => ({
-          actions: state.actions.map(a => a.id === id ? updatedAction : a)
+          actions: state.actions.map((a) => (a.id === id ? updatedAction : a)),
         }))
       } catch (error) {
         console.error('Failed to update action in IndexedDB:', error)
@@ -195,21 +195,21 @@ export const useOfflineQueue = create<OfflineQueueState & OfflineQueueActions>()
 
     processQueue: async () => {
       const { actions, isOnline, isProcessing } = get()
-      
+
       if (!isOnline || isProcessing) return
 
       const pendingActions = actions
-        .filter(action => action.status === 'pending')
+        .filter((action) => action.status === 'pending')
         .sort((a, b) => {
           // Sort by priority first, then by timestamp
           const priorityOrder = { high: 3, normal: 2, low: 1 }
           const aPriority = priorityOrder[a.priority]
           const bPriority = priorityOrder[b.priority]
-          
+
           if (aPriority !== bPriority) {
             return bPriority - aPriority
           }
-          
+
           return a.timestamp - b.timestamp
         })
 
@@ -219,13 +219,14 @@ export const useOfflineQueue = create<OfflineQueueState & OfflineQueueActions>()
 
       for (const action of pendingActions) {
         try {
-          await get().executeAction(action)
+          // Call standalone executeAction function (not a store method)
+          await executeAction(action)
         } catch (error) {
           console.error(`Failed to execute action ${action.id}:`, error)
           await get().updateActionStatus(
-            action.id, 
-            'failed', 
-            error instanceof Error ? error.message : 'Unknown error'
+            action.id,
+            'failed',
+            error instanceof Error ? error.message : 'Unknown error',
           )
         }
       }
@@ -237,7 +238,7 @@ export const useOfflineQueue = create<OfflineQueueState & OfflineQueueActions>()
       try {
         await dbManager.clearCompleted()
         set((state) => ({
-          actions: state.actions.filter(action => action.status !== 'completed')
+          actions: state.actions.filter((action) => action.status !== 'completed'),
         }))
       } catch (error) {
         console.error('Failed to clear completed actions:', error)
@@ -246,20 +247,20 @@ export const useOfflineQueue = create<OfflineQueueState & OfflineQueueActions>()
 
     retryFailed: async () => {
       const failedActions = get().getFailedActions()
-      
+
       for (const action of failedActions) {
         if (action.retryCount < action.maxRetries) {
           const updatedAction = {
             ...action,
             status: 'pending' as const,
             retryCount: action.retryCount + 1,
-            error: undefined
+            error: undefined,
           }
-          
+
           try {
             await dbManager.saveAction(updatedAction)
             set((state) => ({
-              actions: state.actions.map(a => a.id === action.id ? updatedAction : a)
+              actions: state.actions.map((a) => (a.id === action.id ? updatedAction : a)),
             }))
           } catch (error) {
             console.error('Failed to retry action:', error)
@@ -269,19 +270,19 @@ export const useOfflineQueue = create<OfflineQueueState & OfflineQueueActions>()
     },
 
     getPendingActions: () => {
-      return get().actions.filter(action => action.status === 'pending')
+      return get().actions.filter((action) => action.status === 'pending')
     },
 
     getFailedActions: () => {
-      return get().actions.filter(action => action.status === 'failed')
-    }
-  }))
+      return get().actions.filter((action) => action.status === 'failed')
+    },
+  })),
 )
 
 // Action executor
 const executeAction = async (action: QueuedAction): Promise<void> => {
   const { updateActionStatus } = useOfflineQueue.getState()
-  
+
   try {
     await updateActionStatus(action.id, 'processing')
 
@@ -289,9 +290,9 @@ const executeAction = async (action: QueuedAction): Promise<void> => {
       method: action.method,
       headers: {
         'Content-Type': 'application/json',
-        ...action.headers
+        ...action.headers,
       },
-      body: action.data ? JSON.stringify(action.data) : undefined
+      body: action.data ? JSON.stringify(action.data) : undefined,
     })
 
     if (!response.ok) {
@@ -334,7 +335,9 @@ initializeStore()
 setupNetworkListeners()
 
 // Export utility functions
-export const addToQueue = (action: Omit<QueuedAction, 'id' | 'timestamp' | 'retryCount' | 'status'>) => {
+export const addToQueue = (
+  action: Omit<QueuedAction, 'id' | 'timestamp' | 'retryCount' | 'status'>,
+) => {
   useOfflineQueue.getState().addAction(action)
 }
 
@@ -352,4 +355,3 @@ export const retryFailed = () => {
 
 // Export the store
 export default useOfflineQueue
-

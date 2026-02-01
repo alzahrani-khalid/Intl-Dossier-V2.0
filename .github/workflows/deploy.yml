@@ -2,7 +2,7 @@ name: Deploy
 
 on:
   push:
-    branches: [main]
+    branches: [main, develop]
   workflow_dispatch:
 
 env:
@@ -59,7 +59,8 @@ jobs:
     name: Deploy to Production
     runs-on: ubuntu-latest
     environment: production
-    if: github.ref == 'refs/heads/main'
+    # Run on main branch, allow skipped staging (staging only runs on develop)
+    if: github.ref == 'refs/heads/main' && (needs.deploy-staging.result == 'success' || needs.deploy-staging.result == 'skipped')
     needs: [deploy-staging]
 
     steps:

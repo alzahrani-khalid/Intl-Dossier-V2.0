@@ -108,27 +108,42 @@ export interface OrganizationExtension {
  * @description
  * Contains individual-specific metadata including professional information,
  * biographical data, and current employment details.
+ * IMPORTANT: Must match database schema and person.types.ts
  *
- * @property title - Professional/honorific title (e.g., "Ambassador", "Minister")
+ * @property id - Extension table ID
+ * @property title_en - Professional/honorific title in English (e.g., "Ambassador")
+ * @property title_ar - Professional/honorific title in Arabic
+ * @property organization_id - Primary organization dossier ID
+ * @property nationality_country_id - Nationality country dossier ID
+ * @property email - Contact email address
+ * @property phone - Contact phone number
+ * @property biography_en - Biography in English
+ * @property biography_ar - Biography in Arabic
  * @property photo_url - Profile photo URL
- * @property birth_date - Date of birth (ISO 8601)
- * @property nationality - ISO 3166-1 alpha-2 country code
- * @property education - List of educational qualifications
- * @property languages - List of spoken languages (ISO 639-1 codes)
- * @property current_position - Current employment details
+ * @property linkedin_url - LinkedIn profile URL
+ * @property twitter_url - Twitter/X profile URL
+ * @property expertise_areas - List of expertise/specialization areas
+ * @property languages - List of spoken languages
+ * @property notes - Internal notes
+ * @property importance_level - 1=Regular, 2=Important, 3=Key, 4=VIP, 5=Critical
  */
 export interface PersonExtension {
-  title?: string
+  id?: string
+  title_en?: string
+  title_ar?: string
+  organization_id?: string
+  nationality_country_id?: string
+  email?: string
+  phone?: string
+  biography_en?: string
+  biography_ar?: string
   photo_url?: string
-  birth_date?: string
-  nationality?: string
-  education?: string[]
+  linkedin_url?: string
+  twitter_url?: string
+  expertise_areas?: string[]
   languages?: string[]
-  current_position?: {
-    title: string
-    organization: string
-    start_date: string
-  }
+  notes?: string
+  importance_level?: 1 | 2 | 3 | 4 | 5
 }
 
 /**

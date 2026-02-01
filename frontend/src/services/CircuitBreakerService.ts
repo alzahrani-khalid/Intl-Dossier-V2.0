@@ -124,12 +124,16 @@ export class CircuitBreakerService {
    */
   private onFailure(): void {
     this.totalFailures++
-    this.failureCount++
+
+    // Store previous failure time before updating
+    const previousFailureTime = this.lastFailureTime
     this.lastFailureTime = Date.now()
 
-    // Clear old failures outside monitoring period
-    if (this.lastFailureTime && Date.now() - this.lastFailureTime > this.monitoringPeriod) {
+    // Clear old failures outside monitoring period (compare against previous time)
+    if (previousFailureTime && this.lastFailureTime - previousFailureTime > this.monitoringPeriod) {
       this.failureCount = 1
+    } else {
+      this.failureCount++
     }
 
     // Open circuit if failure threshold reached

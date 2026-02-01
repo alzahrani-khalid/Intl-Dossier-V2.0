@@ -20,7 +20,7 @@
  * - Touch-friendly UI (44x44px min targets)
  */
 
-import { useState, useCallback, useMemo } from 'react'
+import { useState, useCallback, useMemo, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate } from '@tanstack/react-router'
 import { useForm, FormProvider } from 'react-hook-form'
@@ -235,6 +235,20 @@ export function DossierCreateWizard({
   // Watch form values for draft syncing
   const formValues = form.watch()
   const selectedType = form.watch('type')
+
+  // Sync form with draft values when draft is restored from localStorage
+  // This ensures the form's internal state matches the draft after initial mount
+  useEffect(() => {
+    if (hasDraft && draft.name_en && draft.name_ar) {
+      form.reset({
+        ...draft,
+        type: initialType || draft.type,
+        tags: recommendedTags || draft.tags || [],
+      })
+    }
+    // Only run when hasDraft changes (on initial load with draft)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hasDraft])
 
   // Wizard step state - skip type selection if initialType is provided
   const [currentStep, setCurrentStep] = useState(() => {
@@ -1109,7 +1123,9 @@ export function DossierCreateWizard({
               isDraftSaving={isDraftSaving}
               hasDraft={hasDraft}
               canComplete={
-                !!selectedType && formValues.name_en.length >= 2 && formValues.name_ar.length >= 2
+                !!selectedType &&
+                (formValues.name_en?.length ?? 0) >= 2 &&
+                (formValues.name_ar?.length ?? 0) >= 2
               }
               completeButtonText={t('dossier:form.create')}
               completeButtonTextAr="إنشاء الملف"

@@ -9,6 +9,7 @@ import { useState, useCallback, useEffect, useMemo } from 'react'
 import { useQueries, useQueryClient } from '@tanstack/react-query'
 import { useTranslation } from 'react-i18next'
 import { v4 as uuidv4 } from 'uuid'
+import { supabase } from '@/lib/supabase'
 import type {
   WidgetConfig,
   WidgetType,
@@ -162,205 +163,338 @@ const createDefaultWidgets = (t: (key: string) => string): WidgetConfig[] => [
 ]
 
 // ============================================================================
-// Mock Data Generation (Replace with API calls in production)
+// Real Data Fetching Functions
 // ============================================================================
 
-function generateMockKpiData(metric: string): KpiData {
-  const baseValues: Record<string, number> = {
-    'active-dossiers': 147,
-    'pending-tasks': 23,
-    'overdue-items': 5,
-    'completed-this-week': 42,
-    'response-rate': 94.5,
-    'engagement-count': 18,
-    'intake-volume': 156,
-    'sla-compliance': 98.2,
-  }
-
-  const value = baseValues[metric] || Math.floor(Math.random() * 100)
-  const previousValue = value + (Math.random() - 0.5) * value * 0.2
-  const trendPercentage = ((value - previousValue) / previousValue) * 100
-
-  return {
-    value,
-    previousValue,
-    trend: trendPercentage > 1 ? 'up' : trendPercentage < -1 ? 'down' : 'neutral',
-    trendPercentage: Math.abs(trendPercentage),
-    sparklineData: Array.from({ length: 7 }, () => Math.floor(value * (0.8 + Math.random() * 0.4))),
-  }
-}
-
-function generateMockChartData(dataSource: string): ChartData {
-  switch (dataSource) {
-    case 'work-items-by-status':
-      return {
-        labels: ['Pending', 'In Progress', 'Review', 'Completed'],
-        datasets: [
-          {
-            label: 'Work Items',
-            data: [23, 15, 8, 42],
-            backgroundColor: ['#f59e0b', '#3b82f6', '#8b5cf6', '#10b981'],
-          },
-        ],
-        total: 88,
-      }
-    case 'work-items-by-source':
-      return {
-        labels: ['Tasks', 'Commitments', 'Intake'],
-        datasets: [
-          {
-            label: 'Work Items',
-            data: [35, 28, 25],
-            backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6'],
-          },
-        ],
-        total: 88,
-      }
-    case 'completion-trend':
-      return {
-        labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-        datasets: [
-          {
-            label: 'Completed',
-            data: [8, 12, 6, 15, 10, 4, 7],
-            borderColor: '#10b981',
-          },
-        ],
-      }
-    default:
-      return {
-        labels: ['A', 'B', 'C', 'D'],
-        datasets: [
-          {
-            label: 'Data',
-            data: [25, 35, 20, 20],
-          },
-        ],
-      }
-  }
-}
-
-function generateMockEvents(): EventData[] {
+async function fetchKpiData(metric: string): Promise<KpiData> {
   const now = new Date()
-  return [
-    {
-      id: '1',
-      title: 'Team Meeting',
-      type: 'meeting',
-      startDate: new Date(now.getTime() + 2 * 60 * 60 * 1000).toISOString(),
-      description: 'Weekly sync with the team',
-    },
-    {
-      id: '2',
-      title: 'Report Deadline',
-      type: 'deadline',
-      startDate: new Date(now.getTime() + 24 * 60 * 60 * 1000).toISOString(),
-      description: 'Q4 report submission',
-      priority: 'high',
-    },
-    {
-      id: '3',
-      title: 'Follow-up: Saudi Embassy',
-      type: 'follow-up',
-      startDate: new Date(now.getTime() + 48 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: '4',
-      title: 'MOU Renewal - UAE',
-      type: 'mou-renewal',
-      startDate: new Date(now.getTime() + 72 * 60 * 60 * 1000).toISOString(),
-      priority: 'high',
-    },
-    {
-      id: '5',
-      title: 'Engagement Review',
-      type: 'engagement',
-      startDate: new Date(now.getTime() + 96 * 60 * 60 * 1000).toISOString(),
-    },
-  ]
+  const weekAgo = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000)
+  const twoWeeksAgo = new Date(now.getTime() - 14 * 24 * 60 * 60 * 1000)
+
+  try {
+    let value = 0
+    let previousValue = 0
+
+    switch (metric) {
+      case 'active-dossiers': {
+        const [current, previous] = await Promise.all([
+          supabase
+            .from('dossiers')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'active'),
+          supabase
+            .from('dossiers')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'active')
+            .lt('created_at', weekAgo.toISOString()),
+        ])
+        value = current.count || 0
+        previousValue = previous.count || value
+        break
+      }
+      case 'pending-tasks': {
+        const [current, previous] = await Promise.all([
+          supabase
+            .from('work_items')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'pending'),
+          supabase
+            .from('work_items')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'pending')
+            .lt('created_at', weekAgo.toISOString()),
+        ])
+        value = current.count || 0
+        previousValue = previous.count || value
+        break
+      }
+      case 'overdue-items': {
+        const { count } = await supabase
+          .from('work_items')
+          .select('id', { count: 'exact', head: true })
+          .lt('deadline', now.toISOString())
+          .neq('status', 'completed')
+        value = count || 0
+        previousValue = value // No historical comparison for overdue
+        break
+      }
+      case 'completed-this-week': {
+        const [current, previous] = await Promise.all([
+          supabase
+            .from('work_items')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'completed')
+            .gte('updated_at', weekAgo.toISOString()),
+          supabase
+            .from('work_items')
+            .select('id', { count: 'exact', head: true })
+            .eq('status', 'completed')
+            .gte('updated_at', twoWeeksAgo.toISOString())
+            .lt('updated_at', weekAgo.toISOString()),
+        ])
+        value = current.count || 0
+        previousValue = previous.count || value
+        break
+      }
+      case 'engagement-count': {
+        const { count } = await supabase
+          .from('dossiers')
+          .select('id', { count: 'exact', head: true })
+          .eq('type', 'engagement')
+          .eq('status', 'active')
+        value = count || 0
+        previousValue = value
+        break
+      }
+      case 'intake-volume': {
+        const [current, previous] = await Promise.all([
+          supabase
+            .from('intake_tickets')
+            .select('id', { count: 'exact', head: true })
+            .gte('created_at', weekAgo.toISOString()),
+          supabase
+            .from('intake_tickets')
+            .select('id', { count: 'exact', head: true })
+            .gte('created_at', twoWeeksAgo.toISOString())
+            .lt('created_at', weekAgo.toISOString()),
+        ])
+        value = current.count || 0
+        previousValue = previous.count || value
+        break
+      }
+      default:
+        value = 0
+        previousValue = 0
+    }
+
+    const trendPercentage = previousValue > 0 ? ((value - previousValue) / previousValue) * 100 : 0
+
+    return {
+      value,
+      previousValue,
+      trend: trendPercentage > 1 ? 'up' : trendPercentage < -1 ? 'down' : 'neutral',
+      trendPercentage: Math.abs(trendPercentage),
+      sparklineData: [], // Could add historical data if needed
+    }
+  } catch (error) {
+    console.error('Failed to fetch KPI data:', error)
+    return {
+      value: 0,
+      previousValue: 0,
+      trend: 'neutral',
+      trendPercentage: 0,
+      sparklineData: [],
+    }
+  }
 }
 
-function generateMockTasks() {
-  return [
-    {
-      id: '1',
-      title: 'Review dossier updates',
-      source: 'task' as const,
-      priority: 'high' as const,
-      status: 'pending' as const,
-      deadline: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: '2',
-      title: 'Prepare briefing document',
-      source: 'commitment' as const,
-      priority: 'urgent' as const,
-      status: 'in_progress' as const,
-      deadline: new Date(Date.now() + 2 * 60 * 60 * 1000).toISOString(),
-      isOverdue: false,
-    },
-    {
-      id: '3',
-      title: 'Response to intake ticket #156',
-      source: 'intake' as const,
-      priority: 'medium' as const,
-      status: 'pending' as const,
-      deadline: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-      isOverdue: true,
-    },
-    {
-      id: '4',
-      title: 'Update contact information',
-      source: 'task' as const,
-      priority: 'low' as const,
-      status: 'pending' as const,
-    },
-    {
-      id: '5',
-      title: 'Follow up on meeting notes',
-      source: 'commitment' as const,
-      priority: 'medium' as const,
-      status: 'completed' as const,
-    },
-  ]
+async function fetchChartData(dataSource: string): Promise<ChartData> {
+  try {
+    switch (dataSource) {
+      case 'work-items-by-status': {
+        const { data } = await supabase.from('work_items').select('status')
+
+        const statusCounts: Record<string, number> = {
+          pending: 0,
+          in_progress: 0,
+          review: 0,
+          completed: 0,
+        }
+
+        for (const item of data || []) {
+          if (statusCounts[item.status] !== undefined) {
+            statusCounts[item.status]++
+          }
+        }
+
+        const total = Object.values(statusCounts).reduce((a, b) => a + b, 0)
+
+        return {
+          labels: ['Pending', 'In Progress', 'Review', 'Completed'],
+          datasets: [
+            {
+              label: 'Work Items',
+              data: [
+                statusCounts.pending,
+                statusCounts.in_progress,
+                statusCounts.review,
+                statusCounts.completed,
+              ],
+              backgroundColor: ['#f59e0b', '#3b82f6', '#8b5cf6', '#10b981'],
+            },
+          ],
+          total,
+        }
+      }
+      case 'work-items-by-source': {
+        const { data } = await supabase.from('work_items').select('source')
+
+        const sourceCounts: Record<string, number> = {
+          task: 0,
+          commitment: 0,
+          intake: 0,
+        }
+
+        for (const item of data || []) {
+          if (sourceCounts[item.source] !== undefined) {
+            sourceCounts[item.source]++
+          }
+        }
+
+        const total = Object.values(sourceCounts).reduce((a, b) => a + b, 0)
+
+        return {
+          labels: ['Tasks', 'Commitments', 'Intake'],
+          datasets: [
+            {
+              label: 'Work Items',
+              data: [sourceCounts.task, sourceCounts.commitment, sourceCounts.intake],
+              backgroundColor: ['#10b981', '#3b82f6', '#8b5cf6'],
+            },
+          ],
+          total,
+        }
+      }
+      case 'completion-trend': {
+        const weekAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000)
+        const { data } = await supabase
+          .from('work_items')
+          .select('updated_at')
+          .eq('status', 'completed')
+          .gte('updated_at', weekAgo.toISOString())
+
+        // Group by day
+        const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+        const dayCounts = [0, 0, 0, 0, 0, 0, 0]
+
+        for (const item of data || []) {
+          const day = new Date(item.updated_at).getDay()
+          dayCounts[day]++
+        }
+
+        // Reorder to start from Monday
+        const reorderedDays = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        const reorderedCounts = [
+          dayCounts[1],
+          dayCounts[2],
+          dayCounts[3],
+          dayCounts[4],
+          dayCounts[5],
+          dayCounts[6],
+          dayCounts[0],
+        ]
+
+        return {
+          labels: reorderedDays,
+          datasets: [
+            {
+              label: 'Completed',
+              data: reorderedCounts,
+              borderColor: '#10b981',
+            },
+          ],
+        }
+      }
+      default:
+        return {
+          labels: [],
+          datasets: [],
+        }
+    }
+  } catch (error) {
+    console.error('Failed to fetch chart data:', error)
+    return { labels: [], datasets: [] }
+  }
 }
 
-function generateMockNotifications(): NotificationData[] {
-  return [
-    {
-      id: '1',
-      title: 'New Task Assigned',
-      message: 'You have been assigned to review the Q4 report',
-      category: 'task-assigned',
-      isRead: false,
-      createdAt: new Date(Date.now() - 5 * 60 * 1000).toISOString(),
-      actionUrl: '/my-work',
-    },
-    {
-      id: '2',
-      title: 'Deadline Approaching',
-      message: 'Report submission due in 2 hours',
-      category: 'deadline-approaching',
-      isRead: false,
-      createdAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
-    },
-    {
-      id: '3',
-      title: 'Status Updated',
-      message: 'Dossier #147 status changed to Active',
-      category: 'status-change',
-      isRead: true,
-      createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-    },
-    {
-      id: '4',
-      title: 'You were mentioned',
-      message: 'Ahmed mentioned you in a comment',
-      category: 'mention',
-      isRead: false,
-      createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
-    },
-  ]
+async function fetchEvents(maxItems = 5): Promise<EventData[]> {
+  try {
+    const now = new Date()
+    const { data } = await supabase
+      .from('calendar_entries')
+      .select('id, title_en, title_ar, entry_type, start_datetime, description_en, description_ar')
+      .gte('start_datetime', now.toISOString())
+      .order('start_datetime', { ascending: true })
+      .limit(maxItems)
+
+    return (data || []).map((entry) => ({
+      id: entry.id,
+      title: entry.title_en || entry.title_ar || 'Untitled',
+      type: entry.entry_type || 'other',
+      startDate: entry.start_datetime,
+      description: entry.description_en || entry.description_ar,
+    }))
+  } catch (error) {
+    console.error('Failed to fetch events:', error)
+    return []
+  }
+}
+
+async function fetchTasks(maxItems = 10, showCompleted = false) {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return []
+
+    let query = supabase
+      .from('work_items')
+      .select('id, title, source, priority, status, deadline')
+      .eq('assignee_id', user.id)
+      .order('deadline', { ascending: true, nullsFirst: false })
+      .limit(maxItems)
+
+    if (!showCompleted) {
+      query = query.neq('status', 'completed')
+    }
+
+    const { data } = await query
+
+    const now = new Date()
+    return (data || []).map((item) => ({
+      id: item.id,
+      title: item.title,
+      source: item.source || 'task',
+      priority: item.priority || 'medium',
+      status: item.status || 'pending',
+      deadline: item.deadline,
+      isOverdue: item.deadline
+        ? new Date(item.deadline) < now && item.status !== 'completed'
+        : false,
+    }))
+  } catch (error) {
+    console.error('Failed to fetch tasks:', error)
+    return []
+  }
+}
+
+async function fetchNotifications(): Promise<NotificationData[]> {
+  try {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser()
+    if (!user) return []
+
+    const { data } = await supabase
+      .from('notifications')
+      .select('id, title, message, category, is_read, created_at, action_url')
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(10)
+
+    return (data || []).map((n) => ({
+      id: n.id,
+      title: n.title,
+      message: n.message,
+      category: n.category || 'general',
+      isRead: n.is_read || false,
+      createdAt: n.created_at,
+      actionUrl: n.action_url,
+    }))
+  } catch (error) {
+    console.error('Failed to fetch notifications:', error)
+    return []
+  }
 }
 
 // ============================================================================
@@ -369,25 +503,26 @@ function generateMockNotifications(): NotificationData[] {
 
 function fetchWidgetData(widget: WidgetConfig) {
   return async () => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
-    // Return mock data based on widget type
+    // Fetch real data based on widget type
     switch (widget.type) {
       case 'kpi-card': {
         const settings = widget.settings as { metric: string }
-        return generateMockKpiData(settings.metric)
+        return fetchKpiData(settings.metric)
       }
       case 'chart': {
         const settings = widget.settings as { dataSource: string }
-        return generateMockChartData(settings.dataSource)
+        return fetchChartData(settings.dataSource)
       }
-      case 'upcoming-events':
-        return generateMockEvents()
-      case 'task-list':
-        return generateMockTasks()
+      case 'upcoming-events': {
+        const settings = widget.settings as { maxItems?: number }
+        return fetchEvents(settings.maxItems || 5)
+      }
+      case 'task-list': {
+        const settings = widget.settings as { maxItems?: number; showCompleted?: boolean }
+        return fetchTasks(settings.maxItems || 10, settings.showCompleted || false)
+      }
       case 'notifications':
-        return generateMockNotifications()
+        return fetchNotifications()
       case 'quick-actions':
         return null // Quick actions don't need data
       default:

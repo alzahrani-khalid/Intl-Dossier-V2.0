@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { User, Camera, Trash2 } from 'lucide-react'
+import { User, Camera, Trash2, Loader2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Label } from '@/components/ui/label'
 import { SettingsSectionCard, SettingsGroup } from '../SettingsSectionCard'
 import { cn } from '@/lib/utils'
+import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
 
 interface ProfileSettingsSectionProps {
   form: UseFormReturn<any>
@@ -23,6 +25,7 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
   const { t, i18n } = useTranslation('settings')
   const isRTL = i18n.language === 'ar'
   const [avatarPreview, setAvatarPreview] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
   const displayName = form.watch('display_name')
   const avatarUrl = form.watch('avatar_url')
@@ -36,20 +39,82 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
         .slice(0, 2)
     : 'U'
 
-  const handleAvatarUpload = useCallback((event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0]
-    if (file) {
-      // Preview
+  const handleAvatarUpload = useCallback(
+    async (event: React.ChangeEvent<HTMLInputElement>) => {
+      const file = event.target.files?.[0]
+      if (!file) return
+
+      // Validate file type
+      const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp']
+      if (!validTypes.includes(file.type)) {
+        toast.error(t('profile.invalidFileType'))
+        return
+      }
+
+      // Validate file size (max 5MB)
+      const maxSize = 5 * 1024 * 1024
+      if (file.size > maxSize) {
+        toast.error(t('profile.fileTooLarge'))
+        return
+      }
+
+      // Show preview immediately
       const reader = new FileReader()
       reader.onloadend = () => {
         setAvatarPreview(reader.result as string)
       }
       reader.readAsDataURL(file)
 
-      // TODO: Implement actual upload to Supabase Storage
-      // For now, just set a preview
-    }
-  }, [])
+      setIsUploading(true)
+
+      try {
+        // Get current user
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        if (!user) {
+          throw new Error('User not found')
+        }
+
+        // Generate unique filename
+        const fileExt = file.name.split('.').pop()
+        const fileName = `${user.id}/avatar-${Date.now()}.${fileExt}`
+
+        // Upload to Supabase Storage
+        const { error: uploadError } = await supabase.storage
+          .from('avatars')
+          .upload(fileName, file, {
+            cacheControl: '3600',
+            upsert: true,
+          })
+
+        if (uploadError) {
+          // If bucket doesn't exist, show helpful error
+          if (uploadError.message.includes('not found')) {
+            throw new Error('Avatar storage not configured. Please contact administrator.')
+          }
+          throw uploadError
+        }
+
+        // Get public URL
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('avatars').getPublicUrl(fileName)
+
+        // Update form with new avatar URL
+        form.setValue('avatar_url', publicUrl, { shouldDirty: true })
+        toast.success(t('profile.avatarUploaded'))
+      } catch (error) {
+        const message = error instanceof Error ? error.message : 'Failed to upload avatar'
+        toast.error(message)
+        // Clear preview on error
+        setAvatarPreview(null)
+      } finally {
+        setIsUploading(false)
+      }
+    },
+    [form, t],
+  )
 
   const handleRemoveAvatar = useCallback(() => {
     form.setValue('avatar_url', null, { shouldDirty: true })
@@ -77,17 +142,22 @@ export function ProfileSettingsSection({ form, email }: ProfileSettingsSectionPr
                 'flex items-center justify-center',
                 'h-8 w-8 rounded-full',
                 'bg-primary text-primary-foreground',
-                'cursor-pointer hover:bg-primary/90',
                 'transition-colors',
+                isUploading ? 'cursor-wait' : 'cursor-pointer hover:bg-primary/90',
               )}
             >
-              <Camera className="h-4 w-4" />
+              {isUploading ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <Camera className="h-4 w-4" />
+              )}
               <input
                 id="avatar-upload"
                 type="file"
-                accept="image/jpeg,image/png,image/gif"
+                accept="image/jpeg,image/png,image/gif,image/webp"
                 className="sr-only"
                 onChange={handleAvatarUpload}
+                disabled={isUploading}
               />
             </label>
           </div>

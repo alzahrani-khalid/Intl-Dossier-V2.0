@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Lock, Smartphone, Key, Clock, AlertCircle, Loader2 } from 'lucide-react'
+import { Lock, Smartphone, Key, Clock, AlertCircle, Loader2, CheckCircle2 } from 'lucide-react'
 import { UseFormReturn } from 'react-hook-form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -19,6 +19,8 @@ import { Separator } from '@/components/ui/separator'
 import { SettingsSectionCard, SettingsItem, SettingsGroup } from '../SettingsSectionCard'
 import { SESSION_TIMEOUT_OPTIONS } from '@/types/settings.types'
 import { cn } from '@/lib/utils'
+import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
 
 interface SecuritySettingsSectionProps {
   form: UseFormReturn<any>
@@ -33,6 +35,8 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
   const isRTL = i18n.language === 'ar'
 
   const [isChangingPassword, setIsChangingPassword] = useState(false)
+  const [passwordError, setPasswordError] = useState<string | null>(null)
+  const [passwordSuccess, setPasswordSuccess] = useState(false)
   const [passwordForm, setPasswordForm] = useState({
     current: '',
     new: '',
@@ -43,11 +47,65 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
   const sessionTimeout = form.watch('session_timeout')
 
   const handlePasswordChange = async () => {
-    // TODO: Implement password change via Supabase Auth
+    // Validate passwords match
+    if (passwordForm.new !== passwordForm.confirm) {
+      setPasswordError(t('security.passwordMismatch'))
+      return
+    }
+
+    // Validate password requirements (min 8 chars, 1 uppercase, 1 number)
+    if (passwordForm.new.length < 8) {
+      setPasswordError(t('security.passwordTooShort'))
+      return
+    }
+
     setIsChangingPassword(true)
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsChangingPassword(false)
-    setPasswordForm({ current: '', new: '', confirm: '' })
+    setPasswordError(null)
+    setPasswordSuccess(false)
+
+    try {
+      // Re-authenticate with current password first
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user?.email) {
+        throw new Error('User not found')
+      }
+
+      // Verify current password by attempting to sign in
+      const { error: verifyError } = await supabase.auth.signInWithPassword({
+        email: user.email,
+        password: passwordForm.current,
+      })
+
+      if (verifyError) {
+        setPasswordError(t('security.currentPasswordIncorrect'))
+        setIsChangingPassword(false)
+        return
+      }
+
+      // Update password via Supabase Auth
+      const { error: updateError } = await supabase.auth.updateUser({
+        password: passwordForm.new,
+      })
+
+      if (updateError) {
+        throw updateError
+      }
+
+      setPasswordSuccess(true)
+      setPasswordForm({ current: '', new: '', confirm: '' })
+      toast.success(t('security.passwordChanged'))
+
+      // Clear success message after 3 seconds
+      setTimeout(() => setPasswordSuccess(false), 3000)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Failed to change password'
+      setPasswordError(message)
+      toast.error(message)
+    } finally {
+      setIsChangingPassword(false)
+    }
   }
 
   const getTimeoutLabel = (minutes: number) => {
@@ -199,6 +257,30 @@ export function SecuritySettingsSection({ form }: SecuritySettingsSectionProps) 
                 className="max-w-md"
               />
             </div>
+
+            {/* Error message */}
+            {passwordError && (
+              <Card className="border-destructive/50 bg-destructive/5 max-w-md">
+                <CardContent className="p-3">
+                  <div className="flex items-center gap-2 text-destructive text-sm">
+                    <AlertCircle className="h-4 w-4 shrink-0" />
+                    <span>{passwordError}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {/* Success message */}
+            {passwordSuccess && (
+              <Card className="border-green-500/50 bg-green-50 dark:bg-green-950/20 max-w-md">
+                <CardContent className="p-3">
+                  <div className="flex items-center gap-2 text-green-700 dark:text-green-400 text-sm">
+                    <CheckCircle2 className="h-4 w-4 shrink-0" />
+                    <span>{t('security.passwordChanged')}</span>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
 
             <Button
               type="button"

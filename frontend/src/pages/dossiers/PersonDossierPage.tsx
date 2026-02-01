@@ -6,21 +6,18 @@
  * Renders PersonDossierDetail component.
  */
 
-import type { PersonDossier } from '@/lib/dossier-type-guards';
-import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout';
-import { PersonDossierDetail } from '@/components/Dossier/PersonDossierDetail';
+import type { PersonDossier } from '@/lib/dossier-type-guards'
+import { DossierDetailLayout } from '@/components/Dossier/DossierDetailLayout'
+import { PersonDossierDetail } from '@/components/Dossier/PersonDossierDetail'
 
 interface PersonDossierPageProps {
-  dossier: PersonDossier;
+  dossier: PersonDossier
 }
 
 export function PersonDossierPage({ dossier }: PersonDossierPageProps) {
   return (
-    <DossierDetailLayout
-      dossier={dossier}
-      gridClassName="lg:grid-cols-[1fr_2fr]"
-    >
+    <DossierDetailLayout dossier={dossier}>
       <PersonDossierDetail dossier={dossier} />
     </DossierDetailLayout>
-  );
+  )
 }

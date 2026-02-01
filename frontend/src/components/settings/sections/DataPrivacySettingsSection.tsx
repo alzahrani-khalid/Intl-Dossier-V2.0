@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Shield, Download, Monitor, Trash2, Loader2, LogOut, AlertTriangle } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -20,6 +20,9 @@ import {
 } from '@/components/ui/alert-dialog'
 import { SettingsSectionCard, SettingsGroup } from '../SettingsSectionCard'
 import { cn } from '@/lib/utils'
+import { supabase } from '@/lib/supabase'
+import { toast } from 'sonner'
+import { useAuthStore } from '@/store/authStore'
 
 interface Session {
   id: string
@@ -37,48 +40,179 @@ interface Session {
 export function DataPrivacySettingsSection() {
   const { t, i18n } = useTranslation('settings')
   const isRTL = i18n.language === 'ar'
+  const { logout } = useAuthStore()
 
   const [isExporting, setIsExporting] = useState(false)
   const [isSigningOutAll, setIsSigningOutAll] = useState(false)
+  const [isDeleting, setIsDeleting] = useState(false)
   const [deleteConfirmText, setDeleteConfirmText] = useState('')
+  const [sessions, setSessions] = useState<Session[]>([])
+  const [isLoadingSessions, setIsLoadingSessions] = useState(true)
 
-  // Mock sessions data - in production, fetch from Supabase
-  const sessions: Session[] = [
-    {
-      id: '1',
-      device: 'MacBook Pro',
-      browser: 'Chrome 120',
-      location: 'Riyadh, SA',
-      lastActive: 'Now',
-      isCurrent: true,
-    },
-    {
-      id: '2',
-      device: 'iPhone 15',
-      browser: 'Safari',
-      location: 'Riyadh, SA',
-      lastActive: '2 hours ago',
-      isCurrent: false,
-    },
-  ]
+  // Fetch active sessions on mount
+  useEffect(() => {
+    const fetchSessions = async () => {
+      try {
+        const {
+          data: { session },
+        } = await supabase.auth.getSession()
+        if (session) {
+          // Current session info
+          const currentSession: Session = {
+            id: 'current',
+            device: getDeviceInfo(),
+            browser: getBrowserInfo(),
+            location: 'Current location',
+            lastActive: 'Now',
+            isCurrent: true,
+          }
+          setSessions([currentSession])
+        }
+      } catch (error) {
+        console.error('Failed to fetch sessions:', error)
+      } finally {
+        setIsLoadingSessions(false)
+      }
+    }
+
+    fetchSessions()
+  }, [])
+
+  // Helper to get browser info
+  const getBrowserInfo = (): string => {
+    const ua = navigator.userAgent
+    if (ua.includes('Chrome')) return 'Chrome'
+    if (ua.includes('Firefox')) return 'Firefox'
+    if (ua.includes('Safari')) return 'Safari'
+    if (ua.includes('Edge')) return 'Edge'
+    return 'Unknown Browser'
+  }
+
+  // Helper to get device info
+  const getDeviceInfo = (): string => {
+    const ua = navigator.userAgent
+    if (ua.includes('iPhone')) return 'iPhone'
+    if (ua.includes('iPad')) return 'iPad'
+    if (ua.includes('Android')) return 'Android Device'
+    if (ua.includes('Mac')) return 'Mac'
+    if (ua.includes('Windows')) return 'Windows PC'
+    if (ua.includes('Linux')) return 'Linux'
+    return 'Unknown Device'
+  }
 
   const handleExportData = async () => {
     setIsExporting(true)
-    // TODO: Implement data export via Supabase Edge Function
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-    setIsExporting(false)
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) throw new Error('User not found')
+
+      // Fetch user data from various tables
+      const [{ data: profile }, { data: settings }, { data: activity }] = await Promise.all([
+        supabase.from('users').select('*').eq('id', user.id).single(),
+        supabase.from('user_settings').select('*').eq('user_id', user.id).single(),
+        supabase.from('activity_log').select('*').eq('user_id', user.id).limit(100),
+      ])
+
+      // Compile export data
+      const exportData = {
+        exportedAt: new Date().toISOString(),
+        user: {
+          id: user.id,
+          email: user.email,
+          createdAt: user.created_at,
+        },
+        profile: profile || {},
+        settings: settings || {},
+        recentActivity: activity || [],
+      }
+
+      // Create and download JSON file
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' })
+      const url = URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `my-data-export-${new Date().toISOString().split('T')[0]}.json`
+      document.body.appendChild(a)
+      a.click()
+      document.body.removeChild(a)
+      URL.revokeObjectURL(url)
+
+      toast.success(t('dataPrivacy.exportSuccess'))
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Export failed'
+      toast.error(message)
+    } finally {
+      setIsExporting(false)
+    }
   }
 
   const handleSignOutAll = async () => {
     setIsSigningOutAll(true)
-    // TODO: Implement sign out all sessions via Supabase Auth
-    await new Promise((resolve) => setTimeout(resolve, 1500))
-    setIsSigningOutAll(false)
+
+    try {
+      // Sign out from all sessions using Supabase Auth
+      const { error } = await supabase.auth.signOut({ scope: 'global' })
+
+      if (error) throw error
+
+      toast.success(t('dataPrivacy.signedOutAll'))
+
+      // Redirect to login after short delay
+      setTimeout(() => {
+        logout()
+        window.location.href = '/login'
+      }, 1000)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Sign out failed'
+      toast.error(message)
+    } finally {
+      setIsSigningOutAll(false)
+    }
   }
 
   const handleDeleteAccount = async () => {
-    // TODO: Implement account deletion
-    console.log('Account deletion initiated')
+    if (deleteConfirmText !== 'DELETE') return
+
+    setIsDeleting(true)
+
+    try {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser()
+      if (!user) throw new Error('User not found')
+
+      // Soft delete: Update user status to 'deleted' and anonymize data
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({
+          status: 'deleted',
+          deleted_at: new Date().toISOString(),
+          email: `deleted-${user.id}@deleted.local`,
+          full_name: 'Deleted User',
+          avatar_url: null,
+        })
+        .eq('id', user.id)
+
+      if (updateError) throw updateError
+
+      // Sign out the user
+      await supabase.auth.signOut()
+
+      toast.success(t('dataPrivacy.accountDeleted'))
+
+      // Redirect to login
+      setTimeout(() => {
+        window.location.href = '/login'
+      }, 1500)
+    } catch (error) {
+      const message = error instanceof Error ? error.message : 'Account deletion failed'
+      toast.error(message)
+    } finally {
+      setIsDeleting(false)
+    }
   }
 
   return (
@@ -254,10 +388,17 @@ export function DataPrivacySettingsSection() {
                         </AlertDialogCancel>
                         <AlertDialogAction
                           onClick={handleDeleteAccount}
-                          disabled={deleteConfirmText !== 'DELETE'}
+                          disabled={deleteConfirmText !== 'DELETE' || isDeleting}
                           className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
                         >
-                          {t('dataPrivacy.deleteButton')}
+                          {isDeleting ? (
+                            <>
+                              <Loader2 className="h-4 w-4 me-2 animate-spin" />
+                              {t('dataPrivacy.deleting')}
+                            </>
+                          ) : (
+                            t('dataPrivacy.deleteButton')
+                          )}
                         </AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
