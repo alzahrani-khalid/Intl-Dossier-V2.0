@@ -123,3 +123,4 @@ docker/anythingllm-storage/
 .worktrees/
 .security-key
 logs/security/
+.playwright-mcp/
