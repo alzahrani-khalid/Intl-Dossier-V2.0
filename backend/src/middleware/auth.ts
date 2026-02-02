@@ -4,6 +4,29 @@ import { supabaseAdmin } from '../config/supabase'
 import { UnauthorizedError, ForbiddenError } from '../utils/validation'
 import { logInfo, logError } from '../utils/logger'
 
+/**
+ * Decoded JWT payload structure
+ */
+interface DecodedJWT {
+  userId: string
+  email?: string
+  role?: string
+  iat?: number
+  exp?: number
+}
+
+/**
+ * Type guard to validate decoded JWT has required fields
+ */
+function isValidDecodedJWT(decoded: unknown): decoded is DecodedJWT {
+  return (
+    typeof decoded === 'object' &&
+    decoded !== null &&
+    'userId' in decoded &&
+    typeof (decoded as DecodedJWT).userId === 'string'
+  )
+}
+
 // Extend Express Request type
 declare global {
   namespace Express {
@@ -40,7 +63,11 @@ export const authenticateToken = async (req: Request, res: Response, next: NextF
     }
 
     // Verify JWT token
-    const decoded = jwt.verify(token, JWT_SECRET) as any
+    const decoded = jwt.verify(token, JWT_SECRET)
+
+    if (!isValidDecodedJWT(decoded)) {
+      throw new UnauthorizedError('Invalid token payload')
+    }
 
     // Verify user still exists and is active
     const { data: user, error } = await supabaseAdmin
@@ -145,7 +172,11 @@ export const optionalAuth = async (req: Request, res: Response, next: NextFuncti
     }
 
     // Try to verify token
-    const decoded = jwt.verify(token, JWT_SECRET) as any
+    const decoded = jwt.verify(token, JWT_SECRET)
+
+    if (!isValidDecodedJWT(decoded)) {
+      return next() // Invalid payload, continue without auth
+    }
 
     // Try to get user
     const { data: user } = await supabaseAdmin

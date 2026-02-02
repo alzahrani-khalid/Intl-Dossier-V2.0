@@ -22,6 +22,7 @@ const supabaseUrl = Deno.env.get('SUPABASE_URL') ?? '';
 const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '';
 
 // Dossier types to search
+// Note: elected_official is now a person_subtype, not a separate dossier type
 const DOSSIER_TYPES = [
   'country',
   'organization',
@@ -30,7 +31,6 @@ const DOSSIER_TYPES = [
   'topic',
   'working_group',
   'person',
-  'elected_official',
 ];
 
 // Related work types

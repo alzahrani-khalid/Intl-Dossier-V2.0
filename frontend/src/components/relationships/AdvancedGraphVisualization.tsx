@@ -158,7 +158,6 @@ const NODE_COLORS: Record<string, string> = {
   person: '#f97316',
   topic: '#84cc16',
   working_group: '#06b6d4',
-  elected_official: '#a855f7',
 }
 
 const EDGE_COLORS: Record<string, string> = {

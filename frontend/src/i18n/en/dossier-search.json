@@ -21,8 +21,7 @@
     "engagement": "Engagement",
     "topic": "Topic",
     "working_group": "Working Group",
-    "person": "Person",
-    "elected_official": "Elected Official"
+    "person": "Person"
   },
   "status": {
     "all": "All Status",

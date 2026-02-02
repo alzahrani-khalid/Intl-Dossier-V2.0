@@ -65,8 +65,23 @@ export interface WorkItemDossierLink {
 
 /**
  * Dossier type for categorization
+ * All 7 dossier types as defined in CLAUDE.md
+ * Note: elected_official is now a person_subtype, not a separate dossier type
  */
-export type DossierType = 'country' | 'organization' | 'forum' | 'theme'
+export type DossierType =
+  | 'country'
+  | 'organization'
+  | 'forum'
+  | 'engagement'
+  | 'topic'
+  | 'working_group'
+  | 'person'
+
+/**
+ * Person subtype discriminator
+ * Used to distinguish between standard persons and elected officials
+ */
+export type PersonSubtype = 'standard' | 'elected_official'
 
 /**
  * Dossier status

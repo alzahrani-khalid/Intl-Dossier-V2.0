@@ -20,7 +20,10 @@
     "topic": "Topic",
     "theme": "Theme",
     "working_group": "Working Group",
-    "person": "Person",
+    "person": "Person"
+  },
+  "personSubtype": {
+    "standard": "Person",
     "elected_official": "Elected Official"
   },
   "typeDescription": {
@@ -31,8 +34,7 @@
     "topic": "Policy areas, strategic priorities, and topical focus areas",
     "theme": "Policy areas, strategic priorities, and topical focus areas",
     "working_group": "Task forces, committees, and collaborative working bodies",
-    "person": "VIP individuals including ambassadors, ministers, and key contacts",
-    "elected_official": "Elected officials and government contacts with office, district, and party information"
+    "person": "VIP individuals including ambassadors, ministers, key contacts, and elected officials"
   },
   "typeGuide": {
     "country": {
@@ -58,31 +60,23 @@
       "notFor": "Not for individual people - use Person for that. Not for countries - use Country"
     },
     "person": {
-      "whenToUse": "Use for VIP individuals you need to track relationships and interactions with",
+      "whenToUse": "Use for VIP individuals including diplomats, ministers, and elected officials",
       "examples": [
         "Ambassador John Smith",
         "Minister of Trade",
         "UN Representative",
-        "Chief Statistician"
+        "Chief Statistician",
+        "Senator",
+        "Member of Parliament"
       ],
       "commonLinks": [
         "Current organization",
         "Country represented",
         "Past engagements",
-        "Positions held"
+        "Positions held",
+        "Committee assignments"
       ],
-      "notFor": "Not for elected officials with term limits - use Elected Official for those"
-    },
-    "elected_official": {
-      "whenToUse": "Use for politicians, legislators, and elected representatives with defined terms",
-      "examples": ["Senator", "Member of Parliament", "Governor", "Mayor", "Cabinet Minister"],
-      "commonLinks": [
-        "Committee assignments",
-        "Party affiliation",
-        "Staff contacts",
-        "Term history"
-      ],
-      "notFor": "Not for appointed officials or permanent civil servants - use Person for those"
+      "notFor": "Not for regular staff or contacts - use Organization contacts for those"
     },
     "engagement": {
       "whenToUse": "Use for specific meetings, events, or diplomatic interactions that occur on a date",

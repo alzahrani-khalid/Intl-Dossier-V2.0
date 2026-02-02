@@ -10,6 +10,7 @@ import {
   getEntityMetadata,
   invalidateEntityCache,
 } from '../services/entity-search.service'
+import { requireRole } from '../middleware/auth'
 import type { EntityType } from '../types/intake-entity-links.types'
 
 const router = Router()
@@ -253,10 +254,11 @@ router.get('/entities/:entity_type/:entity_id', async (req: Request, res: Respon
 /**
  * POST /api/entities/:entity_type/:entity_id/invalidate-cache
  * Invalidates cache for a specific entity
- * (Admin endpoint - should be protected with appropriate middleware)
+ * Requires admin role
  */
 router.post(
   '/entities/:entity_type/:entity_id/invalidate-cache',
+  requireRole(['admin']),
   async (req: Request, res: Response) => {
     try {
       const userId = req.user?.id
@@ -271,7 +273,7 @@ router.post(
         })
       }
 
-      // TODO: Add admin/permission check here
+      // Admin check handled by requireRole middleware
 
       const { entity_type, entity_id } = req.params
 

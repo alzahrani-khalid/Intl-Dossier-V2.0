@@ -36,6 +36,9 @@ import {
   FileText,
   Shield,
   CheckCircle2,
+  AlertTriangle,
+  Loader2,
+  ExternalLink,
 } from 'lucide-react'
 import { toast } from 'sonner'
 
@@ -69,9 +72,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { cn } from '@/lib/utils'
-import { getDossierDetailPath } from '@/lib/dossier-routes'
+import { getDossierDetailPath, getDossierRouteSegment } from '@/lib/dossier-routes'
 
 import { useCreateDossier } from '@/hooks/useDossier'
+import { useDossierNameSimilarity } from '@/hooks/useDossierNameSimilarity'
+import { Alert, AlertDescription, AlertTitle } from '@/components/ui/alert'
 import type { DossierType, CreateDossierRequest } from '@/services/dossier-api'
 
 // Draft key for localStorage
@@ -80,16 +85,7 @@ const DRAFT_KEY = 'dossier-create-draft'
 // Form schema
 const dossierSchema = z.object({
   type: z
-    .enum([
-      'country',
-      'organization',
-      'forum',
-      'engagement',
-      'topic',
-      'working_group',
-      'person',
-      'elected_official',
-    ])
+    .enum(['country', 'organization', 'forum', 'engagement', 'topic', 'working_group', 'person'])
     .optional(),
   name_en: z.string().min(2, { message: 'English name must be at least 2 characters' }),
   name_ar: z.string().min(2, { message: 'Arabic name must be at least 2 characters' }),
@@ -132,6 +128,19 @@ const dossierSchema = z.object({
       engagement_category: z.enum(['bilateral', 'multilateral', 'regional', 'internal']).optional(),
       location_en: z.string().optional(),
       location_ar: z.string().optional(),
+      // Forum fields
+      number_of_sessions: z.number().positive().optional(),
+      registration_fee: z.number().nonnegative().optional(),
+      currency: z.string().length(3).optional().or(z.literal('')),
+      agenda_url: z.string().url().optional().or(z.literal('')),
+      live_stream_url: z.string().url().optional().or(z.literal('')),
+      // Topic fields (column names are theme_* for backward compatibility)
+      theme_category: z.enum(['policy', 'technical', 'strategic', 'operational']).optional(),
+      // Working Group fields
+      mandate_en: z.string().optional(),
+      mandate_ar: z.string().optional(),
+      wg_status: z.enum(['active', 'suspended', 'disbanded']).optional(),
+      established_date: z.string().optional(), // ISO date string
     })
     .optional(),
 })
@@ -170,6 +179,19 @@ const defaultValues: DossierFormData = {
     engagement_category: undefined,
     location_en: '',
     location_ar: '',
+    // Forum fields
+    number_of_sessions: undefined,
+    registration_fee: undefined,
+    currency: '',
+    agenda_url: '',
+    live_stream_url: '',
+    // Topic fields
+    theme_category: undefined,
+    // Working Group fields
+    mandate_en: '',
+    mandate_ar: '',
+    wg_status: undefined,
+    established_date: '',
   },
 }
 
@@ -182,10 +204,94 @@ const typeIcons: Partial<Record<DossierType, typeof Globe>> = {
   topic: FileText,
   working_group: Briefcase,
   person: UserCircle,
-  elected_official: UserCircle,
 }
 
 import type { TemplateSection } from '@/types/dossier-template.types'
+import type { DossierExtensionData } from '@/services/dossier-api'
+
+/**
+ * Filter extension data to only include fields for the selected dossier type.
+ * Strips empty strings and undefined values.
+ * Returns undefined if no valid extension data for the type.
+ */
+function filterExtensionDataByType(
+  type: DossierType,
+  extensionData: DossierFormData['extension_data'],
+): DossierExtensionData | undefined {
+  if (!extensionData) return undefined
+
+  // Helper to check if value is meaningful (not empty string, undefined, or null)
+  const isMeaningful = (value: unknown): boolean =>
+    value !== undefined && value !== null && value !== ''
+
+  // Filter function to remove empty values
+  const filterEmpty = <T extends Record<string, unknown>>(obj: T): T | undefined => {
+    const filtered = Object.fromEntries(
+      Object.entries(obj).filter(([, value]) => isMeaningful(value)),
+    )
+    return Object.keys(filtered).length > 0 ? (filtered as T) : undefined
+  }
+
+  switch (type) {
+    case 'person':
+      return filterEmpty({
+        title_en: extensionData.title_en,
+        title_ar: extensionData.title_ar,
+        biography_en: extensionData.biography_en,
+        biography_ar: extensionData.biography_ar,
+        photo_url: extensionData.photo_url,
+      })
+
+    case 'country':
+      return filterEmpty({
+        iso_code_2: extensionData.iso_code_2,
+        iso_code_3: extensionData.iso_code_3,
+        capital_en: extensionData.capital_en,
+        capital_ar: extensionData.capital_ar,
+        region: extensionData.region,
+      })
+
+    case 'organization':
+      return filterEmpty({
+        org_code: extensionData.org_code,
+        org_type: extensionData.org_type,
+        website: extensionData.website,
+      })
+
+    case 'engagement':
+      return filterEmpty({
+        engagement_type: extensionData.engagement_type,
+        engagement_category: extensionData.engagement_category,
+        location_en: extensionData.location_en,
+        location_ar: extensionData.location_ar,
+      })
+
+    case 'forum':
+      return filterEmpty({
+        number_of_sessions: extensionData.number_of_sessions,
+        registration_fee: extensionData.registration_fee,
+        currency: extensionData.currency,
+        agenda_url: extensionData.agenda_url,
+        live_stream_url: extensionData.live_stream_url,
+      })
+
+    case 'topic':
+      return filterEmpty({
+        theme_category: extensionData.theme_category,
+      })
+
+    case 'working_group':
+      return filterEmpty({
+        mandate_en: extensionData.mandate_en,
+        mandate_ar: extensionData.mandate_ar,
+        wg_status: extensionData.wg_status,
+        established_date: extensionData.established_date,
+      })
+
+    default:
+      return undefined
+  }
+}
 
 interface DossierCreateWizardProps {
   onSuccess?: (dossierId: string, dossierType?: DossierType) => void
@@ -259,6 +365,20 @@ export function DossierCreateWizard({
     return 0
   })
 
+  // Duplicate detection - check for similar dossier names
+  // NOTE: Must be placed after currentStep is defined
+  const {
+    similarDossiers,
+    isChecking: isCheckingDuplicates,
+    hasHighSimilarity,
+    hasMediumSimilarity,
+    highestMatch,
+  } = useDossierNameSimilarity(formValues.name_en || '', formValues.name_ar, {
+    type: selectedType as DossierType | undefined,
+    threshold: 0.4,
+    enabled: currentStep === 1 && (formValues.name_en?.length || 0) >= 3,
+  })
+
   // Sync form changes to draft
   const updateDraft = useCallback(
     (values: Partial<DossierFormData>) => {
@@ -316,7 +436,29 @@ export function DossierCreateWizard({
         description: 'Additional fields specific to this type',
         descriptionAr: 'حقول إضافية خاصة بهذا النوع',
         icon: typeIcons[selectedType as DossierType] || FileText,
-        isOptional: true,
+        // Types with required extension fields are NOT optional
+        isOptional: !['country', 'organization', 'engagement', 'topic'].includes(
+          selectedType || '',
+        ),
+        // Validation for required extension fields
+        validate: () => {
+          const ext = form.getValues('extension_data')
+          if (!ext)
+            return !['country', 'organization', 'engagement', 'topic'].includes(selectedType || '')
+
+          switch (selectedType) {
+            case 'country':
+              return !!(ext.iso_code_2?.length === 2 && ext.iso_code_3?.length === 3)
+            case 'organization':
+              return !!ext.org_type
+            case 'engagement':
+              return !!(ext.engagement_type && ext.engagement_category)
+            case 'topic':
+              return !!ext.theme_category
+            default:
+              return true // Optional for other types
+          }
+        },
       },
       {
         id: 'review',
@@ -339,6 +481,12 @@ export function DossierCreateWizard({
         return
       }
 
+      // Filter extension data to only include fields for the selected type
+      const filteredExtensionData = filterExtensionDataByType(
+        values.type as DossierType,
+        values.extension_data,
+      )
+
       const createData: CreateDossierRequest = {
         type: values.type as DossierType,
         name_en: values.name_en,
@@ -348,7 +496,7 @@ export function DossierCreateWizard({
         status: values.status,
         sensitivity_level: values.sensitivity_level,
         tags: values.tags || [],
-        extensionData: values.extension_data,
+        extensionData: filteredExtensionData,
       }
 
       const newDossier = await createMutation.mutateAsync(createData)
@@ -469,6 +617,88 @@ export function DossierCreateWizard({
                 )}
               />
             </div>
+
+            {/* Duplicate Detection Warning */}
+            {(isCheckingDuplicates || similarDossiers.length > 0) && (
+              <div className="mt-4">
+                {isCheckingDuplicates && (
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Loader2 className="h-4 w-4 animate-spin" />
+                    {t('dossier:create.checkingDuplicates', 'Checking for similar dossiers...')}
+                  </div>
+                )}
+
+                {!isCheckingDuplicates && hasHighSimilarity && highestMatch && (
+                  <Alert variant="destructive" className="border-destructive/50">
+                    <AlertTriangle className="h-4 w-4" />
+                    <AlertTitle>
+                      {t(
+                        'dossier:create.duplicateWarning.highSimilarity.title',
+                        'Potential Duplicate Detected',
+                      )}
+                    </AlertTitle>
+                    <AlertDescription className="space-y-2">
+                      <p>
+                        {t('dossier:create.duplicateWarning.highSimilarity.description', {
+                          similarity: Math.round(highestMatch.highest_similarity * 100),
+                          name: isRTL ? highestMatch.name_ar : highestMatch.name_en,
+                          type: t(`dossier:type.${highestMatch.type}`),
+                        }) ||
+                          `A ${highestMatch.type} with ${Math.round(highestMatch.highest_similarity * 100)}% similar name already exists: "${isRTL ? highestMatch.name_ar : highestMatch.name_en}"`}
+                      </p>
+                      <a
+                        href={`/dossiers/${getDossierRouteSegment(highestMatch.type as DossierType)}/${highestMatch.id}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center gap-1 text-sm underline"
+                      >
+                        {t('dossier:create.duplicateWarning.viewExisting', 'View existing dossier')}
+                        <ExternalLink className="h-3 w-3" />
+                      </a>
+                    </AlertDescription>
+                  </Alert>
+                )}
+
+                {!isCheckingDuplicates &&
+                  !hasHighSimilarity &&
+                  hasMediumSimilarity &&
+                  similarDossiers.length > 0 && (
+                    <Alert className="border-yellow-500/50 bg-yellow-50 dark:bg-yellow-950/20">
+                      <AlertTriangle className="h-4 w-4 text-yellow-600 dark:text-yellow-500" />
+                      <AlertTitle className="text-yellow-700 dark:text-yellow-400">
+                        {t(
+                          'dossier:create.duplicateWarning.mediumSimilarity.title',
+                          'Similar Dossiers Found',
+                        )}
+                      </AlertTitle>
+                      <AlertDescription className="text-yellow-600 dark:text-yellow-300">
+                        <p className="mb-2">
+                          {t('dossier:create.duplicateWarning.mediumSimilarity.description', {
+                            count: similarDossiers.length,
+                          }) ||
+                            `${similarDossiers.length} dossier(s) with similar names were found. Please verify this is not a duplicate.`}
+                        </p>
+                        <ul className="list-disc ps-5 space-y-1 text-sm">
+                          {similarDossiers.slice(0, 3).map((d) => (
+                            <li key={d.id}>
+                              <a
+                                href={`/dossiers/${getDossierRouteSegment(d.type as DossierType)}/${d.id}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="underline hover:text-yellow-800 dark:hover:text-yellow-200"
+                              >
+                                {isRTL ? d.name_ar : d.name_en}
+                              </a>{' '}
+                              ({Math.round(d.highest_similarity * 100)}%{' '}
+                              {t('dossier:create.duplicateWarning.match', 'match')})
+                            </li>
+                          ))}
+                        </ul>
+                      </AlertDescription>
+                    </Alert>
+                  )}
+              </div>
+            )}
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* English Description */}
@@ -732,16 +962,19 @@ export function DossierCreateWizard({
                     name="extension_data.iso_code_2"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ISO Code (2)</FormLabel>
+                        <FormLabel>
+                          ISO Code (2) <span className="text-destructive">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="SA"
                             maxLength={2}
                             className="min-h-11 uppercase"
+                            required
                           />
                         </FormControl>
-                        <FormDescription>2-letter country code</FormDescription>
+                        <FormDescription>2-letter country code (required)</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -752,16 +985,19 @@ export function DossierCreateWizard({
                     name="extension_data.iso_code_3"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>ISO Code (3)</FormLabel>
+                        <FormLabel>
+                          ISO Code (3) <span className="text-destructive">*</span>
+                        </FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="SAU"
                             maxLength={3}
                             className="min-h-11 uppercase"
+                            required
                           />
                         </FormControl>
-                        <FormDescription>3-letter country code</FormDescription>
+                        <FormDescription>3-letter country code (required)</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}
@@ -837,11 +1073,13 @@ export function DossierCreateWizard({
                     name="extension_data.org_type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Organization Type</FormLabel>
+                        <FormLabel>
+                          Organization Type <span className="text-destructive">*</span>
+                        </FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="min-h-11">
-                              <SelectValue placeholder="Select type" />
+                              <SelectValue placeholder="Select type (required)" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -888,11 +1126,13 @@ export function DossierCreateWizard({
                     name="extension_data.engagement_type"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Engagement Type</FormLabel>
+                        <FormLabel>
+                          Engagement Type <span className="text-destructive">*</span>
+                        </FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="min-h-11">
-                              <SelectValue placeholder="Select type" />
+                              <SelectValue placeholder="Select type (required)" />
                             </SelectTrigger>
                           </FormControl>
                           <SelectContent>
@@ -915,7 +1155,9 @@ export function DossierCreateWizard({
                     name="extension_data.engagement_category"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Category</FormLabel>
+                        <FormLabel>
+                          Category <span className="text-destructive">*</span>
+                        </FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger className="min-h-11">
@@ -976,19 +1218,261 @@ export function DossierCreateWizard({
               </div>
             </ConditionalField>
 
-            {/* Placeholder for other types */}
-            <ConditionalField
-              show={
-                !['person', 'country', 'organization', 'engagement'].includes(selectedType || '')
-              }
-            >
-              <div className="text-center py-8 text-muted-foreground">
-                <p>
-                  {t('dossier:form.typeSpecificFieldsPlaceholder', {
-                    type: selectedType ? t(`dossier:type.${selectedType}`) : '',
-                  })}
-                </p>
-                <p className="text-sm mt-2">{t('form-wizard:optional')}</p>
+            {/* Forum fields */}
+            <ConditionalField show={selectedType === 'forum'}>
+              <div className="space-y-4">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="extension_data.number_of_sessions"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('dossier:form.forum.numberOfSessions')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            min="1"
+                            placeholder="5"
+                            className="min-h-11"
+                            onChange={(e) =>
+                              field.onChange(e.target.value ? parseInt(e.target.value) : undefined)
+                            }
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          {t('dossier:form.forum.numberOfSessionsDescription')}
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="extension_data.registration_fee"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('dossier:form.forum.registrationFee')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="number"
+                            min="0"
+                            step="0.01"
+                            placeholder="0"
+                            className="min-h-11"
+                            onChange={(e) =>
+                              field.onChange(
+                                e.target.value ? parseFloat(e.target.value) : undefined,
+                              )
+                            }
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="extension_data.currency"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('dossier:form.forum.currency')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="USD"
+                            maxLength={3}
+                            className="min-h-11 uppercase"
+                          />
+                        </FormControl>
+                        <FormDescription>3-letter currency code</FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="extension_data.agenda_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('dossier:form.forum.agendaUrl')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="url"
+                            placeholder="https://example.com/agenda"
+                            className="min-h-11"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="extension_data.live_stream_url"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('dossier:form.forum.liveStreamUrl')}</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            type="url"
+                            placeholder="https://example.com/stream"
+                            className="min-h-11"
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              </div>
+            </ConditionalField>
+
+            {/* Topic fields */}
+            <ConditionalField show={selectedType === 'topic'}>
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="extension_data.theme_category"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>
+                        {t('dossier:form.topic.category')}{' '}
+                        <span className="text-destructive">*</span>
+                      </FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="min-h-11">
+                            <SelectValue
+                              placeholder={`${t('dossier:form.topic.categoryPlaceholder')} (required)`}
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="policy">
+                            {t('dossier:form.topic.categories.policy')}
+                          </SelectItem>
+                          <SelectItem value="technical">
+                            {t('dossier:form.topic.categories.technical')}
+                          </SelectItem>
+                          <SelectItem value="strategic">
+                            {t('dossier:form.topic.categories.strategic')}
+                          </SelectItem>
+                          <SelectItem value="operational">
+                            {t('dossier:form.topic.categories.operational')}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormDescription>
+                        {t('dossier:form.topic.categoryDescription')} (required)
+                      </FormDescription>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            </ConditionalField>
+
+            {/* Working Group fields */}
+            <ConditionalField show={selectedType === 'working_group'}>
+              <div className="space-y-4">
+                <FormField
+                  control={form.control}
+                  name="extension_data.wg_status"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('dossier:form.workingGroup.status')}</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger className="min-h-11">
+                            <SelectValue
+                              placeholder={t('dossier:form.workingGroup.statusPlaceholder')}
+                            />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="active">
+                            {t('dossier:form.workingGroup.statuses.active')}
+                          </SelectItem>
+                          <SelectItem value="suspended">
+                            {t('dossier:form.workingGroup.statuses.suspended')}
+                          </SelectItem>
+                          <SelectItem value="disbanded">
+                            {t('dossier:form.workingGroup.statuses.disbanded')}
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <FormField
+                  control={form.control}
+                  name="extension_data.established_date"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>{t('dossier:form.workingGroup.establishedDate')}</FormLabel>
+                      <FormControl>
+                        <Input {...field} type="date" className="min-h-11" />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <FormField
+                    control={form.control}
+                    name="extension_data.mandate_en"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('dossier:form.workingGroup.mandateEn')}</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            placeholder={t('dossier:form.workingGroup.mandateEnPlaceholder')}
+                            className="min-h-[100px]"
+                            rows={4}
+                          />
+                        </FormControl>
+                        <FormDescription>
+                          {t('dossier:form.workingGroup.mandateDescription')}
+                        </FormDescription>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="extension_data.mandate_ar"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel>{t('dossier:form.workingGroup.mandateAr')}</FormLabel>
+                        <FormControl>
+                          <Textarea
+                            {...field}
+                            placeholder={t('dossier:form.workingGroup.mandateArPlaceholder')}
+                            className="min-h-[100px]"
+                            dir="rtl"
+                            rows={4}
+                          />
+                        </FormControl>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
               </div>
             </ConditionalField>
           </FormWizardStep>
@@ -1079,7 +1563,8 @@ export function DossierCreateWizard({
                       <div>
                         <p className="text-muted-foreground">ISO Code</p>
                         <p className="font-medium uppercase">
-                          {formValues.extension_data.iso_code_2}
+                          {formValues.extension_data.iso_code_2} /{' '}
+                          {formValues.extension_data.iso_code_3}
                         </p>
                       </div>
                       {formValues.extension_data.region && (
@@ -1095,6 +1580,201 @@ export function DossierCreateWizard({
                         </div>
                       )}
                     </div>
+                  </>
+                )}
+
+                {/* Organization review */}
+                {selectedType === 'organization' && formValues.extension_data?.org_type && (
+                  <>
+                    <Separator />
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Organization Type</p>
+                        <Badge variant="outline" className="capitalize">
+                          {formValues.extension_data.org_type}
+                        </Badge>
+                      </div>
+                      {formValues.extension_data.org_code && (
+                        <div>
+                          <p className="text-muted-foreground">Code</p>
+                          <p className="font-medium">{formValues.extension_data.org_code}</p>
+                        </div>
+                      )}
+                      {formValues.extension_data.website && (
+                        <div>
+                          <p className="text-muted-foreground">Website</p>
+                          <p className="font-medium text-primary truncate">
+                            {formValues.extension_data.website}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                  </>
+                )}
+
+                {/* Engagement review */}
+                {selectedType === 'engagement' && formValues.extension_data?.engagement_type && (
+                  <>
+                    <Separator />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                      <div>
+                        <p className="text-muted-foreground">Engagement Type</p>
+                        <Badge variant="outline" className="capitalize">
+                          {formValues.extension_data.engagement_type?.replace('_', ' ')}
+                        </Badge>
+                      </div>
+                      <div>
+                        <p className="text-muted-foreground">Category</p>
+                        <Badge variant="outline" className="capitalize">
+                          {formValues.extension_data.engagement_category}
+                        </Badge>
+                      </div>
+                    </div>
+                    {(formValues.extension_data.location_en ||
+                      formValues.extension_data.location_ar) && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-4">
+                        {formValues.extension_data.location_en && (
+                          <div>
+                            <p className="text-muted-foreground">Location (EN)</p>
+                            <p className="font-medium">{formValues.extension_data.location_en}</p>
+                          </div>
+                        )}
+                        {formValues.extension_data.location_ar && (
+                          <div>
+                            <p className="text-muted-foreground">Location (AR)</p>
+                            <p className="font-medium" dir="rtl">
+                              {formValues.extension_data.location_ar}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Forum review */}
+                {selectedType === 'forum' && (
+                  <>
+                    <Separator />
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+                      {formValues.extension_data?.number_of_sessions && (
+                        <div>
+                          <p className="text-muted-foreground">
+                            {t('dossier:form.forum.numberOfSessions')}
+                          </p>
+                          <p className="font-medium">
+                            {formValues.extension_data.number_of_sessions}
+                          </p>
+                        </div>
+                      )}
+                      {formValues.extension_data?.registration_fee !== undefined && (
+                        <div>
+                          <p className="text-muted-foreground">
+                            {t('dossier:form.forum.registrationFee')}
+                          </p>
+                          <p className="font-medium">
+                            {formValues.extension_data.registration_fee}{' '}
+                            {formValues.extension_data.currency || ''}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    {(formValues.extension_data?.agenda_url ||
+                      formValues.extension_data?.live_stream_url) && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-4">
+                        {formValues.extension_data.agenda_url && (
+                          <div>
+                            <p className="text-muted-foreground">
+                              {t('dossier:form.forum.agendaUrl')}
+                            </p>
+                            <p className="font-medium text-primary truncate">
+                              {formValues.extension_data.agenda_url}
+                            </p>
+                          </div>
+                        )}
+                        {formValues.extension_data.live_stream_url && (
+                          <div>
+                            <p className="text-muted-foreground">
+                              {t('dossier:form.forum.liveStreamUrl')}
+                            </p>
+                            <p className="font-medium text-primary truncate">
+                              {formValues.extension_data.live_stream_url}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                  </>
+                )}
+
+                {/* Topic review */}
+                {selectedType === 'topic' && formValues.extension_data?.theme_category && (
+                  <>
+                    <Separator />
+                    <div className="text-sm">
+                      <p className="text-muted-foreground">{t('dossier:form.topic.category')}</p>
+                      <Badge variant="outline">
+                        {t(
+                          `dossier:form.topic.categories.${formValues.extension_data.theme_category}`,
+                        )}
+                      </Badge>
+                    </div>
+                  </>
+                )}
+
+                {/* Working Group review */}
+                {selectedType === 'working_group' && (
+                  <>
+                    <Separator />
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                      {formValues.extension_data?.wg_status && (
+                        <div>
+                          <p className="text-muted-foreground">
+                            {t('dossier:form.workingGroup.status')}
+                          </p>
+                          <Badge variant="outline" className="capitalize">
+                            {t(
+                              `dossier:form.workingGroup.statuses.${formValues.extension_data.wg_status}`,
+                            )}
+                          </Badge>
+                        </div>
+                      )}
+                      {formValues.extension_data?.established_date && (
+                        <div>
+                          <p className="text-muted-foreground">
+                            {t('dossier:form.workingGroup.establishedDate')}
+                          </p>
+                          <p className="font-medium">
+                            {formValues.extension_data.established_date}
+                          </p>
+                        </div>
+                      )}
+                    </div>
+                    {(formValues.extension_data?.mandate_en ||
+                      formValues.extension_data?.mandate_ar) && (
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm mt-4">
+                        {formValues.extension_data.mandate_en && (
+                          <div>
+                            <p className="text-muted-foreground">
+                              {t('dossier:form.workingGroup.mandateEn')}
+                            </p>
+                            <p className="font-medium line-clamp-3">
+                              {formValues.extension_data.mandate_en}
+                            </p>
+                          </div>
+                        )}
+                        {formValues.extension_data.mandate_ar && (
+                          <div>
+                            <p className="text-muted-foreground">
+                              {t('dossier:form.workingGroup.mandateAr')}
+                            </p>
+                            <p className="font-medium line-clamp-3" dir="rtl">
+                              {formValues.extension_data.mandate_ar}
+                            </p>
+                          </div>
+                        )}
+                      </div>
+                    )}
                   </>
                 )}
               </CardContent>

@@ -75,10 +75,7 @@ export function CountryDossierDetail({ dossier, initialTab }: CountryDossierDeta
     (initialTab as CountryTabType) || 'intelligence',
   )
 
-  // Ensure extension data exists
-  if (!dossier.extension) {
-    console.error('Country dossier extension data is missing:', dossier)
-  }
+  // Extension data is optional - dossier still works without it
 
   // Tab definitions for country dossier
   const tabs: Array<{ id: CountryTabType; label: string; disabled?: boolean }> = [

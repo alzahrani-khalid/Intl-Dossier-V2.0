@@ -69,6 +69,7 @@ export const ApiErrorResponseSchema = z.object({
 
 /**
  * Schema for dossier types
+ * Note: elected_official is now a person_subtype, not a separate dossier type
  */
 export const DossierTypeSchema = z.enum([
   'country',
@@ -78,8 +79,12 @@ export const DossierTypeSchema = z.enum([
   'topic',
   'working_group',
   'person',
-  'elected_official',
 ])
+
+/**
+ * Schema for person subtypes
+ */
+export const PersonSubtypeSchema = z.enum(['standard', 'elected_official'])
 
 /**
  * Schema for dossier status
@@ -260,6 +265,134 @@ export function parseErrorDetails(
 }
 
 // ============================================================================
+// Supabase Response Validation
+// ============================================================================
+
+/**
+ * Schema for a single dossier from API
+ */
+export const DossierSchema = z.object({
+  id: z.string().uuid(),
+  type: DossierTypeSchema,
+  name_en: z.string(),
+  name_ar: z.string(),
+  status: DossierStatusSchema,
+  description_en: z.string().nullable().optional(),
+  description_ar: z.string().nullable().optional(),
+  sensitivity_level: z.number().int().min(1).max(5).optional(),
+  tags: z.array(z.string()).optional(),
+  metadata: JsonObjectSchema.nullable().optional(),
+  created_at: z.string(),
+  updated_at: z.string(),
+})
+
+/**
+ * Schema for task from API
+ */
+export const TaskSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string().optional(),
+  title_en: z.string().optional(),
+  title_ar: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  description_en: z.string().nullable().optional(),
+  description_ar: z.string().nullable().optional(),
+  status: TaskStatusSchema,
+  priority: PrioritySchema.nullable().optional(),
+  deadline: z.string().nullable().optional(),
+  assignee_id: z.string().uuid().nullable().optional(),
+  created_at: z.string(),
+  updated_at: z.string(),
+})
+
+/**
+ * Schema for commitment from API
+ */
+export const CommitmentSchema = z.object({
+  id: z.string().uuid(),
+  title: z.string().optional(),
+  title_en: z.string().optional(),
+  title_ar: z.string().nullable().optional(),
+  description: z.string().nullable().optional(),
+  status: TaskStatusSchema,
+  priority: PrioritySchema.nullable().optional(),
+  deadline: z.string().nullable().optional(),
+  responsible_user_id: z.string().uuid().nullable().optional(),
+  created_at: z.string(),
+  updated_at: z.string(),
+})
+
+/**
+ * Validate Supabase response data with Zod schema
+ * Logs validation errors in development and returns data or null
+ */
+export function validateSupabaseResponse<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown,
+  context?: string,
+): T | null {
+  const result = schema.safeParse(data)
+
+  if (!result.success) {
+    if (import.meta.env.DEV) {
+      console.warn(
+        `[Validation] ${context || 'Response'} validation failed:`,
+        result.error.format(),
+      )
+    }
+    return null
+  }
+
+  return result.data
+}
+
+/**
+ * Validate array of Supabase response items
+ * Returns only valid items, logs invalid ones in development
+ */
+export function validateSupabaseArray<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown[],
+  context?: string,
+): T[] {
+  return data
+    .map((item, index) => {
+      const result = schema.safeParse(item)
+      if (!result.success) {
+        if (import.meta.env.DEV) {
+          console.warn(
+            `[Validation] ${context || 'Array'} item ${index} validation failed:`,
+            result.error.format(),
+          )
+        }
+        return null
+      }
+      return result.data
+    })
+    .filter((item): item is T => item !== null)
+}
+
+/**
+ * Strict validation that throws on failure
+ * Use for critical data that must be valid
+ */
+export function validateStrictSupabaseResponse<T>(
+  schema: z.ZodSchema<T>,
+  data: unknown,
+  context?: string,
+): T {
+  const result = schema.safeParse(data)
+
+  if (!result.success) {
+    const errorMessage = `${context || 'Response'} validation failed: ${result.error.message}`
+    console.error('[Validation Error]', errorMessage, result.error.format())
+    throw new Error(errorMessage)
+  }
+
+  return result.data
+}
+
+// ============================================================================
 // Type Exports
 // ============================================================================
 
@@ -270,6 +403,7 @@ export type ApiErrorDetails = z.infer<typeof ApiErrorDetailsSchema>
 export type ApiErrorResponse = z.infer<typeof ApiErrorResponseSchema>
 export type DossierType = z.infer<typeof DossierTypeSchema>
 export type DossierStatus = z.infer<typeof DossierStatusSchema>
+export type PersonSubtype = z.infer<typeof PersonSubtypeSchema>
 export type Priority = z.infer<typeof PrioritySchema>
 export type WorkflowStage = z.infer<typeof WorkflowStageSchema>
 export type TaskStatus = z.infer<typeof TaskStatusSchema>
@@ -281,3 +415,6 @@ export type RelationshipType = z.infer<typeof RelationshipTypeSchema>
 export type RelationshipStatus = z.infer<typeof RelationshipStatusSchema>
 export type EventType = z.infer<typeof EventTypeSchema>
 export type EventStatus = z.infer<typeof EventStatusSchema>
+export type Dossier = z.infer<typeof DossierSchema>
+export type Task = z.infer<typeof TaskSchema>
+export type Commitment = z.infer<typeof CommitmentSchema>

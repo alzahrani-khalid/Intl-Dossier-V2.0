@@ -24,7 +24,6 @@ import {
   Target,
   Briefcase,
   User,
-  UserCheck,
   HelpCircle,
   Check,
   X,
@@ -75,8 +74,6 @@ function getTypeIcon(type: DossierType, className?: string) {
       return <Briefcase {...iconProps} />
     case 'person':
       return <User {...iconProps} />
-    case 'elected_official':
-      return <UserCheck {...iconProps} />
     default:
       return <Globe {...iconProps} />
   }
@@ -128,12 +125,6 @@ function getTypeColors(type: DossierType): { bg: string; text: string; border: s
         bg: 'bg-teal-50 dark:bg-teal-950',
         text: 'text-teal-600 dark:text-teal-400',
         border: 'border-teal-200 dark:border-teal-800',
-      }
-    case 'elected_official':
-      return {
-        bg: 'bg-cyan-50 dark:bg-cyan-950',
-        text: 'text-cyan-600 dark:text-cyan-400',
-        border: 'border-cyan-200 dark:border-cyan-800',
       }
     default:
       return {
@@ -386,7 +377,6 @@ export function DossierTypeGuideGrid({
     'country',
     'organization',
     'person',
-    'elected_official',
     'engagement',
     'forum',
     'working_group',

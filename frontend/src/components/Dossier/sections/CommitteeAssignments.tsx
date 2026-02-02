@@ -9,10 +9,11 @@ import { useTranslation } from 'react-i18next'
 import { Users, Crown, UserCheck, User } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import type { ElectedOfficialDossier } from '@/lib/dossier-type-guards'
+import type { PersonDossier } from '@/lib/dossier-type-guards'
 
 interface CommitteeAssignmentsProps {
-  dossier: ElectedOfficialDossier
+  /** PersonDossier with person_subtype === 'elected_official' */
+  dossier: PersonDossier
 }
 
 export function CommitteeAssignments({ dossier }: CommitteeAssignmentsProps) {

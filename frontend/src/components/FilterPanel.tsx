@@ -6,7 +6,9 @@ import { Label } from './ui/label'
 import { Badge } from './ui/badge'
 import { Card, CardContent, CardHeader, CardTitle } from './ui/card'
 import { Search, X, Filter } from 'lucide-react'
-import type { DossierFilters, DossierType, DossierStatus, SensitivityLevel } from '../types/dossier'
+import type { DossierType } from '@/lib/dossier-type-guards'
+import type { DossierStatus } from '@/services/dossier-api'
+import type { DossierFilters, SensitivityLevel } from '../types/dossier'
 
 interface FilterPanelProps {
   filters: DossierFilters
@@ -38,10 +40,20 @@ export function FilterPanel({ filters, onFilterChange, onSearch }: FilterPanelPr
   const [searchQuery, setSearchQuery] = useState(filters.search || '')
   const debouncedSearch = useDebounce(searchQuery, 500)
 
-  // Available options
-  const typeOptions: DossierType[] = ['country', 'organization', 'forum', 'theme']
-  const statusOptions: DossierStatus[] = ['active', 'inactive', 'archived']
-  const sensitivityOptions: SensitivityLevel[] = ['low', 'medium', 'high']
+  // Available options - all 7 dossier types
+  const typeOptions: DossierType[] = [
+    'country',
+    'organization',
+    'person',
+    'engagement',
+    'forum',
+    'working_group',
+    'topic',
+  ]
+  const statusOptions: DossierStatus[] = ['active', 'inactive', 'archived', 'deleted']
+  // Numeric sensitivity levels matching i18n keys: 0=Public, 1=Internal, 2=Confidential, 3=Secret
+  // Note: API expects 1-4, this is a known inconsistency to be fixed in P0-fix-sensitivity
+  const sensitivityOptions: SensitivityLevel[] = [1, 2, 3, 4]
 
   // Apply debounced search
   useEffect(() => {

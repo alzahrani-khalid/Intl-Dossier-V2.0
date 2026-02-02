@@ -181,3 +181,120 @@ export const recommendedPolicies: Record<string, keyof typeof CACHE_POLICIES> = 
   'current-user': 'critical',
   notifications: 'realtime',
 }
+
+// ============================================================================
+// Query Key Validation & Type Safety
+// ============================================================================
+
+/**
+ * Valid top-level query key prefixes
+ * Use these to ensure consistent key naming
+ */
+export const VALID_KEY_PREFIXES = [
+  'dossiers',
+  'work-items',
+  'engagements',
+  'positions',
+  'documents',
+  'search',
+  'current-user',
+  'notifications',
+  'users',
+  'roles',
+  'delegations',
+  'access-reviews',
+  'sessions',
+  'audit-logs',
+  'dossier-overview',
+  'relationships',
+  'calendar',
+  'contacts',
+  'activity',
+  'commitments',
+  'tasks',
+  'intake',
+] as const
+
+export type ValidKeyPrefix = (typeof VALID_KEY_PREFIXES)[number]
+
+/**
+ * Validate a query key follows conventions
+ * Use in development to catch inconsistent key usage
+ */
+export function validateQueryKey(key: readonly unknown[]): boolean {
+  if (key.length === 0) {
+    console.warn('[Query Key] Empty query key is not recommended')
+    return false
+  }
+
+  const prefix = key[0]
+  if (typeof prefix !== 'string') {
+    console.warn('[Query Key] First element should be a string prefix')
+    return false
+  }
+
+  if (!VALID_KEY_PREFIXES.includes(prefix as ValidKeyPrefix)) {
+    console.warn(
+      `[Query Key] Unknown prefix "${prefix}". Consider adding it to VALID_KEY_PREFIXES.`,
+    )
+    return false
+  }
+
+  return true
+}
+
+/**
+ * Create a validated query key with type safety
+ *
+ * @example
+ * ```typescript
+ * // Type-safe key creation
+ * const key = createQueryKey('dossiers', 'detail', dossierId)
+ * // Results in: ['dossiers', 'detail', dossierId]
+ * ```
+ */
+export function createQueryKey<T extends readonly unknown[]>(
+  prefix: ValidKeyPrefix,
+  ...parts: T
+): readonly [ValidKeyPrefix, ...T] {
+  return [prefix, ...parts] as const
+}
+
+/**
+ * Get cache policy for a query key based on its prefix
+ */
+export function getCachePolicyForKey(
+  key: readonly unknown[],
+): (typeof CACHE_POLICIES)[keyof typeof CACHE_POLICIES] {
+  const prefix = key[0] as string
+  const policyName = recommendedPolicies[prefix] || 'dynamic'
+  return CACHE_POLICIES[policyName]
+}
+
+/**
+ * Hook helper: Apply recommended cache policy based on query key
+ *
+ * @example
+ * ```typescript
+ * const { data } = useQuery({
+ *   queryKey: queryKeyPatterns.dossiers.detail(id),
+ *   queryFn: () => fetchDossier(id),
+ *   ...withAutoCachePolicy(queryKeyPatterns.dossiers.detail(id)),
+ * })
+ * ```
+ */
+export function withAutoCachePolicy(
+  key: readonly unknown[],
+): Pick<UseQueryOptions, 'staleTime' | 'gcTime' | 'refetchOnWindowFocus' | 'refetchOnMount'> {
+  return getCachePolicyForKey(key)
+}
+
+/**
+ * Development-only query key validation wrapper
+ * In production, this is a no-op
+ */
+export function assertValidQueryKey(key: readonly unknown[]): void {
+  if (import.meta.env.DEV) {
+    validateQueryKey(key)
+  }
+}

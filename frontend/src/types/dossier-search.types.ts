@@ -194,7 +194,6 @@ export const DOSSIER_TYPE_FILTER_OPTIONS: DossierTypeFilterOption[] = [
   { value: 'topic', label_en: 'Topics', label_ar: 'المواضيع' },
   { value: 'working_group', label_en: 'Working Groups', label_ar: 'مجموعات العمل' },
   { value: 'person', label_en: 'People', label_ar: 'الأشخاص' },
-  { value: 'elected_official', label_en: 'Elected Officials', label_ar: 'المسؤولون المنتخبون' },
 ]
 
 /**

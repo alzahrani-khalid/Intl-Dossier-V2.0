@@ -23,10 +23,11 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
-import type { ElectedOfficialDossier } from '@/lib/dossier-type-guards'
+import type { PersonDossier } from '@/lib/dossier-type-guards'
 
 interface ElectedOfficialProfileProps {
-  dossier: ElectedOfficialDossier
+  /** PersonDossier with person_subtype === 'elected_official' */
+  dossier: PersonDossier
 }
 
 export function ElectedOfficialProfile({ dossier }: ElectedOfficialProfileProps) {

@@ -123,7 +123,6 @@ function transformToDelowFirstFormat(
     'topic',
     'working_group',
     'person',
-    'elected_official',
   ]
 
   const dossiers: DossierSearchResult[] = []
@@ -324,7 +323,6 @@ export function useDossierFirstSearch(
       topic: 0,
       working_group: 0,
       person: 0,
-      elected_official: 0,
     }
 
     searchQuery.data.dossiers.forEach((d) => {

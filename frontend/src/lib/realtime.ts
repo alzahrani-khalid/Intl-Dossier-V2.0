@@ -1,13 +1,45 @@
-import type { RealtimeChannel, RealtimePresenceState } from '@supabase/supabase-js'
+import type {
+  RealtimeChannel,
+  RealtimePresenceState,
+  RealtimePostgresChangesPayload,
+} from '@supabase/supabase-js'
 import { supabase } from './supabase'
+
+/**
+ * Presence payload from Supabase Realtime
+ */
+export interface PresencePayload {
+  presence_ref: string
+  [key: string]: unknown
+}
+
+/**
+ * Broadcast message payload
+ */
+export interface BroadcastPayload {
+  [key: string]: unknown
+}
+
+/**
+ * Queued message for offline support
+ */
+export interface QueuedMessage {
+  event: string
+  payload: BroadcastPayload
+}
+
+/**
+ * Database change payload from postgres_changes
+ */
+export type DatabaseChangePayload = RealtimePostgresChangesPayload<Record<string, unknown>>
 
 export interface RealtimeConfig {
   channel: string
-  onPresenceSync?: (state: RealtimePresenceState) => void
-  onPresenceJoin?: (state: RealtimePresenceState) => void
-  onPresenceLeave?: (state: RealtimePresenceState) => void
-  onBroadcast?: (event: string, payload: any) => void
-  onDatabaseChange?: (payload: any) => void
+  onPresenceSync?: (state: RealtimePresenceState<PresencePayload>) => void
+  onPresenceJoin?: (state: RealtimePresenceState<PresencePayload>) => void
+  onPresenceLeave?: (state: RealtimePresenceState<PresencePayload>) => void
+  onBroadcast?: (event: string, payload: BroadcastPayload) => void
+  onDatabaseChange?: (payload: DatabaseChangePayload) => void
 }
 
 export interface PresenceUser {
@@ -25,7 +57,7 @@ export interface PresenceUser {
 class RealtimeManager {
   private channels: Map<string, RealtimeChannel> = new Map()
   private reconnectTimeouts: Map<string, NodeJS.Timeout> = new Map()
-  private messageQueue: Map<string, Array<{ event: string; payload: any }>> = new Map()
+  private messageQueue: Map<string, QueuedMessage[]> = new Map()
   private isOnline: boolean = navigator.onLine
   private reconnectAttempts: Map<string, number> = new Map()
   private maxReconnectAttempts = 5
@@ -86,12 +118,13 @@ class RealtimeManager {
     if (config.onPresenceJoin) {
       channel.on('presence', { event: 'join' }, ({ newPresences }) => {
         // Convert array to RealtimePresenceState format
-        const presenceState: RealtimePresenceState = {}
-        newPresences.forEach((presence: any) => {
-          if (!presenceState[presence.presence_ref]) {
-            presenceState[presence.presence_ref] = []
+        const presenceState: RealtimePresenceState<PresencePayload> = {}
+        ;(newPresences as PresencePayload[]).forEach((presence) => {
+          const key = presence.presence_ref
+          if (!presenceState[key]) {
+            presenceState[key] = []
           }
-          presenceState[presence.presence_ref]?.push(presence)
+          presenceState[key].push(presence)
         })
         config.onPresenceJoin!(presenceState)
       })
@@ -100,12 +133,13 @@ class RealtimeManager {
     if (config.onPresenceLeave) {
       channel.on('presence', { event: 'leave' }, ({ leftPresences }) => {
         // Convert array to RealtimePresenceState format
-        const presenceState: RealtimePresenceState = {}
-        leftPresences.forEach((presence: any) => {
-          if (!presenceState[presence.presence_ref]) {
-            presenceState[presence.presence_ref] = []
+        const presenceState: RealtimePresenceState<PresencePayload> = {}
+        ;(leftPresences as PresencePayload[]).forEach((presence) => {
+          const key = presence.presence_ref
+          if (!presenceState[key]) {
+            presenceState[key] = []
           }
-          presenceState[presence.presence_ref]?.push(presence)
+          presenceState[key].push(presence)
         })
         config.onPresenceLeave!(presenceState)
       })
@@ -202,7 +236,7 @@ class RealtimeManager {
     })
   }
 
-  broadcast(channelName: string, event: string, payload: any) {
+  broadcast(channelName: string, event: string, payload: BroadcastPayload) {
     if (!this.isOnline) {
       // Queue message when offline
       this.queueMessage(channelName, event, payload)
@@ -220,7 +254,7 @@ class RealtimeManager {
     return Promise.reject(new Error(`Channel ${channelName} not found`))
   }
 
-  private queueMessage(channelName: string, event: string, payload: any) {
+  private queueMessage(channelName: string, event: string, payload: BroadcastPayload) {
     if (!this.messageQueue.has(channelName)) {
       this.messageQueue.set(channelName, [])
     }
@@ -299,7 +333,7 @@ export const subscribeToChannel = (config: RealtimeConfig) => realtimeManager.su
 export const unsubscribeFromChannel = (channelName: string) =>
   realtimeManager.unsubscribe(channelName)
 
-export const broadcastMessage = (channelName: string, event: string, payload: any) =>
+export const broadcastMessage = (channelName: string, event: string, payload: BroadcastPayload) =>
   realtimeManager.broadcast(channelName, event, payload)
 
 export const trackUserPresence = (channelName: string, user: PresenceUser) =>

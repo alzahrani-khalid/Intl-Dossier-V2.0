@@ -105,7 +105,6 @@ const NODE_COLORS: Record<string, string> = {
   engagement: '#ec4899',
   working_group: '#14b8a6',
   topic: '#6366f1',
-  elected_official: '#ef4444',
 }
 
 const EDGE_COLORS: Record<string, string> = {

@@ -113,7 +113,7 @@ export function DossierCreatePage() {
     }))
 
     setAiGeneratedSections(templateSections)
-    setInitialDossierType('theme') // Policy briefs are typically theme dossiers
+    setInitialDossierType('topic') // Policy briefs are typically topic dossiers
     setCreateMode('wizard')
   }, [])
 

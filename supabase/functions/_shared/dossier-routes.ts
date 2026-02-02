@@ -5,6 +5,10 @@
  * Mirrors frontend/src/lib/dossier-routes.ts for backend usage.
  */
 
+/**
+ * Maps dossier types to their URL route segments.
+ * Note: elected_official is now a person_subtype, all persons use /persons route.
+ */
 export const DOSSIER_TYPE_TO_ROUTE: Record<string, string> = {
   country: 'countries',
   organization: 'organizations',
@@ -13,7 +17,6 @@ export const DOSSIER_TYPE_TO_ROUTE: Record<string, string> = {
   forum: 'forums',
   working_group: 'working_groups',
   topic: 'topics',
-  elected_official: 'elected_officials',
 };
 
 /**

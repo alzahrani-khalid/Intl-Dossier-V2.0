@@ -28,6 +28,7 @@
  * @description
  * These correspond to the `type` column in the `dossiers` database table.
  * Each type has a corresponding extension table with type-specific fields.
+ * Note: elected_official is now a person_subtype, not a separate dossier type.
  */
 export type DossierType =
   | 'country'
@@ -37,7 +38,15 @@ export type DossierType =
   | 'forum'
   | 'working_group'
   | 'topic'
-  | 'elected_official'
+
+/**
+ * Person subtype discriminator
+ *
+ * @description
+ * Used to distinguish between standard persons and elected officials.
+ * This allows a single 'person' dossier type to handle both cases.
+ */
+export type PersonSubtype = 'standard' | 'elected_official'
 
 /**
  * Extension schema for country dossiers
@@ -107,10 +116,12 @@ export interface OrganizationExtension {
  *
  * @description
  * Contains individual-specific metadata including professional information,
- * biographical data, and current employment details.
+ * biographical data, and current employment details. Also includes elected
+ * official fields when person_subtype is 'elected_official'.
  * IMPORTANT: Must match database schema and person.types.ts
  *
  * @property id - Extension table ID
+ * @property person_subtype - Discriminator: 'standard' or 'elected_official'
  * @property title_en - Professional/honorific title in English (e.g., "Ambassador")
  * @property title_ar - Professional/honorific title in Arabic
  * @property organization_id - Primary organization dossier ID
@@ -126,9 +137,20 @@ export interface OrganizationExtension {
  * @property languages - List of spoken languages
  * @property notes - Internal notes
  * @property importance_level - 1=Regular, 2=Important, 3=Key, 4=VIP, 5=Critical
+ *
+ * Elected official specific fields (when person_subtype === 'elected_official'):
+ * @property office_name_en - Name of office in English
+ * @property office_type - Type of governmental office
+ * @property district_en - Electoral district in English
+ * @property party_en - Political party name
+ * @property term_start - Current term start date
+ * @property committee_assignments - JSONB array of committee assignments
+ * @property contact_preferences - JSONB with preferred contact methods
+ * @property staff_contacts - JSONB array of key staff members
  */
 export interface PersonExtension {
   id?: string
+  person_subtype?: PersonSubtype
   title_en?: string
   title_ar?: string
   organization_id?: string
@@ -144,6 +166,69 @@ export interface PersonExtension {
   languages?: string[]
   notes?: string
   importance_level?: 1 | 2 | 3 | 4 | 5
+
+  // Elected official specific fields (nullable for standard persons)
+  office_name_en?: string
+  office_name_ar?: string
+  office_type?: OfficeType
+  district_en?: string
+  district_ar?: string
+  party_en?: string
+  party_ar?: string
+  party_abbreviation?: string
+  party_ideology?:
+    | 'conservative'
+    | 'liberal'
+    | 'centrist'
+    | 'socialist'
+    | 'green'
+    | 'nationalist'
+    | 'libertarian'
+    | 'independent'
+    | 'other'
+  term_start?: string
+  term_end?: string
+  is_current_term?: boolean
+  term_number?: number
+  committee_assignments?: Array<{
+    name_en: string
+    name_ar?: string
+    role: 'chair' | 'vice_chair' | 'member'
+    is_active: boolean
+  }>
+  contact_preferences?: {
+    preferred_channel?: 'email' | 'phone' | 'in_person' | 'formal_letter'
+    best_time?: 'morning' | 'afternoon' | 'evening'
+    scheduling_notes_en?: string
+    scheduling_notes_ar?: string
+    protocol_notes_en?: string
+    protocol_notes_ar?: string
+  }
+  email_official?: string
+  email_personal?: string
+  phone_office?: string
+  phone_mobile?: string
+  address_office_en?: string
+  address_office_ar?: string
+  website_official?: string
+  website_campaign?: string
+  social_media?: Record<string, string>
+  staff_contacts?: Array<{
+    name: string
+    role: 'chief_of_staff' | 'scheduler' | 'policy_advisor' | 'press_secretary' | 'other'
+    email?: string
+    phone?: string
+    notes?: string
+  }>
+  country_id?: string
+  policy_priorities?: string[]
+  notes_en?: string
+  notes_ar?: string
+  data_source?: 'official_website' | 'api_gov' | 'manual'
+  data_source_url?: string
+  last_verified_at?: string
+  last_refresh_at?: string
+  refresh_frequency_days?: number
 }
 
 /**
@@ -230,16 +315,18 @@ export interface WorkingGroupExtension {
  * Contains topic-specific metadata for organizing dossiers
  * by subject matter. Supports hierarchical topic structures.
  *
- * @property topic_category - Topic classification
- * @property parent_topic_id - Parent topic dossier ID for hierarchy
+ * Note: Column names are theme_* for backward compatibility with existing MV/database
+ * @property theme_category - Topic classification (policy, technical, strategic, operational)
+ * @property parent_theme_id - Parent topic dossier ID for hierarchy
  */
 export interface TopicExtension {
-  topic_category?: 'policy' | 'technical' | 'strategic' | 'operational'
-  parent_topic_id?: string
+  theme_category?: 'policy' | 'technical' | 'strategic' | 'operational'
+  parent_theme_id?: string
 }
 
 /**
  * Office types for elected officials
+ * Used in PersonExtension when person_subtype is 'elected_official'
  */
 export type OfficeType =
   | 'head_of_state'
@@ -255,96 +342,6 @@ export type OfficeType =
   | 'ambassador'
   | 'international_org'
   | 'other'
-
-/**
- * Extension schema for elected official dossiers
- *
- * @description
- * Contains elected official-specific metadata including office details,
- * political affiliation, committee assignments, and contact preferences.
- *
- * @property title_en - Professional title in English (e.g., "Senator")
- * @property title_ar - Professional title in Arabic
- * @property office_name_en - Name of office in English
- * @property office_type - Type of governmental office
- * @property district_en - Electoral district in English
- * @property party_en - Political party name
- * @property term_start - Current term start date
- * @property committee_assignments - JSONB array of committee assignments
- * @property contact_preferences - JSONB with preferred contact methods
- * @property staff_contacts - JSONB array of key staff members
- * @property importance_level - 1=Regular, 2=Important, 3=Key, 4=VIP, 5=Critical
- */
-export interface ElectedOfficialExtension {
-  title_en?: string
-  title_ar?: string
-  photo_url?: string
-  office_name_en: string
-  office_name_ar?: string
-  office_type: OfficeType
-  district_en?: string
-  district_ar?: string
-  party_en?: string
-  party_ar?: string
-  party_abbreviation?: string
-  party_ideology?:
-    | 'conservative'
-    | 'liberal'
-    | 'centrist'
-    | 'socialist'
-    | 'green'
-    | 'nationalist'
-    | 'libertarian'
-    | 'independent'
-    | 'other'
-  term_start?: string
-  term_end?: string
-  is_current_term?: boolean
-  term_number?: number
-  committee_assignments?: Array<{
-    name_en: string
-    name_ar?: string
-    role: 'chair' | 'vice_chair' | 'member'
-    is_active: boolean
-  }>
-  contact_preferences?: {
-    preferred_channel?: 'email' | 'phone' | 'in_person' | 'formal_letter'
-    best_time?: 'morning' | 'afternoon' | 'evening'
-    scheduling_notes_en?: string
-    scheduling_notes_ar?: string
-    protocol_notes_en?: string
-    protocol_notes_ar?: string
-  }
-  email_official?: string
-  email_personal?: string
-  phone_office?: string
-  phone_mobile?: string
-  address_office_en?: string
-  address_office_ar?: string
-  website_official?: string
-  website_campaign?: string
-  social_media?: Record<string, string>
-  staff_contacts?: Array<{
-    name: string
-    role: 'chief_of_staff' | 'scheduler' | 'policy_advisor' | 'press_secretary' | 'other'
-    email?: string
-    phone?: string
-    notes?: string
-  }>
-  country_id?: string
-  organization_id?: string
-  biography_en?: string
-  biography_ar?: string
-  policy_priorities?: string[]
-  notes_en?: string
-  notes_ar?: string
-  data_source?: 'official_website' | 'api_gov' | 'manual'
-  data_source_url?: string
-  last_verified_at?: string
-  last_refresh_at?: string
-  refresh_frequency_days?: number
-  importance_level?: 1 | 2 | 3 | 4 | 5
-}
 
 /**
  * Base dossier interface shared by all dossier types
@@ -446,21 +443,13 @@ export interface TopicDossier extends BaseDossier {
 }
 
 /**
- * Elected official dossier type with elected official-specific extension
- *
- * @see ElectedOfficialExtension for type-specific fields
- */
-export interface ElectedOfficialDossier extends BaseDossier {
-  type: 'elected_official'
-  extension: ElectedOfficialExtension
-}
-
-/**
  * Discriminated union type for all dossier types
  *
  * @description
  * Use this type when accepting any dossier type. Use type guards
  * like `isCountryDossier()` to narrow down to specific types.
+ * Note: elected officials are now represented as PersonDossier with
+ * extension.person_subtype === 'elected_official'.
  *
  * @example
  * ```typescript
@@ -468,6 +457,10 @@ export interface ElectedOfficialDossier extends BaseDossier {
  *   if (isCountryDossier(dossier)) {
  *     // TypeScript knows dossier.extension is CountryExtension
  *     console.log(dossier.extension.iso_code_2);
+ *   }
+ *   if (isPersonDossier(dossier) && isElectedOfficial(dossier.extension)) {
+ *     // TypeScript knows this is a person with elected official data
+ *     console.log(dossier.extension.office_name_en);
  *   }
  * }
  * ```
@@ -480,7 +473,6 @@ export type Dossier =
   | ForumDossier
   | WorkingGroupDossier
   | TopicDossier
-  | ElectedOfficialDossier
 
 // =============================================================================
 // TYPE GUARD FUNCTIONS
@@ -564,13 +556,38 @@ export function isTopicDossier(dossier: Dossier): dossier is TopicDossier {
 }
 
 /**
- * Type guard for elected official dossiers
+ * Type guard to check if a person extension represents an elected official
+ *
+ * @param extension - PersonExtension to check
+ * @returns True if the person is an elected official
+ *
+ * @example
+ * ```typescript
+ * if (isPersonDossier(dossier) && isElectedOfficial(dossier.extension)) {
+ *   console.log(dossier.extension.office_name_en); // TypeScript knows this exists
+ * }
+ * ```
+ */
+export function isElectedOfficial(extension: PersonExtension): boolean {
+  return extension.person_subtype === 'elected_official'
+}
+
+/**
+ * Type guard for elected official within person dossier
  *
  * @param dossier - Dossier to check
- * @returns True if the dossier is an elected official dossier
+ * @returns True if the dossier is a person with elected_official subtype
+ *
+ * @example
+ * ```typescript
+ * if (isElectedOfficialPerson(dossier)) {
+ *   // dossier is a PersonDossier with elected official data
+ *   console.log(dossier.extension.office_name_en);
+ * }
+ * ```
  */
-export function isElectedOfficialDossier(dossier: Dossier): dossier is ElectedOfficialDossier {
-  return dossier.type === 'elected_official'
+export function isElectedOfficialPerson(dossier: Dossier): dossier is PersonDossier {
+  return dossier.type === 'person' && dossier.extension?.person_subtype === 'elected_official'
 }
 
 // =============================================================================
@@ -626,8 +643,6 @@ export function getTypeGuard(type: DossierType): (dossier: Dossier) => boolean {
       return isWorkingGroupDossier
     case 'topic':
       return isTopicDossier
-    case 'elected_official':
-      return isElectedOfficialDossier
     default:
       throw new Error(`Unknown dossier type: ${type}`)
   }
@@ -686,10 +701,31 @@ export function getDossierTypeLabel(type: DossierType, language: 'en' | 'ar'): s
     forum: { en: 'Forum', ar: 'منتدى' },
     working_group: { en: 'Working Group', ar: 'مجموعة عمل' },
     topic: { en: 'Topic', ar: 'موضوع' },
-    elected_official: { en: 'Elected Official', ar: 'مسؤول منتخب' },
   }
 
   return labels[type][language]
+}
+
+/**
+ * Returns a human-readable label for a person subtype
+ *
+ * @param subtype - Person subtype
+ * @param language - Language code ('en' | 'ar')
+ * @returns Localized subtype label
+ *
+ * @example
+ * ```typescript
+ * getPersonSubtypeLabel('elected_official', 'en'); // Returns "Elected Official"
+ * getPersonSubtypeLabel('standard', 'ar'); // Returns "شخص"
+ * ```
+ */
+export function getPersonSubtypeLabel(subtype: PersonSubtype, language: 'en' | 'ar'): string {
+  const labels: Record<PersonSubtype, { en: string; ar: string }> = {
+    standard: { en: 'Person', ar: 'شخص' },
+    elected_official: { en: 'Elected Official', ar: 'مسؤول منتخب' },
+  }
+
+  return labels[subtype][language]
 }
 
 /**
@@ -706,14 +742,16 @@ export function getDossierTypeLabel(type: DossierType, language: 'en' | 'ar'): s
  * ```
  */
 export function getAllDossierTypes(): DossierType[] {
-  return [
-    'country',
-    'organization',
-    'person',
-    'engagement',
-    'forum',
-    'working_group',
-    'topic',
-    'elected_official',
-  ]
+  return ['country', 'organization', 'person', 'engagement', 'forum', 'working_group', 'topic']
+}
+
+/**
+ * Returns an array of all person subtypes
+ *
+ * Useful for iteration and subtype selection UIs
+ *
+ * @returns Array of all valid person subtypes
+ */
+export function getAllPersonSubtypes(): PersonSubtype[] {
+  return ['standard', 'elected_official']
 }

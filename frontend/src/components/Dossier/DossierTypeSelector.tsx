@@ -3,7 +3,8 @@
  * Part of: 026-unified-dossier-architecture implementation (User Story 1 - T054)
  *
  * Mobile-first, RTL-compatible type selection component for creating dossiers.
- * Displays all 8 dossier types as selectable cards with icons and descriptions.
+ * Displays all 7 dossier types as selectable cards with icons and descriptions.
+ * Note: elected_official is now a person_subtype, not a separate dossier type.
  *
  * Features:
  * - Responsive grid (1 col mobile → 2 cols tablet → 3 cols desktop)
@@ -25,7 +26,6 @@ import {
   Target,
   Briefcase,
   User,
-  UserCheck,
   Check,
   HelpCircle,
 } from 'lucide-react'
@@ -65,12 +65,6 @@ const dossierTypeOptions: DossierTypeOption[] = [
     icon: User,
     colorClass: 'text-teal-600 dark:text-teal-400',
     descriptionKey: 'typeDescription.person',
-  },
-  {
-    type: 'elected_official',
-    icon: UserCheck,
-    colorClass: 'text-cyan-600 dark:text-cyan-400',
-    descriptionKey: 'typeDescription.elected_official',
   },
   {
     type: 'engagement',

@@ -114,6 +114,40 @@
       "biographyEnPlaceholder": "Enter person's background and qualifications",
       "biographyArPlaceholder": "أدخل السيرة الذاتية والمؤهلات"
     },
+    "forum": {
+      "numberOfSessions": "Number of Sessions",
+      "numberOfSessionsDescription": "Total number of planned sessions",
+      "registrationFee": "Registration Fee",
+      "currency": "Currency",
+      "agendaUrl": "Agenda URL",
+      "liveStreamUrl": "Live Stream URL"
+    },
+    "topic": {
+      "category": "Topic Category",
+      "categoryPlaceholder": "Select category",
+      "categoryDescription": "Classification of this topic",
+      "categories": {
+        "policy": "Policy",
+        "technical": "Technical",
+        "strategic": "Strategic",
+        "operational": "Operational"
+      }
+    },
+    "workingGroup": {
+      "status": "Working Group Status",
+      "statusPlaceholder": "Select status",
+      "statuses": {
+        "active": "Active",
+        "suspended": "Suspended",
+        "disbanded": "Disbanded"
+      },
+      "establishedDate": "Established Date",
+      "mandateEn": "Mandate (English)",
+      "mandateAr": "Mandate (Arabic)",
+      "mandateEnPlaceholder": "Enter the working group's mandate and objectives",
+      "mandateArPlaceholder": "أدخل تفويض وأهداف فريق العمل",
+      "mandateDescription": "The official mandate and objectives of the working group"
+    },
     "cancel": "Cancel",
     "create": "Create Dossier",
     "update": "Update Dossier"
@@ -242,7 +276,20 @@
     "helpTitle": "Need Help",
     "helpText": "Select the appropriate dossier type based on the entity you're tracking. Required fields are marked with an asterisk (*). You can always edit the dossier later.",
     "success": "Dossier created successfully",
-    "error": "Failed to create dossier"
+    "error": "Failed to create dossier",
+    "checkingDuplicates": "Checking for similar dossiers...",
+    "duplicateWarning": {
+      "highSimilarity": {
+        "title": "Potential Duplicate Detected",
+        "description": "A {{type}} with {{similarity}}% similar name already exists: \"{{name}}\""
+      },
+      "mediumSimilarity": {
+        "title": "Similar Dossiers Found",
+        "description": "{{count}} dossier(s) with similar names were found. Please verify this is not a duplicate."
+      },
+      "viewExisting": "View existing dossier",
+      "match": "match"
+    }
   },
   "update": {
     "title": "Edit Dossier",

@@ -1,4 +1,18 @@
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import { createClient } from 'jsr:@supabase/supabase-js@2';
+
+/**
+ * Rate Limiting using Supabase Database
+ *
+ * @deprecated For new implementations, prefer using `rate-limiter.ts` which uses
+ * Upstash Redis for faster, more scalable rate limiting. This implementation
+ * uses Supabase DB which adds latency and requires the `rate_limits` table.
+ *
+ * Use this only if:
+ * - You don't have Upstash Redis configured
+ * - You need to persist rate limit data for analytics
+ *
+ * @see ./rate-limiter.ts for the recommended implementation
+ */
 
 /**
  * Rate Limiting Configuration
@@ -55,10 +69,7 @@ export class RateLimiter {
    * @param ipAddress - Client IP address for anonymous tracking
    * @returns Rate limit check result
    */
-  async checkLimit(
-    userId: string | null,
-    ipAddress?: string
-  ): Promise<RateLimitResult> {
+  async checkLimit(userId: string | null, ipAddress?: string): Promise<RateLimitResult> {
     const isAuthenticated = !!userId;
     const limit = isAuthenticated ? RATE_LIMITS.USER : RATE_LIMITS.ANON;
 
@@ -87,22 +98,19 @@ export class RateLimiter {
       const windowStart = new Date(now.getTime() - limit.windowMs);
 
       // Clean up expired entries
-      await this.supabase
-        .from("rate_limits")
-        .delete()
-        .lt("expires_at", now.toISOString());
+      await this.supabase.from('rate_limits').delete().lt('expires_at', now.toISOString());
 
       // Get current count for this key
       const { data: existing, error: fetchError } = await this.supabase
-        .from("rate_limits")
-        .select("*")
-        .eq("key", key)
-        .gte("window_start", windowStart.toISOString())
+        .from('rate_limits')
+        .select('*')
+        .eq('key', key)
+        .gte('window_start', windowStart.toISOString())
         .single();
 
-      if (fetchError && fetchError.code !== "PGRST116") {
+      if (fetchError && fetchError.code !== 'PGRST116') {
         // PGRST116 is "not found" which is expected for new keys
-        console.error("Rate limit fetch error:", fetchError);
+        console.error('Rate limit fetch error:', fetchError);
         // Fail open - allow the request but log the error
         return {
           allowed: true,
@@ -131,15 +139,15 @@ export class RateLimiter {
       if (existing) {
         // Update existing entry
         await this.supabase
-          .from("rate_limits")
+          .from('rate_limits')
           .update({
             count: currentCount + 1,
             expires_at: new Date(now.getTime() + limit.windowMs).toISOString(),
           })
-          .eq("key", key);
+          .eq('key', key);
       } else {
         // Create new entry
-        await this.supabase.from("rate_limits").insert({
+        await this.supabase.from('rate_limits').insert({
           key,
           count: 1,
           window_start: now.toISOString(),
@@ -153,7 +161,7 @@ export class RateLimiter {
         limit: limit.requests,
       };
     } catch (error) {
-      console.error("Rate limiter error:", error);
+      console.error('Rate limiter error:', error);
       // Fail open - allow the request but log the error
       return {
         allowed: true,
@@ -168,7 +176,7 @@ export class RateLimiter {
    */
   private async checkGlobalLimit(): Promise<RateLimitResult> {
     const limit = RATE_LIMITS.GLOBAL;
-    const key = "global:all";
+    const key = 'global:all';
 
     try {
       const now = new Date();
@@ -176,14 +184,14 @@ export class RateLimiter {
 
       // Get current global count
       const { data: existing, error: fetchError } = await this.supabase
-        .from("rate_limits")
-        .select("*")
-        .eq("key", key)
-        .gte("window_start", windowStart.toISOString())
+        .from('rate_limits')
+        .select('*')
+        .eq('key', key)
+        .gte('window_start', windowStart.toISOString())
         .single();
 
-      if (fetchError && fetchError.code !== "PGRST116") {
-        console.error("Global rate limit fetch error:", fetchError);
+      if (fetchError && fetchError.code !== 'PGRST116') {
+        console.error('Global rate limit fetch error:', fetchError);
         // Fail open
         return {
           allowed: true,
@@ -211,14 +219,14 @@ export class RateLimiter {
       // Increment global counter
       if (existing) {
         await this.supabase
-          .from("rate_limits")
+          .from('rate_limits')
           .update({
             count: currentCount + 1,
             expires_at: new Date(now.getTime() + limit.windowMs).toISOString(),
           })
-          .eq("key", key);
+          .eq('key', key);
       } else {
-        await this.supabase.from("rate_limits").insert({
+        await this.supabase.from('rate_limits').insert({
           key,
           count: 1,
           window_start: now.toISOString(),
@@ -232,7 +240,7 @@ export class RateLimiter {
         limit: limit.requests,
       };
     } catch (error) {
-      console.error("Global rate limiter error:", error);
+      console.error('Global rate limiter error:', error);
       // Fail open
       return {
         allowed: true,
@@ -272,14 +280,12 @@ export class RateLimiter {
  * });
  * ```
  */
-export async function applyRateLimit(
-  req: Request
-): Promise<RateLimitResult> {
-  const supabaseUrl = Deno.env.get("SUPABASE_URL");
-  const supabaseServiceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+export async function applyRateLimit(req: Request): Promise<RateLimitResult> {
+  const supabaseUrl = Deno.env.get('SUPABASE_URL');
+  const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY');
 
   if (!supabaseUrl || !supabaseServiceKey) {
-    console.error("Rate limiter configuration missing");
+    console.error('Rate limiter configuration missing');
     // Fail open if configuration is missing
     return {
       allowed: true,
@@ -289,24 +295,24 @@ export async function applyRateLimit(
   }
 
   // Extract user ID from Authorization header
-  const authHeader = req.headers.get("Authorization");
+  const authHeader = req.headers.get('Authorization');
   let userId: string | null = null;
 
-  if (authHeader?.startsWith("Bearer ")) {
+  if (authHeader?.startsWith('Bearer ')) {
     try {
       const token = authHeader.substring(7);
       // Decode JWT to get user ID (without verification since this is just for rate limiting)
-      const payload = JSON.parse(atob(token.split(".")[1]));
+      const payload = JSON.parse(atob(token.split('.')[1]));
       userId = payload.sub || null;
     } catch (error) {
-      console.error("Failed to decode JWT:", error);
+      console.error('Failed to decode JWT:', error);
     }
   }
 
   // Get client IP address (considering proxy headers)
-  const forwardedFor = req.headers.get("x-forwarded-for");
-  const realIp = req.headers.get("x-real-ip");
-  const ipAddress = forwardedFor?.split(",")[0] || realIp || "unknown";
+  const forwardedFor = req.headers.get('x-forwarded-for');
+  const realIp = req.headers.get('x-real-ip');
+  const ipAddress = forwardedFor?.split(',')[0] || realIp || 'unknown';
 
   const limiter = new RateLimiter(supabaseUrl, supabaseServiceKey);
   return await limiter.checkLimit(userId, ipAddress);
@@ -321,18 +327,18 @@ export function createRateLimitResponse(
 ): Response {
   return new Response(
     JSON.stringify({
-      error: "rate_limit_exceeded",
-      message: "Too many requests. Please try again later.",
+      error: 'rate_limit_exceeded',
+      message: 'Too many requests. Please try again later.',
       retry_after: result.retryAfter,
     }),
     {
       status: 429,
       headers: {
         ...corsHeaders,
-        "Content-Type": "application/json",
-        "X-RateLimit-Limit": result.limit.toString(),
-        "X-RateLimit-Remaining": "0",
-        "Retry-After": result.retryAfter?.toString() || "60",
+        'Content-Type': 'application/json',
+        'X-RateLimit-Limit': result.limit.toString(),
+        'X-RateLimit-Remaining': '0',
+        'Retry-After': result.retryAfter?.toString() || '60',
       },
     }
   );

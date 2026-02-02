@@ -9,10 +9,11 @@ import { useTranslation } from 'react-i18next'
 import { Mail, Phone, Users, FileText, Clock, Info } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
-import type { ElectedOfficialDossier } from '@/lib/dossier-type-guards'
+import type { PersonDossier } from '@/lib/dossier-type-guards'
 
 interface ContactPreferencesSectionProps {
-  dossier: ElectedOfficialDossier
+  /** PersonDossier with person_subtype === 'elected_official' */
+  dossier: PersonDossier
 }
 
 export function ContactPreferencesSection({ dossier }: ContactPreferencesSectionProps) {

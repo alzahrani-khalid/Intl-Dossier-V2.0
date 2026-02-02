@@ -34,9 +34,213 @@ import type {
   DossierExportResponse,
   DossierRelationshipType,
   DossierDocumentType,
+  WorkItemStatus,
+  WorkItemPriority,
 } from '@/types/dossier-overview.types'
 import type { DossierType } from '@/services/dossier-api'
 import { fetchUnifiedDossierActivities } from './unified-dossier-activity.service'
+
+// =============================================================================
+// Raw Supabase Response Types (for type safety)
+// =============================================================================
+
+/**
+ * Target dossier data from relationship join
+ */
+interface RelationshipTargetDossier {
+  id: string
+  name_en: string
+  name_ar: string
+  type: DossierType
+  status: string
+}
+
+/**
+ * Source dossier data from relationship join
+ */
+interface RelationshipSourceDossier {
+  id: string
+  name_en: string
+  name_ar: string
+  type: DossierType
+  status: string
+}
+
+/**
+ * Raw outgoing relationship row from Supabase
+ */
+interface OutgoingRelationshipRow {
+  id: string
+  relationship_type: string
+  effective_from: string | null
+  effective_to: string | null
+  notes_en: string | null
+  notes_ar: string | null
+  created_at: string
+  target_dossier: RelationshipTargetDossier | null
+}
+
+/**
+ * Raw incoming relationship row from Supabase
+ */
+interface IncomingRelationshipRow {
+  id: string
+  relationship_type: string
+  effective_from: string | null
+  effective_to: string | null
+  notes_en: string | null
+  notes_ar: string | null
+  created_at: string
+  source_dossier: RelationshipSourceDossier | null
+}
+
+/**
+ * Position link row from Supabase
+ */
+interface PositionLinkRow {
+  position: {
+    id: string
+    title_en: string
+    title_ar: string | null
+    status: string
+    created_at: string
+    updated_at: string
+    classification?: string
+  } | null
+}
+
+/**
+ * MOU row from Supabase
+ */
+interface MOURow {
+  id: string
+  title: string
+  status: string
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Brief row from Supabase
+ */
+interface BriefRow {
+  id: string
+  content_en: { summary?: string } | null
+  content_ar: { summary?: string } | null
+  generated_by: string | null
+  generated_at: string
+  is_template: boolean
+}
+
+/**
+ * Work item dossier link row from Supabase
+ */
+interface WorkItemDossierLinkRow {
+  work_item_type: 'task' | 'commitment' | 'intake'
+  work_item_id: string
+  inheritance_source: string
+}
+
+/**
+ * Task row from Supabase
+ */
+interface TaskRow {
+  id: string
+  title_en?: string
+  title?: string
+  title_ar?: string
+  description_en?: string
+  description?: string
+  description_ar?: string
+  status: string
+  priority: string | null
+  deadline: string | null
+  assignee_id: string | null
+  assignee: { full_name: string } | null
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Commitment row from Supabase
+ */
+interface CommitmentRow {
+  id: string
+  title_en?: string
+  title?: string
+  title_ar?: string
+  description_en?: string
+  description?: string
+  description_ar?: string
+  status: string
+  priority: string | null
+  deadline: string | null
+  responsible_user_id: string | null
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Intake ticket row from Supabase
+ */
+interface IntakeTicketRow {
+  id: string
+  subject?: string
+  title_en?: string
+  title_ar?: string
+  description: string | null
+  description_ar?: string
+  status: string
+  priority: string | null
+  sla_deadline: string | null
+  assigned_to_id: string | null
+  assigned_to: { full_name: string } | null
+  created_at: string
+  updated_at: string
+}
+
+/**
+ * Calendar event row from Supabase
+ */
+interface CalendarEventRow {
+  id: string
+  title_en?: string
+  title?: string
+  title_ar?: string
+  event_type: string | null
+  start_datetime: string
+  end_datetime: string | null
+  is_all_day: boolean | null
+  location_en?: string
+  location?: string
+  location_ar?: string
+  is_virtual: boolean | null
+  meeting_link: string | null
+  description_en?: string
+  description?: string
+  description_ar?: string
+  created_at: string
+}
+
+/**
+ * Key contact row from Supabase
+ */
+interface KeyContactRow {
+  id: string
+  name: string
+  name_ar: string | null
+  role?: string
+  title_en?: string
+  title_ar?: string
+  organization: string | null
+  organization_ar?: string
+  email: string | null
+  phone: string | null
+  photo_url: string | null
+  last_interaction_date: string | null
+  notes: string | null
+  linked_person_dossier_id: string | null
+}
 
 // =============================================================================
 // API Error
@@ -159,7 +363,7 @@ async function fetchRelatedDossiers(dossierId: string): Promise<RelatedDossiersS
   const allRelated: RelatedDossier[] = []
 
   // Process outgoing
-  ;(outgoing || []).forEach((rel: any) => {
+  ;((outgoing || []) as OutgoingRelationshipRow[]).forEach((rel) => {
     if (rel.target_dossier) {
       allRelated.push({
         id: rel.target_dossier.id,
@@ -180,7 +384,7 @@ async function fetchRelatedDossiers(dossierId: string): Promise<RelatedDossiersS
   })
 
   // Process incoming
-  ;(incoming || []).forEach((rel: any) => {
+  ;((incoming || []) as IncomingRelationshipRow[]).forEach((rel) => {
     if (rel.source_dossier) {
       allRelated.push({
         id: rel.source_dossier.id,
@@ -222,7 +426,6 @@ async function fetchRelatedDossiers(dossierId: string): Promise<RelatedDossiersS
     topic: [],
     working_group: [],
     person: [],
-    elected_official: [],
   }
 
   allRelated.forEach((rel) => {
@@ -257,9 +460,9 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     .eq('dossier_id', dossierId)
 
   // Extract positions from links
-  const positions = (positionLinks || [])
-    .map((link: any) => link.position)
-    .filter((p: any) => p !== null)
+  const positions = ((positionLinks || []) as PositionLinkRow[])
+    .map((link) => link.position)
+    .filter((p): p is NonNullable<PositionLinkRow['position']> => p !== null)
 
   // Fetch MOUs where this dossier is a signatory
   const { data: mous1 } = await supabase
@@ -276,8 +479,8 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
 
   // Combine MOUs (avoid duplicates)
   const mouIds = new Set<string>()
-  const mous: any[] = []
-  ;[...(mous1 || []), ...(mous2 || [])].forEach((m: any) => {
+  const mous: MOURow[] = []
+  ;[...((mous1 || []) as MOURow[]), ...((mous2 || []) as MOURow[])].forEach((m) => {
     if (!mouIds.has(m.id)) {
       mouIds.add(m.id)
       mous.push(m)
@@ -292,9 +495,9 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
 
   // Note: Generic documents/attachments table doesn't exist in expected format
   // Attachments are linked to after_action_records, not directly to dossiers
-  const attachments: any[] = []
+  const attachments: DossierDocument[] = []
 
-  const positionDocs: DossierDocument[] = (positions || []).map((p: any) => ({
+  const positionDocs: DossierDocument[] = positions.map((p) => ({
     id: p.id,
     title_en: p.title_en || 'Untitled Position',
     title_ar: p.title_ar,
@@ -304,13 +507,13 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     mime_type: null,
     size_bytes: null,
     status: p.status,
-    classification: p.classification,
+    classification: p.classification || null,
     created_at: p.created_at,
     updated_at: p.updated_at,
     created_by_name: null,
   }))
 
-  const mouDocs: DossierDocument[] = (mous || []).map((m: any) => ({
+  const mouDocs: DossierDocument[] = mous.map((m) => ({
     id: m.id,
     title_en: m.title || 'Untitled MOU',
     title_ar: m.title, // MOU table uses single 'title' column
@@ -326,7 +529,7 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     created_by_name: null,
   }))
 
-  const briefDocs: DossierDocument[] = (briefs || []).map((b: any) => ({
+  const briefDocs: DossierDocument[] = ((briefs || []) as BriefRow[]).map((b) => ({
     id: b.id,
     title_en: b.content_en?.summary?.substring(0, 50) || 'Brief',
     title_ar: b.content_ar?.summary?.substring(0, 50) || null,
@@ -342,21 +545,8 @@ async function fetchDocuments(dossierId: string): Promise<DocumentsSection> {
     created_by_name: null,
   }))
 
-  const attachmentDocs: DossierDocument[] = (attachments || []).map((a: any) => ({
-    id: a.id,
-    title_en: a.file_name,
-    title_ar: null,
-    document_type: 'attachment' as DossierDocumentType,
-    file_name: a.file_name,
-    file_path: a.file_path,
-    mime_type: a.mime_type,
-    size_bytes: a.size_bytes,
-    status: 'active',
-    classification: a.classification,
-    created_at: a.uploaded_at,
-    updated_at: a.uploaded_at,
-    created_by_name: null,
-  }))
+  // attachments is already typed as DossierDocument[], no mapping needed
+  const attachmentDocs: DossierDocument[] = attachments
 
   return {
     total_count: positionDocs.length + mouDocs.length + briefDocs.length + attachmentDocs.length,
@@ -384,7 +574,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
   const intakeIds: string[] = []
   const linkMap: Record<string, string> = {}
 
-  ;(links || []).forEach((link: any) => {
+  ;((links || []) as WorkItemDossierLinkRow[]).forEach((link) => {
     linkMap[link.work_item_id] = link.inheritance_source
     if (link.work_item_type === 'task') taskIds.push(link.work_item_id)
     else if (link.work_item_type === 'commitment') commitmentIds.push(link.work_item_id)
@@ -402,7 +592,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       .in('id', taskIds)
       .limit(limit)
 
-    ;(tasks || []).forEach((t: any) => {
+    ;((tasks || []) as TaskRow[]).forEach((t) => {
       const isOverdue =
         t.deadline &&
         new Date(t.deadline) < now &&
@@ -411,12 +601,12 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       allWorkItems.push({
         id: t.id,
         source: 'task',
-        title_en: t.title_en || t.title,
-        title_ar: t.title_ar,
-        description_en: t.description_en || t.description,
-        description_ar: t.description_ar,
-        status: isOverdue ? 'overdue' : t.status,
-        priority: t.priority || 'medium',
+        title_en: t.title_en || t.title || '',
+        title_ar: t.title_ar || null,
+        description_en: t.description_en || t.description || null,
+        description_ar: t.description_ar || null,
+        status: isOverdue ? 'overdue' : (t.status as WorkItemStatus),
+        priority: (t.priority || 'medium') as WorkItemPriority,
         deadline: t.deadline,
         assignee_id: t.assignee_id,
         assignee_name: t.assignee?.full_name || null,
@@ -435,7 +625,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       .in('id', commitmentIds)
       .limit(limit)
 
-    ;(commitments || []).forEach((c: any) => {
+    ;((commitments || []) as CommitmentRow[]).forEach((c) => {
       const isOverdue =
         c.deadline &&
         new Date(c.deadline) < now &&
@@ -444,12 +634,12 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       allWorkItems.push({
         id: c.id,
         source: 'commitment',
-        title_en: c.title_en || c.title,
-        title_ar: c.title_ar,
-        description_en: c.description_en || c.description,
-        description_ar: c.description_ar,
-        status: isOverdue ? 'overdue' : c.status,
-        priority: c.priority || 'medium',
+        title_en: c.title_en || c.title || '',
+        title_ar: c.title_ar || null,
+        description_en: c.description_en || c.description || null,
+        description_ar: c.description_ar || null,
+        status: isOverdue ? 'overdue' : (c.status as WorkItemStatus),
+        priority: (c.priority || 'medium') as WorkItemPriority,
         deadline: c.deadline,
         assignee_id: c.responsible_user_id,
         assignee_name: null,
@@ -468,7 +658,7 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       .in('id', intakeIds)
       .limit(limit)
 
-    ;(intakes || []).forEach((i: any) => {
+    ;((intakes || []) as IntakeTicketRow[]).forEach((i) => {
       const isOverdue =
         i.sla_deadline &&
         new Date(i.sla_deadline) < now &&
@@ -477,12 +667,12 @@ async function fetchWorkItems(dossierId: string, limit: number = 50): Promise<Wo
       allWorkItems.push({
         id: i.id,
         source: 'intake',
-        title_en: i.subject || i.title_en,
-        title_ar: i.title_ar,
+        title_en: i.subject || i.title_en || '',
+        title_ar: i.title_ar || null,
         description_en: i.description,
-        description_ar: i.description_ar,
-        status: isOverdue ? 'overdue' : i.status,
-        priority: i.priority || 'medium',
+        description_ar: i.description_ar || null,
+        status: isOverdue ? 'overdue' : (i.status as WorkItemStatus),
+        priority: (i.priority || 'medium') as WorkItemPriority,
         deadline: i.sla_deadline,
         assignee_id: i.assigned_to_id,
         assignee_name: i.assigned_to?.full_name || null,
@@ -543,20 +733,20 @@ async function fetchCalendarEvents(
   const todayEnd = new Date(todayStart)
   todayEnd.setDate(todayEnd.getDate() + 1)
 
-  const allEvents: DossierCalendarEvent[] = (events || []).map((e: any) => ({
+  const allEvents: DossierCalendarEvent[] = ((events || []) as CalendarEventRow[]).map((e) => ({
     id: e.id,
-    title_en: e.title_en || e.title,
-    title_ar: e.title_ar,
-    event_type: e.event_type || 'meeting',
+    title_en: e.title_en || e.title || '',
+    title_ar: e.title_ar || null,
+    event_type: (e.event_type || 'meeting') as DossierCalendarEvent['event_type'],
     start_datetime: e.start_datetime,
     end_datetime: e.end_datetime,
     is_all_day: e.is_all_day || false,
-    location_en: e.location_en || e.location,
-    location_ar: e.location_ar,
+    location_en: e.location_en || e.location || null,
+    location_ar: e.location_ar || null,
     is_virtual: e.is_virtual || false,
     meeting_link: e.meeting_link,
-    description_en: e.description_en || e.description,
-    description_ar: e.description_ar,
+    description_en: e.description_en || e.description || null,
+    description_ar: e.description_ar || null,
     created_at: e.created_at,
   }))
 
@@ -582,14 +772,14 @@ async function fetchKeyContacts(dossierId: string): Promise<KeyContactsSection> 
     .eq('dossier_id', dossierId)
     .order('name', { ascending: true })
 
-  const allContacts: DossierKeyContact[] = (contacts || []).map((c: any) => ({
+  const allContacts: DossierKeyContact[] = ((contacts || []) as KeyContactRow[]).map((c) => ({
     id: c.id,
     name: c.name,
     name_ar: c.name_ar,
-    title_en: c.role || c.title_en,
-    title_ar: c.title_ar,
+    title_en: c.role || c.title_en || null,
+    title_ar: c.title_ar || null,
     organization_en: c.organization,
-    organization_ar: c.organization_ar,
+    organization_ar: c.organization_ar || null,
     email: c.email,
     phone: c.phone,
     photo_url: c.photo_url,
@@ -700,8 +890,26 @@ export async function fetchDossierOverview(
         ? fetchRelatedDossiers(dossier_id)
         : Promise.resolve({
             total_count: 0,
-            by_relationship_type: {} as any,
-            by_dossier_type: {} as any,
+            by_relationship_type: {
+              parent: [],
+              child: [],
+              bilateral: [],
+              member_of: [],
+              has_member: [],
+              partner: [],
+              related_to: [],
+              predecessor: [],
+              successor: [],
+            } as Record<DossierRelationshipType, RelatedDossier[]>,
+            by_dossier_type: {
+              country: [],
+              organization: [],
+              forum: [],
+              engagement: [],
+              topic: [],
+              working_group: [],
+              person: [],
+            } as Record<DossierType, RelatedDossier[]>,
           }),
       include_sections.includes('documents')
         ? fetchDocuments(dossier_id)

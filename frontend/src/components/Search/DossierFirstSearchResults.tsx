@@ -88,11 +88,6 @@ const dossierTypeConfig: Record<
     color: 'text-teal-600 dark:text-teal-400',
     bgColor: 'bg-teal-100 dark:bg-teal-900/30',
   },
-  elected_official: {
-    icon: Vote,
-    color: 'text-rose-600 dark:text-rose-400',
-    bgColor: 'bg-rose-100 dark:bg-rose-900/30',
-  },
 }
 
 // Related work type configuration

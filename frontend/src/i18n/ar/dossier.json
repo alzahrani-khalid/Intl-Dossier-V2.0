@@ -114,6 +114,40 @@
       "biographyEnPlaceholder": "أدخل الخلفية والمؤهلات",
       "biographyArPlaceholder": "أدخل الخلفية والمؤهلات"
     },
+    "forum": {
+      "numberOfSessions": "عدد الجلسات",
+      "numberOfSessionsDescription": "إجمالي عدد الجلسات المخطط لها",
+      "registrationFee": "رسوم التسجيل",
+      "currency": "العملة",
+      "agendaUrl": "رابط جدول الأعمال",
+      "liveStreamUrl": "رابط البث المباشر"
+    },
+    "topic": {
+      "category": "تصنيف الموضوع",
+      "categoryPlaceholder": "اختر التصنيف",
+      "categoryDescription": "تصنيف هذا الموضوع",
+      "categories": {
+        "policy": "سياسي",
+        "technical": "تقني",
+        "strategic": "استراتيجي",
+        "operational": "تشغيلي"
+      }
+    },
+    "workingGroup": {
+      "status": "حالة فريق العمل",
+      "statusPlaceholder": "اختر الحالة",
+      "statuses": {
+        "active": "نشط",
+        "suspended": "معلق",
+        "disbanded": "منحل"
+      },
+      "establishedDate": "تاريخ التأسيس",
+      "mandateEn": "التفويض (بالإنجليزية)",
+      "mandateAr": "التفويض (بالعربية)",
+      "mandateEnPlaceholder": "أدخل تفويض وأهداف فريق العمل",
+      "mandateArPlaceholder": "أدخل تفويض وأهداف فريق العمل",
+      "mandateDescription": "التفويض والأهداف الرسمية لفريق العمل"
+    },
     "cancel": "إلغاء",
     "create": "إنشاء دوسيه",
     "update": "تحديث الدوسيه"
@@ -242,7 +276,20 @@
     "helpTitle": "تحتاج مساعدة",
     "helpText": "اختر نوع الدوسيه المناسب بناءً على الكيان الذي تتتبعه. الحقول المطلوبة مميزة بعلامة نجمة (*). يمكنك دائمًا تحرير الدوسيه لاحقًا.",
     "success": "تم إنشاء الدوسيه بنجاح",
-    "error": "فشل إنشاء الدوسيه"
+    "error": "فشل إنشاء الدوسيه",
+    "checkingDuplicates": "جارٍ البحث عن دوسيهات مشابهة...",
+    "duplicateWarning": {
+      "highSimilarity": {
+        "title": "تم اكتشاف تكرار محتمل",
+        "description": "يوجد {{type}} بنسبة تشابه {{similarity}}% في الاسم: \"{{name}}\""
+      },
+      "mediumSimilarity": {
+        "title": "تم العثور على دوسيهات مشابهة",
+        "description": "تم العثور على {{count}} دوسيه بأسماء مشابهة. يرجى التحقق من عدم وجود تكرار."
+      },
+      "viewExisting": "عرض الدوسيه الموجود",
+      "match": "تطابق"
+    }
   },
   "update": {
     "title": "تحرير الدوسيه",

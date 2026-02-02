@@ -135,7 +135,6 @@ const dossierTypeIcons: Record<DossierType, React.ElementType> = {
   forum: MessageSquare,
   working_group: UsersRound,
   topic: Tag,
-  elected_official: Vote,
 }
 
 // Icons for work item types
@@ -157,7 +156,6 @@ const dossierTypeLabels: Record<DossierType, { en: string; ar: string }> = {
   forum: { en: 'Forum', ar: 'منتدى' },
   working_group: { en: 'Working Group', ar: 'مجموعة عمل' },
   topic: { en: 'Topic', ar: 'موضوع' },
-  elected_official: { en: 'Official', ar: 'مسؤول' },
 }
 
 // Labels for work item types
@@ -179,7 +177,6 @@ const dossierTypeBadgeColors: Record<DossierType, string> = {
   forum: 'bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-400',
   working_group: 'bg-cyan-100 text-cyan-700 dark:bg-cyan-900/30 dark:text-cyan-400',
   topic: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-  elected_official: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
 }
 
 // Badge colors for work item types
@@ -226,11 +223,6 @@ const routeContexts: RouteContext[] = [
     suggestedActions: ['create-person', 'view-relationships'],
   },
   { pattern: /^\/dossiers\/topics/, contextType: 'dossier', suggestedActions: ['create-topic'] },
-  {
-    pattern: /^\/dossiers\/elected_officials/,
-    contextType: 'dossier',
-    suggestedActions: ['create-official', 'view-relationships'],
-  },
   {
     pattern: /^\/dossiers\/working_groups/,
     contextType: 'dossier',
@@ -465,13 +457,6 @@ export function CommandPalette({ className }: CommandPaletteProps) {
         label: t('createActions.newWorkingGroup', 'Create New Working Group'),
         icon: Briefcase,
         action: () => navigateTo('/dossiers/working_groups?action=create'),
-        category: 'create-dossier',
-      },
-      {
-        id: 'create-official',
-        label: t('createActions.newElectedOfficial', 'Create New Elected Official'),
-        icon: Vote,
-        action: () => navigateTo('/dossiers/elected_officials?action=create'),
         category: 'create-dossier',
       },
     ],

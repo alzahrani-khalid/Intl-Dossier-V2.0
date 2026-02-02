@@ -26,6 +26,7 @@ import { SecurityAssessment } from '@/components/intelligence/SecurityAssessment
 import { BilateralOpportunities } from '@/components/intelligence/BilateralOpportunities'
 import { Skeleton } from '@/components/ui/skeleton'
 import { Alert, AlertDescription } from '@/components/ui/alert'
+import { Button } from '@/components/ui/button'
 import { Globe, MapPin, Users, Maximize2, AlertCircle, RefreshCw } from 'lucide-react'
 import type { IntelligenceReport } from '@/types/intelligence-reports.types'
 import type { CountryDossier } from '@/lib/dossier-type-guards'

@@ -10,10 +10,11 @@ import { Users, Mail, Phone, Briefcase, Info } from 'lucide-react'
 import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import type { ElectedOfficialDossier } from '@/lib/dossier-type-guards'
+import type { PersonDossier } from '@/lib/dossier-type-guards'
 
 interface StaffDirectoryProps {
-  dossier: ElectedOfficialDossier
+  /** PersonDossier with person_subtype === 'elected_official' */
+  dossier: PersonDossier
 }
 
 export function StaffDirectory({ dossier }: StaffDirectoryProps) {

@@ -4,6 +4,7 @@ import { corsHeaders } from '../_shared/cors.ts';
 import { getDossierDetailPath } from '../_shared/dossier-routes.ts';
 
 // All supported dossier types
+// Note: elected_official is now a person_subtype, not a separate dossier type
 const VALID_DOSSIER_TYPES = [
   'country',
   'organization',
@@ -12,10 +13,16 @@ const VALID_DOSSIER_TYPES = [
   'topic',
   'working_group',
   'person',
-  'elected_official',
 ] as const;
 
 type DossierType = (typeof VALID_DOSSIER_TYPES)[number];
+
+// Types with required extension fields (from database NOT NULL constraints)
+const TYPES_WITH_REQUIRED_EXTENSION: Partial<Record<DossierType, string[]>> = {
+  country: ['iso_code_2', 'iso_code_3'],
+  organization: ['org_type'],
+  engagement: ['engagement_type', 'engagement_category'],
+};
 
 interface DossierCreateRequest {
   name_en: string;
@@ -71,7 +78,7 @@ serve(async (req) => {
       );
     }
 
-    // Create Supabase client
+    // Create Supabase client with user token (for RLS-protected operations)
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_ANON_KEY') ?? '',
@@ -80,6 +87,12 @@ serve(async (req) => {
           headers: { Authorization: authHeader },
         },
       }
+    );
+
+    // Create service_role client for admin operations (MV refresh)
+    const supabaseAdmin = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
     // Get current user by passing the JWT token directly
@@ -130,6 +143,17 @@ serve(async (req) => {
     }
     if (body.tags && (body.tags.length > 20 || body.tags.some((tag) => tag.length > 50))) {
       validationErrors.push('tags must have max 20 items, each <= 50 characters');
+    }
+
+    // Validate required extension fields for types that need them
+    const requiredFields = TYPES_WITH_REQUIRED_EXTENSION[body.type as DossierType];
+    if (requiredFields && requiredFields.length > 0) {
+      const extensionData = body.extensionData || {};
+      for (const field of requiredFields) {
+        if (!extensionData[field]) {
+          validationErrors.push(`${field} is required for ${body.type} dossiers`);
+        }
+      }
     }
 
     if (validationErrors.length > 0) {
@@ -227,7 +251,6 @@ serve(async (req) => {
         topic: 'topics',
         working_group: 'working_groups',
         person: 'persons',
-        elected_official: 'elected_officials',
       };
 
       const extensionTable = extensionTableMap[body.type];
@@ -242,8 +265,33 @@ serve(async (req) => {
           .single();
 
         if (extError) {
-          console.warn(`Failed to insert extension data for ${body.type}:`, extError);
-          // Non-critical - base dossier was created
+          console.error(`Failed to insert extension data for ${body.type}:`, extError);
+
+          // ATOMIC ROLLBACK: Delete the base dossier if extension insert fails
+          // This ensures we don't have orphaned dossiers without their required extension data
+          const { error: deleteError } = await supabaseClient
+            .from('dossiers')
+            .delete()
+            .eq('id', dossier.id);
+
+          if (deleteError) {
+            console.error('Failed to rollback dossier after extension error:', deleteError);
+          }
+
+          return new Response(
+            JSON.stringify({
+              error: {
+                code: 'EXTENSION_INSERT_ERROR',
+                message_en: `Failed to create ${body.type} extension data. The dossier was not created.`,
+                message_ar: `فشل في إنشاء بيانات ${body.type} الإضافية. لم يتم إنشاء الملف.`,
+                details: extError,
+              },
+            }),
+            {
+              status: 500,
+              headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+            }
+          );
         } else {
           extensionResult = extData;
         }
@@ -251,8 +299,9 @@ serve(async (req) => {
     }
 
     // Refresh the materialized view to include the new dossier
+    // Use service_role client since refresh requires elevated permissions
     // This is non-blocking - we don't wait for it to complete
-    supabaseClient.rpc('refresh_dossier_list_mv').then(({ error }) => {
+    supabaseAdmin.rpc('refresh_dossier_list_mv').then(({ error }) => {
       if (error) {
         console.warn('Failed to refresh materialized view (non-critical):', error);
       }

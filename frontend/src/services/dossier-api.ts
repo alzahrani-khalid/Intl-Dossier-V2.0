@@ -31,7 +31,11 @@ export type DossierType =
   | 'topic'
   | 'working_group'
   | 'person'
-  | 'elected_official'
+
+/**
+ * Person subtype discriminator for distinguishing standard persons from elected officials
+ */
+export type PersonSubtype = 'standard' | 'elected_official'
 export type DossierStatus = 'active' | 'inactive' | 'archived' | 'deleted'
 
 /**
@@ -88,8 +92,9 @@ export interface EngagementExtension {
 }
 
 export interface TopicExtension {
-  topic_category?: 'policy' | 'technical' | 'strategic' | 'operational'
-  parent_topic_id?: string
+  // Note: Column names are theme_* for backward compatibility with existing MV
+  theme_category?: 'policy' | 'technical' | 'strategic' | 'operational'
+  parent_theme_id?: string
 }
 
 export interface WorkingGroupExtension {
@@ -600,7 +605,6 @@ export async function getDossierCountsByType(): Promise<Record<DossierType, Doss
     'topic',
     'working_group',
     'person',
-    'elected_official',
   ]
   const counts = {} as Record<DossierType, DossierTypeCount>
 

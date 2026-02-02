@@ -13,6 +13,7 @@
 
 /**
  * Entity types that can be cached
+ * Note: elected_official is now a person_subtype, cache uses 'person' type
  */
 export type CacheableEntityType =
   | 'dossier'
@@ -23,7 +24,6 @@ export type CacheableEntityType =
   | 'topic'
   | 'working_group'
   | 'person'
-  | 'elected_official'
   | 'user'
   | 'session'
   | 'translation'
@@ -55,7 +55,6 @@ export const CACHE_TTL: Record<CacheableEntityType, number> = {
   topic: parseInt(process.env.CACHE_TTL_TOPIC || '300', 10),
   working_group: parseInt(process.env.CACHE_TTL_WORKING_GROUP || '300', 10),
   person: parseInt(process.env.CACHE_TTL_PERSON || '300', 10),
-  elected_official: parseInt(process.env.CACHE_TTL_ELECTED_OFFICIAL || '300', 10),
 
   // User-related - 15 minutes (balance between freshness and performance)
   user: parseInt(process.env.CACHE_TTL_USER || '900', 10),
@@ -103,7 +102,6 @@ export const CACHE_KEY_PREFIX: Record<CacheableEntityType, string> = {
   topic: 'topic:',
   working_group: 'wg:',
   person: 'person:',
-  elected_official: 'elected:',
   user: 'user:',
   session: 'session:',
   translation: 'trans:',
@@ -127,7 +125,7 @@ export const CACHE_KEY_PREFIX: Record<CacheableEntityType, string> = {
  * Tags for cache invalidation grouping
  */
 export const CACHE_TAGS = {
-  // Dossier-related tags
+  // Dossier-related tags (elected_officials merged into persons)
   DOSSIERS: 'dossiers',
   COUNTRIES: 'countries',
   ORGANIZATIONS: 'organizations',
@@ -136,7 +134,6 @@ export const CACHE_TAGS = {
   TOPICS: 'topics',
   WORKING_GROUPS: 'working_groups',
   PERSONS: 'persons',
-  ELECTED_OFFICIALS: 'elected_officials',
 
   // User & auth tags
   USERS: 'users',
@@ -224,7 +221,6 @@ export function getTagsForEntity(entityType: CacheableEntityType): string[] {
     topic: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.TOPICS],
     working_group: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.WORKING_GROUPS],
     person: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.PERSONS],
-    elected_official: [CACHE_TAGS.DOSSIERS, CACHE_TAGS.ELECTED_OFFICIALS],
     user: [CACHE_TAGS.USERS],
     session: [CACHE_TAGS.SESSIONS, CACHE_TAGS.USERS],
     translation: [CACHE_TAGS.TRANSLATIONS, CACHE_TAGS.STATIC],

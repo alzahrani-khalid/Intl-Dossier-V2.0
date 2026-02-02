@@ -47,7 +47,6 @@ const typeIcons: Record<DossierType | 'all', React.ComponentType<{ className?: s
   topic: Target,
   working_group: BookOpen,
   person: User,
-  elected_official: Vote,
 }
 
 interface DossierSearchFiltersProps {
@@ -209,17 +208,6 @@ export function DossierSearchFilters({
                 )}
               </div>
             </SelectItem>
-            <SelectItem value="elected_official">
-              <div className="flex items-center gap-2">
-                <Vote className="size-4 text-rose-500" />
-                <span>{t('types.elected_official')}</span>
-                {typeCounts?.elected_official !== undefined && (
-                  <Badge variant="secondary" className="ms-auto text-xs">
-                    {typeCounts.elected_official}
-                  </Badge>
-                )}
-              </div>
-            </SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -314,7 +302,6 @@ export function DossierTypeChips({
     'topic',
     'working_group',
     'person',
-    'elected_official',
   ]
 
   return (

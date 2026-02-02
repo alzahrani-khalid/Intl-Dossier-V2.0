@@ -94,11 +94,11 @@ export function useThemes(filters: ThemeFilters = {}) {
       const { search, status, parent_theme_id, is_standard, page = 1, limit = 20 } = filters
       const offset = (page - 1) * limit
 
-      // Query base dossier table with theme type
+      // Query base dossier table with topic type (formerly called theme)
       let query = supabase
         .from('dossiers')
         .select('*', { count: 'exact' })
-        .eq('type', 'theme')
+        .eq('type', 'topic')
         .neq('status', 'archived')
 
       // Apply search filter
@@ -122,12 +122,12 @@ export function useThemes(filters: ThemeFilters = {}) {
         throw new Error(error.message)
       }
 
-      // Get theme extension data for all dossiers
+      // Get topic extension data for all dossiers (table renamed from themes to topics)
       const themeIds = (dossiers || []).map((d) => d.id)
       let extensions: Record<string, ThemeExtension> = {}
 
       if (themeIds.length > 0) {
-        let extQuery = supabase.from('themes').select('*').in('id', themeIds)
+        let extQuery = supabase.from('topics').select('*').in('id', themeIds)
 
         // Apply parent filter if specified
         if (parent_theme_id !== undefined) {
@@ -162,7 +162,7 @@ export function useThemes(filters: ThemeFilters = {}) {
         .filter((d) => extensions[d.id])
         .map((d) => ({
           ...d,
-          type: 'theme' as const,
+          type: 'topic' as const,
           extension: extensions[d.id] || { category_code: 'UNKNOWN' },
         }))
 
@@ -194,7 +194,7 @@ export function useTheme(id: string | undefined) {
         .from('dossiers')
         .select('*')
         .eq('id', id)
-        .eq('type', 'theme')
+        .eq('type', 'topic')
         .single()
 
       if (dossierError) {
@@ -212,18 +212,18 @@ export function useTheme(id: string | undefined) {
 
       if (!themeDetails) {
         // Fallback to just the extension table
-        const { data: themeExt } = await supabase.from('themes').select('*').eq('id', id).single()
+        const { data: themeExt } = await supabase.from('topics').select('*').eq('id', id).single()
 
         return {
           ...dossier,
-          type: 'theme' as const,
+          type: 'topic' as const,
           extension: themeExt || { category_code: 'UNKNOWN' },
         }
       }
 
       return {
         ...dossier,
-        type: 'theme' as const,
+        type: 'topic' as const,
         extension: {
           id: themeDetails.id,
           parent_theme_id: themeDetails.parent_theme_id,
@@ -281,7 +281,7 @@ export function useRootThemes() {
     queryFn: async () => {
       // Get themes with no parent
       const { data: themeExts, error: extError } = await supabase
-        .from('themes')
+        .from('topics')
         .select('*')
         .is('parent_theme_id', null)
         .order('sort_order')
@@ -301,7 +301,7 @@ export function useRootThemes() {
         .from('dossiers')
         .select('*')
         .in('id', themeIds)
-        .eq('type', 'theme')
+        .eq('type', 'topic')
         .neq('status', 'archived')
 
       if (dossierError) {
@@ -319,7 +319,7 @@ export function useRootThemes() {
 
       return (dossiers || []).map((d) => ({
         ...d,
-        type: 'theme' as const,
+        type: 'topic' as const,
         extension: extensionMap[d.id] || { category_code: 'UNKNOWN' },
       }))
     },
@@ -334,7 +334,7 @@ export function useChildThemes(parentId: string | null) {
   return useQuery<Theme[], Error>({
     queryKey: [THEMES_QUERY_KEY, 'children', parentId],
     queryFn: async () => {
-      let extQuery = supabase.from('themes').select('*').order('sort_order').order('category_code')
+      let extQuery = supabase.from('topics').select('*').order('sort_order').order('category_code')
 
       if (parentId === null) {
         extQuery = extQuery.is('parent_theme_id', null)
@@ -358,7 +358,7 @@ export function useChildThemes(parentId: string | null) {
         .from('dossiers')
         .select('*')
         .in('id', themeIds)
-        .eq('type', 'theme')
+        .eq('type', 'topic')
         .neq('status', 'archived')
 
       if (dossierError) {
@@ -375,7 +375,7 @@ export function useChildThemes(parentId: string | null) {
 
       return (dossiers || []).map((d) => ({
         ...d,
-        type: 'theme' as const,
+        type: 'topic' as const,
         extension: extensionMap[d.id] || { category_code: 'UNKNOWN' },
       }))
     },
@@ -444,7 +444,7 @@ export function useCreateTheme() {
       const { data: dossier, error: dossierError } = await supabase
         .from('dossiers')
         .insert({
-          type: 'theme',
+          type: 'topic',
           name_en: data.name_en,
           name_ar: data.name_ar,
           description_en: data.description_en || null,
@@ -462,7 +462,7 @@ export function useCreateTheme() {
 
       // Create theme extension
       if (data.extension) {
-        const { error: extError } = await supabase.from('themes').insert({
+        const { error: extError } = await supabase.from('topics').insert({
           id: dossier.id,
           parent_theme_id: data.extension.parent_theme_id || null,
           category_code: data.extension.category_code,
@@ -487,7 +487,7 @@ export function useCreateTheme() {
 
       return {
         ...dossier,
-        type: 'theme' as const,
+        type: 'topic' as const,
         extension: data.extension || { category_code: 'UNKNOWN' },
       } as Theme
     },
@@ -531,7 +531,7 @@ export function useUpdateTheme() {
         .from('dossiers')
         .update(dossierUpdate)
         .eq('id', id)
-        .eq('type', 'theme')
+        .eq('type', 'topic')
         .select()
         .single()
 
@@ -544,7 +544,7 @@ export function useUpdateTheme() {
       if (data.extension) {
         // Check if extension exists
         const { data: existingExt } = await supabase
-          .from('themes')
+          .from('topics')
           .select('id')
           .eq('id', id)
           .single()
@@ -568,7 +568,7 @@ export function useUpdateTheme() {
         if (existingExt) {
           // Update existing
           const { data: updatedExt, error: extError } = await supabase
-            .from('themes')
+            .from('topics')
             .update(extUpdate)
             .eq('id', id)
             .select()
@@ -578,7 +578,7 @@ export function useUpdateTheme() {
         } else {
           // Create new (shouldn't happen normally, but handle it)
           const { data: newExt, error: extError } = await supabase
-            .from('themes')
+            .from('topics')
             .insert({
               id: id,
               ...extUpdate,
@@ -592,7 +592,7 @@ export function useUpdateTheme() {
       } else {
         // Fetch existing extension
         const { data: existingExt } = await supabase
-          .from('themes')
+          .from('topics')
           .select('*')
           .eq('id', id)
           .single()
@@ -601,7 +601,7 @@ export function useUpdateTheme() {
 
       return {
         ...dossier,
-        type: 'theme' as const,
+        type: 'topic' as const,
         extension: themeExt || { category_code: 'UNKNOWN' },
       } as Theme
     },
@@ -627,7 +627,7 @@ export function useDeleteTheme() {
     mutationFn: async (id: string) => {
       // Check for children - can't delete theme with children
       const { data: children } = await supabase
-        .from('themes')
+        .from('topics')
         .select('id')
         .eq('parent_theme_id', id)
         .limit(1)
@@ -641,7 +641,7 @@ export function useDeleteTheme() {
         .from('dossiers')
         .update({ status: 'archived' })
         .eq('id', id)
-        .eq('type', 'theme')
+        .eq('type', 'topic')
 
       if (error) {
         throw new Error(error.message)
@@ -670,7 +670,7 @@ export function useMoveTheme() {
   return useMutation({
     mutationFn: async ({ id, newParentId }: { id: string; newParentId: string | null }) => {
       const { data, error } = await supabase
-        .from('themes')
+        .from('topics')
         .update({ parent_theme_id: newParentId })
         .eq('id', id)
         .select()

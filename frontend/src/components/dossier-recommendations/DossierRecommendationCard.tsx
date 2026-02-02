@@ -98,7 +98,6 @@ const dossierTypeIcons: Record<DossierType, React.ComponentType<{ className?: st
   topic: Lightbulb,
   working_group: Layers,
   person: User,
-  elected_official: UserCheck,
 }
 
 // ============================================================================
