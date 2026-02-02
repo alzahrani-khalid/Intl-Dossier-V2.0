@@ -186,11 +186,11 @@ serve(async (req) => {
         topic: 'topics',
         working_group: 'working_groups',
         person: 'persons',
-        elected_official: 'elected_officials',
       };
 
       const extensionTable = extensionTableMap[dossierType];
       if (extensionTable) {
+        // Extension tables use the same ID as the dossier (Class Table Inheritance)
         const { data: extension, error: extensionError } = await supabaseClient
           .from(extensionTable)
           .select('*')
